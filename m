@@ -2,147 +2,141 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A76C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 19:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D18C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 19:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1C420857
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 19:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D96E20781
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 19:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aaVLBGt9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VvM7nsGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgDXT0K (ORCPT
+        id S1729257AbgDXTdy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725970AbgDXT0J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:26:09 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD4DC09B048
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 12:26:09 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id n24so4076834plp.13
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 12:26:09 -0700 (PDT)
+        Fri, 24 Apr 2020 15:33:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729225AbgDXTdx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 15:33:53 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92167C09B048
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 12:33:53 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id f19so11627255iog.5
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 12:33:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6Ak3wRUTbhX3b+AZt5O65BJGsm25sMRWic48F76A9hM=;
-        b=aaVLBGt9xNHi+hCZ8vzCgEF7XWOZEZmPr0Phaz77zFbq5WMywT6yHSh9e8GCu8ociu
-         aGr7G3Cchq8usek7UA7iq6OS8pshLesDZoZqje7Aui6a8mp1OHLDByvI9C73O1SqdDiZ
-         mx0zwH44LI86AaesZXFM2Ajhmo0vIU9IhlS4Y=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HNuMYxfjwGPC+1jTTYtTMM55VcfYeYfWrdW1KEr8xRY=;
+        b=VvM7nsGUt7pp9ndkQZB8KkXo4k0KWv2pzPtzuuMU2pMNneU8cftEBccuLo2PcczwAN
+         BgFebrKixBIKF/VtqFhOrRl9liwOrp2UTNpkHW0QOncfySrbhkYYKaxtCOcADwUeriVu
+         UAS5HUc/0WMI9yAEBUBbDx6qZMeA7iYAiQJLxjHJ+Tv0s9iCSkS3DZCGGthZNDCmzA0c
+         Q2XGb6dIW3ZqfW47wRXhqMw+ZkzG33eyRAC/GulqqeGnijMSIbCWnlz8k98noCEuWSmN
+         eNOLku6bswd4Pkj8wgXeOXyQ7VbaMUVNORfn03bhCGcKMOR/RoqYdMhPGJx53cC7s2xv
+         9EpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6Ak3wRUTbhX3b+AZt5O65BJGsm25sMRWic48F76A9hM=;
-        b=O7JcluRFkTaJDO7USvRVpFrHZEn5EZBkNk4Z9K2Xlj6AOIH44R4AeRiuQeCnBdcZSq
-         cKm+Lv2uaJ2vVm1vpYpeOCD0ksAIC6Bso74ycWAuKCjIp3JdATSaGTQpwc22HiA6j7+n
-         GRAljMx6ZQzDTTZ1rNcel8OHOe1pPqUbGWitw1qN+H6SXqq/8p7TgrtQk0CXxv5ibjyc
-         qTB6/8rcneAB4MYdvfynYFGcKOpeRm6OZcS8WONNDnKRZ7+NYnOine6vX1vMHna5CbuE
-         3oRMzhEi2fSqbGlKbXNad1CLxuu8HcRtsJAecQbcLLeTE3IbzHrXPknUqbnHCVdRjeVF
-         TRLg==
-X-Gm-Message-State: AGi0PuYpRNCko5tHF8xOcjUaNEwWimZ/p3TYHNkf5Ox4bsbi2vJDV5Ml
-        mfAjueCrrqxObtuTFsWvbyZP9Q==
-X-Google-Smtp-Source: APiQypL6ZHQVIk0jDGsuJs8ztATvWT/HuDC1iXb3RFCHlfbimDatC7NnMcHjF8PcL7UjBVc67o/vfw==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr11186391plb.285.1587756369143;
-        Fri, 24 Apr 2020 12:26:09 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id g6sm5227594pjx.48.2020.04.24.12.26.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 12:26:08 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 12:26:07 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
-        sibis@codeaurora.org, rnayak@codeaurora.org,
-        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
-        jcrouse@codeaurora.org, evgreen@chromium.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 5/7] OPP: Add sanity checks in _read_opp_key()
-Message-ID: <20200424192607.GB4525@google.com>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-6-georgi.djakov@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HNuMYxfjwGPC+1jTTYtTMM55VcfYeYfWrdW1KEr8xRY=;
+        b=liEjcyN7Br9mU7Qk4sj2d9lZa3XT/hipco/CW6mZ7jTlL4Mox5iDiB7cSnLuq57gBR
+         zsc3JcquQmp9UeIzSvvuZcbITHHz9DJNcpZS0mfv2p5lepAYoZxmy+v0VfCI3IU3Khbd
+         fRB66eE69bJAiJeMHiuvqcnGugSD0VzvZzMBak4dlT2H+Qh30qd5sIVCLG9tg1ALOflW
+         1jxK7gM/RCjsbTdMWS4IdoJWgNzuS4tzUzvCZsJtSvLvrlRWpp+G4f5M5IHeqBuiKBW3
+         hZ5jkRJqshSIxpUJ+ulykPG5E2V9qg9gymVb8ON5BayCu0nSFbl/knY2mst4vsqd7Jcw
+         xWqw==
+X-Gm-Message-State: AGi0PuYq10hcCtwXYHLTzQ3hWjMUFCuDJevKBQcGEGv/8+ZF2K7ZfapN
+        /9ZhhcwKcBLGBrhKligeVGBJE4//pAg2j+fuHmgYq6hu
+X-Google-Smtp-Source: APiQypK+tAyZdsSD4T9QkiAxKF5gM5wpe2bXg3S0jvmEFZRNhjynTDdgGezVLreV/JA3xXv/0XyHMUb0QhD/L7v4ecY=
+X-Received: by 2002:a02:ccf4:: with SMTP id l20mr7418563jaq.28.1587756832473;
+ Fri, 24 Apr 2020 12:33:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200424155404.10746-6-georgi.djakov@linaro.org>
+References: <20200424053819.220276-1-jnchase@google.com> <20200424053819.220276-2-jnchase@google.com>
+ <74c08463-7052-2ac4-3662-7301ecb8150d@xs4all.nl>
+In-Reply-To: <74c08463-7052-2ac4-3662-7301ecb8150d@xs4all.nl>
+From:   Jeff Chase <jnchase@google.com>
+Date:   Fri, 24 Apr 2020 15:33:41 -0400
+Message-ID: <CALTkaQ2dnWdkAsqYXF+msN+Jnz_1RuvbQtJd4PFwVT_Q7FTc5Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] media: cec: i2c: ch7322: Add ch7322 CEC controller driver
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 06:54:02PM +0300, Georgi Djakov wrote:
-> When we read the OPP keys, it would be nice to do some sanity checks
-> of the values we get from DT and see if they match with the information
-> that is populated in the OPP table. Let's pass a pointer of the table,
-> so that we can do some validation.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v7:
-> New patch.
-> 
->  drivers/opp/of.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 978e445b0cdb..2b590fe2e69a 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -574,8 +574,8 @@ void dev_pm_opp_of_remove_table(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
->  
-> -static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
-> -			 bool *rate_not_available)
-> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct opp_table *table,
-> +			 struct device_node *np, bool *rate_not_available)
->  {
->  	struct property *peak, *avg;
->  	u32 *peak_bw, *avg_bw;
-> @@ -603,6 +603,12 @@ static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
->  		 * opp-avg-kBps = <path1_value path2_value>;
->  		 */
->  		count = peak->length / sizeof(u32);
-> +		if (table->path_count != count) {
-> +			pr_err("%s: Mismatch between opp-peak-kBps and paths (%d %d)\n",
-> +			       __func__, count, table->path_count);
-> +			return -EINVAL;
-> +		}
-> +
->  		peak_bw = kmalloc_array(count, sizeof(*peak_bw), GFP_KERNEL);
->  		if (!peak_bw)
->  			return -ENOMEM;
-> @@ -624,6 +630,13 @@ static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
->  	avg = of_find_property(np, "opp-avg-kBps", NULL);
->  	if (peak && avg) {
->  		count = avg->length / sizeof(u32);
-> +		if (table->path_count != count) {
-> +			pr_err("%s: Mismatch between opp-avg-kBps and paths (%d %d)\n",
-> +			       __func__, count, table->path_count);
-> +			ret = -EINVAL;
-> +			goto free_peak_bw;
-> +		}
-> +
->  		avg_bw = kmalloc_array(count, sizeof(*avg_bw), GFP_KERNEL);
->  		if (!avg_bw) {
->  			ret = -ENOMEM;
-> @@ -695,7 +708,7 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
->  	if (!new_opp)
->  		return ERR_PTR(-ENOMEM);
->  
-> -	ret = _read_opp_key(new_opp, np, &rate_not_available);
-> +	ret = _read_opp_key(new_opp, opp_table, np, &rate_not_available);
->  	if (ret < 0) {
->  		if (!opp_table->is_genpd)
->  			dev_err(dev, "%s: opp key field not found\n", __func__);
+Hi Hans,
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Thank you for the quick review.
+
+> Is the register documentation available somewhere? I only found the product brief.
+
+No, it's not publicly available.
+
+> The chip can only detect OK vs NACK? There are no error states for Arbitration Lost
+> or Low Drive conditions? Just checking, not all hardware has support for that.
+
+Correct, message transmit completion just has a one-bit status.
+
+> > +static int ch7322_cec_adap_log_addr(struct cec_adapter *adap, u8 log_addr)
+> > +{
+> > +     struct ch7322 *ch7322 = cec_get_drvdata(adap);
+> > +
+> > +     dev_dbg(&ch7322->i2c->dev, "cec log addr: %x\n", log_addr);
+> > +
+> > +     return 0;
+>
+> This can't be right. I expect that logical addresses are set/cleared here,
+> because the device needs to know that so that it can ignore messages not
+> intended for it.
+
+As far as I can tell the device doesn't filter based on logical
+address. I'll have to save
+the logical address to the driver and filter manually.
+
+> > +}
+> > +
+> > +static int ch7322_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
+> > +                                  u32 signal_free_time, struct cec_msg *msg)
+> > +{
+>
+> Does the hardware correctly handle Signal Free Time? If this isn't handled right
+> then one CEC device can flood the CEC bus, preventing anyone else from using it.
+>
+> In some devices it has to be programmed, in others it is hardwired.
+
+It must be hardwired -- I don't see a way to program it.
+
+> > +     struct ch7322 *ch7322 = cec_get_drvdata(adap);
+> > +     int ret;
+> > +
+> > +     dev_dbg(&ch7322->i2c->dev, "cec transmit: %x->%x: %x\n",
+> > +             cec_msg_initiator(msg), cec_msg_destination(msg),
+> > +             cec_msg_opcode(msg));
+> > +
+> > +     mutex_lock(&ch7322->mutex);
+> > +     ret = ch7322_send_message(ch7322, msg);
+> > +     mutex_unlock(&ch7322->mutex);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static const struct cec_adap_ops ch7322_cec_adap_ops = {
+> > +     .adap_enable = ch7322_cec_adap_enable,
+> > +     .adap_log_addr = ch7322_cec_adap_log_addr,
+> > +     .adap_transmit = ch7322_cec_adap_transmit,
+>
+> If the HW supports CEC monitoring (aka snooping), then I recommend that
+> adap_monitor_all_enable is also implemented. It's very useful for debugging
+> CEC in userspace. Not all HW supports it, though.
+
+Okay, I'll add this along with the logical address filtering I mentioned above.
+
+Thanks,
+Jeff
