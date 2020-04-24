@@ -4,71 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C13C55196
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 19:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F035AC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 20:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA4F216FD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 19:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C655C215A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 20:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587758160;
-	bh=XyAZQ+e0o7lKduytKo6lvmMqRCZ1EqfQCzwTnAq96HM=;
+	s=default; t=1587759337;
+	bh=l1O/C/hTo/zI0Ev9A/bDkK/3yYR6GXm/DdmR6fsA29s=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=V9yLKOcblpRu/wuFFLUth/LtOral6ZqjYKVZcaEgTL9dOq271XOj7GnRvKBqlWhqw
-	 0pJkh3YHALodMt0ZUNhHe+mf6842Lz+cw8ENwwhfSQT95XxX3/xAwN9apTnMfaCEIb
-	 KedXHUu6FBNJ662n2B1pvbFK2x0KaehMNrk+vq08=
+	b=EUIiMb1Qvrn/VzdEj+il5hsVjY2hCitWoQNBPWy75kcJtzm41GBt+mSf/ALQkTsGd
+	 DWeS6oRYzJhY/nyGF3dSeSB9Jbfe2OfJx0HPVRkHSaJPvOhLm2524bU/O0Eg1d8j3M
+	 X6iEBkacElwlpRgo4liN/RWjtivj5oQt+KakJGIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbgDXTzz (ORCPT
+        id S1729154AbgDXUPh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46470 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 16:15:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729419AbgDXTzy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:55:54 -0400
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        id S1727031AbgDXUPh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 16:15:37 -0400
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86228215A4;
-        Fri, 24 Apr 2020 19:55:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 183DC214AF;
+        Fri, 24 Apr 2020 20:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587758153;
-        bh=XyAZQ+e0o7lKduytKo6lvmMqRCZ1EqfQCzwTnAq96HM=;
+        s=default; t=1587759336;
+        bh=l1O/C/hTo/zI0Ev9A/bDkK/3yYR6GXm/DdmR6fsA29s=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fV8hXCcw3sdoVZvyT2ycb3P/w1YU7ELr4Hxd9Un8zFJ8TB3zwtrJ9iPol/89Q4z9F
-         ZLYdcJdtFLdPS9FCtOahiG5HXdIX7ycnQbUXUS0XXdqLY2xw0KdQHPDw6HsaJ1+tG1
-         cqkMSsJhYHantVRmxqg7qv57CTejZPcFSiT4r/ZE=
-Received: by mail-qv1-f46.google.com with SMTP id fb4so5310871qvb.7;
-        Fri, 24 Apr 2020 12:55:53 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYP157vDYmJ2xU5xTvW5md0cc49fmUYDV4/r/LDqY2uDLawKIbV
-        o6OBcLp6Ppf/HcN6BEwZU5WIFuwJjhGbzm2dcg==
-X-Google-Smtp-Source: APiQypL6QVP34OIZcFjfLZaCQy58J6loPgHHO+jJmV1P6s/hngLJU56sMwG2qfl9h0lCetvcQovdru7JCgkvs7MOHI0=
-X-Received: by 2002:a0c:a986:: with SMTP id a6mr10586552qvb.79.1587758152580;
- Fri, 24 Apr 2020 12:55:52 -0700 (PDT)
+        b=NBnwn88Vlic+UNRF5aueaudOU5sbWrzLDfkLeKYUyHCWJbKYoNZe32+TpmXVrWBnJ
+         QZB7fkY7cZYVsxh/Q1GFdstcKCvlduZ4BkSpbg7gA8K39ftS5Aq1PIegU3l/wijsz1
+         UQPcWA+RGXSkhWauwPwfx6wVI1yXoG9sHDd6cL2g=
+Received: by mail-qv1-f41.google.com with SMTP id y19so5334700qvv.4;
+        Fri, 24 Apr 2020 13:15:36 -0700 (PDT)
+X-Gm-Message-State: AGi0PubU+CcX3khF4IFP6m8rmd6U9CSfjXGLFhxIjFzthxcmtGmWLgxX
+        F1h1QfP6g540mP0xc4La4HOFXd5fa1o8C0yT7A==
+X-Google-Smtp-Source: APiQypJ0f0ryj35lZZuNDRfB/EETxfcGPsUXh+hylvj1RxjuVyiDMzn7WSvH4H7yXAhIT+IJy7JbwU9WDjK9j+kOM08=
+X-Received: by 2002:a0c:b651:: with SMTP id q17mr10460047qvf.135.1587759335207;
+ Fri, 24 Apr 2020 13:15:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587732391-3374-1-git-send-email-florinel.iordache@nxp.com> <1587732391-3374-3-git-send-email-florinel.iordache@nxp.com>
-In-Reply-To: <1587732391-3374-3-git-send-email-florinel.iordache@nxp.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 24 Apr 2020 14:55:40 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+7zpDDcVzTKSufzuCWnRcLZ0h+y0TpsJE=G+pbuhWtvw@mail.gmail.com>
-Message-ID: <CAL_Jsq+7zpDDcVzTKSufzuCWnRcLZ0h+y0TpsJE=G+pbuhWtvw@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 2/9] dt-bindings: net: add backplane dt bindings
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        devicetree@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Yang-Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
+References: <20200303101722.26052-1-rogerq@ti.com> <20200303101722.26052-4-rogerq@ti.com>
+ <20200310210904.GA11275@bogus> <247a115e-6b44-2906-07cf-771236d492d6@ti.com>
+In-Reply-To: <247a115e-6b44-2906-07cf-771236d492d6@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 24 Apr 2020 15:15:24 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLUk2DJ-i9bemAO9FKmYUP5sgxyjzGpBPVpdv08bwZEJQ@mail.gmail.com>
+Message-ID: <CAL_JsqLUk2DJ-i9bemAO9FKmYUP5sgxyjzGpBPVpdv08bwZEJQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] arm64: dts: ti: k3-j721e-main: Add serdes_ln_ctrl
+ node to select SERDES lane mux
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Nishanth Menon <nm@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
@@ -76,260 +67,64 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 7:46 AM Florinel Iordache
-<florinel.iordache@nxp.com> wrote:
+On Thu, Mar 19, 2020 at 5:32 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
 >
-> Add ethernet backplane device tree bindings
-
-For a new, common binding, you've got to do better than this. Bindings
-need to stand on their own. I need a h/w block diagram or something
-because I know little about "ethernet backplane".
-
+> Hi Rob,
 >
-> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-> ---
->  .../bindings/net/ethernet-controller.yaml          |  3 +-
->  .../devicetree/bindings/net/ethernet-phy.yaml      | 50 +++++++++++++++++++++
->  .../devicetree/bindings/net/serdes-lane.yaml       | 51 ++++++++++++++++++++++
->  Documentation/devicetree/bindings/net/serdes.yaml  | 44 +++++++++++++++++++
->  4 files changed, 147 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/net/serdes-lane.yaml
->  create mode 100644 Documentation/devicetree/bindings/net/serdes.yaml
+> On 11/03/20 2:39 am, Rob Herring wrote:
+> > On Tue, Mar 03, 2020 at 12:17:19PM +0200, Roger Quadros wrote:
+> >> From: Kishon Vijay Abraham I <kishon@ti.com>
+> >>
+> >> Add serdes_ln_ctrl node used for selecting SERDES lane mux.
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> >> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> >> ---
+> >>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 27 ++++++++++++
+> >>  include/dt-bindings/mux/mux-j721e-wiz.h   | 53 +++++++++++++++++++++++
+> >>  2 files changed, 80 insertions(+)
+> >>  create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
+> >>
+> >> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> >> index cbaadee5bfdc..c5d54af37e91 100644
+> >> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> >> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> >> @@ -5,6 +5,8 @@
+> >>   * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
+> >>   */
+> >>  #include <dt-bindings/phy/phy.h>
+> >> +#include <dt-bindings/mux/mux.h>
+> >> +#include <dt-bindings/mux/mux-j721e-wiz.h>
+> >>
+> >>  &cbass_main {
+> >>      msmc_ram: sram@70000000 {
+> >> @@ -19,6 +21,31 @@
+> >>              };
+> >>      };
+> >>
+> >> +    scm_conf: scm-conf@100000 {
+> >> +            compatible = "syscon", "simple-mfd", "ti,j721e-system-controller";
+> >
+> > Wrong ordering. Most significant first.
+> >
+> >> +            reg = <0 0x00100000 0 0x1c000>;
+> >> +            #address-cells = <1>;
+> >> +            #size-cells = <1>;
+> >> +            ranges = <0x0 0x0 0x00100000 0x1c000>;
+> >> +
+> >> +            serdes_ln_ctrl: serdes-ln-ctrl@4080 {
+> >
+> > Your syscon.yaml change is not valid if you have child nodes. Do a
+> > specific binding for this block.
 >
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> index ac471b6..541cee5 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> @@ -93,8 +93,9 @@ properties:
->        - rxaui
->        - xaui
->
-> -      # 10GBASE-KR, XFI, SFI
-> +      # 10GBASE-KR, 40GBASE-KR4, XFI, SFI
->        - 10gbase-kr
-> +      - 40gbase-kr4
->        - usxgmii
->
->    phy-mode:
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> index 5aa141c..436b5a7 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> @@ -161,6 +161,42 @@ properties:
->      description:
->        Specifies a reference to a node representing a SFP cage.
->
-> +  eq-algorithm:
-> +    description:
-> +      Specifies the desired equalization algorithm to be used
-> +      by the KR link training
-> +    oneOf:
-> +      - const: fixed
-> +        description:
-> +          Backplane KR using fixed coefficients meaning no
-> +          equalization algorithm
-> +      - const: bee
-> +        description:
-> +          Backplane KR using 3-Taps Bit Edge Equalization (BEE)
-> +          algorithm
-> +
-> +  eq-init:
+> Do you mean in addition to having platform specific binding for
+> scm-conf, I need to have platform specific binding for serdes-ln-ctrl.
 
-eq-coefficients?
+I mean 'dt-bindings: syscon: Add TI's J721E specific compatible string'.
 
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 3
-> +    maxItems: 3
-> +    description:
-> +      Triplet of KR coefficients. Specifies the initialization
-> +      values for standard KR equalization coefficients used by
-> +      the link training (pre-cursor, main-cursor, post-cursor)
+While not currently enforced because 'unevaluatedProperties: false'
+doesn't yet do anything, the intent with syscon.yaml is child nodes
+are not allowed. If you have child nodes, you need your own schema.
 
-items:
-  - description: pre-cursor
-  - description: main-cursor
-  ...
-
-Is 0-2^32 valid data? If not, add some constraints.
-
-> +
-> +  eq-params:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description:
-> +      Variable size array of KR parameters. Specifies the HW
-> +      specific parameters used by the link training.
-
-DT is not a dumping ground for magic register values.
-
-eq-init vs. eq-params is pretty vague as to what they are.
-
-I fail to see how these properties are related to $subject. Should be
-a separate patch.
-
-> +
-> +  lane-handle:
-> +    $ref: /schemas/types.yaml#definitions/phandle
-> +    description:
-> +      Specifies a reference (or array of references) to a node
-> +      representing the desired SERDES lane (or lanes) used in
-> +      backplane mode.
-> +
->  required:
->    - reg
->
-> @@ -183,3 +219,17 @@ examples:
->              reset-deassert-us = <2000>;
->          };
->      };
-> +  - |
-> +    ethernet {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        ethernet-phy@0 {
-> +            compatible = "ethernet-phy-ieee802.3-c45";
-> +            reg = <0x0>;
-> +            lane-handle = <&lane_d>;
-> +            eq-algorithm = "fixed";
-> +            eq-init = <0x2 0x29 0x5>;
-> +            eq-params = <0>;
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/net/serdes-lane.yaml b/Documentation/devicetree/bindings/net/serdes-lane.yaml
-> new file mode 100644
-> index 0000000..ce3581e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/serdes-lane.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/serdes-lane.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Serdes Lane Binding
-> +
-> +maintainers:
-> +  - Florinel Iordache <florinel.iordache@nxp.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^lane(@[a-f0-9]+)?$"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: lane-10g
-> +        description: Lane part of a 10G SerDes module
-> +      - const: lane-28g
-> +        description: Lane part of a 28G SerDes module
-> +
-> +  reg:
-> +    description:
-> +      Registers memory map offset and size for this lane
-> +
-> +  reg-names:
-> +    description:
-> +      Names of the register map given in "reg" node.
-> +
-> +examples:
-> +  - |
-> +    serdes1: serdes@1ea0000 {
-> +        compatible = "serdes-10g";
-
-Do you have a datasheet for this device as bindings describe devices?
-I assume not because serdes is a protocol, not a device. AFAIK,
-there's no standard programming interface for 'serdes' as that is
-about the only time we have any sort of genericish compatible strings.
-The compatible string at a minimum should tell me what the programming
-model for the registers are.
-
-> +        reg = <0x0 0x1ea0000 0 0x00002000>;
-> +        reg-names = "serdes", "serdes-10g";
-
-The default address and sizes are 1 cell. So you have addr 0 with size
-0x1ea0000 and then addr 0 with size 0x2000.
-
-> +        little-endian;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        lane_a: lane@800 {
-> +            compatible = "lane-10g";
-> +            reg = <0x800 0x40>;
-> +            reg-names = "lane", "serdes-lane";
-
-Not valid. You have 1 entry (with a addr and size) for reg, but 2
-entries for reg-names.
-
-40G is made up of 4 10G lanes, right? Do all 40G serdes phys have
-separate register regions for each lane? You can't assume lanes and DT
-nodes are 1-1.
-
-As lanes have to be child nodes, these 2 schemas should be 1. Though I
-don't think lane nodes will survive.
-
-> +        };
-> +        lane_b: lane@840 {
-> +            compatible = "lane-10g";
-> +            reg = <0x840 0x40>;
-> +            reg-names = "lane", "serdes-lane";
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/net/serdes.yaml b/Documentation/devicetree/bindings/net/serdes.yaml
-> new file mode 100644
-> index 0000000..fd3da85
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/serdes.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/serdes.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Serdes Module Binding
-> +
-> +maintainers:
-> +  - Florinel Iordache <florinel.iordache@nxp.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^serdes(@[a-f0-9]+)?$"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: serdes-10g
-> +        description: SerDes module type of 10G
-> +      - const: serdes-28g
-> +        description: SerDes module type of 28G
-> +
-> +  reg:
-> +    description:
-> +      Registers memory map offset and size for this serdes module
-> +
-> +  reg-names:
-> +    description:
-> +      Names of the register map given in "reg" node.
-> +
-> +  little-endian:
-> +    description:
-> +      Specifies the endianness of serdes module
-> +      For complete definition see
-> +      Documentation/devicetree/bindings/common-properties.txt
-> +
-> +examples:
-> +  - |
-> +    serdes1: serdes@1ea0000 {
-> +        compatible = "serdes-10g";
-> +        reg = <0x0 0x1ea0000 0 0x00002000>;
-> +        reg-names = "serdes", "serdes-10g";
-> +        little-endian;
-> +    };
-> --
-> 1.9.1
->
+Rob
