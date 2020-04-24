@@ -2,139 +2,106 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36102C2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9EAC2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 05:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1645C2075A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587706639;
-	bh=UpjdYfWzhaIBWwT8pfBeT5E2eAvIuj0KkNBR5ForkP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z7O4XiuK2FsGLRcmOer6KL87F60CCo4isbTn12TzuTYLkewB3QwS/GTHwje0NrE1i
-	 oFI19xQgHDOg2ZiHHkuPCTwE9y6+98J216ku91rkg+1+weqRJk+xbt1VHiUn9fFvB0
-	 ncp9i4cxOecLNk5IgJ4RPfZlm67Fo9JLAbVyhYIA=
+	by mail.kernel.org (Postfix) with ESMTP id 347BD20728
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 05:38:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iUmsqjZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDXFhP (ORCPT
+        id S1726078AbgDXFij (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:37:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgDXFhP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:37:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C808D2075A;
-        Fri, 24 Apr 2020 05:37:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587706634;
-        bh=UpjdYfWzhaIBWwT8pfBeT5E2eAvIuj0KkNBR5ForkP8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xRAZIkUacZko7ajq7cHgKyFBma9mq+G+xqKbHfA9RNyQ85imZkOzVX+M8T8pPEBpX
-         HjMiJaSUqzGWbQVIFLn8NU2K1bIYEo3FgiiElxYqvGeI0GunAOkV+dFb52E7hqyOuZ
-         mGR5wIQ88ku15rmA65YXFz2L+nTo8+7OdvZoqyLQ=
-Date:   Fri, 24 Apr 2020 07:37:11 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     robh+dt@kernel.org, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/3] 32-bit access for TX/RX hold registers for
- samsung_tty driver
-Message-ID: <20200424053711.GB103562@kroah.com>
-References: <20200420013300.17249-1-hyunki00.koo@samsung.com>
- <CGME20200420233607epcas2p305dbd652ab73592a32c17773c1fce329@epcas2p3.samsung.com>
- <20200420233558.11879-1-hyunki00.koo@samsung.com>
- <000a01d619d0$ee167730$ca436590$@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000a01d619d0$ee167730$ca436590$@samsung.com>
+        Fri, 24 Apr 2020 01:38:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725823AbgDXFij (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:38:39 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E132C09B045
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 22:38:39 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id z8so9467813qki.13
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 22:38:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=fleKWJiYiR5vKTf1/KbKvBmLV3KIF/zKJR1BUiNMI5U=;
+        b=iUmsqjZgO6njBhyLec4kM76hC2BmGpCFZ/DJuY4A7zmGD5TMPESZW68+W3nxzv7Vhf
+         u6cHLvaX3p1Gh+9lhbca/bl66KMMhSXYjNCl7tW0+QSvzhh1f8Ba4nkDc7Cs0rshTLog
+         OKzG+qkupZBN/hv61NjrkS1GNk2XPoa05QI+e/hR6K48Kndomf08SMXLz0cIA/Sp+fMO
+         ke/YhFJWdPXYp638TmKQf7oiM/m9gOpTDoLU4GB3d5FzS41l3fhz4P7483FPz+fIQzsS
+         qGwoN5qANwFgxRgkmuM/Y2C1Fl8vOnWJG3PKrtgCn4OItUNYeftvXEntyIERBY5L3+q9
+         c0mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=fleKWJiYiR5vKTf1/KbKvBmLV3KIF/zKJR1BUiNMI5U=;
+        b=XS8s52j0E8G7i2czByuKqd8X/MAQSwBUJRGp2TK89l+HjWEtneMM0ztVPghGnNIQ8V
+         e9uCH0PHnixcjKzuqbNCMfvmH3cWXi2SupXNn9ISC35L1aBU1pa/C7Ay+t1Kwl4G/0Hd
+         JtEw39F/WkyPgoYv4HCRYsmttkEPTa3D2x9bjDn7yDfENwzTlR3e0HFm+3tpJVSnneym
+         DvKe9sTxxuukm4meewUdLx+3U+4glC6oS3vVtU93zXrb1gtgwg3jpYzBofk/iTyXVkEy
+         9q0yRh0gJqv4iT/lz/bN08HmO74xERVQxR593F5hWODrNNVvu01tcYNlf+IfZaPu/jSU
+         U/hA==
+X-Gm-Message-State: AGi0PuYeZw6pYyNqPwvGOmeiF65cGsrVvEs46FlFmwVuDbnrqaxNp58F
+        H4y5zoYvhf99/16KmZq9Esb6akFsYM9w
+X-Google-Smtp-Source: APiQypIIQlkCaX6bJWhHG4kmnfMkCHlcuy1qfAA357aSBf5DIUde8BulJxDuqS/1DEgn1C/NV2X5FLliT9xg
+X-Received: by 2002:a05:620a:118b:: with SMTP id b11mr7521950qkk.82.1587706718313;
+ Thu, 23 Apr 2020 22:38:38 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 01:38:18 -0400
+Message-Id: <20200424053819.220276-1-jnchase@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+Subject: [PATCH 1/2] dt-bindings: Add ch7322 as a trivial device
+From:   Jeff Chase <jnchase@google.com>
+To:     linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, Jeff Chase <jnchase@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 09:40:18AM +0900, Hyunki Koo wrote:
-> On Sat, April 21, 2020 at 08:36:00 AM +0900, Hyunki Koo wrote:
-> > 
-> > Change in v8:
-> > - spit into 3 patch
-> >   [1/3] create the new functions with no functional change to the code as-
-> > is.
-> >   Replace rd_regb/wr_regb with rd_reg/wr_reg for general usage.
-> >   [2/3] add the new binding reg-io-width in device tree
-> >   [3/3] add the new funtinality of rd_reg / wr_reg and wr_reg_barrier
-> >         to support 32-bit access for the TX/RX hold registers UTXH and URXH.
-> > 
-> > Change in v7:
-> > - [1/2] correct build error on running 'make dt_binding_check'
-> > Documentation/devicetree/bindings/serial/samsung_uart.yaml:  mapping
-> > values are not allowed in this context
-> >   in "<unicode string>", line 36, column 13
-> >   Documentation/devicetree/bindings/Makefile:12: recipe for target
-> > 'Documentation/devicetree/bindings/serial/samsung_uart.example.dts'
-> > failed
-> >   make[1]: ***
-> > [Documentation/devicetree/bindings/serial/samsung_uart.example.dts]
-> > Error 1
-> >   make[1]: *** Waiting for unfinished jobs....
-> >   Makefile:1262: recipe for target 'dt_binding_check' failed
-> >   make: *** [dt_binding_check] Error 2
-> > - [2/2] add commit message of reviewed by and tested by in commit
-> > message
-> >   Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >   Tested on Odroid HC1 (Exynos5422):
-> >   Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > Change in v6:
-> > - [2/2] clean description of reg-io-width
-> >   allOf is not needed. Just enum [1, 2] is enough.
-> > 
-> > Changes in v5:
-> > - spit into 2 patch, newly added patch for dt-binding
-> >   [1/2] newly added dt-binding and go as first patch in this series.
-> >   [2/2] go as second patch in this series.
-> > 
-> > Changes in v4:
-> > - correct variable types and change misleading function name
-> > 
-> > Changes in v3:
-> > - line 2031: remove redundant init value  for ourport->port.iotype
-> > 
-> > Changes in v2:
-> > - line 954 : change rd_regl to rd_reg in for backward compatibility.
-> > - line 2031: Add init value for ourport->port.iotype  to UPIO_MEM
-> > 
-> > 
-> > Hyunki Koo (3):
-> >   serial: samsung: Replace rd_regb/wr_regb with rd_reg/wr_reg
-> >   dt-bindings: serial: Add reg-io-width compatible
-> >   tty: samsung_tty: 32-bit access for TX/RX hold registers
-> > 
-> >  .../devicetree/bindings/serial/samsung_uart.yaml   |  8 +++
-> >  drivers/tty/serial/samsung_tty.c                   | 76 ++++++++++++++++++---
-> > -
-> >  2 files changed, 72 insertions(+), 12 deletions(-)
-> > 
-> > --
-> > 2.15.0.rc1
-> 
-> Hi Greg KH
-> 
-> Can I ask is this series patch are acceptable or not?
-> Do you think, I have to do any further action  for this patch?
-> 
+The ch7322 is a Chrontel CEC controller.
 
-It's been 3 days, give us a chance please...
+Signed-off-by: Jeff Chase <jnchase@google.com>
+---
+ Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 2 files changed, 4 insertions(+)
 
-Also, I need to wait for the dt patch to be reviewed first before I can
-take any of this, so that's up to the DT maintainers.
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 4165352a590a..ec2ddc6cdf9a 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -48,6 +48,8 @@ properties:
+           - capella,cm32181
+             # CM3232: Ambient Light Sensor
+           - capella,cm3232
++            # CH7322: HDMI-CEC Controller
++          - chrontel,ch7322
+             # High-Precision Digital Thermometer
+           - dallas,ds1631
+             # Total-Elapsed-Time Recorder with Alarm
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d3891386d671..7794ffccd325 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -187,6 +187,8 @@ patternProperties:
+     description: ChipOne
+   "^chipspark,.*":
+     description: ChipSPARK
++  "^chrontel,.*":
++    description: Chrontel, Inc.
+   "^chrp,.*":
+     description: Common Hardware Reference Platform
+   "^chunghwa,.*":
+-- 
+2.26.2.303.gf8c07b1a785-goog
 
-thanks,
-
-greg k-h
