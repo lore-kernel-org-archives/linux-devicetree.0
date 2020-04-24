@@ -8,69 +8,68 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981E3C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 18:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AB3C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 18:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A97206A1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 18:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D516206A1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 18:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfBwZ6Y8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u84fygdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgDXSQr (ORCPT
+        id S1727022AbgDXSVm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:16:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51240 "EHLO
+        Fri, 24 Apr 2020 14:21:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727031AbgDXSQq (ORCPT
+        by vger.kernel.org with ESMTP id S1726793AbgDXSVl (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:16:46 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2639EC09B048;
-        Fri, 24 Apr 2020 11:16:45 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k13so12052731wrw.7;
-        Fri, 24 Apr 2020 11:16:45 -0700 (PDT)
+        Fri, 24 Apr 2020 14:21:41 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A62FC09B048;
+        Fri, 24 Apr 2020 11:21:41 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id e26so11609664wmk.5;
+        Fri, 24 Apr 2020 11:21:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ieWnO8DComqla3yHOcWNlGDT1t9CTFtocezocte3FwY=;
-        b=JfBwZ6Y8cWCcahCa59GldWU93zzWnt8l14DjiUJIwHvNELNGgIXOEWkcg8GJtAg0KE
-         3ggAZEdzrMcnAbE03Kj/AZdCVqfnUbo4lCQESa9FJGpIOW94m2oLd2yIyrm6k1hZIzcG
-         k7lDOi/JcF8r4Eu4imA6Z6nciBGRXP8bqF0bcm2UNkMMMZqOTQY3XMu0Lc9t1+p1HTO4
-         4WPNvvdUo4hE4CCqAJowHZtTuTtwV8KzL/03aYqGHozoUaqoO+NBRtcRvIYdb6ebgqig
-         pJGUhv/oammk8nJpFd8f5zBcKqyXjKp/pK3dyrlFDxIt/b8JbvHi2Am66usvwyTBuOBe
-         fD8w==
+        bh=rAYQCmL6IU2xY3DJLIY0s7M6/A1t7zEK7ce+EUTohJo=;
+        b=u84fygdIrsBH86qD5SGKghp8DXnyg7qSkbkmLvLVWlwrhonzzdwSW1AYHFK2yC/R69
+         flipLGa2VPJBxThDXoOGxXceU68RpDespacc5xLSVhQuQrggJfatmOb3NS8uqhOYjjHK
+         Ik8EwKPUQ+yevL2z43tW5Ns1QKy33nWsAPcXkosdOoJ1sCHRInDMfUemRBoUoanJvqBh
+         MzVSsQqJzwGEADQ9ezgfUJjXTp6RnkXL7CM++U8+PpgAAsAglMXPgYMYN/0ZBYagHU+q
+         CNlrZmZ/7cdf1e1QeBs2xHdoRHYW3ugIgJX1sUCWfLG2LeiHDRppV19l8Q7QBIadWLe6
+         Wh9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ieWnO8DComqla3yHOcWNlGDT1t9CTFtocezocte3FwY=;
-        b=J7QxNJ4VdYGXF6mxyqjc0iLmWkv6LZFHGUqGJPgbuzUrYQ7vKkYTkiHv31OYw21udF
-         ZQGbrVbjKfVBHHXbeUp4TG7Aaq5FJdDlNZKnD/TOGMQzh5xGA2md/wOVw8IaN6lcGPjA
-         AUQe2B+ERhQ7VxPGaDiZq+gsUZxlGJFFJYRKoLYmqLMK1bwAQxIkuzqBZQf+ZFxcXkGh
-         nd6LlXea0r859Hjzkq3dnzIlohgpMTKypNCFxa2SIPnc2zAoM2lZQ3i5FMcxRKiNWK8u
-         RKHYP2lx4woNyz17pV6wo0ceMMv7PTJZyb3hzmH9aOOH78Gv+BtcXehxsX8EqfVm7XZM
-         +g+w==
-X-Gm-Message-State: AGi0PuYdkjVMkW6kIupIEr/hjae1nvsk4dSzmfMlp1S0RfA7t9m9Rqta
-        yFR+XHB9pY734ZEcQsM/wew=
-X-Google-Smtp-Source: APiQypIKSmT1g/OvWZvryuhk2ZfBiuMTXa6LcUv3vESta4ZnJL2cNrAoW7cKm4HTnxlFjfLG4W8Qsw==
-X-Received: by 2002:a5d:69c9:: with SMTP id s9mr12531518wrw.307.1587752203918;
-        Fri, 24 Apr 2020 11:16:43 -0700 (PDT)
+        bh=rAYQCmL6IU2xY3DJLIY0s7M6/A1t7zEK7ce+EUTohJo=;
+        b=YCPgUwlUsWjaiY+p5QKJPskmClKU2X5uZcESYtNYMHu+WTIu0Wong47qSibDYfrcww
+         VeYXc+OHBJM0JnRbQJGksyjFJ7b9ZzPl35as9smIMEw+tQ5FbDEVHjrAXr0wdNa3mSyX
+         qT1psPFcMYH7Py1FhzdS8ft1F3zqdx2G9MTtmSf5SQWmpeMNQMlaXz+DxSAe3AP4T1R5
+         SchFJXwcJqTWh10jCec1jriACU5X9aoCO//kpJ0RrXwfPpV6H3AK9u5jAPMJFJFbyl7X
+         ukIPHT6qodxhadTM8FVnOrY2qa/fCnTnAMen3Ee+WT7ZMQh4AZf9RBaXPtKrS0rwTWvB
+         yQjQ==
+X-Gm-Message-State: AGi0PuZYpxOwuu3wfblgga3RGhil+DCMxatOKcP13daHKMz5GeJgb4Ol
+        HveXBtua+33nIi7L+YWPhpHTUiunWeKdmA==
+X-Google-Smtp-Source: APiQypLUjLMhouWE33cxL9vt13Udxx8+F7+VXu6HcQFVF3uBl85CsetfpYO5KrT/E0cXXHX9BYHFwA==
+X-Received: by 2002:a1c:5683:: with SMTP id k125mr11193868wmb.17.1587752500199;
+        Fri, 24 Apr 2020 11:21:40 -0700 (PDT)
 Received: from localhost.localdomain ([2a04:2413:8140:d480:18da:1e39:90cf:b88b])
-        by smtp.gmail.com with ESMTPSA id c190sm3913426wme.4.2020.04.24.11.16.42
+        by smtp.gmail.com with ESMTPSA id f8sm9338788wrm.14.2020.04.24.11.21.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 11:16:43 -0700 (PDT)
+        Fri, 24 Apr 2020 11:21:39 -0700 (PDT)
 From:   Adrian Pop <pop.adrian61@gmail.com>
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Adrian Pop <pop.adrian61@gmail.com>
-Subject: [PATCH 1/2] arm: dt-bindings: mfd: stm32f-rcc: Add missing DSI clock
-Date:   Fri, 24 Apr 2020 21:16:42 +0300
-Message-Id: <20200424181642.32084-1-pop.adrian61@gmail.com>
+Cc:     linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Adrian Pop <pop.adrian61@gmail.com>
+Subject: [PATCH 2/2] arm: dts: stm32f769-disco: Enable MIPI DSI display support
+Date:   Fri, 24 Apr 2020 21:21:39 +0300
+Message-Id: <20200424182139.32190-1-pop.adrian61@gmail.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,25 +78,124 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add missing clock.
+STM32f769-disco features a 4" MIPI DSI display: add support for it.
 
 Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
 ---
- include/dt-bindings/mfd/stm32f7-rcc.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/stm32f746.dtsi      | 34 ++++++++++++++++++
+ arch/arm/boot/dts/stm32f769-disco.dts | 50 +++++++++++++++++++++++++++
+ 2 files changed, 84 insertions(+)
 
-diff --git a/include/dt-bindings/mfd/stm32f7-rcc.h b/include/dt-bindings/mfd/stm32f7-rcc.h
-index a90f3613c584..ba5cb7456ee4 100644
---- a/include/dt-bindings/mfd/stm32f7-rcc.h
-+++ b/include/dt-bindings/mfd/stm32f7-rcc.h
-@@ -107,6 +107,7 @@
- #define STM32F7_RCC_APB2_SAI1		22
- #define STM32F7_RCC_APB2_SAI2		23
- #define STM32F7_RCC_APB2_LTDC		26
-+#define STM32F7_RCC_APB2_DSI		27
+diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
+index 93c063796780..202bb6edc9f1 100644
+--- a/arch/arm/boot/dts/stm32f746.dtsi
++++ b/arch/arm/boot/dts/stm32f746.dtsi
+@@ -48,6 +48,19 @@ / {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
  
- #define STM32F7_APB2_RESET(bit)	(STM32F7_RCC_APB2_##bit + (0x24 * 8))
- #define STM32F7_APB2_CLOCK(bit)	(STM32F7_RCC_APB2_##bit + 0xA0)
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		linux,dma {
++			compatible = "shared-dma-pool";
++			linux,dma-default;
++			no-map;
++			size = <0x10F000>;
++		};
++	};
++
+ 	clocks {
+ 		clk_hse: clk-hse {
+ 			#clock-cells = <0>;
+@@ -75,6 +88,27 @@ clk_i2s_ckin: clk-i2s-ckin {
+ 	};
+ 
+ 	soc {
++		ltdc: display-controller@40016800 {
++			compatible = "st,stm32-ltdc";
++			reg = <0x40016800 0x200>;
++			interrupts = <88>, <89>;
++			resets = <&rcc STM32F7_APB2_RESET(LTDC)>;
++			clocks = <&rcc 1 CLK_LCD>;
++			clock-names = "lcd";
++			status = "disabled";
++		};
++
++		dsi: dsi@40016c00 {
++			compatible = "st,stm32-dsi";
++			reg = <0x40016c00 0x800>;
++			interrupts = <98>;
++			clocks = <&rcc 1 CLK_F769_DSI>, <&clk_hse>;
++			clock-names = "pclk", "ref";
++			resets = <&rcc STM32F7_APB2_RESET(DSI)>;
++			reset-names = "apb";
++			status = "disabled";
++		};
++
+ 		timer2: timer@40000000 {
+ 			compatible = "st,stm32-timer";
+ 			reg = <0x40000000 0x400>;
+diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
+index 1626e00bb2cb..30ebbc193e82 100644
+--- a/arch/arm/boot/dts/stm32f769-disco.dts
++++ b/arch/arm/boot/dts/stm32f769-disco.dts
+@@ -153,3 +153,53 @@ &usbotg_hs {
+ 	pinctrl-names = "default";
+ 	status = "okay";
+ };
++
++&dsi {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			dsi_in: endpoint {
++				remote-endpoint = <&ltdc_out_dsi>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			dsi_out: endpoint {
++				remote-endpoint = <&dsi_in_panel>;
++			};
++		};
++
++	};
++
++	panel: panel {
++		compatible = "orisetech,otm8009a";
++		reg = <0>; /* dsi virtual channel (0..3) */
++		reset-gpios = <&gpioj 15 GPIO_ACTIVE_LOW>;
++		status = "okay";
++
++		port {
++			dsi_in_panel: endpoint {
++				remote-endpoint = <&dsi_out>;
++			};
++		};
++	};
++};
++
++&ltdc {
++	dma-ranges;
++	status = "okay";
++
++	port {
++		ltdc_out_dsi: endpoint {
++			remote-endpoint = <&dsi_in>;
++		};
++	};
++};
 -- 
 2.26.2
 
