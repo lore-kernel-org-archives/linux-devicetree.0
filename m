@@ -7,165 +7,141 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16639C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 10:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86513C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 10:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E50EE2084D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 10:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F2D2084D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 10:53:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VmBbirVE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TqnzzbkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgDXKvB (ORCPT
+        id S1726885AbgDXKxY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:51:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36536 "EHLO
+        Fri, 24 Apr 2020 06:53:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgDXKu7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 06:50:59 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584BCC09B046
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 03:50:57 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id x4so9949809wmj.1
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 03:50:57 -0700 (PDT)
+        with ESMTP id S1726839AbgDXKxX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 06:53:23 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7AB6C09B048
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 03:53:22 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s10so10260372wrr.0
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 03:53:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=yf9tP3sNXUsAB/rOddBDtkpZustuUZCD7ZROOWh0ox4=;
-        b=VmBbirVEjOgVcz1iLrCDuO5VLXN1951W8re/zO0nzgFYuwEMxoMSE1+bJi8VD1ugrt
-         k100zGpG94719MgmRICqnQneLX0yv58hh5Eu4UMybV0Ju088At0DHXnNLHBrNZ3wd4ir
-         ZD7sb8FxKGceNRllh8lWxRQJM921TSzHLF/sh9jCuOzooAWoNv9Y8c0eNgG9iXPQJcHo
-         UI6hKLFOmog5ICyxUJVBFWjTf1rn4Ep1qEVB2jzkZbhzpnSyDGeM4ygUy/LNdLZriX7H
-         9r9BKf31beIDyCBTLhxqlxcPdXdY26KNmj2nRe+DueEx2j8TvXDVpgjU/HC402cddZWP
-         tV6g==
+        bh=ANVFxj0a3PZxuvcR/cQpqDlmHqLVaxnBkwvzY2D+yRQ=;
+        b=TqnzzbkLwgVbmsD15PJo6vPGbNOmNr2/mJjPgL9eevI2ZbgbaLKHqzcjjpusU51Doh
+         NVKcjMg+bWBhUhNbQDdkbqj9ERt0ChWSN01vAzVDSi9CmtdIQtsX8VUHEB3/jNNRSerX
+         y9U+/g8CZ27zw3gjVVpl4mV24Jl5Fr5r/scKO/zgNbjmn48lfTIykG9/YnSj4IzlpQ7x
+         9sCMoDp9Q+frjZdGucx9E0GLUTjBwivWtbkXOEqoXAzz/EXNwZawwuny5QWFYB/4wCko
+         MgQOaXyD5AxOimhaN8V4FFfg8BCImvzBgwiESTze/+9yXbeRgPdupE3wfoBu6Sl2sbkX
+         PAyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=yf9tP3sNXUsAB/rOddBDtkpZustuUZCD7ZROOWh0ox4=;
-        b=U5LfVb+NrTgv7Tftt/mLjRcNjSIvpAIbGMaUcLIp1LCO6eAU4fszbbCFcAfwzqRyIx
-         qr+5w2VU16t4A5uNBKJxqlj7ByMjvnWONjRS6ET2GxFtgZYaa6z5Dx14DN9cN5qcUBNF
-         v3LblKJjIvwkWdJOJQUHigVjrsdAGGHfe7oO3vgb0l1siwLvWXqUiK7pkomDGc4Mg0PS
-         VZ3ACekW8H6UFlsjGeiNgpVlpeFlMJonqt01nkp2dUdpSue/iuJJVjXAbpfsVy4J3XD4
-         XRljOHXmADh6iBh5ppWsK/nFldBjtzCukWznMmq4nvFsPKKZsX1so7ZrQdj9cOx6Izka
-         nzlw==
-X-Gm-Message-State: AGi0Puaql+r1F6pxnDK+nVuLzWhY5se7Y1thnqdsYPLtcXefFYaYjyQk
-        Rif+zWjc7SLx4WLBZI2jfWiSftfTTD4=
-X-Google-Smtp-Source: APiQypIA21ZhRcvVCjZ27PG/4HY/Hpz6nTlXLW+I8YNTy6MMWXH+2KzYqqh4CqqJzSqriZ3BH6X/kw==
-X-Received: by 2002:a1c:7d90:: with SMTP id y138mr10044348wmc.121.1587725455891;
-        Fri, 24 Apr 2020 03:50:55 -0700 (PDT)
+        bh=ANVFxj0a3PZxuvcR/cQpqDlmHqLVaxnBkwvzY2D+yRQ=;
+        b=Lfcp5UFjIL4ViGCiznszH9iBsJjeZVTBkwzax+VVZHBqqbUjSxa7ex5NhvKdxdJ8FR
+         e2CKFImWDkZk+ySMqRxUCAXNaK75hgs7LFosmeQWYG21RrJ+TGMKQppLKc/cZ9C7Nflf
+         FOlBTpKVf6dYhhwmPUpUyr/McQudzytZSUFPSMdfraQZ8sHkAkgmjpXN8KgkE1aoCsC9
+         kay5z/kNHuvomP4qVdhISoP8me4ZBCe9k+HY0Gfp9V/cBh80HwasspjSsx0Y14YzAScp
+         zBirgBQf/tSfjbq2ehXZ7Y2xhTjt9BofDeM9YD3oRyhJuVPLqueo0RANoANshM4gfHJU
+         C06A==
+X-Gm-Message-State: AGi0PuZ67elSxaxVFVpvZqdv1g10R3NLmt4w6Diasj8SxkNhNv4nwgmj
+        rHvZAsX7YD2dQ8GzBiGQOe/ylQ==
+X-Google-Smtp-Source: APiQypKP9clOM1Dthyy7Ek8Ij90zL+Giy22gsKlvN3INV/Bf1kE9Y4mK9kb1o6kuHIq3Nyvws+waXA==
+X-Received: by 2002:adf:cd12:: with SMTP id w18mr10512940wrm.177.1587725601416;
+        Fri, 24 Apr 2020 03:53:21 -0700 (PDT)
 Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id o18sm7595925wrp.23.2020.04.24.03.50.54
+        by smtp.gmail.com with ESMTPSA id c25sm2218532wmb.44.2020.04.24.03.53.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 03:50:55 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 11:50:53 +0100
+        Fri, 24 Apr 2020 03:53:20 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 11:53:19 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     Christophe Kerello <christophe.kerello@st.com>,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, tony@atomide.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
- driver
-Message-ID: <20200424105053.GC8414@dell>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
- <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
- <20200424074517.GN3612@dell>
- <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
+Message-ID: <20200424105319.GD8414@dell>
+References: <20200415162030.16414-1-sravanhome@gmail.com>
+ <20200415162030.16414-3-sravanhome@gmail.com>
+ <20200424071822.GM3612@dell>
+ <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
+ <20200424093720.GA3542@dell>
+ <864eb6ad-a605-c0a0-c3e7-23c0c70f5ede@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
+In-Reply-To: <864eb6ad-a605-c0a0-c3e7-23c0c70f5ede@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Apr 2020, Marek Vasut wrote:
+On Fri, 24 Apr 2020, saravanan sekar wrote:
 
-> On 4/24/20 9:45 AM, Lee Jones wrote:
-> > On Wed, 15 Apr 2020, Christophe Kerello wrote:
-> > 
-> >> The driver adds the support for the STMicroelectronics FMC2 controller
-> >> found on STM32MP SOCs.
-> >>
-> >> The FMC2 functional block makes the interface with: synchronous and
-> >> asynchronous static memories (such as PSNOR, PSRAM or other
-> >> memory-mapped peripherals) and NAND flash memories.
-> >>
-> >> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >> ---
-> >> Changes in v2:
-> >>  - remove ops from stm32_fmc2 structure
-> >>  - add 2 APIs to manage FMC2 enable/disable
-> >>  - add 2 APIs to manage FMC2 NWAIT shared signal
-> >>
-> >>  drivers/mfd/Kconfig            |  12 +++
-> >>  drivers/mfd/Makefile           |   1 +
-> >>  drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
-> >>  include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
-> >>  4 files changed, 374 insertions(+)
-> >>  create mode 100644 drivers/mfd/stm32-fmc2.c
-> >>  create mode 100644 include/linux/mfd/stm32-fmc2.h
-> >>
-> >> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> >> index 2b20329..5260582 100644
-> >> --- a/drivers/mfd/Kconfig
-> >> +++ b/drivers/mfd/Kconfig
-> >> @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
-> >>  	  Also included is a Coulomb counter, a real-time clock (RTC), and
-> >>  	  a 32.768 kHz clock gate.
-> >>  
-> >> +config MFD_STM32_FMC2
-> >> +	tristate "Support for FMC2 controllers on STM32MP SoCs"
-> >> +	depends on MACH_STM32MP157 || COMPILE_TEST
-> >> +	select MFD_CORE
-> >> +	select REGMAP
-> >> +	select REGMAP_MMIO
-> >> +	help
-> >> +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
-> >> +	  Bus Interface controller and FMC2 NAND flash controller. This driver
-> >> +	  provides core support for the STM32 FMC2 controllers, in order to use
-> >> +	  the actual functionality of the device other drivers must be enabled.
-> > 
-> > Not sure how many times I have to say this before people stop
-> > attempting to pass these kinds of relationships off as MFDs:
-> > 
-> > A memory device and its bus is not an MFD.  In a similar vain to the
-> > thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
-> > either.
-> > 
-> > Please find another way to associate your device with its bus.
+> Hi Lee,
 > 
-> This FMC2 is however an IP which can either operate external devices
-> (like ethernet chip on this parallel bus) or external flashes (like NOR
-> and NAND chips).
+> On 24/04/20 11:37 am, Lee Jones wrote:
+> > On Fri, 24 Apr 2020, saravanan sekar wrote:
+> > 
+> > > Hi Lee,
+> > > 
+> > > On 24/04/20 9:18 am, Lee Jones wrote:
+> > > > On Wed, 15 Apr 2020, Saravanan Sekar wrote:
+> > > > 
+> > > > > mp2629 is a highly-integrated switching-mode battery charge management
+> > > > > device for single-cell Li-ion or Li-polymer battery.
+> > > > > 
+> > > > > Add MFD core enables chip access for ADC driver for battery readings,
+> > > > > and a power supply battery-charger driver
+> > > > > 
+> > > > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > > > ---
+> > > > >    drivers/mfd/Kconfig        |  9 ++++
+> > > > >    drivers/mfd/Makefile       |  2 +
+> > > > >    drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
+> > > > >    include/linux/mfd/mp2629.h | 19 +++++++++
+> > > > >    4 files changed, 116 insertions(+)
+> > > > >    create mode 100644 drivers/mfd/mp2629.c
+> > > > >    create mode 100644 include/linux/mfd/mp2629.h
+> > > > How is this driver registered?
+> > > > 
+> > > > Looks like it has device tree support.  Is there another way?
+> > > Yes, only using device tree
+> > Then how about using 'simple-mfd' and 'syscon'?
+> > 
+> > Then you can omit this driver completely.
+> 
+> The exception is to support for non device tree platform as well, but I have
+> tested only for ARM device tree platform.
 
-I'm sure that it *can*.  Although that's not its main purpose.  The
-clue is in the nomenclature ("Flexible *Memory* Controller").  Nor is
-it how the device is being used in this submission:
+Is that a reality though?
 
-  "The FMC2 functional block makes the interface with: synchronous and
-   asynchronous static memories (such as PSNOR, PSRAM or other
-   memory-mapped peripherals) and NAND flash memories."
+How else do you see this realistically being registered?
 
-As I mentioned, this is just another memory device and its bus.
-
-> Can you provide a suggestion how this should be handled, if not as MFD?
-> It seems to me, that this is a Multi-Function Device .
-
-Simply move it into the MTD or Memory subsystems and set up the
-dependencies via Kconfig.
-
-> If this discussion is a recurring topic, is there some documentation
-> which explains how such devices should be handled ?
-
-Not that I'm aware of.
+> > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > > > index 3c547ed575e6..85be799795aa 100644
+> > > > > --- a/drivers/mfd/Kconfig
+> > > > > +++ b/drivers/mfd/Kconfig
+> > > > > @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
+> > > > >    	help
+> > > > >    	  Select this if your MC13xxx is connected via an I2C bus.
+> > > > > +config MFD_MP2629
+> > > > > +	tristate "Monolithic power system MP2629 ADC and Battery charger"
+> > > > > +	depends on I2C
+> > > > > +	select REGMAP_I2C
+> > > > > +	help
+> > > > > +	  Select this option to enable support for monolithic power system
+> > > > > +	  battery charger. This provides ADC, thermal, battery charger power
+> > > > > +	  management functions on the systems.
 
 -- 
 Lee Jones [李琼斯]
