@@ -2,141 +2,88 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2355C2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 07:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E73C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 07:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA65D21655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 07:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E835420704
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 07:46:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+DsWnfI"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mBIGmXaG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgDXHpW (ORCPT
+        id S1726056AbgDXHqV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 03:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgDXHpV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 03:45:21 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1379C09B046
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 00:45:21 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id s10so9581830wrr.0
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 00:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=SG53LOGVaYSrSbMxtiTrlXAzhLKqp75bh+EmCNg5dN0=;
-        b=a+DsWnfI8BxEYpw24cMf1ubciUzpfQylo8DC8e2EEMjIGJAT5XO0tgJRc4zm/7UKFj
-         yP+UatvpM1GtMmXPpD5t6YQ4MasDgMtoYBWExtSpG/3qslXrxpKJuKOxPK6aDwnRbbNW
-         6yJkklIByWlX/orJ1QKHiLb1RV9hXPUxXRysqlf+BZvjvB7SyZ++FH1taB7SxqUTSMKd
-         Mj7oXh41AlY1haAGy3/VSB+UViganSyx20+MVCqJlMMbYhZ1eBZnDu7arB/dsxjdJR9g
-         cMWMghusSfqfUS/ZTQ+cVhwDE8raguIokO5x2X3TnwoyGJPxoQ5N3TuXUvUMUuXGQXsL
-         2u6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=SG53LOGVaYSrSbMxtiTrlXAzhLKqp75bh+EmCNg5dN0=;
-        b=H3LHYLhr3CTktxuU5/B2nsKL4ziGHsEFcnjhpUIkASpjJFp7JNTV/fTmpYyAA1v6Zn
-         en3Iq+VN5KLjcwbvXvBZZm21+C4ZQkxDzEaWlKbuBXY4cVUaFniHQMlQgQq/1qwYXIO3
-         SDthlIRoUZk5RcvGYQNSatg29vH1xZfglJCZ24i8wngp7fssuJ0wlGCsst9zMTmLjpu/
-         IS/UQRIhc4of7mZaJQGZufj1eYH92L5gnyZivAwhI3Cu98XlNUumdE4q6PzxEu3CCpeu
-         omeum1NNGf+GgZGzdfy0QJCfIJRmFD79stHGla/3eN7DLiHnmzvCvuhTVDQNOWoebQM0
-         z79A==
-X-Gm-Message-State: AGi0PuaeJk/16+qm0o9w7pZNDPjOAl0spvXg+9RIWtzJepg74CC7AsZl
-        3sA+IpAICMfJjj+z1Sme9+2FJw==
-X-Google-Smtp-Source: APiQypJQnsAmYnrESuH25hDMC1DnFFclkWGp9gSfFlUxWpilxTxaT5ID13BjavkGNKAVWmlFxdLMmw==
-X-Received: by 2002:adf:82f5:: with SMTP id 108mr9200402wrc.43.1587714320260;
-        Fri, 24 Apr 2020 00:45:20 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id o3sm7034174wru.68.2020.04.24.00.45.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 00:45:18 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 08:45:17 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, tony@atomide.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org, marex@denx.de
-Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
- driver
-Message-ID: <20200424074517.GN3612@dell>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
- <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
+        Fri, 24 Apr 2020 03:46:21 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:47797 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726008AbgDXHqV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 03:46:21 -0400
+X-UUID: 42574fb4d7c640c6b37c4610ca4244c7-20200424
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=TGTl6pQNQgkA/N1LJ9tQCq0BeEV1GoiphNNPW0tMqhM=;
+        b=mBIGmXaGn7DNbs+CdEYFFVdoacHrZrzgN14Zdeq1MggFG2x3DSHhL22LnNtTFoLpd7rWxtqg5xLSJCZLYBVevakXumwRDDl3fwy3yk3ab5fmeX9Ht+fyE78558yfrGFBoNcTYsBHcHrGzmNc5TQNOR59qq/VamhsU+NDSpiYl6Y=;
+X-UUID: 42574fb4d7c640c6b37c4610ca4244c7-20200424
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 475130578; Fri, 24 Apr 2020 15:46:18 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 24 Apr 2020 15:46:15 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 24 Apr 2020 15:46:15 +0800
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <hsinyi@chromium.org>, <linux-pm@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Michael Kao <michael.kao@mediatek.com>
+Subject: [PATCH] arm64: dts: mt8173: fix cooling device range
+Date:   Fri, 24 Apr 2020 15:46:15 +0800
+Message-ID: <20200424074615.2835-1-michael.kao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Apr 2020, Christophe Kerello wrote:
+V2hlbiB0aGVybWFsIHJlYWNoZXMgdGFyZ2V0IHRlbXBlcmF0dXJlLGl0IHdvdWxkIGJlIHBpbm5l
+ZCB0byBzdGF0ZSAwDQoobWF4IGZyZXF1ZW5jeSBhbmQgcG93ZXIpLg0KRml4IHRoZSB0aHJvdHRs
+aW5nIHJhbmdlIHRvIG5vIGxpbWl0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBIc2luLVlpIFdhbmcgPGhz
+aW55aUBjaHJvbWl1bS5vcmc+DQpTaWduZWQtb2ZmLWJ5OiBNaWNoYWVsIEthbyA8bWljaGFlbC5r
+YW9AbWVkaWF0ZWsuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgx
+NzMuZHRzaSB8IDEyICsrKysrKysrLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMo
+KyksIDQgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210ODE3My5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMu
+ZHRzaQ0KaW5kZXggY2NiOGU4OGE2MGM1Li4xMWIxYmQ1NWJhOWIgMTAwNjQ0DQotLS0gYS9hcmNo
+L2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My5kdHNpDQorKysgYi9hcmNoL2FybTY0L2Jv
+b3QvZHRzL21lZGlhdGVrL210ODE3My5kdHNpDQpAQCAtMjk0LDE0ICsyOTQsMTggQEANCiAJCQlj
+b29saW5nLW1hcHMgew0KIAkJCQltYXBAMCB7DQogCQkJCQl0cmlwID0gPCZ0YXJnZXQ+Ow0KLQkJ
+CQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTAgMCAwPiwNCi0JCQkJCQkJIDwmY3B1MSAwIDA+Ow0K
+KwkJCQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTAgVEhFUk1BTF9OT19MSU1JVA0KKwkJCQkJCQkg
+IFRIRVJNQUxfTk9fTElNSVQ+LA0KKwkJCQkJCQkgPCZjcHUxIFRIRVJNQUxfTk9fTElNSVQNCisJ
+CQkJCQkJICBUSEVSTUFMX05PX0xJTUlUPjsNCiAJCQkJCWNvbnRyaWJ1dGlvbiA9IDwzMDcyPjsN
+CiAJCQkJfTsNCiAJCQkJbWFwQDEgew0KIAkJCQkJdHJpcCA9IDwmdGFyZ2V0PjsNCi0JCQkJCWNv
+b2xpbmctZGV2aWNlID0gPCZjcHUyIDAgMD4sDQotCQkJCQkJCSA8JmNwdTMgMCAwPjsNCisJCQkJ
+CWNvb2xpbmctZGV2aWNlID0gPCZjcHUyIFRIRVJNQUxfTk9fTElNSVQNCisJCQkJCQkJICBUSEVS
+TUFMX05PX0xJTUlUPiwNCisJCQkJCQkJIDwmY3B1MyBUSEVSTUFMX05PX0xJTUlUDQorCQkJCQkJ
+CSAgVEhFUk1BTF9OT19MSU1JVD47DQogCQkJCQljb250cmlidXRpb24gPSA8MTAyND47DQogCQkJ
+CX07DQogCQkJfTsNCi0tIA0KMi4xOC4wDQo=
 
-> The driver adds the support for the STMicroelectronics FMC2 controller
-> found on STM32MP SOCs.
-> 
-> The FMC2 functional block makes the interface with: synchronous and
-> asynchronous static memories (such as PSNOR, PSRAM or other
-> memory-mapped peripherals) and NAND flash memories.
-> 
-> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> ---
-> Changes in v2:
->  - remove ops from stm32_fmc2 structure
->  - add 2 APIs to manage FMC2 enable/disable
->  - add 2 APIs to manage FMC2 NWAIT shared signal
-> 
->  drivers/mfd/Kconfig            |  12 +++
->  drivers/mfd/Makefile           |   1 +
->  drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
->  include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 374 insertions(+)
->  create mode 100644 drivers/mfd/stm32-fmc2.c
->  create mode 100644 include/linux/mfd/stm32-fmc2.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 2b20329..5260582 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
->  	  Also included is a Coulomb counter, a real-time clock (RTC), and
->  	  a 32.768 kHz clock gate.
->  
-> +config MFD_STM32_FMC2
-> +	tristate "Support for FMC2 controllers on STM32MP SoCs"
-> +	depends on MACH_STM32MP157 || COMPILE_TEST
-> +	select MFD_CORE
-> +	select REGMAP
-> +	select REGMAP_MMIO
-> +	help
-> +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
-> +	  Bus Interface controller and FMC2 NAND flash controller. This driver
-> +	  provides core support for the STM32 FMC2 controllers, in order to use
-> +	  the actual functionality of the device other drivers must be enabled.
-
-Not sure how many times I have to say this before people stop
-attempting to pass these kinds of relationships off as MFDs:
-
-A memory device and its bus is not an MFD.  In a similar vain to the
-thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
-either.
-
-Please find another way to associate your device with its bus.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
