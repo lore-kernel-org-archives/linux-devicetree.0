@@ -2,122 +2,126 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31116C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAF5C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE522084D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587738510;
-	bh=8SNgUrX8GwVarrY8Ebo9QfXjiJ1rvJ7gh0V24v+SvcA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FEhmhTUYwb5MFQPQlBCB3D+FIeds+uZpRnuoj0HpHoJhr87wGYiLwqdyY/2QipWwD
-	 pjLAPOnhgrwJTI79Lro3eeo5vIY6Bz4wq9j//d7LdgZGecFZkibQDrBKmbTNodPbAV
-	 T+wILdOGITFL9RSEKaU7/J/nxoV7/5Mp/43MYowI=
+	by mail.kernel.org (Postfix) with ESMTP id D26A320736
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgDXO23 (ORCPT
+        id S1727823AbgDXOfM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 10:28:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726848AbgDXO22 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 10:28:28 -0400
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A6322084D;
-        Fri, 24 Apr 2020 14:28:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587738507;
-        bh=8SNgUrX8GwVarrY8Ebo9QfXjiJ1rvJ7gh0V24v+SvcA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JR7m0hjwgKtKn5FIdX8lXcQcUCs3L0ZznrPTcW0oumHgoLDUqQGlEIeKDCDgpjblA
-         aKhMAPSxoEnteZvpAFRu5h2YCBbJvwg1I+9aMaDtfoSSQkjopoKkwjhqeqP4FK3reI
-         hHacNGbU3nWF28PwlPGluDYJ0+lWHFFhXGXjsI7s=
-Received: by mail-qk1-f176.google.com with SMTP id s63so10302931qke.4;
-        Fri, 24 Apr 2020 07:28:27 -0700 (PDT)
-X-Gm-Message-State: AGi0Pubc+5gJV+ga25zkRyuA/bb/QUxQJdMssIxmUo5ZTsLoPqoMr8Mr
-        fq27kByfQz4GR4hN3A4mil3cUJ63vb3Bz3Xu4Q==
-X-Google-Smtp-Source: APiQypJTEZlYNHfuUM4k/UahZKOMwF+cs9AnE0Zoa69Be6ozAPXgBe3pi4Ofgx9yKbwqA1iTRmFHU2IVDittvj/nesM=
-X-Received: by 2002:a37:4a85:: with SMTP id x127mr9364413qka.152.1587738506606;
- Fri, 24 Apr 2020 07:28:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
- <20200413164440.1138178-3-iskren.chernev@gmail.com> <20200420205501.GA6828@bogus>
- <f9b5d68d-536b-5806-573b-9dafb848f46f@gmail.com>
-In-Reply-To: <f9b5d68d-536b-5806-573b-9dafb848f46f@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 24 Apr 2020 09:28:12 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLZ8WrOmRDBuQ5DdAfib0KaCScYY_12qfkcoZa3_Z7_3Q@mail.gmail.com>
-Message-ID: <CAL_JsqLZ8WrOmRDBuQ5DdAfib0KaCScYY_12qfkcoZa3_Z7_3Q@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: regulator: Add document bindings for max77826
-To:     Iskren Chernev <iskren.chernev@gmail.com>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
+        Fri, 24 Apr 2020 10:35:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726946AbgDXOfM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 10:35:12 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D61C09B045;
+        Fri, 24 Apr 2020 07:35:11 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 5159B2A2DEF
+Message-ID: <ad0310d6618cd8cd8a88c0eaf27ae83432a61344.camel@collabora.com>
+Subject: Re: [PATCH v2 3/4] media: rockchip: rga: Add support for the PX30
+ compatible
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        justin.swartz@risingedge.co.za, Johan Jonker <jbx6244@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date:   Fri, 24 Apr 2020 11:34:59 -0300
+In-Reply-To: <20200424135552.GI610776@aptenodytes>
+References: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
+         <20200423200937.1039257-4-paul.kocialkowski@bootlin.com>
+         <cf31ae67792aedf60ee4cf8002861edadc305314.camel@collabora.com>
+         <20200424135552.GI610776@aptenodytes>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 7:59 AM Iskren Chernev <iskren.chernev@gmail.com> wrote:
->
->
-> On 4/20/20 11:55 PM, Rob Herring wrote:
-> > On Mon, Apr 13, 2020 at 07:44:39PM +0300, Iskren Chernev wrote:
-> >> +    patternProperties:
-> >> +      "^LDO([1-9]|1[0-5])$":
-> >> +        type: object
-> >> +        allOf:
-> >> +          - $ref: regulator.yaml#
-> >> +
-> >> +      "^BUCK|BUCKBOOST$":
-> >> +        type: object
-> >> +        allOf:
-> >> +          - $ref: regulator.yaml#
-> >> +
-> >> +      additionalProperties: false
-> >
-> > You are defining a property called 'additionalProperties'. This one
-> > should be dropped because additionalProperties doesn't work with a $ref.
-> >
->
-> I got the idea from mps,mpq7920.yaml. It has additionalProperties in the
-> exact same places that I do. Also bd718(28|37|47).yaml seem to use
-> additionalProperties inside patternProperties. Shall I modify it as well?
+On Fri, 2020-04-24 at 15:55 +0200, Paul Kocialkowski wrote:
+> Hi Ezequiel,
+> 
+> On Fri 24 Apr 20, 09:54, Ezequiel Garcia wrote:
+> > Hey Paul,
+> > 
+> > Thanks for the patch!
+> > 
+> > On Thu, 2020-04-23 at 22:09 +0200, Paul Kocialkowski wrote:
+> > > The PX30 SoC has a RGA block, so add the associated compatible to
+> > > support it.
+> > > 
+> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > ---
+> > >  drivers/media/platform/rockchip/rga/rga.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/drivers/media/platform/rockchip/rga/rga.c b/drivers/media/platform/rockchip/rga/rga.c
+> > > index 9d122429706e..4fb4615662b7 100644
+> > > --- a/drivers/media/platform/rockchip/rga/rga.c
+> > > +++ b/drivers/media/platform/rockchip/rga/rga.c
+> > > @@ -955,6 +955,9 @@ static const struct dev_pm_ops rga_pm = {
+> > >  };
+> > >  
+> > >  static const struct of_device_id rockchip_rga_match[] = {
+> > > +	{
+> > > +		.compatible = "rockchip,px30-rga",
+> > > +	},
+> > 
+> > Please note that if you don't have anything px30-specific,
+> > then you don't need the compatible in the driver.
+> > 
+> > You can have something like:
+> > 
+> > compatible = "rockchip,px30-rga", "rockchip,rk3288-rga"
+> > 
+> > so you need to add it to the bindings. See Justin Swartz
+> > recent patches for rk3228.
+> 
+> Thanks for the instruction!
+> 
+> I've been a bit confused about that because RK3399 has its own compatible
+> (without a 2nd rk3288 compatible) although there's nothing different with it
+> either. All of these rockchip platforms come with what they call "RGA2", that
+> seems to have no variation across platforms (downstream rockchip even has a
+> single compatible for it).
+> 
 
-Indeed. mps,mp5416.yaml too. I'll fix all of these and few
-non-regulator ones so I can get them into rc3.
+Yep, and that's an anti pattern, so you can expect to see that elsewhere.
 
-> I couldn't find the core schema for this yaml:
-> http://devicetree.org/meta-schemas/core.yaml (gives 404).  Is there a way
-> to verify the validity of the yaml?
+> Should we add the rk3288 compatible to the rk3399 dtsi? I guess we
+> can't remove it from the driver at this point, for backward compatibility
+> with previous dts (what a strange idea...).
+> 
 
-Running 'make dt_binding_check'. The url is just convention and while
-files could be there they aren't. They are all contained in the
-dtschema module[1].
+No, we don't necesarily need/have to do anything with rk3399,
+not sure if there's any gain at this point.
 
-However, in this case the meta-schema fails to check for this. It is
-technically valid as it is saying you can't have a DT property called
-'additionalProperties'. I've written a check now which should disallow
-listing any DT property names which are json-schema vocabulary. Once
-the failures get fixed I'll add it to the meta-schema.
+> > Down the road, if you find something specific for px30,
+> > you can make the driver aware. 
+> 
+> Makes sense, yes.
+> 
 
-> Also, this patch is already merged in linux-next. I guess I shall submit
-> a new patch with the fixes standalone?
-
-Yes, should be on top of this one.
+Cool.
 
 Thanks,
-Rob
+Ezequiel
 
-[1] https://github.com/devicetree-org/dt-schema
