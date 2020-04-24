@@ -2,126 +2,92 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B550C2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 08:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063E3C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 08:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1441E20774
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 08:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF632064C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 08:23:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="X/Rep5K8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgDXIHM (ORCPT
+        id S1726298AbgDXIXp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 04:07:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42824 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgDXIHM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 04:07:12 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m18so10934569otq.9;
-        Fri, 24 Apr 2020 01:07:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tzIFhflCUpW0vlwD+HN499aTW1TuNaMPbwNcI/YnbU8=;
-        b=sSX50AOTW8dUpnYE+Fuki2PZITmeLRO2PtouLIrv57IVcQz0IpnI4UWvD99MmD22yG
-         SAWGvNwBFbajaf2NXazrw13oSgONZZzVIEipsFpGgNCEMKxzkTXVsSOzRxdH+T18CD2M
-         1vJcwMfEmF0chAmi4ptV146nIChqbDtplA60esmVB1mD0hzAqP5ICjmEnoeJ2PWTrXHr
-         HOYEHExELPJ+QQ/ITljVEPHhGyAkTfNxfTFNFu1c+ZXcg2Ttb54u9+BuP35RbAL3a6fr
-         xJJFo19E6jBwuAgtvkjYUIKA5Kav+fmHqVhGY9bFQwzluIN5S6zKlOC/Wh5FzPx3sNHH
-         xs1Q==
-X-Gm-Message-State: AGi0PuZv9BDBONgIydasA6ozGJSt1zrtVm6AZp/b831RR8clkn6PwCGJ
-        r7LibU1b08ZCKqT/nlAXXLjnCDbRYkxNPYWz2AzHapEy
-X-Google-Smtp-Source: APiQypKQNbeN4mNtj3QtUc1MVDLrUbKP4GFG3yBb1TIc/Bv8Ot642D/RYCQ/hI/TESa0U15+fXMnRv0n9KoFV8tx1ZE=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr6433482otn.107.1587715630830;
- Fri, 24 Apr 2020 01:07:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200422101026.9220-1-erosca@de.adit-jv.com> <20200422101026.9220-2-erosca@de.adit-jv.com>
-In-Reply-To: <20200422101026.9220-2-erosca@de.adit-jv.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 24 Apr 2020 10:06:59 +0200
-Message-ID: <CAMuHMdXvrBHuBpVbJ=fUcRsQ9qk4Q3Lr13DeJjiHanN3f8K+1g@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: gpio-rcar: Add optional
- use-alternative-interrupt property
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        Yusuke Ashiduka <ashiduka@fujitsu.com>,
-        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
-        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
-        Yasushi Asano <yasano@jp.adit-jv.com>,
-        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Eugeniu Rosca <rosca.eugeniu@gmail.com>,
+        Fri, 24 Apr 2020 04:23:45 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:32475 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726028AbgDXIXp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 04:23:45 -0400
+X-UUID: aa5e11a295bd4456a9b0e6dd56f50983-20200424
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=5Le9qoejU+6jSbO30NZ6FQCsnzb28/ib8ihNNO5nR/Q=;
+        b=X/Rep5K8QMo98wwa7h4FZ9m9ROq5x7ZKPJXqFs76Mw4ybRk0NHNOaoSQxEBKdP3grJcrLBZwNrEL2I4qkBgFcRBwvpOVmQh1aaDQj5+zysrE52qZxF2KaXzlJHemL0vzGEWtWgvLaIWdzgM3IXpCsXi00WaDLcgwa54tk+sITJE=;
+X-UUID: aa5e11a295bd4456a9b0e6dd56f50983-20200424
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1217075942; Fri, 24 Apr 2020 16:23:42 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 24 Apr 2020 16:23:39 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 24 Apr 2020 16:23:39 +0800
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <hsinyi@chromium.org>, <linux-pm@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Michael Kao <michael.kao@mediatek.com>
+Subject: [PATCH] [RESEND] arm64: dts: mt8173: fix cooling device range
+Date:   Fri, 24 Apr 2020 16:23:40 +0800
+Message-ID: <20200424082340.4127-1-michael.kao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Eugeniu,
+V2hlbiB0aGVybWFsIHJlYWNoZXMgdGFyZ2V0IHRlbXBlcmF0dXJlLGl0IHdvdWxkIGJlIHBpbm5l
+ZCB0byBzdGF0ZSAwDQoobWF4IGZyZXF1ZW5jeSBhbmQgcG93ZXIpLg0KRml4IHRoZSB0aHJvdHRs
+aW5nIHJhbmdlIHRvIG5vIGxpbWl0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBIc2luLVlpIFdhbmcgPGhz
+aW55aUBjaHJvbWl1bS5vcmc+DQpTaWduZWQtb2ZmLWJ5OiBNaWNoYWVsIEthbyA8bWljaGFlbC5r
+YW9AbWVkaWF0ZWsuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgx
+NzMuZHRzaSB8IDEzICsrKysrKysrKy0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25z
+KCspLCA0IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9t
+ZWRpYXRlay9tdDgxNzMuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTcz
+LmR0c2kNCmluZGV4IGNjYjhlODhhNjBjNS4uY2FlMmNlYzQ2Y2RjIDEwMDY0NA0KLS0tIGEvYXJj
+aC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRzaQ0KKysrIGIvYXJjaC9hcm02NC9i
+b290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRzaQ0KQEAgLTE5LDYgKzE5LDcgQEANCiAjaW5jbHVk
+ZSA8ZHQtYmluZGluZ3MvcG93ZXIvbXQ4MTczLXBvd2VyLmg+DQogI2luY2x1ZGUgPGR0LWJpbmRp
+bmdzL3Jlc2V0L210ODE3My1yZXNldHMuaD4NCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ2NlL210
+ODE3My1nY2UuaD4NCisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvdGhlcm1hbC90aGVybWFsLmg+DQog
+I2luY2x1ZGUgIm10ODE3My1waW5mdW5jLmgiDQogDQogLyB7DQpAQCAtMjk0LDE0ICsyOTUsMTgg
+QEANCiAJCQljb29saW5nLW1hcHMgew0KIAkJCQltYXBAMCB7DQogCQkJCQl0cmlwID0gPCZ0YXJn
+ZXQ+Ow0KLQkJCQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTAgMCAwPiwNCi0JCQkJCQkJIDwmY3B1
+MSAwIDA+Ow0KKwkJCQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTAgVEhFUk1BTF9OT19MSU1JVA0K
+KwkJCQkJCQkgIFRIRVJNQUxfTk9fTElNSVQ+LA0KKwkJCQkJCQkgPCZjcHUxIFRIRVJNQUxfTk9f
+TElNSVQNCisJCQkJCQkJICBUSEVSTUFMX05PX0xJTUlUPjsNCiAJCQkJCWNvbnRyaWJ1dGlvbiA9
+IDwzMDcyPjsNCiAJCQkJfTsNCiAJCQkJbWFwQDEgew0KIAkJCQkJdHJpcCA9IDwmdGFyZ2V0PjsN
+Ci0JCQkJCWNvb2xpbmctZGV2aWNlID0gPCZjcHUyIDAgMD4sDQotCQkJCQkJCSA8JmNwdTMgMCAw
+PjsNCisJCQkJCWNvb2xpbmctZGV2aWNlID0gPCZjcHUyIFRIRVJNQUxfTk9fTElNSVQNCisJCQkJ
+CQkJICBUSEVSTUFMX05PX0xJTUlUPiwNCisJCQkJCQkJIDwmY3B1MyBUSEVSTUFMX05PX0xJTUlU
+DQorCQkJCQkJCSAgVEhFUk1BTF9OT19MSU1JVD47DQogCQkJCQljb250cmlidXRpb24gPSA8MTAy
+ND47DQogCQkJCX07DQogCQkJfTsNCi0tIA0KMi4xOC4wDQo=
 
-CC devicetree
-
-On Wed, Apr 22, 2020 at 12:11 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
->
-> When setting this property, you must set alternate interrupt number in
-> the 'interrupts' property.
->
-> Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> [erosca: tidy up the descriptions/comments]
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-
-Thanks for your/forwarding this patch!
-
-> --- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-> +++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-> @@ -50,6 +50,9 @@ Optional properties:
->    - clocks: Must contain a reference to the functional clock.  The property is
->      mandatory if the hardware implements a controllable functional clock for
->      the GPIO instance.
-> +  - use-alternative-interrupt: Use 'alternative' GPIO interrupt instead
-
-renesas,use-alternative-interrupt?
-(unless you can convince Rob this becomes a generic property).
-
-> +    of 'normal' GPIO interrupt. When you specify this property, you must
-> +    also change the 'interrupts' DT property.
-
-In light of "DT describes the hardware", I think you should instead list
-both interrupts in DT.  I.e. first/single interrupt is the normal one,
-second optional interrupt is the alternative one.
-
-On R-Car Gen2, the oldest SoC family with this feature I could find,
-they are called "ext_int" resp. "ext_alt_int", so introducing the
-optional "clock-names" property would be a good idea, too.
-
->    - gpio-reserved-ranges: See gpio.txt.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
