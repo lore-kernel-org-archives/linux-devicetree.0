@@ -2,555 +2,267 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D082C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 16:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E221C55186
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 16:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7860C2071E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 16:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D00206D7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 16:43:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cba/kur7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgDXQgT (ORCPT
+        id S1726908AbgDXQnh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:36:19 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41864 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgDXQgT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 12:36:19 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 521972A2B31;
-        Fri, 24 Apr 2020 17:36:15 +0100 (BST)
-Date:   Fri, 24 Apr 2020 18:36:12 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org,
-        miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200424183612.4cfdbb6a@collabora.com>
-In-Reply-To: <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 24 Apr 2020 12:43:37 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:9730 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726793AbgDXQnh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 12:43:37 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OGbOfX004529;
+        Fri, 24 Apr 2020 18:43:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=PLCBR/0LsB/9qRzLc0EfWDTDQckjp7MG8NRjJdLWuGo=;
+ b=cba/kur7T3oK3eHTO5riac9CUGH4UD9hV/VsGq0htRODrtDcHSow/itRRfaoxLSvyLHv
+ 4uRbYElcIw79SLs7QmjhPgioclZ+Z7urFPWNeqPUa8iwppNwCl/6MrX4IH727yRRuJn7
+ mQcGgdS78JPgMzEOZY/zcfJvTB/+B0zv2IfDlX/xSi0boItMDcdA0ufhueajVrv09tc0
+ qfNEOcLdfpA/4WuDRraf5a6YT8ddu+I8AWH3JDoiNEuRgLz08WdRvgKO3FnrYjSELucK
+ 1XQCEy0LnOddw/bbbVdronw6jodFz9GnC+6arDcCg6jXa90m4F7Yr2vbWEMhsvUH9Est cA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30fqawv4uj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 18:43:04 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D48D6100034;
+        Fri, 24 Apr 2020 18:43:02 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B4FCE2C322C;
+        Fri, 24 Apr 2020 18:43:02 +0200 (CEST)
+Received: from [10.211.2.59] (10.75.127.48) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Apr
+ 2020 18:43:00 +0200
+Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
+ driver
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     Marek Vasut <marex@denx.de>, Lee Jones <lee.jones@linaro.org>,
+        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        <vigneshr@ti.com>, <tony@atomide.com>, <richard@nod.at>,
+        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
+        <linux-mtd@lists.infradead.org>, <miquel.raynal@bootlin.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+ <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
+ <20200424074517.GN3612@dell> <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
+ <20200424105053.GC8414@dell> <e5e6c279-28d0-f423-aa6d-5c7aca563352@denx.de>
+ <268ea231-eb4a-6144-c632-1bc8e9f21582@st.com>
+ <20200424171412.5f65ff05@collabora.com>
+From:   Christophe Kerello <christophe.kerello@st.com>
+Message-ID: <b136632f-51ce-f72e-f145-1b6b4cba485c@st.com>
+Date:   Fri, 24 Apr 2020 18:42:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200424171412.5f65ff05@collabora.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-24_08:2020-04-24,2020-04-24 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Apr 2020 00:21:13 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-> +
-> +#define EBU_CLC			0x000
-> +#define EBU_CLC_RST		0x00000000u
-> +
-> +#define	EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
 
-	   ^ Please replace those tabs by a single space.
+On 4/24/20 5:14 PM, Boris Brezillon wrote:
+> On Fri, 24 Apr 2020 13:47:34 +0200
+> Christophe Kerello <christophe.kerello@st.com> wrote:
+> 
+>> On 4/24/20 1:06 PM, Marek Vasut wrote:
+>>> On 4/24/20 12:50 PM, Lee Jones wrote:
+>>>> On Fri, 24 Apr 2020, Marek Vasut wrote:
+>>>>   
+>>>>> On 4/24/20 9:45 AM, Lee Jones wrote:
+>>>>>> On Wed, 15 Apr 2020, Christophe Kerello wrote:
+>>>>>>   
+>>>>>>> The driver adds the support for the STMicroelectronics FMC2 controller
+>>>>>>> found on STM32MP SOCs.
+>>>>>>>
+>>>>>>> The FMC2 functional block makes the interface with: synchronous and
+>>>>>>> asynchronous static memories (such as PSNOR, PSRAM or other
+>>>>>>> memory-mapped peripherals) and NAND flash memories.
+>>>>>>>
+>>>>>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+>>>>>>> ---
+>>>>>>> Changes in v2:
+>>>>>>>    - remove ops from stm32_fmc2 structure
+>>>>>>>    - add 2 APIs to manage FMC2 enable/disable
+>>>>>>>    - add 2 APIs to manage FMC2 NWAIT shared signal
+>>>>>>>
+>>>>>>>    drivers/mfd/Kconfig            |  12 +++
+>>>>>>>    drivers/mfd/Makefile           |   1 +
+>>>>>>>    drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
+>>>>>>>    include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
+>>>>>>>    4 files changed, 374 insertions(+)
+>>>>>>>    create mode 100644 drivers/mfd/stm32-fmc2.c
+>>>>>>>    create mode 100644 include/linux/mfd/stm32-fmc2.h
+>>>>>>>
+>>>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>>>>>>> index 2b20329..5260582 100644
+>>>>>>> --- a/drivers/mfd/Kconfig
+>>>>>>> +++ b/drivers/mfd/Kconfig
+>>>>>>> @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
+>>>>>>>    	  Also included is a Coulomb counter, a real-time clock (RTC), and
+>>>>>>>    	  a 32.768 kHz clock gate.
+>>>>>>>    
+>>>>>>> +config MFD_STM32_FMC2
+>>>>>>> +	tristate "Support for FMC2 controllers on STM32MP SoCs"
+>>>>>>> +	depends on MACH_STM32MP157 || COMPILE_TEST
+>>>>>>> +	select MFD_CORE
+>>>>>>> +	select REGMAP
+>>>>>>> +	select REGMAP_MMIO
+>>>>>>> +	help
+>>>>>>> +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
+>>>>>>> +	  Bus Interface controller and FMC2 NAND flash controller. This driver
+>>>>>>> +	  provides core support for the STM32 FMC2 controllers, in order to use
+>>>>>>> +	  the actual functionality of the device other drivers must be enabled.
+>>>>>>
+>>>>>> Not sure how many times I have to say this before people stop
+>>>>>> attempting to pass these kinds of relationships off as MFDs:
+>>>>>>
+>>>>>> A memory device and its bus is not an MFD.  In a similar vain to the
+>>>>>> thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
+>>>>>> either.
+>>>>>>
+>>>>>> Please find another way to associate your device with its bus.
+>>>>>
+>>>>> This FMC2 is however an IP which can either operate external devices
+>>>>> (like ethernet chip on this parallel bus) or external flashes (like NOR
+>>>>> and NAND chips).
+>>>>
+>>>> I'm sure that it *can*.  Although that's not its main purpose.
+>>>
+>>> I use it to operate KSZ8851-16MLL ethernet chip, which has async bus
+>>> interface. Linux just didn't have support for that mode of operation
+>>> thus far and the FMC was used to operate NANDs and NORs only. This
+>>> series, or rather, the first three patches in this series, add support
+>>> for operating other bus devices, like this ethernet controller.
+>>>    
+>>>> The
+>>>> clue is in the nomenclature ("Flexible *Memory* Controller").  Nor is
+>>>> it how the device is being used in this submission:
+>>>>
+>>>>     "The FMC2 functional block makes the interface with: synchronous and
+>>>>      asynchronous static memories (such as PSNOR, PSRAM or other
+>>>>      memory-mapped peripherals) and NAND flash memories."
+>>>>
+>>>> As I mentioned, this is just another memory device and its bus.
+>>>
+>>> I don't think it's _just_ a memory controller, it's more universal than
+>>> that, see above. Note that SRAM interface basically boils down to
+>>> anything which has external parallel bus, e.g. Davicom DM9000, that
+>>> KSZ8851-16MLL etc.
+>>>    
+>>>>> Can you provide a suggestion how this should be handled, if not as MFD?
+>>>>> It seems to me, that this is a Multi-Function Device .
+>>>>
+>>>> Simply move it into the MTD or Memory subsystems and set up the
+>>>> dependencies via Kconfig.
+>>>>   
+>>>>> If this discussion is a recurring topic, is there some documentation
+>>>>> which explains how such devices should be handled ?
+>>>>
+>>>> Not that I'm aware of.
+>>>
+>>> I see.
+>>>   
+>>
+>> Hi Lee, Marek,
+>>
+>> I will move this source code in the FMC2 bus driver. I think that I
+>> should be able to manage the 2 controllers with 2 drivers (the FMC2 bus
+>> driver and the FMC2 raw NAND driver).
+> 
+> FWIW, that's what I did for the Atmel EBI (External Bus Interface)
+> controller (see [1]).
+> 
+> [1]https://elixir.bootlin.com/linux/v5.6/source/drivers/memory/atmel-ebi.c
+> 
+
+Hi Boris,
+
+Thanks for your help.
+
+I was thinking about the bindings and I think that the bindings below 
+are close to what has been done for Atmel EBI/Raw NAND bindings (in 
+terms of structure of bindings if I have well understood).
+I think that these proposed bindings are very close to the first 
+proposed version (V1/V2).
+
+     fmc@58002000 {
+       #address-cells = <2>;
+       #size-cells = <1>;
+       compatible = "st,stm32mp1-fmc2";
+       reg = <0x58002000 0x1000>;
+       clocks = <&rcc FMC_K>;
+       resets = <&rcc FMC_R>;
+
+       ranges = <0 0 0x60000000 0x4000000>, /* EBI bank 1 */
+                <1 0 0x64000000 0x4000000>, /* EBI bank 2 */
+                <2 0 0x68000000 0x4000000>, /* EBI bank 3 */
+                <3 0 0x6c000000 0x4000000>, /* EBI bank 4 */
+                <4 0 0x80000000 0x4000000>, /* NAND common memory space */
+                <5 0 0x88000000 0x4000000>; /* NAND attribute memory 
+space */
+	
+       psram@0 {
+         compatible = "mtd-ram";
+         reg = <0 0x00000000 0x100000>;
+         bank-width = <2>;
+
+         st,fmc2_ebi_cs_transaction_type = <1>;
+         st,fmc2_ebi_cs_address_setup = <60>;
+         st,fmc2_ebi_cs_data_setup = <30>;
+         st,fmc2_ebi_cs_bus_turnaround = <5>;
+       };
+
+       nand-controller@4 {
+         #address-cells = <1>;
+         #size-cells = <0>;
+         compatible = "st,stm32mp15-fmc2";
+         reg = <4 0x00000000 0x1000>,
+               <5 0x00010000 0x1000>,
+               <5 0x00020000 0x1000>,
+               <4 0x01000000 0x1000>,
+               <5 0x01010000 0x1000>,
+               <5 0x01020000 0x1000>;
+         interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+         dmas = <&mdma1 20 0x2 0x12000a02 0x0 0x0>,
+                <&mdma1 20 0x2 0x12000a08 0x0 0x0>,
+                <&mdma1 21 0x2 0x12000a0a 0x0 0x0>;
+         dma-names = "tx", "rx", "ecc";
+
+         nand@0 {
+           reg = <0>;
+           nand-on-flash-bbt;
+           #address-cells = <1>;
+           #size-cells = <1>;
+         };
+       };
+     };
+
+Regards,
+Christophe Kerello.
 
-> +#define	EBU_ADDR_MASK		(5 << 4)
-> +#define	EBU_ADDR_SEL_REGEN	0x1
-> +
-> +#define EBU_BUSCON(n)		(0x60 + (n) * 4)
-> +#define EBU_BUSCON_CMULT_V4	0x1
-> +#define EBU_BUSCON_RECOVC(n)	((n) << 2)
-> +#define EBU_BUSCON_HOLDC(n)	((n) << 4)
-> +#define EBU_BUSCON_WAITRDC(n)	((n) << 6)
-> +#define EBU_BUSCON_WAITWRC(n)	((n) << 8)
-> +#define EBU_BUSCON_BCGEN_CS	0x0
-> +#define EBU_BUSCON_SETUP_EN	BIT(22)
-> +#define EBU_BUSCON_ALEC		0xC000
-> +
-> +#define EBU_CON			0x0B0
-> +#define EBU_CON_NANDM_EN	BIT(0)
-> +#define EBU_CON_NANDM_DIS	0x0
-> +#define EBU_CON_CSMUX_E_EN	BIT(1)
-> +#define EBU_CON_ALE_P_LOW	BIT(2)
-> +#define EBU_CON_CLE_P_LOW	BIT(3)
-> +#define EBU_CON_CS_P_LOW	BIT(4)
-> +#define EBU_CON_SE_P_LOW	BIT(5)
-> +#define EBU_CON_WP_P_LOW	BIT(6)
-> +#define EBU_CON_PRE_P_LOW	BIT(7)
-> +#define EBU_CON_IN_CS_S(n)	((n) << 8)
-> +#define EBU_CON_OUT_CS_S(n)	((n) << 10)
-> +#define EBU_CON_LAT_EN_CS_P	((0x3D) << 18)
-> +
-> +#define EBU_WAIT		0x0B4
-> +#define EBU_WAIT_RDBY		BIT(0)
-> +#define EBU_WAIT_WR_C		BIT(3)
-> +
-> +#define	EBU_MEM_BASE_CS_0	0x17400
-> +#define	EBU_MEM_BASE_CS_1	0x17C00
-
-If I refer to v2, that's actually 0x17400000 and 0x17C00000.
-And I suspect those addresses come from the physical addresses of the
-EBU range attached to those CS lines, which can be extracted
-from the resource passed to the driver. But maybe I'm wrong.
-
-> +#define	EBU_MEM_OFFSET		0x051
-
-Sorry but that's too vague. What is this mask/offset encoding?
-
-> +
-> +#define HSNAND_CTL1		0x110
-> +#define HSNAND_CTL1_ADDR_SHIFT	24
-> +
-> +#define HSNAND_CTL2		0x114
-> +#define HSNAND_CTL2_ADDR_SHIFT	8
-> +#define HSNAND_CTL2_CYC_N_V5	(0x2 << 16)
-> +
-> +#define HSNAND_INT_MSK_CTL	0x124
-> +#define HSNAND_INT_MSK_CTL_WR_C	BIT(4)
-> +
-> +#define HSNAND_INT_STA		0x128
-> +#define HSNAND_INT_STA_WR_C	BIT(4)
-> +
-> +#define HSNAND_CTL		0x130
-> +#define HSNAND_CTL_MODE_ECC	0x1
-
-#define HSNAND_CTL_ENABLE_ECC	BIT(0)
-
-> +#define HSNAND_CTL_GO		BIT(2)
-> +#define HSNAND_CTL_CE_SEL_CS(n)	BIT(3 + (n))
-> +#define HSNAND_CTL_RW_READ	0x0
-> +#define HSNAND_CTL_RW_WRITE	BIT(10)
-> +#define HSNAND_CTL_ECC_OFF_V8TH	BIT(11)
-> +#define HSNAND_CTL_CKFF_EN	0x0
-> +#define HSNAND_CTL_MSG_EN	BIT(17)
-> +
-> +#define NAND_PARA0		0x13c
-
-Why are some of those registers prefixed NAND and others HSNAND? I
-guess HS stands for High-Speed.
-
-> +#define NAND_PARA0_PAGE_V8192	0x3
-> +#define NAND_PARA0_PIB_V256	(0x3 << 4)
-> +#define NAND_PARA0_BYP_EN_NP	0x0
-> +#define NAND_PARA0_BYP_DEC_NP	0x0
-> +#define NAND_PARA0_TYPE_ONFI	BIT(18)
-> +#define NAND_PARA0_ADEP_EN	BIT(21)
-> +
-> +#define NAND_CMSG_0		0x150
-> +#define NAND_CMSG_1		0x154
-> +
-> +#define NAND_ALE_OFFS		BIT(2)
-> +#define NAND_CLE_OFFS		BIT(3)
-> +#define NAND_CS_OFFS		BIT(4)
-> +
-> +#define NAND_WRITE_CMD		(NAND_CS_OFFS | NAND_CLE_OFFS)
-> +#define NAND_WRITE_ADDR		(NAND_CS_OFFS | NAND_ALE_OFFS)
-
-Those macros are no longer used, you can drop them.
-
-> +#define NAND_WRITE_DATA		EBU_CON_CS_P_LOW
-> +#define NAND_READ_DATA		EBU_CON_CS_P_LOW
-
-And those should not be used, please use NAND_CS_OFFS instead.
-
-> +
-> +#define NAND_ECC_OFFSET		0x008
-> +
-> +struct ebu_nand_controller {
-> +	struct nand_controller	controller;
-
-Can you drop the tabs and use one space between the type and field name?
-
-> +	struct nand_chip	chip;
-
-Can you add a comment explaining that this should be reworked if
-someone needs to support more than one chip.
-
-> +	void __iomem		*ebu_addr;
-> +	void __iomem		*nand_addr;
-
-Can we get rid of those _addr and rename those fields so they describe
-more precisely what the MMIO range is about:
-
-	void __iomem *ebu;
-	void __iomem *hsnand;
-
-
-> +	void __iomem		*chip_addr;
-
-This field should be part of a specialized nand_chip object (see what's
-done here [1]). More generally, you should move anything that's
-chip-specific to this driver-specific nand_chip object. 
-
-> +	struct clk		*clk;
-> +	unsigned long		clk_rate;
-> +	u32			cs;
-> +	u32			nd_para0;
-
-The cs and nd_para0 fields should be attached to the ebu_nand_chip
-object too (see [1]). While you move that, please add a comment saying
-that you currently only support single-CE chips.
-
-> +	struct device		*dev;
-> +	struct dma_chan		*dma_tx;
-> +	struct dma_chan		*dma_rx;
-> +	struct completion	dma_access_complete;
-
-Maybe
-
-	struct {
-		struct dma_chan *tx;
-		struct dma_chan *rx;
-		struct completion complete;
-	} dma;
-
-> +	const char *cs_name;
-
-You no longer use this field.
-
-> +};
-> +
-> +static inline struct ebu_nand_controller *nand_to_ebu(struct nand_chip *chip)
-> +{
-> +	return container_of(chip, struct ebu_nand_controller, chip);
-> +}
-> +
-> +static u8 ebu_nand_readb(struct nand_chip *chip, unsigned int op)
-> +{
-> +	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-> +	void __iomem *nand_wait = ebu_host->ebu_addr + EBU_WAIT;
-> +	u32 stat;
-> +	int ret;
-> +	u8 val;
-> +
-> +	val = readb(ebu_host->chip_addr + op);
-
-No need for op here, just pass NAND_CS_OFFS directly, and you can drop
-the op argument.
-
-> +
-> +	ret = readl_poll_timeout(nand_wait, stat, stat & EBU_WAIT_WR_C,
-> +				 20, 1000);
-> +	if (ret)
-> +		dev_warn(ebu_host->dev,
-> +			 "ebu nand write timeout. nand_wait(0x%p)=0x%x\n",
-> +			 nand_wait, readl(nand_wait));
-
-Maybe dev_warn_ratelimited().
-
-> +
-> +	return val;
-> +}
-> +
-> +static void ebu_nand_writeb(struct nand_chip *chip, int op, u8 value)
-
-							^u32 offset,
-
-> +{
-> +	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-> +	void __iomem *nand_wait = ebu_host->ebu_addr + EBU_WAIT;
-> +	u32 stat;
-> +	int ret;
-> +
-> +	writeb(value, ebu_host->chip_addr + op);
-> +
-> +	ret = readl_poll_timeout(nand_wait, stat, stat & EBU_WAIT_WR_C,
-> +				 20, 1000);
-> +	if (ret)
-> +		dev_warn(ebu_host->dev,
-> +			 "ebu nand write timeout. nand_wait(0x%p)=0x%x\n",
-> +			 nand_wait, readl(nand_wait));
-> +}
-> +
-> +static void ebu_read_buf(struct nand_chip *chip, u_char *buf, int len)
-
-						      ^void *	   ^unsigned int
-
-Please update all of those.
-
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < len; i++)
-> +		buf[i] = ebu_nand_readb(chip, NAND_READ_DATA);
-> +}
-> +
-> +static void ebu_write_buf(struct nand_chip *chip, const u_char *buf, int len)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < len; i++)
-> +		ebu_nand_writeb(chip, NAND_WRITE_DATA, buf[i]);
-
-				      ^NAND_CS_OFFS
-
-> +}
-> +
-> +static void ebu_unselect_chip(struct nand_chip *chip)
-> +{
-> +	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-> +	void __iomem *nand_con = ebu_host->ebu_addr + EBU_CON;
-> +	int val;
-
-	^u32
-
-> +
-> +	val = readl(nand_con);
-> +	writel(val & ~EBU_CON_NANDM_EN, nand_con);
-
-And I suspect you could just do:
-
-	writel(0, ebu_host->ebu + EBU_CON);
-
-here.
-
-BTW, maybe we don't have to unselect the chip and can instead do this
-'disable NAND module' in a runtime PM hook when the NAND has been
-unused for some time, but let's keep that for later.
-
-> +}
-
-...
-
-> +static int ebu_nand_exec_op(struct nand_chip *chip,
-> +			    const struct nand_operation *op, bool check_only)
-> +{
-> +	struct ebu_nand_controller *ctrl = nand_to_ebu(chip);
-> +	const struct nand_op_instr *instr = NULL;
-> +	unsigned int op_id;
-> +	int i, time_out, ret = 0;
-> +	u32 stat;
-> +
-> +	ebu_select_chip(chip);
-> +
-> +	for (op_id = 0; op_id < op->ninstrs; op_id++) {
-> +		instr = &op->instrs[op_id];
-> +
-> +		switch (instr->type) {
-> +		case NAND_OP_CMD_INSTR:
-> +			ebu_nand_writeb(chip, NAND_CLE_OFFS,
-
-Hm, are you sure you shouldn't add NAND_CS_OFFS here? I'd expect
-the CS to be asserted when the CLE/ALE pin is. Or maybe NAND_CS_OFFS
-is not about CS pin assertion/de-assertion, in which case this should
-be documented (and the name should be changed accordingly).
-
-> +					instr->ctx.cmd.opcode);
-> +			break;
-> +
-> +		case NAND_OP_ADDR_INSTR:
-> +			for (i = 0; i < instr->ctx.addr.naddrs; i++)
-> +				ebu_nand_writeb(chip, NAND_ALE_OFFS,
-> +						instr->ctx.addr.addrs[i]);
-> +			break;
-> +
-> +		case NAND_OP_DATA_IN_INSTR:
-> +			ebu_read_buf(chip, instr->ctx.data.buf.in,
-> +				     instr->ctx.data.len);
-> +			break;
-> +
-> +		case NAND_OP_DATA_OUT_INSTR:
-> +			ebu_write_buf(chip, instr->ctx.data.buf.out,
-> +				      instr->ctx.data.len);
-> +			break;
-> +
-> +		case NAND_OP_WAITRDY_INSTR:
-> +			time_out = instr->ctx.waitrdy.timeout_ms * 1000;
-> +			ret = readl_poll_timeout(ctrl->ebu_addr + EBU_WAIT,
-> +						 stat, stat & EBU_WAIT_RDBY,
-> +						 20, time_out);
-> +			break;
-> +		}
-> +	}
-
-Yay! I really like this new version of exec_op().
-
-> +
-> +	ebu_unselect_chip(chip);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct nand_controller_ops ebu_nand_controller_ops = {
-> +	.attach_chip = ebu_nand_attach_chip,
-> +	.exec_op = ebu_nand_exec_op,
-> +};
-> +
-> +static void ebu_dma_cleanup(struct ebu_nand_controller *ebu_host)
-> +{
-> +	if (ebu_host->dma_rx) {
-> +		dma_release_channel(ebu_host->dma_rx);
-> +		ebu_host->dma_rx = NULL;
-
-You don't need to reset the value here.
-
-> +	}
-> +
-> +	if (ebu_host->dma_tx) {
-> +		dma_release_channel(ebu_host->dma_tx);
-> +		ebu_host->dma_tx = NULL;
-> +	}
-> +}
-> +
-> +static int ebu_nand_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct ebu_nand_controller *ebu_host;
-> +	struct nand_chip *nand;
-> +	phys_addr_t nandaddr_pa;
-> +	struct mtd_info *mtd;
-> +	struct resource *res;
-> +	int ret;
-> +	u32 cs;
-> +
-> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
-> +	if (!ebu_host)
-> +		return -ENOMEM;
-> +
-> +	ebu_host->dev = dev;
-> +	nand_controller_init(&ebu_host->controller);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
-> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(ebu_host->ebu_addr))
-> +		return PTR_ERR(ebu_host->ebu_addr);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
-> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(ebu_host->nand_addr))
-> +		return PTR_ERR(ebu_host->nand_addr);
-> +
-> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
-
-CS ids should be encoded in the reg property (see [1]).
-
-> +	if (ret) {
-> +		dev_err(dev, "failed to get chip select: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ebu_host->cs = cs;
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand_cs0");
-
-	resname = devm_kasprintf("nand-cs%d", cs);
-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, resname);
-
-> +	ebu_host->chip_addr = devm_ioremap_resource(&pdev->dev, res);
-> +	nandaddr_pa = res->start;
-> +	if (IS_ERR(ebu_host->chip_addr))
-> +		return PTR_ERR(ebu_host->chip_addr);
-> +
-> +	ebu_host->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(ebu_host->clk)) {
-> +		ret = PTR_ERR(ebu_host->clk);
-> +		dev_err(dev, "failed to get clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(ebu_host->clk);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +	ebu_host->clk_rate = clk_get_rate(ebu_host->clk);
-> +
-> +	ebu_host->dma_tx = dma_request_chan(dev, "tx");
-> +	if (IS_ERR(ebu_host->dma_tx)) {
-> +		ret = PTR_ERR(ebu_host->dma_tx);
-> +		dev_err(dev, "DMA tx channel request fail!.\n");
-> +		goto exit_dma;
-> +	}
-> +
-> +	ebu_host->dma_rx = dma_request_chan(dev, "rx");
-> +	if (IS_ERR(ebu_host->dma_rx)) {
-> +		ret = PTR_ERR(ebu_host->dma_rx);
-> +		dev_err(dev, "DMA tx channel request fail!.\n");
-> +		goto exit_dma;
-> +	}
-> +
-> +	writel(lower_32_bits(nandaddr_pa) | EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
-> +	       ebu_host->ebu_addr + EBU_ADDR_SEL(cs));
-> +
-> +	writel(EBU_BUSCON_CMULT_V4 | EBU_BUSCON_RECOVC(1) |
-> +	       EBU_BUSCON_HOLDC(1) | EBU_BUSCON_WAITRDC(2) |
-> +	       EBU_BUSCON_WAITWRC(2) | EBU_BUSCON_BCGEN_CS | EBU_BUSCON_ALEC |
-> +	       EBU_BUSCON_SETUP_EN, ebu_host->ebu_addr + EBU_BUSCON(cs));
-
-Again, can you try to implement ->setup_data_interface()?
-
-> +
-> +	/*
-> +	 * NAND physical address selection is based on the chip select
-> +	 * and written to ADDR_SEL register to get Memory Region Base address.
-> +	 * FPI Bus addresses are compared to this base address in conjunction
-> +	 * with the mask control. Driver need to program this field!
-> +	 * Address: 0x17400 if chip select is CS_0
-> +	 * Address: 0x17C00 if chip select is CS_1
-> +	 */
-> +	writel(EBU_MEM_BASE_CS_0 + EBU_MEM_OFFSET,
-> +	       ebu_host->ebu_addr + EBU_ADDR_SEL(0));
-> +	writel(EBU_MEM_BASE_CS_1 + EBU_MEM_OFFSET,
-> +	       ebu_host->ebu_addr + EBU_ADDR_SEL(cs));
-
-See my comments on those values. I feel like the mapping should be
-created based on information we gather from somewhere else.
-
-> +	nand_set_flash_node(&ebu_host->chip, dev->of_node);
-> +	mtd = nand_to_mtd(&ebu_host->chip);
-> +	mtd->dev.parent = dev;
-> +	ebu_host->dev = dev;
-> +
-> +	platform_set_drvdata(pdev, ebu_host);
-> +	nand_set_controller_data(&ebu_host->chip, ebu_host);
-> +
-> +	nand = &ebu_host->chip;
-> +	nand->controller = &ebu_host->controller;
-> +	nand->controller->ops = &ebu_nand_controller_ops;
-> +
-> +	/* Scan to find existence of the device */
-> +	ret = nand_scan(&ebu_host->chip, 1);
-> +	if (ret)
-> +		goto exit_dma;
-> +
-> +	ret = mtd_device_register(mtd, NULL, 0);
-> +	if (ret)
-> +		goto clean_nand;
-> +
-> +	return 0;
-> +
-> +clean_nand:
-
-err_cleanup_nand:
-
-> +	nand_cleanup(&ebu_host->chip);
-> +exit_dma:
-
-err_cleanup_dma:
-
-> +	ebu_dma_cleanup(ebu_host);
-> +	clk_disable_unprepare(ebu_host->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static int ebu_nand_remove(struct platform_device *pdev)
-> +{
-> +	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
-> +
-> +	mtd_device_unregister(nand_to_mtd(&ebu_host->chip));
-
-Check the return value of this function please.
-
-
-[1]https://elixir.bootlin.com/linux/v5.6/source/drivers/mtd/nand/raw/atmel/nand-controller.c#L148
