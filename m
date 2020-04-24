@@ -2,173 +2,150 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51681C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D48C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 357D0206D7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CEC20767
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:35:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XWPBUnlo";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uV6TaWdn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgDXPOS (ORCPT
+        id S1727919AbgDXPf3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:14:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726998AbgDXPOS (ORCPT
+        Fri, 24 Apr 2020 11:35:29 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:59751 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726849AbgDXPf2 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:14:18 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41855C09B045;
-        Fri, 24 Apr 2020 08:14:17 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 993952A2E0F;
-        Fri, 24 Apr 2020 16:14:15 +0100 (BST)
-Date:   Fri, 24 Apr 2020 17:14:12 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     Marek Vasut <marex@denx.de>, Lee Jones <lee.jones@linaro.org>,
-        mark.rutland@arm.com, devicetree@vger.kernel.org, vigneshr@ti.com,
-        tony@atomide.com, richard@nod.at, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
- driver
-Message-ID: <20200424171412.5f65ff05@collabora.com>
-In-Reply-To: <268ea231-eb4a-6144-c632-1bc8e9f21582@st.com>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
-        <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
-        <20200424074517.GN3612@dell>
-        <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
-        <20200424105053.GC8414@dell>
-        <e5e6c279-28d0-f423-aa6d-5c7aca563352@denx.de>
-        <268ea231-eb4a-6144-c632-1bc8e9f21582@st.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 24 Apr 2020 11:35:28 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 4906C78A;
+        Fri, 24 Apr 2020 11:35:27 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:35:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=Qm04qMuBv7fTr
+        3XQL3pQXZGC/epnrC5zo/RIT1dLqig=; b=XWPBUnloTpw693cNK86jats0UjZsU
+        LYYzIOWDLDcbxljiWdawcNkq7cD2P/Zxw8uHRGlU4BY+92zF8EriCXAwRjC250/i
+        Q/2eTVQ/HTnsxF1ssYTyYFViAXI3iD04XT6+rrO7DF6NuRYqYqf0Fr4Dzpm6MZPD
+        ycxecx+ykib6FCBi3esoLSzAFsAUHrsOfoKE1k4rzwQAMLK3eKK0+3wk20pa+sr+
+        auX1+Ei91tdcu9eCeAsvVajjTdHTyKxHryR7OWzSTJGy77EJFIy/F5FudWNXKmXe
+        +QRl0SIEdGaez3xJaxwc48AlmAddOZftk/jNnPlnhUj5KWVwLAlCKEYLg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=Qm04qMuBv7fTr3XQL3pQXZGC/epnrC5zo/RIT1dLqig=; b=uV6TaWdn
+        FOEFeAtYf7zwrFEEppmSrP/Cg4G7SQqf1Y9lXsUlmFxNmmZC0s/54ZQciU+nVXIK
+        HDNzGdnTxF/NWUOnVvoMwpyfTP98HTHJ/tDAdgSuNf2VmYhMQuebhxMysuby2uOM
+        m7eSZHoj2uVcJuv/yc+PdyhzwdEeH7wXglLByi2UCQ3wiFx7h5Pzs1pqUN5/tb5E
+        YOYYIDVYOuTjn9LnS9CJPjOpdNuGxS4WSYomsPE/CIszQwynZU4tBvSidn4ux/XC
+        D6ICsTxk3YhxCssDjG5yp3EEcCqrcDq5pLI58ssQUVfvzZYxOaKUiHQR3ObJdZAh
+        RmNX/xFwD/DW8w==
+X-ME-Sender: <xms:PgejXiOUue0ABFDmxlj4Dcnug7_XUMg7mPZqTn46PxLLzGJYEuUHBQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:PgejXtuuxHtho2QIg_Y9ZrYVgvAZGVqvbiPhrGF-YUWa-6e4CkFJgA>
+    <xmx:PgejXo3_3EsiNmsdgnraJlS2xDsgt3V-5khm09Gk8pXR6R3juYKkwg>
+    <xmx:PgejXrXXEYqDWPfrWwEeugSke6yeZWvA6W8V5fg2IW0ypVf0Iexw8A>
+    <xmx:PgejXi7U-ajfaRtJoaZS_RedX5MulrwEM5fBhqk4zeStc0V2v5YNc5sxdg4>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 84E4C3065CDA;
+        Fri, 24 Apr 2020 11:35:26 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 03/91] dt-bindings: clock: Add a binding for the RPi Firmware clocks
+Date:   Fri, 24 Apr 2020 17:33:44 +0200
+Message-Id: <69e869b0a79ea17f2cdb79df986409963672495a.1587742492.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Apr 2020 13:47:34 +0200
-Christophe Kerello <christophe.kerello@st.com> wrote:
+The firmware running on the RPi VideoCore can be used to discover and
+change the various clocks running in the BCM2711. Since devices will
+need to use them through the DT, let's add a pretty simple binding.
 
-> On 4/24/20 1:06 PM, Marek Vasut wrote:
-> > On 4/24/20 12:50 PM, Lee Jones wrote:  
-> >> On Fri, 24 Apr 2020, Marek Vasut wrote:
-> >>  
-> >>> On 4/24/20 9:45 AM, Lee Jones wrote:  
-> >>>> On Wed, 15 Apr 2020, Christophe Kerello wrote:
-> >>>>  
-> >>>>> The driver adds the support for the STMicroelectronics FMC2 controller
-> >>>>> found on STM32MP SOCs.
-> >>>>>
-> >>>>> The FMC2 functional block makes the interface with: synchronous and
-> >>>>> asynchronous static memories (such as PSNOR, PSRAM or other
-> >>>>> memory-mapped peripherals) and NAND flash memories.
-> >>>>>
-> >>>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >>>>> ---
-> >>>>> Changes in v2:
-> >>>>>   - remove ops from stm32_fmc2 structure
-> >>>>>   - add 2 APIs to manage FMC2 enable/disable
-> >>>>>   - add 2 APIs to manage FMC2 NWAIT shared signal
-> >>>>>
-> >>>>>   drivers/mfd/Kconfig            |  12 +++
-> >>>>>   drivers/mfd/Makefile           |   1 +
-> >>>>>   drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
-> >>>>>   include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
-> >>>>>   4 files changed, 374 insertions(+)
-> >>>>>   create mode 100644 drivers/mfd/stm32-fmc2.c
-> >>>>>   create mode 100644 include/linux/mfd/stm32-fmc2.h
-> >>>>>
-> >>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> >>>>> index 2b20329..5260582 100644
-> >>>>> --- a/drivers/mfd/Kconfig
-> >>>>> +++ b/drivers/mfd/Kconfig
-> >>>>> @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
-> >>>>>   	  Also included is a Coulomb counter, a real-time clock (RTC), and
-> >>>>>   	  a 32.768 kHz clock gate.
-> >>>>>   
-> >>>>> +config MFD_STM32_FMC2
-> >>>>> +	tristate "Support for FMC2 controllers on STM32MP SoCs"
-> >>>>> +	depends on MACH_STM32MP157 || COMPILE_TEST
-> >>>>> +	select MFD_CORE
-> >>>>> +	select REGMAP
-> >>>>> +	select REGMAP_MMIO
-> >>>>> +	help
-> >>>>> +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
-> >>>>> +	  Bus Interface controller and FMC2 NAND flash controller. This driver
-> >>>>> +	  provides core support for the STM32 FMC2 controllers, in order to use
-> >>>>> +	  the actual functionality of the device other drivers must be enabled.  
-> >>>>
-> >>>> Not sure how many times I have to say this before people stop
-> >>>> attempting to pass these kinds of relationships off as MFDs:
-> >>>>
-> >>>> A memory device and its bus is not an MFD.  In a similar vain to the
-> >>>> thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
-> >>>> either.
-> >>>>
-> >>>> Please find another way to associate your device with its bus.  
-> >>>
-> >>> This FMC2 is however an IP which can either operate external devices
-> >>> (like ethernet chip on this parallel bus) or external flashes (like NOR
-> >>> and NAND chips).  
-> >>
-> >> I'm sure that it *can*.  Although that's not its main purpose.  
-> > 
-> > I use it to operate KSZ8851-16MLL ethernet chip, which has async bus
-> > interface. Linux just didn't have support for that mode of operation
-> > thus far and the FMC was used to operate NANDs and NORs only. This
-> > series, or rather, the first three patches in this series, add support
-> > for operating other bus devices, like this ethernet controller.
-> >   
-> >> The
-> >> clue is in the nomenclature ("Flexible *Memory* Controller").  Nor is
-> >> it how the device is being used in this submission:
-> >>
-> >>    "The FMC2 functional block makes the interface with: synchronous and
-> >>     asynchronous static memories (such as PSNOR, PSRAM or other
-> >>     memory-mapped peripherals) and NAND flash memories."
-> >>
-> >> As I mentioned, this is just another memory device and its bus.  
-> > 
-> > I don't think it's _just_ a memory controller, it's more universal than
-> > that, see above. Note that SRAM interface basically boils down to
-> > anything which has external parallel bus, e.g. Davicom DM9000, that
-> > KSZ8851-16MLL etc.
-> >   
-> >>> Can you provide a suggestion how this should be handled, if not as MFD?
-> >>> It seems to me, that this is a Multi-Function Device .  
-> >>
-> >> Simply move it into the MTD or Memory subsystems and set up the
-> >> dependencies via Kconfig.
-> >>  
-> >>> If this discussion is a recurring topic, is there some documentation
-> >>> which explains how such devices should be handled ?  
-> >>
-> >> Not that I'm aware of.  
-> > 
-> > I see.
-> >  
-> 
-> Hi Lee, Marek,
-> 
-> I will move this source code in the FMC2 bus driver. I think that I 
-> should be able to manage the 2 controllers with 2 drivers (the FMC2 bus 
-> driver and the FMC2 raw NAND driver).
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-FWIW, that's what I did for the Atmel EBI (External Bus Interface)
-controller (see [1]).
-
-[1]https://elixir.bootlin.com/linux/v5.6/source/drivers/memory/atmel-ebi.c
+diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+index cec540c052b6..b48ed875eb8e 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
++++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+@@ -22,6 +22,25 @@ properties:
+       Phandle to the firmware device's Mailbox.
+       (See: ../mailbox/mailbox.txt for more information)
+ 
++  clocks:
++    type: object
++
++    properties:
++      compatible:
++        const: raspberrypi,firmware-clocks
++
++      "#clock-cells":
++        const: 1
++        description: >
++          The argument is the ID of the clocks contained by the
++          firmware messages.
++
++    required:
++      - compatible
++      - "#clock-cells"
++
++    additionalProperties: false
++
+ required:
+   - compatible
+   - mboxes
+@@ -31,5 +50,10 @@ examples:
+     firmware {
+         compatible = "raspberrypi,bcm2835-firmware", "simple-bus";
+         mboxes = <&mailbox>;
++
++        firmware_clocks: clocks {
++            compatible = "raspberrypi,firmware-clocks";
++            #clock-cells = <1>;
++        };
+     };
+ ...
+-- 
+git-series 0.9.1
