@@ -2,171 +2,124 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0D6C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 01:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2031AC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 01:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE3612074F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 01:08:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KmrFXbTC"
+	by mail.kernel.org (Postfix) with ESMTP id 0626E214AF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 01:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgDXBIa (ORCPT
+        id S1726970AbgDXBTo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 21:08:30 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4284 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgDXBIa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 21:08:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea23b980000>; Thu, 23 Apr 2020 18:06:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Apr 2020 18:08:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 18:08:29 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
- 2020 01:08:29 +0000
-Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
- 2020 01:08:28 +0000
-Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
- <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
- <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
- <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
- <3691c4b5-1ecc-2ad3-23ed-72ef6b8d25fa@nvidia.com>
- <fce6dfbb-0b8d-319b-2d6f-976953a3c36c@gmail.com>
- <a2672be9-93c1-8363-6c0e-6d43c2bd59bc@nvidia.com>
- <492dafac-42aa-3caf-4d32-ba0e434b19c3@gmail.com>
- <39402a49-f39f-256c-31e7-afaa25d55664@nvidia.com>
-Message-ID: <8f01724e-95d4-e6d8-9e2d-bce4b8dd0177@nvidia.com>
-Date:   Thu, 23 Apr 2020 18:08:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 23 Apr 2020 21:19:44 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41891 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbgDXBTo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 21:19:44 -0400
+Received: by mail-io1-f66.google.com with SMTP id b12so8658615ion.8;
+        Thu, 23 Apr 2020 18:19:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W9OmgagrKCCt63SJ70DGo07Hs4DQPWadwIXDQwuPLQE=;
+        b=N5q+YAEa+Z81vrN6qlRJJzmaLqVv5kuPLYcNPFAs3voarUKw6mTL0rr5s4xqMZLYsR
+         nVbR6uQVFaPP65u303LfcpPNAmk02ID5dTKjhIUC7X5leog7ZHFM9zdj+dlNES96wA9n
+         f6ABMEtHD6EWTIZZxZjLpVSmUkH2qBVVxyldV5OI9w7YeQB67BoFvj3g5huGbTvgpXce
+         GfFkPryokZ4Lr61RK4nCDdIUi/mcJZtHlbkBN1qEmf86VwXq0UQj5b1DXwJw+w2E/gtL
+         2UaC5HucLmIy2KDbL6MFhp5zJEQXeDQ+BWkxyPZ/MrvuZM+qGUtppvQMD7tfa196Vcnd
+         96SQ==
+X-Gm-Message-State: AGi0Pubb+8ES688TxjrTybKVOhobp1JG6zDZHGO5XJ6MapwVCi0TfEhs
+        PYCbSeFNrO7wJHCn4Dj9n3J1LAUzMyRgAawEodJsQ3en
+X-Google-Smtp-Source: APiQypJksG9oll5dR51HBA7PNJp709ixLzaxLqE939dazCKHiP4+Otceirx7G1e9uvPhD1GNV4UI1AGYmqyDRqNld2w=
+X-Received: by 2002:a5e:8613:: with SMTP id z19mr6274962ioj.84.1587691181816;
+ Thu, 23 Apr 2020 18:19:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <39402a49-f39f-256c-31e7-afaa25d55664@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587690392; bh=0VcoRgXJ0ZnT5wCxcL+1oZjS8xuQ825bdiGOnGN6ldI=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=KmrFXbTCpgHZzv0NUHaUfJjgUNF+0du/q8tLCI0Nu3o44g8QCH0DVWNGTie17IZC2
-         gajOyou6UNclIWBlJYhCTpwvpEVeibc4EtQ1IZm/Wua+r/qQZGDaZ92KnyUugqbCFB
-         qcpzhn0uoMW6fT0FYcVGipG1WoOu8KOhE7QkltxI9wJi3ynkD5SmSNQmhM8uJjgHLv
-         dzX+H3rmEHPBTFWf4kiswfWAkx47BpgPH+K+XdcUtvalBwEglpx9sQj2szf8xdfCNw
-         J7W4PVy83N1FNXByAPPJI62nUVR5Au9+tFUo1QtUX5Z58WsGiXVIVUryPodVGZ+ZQM
-         qsBPB2SEp79AQ==
+References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
+ <20200422142428.1249684-7-jiaxun.yang@flygoat.com> <CAAhV-H43ds5YnW+h3zpbwedT0Lksz_o5d=Sz0Uqn+--uuDHN1A@mail.gmail.com>
+ <b645bfeba3c1c9d3167aef68868ef09f@kernel.org>
+In-Reply-To: <b645bfeba3c1c9d3167aef68868ef09f@kernel.org>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Fri, 24 Apr 2020 09:27:07 +0800
+Message-ID: <CAAhV-H4o4yFLu28y7ZoyEwd_YVdDQpOdHF=KVBF0o9s7yZ3RZQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] dt-bindings: interrupt-controller: Add Loongson PCH MSI
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi, Marc,
 
-On 4/23/20 5:51 PM, Sowjanya Komatineni wrote:
+On Thu, Apr 23, 2020 at 8:46 PM Marc Zyngier <maz@kernel.org> wrote:
 >
-> On 4/23/20 5:42 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 24.04.2020 02:50, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 4/23/20 4:25 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 24.04.2020 02:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 4/23/20 4:19 PM, Sowjanya Komatineni wrote:
->>>>>> On 4/23/20 4:16 PM, Dmitry Osipenko wrote:
->>>>>>> External email: Use caution opening links or attachments
->>>>>>>
->>>>>>>
->>>>>>> 22.04.2020 09:18, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>> +static int chan_capture_kthread_start(void *data)
->>>>>>>> +{
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 int err =3D 0;
->>>>>>>> +
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 set_freezable();
->>>>>>>> +
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 while (1) {
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 try_to_freeze();
->>>>>>>> +
->>>>>>>> + wait_event_interruptible(chan->start_wait,
->>>>>>>> + !list_empty(&chan->capture) ||
->>>>>>>> + kthread_should_stop());
->>>>>>>> +
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 if (kthread_should_stop())
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>>>>>> +
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 /*
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 * Source is not streaming if error is non-zero.
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 * So, do not dequeue buffers on capture error.
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 */
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 if (err)
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 continue;
->>>>>>> This will result in an endless loop, I suppose it wasn't the
->>>>>>> intention.
->>>>>> no it will not. on error we report vb2_queue_error which will do
->>>>>> streaming stop request.
->>>>>>
->>>>>> So thread will be stopped on streaming stop request thru kthread=20
->>>>>> stop
->>>>>> signal
->>>>> To be clear on error it reports vb2 queue error and waits for stop
->>>>> streaming to happen
->>>> If thread should exit on error, then it should do it on the actual
->>>> error. Otherwise it looks very error-prone.
->>> When v4l2 drivers indicate fatal error through vb2_queue_error, queue
->>> error flag=C2=A0 is set and wakes up all processes waiting on queue alo=
-ng
->>> with polling reporting=C2=A0 EPOLLERR and also reporting error for queu=
-ing
->>> and dequeuing buffers. Stream stop will surely happen which stops the
->>> thread.
->> This doesn't explain what is the point of continuing to loop instead of
->> exiting immediately on error.
+> Huacai,
 >
-> We are using 2 threads and when capture start error happens, we can=20
-> stop capture_start thread immediately but capture_finish thread will=20
-> still run for any outstanding buffers.
+> On 2020-04-23 06:55, Huacai Chen wrote:
+> > Hi, Jiaxun,
+> >
+> > On Wed, Apr 22, 2020 at 10:28 PM Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > wrote:
+> >>
+> >> Add binding for Loongson PCH MSI controller.
+> >>
+> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >> ---
+> >>  .../loongson,pch-msi.yaml                     | 56
+> >> +++++++++++++++++++
+> >>  1 file changed, 56 insertions(+)
+> >>  create mode 100644
+> >> Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+> >>
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+> >> b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+> >> new file mode 100644
+> >> index 000000000000..dfb9cecacba0
+> >> --- /dev/null
+> >> +++
+> >> b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+> >> @@ -0,0 +1,56 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id:
+> >> "http://devicetree.org/schemas/interrupt-controller/loongson,pch-msi.yaml#"
+> >> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> >> +
+> >> +title: Loongson PCH MSI Controller
+> >> +
+> >> +maintainers:
+> >> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >> +
+> >> +description: |
+> >> +  This interrupt controller is found in the Loongson-7A family of PCH
+> >> for
+> > Please use "Loongson's LS7A family" here.
 >
-> So, as it makes no diff stopping both threads during stream stop which=20
-> will definitely happen on error and when we don't dequeue buffers
->
-Also there will be an issue if we break on error immediately during=20
-stop_streaming -> kthread_stop()
+> It's the fourth email you send on the same subject. I think the author
+> has got the message already. Frankly, it is only a name, and if they
+> want to call it Bob, so be it.
+I'm sorry that make so much noise, and I will not do this again. Yes,
+a name is just a name, but we can do something to avoid confusing as
+much as possible.
 
-As stop streaming can happen any time, we do kthread_stop and in case of=20
-error if we stop thread and on stop streaming kthread_stop might crash=20
-as kthread_stop can only be called on running thread
+>
+> Thanks,
+>
+>          M.
+> --
+> Jazz is not dead. It just smells funny...
 
+Thanks,
+Huacai
