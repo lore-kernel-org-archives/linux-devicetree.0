@@ -2,220 +2,92 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E571DC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14447C55196
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF17020776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:37:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="tMn5/e2A";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PeBuWruY"
+	by mail.kernel.org (Postfix) with ESMTP id F394D20767
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbgDXPhc (ORCPT
+        id S1728988AbgDXPiK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:37:32 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:44281 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728119AbgDXPha (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:37:30 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 865171455;
-        Fri, 24 Apr 2020 11:37:28 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:37:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=FzciRgntrUVjR
-        Spnb+QBb61aDq9QNcaXOAvosXqRwQ4=; b=tMn5/e2AbkJ6Bb5qdDKg4MieCXMFO
-        lfdC7gflTgzHbmol55bMIqkfSpxcwH+k/dkDafHxo7otMKs/m7bO6LU9cYiqpNtE
-        UX2A/m0lRe363maqxwCaBQs3MeE0RLDTlgBfu6ep4DJgCJ/EvZt4UO9NP6UgkwAi
-        rhJXagWyGlV6d6HmfnppNOn4TGo5iiDBaWDwPli75H4BmuTZ9R/MOrGIWr4vh15J
-        aUmuVRM/20XC5n8VLH1eF3ccV8qY37u2VA5ojuxp0nF0nJC3yGYe1xfNbkCLlvjb
-        OENaC0ZdkwVMG8cFmsar3IoQSabr1emYFFkWBZ+PvfzFIHAsqGdepOTGA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=FzciRgntrUVjRSpnb+QBb61aDq9QNcaXOAvosXqRwQ4=; b=PeBuWruY
-        GWa+BZy+5wtBqhfWMDD5PObCbstHMQRwKb2dnTHLGPyaICg8w1L+v5rigOHfKWTy
-        FHRLkdToLbdokqhSTA9OnWJltIMvffbRtHoVpyCktRrxKRCCrEkDtupVKQ7dtWqh
-        osXwvz3o75dXA/AZPgn/Y8VJgAXwTY6zsYxjuJISwQKsZufb5pmRgrl/0ZXcjKVn
-        n6vwLy6O4Ypag0FnHqaiOaUwS4PC4wKa7gyr6BQxXV19gKATO4/YmzqQsRj5D87D
-        w5hisOlHyqNIT710jnU6NsCp14GGfDW1p+pHkYZYa1DQwaP7bY1WYh0JfGf7I9RG
-        Y3d+xGTW+UR1pA==
-X-ME-Sender: <xms:twejXlpcHRijjQR8D9MlPfFte0qze1gvw1ngdSB1gn4W9CToVgP7YA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
-    evohgrshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffojghf
-    ggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgi
-    himhgvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdr
-    ohhrghenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedvne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:uAejXr4jlnVoWFqxG0QkCIaycK4lDjqDxfh6QmrjCAcwb-UusblkYw>
-    <xmx:uAejXtPY3G1bAzgIIHZg6hYx4hyGkzgu2s6sUpliucpKrhvTo_QHNA>
-    <xmx:uAejXlPtWB0ldfXuC5sUrhvwtQzZRtB6XUAXodyR2NqNqSJU-PfNmw>
-    <xmx:uAejXlVUoA317VBkUWodXQqqEWSeRA9KzRmcUMgW2dG6U1RGjdve3dWtrdQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B1D81328005E;
-        Fri, 24 Apr 2020 11:37:27 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v2 90/91] dt-bindings: display: vc4: hdmi: Add BCM2711 HDMI controllers bindings
-Date:   Fri, 24 Apr 2020 17:35:11 +0200
-Message-Id: <9bdee4024b3f95bed9b55c642f0f9415c22fc506.1587742492.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+        Fri, 24 Apr 2020 11:38:10 -0400
+Received: from muru.com ([72.249.23.125]:51236 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728222AbgDXPiK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 11:38:10 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 062F880E7;
+        Fri, 24 Apr 2020 15:38:56 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 08:38:06 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, lkft-triage@lists.linaro.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benoit Cousson <bcousson@baylibre.com>,
+        Carlos Hernandez <ceh@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Olof Johansson <olof@lixom.net>, tomi.valkeinen@ti.com,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: OF: ERROR: Bad of_node_put() on
+ /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
+Message-ID: <20200424153806.GJ37466@atomide.com>
+References: <CA+G9fYv5NxK+F5DX_q1c_wvnhjT_WTZBFJQXLWFeqMXsEcASZg@mail.gmail.com>
+ <CA+G9fYu-qYP2wJw4p1p_C6_ttwK0fvw+qUnsN9mDuKOv3zGEBw@mail.gmail.com>
+ <20200417152903.GO37466@atomide.com>
+ <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The HDMI controllers found in the BCM2711 SoC need some adjustments to the
-bindings, especially since the registers have been shuffled around in more
-register ranges.
+* Tero Kristo <t-kristo@ti.com> [200424 12:41]:
+> On 17/04/2020 18:29, Tony Lindgren wrote:
+> > * Naresh Kamboju <naresh.kamboju@linaro.org> [200327 16:44]:
+> > > The reported problem still happening on arm beagle board x15 device
+> > > running Linux next kernel 20200327.
+> > ...
+> > 
+> > > [    0.000000] OF: ERROR: Bad of_node_put() on
+> > > /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
+> > > [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
+> > >    5.6.0-rc7-next-20200327 #1
+> > > [    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
+> > > [    0.000000] [<c0311810>] (unwind_backtrace) from [<c030ba14>]
+> > > (show_stack+0x10/0x14)
+> > > [    0.000000] [<c030ba14>] (show_stack) from [<c0fb6604>]
+> > > (dump_stack+0xbc/0xd0)
+> > > [    0.000000] [<c0fb6604>] (dump_stack) from [<c0fbb07c>]
+> > > (kobject_put+0xc0/0x104)
+> > > [    0.000000] [<c0fbb07c>] (kobject_put) from [<c1639e4c>]
+> > > (of_clk_init+0x18c/0x228)
+> > > [    0.000000] [<c1639e4c>] (of_clk_init) from [<c1611544>]
+> > > (omap_clk_init+0x3c/0x58)
+> > > [    0.000000] [<c1611544>] (omap_clk_init) from [<c1611ea8>]
+> > > (omap4_sync32k_timer_init+0x8/0x2c)
+> > > [    0.000000] [<c1611ea8>] (omap4_sync32k_timer_init) from
+> > > [<c161213c>] (omap5_realtime_timer_init+0x8/0x234)
+> > > [    0.000000] [<c161213c>] (omap5_realtime_timer_init) from
+> > > [<c1600c88>] (start_kernel+0x330/0x4b8)
+> > 
+> > Just FYI, Tero is looking at the clock issues that seem to be
+> > causing these warnings.
+> 
+> Haven't seen this before, but easily reproducible with multi_v7_defconfig. I
+> have a simple fix for it now, will post to lists soon.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml | 109 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
+OK thanks for tracking it down.
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-new file mode 100644
-index 000000000000..6091fe3d315b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-@@ -0,0 +1,109 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/brcm,bcm2711-hdmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom BCM2711 HDMI Controller Device Tree Bindings
-+
-+maintainers:
-+  - Eric Anholt <eric@anholt.net>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - brcm,bcm2711-hdmi0
-+      - brcm,bcm2711-hdmi1
-+
-+  reg:
-+    items:
-+      - description: HDMI controller register range
-+      - description: DVP register range
-+      - description: HDMI PHY register range
-+      - description: Rate Manager register range
-+      - description: Packet RAM register range
-+      - description: Metadata RAM register range
-+      - description: CSC register range
-+      - description: CEC register range
-+      - description: HD register range
-+
-+  reg-names:
-+    items:
-+      - const: hdmi
-+      - const: dvp
-+      - const: phy
-+      - const: rm
-+      - const: packet
-+      - const: metadata
-+      - const: csc
-+      - const: cec
-+      - const: hd
-+
-+  clocks:
-+    description: The HDMI state machine clock
-+
-+  clock-names:
-+    const: hdmi
-+
-+  ddc:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+    description: >
-+      Phandle of the I2C controller used for DDC EDID probing
-+
-+  hpd-gpios:
-+    description: >
-+      The GPIO pin for the HDMI hotplug detect (if it doesn't appear
-+      as an interrupt/status bit in the HDMI controller itself)
-+
-+  dmas:
-+    maxItems: 1
-+    description: >
-+      Should contain one entry pointing to the DMA channel used to
-+      transfer audio data.
-+
-+  dma-names:
-+    const: audio-rx
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - resets
-+  - ddc
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    hdmi0: hdmi@7ef00700 {
-+        compatible = "brcm,bcm2711-hdmi0";
-+        reg = <0x7ef00700 0x300>,
-+              <0x7ef00300 0x200>,
-+              <0x7ef00f00 0x80>,
-+              <0x7ef00f80 0x80>,
-+              <0x7ef01b00 0x200>,
-+              <0x7ef01f00 0x400>,
-+              <0x7ef00200 0x80>,
-+              <0x7ef04300 0x100>,
-+              <0x7ef20000 0x100>;
-+        reg-names = "hdmi",
-+                    "dvp",
-+                    "phy",
-+                    "rm",
-+                    "packet",
-+                    "metadata",
-+                    "csc",
-+                    "cec",
-+                    "hd";
-+        clocks = <&firmware_clocks 13>;
-+        clock-names = "hdmi";
-+        resets = <&dvp 0>;
-+        ddc = <&ddc0>;
-+    };
-+
-+...
--- 
-git-series 0.9.1
+Tony
