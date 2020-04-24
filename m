@@ -4,66 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 662F3C55196
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0EAC55196
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 428AA20700
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EDD120700
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="vFfuVaTB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l5Tkrgwu"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="LRiL0r3p";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XMJBP5GB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbgDXPkY (ORCPT
+        id S1728894AbgDXPkc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:40:24 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:42339 "EHLO
+        Fri, 24 Apr 2020 11:40:32 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:39489 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728393AbgDXPgF (ORCPT
+        by vger.kernel.org with ESMTP id S1728353AbgDXPf5 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:36:05 -0400
+        Fri, 24 Apr 2020 11:35:57 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id A2D791431;
-        Fri, 24 Apr 2020 11:36:03 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:04 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id A560C1338;
+        Fri, 24 Apr 2020 11:35:56 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:35:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=FMKLC09xuIf9F
-        IYI+xqoFdFwX3vaShvGRIMTND5Z/+g=; b=vFfuVaTBl9lBx6ZA41ONXjYnFmlbp
-        1NRewMuL2HFtVGQVR1sFE2ehBKg5TWy0c8owqnD7Idt8Ip1OgmS/ZD7vujJIdGH1
-        oXAQD0IfScXmKwzLlgz4qIavwX0xa7wtiGa52zAR80dWpo3O2kmGTY192DkCYXMX
-        PrRj6B2g2G6WX+Ks7Jp+2pF9NHx8grY79nQp2CvUv+H7700vprZ5AbYBs6oVG6ZZ
-        k2m00lawZe8wnZmTNQsb9bR2TUKkGNHEIAR4FjWRaMjcn3acL+9CUoyDfSRm0Pga
-        nD+08qqizhA3tfQQBur0wRPpWhpDpzCKzqf94esKXax6wNLbR36v+zZug==
+        :mime-version:content-transfer-encoding; s=fm2; bh=YRaDkEkTklAX2
+        SkiwK41JMnq4nzpTHlfRqzovGYPSFo=; b=LRiL0r3pGsH7NH0UsiS1ZQyTZko/P
+        FagohDpiXdVd/S3MxI4t/rZ8096CFZXNvqEG2vnqhBmpNhRlaWPaaLAcmScXt7eu
+        H1qaG6DQtpk4cq2q+xFjxTonQKVXFa2ho/4EZCgl5qDvMNz4+j7Aua0ROYnBdFao
+        0UrckhSmgNsQzuZNfBGWB8kZRa62j25gNy5tgWQ3OSgEKZMNVvsbMk0/GHenBXhH
+        0WdgnhGNzaW/9Ubr76iCIR40rCct0FBj6vS74tSXqFjbtUDFm/8QO/oiHEtWrTJI
+        0GpnjVnDRm9mjs0ZWL7CR56oQiyAH3wNlH+jDbCfsTI/2YNffUF+K33LQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=FMKLC09xuIf9FIYI+xqoFdFwX3vaShvGRIMTND5Z/+g=; b=l5Tkrgwu
-        r558IB52HFews4Qvk9hqnM1tMnPOGyRIUlKRZ8znuQCAiUbghI6qNYMKB+fCiW0N
-        mdD+Yw70W593GTMPQP7Iqsu7nfIEOWV4TgeKhXEVamQeK1+6LLMFptRmtGgEYUjh
-        Is0fpwhpA2XsO3/SjT/XHFr3CAzSPl4QjbmAwTneKAwDFIoNA/junuobImWbwZAm
-        gYO0eSR8p9jGTFfMFtR3oXHb6xB66S9Vewy2uCFuPB+Dh8dgRZvNcVl7wuS8jqIx
-        IkuTWW5mdd4jZpe0xbf/RFCc8+jdnqXYh2rdPx5kzBbtyFpkUaBWq4sy7dctyzK9
-        XodGkIk8JEEhSA==
-X-ME-Sender: <xms:YwejXtMEaz-78CfRt8VHDSDF-2Mfan41F-7443840BSgzgItSSVDiQ>
+        fm2; bh=YRaDkEkTklAX2SkiwK41JMnq4nzpTHlfRqzovGYPSFo=; b=XMJBP5GB
+        /bJqUF20ppXOg2IXy6n4jKj4tlyRjY3IEDLvMpE1hdWSZ4xX4iqktdcRoodepNrt
+        lg134xyAe3W5nGO7XGm+GmS+LpyiOfoDqPKFicz+BYT2/bXzYPeA/j18pgarg8Gw
+        BaHMyBEF0g9mKXIpfkZQ1QTyyVAJE8Vfmn1XK2HJfwZgiU844wTZgpNlfdfy6UXy
+        cx1vJQt+ZfYXuElvlgpSgJAJib6VyavijETudd+m3/O8DZ4msVssR/Go0mf1z7x3
+        H0f20lNqQM9GC0/TtzXPwenEWY0a7jau37iYWd1IEnd0zwtXLcHPPIvxc9R3phlb
+        SFbSS2MBzwuS1g==
+X-ME-Sender: <xms:XAejXr5W7-kI-k-ntRqkQLPWi0dF-vX5gRY1FK9a3Z7N7__mSB-tsQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedvvdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:YwejXmtvckOH_v0Zc3S75RQgkV81DoBmBappqeO5EGPqSwhC9zf7CA>
-    <xmx:YwejXjzsSNu7ZSKymFDA8TDT7qmoQU8XzG_MHcd1FsmeycsRcYw9yg>
-    <xmx:YwejXn4hfRyhLITSm-CjTvvgqLlrPhTMlo-aTkneWhxHuptTNfSQLw>
-    <xmx:YwejXoZY41Z9pG-PSPtCJqihIIMb2yFbOef9FmSsb7I4vUGbNltVkEPHsM0>
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
+    evohgrshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffojghf
+    ggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgi
+    himhgvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdr
+    ohhrghenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedune
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:XAejXhUWqZFRNR_5fZsp3aMzApxekHQOufLuZwxSzTrEP3nqQVPRJg>
+    <xmx:XAejXiO1FOGTNcMczhzIZV_CIsdRnPyH4ztsR_9xlat1qHJrDJmNGg>
+    <xmx:XAejXohhZB0zr4r85_LevF2B5lIibXBh2gUnjgBYyH68CRfv_g-PbA>
+    <xmx:XAejXqLUGxn8iB0XqtXvIkK9k1qYa_qVCRJkfrBOxF7xp7wNnnJBpczcW48>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DEF6F3065CDA;
-        Fri, 24 Apr 2020 11:36:02 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id D40B5328005D;
+        Fri, 24 Apr 2020 11:35:55 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -74,11 +75,12 @@ Cc:     dri-devel@lists.freedesktop.org,
         Dave Stevenson <dave.stevenson@raspberrypi.com>,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 29/91] dt-bindings: display: vc4: dsi: Add missing clock properties
-Date:   Fri, 24 Apr 2020 17:34:10 +0200
-Message-Id: <250df886c0909445783deaf05dac777a362cd156.1587742492.git-series.maxime@cerno.tech>
+        Maxime Ripard <maxime@cerno.tech>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v2 24/91] dt-bindings: clock: Add BCM2711 DVP binding
+Date:   Fri, 24 Apr 2020 17:34:05 +0200
+Message-Id: <29a820e57e208b5ef8d498b121908604bb82245d.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -89,55 +91,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-While the device tree and the driver expected a clock-names and a
-clock-cells properties, it wasn't explicitly documented in the previous
-binding. Make sure it is now.
+The BCM2711 has a unit controlling the HDMI0 and HDMI1 clock and reset
+signals. Let's add a binding for it.
 
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
 Cc: devicetree@vger.kernel.org
 Reviewed-by: Rob Herring <robh+dt@kernel.org>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml | 11 +++++++-
- 1 file changed, 11 insertions(+)
+ Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml | 47 +++++++-
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
-index 3887675f844e..3c643b227a70 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
-@@ -10,6 +10,9 @@ maintainers:
-   - Eric Anholt <eric@anholt.net>
- 
- properties:
+diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml b/Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml
+new file mode 100644
+index 000000000000..08543ecbe35b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/brcm,bcm2711-dvp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Broadcom BCM2711 HDMI DVP Device Tree Bindings
++
++maintainers:
++  - Maxime Ripard <mripard@kernel.org>
++
++properties:
 +  "#clock-cells":
 +    const: 1
 +
-   compatible:
-     enum:
-       - brcm,bcm2835-dsi0
-@@ -24,6 +27,12 @@ properties:
-       - description: The DSI ESC clock
-       - description: The DSI pixel clock
- 
-+  clock-names:
-+    items:
-+      - const: phy
-+      - const: escape
-+      - const: pixel
++  "#reset-cells":
++    const: 1
 +
-   clock-output-names: true
-     # FIXME: The meta-schemas don't seem to allow it for now
-     # items:
-@@ -35,9 +44,11 @@ properties:
-     maxItems: 1
- 
- required:
++  compatible:
++    const: brcm,brcm2711-dvp
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
 +  - "#clock-cells"
-   - compatible
-   - reg
-   - clocks
-+  - clock-names
-   - clock-output-names
-   - interrupts
- 
++  - "#reset-cells"
++  - compatible
++  - reg
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    dvp: clock@7ef00000 {
++        compatible = "brcm,brcm2711-dvp";
++        reg = <0x7ef00000 0x10>;
++        clocks = <&clk_108MHz>;
++        #clock-cells = <1>;
++        #reset-cells = <1>;
++    };
++
++...
 -- 
 git-series 0.9.1
