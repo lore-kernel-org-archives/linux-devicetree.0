@@ -2,129 +2,101 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E23C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB4BC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47B442075A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9888B2063A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LXbf8HmZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EaiRysTH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgDXPtQ (ORCPT
+        id S1727982AbgDXPvv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:49:16 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58780 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgDXPtP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 11:49:15 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03OFmvgr112448;
-        Fri, 24 Apr 2020 10:48:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587743337;
-        bh=brDS66IythliFGEaOudO2r3RwbjKsL4G+NVVMco0T4w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LXbf8HmZgPVyfb7AbDC/MngnskLjXg1hpW8gOpuma3t6ZDd4C5SWcpJSbIY71EcO6
-         J8xOD1nxVc6CeIzfvL+ATDJvtc58ZzvET3E0rQBFHnXoNtmMp0rq9WwXnFPrr8g5p/
-         G9/Z1BB8Rhf1Y4PQZUKaBvIFEy9yOj+coCQFJVSU=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03OFmv77021324
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Apr 2020 10:48:57 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
- Apr 2020 10:48:57 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 24 Apr 2020 10:48:57 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03OFmrEs029197;
-        Fri, 24 Apr 2020 10:48:54 -0500
-Subject: Re: OF: ERROR: Bad of_node_put() on
- /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <lkft-triage@lists.linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benoit Cousson <bcousson@baylibre.com>,
-        Carlos Hernandez <ceh@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Olof Johansson <olof@lixom.net>, <tomi.valkeinen@ti.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYv5NxK+F5DX_q1c_wvnhjT_WTZBFJQXLWFeqMXsEcASZg@mail.gmail.com>
- <CA+G9fYu-qYP2wJw4p1p_C6_ttwK0fvw+qUnsN9mDuKOv3zGEBw@mail.gmail.com>
- <20200417152903.GO37466@atomide.com>
- <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
- <20200424153806.GJ37466@atomide.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <913875ab-1b78-e37c-a168-3eb6e4815edb@ti.com>
-Date:   Fri, 24 Apr 2020 18:48:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Apr 2020 11:51:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgDXPvu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 11:51:50 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87078C09B047
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 08:51:50 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id v63so4972736pfb.10
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 08:51:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G5PlYrTAxuP4jdGGCfhHHIkEJ7U7EkPwrECQq1/CaMg=;
+        b=EaiRysTHCtPodQ5fxFggQe3OinZ9fgf3lzjpO+Ink3q+dKHjSSGbaKMXLVP65Y7nyq
+         TaxOzbgnqWXRtkAaFjxJD3pHXfoxRhIcx6M97qzDbeTTiJjX7kFSf5g0kH5SlZzTIhQU
+         hY2fZ5eO5EVxTyLMtxw7Iq6vMaPZav1IOXT4E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G5PlYrTAxuP4jdGGCfhHHIkEJ7U7EkPwrECQq1/CaMg=;
+        b=CrX9TNoU0v4kx2bjtawIC/Ix3u5OCiG2QTQqjUdFGhGkr0aWvIQY/lh0SNh4S4QrmD
+         JzhX+unRnuJ47uCb/jU4V74/Hj+DYqk2pk5NqHf8PSEylzLPORpSGk4opBYqUO5mImCe
+         DNbvvowfqinc0uD1bTpEwKH2MQkGwbgUeRR/JjfRu59asJCuJOX20eauYrwsvL85zIiJ
+         qra2qlxYzLxOyobOl5fHVPxzLeoV5eRzDXelsmy9zt5xf0sXiHIjVW3coihYkgKkOnWB
+         W2RRmpQdlSAVjwUQkNC5+kQ3CoVwNeDD2F99PGPTLHsdZB4D37CDCKBMreG0GEKCP4FV
+         Ubeg==
+X-Gm-Message-State: AGi0PuYcBy0TN5C6yFuIHOLpkU9eTrzszTljxK/5RgsHq0DxpHKSlfaX
+        DDYOH3x0H8W3FB64mliF/UVvpQ==
+X-Google-Smtp-Source: APiQypK5wO/pT3SH10jr2z9q6Ql2ONlPngJbVETLFqKnjrW9asaC9My0tclDZaDOgw6H69igIIl2Zg==
+X-Received: by 2002:a63:5663:: with SMTP id g35mr7350444pgm.356.1587743509867;
+        Fri, 24 Apr 2020 08:51:49 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id 185sm6546149pfv.9.2020.04.24.08.51.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 08:51:49 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Maulik Shah <mkshah@codeaurora.org>, mka@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sc7180: Add "no-map" to cmd_db reserved area
+Date:   Fri, 24 Apr 2020 08:51:29 -0700
+Message-Id: <20200424085121.1.I9d1e84d30f488cdb5a957f582abaecd2c0b24d70@changeid>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
 MIME-Version: 1.0
-In-Reply-To: <20200424153806.GJ37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 24/04/2020 18:38, Tony Lindgren wrote:
-> * Tero Kristo <t-kristo@ti.com> [200424 12:41]:
->> On 17/04/2020 18:29, Tony Lindgren wrote:
->>> * Naresh Kamboju <naresh.kamboju@linaro.org> [200327 16:44]:
->>>> The reported problem still happening on arm beagle board x15 device
->>>> running Linux next kernel 20200327.
->>> ...
->>>
->>>> [    0.000000] OF: ERROR: Bad of_node_put() on
->>>> /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
->>>> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
->>>>     5.6.0-rc7-next-20200327 #1
->>>> [    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
->>>> [    0.000000] [<c0311810>] (unwind_backtrace) from [<c030ba14>]
->>>> (show_stack+0x10/0x14)
->>>> [    0.000000] [<c030ba14>] (show_stack) from [<c0fb6604>]
->>>> (dump_stack+0xbc/0xd0)
->>>> [    0.000000] [<c0fb6604>] (dump_stack) from [<c0fbb07c>]
->>>> (kobject_put+0xc0/0x104)
->>>> [    0.000000] [<c0fbb07c>] (kobject_put) from [<c1639e4c>]
->>>> (of_clk_init+0x18c/0x228)
->>>> [    0.000000] [<c1639e4c>] (of_clk_init) from [<c1611544>]
->>>> (omap_clk_init+0x3c/0x58)
->>>> [    0.000000] [<c1611544>] (omap_clk_init) from [<c1611ea8>]
->>>> (omap4_sync32k_timer_init+0x8/0x2c)
->>>> [    0.000000] [<c1611ea8>] (omap4_sync32k_timer_init) from
->>>> [<c161213c>] (omap5_realtime_timer_init+0x8/0x234)
->>>> [    0.000000] [<c161213c>] (omap5_realtime_timer_init) from
->>>> [<c1600c88>] (start_kernel+0x330/0x4b8)
->>>
->>> Just FYI, Tero is looking at the clock issues that seem to be
->>> causing these warnings.
->>
->> Haven't seen this before, but easily reproducible with multi_v7_defconfig. I
->> have a simple fix for it now, will post to lists soon.
-> 
-> OK thanks for tracking it down.
+The example in the bindings and all the current users (except sc7180)
+have "no-map".  I'm pretty sure we need it on sc7180 too.  Add it.
 
-No problem, sorry about the latency in my response though. I guess I got 
-too many things on my plate. :)
+Fixes: e0abc5eb526e ("arm64: dts: qcom: sc7180: Add cmd_db reserved area")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
--Tero
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 4216b574c080..94d2ee126d25 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -73,6 +73,7 @@ reserved_memory: reserved-memory {
+ 		aop_cmd_db_mem: memory@80820000 {
+ 			reg = <0x0 0x80820000 0x0 0x20000>;
+ 			compatible = "qcom,cmd-db";
++			no-map;
+ 		};
+ 
+ 		smem_mem: memory@80900000 {
+-- 
+2.26.2.303.gf8c07b1a785-goog
+
