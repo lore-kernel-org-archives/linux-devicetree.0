@@ -2,61 +2,62 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC37C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1360C55186
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C338520776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC93C21569
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o/w9qIEs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ierhYQVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgDXPyI (ORCPT
+        id S1727091AbgDXPyh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:54:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55656 "EHLO
+        Fri, 24 Apr 2020 11:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728131AbgDXPyH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 11:54:07 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D5CC09B048
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 08:54:07 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x4so11070819wmj.1
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 08:54:07 -0700 (PDT)
+        with ESMTP id S1728561AbgDXPyS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 11:54:18 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 377F8C09B048
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 08:54:18 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s10so11492813wrr.0
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 08:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ADrifka4jhigxTALfjwTYGfnpgXgMD4+a7Agmx5rILo=;
-        b=o/w9qIEsR+jr/v3slfQCnrCxYARzCrPSp9pGgpkQYlXsYkQqTqh5Ji/+MpmCSaLS7v
-         qKHbT2sNu/Pb2EjTHUgKbzkC/1MtWLpU3ixdlfcQZKcYuF26dD3heeBoqcTVwGATqcZl
-         AcN32liN1kpIyZ+HvwHkiq3cux6jxRru7nZGyTjNy47N8qAtif6IiMo45FWa+L6zjq4m
-         XLGqPlzFurqrLGpfGX0krk2zrVOCU5MhoV+9lfTJrk3gaT90QF23dKMEi7JaMBBLi7/W
-         yaezqte/sAZIbTiDiu3SA8Iwa4hxtfQd+ZjgfOzOTvVjFliw2MSetKNqqA77YYdqNUk3
-         cdkQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ANWXN+2Z3DDrWrVHhsInrxi4EvXPY/8IIalTrvooHG8=;
+        b=ierhYQVQtu+peHFc42kGYjWb//BJX4HxUct5NT4NbIFrjxEH8CyvRdBn6tFBhqOmmb
+         UZ9Z4We6ymLhwC+k6u7kLuDxlPVFOOQGvlAk+jPhjmdbCbjYVkCTzKw5zVCT4WE1l3l+
+         swhcNCjbycHGW70kjoSWISiktdL9x1hDHAk6tBNdNnJsxMGQ4uEldlTRgEQh5IyTb5+U
+         SM8pwVGCpglmLCRaWndJSlE80A10xg6vjnApxIpGL5/9aPpXdgx8QawNiSoyVf1jfWjp
+         lXs+QzmVRTk35lbTdx27DwApHTGihQQBam8yyp/jRZk32rizTuYPTdWUu6rc46nUFTTk
+         o51Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ADrifka4jhigxTALfjwTYGfnpgXgMD4+a7Agmx5rILo=;
-        b=TTkP8BSB5Qm3kcjeKKohXBiofcEw56bWPMACtVssEbuFH7VUSHQYecg7OyBQm9MrFp
-         sijuRnIDrHNhiCKInjkvsW84Z7DnkJgK1Wi5FlMjIc9zLi0/OUwleAGxiyoJi5QUj05n
-         4/B36q9f/5cYmjDhRD4n3bIm4nrHG3Uqh9Tu0Cd6kjkIjOJDvtCLHqbgnpEVrbGHLOXu
-         PcBxAYbcSeAsQxkFYxSR+YZp7/xlBQDPHQ8kiLuHM+rI/hZXBI3x41hALcmC/0TjGaNy
-         K5etXX21TSBUI+rZCxVb7PHI2WesDJowSaSll4PcBj7il7g1dDp/S8TFo/+fujmkdjh9
-         11Iw==
-X-Gm-Message-State: AGi0Pub9Lw2q44mGtVEh/78m9K+eSFvfNKx/XFIXmSSYLaSEnzQ1L9w4
-        8NmTWmRHZZsB48T1hZ3F3vowfQ==
-X-Google-Smtp-Source: APiQypI10LpqQHNiTVHYn+3Mk1k8a0b6tul7ntLB01e7r3o7yyKMm+eFZUqWmrr9UyT6X72zGWwYhQ==
-X-Received: by 2002:a7b:ce09:: with SMTP id m9mr10474294wmc.156.1587743646215;
-        Fri, 24 Apr 2020 08:54:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ANWXN+2Z3DDrWrVHhsInrxi4EvXPY/8IIalTrvooHG8=;
+        b=O+Cyd20z5A81sNuh9eMZUox+kJ/nvomqLd6dcu/QCMktZzrwNapPRjcJsgyTMRLcN+
+         R317Cis+VvvXQ/7bkQ1BpZLmbvWgZwmsPjG2pQhseH6rF9f88na5CjqPOaPunH2WA4E0
+         fFukfJtdbPNjQPpiqW97yaqZmdNgKLyiv61DH0hFZ7r8iB6Vo6hgSJ8ElxnSAgYhj0hO
+         YsC672t2UZYgjt/hkGfTBpiLzl+sYJrypND/sDxo0f0wevp7ChuzFN0S8jbRu8zsbtcg
+         aoKST3k/FyG+/GC1iMl6SPkz4T3yiMF1AQ/mwuUCffOrHaYgtbDGr19kZWak1e4hFioX
+         TH2w==
+X-Gm-Message-State: AGi0PuZsngbaYp5PE7GSeAmJ8eVimv4C56FpJFQnyv3f1K8+kCEq2Opp
+        CFPj1Dus1/PsMShM5jhv6W/M/A==
+X-Google-Smtp-Source: APiQypKrt1I/vfpXrZmkPsz9dzLuK18NN6O8r2S9WWku5sLnMIaDkgNIXVxKYk9wDEbtIfT8TGH1QA==
+X-Received: by 2002:adf:c109:: with SMTP id r9mr11837240wre.265.1587743656909;
+        Fri, 24 Apr 2020 08:54:16 -0700 (PDT)
 Received: from localhost.localdomain ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id z76sm3923583wmc.9.2020.04.24.08.54.04
+        by smtp.googlemail.com with ESMTPSA id z76sm3923583wmc.9.2020.04.24.08.54.15
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Apr 2020 08:54:05 -0700 (PDT)
+        Fri, 24 Apr 2020 08:54:16 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
         robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
@@ -66,10 +67,12 @@ Cc:     rnayak@codeaurora.org, bjorn.andersson@linaro.org,
         evgreen@chromium.org, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         georgi.djakov@linaro.org
-Subject: [PATCH v7 0/7] Introduce OPP bandwidth bindings
-Date:   Fri, 24 Apr 2020 18:53:57 +0300
-Message-Id: <20200424155404.10746-1-georgi.djakov@linaro.org>
+Subject: [PATCH v7 7/7] cpufreq: dt: Add support for interconnect bandwidth scaling
+Date:   Fri, 24 Apr 2020 18:54:04 +0300
+Message-Id: <20200424155404.10746-8-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200424155404.10746-1-georgi.djakov@linaro.org>
+References: <20200424155404.10746-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -77,131 +80,72 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Here is a proposal to extend the OPP bindings with bandwidth based on
-a few previous discussions [1] and patchsets from me [2][3] and Saravana
-[4][5][6][7][8][9].
+In addition to clocks and regulators, some devices can scale the bandwidth
+of their on-chip interconnect - for example between CPU and DDR memory. Add
+support for that, so that platforms which support it can make use of it.
 
-Changes in v7:
-* This version is combination of both patchsets by Saravana and me, based
-on [3] and [9].
-* The latest version of DT bindings from Saravana is used here, with a
-minor change of using arrays instead of single integers for opp-peak-kBps
-and opp-avg-kBps. This is needed to support multiple interconnect paths.
-* The concept of having multiple OPP tables per device has been dropped,
-as it was nacked by Viresh.
-* Various reviews comments have been addressed and some patches are
-split, and there are also some new patches. Thanks to Viresh, Sibi and
-others for providing feedback!
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+v7:
+* Drop using dev_pm_opp_set_paths(), as it has been removed.
+* Add Kconfig dependency on INTERCONNECT, as it can be module.
 
-With this version of the patchset, the CPU/GPU to DDR bandwidth scaling
-will look like this in DT:
 
-One interconnect path (no change from Saravana's v6 patches):
+v2: https://lore.kernel.org/r/20190423132823.7915-6-georgi.djakov@linaro.org
 
-cpu@0 {
-	operating-points-v2 = <&cpu_opp_table>;
-	interconnects = <&noc1 MASTER1 &noc2 SLAVE1>,
-};
+ drivers/cpufreq/Kconfig      |  1 +
+ drivers/cpufreq/cpufreq-dt.c | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-cpu_opp_table: cpu_opp_table {
-	compatible = "operating-points-v2";
-
-	opp-800000000 {
-		opp-hz = /bits/ 64 <800000000>;
-		opp-peak-kBps = <1525000>;
-		opp-avg-kBps = <457000>;
-	};
-
-	opp-998400000 {
-		opp-hz = /bits/ 64 <998400000>;
-		opp-peak-kBps = <7614000>;
-		opp-avg-kBps = <2284000>;
-	};
-};
-
-Two interconnect paths:
-
-cpu@0 {
-	operating-points-v2 = <&cpu_opp_table>;
-	interconnects = <&noc1 MASTER1 &noc2 SLAVE1>,
-			<&noc3 MASTER2 &noc4 SLAVE2>;
-};
-
-cpu_opp_table: cpu_opp_table {
-	compatible = "operating-points-v2";
-
-	opp-800000000 {
-		opp-hz = /bits/ 64 <800000000>;
-		opp-peak-kBps = <1525000 2000>;
-		opp-avg-kBps = <457000 1000>;
-	};
-
-	opp-998400000 {
-		opp-hz = /bits/ 64 <998400000>;
-		opp-peak-kBps = <7614000 4000>;
-		opp-avg-kBps = <2284000 2000>;
-	};
-};
-
-------
-
-Every functional block on a SoC can contribute to the system power
-efficiency by expressing its own bandwidth needs (to memory or other SoC
-modules). This will allow the system to save power when high throughput
-is not required (and also provide maximum throughput when needed).
-
-There are at least three ways for a device to determine its bandwidth
-needs:
-	1. The device can dynamically calculate the needed bandwidth
-based on some known variable. For example: UART (baud rate), I2C (fast
-mode, high-speed mode, etc), USB (specification version, data transfer
-type), SDHC (SD standard, clock rate, bus-width), Video Encoder/Decoder
-(video format, resolution, frame-rate)
-
-	2. There is a hardware specific value. For example: hardware
-specific constant value (e.g. for PRNG) or use-case specific value that
-is hard-coded.
-
-	3. Predefined SoC/board specific bandwidth values. For example:
-CPU or GPU bandwidth is related to the current core frequency and both
-bandwidth and frequency are scaled together.
-
-This patchset is trying to address point 3 above by extending the OPP
-bindings to support predefined SoC/board bandwidth values and adds
-support in cpufreq-dt to scale the interconnect between the CPU and the
-DDR together with frequency and voltage.
-
-[1] https://patchwork.kernel.org/patch/10577315/
-[2] https://lore.kernel.org/r/20190313090010.20534-1-georgi.djakov@linaro.org/
-[3] https://lore.kernel.org/r/20190423132823.7915-1-georgi.djakov@linaro.org/
-[4] https://lore.kernel.org/r/20190608044339.115026-1-saravanak@google.com
-[5] https://lore.kernel.org/r/20190614041733.120807-1-saravanak@google.com
-[6] https://lore.kernel.org/r/20190703011020.151615-1-saravanak@google.com
-[7] https://lore.kernel.org/r/20190726231558.175130-1-saravanak@google.com
-[8] https://lore.kernel.org/r/20190807223111.230846-1-saravanak@google.com
-[9] https://lore.kernel.org/r/20191207002424.201796-1-saravanak@google.com
-
-Georgi Djakov (5):
-  interconnect: Add of_icc_get_by_index() helper function
-  OPP: Add support for parsing interconnect bandwidth
-  OPP: Add sanity checks in _read_opp_key()
-  OPP: Update the bandwidth on OPP frequency changes
-  cpufreq: dt: Add support for interconnect bandwidth scaling
-
-Saravana Kannan (2):
-  dt-bindings: opp: Introduce opp-peak-kBps and opp-avg-kBps bindings
-  OPP: Add helpers for reading the binding properties
-
- Documentation/devicetree/bindings/opp/opp.txt |  20 ++-
- .../devicetree/bindings/property-units.txt    |   4 +
- drivers/cpufreq/Kconfig                       |   1 +
- drivers/cpufreq/cpufreq-dt.c                  |  15 ++
- drivers/interconnect/core.c                   |  68 +++++--
- drivers/opp/Kconfig                           |   1 +
- drivers/opp/core.c                            |  44 ++++-
- drivers/opp/of.c                              | 170 ++++++++++++++++--
- drivers/opp/opp.h                             |  10 ++
- include/linux/interconnect.h                  |   6 +
- include/linux/pm_opp.h                        |  12 ++
- 11 files changed, 311 insertions(+), 40 deletions(-)
-
+diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+index c3e6bd59e920..db2ad54ee67f 100644
+--- a/drivers/cpufreq/Kconfig
++++ b/drivers/cpufreq/Kconfig
+@@ -217,6 +217,7 @@ config CPUFREQ_DT
+ 
+ config CPUFREQ_DT_PLATDEV
+ 	bool
++	depends on INTERCONNECT || !INTERCONNECT
+ 	help
+ 	  This adds a generic DT based cpufreq platdev driver for frequency
+ 	  management.  This creates a 'cpufreq-dt' platform device, on the
+diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+index 26fe8dfb9ce6..4ecef3257532 100644
+--- a/drivers/cpufreq/cpufreq-dt.c
++++ b/drivers/cpufreq/cpufreq-dt.c
+@@ -13,6 +13,7 @@
+ #include <linux/cpufreq.h>
+ #include <linux/cpumask.h>
+ #include <linux/err.h>
++#include <linux/interconnect.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/pm_opp.h>
+@@ -95,6 +96,7 @@ static int resources_available(void)
+ 	struct device *cpu_dev;
+ 	struct regulator *cpu_reg;
+ 	struct clk *cpu_clk;
++	struct icc_path *cpu_path;
+ 	int ret = 0;
+ 	const char *name;
+ 
+@@ -121,6 +123,19 @@ static int resources_available(void)
+ 
+ 	clk_put(cpu_clk);
+ 
++	cpu_path = of_icc_get(cpu_dev, NULL);
++	ret = PTR_ERR_OR_ZERO(cpu_path);
++	if (ret) {
++		if (ret == -EPROBE_DEFER)
++			dev_dbg(cpu_dev, "defer icc path: %d\n", ret);
++		else
++			dev_err(cpu_dev, "failed to get icc path: %d\n", ret);
++
++		return ret;
++	}
++
++	icc_put(cpu_path);
++
+ 	name = find_supply_name(cpu_dev);
+ 	/* Platform doesn't require regulator */
+ 	if (!name)
