@@ -2,92 +2,118 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14447C55196
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70436C55196
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F394D20767
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CDF2084D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XAY7KFmQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZVsO7R0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgDXPiK (ORCPT
+        id S1728664AbgDXPgs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:38:10 -0400
-Received: from muru.com ([72.249.23.125]:51236 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbgDXPiK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:38:10 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 062F880E7;
-        Fri, 24 Apr 2020 15:38:56 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 08:38:06 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org, lkft-triage@lists.linaro.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benoit Cousson <bcousson@baylibre.com>,
-        Carlos Hernandez <ceh@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Olof Johansson <olof@lixom.net>, tomi.valkeinen@ti.com,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: OF: ERROR: Bad of_node_put() on
- /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
-Message-ID: <20200424153806.GJ37466@atomide.com>
-References: <CA+G9fYv5NxK+F5DX_q1c_wvnhjT_WTZBFJQXLWFeqMXsEcASZg@mail.gmail.com>
- <CA+G9fYu-qYP2wJw4p1p_C6_ttwK0fvw+qUnsN9mDuKOv3zGEBw@mail.gmail.com>
- <20200417152903.GO37466@atomide.com>
- <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
+        Fri, 24 Apr 2020 11:36:48 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:51735 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728658AbgDXPgq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 11:36:46 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 61F48334;
+        Fri, 24 Apr 2020 11:36:45 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=mIo2yTnIciTwR
+        AfqGqPRdeUMoEIyJ/WFBxN68ut8oG8=; b=XAY7KFmQ9PTHYwXMyTnUapTYKD24g
+        Mn8jD2A7zM2FUgstdDbWgxTUbdsc0MaTfjLL28skUbmn+ghoY9CUmOCfqIdgQOMZ
+        cWcuu7sdV16n6KAK3qEP2dsnkV/3La8xkZiUS4kkqXAB9joVKqtv+siHkCJrOIDe
+        e2USEfaz0X0x/OYcNdI3PFhO60umohg4/nIRvQytUdoB2svwIXx1YwCe2YAPSwg7
+        MbVoWIWpWC8RsjFafN9sHKp/Kjads4lImncWQ/tOehrQiQmrU09QMlRYSwl5TLAD
+        rIr8IusTRtEg/ppTulPcHDVCtD2jf1SqMDWHTImU7/5FtExW+xat4NDLw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=mIo2yTnIciTwRAfqGqPRdeUMoEIyJ/WFBxN68ut8oG8=; b=ZVsO7R0B
+        BZvoD2w8F8WMZ1HSehOtOrclHujG/eMySrgwFi75FD/rrRE0+DVvt3nPGa/gzyST
+        ZciLYHA3TuTaKOHirgTL4GDuVa/Ljt//zPqv0uQl4UripPfTm3b1LJAaX81PV8No
+        1EVD+UmkYXIugR48wNuwmBwQp268S2ETvuboamscQZrVbip10DIXe0aBk5ito7w/
+        i7in/zrC/FZsRg9gOJTBDtcsjR42ut2ew6NdIcoYYhnrC5LWrrxthDgLVVDHOPj/
+        uzQDeESNeVl76yAfKoNecbhciQz5uDODLalYS6nDF1LMzUpVSEOsDaYG70y5yBkq
+        PW+yE+63KXrOOw==
+X-ME-Sender: <xms:jAejXrPXjRki40XukrQGpqYkBxwCbfRMZWtOdTF6OGEOwB7nsL21wA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeehudenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:jAejXqOeWAWXjKtcJ2WkYnNupPOLAY4qkuHbAlb0fetjOhhsWlp7Tg>
+    <xmx:jAejXlTqMD-dvnKAFtjv5Bs3fT9Zp85QfufkPxe4y3sRVM38Hueq1w>
+    <xmx:jAejXkBHysai9lOmJH8G_LW-AhHhH2rsA93tJMrkDLMjiP-1jYnduA>
+    <xmx:jQejXoIDgJUvT34hWhwsWHKmIEK8IAAn4vmTCVAQd5Lor41MGUpKJtOFYHo>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8AADE3065CDA;
+        Fri, 24 Apr 2020 11:36:44 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v2 59/91] dt-bindings: display: vc4: pv: Add BCM2711 pixel valves
+Date:   Fri, 24 Apr 2020 17:34:40 +0200
+Message-Id: <d32c991fa0441b631ca5de8a39107a0db5e13880.1587742492.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [200424 12:41]:
-> On 17/04/2020 18:29, Tony Lindgren wrote:
-> > * Naresh Kamboju <naresh.kamboju@linaro.org> [200327 16:44]:
-> > > The reported problem still happening on arm beagle board x15 device
-> > > running Linux next kernel 20200327.
-> > ...
-> > 
-> > > [    0.000000] OF: ERROR: Bad of_node_put() on
-> > > /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
-> > > [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
-> > >    5.6.0-rc7-next-20200327 #1
-> > > [    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
-> > > [    0.000000] [<c0311810>] (unwind_backtrace) from [<c030ba14>]
-> > > (show_stack+0x10/0x14)
-> > > [    0.000000] [<c030ba14>] (show_stack) from [<c0fb6604>]
-> > > (dump_stack+0xbc/0xd0)
-> > > [    0.000000] [<c0fb6604>] (dump_stack) from [<c0fbb07c>]
-> > > (kobject_put+0xc0/0x104)
-> > > [    0.000000] [<c0fbb07c>] (kobject_put) from [<c1639e4c>]
-> > > (of_clk_init+0x18c/0x228)
-> > > [    0.000000] [<c1639e4c>] (of_clk_init) from [<c1611544>]
-> > > (omap_clk_init+0x3c/0x58)
-> > > [    0.000000] [<c1611544>] (omap_clk_init) from [<c1611ea8>]
-> > > (omap4_sync32k_timer_init+0x8/0x2c)
-> > > [    0.000000] [<c1611ea8>] (omap4_sync32k_timer_init) from
-> > > [<c161213c>] (omap5_realtime_timer_init+0x8/0x234)
-> > > [    0.000000] [<c161213c>] (omap5_realtime_timer_init) from
-> > > [<c1600c88>] (start_kernel+0x330/0x4b8)
-> > 
-> > Just FYI, Tero is looking at the clock issues that seem to be
-> > causing these warnings.
-> 
-> Haven't seen this before, but easily reproducible with multi_v7_defconfig. I
-> have a simple fix for it now, will post to lists soon.
+The BCM2711 comes with other pixelvalves that have different requirements
+and capabilities. Let's document their compatible.
 
-OK thanks for tracking it down.
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Tony
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
+index e60791db1fa1..4e1ba03f6477 100644
+--- a/Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
++++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
+@@ -15,6 +15,11 @@ properties:
+       - brcm,bcm2835-pixelvalve0
+       - brcm,bcm2835-pixelvalve1
+       - brcm,bcm2835-pixelvalve2
++      - brcm,bcm2711-pixelvalve0
++      - brcm,bcm2711-pixelvalve1
++      - brcm,bcm2711-pixelvalve2
++      - brcm,bcm2711-pixelvalve3
++      - brcm,bcm2711-pixelvalve4
+ 
+   reg:
+     maxItems: 1
+-- 
+git-series 0.9.1
