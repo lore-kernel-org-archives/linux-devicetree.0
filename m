@@ -2,142 +2,149 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69232C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 00:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4189C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 00:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48CBF20CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 00:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5AEF2087E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 00:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gpboAXek"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lH4nj+WY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgDXApR (ORCPT
+        id S1728395AbgDXAvv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 20:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728156AbgDXApQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 20:45:16 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 225DFC09B044
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 17:45:15 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 145so3910328pfw.13
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 17:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hOf+x2Y/Qe7ScdzUkVaxYfAFCfFShTVPAhN8bzkGnXg=;
-        b=gpboAXekQ409ikcKnsJINuleZnjwZW1LBae+1wFSPlBf4tiLiWDNQ50LbNngeu9sf/
-         Xgw9IU+pc6c9DnwvAakrbtb4HLsIk+0g2BZkddeMsg4+2/8PQEIz10vKTmoT/NhZiFmK
-         B48ElTPt8fsDWhuiJLmZE1NkMURXV9l0CNq1A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hOf+x2Y/Qe7ScdzUkVaxYfAFCfFShTVPAhN8bzkGnXg=;
-        b=ThDgwEsFD4XScwGJUVNsGPi81kUjxMttn/iOgDVBuTgp5OPHtcI905F6tkGXWqLmbD
-         oOYWMZQ3W85bKBJvKBcm+Byw969dc2aW70h8ePIHKGP/2/bZQYcezuV7ux+BhAQTPk0b
-         JrKkbD1j3HFyd/uUpJQ39oMw1E1Jc+pIoG/8/Ak60Az03op62k2GsqTRATYRSAc/oYyy
-         9txFkYDM1BiSA5/3390qKXHX7qEFs37WPtqidTa41VOgMKEJ43P4U/eQrixf4m+Omoqo
-         NU3Cx88/IlWvS9SHsBOeyqE2mrF6SnyGL+umG9sZeo7rh0OSEprEWglsBw8btXt99snd
-         I27A==
-X-Gm-Message-State: AGi0PubrNJRZuZtCCFYJ3jqyIJVNA/jtl8epc5whckoPxD6OONQet7/y
-        isnmzMzgmsAzmUxnXWy/HdjHeg==
-X-Google-Smtp-Source: APiQypIyIZtDVKhOHp8Y5kuCR8rED5XYlhlovTxBBx+WS6MOfMqJu+zBJGNouJUoijlxSK6x5TwpPw==
-X-Received: by 2002:a63:41c2:: with SMTP id o185mr6315849pga.139.1587689114561;
-        Thu, 23 Apr 2020 17:45:14 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id y186sm3166133pgb.69.2020.04.23.17.45.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 17:45:13 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 17:45:12 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: phy: qcom-qusb2: Fix defaults
-Message-ID: <20200424004512.GL199755@google.com>
-References: <20200423111015.1.Ifa8039b6f3031e9a69c4a526a6efc2f499f07292@changeid>
+        Thu, 23 Apr 2020 20:51:51 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2909 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728156AbgDXAvu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 20:51:50 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea238190000>; Thu, 23 Apr 2020 17:51:38 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 23 Apr 2020 17:51:50 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 23 Apr 2020 17:51:50 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
+ 2020 00:51:50 +0000
+Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
+ 2020 00:51:49 +0000
+Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+ <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
+ <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
+ <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
+ <3691c4b5-1ecc-2ad3-23ed-72ef6b8d25fa@nvidia.com>
+ <fce6dfbb-0b8d-319b-2d6f-976953a3c36c@gmail.com>
+ <a2672be9-93c1-8363-6c0e-6d43c2bd59bc@nvidia.com>
+ <492dafac-42aa-3caf-4d32-ba0e434b19c3@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <39402a49-f39f-256c-31e7-afaa25d55664@nvidia.com>
+Date:   Thu, 23 Apr 2020 17:51:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200423111015.1.Ifa8039b6f3031e9a69c4a526a6efc2f499f07292@changeid>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <492dafac-42aa-3caf-4d32-ba0e434b19c3@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587689498; bh=GqevmKFeruTWerk0fVnbYo2UecOfTyPj1DGoVK9JAfM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=lH4nj+WYYCRcuwprODPNnVi9lgpM+R7mnlqKWtU3Z0FzAJ/FkWZReXMDT6q/7s5Hc
+         ctc2GHlC53N70o84nvfNVF0w5+8Rbyg4TJeR9iZ7aqLrcsZaP1VtRgaPETfFgpyG+k
+         WZPVz79yFBVUvd3qenZsKTpxUd0Ql6T4/XJ2JZDjVk/4NpbUoXn0VHp498hWQua47z
+         rdRWbbQSgz58VZ/gHX7QdyyDBg/Zx3yuwIOLueN9S6YtJjgaP1l9Q0eQHjDRLnd7iO
+         f45KQe4oWJiLtwoFDiZRJO8yX0VJH4JicPySCguzTkOzb2GsW5j81Oo5qlrzkOCmKD
+         Vw2JnNAoDjmVw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:10:27AM -0700, Douglas Anderson wrote:
-> The defaults listed in the bindings don't match what the code is
-> actually doing.  Presumably existing users care more about keeping
-> existing behavior the same, so change the bindings to match the code
-> in Linux.
-> 
-> The "qcom,preemphasis-level" default has been wrong for quite a long
-> time (May 2018).  The other two were recently added.
-> 
-> As some evidence that these values are wrong, this is from the Linux
-> driver:
-> - qcom,preemphasis-level: sets "PORT_TUNE1", lower 2 bits.  Driver
->   programs PORT_TUNE1 to 0x30 by default and (0x30 & 0x3) = 0.
-> - qcom,bias-ctrl-value: sets "PLL_BIAS_CONTROL_2", lower 6 bits.
->   Driver programs PLL_BIAS_CONTROL_2 to 0x20 by default and (0x20 &
->   0x3f) = 0x20 = 32.
-> - qcom,hsdisc-trim-value: sets "PORT_TUNE2", lower 2 bits.  Driver
->   programs PORT_TUNE2 to 0x29 by default and (0x29 & 0x3) = 1.
-> 
-> Fixes: 1e6f134eb67a ("dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning parameters")
-> Fixes: a8b70ccf10e3 ("dt-bindings: phy-qcom-usb2: Add support to override tuning values")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-> index 144ae29e7141..f8bd28ff31c1 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-> @@ -97,7 +97,7 @@ then:
->          - $ref: /schemas/types.yaml#/definitions/uint32
->          - minimum: 0
->            maximum: 63
-> -          default: 0
-> +          default: 32
->  
->      qcom,charge-ctrl-value:
->       description:
-> @@ -130,7 +130,7 @@ then:
->          - $ref: /schemas/types.yaml#/definitions/uint32
->          - minimum: 0
->            maximum: 3
-> -          default: 2
-> +          default: 0
->  
->      qcom,preemphasis-width:
->        description:
-> @@ -152,7 +152,7 @@ then:
->          - $ref: /schemas/types.yaml#/definitions/uint32
->          - minimum: 0
->            maximum: 3
-> -          default: 0
-> +          default: 1
->  
->  required:
->    - compatible
-> -- 
-> 2.26.1.301.g55bc3eb7cb9-goog
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+On 4/23/20 5:42 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 24.04.2020 02:50, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/23/20 4:25 PM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 24.04.2020 02:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 4/23/20 4:19 PM, Sowjanya Komatineni wrote:
+>>>>> On 4/23/20 4:16 PM, Dmitry Osipenko wrote:
+>>>>>> External email: Use caution opening links or attachments
+>>>>>>
+>>>>>>
+>>>>>> 22.04.2020 09:18, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>>>>>> +static int chan_capture_kthread_start(void *data)
+>>>>>>> +{
+>>>>>>> +     struct tegra_vi_channel *chan =3D data;
+>>>>>>> +     struct tegra_channel_buffer *buf;
+>>>>>>> +     int err =3D 0;
+>>>>>>> +
+>>>>>>> +     set_freezable();
+>>>>>>> +
+>>>>>>> +     while (1) {
+>>>>>>> +             try_to_freeze();
+>>>>>>> +
+>>>>>>> +             wait_event_interruptible(chan->start_wait,
+>>>>>>> + !list_empty(&chan->capture) ||
+>>>>>>> +                                      kthread_should_stop());
+>>>>>>> +
+>>>>>>> +             if (kthread_should_stop())
+>>>>>>> +                     break;
+>>>>>>> +
+>>>>>>> +             /*
+>>>>>>> +              * Source is not streaming if error is non-zero.
+>>>>>>> +              * So, do not dequeue buffers on capture error.
+>>>>>>> +              */
+>>>>>>> +             if (err)
+>>>>>>> +                     continue;
+>>>>>> This will result in an endless loop, I suppose it wasn't the
+>>>>>> intention.
+>>>>> no it will not. on error we report vb2_queue_error which will do
+>>>>> streaming stop request.
+>>>>>
+>>>>> So thread will be stopped on streaming stop request thru kthread stop
+>>>>> signal
+>>>> To be clear on error it reports vb2 queue error and waits for stop
+>>>> streaming to happen
+>>> If thread should exit on error, then it should do it on the actual
+>>> error. Otherwise it looks very error-prone.
+>> When v4l2 drivers indicate fatal error through vb2_queue_error, queue
+>> error flag  is set and wakes up all processes waiting on queue along
+>> with polling reporting  EPOLLERR and also reporting error for queuing
+>> and dequeuing buffers. Stream stop will surely happen which stops the
+>> thread.
+> This doesn't explain what is the point of continuing to loop instead of
+> exiting immediately on error.
+
+We are using 2 threads and when capture start error happens, we can stop=20
+capture_start thread immediately but capture_finish thread will still=20
+run for any outstanding buffers.
+
+So, as it makes no diff stopping both threads during stream stop which=20
+will definitely happen on error and when we don't dequeue buffers
+
