@@ -2,170 +2,211 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07342C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E368C55191
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4F9F2084D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 091A12071E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:50:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PL7fH1J9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JW615PGB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgDXOj7 (ORCPT
+        id S1727781AbgDXOuw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 10:39:59 -0400
-Received: from mail-eopbgr50063.outbound.protection.outlook.com ([40.107.5.63]:45042
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726813AbgDXOj6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 10:39:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iA6NgLzqijXR94cCT3k/pQ/XuWDkucxOZVrvO/NKVcBtccSeK/sfudOJDhvONd5iK5+lH0O9CfgG+vCXK1HnaoulLf9i0ataMR6PgUdBTt87j5AE7Kdud+W1iypBChKp+2JwjKMNUId6bjnXqvjGpdGfGzb2n0EwiD3jm+ThtBPOkSRFBiulZnAZwmEZjdzbEIyuv86J1N7JgihGSznfB6f2tkN+c4qRwoI1vu8MHFx55EJj/jD8znKCbkHjZTDaa2RTprl+AhvLhkTPwulZOQg5cK3qUdy66CJp670YbdhvhLJ1F10RQL2xkdsBJVIk9Z+6VKM196aPHAOX9hO6hQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=El7UDRVQpMMg9nFO5vjYJuep7JYJNDc11HnZl67GajI=;
- b=cJMMA/ba3HRl0MBee3NqetoMvpyODInOfXJGaJwGGAxrvhEBXrfl9pBSmrLcvxeu3xGTDqLTEfxzymHgOg+s8cyWqTBPKcMfu4jh948IFaGB1HNvoKocD1zPnBrC6e7wy1xjpt8Iul668mL3pUqnJXjt9Y6dbjl4o4d8hXhiyuj26XQTd4KLgCKy9IzsespbY3bd6NE2Fihv7dMHvL3Y7mQjcNV9nNwCLY8a+FE6hNRX3a5ZhkLXTNpfgasmvKeHUahebvkxJ6L8yTaaXfNtez3LsEiGQI3G5Ma+anBR47OIEZbAhy2nzxfHxcjbBqyS/tgGrMTJxzxiQAfyAMyeeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=El7UDRVQpMMg9nFO5vjYJuep7JYJNDc11HnZl67GajI=;
- b=PL7fH1J9TbSjxAVu0/RkE1wTfYeICuJlvyyZBNEOdK7skaKzdJFJMNklg45vdv5mIRqztPsLtC7A4rWBPzSihuEQiXFMFJmtKrSCCEptyiVY94ZyhPFYItUJJ4VBp4u+UJ/sOGpdyCoFJKf+3WtlRK1q9J+a11Acr5idloI6vfQ=
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (2603:10a6:208:119::33)
- by AM0PR04MB6481.eurprd04.prod.outlook.com (2603:10a6:208:171::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Fri, 24 Apr
- 2020 14:39:54 +0000
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::8cc9:252:1c77:5860]) by AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::8cc9:252:1c77:5860%2]) with mapi id 15.20.2937.012; Fri, 24 Apr 2020
- 14:39:54 +0000
-From:   Florinel Iordache <florinel.iordache@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Florinel Iordache <florinel.iordache@nxp.com>
-Subject: RE: Re: [PATCH net-next v2 6/9] net: phy: add backplane kr driver
- support
-Thread-Topic: Re: [PATCH net-next v2 6/9] net: phy: add backplane kr driver
- support
-Thread-Index: AdYaRAr6OuhHlsgtRe2hojICsYdYXA==
-Date:   Fri, 24 Apr 2020 14:39:54 +0000
-Message-ID: <AM0PR04MB5443BCFEC71B6903BE6EFE02FBD00@AM0PR04MB5443.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=florinel.iordache@nxp.com; 
-x-originating-ip: [89.136.167.85]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: af9b0be3-049c-4d2a-0b30-08d7e85d5a92
-x-ms-traffictypediagnostic: AM0PR04MB6481:|AM0PR04MB6481:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6481EAEBDB4C4E54402B7627FBD00@AM0PR04MB6481.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03838E948C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(39860400002)(396003)(376002)(136003)(186003)(316002)(6506007)(66946007)(66556008)(66476007)(54906003)(7696005)(66446008)(76116006)(52536014)(71200400001)(5660300002)(64756008)(4326008)(86362001)(7416002)(2906002)(55016002)(26005)(8676002)(9686003)(81156014)(44832011)(478600001)(6916009)(8936002)(33656002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: i01M3m5uAWiFb6AwNyY/37DAKGD+HwRpdCNJTtXXccfrfTo1J4im55z6ia4gxjWiYZhHwsMOFUXUD07Qf9HaQxLISpMGpJjL4NMWKKSshF40PyBRRgAub4l8d6ZVSFHS526awUegupSwnCK2haAHzM2hJFknrJCfOAISTpDv+mMgwCcjaXJzb6MsssgyRk9RNlQDJI77BBcuYnuqWzBciiKVW9Wtu5tSbzKWHh8wxvRbbbxRbxZ5nW+OSUBYcOOzFbG9dMCtW84J0PHefJ/f70bgWitkgoRaGXm8ETNePyWj8UZsX5Oyvh3fYxin7TJpxeySlFWvhTTEPL3c24ISPgcuRM35PHpyCMucLXeP4Sxfvf84xuI/ozKwAgwvjB31C5NDEneKMKoXXdffuyGFTGQsG6HUyB0OyqU20GvCu/PHEadzmj96B531DEecnNrz
-x-ms-exchange-antispam-messagedata: XuLW//yiv7aFp4RLkhA5lzUfW/VZywSgOUUtXoDHbOAbehUCE5oZ7TUMwDWkfi1AK6/zmFb6QbA7fnla9GaJR9z4XpRZSHZ3Qi3MWA/1o07KE5z/CBQ750bLImgZC8ZJZngNn5/NvCw31WmM4hc1bQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 24 Apr 2020 10:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726968AbgDXOuv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 10:50:51 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFF1C09B046
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 07:50:51 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f13so11140070wrm.13
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 07:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=arbjr4f533qeCGCUfXjG1AwJZCWsc1TMbgG9gTC3+BU=;
+        b=JW615PGBkId3Rrx+sIS/Qtame0NNhCqmt0qNHU2XFbJURWQSEIB98K9+6A9yo9Xwwo
+         GVlxwOoYW0tgbXzt1dH6VxJpCED3uo/wSrBJPwF2J/YRLAjxEE5GTY6dC7fmCckxWh18
+         L6cZGp86UCIuw9xgcBy16AIkG14OfZu8mpSA9F1G0dBhNx5YzkdvnBcQLGMPHmy8G7/Y
+         /Ytol1fBWdvenECw8SxiLzwPHJW0+t+MRQL6dlXTCrd21KdWZS2FdCZrQfrw9ZaOcCRI
+         H3DwpwVK+1fO5Dqx2rJrMVgToIQ/tPEUh8g/EiLjowojJ5P1nPY2mjEQDk4l9UgE1wzz
+         iCIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=arbjr4f533qeCGCUfXjG1AwJZCWsc1TMbgG9gTC3+BU=;
+        b=WHFMzb9nc7tlnfLa74nVyPhJV9G5+diQTU0D/zITw57HGjY22mbldot0TG2sWzcBOG
+         M9ibaj21nPE6TuBW/y+oPK2neK42KupN/H75QMbNdmOrCNuyPWeoj2bwqEPG/lfwz0Ox
+         e4qH0AEMu6WRvrkzKNxKN3gJOHUUAXBfWSOM5aymhEuVhV7DHSsgXhtekwly2+1wWRao
+         ZYUbmhnfHQZfY0UDyhlzNlHaXnBShCTIpc7FN8mq4sWxcDCR568t6QXNF1w7xvk1jn83
+         VePXuKipT3l8VVEv9yNxPEt/lL5+2ON6ONuyWkFcackgjo/3+OtDYVINoA5odemJ6uq9
+         oYUg==
+X-Gm-Message-State: AGi0PuYlrJV9GeUuoObgtkVXn34vXF+JWpGqDqEVuv8qjbA5H8yh13qS
+        5J+ubLC7Ze4qlXgUjT52ydmmYQ==
+X-Google-Smtp-Source: APiQypKNlSzxiPCXIPo6RVz6w6o8W/4DZM0rPEnuXAxixbYMV5Gd4ccyEgRYMSuw8bMnFvOrB6o8/w==
+X-Received: by 2002:a5d:5646:: with SMTP id j6mr12203073wrw.207.1587739849924;
+        Fri, 24 Apr 2020 07:50:49 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id q187sm3088378wma.41.2020.04.24.07.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 07:50:49 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 15:50:47 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     Marek Vasut <marex@denx.de>, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, tony@atomide.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
+ driver
+Message-ID: <20200424145047.GE8414@dell>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+ <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
+ <20200424074517.GN3612@dell>
+ <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
+ <20200424105053.GC8414@dell>
+ <e5e6c279-28d0-f423-aa6d-5c7aca563352@denx.de>
+ <268ea231-eb4a-6144-c632-1bc8e9f21582@st.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af9b0be3-049c-4d2a-0b30-08d7e85d5a92
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 14:39:54.3738
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RhZPaZelauvgQO5zNRDKoid0fIgK9UwyRG5aZUshHDZudKMUikZK08nKi7ZpuJoX0N51JE9No/QrubWzHSZaY2O3AqKiHHfKVhdO13r23vw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6481
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <268ea231-eb4a-6144-c632-1bc8e9f21582@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > +/* Backplane custom logging */
-> > +#define bpdev_fn(fn)                                                 \
-> > +void bpdev_##fn(struct phy_device *phydev, char *fmt, ...)           \
-> > +{                                                                    \
-> > +     struct va_format vaf =3D {                                       =
- \
-> > +             .fmt =3D fmt,                                            =
- \
-> > +     };                                                              \
-> > +     va_list args;                                                   \
-> > +     va_start(args, fmt);                                            \
-> > +     vaf.va =3D &args;                                                =
- \
-> > +     if (!phydev->attached_dev)                                      \
-> > +             dev_##fn(&phydev->mdio.dev, "%pV", &vaf);               \
-> > +     else                                                            \
-> > +             dev_##fn(&phydev->mdio.dev, "%s: %pV",                  \
-> > +                     netdev_name(phydev->attached_dev), &vaf);       \
-> > +     va_end(args);                                                   \
-> > +}
-> > +
-> > +bpdev_fn(err)
-> > +EXPORT_SYMBOL(bpdev_err);
-> > +
-> > +bpdev_fn(warn)
-> > +EXPORT_SYMBOL(bpdev_warn);
-> > +
-> > +bpdev_fn(info)
-> > +EXPORT_SYMBOL(bpdev_info);
-> > +
-> > +bpdev_fn(dbg)
-> > +EXPORT_SYMBOL(bpdev_dbg);
->=20
-> Didn't i say something about just using phydev_{err|warn|info|dbg}?
->=20
->        Andrew
+On Fri, 24 Apr 2020, Christophe Kerello wrote:
 
-Hi Andrew,
+> 
+> 
+> On 4/24/20 1:06 PM, Marek Vasut wrote:
+> > On 4/24/20 12:50 PM, Lee Jones wrote:
+> > > On Fri, 24 Apr 2020, Marek Vasut wrote:
+> > > 
+> > > > On 4/24/20 9:45 AM, Lee Jones wrote:
+> > > > > On Wed, 15 Apr 2020, Christophe Kerello wrote:
+> > > > > 
+> > > > > > The driver adds the support for the STMicroelectronics FMC2 controller
+> > > > > > found on STM32MP SOCs.
+> > > > > > 
+> > > > > > The FMC2 functional block makes the interface with: synchronous and
+> > > > > > asynchronous static memories (such as PSNOR, PSRAM or other
+> > > > > > memory-mapped peripherals) and NAND flash memories.
+> > > > > > 
+> > > > > > Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> > > > > > ---
+> > > > > > Changes in v2:
+> > > > > >   - remove ops from stm32_fmc2 structure
+> > > > > >   - add 2 APIs to manage FMC2 enable/disable
+> > > > > >   - add 2 APIs to manage FMC2 NWAIT shared signal
+> > > > > > 
+> > > > > >   drivers/mfd/Kconfig            |  12 +++
+> > > > > >   drivers/mfd/Makefile           |   1 +
+> > > > > >   drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
+> > > > > >   include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
+> > > > > >   4 files changed, 374 insertions(+)
+> > > > > >   create mode 100644 drivers/mfd/stm32-fmc2.c
+> > > > > >   create mode 100644 include/linux/mfd/stm32-fmc2.h
+> > > > > > 
+> > > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > > > > index 2b20329..5260582 100644
+> > > > > > --- a/drivers/mfd/Kconfig
+> > > > > > +++ b/drivers/mfd/Kconfig
+> > > > > > @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
+> > > > > >   	  Also included is a Coulomb counter, a real-time clock (RTC), and
+> > > > > >   	  a 32.768 kHz clock gate.
+> > > > > > +config MFD_STM32_FMC2
+> > > > > > +	tristate "Support for FMC2 controllers on STM32MP SoCs"
+> > > > > > +	depends on MACH_STM32MP157 || COMPILE_TEST
+> > > > > > +	select MFD_CORE
+> > > > > > +	select REGMAP
+> > > > > > +	select REGMAP_MMIO
+> > > > > > +	help
+> > > > > > +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
+> > > > > > +	  Bus Interface controller and FMC2 NAND flash controller. This driver
+> > > > > > +	  provides core support for the STM32 FMC2 controllers, in order to use
+> > > > > > +	  the actual functionality of the device other drivers must be enabled.
+> > > > > 
+> > > > > Not sure how many times I have to say this before people stop
+> > > > > attempting to pass these kinds of relationships off as MFDs:
+> > > > > 
+> > > > > A memory device and its bus is not an MFD.  In a similar vain to the
+> > > > > thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
+> > > > > either.
+> > > > > 
+> > > > > Please find another way to associate your device with its bus.
+> > > > 
+> > > > This FMC2 is however an IP which can either operate external devices
+> > > > (like ethernet chip on this parallel bus) or external flashes (like NOR
+> > > > and NAND chips).
+> > > 
+> > > I'm sure that it *can*.  Although that's not its main purpose.
+> > 
+> > I use it to operate KSZ8851-16MLL ethernet chip, which has async bus
+> > interface. Linux just didn't have support for that mode of operation
+> > thus far and the FMC was used to operate NANDs and NORs only. This
+> > series, or rather, the first three patches in this series, add support
+> > for operating other bus devices, like this ethernet controller.
+> > 
+> > > The
+> > > clue is in the nomenclature ("Flexible *Memory* Controller").  Nor is
+> > > it how the device is being used in this submission:
+> > > 
+> > >    "The FMC2 functional block makes the interface with: synchronous and
+> > >     asynchronous static memories (such as PSNOR, PSRAM or other
+> > >     memory-mapped peripherals) and NAND flash memories."
+> > > 
+> > > As I mentioned, this is just another memory device and its bus.
+> > 
+> > I don't think it's _just_ a memory controller, it's more universal than
+> > that, see above. Note that SRAM interface basically boils down to
+> > anything which has external parallel bus, e.g. Davicom DM9000, that
+> > KSZ8851-16MLL etc.
+> > 
+> > > > Can you provide a suggestion how this should be handled, if not as MFD?
+> > > > It seems to me, that this is a Multi-Function Device .
+> > > 
+> > > Simply move it into the MTD or Memory subsystems and set up the
+> > > dependencies via Kconfig.
+> > > 
+> > > > If this discussion is a recurring topic, is there some documentation
+> > > > which explains how such devices should be handled ?
+> > > 
+> > > Not that I'm aware of.
+> > 
+> > I see.
+> > 
+> 
+> Hi Lee, Marek,
+> 
+> I will move this source code in the FMC2 bus driver. I think that I should
+> be able to manage the 2 controllers with 2 drivers (the FMC2 bus driver and
+> the FMC2 raw NAND driver). I will have to modify some part of the proposed
+> bindings, and some updates will have to be done in the FMC2 bus driver. All
+> these modifications will be part of V3.
 
-I used this custom logging in order to be able to add any kind of useful in=
-formation we might need to all prints (err/warn/info/dbg).
-For example all these bpdev_ functions are equivalent with phydev_ but only=
- in the case when there is no attached device: phydev->attached_dev =3D=3D =
-NULL.
-Otherwise, if there is a device attached, then we also want to add its name=
- to all these prints in order to know to which device the information refer=
-s to.
-For example in this case the print looks like this:
-[   50.853515] backplane_qoriq 8c13000:00: eth1: 10gbase-kr link trained, T=
-x equalization: C(-1)=3D0x0, C(0)=3D0x29, C(+1)=3D0x5
-This is very useful because we can see very easy to which interface the inf=
-ormation printed is related to: in this case the link was trained for inter=
-face: eth1
-This information (the name of attached device: eth1) is not printed by phyd=
-ev_ functions.
-I'm sorry I have not explained all this earlier, the first time when you as=
-ked about it.=20
+That sounds like a very reasonable solution.
 
-Florin.
+From a purist's PoV, the bindings should not change.  As they should
+describe the hardware, rather than the implementation.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
