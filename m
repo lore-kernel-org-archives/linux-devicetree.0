@@ -2,121 +2,119 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72137C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 12:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B980CC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 12:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4853E20704
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 12:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F5820704
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 12:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="teIk66Jm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ha46ki2b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgDXMjf (ORCPT
+        id S1726668AbgDXMkw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:39:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbgDXMjf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 08:39:35 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19320C09B045;
-        Fri, 24 Apr 2020 05:39:35 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g12so10512742wmh.3;
-        Fri, 24 Apr 2020 05:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=/5FhewZOjMa+L+2tqcMzJgPUq1JNbdQFqoKSCaQXbEM=;
-        b=teIk66JmO3IgWg1GspSg6VCLItxXTdO1u7eb8fUFMU1hNrcoBYZXDVZoLV6cPR1RMF
-         Kv31jgC7+Q1/s/yQIy2NIpwJ59DdnE6U7NT6Y4kyOGlze/NKDXRptsRrBeFKR8xRbz5g
-         glrUypL0KSIC7WPE1M6ct55WNR0c5Xt31WsWb75eFEBgstEfRymNxjm0e92XKYLn72YP
-         yYcmw+lf3k92IBqkoaICC04Hb40kMPASXUwBBIeZAqw+k6hGmE8dGn94vUO+9/uk/+Gn
-         Z5mJsfiT2cciloi5lMLEwBDP3dlkGN305mOnuo/C6bthykIkjf5IWmEYSYCuGJXxjPut
-         fmHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/5FhewZOjMa+L+2tqcMzJgPUq1JNbdQFqoKSCaQXbEM=;
-        b=PioyfhNtE+rku3ur8NPYPPvAi+atCJiQkanWcqwCMTWKiFk9v95CXTtFjNoYoBz3D1
-         ym/aIgSZieOMU8K4oMbYfVPDi1m3NUP/RFE3gemZ9XQ2P/ifLjFQULQFKqtrzpJpOz9m
-         o1qv7ao6G0z3QMp0sB7yjaYHQNwryF6JMA1w1xNReqbRsytJi34U3auYcI0CZOdTT8rw
-         6FLpwQnKewwh8Z1Dh56ywx6Ey1tp0eO+SnyoewoPIejxSfr23EVYvsN5cDDfxRBOMfs/
-         GHcqx9qRs3DGue4fXjsA+bwl/0YsIoUK2slbklC7spYC0b6s8pBnnlz0F4zVc2l+N3g+
-         qenQ==
-X-Gm-Message-State: AGi0PuZxSFWDnQCx4QRiLr0/DIxSwMSEi5ZsD3SPCAtN/uXiB2fRZwnj
-        SsaLSCZwK9dzHoZfWT6a/Mc=
-X-Google-Smtp-Source: APiQypKzAVcFFjXq84S98O4oSdfTNcU47XV/qwKDcg5zoIea/Yi23V/u7OuB9vSrNLmWi+JIwU/mEg==
-X-Received: by 2002:a05:600c:210c:: with SMTP id u12mr10328859wml.135.1587731973727;
-        Fri, 24 Apr 2020 05:39:33 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id b12sm9136457wro.18.2020.04.24.05.39.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Apr 2020 05:39:33 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
-Date:   Fri, 24 Apr 2020 14:39:23 +0200
-Message-Id: <20200424123923.8192-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 24 Apr 2020 08:40:52 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48526 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbgDXMkv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 08:40:51 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03OCeSwJ130179;
+        Fri, 24 Apr 2020 07:40:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587732028;
+        bh=OqOZLXd6jVvlszCib9onXl4SS/9K0iruKK4fRcv8uIo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ha46ki2bVuhYHKmUkAjivI0+mpfT7WpIwnDlT14eb2DC9lTigC25z6CcIBzOrVumB
+         A2XwWgWHoOz4DuYBnO7J5iUE78ku6r1j52O4oUAXepntKDk65Ly7uPiFuIYvERXfoa
+         GEzSBhFyo3FISMa/7Vdkr2wpMR/rzcNrm3L1E9oA=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03OCeSpK001066
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Apr 2020 07:40:28 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
+ Apr 2020 07:40:28 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 24 Apr 2020 07:40:28 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03OCeOSv072911;
+        Fri, 24 Apr 2020 07:40:25 -0500
+Subject: Re: OF: ERROR: Bad of_node_put() on
+ /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
+To:     Tony Lindgren <tony@atomide.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+CC:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <lkft-triage@lists.linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benoit Cousson <bcousson@baylibre.com>,
+        Carlos Hernandez <ceh@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Olof Johansson <olof@lixom.net>, <tomi.valkeinen@ti.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYv5NxK+F5DX_q1c_wvnhjT_WTZBFJQXLWFeqMXsEcASZg@mail.gmail.com>
+ <CA+G9fYu-qYP2wJw4p1p_C6_ttwK0fvw+qUnsN9mDuKOv3zGEBw@mail.gmail.com>
+ <20200417152903.GO37466@atomide.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
+Date:   Fri, 24 Apr 2020 15:40:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200417152903.GO37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives these errors:
+On 17/04/2020 18:29, Tony Lindgren wrote:
+> * Naresh Kamboju <naresh.kamboju@linaro.org> [200327 16:44]:
+>> The reported problem still happening on arm beagle board x15 device
+>> running Linux next kernel 20200327.
+> ...
+> 
+>> [    0.000000] OF: ERROR: Bad of_node_put() on
+>> /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
+>> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
+>>    5.6.0-rc7-next-20200327 #1
+>> [    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
+>> [    0.000000] [<c0311810>] (unwind_backtrace) from [<c030ba14>]
+>> (show_stack+0x10/0x14)
+>> [    0.000000] [<c030ba14>] (show_stack) from [<c0fb6604>]
+>> (dump_stack+0xbc/0xd0)
+>> [    0.000000] [<c0fb6604>] (dump_stack) from [<c0fbb07c>]
+>> (kobject_put+0xc0/0x104)
+>> [    0.000000] [<c0fbb07c>] (kobject_put) from [<c1639e4c>]
+>> (of_clk_init+0x18c/0x228)
+>> [    0.000000] [<c1639e4c>] (of_clk_init) from [<c1611544>]
+>> (omap_clk_init+0x3c/0x58)
+>> [    0.000000] [<c1611544>] (omap_clk_init) from [<c1611ea8>]
+>> (omap4_sync32k_timer_init+0x8/0x2c)
+>> [    0.000000] [<c1611ea8>] (omap4_sync32k_timer_init) from
+>> [<c161213c>] (omap5_realtime_timer_init+0x8/0x234)
+>> [    0.000000] [<c161213c>] (omap5_realtime_timer_init) from
+>> [<c1600c88>] (start_kernel+0x330/0x4b8)
+> 
+> Just FYI, Tero is looking at the clock issues that seem to be
+> causing these warnings.
 
-arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-0:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-1:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-0:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-1:
-'#address-cells' is a required property
+Haven't seen this before, but easily reproducible with 
+multi_v7_defconfig. I have a simple fix for it now, will post to lists soon.
 
-The $nodename pattern for spi nodes is
-"^spi(@.*|-[0-9a-f])*$". To prevent warnings rename
-'spi-0' and 'spi-1' pinctrl sub nodenames to
-'spi0' and 'spi1' in 'rk322x.dtsi'.
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-controller.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm/boot/dts/rk322x.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 06172ebbf..e3b27da0a 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -1020,7 +1020,7 @@
- 			};
- 		};
- 
--		spi-0 {
-+		spi0 {
- 			spi0_clk: spi0-clk {
- 				rockchip,pins = <0 RK_PB1 2 &pcfg_pull_up>;
- 			};
-@@ -1038,7 +1038,7 @@
- 			};
- 		};
- 
--		spi-1 {
-+		spi1 {
- 			spi1_clk: spi1-clk {
- 				rockchip,pins = <0 RK_PC7 2 &pcfg_pull_up>;
- 			};
--- 
-2.11.0
-
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
