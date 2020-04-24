@@ -2,137 +2,181 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761D0C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51D1C55199
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 503442074F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AAC20728
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:52:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E+H+PKEW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="qX4Tgh9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgDXJhZ (ORCPT
+        id S1726799AbgDXJw2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53274 "EHLO
+        Fri, 24 Apr 2020 05:52:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726298AbgDXJhY (ORCPT
+        by vger.kernel.org with ESMTP id S1726788AbgDXJw2 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:37:24 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB82C09B046
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 02:37:24 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id r26so9950396wmh.0
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 02:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=lpgfeCztxAhzxjhQqiFZc+a2M7I9kDIUKtebW9THuHo=;
-        b=E+H+PKEWckalgAUrAxfA2tUr4Dr5zRoWeGzskBy6H53BglCw3eP155NoYhsC7jdQiI
-         qluFEhKpQ+DSHSzqLqSZMeD0k14RwoB+SUuhVdhR8jgyw4gXACOPaWr9XutcMcLuLel3
-         8WZxlynNH7qJd0BspwLL1sYeTrHFFu3a76G+RdF7obaS1pLM1DSCbMFbNY9dK4EZ5ymT
-         tlnH/ERsB9TegNHu+KfzIuiJdzFqqCnkwQ8PTxfEGIX3McYJjbN7mZF6m5rNJlKz3aGn
-         ZTeNp7OtPikPXwo7ZqOKDOi+bqkFqVzNR4szarGXzmGI+oivP5a8mWF6fMD7ByBzQbzj
-         15Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=lpgfeCztxAhzxjhQqiFZc+a2M7I9kDIUKtebW9THuHo=;
-        b=aJb2QKLTytc6ftD0fY3/HhIVXnaCerdx779Nkp+Xcc60TxXAKpQVSPTnrkJVkDi+Jq
-         MVQNAjPxXtN5AkbcLRtvLZkWkR5++Lm4Z4ymsmmrv0Sg4tnTiV8JrGi5Sm6ilnKYpVZB
-         iFVaWFVWymD4c47Ymb938s72SveSBogZkmyWg8R6BDkcAsRl43ef77fhjdy5xJELAfPd
-         YSihDHHXi52vzVykRKq9SS/WniTHvwhSHgGsZ8YleA2x04gXwGUNx6pgubPwTXFcMLXM
-         VrDGFw/pn7cLL56KdGeoH0ZNAbxIid6T+ujTy8HZp6owSfwmHK8yWnjAj6mhk7mg6RIX
-         eudQ==
-X-Gm-Message-State: AGi0PuYGkvS+KSVVtIqRV86hofYhd1kUf7i+HzY2UPKpl7+e7BdkzqGs
-        7aHYpsVBFqjyRXXEIkWZGB3l5g==
-X-Google-Smtp-Source: APiQypIP711LckL5LI1ubR6GN3OUzUAydpJDOVRvnJ3Nw6MpHq29JuuPonguAQ22PujRITptpK9QEA==
-X-Received: by 2002:a7b:c213:: with SMTP id x19mr8902459wmi.53.1587721043049;
-        Fri, 24 Apr 2020 02:37:23 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id a7sm2062330wmj.12.2020.04.24.02.37.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 02:37:22 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 10:37:20 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200424093720.GA3542@dell>
-References: <20200415162030.16414-1-sravanhome@gmail.com>
- <20200415162030.16414-3-sravanhome@gmail.com>
- <20200424071822.GM3612@dell>
- <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
+        Fri, 24 Apr 2020 05:52:28 -0400
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3758BC09B045;
+        Fri, 24 Apr 2020 02:52:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587721943;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=EADzuRL+YsoGCLSE7b2pLcK0IVG9NS9sozBTxA+ffmU=;
+        b=qX4Tgh9DexKEcEKY8O3CSB7UEzJZ1Er7j0iMt+mCqFDpmNz0mtEAMbNthQakqarUvS
+        oezsCKUGyBkq1FlzG9KgCa6IAnZH81ggZ0FU+mT6Su2J/Heog5Qkh47YmFWPdeETREux
+        Cw8Eo00uB9npN4Nxeih9vCYiFtvmRyS6yi900ttbFqufXoNqTOnrm9GwWXCODZ/Jh0QJ
+        oURcz5yoIuaVxK04/Q061dqmzRwh1fdnLtKIU/7soLldpl2YL8QMysOWCg0MwofVlySv
+        v09I/sy2HTmQi0tP+VzeDTKVHgPIDCSQu4v4yJ2xTMThHoLBtyJeiUOpuK+MLKTtB+JH
+        XbQg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlabXA0JT7U="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw3O9pgAHY
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 24 Apr 2020 11:51:42 +0200 (CEST)
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200423203642.35ms4aarnv65tfp5@gilmour.lan>
+Date:   Fri, 24 Apr 2020 11:51:42 +0200
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Tony Lindgren <tony@atomide.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        kernel@pyra-handheld.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <A095F2EA-C6F8-47AD-A333-E19F7073581A@goldelico.com>
+References: <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com> <20200421112129.zjmkmzo3aftksgka@gilmour.lan> <20200421141543.GU37466@atomide.com> <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com> <20200422065859.quy6ane5v7vsy5tf@gilmour.lan> <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com> <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan> <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com> <43688597-4b99-8f4d-9ad5-548ddff07f52@baylibre.com> <71F2F964-32C7-41E6-8F1A-A73161EA1BB3@goldelico.com> <20200423203642.35ms4aarnv65tfp5@gilmour.lan>
+To:     Maxime Ripard <maxime@cerno.tech>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Apr 2020, saravanan sekar wrote:
+Hi,
 
-> Hi Lee,
+> Am 23.04.2020 um 22:36 schrieb Maxime Ripard <maxime@cerno.tech>:
+>> My goal is to keep the bindings as minimalistic as possible. And reset
+>> lines and power domains are (at least for those we have in the works)
+>> not needed to make working systems.
+>> 
+>> Therefore, for clocks I also would start with a minimalistic approach
+>> for a single optional GPU core clock and leave out reset and power
+>> completely.
 > 
-> On 24/04/20 9:18 am, Lee Jones wrote:
-> > On Wed, 15 Apr 2020, Saravanan Sekar wrote:
-> > 
-> > > mp2629 is a highly-integrated switching-mode battery charge management
-> > > device for single-cell Li-ion or Li-polymer battery.
-> > > 
-> > > Add MFD core enables chip access for ADC driver for battery readings,
-> > > and a power supply battery-charger driver
-> > > 
-> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > ---
-> > >   drivers/mfd/Kconfig        |  9 ++++
-> > >   drivers/mfd/Makefile       |  2 +
-> > >   drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
-> > >   include/linux/mfd/mp2629.h | 19 +++++++++
-> > >   4 files changed, 116 insertions(+)
-> > >   create mode 100644 drivers/mfd/mp2629.c
-> > >   create mode 100644 include/linux/mfd/mp2629.h
-> > How is this driver registered?
-> > 
-> > Looks like it has device tree support.  Is there another way?
-> Yes, only using device tree
+> Like I said above, the DT is considered an ABI and you'll have to
+> maintain backward compatibility (ie, newer kernel running with older
+> DT).
 
-Then how about using 'simple-mfd' and 'syscon'?
+Generally I fully agree to this rule (although I have experienced
+that exceptions happen more often than I like).
 
-Then you can omit this driver completely.
+But here, we don't have any older DT which define something about SGX.
 
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index 3c547ed575e6..85be799795aa 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
-> > >   	help
-> > >   	  Select this if your MC13xxx is connected via an I2C bus.
-> > > +config MFD_MP2629
-> > > +	tristate "Monolithic power system MP2629 ADC and Battery charger"
-> > > +	depends on I2C
-> > > +	select REGMAP_I2C
-> > > +	help
-> > > +	  Select this option to enable support for monolithic power system
-> > > +	  battery charger. This provides ADC, thermal, battery charger power
-> > > +	  management functions on the systems.
+We introduce SGX for the first time with bindings and DT in parallel.
+So they are in sync.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Therefore, newer kernels with SGX support and older DT simply will
+skip SGX and not load any drivers. So we can't break older DT and
+older DT can't break SGX.
+
+What we introduce is a DT code that is well hung and tested (originating
+in vendor kernels). It is cast in a bindings.yaml where not everyone
+is happy with for reasons outside the originally proposed DT.
+
+For new SoC not yet supported, I don't see a need to touch the
+existing ones.
+
+This is because I only propose to *add* properties to the bindings
+for devices that have not been supported with SGX before and are
+not sufficiently covered by what exists.
+
+So backward compatibility is a non-problem.
+
+> Therefore, you won't be able to require a new clock, reset or
+> power-domain later on for example.
+> 
+> I guess the question I'm really asking is: since you don't really know
+> how the hardware is integrated at the moment,
+
+Like I explained, we do not need to know and model all details about
+the hardware integration. The register set of an SoC does not always
+provide bits to control all signals we may see in a block diagram or
+think they must exist.
+
+We have a set of SoC where it is demonstrated to work without need
+for more detailed knowledge about specific hardware integration.
+
+So we know everything of importance for this initial set of SoC to
+make it work.
+
+> why should we have that
+> discussion *now*. It's really not suprising that you don't know yet, so
+> I'm not sure why we need to rush in the bindings.
+
+Because:
+* there are people who want to have upstream SGX support for an initial
+  set of SoC *now*
+* the discussion already lasts ca. 6 months since I posted v1,
+  that should be enough and is not a rush
+* it is not required to know more details to make a working system
+* we will not gain more information by waiting for another year or two
+* problems are not solved by postponing them
+* there are DTS for some initial SoC, tested to work
+* it is no longer possible to submit DT without bindings.yaml (or is it?)
+* we just need to define a bindings.yaml for them, not invent something
+  completely new
+* we can start with a minimal bindings.yaml for the analysed SoC and
+  *extend* it in the future if really needed
+* we can discuss changes & extensions for the bindings when they are
+  really proposed
+* having this patch series upstream is a prerequisite for introducing
+  the sgx kernel driver to staging
+
+In other words: your suggestion to postpone everything will keep finished
+work sitting in front of the door and rotting and blocking unfinished work...
+
+And to be honest, we have postponed SGX support already for too long
+time and could be much farther with more and broader community cooperation.
+So we should not block ourselves.
+
+So if you can contribute new information or proposals to specifically
+improve the proposed bindings.yaml, you are very welcome. But please do
+it *now*.
+
+BR and thanks,
+Nikolaus
+
