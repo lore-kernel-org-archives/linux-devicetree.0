@@ -2,296 +2,109 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 472D6C55196
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 20:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA872C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 20:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 237C1215A4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 20:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83899215A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 20:57:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="LTjLD61H"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q8RRoyAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbgDXUoE (ORCPT
+        id S1726038AbgDXU5E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 16:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45896 "EHLO
+        Fri, 24 Apr 2020 16:57:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgDXUoD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 16:44:03 -0400
-Received: from mo6-p04-ob.smtp.rzone.de (mo6-p04-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5304::11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91FE1C09B048;
-        Fri, 24 Apr 2020 13:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587761040;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=vhudvGlAsCcgRL2OjoDTyBEhyn7ZxJt8dndzIv56d3M=;
-        b=LTjLD61Hz6mC0iT06yfJzknWfMi0JLkCtjfhHYqfJZEO/nil8rMZVcPebZ1DOB/+nK
-        DEF6cTz4VqNYNLnpZyZD/qi0fulivHaOVDpgDK8QsgSZVGQr+OQfZsWByzLYSl3cg1tj
-        zPmb2wDYjR6ITSGR++t9IWy5IHKdepmlueXHrVmpiEUsqFJzJSrNVKdnfm47N2AmD6fR
-        z8mEugD98dN8DqMJtDsHwkSyIR0+wx3N1MTPF382Rl2/wMT+YCBgxjwV5DPhh7ZkrxKn
-        wT0bU8mHxVcPtZv2Xftzay2W6kFOqxZLOk1JQrr0gufCXrNQM9NSzOX72l1LSjPYXvQm
-        jIXA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlabXA0JT7U="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id R0acebw3OKhXEVq
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 24 Apr 2020 22:43:33 +0200 (CEST)
-Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com>
-Date:   Fri, 24 Apr 2020 22:43:30 +0200
-Cc:     Jonathan Bakker <xc-racer2@live.ca>,
-        Philipp Rossak <embed3d@gmail.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S1726027AbgDXU5D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 16:57:03 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98AD6C09B049
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 13:57:03 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id ay1so4203992plb.0
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 13:57:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CMlR2Lch6qanhmgzHXzt9Ss34iAITfulP0yBSMWEtIk=;
+        b=Q8RRoyAYtL/AzdVawKmyJnSkxSE86u03IG8xw3LhjN5TgulDYq1XdyATi6YsU3g7sf
+         O8Nj2OoAahkWNE2WzQgpYAejnxmiP2G+jbNPownYuQ+2ypW+cRGyHoX6HeFrrjm2C7Q8
+         ZdojSE55OwpRlmFGD1RY4LREZWh6qxCy7bU9g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CMlR2Lch6qanhmgzHXzt9Ss34iAITfulP0yBSMWEtIk=;
+        b=LBFc1UvQDxg0gzMtFd7pH96ZzyenVjdtlm8yjGPwGOB5gJb2yGAHSv1CmKbvF3AEuJ
+         wE9Q1HcTpFlbKsXj6/XGLMw5xFfQ6EKmG52cIkUA9cFASt/BW/9xCXH20DG4OFaxVQez
+         L2n5WVI4CvC5WaxtUEBAgIMqCrY67aXPi1zpJhVk22OpLklQprAI7fF+QiXSn105bXIO
+         OSSDxBo3J5ikr+JTNRmbJ3gHbe5QoqUa4NKX07vIdY9rWJhLh2eQ4OUscCu9kIXvq7J7
+         Q8daTZquRPC1Tnre6WbmoYRjLqTNU3A00YfbTjwMbm+fDnchUUgG8MgwouMT+oThq6e1
+         EK/A==
+X-Gm-Message-State: AGi0Pua97ooJ721mwLPMY+30767VpZMi9DwdPJ38K+2vx9qDBnWO5Ro6
+        I8eU3jGIpwx/ASEBBqKFFu1wyw==
+X-Google-Smtp-Source: APiQypJ1Esxx+d2XPYW85epj3fqYRYqoDJaHV+BQi55XveY65BnIq4Qp6GCNmfHLlAsHZADZhUGE3g==
+X-Received: by 2002:a17:902:76c5:: with SMTP id j5mr2136961plt.189.1587761823068;
+        Fri, 24 Apr 2020 13:57:03 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id j13sm5405122pje.1.2020.04.24.13.57.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 13:57:02 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 13:57:01 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <47E9ACFA-A5DE-4918-9C79-0C50FAA6E988@goldelico.com>
-References: <cover.1587760454.git.hns@goldelico.com> <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com>
-To:     Nikolaus Schaller <hns@goldelico.com>
-X-Mailer: Apple Mail (2.3124)
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>, rojay@codeaurora.org,
+        c_skakit@codeaurora.org
+Subject: Re: [PATCH V5 3/3] dt-bindings: geni-se: Add binding for UART pin
+ swap
+Message-ID: <20200424205701.GE4525@google.com>
+References: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
+ <1584095350-841-4-git-send-email-akashast@codeaurora.org>
+ <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
+ <ee34573a-e4ff-ad43-64ed-53439206d534@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ee34573a-e4ff-ad43-64ed-53439206d534@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Akash,
 
-> Am 24.04.2020 um 22:34 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> The Imagination PVR/SGX GPU is part of several SoC from
-> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
-> Allwinner A83 and others.
->=20
-> With this binding, we describe how the SGX processor is
-> interfaced to the SoC (registers and interrupt).
->=20
-> The interface also consists of clocks, reset, power but
-> information from data sheets is vague and some SoC integrators
-> (TI) deciced to use a PRCM wrapper (ti,sysc) which does
+On Tue, Mar 24, 2020 at 10:46:40AM +0530, Akash Asthana wrote:
+> Hi Rob,
+> 
+> On 3/20/2020 11:37 PM, Rob Herring wrote:
+> > On Fri, Mar 13, 2020 at 4:29 AM Akash Asthana <akashast@codeaurora.org> wrote:
+> > > Add documentation to support RX/TX/CTS/RTS pin swap in HW.
+> > > 
+> > > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> > > ---
+> > > Changes in V5:
+> > >   -  As per Matthias's comment, remove rx-tx-cts-rts-swap property from UART
+> > >      child node.
+> > > 
+> > >   Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 6 ++++++
+> > >   1 file changed, 6 insertions(+)
+> > STM32 folks need something similar. Can you move this to a common
+> > location. That's serial.txt, but that is being converted to DT schema.
+> > 
+> > Rob
+> 
+> Okay, once serial.txt is converted to DT schema, I will move it there.
 
-s/deciced/decided/
+It has landed upstream:
 
-> all clock, reset and power-management through registers
-> outside of the sgx register block.
->=20
-> Therefore all these properties are optional.
->=20
-> Tested by make dt_binding_check
->=20
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
-> .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 150 ++++++++++++++++++
-> 1 file changed, 150 insertions(+)
-> create mode 100644 =
-Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml =
-b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> new file mode 100644
-> index 000000000000..33a9c4c6e784
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> @@ -0,0 +1,150 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Imagination PVR/SGX GPU
-> +
-> +maintainers:
-> +  - H. Nikolaus Schaller <hns@goldelico.com>
-> +
-> +description: |+
-> +  This binding describes the Imagination SGX5 series of 3D =
-accelerators which
-> +  are found in several different SoC like TI OMAP, Sitara, Ingenic =
-JZ4780,
-> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
-> +
-> +  For an extensive list see: =
-https://en.wikipedia.org/wiki/PowerVR#Implementations
-> +
-> +  The SGX node is usually a child node of some DT node belonging to =
-the SoC
-> +  which handles clocks, reset and general address space mapping of =
-the SGX
-> +  register area. If not, an optional clock can be specified here.
-
-     ^^^ this is no longer that way. now clocks, reset etc. are part of =
-this
-         node but can be omitted if done by the parent node.
-
-     =3D> either remove this sentence or rewrite.
-
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: '^gpu@[a-f0-9]+$'
-> +  compatible:
-> +    oneOf:
-> +      - description: SGX530-121 based SoC
-> +        items:
-> +          - enum:
-> +            - ti,omap3-sgx530-121 # BeagleBoard A/B/C, OpenPandora =
-600MHz and similar
-> +          - const: img,sgx530-121
-> +          - const: img,sgx530
-> +
-> +      - description: SGX530-125 based SoC
-> +        items:
-> +          - enum:
-> +            - ti,am3352-sgx530-125 # BeagleBone Black
-> +            - ti,am3517-sgx530-125
-> +            - ti,am4-sgx530-125
-> +            - ti,omap3-sgx530-125 # BeagleBoard XM, GTA04, =
-OpenPandora 1GHz and similar
-> +            - ti,ti81xx-sgx530-125
-> +          - const: ti,omap3-sgx530-125
-> +          - const: img,sgx530-125
-> +          - const: img,sgx530
-> +
-> +      - description: SGX535-116 based SoC
-> +        items:
-> +          - const: intel,poulsbo-gma500-sgx535 # Atom Z5xx
-> +          - const: img,sgx535-116
-> +          - const: img,sgx535
-> +
-> +      - description: SGX540-116 based SoC
-> +        items:
-> +          - const: intel,medfield-gma-sgx540 # Atom Z24xx
-> +          - const: img,sgx540-116
-> +          - const: img,sgx540
-> +
-> +      - description: SGX540-120 based SoC
-> +        items:
-> +          - enum:
-> +            - samsung,s5pv210-sgx540-120
-> +            - ti,omap4-sgx540-120 # Pandaboard, Pandaboard ES and =
-similar
-> +          - const: img,sgx540-120
-> +          - const: img,sgx540
-> +
-> +      - description: SGX540-130 based SoC
-> +        items:
-> +          - enum:
-> +            - ingenic,jz4780-sgx540-130 # CI20
-> +          - const: img,sgx540-130
-> +          - const: img,sgx540
-> +
-> +      - description: SGX544-112 based SoC
-> +        items:
-> +          - const: ti,omap4470-sgx544-112
-> +          - const: img,sgx544-112
-> +          - const: img,sgx544
-> +
-> +      - description: SGX544-115 based SoC
-> +        items:
-> +          - enum:
-> +            - allwinner,sun8i-a31-sgx544-115
-> +            - allwinner,sun8i-a31s-sgx544-115
-> +            - allwinner,sun8i-a83t-sgx544-115 # Banana-Pi-M3 =
-(Allwinner A83T) and similar
-> +          - const: img,sgx544-115
-> +          - const: img,sgx544
-> +
-> +      - description: SGX544-116 based SoC
-> +        items:
-> +          - enum:
-> +            - ti,dra7-sgx544-116 # DRA7
-> +            - ti,omap5-sgx544-116 # OMAP5 UEVM, Pyra Handheld and =
-similar
-> +          - const: img,sgx544-116
-> +          - const: img,sgx544
-> +
-> +      - description: SGX545 based SoC
-> +        items:
-> +          - const: intel,cedarview-gma3600-sgx545 # Atom N2600, D2500
-> +          - const: img,sgx545-116
-> +          - const: img,sgx545
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-names:
-> +    maxItems: 1
-> +    items:
-> +      - const: sgx
-> +
-> +  clocks:
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    maxItems: 4
-> +    items:
-> +      - const: core
-> +      - const: sys
-> +      - const: mem
-> +      - const: hyd
-> +
-> +  sgx-supply: true
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |+
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    gpu: gpu@fe00 {
-> +      compatible =3D "ti,omap5-sgx544-116", "img,sgx544-116", =
-"img,sgx544";
-> +      reg =3D <0xfe00 0x200>;
-> +      interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> +...
-> --=20
-> 2.25.1
->=20
-
+175a7427bb72 dt-bindings: serial: Convert generic bindings to json-schema
