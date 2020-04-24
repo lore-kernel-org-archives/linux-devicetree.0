@@ -2,165 +2,149 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6E3C55194
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 11:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDA6C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 11:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07A5520728
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 11:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C9C206D4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 11:17:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XZHZkue7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgDXLGu (ORCPT
+        id S1726956AbgDXLRA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:06:50 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:58281 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgDXLGu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 07:06:50 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 497rw31JCtz1rvy6;
-        Fri, 24 Apr 2020 13:06:43 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 497rw26Slqz1qrwY;
-        Fri, 24 Apr 2020 13:06:42 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 0iaOQviYJv_e; Fri, 24 Apr 2020 13:06:41 +0200 (CEST)
-X-Auth-Info: WvWMMq5G9rT0EAZF7CsY2otKmcZZkujTKXBCzYD9TsA=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 24 Apr 2020 07:17:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:56829 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726289AbgDXLRA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:17:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587727020; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=+S6TTE3qIQR3bjpweChMEUVjD/kVHW4m2uU9Je20LDk=; b=XZHZkue7TOEI1F2t59A4vzfGncxuq8yqiHxWZG+HzdY0k9+zPs6BXBRri1Rnx58WcN7uH1Cv
+ aN7kGrNUC2Da+a1dcIXNefCMwgqy5m8wW3syi4Nz/T3ptFlt8w4LHzt+J4c+UcpwgLLaT917
+ TGWq6dhppvaqGx/n3p0f5wgv4Q4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea2caab.7fa192271768-smtp-out-n01;
+ Fri, 24 Apr 2020 11:16:59 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 755C1C43637; Fri, 24 Apr 2020 11:16:58 +0000 (UTC)
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri, 24 Apr 2020 13:06:41 +0200 (CEST)
-Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
- driver
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Christophe Kerello <christophe.kerello@st.com>,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, tony@atomide.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
- <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
- <20200424074517.GN3612@dell> <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
- <20200424105053.GC8414@dell>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <e5e6c279-28d0-f423-aa6d-5c7aca563352@denx.de>
-Date:   Fri, 24 Apr 2020 13:06:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB17AC433F2;
+        Fri, 24 Apr 2020 11:16:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB17AC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sc7180: Support ETMv4 power management
+Date:   Fri, 24 Apr 2020 16:46:44 +0530
+Message-Id: <20200424111644.27970-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20200424105053.GC8414@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/24/20 12:50 PM, Lee Jones wrote:
-> On Fri, 24 Apr 2020, Marek Vasut wrote:
-> 
->> On 4/24/20 9:45 AM, Lee Jones wrote:
->>> On Wed, 15 Apr 2020, Christophe Kerello wrote:
->>>
->>>> The driver adds the support for the STMicroelectronics FMC2 controller
->>>> found on STM32MP SOCs.
->>>>
->>>> The FMC2 functional block makes the interface with: synchronous and
->>>> asynchronous static memories (such as PSNOR, PSRAM or other
->>>> memory-mapped peripherals) and NAND flash memories.
->>>>
->>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->>>> ---
->>>> Changes in v2:
->>>>  - remove ops from stm32_fmc2 structure
->>>>  - add 2 APIs to manage FMC2 enable/disable
->>>>  - add 2 APIs to manage FMC2 NWAIT shared signal
->>>>
->>>>  drivers/mfd/Kconfig            |  12 +++
->>>>  drivers/mfd/Makefile           |   1 +
->>>>  drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
->>>>  include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
->>>>  4 files changed, 374 insertions(+)
->>>>  create mode 100644 drivers/mfd/stm32-fmc2.c
->>>>  create mode 100644 include/linux/mfd/stm32-fmc2.h
->>>>
->>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>>> index 2b20329..5260582 100644
->>>> --- a/drivers/mfd/Kconfig
->>>> +++ b/drivers/mfd/Kconfig
->>>> @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
->>>>  	  Also included is a Coulomb counter, a real-time clock (RTC), and
->>>>  	  a 32.768 kHz clock gate.
->>>>  
->>>> +config MFD_STM32_FMC2
->>>> +	tristate "Support for FMC2 controllers on STM32MP SoCs"
->>>> +	depends on MACH_STM32MP157 || COMPILE_TEST
->>>> +	select MFD_CORE
->>>> +	select REGMAP
->>>> +	select REGMAP_MMIO
->>>> +	help
->>>> +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
->>>> +	  Bus Interface controller and FMC2 NAND flash controller. This driver
->>>> +	  provides core support for the STM32 FMC2 controllers, in order to use
->>>> +	  the actual functionality of the device other drivers must be enabled.
->>>
->>> Not sure how many times I have to say this before people stop
->>> attempting to pass these kinds of relationships off as MFDs:
->>>
->>> A memory device and its bus is not an MFD.  In a similar vain to the
->>> thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
->>> either.
->>>
->>> Please find another way to associate your device with its bus.
->>
->> This FMC2 is however an IP which can either operate external devices
->> (like ethernet chip on this parallel bus) or external flashes (like NOR
->> and NAND chips).
-> 
-> I'm sure that it *can*.  Although that's not its main purpose.
+Now that deep idle states are properly supported on SC7180,
+we need to add "coresight-loses-context-with-cpu" property
+to avoid failure of trace session because of losing context
+on entering deep idle states.
 
-I use it to operate KSZ8851-16MLL ethernet chip, which has async bus
-interface. Linux just didn't have support for that mode of operation
-thus far and the FMC was used to operate NANDs and NORs only. This
-series, or rather, the first three patches in this series, add support
-for operating other bus devices, like this ethernet controller.
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> The
-> clue is in the nomenclature ("Flexible *Memory* Controller").  Nor is
-> it how the device is being used in this submission:
-> 
->   "The FMC2 functional block makes the interface with: synchronous and
->    asynchronous static memories (such as PSNOR, PSRAM or other
->    memory-mapped peripherals) and NAND flash memories."
-> 
-> As I mentioned, this is just another memory device and its bus.
-
-I don't think it's _just_ a memory controller, it's more universal than
-that, see above. Note that SRAM interface basically boils down to
-anything which has external parallel bus, e.g. Davicom DM9000, that
-KSZ8851-16MLL etc.
-
->> Can you provide a suggestion how this should be handled, if not as MFD?
->> It seems to me, that this is a Multi-Function Device .
-> 
-> Simply move it into the MTD or Memory subsystems and set up the
-> dependencies via Kconfig.
-> 
->> If this discussion is a recurring topic, is there some documentation
->> which explains how such devices should be handled ?
-> 
-> Not that I'm aware of.
-
-I see.
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 4216b574c080..cab86194a870 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1621,6 +1621,7 @@
+ 
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
++			arm,coresight-loses-context-with-cpu;
+ 
+ 			out-ports {
+ 				port {
+@@ -1639,6 +1640,7 @@
+ 
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
++			arm,coresight-loses-context-with-cpu;
+ 
+ 			out-ports {
+ 				port {
+@@ -1657,6 +1659,7 @@
+ 
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
++			arm,coresight-loses-context-with-cpu;
+ 
+ 			out-ports {
+ 				port {
+@@ -1675,6 +1678,7 @@
+ 
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
++			arm,coresight-loses-context-with-cpu;
+ 
+ 			out-ports {
+ 				port {
+@@ -1693,6 +1697,7 @@
+ 
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
++			arm,coresight-loses-context-with-cpu;
+ 
+ 			out-ports {
+ 				port {
+@@ -1711,6 +1716,7 @@
+ 
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
++			arm,coresight-loses-context-with-cpu;
+ 
+ 			out-ports {
+ 				port {
+@@ -1729,6 +1735,7 @@
+ 
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
++			arm,coresight-loses-context-with-cpu;
+ 
+ 			out-ports {
+ 				port {
+@@ -1747,6 +1754,7 @@
+ 
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
++			arm,coresight-loses-context-with-cpu;
+ 
+ 			out-ports {
+ 				port {
 -- 
-Best regards,
-Marek Vasut
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
