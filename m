@@ -2,249 +2,155 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A00C55186
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 18:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3194C55196
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 18:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9C920774
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 18:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B280F206B9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 18:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fnz1wUCc"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="PZMDSLIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgDXSCe (ORCPT
+        id S1728953AbgDXSDo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726908AbgDXSCe (ORCPT
+        Fri, 24 Apr 2020 14:03:44 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17802 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728300AbgDXSDo (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:02:34 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF90AC09B049
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 11:02:33 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id hi11so4168168pjb.3
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 11:02:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pOk/kzhlhPwNaetCm8gHWGwhQXlpl0JHUkFF0oAV7cs=;
-        b=Fnz1wUCcpiV9Sbd1YePKv3AoJZbAFcFu1weCKyJf/l35GLl+RBs2PnSoBgMsTXAbpN
-         hSkWcBmxyu1B3ASUzbyGpxWEYa9ByJRR0sL+EH0O7kGCxr9A9Pz/8cy6RBWvF9FPasIb
-         nyxWc4sgKXi4zzCu32UhYeVxmxIDJ535rbkn0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pOk/kzhlhPwNaetCm8gHWGwhQXlpl0JHUkFF0oAV7cs=;
-        b=H3QdOh/AZPd/z2G2CRpUxHGf31hHLekPbmoG/V/BfMILcdUzdBEm92xVkqHfl9BDXX
-         WYAUm3ZIMD+c9SnMMHSrM3KsJENw95O9A9mAsbbOonXwzpr2TA0tL6Iz7W4FjRYcLShG
-         GIBqsbuM3B7sRM8Hu5GSAHTQPg0CAkMjvUVnkS+BxDjgGwmDN3dmaBEVqtj2K9wzu9zm
-         5JGaAS5wwngTCoELagPSsA3EJFmojIsJpOzlLoHW8viTnGopdkcJVFsLpKnmRvFOTx0H
-         qKlnkgtRoGX8yb67NDfByTfBPuWeHmlV3IoRAi800TIXo28gNaN35LmuMYxHyJznG9SB
-         sUTA==
-X-Gm-Message-State: AGi0PuYOtojHT7Js6rBJjgSWCf/uOPEVe/qh4F0IpUf6ceGYtTn96cpJ
-        Kg/kPf/kYqLRZmox/fX8skiCAw==
-X-Google-Smtp-Source: APiQypIyNcuFloIZ3Kpb1PoSspwoVMlg7ujNFsD0/3jv7Pkd7waV6IPMavxHd+yj90Bqk0Htn6n38g==
-X-Received: by 2002:a17:90b:297:: with SMTP id az23mr7357140pjb.85.1587751353096;
-        Fri, 24 Apr 2020 11:02:33 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w30sm6418630pfj.25.2020.04.24.11.02.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 11:02:32 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 11:02:31 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
-        sibis@codeaurora.org, rnayak@codeaurora.org,
-        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
-        jcrouse@codeaurora.org, evgreen@chromium.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 3/7] interconnect: Add of_icc_get_by_index() helper
- function
-Message-ID: <20200424180231.GN199755@google.com>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-4-georgi.djakov@linaro.org>
+        Fri, 24 Apr 2020 14:03:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1587751397; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=lwSKKc8bGEb08Yw9SQhy7JOaYUDCCnpIWNEoH4WfSQ3RFpxNt2R4VdiqkdhGys3P27TbMDGl/3nK43URBUL8mMOrL34WDuz12eEKXR59OC5MVSI+rTM4AByEXRyEAVgFckWrhqkkEIk1kt0p1nZU3Bjkcga2aD5npBltHqCcOUQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1587751397; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=JFPPVC9jj5f6wCUGiIdI/tjl90bno75idKtqMqLKtKs=; 
+        b=LsB8yPdBkTFg5CXrr4OaIpJEK70qHZK81+3QsZeHUhFBvvhDY3MbZMXg8UlGBDbzpVmQJNVmZ7deO3Yig9C04cA/oFa6yRcUDw218hQtOdE9VG3ceHyYJudK/mwnWTVmyjJfjxakOLP2MxQICSQvWh4lv555rTr6fUpWVxqFjvU=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1587751397;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=JFPPVC9jj5f6wCUGiIdI/tjl90bno75idKtqMqLKtKs=;
+        b=PZMDSLIHrjQ5AXgEowlm2usG+vmi3H4R6zmuEZJyW/TKRLU5vq1Xrf/LI4kjJyBF
+        TthGf/iJvUQf6UGPQ+nC1ebyN4qyQCMeSs93rcg0jlKv3ZJTJsra8QkgIdAE7hXuzR1
+        Wlf4VlCwLcxePN0OuXB5DlxnBOBkEoRf0WnhUQeg=
+Received: from [127.0.0.1] (122.235.213.3 [122.235.213.3]) by mx.zoho.com.cn
+        with SMTPS id 1587751393295109.35899408288469; Sat, 25 Apr 2020 02:03:13 +0800 (CST)
+Date:   Sat, 25 Apr 2020 02:03:11 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v5 1/6] PCI: OF: Don't remap iospace on unsupported platform
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <CAL_JsqKsZrsnn92XHL4QdFkAgFKqVTBZXDz9wVv-_7oywOOsBQ@mail.gmail.com>
+References: <20200424130847.328584-1-jiaxun.yang@flygoat.com> <20200424130847.328584-2-jiaxun.yang@flygoat.com> <CAL_JsqKsZrsnn92XHL4QdFkAgFKqVTBZXDz9wVv-_7oywOOsBQ@mail.gmail.com>
+Message-ID: <D5CC0902-F84F-43F1-88E5-C03018B25050@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200424155404.10746-4-georgi.djakov@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-On Fri, Apr 24, 2020 at 06:54:00PM +0300, Georgi Djakov wrote:
-> This is the same as the traditional of_icc_get() function, but the
-> difference is that it takes index as an argument, instead of name.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v7:
-> * Addressed review comments from Sibi.
-> * Re-based patch.
-> 
-> v2: https://lore.kernel.org/r/20190423132823.7915-3-georgi.djakov@linaro.org
-> 
->  drivers/interconnect/core.c  | 68 +++++++++++++++++++++++++++---------
->  include/linux/interconnect.h |  6 ++++
->  2 files changed, 58 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index 2c6515e3ecf1..648237f4de49 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -351,9 +351,9 @@ static struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
->  }
->  
->  /**
-> - * of_icc_get() - get a path handle from a DT node based on name
-> + * of_icc_get_by_index() - get a path handle from a DT node based on index
->   * @dev: device pointer for the consumer device
-> - * @name: interconnect path name
-> + * @idx: interconnect path index
->   *
->   * This function will search for a path between two endpoints and return an
->   * icc_path handle on success. Use icc_put() to release constraints when they
-> @@ -365,13 +365,12 @@ static struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
->   * Return: icc_path pointer on success or ERR_PTR() on error. NULL is returned
->   * when the API is disabled or the "interconnects" DT property is missing.
->   */
-> -struct icc_path *of_icc_get(struct device *dev, const char *name)
-> +struct icc_path *of_icc_get_by_index(struct device *dev, int idx)
->  {
->  	struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
 
-nit: initialization is not needed. According to the diff this is existing
-code, but since we are adding a new function we can as well 'fix' it :)
+=E4=BA=8E 2020=E5=B9=B44=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+:47:23, Rob Herring <robh+dt@kernel=2Eorg> =E5=86=99=E5=88=B0:
+>On Fri, Apr 24, 2020 at 8:09 AM Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>=
+ wrote:
+>>
+>> There are some platforms that don't support I/O space remapping
+>> like MIPS=2E However, our PCI code will try to remap iospace
+>> unconditionally and reject io resources on these platforms=2E
+>>
+>> So we should remove I/O space remapping check and use a range
+>> check instead on these platforms=2E
+>>
+>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>> --
+>> v4: Fix a typo in commit message=2E
+>> v5: Commit message massage
+>> ---
+>>  drivers/pci/of=2Ec | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/pci/of=2Ec b/drivers/pci/of=2Ec
+>> index 81ceeaa6f1d5=2E=2E36e8761b66c6 100644
+>> --- a/drivers/pci/of=2Ec
+>> +++ b/drivers/pci/of=2Ec
+>> @@ -547,12 +547,21 @@ int pci_parse_request_of_pci_ranges(struct device=
+ *dev,
+>>
+>>                 switch (resource_type(res)) {
+>>                 case IORESOURCE_IO:
+>> +#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
+>
+>We already have the same condition in pci_remap_iospace()=2E All this
+>does is suppress a WARN=2E If a WARN is not desired, then change it=2E
+>Perhaps just a single line rather than backtrace would be okay=2E
+>Whether to WARN or not shouldn't be a decision for firmware code=2E
+>
+>Though really, if I/O space can never be supported, then it's an error
+>in your DT to describe it=2E
 
->  	struct icc_node *src_node, *dst_node;
->  	struct device_node *np = NULL;
+In MIPS world, we do have inb/oub family of I/O functions
+to support I/O space=2E But we're not using remap_iospace as it's breaking
+some of our assumptions=2E
+We have our own inb/outb implementation=2E
 
-ditto
+In that case, I think make a range check instead of remapping would
+be more practical=2E
 
->  	struct of_phandle_args src_args, dst_args;
-> -	int idx = 0;
->  	int ret;
->  
->  	if (!dev || !dev->of_node)
-> @@ -391,12 +390,6 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
->  	 * lets support only global ids and extend this in the future if needed
->  	 * without breaking DT compatibility.
->  	 */
-> -	if (name) {
-> -		idx = of_property_match_string(np, "interconnect-names", name);
-> -		if (idx < 0)
-> -			return ERR_PTR(idx);
-> -	}
-> -
->  	ret = of_parse_phandle_with_args(np, "interconnects",
->  					 "#interconnect-cells", idx * 2,
->  					 &src_args);
-> @@ -439,12 +432,8 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
->  		return path;
->  	}
->  
-> -	if (name)
-> -		path->name = kstrdup_const(name, GFP_KERNEL);
-> -	else
-> -		path->name = kasprintf(GFP_KERNEL, "%s-%s",
-> -				       src_node->name, dst_node->name);
-> -
-> +	path->name = kasprintf(GFP_KERNEL, "%s-%s",
-> +			       src_node->name, dst_node->name);
->  	if (!path->name) {
->  		kfree(path);
->  		return ERR_PTR(-ENOMEM);
-> @@ -452,6 +441,53 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
->  
->  	return path;
->  }
-> +EXPORT_SYMBOL_GPL(of_icc_get_by_index);
-> +
-> +/**
-> + * of_icc_get() - get a path handle from a DT node based on name
-> + * @dev: device pointer for the consumer device
-> + * @name: interconnect path name
-> + *
-> + * This function will search for a path between two endpoints and return an
-> + * icc_path handle on success. Use icc_put() to release constraints when they
-> + * are not needed anymore.
-> + * If the interconnect API is disabled, NULL is returned and the consumer
-> + * drivers will still build. Drivers are free to handle this specifically,
-> + * but they don't have to.
-> + *
-> + * Return: icc_path pointer on success or ERR_PTR() on error. NULL is returned
-> + * when the API is disabled or the "interconnects" DT property is missing.
-> + */
-> +struct icc_path *of_icc_get(struct device *dev, const char *name)
-> +{
-> +	struct device_node *np = NULL;
+Thanks=2E
 
-nit: initialization is not needed
+>
+>>                         err =3D devm_pci_remap_iospace(dev, res, iobase=
+);
+>>                         if (err) {
+>>                                 dev_warn(dev, "error %d: failed to map =
+resource %pR\n",
+>>                                          err, res);
+>>                                 resource_list_destroy_entry(win);
+>>                         }
+>> +#else
+>> +                       /* Simply check if IO is inside the range */
+>
+>Why do you care if it's never used?
+>
+>> +                       if (res->end > IO_SPACE_LIMIT) {
+>> +                               dev_warn(dev, "resource %pR out of the =
+I/O range\n",
+>> +                                       res);
+>> +                               resource_list_destroy_entry(win);
+>> +                       }
+>> +#endif
+>>                         break;
+>>                 case IORESOURCE_MEM:
+>>                         res_valid |=3D !(res->flags & IORESOURCE_PREFET=
+CH);
+>> --
+>> 2=2E26=2E0=2Erc2
+>>
 
-> +	int idx = 0;
-> +
-> +	if (!dev || !dev->of_node)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	np = dev->of_node;
-> +
-> +	/*
-> +	 * When the consumer DT node do not have "interconnects" property
-> +	 * return a NULL path to skip setting constraints.
-> +	 */
-> +	if (!of_find_property(np, "interconnects", NULL))
-> +		return NULL;
-> +
-> +	/*
-> +	 * We use a combination of phandle and specifier for endpoint. For now
-> +	 * lets support only global ids and extend this in the future if needed
-> +	 * without breaking DT compatibility.
-> +	 */
-> +	if (name) {
-> +		idx = of_property_match_string(np, "interconnect-names", name);
-> +		if (idx < 0)
-> +			return ERR_PTR(idx);
-> +	}
-> +
-> +	return of_icc_get_by_index(dev, idx);
-> +}
->  EXPORT_SYMBOL_GPL(of_icc_get);
->  
->  /**
-> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-> index d70a914cba11..34e97231a6ab 100644
-> --- a/include/linux/interconnect.h
-> +++ b/include/linux/interconnect.h
-> @@ -28,6 +28,7 @@ struct device;
->  struct icc_path *icc_get(struct device *dev, const int src_id,
->  			 const int dst_id);
->  struct icc_path *of_icc_get(struct device *dev, const char *name);
-> +struct icc_path *of_icc_get_by_index(struct device *dev, int idx);
->  void icc_put(struct icc_path *path);
->  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
->  void icc_set_tag(struct icc_path *path, u32 tag);
-> @@ -46,6 +47,11 @@ static inline struct icc_path *of_icc_get(struct device *dev,
->  	return NULL;
->  }
->  
-> +static inline struct icc_path *of_icc_get_by_index(struct device *dev, int idx)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline void icc_put(struct icc_path *path)
->  {
->  }
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+--=20
+Jiaxun Yang
