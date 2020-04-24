@@ -2,343 +2,139 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B38C5518A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 05:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36102C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 981392076C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 05:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1645C2075A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587706639;
+	bh=UpjdYfWzhaIBWwT8pfBeT5E2eAvIuj0KkNBR5ForkP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z7O4XiuK2FsGLRcmOer6KL87F60CCo4isbTn12TzuTYLkewB3QwS/GTHwje0NrE1i
+	 oFI19xQgHDOg2ZiHHkuPCTwE9y6+98J216ku91rkg+1+weqRJk+xbt1VHiUn9fFvB0
+	 ncp9i4cxOecLNk5IgJ4RPfZlm67Fo9JLAbVyhYIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgDXFVZ (ORCPT
+        id S1726626AbgDXFhP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:21:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726515AbgDXFVY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:21:24 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2404EC09B046
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 22:21:24 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jRqm7-0003I8-AJ; Fri, 24 Apr 2020 07:21:19 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jRqm6-0004UP-N7; Fri, 24 Apr 2020 07:21:18 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH net-next v1] dt-bindings: net: convert qca,ar71xx documentation to yaml
-Date:   Fri, 24 Apr 2020 07:21:16 +0200
-Message-Id: <20200424052116.17204-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.1
+        Fri, 24 Apr 2020 01:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbgDXFhP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:37:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C808D2075A;
+        Fri, 24 Apr 2020 05:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587706634;
+        bh=UpjdYfWzhaIBWwT8pfBeT5E2eAvIuj0KkNBR5ForkP8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xRAZIkUacZko7ajq7cHgKyFBma9mq+G+xqKbHfA9RNyQ85imZkOzVX+M8T8pPEBpX
+         HjMiJaSUqzGWbQVIFLn8NU2K1bIYEo3FgiiElxYqvGeI0GunAOkV+dFb52E7hqyOuZ
+         mGR5wIQ88ku15rmA65YXFz2L+nTo8+7OdvZoqyLQ=
+Date:   Fri, 24 Apr 2020 07:37:11 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hyunki Koo <hyunki00.koo@samsung.com>
+Cc:     robh+dt@kernel.org, linux-serial@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 0/3] 32-bit access for TX/RX hold registers for
+ samsung_tty driver
+Message-ID: <20200424053711.GB103562@kroah.com>
+References: <20200420013300.17249-1-hyunki00.koo@samsung.com>
+ <CGME20200420233607epcas2p305dbd652ab73592a32c17773c1fce329@epcas2p3.samsung.com>
+ <20200420233558.11879-1-hyunki00.koo@samsung.com>
+ <000a01d619d0$ee167730$ca436590$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000a01d619d0$ee167730$ca436590$@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for the Atheros AR71XX over to a YAML schemas.
+On Fri, Apr 24, 2020 at 09:40:18AM +0900, Hyunki Koo wrote:
+> On Sat, April 21, 2020 at 08:36:00 AM +0900, Hyunki Koo wrote:
+> > 
+> > Change in v8:
+> > - spit into 3 patch
+> >   [1/3] create the new functions with no functional change to the code as-
+> > is.
+> >   Replace rd_regb/wr_regb with rd_reg/wr_reg for general usage.
+> >   [2/3] add the new binding reg-io-width in device tree
+> >   [3/3] add the new funtinality of rd_reg / wr_reg and wr_reg_barrier
+> >         to support 32-bit access for the TX/RX hold registers UTXH and URXH.
+> > 
+> > Change in v7:
+> > - [1/2] correct build error on running 'make dt_binding_check'
+> > Documentation/devicetree/bindings/serial/samsung_uart.yaml:  mapping
+> > values are not allowed in this context
+> >   in "<unicode string>", line 36, column 13
+> >   Documentation/devicetree/bindings/Makefile:12: recipe for target
+> > 'Documentation/devicetree/bindings/serial/samsung_uart.example.dts'
+> > failed
+> >   make[1]: ***
+> > [Documentation/devicetree/bindings/serial/samsung_uart.example.dts]
+> > Error 1
+> >   make[1]: *** Waiting for unfinished jobs....
+> >   Makefile:1262: recipe for target 'dt_binding_check' failed
+> >   make: *** [dt_binding_check] Error 2
+> > - [2/2] add commit message of reviewed by and tested by in commit
+> > message
+> >   Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >   Tested on Odroid HC1 (Exynos5422):
+> >   Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > Change in v6:
+> > - [2/2] clean description of reg-io-width
+> >   allOf is not needed. Just enum [1, 2] is enough.
+> > 
+> > Changes in v5:
+> > - spit into 2 patch, newly added patch for dt-binding
+> >   [1/2] newly added dt-binding and go as first patch in this series.
+> >   [2/2] go as second patch in this series.
+> > 
+> > Changes in v4:
+> > - correct variable types and change misleading function name
+> > 
+> > Changes in v3:
+> > - line 2031: remove redundant init value  for ourport->port.iotype
+> > 
+> > Changes in v2:
+> > - line 954 : change rd_regl to rd_reg in for backward compatibility.
+> > - line 2031: Add init value for ourport->port.iotype  to UPIO_MEM
+> > 
+> > 
+> > Hyunki Koo (3):
+> >   serial: samsung: Replace rd_regb/wr_regb with rd_reg/wr_reg
+> >   dt-bindings: serial: Add reg-io-width compatible
+> >   tty: samsung_tty: 32-bit access for TX/RX hold registers
+> > 
+> >  .../devicetree/bindings/serial/samsung_uart.yaml   |  8 +++
+> >  drivers/tty/serial/samsung_tty.c                   | 76 ++++++++++++++++++---
+> > -
+> >  2 files changed, 72 insertions(+), 12 deletions(-)
+> > 
+> > --
+> > 2.15.0.rc1
+> 
+> Hi Greg KH
+> 
+> Can I ask is this series patch are acceptable or not?
+> Do you think, I have to do any further action  for this patch?
+> 
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- .../devicetree/bindings/net/qca,ar71xx.txt    |  45 ----
- .../devicetree/bindings/net/qca,ar71xx.yaml   | 216 ++++++++++++++++++
- 2 files changed, 216 insertions(+), 45 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/qca,ar71xx.txt
- create mode 100644 Documentation/devicetree/bindings/net/qca,ar71xx.yaml
+It's been 3 days, give us a chance please...
 
-diff --git a/Documentation/devicetree/bindings/net/qca,ar71xx.txt b/Documentation/devicetree/bindings/net/qca,ar71xx.txt
-deleted file mode 100644
-index 2a33e71ba72b8..0000000000000
---- a/Documentation/devicetree/bindings/net/qca,ar71xx.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--Required properties:
--- compatible:	Should be "qca,<soc>-eth". Currently support compatibles are:
--		qca,ar7100-eth - Atheros AR7100
--		qca,ar7240-eth - Atheros AR7240
--		qca,ar7241-eth - Atheros AR7241
--		qca,ar7242-eth - Atheros AR7242
--		qca,ar9130-eth - Atheros AR9130
--		qca,ar9330-eth - Atheros AR9330
--		qca,ar9340-eth - Atheros AR9340
--		qca,qca9530-eth - Qualcomm Atheros QCA9530
--		qca,qca9550-eth - Qualcomm Atheros QCA9550
--		qca,qca9560-eth - Qualcomm Atheros QCA9560
--
--- reg : Address and length of the register set for the device
--- interrupts : Should contain eth interrupt
--- phy-mode : See ethernet.txt file in the same directory
--- clocks: the clock used by the core
--- clock-names: the names of the clock listed in the clocks property. These are
--	"eth" and "mdio".
--- resets: Should contain phandles to the reset signals
--- reset-names: Should contain the names of reset signal listed in the resets
--		property. These are "mac" and "mdio"
--
--Optional properties:
--- phy-handle : phandle to the PHY device connected to this device.
--- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
--  Use instead of phy-handle.
--
--Optional subnodes:
--- mdio : specifies the mdio bus, used as a container for phy nodes
--  according to phy.txt in the same directory
--
--Example:
--
--ethernet@1a000000 {
--	compatible = "qca,ar9330-eth";
--	reg = <0x1a000000 0x200>;
--	interrupts = <5>;
--	resets = <&rst 13>, <&rst 23>;
--	reset-names = "mac", "mdio";
--	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_MDIO>;
--	clock-names = "eth", "mdio";
--
--	phy-mode = "gmii";
--};
-diff --git a/Documentation/devicetree/bindings/net/qca,ar71xx.yaml b/Documentation/devicetree/bindings/net/qca,ar71xx.yaml
-new file mode 100644
-index 0000000000000..f99a5aabe9232
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qca,ar71xx.yaml
-@@ -0,0 +1,216 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qca,ar71xx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: QCA AR71XX MAC
-+
-+allOf:
-+  - $ref: ethernet-controller.yaml#
-+
-+maintainers:
-+  - Oleksij Rempel <o.rempel@pengutronix.de>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - qca,ar7100-eth   # Atheros AR7100
-+              - qca,ar7240-eth   # Atheros AR7240
-+              - qca,ar7241-eth   # Atheros AR7241
-+              - qca,ar7242-eth   # Atheros AR7242
-+              - qca,ar9130-eth   # Atheros AR9130
-+              - qca,ar9330-eth   # Atheros AR9330
-+              - qca,ar9340-eth   # Atheros AR9340
-+              - qca,qca9530-eth  # Qualcomm Atheros QCA9530
-+              - qca,qca9550-eth  # Qualcomm Atheros QCA9550
-+              - qca,qca9560-eth  # Qualcomm Atheros QCA9560
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  '#address-cells':
-+    description: number of address cells for the MDIO bus
-+    const: 1
-+
-+  '#size-cells':
-+    description: number of size cells on the MDIO bus
-+    const: 0
-+
-+  clocks:
-+    items:
-+      - description: MAC main clock
-+      - description: MDIO clock
-+
-+  clock-names:
-+    items:
-+      - const: eth
-+      - const: mdio
-+
-+  resets:
-+    items:
-+      - description: MAC reset
-+      - description: MDIO reset
-+
-+  reset-names:
-+    items:
-+      - const: mac
-+      - const: mdio
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - phy-mode
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+
-+examples:
-+  # Lager board
-+  - |
-+    eth0: ethernet@19000000 {
-+        compatible = "qca,ar9330-eth";
-+        reg = <0x19000000 0x200>;
-+        interrupts = <4>;
-+        resets = <&rst 9>, <&rst 22>;
-+        reset-names = "mac", "mdio";
-+        clocks = <&pll 1>, <&pll 2>;
-+        clock-names = "eth", "mdio";
-+        qca,ethcfg = <&ethcfg>;
-+        phy-mode = "mii";
-+        phy-handle = <&phy_port4>;
-+    };
-+
-+    eth1: ethernet@1a000000 {
-+        compatible = "qca,ar9330-eth";
-+        reg = <0x1a000000 0x200>;
-+        interrupts = <5>;
-+        resets = <&rst 13>, <&rst 23>;
-+        reset-names = "mac", "mdio";
-+        clocks = <&pll 1>, <&pll 2>;
-+        clock-names = "eth", "mdio";
-+
-+        phy-mode = "gmii";
-+
-+        status = "disabled";
-+
-+        fixed-link {
-+            speed = <1000>;
-+            full-duplex;
-+        };
-+
-+        mdio {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            switch10: switch@10 {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                compatible = "qca,ar9331-switch";
-+                reg = <0x10>;
-+                resets = <&rst 8>;
-+                reset-names = "switch";
-+
-+                interrupt-parent = <&miscintc>;
-+                interrupts = <12>;
-+
-+                interrupt-controller;
-+                #interrupt-cells = <1>;
-+
-+                ports {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    switch_port0: port@0 {
-+                        reg = <0x0>;
-+                        label = "cpu";
-+                        ethernet = <&eth1>;
-+
-+                        phy-mode = "gmii";
-+
-+                        fixed-link {
-+                            speed = <1000>;
-+                            full-duplex;
-+                        };
-+                    };
-+
-+                    switch_port1: port@1 {
-+                        reg = <0x1>;
-+                        phy-handle = <&phy_port0>;
-+                        phy-mode = "internal";
-+
-+                        status = "disabled";
-+                    };
-+
-+                    switch_port2: port@2 {
-+                        reg = <0x2>;
-+                        phy-handle = <&phy_port1>;
-+                        phy-mode = "internal";
-+
-+                        status = "disabled";
-+                    };
-+
-+                    switch_port3: port@3 {
-+                        reg = <0x3>;
-+                        phy-handle = <&phy_port2>;
-+                        phy-mode = "internal";
-+
-+                        status = "disabled";
-+                    };
-+
-+                    switch_port4: port@4 {
-+                        reg = <0x4>;
-+                        phy-handle = <&phy_port3>;
-+                        phy-mode = "internal";
-+
-+                        status = "disabled";
-+                    };
-+                };
-+
-+                mdio {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    interrupt-parent = <&switch10>;
-+
-+                    phy_port0: phy@0 {
-+                        reg = <0x0>;
-+                        interrupts = <0>;
-+                        status = "disabled";
-+                    };
-+
-+                    phy_port1: phy@1 {
-+                        reg = <0x1>;
-+                        interrupts = <0>;
-+                        status = "disabled";
-+                    };
-+
-+                    phy_port2: phy@2 {
-+                        reg = <0x2>;
-+                        interrupts = <0>;
-+                        status = "disabled";
-+                    };
-+
-+                    phy_port3: phy@3 {
-+                        reg = <0x3>;
-+                        interrupts = <0>;
-+                        status = "disabled";
-+                    };
-+
-+                    phy_port4: phy@4 {
-+                        reg = <0x4>;
-+                        interrupts = <0>;
-+                        status = "disabled";
-+                    };
-+                };
-+            };
-+        };
-+    };
--- 
-2.26.1
+Also, I need to wait for the dt patch to be reviewed first before I can
+take any of this, so that's up to the DT maintainers.
 
+thanks,
+
+greg k-h
