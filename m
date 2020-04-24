@@ -2,280 +2,122 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB25CC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31116C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B89BB21473
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE522084D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 14:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587738510;
+	bh=8SNgUrX8GwVarrY8Ebo9QfXjiJ1rvJ7gh0V24v+SvcA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FEhmhTUYwb5MFQPQlBCB3D+FIeds+uZpRnuoj0HpHoJhr87wGYiLwqdyY/2QipWwD
+	 pjLAPOnhgrwJTI79Lro3eeo5vIY6Bz4wq9j//d7LdgZGecFZkibQDrBKmbTNodPbAV
+	 T+wILdOGITFL9RSEKaU7/J/nxoV7/5Mp/43MYowI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgDXOIQ (ORCPT
+        id S1726699AbgDXO23 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 10:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726698AbgDXOIQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 10:08:16 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3CC1C09B045
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 07:08:15 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id AAA372A2D55
-Subject: Re: [PATCH] dt-bindings: display: anx7814.txt: convert to yaml
-To:     =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
-        devicetree@vger.kernel.org
-Cc:     kernel@collabora.com, dri-devel@lists.freedesktop.org,
-        robh+dt@kernel.org
-References: <20200424065354.23781-1-ricardo.canuelo@collabora.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <481401ed-93a4-6918-3d8b-6c769d8c7617@collabora.com>
-Date:   Fri, 24 Apr 2020 16:08:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 24 Apr 2020 10:28:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726848AbgDXO22 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 10:28:28 -0400
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A6322084D;
+        Fri, 24 Apr 2020 14:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587738507;
+        bh=8SNgUrX8GwVarrY8Ebo9QfXjiJ1rvJ7gh0V24v+SvcA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JR7m0hjwgKtKn5FIdX8lXcQcUCs3L0ZznrPTcW0oumHgoLDUqQGlEIeKDCDgpjblA
+         aKhMAPSxoEnteZvpAFRu5h2YCBbJvwg1I+9aMaDtfoSSQkjopoKkwjhqeqP4FK3reI
+         hHacNGbU3nWF28PwlPGluDYJ0+lWHFFhXGXjsI7s=
+Received: by mail-qk1-f176.google.com with SMTP id s63so10302931qke.4;
+        Fri, 24 Apr 2020 07:28:27 -0700 (PDT)
+X-Gm-Message-State: AGi0Pubc+5gJV+ga25zkRyuA/bb/QUxQJdMssIxmUo5ZTsLoPqoMr8Mr
+        fq27kByfQz4GR4hN3A4mil3cUJ63vb3Bz3Xu4Q==
+X-Google-Smtp-Source: APiQypJTEZlYNHfuUM4k/UahZKOMwF+cs9AnE0Zoa69Be6ozAPXgBe3pi4Ofgx9yKbwqA1iTRmFHU2IVDittvj/nesM=
+X-Received: by 2002:a37:4a85:: with SMTP id x127mr9364413qka.152.1587738506606;
+ Fri, 24 Apr 2020 07:28:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200424065354.23781-1-ricardo.canuelo@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+ <20200413164440.1138178-3-iskren.chernev@gmail.com> <20200420205501.GA6828@bogus>
+ <f9b5d68d-536b-5806-573b-9dafb848f46f@gmail.com>
+In-Reply-To: <f9b5d68d-536b-5806-573b-9dafb848f46f@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 24 Apr 2020 09:28:12 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLZ8WrOmRDBuQ5DdAfib0KaCScYY_12qfkcoZa3_Z7_3Q@mail.gmail.com>
+Message-ID: <CAL_JsqLZ8WrOmRDBuQ5DdAfib0KaCScYY_12qfkcoZa3_Z7_3Q@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: regulator: Add document bindings for max77826
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ricardo,
+On Thu, Apr 23, 2020 at 7:59 AM Iskren Chernev <iskren.chernev@gmail.com> wrote:
+>
+>
+> On 4/20/20 11:55 PM, Rob Herring wrote:
+> > On Mon, Apr 13, 2020 at 07:44:39PM +0300, Iskren Chernev wrote:
+> >> +    patternProperties:
+> >> +      "^LDO([1-9]|1[0-5])$":
+> >> +        type: object
+> >> +        allOf:
+> >> +          - $ref: regulator.yaml#
+> >> +
+> >> +      "^BUCK|BUCKBOOST$":
+> >> +        type: object
+> >> +        allOf:
+> >> +          - $ref: regulator.yaml#
+> >> +
+> >> +      additionalProperties: false
+> >
+> > You are defining a property called 'additionalProperties'. This one
+> > should be dropped because additionalProperties doesn't work with a $ref.
+> >
+>
+> I got the idea from mps,mpq7920.yaml. It has additionalProperties in the
+> exact same places that I do. Also bd718(28|37|47).yaml seem to use
+> additionalProperties inside patternProperties. Shall I modify it as well?
 
-Thank you for your patch.
+Indeed. mps,mp5416.yaml too. I'll fix all of these and few
+non-regulator ones so I can get them into rc3.
 
-On 24/4/20 8:53, Ricardo Cañuelo wrote:
-> This converts the Analogix ANX7814 bridge DT binding to yaml. Port
-> definitions and descriptions were expanded, apart from that it's a
-> direct translation from the original binding.
-> 
-> Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-> ---
-> Tested with:
-> make dt_binding_check ARCH=arm64 DT_SCHEMA_FILES=<.../anx7814.yaml>
-> make dtbs_check ARCH=arm64 DT_SCHEMA_FILES=<.../anx7814.yaml>
-> 
->  .../bindings/display/bridge/anx7814.txt       |  42 ------
->  .../bindings/display/bridge/anx7814.yaml      | 133 ++++++++++++++++++
->  2 files changed, 133 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/bridge/anx7814.txt
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7814.yaml
+> I couldn't find the core schema for this yaml:
+> http://devicetree.org/meta-schemas/core.yaml (gives 404).  Is there a way
+> to verify the validity of the yaml?
 
-Use the full compatible string: analogix,anx7814.yaml
+Running 'make dt_binding_check'. The url is just convention and while
+files could be there they aren't. They are all contained in the
+dtschema module[1].
 
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/anx7814.txt b/Documentation/devicetree/bindings/display/bridge/anx7814.txt
-> deleted file mode 100644
-> index 17258747fff6..000000000000
-> --- a/Documentation/devicetree/bindings/display/bridge/anx7814.txt
-> +++ /dev/null
-> @@ -1,42 +0,0 @@
-> -Analogix ANX7814 SlimPort (Full-HD Transmitter)
-> ------------------------------------------------
-> -
-> -The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
-> -designed for portable devices.
-> -
-> -Required properties:
-> -
-> - - compatible		: Must be one of:
-> -			  "analogix,anx7808"
-> -			  "analogix,anx7812"
-> -			  "analogix,anx7814"
-> -			  "analogix,anx7818"
-> - - reg			: I2C address of the device
-> - - interrupts		: Should contain the INTP interrupt
-> - - hpd-gpios		: Which GPIO to use for hpd
-> - - pd-gpios		: Which GPIO to use for power down
-> - - reset-gpios		: Which GPIO to use for reset
-> -
-> -Optional properties:
-> -
-> - - dvdd10-supply	: Regulator for 1.0V digital core power.
-> - - Video port for HDMI input, using the DT bindings defined in [1].
-> -
-> -[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> -
-> -Example:
-> -
-> -	anx7814: anx7814@38 {
-> -		compatible = "analogix,anx7814";
-> -		reg = <0x38>;
-> -		interrupt-parent = <&gpio0>;
-> -		interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
-> -		hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
-> -		pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
-> -		reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
-> -		port {
-> -			anx7814_in: endpoint {
-> -				remote-endpoint = <&hdmi0_out>;
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/display/bridge/anx7814.yaml b/Documentation/devicetree/bindings/display/bridge/anx7814.yaml
-> new file mode 100644
-> index 000000000000..53d3c778c893
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/anx7814.yaml
-> @@ -0,0 +1,133 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/anx7814.yaml#
+However, in this case the meta-schema fails to check for this. It is
+technically valid as it is saying you can't have a DT property called
+'additionalProperties'. I've written a check now which should disallow
+listing any DT property names which are json-schema vocabulary. Once
+the failures get fixed I'll add it to the meta-schema.
 
-Don't forget to update this too.
+> Also, this patch is already merged in linux-next. I guess I shall submit
+> a new patch with the fixes standalone?
 
+Yes, should be on top of this one.
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analogix ANX7814 SlimPort (Full-HD Transmitter)
-> +
-> +maintainers:
-> +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> +
-> +description: |
-> +  The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
-> +  designed for portable devices.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - analogix,anx7808
-> +      - analogix,anx7812
-> +      - analogix,anx7814
-> +      - analogix,anx7818
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: I2C address of the device.
-> +
+Thanks,
+Rob
 
-Can drop the description as there's nothing specific to this device.
-
-> +  interrupts:
-> +    maxItems: 1
-> +    description: Should contain the INTP interrupt.
-> +
-> +  hpd-gpios:
-> +    maxItems: 1
-> +    description: Which GPIO to use for hpd.
-> +
-> +  pd-gpios:
-> +    maxItems: 1
-> +    description: Which GPIO to use for power down.
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: Which GPIO to use for reset.
-> +
-> +  dvdd10-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.0V digital core power.
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      A node containing input and output port nodes with endpoint
-> +      definitions as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +      Documentation/devicetree/bindings/graph.txt
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-
-I don't' think you need to specify this. You can drop it (better double check
-with Rob, though)
-
-> +      "#size-cells":
-> +        const: 0
-> +
-
-I don't' think you need to specify this. You can drop it (better double check
-with Rob, though)
-
-> +      port@0:
-> +        type: object
-> +        description: Video port for HDMI input.
-> +
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          Video port for SlimPort, DisplayPort, eDP or MyDP output.
-> +
-> +        properties:
-> +          reg:
-> +            const: 1
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - hpd-gpios
-> +  - pd-gpios
-> +  - reset-gpios
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        anx7814: anx7814@38 {
-
-This should be "bridge@38 {", since node names are supposed to
-match the class of the device instead of the name of the device. I guess.
-
-> +            compatible = "analogix,anx7814";
-> +            reg = <0x38>;
-> +            interrupt-parent = <&gpio0>;
-> +            interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
-> +            hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
-> +            pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
-> +            reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    reg = <0>;
-> +                    anx7814_in: endpoint {
-> +                        remote-endpoint = <&hdmi0_out>;
-> +                    };
-> +                };
-> +
-> +                port@1 {
-> +                    reg = <1>;
-> +                    anx7814_out: endpoint {
-> +                        remote-endpoint = <&edp_out>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> +...
-> 
+[1] https://github.com/devicetree-org/dt-schema
