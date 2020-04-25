@@ -4,131 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6797AC55194
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FC0C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4854120748
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1916E2072B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587834659;
-	bh=9JLPrvwtf1kR1XWHBlo5cHjeAQpwvGV5tSTP/VROjBw=;
+	s=default; t=1587836315;
+	bh=wozh6fPngOaid+sufoR11TXXvYo49Yoy0laoXfwu+iQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=N8g8X8N+Gh4RRwWZ2JyFHLGcCY9gb/w4ohJOna515sSuHylMDnUvE+5AY+1EH2aJR
-	 90wSltSF/1Qc3KvSJ+pT+9x1Qhthnfj8N3/VJt7zk71M1Puz/rqu65gc6yFqhE6wQH
-	 G3ab55DGzTz9lHhDsOKHDAQ0IY7x3LJEWFdkbcqk=
+	b=YONR4fvLcOmsAzuHpUy9zVvNKyDvBL0seytvB9sJZADcfMm9F2dDbGIQaSFnSAt2g
+	 r3950ZsJ7mYCqcRVDqxFrrLTcslBtPe2BMZaFePKjqhWZxbYQjOIFHyL8u8X4XrLdE
+	 80Mn/05eTE+fzpitEXKJdAqO49q8TaO67NOP5Vqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgDYRK6 (ORCPT
+        id S1726336AbgDYRie (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 13:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44936 "EHLO mail.kernel.org"
+        Sat, 25 Apr 2020 13:38:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgDYRK6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:10:58 -0400
+        id S1726145AbgDYRie (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 13:38:34 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44098206B6;
-        Sat, 25 Apr 2020 17:10:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F150720728;
+        Sat, 25 Apr 2020 17:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587834658;
-        bh=9JLPrvwtf1kR1XWHBlo5cHjeAQpwvGV5tSTP/VROjBw=;
+        s=default; t=1587836313;
+        bh=wozh6fPngOaid+sufoR11TXXvYo49Yoy0laoXfwu+iQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=c+5nHlWN09zsQoQrU7U4zQaBKY44wiT3NKX9U9V8hidHXxvLJilr6BbWYqiZlzmHA
-         sg0rgZ7GkamplUTWe26nR+NwNc8K6SKJ8z5yxbDlZfHkZnWkfE/rPphKgMTtenO4FC
-         VmAfFdtUOGCU83p4F9vY07/ipVGV96nmBuhiKZIk=
-Date:   Sat, 25 Apr 2020 18:10:52 +0100
+        b=neCfOoexTTvUUd7UtEOWURtYSzqhPRSlizBUrvV8193NP6RAufCPLsTg0eb+eVIaG
+         cDtm/r8Vvlrf3uRFl9v+Omq4L9WOsC0rlNhZzJeewZ3h5A6atOC/ydCCZj0Cx2R8r0
+         3aOmZspA+Y0/QNSx/2iOSTnvTap1J5pkIzPCFKRg=
+Date:   Sat, 25 Apr 2020 18:38:29 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+To:     Rob Herring <robh@kernel.org>
+Cc:     Nick Reitemeyer <nick.reitemeyer@web.de>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: iio: adi,ltc2983: Add missing quotes on
- dependencies
-Message-ID: <20200425181052.1588a862@archlinux>
-In-Reply-To: <CY4PR03MB33502FFA293BB3F068A488B299D00@CY4PR03MB3350.namprd03.prod.outlook.com>
-References: <20200423150523.23984-1-robh@kernel.org>
-        <CY4PR03MB33502FFA293BB3F068A488B299D00@CY4PR03MB3350.namprd03.prod.outlook.com>
+        linux-iio@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/3] dt-bindings: magnetometer: ak8974: Add Alps
+ hscdtd008a
+Message-ID: <20200425183829.4646e503@archlinux>
+In-Reply-To: <20200415000945.GA24169@bogus>
+References: <20200406141350.162036-1-nick.reitemeyer@web.de>
+        <20200406141350.162036-2-nick.reitemeyer@web.de>
+        <20200415000945.GA24169@bogus>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Apr 2020 07:26:46 +0000
-"Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+On Tue, 14 Apr 2020 19:09:45 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-> > From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org>
-> > On Behalf Of Rob Herring
-> > Sent: Donnerstag, 23. April 2020 17:05
-> > To: devicetree@vger.kernel.org
-> > Cc: Sa, Nuno <Nuno.Sa@analog.com>; Jonathan Cameron
-> > <jic23@kernel.org>; Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter
-> > Clausen <lars@metafoo.de>; Peter Meerwald-Stadler
-> > <pmeerw@pmeerw.net>; linux-iio@vger.kernel.org
-> > Subject: [PATCH] dt-bindings: iio: adi,ltc2983: Add missing quotes on
-> > dependencies
-> >=20
-> > With the bracketed list form, any strings with commas have to be quoted
-> > or they are separated.
-> >=20
-> > Fixes: 3986a14870cb ("dt-bindings: iio: Add ltc2983 documentation")
-> > Cc: "Nuno S=C3=A1" <nuno.sa@analog.com>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: Hartmut Knaack <knaack.h@gmx.de>
-> > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> > Cc: linux-iio@vger.kernel.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > --- =20
->=20
-> Acked-by: Nuno S=C3=A1 <nuno.sa@analog.com>
->=20
+> On Mon,  6 Apr 2020 16:13:51 +0200, Nick Reitemeyer wrote:
+> > 
+> > Add binding documentation for the Alps HSCDTD008A, which is similar
+> > to the ak8974.
+> > 
+> > Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
+> > ---
+> >  Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >   
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Applied to the togreg branch of iio.git.
 
-Rob, Do you want to pick this one up via your tree?
-
-Thanks,
+thanks,
 
 Jonathan
-
-> >  .../devicetree/bindings/iio/temperature/adi,ltc2983.yaml      | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git
-> > a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
-> > b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
-> > index 8fb46de6641d..04da5c48a5e9 100644
-> > --- a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
-> > +++
-> > b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
-> > @@ -260,7 +260,7 @@ patternProperties:
-> >        - adi,rsense-handle
-> >=20
-> >      dependencies:
-> > -      adi,current-rotate: [ adi,rsense-share ]
-> > +      adi,current-rotate: [ "adi,rsense-share" ]
-> >=20
-> >    "^thermistor@":
-> >      type: object
-> > @@ -349,7 +349,7 @@ patternProperties:
-> >        - adi,rsense-handle
-> >=20
-> >      dependencies:
-> > -      adi,current-rotate: [ adi,rsense-share ]
-> > +      adi,current-rotate: [ "adi,rsense-share" ]
-> >=20
-> >    "^adc@":
-> >      type: object
-> > --
-> > 2.20.1 =20
->=20
-
