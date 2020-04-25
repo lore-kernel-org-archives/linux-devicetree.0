@@ -2,120 +2,141 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668A3C55186
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 09:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E2EC55191
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 10:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1D420704
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 09:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D9E2074F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 10:22:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="CslqNo6T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="b00YjM0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgDYJg2 (ORCPT
+        id S1726059AbgDYKWr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 05:36:28 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:54873 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725837AbgDYJg1 (ORCPT
+        Sat, 25 Apr 2020 06:22:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726060AbgDYKWr (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Apr 2020 05:36:27 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id SHERjN65NlKa1SHEVjTTIE; Sat, 25 Apr 2020 11:36:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1587807384; bh=fSYBdxjgYtmYwGO3ICwPcGjEcBBVqN9UZaSZatOml9E=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=CslqNo6TKr61FhjvZFeX4gxFSTW3yda1JQn1LdpQJf2j+M8j5S3RH+XrsXl496S7p
-         gf31e4sre4Ofq1DdZLgfcJC8Ac5lpBctqgW7gTPd2cz4Ix6OdwLd+VekbGRSVdXXTK
-         fpFLeoeBYqx3mlBVvD4quAru9/yw24j9WZCxnp95EQZq5BJAZKt73XBv1rA/N4TL60
-         6WdWxWUFYjKroQBXNemGwgj3M/YdjE3O5BoeeCYQLie9tmGjqgqoExq7exGZd60Qlf
-         nvqqbjkQHVOFLYKYNC1x+gdsyMamBqWeAJhhr792mj8y1NlelP0wkPejUVAQlETWNk
-         ppsheNEsfYhLA==
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
- <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
-Date:   Sat, 25 Apr 2020 11:36:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 25 Apr 2020 06:22:47 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52192C09B04A;
+        Sat, 25 Apr 2020 03:22:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=s3Na2WaeJN8ZP3a01wZ11T3dQK6+5+kSc6FYnwxfMlw=; b=b00YjM0PN+/RhAE0WZkI/1LmA
+        ZyzyNpedSXiqGaE3h7ko+59RAAstbBqwojqfBIXPQYxAYGXUEeHXO+2OEXrpUZifK+WS6F1er7msd
+        +HV2lklHHOlIu8/oQb+RRMCY/yGTmjqeRI1wfbBTXxpxptNw1RNUxgDoDWD5mbEggAhIEH6GUpAUR
+        K3/U83+XTS0sIcKwKlnb9W9XX8ELZQwOB9n0LckgPCuzZvmtOAkNRxGgxrLMu4u3bIP46Q23SW0s4
+        xooxJCs66TZ40PlWhWchzrgkJSJZlQ77uD1XnxKVkvpdtSfaYaoPkd8R4DK/eRG0wVPnkGoZfDUdk
+        jFe/lK5uQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43510)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jSHx8-00021Y-Ko; Sat, 25 Apr 2020 11:22:30 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jSHx0-0004Wk-SS; Sat, 25 Apr 2020 11:22:22 +0100
+Date:   Sat, 25 Apr 2020 11:22:22 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florinel Iordache <florinel.iordache@nxp.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 3/9] net: phy: add kr phy connection type
+Message-ID: <20200425102222.GV25745@shell.armlinux.org.uk>
+References: <1587732391-3374-1-git-send-email-florinel.iordache@nxp.com>
+ <1587732391-3374-4-git-send-email-florinel.iordache@nxp.com>
+ <20200424134236.GB1087366@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfNDz9HNxuqvyVl2LksfOfgdeceMdmfDlPtUuL8p5+1z94jh0ysXaXrk72fRFAoZruzMaSpqmLAabuLPR5TyA5ByC+iydYkYlRyRlM0C7ttuXsNFV1eGY
- LsJkH3/vDAMCBJ8Fv5m1EmuwJm5pi6PX3ch6aCVALXxDadxmW1SA5WVFFbo/LjjGLfyzePjxAWsMOl4PNiGprlcYCqN9VqdJG/IkgFFMUOKPFSSxmoHwkOXZ
- sZzwyghdVQA+TzD0DxfFTpptWzbrvMWwJvpm7/pvgomRw2+iOS5U1NDSfaULH8RDhLI1dlwk1st1XgsqGjbcInAIH34OqwchG0gW24U41PG00p7bkKnhIWB3
- MOKrYVqHcNLQ401YQFQ2uGXfxY9AGfuYHQDSz2jw2CzWCk2BF+/ApXoz+OkOJ03Ap38lV0W5JccjA42GvfgfF0FhSg5cAOtCr+Az78jHzp6Awo/u81IYG3yO
- cCtMKi9bxEuozGXV/hol1DzHh743hJQKa9h8R0WJ2VoyKmsCZGifmne5T1DQZ5bWxP+eD0DBuQGX00+YvBzXvVZKJx1hyfnPYXFers040re5rp3+Y4mMTiqP
- JNc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424134236.GB1087366@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 24/04/2020 17:11, Dmitry Osipenko wrote:
-> 24.04.2020 06:55, Sowjanya Komatineni пишет:
->> Tegra210 contains a powerful Video Input (VI) hardware controller
->> which can support up to 6 MIPI CSI camera sensors.
->>
->> Each Tegra CSI port can be one-to-one mapped to VI channel and can
->> capture from an external camera sensor connected to CSI or from
->> built-in test pattern generator.
->>
->> Tegra210 supports built-in test pattern generator from CSI to VI.
->>
->> This patch adds a v4l2 capture driver with media interface for
->> Tegra210 built-in CSI to VI test pattern generator.
->>
->> This patch includes TPG support only and all the video pipeline
->> configuration happens through the video device node.
->>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/staging/media/Kconfig          |    2 +
->>  drivers/staging/media/Makefile         |    1 +
->>  drivers/staging/media/tegra/Kconfig    |   12 +
->>  drivers/staging/media/tegra/Makefile   |    8 +
->>  drivers/staging/media/tegra/TODO       |   10 +
->>  drivers/staging/media/tegra/common.h   |  259 ++++++++
->>  drivers/staging/media/tegra/csi.c      |  604 +++++++++++++++++
->>  drivers/staging/media/tegra/csi.h      |  144 ++++
->>  drivers/staging/media/tegra/tegra210.c |  708 ++++++++++++++++++++
->>  drivers/staging/media/tegra/tegra210.h |  190 ++++++
->>  drivers/staging/media/tegra/vi.c       | 1127 ++++++++++++++++++++++++++++++++
->>  drivers/staging/media/tegra/vi.h       |   72 ++
->>  drivers/staging/media/tegra/video.c    |  153 +++++
->>  drivers/staging/media/tegra/video.h    |   29 +
+On Fri, Apr 24, 2020 at 03:42:36PM +0200, Andrew Lunn wrote:
+> On Fri, Apr 24, 2020 at 03:46:25PM +0300, Florinel Iordache wrote:
+> > Add support for backplane kr phy connection types currently available
+> > (10gbase-kr, 40gbase-kr4) and the required phylink updates (cover all
+> > the cases for KR modes which are clause 45 compatible to correctly assign
+> > phy_interface and phylink#supported)
+> > 
+> > Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+> > ---
+> >  drivers/net/phy/phylink.c | 15 ++++++++++++---
+> >  include/linux/phy.h       |  6 +++++-
+> >  2 files changed, 17 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> > index 34ca12a..9a31f68 100644
+> > --- a/drivers/net/phy/phylink.c
+> > +++ b/drivers/net/phy/phylink.c
+> > @@ -4,6 +4,7 @@
+> >   * technologies such as SFP cages where the PHY is hot-pluggable.
+> >   *
+> >   * Copyright (C) 2015 Russell King
+> > + * Copyright 2020 NXP
+> >   */
+> >  #include <linux/ethtool.h>
+> >  #include <linux/export.h>
+> > @@ -304,7 +305,6 @@ static int phylink_parse_mode(struct phylink *pl, struct fwnode_handle *fwnode)
+> >  			break;
+> >  
+> >  		case PHY_INTERFACE_MODE_USXGMII:
+> > -		case PHY_INTERFACE_MODE_10GKR:
+> >  		case PHY_INTERFACE_MODE_10GBASER:
+> >  			phylink_set(pl->supported, 10baseT_Half);
+> >  			phylink_set(pl->supported, 10baseT_Full);
 > 
-> The media/tegra/ sounds a bit too generic, the media/tegra-vi/ path
-> should better reflect the driver, IMO.
+> Hi Florinel
 > 
-> It also should be better to name the compiled kernel module as tegra-vi,
-> IMO.
+> What about the issues pointed out in:
 > 
+> https://www.spinics.net/lists/netdev/msg641046.html
 
-The driver name and the directory should be in sync, so either tegra-video
-or tegra-vi for both. I have no preference myself, as long as they are the
-same.
+Having reviewed the situation, it seems that I added a translation
+to mvpp2 driver for this, translating PHY_INTERFACE_MODE_10GKR to
+PHY_INTERFACE_MODE_10GBASER, so anything using "10gbase-kr" in
+arch/arm64/boot/dts/marvell/ is not a worry - however, those DT files
+still need to be updated but my request to bootlin for help with
+that has gone unanswered to date.  So, I'm tempted to change them
+wholesale, since that's what we're doing in the mvpp2 driver anyway.
 
-This can be done as a follow-up patch.
+> > @@ -107,8 +108,9 @@
+> >  	/* 10GBASE-R, XFI, SFI - single lane 10G Serdes */
+> >  	PHY_INTERFACE_MODE_10GBASER,
+> >  	PHY_INTERFACE_MODE_USXGMII,
+> > -	/* 10GBASE-KR - with Clause 73 AN */
+> > +	/* Backplane KR */
+> >  	PHY_INTERFACE_MODE_10GKR,
+> > +	PHY_INTERFACE_MODE_40GKR4,
+> >  	PHY_INTERFACE_MODE_MAX,
+> >  } phy_interface_t;
 
-Regards,
+I would like to see these (re-)named to PHY_INTERFACE_MODE_*GBASE* as
+we have the same for previous definitions such as 1000BASEX and
+2500BASEX.
 
-	Hans
+Also, please update Documentation/networking/phy.rst with a description
+of the new 40GBASE-KR4 mode.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
