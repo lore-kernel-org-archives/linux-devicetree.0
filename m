@@ -2,125 +2,112 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 928A9C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E80C55191
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C71020728
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C602084D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:55:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="qjrasrrR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bCfVWHG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgDYPoB (ORCPT
+        id S1726191AbgDYPzn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:44:01 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:48752 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbgDYPoB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 11:44:01 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id AB86A20089;
-        Sat, 25 Apr 2020 17:43:58 +0200 (CEST)
-Date:   Sat, 25 Apr 2020 17:43:57 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 2/2] panel: simple: Add BOE NV133FHM-N61
-Message-ID: <20200425154357.GJ32235@ravnborg.org>
-References: <20200420215742.1927498-1-bjorn.andersson@linaro.org>
- <20200420215742.1927498-2-bjorn.andersson@linaro.org>
+        Sat, 25 Apr 2020 11:55:43 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:37099 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726076AbgDYPzm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 11:55:42 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 39C485803BB;
+        Sat, 25 Apr 2020 11:55:41 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sat, 25 Apr 2020 11:55:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
+         h=from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=4NDaOwg5jepTh
+        MDWgHjK7GYLbHX6IFibl+r4ExTotBU=; b=qjrasrrRtXMYrs6S+OE4vXcKll5qV
+        6GNU2SNqK9tkbOwLgbrIzS+BCJpVXCvl7yYG8TqGBa6HE6z4P/tqPbAU0veD9fMN
+        r3e3VistO+tUtmhY9iyG5UfiASAcUkWiQT/L46PpWVVVDKcsuiWok/IhwnRQrk8K
+        OzJqUq9a895xA2bVvA2cc0Xqz84dGnvbxKRmtMMgLwF+UbPOG0MODJej/ip9Nf1x
+        FgBKXgqthiiWYUQdj9NvF1Ym705mVFl4yNVCHmvARvle82eg4FzwQnllmhBQB9Nl
+        /fAyOMOVNU3cM5TzbcxlHoaLy/BsUs6IeRTIyfEWvr3FIbpHteEitBoXw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=4NDaOwg5jepThMDWgHjK7GYLbHX6IFibl+r4ExTotBU=; b=bCfVWHG8
+        LBSQMrCS0v3/C5HT46ThY53/r/E9V4cLosMlpERSPU8by3bZ798hbOvf+h+mpQah
+        9ydx84tj7uwAhDyjnorAVJbQS9R4nRkRGnRJjCR44GgxOyJ7+FvXqHpSZA10Qo3p
+        4/2MLlAXJ0McOkaSk5vWEBELiWiOE4ZPbMILD8ihKWFcKqYNWzoeduMPPWiyX6WK
+        r67pQu2LAILHwDztoQ1Xo43q3IowrDxxjFolVkO1vbeThf+W85HsKVFk6t09Mgt4
+        IYxps+dfaSAs2auNdclPDzdaI6PJwdm3EGHHxWRoByWkBcId5zrO3zYDaALw0PbU
+        guJE4eAXVSqn2Q==
+X-ME-Sender: <xms:eF2kXq86cUymBj8QOYZyEdgMiU2szVqg81_gTjSKw1DYzG2jFRTSuA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrheeggdejvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
+    ertddtnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghishcuoegrlhhishhtrghi
+    rhesrghlihhsthgrihhrvdefrdhmvgeqnecukfhppeejfedrleefrdekgedrvddtkeenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlhhishht
+    rghirhesrghlihhsthgrihhrvdefrdhmvg
+X-ME-Proxy: <xmx:eF2kXqS-pC4-YEAay7uvJmtKdXJOqYaO14SVp18YrP8rC8CO7PB3kw>
+    <xmx:eF2kXjz-5O5_2NoF2IAZMy_-QAx9M3gehxQ8c8vMlEC1WLoAZvHkwg>
+    <xmx:eF2kXm5eW9jo3LrHUmzPfheAdlwwNzSyVVc0Ol3KlTqS_pjV7G_G6g>
+    <xmx:fV2kXmWpZWwkjQV75R64eYAOMQujRkt-z7a_usZqW-Jo7C528rQ3jg>
+Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4A9EB3280064;
+        Sat, 25 Apr 2020 11:55:35 -0400 (EDT)
+From:   Alistair Francis <alistair@alistair23.me>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org
+Cc:     anarsoul@gmail.com, devicetree@vger.kernel.org,
+        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org,
+        Alistair Francis <alistair@alistair23.me>
+Subject: [PATCH v4 2/3] Bluetooth: hci_h5: Add support for binding RTL8723BS with device tree
+Date:   Sat, 25 Apr 2020 08:55:30 -0700
+Message-Id: <20200425155531.2816584-2-alistair@alistair23.me>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200425155531.2816584-1-alistair@alistair23.me>
+References: <20200425155531.2816584-1-alistair@alistair23.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420215742.1927498-2-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8 a=e5mUnYsNAAAA:8
-        a=ZHUanIRT7T1iIWuw79kA:9 a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 02:57:42PM -0700, Bjorn Andersson wrote:
-> The BOE NV133FHM-N61 panel is a 13.3" 1920x1080 eDP panel, add support
-> for it in panel-simple.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
 
-While applying I fixed so boe_nv133fhm_n61 is defined before boe_nv140fhmn49.
+RTL8723BS is often used in ARM boards, so add ability to bind it
+using device tree.
 
-	Sam
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Signed-off-by: Alistair Francis <alistair@alistair23.me>
+---
+ drivers/bluetooth/hci_h5.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 33 ++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 3ad828eaefe1..5b92583bccdf 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1124,6 +1124,36 @@ static const struct panel_desc boe_nv140fhmn49 = {
->  	.connector_type = DRM_MODE_CONNECTOR_eDP,
->  };
->  
-> +static const struct drm_display_mode boe_nv133fhm_n61_modes = {
-> +	.clock = 147840,
-> +	.hdisplay = 1920,
-> +	.hsync_start = 1920 + 48,
-> +	.hsync_end = 1920 + 48 + 32,
-> +	.htotal = 1920 + 48 + 32 + 200,
-> +	.vdisplay = 1080,
-> +	.vsync_start = 1080 + 3,
-> +	.vsync_end = 1080 + 3 + 6,
-> +	.vtotal = 1080 + 3 + 6 + 31,
-> +	.vrefresh = 60,
-> +};
-> +
-> +static const struct panel_desc boe_nv133fhm_n61 = {
-> +	.modes = &boe_nv133fhm_n61_modes,
-> +	.num_modes = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 300,
-> +		.height = 187,
-> +	},
-> +	.delay = {
-> +		.hpd_absent_delay = 200,
-> +		.unprepare = 500,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> +	.bus_flags = DRM_BUS_FLAG_DATA_MSB_TO_LSB,
-> +	.connector_type = DRM_MODE_CONNECTOR_eDP,
-> +};
-> +
->  static const struct drm_display_mode cdtech_s043wq26h_ct7_mode = {
->  	.clock = 9000,
->  	.hdisplay = 480,
-> @@ -3478,6 +3508,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "boe,nv101wxmn51",
->  		.data = &boe_nv101wxmn51,
-> +	}, {
-> +		.compatible = "boe,nv133fhm-n61",
-> +		.data = &boe_nv133fhm_n61,
->  	}, {
->  		.compatible = "boe,nv140fhmn49",
->  		.data = &boe_nv140fhmn49,
-> -- 
-> 2.26.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
+index 106c110efe56..e60b2e0773db 100644
+--- a/drivers/bluetooth/hci_h5.c
++++ b/drivers/bluetooth/hci_h5.c
+@@ -1018,6 +1018,8 @@ static const struct of_device_id rtl_bluetooth_of_match[] = {
+ #ifdef CONFIG_BT_HCIUART_RTL
+ 	{ .compatible = "realtek,rtl8822cs-bt",
+ 	  .data = (const void *)&rtl_vnd },
++	{ .compatible = "realtek,rtl8723bs-bt",
++	  .data = (const void *)&rtl_vnd },
+ #endif
+ 	{ },
+ };
+-- 
+2.26.0
+
