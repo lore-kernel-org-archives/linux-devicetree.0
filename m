@@ -6,70 +6,60 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABB2C2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 01:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE4EC2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 01:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9028D2076C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 01:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC3820706
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 01:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587778555;
-	bh=NuUXrLv2uLvTteae+JnaWLYHig2mTbcSLJKImdqctg4=;
+	s=default; t=1587779613;
+	bh=yiSOeJ8Lx1TDaaZ07PZ6pApvBWfqUo+mApyrV/CkPO4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c3WLoG54qwmvkyBOo6pyfuNNK3Onesp3COGSBZKSR/dtgSw/nZgmSEi62yIS020ka
-	 nwFf/pYyK2UO/dCvPRPDFl6ecnjFatZxQTHC5w56+5Onb0P3ApnM30L7XrJWUIzGIW
-	 2y31iYecm7I261w9ZaKhdU+PPbQ/n8eWfs+hUBM8=
+	b=Ew2zNjz956mF8b2BHEMS9TXrJIKZS0gJPUr3HUywrp9DGiH3T4liYCrvkZACtvSDB
+	 nmT3MdJEC79JD+JIiHc31oxYjBHgjIkmfb0Mul1H3YlapaHsccF6nuPSGQmya9zIFb
+	 gruH5QPygarml/LliXvDXKPQl549DzZ6clrt+l5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbgDYBfz (ORCPT
+        id S1726044AbgDYBxc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 21:35:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38866 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 21:53:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbgDYBfy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 21:35:54 -0400
+        id S1726032AbgDYBxc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 21:53:32 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D5F220736;
-        Sat, 25 Apr 2020 01:35:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDAAE2076C;
+        Sat, 25 Apr 2020 01:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587778554;
-        bh=NuUXrLv2uLvTteae+JnaWLYHig2mTbcSLJKImdqctg4=;
+        s=default; t=1587779612;
+        bh=yiSOeJ8Lx1TDaaZ07PZ6pApvBWfqUo+mApyrV/CkPO4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VVaL+kZvrA4R1fWA5oOSC8VfR3CiEJUMMEDGiV7KVeKbFwchH4aPX12X/QtCm0uRb
-         ISSN+zqr/FILTvRCOl5GzNlhRJwxtX1vW19t9GGO6gKAZLRzuGi7ePqRZbcKzt6Z1y
-         FrFXGQS2nqV/ym3+Yv44jIBny7i8Z/7wzvcMHHYI=
-Date:   Sat, 25 Apr 2020 09:35:46 +0800
+        b=zY4o8Vfff2O4z5RuZiHso0kV+soZFhImKmjgY2t4ukw1Qc+cTQzLSRNz2lXmWHZDL
+         AEafx9zPhm3wJ5W+1iGRYBMIh+Vc7B/I9l2tRL6NltcsbGxxvoWDApT6ktIMy0VU6a
+         QsygAH2GRbzxt6oubmDJp0kdKgbOpDDPBlg1cRlk=
+Date:   Sat, 25 Apr 2020 09:53:27 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     peng.fan@nxp.com, linux-imx@nxp.com, kernel@pengutronix.de,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: imx8m: Fix AIPS reg properties
-Message-ID: <20200425013546.GK8571@dragon>
-References: <20200331183725.25255-1-festevam@gmail.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     robh+dt@kernel.org, leoyang.li@nxp.com, festevam@gmail.com,
+        kernel@pengutronix.de, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: arm: imx: add kontron smarc to schema
+Message-ID: <20200425015326.GA30501@dragon>
+References: <20200402083436.24710-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331183725.25255-1-festevam@gmail.com>
+In-Reply-To: <20200402083436.24710-1-m.felsch@pengutronix.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 03:37:25PM -0300, Fabio Estevam wrote:
-> Commit dc3efc6ff0d5 ("arm64: dts: imx8m: fix aips dts node") caused several
-> dtc warnings like these when building with W=1:
+On Thu, Apr 02, 2020 at 10:34:36AM +0200, Marco Felsch wrote:
+> Add Kontron SMARC module compatibles to the schema so we can make use of
+> them for the validation.
 > 
-> arch/arm64/boot/dts/freescale/imx8mm.dtsi:265.23-542.5: Warning (simple_bus_reg): /soc@0/bus@30000000: simple-bus unit address format error, expected "301f0000"
-> arch/arm64/boot/dts/freescale/imx8mm.dtsi:544.23-602.5: Warning (simple_bus_reg): /soc@0/bus@30400000: simple-bus unit address format error, expected "305f0000"
-> arch/arm64/boot/dts/freescale/imx8mm.dtsi:604.23-862.5: Warning (simple_bus_reg): /soc@0/bus@30800000: simple-bus unit address format error, expected "309f0000"
-> arch/arm64/boot/dts/freescale/imx8mm.dtsi:864.23-909.5: Warning (simple_bus_reg): /soc@0/bus@32c00000: simple-bus unit address format error, expected "32df0000"
-> 
-> Fix them by using the correct address base and size in the AIPS reg
-> properties.
-> 
-> Fixes: dc3efc6ff0d5 ("arm64: dts: imx8m: fix aips dts node")
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
 Applied, thanks.
