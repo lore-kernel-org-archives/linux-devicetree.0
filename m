@@ -2,76 +2,109 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC30C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 12:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6A4C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 12:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7FDF205C9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 12:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5472071C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 12:54:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jv6bVAzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgDYMib (ORCPT
+        id S1726100AbgDYMx6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 08:38:31 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:58456 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgDYMib (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Apr 2020 08:38:31 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B23D1A07FC;
-        Sat, 25 Apr 2020 14:38:29 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 47A8B1A07F7;
-        Sat, 25 Apr 2020 14:38:24 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EAD19402BB;
-        Sat, 25 Apr 2020 20:38:17 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        horia.geanta@nxp.com, peng.fan@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] arm64: dts: imx8mn: Update VDD_ARM 1.2GHz setpoint voltage
-Date:   Sat, 25 Apr 2020 20:29:50 +0800
-Message-Id: <1587817790-21698-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sat, 25 Apr 2020 08:53:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgDYMx6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 08:53:58 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1DC2C09B04B;
+        Sat, 25 Apr 2020 05:53:57 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y4so12769693ljn.7;
+        Sat, 25 Apr 2020 05:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8UzchNf6ebuUZU6Jtk0695PKv2lrQGXDNULzEQ+q9fA=;
+        b=Jv6bVAzsBfbNsh7eQlEEx7re8eKnGVbFZIclojWTPhFn/75+eAXuoIQXDk5tW0mVbN
+         VGAmOuLW/7QU9dMlN47hYSDiz424o/X1cgLhvG9bsRfwQhdwWZq3esxYTCukeG/TbFL1
+         U1bdhVrW7wOwQwCmi5qgDVsm4Asp4v/rDrmCGxZIaqFnwfFpkjhLe2MfiyiyJPx48ofb
+         GnObQjC2Qhijd2mo1tvKefmTmSUKOWoKJZi2e7DUp1YkiNEEk5YVjPiHDtGZkxh2B0Yc
+         Ochy/3exOJeDuQTiVUacGoB2sfgro9w3bbc0137My9PqFy70x+FlzgluHYXHTOtO4Gh0
+         Nkng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8UzchNf6ebuUZU6Jtk0695PKv2lrQGXDNULzEQ+q9fA=;
+        b=fr/xwv3lwWS0PQ+UvAfQ92ahoUeEAYEtz+p/od0atmGne3GvIXDSLoW32FDSqJTwIE
+         cDrSnow8xqGJFXIzEgtRN9V4zGXToSRfI31DHdkWqj+NvdgvpIP1/cE91v62jdHu3nEK
+         YBxM06s3aeKagpvXsmI9kzEm0Apq7esv7r/5SyH+zwjKt23TrhLIZMM52HW86htjAUkO
+         wiJ6EXpLKgcaDwZTXrqOdkaDnXl+3I0UHXT/xgWc7/u7N757j1bqQZHEdwt2oYtcVLtP
+         ahNVP5dY3PWurFRK+9+4y6WLW7OmhR0NSoXOB1mXOkqvXu+UmniMHRPjaSq2JquO87Ds
+         k+fw==
+X-Gm-Message-State: AGi0PuZOGosDuAc6cn/Qvjx12n5+0SdL0yn5Ybp6YcKELHSj0gmxLXWN
+        C29vr7o+4DFgUiJ4kTDTc/uv7UefacpUww==
+X-Google-Smtp-Source: APiQypL6/eBLN5bzQPHJ2ShWsgSL0nJcGXIijkmLET37+uDAzfhNZu6/xGArjM69tGipR5px0NZ7OA==
+X-Received: by 2002:a2e:7e04:: with SMTP id z4mr9049872ljc.50.1587819236327;
+        Sat, 25 Apr 2020 05:53:56 -0700 (PDT)
+Received: from localhost ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id w9sm6016089ljj.88.2020.04.25.05.53.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 05:53:55 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH] regulator: max77826: Remove erroneous additionalProperties
+Date:   Sat, 25 Apr 2020 15:53:35 +0300
+Message-Id: <20200425125335.2674534-1-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The latest datasheet Rev. 0.1, 03/2020 removes below constrain:
+In this particular location additionalProperties actually declares a property
+named `additionalProperties` instead of specifying there should be no other
+properties.
 
-"If VDD_SOC/GPU/DDR = 0.95V, then VDD_ARM must be >= 0.95V."
-
-So, for 1.2GHz setpoint VDD_ARM can use its typical voltage
-directly.
-
-The datasheet can be downloaded from below link:
-https://www.nxp.com/docs/en/data-sheet/IMX8MNCEC.pdf
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Fix bindings documentation for max77826 regulator as discussed in
+https://lore.kernel.org/lkml/20200413164440.1138178-1-iskren.chernev@gmail.com/T/#m9e9904560e68bcd98980fa0e68fe190525033af6
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index fa78f01..de6e2cf 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -121,7 +121,7 @@
- 
- 		opp-1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
--			opp-microvolt = <950000>;
-+			opp-microvolt = <850000>;
- 			opp-supported-hw = <0xb00>, <0x7>;
- 			clock-latency-ns = <150000>;
- 			opp-suspend;
--- 
-2.7.4
+
+ Documentation/devicetree/bindings/regulator/maxim,max77826.yaml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml b/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
+index d4f0f958385a..19cbd5eb2897 100644
+--- a/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
++++ b/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
+@@ -38,7 +38,6 @@ properties:
+         allOf:
+           - $ref: regulator.yaml#
+
+-      additionalProperties: false
+     additionalProperties: false
+
+ required:
+
+base-commit: 8bdabd09ec86a993419c8c98a4f34c12bc902c6c
+--
+2.26.0
 
