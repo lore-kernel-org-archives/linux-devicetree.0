@@ -2,248 +2,101 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F79C55185
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 11:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0BBC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 12:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF936206EC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 11:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23DA72071E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 12:23:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBGpWRsh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uh/YxgYr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbgDYLns (ORCPT
+        id S1726070AbgDYMXy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 07:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43512 "EHLO
+        Sat, 25 Apr 2020 08:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgDYLns (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 07:43:48 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04857C09B04B;
-        Sat, 25 Apr 2020 04:43:48 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id o15so5976240pgi.1;
-        Sat, 25 Apr 2020 04:43:48 -0700 (PDT)
+        with ESMTP id S1726062AbgDYMXy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 08:23:54 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9622C09B04B;
+        Sat, 25 Apr 2020 05:23:53 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f13so14656660wrm.13;
+        Sat, 25 Apr 2020 05:23:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D+fcBxNw/nwKWvas8bdh9z7lSOeFbVCVoSvS/R8YOZ4=;
-        b=FBGpWRshuMLAD0L8sCwi1qBFiM3qU3inaSks+NHjc7EiO83P6aGntSbE2m7YDKbG5A
-         mryVIOJddS5k0MIvthi5ILVpua11o+xn4uZLMq8u/ZsXyoJdqK7bAoMKNIIY1NIhwtjc
-         1z/odHsWWdDINScg3E4/CyJ/AeQD6xWnmEf1GbZDkkZgfQIOZUjuhtp5RAZt9wmJHGWA
-         +eAC9LSaIca26xLroqp+HQms8+mbdhBXjranbaNt38IMGkBTgiAUHmMXaawGs+el9fC8
-         KdkTEEUa7+dBq/A+o0nAoHaZqtVIK2LyuytNm7vxyBqOcHRxETVHUaZu1USwsNuT/sx/
-         DBiA==
+        h=from:to:cc:subject:date:message-id;
+        bh=c08OzdbQ1jE2QKx73owHlaSBf5XrQfOgZDyVrQRe5NE=;
+        b=Uh/YxgYrTgZm8cH7x+rLL64FIq82XOzzZDijkhS9sHgRdyfLMD/FImyOANWUtI0X3Z
+         MGtQg53S8vd8vXVy0dZQDwHprtF0QDAjizqUCMyFFlRqAaAZiYkEchZr7uDlaryCrDrt
+         7Otk2t/c6Nr85RCeC2V163G1cXTCBflRW7hOomfmDjQdH1VLPppXS3gHbZdKarWReiKs
+         srkiAdwQ7LFjNUO21rK/JS0vR35lr2NV5jEFjWfAH/4igFTtSD0jwnvScl9nJ9LSxA7U
+         yxhFKMjLoD5qWB3POqMKhwqWvDJe36uIdpFEnfOA7z+P7Klhz90Q3fEn0oRq8J9TuP7O
+         1U9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D+fcBxNw/nwKWvas8bdh9z7lSOeFbVCVoSvS/R8YOZ4=;
-        b=Xt5ya8mSHJ4Jmt4u4UFcova67qDqusn2rIoEEKin7zOIPxtXP0eouMsyjFWwVzAx9d
-         Smv+kxOHcn7WqWpHq3i01mGkCyAZfE1w7Fbj2Bp6I1kqkc6j/O2TwwW8Y85RpeQ3QNzT
-         xdl+K8WBDiwklYrgwFWWA7WKtyoyJ54vdbhUZdzxNn3aDJSSHpFJkhTEbPKHUYanBrd2
-         wCQi7kLP3iCHej3nbR9wdYuCYU2eyzvRmPDPQ/HgxUZrkldXBnrhB0/wNJ0BiapcpaCD
-         LZzeE50Jqpeld3NhCfOTzDfVWyISIMm8Ybe+cCOQ5Yq0saxJ4LLrqcals5vTbPrDTB6e
-         yvwg==
-X-Gm-Message-State: AGi0PuZDP9MGLJM4YRE7tM6utd5mhyqVNXwxq4+WMqidJzYmTrI9N9d3
-        GPxvkwYICAvdZJcJgB9HYfK+pt7eeumWC8ezObdB8syNrJQ=
-X-Google-Smtp-Source: APiQypLNRmDFDdkqQqFUJOEj14NHuHK26wddSprK6QKYDfBaSBDQ4d1J6m87q/0nL6ioabJ60J0w18/POeBEdQJoJGI=
-X-Received: by 2002:a62:5ec7:: with SMTP id s190mr14036650pfb.130.1587815027309;
- Sat, 25 Apr 2020 04:43:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
- <20200422141135.86419-2-tomasz.duszynski@octakon.com> <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
- <20200424190413.GA2731@arch>
-In-Reply-To: <20200424190413.GA2731@arch>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 25 Apr 2020 14:43:35 +0300
-Message-ID: <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
-Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=c08OzdbQ1jE2QKx73owHlaSBf5XrQfOgZDyVrQRe5NE=;
+        b=XmVPLMykUgTCNPRTwAkm3BuRbEKowrODm2Jugepu8BNhlfrwxFwjV4Mj5dkB/V/Bqy
+         C5cVQjbSDAW4aGxwD13YXt0vGo9ys5mrwNhFNKdTuOVQABBbxVoUONOhj67ZCsdJxmtN
+         srpeAjm5j2Hdn6Y8kZsKoGaaRnY+2uiVIdwbCLmh45u2WP5zkFVKaXO/ONmjNU8Sxudu
+         pwbLnn/jeMkdwQwLb6kpAaMWWQ9DxgWqwZ+GBu77ZBUsPIbHxXW3vlrRt6pN84VqrLBu
+         dA4rTGa6Kvc18ZfixvTIs/O/5vndRTsoxKIdggEanrJPLeieBgk2pXgrOAWGlIBD+46u
+         T6hg==
+X-Gm-Message-State: AGi0PuYXaeBQy7sEPUP5jvRvC2QR7OGrGDvs80pJTzL0E8rOxvH281tN
+        lVFPV1wFzww99NzedWKQyyi/Qm5H
+X-Google-Smtp-Source: APiQypKqV1QTBOAvxcY1sOfn6lI7/CzLvVHNS8erVBArRldAOpnsmJD7HkBmATIOd07gEBWAxue0aw==
+X-Received: by 2002:adf:e3c2:: with SMTP id k2mr16436150wrm.287.1587817432474;
+        Sat, 25 Apr 2020 05:23:52 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id o6sm3248461wrw.63.2020.04.25.05.23.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 Apr 2020 05:23:51 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] arm64: dts: rockchip: remove extra assigned-clocks property from &gmac2phy node in rk3328-evb.dts
+Date:   Sat, 25 Apr 2020 14:23:44 +0200
+Message-Id: <20200425122345.12902-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 10:05 PM Tomasz Duszynski
-<tomasz.duszynski@octakon.com> wrote:
-> On Wed, Apr 22, 2020 at 10:49:44PM +0300, Andy Shevchenko wrote:
-> > On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
-> > <tomasz.duszynski@octakon.com> wrote:
+There are 2 'assigned-clocks' properties in the '&gmac2phy'
+node in 'rk3328-evb.dts', so remove one of them.
 
-...
+Info from clk-rk3328.c:
 
-> > > Add Sensirion SCD30 carbon dioxide core driver.
-> >
-> > And DocLink tar of Datasheet: with a link?
->
-> I never do this. These files change their location way too often to be
-> worthwhile putting here. Nobody has that much time to fallow all this
-> and keep respective files up to date.
->
-> But that doesn't mean I can't drop a link here.
-> https://developer.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.5_CO2/Sensirion_CO2_Sensors_SCD30_Interface_Description.pdf
+MUXGRF(SCLK_MAC2PHY, "clk_mac2phy", mux_mac2phy_src_p,
+CLK_SET_RATE_NO_REPARENT,
+RK3328_GRF_MAC_CON2, 10, 1, MFLAGS),
 
-Yes, just make it a tag
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-DocLink: ....
-
-...
-
-> > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
-> > > +               int (*command)(struct scd30_state *state, enum scd30_cmd cmd,
-> > > +                              u16 arg, char *rsp, int size));
-> >
-> > My gosh.
-> > Please, supply proper structure member in priv or alike.
->
-> Not sure it's worth the fuss. Wrapping all into structure means either
-> copying respective members or more dereferences later on.
-
-At least you may introduce a typedef, because above really hurts my eyes.
-
-...
-
-> > > +enum {
-> > > +       CONC,
-> > > +       TEMP,
-> > > +       HR,
-> > > +};
-> >
-> > Way too generic names for anonymous enum.
->
-> I'd argue that they are pretty well understood abbreviations in iio generally
-> and here specifically. But adding some prefix won't harm.
-
-Yes, prefix is what I was talking about.
-
-...
-
-> > > +static int scd30_wait_meas_poll(struct scd30_state *state)
-> > > +{
-> > > +       int tries = 5;
-> > > +
-> > > +       while (tries--) {
-> > > +               int ret;
-> > > +               u16 val;
-> > > +
-> > > +               ret = scd30_command(state, CMD_MEAS_READY, 0, (char *)&val,
-> > > +                                   sizeof(val));
-> > > +               if (ret)
-> > > +                       return -EIO;
-> > > +
-> > > +               /* new measurement available */
-> > > +               if (val)
-> > > +                       break;
-> > > +
-> > > +               msleep_interruptible(state->meas_interval * 250);
-> > > +       }
-> > > +
-> > > +       if (tries == -1)
-> > > +               return -ETIMEDOUT;
-> >
-> > unsigned int tries = ...;
-> >
-> > do {
-> >  ...
-> > } while (--tries);
-> > if (!tries)
-> >   return ...;
-> >
-> > looks better and I guess less code in asm.
-> >
->
-> You mean that one extra branch in case of while?
-
-There are few things:
-a) do {} while notation immediately tells that at least one cycle of
-body will be done (unconditionally);
-b) it makes a loop variable unsigned and no need to check for specific
-negative numbers;
-c) it quite likely will generate slightly better assembly code.
-
->  But it comes to code
-> itself it looks more compact. And I am okay with that.
->
-> > > +       return 0;
-> > > +}
-
-...
-
-> > > +       if (kstrtou16(buf, 0, &val))
-> > > +               return -EINVAL;
-> >
-> > Shadowed error code. Don't do like this.
->
-> Integer parsing either returns EINVAL or ERANGE. Passing the latter to
-> the user is not worth the trouble, especially because majority of writable attrs
-> have a fellow _available attr.
-
-It's simple a bad coding practice. Please, change.
-
-> > > +       if (kstrtou16(buf, 0, &val))
-> > > +               return -EINVAL;
-> >
-> > Ditto.
-> >
-> > > +       if (kstrtou16(buf, 0, &val))
-> > > +               return -EINVAL;
-> >
-> > Ditto.
-
-...
-
-> > > +       if (kstrtou16(buf, 0, &val))
-> > > +               return -EINVAL;
-> >
-> > No shadowed error code, please. Check entire code.
-
-Same here.
-
-...
-
-> > > +static IIO_DEVICE_ATTR_RW(pressure_comp, 0);
-> > > +static IIO_DEVICE_ATTR_RO(pressure_comp_available, 0);
-> > > +static IIO_DEVICE_ATTR_RW(meas_interval, 0);
-> > > +static IIO_DEVICE_ATTR_RO(meas_interval_available, 0);
-> > > +static IIO_DEVICE_ATTR_RW(asc, 0);
-> > > +static IIO_DEVICE_ATTR_RW(frc, 0);
-> > > +static IIO_DEVICE_ATTR_RO(frc_available, 0);
-> > > +static IIO_DEVICE_ATTR_RW(temp_offset, 0);
-> > > +static IIO_CONST_ATTR(temp_offset_available, "[0 1 65535]");
-> > > +static IIO_DEVICE_ATTR_WO(reset, 0);
-> >
-> > Do you need all of them? Doesn't  IIO core provides a tons of helpers for these?
-> > Btw, where is ABI documentation? It's a show stopper.
->
-> They are sensor specific and none falls into a category of iio generic
-> attrs. Maybe, except the measurement interval which could be represented as
-> a SAMP_FREQ.
-
-IIO ABI becomes already a big pile of nodes and I hope we will become
-stricter about adding new ones.
-
-> But given that measurement interval spans from 2s to 1800s
-> it becomes a little bit awkward to have it in Hz.
-
-> As for ABI that's in
-> a separate patch.
-
-It's not good from bisectability point of view. If by some reason this
-patch or documentation patch gets reverted, the other one will be
-dangling.
-Please, unify them.
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+index 49c4b96da..ab69b493d 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+@@ -82,7 +82,6 @@
+ &gmac2phy {
+ 	phy-supply = <&vcc_phy>;
+ 	clock_in_out = "output";
+-	assigned-clocks = <&cru SCLK_MAC2PHY_SRC>;
+ 	assigned-clock-rate = <50000000>;
+ 	assigned-clocks = <&cru SCLK_MAC2PHY>;
+ 	assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.11.0
+
