@@ -2,93 +2,115 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2400BC55191
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 19:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5222C55191
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 20:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00DC8206D4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 19:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C062420728
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 20:07:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i3Lalq5c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tzgPg3n5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgDYTjb (ORCPT
+        id S1726234AbgDYUHB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 15:39:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60450 "EHLO
+        Sat, 25 Apr 2020 16:07:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgDYTjb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 15:39:31 -0400
+        with ESMTP id S1726190AbgDYUHA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 16:07:00 -0400
 Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18A45C09B04F
-        for <devicetree@vger.kernel.org>; Sat, 25 Apr 2020 12:39:31 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id fu13so4790082pjb.5
-        for <devicetree@vger.kernel.org>; Sat, 25 Apr 2020 12:39:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED95C09B04D;
+        Sat, 25 Apr 2020 13:06:59 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t9so5445107pjw.0;
+        Sat, 25 Apr 2020 13:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=FFJ+RlIhSOPxhMwKLc97vVcR1rOxDF8GYeyH64M0ydo=;
-        b=i3Lalq5cuGCVKoML246R4E8KH9Vsvt1oOUaMLmiW0f02n1iwTSO2C7ec3YfI6FkZY5
-         dyC8mB7Y4nHzjjPkMlSt5hkzbzMJMeRAj9M3k2cZtyFEmLRfmaNs5b5z/Q3XkJgJNsIK
-         WAVu/yAWl3WZ2xxyUxnFkKt7QWECEHLjbbvzo=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BTzPKchfa+HTrW2yOtikWwN8/pT9z90dekyVPCBoW58=;
+        b=tzgPg3n5j4xvFDhHAYLjFZoxihcNt+okfBWx7VxUEqf2cHwX52TpJodI/F+zSzD0kT
+         aoOu7i2HAfcOjD8b+2ZRzXhnbZfevunm5qT03G9uKbWCZfJeTCk++ycy5HZF/wn3OaC5
+         QuAO5r19RC9HwoHXJZ1Y/O8mawozJIk1g5icsd/WoEQWxlCnXDaYGn9w2+H9Cbc61Mad
+         iRK2kgj3/iJD8t3JktlF3f/syd7SHxNA1e2AzIhPUUkHhoEY9s3b6nVJHLSiJ6VxKgtB
+         F/l/+HkZUcUAODaZ0xzm3VcZ1Cfo/z71cZQQklfcbVPBnQtGgCGTPvWagwFUSnFlySfN
+         fglw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=FFJ+RlIhSOPxhMwKLc97vVcR1rOxDF8GYeyH64M0ydo=;
-        b=BV/m3zezfctRVEeY4/FasAucfbo+y0E9qZxPMJSQmCHL3Dn5sxXRx0RLteBBICx2RY
-         P4ciG9sdl0FmmmAwHj+dmBfaJOMdS4GecKKIBXwJIrnDLtjqMsFk8ZZqXt23DQR0YTNT
-         ZLLpbltbzsTvoyfteelwaHKLaTJC/hv0IzOA0/MwdKFespXLvqFGKVLxZMKNrSbibaF0
-         Xm+C03t2ica60QiTH1Aq+K9VKHm29j+3XHKTsmnLCJ5xMUS7iBTUgMYWdb8YEkwEAXQI
-         zsUhDGpwxIQxXO1crXcPjqW+yeJqwYLCWWwEPQ+6U8ARjHFx9BS0zDvzFqs5G2x9amAy
-         ib+Q==
-X-Gm-Message-State: AGi0PuYvgaNqoOYQzTKp67M/r00UF2FQrVuBlNmXMvGGkOP25y3zWySR
-        VXAdlTmF0uRc0YQ/7rgAaKqtBQ==
-X-Google-Smtp-Source: APiQypJjb7QoZatoPvZ0C5SA3OcumKCIMFSbn7THfXcy0NM0yccE/7t+zWNjac26pi33jCqWjxp58A==
-X-Received: by 2002:a17:90a:d709:: with SMTP id y9mr14198065pju.50.1587843570681;
-        Sat, 25 Apr 2020 12:39:30 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id n16sm8679956pfq.61.2020.04.25.12.39.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BTzPKchfa+HTrW2yOtikWwN8/pT9z90dekyVPCBoW58=;
+        b=X9a+9eiK5yH7nQeu/CyN8G3jNRGpDwez2IWNlTvNM8uYgiGAnWUw6ihjzEh2EjEXaD
+         y1JnNMgEEdfCBy0BCl5/eBEWKYGH9zBhbeWydff5MNbEVfAL5936HCTR/dKaVXPFuZ5P
+         P8kYhNRtWbk9njQJ4A8L04irP+elcrPiCVX05spi1jYiLf8ItuHm/b2zZVdoepClH8IM
+         ubq0GFpGksPXRopG+JZiHtDPqTUTEhSc0pkclzK0JILXV7RVp6BnwZsQvHSNOmzKHq4H
+         rdBFqofyjEk1MeF6+89o4tszkk/UrwZOUiiZbVoSn/nPSNJH2+GNUxHDRyuU9EwWH4vM
+         RlIw==
+X-Gm-Message-State: AGi0PubLfp/lYt5tCtDESKHqFUv3m4sa2DEPWKSnhczZRrFrnwcW9h3S
+        jHJBFwtUkF5zd8N2npC81Bo=
+X-Google-Smtp-Source: APiQypIjYkrTwFD+x+K6w8fSlTSSNgiyu96I581b7PeYbMAPdnAseQHToL1xi6J6Slp27+5sESYr1A==
+X-Received: by 2002:a17:90a:d3ce:: with SMTP id d14mr13989627pjw.46.1587845218547;
+        Sat, 25 Apr 2020 13:06:58 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id z23sm8680124pfr.136.2020.04.25.13.06.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 12:39:30 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Sat, 25 Apr 2020 13:06:58 -0700 (PDT)
+Date:   Sat, 25 Apr 2020 13:06:55 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Andi Shyti <andi@etezian.org>, linux-input@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: mms114: document melfas,mms345l binding
+Message-ID: <20200425200655.GL125362@dtor-ws>
+References: <20200423102431.2715-1-stephan@gerhold.net>
+ <20200423102431.2715-2-stephan@gerhold.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200424111644.27970-1-saiprakash.ranjan@codeaurora.org>
-References: <20200424111644.27970-1-saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Support ETMv4 power management
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        devicetree@vger.kernel.org
-Date:   Sat, 25 Apr 2020 12:39:29 -0700
-Message-ID: <158784356931.117437.2821018841391441959@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423102431.2715-2-stephan@gerhold.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sai Prakash Ranjan (2020-04-24 04:16:44)
-> Now that deep idle states are properly supported on SC7180,
-> we need to add "coresight-loses-context-with-cpu" property
-> to avoid failure of trace session because of losing context
-> on entering deep idle states.
->=20
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
+On Thu, Apr 23, 2020 at 12:24:31PM +0200, Stephan Gerhold wrote:
+> The mms114 driver now supports MMS345L; document the
+> melfas,mms345l binding that is used for it.
+> 
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> Reviewed-by: Andi Shyti <andi@etezian.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Applied, thank you.
+
+> ---
+>  Documentation/devicetree/bindings/input/touchscreen/mms114.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+> index 2cd954051d29..707234cfd7e6 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+> @@ -1,9 +1,10 @@
+> -* MELFAS MMS114/MMS152 touchscreen controller
+> +* MELFAS MMS114/MMS152/MMS345L touchscreen controller
+>  
+>  Required properties:
+>  - compatible: should be one of:
+>  	- "melfas,mms114"
+>  	- "melfas,mms152"
+> +	- "melfas,mms345l"
+>  - reg: I2C address of the chip
+>  - interrupts: interrupt to which the chip is connected
+>  - touchscreen-size-x: See [1]
+> -- 
+> 2.26.2
+> 
+
+-- 
+Dmitry
