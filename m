@@ -7,116 +7,88 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71631C55191
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 19:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2400BC55191
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 19:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA40206D4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 19:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DC8206D4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 19:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PQhZzQtK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i3Lalq5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgDYTiX (ORCPT
+        id S1726220AbgDYTjb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 15:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60276 "EHLO
+        Sat, 25 Apr 2020 15:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgDYTiX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 15:38:23 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81D4BC09B051
-        for <devicetree@vger.kernel.org>; Sat, 25 Apr 2020 12:38:23 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a5so5403184pjh.2
-        for <devicetree@vger.kernel.org>; Sat, 25 Apr 2020 12:38:23 -0700 (PDT)
+        with ESMTP id S1726190AbgDYTjb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 15:39:31 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18A45C09B04F
+        for <devicetree@vger.kernel.org>; Sat, 25 Apr 2020 12:39:31 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id fu13so4790082pjb.5
+        for <devicetree@vger.kernel.org>; Sat, 25 Apr 2020 12:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=wDIY7Zc1oPrCnhuBYSFyR9XUZ6XtcZd19wi4ia+d3a0=;
-        b=PQhZzQtKgnw95PWTl4LWH+6v6ZwbejfOj/qMmmsjdx7wU67v8uPiFk9qhqZ3opVNap
-         pe2PUhJC3EaAKlByWg1UYK37UjsqYUF/x3wUJ1jfdQbxI7Qhs8KBFv/+vP11S7XvUBLK
-         ZsTjWMqTlgaPZeNXBgJA48vLHmaCV2316iK3s=
+        bh=FFJ+RlIhSOPxhMwKLc97vVcR1rOxDF8GYeyH64M0ydo=;
+        b=i3Lalq5cuGCVKoML246R4E8KH9Vsvt1oOUaMLmiW0f02n1iwTSO2C7ec3YfI6FkZY5
+         dyC8mB7Y4nHzjjPkMlSt5hkzbzMJMeRAj9M3k2cZtyFEmLRfmaNs5b5z/Q3XkJgJNsIK
+         WAVu/yAWl3WZ2xxyUxnFkKt7QWECEHLjbbvzo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=wDIY7Zc1oPrCnhuBYSFyR9XUZ6XtcZd19wi4ia+d3a0=;
-        b=P1FUn68/0Dd9l4LKnxTQLDK8BXOeRNmMlsFDLnUy8CBfOSdwfR7AzYz3ovRIb+sdt/
-         YGn2BMGAp3XUnPEAZYtyXhT+hoFvLjqYPiezlb7Jdcn4EcEJ7PdRbgHPPcpxh/qRZAPb
-         oO0/eX0U3wSna0SHVwEWjgbcQFvh4UxCo3zKtxjbCXA4MMu04BUWxvAPF1pyhHiEdNEc
-         trmaCDtOLPDY0Cgzf1t0g31Z2lICP2ucOk5yDeNsDk2cjUoZM0Eg2pOyAg64KscaPhZN
-         +EngMpFW+GTk7iWuM1slh5Zkl0fy0wkhFA3zB2sE+E3VjrqetGdKydBcuGAH3YJUGr1X
-         RdPw==
-X-Gm-Message-State: AGi0Puaw3eihsCU1WaR/sD44UdLyjTqCrz1necsuvr/X3RJ6O/dshtGA
-        QkFTdCN5J+ClP/q2C+5MAvlY7jM7QOw=
-X-Google-Smtp-Source: APiQypKqi15ly1FCn64WfHLu7AD932QOaOgexubbURGEz41/S+Yww8OGEEEaC1cDZ/uvcHGogNT0rg==
-X-Received: by 2002:a17:90a:25c3:: with SMTP id k61mr14548584pje.28.1587843502754;
-        Sat, 25 Apr 2020 12:38:22 -0700 (PDT)
+        bh=FFJ+RlIhSOPxhMwKLc97vVcR1rOxDF8GYeyH64M0ydo=;
+        b=BV/m3zezfctRVEeY4/FasAucfbo+y0E9qZxPMJSQmCHL3Dn5sxXRx0RLteBBICx2RY
+         P4ciG9sdl0FmmmAwHj+dmBfaJOMdS4GecKKIBXwJIrnDLtjqMsFk8ZZqXt23DQR0YTNT
+         ZLLpbltbzsTvoyfteelwaHKLaTJC/hv0IzOA0/MwdKFespXLvqFGKVLxZMKNrSbibaF0
+         Xm+C03t2ica60QiTH1Aq+K9VKHm29j+3XHKTsmnLCJ5xMUS7iBTUgMYWdb8YEkwEAXQI
+         zsUhDGpwxIQxXO1crXcPjqW+yeJqwYLCWWwEPQ+6U8ARjHFx9BS0zDvzFqs5G2x9amAy
+         ib+Q==
+X-Gm-Message-State: AGi0PuYvgaNqoOYQzTKp67M/r00UF2FQrVuBlNmXMvGGkOP25y3zWySR
+        VXAdlTmF0uRc0YQ/7rgAaKqtBQ==
+X-Google-Smtp-Source: APiQypJjb7QoZatoPvZ0C5SA3OcumKCIMFSbn7THfXcy0NM0yccE/7t+zWNjac26pi33jCqWjxp58A==
+X-Received: by 2002:a17:90a:d709:: with SMTP id y9mr14198065pju.50.1587843570681;
+        Sat, 25 Apr 2020 12:39:30 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id w28sm7623732pgc.26.2020.04.25.12.38.21
+        by smtp.gmail.com with ESMTPSA id n16sm8679956pfq.61.2020.04.25.12.39.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 12:38:22 -0700 (PDT)
+        Sat, 25 Apr 2020 12:39:30 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200423092431.v3.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
-References: <20200423162548.129661-1-dianders@chromium.org> <20200423092431.v3.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
-Subject: Re: [PATCH v3 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
+In-Reply-To: <20200424111644.27970-1-saiprakash.ranjan@codeaurora.org>
+References: <20200424111644.27970-1-saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Support ETMv4 power management
 From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jeffrey.l.hugo@gmail.com, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, robdclark@chromium.org,
-        jernej.skrabec@siol.net, jonas@kwiboo.se,
-        bjorn.andersson@linaro.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-To:     Douglas Anderson <dianders@chromium.org>,
-        Laurent.pinchart@ideasonboard.com, a.hajda@samsung.com,
-        airlied@linux.ie, bgolaszewski@baylibre.com, daniel@ffwll.ch,
-        linus.walleij@linaro.org, narmstrong@baylibre.com,
-        robh+dt@kernel.org, spanda@codeaurora.org
-Date:   Sat, 25 Apr 2020 12:38:21 -0700
-Message-ID: <158784350116.117437.9524374865698963301@swboyd.mtv.corp.google.com>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        devicetree@vger.kernel.org
+Date:   Sat, 25 Apr 2020 12:39:29 -0700
+Message-ID: <158784356931.117437.2821018841391441959@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Douglas Anderson (2020-04-23 09:25:43)
-> The ti-sn65dsi86 MIPI DSI to eDP bridge chip has 4 pins on it that can
-> be used as GPIOs in a system.  Each pin can be configured as input,
-> output, or a special function for the bridge chip.  These are:
-> - GPIO1: SUSPEND Input
-> - GPIO2: DSIA VSYNC
-> - GPIO3: DSIA HSYNC or VSYNC
-> - GPIO4: PWM
+Quoting Sai Prakash Ranjan (2020-04-24 04:16:44)
+> Now that deep idle states are properly supported on SC7180,
+> we need to add "coresight-loses-context-with-cpu" property
+> to avoid failure of trace session because of losing context
+> on entering deep idle states.
 >=20
-> Let's expose these pins as GPIOs.  A few notes:
-> - Access to ti-sn65dsi86 is via i2c so we set "can_sleep".
-> - These pins can't be configured for IRQ.
-> - There are no programmable pulls or other fancy features.
-> - Keeping the bridge chip powered might be expensive.  The driver is
->   setup such that if all used GPIOs are only inputs we'll power the
->   bridge chip on just long enough to read the GPIO and then power it
->   off again.  Setting a GPIO as output will keep the bridge powered.
-> - If someone releases a GPIO we'll implicitly switch it to an input so
->   we no longer need to keep the bridge powered for it.
->=20
-> Because of all of the above limitations we just need to implement a
-> bare-bones GPIO driver.  The device tree bindings already account for
-> this device being a GPIO controller so we only need the driver changes
-> for it.
->=20
-> NOTE: Despite the fact that these pins are nominally muxable I don't
-> believe it makes sense to expose them through the pinctrl interface as
-> well as the GPIO interface.  The special functions are things that the
-> bridge chip driver itself would care about and it can just configure
-> the pins as needed.
->=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
 
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
