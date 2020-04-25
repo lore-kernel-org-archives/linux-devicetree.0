@@ -2,151 +2,111 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C4BC55191
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41EDC55194
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 16:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 923A720748
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="MyWUkHZZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UCDRN4Jd"
+	by mail.kernel.org (Postfix) with ESMTP id 8DDF4206D4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 16:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgDYPzx (ORCPT
+        id S1726162AbgDYQ62 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:55:53 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:54085 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726118AbgDYPzm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:55:42 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3AC8E5803BD;
-        Sat, 25 Apr 2020 11:55:41 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sat, 25 Apr 2020 11:55:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-         h=from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=ILg74KFQ4/u/i
-        LEbpVIGKPDUn0lqkuyVDFTjVVQFF4M=; b=MyWUkHZZ+Mcwdt7tPDh4nOqgZAEVt
-        n8SU2n8ZR81Fv2JQ69Dyg1uEdGkMtEKpm/soc219ggCkilM6/1D9+OtmqfPOenjB
-        ldoLtqTsxpA3l58j2j2ws+Qsm4ncs+ahXHyZGwqLceD/yhD67JU+9FsvbJJ0KH0H
-        xKUJHUyoJjfvhIlvyuaPQBgQcyettaIm/ENgjGOFgP+fgXERqdExYTLQQvVQ3oZV
-        qCIkbphLwFFe8aJ50Ie2LVfwUjbiiN6EUeCKBKsMIpfGk9Xp/ZhqrJHuekKCLYaY
-        dduUrgJQ+SKwcqcQ2dEDydxkN8MCTy8Vkjd+XDRq0iFdlnkPfiOoL5EYw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=ILg74KFQ4/u/iLEbpVIGKPDUn0lqkuyVDFTjVVQFF4M=; b=UCDRN4Jd
-        LJ1aMZu0e0azt1QAd15mpQLEvkm7c3u+0gP103CIaOw4Q/XGpCcOEGGWyMJifCLg
-        9ohqiYsQi429Ig1oFNTzBFbW7VW/5MSqi2GRDxWR6smw/FieTf3ZS8BFdRFihbi+
-        50WCmvYm5421efcI5PBTNEhlHYua0qS7FC5QP1biymBNhbukf3tm84In2sOVExAh
-        GHl83AiZau8VJG05cv33yS4Of5eeOLPnRa0VbVUNsSBGGwqZRoTAq5tPACtbRGKN
-        JyzCbsnjkiymVnm4+scLO6k6toz5ie3GpFcSOEJ2WAC2mCqstpej7t2ACneO7mug
-        luZ/F72ZAiQlhg==
-X-ME-Sender: <xms:eV2kXi1pBLxDckTlLq0uQuE8lEyDr8jXdaOXJDDd04dyCcx-e5eu_Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrheeggdejvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghishcuoegrlhhishhtrghi
-    rhesrghlihhsthgrihhrvdefrdhmvgeqnecukfhppeejfedrleefrdekgedrvddtkeenuc
-    evlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlhhishht
-    rghirhesrghlihhsthgrihhrvdefrdhmvg
-X-ME-Proxy: <xmx:eV2kXqZrTsq_qRbUyCTF_6XuyPLGUjZ7BuDwiXHBjViahgBFV0hl6w>
-    <xmx:eV2kXm_x8CUI9jrkObOTtn3Yguxfh63r73e5LW3bdkcDWa5Q8iVRJg>
-    <xmx:eV2kXgZpYVI4tGkPcpJv3AmtMpyCUSWeZFa-C0lng4L1-U64Se0jcw>
-    <xmx:fV2kXi4qQrktnCVTQ7Iav98OQI_z_ThFrs3_xuZPYpAYfcQBnE1LSw>
-Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 921A03280067;
-        Sat, 25 Apr 2020 11:55:36 -0400 (EDT)
-From:   Alistair Francis <alistair@alistair23.me>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org
-Cc:     anarsoul@gmail.com, devicetree@vger.kernel.org,
-        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org,
-        Alistair Francis <alistair@alistair23.me>
-Subject: [DO-NOT-MERGE][PATCH v4 3/3] arm64: allwinner: Enable Bluetooth and WiFi on sopine baseboard
-Date:   Sat, 25 Apr 2020 08:55:31 -0700
-Message-Id: <20200425155531.2816584-3-alistair@alistair23.me>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200425155531.2816584-1-alistair@alistair23.me>
-References: <20200425155531.2816584-1-alistair@alistair23.me>
+        Sat, 25 Apr 2020 12:58:28 -0400
+Received: from muru.com ([72.249.23.125]:51424 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbgDYQ62 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 12:58:28 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 7877F8108;
+        Sat, 25 Apr 2020 16:59:14 +0000 (UTC)
+Date:   Sat, 25 Apr 2020 09:58:23 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
+ droid4 modem
+Message-ID: <20200425165823.GO37466@atomide.com>
+References: <20200421232752.3070-1-tony@atomide.com>
+ <20200423114326.GQ18608@localhost>
+ <20200423153756.GE37466@atomide.com>
+ <20200423232722.GG37466@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423232722.GG37466@atomide.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The sopine board has an optional RTL8723BS WiFi + BT module that can be
-connected to UART1. Add this to the device tree so that it will work
-for users if connected.
+* Tony Lindgren <tony@atomide.com> [200423 23:28]:
+> * Tony Lindgren <tony@atomide.com> [200423 15:38]:
+> > * Johan Hovold <johan@kernel.org> [200423 11:44]:
+> > > I'd rather see a generic implementation which can be used with other
+> > > modems and that continues to expose a /dev/gsmttyN interface to which we
+> > > could attach serdev clients instead (and not create a motmdm serdev
+> > > replica of sorts).
+> > 
+> > Yeah this should be doable quite easily actually without really any of
+> > the motorola driver code. It's a separate driver though, and not
+> > usable for this case because of the custom layer.
+> 
+> Well here's a first take at the such a generic serdev-ngsm driver
+> that depends on patch 1/4 of this series. All this does is configure
+> a serial port for TS 27.010 adaption1, and brings up 16 /dev/gsmtty*
+> devices. So no custom options for the binding so far, and no support
+> for adding channel specific device drivers. But all that can be added
+> naturally later on.
 
-Signed-off-by: Alistair Francis <alistair@alistair23.me>
----
- .../allwinner/sun50i-a64-sopine-baseboard.dts | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Just to clarify the difference between the generic serdev-ngsm case
+and this modem..
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 2f6ea9f3f6a2..34357ba143cb 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -42,6 +42,11 @@ reg_vcc1v8: vcc1v8 {
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
-+	};
- };
- 
- &ac_power_supply {
-@@ -103,6 +108,17 @@ ext_rgmii_phy: ethernet-phy@1 {
- 	};
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_dldo4>;
-+	vqmmc-supply = <&reg_eldo1>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	non-removable;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
- &mmc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins>;
-@@ -174,6 +190,19 @@ &uart0 {
- 	status = "okay";
- };
- 
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts = <1>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "realtek,rtl8723bs-bt";
-+		device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-+		host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+	};
-+};
-+
- /* On Pi-2 connector */
- &uart2 {
- 	pinctrl-names = "default";
--- 
-2.26.0
+In the generic case, channel specific Linux device drivers can just
+use gsm_serdev_write() directly for things like GNSS driver, SIM
+file system, audio and whatever the modems might have on separate
+channels.
 
+This Motorola modem needs custom read and write functions because
+of the custom Motorola packet format on top of TS 27.010. So for
+example, the motmdm_write() function stuffs the packet header, and
+then just calls gsm_serdev_write().
+
+So for the generic channel specific drivers, the driver just needs
+to be able to do something like:
+
+Configure devicetree for the drivers/tty/serdev/serdev-ngsm.c
+to bring up the TS 27.010 port based on the compatible and
+whatever port specific properties we may want use.
+
+And then have the channel specific device drivers do something
+like this:
+
+gsm_serdev_ngsm_register();	/* TBD to add to serdev-ngsm.c */
+gsm_serdev_register_dlci();	/* Already patched for n_gsm.c */
+gsm_serdev_write();		/* Already patched for n_gsm.c */
+...
+gsm_serdev_unregister_dlci();	/* Already patched for n_gsm.c */
+gsm_serdev_ngsm_unregister();	/* TBD to add to serdev-ngsm.c */
+
+So I think we can limit the code in the generic serdev-ngsm.c to bring
+up the TS 27.010, and then allow whatever channel specific device
+drivers to register with it. I guess that should do for the generic
+API.
+
+Anybody got better suggestions?
+
+Regards,
+
+Tony
