@@ -2,111 +2,110 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE29C55191
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 22:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 888FEC55194
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 22:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E18BC20706
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 22:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D5520706
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 22:11:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkdAxr8G"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qXkJZuk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgDYWIH (ORCPT
+        id S1726360AbgDYWLz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 18:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgDYWIG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 18:08:06 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D44C09B04F;
-        Sat, 25 Apr 2020 15:08:06 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id t11so10679918lfe.4;
-        Sat, 25 Apr 2020 15:08:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=stKhy/h17mAoYghX4I6mRLwgtGhKJwi/X0wHAwKsRfA=;
-        b=nkdAxr8G/h5QMxMQ9/0+z2TWsdx8OXFRV84cGL/0tawE+iOu7o/nCj4il4G4CQQWH2
-         YxQQPBwb7kFRDeoF7664tHtQtx7LXr/YR9YEUcoezdCu+5wjkOPKCV5vdI2TU8SZw/JC
-         Qt3QNALge3rxc3i+4l4vhGWNRhE9fRtFFXKBEz/k+TuQY80Oq1FSY8FeyS9FjFBigkgR
-         DYoNYP0BytvKxuz30uvOSaaNRcfh7YB5gnK1ritRDzK7YKrljKO62bccDfdpv6/+dma8
-         NYCZ/uyRbZ0tDxomDcTauOL/p0NlXLlbE1L116d24Syr5TNmuR+zgjGe48BgfIp18kyD
-         qjGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=stKhy/h17mAoYghX4I6mRLwgtGhKJwi/X0wHAwKsRfA=;
-        b=SzdVkcG9UZrxaR6+1QTZ49pHfiGzLkOvq/bdC5FmcVQehp20PKTTXYdJeZfOv01iGn
-         YoLLV4ZzgJ2FR/dQobgiXoi54r/qBXgU5QLH4EhzOfC7EzHOktnt0SgfvR0sTbv8duhm
-         fjvG/Yb1cnyjQvVRiDOCsOeCf1zb+O7vNmufWYJjzK4SSjz0ja6d/6bvtk9Ic88GMoDO
-         Pu0uJaeiT+r1zMuVOfLHZHN9dHR/5W88K3v45Gmxtgg+dLkkyPV8+jScwFJJ/RvNSwCQ
-         NyXO17/1N3ZCSYqZtvkPNK4g6TmM53K/YWvk/H5RVzV2/CuQN5XmRw7J59shXjgk8ryk
-         PPCQ==
-X-Gm-Message-State: AGi0PuZMoRlMFE53W223D+n4zNicXvo4CfSydhY+OT2W4/BEcDndW1Yz
-        VyAo+ZiBDaqJG9RF6b3PWVNjx8qV
-X-Google-Smtp-Source: APiQypJBj4/s4vaQgtuniB+FW/ntlwSg1bwGWcRhW63q5PuexDleztxn7q3vyN2ftsUWnXOncpip9w==
-X-Received: by 2002:ac2:52b9:: with SMTP id r25mr10877874lfm.156.1587852484346;
-        Sat, 25 Apr 2020 15:08:04 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id k2sm6889535ljg.7.2020.04.25.15.08.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 15:08:03 -0700 (PDT)
+        Sat, 25 Apr 2020 18:11:55 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1927 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgDYWLy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 18:11:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea4b59d0000>; Sat, 25 Apr 2020 15:11:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 25 Apr 2020 15:11:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 25 Apr 2020 15:11:54 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Apr
+ 2020 22:11:54 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Apr
+ 2020 22:11:52 +0000
 Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
  <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
  <3155e0d2-94b0-6e0a-bf35-b3560c201039@gmail.com>
  <fffc09d1-a25f-2d6e-83bd-f7657dd2ff16@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e5602c48-a73e-8e71-188d-6a53ebf8e4a4@gmail.com>
-Date:   Sun, 26 Apr 2020 01:08:02 +0300
+ <e5602c48-a73e-8e71-188d-6a53ebf8e4a4@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <f6d62dde-9ab5-7001-0ff4-93ed70cb207f@nvidia.com>
+Date:   Sat, 25 Apr 2020 15:11:36 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <fffc09d1-a25f-2d6e-83bd-f7657dd2ff16@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <e5602c48-a73e-8e71-188d-6a53ebf8e4a4@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587852701; bh=M+2SLVtDyEOZG9XNt7U9Wdx7inYhYLLVw0PqKdlIUQ8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=qXkJZuk7r6LyMrT+wOSNjhCrklbWB1e2SV7oesMNqEqRM5b/VInmh0yb1aXS9CS4l
+         SztHqt0F7XVjAO6uQfM6DvVCJd5rryf1lFFwUb1bpXf1ung2gF5nMyzSO6T2CqFDt4
+         2pO6I5Rsu+iihq/MDDmyoXXKoewIqNe8NZ67ivJtb8Bb5757hRutLSb6ml+YjIgOiB
+         S7ZlRZ6c03O4FR8OwCoomrcZN/yfX0sIZnkGkNTrRtINrYATiguwsblcNGbpRotaAU
+         e2X6BDAWEIrMtotyVIFYGu1BlWwXCfnQBnRtRhw8UBSmvE9bzzmlRQ0v3S4VWjjZ+c
+         8ni16M1u9QoHg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-25.04.2020 01:00, Sowjanya Komatineni пишет:
-> 
-> On 4/24/20 8:07 AM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 24.04.2020 06:55, Sowjanya Komatineni пишет:
->>
->> Is this driver compiled as a single kernel module file?
->>
->>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
->>> +MODULE_DESCRIPTION("NVIDIA Tegra CSI Device Driver");
->>> +MODULE_LICENSE("GPL v2");
->> ...
->>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
->>> +MODULE_DESCRIPTION("NVIDIA Tegra Video Input Device Driver");
->>> +MODULE_LICENSE("GPL v2");
->> I don't think that these macros are needed in that case.
->> The video.c should be enough, isn't it?
-> yes these can be removed
 
-It will be nice to factor out the Tegra210-specific VI/CSI OPS into a
-separate driver module (say tegra210-vi) to ease supporting of other
-Tegra versions. Of course this could be done later on, although I
-suppose the amount of hassle could be reduced if it's done from the start.
+On 4/25/20 3:08 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 25.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/24/20 8:07 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 24.04.2020 06:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>
+>>> Is this driver compiled as a single kernel module file?
+>>>
+>>>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
+>>>> +MODULE_DESCRIPTION("NVIDIA Tegra CSI Device Driver");
+>>>> +MODULE_LICENSE("GPL v2");
+>>> ...
+>>>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
+>>>> +MODULE_DESCRIPTION("NVIDIA Tegra Video Input Device Driver");
+>>>> +MODULE_LICENSE("GPL v2");
+>>> I don't think that these macros are needed in that case.
+>>> The video.c should be enough, isn't it?
+>> yes these can be removed
+> It will be nice to factor out the Tegra210-specific VI/CSI OPS into a
+> separate driver module (say tegra210-vi) to ease supporting of other
+> Tegra versions. Of course this could be done later on, although I
+> suppose the amount of hassle could be reduced if it's done from the start=
+.
+vi/csi.c are common drivers for all Tegras. All Tegra chip specific=20
+related programming for both vi and csi were already moved to Tegra210.c=20
+based on prior feedbacks.
