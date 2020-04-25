@@ -2,224 +2,115 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC19BC55194
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955E9C55191
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872812076C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:48:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587836896;
-	bh=bi0cxJLPQhpp3syjgRoSATl47TvoQVeDksKErDsCS2Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uQCZDhlUmb1fmXgQuCTroYPSI7yn6x0JkQdrMcRzye3/1xwViKAq8bUo7oCoX3HLg
-	 ICt/JrVTNJG+1W2pq/om5RKrGE9l8Uxho8zU7v/PbuVxKqVmGLG/eKshZWllAtFYlo
-	 iLu0Z3hvcqoq6cPrA+zgVMb9WtuBPdMgIH2PM0VY=
+	by mail.kernel.org (Postfix) with ESMTP id 7ECE5206B6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgDYRsQ (ORCPT
+        id S1726157AbgDYR6s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 13:48:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgDYRsP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:48:15 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        Sat, 25 Apr 2020 13:58:48 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:48792 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbgDYR6r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 13:58:47 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27ABF206B6;
-        Sat, 25 Apr 2020 17:48:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587836894;
-        bh=bi0cxJLPQhpp3syjgRoSATl47TvoQVeDksKErDsCS2Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nfXwBjpXIt/A5fj/rnHVA4S+v6bapF6XAbcpOUSOlg5VBKciuihNuSqa6aUuRWBbB
-         NYLXRtHiA+qDWk2MvKwid9P6AqhoPibcv9wrG2pcIQJF7qaUiLXL/wQDKrBywHaqZZ
-         esHKKLo5zLpdqbGS9UD6Gu9MHVCZQugqD//eVoZ4=
-Date:   Sat, 25 Apr 2020 18:48:10 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Nick Reitemeyer <nick.reitemeyer@web.de>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/3] iio: magnetometer: ak8974: add Alps hscdtd008a
-Message-ID: <20200425184810.4b12e165@archlinux>
-In-Reply-To: <20200412143524.377d2c16@archlinux>
-References: <20200406141350.162036-1-nick.reitemeyer@web.de>
-        <20200406141350.162036-3-nick.reitemeyer@web.de>
-        <20200406143113.GA126707@gerhold.net>
-        <20200412143524.377d2c16@archlinux>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 3E92980441;
+        Sat, 25 Apr 2020 19:58:44 +0200 (CEST)
+Date:   Sat, 25 Apr 2020 19:58:42 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: simple: Add IVO M133NWF4 R0
+Message-ID: <20200425175842.GA3773@ravnborg.org>
+References: <20200420215728.1927434-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200420215728.1927434-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=8nJEP1OIZ-IA:10 a=KKAkSRfTAAAA:8 a=e5mUnYsNAAAA:8
+        a=VT_5SEiLe_3rwrpvr8sA:9 a=wPNLvfGTeEIA:10 a=cvBusfyB2V15izCimMoJ:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 12 Apr 2020 14:35:24 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+Hi Björn.
 
-> On Mon, 6 Apr 2020 16:31:13 +0200
-> Stephan Gerhold <stephan@gerhold.net> wrote:
+On Mon, Apr 20, 2020 at 02:57:27PM -0700, Bjorn Andersson wrote:
+> Define the vendor prefix for InfoVision Optoelectronics and add their
+> M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel to the compatible list
+> of panel-simple.
 > 
-> > On Mon, Apr 06, 2020 at 04:13:53PM +0200, Nick Reitemeyer wrote:  
-> > > The hscdtd008a is similar to the AK8974:
-> > > Only the whoami value and some registers are different.
-> > > 
-> > > Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>    
-> > 
-> > Thanks a lot for sending this patch upstream!
-> > 
-> > I checked this with the datasheet available here:
-> > https://tech.alpsalpine.com/prod/c/pdf/sensor/geomagnetic/hscd/hscdtd008a_data.pdf
-> > 
-> > Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
-> > 
-> > ... and it seems to produce reasonable values on samsung-golden:
-> > 
-> > Tested-by: Stephan Gerhold <stephan@gerhold.net>
-> > 
-> > Linus Walleij might want to test this on his samsung-skomer :)  
-> 
-> Looks good to me, but I'll need a review on the binding (particularly
-> the vendor prefix as it's in a generic file). 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-Thanks,
+I got OK for the vendor prefix on irc so patch is now added to
+drm-misc-next.
+Another time please use a dedicated patch for vendor-prefix
+so it is not hidden with other stuff. This way the chance
+to get the attention of the right people is better.
 
-Jonathan
+Also added the panel-simple patch.
+Both pushed out now.
 
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> > 
-> > Thanks,
-> > Stephan
-> >   
-> > > ---
-> > >  drivers/iio/magnetometer/ak8974.c | 38 ++++++++++++++++++++++++-------
-> > >  1 file changed, 30 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
-> > > index d32996702110..ade4ed8f67d2 100644
-> > > --- a/drivers/iio/magnetometer/ak8974.c
-> > > +++ b/drivers/iio/magnetometer/ak8974.c
-> > > @@ -49,6 +49,7 @@
-> > >  #define AK8974_WHOAMI_VALUE_AMI306 0x46
-> > >  #define AK8974_WHOAMI_VALUE_AMI305 0x47
-> > >  #define AK8974_WHOAMI_VALUE_AK8974 0x48
-> > > +#define AK8974_WHOAMI_VALUE_HSCDTD008A 0x49
-> > > 
-> > >  #define AK8974_DATA_X		0x10
-> > >  #define AK8974_DATA_Y		0x12
-> > > @@ -140,6 +141,12 @@
-> > >  #define AK8974_INT_CTRL_PULSE	BIT(1) /* 0 = latched; 1 = pulse (50 usec) */
-> > >  #define AK8974_INT_CTRL_RESDEF	(AK8974_INT_CTRL_XYZEN | AK8974_INT_CTRL_POL)
-> > > 
-> > > +/* HSCDTD008A-specific control register */
-> > > +#define HSCDTD008A_CTRL4	0x1E
-> > > +#define HSCDTD008A_CTRL4_MMD	BIT(7)	/* must be set to 1 */
-> > > +#define HSCDTD008A_CTRL4_RANGE	BIT(4)	/* 0 = 14-bit output; 1 = 15-bit output */
-> > > +#define HSCDTD008A_CTRL4_RESDEF	(HSCDTD008A_CTRL4_MMD | HSCDTD008A_CTRL4_RANGE)
-> > > +
-> > >  /* The AMI305 has elaborate FW version and serial number registers */
-> > >  #define AMI305_VER		0xE8
-> > >  #define AMI305_SN		0xEA
-> > > @@ -241,10 +248,17 @@ static int ak8974_reset(struct ak8974 *ak8974)
-> > >  	ret = regmap_write(ak8974->map, AK8974_CTRL3, AK8974_CTRL3_RESDEF);
-> > >  	if (ret)
-> > >  		return ret;
-> > > -	ret = regmap_write(ak8974->map, AK8974_INT_CTRL,
-> > > -			   AK8974_INT_CTRL_RESDEF);
-> > > -	if (ret)
-> > > -		return ret;
-> > > +	if (ak8974->variant != AK8974_WHOAMI_VALUE_HSCDTD008A) {
-> > > +		ret = regmap_write(ak8974->map, AK8974_INT_CTRL,
-> > > +				   AK8974_INT_CTRL_RESDEF);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	} else {
-> > > +		ret = regmap_write(ak8974->map, HSCDTD008A_CTRL4,
-> > > +				   HSCDTD008A_CTRL4_RESDEF);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	}
-> > > 
-> > >  	/* After reset, power off is default state */
-> > >  	return ak8974_set_power(ak8974, AK8974_PWR_OFF);
-> > > @@ -267,6 +281,8 @@ static int ak8974_configure(struct ak8974 *ak8974)
-> > >  		if (ret)
-> > >  			return ret;
-> > >  	}
-> > > +	if (ak8974->variant == AK8974_WHOAMI_VALUE_HSCDTD008A)
-> > > +		return 0;
-> > >  	ret = regmap_write(ak8974->map, AK8974_INT_CTRL, AK8974_INT_CTRL_POL);
-> > >  	if (ret)
-> > >  		return ret;
-> > > @@ -495,6 +511,10 @@ static int ak8974_detect(struct ak8974 *ak8974)
-> > >  		name = "ak8974";
-> > >  		dev_info(&ak8974->i2c->dev, "detected AK8974\n");
-> > >  		break;
-> > > +	case AK8974_WHOAMI_VALUE_HSCDTD008A:
-> > > +		name = "hscdtd008a";
-> > > +		dev_info(&ak8974->i2c->dev, "detected hscdtd008a\n");
-> > > +		break;
-> > >  	default:
-> > >  		dev_err(&ak8974->i2c->dev, "unsupported device (%02x) ",
-> > >  			whoami);
-> > > @@ -674,18 +694,18 @@ static bool ak8974_writeable_reg(struct device *dev, unsigned int reg)
-> > >  	case AK8974_INT_CTRL:
-> > >  	case AK8974_INT_THRES:
-> > >  	case AK8974_INT_THRES + 1:
-> > > +		return true;
-> > >  	case AK8974_PRESET:
-> > >  	case AK8974_PRESET + 1:
-> > > -		return true;
-> > > +		return ak8974->variant != AK8974_WHOAMI_VALUE_HSCDTD008A;
-> > >  	case AK8974_OFFSET_X:
-> > >  	case AK8974_OFFSET_X + 1:
-> > >  	case AK8974_OFFSET_Y:
-> > >  	case AK8974_OFFSET_Y + 1:
-> > >  	case AK8974_OFFSET_Z:
-> > >  	case AK8974_OFFSET_Z + 1:
-> > > -		if (ak8974->variant == AK8974_WHOAMI_VALUE_AK8974)
-> > > -			return true;
-> > > -		return false;
-> > > +		return ak8974->variant == AK8974_WHOAMI_VALUE_AK8974 ||
-> > > +		       ak8974->variant == AK8974_WHOAMI_VALUE_HSCDTD008A;
-> > >  	case AMI305_OFFSET_X:
-> > >  	case AMI305_OFFSET_X + 1:
-> > >  	case AMI305_OFFSET_Y:
-> > > @@ -926,12 +946,14 @@ static const struct i2c_device_id ak8974_id[] = {
-> > >  	{"ami305", 0 },
-> > >  	{"ami306", 0 },
-> > >  	{"ak8974", 0 },
-> > > +	{"hscdtd008a", 0 },
-> > >  	{}
-> > >  };
-> > >  MODULE_DEVICE_TABLE(i2c, ak8974_id);
-> > > 
-> > >  static const struct of_device_id ak8974_of_match[] = {
-> > >  	{ .compatible = "asahi-kasei,ak8974", },
-> > > +	{ .compatible = "alps,hscdtd008a", },
-> > >  	{}
-> > >  };
-> > >  MODULE_DEVICE_TABLE(of, ak8974_of_match);
-> > > --
-> > > 2.26.0
-> > >     
-> 
+	Sam
 
+> ---
+> 
+> Changes since v1:
+> - Added this patch
+> 
+>  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml          | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> index daf86ba18f47..31dc88f5b2a9 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> @@ -129,6 +129,8 @@ properties:
+>        - hannstar,hsd100pxn1
+>          # Hitachi Ltd. Corporation 9" WVGA (800x480) TFT LCD panel
+>        - hit,tx23d38vm0caa
+> +        # InfoVision Optoelectronics M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel
+> +      - ivo,m133nwf4-r0
+>          # Innolux AT043TN24 4.3" WQVGA TFT LCD panel
+>        - innolux,at043tn24
+>          # Innolux AT070TN92 7.0" WQVGA TFT LCD panel
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index d3891386d671..31012f91fb9a 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -463,6 +463,8 @@ patternProperties:
+>      description: Infineon Technologies
+>    "^inforce,.*":
+>      description: Inforce Computing
+> +  "^ivo,.*":
+> +    description: InfoVision Optoelectronics Kunshan Co. Ltd.
+>    "^ingenic,.*":
+>      description: Ingenic Semiconductor
+>    "^innolux,.*":
+> -- 
+> 2.26.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
