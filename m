@@ -1,109 +1,71 @@
-Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48005C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 22:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1B6C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 00:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26A8C2076C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 22:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C50B20857
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 00:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587768739;
-	bh=k6EO4HV8b2LdbYgAlXsToOZ0phBXPGeCG8Astjp//Vw=;
+	s=default; t=1587775731;
+	bh=eD2lkS1AtW+Wg0mPsmtRaci8d1euaDf6xsjtaP/gBWY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I1kLT3r+uVPv+GneETNvDW9zI7UDA4UcYm6Vzw9FwyZGTe7ij0nmJH9VMgHARPbVN
-	 vJgEpZyuKkQC8zTIXlm+rdQcUIRywPIFPboXdpsb+X2brzib8Qy8Sm4Frhloo4zhqO
-	 qbRHjyqSNVpLxGgqV1KTaony3zznpy2vlRlBakNw=
+	b=D4K32+D3Peb00jcgsWM6xIoE5PIAlzTvytvQ5Oqg5m2Krhd4aeL2Sr9lAuq22eF4j
+	 8UILEuG/uMOWcBPncPKrvXUBlWdRL1FMKfSG9dqpqBzU/MYtUkzC/hdrHdDo9TPU4h
+	 5gJtrvXYdz3Z8oxAWTJIMKN9ToTsQMhymg8584j4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726060AbgDXWwQ (ORCPT
+        id S1726073AbgDYAsu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:52:16 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33622 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgDXWwQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 18:52:16 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j26so15383781ots.0;
-        Fri, 24 Apr 2020 15:52:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wF6fQRNcOVGmiPWGuQ33fy/Py3YU3kYZ9u186GNu9uo=;
-        b=htSWQD+d0WCZNfCalaDjkEKy4fUv0uwYmrdbZ2zw2QnRhzFFf+B1bWEtkxIGb87ZS4
-         4xdAQ5o8cV1mHVZWgD31nep0szycSh+EXz7qPRACAaKse1DdnHgWeDL5MEnhUmqs1pzS
-         1uJ/miCjJI83xPldkDyyhAGuvh67apWIkpwKa8Qjdni7qHh2JZkEjZ0v+2iqIigPmu1f
-         kc4SecTmjxKKcVCx9LuwXPX5U7sX4Rlk9GpVD+lZ/9CFFOqAadbE1F6SfT0WMHwoTD3G
-         muIjFl8rY+0iqAmVhUcAjjIlLJJcTLfVsGiRGXgEekmjn1wHTjNwbOpImYEVKgBEBRT6
-         sE/w==
-X-Gm-Message-State: AGi0PuY7RlD1W0t/s/thz1oJQOigf9zEac61t4XPSPdRzEX8ISq9Nhx/
-        ZEvUvRiWxdj3j4iKolmgKw==
-X-Google-Smtp-Source: APiQypL+B3MmVxN4219JD1LUJE3v2D7vWF8MSXRe8ojTj26JKh2LYSmBoJni5bwWB5GfRoFjUUXlwQ==
-X-Received: by 2002:aca:c646:: with SMTP id w67mr9239297oif.70.1587768735355;
-        Fri, 24 Apr 2020 15:52:15 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s73sm2013006oih.14.2020.04.24.15.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 15:52:14 -0700 (PDT)
-Received: (nullmailer pid 18240 invoked by uid 1000);
-        Fri, 24 Apr 2020 22:52:13 -0000
-Date:   Fri, 24 Apr 2020 17:52:13 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Sandeep Maheswaram <sanm@codeaurora.org>, mka@chromium.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: phy: qcom-qusb2: Fix defaults
-Message-ID: <20200424225213.GA15428@bogus>
-References: <20200423111015.1.Ifa8039b6f3031e9a69c4a526a6efc2f499f07292@changeid>
+        Fri, 24 Apr 2020 20:48:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726031AbgDYAsu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 20:48:50 -0400
+Received: from dragon (unknown [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2858F2076C;
+        Sat, 25 Apr 2020 00:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587775730;
+        bh=eD2lkS1AtW+Wg0mPsmtRaci8d1euaDf6xsjtaP/gBWY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Num4sbIzgP3MZEsaxwl0zYPFaPrXyl4eEhFr/JXs2OrYA8LQPntmyX2/H18eos1Bh
+         YqHYii9JyvgFR9udKmHE4O7rRmagSiK8zzGgwa6lvUfi3YabOq01gnmNJ8Db9xNZKG
+         F6UqJXWnIkHejnCYCnePLSjYGpBTjtJ04S1v23j4=
+Date:   Sat, 25 Apr 2020 08:48:37 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        festevam@gmail.com
+Subject: Re: [PATCH] dts: ARM: e60k02: add interrupt for PMIC
+Message-ID: <20200425004836.GI8571@dragon>
+References: <20200329104250.15194-1-andreas@kemnade.info>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200423111015.1.Ifa8039b6f3031e9a69c4a526a6efc2f499f07292@changeid>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200329104250.15194-1-andreas@kemnade.info>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 23 Apr 2020 11:10:27 -0700, Douglas Anderson wrote:
-> The defaults listed in the bindings don't match what the code is
-> actually doing.  Presumably existing users care more about keeping
-> existing behavior the same, so change the bindings to match the code
-> in Linux.
+On Sun, Mar 29, 2020 at 12:42:50PM +0200, Andreas Kemnade wrote:
+> Since the PMIC driver now has IRQ handling, add the GPIO to
+> listen to things like RTC alarm or ADC conversion completion.
 > 
-> The "qcom,preemphasis-level" default has been wrong for quite a long
-> time (May 2018).  The other two were recently added.
-> 
-> As some evidence that these values are wrong, this is from the Linux
-> driver:
-> - qcom,preemphasis-level: sets "PORT_TUNE1", lower 2 bits.  Driver
->   programs PORT_TUNE1 to 0x30 by default and (0x30 & 0x3) = 0.
-> - qcom,bias-ctrl-value: sets "PLL_BIAS_CONTROL_2", lower 6 bits.
->   Driver programs PLL_BIAS_CONTROL_2 to 0x20 by default and (0x20 &
->   0x3f) = 0x20 = 32.
-> - qcom,hsdisc-trim-value: sets "PORT_TUNE2", lower 2 bits.  Driver
->   programs PORT_TUNE2 to 0x29 by default and (0x29 & 0x3) = 1.
-> 
-> Fixes: 1e6f134eb67a ("dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning parameters")
-> Fixes: a8b70ccf10e3 ("dt-bindings: phy-qcom-usb2: Add support to override tuning values")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 
-Applied, thanks.
+Subject should be prefixed like 'ARM: dts: ...'
 
-Rob
+I fixed it up and applied the patch.
+
+Shawn
