@@ -2,128 +2,405 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31282C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 13:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CF6C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 14:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1558F2072B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 13:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4686120704
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 14:05:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="f8xkpY/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgDYNrB (ORCPT
+        id S1726062AbgDYOFr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 09:47:01 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50032 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgDYNrB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 09:47:01 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 6EA352A227C
-Message-ID: <c49a060e7f5da9564e375fdd47117d3f901e5d00.camel@collabora.com>
-Subject: Re: [PATCH v2 4/4] media: rockchip: rga: Only set output CSC mode
- for RGB input
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        justin.swartz@risingedge.co.za, Johan Jonker <jbx6244@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date:   Sat, 25 Apr 2020 10:46:47 -0300
-In-Reply-To: <20200423200937.1039257-5-paul.kocialkowski@bootlin.com>
-References: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
-         <20200423200937.1039257-5-paul.kocialkowski@bootlin.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Sat, 25 Apr 2020 10:05:47 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:44079 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726050AbgDYOFo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 10:05:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587823542; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=oICXBIpep/D27htpZFSqCDakeFrEc4RwdE0UEWchpXA=; b=f8xkpY/UMJ0GJC3MQCefvtlw4/ES2uUdCQbYD/KamjC0IH5gPx+1OjOdbBcfiHk1ST4QlInn
+ EvfjILbltJRhEDbjRQjwSz1QGuQvWtzi0vTBNp4oQmJShtn0uEqAJxoN3kOwWy76sHKLGZMA
+ VWkCCTnTIlvG4gDM6hvm71uV6W4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea443a4.7fe69a0366f8-smtp-out-n01;
+ Sat, 25 Apr 2020 14:05:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 919EFC433CB; Sat, 25 Apr 2020 14:05:24 +0000 (UTC)
+Received: from [10.86.13.83] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ajitp)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E854CC433D2;
+        Sat, 25 Apr 2020 14:05:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E854CC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ajitp@codeaurora.org
+Subject: Re: [PATCH 01/11] Documentation: device-tree: sound: Update lpass-cpu
+ driver binding
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        alsa-devel@alsa-project.org, broonie@kernel.org,
+        devicetree@vger.kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.com
+References: <1586592171-31644-1-git-send-email-ajitp@codeaurora.org>
+ <1586592171-31644-2-git-send-email-ajitp@codeaurora.org>
+ <f0ce184d-ad24-fe4a-8ad1-b9a9bf47f33b@linaro.org>
+From:   Ajit Pandey <ajitp@codeaurora.org>
+Message-ID: <05b9ba59-5361-be93-d4d9-e5b52708f151@codeaurora.org>
+Date:   Sat, 25 Apr 2020 19:35:16 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <f0ce184d-ad24-fe4a-8ad1-b9a9bf47f33b@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
+On 4/16/2020 1:23 PM, Srinivas Kandagatla wrote:
+>
+>
+> On 11/04/2020 09:02, Ajit Pandey wrote:
+>> Done the required cleanups to update lpass-cpu binding with newer
+>> yaml formats.
+>>
+>> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+>
+>
+>> ---
+>>   .../devicetree/bindings/sound/qcom,lpass-cpu.txt   | 158 
+>> ---------------------
+>>   .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 103 
+>> ++++++++++++++
+>>   2 files changed, 103 insertions(+), 158 deletions(-)
+>>   delete mode 100644 
+>> Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>>   create mode 100644 
+>> Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt 
+>> b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>> deleted file mode 100644
+>> index a49b878..00000000
+>> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>> +++ /dev/null
+>> @@ -1,158 +0,0 @@
+>> -* Qualcomm Technologies LPASS CPU DAI binding
+>> -
+>> -Low-Power Audio SubSystem (LPASS) consist of MI2S interfaces for 
+>> audio data
+>> -transfer on external codec. LPASS cpu driver is a common code to 
+>> configure
+>> -MI2S related CPU dai's across different version of LPASS architecture.
+>> -
+>> -- compatible:
+>> -    Usage: required
+>> -    Value type: <stringlist>
+>> -    Definition: compatible string corresponds to lpass variants driver
+>> -            must be "qcom, lpass-cpu-sc7180" for sc7180 lpass
+> This patch will not apply on mainline, looks like this was done on top 
+> of your local repo, please fix this!
+>
+> Best thing would be rebase patches top of 
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/log/?h=for-next
+Sure I'll rebase on top of mentioned tip during v2 patch chain submission
+>
+> Secondly, Split this patch into two,
+> 1> converting in to yaml
+> 2> adding new changes
+> so that it will be easy to see what exactly changed.
+>
+> thanks,
+> srini
+>
+I've not added any newer properties here just changed it to yaml format only
 
-Thanks a lot for the patch.
+Thanks & Regards
 
-I haven't had the chance to test this,
-but I'd say you are fixing a long time issue here.
+Ajit
 
-I really appreciate that.
-
-On Thu, 2020-04-23 at 22:09 +0200, Paul Kocialkowski wrote:
-> Setting the output CSC mode is required for a YUV output, but must not
-> be set when the input is also YUV. Doing this (as tested with a YUV420P
-> to YUV420P conversion) results in wrong colors.
-> 
-> Adapt the logic to only set the CSC mode when the output is YUV and the
-> input is RGB.
-> 
-> Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  drivers/media/platform/rockchip/rga/rga-hw.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
-> index 4be6dcf292ff..cbffcf986ccf 100644
-> --- a/drivers/media/platform/rockchip/rga/rga-hw.c
-> +++ b/drivers/media/platform/rockchip/rga/rga-hw.c
-> @@ -216,13 +216,17 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
->  	}
->  
->  	if (ctx->out.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
-
-Since we are already here touching this code, would you mind
-adding another patch, to do some cleaning first?
-
-First, replace the nested ifs with a boolean operator.
-Then, introduce some IS_YUV (or IS_RGB) macro, making the above test
-more like IS_YUV(out_hw_format).
-
-Finally, perhaps a comment along the lines of your commit message:
-
-"""
-Setting the output CSC mode is required for a YUV output,
-but must not be set when the input is also YUV.
-"""
-
-Details up to you :-)
-
-After the clean-up patch, which would be just cosmetics,
-your fix should be cleaner and more clear.
-
-Thanks,
-Ezequiel
- 
-> -		switch (ctx->out.colorspace) {
-> -		case V4L2_COLORSPACE_REC709:
-> -			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
-> -			break;
-> -		default:
-> -			dst_info.data.csc_mode = RGA_DST_CSC_MODE_BT601_R0;
-> -			break;
-> +		if (ctx->in.fmt->hw_format < RGA_COLOR_FMT_YUV422SP) {
-> +			switch (ctx->out.colorspace) {
-> +			case V4L2_COLORSPACE_REC709:
-> +				dst_info.data.csc_mode =
-> +					RGA_SRC_CSC_MODE_BT709_R0;
-> +				break;
-> +			default:
-> +				dst_info.data.csc_mode =
-> +					RGA_DST_CSC_MODE_BT601_R0;
-> +				break;
-> +			}
->  		}
->  	}
->  
-
-
+>> -            must be "qcom,apq8016-lpass-cpu" for apq8016 lpass
+>> -- reg:
+>> -    Usage: required
+>> -    Value type: <prop-encoded-array>
+>> -    Definition: must specify the base address and size of the LPAIF 
+>> CORE
+>> -            region of lpass variant.
+>> -- reg-names:
+>> -    Usage: required
+>> -    Value type: <stringlist>
+>> -    Definition: must be "lpass-lpaif"
+>> -
+>> -- iommus:
+>> -        Usage: required for "qcom, lpass-cpu-sc7180" compatible string
+>> -        Value type: <prop-encoded-array>
+>> -        Definition: sid mask for lpaif memory region to apps_smmu
+>> -                    must be <&apps_smmu 0x1020 0>
+>> -
+>> -- power-domains:
+>> -    Usage: required for "qcom, lpass-cpu-sc7180" compatible string
+>> -    Value type: <phandle>
+>> -    Definition: reference to power-domains
+>> -            must be <&lpass_hm LPASS_CORE_HM_GDSCR>
+>> -
+>> -- clocks:
+>> -        Usage: required
+>> -    Value type: <phandle>
+>> -    Definition: reference to the clocks that match clock-names
+>> -
+>> -- clock-names:
+>> -    Usage: required
+>> -    Value type: <stringlist>
+>> -    Definition: The clocks needed depend on the compatible string:
+>> -    qcom,lpass-cpu-apq8016:
+>> -        must be "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk0",
+>> -        mi2s-bit-clk1", "mi2s-bit-clk2", "mi2s-bit-clk3",
+>> -        "pcnoc-mport-clk", "pcnoc-sway-clk"
+>> -    qcom, lpass-cpu-sc7180:
+>> -        must be "noc", "audio-core", "mclk0", "sysnoc_mport",
+>> -        "pri_ibit", "sec_ibit"
+>> -
+>> -- #sound-dai-cells
+>> -    Usage: required
+>> -    Value type: <u32>
+>> -    Definition: Must be 1
+>> -
+>> -- interrupts:
+>> -    Usage: required
+>> -    Value type: <prop-encoded-array>
+>> -    Definition: reference to the interrupts that match interrupt-names
+>> -
+>> -- interrupt-names:
+>> -    Usage: required
+>> -    Value type: <stringlist>
+>> -    Definition: must be "lpass-irq-lpaif"
+>> -
+>> -- qcom,adsp:
+>> -        Usage: optional
+>> -        Value type: <phandle>
+>> -    Definition: Phandle for the audio DSP node
+>> -
+>> -= MI2S DAIs (Digial Audio Interface)
+>> -"dais" child node of the lpass node. It represents mi2s dais, each 
+>> mi2s dai is
+>> -subnode of "dais" representing board specific dai setup & required 
+>> dai clocks.
+>> -"dais" node should have following properties.
+>> -
+>> -- id:
+>> -    Usage: required for mi2s interface
+>> -    Value type: <u32>
+>> -    Definition: Must be dai id defined in lpass bindings like 
+>> MI2S_PRIMARY
+>> -
+>> -- qcom,bitclk-name:
+>> -    Usage: required for mi2s interface
+>> -    Value type: <stringlist>
+>> -    Definition: bitclk name corresponds to MI2S of lpass version
+>> -
+>> -- qcom,mclk-name:
+>> -        Usage: optional for mi2s interface
+>> -        Value type: <stringlist>
+>> -        Definition: external mclk name corresponds to MI2S of lpass 
+>> version
+>> -
+>> -- qcom,osrclk-name:
+>> -        Usage: optional for mi2s interface
+>> -        Value type: <stringlist>
+>> -        Definition: osrclk name corresponds to MI2S of lpass version
+>> -
+>> -- qcom,spkmode-mask:
+>> -        Usage: optional for mi2s interface
+>> -        Value type: <u32>
+>> -        Definition: board specific property to change default 
+>> spkmode mask
+>> -                    of MI2S dai based on dataline connection on board.
+>> -
+>> -- qcom,micmode-mask:
+>> -        Usage: optional for mi2s interface
+>> -        Value type: <u32>
+>> -        Definition: board specific property to change default 
+>> micmode mask
+>> -                    of MI2S dai based on dataline connection on board.
+>> -
+>> -- qcom,loopback-mask:
+>> -        Usage: optional for mi2s interface
+>> -        Value type: <u32>
+>> -        Definition: board specific property to change default 
+>> loopback mask
+>> -                    of MI2S dai as per requirement.
+>> -
+>> -- qcom,wssrc-mask:
+>> -        Usage: optional for mi2s interface
+>> -        Value type: <u32>
+>> -        Definition: board specific property to change default wssrc 
+>> mask
+>> -                    of MI2S dai based as per requirement.
+>> -
+>> -Example:
+>> -
+>> -lpass_cpu: lpass {
+>> -    compatible = "qcom, lpass-cpu-sc7180";
+>> -
+>> -    reg = <0 0x62F00000 0 0x29000>;
+>> -    reg-names = "lpass-lpaif";
+>> -
+>> -    iommus = <&apps_smmu 0x1020 0>;
+>> -
+>> -    power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
+>> -
+>> -    clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
+>> -         <&lpasscorecc LPASS_AUDIO_CORE_CORE_CLK>,
+>> -         <&lpasscorecc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
+>> -         <&lpasscorecc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
+>> -         <&lpasscorecc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
+>> -         <&lpasscorecc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
+>> -
+>> -    clock-names = "noc", "audio-core", "mclk0", "sysnoc_mport",
+>> -              "pri_ibit", "sec_ibit";
+>> -
+>> -    #sound-dai-cells = <1>;
+>> -
+>> -    interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
+>> -    interrupt-names = "lpass-irq-lpaif";
+>> -
+>> -    prim-mi2s@0 {
+>> -        id = <MI2S_PRIMARY>;
+>> -        qcom,bitclk-name = "pri_ibit";
+>> -        qcom,mclk-name = "mclk0";
+>> -    };
+>> -
+>> -    sec-mi2s@1 {
+>> -        id = <MI2S_SECONDARY>;
+>> -        qcom,bitclk-name = "sec_ibit";
+>> -    };
+>> -};
+>> diff --git 
+>> a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml 
+>> b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+>> new file mode 100644
+>> index 00000000..a87a406
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+>> @@ -0,0 +1,103 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/sound/qcom,lpass-cpu.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm LPASS CPU dai driver bindings
+>> +
+>> +maintainers:
+>> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> +  - Ajit Pandey <ajitp@codeaurora.org>
+>> +
+>> +description: |
+>> +  Qualcomm SOC Low-Power Audio SubSystem (LPASS) that consist of 
+>> MI2S interface
+>> +  for audio data transfer on external codecs. LPASS cpu driver is a 
+>> module to
+>> +  configure Low-Power Audio Interface(LPAIF) core registers across 
+>> different
+>> +  IP versions.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,lpass-cpu
+>> +      - qcom,apq8016-lpass-cpu
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: LPAIF core registers
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: lpass-lpaif
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: AHBIX core clock for IPQ806X
+>> +      - description: oscillator clock for MI2S external interfaces
+>> +      - description: Bit clock for single MI2S dai in IPQ806X
+>> +      - description: Bit clock for MI2S_PRIMARY dai interface
+>> +      - description: Bit clock for MI2S_SECONDARY dai interface
+>> +      - description: Bit clock for MI2S_TERTIARY dai interface
+>> +      - description: Bit clock for MI2S_QUATERNARY dai interface
+>> +      - description: NOC MPORT clock of LPASS core
+>> +      - description: NOC SWAY clock of LPASS core
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: ahbix-clk
+>> +      - const: mi2s-osr-clk
+>> +      - const: mi2s-bit-clk
+>> +      - const: mi2s-bit-clk0
+>> +      - const: mi2s-bit-clk1
+>> +      - const: mi2s-bit-clk2
+>> +      - const: mi2s-bit-clk3
+>> +      - const: pcnoc-mport-clk
+>> +      - const: pcnoc-sway-clk
+>> +
+>> +  interrupts:
+>> +    items:
+>> +      - description: LPAIF DMA buffer interrupt
+>> +
+>> +  interrupt-names:
+>> +    items:
+>> +      - const: lpass-irq-lpaif
+>> +
+>> +  qcom,adsp:
+>> +    maxItems: 1
+>> +    description: Phandle for the audio DSP node
+>> +
+>> +  '#sound-dai-cells':
+>> +    const: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - reg-names
+>> +  - clocks
+>> +  - clock-names
+>> +  - interrupts
+>> +  - interrupt-names
+>> +  - sound-dai-cells
+>> +
+>> +optional:
+>> +  - qcom,adsp
+>> +
+>> +examples:
+>> +  lpass@28100000 {
+>> +    compatible = "qcom,lpass-cpu";
+>> +    clocks = <&lcc AHBIX_CLK>,
+>> +         <&lcc MI2S_OSR_CLK>,
+>> +         <&lcc MI2S_BIT_CLK>;
+>> +
+>> +    clock-names = "ahbix-clk",
+>> +              "mi2s-osr-clk",
+>> +              "mi2s-bit-clk";
+>> +
+>> +    interrupts = <0 85 1>;
+>> +    interrupt-names = "lpass-irq-lpaif";
+>> +
+>> +    reg = <0x28100000 0x10000>;
+>> +    reg-names = "lpass-lpaif";
+>> +    #sound-dai-cells = <1>;
+>> +    qcom,adsp = <&adsp>;
+>> +
+>>
