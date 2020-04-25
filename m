@@ -2,109 +2,128 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6A4C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 12:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31282C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 13:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC5472071C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 12:54:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jv6bVAzs"
+	by mail.kernel.org (Postfix) with ESMTP id 1558F2072B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 13:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgDYMx6 (ORCPT
+        id S1726105AbgDYNrB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 08:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgDYMx6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 08:53:58 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1DC2C09B04B;
-        Sat, 25 Apr 2020 05:53:57 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id y4so12769693ljn.7;
-        Sat, 25 Apr 2020 05:53:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8UzchNf6ebuUZU6Jtk0695PKv2lrQGXDNULzEQ+q9fA=;
-        b=Jv6bVAzsBfbNsh7eQlEEx7re8eKnGVbFZIclojWTPhFn/75+eAXuoIQXDk5tW0mVbN
-         VGAmOuLW/7QU9dMlN47hYSDiz424o/X1cgLhvG9bsRfwQhdwWZq3esxYTCukeG/TbFL1
-         U1bdhVrW7wOwQwCmi5qgDVsm4Asp4v/rDrmCGxZIaqFnwfFpkjhLe2MfiyiyJPx48ofb
-         GnObQjC2Qhijd2mo1tvKefmTmSUKOWoKJZi2e7DUp1YkiNEEk5YVjPiHDtGZkxh2B0Yc
-         Ochy/3exOJeDuQTiVUacGoB2sfgro9w3bbc0137My9PqFy70x+FlzgluHYXHTOtO4Gh0
-         Nkng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8UzchNf6ebuUZU6Jtk0695PKv2lrQGXDNULzEQ+q9fA=;
-        b=fr/xwv3lwWS0PQ+UvAfQ92ahoUeEAYEtz+p/od0atmGne3GvIXDSLoW32FDSqJTwIE
-         cDrSnow8xqGJFXIzEgtRN9V4zGXToSRfI31DHdkWqj+NvdgvpIP1/cE91v62jdHu3nEK
-         YBxM06s3aeKagpvXsmI9kzEm0Apq7esv7r/5SyH+zwjKt23TrhLIZMM52HW86htjAUkO
-         wiJ6EXpLKgcaDwZTXrqOdkaDnXl+3I0UHXT/xgWc7/u7N757j1bqQZHEdwt2oYtcVLtP
-         ahNVP5dY3PWurFRK+9+4y6WLW7OmhR0NSoXOB1mXOkqvXu+UmniMHRPjaSq2JquO87Ds
-         k+fw==
-X-Gm-Message-State: AGi0PuZOGosDuAc6cn/Qvjx12n5+0SdL0yn5Ybp6YcKELHSj0gmxLXWN
-        C29vr7o+4DFgUiJ4kTDTc/uv7UefacpUww==
-X-Google-Smtp-Source: APiQypL6/eBLN5bzQPHJ2ShWsgSL0nJcGXIijkmLET37+uDAzfhNZu6/xGArjM69tGipR5px0NZ7OA==
-X-Received: by 2002:a2e:7e04:: with SMTP id z4mr9049872ljc.50.1587819236327;
-        Sat, 25 Apr 2020 05:53:56 -0700 (PDT)
-Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id w9sm6016089ljj.88.2020.04.25.05.53.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 05:53:55 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Iskren Chernev <iskren.chernev@gmail.com>
-Subject: [PATCH] regulator: max77826: Remove erroneous additionalProperties
-Date:   Sat, 25 Apr 2020 15:53:35 +0300
-Message-Id: <20200425125335.2674534-1-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        Sat, 25 Apr 2020 09:47:01 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50032 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgDYNrB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 09:47:01 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 6EA352A227C
+Message-ID: <c49a060e7f5da9564e375fdd47117d3f901e5d00.camel@collabora.com>
+Subject: Re: [PATCH v2 4/4] media: rockchip: rga: Only set output CSC mode
+ for RGB input
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        justin.swartz@risingedge.co.za, Johan Jonker <jbx6244@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date:   Sat, 25 Apr 2020 10:46:47 -0300
+In-Reply-To: <20200423200937.1039257-5-paul.kocialkowski@bootlin.com>
+References: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
+         <20200423200937.1039257-5-paul.kocialkowski@bootlin.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In this particular location additionalProperties actually declares a property
-named `additionalProperties` instead of specifying there should be no other
-properties.
+Hi Paul,
 
-Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
----
-Fix bindings documentation for max77826 regulator as discussed in
-https://lore.kernel.org/lkml/20200413164440.1138178-1-iskren.chernev@gmail.com/T/#m9e9904560e68bcd98980fa0e68fe190525033af6
+Thanks a lot for the patch.
 
+I haven't had the chance to test this,
+but I'd say you are fixing a long time issue here.
 
- Documentation/devicetree/bindings/regulator/maxim,max77826.yaml | 1 -
- 1 file changed, 1 deletion(-)
+I really appreciate that.
 
-diff --git a/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml b/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
-index d4f0f958385a..19cbd5eb2897 100644
---- a/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
-+++ b/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
-@@ -38,7 +38,6 @@ properties:
-         allOf:
-           - $ref: regulator.yaml#
+On Thu, 2020-04-23 at 22:09 +0200, Paul Kocialkowski wrote:
+> Setting the output CSC mode is required for a YUV output, but must not
+> be set when the input is also YUV. Doing this (as tested with a YUV420P
+> to YUV420P conversion) results in wrong colors.
+> 
+> Adapt the logic to only set the CSC mode when the output is YUV and the
+> input is RGB.
+> 
+> Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> ---
+>  drivers/media/platform/rockchip/rga/rga-hw.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
+> index 4be6dcf292ff..cbffcf986ccf 100644
+> --- a/drivers/media/platform/rockchip/rga/rga-hw.c
+> +++ b/drivers/media/platform/rockchip/rga/rga-hw.c
+> @@ -216,13 +216,17 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
+>  	}
+>  
+>  	if (ctx->out.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
 
--      additionalProperties: false
-     additionalProperties: false
+Since we are already here touching this code, would you mind
+adding another patch, to do some cleaning first?
 
- required:
+First, replace the nested ifs with a boolean operator.
+Then, introduce some IS_YUV (or IS_RGB) macro, making the above test
+more like IS_YUV(out_hw_format).
 
-base-commit: 8bdabd09ec86a993419c8c98a4f34c12bc902c6c
---
-2.26.0
+Finally, perhaps a comment along the lines of your commit message:
+
+"""
+Setting the output CSC mode is required for a YUV output,
+but must not be set when the input is also YUV.
+"""
+
+Details up to you :-)
+
+After the clean-up patch, which would be just cosmetics,
+your fix should be cleaner and more clear.
+
+Thanks,
+Ezequiel
+ 
+> -		switch (ctx->out.colorspace) {
+> -		case V4L2_COLORSPACE_REC709:
+> -			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
+> -			break;
+> -		default:
+> -			dst_info.data.csc_mode = RGA_DST_CSC_MODE_BT601_R0;
+> -			break;
+> +		if (ctx->in.fmt->hw_format < RGA_COLOR_FMT_YUV422SP) {
+> +			switch (ctx->out.colorspace) {
+> +			case V4L2_COLORSPACE_REC709:
+> +				dst_info.data.csc_mode =
+> +					RGA_SRC_CSC_MODE_BT709_R0;
+> +				break;
+> +			default:
+> +				dst_info.data.csc_mode =
+> +					RGA_DST_CSC_MODE_BT601_R0;
+> +				break;
+> +			}
+>  		}
+>  	}
+>  
+
 
