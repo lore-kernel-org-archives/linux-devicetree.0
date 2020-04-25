@@ -2,122 +2,145 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0773EC55191
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99288C55185
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA56820748
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7E520767
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587827906;
-	bh=rOkvclJzaXVnBhcnnHYunJz4EyHyd4zB1pXX/giEa6I=;
+	s=default; t=1587828272;
+	bh=YYlOpFJVzH3Jxf/CWXh16DTDqEKfKsrRb+fRydNLkiM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SU78MF7JNHuDIEPorAUcvTFn/pbBXmccwy6tH/kfd4YYI/LT1uvSBdoM3oR2dlGqf
-	 /ql2qyzTakIQsAB1kEJB7+L8/U17J84yh65LTapv78q20hZT5Kf+6HdWf6IybPMyGp
-	 o2SybG9Q8iAW75Ha5xkPgAI3DRbWjfGX2LOmAxfo=
+	b=R6EiLlITqfSgdwKPKVJx0TUeTmRX0dI95hyNIjaP++XDSerOiTVdIeMJuEV+9gOPY
+	 p2aoX8tJZ/N1TT3OuK0LQGLW4LdCZNCG55yYSgEvb1r0xKfP1PRtMEKF76pO9YPfdH
+	 xBmHyy0y+U6jhpfWibLV1Gdtydo80RFX0ckIjg68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDYPS0 (ORCPT
+        id S1726102AbgDYPYb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55444 "EHLO mail.kernel.org"
+        Sat, 25 Apr 2020 11:24:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbgDYPSZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:18:25 -0400
+        id S1726087AbgDYPYb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 11:24:31 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C27D2071C;
-        Sat, 25 Apr 2020 15:18:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48EB82071C;
+        Sat, 25 Apr 2020 15:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587827905;
-        bh=rOkvclJzaXVnBhcnnHYunJz4EyHyd4zB1pXX/giEa6I=;
+        s=default; t=1587828270;
+        bh=YYlOpFJVzH3Jxf/CWXh16DTDqEKfKsrRb+fRydNLkiM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cOzRyirjqSHYhZL4KaXK2Ni+S/Tf7cb0hpFj5a/Q0zprMwWbjCUJHRvfdsbHEY1xX
-         C09jLCwyxZfnGiLMNqLKEHI6QPMkHVbqHl+sBy5hANYsPOeFK43cmJPV7c6bde5snk
-         ITvzVw2fyT9ume4EoCBwzkkbwP0X3JrVpQgERDQI=
-Date:   Sat, 25 Apr 2020 16:18:21 +0100
+        b=EUaXQmc7FWqoDDqF8NwHBkl/GDImouhDgLovwJK2BBmjka/VYQFUGqWiXisz7wfW9
+         oKIhvH4517Qgbhu+Ok2ySy5NStnmTZ/QEJ2ZKUgQqWcGwZR69PAreaEAgWkDpLEWfI
+         4wuyw5ziM7T0sCWc1cHRE4AnLdK8un8yCGU4P/S8=
+Date:   Sat, 25 Apr 2020 16:24:26 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH v5 0/6] Support ADIS16475 and similar IMUs
-Message-ID: <20200425161821.1975fe3e@archlinux>
-In-Reply-To: <20200413172722.1cb5f55e@archlinux>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
-        <20200413172722.1cb5f55e@archlinux>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, narcisaanamaria12@gmail.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
+Subject: Re: [RESEND PATCH v3 1/3] dt-bindings: iio: chemical: Add binding
+ for CCS811 VOC sensor
+Message-ID: <20200425162426.43d2f9d1@archlinux>
+In-Reply-To: <20200422182715.GA27920@Mani-XPS-13-9360>
+References: <20200414184930.5576-1-mani@kernel.org>
+        <20200414184930.5576-2-mani@kernel.org>
+        <20200420211111.GA754@bogus>
+        <20200422182715.GA27920@Mani-XPS-13-9360>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 13 Apr 2020 17:27:22 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+On Wed, 22 Apr 2020 23:57:15 +0530
+Manivannan Sadhasivam <mani@kernel.org> wrote:
 
-> On Mon, 13 Apr 2020 10:24:39 +0200
-> Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
->=20
-> > This series adds support for the adis16475 and similar IMUs. This driver
-> > will be the first user of some changes on the adis library. Hence, the
-> > first three patches are related to the library:
-> >  * Add anaged device functions for registering triggers with the librar=
-y;
-> >  * Updates the way `irq_mask` is passed to `request_irq()`;
-> >  * It adds an update_bits() like API.
-> >=20
-> > A new patch was introduced (iio: adis: Add burst_max_len variable) in
-> > order to make burst32 configuration at runtime. =20
->=20
-> Series looks good to me, but I'd like to allow a bit of time for DT
-> review + anyone else who wants to take another look.
+> On Mon, Apr 20, 2020 at 04:11:11PM -0500, Rob Herring wrote:
+> > On Wed, Apr 15, 2020 at 12:19:28AM +0530, mani@kernel.org wrote:  
+> > > From: Manivannan Sadhasivam <mani@kernel.org>
+> > > 
+> > > This commit adds devicetree binding for AMS CCS811 VOC sensor.
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> > > ---
+> > >  .../bindings/iio/chemical/ams,ccs811.yaml     | 51 +++++++++++++++++++
+> > >  1 file changed, 51 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> > > new file mode 100644
+> > > index 000000000000..5cb068666a3e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> > > @@ -0,0 +1,51 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/iio/chemical/ams,ccs811.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: AMS CCS811 VOC Sensor
+> > > +
+> > > +maintainers:
+> > > +  - Narcisa Vasile <narcisaanamaria12@gmail.com>
+> > > +
+> > > +description: |
+> > > +  Ultra-Low Power Digital Gas Sensor for Monitoring Indoor Air Quality.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - ams,ccs811
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  reset-gpios:
+> > > +    description: GPIO connected to the nRESET line. This is an active low
+> > > +                 input to CCS811.
+> > > +    maxItems: 1
+> > > +
+> > > +  wakeup-gpios:
+> > > +    description: GPIO connected to the nWAKE line. This is an active low
+> > > +                 input to CCS811.
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg  
+> > 
+> > Add:
+> > 
+> > additionalProperties: false
+> >   
+> 
+> Hi Jonathan,
+> 
+> Do you want me to spin another series or you can add it while applying?
+Added whilst applying.
 
 Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+the autobuilders to poke at it.
 
 Thanks,
 
 Jonathan
 
->=20
+> 
 > Thanks,
->=20
-> Jonathan
->=20
-> >=20
-> > Nuno S=C3=A1 (6):
-> >   iio: imu: adis: Add Managed device functions
-> >   iio: imu: adis: Add irq mask variable
-> >   iio: adis: Add adis_update_bits() APIs
-> >   iio: adis: Support different burst sizes
-> >   iio: imu: Add support for adis16475
-> >   dt-bindings: iio: Add adis16475 documentation
-> >=20
-> >  .../bindings/iio/imu/adi,adis16475.yaml       |  137 ++
-> >  MAINTAINERS                                   |    8 +
-> >  drivers/iio/imu/Kconfig                       |   13 +
-> >  drivers/iio/imu/Makefile                      |    1 +
-> >  drivers/iio/imu/adis.c                        |   25 +
-> >  drivers/iio/imu/adis16400.c                   |    2 +-
-> >  drivers/iio/imu/adis16475.c                   | 1336 +++++++++++++++++
-> >  drivers/iio/imu/adis_buffer.c                 |   58 +-
-> >  drivers/iio/imu/adis_trigger.c                |   72 +-
-> >  include/linux/iio/imu/adis.h                  |   87 +-
-> >  10 files changed, 1728 insertions(+), 11 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis1=
-6475.yaml
-> >  create mode 100644 drivers/iio/imu/adis16475.c
-> >  =20
->=20
+> Mani
+> 
+> > With that,
+> > 
+> > Reviewed-by: Rob Herring <robh@kernel.org>  
 
