@@ -2,100 +2,122 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382D3C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 14:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0773EC55191
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EECE20704
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 14:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA56820748
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:18:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587827906;
+	bh=rOkvclJzaXVnBhcnnHYunJz4EyHyd4zB1pXX/giEa6I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SU78MF7JNHuDIEPorAUcvTFn/pbBXmccwy6tH/kfd4YYI/LT1uvSBdoM3oR2dlGqf
+	 /ql2qyzTakIQsAB1kEJB7+L8/U17J84yh65LTapv78q20hZT5Kf+6HdWf6IybPMyGp
+	 o2SybG9Q8iAW75Ha5xkPgAI3DRbWjfGX2LOmAxfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgDYOzh (ORCPT
+        id S1726112AbgDYPS0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 10:55:37 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:44254 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbgDYOzh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 10:55:37 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Sat, 25 Apr 2020 11:18:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbgDYPSZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 11:18:25 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 87AB620085;
-        Sat, 25 Apr 2020 16:55:34 +0200 (CEST)
-Date:   Sat, 25 Apr 2020 16:55:33 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] dt-bindings: panel: Document some missing compatible
- strings
-Message-ID: <20200425145533.GF32235@ravnborg.org>
-References: <20200417065328.1578603-1-thierry.reding@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C27D2071C;
+        Sat, 25 Apr 2020 15:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587827905;
+        bh=rOkvclJzaXVnBhcnnHYunJz4EyHyd4zB1pXX/giEa6I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cOzRyirjqSHYhZL4KaXK2Ni+S/Tf7cb0hpFj5a/Q0zprMwWbjCUJHRvfdsbHEY1xX
+         C09jLCwyxZfnGiLMNqLKEHI6QPMkHVbqHl+sBy5hANYsPOeFK43cmJPV7c6bde5snk
+         ITvzVw2fyT9ume4EoCBwzkkbwP0X3JrVpQgERDQI=
+Date:   Sat, 25 Apr 2020 16:18:21 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH v5 0/6] Support ADIS16475 and similar IMUs
+Message-ID: <20200425161821.1975fe3e@archlinux>
+In-Reply-To: <20200413172722.1cb5f55e@archlinux>
+References: <20200413082445.17324-1-nuno.sa@analog.com>
+        <20200413172722.1cb5f55e@archlinux>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417065328.1578603-1-thierry.reding@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=Ikd4Dj_1AAAA:8 a=e5mUnYsNAAAA:8
-        a=ALrkF4PwKyK47AGwkhQA:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 08:53:28AM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Add missing compatible strings for the Panasonic and Chunghwa panels
-> found on NVIDIA Dalmore and Cardhu boards.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-Applied to drm-misc-next.
-The resulting patch in git looks strange because some of the
-descriptions are the same. But end result is OK.
+On Mon, 13 Apr 2020 17:27:22 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-	Sam
+> On Mon, 13 Apr 2020 10:24:39 +0200
+> Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+>=20
+> > This series adds support for the adis16475 and similar IMUs. This driver
+> > will be the first user of some changes on the adis library. Hence, the
+> > first three patches are related to the library:
+> >  * Add anaged device functions for registering triggers with the librar=
+y;
+> >  * Updates the way `irq_mask` is passed to `request_irq()`;
+> >  * It adds an update_bits() like API.
+> >=20
+> > A new patch was introduced (iio: adis: Add burst_max_len variable) in
+> > order to make burst32 configuration at runtime. =20
+>=20
+> Series looks good to me, but I'd like to allow a bit of time for DT
+> review + anyone else who wants to take another look.
 
-> ---
->  .../devicetree/bindings/display/panel/panel-simple-dsi.yaml     | 2 ++
->  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-> index b2e8742fd6af..88ac75333a5e 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-> @@ -29,6 +29,8 @@ properties:
->        # compatible must be listed in alphabetical order, ordered by compatible.
->        # The description in the comment is mandatory for each compatible.
->  
-> +        # Panasonic 10" WUXGA TFT LCD panel
-> +      - panasonic,vvx10f004b00
->          # Panasonic 10" WUXGA TFT LCD panel
->        - panasonic,vvx10f034n00
->  
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> index 393ffc6acbba..6c21650664e2 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> @@ -82,6 +82,8 @@ properties:
->          # Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
->        - chunghwa,claa101wa01a
->          # Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
-> +      - chunghwa,claa101wb01
-> +        # Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
->        - chunghwa,claa101wb03
->          # DataImage, Inc. 7" WVGA (800x480) TFT LCD panel with 24-bit parallel interface.
->        - dataimage,scf0700c48ggu18
-> -- 
-> 2.24.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+>=20
+> Thanks,
+>=20
+> Jonathan
+>=20
+> >=20
+> > Nuno S=C3=A1 (6):
+> >   iio: imu: adis: Add Managed device functions
+> >   iio: imu: adis: Add irq mask variable
+> >   iio: adis: Add adis_update_bits() APIs
+> >   iio: adis: Support different burst sizes
+> >   iio: imu: Add support for adis16475
+> >   dt-bindings: iio: Add adis16475 documentation
+> >=20
+> >  .../bindings/iio/imu/adi,adis16475.yaml       |  137 ++
+> >  MAINTAINERS                                   |    8 +
+> >  drivers/iio/imu/Kconfig                       |   13 +
+> >  drivers/iio/imu/Makefile                      |    1 +
+> >  drivers/iio/imu/adis.c                        |   25 +
+> >  drivers/iio/imu/adis16400.c                   |    2 +-
+> >  drivers/iio/imu/adis16475.c                   | 1336 +++++++++++++++++
+> >  drivers/iio/imu/adis_buffer.c                 |   58 +-
+> >  drivers/iio/imu/adis_trigger.c                |   72 +-
+> >  include/linux/iio/imu/adis.h                  |   87 +-
+> >  10 files changed, 1728 insertions(+), 11 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis1=
+6475.yaml
+> >  create mode 100644 drivers/iio/imu/adis16475.c
+> >  =20
+>=20
+
