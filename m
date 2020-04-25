@@ -2,109 +2,133 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65013C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6797AC55194
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35D9A206B6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j4JzYTSp"
+	by mail.kernel.org (Postfix) with ESMTP id 4854120748
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587834659;
+	bh=9JLPrvwtf1kR1XWHBlo5cHjeAQpwvGV5tSTP/VROjBw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=N8g8X8N+Gh4RRwWZ2JyFHLGcCY9gb/w4ohJOna515sSuHylMDnUvE+5AY+1EH2aJR
+	 90wSltSF/1Qc3KvSJ+pT+9x1Qhthnfj8N3/VJt7zk71M1Puz/rqu65gc6yFqhE6wQH
+	 G3ab55DGzTz9lHhDsOKHDAQ0IY7x3LJEWFdkbcqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgDYRIm (ORCPT
+        id S1726232AbgDYRK6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 13:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726146AbgDYRIm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:08:42 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291F8C09B04D;
-        Sat, 25 Apr 2020 10:08:42 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x4so14740132wmj.1;
-        Sat, 25 Apr 2020 10:08:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=O1616GdJZQwMAYCstXMQMO+mfdnUnYcAiAdqWMQMdCk=;
-        b=j4JzYTSp3PtLbLbdxcMK87wTyBA+cZ9QfDr8XV3TqsDzR2+kzS0Thq0j4qF6+KhnwD
-         IxkXuVSgY+8xgG+zJPuIeQg4Z2vDQiIT8YdYB8qJCICmhw2XZJgLGhC8pW2KTQ30UnvX
-         hSicDM9OkRCqIoKETGn428fQxa/T6bS2DIHZvssE6ZumH4i8Qg/36eFvQceQJw1BS5dQ
-         RFxaawFiG8yK71Ig4F793o4iV8/Gf3F3o6tzuYu/7YvWSp++XqnqLyQlQpX4vuFJm/Ik
-         8PXvxpO4gXICnXdJN3zj8WK9i2ilkslQMO1i5n8tGbhl6IEiKWi/pGD33gsrMe960Bv0
-         qVjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=O1616GdJZQwMAYCstXMQMO+mfdnUnYcAiAdqWMQMdCk=;
-        b=H7W/94ObsOlHcC2g3rFCvgL8gUozgBtuO53Pw6kao66s6oLPo6mW/tVSV+lBvQ1f9l
-         4LKs+jsFSKxRmR3n6xbfPa7sgVlq1iq3/MGIQ9mOBZhX8bEAT4HXTV/CJix48ilKGd/J
-         KBt2xGL1fpk4fpr6LC5jRn9FDLKSzdOz0MgY98qmn2IDL+1zVLw31UG6Y8Z5wEWh/mXV
-         yOweEEGtKJwuG2T6ttdmbn9FKp+Lb7Rr4OTP3PHLkec9Yx0urTYf+MPMhbmh6DWT/aww
-         USvoA0JL7Mo+UcHGATVQW4kuYrBEI0odj8MQTz62L8LDLLI/F9TjzRRunHdk2J+tpLCA
-         n7XQ==
-X-Gm-Message-State: AGi0Pua/1BkHgyd5rI4wKShp7KTp+uhYW6AQmME+g56AhAAtk+zYOP20
-        SOpdAVyBvVF+8x/0nZYAFwE=
-X-Google-Smtp-Source: APiQypJ0HdhWPnrZxWn5tl/nMOJwIvph3SNIW4dQKPyjSEoo+S9vKcobegz/uTrZe6sqeXJ61115cA==
-X-Received: by 2002:a1c:9d84:: with SMTP id g126mr15715568wme.184.1587834520927;
-        Sat, 25 Apr 2020 10:08:40 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id t67sm8549717wmg.40.2020.04.25.10.08.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 Apr 2020 10:08:40 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: usb: dwc2: add power-domains property
-Date:   Sat, 25 Apr 2020 19:08:33 +0200
-Message-Id: <20200425170833.26718-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Sat, 25 Apr 2020 13:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbgDYRK6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 13:10:58 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44098206B6;
+        Sat, 25 Apr 2020 17:10:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587834658;
+        bh=9JLPrvwtf1kR1XWHBlo5cHjeAQpwvGV5tSTP/VROjBw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=c+5nHlWN09zsQoQrU7U4zQaBKY44wiT3NKX9U9V8hidHXxvLJilr6BbWYqiZlzmHA
+         sg0rgZ7GkamplUTWe26nR+NwNc8K6SKJ8z5yxbDlZfHkZnWkfE/rPphKgMTtenO4FC
+         VmAfFdtUOGCU83p4F9vY07/ipVGV96nmBuhiKZIk=
+Date:   Sat, 25 Apr 2020 18:10:52 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: iio: adi,ltc2983: Add missing quotes on
+ dependencies
+Message-ID: <20200425181052.1588a862@archlinux>
+In-Reply-To: <CY4PR03MB33502FFA293BB3F068A488B299D00@CY4PR03MB3350.namprd03.prod.outlook.com>
+References: <20200423150523.23984-1-robh@kernel.org>
+        <CY4PR03MB33502FFA293BB3F068A488B299D00@CY4PR03MB3350.namprd03.prod.outlook.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives this error:
+On Fri, 24 Apr 2020 07:26:46 +0000
+"Sa, Nuno" <Nuno.Sa@analog.com> wrote:
 
-arch/arm64/boot/dts/rockchip/px30-evb.dt.yaml: usb@ff300000:
-'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
+> > From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org>
+> > On Behalf Of Rob Herring
+> > Sent: Donnerstag, 23. April 2020 17:05
+> > To: devicetree@vger.kernel.org
+> > Cc: Sa, Nuno <Nuno.Sa@analog.com>; Jonathan Cameron
+> > <jic23@kernel.org>; Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter
+> > Clausen <lars@metafoo.de>; Peter Meerwald-Stadler
+> > <pmeerw@pmeerw.net>; linux-iio@vger.kernel.org
+> > Subject: [PATCH] dt-bindings: iio: adi,ltc2983: Add missing quotes on
+> > dependencies
+> >=20
+> > With the bracketed list form, any strings with commas have to be quoted
+> > or they are separated.
+> >=20
+> > Fixes: 3986a14870cb ("dt-bindings: iio: Add ltc2983 documentation")
+> > Cc: "Nuno S=C3=A1" <nuno.sa@analog.com>
+> > Cc: Jonathan Cameron <jic23@kernel.org>
+> > Cc: Hartmut Knaack <knaack.h@gmx.de>
+> > Cc: Lars-Peter Clausen <lars@metafoo.de>
+> > Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> > Cc: linux-iio@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > --- =20
+>=20
+> Acked-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+>=20
 
-With the conversion to yaml it also filters things
-in a node that are used by other drivers like
-'power-domains' for Rockchip px30 usb nodes,
-so add them to 'dwc2.yaml'.
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/dwc2.yaml
+Rob, Do you want to pick this one up via your tree?
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/usb/dwc2.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks,
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
-index fb2f62aef..9352a8ef6 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.yaml
-+++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
-@@ -78,6 +78,9 @@ properties:
-   phy-names:
-     const: usb2-phy
- 
-+  power-domains:
-+    maxItems: 1
-+
-   vbus-supply:
-     description: reference to the VBUS regulator. Depending on the current mode
-       this is enabled (in "host" mode") or disabled (in "peripheral" mode). The
--- 
-2.11.0
+Jonathan
+
+> >  .../devicetree/bindings/iio/temperature/adi,ltc2983.yaml      | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git
+> > a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+> > b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+> > index 8fb46de6641d..04da5c48a5e9 100644
+> > --- a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+> > +++
+> > b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+> > @@ -260,7 +260,7 @@ patternProperties:
+> >        - adi,rsense-handle
+> >=20
+> >      dependencies:
+> > -      adi,current-rotate: [ adi,rsense-share ]
+> > +      adi,current-rotate: [ "adi,rsense-share" ]
+> >=20
+> >    "^thermistor@":
+> >      type: object
+> > @@ -349,7 +349,7 @@ patternProperties:
+> >        - adi,rsense-handle
+> >=20
+> >      dependencies:
+> > -      adi,current-rotate: [ adi,rsense-share ]
+> > +      adi,current-rotate: [ "adi,rsense-share" ]
+> >=20
+> >    "^adc@":
+> >      type: object
+> > --
+> > 2.20.1 =20
+>=20
 
