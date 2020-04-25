@@ -2,246 +2,136 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF85DC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 18:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F73BC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 18:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A884C20714
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 18:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B06206D4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 18:48:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="ZrpX6qeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgDYSm5 (ORCPT
+        id S1726240AbgDYSsA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 14:42:57 -0400
-Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:47383 "EHLO
-        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726303AbgDYSm4 (ORCPT
+        Sat, 25 Apr 2020 14:48:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726145AbgDYSr7 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Apr 2020 14:42:56 -0400
-Received: from pro2.mail.ovh.net (unknown [10.108.4.220])
-        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id C74854FAE313;
-        Sat, 25 Apr 2020 20:42:53 +0200 (CEST)
-Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sat, 25 Apr
- 2020 20:42:53 +0200
-Date:   Sat, 25 Apr 2020 20:41:30 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
-Message-ID: <20200425184130.GA37271@arch>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
- <20200422141135.86419-2-tomasz.duszynski@octakon.com>
- <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
- <20200424190413.GA2731@arch>
- <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
+        Sat, 25 Apr 2020 14:47:59 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63BAFC09B04D
+        for <devicetree@vger.kernel.org>; Sat, 25 Apr 2020 11:47:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587840475;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=uAG86XGPqen4Dg22kJ3CPVajRoqLcvh1DDi1F0/W7Ek=;
+        b=ZrpX6qeu7791vNB+kGBeKp9Tpehl9tIPXIUNrOA7zTvkGMpx1KJ6HiLCvaZN1hOJop
+        fv4+DKE1jnoLilIPFJSeX78qIsqLt0aAKr/Epa5VTDS6oNeRlT2tXQVMLGr3DW4beIJk
+        CQnonfV5DKQB91mQAubslt8+gryVGYMLMktgZFckkyTkdEVZC4aTs/3pIy8sQMmDNZqD
+        X472FtwIwtCP8GmHlWE+5A1x/3fj402eGAstBq9lITLKpGnmojf/lMjJvpmsextJY0AL
+        /bSz11we3dZdov9NWfqS2QUwFBjkdL/d/gWrM6hSH9FfKYkgBX/QgjJBK5eNbL0FCBJ8
+        HY6g==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4G6IlKY="
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id 60b02dw3PIloKDT
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sat, 25 Apr 2020 20:47:50 +0200 (CEST)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kenneth Westfield <kwestfie@codeaurora.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH v2 1/2] dt-bindings: sound: lpass-cpu: Document DAI subnodes
+Date:   Sat, 25 Apr 2020 20:46:56 +0200
+Message-Id: <20200425184657.121991-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
-X-Originating-IP: [89.70.31.203]
-X-ClientProxiedBy: DAG2EX1.emp2.local (172.16.2.11) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 9560297584316538015
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrheeggddutdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfhfgggtuggjihesthdtredttddtjeenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucffohhmrghinhepshgvnhhsihhrihhonhdrtghomhenucfkpheptddrtddrtddrtddpkeelrdejtddrfedurddvtdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepjhhitgdvfeeskhgvrhhnvghlrdhorhhg
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 02:43:35PM +0300, Andy Shevchenko wrote:
-> On Fri, Apr 24, 2020 at 10:05 PM Tomasz Duszynski
-> <tomasz.duszynski@octakon.com> wrote:
-> > On Wed, Apr 22, 2020 at 10:49:44PM +0300, Andy Shevchenko wrote:
-> > > On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
-> > > <tomasz.duszynski@octakon.com> wrote:
->
-> ...
->
-> > > > Add Sensirion SCD30 carbon dioxide core driver.
-> > >
-> > > And DocLink tar of Datasheet: with a link?
-> >
-> > I never do this. These files change their location way too often to be
-> > worthwhile putting here. Nobody has that much time to fallow all this
-> > and keep respective files up to date.
-> >
-> > But that doesn't mean I can't drop a link here.
-> > https://developer.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.5_CO2/Sensirion_CO2_Sensors_SCD30_Interface_Description.pdf
->
-> Yes, just make it a tag
->
-> DocLink: ....
->
-> ...
->
-> > > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
-> > > > +               int (*command)(struct scd30_state *state, enum scd30_cmd cmd,
-> > > > +                              u16 arg, char *rsp, int size));
-> > >
-> > > My gosh.
-> > > Please, supply proper structure member in priv or alike.
-> >
-> > Not sure it's worth the fuss. Wrapping all into structure means either
-> > copying respective members or more dereferences later on.
->
-> At least you may introduce a typedef, because above really hurts my eyes.
->
+The lpass-cpu driver now allows configuring the MI2S SD lines
+by defining subnodes for one of the DAIs.
 
-May be.
+Document this in the device tree bindings.
 
-> ...
->
-> > > > +enum {
-> > > > +       CONC,
-> > > > +       TEMP,
-> > > > +       HR,
-> > > > +};
-> > >
-> > > Way too generic names for anonymous enum.
-> >
-> > I'd argue that they are pretty well understood abbreviations in iio generally
-> > and here specifically. But adding some prefix won't harm.
->
-> Yes, prefix is what I was talking about.
->
-> ...
->
-> > > > +static int scd30_wait_meas_poll(struct scd30_state *state)
-> > > > +{
-> > > > +       int tries = 5;
-> > > > +
-> > > > +       while (tries--) {
-> > > > +               int ret;
-> > > > +               u16 val;
-> > > > +
-> > > > +               ret = scd30_command(state, CMD_MEAS_READY, 0, (char *)&val,
-> > > > +                                   sizeof(val));
-> > > > +               if (ret)
-> > > > +                       return -EIO;
-> > > > +
-> > > > +               /* new measurement available */
-> > > > +               if (val)
-> > > > +                       break;
-> > > > +
-> > > > +               msleep_interruptible(state->meas_interval * 250);
-> > > > +       }
-> > > > +
-> > > > +       if (tries == -1)
-> > > > +               return -ETIMEDOUT;
-> > >
-> > > unsigned int tries = ...;
-> > >
-> > > do {
-> > >  ...
-> > > } while (--tries);
-> > > if (!tries)
-> > >   return ...;
-> > >
-> > > looks better and I guess less code in asm.
-> > >
-> >
-> > You mean that one extra branch in case of while?
->
-> There are few things:
-> a) do {} while notation immediately tells that at least one cycle of
-> body will be done (unconditionally);
-> b) it makes a loop variable unsigned and no need to check for specific
-> negative numbers;
-> c) it quite likely will generate slightly better assembly code.
->
-> >  But it comes to code
-> > itself it looks more compact. And I am okay with that.
-> >
-> > > > +       return 0;
-> > > > +}
->
-> ...
->
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;
-> > >
-> > > Shadowed error code. Don't do like this.
-> >
-> > Integer parsing either returns EINVAL or ERANGE. Passing the latter to
-> > the user is not worth the trouble, especially because majority of writable attrs
-> > have a fellow _available attr.
->
-> It's simple a bad coding practice. Please, change.
->
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+Changes in v2:
+  - Clarify number of entries for qcom,playback/capture-sd-lines
+  - Suggest more generic node names (dai@...) for children DAI device nodes
 
-Fair enough.
+v1: https://lore.kernel.org/alsa-devel/20200406135608.126171-1-stephan@gerhold.net/
+---
+ .../bindings/sound/qcom,lpass-cpu.txt         | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;
-> > >
-> > > Ditto.
-> > >
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;
-> > >
-> > > Ditto.
->
-> ...
->
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;
-> > >
-> > > No shadowed error code, please. Check entire code.
->
-> Same here.
->
-> ...
->
-> > > > +static IIO_DEVICE_ATTR_RW(pressure_comp, 0);
-> > > > +static IIO_DEVICE_ATTR_RO(pressure_comp_available, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(meas_interval, 0);
-> > > > +static IIO_DEVICE_ATTR_RO(meas_interval_available, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(asc, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(frc, 0);
-> > > > +static IIO_DEVICE_ATTR_RO(frc_available, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(temp_offset, 0);
-> > > > +static IIO_CONST_ATTR(temp_offset_available, "[0 1 65535]");
-> > > > +static IIO_DEVICE_ATTR_WO(reset, 0);
-> > >
-> > > Do you need all of them? Doesn't  IIO core provides a tons of helpers for these?
-> > > Btw, where is ABI documentation? It's a show stopper.
-> >
-> > They are sensor specific and none falls into a category of iio generic
-> > attrs. Maybe, except the measurement interval which could be represented as
-> > a SAMP_FREQ.
->
-> IIO ABI becomes already a big pile of nodes and I hope we will become
-> stricter about adding new ones.
->
+diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+index 21c648328be9..32c2cdb3d32f 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+@@ -30,6 +30,8 @@ Required properties:
+ - reg			: Must contain an address for each entry in reg-names.
+ - reg-names		: A list which must include the following entries:
+ 				* "lpass-lpaif"
++- #address-cells	: Must be 1
++- #size-cells		: Must be 0
+ 
+ 
+ 
+@@ -37,6 +39,20 @@ Optional properties:
+ 
+ - qcom,adsp		: Phandle for the audio DSP node
+ 
++By default, the driver uses up to 4 MI2S SD lines, for a total of 8 channels.
++The SD lines to use can be configured by adding subnodes for each of the DAIs.
++
++Required properties for each DAI (represented by a subnode):
++- reg			: Must be one of the DAI IDs
++			  (usually part of dt-bindings header)
++- qcom,playback-sd-lines: List of serial data lines to use for playback
++			  Each SD line should be represented by a number from 0-3.
++- qcom,capture-sd-lines	: List of serial data lines to use for capture
++			  Each SD line should be represented by a number from 0-3.
++
++Note that adding a subnode changes the default to "no lines configured",
++so both playback and capture lines should be configured when a subnode is added.
++
+ Example:
+ 
+ lpass@28100000 {
+@@ -51,4 +67,13 @@ lpass@28100000 {
+ 	reg = <0x28100000 0x10000>;
+ 	reg-names = "lpass-lpaif";
+ 	qcom,adsp = <&adsp>;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	/* Optional to set different MI2S SD lines */
++	dai@3 {
++		reg = <MI2S_QUATERNARY>;
++		qcom,playback-sd-lines = <0 1>;
++	};
+ };
+-- 
+2.26.2
 
-Try persuading vendors to use unified interfaces and problem will
-disappear completely :).
-
-> > But given that measurement interval spans from 2s to 1800s
-> > it becomes a little bit awkward to have it in Hz.
->
-> > As for ABI that's in
-> > a separate patch.
->
-> It's not good from bisectability point of view. If by some reason this
-> patch or documentation patch gets reverted, the other one will be
-> dangling.
-> Please, unify them.
->
-
-Huh? Reverting core and leaving leftovers would be wrong and pointless.
-
-> --
-> With Best Regards,
-> Andy Shevchenko
