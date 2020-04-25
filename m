@@ -2,110 +2,118 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB635C55185
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0647C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFE8A2084D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587828418;
-	bh=klMtI9c3hsQkJBnE/PQB846p6NO18kKSrKvujZqCmyE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JZFlUIU3S/TQJJVgEDrFr4LemInknuxC5sQ8NRxrqold6/KZNZpJf+ShXEgvur+rm
-	 mQ7tbHGjjvglr1H84rb8kobAoucje3+XWUSefCRsnWq3CA7hXNbCsjIcgXgSAj9pNe
-	 t9xx/WtoHGCHhyqK3kykcN5Fd9ULMTriIDqiEaII=
+	by mail.kernel.org (Postfix) with ESMTP id B6CF220728
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 15:40:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dF1k9liH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbgDYP06 (ORCPT
+        id S1726112AbgDYPkr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbgDYP05 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:26:57 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BAFB2071C;
-        Sat, 25 Apr 2020 15:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587828417;
-        bh=klMtI9c3hsQkJBnE/PQB846p6NO18kKSrKvujZqCmyE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AgvRLrfwdIcN4PU4N6ZeEvepO/7MhSbURHVSzkbu0D3ePNlhkU2z12/mJ2M5RkrGX
-         P+WKoJtRWDt6VTZgo/imzA1NAfE30saDAaVYwfU8veNQ5jgEdkZ0QsjTo+/ad/BSEp
-         PYreFMi1kHatennuFh/dk0vV1MRluGWhyn/KV7hU=
-Date:   Sat, 25 Apr 2020 16:26:52 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     mani@kernel.org
-Cc:     robh+dt@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andy.shevchenko@gmail.com
-Subject: Re: [RESEND PATCH v3 0/3] Add Reset and Wakeup support for CCS811
-Message-ID: <20200425162652.1fa2fc5b@archlinux>
-In-Reply-To: <20200414184930.5576-1-mani@kernel.org>
-References: <20200414184930.5576-1-mani@kernel.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 25 Apr 2020 11:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726062AbgDYPkq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 11:40:46 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68363C09B04B;
+        Sat, 25 Apr 2020 08:40:46 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k13so15160516wrw.7;
+        Sat, 25 Apr 2020 08:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4tS2YGMao2bjz+V8i9WcC4XNAp8kWn2u9wEJt79QoxQ=;
+        b=dF1k9liH3vfLfnCQ38X3ZEdw/ILSueU4pIU8vSkFjXiNbaOk0AOr7z6fV5KjjUhI3G
+         tGmJbp7EWR2o+ivKlKnxVEms60/+1PQmdCuJUJlDSpU9c2UP4038Fr4cDhjIWw4hsMjq
+         gGdRD3NqmVtvGDsdb+VQF2ruU1D78lBlNTBpCpWuJkYFqR1ymt5O3ng224ZDwlvUl/Pu
+         zYlP3+58ZnvuRTo8pNHKJl/F+2SR0Rn7vy7iF49aV2kXRZOgiw6H75UuYXSq8Y9tj8t0
+         TWGpif2nTKtPlcbYrCUGN7cDWU3ba0bEa/CNDdiiiO+0Ir9vBH11pGwugIFjUBrtpdH+
+         iyIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4tS2YGMao2bjz+V8i9WcC4XNAp8kWn2u9wEJt79QoxQ=;
+        b=Hz3pWXG/EWOsGZ3OgYxis9GDdxeVduJUIqIMrCQuTEHPpUeMo0xNCkTzR82dB9W+5I
+         g5or+3D8d+hDBktzGfdIcNYWKnM86tdPEufsnKl7vxfvsxGUOIs5+vBgWcicPNdt6Bu/
+         CP09AZaLD3+Kqt3zMuvDxBy30eVx1yo+iORulP/qhAOcyuB1WFkz6rz5u6/zuU3tn7Lf
+         bmRlN4NJyjT6JDJo/lrtnL4Fk1pD9Ms0R5LRizpdlFeSk1T5ahlRkN5k8/chpodWufZh
+         if2V4sOLyl1XuAPicnFlfBkbqXCRDPkmgHgp7u9SmQFPrYbl0GszIPXWzwobgCnVWaUf
+         6elQ==
+X-Gm-Message-State: AGi0PuZbNm3HBwOG557DeSK6FajzZKBk5P3UMzLLNEYFRYHfQ7EoOWhx
+        fB5sS4rz/Ei08nOi4Q5YGq8=
+X-Google-Smtp-Source: APiQypJGoGaAzG+Bg3At6JDz4UC0pKLg+Q1gEBvlSnQRnBene5RUUzfezzxPjtbNthOJhfaLe9pXvA==
+X-Received: by 2002:adf:ab5c:: with SMTP id r28mr17423144wrc.384.1587829245032;
+        Sat, 25 Apr 2020 08:40:45 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id c190sm7759143wme.4.2020.04.25.08.40.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 Apr 2020 08:40:44 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: gpu: add power-domains #cooling-cells to arm,mali-bifrost.yaml
+Date:   Sat, 25 Apr 2020 17:40:37 +0200
+Message-Id: <20200425154037.21083-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Apr 2020 00:19:27 +0530
-mani@kernel.org wrote:
+A test with the command below gives this error:
 
-> From: Manivannan Sadhasivam <mani@kernel.org>
-> 
-> Hello,
-> 
-> This patchset adds external reset and wakeup support for CCS811 VOC
-> gas sensor. The nRESET and nWAKE pins available on the device are
-> utilised to provide these functionalities.
-> 
-> The patchset has been validated using CCS811 connected to STM32MP1 based
-> board over I2C.
-> 
-> While at it, the devicetree yaml binding and OF match table for this sensor
-> are also added.
-> 
-> Thanks,
-> Mani
+arch/arm64/boot/dts/rockchip/px30-evb.dt.yaml: gpu@ff400000:
+'#cooling-cells', 'power-domains'
+do not match any of the regexes: 'pinctrl-[0-9]+'
 
-All applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+With the conversion to yaml it also filters things
+in a node that are used by other drivers like
+'#cooling-cells' and 'power-domains'
+for Rockchip px30 gpu nodes,
+so add them to 'arm,mali-bifrost.yaml'.
 
-Thanks,
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpu/
+arm,mali-bifrost.yaml
 
-Jonathan
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> 
-> Changes in v3:
-> 
-> * Added ccs811_set_wake(false) to all error paths before calling it actually
-> * Added Andy's reviewed-by tag
-> * Added comment for reset procedure and dropped error print for gpio request
-> 
-> Changes in v2:
-> 
-> * Fixed DT binding schema and switched to dual license (GPL/BSD)
-> * Returned actual error code from devm_gpiod_get_optional()
-> * Dropped of.h include and of_match_ptr()
-> 
-> Manivannan Sadhasivam (3):
->   dt-bindings: iio: chemical: Add binding for CCS811 VOC sensor
->   iio: chemical: Add support for external Reset and Wakeup in CCS811
->   iio: chemical: Add OF match table for CCS811 VOC sensor
-> 
->  .../bindings/iio/chemical/ams,ccs811.yaml     |  51 ++++++++
->  drivers/iio/chemical/ccs811.c                 | 112 ++++++++++++++++--
->  2 files changed, 152 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
-> 
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+index 0b229a7d4..b1844b9c2 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+@@ -43,9 +43,15 @@ properties:
+ 
+   operating-points-v2: true
+ 
++  power-domains:
++    maxItems: 1
++
+   resets:
+     maxItems: 2
+ 
++  "#cooling-cells":
++    const: 2
++
+ required:
+   - compatible
+   - reg
+-- 
+2.11.0
 
