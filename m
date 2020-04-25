@@ -2,64 +2,104 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE4EC2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 01:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22279C55185
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 07:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC3820706
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 01:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587779613;
-	bh=yiSOeJ8Lx1TDaaZ07PZ6pApvBWfqUo+mApyrV/CkPO4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ew2zNjz956mF8b2BHEMS9TXrJIKZS0gJPUr3HUywrp9DGiH3T4liYCrvkZACtvSDB
-	 nmT3MdJEC79JD+JIiHc31oxYjBHgjIkmfb0Mul1H3YlapaHsccF6nuPSGQmya9zIFb
-	 gruH5QPygarml/LliXvDXKPQl549DzZ6clrt+l5A=
+	by mail.kernel.org (Postfix) with ESMTP id 03B4A20728
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 07:25:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="Uo90dT5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbgDYBxc (ORCPT
+        id S1726097AbgDYHZd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 21:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbgDYBxc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 21:53:32 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDAAE2076C;
-        Sat, 25 Apr 2020 01:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587779612;
-        bh=yiSOeJ8Lx1TDaaZ07PZ6pApvBWfqUo+mApyrV/CkPO4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zY4o8Vfff2O4z5RuZiHso0kV+soZFhImKmjgY2t4ukw1Qc+cTQzLSRNz2lXmWHZDL
-         AEafx9zPhm3wJ5W+1iGRYBMIh+Vc7B/I9l2tRL6NltcsbGxxvoWDApT6ktIMy0VU6a
-         QsygAH2GRbzxt6oubmDJp0kdKgbOpDDPBlg1cRlk=
-Date:   Sat, 25 Apr 2020 09:53:27 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     robh+dt@kernel.org, leoyang.li@nxp.com, festevam@gmail.com,
-        kernel@pengutronix.de, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: arm: imx: add kontron smarc to schema
-Message-ID: <20200425015326.GA30501@dragon>
-References: <20200402083436.24710-1-m.felsch@pengutronix.de>
+        Sat, 25 Apr 2020 03:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726128AbgDYHZb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 03:25:31 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B222C09B04A
+        for <devicetree@vger.kernel.org>; Sat, 25 Apr 2020 00:25:30 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id j14so9591117lfg.9
+        for <devicetree@vger.kernel.org>; Sat, 25 Apr 2020 00:25:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VX6tMFQF79i/ftypgBXXLpWGwJKO5n2LFJJUQCNDLbI=;
+        b=Uo90dT5qPFrkcewUW3XrA/N8YnnL403bBnWwdV7jRRtGXXyZahUOZOdo2ZzQynkY6X
+         uY+kcqOW0yAFC1dWc0cYDq/Fw/+ivtTzfTs/wZnho+A3QAU1+f+aO5ZdgLrvNWYZG/Of
+         4fSNYgJJgUTIviXFwB6FETyky1jYRWVYIpuHg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VX6tMFQF79i/ftypgBXXLpWGwJKO5n2LFJJUQCNDLbI=;
+        b=Bpjw7VevKa4wa/XSV+4eJgxBQgE+ZvvlWGQc3rkHs0dbruVHa0ZFbtoaZA3OnIn6Ye
+         tMJYdtyOTkFPSMA61MGEqdycNPS+wSvEabJPCwbWbsBRVDcCOEF3FTbxixwmreqEgNJ/
+         +7mP+iL1XG2/kfjnwQt80tbekgx0Fc+0KQxhd607Z1CzXcG2fK+hhV5Uw9d8Gpu8UjRj
+         1aVuEH1GTbMAO4tVqJOsl45AZy0E8UgbYIORbtaa4tdFf5EaA2zinnEodXkytpAXh1SV
+         +X3Q9fpAwHANCD4PZgvvrW+4ugSkShPytIEPK2RX5uCVexpMSUYwYoAZmOzAAvLa8DIc
+         lF0A==
+X-Gm-Message-State: AGi0PuY6VMwrEGew6I7V15Xuw2X0B0PieeU8WYooe3YZLMhMuvowgDsM
+        ZOaRGSI0z8nekVBPaGe2a/OiZg==
+X-Google-Smtp-Source: APiQypJuEBS7Xvm9F8pFZcCse1J92wNQtBwuXXu188KX3znHaJRiJE2W0LQD7dNqwL+USSVDVZiDLQ==
+X-Received: by 2002:a19:c78d:: with SMTP id x135mr8655245lff.151.1587799528695;
+        Sat, 25 Apr 2020 00:25:28 -0700 (PDT)
+Received: from taos.konsulko.bg (lan.nucleusys.com. [92.247.61.126])
+        by smtp.gmail.com with ESMTPSA id t8sm6382662lfe.31.2020.04.25.00.25.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Apr 2020 00:25:28 -0700 (PDT)
+From:   Matt Ranostay <matt.ranostay@konsulko.com>
+To:     jic23@kernel.org
+Cc:     linux-iio@vger.kernel.org,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 1/2] dt-bindings: iio: chemical: add Atlas Scientific RTD-SM sensor docs
+Date:   Sat, 25 Apr 2020 10:25:19 +0300
+Message-Id: <20200425072520.27776-2-matt.ranostay@konsulko.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200425072520.27776-1-matt.ranostay@konsulko.com>
+References: <20200425072520.27776-1-matt.ranostay@konsulko.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402083436.24710-1-m.felsch@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 10:34:36AM +0200, Marco Felsch wrote:
-> Add Kontron SMARC module compatibles to the schema so we can make use of
-> them for the validation.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+---
+ .../devicetree/bindings/iio/chemical/atlas,sensor.yaml          | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Applied, thanks.
+diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml b/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
+index edcd2904d50e..0e510a52920d 100644
+--- a/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
++++ b/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
+@@ -17,6 +17,7 @@ description: |
+     http://www.atlas-scientific.com/_files/_datasheets/_oem/EC_oem_datasheet.pdf
+     http://www.atlas-scientific.com/_files/_datasheets/_oem/ORP_oem_datasheet.pdf
+     http://www.atlas-scientific.com/_files/_datasheets/_oem/pH_oem_datasheet.pdf
++    http://www.atlas-scientific.com/_files/_datasheets/_oem/RTD_oem_datasheet.pdf
+ 
+ properties:
+   compatible:
+@@ -25,6 +26,7 @@ properties:
+       - atlas,ec-sm
+       - atlas,orp-sm
+       - atlas,ph-sm
++      - atlas,rtd-sm
+ 
+   reg:
+      maxItems: 1
+-- 
+2.20.1
+
