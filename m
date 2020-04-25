@@ -2,242 +2,103 @@ Return-Path: <SRS0=EFsK=6J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B62C55194
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9AAC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 18:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79EAB2074F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 17:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587837547;
-	bh=8ojAkugMKNr0HOcKJukOabtkpBS19lmg0Bp7/OoK854=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WmqZuDdKAc8nJDYl3sfqslGSN3ppbfye3rIKDh0b17oWnD42mC5rqQ3VLBzlrPzUN
-	 rF8BU150CC2HhvqeZfopWdZnyq4ffDwhK+SXK9VoEHE5MfY6oCabNZIR6+BpgU7mdT
-	 TyxNpjsJ8skCs5u17a4szKeQ2BIzMaQoXOA5NpjA=
+	by mail.kernel.org (Postfix) with ESMTP id E701820714
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Apr 2020 18:24:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="MrOcsueJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgDYR7G (ORCPT
+        id S1726192AbgDYSYf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 13:59:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgDYR7G (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:59:06 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71F94206B9;
-        Sat, 25 Apr 2020 17:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587837545;
-        bh=8ojAkugMKNr0HOcKJukOabtkpBS19lmg0Bp7/OoK854=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ijK40JRcybkPPANgc/j+K/mvBiXqVdVpC4A0IVbFoGLIR35detu+lb6LLUqffIkQk
-         qEb+VRZE8XI0kwbMVPe84pYWJkgzLRYGmM30lzkzGVkWExUBOLovRtHzwpPJOwb+hh
-         26YWCjngmupCdjRS8nkwBFl3h5xpTr8kdOhhaOUo=
-Date:   Sat, 25 Apr 2020 18:59:01 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
-Message-ID: <20200425185901.1611eca5@archlinux>
-In-Reply-To: <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
-        <20200422141135.86419-2-tomasz.duszynski@octakon.com>
-        <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
-        <20200424190413.GA2731@arch>
-        <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 25 Apr 2020 14:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726145AbgDYSYf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 14:24:35 -0400
+Received: from mo6-p00-ob.smtp.rzone.de (mo6-p00-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5300::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACE04C09B04D;
+        Sat, 25 Apr 2020 11:24:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587839071;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=WyxuVUhLZGGrHSbH2ipZbYc3BijhBmdyyn9wJF7Ivc0=;
+        b=MrOcsueJcRJ1u+J0sLHxjgruB6qRF5ZMpm5yaDxLv8sR/D9azR4UAz9UTsH0KszZ0w
+        AanDCdZhJ0SVGQ3twUhExyTtVUZdTH34Tdze4rpPYY7n33sQL6qetQI+OKeSXVsa7rVf
+        tiAgE4P93eJzRVlI+Q2ZQN1wiuBzZEiqpKVpZjXnsDehiS3to6ydNhh/Fb8x26ki1zvC
+        qewLVs2JvXLvS7tiJeBoLNK+OOMxJimKdtPyKv92dvcK0yRvBk5cTfMh7AE0RJ2hOoEf
+        GNO7g6Lk6nDglsymUdlkGyyKWGs/dit+wI+H0ecIKKVxfi8WwLnCJUSsE/FWP4ll/tjF
+        +BXg==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j6IcrHBg=="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id 60b02dw3PIOOKAk
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sat, 25 Apr 2020 20:24:24 +0200 (CEST)
+Date:   Sat, 25 Apr 2020 20:24:17 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Andi Shyti <andi@etezian.org>, linux-input@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] Input: mms114 - add extra compatible for mms345l
+Message-ID: <20200425182417.GA116540@gerhold.net>
+References: <20200423102431.2715-1-stephan@gerhold.net>
+ <20200424092937.GB460760@jack.zhora.eu>
+ <20200424113446.GA205913@gerhold.net>
+ <20200424132243.GH460760@jack.zhora.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424132243.GH460760@jack.zhora.eu>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 25 Apr 2020 14:43:35 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-
-> On Fri, Apr 24, 2020 at 10:05 PM Tomasz Duszynski
-> <tomasz.duszynski@octakon.com> wrote:
-> > On Wed, Apr 22, 2020 at 10:49:44PM +0300, Andy Shevchenko wrote:  
-> > > On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
-> > > <tomasz.duszynski@octakon.com> wrote:  
+On Fri, Apr 24, 2020 at 04:22:43PM +0300, Andi Shyti wrote:
+> Hi Stephan,
 > 
-> ...
+> On Fri, Apr 24, 2020 at 01:34:46PM +0200, Stephan Gerhold wrote:
+> > On Fri, Apr 24, 2020 at 12:29:37PM +0300, Andi Shyti wrote:
+> > > Hi guys,
+> > > 
+> > > >  	}, {
+> > > >  		.compatible = "melfas,mms152",
+> > > >  		.data = (void *)TYPE_MMS152,
+> > > > +	}, {
+> > > > +		.compatible = "melfas,mms345l",
+> > > > +		.data = (void *)TYPE_MMS345L,
+> > > >  	},
+> > > 
+> > > it's been some times I haven't been doing this, but is the order
+> > > of the patches correct? shouldn't the binding be updated first?
+> > > 
+> > 
+> > Yes. I had it correct in my original patch, but apparently swapped the
+> > order accidentally for this one. I will do it correct again next time :)
 > 
-> > > > Add Sensirion SCD30 carbon dioxide core driver.  
-> > >
-> > > And DocLink tar of Datasheet: with a link?  
-> >
-> > I never do this. These files change their location way too often to be
-> > worthwhile putting here. Nobody has that much time to fallow all this
-> > and keep respective files up to date.
-> >
-> > But that doesn't mean I can't drop a link here.
-> > https://developer.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.5_CO2/Sensirion_CO2_Sensors_SCD30_Interface_Description.pdf  
+> then with that change:
 > 
-> Yes, just make it a tag
-> 
-> DocLink: ....
-> 
-> ...
-> 
-> > > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
-> > > > +               int (*command)(struct scd30_state *state, enum scd30_cmd cmd,
-> > > > +                              u16 arg, char *rsp, int size));  
-> > >
-> > > My gosh.
-> > > Please, supply proper structure member in priv or alike.  
-> >
-> > Not sure it's worth the fuss. Wrapping all into structure means either
-> > copying respective members or more dereferences later on.  
-> 
-> At least you may introduce a typedef, because above really hurts my eyes.
-> 
-> ...
-> 
-> > > > +enum {
-> > > > +       CONC,
-> > > > +       TEMP,
-> > > > +       HR,
-> > > > +};  
-> > >
-> > > Way too generic names for anonymous enum.  
-> >
-> > I'd argue that they are pretty well understood abbreviations in iio generally
-> > and here specifically. But adding some prefix won't harm.  
-> 
-> Yes, prefix is what I was talking about.
-> 
-> ...
-> 
-> > > > +static int scd30_wait_meas_poll(struct scd30_state *state)
-> > > > +{
-> > > > +       int tries = 5;
-> > > > +
-> > > > +       while (tries--) {
-> > > > +               int ret;
-> > > > +               u16 val;
-> > > > +
-> > > > +               ret = scd30_command(state, CMD_MEAS_READY, 0, (char *)&val,
-> > > > +                                   sizeof(val));
-> > > > +               if (ret)
-> > > > +                       return -EIO;
-> > > > +
-> > > > +               /* new measurement available */
-> > > > +               if (val)
-> > > > +                       break;
-> > > > +
-> > > > +               msleep_interruptible(state->meas_interval * 250);
-> > > > +       }
-> > > > +
-> > > > +       if (tries == -1)
-> > > > +               return -ETIMEDOUT;  
-> > >
-> > > unsigned int tries = ...;
-> > >
-> > > do {
-> > >  ...
-> > > } while (--tries);
-> > > if (!tries)
-> > >   return ...;
-> > >
-> > > looks better and I guess less code in asm.
-> > >  
-> >
-> > You mean that one extra branch in case of while?  
-> 
-> There are few things:
-> a) do {} while notation immediately tells that at least one cycle of
-> body will be done (unconditionally);
-> b) it makes a loop variable unsigned and no need to check for specific
-> negative numbers;
-> c) it quite likely will generate slightly better assembly code.
-> 
-> >  But it comes to code
-> > itself it looks more compact. And I am okay with that.
-> >  
-> > > > +       return 0;
-> > > > +}  
-> 
-> ...
-> 
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;  
-> > >
-> > > Shadowed error code. Don't do like this.  
-> >
-> > Integer parsing either returns EINVAL or ERANGE. Passing the latter to
-> > the user is not worth the trouble, especially because majority of writable attrs
-> > have a fellow _available attr.  
-> 
-> It's simple a bad coding practice. Please, change.
-> 
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;  
-> > >
-> > > Ditto.
-> > >  
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;  
-> > >
-> > > Ditto.  
-> 
-> ...
-> 
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;  
-> > >
-> > > No shadowed error code, please. Check entire code.  
-> 
-> Same here.
-> 
-> ...
-> 
-> > > > +static IIO_DEVICE_ATTR_RW(pressure_comp, 0);
-> > > > +static IIO_DEVICE_ATTR_RO(pressure_comp_available, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(meas_interval, 0);
-> > > > +static IIO_DEVICE_ATTR_RO(meas_interval_available, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(asc, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(frc, 0);
-> > > > +static IIO_DEVICE_ATTR_RO(frc_available, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(temp_offset, 0);
-> > > > +static IIO_CONST_ATTR(temp_offset_available, "[0 1 65535]");
-> > > > +static IIO_DEVICE_ATTR_WO(reset, 0);  
-> > >
-> > > Do you need all of them? Doesn't  IIO core provides a tons of helpers for these?
-> > > Btw, where is ABI documentation? It's a show stopper.  
-> >
-> > They are sensor specific and none falls into a category of iio generic
-> > attrs. Maybe, except the measurement interval which could be represented as
-> > a SAMP_FREQ.  
-> 
-> IIO ABI becomes already a big pile of nodes and I hope we will become
-> stricter about adding new ones.
-Yes.  Starting point is they need to be documented or they can't be
-properly reviewed.
-
-Documentation/ABI/testing/sysfs-bus-iio-*
-
-> 
-> > But given that measurement interval spans from 2s to 1800s
-> > it becomes a little bit awkward to have it in Hz.  
-> 
-> > As for ABI that's in
-> > a separate patch.  
-> 
-> It's not good from bisectability point of view. If by some reason this
-> patch or documentation patch gets reverted, the other one will be
-> dangling.
-> Please, unify them.
+> Reviewed-by: Andi Shyti <andi@etezian.org>
 > 
 
+Hi Dmitry,
+
+I assume there is little reason to resend just to swap the order.
+(You could just apply them in reverse order since they do not depend
+ on each other...)
+
+But if there is something else I should change just let me know.
+
+Thanks,
+Stephan
