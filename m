@@ -2,157 +2,213 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11A9C55194
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 22:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BE8C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 23:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFA3D2098B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 22:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B374620728
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 23:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=trafsysas.onmicrosoft.com header.i=@trafsysas.onmicrosoft.com header.b="QZIT/VEJ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DcUWKOT0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgDZW0d (ORCPT
+        id S1726296AbgDZXPI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 18:26:33 -0400
-Received: from mail-eopbgr70120.outbound.protection.outlook.com ([40.107.7.120]:8817
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726196AbgDZW0c (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Apr 2020 18:26:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WhQgI9YAdhE/EyEr0HZoxKSd+Yb3KOd6O7qrhp0xKwpfkFAGveMb07QUc4u0BCUi9Bq9a+pUDtRciTyH7bjS1qTCfTtBBzxYfDrG+AryW7nu6ZUSV6FHzRBcoqtHDWdIDm1psSldAWZeM8XdPfDa/9Hn8Zk4u87+ow7kVyy15F1/1Q/CUW7CkRflnyqXX8vnaj4njaKSszkBKMbKSSV/5jxSEYAciuwJv0NpSbXnsfQVoIHzp+URt3xsFk/GdLlQsnGF9a07gnmikzq6CbUzufhozn11hFrrO6TwZcS4kLKfQR2rr1C4H1tm5P/z0LzkfiCtxGumfxdaRqHCD3R20g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZPJL9FHU1d0ugKFn3LhsfycM00py/EoJdhFCPXtEnsc=;
- b=YhdUSC4zTGHutoxAvep98wvVA8bNVdNmcaVfLPy3b8pxmRMLNCq9DzbgXbzc0H+E4jqxzomKhIu4a9sxbo2M8NicqwBOF8vBh72zAnkm+zK9m48V/lekdvpJbEWgHQagvCqVJj1MTDl6giLSOg5SuWF7ci+hbfrwevYlHFCRKWTpf3h9efONW6IAM0uvvvYQ/tqlCkAeEH8JvWsR7kBKzhS4O0/A9eiN8tjOiiH9nLYIdmDB2L2wR4bfLVArrjh9VHtDU3YfRKSxdjFZHqB+/rU3TC7b/fDZiJBWHA7CnPQE2jpDhz1Q3Ytur+J3wuFoMC6r2vKCus+EzkmehVfxGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=norphonic.com; dmarc=pass action=none
- header.from=norphonic.com; dkim=pass header.d=norphonic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=trafsysas.onmicrosoft.com; s=selector2-trafsysas-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZPJL9FHU1d0ugKFn3LhsfycM00py/EoJdhFCPXtEnsc=;
- b=QZIT/VEJoVNZV6v2zTEXTGDbUT2yXAQLQxB3o9betI1VtKVwncQN2PcwVw0SkBCAYrUE5djWpq0rFmuxLIRBaHsmZHQAH+K6m9ep9rR0goxuKQ9VXUo95hvi0A6oQ6PjHFYQ9p3jn2x3cR7WziPgCwf66yh4B67Wb5xvKuASFXo=
-Received: from AM6PR06MB5430.eurprd06.prod.outlook.com (2603:10a6:20b:86::11)
- by AM6PR06MB5975.eurprd06.prod.outlook.com (2603:10a6:20b:9f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Sun, 26 Apr
- 2020 22:26:28 +0000
-Received: from AM6PR06MB5430.eurprd06.prod.outlook.com
- ([fe80::9814:8ea:8170:5678]) by AM6PR06MB5430.eurprd06.prod.outlook.com
- ([fe80::9814:8ea:8170:5678%5]) with mapi id 15.20.2937.023; Sun, 26 Apr 2020
- 22:26:28 +0000
-From:   Eugene Zalkonnikov <ez@norphonic.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "development@norphonic.com" <development@norphonic.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 2/2] dt-bindings for TI HDC20x0 humidity and
- temperature sensors
-Thread-Topic: [PATCH v7 2/2] dt-bindings for TI HDC20x0 humidity and
- temperature sensors
-Thread-Index: AQHWHBm6dhBIb3K4EEaSenbAhFvBVg==
-Date:   Sun, 26 Apr 2020 22:26:28 +0000
-Message-ID: <D680EB45-9477-4105-9B14-ED7330F59D1F@norphonic.com>
-References: <E372084A-C6C5-4261-90C5-B810ADAFDD73@norphonic.com>
-In-Reply-To: <E372084A-C6C5-4261-90C5-B810ADAFDD73@norphonic.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ez@norphonic.com; 
-x-originating-ip: [88.88.123.37]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 690e1b8e-c05d-4519-649f-08d7ea30dd38
-x-ms-traffictypediagnostic: AM6PR06MB5975:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR06MB59753A69218EDF436A74276ACAAE0@AM6PR06MB5975.eurprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 03853D523D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR06MB5430.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(376002)(136003)(346002)(366004)(39830400003)(6916009)(4326008)(6506007)(2906002)(966005)(54906003)(316002)(5660300002)(26005)(33656002)(508600001)(6486002)(71200400001)(91956017)(76116006)(86362001)(66946007)(66556008)(64756008)(66446008)(66476007)(2616005)(8936002)(186003)(8676002)(81156014)(6512007)(36756003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: norphonic.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0JCFW4pF4fwWTF9IkaBD0SdxNUlTR4znHXXaa5horMLOEpXDOnR3trDRZSrgPysXpmo/whBkrprWgCI1IH6hX+rKpmSlSopw1WRut5JUw/3f37Ur1upa7FVZzCSXUC3/KoaJMFAwzXL9tq91or8kUsw5md/A4G4748akielIuq0H6TctCEnw58kI7cIyxtk0gT+WXKACj3dnGRTIDH9FqhUCbuAv35Kv3fxfWegrKbJUSChKGqwh/fqjozSb3tVL7j2ZcXN0H86U9quisAzMeBThO3JVb77lbilZnWeP14S5ehkcicKywUxcSq/1BBgcHHoPNjMXfZhEI6v2OI2rtbZytLqCMG9G3eWf+H3lLvlAC9kDNCyvxjPanxjOG6+xcA8OfBjc7nxy9eM6Nwdu/p6OC/ThUsDG1Xc+IsmdDwWEWQiaB6qIzVHyFjTPXF4xwXZqsoNUiRhZQr7JofPe33srVWBwlkplrNiL8cWj6Jt3zu5BM5WYxbq8HRGuQOlc/vH74ehMum5i0BYk0lXpoA==
-x-ms-exchange-antispam-messagedata: SwiziP0XSXDz3tA1lIgJffT0VogsYz3MOtfp6bhrw1Jzbktq2JRdkgmTKOwuwm/jUcaC5w89HOcm6MTIm2qmr86nMo3Q8YmTjtCmDjEz+pPKZH9/X4sJQ0Jck6Xe2/piHn3RlGT2BjbCON5N3Ac2dnHCRUD1itq0JY3IJaWCTXRfkqhbnxNX7HSsmoRM8MMn2a4dDEvxMxEKl6wa+Qr3DuqRW//NsM4eUVi+aowpWLBcYvvZNzZnrNkylc+l//rs9jEL0h92mk2+pJ0WNZ10zD8R7VQZRXyeHSObzXh6iB2cqiaEjQTUUOLGEns1NHZIA70uQ4S3cHThE8tmzQoyz1qBcqZOfdi6x9SHx6rtuVOexPUAyI6mPY24v4vAHMajEwyuMMjeILtU/BqiiftBQHwd5PTHNdPjOJNYBsuf7ViLfGEwpZE+6aXiC1PD39pnh8RuSbAKSzPQq7NZgydvewCYHtjxZXuchPuvRsdAEwfDk1YXZe7b3TGBeHNZnKZ9KnjMp9FSCo7w56h4T6ge1LpeEtYc8PcOVwEefnDOBWYEbN6u9vjt/AHmC8HVkVdeX36by/XHY8m9WypchF0EMNgAcaAgGnlfpxkxPhxXt7AfkjQ4zgrQEUxYaEoJxPvwrpOckr73TaqT/lTf7uZxiSxzEFRO+e8P5dLinbDhMABTZ2pEPiM3BFm4WPxeRg0H7eSFo7BP7P34ShNJtI8aLPWxg7AfImqJD5ySGmsiLWH3hdj8DuzhQvDhDPxn1dP+1aqGBJrBptJfIvfXRBWiV0AF7T9aVOCjB/9Zeh63Bvc=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7C71961D5F4B6A49BC17A01E17F8C55B@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Sun, 26 Apr 2020 19:15:08 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:17689 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgDZXPH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Apr 2020 19:15:07 -0400
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200426231505epoutp01ead55d8925ec69c6b714b4dbe9988242~JgajHk2TV0610706107epoutp011
+        for <devicetree@vger.kernel.org>; Sun, 26 Apr 2020 23:15:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200426231505epoutp01ead55d8925ec69c6b714b4dbe9988242~JgajHk2TV0610706107epoutp011
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587942905;
+        bh=cvNmp41/296JfLyww5sqs0RBNkEyWA2TmxYFpGfDdRE=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=DcUWKOT03GCsWw0fa+yJYbv4yuekhpTeuEtSYO5MfyheJ7xrGKSX5AD+QHWMrM9Nh
+         Q16rJJ4wYaBREWgm3M6KJB1hdTTpFQNrv1Wm6fu7770pQk+gM/KhqFoUVVxrrmBz8B
+         Pvm3Kd+qbaMWTDn1/s8NNfI/x+WpaPHbGc6CmwfI=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20200426231505epcas2p4a39e84353b3d847ec8eb0169a0d0ead0~Jgai8XNWs2703627036epcas2p4H;
+        Sun, 26 Apr 2020 23:15:05 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.40.183]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 499NzW1ZZfzMqYlr; Sun, 26 Apr
+        2020 23:15:03 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9C.80.04647.7F516AE5; Mon, 27 Apr 2020 08:15:03 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200426231502epcas2p4b2482716833122c6b7cf314a9e094ad5~JgagnSQY72841328413epcas2p4y;
+        Sun, 26 Apr 2020 23:15:02 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200426231502epsmtrp16d77d3184c36f5e8159390e3e7724613~JgagmL9XQ2945029450epsmtrp1Q;
+        Sun, 26 Apr 2020 23:15:02 +0000 (GMT)
+X-AuditID: b6c32a48-88dff70000001227-71-5ea615f788e0
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        58.C1.25866.6F516AE5; Mon, 27 Apr 2020 08:15:02 +0900 (KST)
+Received: from KORCO004660 (unknown [12.36.155.199]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200426231502epsmtip12e6873a59c6ccb67b81ad35276b3f96f~Jgagdy_Qj2067720677epsmtip1Q;
+        Sun, 26 Apr 2020 23:15:02 +0000 (GMT)
+From:   "Hyunki Koo" <hyunki00.koo@samsung.com>
+To:     "'Greg KH'" <gregkh@linuxfoundation.org>
+Cc:     <robh+dt@kernel.org>, <linux-serial@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200424053711.GB103562@kroah.com>
+Subject: RE: [PATCH v8 0/3] 32-bit access for TX/RX hold registers for
+ samsung_tty driver
+Date:   Mon, 27 Apr 2020 08:15:02 +0900
+Message-ID: <000001d61c20$837914d0$8a6b3e70$@samsung.com>
 MIME-Version: 1.0
-X-OriginatorOrg: norphonic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 690e1b8e-c05d-4519-649f-08d7ea30dd38
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2020 22:26:28.5325
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: cbf3f496-45ad-415e-97cb-4e62d6cd974f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: d3eJhmbYoQnW+AbhtRir2nChi1b8joKmB8Zqo+ns8BhN0wFN7y/VMVK4HailfNAx7SdL8HyT2DC/uj+za+LT0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR06MB5975
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQLkGOxny2DlkaWSmHdwQHeE1CDJ+wFPPr0wAw52+mwDJ5UScQCvjpF1pi5nRLA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm82w7R2vxNbVeRtQ4UaClbubWsdSuhJGEpFCkqCd3Umm3ztks
+        Lcqw1pQuCoW1btrSqERzdl1UMoVKLLqAdC9IbSaBJWUWUTueRf573ud9n+99nu/7KEJVo1BT
+        JRY7x1tYE62IkF3rjFkYNxrdlKf98ZRiznQ9kjOVnlYF88x3UsH0eA6SzL7bXeRSebr3YpUi
+        /e6pZjJ9xDszk9hoSinmWCPHazhLodVYYilKpddk5a/I1xu0ujhdMrOQ1lhYM5dKr8zIjFtV
+        YgqupDWlrMkRpDJZQaAT0lJ4q8POaYqtgj2V5mxGk02ns8ULrFlwWIriC63mRTqtNlEfnCww
+        FXue30e2RvV2/812VIGORFWjcApwErRcOiyvRhGUCt9AcNUTIKXiKwLvvv0KqRhB8Me5l/wn
+        qWiuD0l8CNrOHwkTGyo8iKDxrUbEChwHzzx943wUng+unvsyERN4O4zU/Brnw7EWHt9qQyKO
+        xDlQ+bGBELEMz4GmXmdwhqKUOBmqnywWaSWeCg+O94WOmQdNDUOE5EcDY/1NcmnVWghcrldI
+        M1FwospJiD4BfyGh6s2HkGAl3KrsRRKOhE/3roSCqWHwsDOEd8MdZy0piQ8gGBvul0uNBeAe
+        2I9EcwSOgVZfgggBz4aulyFvU8DV+ZuUaCW4nCpJOBdavgfCJDwDmvt9ZA2i3ROSuSckc09I
+        4P6/qx7JLqJpnE0wF3FCoi1p4lt70fhvjE2/gToeZfgRphA9WUldb8xTydlSoczsR0ARdJQy
+        1342T6U0smXlHG/N5x0mTvAjffDeawl1dKE1+Lct9nydPtFg0CbrGb0hkaGnK72TXuSqcBFr
+        57ZwnI3j/+nCqHB1Beqm+EWrgXIddZS1+vzbNmhfmzYZXhhfBd5scl1/T+5o33p0RcbPWeu3
+        UptjPzQHynuzWETqRuuWre8//TA7afHwtCR11QBlGIrGhwoeJOe21XWHpZ2r/bxzaI/+x0hN
+        /Gjf4LEDdcsv5ERnrdqx6xufzUR0DDi53HXvJq9eUjZrKS0TilldLMEL7F+hmZv1owMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsWy7bCSnO430WVxBof+6VnMP3KO1aJ58Xo2
+        i8u75rBZnFncy27RuvcIuwOrx6ZVnWwe++euYff4vEkugDmKyyYlNSezLLVI3y6BK2P93E7G
+        gheSFV2LVjE2MF4V7mLk5JAQMJFoWLOAtYuRi0NIYAejxJN389ggEjISE14sYYawhSXutxyB
+        KnrOKHHr6xawIjYBXYnLi58wgdgiAjoSHWdOsIDYzAI1Er+OH2SEaJjMJLHkaSPYJE4BA4kL
+        uzcygtjCApESUw6fAouzCKhKLLvWBjSIg4NXwFKi66I1SJhXQFDi5MwnUDO1JZ7efApnL1v4
+        Guo4BYmfT5exQtzgJ/FiwwI2iBoRidmdbcwTGIVnIRk1C8moWUhGzULSsoCRZRWjZGpBcW56
+        brFhgVFearlecWJucWleul5yfu4mRnCcaGntYNyz6oPeIUYmDsZDjBIczEoivDEli+KEeFMS
+        K6tSi/Lji0pzUosPMUpzsCiJ836dtTBOSCA9sSQ1OzW1ILUIJsvEwSnVwDRBOPG1pjpHW0T7
+        wr3G1YuE+yx2CxSInfnyPbqYqdvTILpncoKgU4uyA0Mi9+kETfkoB+2KN7fz+RXaflbsKQnI
+        PnKr5/jsdI2dLTtz9qgb1dWn7pRUZy+PPNLQeNnjfXDoClfWlEQmZTnPfr/zc1tD1zXHlk3j
+        ilr7WNr4m+abAjuD7x++32C/tHryMzZ5x+3JX05LPRGMfLNhgnxaQXbaVtXt8wQb2naUxj2O
+        3Pkpzu3LJ6YTX5OcZv+90D6N40KpAqfmxOKbXuwKC1epT2juMVza2s55n3eR0A+OCQ2nm1Yk
+        eUw5dKT57rKems+B1nHsSp8tBE8n5DdqZXE6WJQcyihP9eW2uKKr3qLEUpyRaKjFXFScCAAA
+        MqBSAgMAAA==
+X-CMS-MailID: 20200426231502epcas2p4b2482716833122c6b7cf314a9e094ad5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200420233607epcas2p305dbd652ab73592a32c17773c1fce329
+References: <20200420013300.17249-1-hyunki00.koo@samsung.com>
+        <CGME20200420233607epcas2p305dbd652ab73592a32c17773c1fce329@epcas2p3.samsung.com>
+        <20200420233558.11879-1-hyunki00.koo@samsung.com>
+        <000a01d619d0$ee167730$ca436590$@samsung.com>
+        <20200424053711.GB103562@kroah.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Device tree bindings for the HDC2010/2080 driver.
+On Fri, Apr 24, 2020 at 02:37:18PM +0900, Greg KH wrote:
+> On Fri, Apr 24, 2020 at 09:40:18AM +0900, Hyunki Koo wrote:
+> > On Sat, April 21, 2020 at 08:36:00 AM +0900, Hyunki Koo wrote:
+> > >
+> > > Change in v8:
+> > > - spit into 3 patch
+> > >   =5B1/3=5D create the new functions with no functional change to the
+> > > code as- is.
+> > >   Replace rd_regb/wr_regb with rd_reg/wr_reg for general usage.
+> > >   =5B2/3=5D add the new binding reg-io-width in device tree
+> > >   =5B3/3=5D add the new funtinality of rd_reg / wr_reg and wr_reg_bar=
+rier
+> > >         to support 32-bit access for the TX/RX hold registers UTXH an=
+d
+> URXH.
+> > >
+> > > Change in v7:
+> > > - =5B1/2=5D correct build error on running 'make dt_binding_check'
+> > > Documentation/devicetree/bindings/serial/samsung_uart.yaml:
+> mapping
+> > > values are not allowed in this context
+> > >   in =22<unicode string>=22, line 36, column 13
+> > >   Documentation/devicetree/bindings/Makefile:12: recipe for target
+> > >
+> 'Documentation/devicetree/bindings/serial/samsung_uart.example.dts'
+> > > failed
+> > >   make=5B1=5D: ***
+> > >
+> =5BDocumentation/devicetree/bindings/serial/samsung_uart.example.dts=5D
+> > > Error 1
+> > >   make=5B1=5D: *** Waiting for unfinished jobs....
+> > >   Makefile:1262: recipe for target 'dt_binding_check' failed
+> > >   make: *** =5Bdt_binding_check=5D Error 2
+> > > - =5B2/2=5D add commit message of reviewed by and tested by in commit
+> > > message
+> > >   Reviewed-by: Krzysztof Kozlowski <krzk=40kernel.org>
+> > >   Tested on Odroid HC1 (Exynos5422):
+> > >   Tested-by: Krzysztof Kozlowski <krzk=40kernel.org>
+> > >
+> > > Change in v6:
+> > > - =5B2/2=5D clean description of reg-io-width
+> > >   allOf is not needed. Just enum =5B1, 2=5D is enough.
+> > >
+> > > Changes in v5:
+> > > - spit into 2 patch, newly added patch for dt-binding
+> > >   =5B1/2=5D newly added dt-binding and go as first patch in this seri=
+es.
+> > >   =5B2/2=5D go as second patch in this series.
+> > >
+> > > Changes in v4:
+> > > - correct variable types and change misleading function name
+> > >
+> > > Changes in v3:
+> > > - line 2031: remove redundant init value  for ourport->port.iotype
+> > >
+> > > Changes in v2:
+> > > - line 954 : change rd_regl to rd_reg in for backward compatibility.
+> > > - line 2031: Add init value for ourport->port.iotype  to UPIO_MEM
+> > >
+> > >
+> > > Hyunki Koo (3):
+> > >   serial: samsung: Replace rd_regb/wr_regb with rd_reg/wr_reg
+> > >   dt-bindings: serial: Add reg-io-width compatible
+> > >   tty: samsung_tty: 32-bit access for TX/RX hold registers
+> > >
+> > >  .../devicetree/bindings/serial/samsung_uart.yaml   =7C  8 +++
+> > >  drivers/tty/serial/samsung_tty.c                   =7C 76
+> ++++++++++++++++++---
+> > > -
+> > >  2 files changed, 72 insertions(+), 12 deletions(-)
+> > >
+> > > --
+> > > 2.15.0.rc1
+> >
+> > Hi Greg KH
+> >
+> > Can I ask is this series patch are acceptable or not?
+> > Do you think, I have to do any further action  for this patch?
+> >
+>=20
+> It's been 3 days, give us a chance please...
+>=20
+> Also, I need to wait for the dt patch to be reviewed first before I can t=
+ake
+> any of this, so that's up to the DT maintainers.
+>=20
+> thanks,
+>=20
+> greg k-h
 
-Signed-off-by: Eugene Zaikonnikov <eugene.zaikonnikov@norphonic.com>
-
-diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hd=
-c2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/=
-ti,hdc2010.yaml
---- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.y=
-aml	1970-01-01 01:00:00.000000000 +0100
-+++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2=
-010.yaml	2020-04-24 17:50:58.213007228 +0200
-@@ -0,0 +1,41 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/humidity/ti,hdc2010.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HDC2010/HDC2080 humidity and temperature iio sensors
-+
-+maintainers:
-+  - Eugene Zaikonnikov <eugene.zaikonnikov@norophonic.com>
-+
-+description: |
-+  Relative humidity and tempereature sensors on I2C bus
-+
-+  Datasheets are available at:
-+    http://www.ti.com/product/HDC2010/datasheet
-+    http://www.ti.com/product/HDC2080/datasheet
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,hdc2010
-+      - ti,hdc2080
-+
-+  vdd-supply:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    i2c0 {
-+      #address-cells =3D <1>;
-+      #size-cells =3D <0>;
-+
-+      humidity@40 {
-+          compatible =3D "ti,hdc2010";
-+          reg =3D <0x40>;
-+      };
-+    };
+Sorry to disturb you and Thank you for your answer,
+I will wait.
 
