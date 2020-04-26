@@ -2,163 +2,159 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E767C55199
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 08:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E7FC55199
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 09:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 175152071C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 08:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E412087E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 09:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587893688;
+	bh=kR/2T0w9mJ2ALzxxWE7yrQhRXtKJQ4uWeSGOt4AfhqM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2rmmmpyJbj+PZYlzfOp46244nHAqw1lcW9M5agsNNm+Kd4xy5ZKgTEWtCdDsO4gOB
+	 FaI9eUOwfsOAtrFOE/Or0Y9TgeK3Q0ouRZAcBp6OdZFvSt1ODvB32CeuKduqrIp0YQ
+	 fYQovhkNZyYflxnZa0KR69VYzIjc9aTaRhDwUis0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbgDZI3y (ORCPT
+        id S1726112AbgDZJer (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 04:29:54 -0400
-Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:43733 "EHLO
-        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726108AbgDZI3y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Apr 2020 04:29:54 -0400
-Received: from pro2.mail.ovh.net (unknown [10.108.1.157])
-        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id C5AB15AE098D;
-        Sun, 26 Apr 2020 10:29:50 +0200 (CEST)
-Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sun, 26 Apr
- 2020 10:29:50 +0200
-Date:   Sun, 26 Apr 2020 10:28:25 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Sun, 26 Apr 2020 05:34:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbgDZJer (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 26 Apr 2020 05:34:47 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EBD920700;
+        Sun, 26 Apr 2020 09:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587893686;
+        bh=kR/2T0w9mJ2ALzxxWE7yrQhRXtKJQ4uWeSGOt4AfhqM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Fho/YBffK/t7UX26k+VLGEZmmfe9aTKeWH1BSRttXhmqktyT/BqwPnW/Mh/D33Y0f
+         KHd41pE2W33CpmB0/233MxFgvQf1TOUDfI/5Q1vm71pEgQTAUvkTon2hc/3ho6eX8I
+         tKPh1C2RP3iZnSb/8JSamvLoR1OCBR80op9zKYpA=
+Date:   Sun, 26 Apr 2020 10:34:41 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
-Subject: Re: [PATCH 5/6] dt-bindings: iio: scd30: add device binding file
-Message-ID: <20200426082825.GA3282@arch>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
- <20200422141135.86419-6-tomasz.duszynski@octakon.com>
- <20200425202341.53e614d8@archlinux>
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v11 1/2] iio: proximity: provide device tree binding
+ document
+Message-ID: <20200426103441.6d822c7c@archlinux>
+In-Reply-To: <20200422160509.7117-2-i.mikhaylov@yadro.com>
+References: <20200422160509.7117-1-i.mikhaylov@yadro.com>
+        <20200422160509.7117-2-i.mikhaylov@yadro.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200425202341.53e614d8@archlinux>
-X-Originating-IP: [89.70.31.203]
-X-ClientProxiedBy: DAG2EX2.emp2.local (172.16.2.12) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 5079497430882606162
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrheejgddtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhepfffhvffukfhfgggtuggjihesthdtredttddtjeenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehrohgshhdoughtsehkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 08:23:41PM +0100, Jonathan Cameron wrote:
-> On Wed, 22 Apr 2020 16:11:34 +0200
-> Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
->
-> > Add SCD30 sensor binding file.
-> >
-> > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> > ---
-> >  .../iio/chemical/sensirion,scd30.yaml         | 71 +++++++++++++++++++
-> >  1 file changed, 71 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
-> > new file mode 100644
-> > index 000000000000..b092b2530c76
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
-> > @@ -0,0 +1,71 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->
-> Dual license preferred with BSD for bindings.
->
+On Wed, 22 Apr 2020 19:05:08 +0300
+Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
 
-Okay.
+> Mostly standard i2c driver with some additional led-current option
+> for vcnl3020.
+> 
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Hm. I missed on previous versions that the title of this patch doesn't
+match the dt-bindings standard.  Please look at other bindings patches.
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/chemical/sensirion,scd30.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Sensirion SCD30 carbon dioxide sensor
-> > +
-> > +maintainers:
-> > +  - Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> > +
-> > +description: |
-> > +  Air quality sensor capable of measuring co2 concentration, temperature
-> > +  and relative humidity.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - sensirion,scd30
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  vdd-supply: true
-> > +
-> > +  sensirion,sel-gpios:
-> > +    description: GPIO connected to the SEL line
-> > +    maxItems: 1
-> > +
-> > +  sensirion,pwm-gpios:
-> > +    description: GPIO connected to the PWM line
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - vdd-supply
->
-> Only enable it I think in the driver.  Should be fine with a stub regulator
-> as provided if we don't specify one in the dt binding because it's not
-> controllable and we are lazy.
->
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    # include <dt-bindings/gpio/gpio.h>
-> > +    # include <dt-bindings/interrupt-controller/irq.h>
-> > +    i2c {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      scd30@61 {
-> > +        compatible = "sensirion,scd30";
-> > +        reg = <0x61>;
-> > +        vdd-supply = <&vdd>;
-> > +        interrupt-parrent = <&gpio0>;
-> > +        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> > +      };
-> > +    };
-> > +  - |
-> > +    # include <dt-bindings/gpio/gpio.h>
->
-> Why gpio?
->
+e.g. dt-bindings: proximity: Add docs for vcnl3020 
 
-That shouldn't be here. I have some local changes where I use sel-gpios hence
-this include.
+One other comment inline from me.
+> ---
+>  .../bindings/iio/proximity/vcnl3020.yaml      | 64 +++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> new file mode 100644
+> index 000000000000..ac47770609d2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Integrated Proximity Sensor With Infrared Emitter
+> +
+> +maintainers:
+> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> +
+> +description: |
+> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
+> +  that the infrared emitter is included in the package. It has 16-bit
+> +  resolution. It includes a signal processing IC and features standard I2C
+> +  communication interface. It features an interrupt function.
+> +
+> +  Specifications about the devices can be found at:
+> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - vishay,vcnl3020
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +  vddio-supply:
+> +    description: Regulator that provides power to the bus
+> +
+> +  vishay,led-current-microamp:
+> +    description:
+> +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
+> +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
+> +      higher than decimal 20.
+The text doesn't add anything to the enum which fully defines the values.
+I'd go with something simple like:
 
-> > +    # include <dt-bindings/interrupt-controller/irq.h>
-> > +    serial {
-> > +      scd30 {
-> > +        compatible = "sensirion,scd30";
-> > +        vdd-supply = <&vdd>;
-> > +        interrupt-parrent = <&gpio0>;
-> > +        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> > +      };
-> > +    };
-> > +
-> > +...
->
+	 The drive current for the LED used in proximity sensing.
+
+> +    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
+> +          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
+> +          180000, 190000, 200000]
+> +    default: 20000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        proximity@13 {
+> +              compatible = "vishay,vcnl3020";
+> +              reg = <0x13>;
+> +              vishay,led-current-microamp = <200000>;
+> +        };
+> +    };
+
