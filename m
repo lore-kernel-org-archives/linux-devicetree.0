@@ -2,189 +2,113 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2405C55194
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 880F0C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 769F1206DD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C9A206DD
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 15:35:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Odv9VoxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgDZO5W (ORCPT
+        id S1726166AbgDZPfa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 10:57:22 -0400
-Received: from mail-bn8nam11olkn2035.outbound.protection.outlook.com ([40.92.20.35]:6657
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726152AbgDZO5W (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Apr 2020 10:57:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ay5aXiPmGAU6gIRc5Fw8oYXPk6MUvy9D8u6NdUxVEVZYoEQoGdfTaySDVZZ3ItQchb8oMYnChTW9wG1ZjKCQOigUwSVNZz70mpFeBjxsxFv9grdwgMPC/cc41emNEDSa0LTsBcZgpnhZKWKTS7k6AXEftHkTF1Ex5DnMbfrZSqZ5LYsyfHXurW1MJLk6kKm/fAL/2ku7AZtcW/Ga/ANPudN6eo0zRl/otG4o/V11glnJDyd9xZbQYrk1aeeoBXPd47CBMTIYYg1XA6i/YybDGQFOI4bRZiox09WCLmKYqZT2DqrylPEmsmEaNUTIffm+poV5/BMhQr2BhwYtiN6U8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rCl3rY0wkUejQntKOCRLgSoEtSbDA20DEt0Lp6EAeQw=;
- b=XcydcxaB3GWWwBg0qhKGybdwe+RfKugK7++6EZoTXxit5PUP2Tka24Vf1SyXeIZTcly1u6ywzx9j47jCjranR1d6s/UdgvsHW6GR6Yfjik8Xq1GW5dodHLJicGnN9vU+1/zziYx307tz/zzHOkTQz6gr6xsL17mUiR4RUgM0Zx0EsG15vEBhGQKXKVjsTd4tsMPG245r1gI9J94S/ADWrm5DFl/aaTA4wSJpeZfAJNbkts/msCXwF2XJH69Jl7vfVDKbzI485GpRQoZDp7ZRXCF3EqHl6CCIaCAe3u0Ejs8swsvxDKfa4TtCY3uWDF56z32l2G0tl7KSHIB6gRSyOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from CO1NAM11FT032.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:3861::47) by
- CO1NAM11HT148.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::275)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Sun, 26 Apr
- 2020 14:57:17 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:3861::4d) by CO1NAM11FT032.mail.protection.outlook.com
- (2a01:111:e400:3861::218) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15 via Frontend
- Transport; Sun, 26 Apr 2020 14:57:17 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:E81CF6BFCFE073454522CA0EAAF72EEBFDD4626B33AA54E33244858FAA4E44A9;UpperCasedChecksum:B59FE0D74AE6107E11CB223A88241A401D292CCDCAC3F731F6A2F9AC6F7CB0FE;SizeAsReceived:9919;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2937.020; Sun, 26 Apr 2020
- 14:57:17 +0000
-Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
-To:     Paul Cercueil <paul@crapouillou.net>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-References: <cover.1587760454.git.hns@goldelico.com>
- <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
- <NYBE9Q.YH08US7A7DC3@crapouillou.net>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Sun, 26 Apr 2020 07:57:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <NYBE9Q.YH08US7A7DC3@crapouillou.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CO2PR05CA0059.namprd05.prod.outlook.com
- (2603:10b6:102:2::27) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <c7fba899-d520-559f-d14c-1d92f629329e@live.ca>
+        Sun, 26 Apr 2020 11:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726165AbgDZPfa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 26 Apr 2020 11:35:30 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930C6C09B050
+        for <devicetree@vger.kernel.org>; Sun, 26 Apr 2020 08:35:29 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id w145so11704212lff.3
+        for <devicetree@vger.kernel.org>; Sun, 26 Apr 2020 08:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=we74QiB75BtYwlX2vu1/hk6PEpVENj5opPHAohrnsck=;
+        b=Odv9VoxY6497vkDTk3+CRrgpuyR/3DNV0ZX8s0CZ9GN4rNPbF0ZAWfH+KZM9MA8Mqj
+         lR9kQ0/xxj0SUdi0P3ul3qdJo5Fg0sktrQoC3ayiMfbpbvhfoAV7AELpoFo0TK9CslcN
+         S25kQAFoyh7iVFVHblXWMAjwsg3tdzBbYKUYPdygjdmaj5cWt6ohXnQDPgiZddm9MlZB
+         g4YLk8AGHQOuQ3xDsRBB7BH7Pvb1RjSpXjTbHsWLOr20iA6s1a8jhb7+PwyTaNqSZdxg
+         mypAVWAjp1ICtt7tdNQMoskBTF3XR7JWv3LDOUCyPIpJqqS1L6X6oLRnmIra8zqWztpW
+         8GaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=we74QiB75BtYwlX2vu1/hk6PEpVENj5opPHAohrnsck=;
+        b=XVP6rdNiJafW4OcYqMCR4xPsyyR37126qPUN5hXpT65bD8J/Cp9AtwiUvSjIbbP4vc
+         eogImFRlsDjm+YDRNunwIG/Msb8LxaF3iQQHkko7Bb3xub6u3vgDZGhBqka8Klg70izX
+         j0cpThXGrcQWray5eKiO2ALDHlHHUlE7nTMFo5ImugBuRNrPSrtj4wI4YgCbYXKFr9np
+         JDOdivOvShFOX/D1COfW6OF9FCLrjlMOnW3aM7VVTeRqhXhc95ifHCWzF3a7damc+8aD
+         lcP8mW5f80QG6MMykad7pCg6/qFZLXEYgZVun63ZScpvJn1hWVuzWcL/wUbfqJ43b97R
+         LL2A==
+X-Gm-Message-State: AGi0PuYWf/KqwHWyo5WCbmbgfrxrdAV+FXlUB2/Yi8JQsqRA/zNdx3Bj
+        /nZY2ynNZvtaqy4JAddLM+wivDhxlzLyDKWEQXXEfg==
+X-Google-Smtp-Source: APiQypIQlC5Oq9kecdo1sFNy4lS8r1NT6AHD5X6gYOaNU2NmhTi6HZq5fedzF0ehDBll7oigZUvKxEholtvfWonYUMg=
+X-Received: by 2002:ac2:43c6:: with SMTP id u6mr12976089lfl.170.1587915327642;
+ Sun, 26 Apr 2020 08:35:27 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb67:7300:9f89:4b96:de0b:cd14] (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by CO2PR05CA0059.namprd05.prod.outlook.com (2603:10b6:102:2::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.12 via Frontend Transport; Sun, 26 Apr 2020 14:57:14 +0000
-X-Microsoft-Original-Message-ID: <c7fba899-d520-559f-d14c-1d92f629329e@live.ca>
-X-TMN:  [OmgafuzCUqVRB2i/C6FSFbGQe5x8huTGu/6RGTYJ87Y/NFFW81q0f1xbGex4LyHn]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: cbade908-3c53-44a5-a6de-08d7e9f21cd1
-X-MS-TrafficTypeDiagnostic: CO1NAM11HT148:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QwTfGRGC0v5LCTZiqw648BnLUPKmgF4piL5vYUxxnRbFF3jRYYLJaiiCpWhoMoXyun1bOoXNLWVAufhHYJdce/SE0dKQZD9b+gEu1+6CRnw86wcRbtWcpD2FEWg37aNVZWOPo4o/0GXz8vBkYzW0CD47dOBdvOuxcO8Tnayi23egP0iSstBHimHh8antuNuFgNGybBGfDQzllIG4jKC04Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: 8808OTabogw8sV0VMpFUQqObuTnPvfdGv11P400fYeD1iMYdPEq4G/dgFkf3NmGGEEbDa05lFeFmKjbQM3b5L96FQ5G2pK/UROup5LS7M9B2DgKscxJaRp7dNO3Vs1bYl1PB7cvDahfb/2GF9jEYWhElQxuXGrx3RBRkjC+ffFTTcYivf2OhXZrGotJ99khwYRshb5dW/r/Vh1L0XgUPvQ==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbade908-3c53-44a5-a6de-08d7e9f21cd1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2020 14:57:17.5591
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT148
+References: <20200423064808.10468-1-etienne.carriere@linaro.org> <CAL_Jsq+zNyqcQ2xWceGLz4by=3rV=46wPyj=HcFPZ9pQPF17eg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+zNyqcQ2xWceGLz4by=3rV=46wPyj=HcFPZ9pQPF17eg@mail.gmail.com>
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+Date:   Sun, 26 Apr 2020 17:35:16 +0200
+Message-ID: <CAN5uoS9qENztJcd1b4uUMW83+o57gkWE9gEpq3Qd2YV0STA1gA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Add examples of secure- prefixed property in documentation
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
+On Fri, 24 Apr 2020 at 23:59, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Thu, Apr 23, 2020 at 1:49 AM Etienne Carriere
+> <etienne.carriere@linaro.org> wrote:
+> >
+> > Hello,
+> >
+> > This is a proposal for adding a bit of description in the DT bindings
+> > documentation of how secure- property prefix can be used for. The
+> > changes in this patch series describe that for clocks and resets properties.
+> >
+> > Documentation file arm/secure.txt already states that secure- prefix can be
+> > used for any property hence the description proposed here are not mandated.
+> > However it may be useful as explicit examples of such usage.
+>
+> It may say that, but any new property has to be documented and
+> reviewed still. I'm not sure that anything in secure.txt has actually
+> gotten used.
 
-On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
-> 
-> 
-> Le ven. 24 avril 2020 à 22:34, H. Nikolaus Schaller <hns@goldelico.com> a écrit :
->> From: Jonathan Bakker <xc-racer2@live.ca>
->>
->> All s5pv210 devices have a PowerVR SGX 540 (revision 120) attached.
->>
->> There is no external regulator for it so it can be enabled by default.
->>
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->>  arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
->> index 2ad642f51fd9..abbdda205c1b 100644
->> --- a/arch/arm/boot/dts/s5pv210.dtsi
->> +++ b/arch/arm/boot/dts/s5pv210.dtsi
->> @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
->>              #interrupt-cells = <1>;
->>          };
->>
->> +        gpu: gpu@f3000000 {
->> +            compatible = "samsung,s5pv210-sgx540-120";
->> +            reg = <0xf3000000 0x10000>;
->> +            interrupt-parent = <&vic2>;
->> +            interrupts = <10>;
->> +            clock-names = "core";
->> +            clocks = <&clocks CLK_G3D>;
->> +
->> +            assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
->> +            assigned-clock-rates = <0>, <66700000>;
->> +            assigned-clock-parents = <&clocks MOUT_MPLL>;
-> 
-> What are these clocks for, and why are they reparented / reclocked?
-> 
-> Shouldn't they be passed to 'clocks' as well?
-> 
-> -Paul
-> 
+Looking at Linux kernel, U-Boot, Qemu, EDK II, that's right :)
+I guess that applies to the so-called non-secure world.
 
-The G3D clock system can have multiple parents, and for stable operation
-it's recommended to use the MPLL clock as the parent (which in turn
-is actually a mux as well).  MOUT_G3D is simply the mux for CLK_G3D
-(SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could equally be CLK_G3D
-(and probably should be, for readability) as CLK_G3D is simply the gate and
-DOUT_G3D is the divider for it.
+>
+> You should participate in the System DT discussions in Linaro where
+> how to represent different CPUs and CPU execution environments (like
+> secure world) is being worked on.
 
-The SGX clock layout on S5PV210 looks something like this:
+Fair, I'll get information there.
+Thank you for your prompt feedback.
 
-        MOUT_MPLL -----------> MOUT_G3D ---> DOUT_G3D  ---> CLK_G3D
-(selectable parent clock)      (mux)    ---> (divider) ---> (gate)
+In the same scope, I am to post a change in the Linux DTS files.
+A change to define a new attribute mostly of interest for the secure
+world description.
+I will still post it to the LKML to get feedback about it.
+Such new bindings should still be discussed in the Linux DT ML, right?
 
-This is fairly common for older Samsung SoCs, eg having a look at
-arch/arm/boot/dts/exynos4210-universal_c210.dts you can see that
-the FIMC clocks are parented to MPLL and have a rate set.
+Regards,
+Etienne
 
->> +        };
->> +
->>          fimd: fimd@f8000000 {
->>              compatible = "samsung,s5pv210-fimd";
->>              interrupt-parent = <&vic2>;
->> -- 
->> 2.25.1
->>
-> 
-> 
-
-Thanks,
-Jonathan
+>
+> Rob
