@@ -2,143 +2,189 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9471C7C880
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2405C55194
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A544F206DD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:08:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="p/egE2Nh"
+	by mail.kernel.org (Postfix) with ESMTP id 769F1206DD
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgDZOId (ORCPT
+        id S1726154AbgDZO5W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 10:08:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgDZOIc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Apr 2020 10:08:32 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15051C09B051;
-        Sun, 26 Apr 2020 07:08:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587910109;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=X6s9ev0ZnHJUC2UaGsaWn1aQO321edVLr0jMEEcsidA=;
-        b=p/egE2NhubchTCEOMIn6O3umhHR727pVbKRtq/tydKtNBrMr6UM8fxCyBlk/wRBsxN
-        TvhmOj2Ax1iqg5t2hY8M+OlzzAtDTVV2qCIpacgo/ru4ISV9blPUvaeigqGIv5zbwr4X
-        KHfdvRkYiX0PiVYC6+TWsVdRtBDfP7yfEqeV0X+CsKaQPvvnHTO3/OO9nsSRclksAH6C
-        O+gFW7gmejgP4w3i5Em12u1PU6CFHN5terJnI7ggnEqOukn24V/MQmjia4nETRgiSVnU
-        btfyKaVYH1x0cIQ3CjwWd4IywGtIY/kQbaLPyS1ETiQy4qmTRrJ8ElVoTdl1DaE5g5JD
-        ZI6A==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4G6Nf3AC"
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id 60b02dw3QE8PNFK
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Sun, 26 Apr 2020 16:08:25 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 1/4] arm64: dts: qcom: msm8916: Add blsp_i2c1
-Date:   Sun, 26 Apr 2020 16:06:39 +0200
-Message-Id: <20200426140642.204395-2-stephan@gerhold.net>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200426140642.204395-1-stephan@gerhold.net>
-References: <20200426140642.204395-1-stephan@gerhold.net>
-MIME-Version: 1.0
+        Sun, 26 Apr 2020 10:57:22 -0400
+Received: from mail-bn8nam11olkn2035.outbound.protection.outlook.com ([40.92.20.35]:6657
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726152AbgDZO5W (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 26 Apr 2020 10:57:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ay5aXiPmGAU6gIRc5Fw8oYXPk6MUvy9D8u6NdUxVEVZYoEQoGdfTaySDVZZ3ItQchb8oMYnChTW9wG1ZjKCQOigUwSVNZz70mpFeBjxsxFv9grdwgMPC/cc41emNEDSa0LTsBcZgpnhZKWKTS7k6AXEftHkTF1Ex5DnMbfrZSqZ5LYsyfHXurW1MJLk6kKm/fAL/2ku7AZtcW/Ga/ANPudN6eo0zRl/otG4o/V11glnJDyd9xZbQYrk1aeeoBXPd47CBMTIYYg1XA6i/YybDGQFOI4bRZiox09WCLmKYqZT2DqrylPEmsmEaNUTIffm+poV5/BMhQr2BhwYtiN6U8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rCl3rY0wkUejQntKOCRLgSoEtSbDA20DEt0Lp6EAeQw=;
+ b=XcydcxaB3GWWwBg0qhKGybdwe+RfKugK7++6EZoTXxit5PUP2Tka24Vf1SyXeIZTcly1u6ywzx9j47jCjranR1d6s/UdgvsHW6GR6Yfjik8Xq1GW5dodHLJicGnN9vU+1/zziYx307tz/zzHOkTQz6gr6xsL17mUiR4RUgM0Zx0EsG15vEBhGQKXKVjsTd4tsMPG245r1gI9J94S/ADWrm5DFl/aaTA4wSJpeZfAJNbkts/msCXwF2XJH69Jl7vfVDKbzI485GpRQoZDp7ZRXCF3EqHl6CCIaCAe3u0Ejs8swsvxDKfa4TtCY3uWDF56z32l2G0tl7KSHIB6gRSyOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from CO1NAM11FT032.eop-nam11.prod.protection.outlook.com
+ (2a01:111:e400:3861::47) by
+ CO1NAM11HT148.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::275)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Sun, 26 Apr
+ 2020 14:57:17 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:3861::4d) by CO1NAM11FT032.mail.protection.outlook.com
+ (2a01:111:e400:3861::218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15 via Frontend
+ Transport; Sun, 26 Apr 2020 14:57:17 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:E81CF6BFCFE073454522CA0EAAF72EEBFDD4626B33AA54E33244858FAA4E44A9;UpperCasedChecksum:B59FE0D74AE6107E11CB223A88241A401D292CCDCAC3F731F6A2F9AC6F7CB0FE;SizeAsReceived:9919;Count:50
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2937.020; Sun, 26 Apr 2020
+ 14:57:17 +0000
+Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
+To:     Paul Cercueil <paul@crapouillou.net>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+References: <cover.1587760454.git.hns@goldelico.com>
+ <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
+ <NYBE9Q.YH08US7A7DC3@crapouillou.net>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Sun, 26 Apr 2020 07:57:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+In-Reply-To: <NYBE9Q.YH08US7A7DC3@crapouillou.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CO2PR05CA0059.namprd05.prod.outlook.com
+ (2603:10b6:102:2::27) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <c7fba899-d520-559f-d14c-1d92f629329e@live.ca>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb67:7300:9f89:4b96:de0b:cd14] (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by CO2PR05CA0059.namprd05.prod.outlook.com (2603:10b6:102:2::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.12 via Frontend Transport; Sun, 26 Apr 2020 14:57:14 +0000
+X-Microsoft-Original-Message-ID: <c7fba899-d520-559f-d14c-1d92f629329e@live.ca>
+X-TMN:  [OmgafuzCUqVRB2i/C6FSFbGQe5x8huTGu/6RGTYJ87Y/NFFW81q0f1xbGex4LyHn]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: cbade908-3c53-44a5-a6de-08d7e9f21cd1
+X-MS-TrafficTypeDiagnostic: CO1NAM11HT148:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QwTfGRGC0v5LCTZiqw648BnLUPKmgF4piL5vYUxxnRbFF3jRYYLJaiiCpWhoMoXyun1bOoXNLWVAufhHYJdce/SE0dKQZD9b+gEu1+6CRnw86wcRbtWcpD2FEWg37aNVZWOPo4o/0GXz8vBkYzW0CD47dOBdvOuxcO8Tnayi23egP0iSstBHimHh8antuNuFgNGybBGfDQzllIG4jKC04Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: 8808OTabogw8sV0VMpFUQqObuTnPvfdGv11P400fYeD1iMYdPEq4G/dgFkf3NmGGEEbDa05lFeFmKjbQM3b5L96FQ5G2pK/UROup5LS7M9B2DgKscxJaRp7dNO3Vs1bYl1PB7cvDahfb/2GF9jEYWhElQxuXGrx3RBRkjC+ffFTTcYivf2OhXZrGotJ99khwYRshb5dW/r/Vh1L0XgUPvQ==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbade908-3c53-44a5-a6de-08d7e9f21cd1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2020 14:57:17.5591
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT148
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-MSM8916 has another I2C QUP controller that can be enabled on
-GPIO 2 and 3.
+Hi Paul,
 
-Add blsp_i2c1 to msm8916.dtsi and disable it by default.
+On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
+> 
+> 
+> Le ven. 24 avril 2020 à 22:34, H. Nikolaus Schaller <hns@goldelico.com> a écrit :
+>> From: Jonathan Bakker <xc-racer2@live.ca>
+>>
+>> All s5pv210 devices have a PowerVR SGX 540 (revision 120) attached.
+>>
+>> There is no external regulator for it so it can be enabled by default.
+>>
+>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>>  arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+>> index 2ad642f51fd9..abbdda205c1b 100644
+>> --- a/arch/arm/boot/dts/s5pv210.dtsi
+>> +++ b/arch/arm/boot/dts/s5pv210.dtsi
+>> @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
+>>              #interrupt-cells = <1>;
+>>          };
+>>
+>> +        gpu: gpu@f3000000 {
+>> +            compatible = "samsung,s5pv210-sgx540-120";
+>> +            reg = <0xf3000000 0x10000>;
+>> +            interrupt-parent = <&vic2>;
+>> +            interrupts = <10>;
+>> +            clock-names = "core";
+>> +            clocks = <&clocks CLK_G3D>;
+>> +
+>> +            assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
+>> +            assigned-clock-rates = <0>, <66700000>;
+>> +            assigned-clock-parents = <&clocks MOUT_MPLL>;
+> 
+> What are these clocks for, and why are they reparented / reclocked?
+> 
+> Shouldn't they be passed to 'clocks' as well?
+> 
+> -Paul
+> 
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
-On samsung-a2015 there is an external TFA9895 speaker amplifier
-connected to blsp_i2c1. There isn't a proper mainline driver
-for it (yet?), but it's nice to have the I2C bus in mainline at least.
----
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 24 ++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi      | 15 ++++++++++++++
- 2 files changed, 39 insertions(+)
+The G3D clock system can have multiple parents, and for stable operation
+it's recommended to use the MPLL clock as the parent (which in turn
+is actually a mux as well).  MOUT_G3D is simply the mux for CLK_G3D
+(SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could equally be CLK_G3D
+(and probably should be, for readability) as CLK_G3D is simply the gate and
+DOUT_G3D is the divider for it.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index 242aaea68804..b45fd12856ea 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -262,6 +262,30 @@ pinconf {
- 		};
- 	};
- 
-+	i2c1_default: i2c1_default {
-+		pinmux {
-+			function = "blsp_i2c1";
-+			pins = "gpio2", "gpio3";
-+		};
-+		pinconf {
-+			pins = "gpio2", "gpio3";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
-+
-+	i2c1_sleep: i2c1_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio2", "gpio3";
-+		};
-+		pinconf {
-+			pins = "gpio2", "gpio3";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
-+
- 	i2c2_default: i2c2_default {
- 		pinmux {
- 			function = "blsp_i2c2";
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 8b429954ea29..6ab7cabde370 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -612,6 +612,21 @@ blsp_spi6: spi@78ba000 {
- 			status = "disabled";
- 		};
- 
-+		blsp_i2c1: i2c@78b5000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0x078b5000 0x500>;
-+			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				 <&gcc GCC_BLSP1_QUP1_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c1_default>;
-+			pinctrl-1 = <&i2c1_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		blsp_i2c2: i2c@78b6000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x078b6000 0x500>;
--- 
-2.26.2
+The SGX clock layout on S5PV210 looks something like this:
 
+        MOUT_MPLL -----------> MOUT_G3D ---> DOUT_G3D  ---> CLK_G3D
+(selectable parent clock)      (mux)    ---> (divider) ---> (gate)
+
+This is fairly common for older Samsung SoCs, eg having a look at
+arch/arm/boot/dts/exynos4210-universal_c210.dts you can see that
+the FIMC clocks are parented to MPLL and have a rate set.
+
+>> +        };
+>> +
+>>          fimd: fimd@f8000000 {
+>>              compatible = "samsung,s5pv210-fimd";
+>>              interrupt-parent = <&vic2>;
+>> -- 
+>> 2.25.1
+>>
+> 
+> 
+
+Thanks,
+Jonathan
