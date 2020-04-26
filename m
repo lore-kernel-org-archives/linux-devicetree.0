@@ -2,294 +2,103 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1497C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 11:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C36C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 11:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB1222084D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 11:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676B1206CD
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 11:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgDZLMd (ORCPT
+        id S1726137AbgDZLu1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 07:12:33 -0400
-Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:50401 "EHLO
-        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725965AbgDZLMd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Apr 2020 07:12:33 -0400
-Received: from pro2.mail.ovh.net (unknown [10.109.138.25])
-        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id B070B5AE2A86;
-        Sun, 26 Apr 2020 13:12:29 +0200 (CEST)
-Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sun, 26 Apr
- 2020 13:12:29 +0200
-Date:   Sun, 26 Apr 2020 13:11:04 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
-Subject: Re: [PATCH 4/6] Documentation: ABI: testing: scd30: document iio
- attributes
-Message-ID: <20200426111104.GB3282@arch>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
- <20200422141135.86419-5-tomasz.duszynski@octakon.com>
- <alpine.DEB.2.21.2004221818490.26800@vps.pmeerw.net>
- <20200423155317.GB43448@arch>
- <20200425202057.5c8ad612@archlinux>
+        Sun, 26 Apr 2020 07:50:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34706 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbgDZLu1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 26 Apr 2020 07:50:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 000ABAB64;
+        Sun, 26 Apr 2020 11:50:24 +0000 (UTC)
+Subject: Re: [PATCH v3 2/3] dt-bindings: arm: actions: Document Caninos Loucos
+ Labrador
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, edgar.righi@lsitec.org.br,
+        igor.lima@lsitec.org.br, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+References: <20200229104358.GB19610@mani>
+ <20200320035104.26139-1-matheus@castello.eng.br>
+ <20200320035104.26139-3-matheus@castello.eng.br>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <99c5fa14-cc2d-3692-fc6e-8e3fa77c5ab0@suse.de>
+Date:   Sun, 26 Apr 2020 13:50:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200425202057.5c8ad612@archlinux>
-X-Originating-IP: [89.70.31.203]
-X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 7826411728179190866
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrheejgdefkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehrohgshhdoughtsehkvghrnhgvlhdrohhrgh
+In-Reply-To: <20200320035104.26139-3-matheus@castello.eng.br>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 08:20:57PM +0100, Jonathan Cameron wrote:
-> On Thu, 23 Apr 2020 17:53:17 +0200
-> Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
->
-> > On Wed, Apr 22, 2020 at 06:40:17PM +0200, Peter Meerwald-Stadler wrote:
-> > > On Wed, 22 Apr 2020, Tomasz Duszynski wrote:
-> > >
-> > > > Add documentation for sensor specific iio attributes.
-> > >
-> > > minor comments below
-> >
-> > Thanks.
-> >
-> > >
-> > > > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> > > > ---
-> > > >  Documentation/ABI/testing/sysfs-bus-iio-scd30 | 97 +++++++++++++++++++
-> > > >  1 file changed, 97 insertions(+)
-> > > >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
-> > > >
-> > > > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-scd30 b/Documentation/ABI/testing/sysfs-bus-iio-scd30
-> > > > new file mode 100644
-> > > > index 000000000000..0431a718447d
-> > > > --- /dev/null
-> > > > +++ b/Documentation/ABI/testing/sysfs-bus-iio-scd30
-> > > > @@ -0,0 +1,97 @@
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp
-> > > > +Date:		April 2020
-> > > > +KernelVersion:	5.8
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		Given that sensor's CO2 measurement chamber has fixed volume
-> > > > +		pressure changes will affect concentration readings. Writing
-> > > > +		current ambient pressure here will allow senor to make necessary
-> > >
-> > > sensor
-> > >
-> >
-> > Okay.
-> >
-> > > > +		adjustments. Upon reading previously set value is returned.
-> > > > +		Units are millibars.
-> > >
-> > > unit for pressure in IIO is kilopascal (e.g.
-> > > /sys/bus/iio/devices/iio:deviceX/in_pressure_raw)
-> > >
-> >
-> > My thinking here was that since these are sensor specific attributes
-> > they don't need to stick to iio conventions and millibars were somewhat
-> > more natural to use. But I guess that's just matter of habit.
->
-> You absolutely have to stick to standard units.  Userspace programs
-> aren't going to come read your docs...
->
-> For other sensors that take a calibration value like this we've reported
-> them via an output channel.  For example the atlas-ph sensor has
-> an 'output temp' channel used for this purpose.
->
++ linux-actions
 
-Fair enough.
+Am 20.03.20 um 04:51 schrieb Matheus Castello:
+> Update the documentation to add the Caninos Loucos Labrador. Labrador
+> project consists of a computer on module based on the Actions Semi S500
+> processor and the Labrador base board.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>   Documentation/devicetree/bindings/arm/actions.yaml | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
+> index ace3fdaa8396..1b131ceb884a 100644
+> --- a/Documentation/devicetree/bindings/arm/actions.yaml
+> +++ b/Documentation/devicetree/bindings/arm/actions.yaml
+> @@ -24,6 +24,11 @@ properties:
+>                 - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
+>             - const: lemaker,guitar
+>             - const: actions,s500
+> +      - items:
+> +          - enum:
+> +              - caninos,labrador-bb # Caninos Loucos Labrador Base Board
+> +          - const: caninos,labrador
+> +          - const: actions,s500
+> 
+>         # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
+>         - items:
 
-> It's not ideal or totally intuitive but it does let us avoid expanding
-> the overall ABI.  The argument was something along the lines of
-> 1) Imagine your sensor could control the pressure in the measurement space...
-> 2) An output channel would provide the value to set it to.
-> 3) Now instead we provide a means of saying 'what it is'
-> 4) End result is we write a value and the pressure in the chamber is
->    that value :)
->
-> As I said not ideal but the best we can do without having to define a lot
-> of ABI just to deal with compensation factors.
->
-> This is a rare case where I would document the 'standard' ABI in here
-> to make the point that it is actually providing an estimate of the pressure
-> not controlling it...
->
-> >
-> > So generally I am okay with reworking all attrs to accept values in iio
-> > preferred units.
-> >
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp_available
-> > > > +Date:		April 2020
-> > > > +KernelVersion:	5.8
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		The range of available values in millibars represented as the
-> > > > +		minimum value, the step and the maximum value, all enclosed in
-> > > > +		square brackets.
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval
-> > > > +Date:		January 2020
-> > > > +KernelVersion:	5.8
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		Amount of time between subsequent measurements. Writing this
-> > > > +		attribute will change measurement interval. Upon reading
-> > > > +		current measurement interval is returned. Units are seconds.
->
-> Use the existing ABI sampling frequency which is sort of the inverse of this.
->
+Now that you chose to stick with caninos rather than lsi prefix, the 
+sort order compared to lemaker remains wrong.
 
-Was thinking about it but long periods in Hz simply don't look appealing :).
+Looking at https://caninosloucos.org/en/labrador-en/ there's a "CORE 
+BOARD V2.0" and a "BASE BOARD M V1.0".
 
-No other strong opinions so I'll rework that.
+Assuming the v2 is not software-relevant, shouldn't the M be reflected 
+in the compatible string? For example, "caninos,labrador-core" and 
+"caninos,labrador-m"? You're free to use -bb-m of course, but no need to 
+copy LeMaker -bb naming for your board. What does your PCB say?
 
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval_available
-> > > > +Date:		April 2020
-> > > > +KernelVersion:	5.8
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		The range of available values in seconds represented as the
-> > > > +		minimum value, the step and the maximum value, all enclosed in
-> > > > +		square brackets.
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/asc
-> Spends some characters to easy of understanding ;)
->
-> auto_calib_proc_enable maybe?  Or can we get away with the 'somewhat standard
-> calibration (it's used in at least one other driver IIRC)
->
+Also note that other recent bindings have been using a description 
+attribute - not sure whether we can apply that a) to the SoM and b) to 
+the base board here. Please compare other in-tree bindings.
 
-Just self_calibration would do?
+Regards,
+Andreas
 
-> > > > +Date:		April 2020
-> > > > +KernelVersion:	5.8
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		Writing 1 or 0 to this attribute will respectively activate or
-> > > > +		deactivate automatic self calibration procedure. Upon reading 1
-> > >
-> > > deactivate automatic self calibration (asc) procedure
-> > >
-> >
-> > That shouldn't be too difficult to realize what asc actually stands for after
-> > reading this short description.
-> >
-> > > > +		is returned if asc is ongoing, 0 otherwise.
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/frc
-> > > > +Date:		April 2020
-> > > > +KernelVersion:	5.8
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		Forced recalibration is used to compensate for sensor drifts
-> > > > +		when a reference value of CO2 concentration in close proximity
-> > > > +		to the sensor is available. Writing attribute will set frc
-> > > > +		value. Upon reading current frc is returned. Units are
-> > > > +		millibars.
->
-> Could we implement this by just writing to the main channel value?
-> Bit of a clunky ABI but sort of logically fits in my head given we are basically
-> forcing the value we read to be this one?
->
-
-So the similar to the pressure compensation. Okay.
-
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/frc_available
-> > > > +Date:		April 2020
-> > > > +KernelVersion:	5.8
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		The range of available values in millibars represented as the
-> > > > +		minimum value, the step and the maximum value, all enclosed in
-> > > > +		square brackets.
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset
-> > > > +Date:		April 2020
-> > > > +KernelVersion:	5.8
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		Sensor readings may be affected by ambient temperature.
-> > > > +		Writing temperature offset will compensate for unwanted changes.
-> > > > +		Note that written offset gets multiplied by a factor of 100
-> > > > +		by a sensor internally.
-> > > > +
-> > > > +		For example, writing 10 here will correspond to 0.1 degree
-> > > > +		Celsius.
->
-> This sounds like a calibbias to me which is standard ABI.
->
-
-Right, that could work.
-
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset_available
-> > > > +Date:		April 2020
-> > > > +KernelVersion:	5.8
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		The range of available values in degrees Celsius represented as
-> > > > +		the minimum value, the step and the maximum value, all enclosed
-> > > > +		in square brackets.
->
-> Wrong units for temperature (which is an odd one as we
-> lifted them from hwmon before learning the error of our ways and starting to use
-> SI units as the base).
->
-
-Does calibbias have _available counterpart?
-
->
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/reset
-> > > > +Date:		April 2020
-> > > > +KernelVersion:	5.8
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		Software reset mechanism forces sensor into the same state
-> > > > +		as after powering up without the need for removing power supply.
-> > > > +		Writing any value will reset sensor.
->
-> Not seeing an argument here for why you might want to do that other than on
-> power up or module probe to get the driver into a known state.
-> So currently it's a no to this one - just don't expose it to userspace.
->
-
-If one writes some odd configuration (though allowed) into sensor, for example
-out of sheer curiosity and then writes the sane values back sensor needs some
-time to recover (i.e start reporting valid measurements again).
-
-So rationale here was that after reset sensor recovers immediately. I'd
-say that reset is sometimes useful. Perhaps that could be exported by
-means of iio debug api?
-
->
-> > > >
-> > >
-> > > --
-> > >
-> > > Peter Meerwald-Stadler
-> > > Mobile: +43 664 24 44 418
->
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
