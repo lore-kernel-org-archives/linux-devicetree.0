@@ -2,257 +2,155 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5300CC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 12:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83ED4C55191
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 12:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F5520700
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 12:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 650C82074F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 12:50:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAi9kUho"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="EE3tEVxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgDZMSR (ORCPT
+        id S1726163AbgDZMuy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 08:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgDZMSR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Apr 2020 08:18:17 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB2CC061A0E;
-        Sun, 26 Apr 2020 05:18:17 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id i16so14049808ils.12;
-        Sun, 26 Apr 2020 05:18:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pnYdgmQFzwhGmDvDPiH/jDwjweMNfoD46y/Y/YmZg10=;
-        b=pAi9kUhoZ/Qjs8l84NpVVssFY8uSsu6LKAwtrc3pq83VPsGi48uUd/NV12A9px1xae
-         g4LubnCzeRTAW3FSOwhW1SgNb98QvW1B0qi1cVcQsvc5DUpGwlMmcq+QgRQU2NBGg0F5
-         lS/lTGusPWyVcGrfbryvjemU/W2dQVX1C/X2u3hcZ3X4aJkhN024LnrhuKj3ZDcNfXpN
-         VGdtN2YZ44gfUGTf9rQE+Ec37V5rAoBNI6EHVSQo0qP6ZlZd79KhUr9ZA61vfXA7SEqe
-         ihsNWxVNf00/cVSS1U8WLDnvpbhxKUE1sVTTRfyxYCRcGVLW75Qh8IcNfjtkLipXtFQF
-         vR0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pnYdgmQFzwhGmDvDPiH/jDwjweMNfoD46y/Y/YmZg10=;
-        b=LXvZEwMBa6LglJA386xg9A1xlFsYkdYj7iAeF+kHE9KllyogymQRE3KQ74TTz8K2Pd
-         3ZFDUIfsojzbyL7/1coHQnGNJzAwL80NnBzaaID2l1Gil7TVZDCHMfWjmUPnUoL+aEoq
-         DOy9x28PZQrwn2FrcOWvRyrGumBpl/sIaCLaOiXAZjohATDA5L1nop+DuDWPLaq9UQ13
-         /t/KY4uYybXpITXAjyN1SVG9G4M8kwHL773nUgsJe6P0Iu2LtCtGr9YrMS1dhdEUjIIh
-         Ar5ZD+efE2JRqZ+XTb9PcyLdS8Zn9Fx1NAqGA9cJKbrcFBLexOAA++LOo65YmkTz68X7
-         hELQ==
-X-Gm-Message-State: AGi0PuYGDYOKLiG27eBa4T5s/9FSeKyftrtOsGc9rmwwKOu2zJy9Y3WI
-        3q+KY5px0QK43ciU06ZhfkqKcHxz6IFJrmvNve0=
-X-Google-Smtp-Source: APiQypKrdPuEZGu5BM7WAtgp8dotSKhkd5VuYDkUEwAH98HM5hfJjwS7qSjm3rozkhfzgkjuuzZn6yfB/RvFoZbagQw=
-X-Received: by 2002:a92:3a48:: with SMTP id h69mr16189042ila.150.1587903496623;
- Sun, 26 Apr 2020 05:18:16 -0700 (PDT)
+        Sun, 26 Apr 2020 08:50:54 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:41514 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgDZMuy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Apr 2020 08:50:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1587905451; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RSLBf9Fagf4q+HhwxFOFootc8dZMFZo1PVNBvnmStFM=;
+        b=EE3tEVxRcTYljO+UifVqubFUQrC6iAs/RgFg4h5hzwmgAYOrQ//6ynWjCqU3jLthKM680I
+        w4zrgopXWxMruQHZLwU9wrdD4t2QmfxnpJ9QHuBFsFR9VT00zMgd+L6pZkn0GZNklEZs4M
+        RG+3Oi3W8AcC1Pwg4rvYx8qpse7EG9k=
+Date:   Sun, 26 Apr 2020 14:50:37 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v7 06/12] ARM: DTS: omap4: add sgx gpu child node
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Message-Id: <DOBE9Q.00IRKFIW0JMG@crapouillou.net>
+In-Reply-To: <5f493a50fedef45c3cacd91cbf999092d9c05164.1587760454.git.hns@goldelico.com>
+References: <cover.1587760454.git.hns@goldelico.com>
+        <5f493a50fedef45c3cacd91cbf999092d9c05164.1587760454.git.hns@goldelico.com>
 MIME-Version: 1.0
-References: <20200426121709.1216-1-peron.clem@gmail.com>
-In-Reply-To: <20200426121709.1216-1-peron.clem@gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 26 Apr 2020 14:18:05 +0200
-Message-ID: <CAJiuCcfA1f6Q8QN-Y0X5WDKciczLAJ7TWNGr5x3N7X0VGtL2NQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: h6: Use dedicated CPU OPP table
- for Tanix TX6
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Warpme,
+Hi Nikolaus,
 
-On Sun, 26 Apr 2020 at 14:17, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
->
-> Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-> voltage to meet OPP table. The DVFS is not working as expected.
->
-> Introduce a dedicated OPP Table where voltage are equals to
-> the fixed regulator.
->
-> Reported-by: Piotr Oniszczuk <warpme@o2.pl>
-> Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables fo=
-r Tanix TX6")
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-
-Could you confirm this patch fixed your issue?
-
-If yes could you add your tested-by tag ?
-
-Thanks,
-Clement
-
+Le ven. 24 avril 2020 =E0 22:34, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> Add SGX GPU node with interrupt. Tested on PandaBoard ES.
+>=20
+> Since omap4420/30/60 and omap4470 come with different SGX variants
+> we need to introduce a new omap4470.dtsi. If an omap4470 board
+> does not want to use SGX it is no problem to still include
+> omap4460.dtsi.
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
->  .../sun50i-h6-tanix-tx6-cpu-opp.dtsi          | 116 ++++++++++++++++++
->  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     |   2 +-
->  2 files changed, 117 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6-cpu=
--opp.dtsi
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6-cpu-opp.dt=
-si b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6-cpu-opp.dtsi
+>  arch/arm/boot/dts/omap4.dtsi   | 11 ++++++-----
+>  arch/arm/boot/dts/omap4470.dts | 15 +++++++++++++++
+>  2 files changed, 21 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/omap4470.dts
+>=20
+> diff --git a/arch/arm/boot/dts/omap4.dtsi=20
+> b/arch/arm/boot/dts/omap4.dtsi
+> index 763bdea8c829..15ff3d7146af 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -389,7 +389,7 @@ abb_iva: regulator-abb-iva {
+>  			status =3D "disabled";
+>  		};
+>=20
+> -		target-module@56000000 {
+> +		sgx_module: target-module@56000000 {
+>  			compatible =3D "ti,sysc-omap4", "ti,sysc";
+>  			reg =3D <0x5600fe00 0x4>,
+>  			      <0x5600fe10 0x4>;
+> @@ -408,10 +408,11 @@ target-module@56000000 {
+>  			#size-cells =3D <1>;
+>  			ranges =3D <0 0x56000000 0x2000000>;
+>=20
+> -			/*
+> -			 * Closed source PowerVR driver, no child device
+> -			 * binding or driver in mainline
+> -			 */
+> +			gpu: gpu@0 {
+> +				compatible =3D "ti,omap4-sgx540-120", "img,sgx540-120",=20
+> "img,sgx540";
+> +				reg =3D <0x0 0x2000000>;	/* 32MB */
+> +				interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+>  		};
+>=20
+>  		/*
+> diff --git a/arch/arm/boot/dts/omap4470.dts=20
+> b/arch/arm/boot/dts/omap4470.dts
 > new file mode 100644
-> index 000000000000..062940115563
+> index 000000000000..f29c581300bf
 > --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6-cpu-opp.dtsi
-> @@ -0,0 +1,116 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +// Copyright (C) 2020 Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> +++ b/arch/arm/boot/dts/omap4470.dts
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Device Tree Source for OMAP4470 SoC
+> + *
+> + * Copyright (C) 2012 Texas Instruments Incorporated -=20
+> http://www.ti.com/
+> + *
+> + * This file is licensed under the terms of the GNU General Public=20
+> License
+> + * version 2.  This program is licensed "as is" without any warranty=20
+> of any
+> + * kind, whether express or implied.
+> + */
+> +#include "omap4460.dtsi"
 > +
-> +/ {
-> +       cpu_opp_table: cpu-opp-table {
-> +               compatible =3D "allwinner,sun50i-h6-operating-points";
-> +               nvmem-cells =3D <&cpu_speed_grade>;
-> +               opp-shared;
-> +
-> +               opp@480000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <480000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@720000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <720000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@816000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <816000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@888000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <888000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1080000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1080000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1320000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1320000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1488000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1488000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1608000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1608000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1704000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1704000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1800000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1800000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +       };
+> +&sgx {
+
+Does this even compile?
+
+The node's handle is named sgx_module, not sgx.
+
+-Paul
+
+> +	compatible =3D "ti,omap4470-sgx544-112", "img,sgx544-112",=20
+> "img,sgx544";
 > +};
-> +
-> +&cpu0 {
-> +       operating-points-v2 =3D <&cpu_opp_table>;
-> +};
-> +
-> +&cpu1 {
-> +       operating-points-v2 =3D <&cpu_opp_table>;
-> +};
-> +
-> +&cpu2 {
-> +       operating-points-v2 =3D <&cpu_opp_table>;
-> +};
-> +
-> +&cpu3 {
-> +       operating-points-v2 =3D <&cpu_opp_table>;
-> +};
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch=
-/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> index be81330db14f..3eaa4f49e3d3 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> @@ -4,7 +4,7 @@
->  /dts-v1/;
->
->  #include "sun50i-h6.dtsi"
-> -#include "sun50i-h6-cpu-opp.dtsi"
-> +#inlcude "sun50i-h6-tanix-tx6-cpu-opp.dtsi"
->
->  #include <dt-bindings/gpio/gpio.h>
->
 > --
-> 2.20.1
->
+> 2.25.1
+>=20
+
+
