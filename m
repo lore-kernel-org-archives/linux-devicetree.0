@@ -2,124 +2,151 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE747C55191
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 01:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882EAC55185
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 01:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFF58206DD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 01:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFE62071E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 01:26:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fWHUgPyU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBJ5DG8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgDZBIq (ORCPT
+        id S1726126AbgDZB0H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 21:08:46 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7411 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgDZBIq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 21:08:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea4dea60000>; Sat, 25 Apr 2020 18:06:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 25 Apr 2020 18:08:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 25 Apr 2020 18:08:45 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
- 2020 01:08:45 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
- 2020 01:08:44 +0000
+        Sat, 25 Apr 2020 21:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726070AbgDZB0F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Apr 2020 21:26:05 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C6D7C061A0C;
+        Sat, 25 Apr 2020 18:26:05 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id r17so10883080lff.2;
+        Sat, 25 Apr 2020 18:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PJ5SdqUzErX47qSo76sTAhtveEg7L+g5fhu/mwEX3I0=;
+        b=vBJ5DG8+dP+Cx1VxxxUelWljxWOWbM+gc9+WKjPz4Xg/QKvMNRRWEdH8k9njOcLneE
+         VUUgUxHcnQZ4J0ATZri26BWe1zmYsRIWo5iut9TiHrkFicVmIii3ssUtXHaxB3fEIQ2J
+         G6GbEjSKkmBq9WiJgdT5aJLm3GVUwG+T6LvHmikxRxyAwTg96+y//ZjIy8qkCO2LMfWj
+         8S7Ak6H8HiCweY/Of8wqf8NdQ4ycewLFud5KJR1ETSWeKF8JiGkJqzOVwEsqaXDcjIyW
+         wiITGvumXXlMMblzi/iCN0UJBR1380YjcWWx1YfOISXzsSA+o46JG+/XorbRfEWONOuU
+         Lmiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PJ5SdqUzErX47qSo76sTAhtveEg7L+g5fhu/mwEX3I0=;
+        b=bVaQncy8WXMNOumoDyt9EDZPY0H4w4ivFiH4ghh5sNuT8uMmGPH2VDPQbnde/VNGBx
+         EHphaSc7oSTCvz0oT2u+4xvk+kGXGZMPvlta+QFN5tHpnC4vhqQs3MzW/x9GRGCxq4O+
+         gtkvd+1jPkjU2jWdK/zplZyG5I4R017a6qDnp1pT2O5i6fDidPardPXfTPm7v4hb/xu3
+         ABHfxJJfX17VULcUqv0JpkIa6Acczn4bwWVufmgr896ri24JA+5K6HV1+Ifu8RFXNmDQ
+         e7GB5tOWjUhIeO2pvN2XaQGil2+pWSQd9DULwKJHso5OVKV5VPdTxMagYnfkjsVXhrSC
+         nTmg==
+X-Gm-Message-State: AGi0PubedVS7LV2mLwrUihNtZr/85KvJ76ZAPEAK02LNco5vvKeT0QXK
+        cJkRRmKZi/dRCcHxBslwiGrXRtoi
+X-Google-Smtp-Source: APiQypJTDyUc+mABc9irWwCHesc3rz7Cj2W8V7E9oQG8pDGxeL7odSzpXMgzkH+QHT9fK0HCxDueHw==
+X-Received: by 2002:ac2:5c45:: with SMTP id s5mr11155627lfp.28.1587864363200;
+        Sat, 25 Apr 2020 18:26:03 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id m23sm7143408ljb.87.2020.04.25.18.26.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 18:26:02 -0700 (PDT)
 Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, frankc@nvidia.com, sakari.ailus@iki.fi,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
  <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
  <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
  <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
  <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
  <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
-Message-ID: <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
-Date:   Sat, 25 Apr 2020 18:08:26 -0700
+ <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
+Date:   Sun, 26 Apr 2020 04:26:01 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587863206; bh=92MRw1LvU1KIc1wN0RoVrY6gmU+4rftF+SanSTPgbKE=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=fWHUgPyUC3inioYVyMaglDD/GVdsNsf480njQsTzQmOnTY+KOz/Q5mDLFC8mgY1om
-         vLgWcUpUSq2Yj6aI0/lthGzv2DE5gy3rxc0PA7ErDfN7SxccDH/7r0rk60vnQQzXEm
-         yw0W0Sb/lis0JOz1CZbHnC5yyuUWy6cSc+bvBT9Eg6bUmgO6ZKyEZM/4whD6h64dnX
-         N6PZOCleVkOTFhpKmPT8KPRMb7KKuF9n8r+BCkDJ6kZ/NhXeRK1qi1ef9G2dnb3w7e
-         +LsBeoEiKLzP4DptYuPtdldrFsVVNOntiuRnbQXQR/OlLewDNH9d+1qhcSjjjmceY/
-         mi3o0eFNMc9wQ==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 4/25/20 5:41 PM, Sowjanya Komatineni wrote:
->
-> On 4/25/20 5:36 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
+26.04.2020 04:08, Sowjanya Komatineni пишет:
+> 
+> On 4/25/20 5:41 PM, Sowjanya Komatineni wrote:
 >>
->>
->> 25.04.2020 12:36, Hans Verkuil =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> ...
->>>> The media/tegra/ sounds a bit too generic, the media/tegra-vi/ path
->>>> should better reflect the driver, IMO.
->>>>
->>>> It also should be better to name the compiled kernel module as=20
->>>> tegra-vi,
->>>> IMO.
->>>>
->>> The driver name and the directory should be in sync, so either=20
->>> tegra-video
->>> or tegra-vi for both. I have no preference myself, as long as they=20
->>> are the
->>> same.
+>> On 4/25/20 5:36 PM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
 >>>
->>> This can be done as a follow-up patch.
->> Given that this driver isn't going to be reused by older pre-Tegra210
->> SoCs, perhaps it will also be worthwhile to name it as tegra210-vi or
->> tegra210-video.
->
-> Can you explain what do you meant by can't be reused for pre-tegra210=20
-> or for tegra186/194?
->
-> support for other tegra's can be added to same tegra-video driver.=20
-> tegra-video host1x driver can be updated to add other tegra's vi and=20
-> csi compatibles to host1x subdevs and vi and csi driver can be updated=20
-> to add other tegra soc data and need to add coresponding=20
-> tegra186/194/xxx.c file with tegra specific prog sequence
->
-Same tegra-video.ko can be used for all tegra soc as driver supports=20
-adding other soc related as well.
+>>>
+>>> 25.04.2020 12:36, Hans Verkuil пишет:
+>>> ...
+>>>>> The media/tegra/ sounds a bit too generic, the media/tegra-vi/ path
+>>>>> should better reflect the driver, IMO.
+>>>>>
+>>>>> It also should be better to name the compiled kernel module as
+>>>>> tegra-vi,
+>>>>> IMO.
+>>>>>
+>>>> The driver name and the directory should be in sync, so either
+>>>> tegra-video
+>>>> or tegra-vi for both. I have no preference myself, as long as they
+>>>> are the
+>>>> same.
+>>>>
+>>>> This can be done as a follow-up patch.
+>>> Given that this driver isn't going to be reused by older pre-Tegra210
+>>> SoCs, perhaps it will also be worthwhile to name it as tegra210-vi or
+>>> tegra210-video.
+>>
+>> Can you explain what do you meant by can't be reused for pre-tegra210
+>> or for tegra186/194?
 
-Also was thinking instead of renaming media/tegra as media/tegra-vi,=20
-probably we can rename as media/tegra-video so it will be inline with=20
-module name we already chosen and also mainly we have vi and csi with in=20
-that so instead of tegra-vi probably we can use media/tegra-video?
+It looks to me that at least all those hardcoded HW format IDs do not
+match the older SoCs.
 
+>> support for other tegra's can be added to same tegra-video driver.
+>> tegra-video host1x driver can be updated to add other tegra's vi and
+>> csi compatibles to host1x subdevs and vi and csi driver can be updated
+>> to add other tegra soc data and need to add coresponding
+>> tegra186/194/xxx.c file with tegra specific prog sequence
+>>
+> Same tegra-video.ko can be used for all tegra soc as driver supports
+> adding other soc related as well.
+
+Well, I'm still not sure why you would want to have all the unnecessary
+code of a different SoCs shared within the same kernel module, it will
+be quite be a lot wasted space in comparison to a used part of the driver.
+
+The driver will need to have a bit better separation if it's supposed to
+have a common core for all SoCs. Each incompatible VI/CSI hardware
+version should have its own kernel module.
+
+> Also was thinking instead of renaming media/tegra as media/tegra-vi,
+> probably we can rename as media/tegra-video so it will be inline with
+> module name we already chosen and also mainly we have vi and csi with in
+> that so instead of tegra-vi probably we can use media/tegra-video?
+
+The tegra-video should be okay, although the "video" part sounds a bit
+too broad since video could mean a lot of things. I think downstream
+kernel uses (or at least used) the tegra-camera name for the driver,
+perhaps it could be a reasonable variant as well.
