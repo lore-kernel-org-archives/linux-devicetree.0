@@ -2,130 +2,146 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645A9C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 16:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C1AC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 16:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F918206DD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 16:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851D82071C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 16:50:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HM/d4nA6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="hCd69Z0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbgDZQVX (ORCPT
+        id S1726154AbgDZQur (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 12:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726146AbgDZQVX (ORCPT
+        Sun, 26 Apr 2020 12:50:47 -0400
+Received: from gateway30.websitewelcome.com ([192.185.194.16]:25969 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726144AbgDZQuq (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Apr 2020 12:21:23 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B59CC061A0F;
-        Sun, 26 Apr 2020 09:21:23 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id c23so11743353qtp.11;
-        Sun, 26 Apr 2020 09:21:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=XZJ5XFJS/vsNAYaNowFEvXY/ZczE3nivx6mZjGNsaaU=;
-        b=HM/d4nA6P4W/GTAy4y/pD3qJ0N8A8PSV/jvQSLm6y1qWH5cXsuSoIGv9bzLKssIdoQ
-         ormeLE2uNOCvwRF/fQIHHhh8HDSCpcAF8695nXugKI37Z+zCu/Rjhd8IxpmY92b2LJMv
-         zu7M7I9XhSVnTVTt3BJ3i/ISzfLv13TdtvTdYNBz22Ff4kNEd6EdXOZGbDW6ljANZdaT
-         Erycz54Xrf0HZkJ1tvZyGgXT5/02m8mMjC1CkLvGdCbN+l+UvFjjN8Vo4cOazRCobp5K
-         BO5amkDIZ51xAW/gHeKTSGPinsOJa0DeYlQtmTFHLQFz7BXqsQRWepPRO0vl3BDL1BXx
-         um9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=XZJ5XFJS/vsNAYaNowFEvXY/ZczE3nivx6mZjGNsaaU=;
-        b=FJt18pGqg6ZQhf/9rjfVD6cjq6YMIvpADCWOMXH1U1S3IFmbHX5FQtUnZndWLk+LgO
-         vP8KPl6rHW/aNkCZRtBlyi2lN8XiLB4h3YjIuvNg4+Pyy0KBJZxIveWEEIsti35rk6DZ
-         pubqoTZkdS7pEjF+8OPqQFTnrOTMqxZBOI+q859UmWvm559mkFQOtquj9hvVxfKYGwA+
-         FvRJVHxb9SnSAAJK2SMfX/2HYxM61KOUQ9OYsBiygDBYWbnAZGqwF674uQIpbGTmQyjD
-         YHAhZ488xDGn6NxBQ27Ac/DvDdIshXNLGF2QzhvI84JHzZizKV6BqoCkYREOZ+CTJ7c3
-         6itw==
-X-Gm-Message-State: AGi0PuaZcNZgBC5VJx4niL7lsqYfRikKiqgGvY4mmLN5PHCGpDtZqyMS
-        0BWS3ygzSXzOSq9xxvO4lZc=
-X-Google-Smtp-Source: APiQypLJGSjAIL6gY5u9MQHOt1jpAYtXqbnJciek4pGiJF7wy6uTwL+CxOxvOZqvu/ws+fVRLdD2PQ==
-X-Received: by 2002:ac8:3459:: with SMTP id v25mr18842584qtb.229.1587918082412;
-        Sun, 26 Apr 2020 09:21:22 -0700 (PDT)
-Received: from imac (dhcp-108-168-12-59.cable.user.start.ca. [108.168.12.59])
-        by smtp.gmail.com with ESMTPSA id z18sm7991005qti.47.2020.04.26.09.21.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 Apr 2020 09:21:21 -0700 (PDT)
-Date:   Sun, 26 Apr 2020 12:21:19 -0400
-From:   Tim Lewis <elatllat@gmail.com>
-To:     elatllat@gmail.com
-Cc:     narmstrong@baylibre.com, khilman@baylibre.com,
-        christianshewitt@gmail.com, joy.cho@hardkernel.com,
-        tobetter@gmail.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: [PATCH v4] arm64: dts: meson: S922X: extend cpu opp-points
-Message-ID: <20200426162119.GA23268@imac>
+        Sun, 26 Apr 2020 12:50:46 -0400
+X-Greylist: delayed 1393 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Apr 2020 12:50:46 EDT
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 1FEAC36C9
+        for <devicetree@vger.kernel.org>; Sun, 26 Apr 2020 11:27:32 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id Sk7wjZWzl1s2xSk7wjB1mG; Sun, 26 Apr 2020 11:27:32 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nOj2osYNQXr8K1shlwowWOqo3kkVH+1V33i1mSrzbOo=; b=hCd69Z0a5Rcuo1M10ME1Q2NPgW
+        UF4Wfuj7T5NVxEK02KOESbe0ypBal3zFywClY6U8ETSSPA4oQ5BIC2ekU08ym/i06bW0ElDx206O4
+        j6zpUiE13vw7p0IhEjrBXKkHdkTkQGDM2azno7fzsiC0qxEkn6tbkZ4vo9wDkCneWBdJSLN4nDu7L
+        3LO+xkH3PZvRDuVQqyaA9R2t1aHlFr17/1lBa0UGjj4cOgr52e+GMJazf9FvgK2rp9jd9L4zWJK5J
+        EjD7qvS1GerElJCgRF9I7v9ZcVgLjY5kI4Rb3mPMkW7PDSw2vpXLB33nwHxtE9t89exZffR0wLzyR
+        ACzZpapQ==;
+Received: from [191.31.197.205] (port=46284 helo=[192.168.15.9])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jSk7v-001MdU-Ou; Sun, 26 Apr 2020 13:27:31 -0300
+Subject: Re: [PATCH v3 3/3] ARM: dts: Add Caninos Loucos Labrador
+To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
+References: <20200229104358.GB19610@mani>
+ <20200320035104.26139-1-matheus@castello.eng.br>
+ <20200320035104.26139-4-matheus@castello.eng.br>
+ <20200405065137.GC8912@Mani-XPS-13-9360>
+ <df32c750-a097-9210-6e13-db7db49836b5@castello.eng.br>
+ <2dca5a4e-933c-0a43-e86f-21b55d75a586@suse.de>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <f9e48fba-0da8-7ba9-d44a-7909067a1df1@castello.eng.br>
+Date:   Sun, 26 Apr 2020 13:27:27 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <2dca5a4e-933c-0a43-e86f-21b55d75a586@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.197.205
+X-Source-L: No
+X-Exim-ID: 1jSk7v-001MdU-Ou
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.9]) [191.31.197.205]:46284
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 9
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add extra cpu pop points to allow mild overclock on S922X. The opp
-points are found in Hardkernel N2 sources [1] and testing shows no
-obvious issues on other S922X devices. Thermal throttling should
-keep things in-check if needed.
+Hi Andreas,
 
-[1] https://github.com/hardkernel/linux/commit/f86cd9487c7483b2a05f448b9ebacf6bd5a2ad2f
-Tested-by: Christian Hewitt <christianshewitt@gmail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Tim Lewis <elatllat@gmail.com>
+thanks for the review.
 
----
- arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi | 15 +++++++++++++++
- 1 files changed, 15 insertions(+)
+Em 4/26/20 8:58 AM, Andreas Färber escreveu:
+> Hi Matheus,
+> 
+> Am 23.04.20 um 17:20 schrieb Matheus Castello:
+>> Em 4/5/20 3:51 AM, Manivannan Sadhasivam escreveu:
+>>> On Fri, Mar 20, 2020 at 12:51:04AM -0300, Matheus Castello wrote:
+>>>> Add Device Trees for Caninos Loucos Labrador CoM and base board.
+>>>> Based on the work of Andreas Färber on Lemaker Guitar device tree.
+>>>>
+>>>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>>>
+>>> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>>
+>>> Will queue the series for v5.8 once Andreas is happy with it.
+>>
+>> do you have any more concerns about these patches? Let me know.
+> 
+> I've reviewed the preceding two patches. This one here looks okay,
+> 
+> Reviewed-by: Andreas Färber <afaerber@suse.de>
+> 
+> but see 2/3 - model here does contain M and your .dtsi is named -v2 - 
+> what's the difference to v1? If it's big enough to warrant a separate 
+> .dtsi, you should consider whether a versioned compatible string may be 
+> needed, too (likely in addition to, not instead of a generic one). No v1 
+> info on the website.
+> 
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
-index 046cc332d..1e5d0ee5d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
-@@ -65,6 +65,11 @@
- 			opp-hz = /bits/ 64 <1896000000>;
- 			opp-microvolt = <981000>;
- 		};
-+
-+		opp-1992000000 {
-+			opp-hz = /bits/ 64 <1992000000>;
-+			opp-microvolt = <1001000>;
-+		};
- 	};
- 
- 	cpub_opp_table_1: opp-table-1 {
-@@ -120,5 +125,15 @@
- 			opp-hz = /bits/ 64 <1704000000>;
- 			opp-microvolt = <891000>;
- 		};
-+
-+		opp-1800000000 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <981000>;
-+		};
-+
-+		opp-1908000000 {
-+			opp-hz = /bits/ 64 <1908000000>;
-+			opp-microvolt = <1022000>;
-+		};
- 	};
- };
--- 
-2.17.1
+The difference between v1 and v2 is the model and vendor of the DRAM and 
+storage eMMC. But that had no impact on the software.
 
+Checking examples on "/Documentation/devicetree/bindings/arm/" I saw 
+that some add enum descriptions for both the base board and system on 
+module, keeping in const only the vendor prefix of the SoC. And in the 
+device tree both have the model property description. I liked this 
+example, I think I will follow it in v4.
+
+About "-bb-" in the file name and description: on PCB is written 
+"Labrador Base-M v1.0a", so with that I think it is better to leave only 
+base on the name.
+
+I will send the v4, thank you very much for the review.
+
+BR,
+Matheus Castello
+
+> Thanks,
+> Andreas
+> 
