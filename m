@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDCBC55199
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 17:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5CCC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 17:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2C52071C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 17:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3904B20700
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 17:22:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="eQkt2S1H"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="pdUqdKvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgDZRUQ (ORCPT
+        id S1726157AbgDZRWe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 13:20:16 -0400
-Received: from gateway33.websitewelcome.com ([192.185.147.108]:31835 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725976AbgDZRUQ (ORCPT
+        Sun, 26 Apr 2020 13:22:34 -0400
+Received: from gateway20.websitewelcome.com ([192.185.60.19]:17277 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725976AbgDZRWe (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Apr 2020 13:20:16 -0400
-X-Greylist: delayed 1233 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Apr 2020 13:20:15 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id ED7051A4B973
-        for <devicetree@vger.kernel.org>; Sun, 26 Apr 2020 11:59:41 -0500 (CDT)
+        Sun, 26 Apr 2020 13:22:34 -0400
+X-Greylist: delayed 1384 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Apr 2020 13:22:33 EDT
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id A24FE400C5F4A
+        for <devicetree@vger.kernel.org>; Sun, 26 Apr 2020 10:42:02 -0500 (CDT)
 Received: from br164.hostgator.com.br ([192.185.176.180])
         by cmsmtp with SMTP
-        id Skd3j8pGh8vkBSkd3jsxIa; Sun, 26 Apr 2020 11:59:41 -0500
+        id SkcqjKEHCAGTXSkcqjdHJJ; Sun, 26 Apr 2020 11:59:28 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -37,27 +37,28 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=iLUgErvb2iXZEJQC9A6HaOt6+FbaW5Lfu+lR1NB4Zrg=; b=eQkt2S1HSzplTsCrtBZNMqkCuC
-        twrzZlgfk0cPqKM1uNowWHwJaJ7PFXCgd1AhdvR9p6pJG17u2EGxZuZEaZ92JSnGVW/LfdtI0Zjbr
-        1sNwlji5CeNlErZBrPhN7e+IfvmO1z+I7AbPEaFy+9ASdCXCVtx/zwepWkUufnkRzVespgrqmnUUU
-        GxvKHPbfJ2ewlfl24Xc+za4b0/QVgi24Pje6zUfY2AAYz9w2iB3vsKTECx4lih1uk6vyh1eu8a/iD
-        Nud34aiFU+FH9D3u/au5gx93b8vQ41kpG1YmCfo7nOTca/5m70thZhb07bicF5tsG7tlFni0sJSLU
-        ixT17a0w==;
+        bh=e+jJxdcYJ/hbFBY+xD9PXWL+/xiGmlod4Jp6X2xhM4Q=; b=pdUqdKvEoQiXcCIa/mtQVbSCLh
+        z5hYqIvXV0mJ5uKgPq6owU8zXlWBFNIJhLGhrRUD8XD/VtHDnsthk81EFzxKrdiPrcw4QsaXiavHK
+        /3PtccT7GK7bTa5BKbSGRJOpaXF860Uo6uiz2M2FazsimupI38iwdockxjdPKR+8Cs2y7KlnH8JVN
+        Bg2gu7/IE7FRopdHr+WuLjxlluAOgMolo7RHgTrL1eGtN8BiVD7oVhDbQFHHCC1Bpe/XTw8zPrqG4
+        YxenjeuY2344IJ0bBg8PgclRIDZuYbDOfwbWPrUOJLksFNL46/rfMceV9WCON9N/lvuPuokmMe/vz
+        iK6Lw7Jg==;
 Received: from [191.31.197.205] (port=35482 helo=castello.castello)
         by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <matheus@castello.eng.br>)
-        id 1jSkd3-001TTf-5q; Sun, 26 Apr 2020 13:59:41 -0300
+        id 1jSkcp-001TTf-G5; Sun, 26 Apr 2020 13:59:27 -0300
 From:   Matheus Castello <matheus@castello.eng.br>
 To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
         mark.rutland@arm.com, robh+dt@kernel.org
 Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v4 3/3] ARM: dts: Add Caninos Loucos Labrador
-Date:   Sun, 26 Apr 2020 13:58:35 -0300
-Message-Id: <20200426165835.105970-4-matheus@castello.eng.br>
+        Matheus Castello <matheus@castello.eng.br>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
+Date:   Sun, 26 Apr 2020 13:58:33 -0300
+Message-Id: <20200426165835.105970-2-matheus@castello.eng.br>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200426165835.105970-1-matheus@castello.eng.br>
 References: <f9e48fba-0da8-7ba9-d44a-7909067a1df1@castello.eng.br>
@@ -73,13 +74,13 @@ X-AntiAbuse: Sender Address Domain - castello.eng.br
 X-BWhitelist: no
 X-Source-IP: 191.31.197.205
 X-Source-L: No
-X-Exim-ID: 1jSkd3-001TTf-5q
+X-Exim-ID: 1jSkcp-001TTf-G5
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
 X-Source-Sender: (castello.castello) [191.31.197.205]:35482
 X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 52
+X-Email-Count: 29
 X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
 X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
@@ -87,100 +88,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Device Trees for Caninos Loucos Labrador CoM and base board.
-Based on the work of Andreas Färber on Lemaker Guitar device tree.
+The Caninos Loucos Program develops Single Board Computers with an open
+structure. The Program wants to form a community of developers to use
+IoT technologies and disseminate the learning of embedded systems in
+Brazil.
+
+It is an initiative of the Technological Integrated Systems Laboratory
+(LSI-TEC) with the support of Polytechnic School of the University of
+São Paulo (Poli-USP) and Jon "Maddog" Hall.
 
 Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Andreas Färber <afaerber@suse.de>
 ---
- arch/arm/boot/dts/Makefile                    |  1 +
- .../arm/boot/dts/owl-s500-labrador-base-m.dts | 34 +++++++++++++++++++
- arch/arm/boot/dts/owl-s500-labrador-v2.dtsi   | 22 ++++++++++++
- 3 files changed, 57 insertions(+)
- create mode 100644 arch/arm/boot/dts/owl-s500-labrador-base-m.dts
- create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..02a619d7bf2e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -856,6 +856,7 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
- dtb-$(CONFIG_ARCH_ACTIONS) += \
- 	owl-s500-cubieboard6.dtb \
- 	owl-s500-guitar-bb-rev-b.dtb \
-+	owl-s500-labrador-base-m.dtb \
- 	owl-s500-sparky.dtb
- dtb-$(CONFIG_ARCH_PRIMA2) += \
- 	prima2-evb.dtb
-diff --git a/arch/arm/boot/dts/owl-s500-labrador-base-m.dts b/arch/arm/boot/dts/owl-s500-labrador-base-m.dts
-new file mode 100644
-index 000000000000..044568fec25e
---- /dev/null
-+++ b/arch/arm/boot/dts/owl-s500-labrador-base-m.dts
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Caninos Labrador Base Board
-+ *
-+ * Copyright (c) 2019-2020 Matheus Castello
-+ */
-+
-+/dts-v1/;
-+
-+#include "owl-s500-labrador-v2.dtsi"
-+
-+/ {
-+	model = "Caninos Labrador Base-M v1.0a";
-+	compatible = "caninos,labrador-base-m", "actions,s500";
-+
-+	aliases {
-+		serial3 = &uart3;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial3:115200n8";
-+	};
-+
-+	uart3_clk: uart3-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <921600>;
-+		#clock-cells = <0>;
-+	};
-+};
-+
-+&uart3 {
-+	status = "okay";
-+	clocks = <&uart3_clk>;
-+};
-diff --git a/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
-new file mode 100644
-index 000000000000..f31def6b248a
---- /dev/null
-+++ b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Caninos Labrador SoM V2
-+ *
-+ * Copyright (c) 2019-2020 Matheus Castello
-+ */
-+
-+#include "owl-s500.dtsi"
-+
-+/ {
-+	model = "Caninos Labrador Core V2.1";
-+	compatible = "caninos,labrador-v2", "actions,s500";
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000>;
-+	};
-+};
-+
-+&timer {
-+	clocks = <&hosc>;
-+};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d3891386d671..a20a05e3deaa 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -167,6 +167,8 @@ patternProperties:
+     description: CALAO Systems SAS
+   "^calxeda,.*":
+     description: Calxeda
++  "^caninos,.*":
++    description: Caninos Loucos Program
+   "^capella,.*":
+     description: Capella Microsystems, Inc
+   "^cascoda,.*":
 --
 2.25.0
 
