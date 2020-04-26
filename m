@@ -2,122 +2,89 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDF0C5519A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 10:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94D9C55191
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 10:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3402070A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 10:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pEb5M+j3"
+	by mail.kernel.org (Postfix) with ESMTP id 94FE52070A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 10:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgDZKlq (ORCPT
+        id S1726122AbgDZKxi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 06:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726182AbgDZKlW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Apr 2020 06:41:22 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 678A1C061A0C;
-        Sun, 26 Apr 2020 03:41:22 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id d15so15346011wrx.3;
-        Sun, 26 Apr 2020 03:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0RLyOmcQjC6vn1XEI3ccjJ++FkYMXRfGQ9jNbYoBA2Y=;
-        b=pEb5M+j33W1xdCZzu21ZGMF+y2nvgxguxmT+udwzHEM0LMxryFmKJ67rCuQP00C/u3
-         A84XG/yMmH6KqcO1Rod12V7w7z0IX0KrPCjEi64ihqn5kCl8VDGl3eRovoBaJccpVE5e
-         STzoypdReKUshsrOPPueZegajrpg9FuuzMGQqpq0X9VAvIq0DTHGeKOZhTb63TN7xuUo
-         oTyXrW2bosLUdfpZpicvAYyDeJBQl9eb/dbk85F4wMVmTDnC+6bS8bJZ2HeMo5RApxXR
-         fYou2YCU7/OMTscpr01z2q9MJpjb07ew1nDMxYQNMu19nLcROy1f9GGDjt07oVWWxCes
-         98Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0RLyOmcQjC6vn1XEI3ccjJ++FkYMXRfGQ9jNbYoBA2Y=;
-        b=L8bCWauohkhydUw2dh1ob33tdZ62W/hJM6XSkROCSlAZxLybiatNxBHchYuy1VfJH2
-         D4b5oOHaNSWdZI7XSxIQul4ytGJ+vmBki2k86xLno8L01qBDqnKSruFxEP6rBHB+VUY5
-         D5+eLr4dablQPlYcgH6lOLLmGj/MWpyQkO1wJ969ox2yf2sscNPZjQkb/gESoxi5kAX/
-         gXmR3qdjTG93NpTjRP38CU1VbTGiTKI500Rd8tjLG1e8OeD43LWigQFFECQSJgP/HIAT
-         GKKOOXhRHmy815OZOkbGUrWdNteRsoMyBWs672QRZZ262Ve0k+v+D8/lGdheQXXOF0JQ
-         u64w==
-X-Gm-Message-State: AGi0PuZhyKaZwIlYo+wO8vgmylgOxU12ZL0910GObW4zAhm7Gb1lPOQf
-        EDaV+tmsMpPZeWtvLGnAKw0=
-X-Google-Smtp-Source: APiQypIhe1kOoZzu4/c9rSC9Ti+Iwj5P6aeWjhvnEk5fJtGoRvCnoPEUiUPZECcqv9GEFT1eQS0ZiQ==
-X-Received: by 2002:a5d:6847:: with SMTP id o7mr21795688wrw.83.1587897681018;
-        Sun, 26 Apr 2020 03:41:21 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:59f6:22c5:d1f3:662d])
-        by smtp.gmail.com with ESMTPSA id y10sm10491793wma.5.2020.04.26.03.41.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 03:41:20 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Marcus Cooper <codekipper@gmail.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 2/7] dt-bindings: ASoC: sun4i-i2s: Add H6 compatible
-Date:   Sun, 26 Apr 2020 12:41:10 +0200
-Message-Id: <20200426104115.22630-3-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200426104115.22630-1-peron.clem@gmail.com>
-References: <20200426104115.22630-1-peron.clem@gmail.com>
+        Sun, 26 Apr 2020 06:53:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49118 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbgDZKxi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 26 Apr 2020 06:53:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id ED4C7AD71;
+        Sun, 26 Apr 2020 10:53:34 +0000 (UTC)
+Subject: Re: [PATCH v3 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
+To:     Matheus Castello <matheus@castello.eng.br>,
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, edgar.righi@lsitec.org.br,
+        igor.lima@lsitec.org.br, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+References: <20200229104358.GB19610@mani>
+ <20200320035104.26139-1-matheus@castello.eng.br>
+ <20200320035104.26139-2-matheus@castello.eng.br>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <c805072b-17ec-d02b-20ad-548a372341f9@suse.de>
+Date:   Sun, 26 Apr 2020 12:53:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200320035104.26139-2-matheus@castello.eng.br>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+Am 20.03.20 um 04:51 schrieb Matheus Castello:
+> The Caninos Loucos Program develops Single Board Computers with an open
+> structure. The Program wants to form a community of developers to use
+> IoT technologies and disseminate the learning of embedded systems in
+> Brazil.
+> 
+> It is an initiative of the Technological Integrated Systems Laboratory
+> (LSI-TEC) with the support of Polytechnic School of the University of
+> São Paulo (Poli-USP) and Jon "Maddog" Hall.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 9e67944bec9c..16ee382dc6b2 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -165,6 +165,8 @@ patternProperties:
+>       description: CALAO Systems SAS
+>     "^calxeda,.*":
+>       description: Calxeda
+> +  "^caninos,.*":
+> +    description: Caninos Loucos Program
+>     "^capella,.*":
+>       description: Capella Microsystems, Inc
+>     "^cascoda,.*":
 
-H6 I2S is very similar to H3, except that it supports up to 16 channels
-and thus few registers have fields on different position.
+Reviewed-by: Andreas Färber <afaerber@suse.de>
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- .../devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml      | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks,
+Andreas
 
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
-index 112ae00d63c1..606ad2d884a8 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
-@@ -24,6 +24,7 @@ properties:
-       - items:
-           - const: allwinner,sun50i-a64-i2s
-           - const: allwinner,sun8i-h3-i2s
-+      - const: allwinner,sun50i-h6-i2s
- 
-   reg:
-     maxItems: 1
-@@ -59,6 +60,7 @@ allOf:
-               - allwinner,sun8i-a83t-i2s
-               - allwinner,sun8i-h3-i2s
-               - allwinner,sun50i-a64-codec-i2s
-+              - allwinner,sun50i-h6-i2s
- 
-     then:
-       required:
 -- 
-2.20.1
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
