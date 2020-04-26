@@ -7,36 +7,35 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE8FC55196
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 03:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313CEC2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 04:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D13B20724
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 03:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3182071E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 04:23:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Tfsl8COp"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CkafEwoO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgDZDEE (ORCPT
+        id S1726121AbgDZEXu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Apr 2020 23:04:04 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19528 "EHLO
+        Sun, 26 Apr 2020 00:23:50 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2031 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbgDZDEE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Apr 2020 23:04:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea4f9e30001>; Sat, 25 Apr 2020 20:02:59 -0700
+        with ESMTP id S1725979AbgDZEXu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Apr 2020 00:23:50 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea50c940003>; Sat, 25 Apr 2020 21:22:45 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 25 Apr 2020 20:04:03 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sat, 25 Apr 2020 21:23:49 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 25 Apr 2020 20:04:03 -0700
+        by hqpgpgate102.nvidia.com on Sat, 25 Apr 2020 21:23:49 -0700
 Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
  (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
- 2020 03:04:03 +0000
+ 2020 04:23:48 +0000
 Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
  (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
- 2020 03:04:02 +0000
+ 2020 04:23:48 +0000
 Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     Dmitry Osipenko <digetx@gmail.com>,
         Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
@@ -54,15 +53,14 @@ References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
  <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
  <09f20441-fec6-7496-2edc-c69db535e441@nvidia.com>
  <61799fab-858c-8b0d-ba7d-846cd041e044@gmail.com>
- <3a9707b5-b260-6137-f475-fc88d271010f@nvidia.com>
- <a7407ed7-f35e-b3e9-ad26-3e83f0ed462b@gmail.com>
- <024fc70f-9a65-3fc4-1387-d0b15f3f74e7@nvidia.com>
-Message-ID: <fddb9a1e-c8be-1339-5a06-f3f41541896a@nvidia.com>
-Date:   Sat, 25 Apr 2020 20:03:43 -0700
+ <99a5c82a-bd84-5c80-e6d7-7b6f2858aa78@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <8c4f5e88-b47a-6b5c-b579-1b28be19feb5@nvidia.com>
+Date:   Sat, 25 Apr 2020 21:23:27 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <024fc70f-9a65-3fc4-1387-d0b15f3f74e7@nvidia.com>
+In-Reply-To: <99a5c82a-bd84-5c80-e6d7-7b6f2858aa78@gmail.com>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
  DRHQMAIL107.nvidia.com (10.27.9.16)
@@ -70,83 +68,49 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587870179; bh=lDkWZmQ7v+sGrvdR/Y2ohSDw2AI0NeTwg+e9Khufi9Y=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+        t=1587874965; bh=kYrleJVCmR2hU5ZLnRdh4ugBfBt80Fuh+Z9062SgVHU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
          Content-Language;
-        b=Tfsl8COp45O25CzVWpTL0S/mAEOhYM5GLJ05Hsu2cMp+AM5bgkYglIfk2Kzh6kkN6
-         f6MuBPYWUGA676W6XSRH0xjjZVHi5yxvl5uUceAeKGm3b1TL3YjBPWT3OwQZ0JXRxn
-         ZJ4F69RpjqV5RGfErcfJqFLn0PfjKCbpsOdmBTlXFLXvcWTpmLlE6ivjk1GCEUPN4C
-         FTmsNSC9EbApsfx6EcspDDLfc6pCnMV4kCP7fM+5850neZ369QprOBxRG968GL2dNG
-         lS4HYhiHeMt0F5AQH/1czAMbSHM5f3POPUcxB9CvYhSDeUTWfK8ASFZS2IeYljdnAO
-         tNLDHyhM5k7kA==
+        b=CkafEwoOfR629GEZLhuqmipmbtJ07vZQz4WCLz0/j5kI7CO9xE58jEiTjhw1DEpZV
+         Hw3rBHMD5z99ZZyXuAabu36B1xunnX8egUurwXGz3i7xuVQ6daSsLaPW2vDpM3owWR
+         8CcN+3yo4IQjBmBwQffRNmGwllttJwqJ5bniVYU4rGkayZZVS+DeSa7qE5Z5Mxe856
+         qqZ2ce1/9Ry840xauirpWjUE2JKayFdIEqV+0A7x4qcHap64k6pn2CDxI7MGoNuLVi
+         nbIVQCzB3N4zsH7r6zlRCLZ4Rj1jtpqC3Ckto33I0tZsygIRNIunFK4ywz32JMpsOK
+         218ydUM/A6IbA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On 4/25/20 7:48 PM, Sowjanya Komatineni wrote:
+On 4/25/20 7:19 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
 >
-> On 4/25/20 7:38 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 26.04.2020 05:19, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 4/25/20 7:10 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 26.04.2020 04:43, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> ...
->>>>>> It looks to me that at least all those hardcoded HW format IDs do=20
->>>>>> not
->>>>>> match the older SoCs.
->>>>> TPG hard coded formats are supported on prior Tegra.
->>>>>
->>>>> Other supported formats are SoC dependent and=C2=A0 part of soc data =
-in=20
->>>>> the
->>>>> driver already.
->>>> But I don't see where that SoC-dependent definition is made in
->>>> terga210.c. That tegra_image_format enum looks T210-specific, isn't=20
->>>> it?
->>>>
->>>> ...
->>> Video formats which are SoC variants are made soc specific in driver
->>> already tegra_vi_soc structure member video_formats
->>>
->>> tegra_image_format enum is same for T210 and T186
->>>
->>> For T194, enums will be diff and will have diff TEGRA194_VIDEO_FORMAT
->>> using corresponding Tegra194 video format enums
->> But it is also not the same for older SoCs, correct? All the
->> T210-specific things should be separated better, unique parts shouldn't
->> be kept in the common code.
->>
->> Hence the tegra_image_format should be renamed to tegra210_image_format
->> and moved out to t210.h, since it's not common. But then you'll probably
->> need to rename all TEGRA_ defines to TEGRA210_ to make t210.h reusable
->> by T186.
 >
-> We can't make t210.h reusable for t186 as all register defines are diff.
->
-> only video format enums are same b/w them so to reuse that for t186 I=20
-> had that in common.
->
-> Regarding defines, will change prefix as Tegra210
->
->>
->> Also, in the end it may not worth the effort to share anything at all,
->> it could be cleaner to have a bit of duplication. Although, I have no
->> idea how T186 code will look like and what other parts of T210 could be
->> reused by T186. All this needs to be taken into account in order to
->> avoid struggling with the code's reshuffling in the future.
->
-> Currently as image formats are same for t210 and t186 I had them in=20
-> common.h and for t194 where they are diff new enums will be added.
->
-> Other tegra210 soc specific only are all part of tegra210.c/h
->
-Will move video formats to tegra specific file (tegra210.c)...
+> 26.04.2020 05:10, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>>> currently other Tegra host1x driver (drm) also does similar. Single
+>>> module for all Tegra SoCs.
+>> DRM driver has a proper separation of the sub-drivers where sub-driver
+>> won't load on unsupported hardware. The tegra-video driver should do the
+>> same, i.e. VI and CSI should be individual drivers (and not OPS). There
+>> could be a some common core, but for now it's not obvious to me what
+>> that core should be, maybe just the video.c.
+> Maybe video.c csi.c vi.c could be moved into a separate module, somewhat
+> like a common driver framework. Then the individual CSI/VI drivers will
+> use those common helpers.. Just a quick thought.
+
+structure of driver is based on prior feedback.
+
+How about instead of re-structuring whole driver again, probably we can=20
+use conditional compatibles and also corresponding tegra210.o in=20
+Makefile based on ARCH_TEGRA?
+
+#if defined(CONFIG_ARCH_TEGRA_210_SOC)
+ =C2=A0=C2=A0=C2=A0 { .compatible =3D "nvidia,tegra210-vi", .data =3D &tegr=
+a210_vi_soc },
+#endif
+
+
