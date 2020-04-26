@@ -2,60 +2,57 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFFFC55199
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F820C5519C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECC420A8B
+	by mail.kernel.org (Postfix) with ESMTP id E49862078E
 	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="r8Sn3KzZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="k84v9ziz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgDZOId (ORCPT
+        id S1726154AbgDZOId (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sun, 26 Apr 2020 10:08:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33682 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgDZOIc (ORCPT
+        with ESMTP id S1725974AbgDZOIc (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Sun, 26 Apr 2020 10:08:32 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06145C061A0F;
+Received: from mo6-p00-ob.smtp.rzone.de (mo6-p00-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5300::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D824C09B050;
         Sun, 26 Apr 2020 07:08:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587910109;
         s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=YlsGIAJA9igg5C/bJRQhzyd3Q8nFXOWeclEHLmiRMbg=;
-        b=r8Sn3KzZpXFD8h4jzKbU5t1UIUCszzb6bNCtvQCk6G2ZOW5dxZ0lJaYlx7vZe1qmfY
-        uQd/O3+3MtUDqp915YPVUMe5+Oy3l6DFJxsQz/N/ONHrn234P56SZLSY3fi0J/HJA/iF
-        yiGWQaJuqHK+YRC/Qktn8bI0zo3vPNa36zZQlPNPvpPl8393SI/n6MGAn7c2wc5gcbs9
-        Ueg7HtzdvJ3LXUaGbObJL4nkeSnJSzKJFRN76O2z0qLy1lMKa0V+TdvXzidqr2b2jSCg
-        3MwfSHev0Nq4AOx+l1cAinAlJArRm0EZWEVT2ePPq23pxrX/FULgQ06t3NyoJ0OAksWt
-        i+pw==
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=fEN/W8JQvcwVXPrg6byzh4PGroQnpjWICFAQKgeEoOc=;
+        b=k84v9zizjhKQgUVTvuAVKbcrtVlRUWmE8lJHK+hP/lS/HVt0flVDPQvqLjcY0uFBdc
+        JFfkHfft/YrhycsMvXBqgABTZrRHHLR0Xugsv/6lM2Y7yoIDhMMVvDXoPFmwMyFG4soT
+        D/LT3N7dg5yjORk9L82xfEWN+TSyixcGb6RqzqWPJB3yg+Y+L8b+I+wwSM+179XnVuyc
+        FhI8eAOczS7SlTLs2A37pcwqNfBe9seGfLM7GuWpt4hcpyQD2az9bZzlSmlkvPg372qZ
+        YDGBv9flaSznaKiJ8YQ4Eh/ki4q0Qx6ofZVXMnMBxjrIZMUlepL2nh3+qvJivuMwo/XB
+        j+Qg==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4G6Nf3AC"
 X-RZG-CLASS-ID: mo00
 Received: from localhost.localdomain
         by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id 60b02dw3QE8QNFL
+        with ESMTPSA id 60b02dw3QE8PNFJ
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Sun, 26 Apr 2020 16:08:26 +0200 (CEST)
+        Sun, 26 Apr 2020 16:08:25 +0200 (CEST)
 From:   Stephan Gerhold <stephan@gerhold.net>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht,
         Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 2/4] arm64: dts: qcom: msm8916: Add blsp_i2c5
-Date:   Sun, 26 Apr 2020 16:06:40 +0200
-Message-Id: <20200426140642.204395-3-stephan@gerhold.net>
+Subject: [PATCH 0/4] Add touchscreen for msm8916-samsung-a5u
+Date:   Sun, 26 Apr 2020 16:06:38 +0200
+Message-Id: <20200426140642.204395-1-stephan@gerhold.net>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200426140642.204395-1-stephan@gerhold.net>
-References: <20200426140642.204395-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -63,81 +60,21 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-MSM8916 has another I2C QUP controller that can be enabled on
-GPIO 18 and 19.
+This patch series enables the touchscreen
+on the Samsung Galaxy A5 (2015) ("samsung-a5u").
 
-Add blsp_i2c5 to msm8916.dtsi and disable it by default.
+Stephan Gerhold (4):
+  arm64: dts: qcom: msm8916: Add blsp_i2c1
+  arm64: dts: qcom: msm8916: Add blsp_i2c5
+  arm64: dts: qcom: msm8916-samsung-a2015: Add touchscreen regulator
+  arm64: dts: qcom: msm8916-samsung-a5u: Add touchscreen
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
-Most MSM8916 smartphones/tablets have a touchscreen
-connected to blsp_i2c5.
----
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 24 ++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi      | 15 ++++++++++++++
- 2 files changed, 39 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi    | 48 +++++++++++++++++++
+ .../qcom/msm8916-samsung-a2015-common.dtsi    | 25 ++++++++++
+ .../boot/dts/qcom/msm8916-samsung-a5u-eur.dts | 35 ++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         | 30 ++++++++++++
+ 4 files changed, 138 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index b45fd12856ea..31886860766a 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -334,6 +334,30 @@ pinconf {
- 		};
- 	};
- 
-+	i2c5_default: i2c5_default {
-+		pinmux {
-+			function = "blsp_i2c5";
-+			pins = "gpio18", "gpio19";
-+		};
-+		pinconf {
-+			pins = "gpio18", "gpio19";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
-+
-+	i2c5_sleep: i2c5_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio18", "gpio19";
-+		};
-+		pinconf {
-+			pins = "gpio18", "gpio19";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
-+
- 	i2c6_default: i2c6_default {
- 		pinmux {
- 			function = "blsp_i2c6";
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 6ab7cabde370..57ab5573a2d2 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -657,6 +657,21 @@ blsp_i2c4: i2c@78b8000 {
- 			status = "disabled";
- 		};
- 
-+		blsp_i2c5: i2c@78b9000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0x078b9000 0x500>;
-+			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				 <&gcc GCC_BLSP1_QUP5_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c5_default>;
-+			pinctrl-1 = <&i2c5_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		blsp_i2c6: i2c@78ba000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x078ba000 0x500>;
 -- 
 2.26.2
 
