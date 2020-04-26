@@ -7,70 +7,71 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5971AC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 16:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12990C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 16:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3599F20728
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 16:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF38C206DD
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 16:16:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="LWezrIIm";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KZ6D79+Y"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="gwcmGtC/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rYYLYsI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgDZQMC (ORCPT
+        id S1726146AbgDZQQ0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 12:12:02 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:46465 "EHLO
+        Sun, 26 Apr 2020 12:16:26 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:33943 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726144AbgDZQMC (ORCPT
+        by vger.kernel.org with ESMTP id S1726143AbgDZQQ0 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Apr 2020 12:12:02 -0400
+        Sun, 26 Apr 2020 12:16:26 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id E5B8C5C00D3;
-        Sun, 26 Apr 2020 12:12:00 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sun, 26 Apr 2020 12:12:00 -0400
+        by mailout.nyi.internal (Postfix) with ESMTP id DE81A5C0113;
+        Sun, 26 Apr 2020 12:16:24 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sun, 26 Apr 2020 12:16:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=DstDy5l5rdsJcISzdP+t1d2X6d
-        9z/JjBvqVJ7i0o2xw=; b=LWezrIImXKV5NwJ6YSYinDnl9kcK1aYg0DBdgxB3mN
-        PP9CMayJ6NF1TOgIdc0MW0n75595w3H91aK1sQygeodISKszD8lTD//r5UoyiozP
-        aVz84eTEMR+9aEMFPNoiJZdHaWatsJXS6GzEc9AJ6ASi/0bCiGM244fcV2RpqpSQ
-        0xSQWY264Oywd1iR1vQ/BoWUu/2L9ZM4ML67Wfrs+JpNnQV0UCUohczExLPQieoj
-        PPxYMKD+JRb8VkOZbxIhtbF9pU0MDK/adjBq9VA34dIhJFQzrUxcADWMnCi5i0Y/
-        K1P9f2k4Ve2YumQtWw7quQA4OrkPz8Zg4NX+zWqk1n5w==
+        :content-transfer-encoding; s=fm2; bh=RQVYJCx+9TANj3Ikx+7eZ177he
+        ek4dmBB4uSOz8PcYM=; b=gwcmGtC/Hfv8Ho/AVICzxglVJ/h680Yvx82w2TMMRr
+        KwkPgrwpThqADSKNg3ziKcS5G1GsafFGPZ6cMYPeIdOEztYdYQpYTuzt/ZLCYbl9
+        LtTLDY2EoJYw1I0a3XoTjffnIB1G9TGjz5CXOAcFAyJfVt7/iattWlOYOY++tpu5
+        thoi6waHAfpeigeoYkTGojjH3UdWdjD1tbaZAGJXEnXv/HzWpwH2h8qUd1FVjlX2
+        tPWFM5FC1v/TtJSQYKFHWsfprQDspNXQ3fW4s+uQO2k6LBPAX1QY6PCZdIL7TJ5P
+        JKbNFGMf7TTh2HjmKRIiYdXuBX9Tio63d1+BOioBbuQQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DstDy5l5rdsJcISzd
-        P+t1d2X6d9z/JjBvqVJ7i0o2xw=; b=KZ6D79+YC8NS6f5MTQmDTWis+kzyY42Q9
-        /271i3tc3M+/XcvYGzVxSZ75kTKiDnRshnLRr3Tr4uNmreq8B4DMZgZJjNSXh4q9
-        tRHvm5/xNK7ipiFPKMxBxe8lr5d8Zi5v5Kl3ZZd5RSCJ9nSQIEswBao8ZlOQwQ4L
-        o9z1uCrxu89WmhwpxSWXij8fXMeGo7/GKhv6XoNKP3umXylybv85kDOj0TBrUrXb
-        0kWmKn0bGQPzKYzAQXiezJz3htZ1X0JE3G7lNqO79/TRBEcE0DIriC5Sv7kOXdYB
-        vBuIpcyH5Ry+NBxtYOY+Uqrhf3v9MhSqr7o+6IAMoSZDPIdzVfJCw==
-X-ME-Sender: <xms:zLKlXvGduu1BG4f0Y_p6zO24-N9Xaugjvwkmb0DkiUVMBXXGZIj-mw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrheejgdellecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
-    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppeejtd
-    drudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:zLKlXjnPZpJwS3sGVc6St_4U7QIo6lkTTlzyi5gRTyljjlaEaSDvuw>
-    <xmx:zLKlXl3whgDWeGBB9fIQWcpipHr8cuTPU47aDjOb6Uq89A_UJ9ZBqA>
-    <xmx:zLKlXpzFf1pQe2ouGRLgLarcesc0MLdNdL3bkRuEZYw0-usa-Ja56Q>
-    <xmx:0LKlXp362ElMk5nDw4AFv8e_1VLp3xq5rR1obrK3b-MedR9XLT7XyA>
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=RQVYJCx+9TANj3Ikx
+        +7eZ177heek4dmBB4uSOz8PcYM=; b=rYYLYsI0cBzxGNNyM2NtPxMIU1XuZxcfG
+        tsYkJ6ev90Q7Q9BjDPDDu2Vch76//+qEVRZem5uuXYD94mDwElT2uYLNJTQeIzd5
+        IdLhp78ItPxAJf1M5ttjLoXLoIhhb1aaaEOlbObFeA4gFYGxPElWU9Wmxzf4Ltu+
+        yQAM8ndV2CDSJ6Zo5gII13LTIxhjGWJtFmRILIr3h2BexLWXixLBiXy1dUEFaA2n
+        N2O0DgAwlrsROwcDrmXzU+tXO6uztO0zj6JDoAef1tZtpwViu/WnWLRjAv7elDNs
+        G/CrrDgfvXn4xp1HiDWINs0nReF0+3wfZBuuuX3yJqpSAeN9GdOIg==
+X-ME-Sender: <xms:2LOlXsVULnl6PxqmlouCcWtxe0rA_lWDKq-yyyffl2QY7qh_L0WfAA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrheejgddutddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgvlhcu
+    jfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkphepje
+    dtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:2LOlXtjTC8hs3Cru7xM5iYVrgOsfDWgJKRVbIf1dCjPMdC-WMVEJQQ>
+    <xmx:2LOlXsBgZt0slompcnvQXAm66jItiuRIgdKuwHQuA8jG_nmBTIxFfg>
+    <xmx:2LOlXjtAwhhDuTN1GVwPAlW0iE6ytGbUPpa6snlwiDx2-ka6c1F_bw>
+    <xmx:2LOlXnjX4vZ_OIEh4V7G3ytUFEMrkx232jxYfEYgU0hPIvJ36GzKSw>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 780AD3280060;
-        Sun, 26 Apr 2020 12:11:56 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id BBFBE3065E34;
+        Sun, 26 Apr 2020 12:16:23 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2] arm64: dts: allwinner: a64: Remove unused SPDIF sound card
-Date:   Sun, 26 Apr 2020 11:16:05 -0500
-Message-Id: <20200426161605.52121-1-samuel@sholland.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Samuel Holland <samuel@sholland.org>
+Subject: [PATCH] dt-bindings: timer: Document allwinner,erratum-unknown1 property
+Date:   Sun, 26 Apr 2020 11:20:32 -0500
+Message-Id: <20200426162032.52220-1-samuel@sholland.org>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,60 +80,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As of v5.7-rc2, Linux now prints the following message at boot:
+This arch_timer property was added in commit c950ca8c35ee
+("clocksource/drivers/arch_timer: Workaround for Allwinner A64 timer instability")
+but I omitted the device tree binding documentation. Now
+`make dtbs_check` prints the following warning for all A64 boards:
 
-  [   33.848525] platform sound_spdif: deferred probe pending
+timer: 'allwinner,erratum-unknown1' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-This is because sound_spdif is waiting on its CPU DAI &spdif to probe,
-but &spdif is disabled in the device tree.
-
-Exposure of the SPDIF pin is board-specific functionality, so the sound
-card and codec DAI belong in the individual board DTS, not the SoC DTSI.
-In fact, no in-tree A64 board DTS enables &spdif, so let's remove the
-card and DAI entirely.
-
-This reverts commit 78e071370a86473f25923e03b51cbbadacf8be0f.
+Resolve this by documenting the erratum property.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
+ Documentation/devicetree/bindings/timer/arm,arch_timer.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Changes since v1:
- - Remove the node instead of disabling it
- - Also remove the codec DAI
-
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ------------------
- 1 file changed, 18 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 31143fe64d91..c26cc1fcaffd 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -154,24 +154,6 @@ link_codec: simple-audio-card,codec {
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml b/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml
+index fa255672e8e5..cf520c7e9094 100644
+--- a/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml
++++ b/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml
+@@ -51,6 +51,12 @@ properties:
+     description: If present, the timer is powered through an always-on power
+       domain, therefore it never loses context.
  
--	sound_spdif {
--		compatible = "simple-audio-card";
--		simple-audio-card,name = "On-board SPDIF";
--
--		simple-audio-card,cpu {
--			sound-dai = <&spdif>;
--		};
--
--		simple-audio-card,codec {
--			sound-dai = <&spdif_out>;
--		};
--	};
--
--	spdif_out: spdif-out {
--		#sound-dai-cells = <0>;
--		compatible = "linux,spdif-dit";
--	};
--
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		allwinner,erratum-unknown1;
++  allwinner,erratum-unknown1:
++    type: boolean
++    description: Indicates the presence of an erratum found in Allwinner SoCs,
++      where reading certain values from the counter is unreliable. This also
++      affects writes to the tval register, due to the implicit counter read.
++
+   fsl,erratum-a008585:
+     type: boolean
+     description: Indicates the presence of QorIQ erratum A-008585, which says
 -- 
 2.24.1
 
