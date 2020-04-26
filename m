@@ -2,146 +2,102 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82FDC55199
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 10:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF2DC55199
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 10:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C36D32075B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 10:11:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVTghr0F"
+	by mail.kernel.org (Postfix) with ESMTP id C6C372075B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 10:11:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgDZKLv (ORCPT
+        id S1726151AbgDZKL6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 06:11:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726116AbgDZKLu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Apr 2020 06:11:50 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF9BC061A0C;
-        Sun, 26 Apr 2020 03:11:49 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x25so16218376wmc.0;
-        Sun, 26 Apr 2020 03:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=38Zt7pEGuLVXiT/st0D2AyWKW3xWiPY2bYtiMLWQK3Y=;
-        b=PVTghr0FgcuBmCZ0PUMXezA+nNTKcI1Fygf3ezJu65NPeZgIBxfCaFa6awH9Zd0ue6
-         Xwb3tBMIgTokisslyMLXG/zu4eydefaM4LGTSbM5jOv6AVNtZLxcvrGycj9v3ZFi3uNf
-         Of8+v2yEYU1N0ybqdkXEVcMHw7rXJYQpg/3tr7pB6EdLjDaQft4aR79GwBR63MlZ0COW
-         Wf3rWAGvJ4afQpjtOfM35KfcgdrdeYS9luG5nN4jNIpW9LankXkbti7qClolWiKZs8Rj
-         6YWLNp62hGJ65qpnooLLU8vEe81YIPJJG4xfc/RtyjsCqK79yRyQ8bxI3dnsTzZ7pB3J
-         n1GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=38Zt7pEGuLVXiT/st0D2AyWKW3xWiPY2bYtiMLWQK3Y=;
-        b=rfp4o2qXaIRLmvvS7eVZFsYEFo46jWTengnWMvMtIV1E8kKYbhOTB6eLGGn59lHpkI
-         M/AM2b8+KGsWmzf6MhlQFuhhsgSO+/L7WJldUydH+5YNRJQtVytxJ1zqXuJq6HKDYoan
-         jLCs11qdNqC3VSnQtGhCYTRRbBU/BqfKa8wrLfcJPf6tkinTqkm82FX/+zTG+Nv3swk2
-         7OJ6Z/eIwFT5unFWo+v8qcrCyPLlp88bl8VKFNvGRzpXC5WT4Idc3PHQ1inSyoH4+Ijc
-         BE+9bwiWgsqp6roPL2nNH3vGfSWSR2dkE8yTIACO7Lr2czzWeIdRTjpXLhC+pSTcXkUs
-         /f3Q==
-X-Gm-Message-State: AGi0PuYp2SfP6hVLL1noBpDHoSjjCzLqeJgYTd35zhdn7Sgr/yTOT57t
-        MRi+fAnpw8UslV27Sc+oufE=
-X-Google-Smtp-Source: APiQypKXFtdOYFrN+l5LO7+WgBAma4dWRhOE2oE7+TzVEBs1qJ7Dar8zrTy8d1BBmyaXKX6/yknvJg==
-X-Received: by 2002:a1c:c2d4:: with SMTP id s203mr21788195wmf.128.1587895907126;
-        Sun, 26 Apr 2020 03:11:47 -0700 (PDT)
-Received: from localhost (89-104-3-59.customer.bnet.at. [89.104.3.59])
-        by smtp.gmail.com with ESMTPSA id 1sm11366982wmi.0.2020.04.26.03.11.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 03:11:46 -0700 (PDT)
-From:   Peter Vasil <peter.vasil@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Cc:     Peter Vasil <peter.vasil@gmail.com>
-Subject: [PATCH] pwm: sun4i: direct clock output support for Allwinner A64
-Date:   Sun, 26 Apr 2020 12:11:22 +0200
-Message-Id: <20200426101122.98318-1-peter.vasil@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 26 Apr 2020 06:11:58 -0400
+Received: from lucky1.263xmail.com ([211.157.147.130]:50686 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgDZKL6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Apr 2020 06:11:58 -0400
+Received: from localhost (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id B0580ADCF0;
+        Sun, 26 Apr 2020 18:11:55 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from ubuntu18.lan (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P17636T139992863057664S1587895910101377_;
+        Sun, 26 Apr 2020 18:11:55 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <c61c933bb4c94fb159ac94de3edbd417>
+X-RL-SENDER: yifeng.zhao@rock-chips.com
+X-SENDER: zyf@rock-chips.com
+X-LOGIN-NAME: yifeng.zhao@rock-chips.com
+X-FST-TO: miquel.raynal@bootlin.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Yifeng Zhao <yifeng.zhao@rock-chips.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Subject: [PATCH v5 5/7] arm64: dts: rockchip: Add nfc dts for PX30 SOC
+Date:   Sun, 26 Apr 2020 18:11:44 +0800
+Message-Id: <20200426101146.14797-1-yifeng.zhao@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200426100250.14678-1-yifeng.zhao@rock-chips.com>
+References: <20200426100250.14678-1-yifeng.zhao@rock-chips.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Allwinner A64 is capable of a direct clock output on PWM (see A64
-User Manual chapter 3.10). Add support for this in the sun4i PWM
-driver and adjust compatibility in sun50i-a64 base device tree.
+Add nfc(nand flash controller) node for PX30 Soc.
 
-Signed-off-by: Peter Vasil <peter.vasil@gmail.com>
+Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 6 ++----
- drivers/pwm/pwm-sun4i.c                       | 9 +++++++++
- 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 31143fe64d91..c334fd106854 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -1069,8 +1069,7 @@ gic: interrupt-controller@1c81000 {
- 		};
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
+
+ arch/arm64/boot/dts/rockchip/px30.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+index f809dd6d5dc3..749692c21ebe 100644
+--- a/arch/arm64/boot/dts/rockchip/px30.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+@@ -969,6 +969,21 @@
+ 		status = "disabled";
+ 	};
  
- 		pwm: pwm@1c21400 {
--			compatible = "allwinner,sun50i-a64-pwm",
--				     "allwinner,sun5i-a13-pwm";
-+			compatible = "allwinner,sun50i-a64-pwm";
- 			reg = <0x01c21400 0x400>;
- 			clocks = <&osc24M>;
- 			pinctrl-names = "default";
-@@ -1252,8 +1251,7 @@ r_ir: ir@1f02000 {
- 		};
- 
- 		r_pwm: pwm@1f03800 {
--			compatible = "allwinner,sun50i-a64-pwm",
--				     "allwinner,sun5i-a13-pwm";
-+			compatible = "allwinner,sun50i-a64-pwm";
- 			reg = <0x01f03800 0x400>;
- 			clocks = <&osc24M>;
- 			pinctrl-names = "default";
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 5c677c563349..18fbbe3277d0 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -352,6 +352,12 @@ static const struct sun4i_pwm_data sun4i_pwm_single_bypass = {
- 	.npwm = 1,
- };
- 
-+static const struct sun4i_pwm_data sun50i_a64_pwm_data = {
-+	.has_prescaler_bypass = true,
-+	.has_direct_mod_clk_output = true,
-+	.npwm = 1,
-+};
++	nfc: nand-controller@ff3b0000 {
++		compatible = "rockchip,px30_nfc";
++		reg = <0x0 0xff3b0000 0x0 0x4000>;
++		interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_NANDC>, <&cru SCLK_NANDC>;
++		clock-names = "ahb", "nfc";
++		assigned-clocks = <&cru SCLK_NANDC>;
++		assigned-clock-rates = <150000000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&flash_ale &flash_bus8 &flash_cle &flash_cs0
++			     &flash_rdn &flash_rdy &flash_wrn &flash_dqs>;
++		power-domains = <&power PX30_PD_MMC_NAND>;
++		status = "disabled";
++	};
 +
- static const struct sun4i_pwm_data sun50i_h6_pwm_data = {
- 	.has_prescaler_bypass = true,
- 	.has_direct_mod_clk_output = true,
-@@ -374,6 +380,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] = {
- 	}, {
- 		.compatible = "allwinner,sun8i-h3-pwm",
- 		.data = &sun4i_pwm_single_bypass,
-+	}, {
-+		.compatible = "allwinner,sun50i-a64-pwm",
-+		.data = &sun50i_a64_pwm_data,
- 	}, {
- 		.compatible = "allwinner,sun50i-h6-pwm",
- 		.data = &sun50i_h6_pwm_data,
+ 	gpu: gpu@ff400000 {
+ 		compatible = "rockchip,px30-mali", "arm,mali-bifrost";
+ 		reg = <0x0 0xff400000 0x0 0x4000>;
 -- 
-2.25.1
+2.17.1
+
+
 
