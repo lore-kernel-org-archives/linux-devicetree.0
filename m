@@ -2,57 +2,60 @@ Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F820C5519C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB22FC55194
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E49862078E
+	by mail.kernel.org (Postfix) with ESMTP id BB57D206DD
 	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 14:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="k84v9ziz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="B5YfTG5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgDZOId (ORCPT
+        id S1726152AbgDZOId (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sun, 26 Apr 2020 10:08:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33684 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgDZOIc (ORCPT
+        with ESMTP id S1726143AbgDZOIc (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Sun, 26 Apr 2020 10:08:32 -0400
-Received: from mo6-p00-ob.smtp.rzone.de (mo6-p00-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5300::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D824C09B050;
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC80C09B052;
         Sun, 26 Apr 2020 07:08:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587910109;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587910110;
         s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=fEN/W8JQvcwVXPrg6byzh4PGroQnpjWICFAQKgeEoOc=;
-        b=k84v9zizjhKQgUVTvuAVKbcrtVlRUWmE8lJHK+hP/lS/HVt0flVDPQvqLjcY0uFBdc
-        JFfkHfft/YrhycsMvXBqgABTZrRHHLR0Xugsv/6lM2Y7yoIDhMMVvDXoPFmwMyFG4soT
-        D/LT3N7dg5yjORk9L82xfEWN+TSyixcGb6RqzqWPJB3yg+Y+L8b+I+wwSM+179XnVuyc
-        FhI8eAOczS7SlTLs2A37pcwqNfBe9seGfLM7GuWpt4hcpyQD2az9bZzlSmlkvPg372qZ
-        YDGBv9flaSznaKiJ8YQ4Eh/ki4q0Qx6ofZVXMnMBxjrIZMUlepL2nh3+qvJivuMwo/XB
-        j+Qg==
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=VRrCcdTijQc1LuH1q5iBm9hifRAlB2p1XKY8J4Jb5v0=;
+        b=B5YfTG5VAI/SbCmgULQigUvHhMxt7/0BxB/VE+ygrZOGNlgnMXHOTyPg72bsuCDms4
+        /IAsXq76DLUSDGh/AEaDBpQNe91XXUcxn0+Y5anWX5HJ914Ahw9hJYWGIEj722NnELzy
+        xSiBKdR21DVmeM4bk3W9kWNBG6NH4C2TCX53+Llm38c1JQGmFc06LwjAYWCwoNC4BoEC
+        xkhSyJuYoRMrtCvAa1kXxxAyUl5VDHOBQi7/0VBldpmvYr+QrPTjw0pEoynkow6CW1Eb
+        3nLJLj61cSumpRm+F82iQOsKBEnh7U7lZCm62s1NCKKQE9N2MFfRA9PjoSb1LEtPkEmw
+        JdHA==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4G6Nf3AC"
 X-RZG-CLASS-ID: mo00
 Received: from localhost.localdomain
         by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id 60b02dw3QE8PNFJ
+        with ESMTPSA id 60b02dw3QE8RNFN
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Sun, 26 Apr 2020 16:08:25 +0200 (CEST)
+        Sun, 26 Apr 2020 16:08:27 +0200 (CEST)
 From:   Stephan Gerhold <stephan@gerhold.net>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht,
         Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 0/4] Add touchscreen for msm8916-samsung-a5u
-Date:   Sun, 26 Apr 2020 16:06:38 +0200
-Message-Id: <20200426140642.204395-1-stephan@gerhold.net>
+Subject: [PATCH 4/4] arm64: dts: qcom: msm8916-samsung-a5u: Add touchscreen
+Date:   Sun, 26 Apr 2020 16:06:42 +0200
+Message-Id: <20200426140642.204395-5-stephan@gerhold.net>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200426140642.204395-1-stephan@gerhold.net>
+References: <20200426140642.204395-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -60,21 +63,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series enables the touchscreen
-on the Samsung Galaxy A5 (2015) ("samsung-a5u").
+A5U uses a Melfas MMS345L touchscreen that is connected to
+blsp_i2c5. Add it to the device tree.
 
-Stephan Gerhold (4):
-  arm64: dts: qcom: msm8916: Add blsp_i2c1
-  arm64: dts: qcom: msm8916: Add blsp_i2c5
-  arm64: dts: qcom: msm8916-samsung-a2015: Add touchscreen regulator
-  arm64: dts: qcom: msm8916-samsung-a5u: Add touchscreen
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+Note: For the touchscreen to work this patch depends on
+https://lore.kernel.org/linux-input/20200423102431.2715-1-stephan@gerhold.net/
+which was just applied to linux-next.
+---
+ .../boot/dts/qcom/msm8916-samsung-a5u-eur.dts | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi    | 48 +++++++++++++++++++
- .../qcom/msm8916-samsung-a2015-common.dtsi    | 25 ++++++++++
- .../boot/dts/qcom/msm8916-samsung-a5u-eur.dts | 35 ++++++++++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi         | 30 ++++++++++++
- 4 files changed, 138 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
+index 6629a621139c..295a0f969914 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
+@@ -9,8 +9,43 @@ / {
+ 	compatible = "samsung,a5u-eur", "qcom,msm8916";
+ };
+ 
++&blsp_i2c5 {
++	status = "okay";
++
++	touchscreen@48 {
++		compatible = "melfas,mms345l";
++
++		reg = <0x48>;
++		interrupt-parent = <&msmgpio>;
++		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++
++		touchscreen-size-x = <720>;
++		touchscreen-size-y = <1280>;
++
++		avdd-supply = <&reg_vdd_tsp>;
++		vdd-supply = <&pm8916_l6>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&ts_int_default>;
++	};
++};
++
+ &pronto {
+ 	iris {
+ 		compatible = "qcom,wcn3680";
+ 	};
+ };
++
++&msmgpio {
++	ts_int_default: ts_int_default {
++		pinmux {
++			function = "gpio";
++			pins = "gpio13";
++		};
++		pinconf {
++			pins = "gpio13";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++};
 -- 
 2.26.2
 
