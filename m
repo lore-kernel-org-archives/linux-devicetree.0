@@ -2,105 +2,100 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FA0C55199
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 15:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726D6C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7CF32075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 15:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9C8206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgD0PXe (ORCPT
+        id S1728228AbgD0Piz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:23:34 -0400
-Received: from muru.com ([72.249.23.125]:51558 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbgD0PXe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:23:34 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 77CD88087;
-        Mon, 27 Apr 2020 15:24:20 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 08:23:29 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent
- and clocksource support
-Message-ID: <20200427152329.GR37466@atomide.com>
-References: <20200417165519.4979-1-tony@atomide.com>
- <20200417165519.4979-3-tony@atomide.com>
- <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
- <20200427143144.GQ37466@atomide.com>
- <29f39839-b3ed-cac3-1dea-c137286320b1@linaro.org>
+        Mon, 27 Apr 2020 11:38:55 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47463 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgD0Piz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 11:38:55 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 2D5C0C0011;
+        Mon, 27 Apr 2020 15:38:48 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 17:38:46 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200427173846.3866c506@xps13>
+In-Reply-To: <20200418105533.477ce529@collabora.com>
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200418105533.477ce529@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <29f39839-b3ed-cac3-1dea-c137286320b1@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Daniel Lezcano <daniel.lezcano@linaro.org> [200427 15:03]:
-> On 27/04/2020 16:31, Tony Lindgren wrote:
-> > Hi,
-> > 
-> > * Daniel Lezcano <daniel.lezcano@linaro.org> [200427 09:19]:
-> >> On 17/04/2020 18:55, Tony Lindgren wrote:
-> >>> --- a/Documentation/devicetree/bindings/timer/ti,timer.txt
-> >>> +++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
-> >>> @@ -14,6 +14,8 @@ Required properties:
-> >>>  			ti,omap5430-timer (applicable to OMAP543x devices)
-> >>>  			ti,am335x-timer	(applicable to AM335x devices)
-> >>>  			ti,am335x-timer-1ms (applicable to AM335x devices)
-> >>> +			ti,dmtimer-clockevent (when used as for clockevent)
-> >>> +			ti,dmtimer-clocksource (when used as for clocksource)
-> >>
-> >> Please, submit a separate patch for this.
-> >>
-> >> Before you resend as is, this will be nacked as clocksource / clockevent
-> >> is not a hardware description but a Linux thing.
-> >>
-> >> Finding a way to characterize that from the DT is an endless discussion
-> >> since years, so I suggest to use a single property for the timer eg
-> >> <ti,dmtimer> and initialize the clocksource and the clockevent in the
-> >> driver.
-> > 
-> > Hmm good point. We still need to specify which timer is a clocksource
-> > and which one a clockevent somehow.
-> > 
-> > Maybe we could have a generic properties like the clock framework such as:
-> > 
-> > assigned-system-clocksource
-> > assigned-system-clockevent
+Hi Boris,
+
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Sat, 18 Apr
+2020 10:55:33 +0200:
+
+> On Fri, 17 Apr 2020 16:21:47 +0800
+> "Ramuthevar,Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 > 
-> I think that will be the same problem :/
+> > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> > 
+> > This patch adds the new IP of Nand Flash Controller(NFC) support
+> > on Intel's Lightning Mountain(LGM) SoC.
+> > 
+> > DMA is used for burst data transfer operation, also DMA HW supports
+> > aligned 32bit memory address and aligned data access by default.
+> > DMA burst of 8 supported. Data register used to support the read/write
+> > operation from/to device.
+> > 
+> > NAND controller driver implements ->exec_op() to replace legacy hooks,
+> > these specific call-back method to execute NAND operations.
+> > 
+> > Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> > ---
+> >  drivers/mtd/nand/raw/Kconfig          |   7 +
+> >  drivers/mtd/nand/raw/Makefile         |   1 +
+> >  drivers/mtd/nand/raw/intel_lgm_nand.c | 740 ++++++++++++++++++++++++++++++++++  
+> 
+> I wonder if we shouldn't name the driver infineon-nand-controller.c
+> since the original design comes from Infineon IIUC. intel_lgm_nand.c is
+> definitely misleading, as we also have a nand_intel.c file which is for
+> Intel NAND chips (not NAND controllers). If we keep intel in the name,
+> let's at least add a "-controller" suffix to make it clear.
+> 
+> Side note for Miquel: I guess we would also benefit from having a clear
+> core vs controller-drivers split as recently done for spi-nor (a
+> controller subdir has been created).
 
-Seems like other SoCs have the same issue too with multiple timers
-to configure.
+I would even like a core vs controller drivers vs nand chips drivers.
 
-> Is it possible to check the interrupt for the clockevent ? A timer node
-> with the interrrupt is the clockevent, without it is a clocksource.
+Macronix for instance has a NAND controller driver and a NAND chip
+driver, that's why, even if it is a bit long, I enforce the -nfc or
+-nand-controller (my favorite) suffix now.
 
-OK let's try that. So the configuration would become then:
-
-compatible = "ti,dmtimer;	/* reserved for system timers */
-/delete-property/interrupts;	/* ok so it's a clocksource */
-/delete-property/interrupts-extended;
-
-Regards,
-
-Tony
+Thanks,
+Miquèl
