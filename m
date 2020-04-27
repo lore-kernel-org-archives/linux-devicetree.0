@@ -2,345 +2,120 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC73EC7C841
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDD2C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A48D9206BF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDFA02063A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:12:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="EAJmrWtZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAbzNbnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgD0OBN (ORCPT
+        id S1727077AbgD0OM4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:01:13 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:46516 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726786AbgD0OAs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:00:48 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 22138C0340;
-        Mon, 27 Apr 2020 14:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1587996047; bh=gkz/MH4Z3ksYqoxMhUAoa+N/R81O+lRzybg5tG4r+Sg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=EAJmrWtZWC1Rpt/5XO7y7dQi8qPIw6reeltCBl06D8trq30jmSKDRwBuT4pWIMs9W
-         6Xgy8WwlpRSHV2Hpbm4i+zdxTuS0n1LXXy4Njxl01ShCfLw7HyWVO3B0VSMpDtPYGe
-         enoOfvju0XBLo4+zGut3bPcbxfdlpLEqwuLDChC860cAEZ9/GJboW2H4ILknv0E/EJ
-         +Ki+98EHW+FvxmhVZlmvhb7Fu365m30XGyEMWQFCKL0/kqTpklEQW9nO1+mB83qxqH
-         OHOQ+EAqS92uUjsQGIf8TuLEbFF5z0l8DQiGc2oG7Bhh6Zfqi+QtxNnpRImxo7cWaO
-         hJDUy71FCLfCQ==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 51743A005E;
-        Mon, 27 Apr 2020 14:00:44 +0000 (UTC)
-From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
-To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: [PATCH v3 1/4] dt-bindings: display: Add IPK DSI subsystem bindings
-Date:   Mon, 27 Apr 2020 16:00:33 +0200
-Message-Id: <04a657ce78633d82565d3a7ce34a8ab52310ff63.1587992776.git.angelo.ribeiro@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
-References: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
-In-Reply-To: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
-References: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
+        Mon, 27 Apr 2020 10:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbgD0OM4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 10:12:56 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAEBC0610D5;
+        Mon, 27 Apr 2020 07:12:55 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id r26so20666921wmh.0;
+        Mon, 27 Apr 2020 07:12:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hXzFCii8TK+6j4aoUMO+iQEJf8FgxRpxLE2R58+xhnU=;
+        b=oAbzNbnGmUqYwp1txITipiEvjxihbS2UCHOaOjmg8ovkCNQAlfLRuGTyWQwyIjgWD3
+         E073JSClILB1nA3qt8tGjq+VRPpC7UfwW299JgADbvNkeXyEC+1y0OUTeXhWEP4CZx/Y
+         Hwy6cHauz07E0P2uR6KIlRaU181SkT8g0ollwYYgCEAWxHEafxWNphYdzrnGdZwTD2v3
+         AWzP4/tjFBVKACwEHa/nmOj3X4idoIRmtZs25KcEtEOa31ZTkwHOhmt7gquE/kY/ImN2
+         K0RlE8d0zVjzM4IOgHIGC3xlzS1/ooV/olNIbhDzTPufkQRMgcnxjiOjfnhZBf17eU/A
+         Z5cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hXzFCii8TK+6j4aoUMO+iQEJf8FgxRpxLE2R58+xhnU=;
+        b=EDBdRhhWi5wIucHuw2ohQDd4fEtdja4I44xw0+WUBKb4vUJ+YVsRHn7IvKByyHaC1w
+         +sSAgP6lrF9o/8NjNMwtR75BZSXUXpaz02INapyH60TilqWGiTBn07hv92RYvKKtVAZz
+         18BMnDiFVTOx24rIQUWj4RThuQP/kigfo7ApoCIuN2Oi2MG8XRsEQ3pWtcM02NIZjpRr
+         diFN6flyx4COy5XORbqXlPf60Of6e3RCLMOGra4VRx5BEXiJJyM8wgwj0+QxK/CcSk7z
+         jpAgHAcm8Mm/6wPO8Ir1vjU3Pz237yikyCNZApfBA3xD+DqTzG7WR/xZxgqGaCT4qqsz
+         boUg==
+X-Gm-Message-State: AGi0PuaNec8mS1OUgBM+lefDeMKdmG///YSN3YALKnC4gqEaJdzWACXW
+        Fd1qGjg2ZPbBnmakEy4VnUA=
+X-Google-Smtp-Source: APiQypJiOnJfu2lTVpb0BgX484TchdDbu6LXcPdFTw2LgdaUXl1ACqMYRiadebISaSMGvTJodU5KsQ==
+X-Received: by 2002:a1c:99d3:: with SMTP id b202mr27301491wme.126.1587996774461;
+        Mon, 27 Apr 2020 07:12:54 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id e13sm11841282wrp.15.2020.04.27.07.12.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 07:12:53 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
+ numbering for LED triggers
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     devicetree <devicetree@vger.kernel.org>, dmurphy@ti.com,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        jacek.anaszewski@gmail.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+References: <20200427073132.29997-3-wens@kernel.org>
+ <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
+ <CAGb2v66Piu5_2bdqvWV3eEn2Se_y1MNKWvvYBv_J7DA-8jBhbQ@mail.gmail.com>
+ <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com>
+ <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
+ <74a984fc-ce57-211b-936c-2d77e2e642bb@gmail.com>
+Message-ID: <a81840d3-813b-51b5-767c-e0d9d270200e@gmail.com>
+Date:   Mon, 27 Apr 2020 16:12:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <74a984fc-ce57-211b-936c-2d77e2e642bb@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add dt-bindings for Synopsys DesignWare MIPI DSI Host and VPG (Video
-Pattern Generator) support in the IPK display subsystem.
+Hi,
 
-The Synopsys DesignWare IPK display video pipeline is composed by a DSI
-controller (snps,dw-ipk-dsi) and a VPG (snps,dw-ipk-vpg) as DPI
-stimulus. Typically is used the Raspberry Pi
-(raspberrypi,7inch-touchscreen-panel) as DSI panel that requires a
-I2C controller (snps,designware-i2c).
+>> So for fixing up the LED node names, we'd probably want the following:
+>>
+>>     diy_led: led-0
+>>     yellow_led: led-1
+>>     work_led: led-2
 
-Reported-by: Rob Herring <robh+dt@kernel.org>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
----
-Changes since v3:
-  - Fixed dt-binding breaking on `make dt_binding_check`.
+Change proposal for led nodes to comply with preexisting dts.
+Does this work?
 
-Changes since v2:
-  - Fixed dt-bindings issues, see
-    https://patchwork.ozlabs.org/patch/1260819/.
----
- .../bindings/display/snps,dw-ipk-dsi.yaml          | 159 +++++++++++++++++++++
- .../bindings/display/snps,dw-ipk-vpg.yaml          |  73 ++++++++++
- 2 files changed, 232 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
- create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
+diy_led: led_0: led-0
+yellow_led: led_1: led-1
+work_led: led_2: led-2
 
-diff --git a/Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml b/Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
-new file mode 100644
-index 0000000..af4b775
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
-@@ -0,0 +1,159 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/snps,dw-ipk-dsi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synopsys DesignWare IPK specific extensions for the Synopsys DSI host
-+       controller.
-+
-+maintainers:
-+  - Angelo Ribeiro <angelo.ribeiro@synopsys.com>
-+
-+description: |
-+  The Synopsys DesignWare IPK DSI controller uses the Synopsys DesignWare MIPI
-+  DSI host controller.
-+  For more info refer to
-+  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt.
-+
-+properties:
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  compatible:
-+    items:
-+      - const: snps,dw-ipk-dsi
-+      - const: snps,dw-mipi-dsi
-+
-+  reg:
-+    items:
-+      - description: DW MIPI DSI Host registers
-+      - description: DW MIPI DSI Phy test-chip registers
-+    minItems: 2
-+
-+  reg-names:
-+    items:
-+     - const: dsi
-+     - const: phy
-+    minItems: 2
-+
-+  clocks:
-+    items:
-+      - description: Peripheral clock
-+      - description: PLL clock
-+      - description: Pixel clock
-+    minItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: ref
-+      - const: px_clk
-+    minItems: 2
-+
-+  resets:
-+    items:
-+      - description: APB reset line
-+    minItems: 1
-+
-+  reset-names:
-+    items:
-+      - const: apb
-+    minItems: 1
-+
-+  ports:
-+    type: object
-+    description: |
-+      A port node containging a DSI input and outuput port nodes as defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt and
-+      Documentation/devicetree/bindings/graph.txt.
-+    properties:
-+      port@0:
-+        type: object
-+        description: Input endpoint of the controller, connects to a DPI source.
-+
-+      port@1:
-+        type: object
-+        description: Output endpoint of the controller, connects to a panel or
-+          a bridge input port.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+additionalProperties: false
-+
-+required:
-+  - "#address-cells"
-+  - "#size-cells"
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - ports
-+
-+examples:
-+  - |
-+    dsi1: dw-ipk-dsi@2000 {
-+        compatible = "snps,dw-ipk-dsi";
-+        reg = <0x02000 0xfff>, <0x05000 0xfff>;
-+        reg-names = "dsi", "phy";
-+        clocks = <&apb_clk>, <&pll_clk>;
-+        clock-names = "pclk", "ref";
-+        resets = <&ipk_rst 1>;
-+        reset-names = "apb";
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            port@0 {
-+                reg = <0>;
-+                dsi1_in: endpoint {
-+                    remote-endpoint = <&vbridge_out>;
-+                };
-+            };
-+
-+            port@1 {
-+                reg = <1>;
-+                dsi_out_port: endpoint {
-+                    remote-endpoint = <&panel_dsi_port>;
-+                };
-+            };
-+        };
-+    };
-+
-+    i2c: i2c@1000 {
-+        compatible = "snps,designware-i2c";
-+        reg = <0x01000 0x100>;
-+        clock-frequency = <400000>;
-+        clocks = <&i2cclk>;
-+        interrupts = <0>;
-+        resets = <&ipk_rst 0>;
-+        reset-names = "i2c";
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        lcd@45 {
-+            compatible = "raspberrypi,7inch-touchscreen-panel";
-+            reg = <0x45>;
-+
-+            port {
-+                panel_dsi_port: endpoint {
-+                    remote-endpoint = <&dsi_out_port>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml b/Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
-new file mode 100644
-index 0000000..07e8380
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/snps,dw-ipk-vpg.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synopsys DesignWare Video Pattern Generator (VPG) for MIPI DSI HOST
-+
-+maintainers:
-+  - Angelo Ribeiro <angelo.ribeiro@synopsys.com>
-+
-+properties:
-+  compatible:
-+    const: snps,dw-ipk-vpg
-+
-+  reg:
-+    items:
-+      - description: Video Pattern Generator (VPG) registers
-+      - description: Clock generator (MMCM) registers
-+    minItems: 2
-+
-+  reg-names:
-+   items:
-+     - const: vpg
-+     - const: mmcm
-+   minItems: 2
-+
-+  resets:
-+    items:
-+      - description: VPG reset line
-+      - description: MMCM reset line
-+    minItems: 2
-+
-+  reset-names:
-+    items:
-+      - const: vpg
-+      - const: mmcm
-+    minItems: 2
-+
-+  port:
-+    type: object
-+    description: Video port for DPI output.
-+      The VPG has one video port for internal DPI stimulus over the MIPI
-+      DSI host controller.
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - resets
-+  - reset-names
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    dsi_vpg: dw-dsi-vpg@3000 {
-+        compatible = "snps,dw-ipk-vpg";
-+        reg = <0x03000 0xfff>, <0x07000 0xfff>;
-+        reg-names = "vpg", "mmcm";
-+        resets = <&ipk_rst 2>, <&ipk_rst 3>;
-+        reset-names = "vpg", "mmcm";
-+        status = "okay";
-+
-+        port {
-+            vpg_out: endpoint {
-+                remote-endpoint = <&dsi1_in>;
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.7.4
 
+blue: led_0: led-0
+
+A check does not give any warnings.
+
+make -k ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/leds-gpio.yaml
+
+> 
+> That doesn't look pretty either.
+> Would like to hear the maintainers view on how to handle other cases
+> without 'led' like for example 'blue' for mk808.
+> 
