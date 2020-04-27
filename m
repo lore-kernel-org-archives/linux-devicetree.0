@@ -2,161 +2,136 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6396BC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16244C5519B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB52206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:09:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="diOEyOh/"
+	by mail.kernel.org (Postfix) with ESMTP id F2771206CD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgD0KJw (ORCPT
+        id S1726589AbgD0KTE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:09:52 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45640 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgD0KJw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 06:09:52 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RA9jdG122958;
-        Mon, 27 Apr 2020 05:09:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587982185;
-        bh=2gZqUqCzi7AFRq8mRGo3ZoQLutalkhB+Fu89IDdfbgI=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=diOEyOh/+/DnNA0ea8aWSqxZDUaPgxYrX2YLN7XbQnf0VKLcovy6kyW7Elgj0P+tn
-         6tDmy09OcWkVxrNMwIJ7Nx2rDg3zXtCvs8H+0koNCsmeZoZf+/lp78r8Z+MrlANcaD
-         FwCSy5BSdy+/TpdzN8RxPEB+ilPH0oIodLKiNIc4=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RA9ji4031080
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Apr 2020 05:09:45 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 05:09:45 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 05:09:45 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RA9gBX030680;
-        Mon, 27 Apr 2020 05:09:43 -0500
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-j721e-main.dtsi: Add DSS node
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>, Nishanth Menon <nm@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jyri Sarha <jsarha@ti.com>
-References: <20200422091512.950-1-tomi.valkeinen@ti.com>
- <20200422091512.950-2-tomi.valkeinen@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <ade3a177-f060-bc40-bcc1-494093e3071d@ti.com>
-Date:   Mon, 27 Apr 2020 13:09:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Apr 2020 06:19:04 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34060 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgD0KTD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 06:19:03 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 72so25259249otu.1;
+        Mon, 27 Apr 2020 03:19:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q/ranIBWOXV+r1vGh7d3Ut57KQGbxJBp56NZiYevesc=;
+        b=J3bylwHgFwo5MEvFz/1dKzmEUZTP07UXKhcTgSXKhME8nMSWxGy2AC86NLjhPB2VIp
+         VIXetvjjjVt20QfDtqfqJX+gP6qeJwn0bkJwYKfDkw3AA9dLg0j0uFZq/nsJzMes56BM
+         gw4A+tLUWh/9NyBykLREPj4iQtbyw6jxXRk1F45hPzwm7+LPHplWSjaE66rdl8VhEhho
+         +/ixYC6MbBl7bQi85+XYJndKiFSp7cWGLgEk1VuRnNoeqYNUYsgowv/ECmI/ZuIXOJ2M
+         gor9FI1uWYw/ahJ9aDgZbBSM0+WzrfEQfrrxCG5ih9e03uPPJ+IHO2jlaDOGnvDD0PeT
+         n2BA==
+X-Gm-Message-State: AGi0PuajwKmelOpMSMIvwvk4DOyoPP4LcS/e7xklaWdFVOzrXr9p4jRF
+        Q3uLn6j46oTxgiyUny/iBD2dC8EJ5m4YGr+khiE=
+X-Google-Smtp-Source: APiQypLL/90KXHP4+lnbdlxks4rEa4T5zKfZNHUlLZcWix+pIRFzwlLNsl3kVuOJ8sLeCNhHBWF42/Nz02oQnLqOfXY=
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr15376635oig.54.1587982741263;
+ Mon, 27 Apr 2020 03:19:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200422091512.950-2-tomi.valkeinen@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587678050-23468-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdUmj+m8WLaSfwELD0VGYFpDaACTLgerbznBeqfVVy2nzw@mail.gmail.com> <CA+V-a8s6RacEpZ+Z5M8ftKq9NGsVgizdBY137YiYuK_yg-Ozxg@mail.gmail.com>
+In-Reply-To: <CA+V-a8s6RacEpZ+Z5M8ftKq9NGsVgizdBY137YiYuK_yg-Ozxg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 27 Apr 2020 12:18:50 +0200
+Message-ID: <CAMuHMdVrft9Ln=DSKv2hrVcZBuOo9fvbvD_s0JDo0xUQAoG=tQ@mail.gmail.com>
+Subject: Re: [PATCH 08/10] clk: renesas: cpg-mssr: Add R8A7742 support
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 22/04/2020 12:15, Tomi Valkeinen wrote:
-> Add DSS node for J721E SoC.
+Hi Prabhakar,
 
-Subject should drop .dtsi, I can fix that locally though. Got a question 
-below.
+On Mon, Apr 27, 2020 at 12:07 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Mon, Apr 27, 2020 at 10:10 AM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
+> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > Add RZ/G1H (R8A7742) Clock Pulse Generator / Module Standby and Software
+> > > Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
+> > > (and RZ/G) code.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- /dev/null
+> > > +++ b/drivers/clk/renesas/r8a7742-cpg-mssr.c
+> >
+> > > +static struct cpg_core_clk r8a7742_core_clks[] __initdata = {
 
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> ---
->   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 57 +++++++++++++++++++++++
->   1 file changed, 57 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> index 0b9d14b838a1..21c362042ecf 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> @@ -736,6 +736,63 @@
->   		};
->   	};
->   
-> +	dss: dss@04a00000 {
-> +		compatible = "ti,j721e-dss";
-> +		reg =
-> +			<0x00 0x04a00000 0x00 0x10000>, /* common_m */
-> +			<0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
-> +			<0x00 0x04b00000 0x00 0x10000>, /* common_s1*/
-> +			<0x00 0x04b10000 0x00 0x10000>, /* common_s2*/
-> +
-> +			<0x00 0x04a20000 0x00 0x10000>, /* vidl1 */
-> +			<0x00 0x04a30000 0x00 0x10000>, /* vidl2 */
-> +			<0x00 0x04a50000 0x00 0x10000>, /* vid1 */
-> +			<0x00 0x04a60000 0x00 0x10000>, /* vid2 */
-> +
-> +			<0x00 0x04a70000 0x00 0x10000>, /* ovr1 */
-> +			<0x00 0x04a90000 0x00 0x10000>, /* ovr2 */
-> +			<0x00 0x04ab0000 0x00 0x10000>, /* ovr3 */
-> +			<0x00 0x04ad0000 0x00 0x10000>, /* ovr4 */
-> +
-> +			<0x00 0x04a80000 0x00 0x10000>, /* vp1 */
-> +			<0x00 0x04aa0000 0x00 0x10000>, /* vp2 */
-> +			<0x00 0x04ac0000 0x00 0x10000>, /* vp3 */
-> +			<0x00 0x04ae0000 0x00 0x10000>, /* vp4 */
-> +			<0x00 0x04af0000 0x00 0x10000>; /* wb */
-> +
-> +		reg-names = "common_m", "common_s0",
-> +			"common_s1", "common_s2",
-> +			"vidl1", "vidl2","vid1","vid2",
-> +			"ovr1", "ovr2", "ovr3", "ovr4",
-> +			"vp1", "vp2", "vp3", "vp4",
-> +			"wb";
-> +
-> +		clocks =	<&k3_clks 152 0>,
-> +				<&k3_clks 152 1>,
-> +				<&k3_clks 152 4>,
-> +				<&k3_clks 152 9>,
-> +				<&k3_clks 152 13>;
-> +		clock-names = "fck", "vp1", "vp2", "vp3", "vp4";
-> +
-> +		power-domains = <&k3_pds 152 TI_SCI_PD_EXCLUSIVE>;
-> +
-> +		interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "common_m",
-> +				  "common_s0",
-> +				  "common_s1",
-> +				  "common_s2";
-> +
-> +		status = "disabled";
+> > > +       DEF_FIXED("zg",    R8A7742_CLK_ZG,      CLK_PLL1,           3, 1),
 
-Again, why disabled by default?
+> > > +static int __init r8a7742_cpg_mssr_init(struct device *dev)
+> > > +{
+> > > +       const struct rcar_gen2_cpg_pll_config *cpg_pll_config;
+> > > +       struct device_node *np = dev->of_node;
+> > > +       unsigned int i;
+> > > +       u32 cpg_mode;
+> > > +       int error;
+> > > +
+> > > +       error = rcar_rst_read_mode_pins(&cpg_mode);
+> > > +       if (error)
+> > > +               return error;
+> > > +
+> > > +       cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
+> > > +
+> > > +       if (of_device_is_compatible(np, "renesas,r8a7742-cpg-mssr")) {
+> > > +               /* RZ/G1H uses a 1/3 divider for ZG */
+> > > +               for (i = 0; i < ARRAY_SIZE(r8a7742_core_clks); i++)
+> > > +                       if (r8a7742_core_clks[i].id == R8A7742_CLK_ZG) {
+> > > +                               r8a7742_core_clks[i].div = 3;
+> > > +                               break;
+> > > +                       }
+> > > +       }
+> >
+> > Do you really need this part? (copied from r8a7743-cpg-mssr.c ;-)
+> > If you remove it, r8a7742_core_clks[] can be const, and <linux/of.h> is
+> > no longer needed,
+> >
+> I haven't come far enough to test the GPU yet, so Ill drop this for
+> now and add this later if needed.
 
--Tero
+The divider is already set to 3 in the table above.
 
-> +
-> +		dss_ports: ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +	};
-> +
->   	mcasp0: mcasp@2b00000 {
->   		compatible = "ti,am33xx-mcasp-audio";
->   		reg = <0x0 0x02b00000 0x0 0x2000>,
-> 
+Gr{oetje,eeting}s,
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
