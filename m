@@ -2,121 +2,66 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42401C4CECC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 19:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10250C4CECC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 19:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0FE20B1F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 19:39:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="TVtxIr1I"
+	by mail.kernel.org (Postfix) with ESMTP id F1EC9205C9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 19:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbgD0Tjy (ORCPT
+        id S1726426AbgD0Tmf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:39:54 -0400
-Received: from mail-eopbgr1410100.outbound.protection.outlook.com ([40.107.141.100]:25808
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726420AbgD0Tjy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:39:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OsgcstNs9+EqU2Q5a2KTZ+TKxrIMmRKxVA5vgOEjkerzwBamCIEm55G/oZLF50nhql3x3xokpeITiBpNrJo1mQRZgEHThfqM/un7lh+OTijrUdSI0aaWrGPAouCU7uPWX2MGmQ7Zb7kTo7nBYt9sbu2XJNZwpOnw9dfwBXaS308rPJg9MIUQ08uBz0xZlc63XfnU9/ssTNRb54nIQ3h00RBnGovGpM83bftNStuzYOL3jNDrBWPWZ55qKW/97gyovD2aUU+ENr9UnEkn9HqG6ko+2X25U7feup/+ggrVGpNTrZzRr86nDY+yw6bqj5sUebfR4+rj2k9RL8LDXibGgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lkAAfum7nxhqKxzkQYYZZSU8x8hjAVXIPkN0NEzfE7k=;
- b=J4l//PugsoB7WsgRRSyHWTpPTM8NqtJ2FtxdcCzxDXguBIfdSoTY73ce3JwO6x8/E8ADffvKx+Z58GvlocK6/ZcqjJD95LESFc6OAQroJVJZSl83+YLOwQULq9p6QHtljHtqNowzmhKhUIyGxUcnFKHyOKHFLydoCBMrF7uoyNc34O1Z4iyzJGQ6UP46LmJdCAOort7Jv6sAOXQjPTC+Etb2bAVRI2/JjMz05Jev8b8jEOhBnTy79jHemiuUfEEXEVE0nK5g9l1lqd7gKDtG5EJX4j7wYBbYyS205i/iJiR6b6seiOE0c6emCM7aodTPa0SWr17H0HhQagkJRNYOHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lkAAfum7nxhqKxzkQYYZZSU8x8hjAVXIPkN0NEzfE7k=;
- b=TVtxIr1I9Q+UcuJfadR8tBAwDTa/FDpDwivkNdoucmsxtIO9ZOkXZqs6DPNJEs4qWugkirDorD/hxHJrpQ+cfdl6zvzKKSMP6QG76i2UZhF6PftnPsPsd4moNcLK7k1wl8MLAUNWqIYsDqlM8QHHgk5luLN49MAnagY0S7I35l0=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.22; Mon, 27 Apr 2020 19:39:50 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::9582:9902:5907:49e7]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::9582:9902:5907:49e7%5]) with mapi id 15.20.2937.023; Mon, 27 Apr 2020
- 19:39:50 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>
-CC:     "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH] ARM: dts: r7s9210: Remove bogus clock-names from OSTM
- nodes
-Thread-Topic: [PATCH] ARM: dts: r7s9210: Remove bogus clock-names from OSTM
- nodes
-Thread-Index: AQHWHMozll9O00sfrUC6FttMgK1D46iNW/mQ
-Date:   Mon, 27 Apr 2020 19:39:50 +0000
-Message-ID: <TY1PR01MB156288DE1BC4C56E88FF06418AAF0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20200427192932.28967-1-geert+renesas@glider.be>
-In-Reply-To: <20200427192932.28967-1-geert+renesas@glider.be>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctZGE1MzYwMTMtODhiZS0xMWVhLWFhNjMtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XGRhNTM2MDE0LTg4YmUtMTFlYS1hYTYzLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iNjMwIiB0PSIxMzIzMjQ4OTk4ODcwNjAzMTUiIGg9Iml4ckpZOE1ORklpWkdwSjlnZ3h3US9qdzE0az0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [75.60.247.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a86e917f-76c9-4ea7-55f0-08d7eae2c083
-x-ms-traffictypediagnostic: TY1PR01MB1770:
-x-microsoft-antispam-prvs: <TY1PR01MB1770AAA3B47DDDA2521D55D08AAF0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0386B406AA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(376002)(396003)(366004)(346002)(4744005)(478600001)(76116006)(52536014)(8936002)(55016002)(4326008)(186003)(86362001)(9686003)(8676002)(81156014)(26005)(6506007)(7696005)(2906002)(316002)(66476007)(110136005)(54906003)(66556008)(66446008)(5660300002)(64756008)(33656002)(66946007)(71200400001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fSgEgv09Nl8jx2r22K5PL1LE989v1Svedv3vvh1IYXmXmRvmCfUrlOUeUOgB9I4HW0WhVfOjpm8x5/VXozLOdKsRt1ekQHwKX7hAYAvELwqq0FFxSRSsgmuNKwkSvYZJf9vvVSiSRIPLQWbnlk45wZbngXfyVQXHgH9G54+kIJDj5Ni2MJ2tYEryN2Vp/9mpgAjylXOsrgvdIplJIwr64/8xHT0dYIKuxe10BpmBxYun/Prtggo1KOxFwCY1c54ML/+C4wDPfTgUtOIqIUEqoOFhW7+PW36zOI1atAajxB/mt/ZEdLvxleZpZpsh4PHKKDV3swzjE5XEipbY58WTdyz0alYzOQUhLW8Slp6N5g9L8rWDbD2ngMFYGnie5WfWYctohYQwzOT7Dntko4fLYFJDndRK3yxpUXqRigeGHOcy7BESywLJd9h/jvHh+iFY
-x-ms-exchange-antispam-messagedata: nu8fqVTDsleos4njlTFXxBB1Yppkh1ArAEixjCsjKdXXSfZ0LQSNI0pL1ramtbhvnfo7Hw7HJiSwPJEmrKCgZyORgw/fOUIjYp5kA6Ozdo0oMQr5yufM0RpRleMUZTEYr8+Ehrxs3HLo+Qd1nnhTbP8EGFM4Jvlb5sC/cFUan+r7/b+GuT+MjSz7x1pa6C+db+N4ae875o+4roKR9FhrKnmhkOVmRck6+ggu1N87CWbRRrAz/NPg8XX1mQoLavEUcuvFaajwmblCUsJLx1UNHVxRu+1xb+r578DzIPhIzj7emypdA9cBv4H3Pl/YIn2XYFcw03gtSAMRGkVCMR4iPGsCbvMuH1dHfOpi1hp4gzJ9+VguRbf7Y7JH4adz1wFleuJb9MiEO3nhha+LPV21U0MezNe2+EAk6AMJI9i0ZIOcMcy1R1t/3Y0c4wxcYunKLXTTr+J7N0xqOX324DngrZeETsIe57dT7AaoQB9xRBrISemc3JhjmerTtn0/iDm+ru6tUBlqknwQ+vJYEmifKbcZk3iBW5+s9wo2u1PRL0sUaPQbvCPne1oRzjeTLcoqxXr+H7jsHTo1vICP1kMsO4DMXNNL6Jpqxt7lgk47PON5RiRg8CT4Ei9RQ9nj9VclqgiOVbCurFAsJw4ReCSTrsfZIC6Hm/pr06XyF6e2NNKuXGtWwcfBGDA6IQtxwh0r8tKvRAXHVfdY9sCeT/n9zyXnupaX5VkZTfmIuaoxSAsRbjS1M667T0hvw6at2m/SFB2f1AHtVZ9E94qWSyoYQfDDhpQRDiBUwvEZriJ+CcQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 27 Apr 2020 15:42:35 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:46442 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbgD0Tmf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 15:42:35 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jT9eA-00007W-QQ; Mon, 27 Apr 2020 21:42:30 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: remove extra assigned-clocks property from &gmac2phy node in rk3328-evb.dts
+Date:   Mon, 27 Apr 2020 21:42:24 +0200
+Message-Id: <158801649141.50507.12064704129185456183.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200425122345.12902-1-jbx6244@gmail.com>
+References: <20200425122345.12902-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a86e917f-76c9-4ea7-55f0-08d7eae2c083
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 19:39:50.8716
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BJL2VmStLTqgsBMfglayvKHDf/WkY+nKKuy5t+Rj3xNWONK6kXjhuObcEcmKV/awQj9rfE5MNKvTpfX1vY7FuJuawHCOIZ9qWa+/8Qift4U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1770
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+On Sat, 25 Apr 2020 14:23:44 +0200, Johan Jonker wrote:
+> There are 2 'assigned-clocks' properties in the '&gmac2phy'
+> node in 'rk3328-evb.dts', so remove one of them.
+> 
+> Info from clk-rk3328.c:
+> 
+> MUXGRF(SCLK_MAC2PHY, "clk_mac2phy", mux_mac2phy_src_p,
+> CLK_SET_RATE_NO_REPARENT,
+> RK3328_GRF_MAC_CON2, 10, 1, MFLAGS),
+> 
+> [...]
 
-On Mon, Apr 27, 2020, Geert Uytterhoeven wrote:
-> However, the actual clock names for the OS Timer nodes are not fixed,
-> but contain the indices of the consumer instances.  Hence they cannot
-> easily be used by a driver, without scanning for all possible indices.
->=20
-> Remove them, as the OSTM DT bindings do not specify clock-names anyway.
+Applied, thanks!
 
-> ---
-> To be queued in renesas-fixes for v5.7, to avoid the json-schema OSTM DT
-> bindings conversion introducing a regression.
-> ---
+[1/2] arm64: dts: rockchip: remove extra assigned-clocks property from &gmac2phy node in rk3328-evb.dts
+      commit: f73a28284e2a89a7ca1e10e04514aedd33290c76
+[2/2] arm64: dts: rockchip: fix status for &gmac2phy in rk3328-evb.dts
+      commit: c617ed88502d0b05149e7f32f3b3fd8a0663f7e2
 
-OK. Thank you.
-
-Chris
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
