@@ -2,151 +2,146 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A24C4CECD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EECC4CECC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1A79215A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588009567;
-	bh=iF9YmvJqlTOPV6QEo1ch3u7PI0qsz6iUbUvNWthAYms=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pmM3wTKQfx0spTH00hFaEZO+BNzSwzl2gLFmtdMGXG/7aQc6EYRW5JLhFzoBRFk+q
-	 WuI9fO+QJunt9aWfzEAMrUC1pcxhLm/3nI+wEbDFpTvd5UjeI3lLPIkEHB7Ha0iZcD
-	 h6PO9Grvk9G0lG3T7O7dNXxi1ndGsb1Pw9w4G5N0=
+	by mail.kernel.org (Postfix) with ESMTP id 75E10215A4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbgD0RqD (ORCPT
+        id S1726262AbgD0Rrx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:46:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726226AbgD0RqD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:46:03 -0400
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCAA621775;
-        Mon, 27 Apr 2020 17:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588009562;
-        bh=iF9YmvJqlTOPV6QEo1ch3u7PI0qsz6iUbUvNWthAYms=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=x5dT7bls/3QJn+I9NbWzFlG6FHclIlFs0dMqD5tSRm8dQv0gBaJ4/72TXlkHbf0kb
-         5JDD4w1fIgId0fi//oLcPdvIffq0NDHGy0/8f7NlxLYtrTIJIvLtveFzXAIaaFbQMa
-         kbfuHB2JKD+TyBrwC58U+aB0tbjo5/LEOt5HXqfM=
-Received: by mail-yb1-f172.google.com with SMTP id o139so9891403ybc.11;
-        Mon, 27 Apr 2020 10:46:02 -0700 (PDT)
-X-Gm-Message-State: AGi0PuauBr6AQeTzL2HsNKdxN76/MrNIVzrVim/JmvLEVxEn5U97W+QQ
-        sjcxAxJ9PEokUyEsAS1VKL+cUmHgkF8t/yHSUQ==
-X-Google-Smtp-Source: APiQypJCjp0sKkH8wsvV7TRTZ+Y5WfstmylSaK6ab9MlcQ1t5UeAxbE4A4p6/U7DdUD81SjmmMDCkQIJah8HRlmHtgQ=
-X-Received: by 2002:a25:281:: with SMTP id 123mr37843786ybc.358.1588009561921;
- Mon, 27 Apr 2020 10:46:01 -0700 (PDT)
+        Mon, 27 Apr 2020 13:47:53 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:40615 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbgD0Rrw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 13:47:52 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 94DDD20005;
+        Mon, 27 Apr 2020 17:47:48 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 19:47:47 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v2 04/12] mtd: rawnand: stm32_fmc2: manage all errors
+ cases at probe time
+Message-ID: <20200427194747.224a2402@xps13>
+In-Reply-To: <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200422201216.10593-1-ansuelsmth@gmail.com> <20200422201216.10593-2-ansuelsmth@gmail.com>
- <CAL_JsqLUbM7ed2q7so4Uibiz2URRg1juoGRExy9Ta3J-LWAFow@mail.gmail.com>
- <087301d61a86$68b6f950$3a24ebf0$@gmail.com> <20200427034951.xrk5ja3pg4anbg4s@vireshk-i7>
- <016c01d61c80$ba1358b0$2e3a0a10$@gmail.com>
-In-Reply-To: <016c01d61c80$ba1358b0$2e3a0a10$@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 27 Apr 2020 12:45:49 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKu15CQu4pP6uyrUvYk3xZVWwUu=86CE5yDHPx7cSKdTw@mail.gmail.com>
-Message-ID: <CAL_JsqKu15CQu4pP6uyrUvYk3xZVWwUu=86CE5yDHPx7cSKdTw@mail.gmail.com>
-Subject: Re: R: [PATCH v2 2/2] dt-bindings: opp: Fix wrong binding in qcom-nvmem-cpufreq
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilia Lin <ilia.lin@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sricharan R <sricharan@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 5:43 AM <ansuelsmth@gmail.com> wrote:
->
-> > On 25-04-20, 00:19, ansuelsmth@gmail.com wrote:
-> > > > On Wed, Apr 22, 2020 at 3:12 PM Ansuel Smith
-> > <ansuelsmth@gmail.com>
-> > > > wrote:
-> > > > >
-> > > > > Update binding to new generic name "operating-points-v2-qcom-cpu"
-> > > > >
-> > > > > Fixes: a8811ec764f9 ("cpufreq: qcom: Add support for krait based
-> > socs")
-> > > > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt |
-> > 2
-> > > > +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-
-> > > > cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-
-> > > > cpufreq.txt
-> > > > > index 64f07417ecfb..537e1774f589 100644
-> > > > > --- a/Documentation/devicetree/bindings/opp/qcom-nvmem-
-> > cpufreq.txt
-> > > > > +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-
-> > > > cpufreq.txt
-> > > > > @@ -19,7 +19,7 @@ In 'cpu' nodes:
-> > > > >
-> > > > >  In 'operating-points-v2' table:
-> > > > >  - compatible: Should be
-> > > > > -       - 'operating-points-v2-kryo-cpu' for apq8096, msm8996,
-> > msm8974,
-> > > > > +       - 'operating-points-v2-qcom-cpu' for apq8096, msm8996,
-> > > > msm8974,
-> > > > >                                              apq8064, ipq8064,
-> msm8960 and ipq8074.
-> > > >
-> > > > This is not how you fix the backwards compatibility issue pointed out
-> > > > on the Fixes reference.
-> > > >
-> > > > Rob
-> > >
-> > > Sorry but can you give some directive? Should I use the old binding and
-> > change
-> > > the driver to use it instead of the new one (and drop it) ?
-> >
-> > It is not about the name of the binding, you can rename it to whatever
-> > you want. The kernel needs to keep supporting all the previous
-> > bindings, so we can keep on changing the kernel but keep the same
-> > bootloader (with earlier bindings).
-> >
-> > --
-> > viresh
->
-> Ok but still I can't understand why this is not right.
-> In 1/2 of this patchset I added the check for the old binding in the driver
+Hi Christophe,
 
-I don't have patch 1 and this patch should stand on it's own.
+Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
+2020 17:57:28 +0200:
 
-> and
-> here I updated the Documentation with the new one. This way the kernel
-> should support all the previous bindings and I can use the new better name.
+> This patch defers its probe when the expected reset control is not
+> yet ready. This patch also handles properly all errors cases at probe
+> time.
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
+>  drivers/mtd/nand/raw/stm32_fmc2_nand.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> index b6d45cd..0a96797 100644
+> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> @@ -1967,7 +1967,11 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	rstc = devm_reset_control_get(dev, NULL);
+> -	if (!IS_ERR(rstc)) {
+> +	if (IS_ERR(rstc)) {
+> +		ret = PTR_ERR(rstc);
+> +		if (ret == -EPROBE_DEFER)
+> +			goto err_clk_disable;
+> +	} else {
+>  		reset_control_assert(rstc);
+>  		reset_control_deassert(rstc);
+>  	}
+> @@ -1975,7 +1979,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>  	/* DMA setup */
+>  	ret = stm32_fmc2_dma_setup(fmc2);
+>  	if (ret)
+> -		return ret;
+> +		goto err_dma_setup;
+>  
+>  	/* FMC2 init routine */
+>  	stm32_fmc2_init(fmc2);
+> @@ -1997,7 +2001,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>  	/* Scan to find existence of the device */
+>  	ret = nand_scan(chip, nand->ncs);
+>  	if (ret)
+> -		goto err_scan;
+> +		goto err_dma_setup;
+>  
+>  	ret = mtd_device_register(mtd, NULL, 0);
+>  	if (ret)
+> @@ -2010,7 +2014,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>  err_device_register:
+>  	nand_cleanup(chip);
+>  
+> -err_scan:
+> +err_dma_setup:
+>  	if (fmc2->dma_ecc_ch)
+>  		dma_release_channel(fmc2->dma_ecc_ch);
+>  	if (fmc2->dma_tx_ch)
+> @@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>  	sg_free_table(&fmc2->dma_data_sg);
+>  	sg_free_table(&fmc2->dma_ecc_sg);
+>  
+> +err_clk_disable:
+>  	clk_disable_unprepare(fmc2->clk);
+>  
+>  	return ret;
 
-First, a compatible string is just an identifier. Maybe it wasn't the
-best name, but who cares really. Just use it even if it's not just
-kryo cpus. Otherwise, it's more complicated.
+I didn't spot it during my earlier reviews but I really prefer using
+labels explaining what you do than having the same name of the function
+which failed. This way you don't have to rework the error path when
+you handle an additional error.
 
-Are you changing every dts file? If not, then dts files now have an
-undocumented compatible string which is not okay. You'd need to keep
-the old compatible and mark it deprecated. If you are, then you are
-breaking compatibility between new dts and older kernels unless adding
-the new compatible string to the driver is backported to stable (which
-should be okay).
+So, would you mind doing this in two steps:
 
-Rob
+1/
+Replace
+
+    err_scan:
+
+with, eg.
+
+    release_dma_objs:
+
+2/
+Add a
+
+    goto release_dma_objs;
+
+in *_dma_setup() error path, and define and use a
+
+    release_clk
+
+label like you already do.
+
+
+Thanks,
+Miquèl
