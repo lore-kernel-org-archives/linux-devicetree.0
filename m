@@ -2,59 +2,137 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B059C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2624C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3C520738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1DE2076A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:26:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h3fldpMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbgD0RK4 (ORCPT
+        id S1726228AbgD0R0N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgD0RK4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 13:10:56 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AC3AC0610D5;
-        Mon, 27 Apr 2020 10:10:56 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 391F015D4A660;
-        Mon, 27 Apr 2020 10:10:55 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 10:10:54 -0700 (PDT)
-Message-Id: <20200427.101054.2128954519257276284.davem@davemloft.net>
-To:     o.rempel@pengutronix.de
-Cc:     andrew@lunn.ch, robh+dt@kernel.org, kernel@pengutronix.de,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v1] dt-bindings: net: convert qca,ar71xx
- documentation to yaml
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200424052116.17204-1-o.rempel@pengutronix.de>
-References: <20200424052116.17204-1-o.rempel@pengutronix.de>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Apr 2020 10:10:55 -0700 (PDT)
+        Mon, 27 Apr 2020 13:26:13 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:45048 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgD0R0M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 13:26:12 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RHQ8Rp103828;
+        Mon, 27 Apr 2020 12:26:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588008369;
+        bh=j3QH00sY/Htwct4WFyjr8/dZw3NB/QmGpMKW/G19WeM=;
+        h=From:To:CC:Subject:Date;
+        b=h3fldpMoyf0BEKHpn3WjlQtgYlCzTgAVKdtTRO4autseuCbo/k2QGw0wtqnx6Ga1Y
+         ZdO4XLnMnV3y9zheZtPbHHZWmnyl9ngvU+mCQQdIJhELm0RUc4DmzTg+hY06geFV7Z
+         oR++m/QDQ2qaN/knYCD7oJvYYZMHgElJ3DwPFQNw=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RHQ818064603;
+        Mon, 27 Apr 2020 12:26:08 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
+ Apr 2020 12:26:08 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 27 Apr 2020 12:26:08 -0500
+Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RHQ5TE072591;
+        Mon, 27 Apr 2020 12:26:06 -0500
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH] arm: dts: Add 32KHz clock as default clock source
+Date:   Mon, 27 Apr 2020 22:56:04 +0530
+Message-ID: <20200427172604.16351-1-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Date: Fri, 24 Apr 2020 07:21:16 +0200
+Clocksource to timer configured in pwm mode can be selected using the DT
+property ti,clock-source. There are few pwm timers which are not
+selecting the clock source and relying on default value in hardware or
+selected by driver. Instead of relying on default value, always select
+the clock source from DT. 
 
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for the Atheros AR71XX over to a YAML schemas.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+Tony,
+	This is in preparation with removal of selecting clock source in
+	prepare() api. Let me know if you prefer separate patches for
+	each dts.
 
-Applied, thanks.
+ arch/arm/boot/dts/am335x-guardian.dts            | 1 +
+ arch/arm/boot/dts/am3517-evm.dts                 | 1 +
+ arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi | 1 +
+ arch/arm/boot/dts/omap3-gta04.dtsi               | 1 +
+ 4 files changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-guardian.dts b/arch/arm/boot/dts/am335x-guardian.dts
+index 81e0f63e94d3..0ebe9e2c150e 100644
+--- a/arch/arm/boot/dts/am335x-guardian.dts
++++ b/arch/arm/boot/dts/am335x-guardian.dts
+@@ -105,6 +105,7 @@
+ 		ti,timers = <&timer7>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&dmtimer7_pins>;
++		ti,clock-source = <0x01>;
+ 	};
+ 
+ 	vmmcsd_fixed: regulator-3v3 {
+diff --git a/arch/arm/boot/dts/am3517-evm.dts b/arch/arm/boot/dts/am3517-evm.dts
+index a1fd3e63e86e..92466b9eb6ba 100644
+--- a/arch/arm/boot/dts/am3517-evm.dts
++++ b/arch/arm/boot/dts/am3517-evm.dts
+@@ -156,6 +156,7 @@
+ 		pinctrl-0 = <&pwm_pins>;
+ 		ti,timers = <&timer11>;
+ 		#pwm-cells = <3>;
++		ti,clock-source = <0x01>;
+ 	};
+ 
+ 	/* HS USB Host PHY on PORT 1 */
+diff --git a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
+index f7b82ced4080..381f0e82bb70 100644
+--- a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
++++ b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
+@@ -65,6 +65,7 @@
+ 		pinctrl-0 = <&pwm_pins>;
+ 		ti,timers = <&timer10>;
+ 		#pwm-cells = <3>;
++		ti,clock-source = <0x01>;
+ 	};
+ 
+ };
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index 409a758c99f1..ecc45862b4f3 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -150,6 +150,7 @@
+ 		compatible = "ti,omap-dmtimer-pwm";
+ 		ti,timers = <&timer11>;
+ 		#pwm-cells = <3>;
++		ti,clock-source = <0x01>;
+ 	};
+ 
+ 	hsusb2_phy: hsusb2_phy {
+-- 
+2.23.0
+
