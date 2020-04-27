@@ -2,316 +2,155 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23EBC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D981C55199
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7E720663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1FC206B6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:31:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="QcFqyD9U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tvtrT3kr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgD0K2j (ORCPT
+        id S1726795AbgD0KbW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:28:39 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:59494 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726991AbgD0K2i (ORCPT
+        Mon, 27 Apr 2020 06:31:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726537AbgD0KbW (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:28:38 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RAQxFm029197;
-        Mon, 27 Apr 2020 05:28:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=PnK6ji+fY5JtW/xhK/84MD4wpuIccwFxrCzAtfnRQls=;
- b=QcFqyD9UAbvyoW6V6Guz6ThozfhwwqnBZx36tXpO6TISB68i+Hm6WXVFJPKR2DUFmdsS
- ZUKAZ9hn+JYlX25yo45BC92dyvA6x/5P7ihII60eDCOBCyA9fKg5Icb1Y44F3TFLXva7
- w0PF+jwzHXieild+9An/wCmP+F9areu+y4+9wkxjPGiUtmP6LMjzCI8vSIBh2ihzy1pl
- cjp+eYVTONfTINQ8yi+VfOIlvhqTOV6FSyKMsu4Kp5gdiXAPYbGGBchkvY3gbSfGhq5/
- xz+vQP4UVbwq5VhfBo0XJUhssR8bH/dAYuiobVIxIOZziK3808ZHfk4Mn7dx3SaqwpXb tg== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 30mhmqu0ng-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 27 Apr 2020 05:28:14 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Apr
- 2020 11:28:12 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Mon, 27 Apr 2020 11:28:12 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 67C1D44A;
-        Mon, 27 Apr 2020 10:28:12 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <jdelvare@suse.com>,
-        <linux@roeck-us.net>, <linus.walleij@linaro.org>
-CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: [PATCH 4/6] regulator: lochnagar: Move binding over to dtschema
-Date:   Mon, 27 Apr 2020 11:28:10 +0100
-Message-ID: <20200427102812.23251-4-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200427102812.23251-1-ckeepax@opensource.cirrus.com>
-References: <20200427102812.23251-1-ckeepax@opensource.cirrus.com>
+        Mon, 27 Apr 2020 06:31:22 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46847C0610D5;
+        Mon, 27 Apr 2020 03:31:22 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id c3so25250386otp.8;
+        Mon, 27 Apr 2020 03:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3d7vs20E1Et9twZMWtdoqd2YRjkdvKBGwACExL5kyRg=;
+        b=tvtrT3kris+dM2Fd6C2U6qTO23oFqBPH6nLTx0ZEhnnfleDuIP/+oa2CScVy19rpkk
+         COfloMiCX95ftcXhVLOPW9KP7+/PaNrE5zONJMcZOrxURYrILEre8ttKPbOuS9tNpbc+
+         LQyyBkxNObiImX/P5y/ncL6LJQndQzzc6Jy+qhTjr9Nw6vZAm/8Q2PpozO/2q7mhIQjP
+         r8TjF1g2Kr1eXk4Xa8TSMGOR2HVZBkAYtqRAzb+771Tp+yqOfrydKCWcUx6jcrSjXd0d
+         O2ekoMICDb+M+9eC8HjlW8bLQL5QPtmmvnkdbcSe0V5vhWaWzrOcN9XgUbUpCCVKD8Nd
+         4kyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3d7vs20E1Et9twZMWtdoqd2YRjkdvKBGwACExL5kyRg=;
+        b=bejcDyz1aMlUPfSlZkCOAbvetcWvg+aD+3DK9dS97ntfaWiS8Bix9bHLkj/AmAN8/W
+         eyc1OqyEtykUgD7KUbY5b01OmQ8MGe8pbleWQDEegryrl03jIrQyML9uZlvotFKG9UEL
+         HsE7gbBl3qHuCKHDdTlmek290NjvHT69fRHcyTIH/C8/cykMrU0y8PdCzlx4xTfvHMJZ
+         ehG3PLxPvIQS95N87UyGj8PBzPoT2o9GcOZG8mIftlt6B6BkYD5mc8msMhewtoIvr+TY
+         lugYCODjhb+52MCn0cuPsZhT5BckllM7Uwiuyh4FbG9Udd7bsBMkZY242lf5szejfqrs
+         SS7w==
+X-Gm-Message-State: AGi0PuaafEg7jv8V8546/sfGgjguGrdkg3bcWqxVlNiIBzcrXkTFkJWR
+        13/hR4O4gGmDTfBSU3jYPw9Nw/V1214WZN0PsPg=
+X-Google-Smtp-Source: APiQypLDnWLyGAgDCNv98J886odnQ8mX26B9JoocB96gAjQ4sJvW7pv565vVlbaHXsTMdz90L4H275X8XO7T/WINWDQ=
+X-Received: by 2002:aca:b783:: with SMTP id h125mr3069784oif.62.1587983481703;
+ Mon, 27 Apr 2020 03:31:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015 bulkscore=0
- spamscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0 phishscore=0
- suspectscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004270094
+References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdXwsUAaeY+b6t-nqPE8kL-p+F4HqXE2mujP0eXPjrbooQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdXwsUAaeY+b6t-nqPE8kL-p+F4HqXE2mujP0eXPjrbooQ@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 27 Apr 2020 11:30:55 +0100
+Message-ID: <CA+V-a8sH4sLN1XuRM+SgbbN5O38wrtMyk5QEXEPhV5tOkbchJw@mail.gmail.com>
+Subject: Re: [PATCH 00/10] Add RZ/G1H support.
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- .../bindings/regulator/cirrus,lochnagar.txt        |  82 -------------
- .../bindings/regulator/cirrus,lochnagar.yaml       | 132 +++++++++++++++++++++
- 2 files changed, 132 insertions(+), 82 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/cirrus,lochnagar.yaml
+Hi Geert,
 
-diff --git a/Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
-deleted file mode 100644
-index 91974e6ee251b..0000000000000
---- a/Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
-+++ /dev/null
-@@ -1,82 +0,0 @@
--Cirrus Logic Lochnagar Audio Development Board
--
--Lochnagar is an evaluation and development board for Cirrus Logic
--Smart CODEC and Amp devices. It allows the connection of most Cirrus
--Logic devices on mini-cards, as well as allowing connection of
--various application processor systems to provide a full evaluation
--platform.  Audio system topology, clocking and power can all be
--controlled through the Lochnagar, allowing the device under test
--to be used in a variety of possible use cases.
--
--This binding document describes the binding for the regulator portion
--of the driver.
--
--Also see these documents for generic binding information:
--  [1] Regulator: ../regulator/regulator.txt
--
--This binding must be part of the Lochnagar MFD binding:
--  [2] ../mfd/cirrus,lochnagar.txt
--
--Optional sub-nodes:
--
--  - VDDCORE : Initialisation data for the VDDCORE regulator, which
--    supplies the CODECs digital core if it has no build regulator for that
--    purpose.
--      Required Properties:
--      - compatible : One of the following strings:
--                     "cirrus,lochnagar2-vddcore"
--      - SYSVDD-supply: Primary power supply for the Lochnagar.
--
--  - MICVDD : Initialisation data for the MICVDD regulator, which
--    supplies the CODECs MICVDD.
--      Required Properties:
--      - compatible : One of the following strings:
--                     "cirrus,lochnagar2-micvdd"
--      - SYSVDD-supply: Primary power supply for the Lochnagar.
--
--  - MIC1VDD, MIC2VDD : Initialisation data for the MICxVDD supplies.
--      Required Properties:
--      - compatible : One of the following strings:
--                     "cirrus,lochnagar2-mic1vdd", "cirrus,lochnagar2-mic2vdd"
--      Optional Properties:
--      - cirrus,micbias-input : A property selecting which of the CODEC
--        minicard micbias outputs should be used, valid values are 1 - 4.
--      - MICBIAS1-supply, MICBIAS2-supply: Regulator supplies for the
--        MICxVDD outputs, supplying the digital microphones, normally
--        supplied from the attached CODEC.
--
--  - VDD1V8 : Recommended fixed regulator for the VDD1V8 regulator, which supplies the
--    CODECs analog and 1.8V digital supplies.
--      Required Properties:
--      - compatible : Should be set to "regulator-fixed"
--      - regulator-min-microvolt : Should be set to 1.8V
--      - regulator-max-microvolt : Should be set to 1.8V
--      - regulator-boot-on
--      - regulator-always-on
--      - vin-supply : Should be set to same supply as SYSVDD
--
--Example:
--
--lochnagar {
--	lochnagar-micvdd: MICVDD {
--		compatible = "cirrus,lochnagar2-micvdd";
--
--		SYSVDD-supply = <&wallvdd>;
--
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--	};
--
--	lochnagar-vdd1v8: VDD1V8 {
--		compatible = "regulator-fixed";
--
--		regulator-name = "VDD1V8";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--		regulator-boot-on;
--		regulator-always-on;
--
--		vin-supply = <&wallvdd>;
--	};
--};
--
-diff --git a/Documentation/devicetree/bindings/regulator/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/regulator/cirrus,lochnagar.yaml
-new file mode 100644
-index 0000000000000..49ffa1534050b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/cirrus,lochnagar.yaml
-@@ -0,0 +1,132 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/cirrus,lochnagar.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cirrus Logic Lochnagar Audio Development Board
-+
-+maintainers:
-+  - patches@opensource.cirrus.com
-+
-+description: |
-+  Lochnagar is an evaluation and development board for Cirrus Logic
-+  Smart CODEC and Amp devices. It allows the connection of most Cirrus
-+  Logic devices on mini-cards, as well as allowing connection of various
-+  application processor systems to provide a full evaluation platform.
-+  Audio system topology, clocking and power can all be controlled through
-+  the Lochnagar, allowing the device under test to be used in a variety of
-+  possible use cases.
-+
-+  This binding document describes the binding for the regulator portion of
-+  the driver.
-+
-+  Also see these documents for generic binding information:
-+    [1] Regulator: ../regulator/regulator.yaml
-+
-+  This binding must be part of the Lochnagar MFD binding:
-+    [2] ../mfd/cirrus,lochnagar.yaml
-+
-+properties:
-+  VDDCORE:
-+    description:
-+      Initialisation data for the VDDCORE regulator, which supplies the
-+      CODECs digital core if not being provided by an internal regulator.
-+    $ref: "regulator.yaml#"
-+    type: object
-+    properties:
-+      compatible:
-+        enum:
-+          - cirrus,lochnagar2-vddcore
-+      SYSVDD-supply:
-+        description:
-+          Primary power supply for the Lochnagar.
-+    required:
-+      - compatible
-+
-+  MICVDD:
-+    description:
-+      Initialisation data for the MICVDD regulator, which supplies the
-+      CODECs MICVDD.
-+    $ref: "regulator.yaml#"
-+    type: object
-+    properties:
-+      compatible:
-+        enum:
-+          - cirrus,lochnagar2-micvdd
-+      SYSVDD-supply:
-+        description:
-+          Primary power supply for the Lochnagar.
-+    required:
-+      - compatible
-+
-+  MIC1VDD:
-+    description:
-+      Initialisation data for the MIC1VDD supplies.
-+    $ref: "regulator.yaml#"
-+    type: object
-+    properties:
-+      compatible:
-+        enum:
-+          - cirrus,lochnagar2-mic1vdd
-+      cirrus,micbias-input:
-+        description:
-+          A property selecting which of the CODEC minicard micbias outputs
-+          should be used.
-+        $ref: "/schemas/types.yaml#/definitions/uint32"
-+        minimum: 1
-+        maximum: 4
-+      MICBIAS1-supply:
-+        description:
-+          Regulator supplies for the MIC1VDD outputs, supplying the digital
-+          microphones, normally supplied from the attached CODEC.
-+    required:
-+      - compatible
-+
-+  MIC2VDD:
-+    description:
-+      Initialisation data for the MIC2VDD supplies.
-+    $ref: "regulator.yaml#"
-+    type: object
-+    properties:
-+      compatible:
-+        enum:
-+          - cirrus,lochnagar2-mic2vdd
-+      cirrus,micbias-input:
-+        description:
-+          A property selecting which of the CODEC minicard micbias outputs
-+          should be used.
-+        $ref: "/schemas/types.yaml#/definitions/uint32"
-+        minimum: 1
-+        maximum: 4
-+      MICBIAS2-supply:
-+        description:
-+          Regulator supplies for the MIC2VDD outputs, supplying the digital
-+          microphones, normally supplied from the attached CODEC.
-+    required:
-+      - compatible
-+
-+  VDD1V8:
-+    description:
-+      Recommended fixed regulator for the VDD1V8 regulator, which supplies
-+      the CODECs analog and 1.8V digital supplies.
-+    $ref: "regulator.yaml#"
-+    type: object
-+    properties:
-+      compatible:
-+        enum:
-+          - regulator-fixed
-+      regulator-min-microvolt:
-+        const: 1800000
-+      regulator-max-microvolt:
-+        const: 1800000
-+      vin-supply:
-+        description:
-+          Should be set to same supply as SYSVDD
-+    required:
-+      - compatible
-+      - regulator-min-microvolt
-+      - regulator-max-microvolt
-+      - regulator-boot-on
-+      - regulator-always-on
-+      - vin-supply
--- 
-2.11.0
+On Mon, Apr 27, 2020 at 10:28 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > This patch series aims to add support for Renesas RZ/G1H (r8a7742) SoC.
+> >
+> > RZ/G1H SoC is similar to R-Car Gen2 H2 SoC.
+> >
+> > This patch set is based on renesas-drivers/master-v5.7-rc1.
+>
+> Thanks for your series!
+>
+> Looks mostly OK to me.
+Thank you for the review. After fixing patch 8/10 shall I just post a
+v2 with a single patch or the entire series ?
 
+> The missing code part seems to be the introduction of the main
+> CONFIG_ARCH_R8A7742 symbol?
+>
+I was planning to post them once these patches were reviewed, just
+didn't wanted to flood with too many patches.
+
+for enabling r8a7742 SoC in multi_v7_defconfig should this be only
+sent out wen its accepted in shmobile_defconfig or can it be part of
+same series as below ?
+
+05ba50a4cf99 ARM: multi_v7_defconfig: Enable r8a7742 SoC
+99b69d08729a ARM: shmobile: defconfig: Enable r8a7742 SoC
+6b7bcd6635c7 ARM: debug-ll: Add support for r8a7742
+1cf4e52e3a0e soc: renesas: Add Renesas R8A7742 config option
+
+> I assume you plan to submit the DTS for v5.8, too, so I'll have to be
+> careful and apply the binding definitions to a separate shared branch?
+>
+Yes I do plan to submit the DTS changes for v5.8.
+
+Cheers,
+--Prabhakar
+
+> Thanks again!
+>
+> > Lad Prabhakar (10):
+> >   dt-bindings: power: rcar-sysc: Document r8a7742 SYSC binding
+> >   dt-bindings: power: rcar-sysc: Add r8a7742 power domain index macros
+> >   soc: renesas: rcar-sysc: add R8A7742 support
+> >   dt-bindings: reset: rcar-rst: Document r8a7742 reset module
+> >   soc: renesas: rcar-rst: Add support for RZ/G1H
+> >   dt-bindings: clock: renesas: cpg-mssr: Document r8a7742 binding
+> >   clk: renesas: Add r8a7742 CPG Core Clock Definitions
+> >   clk: renesas: cpg-mssr: Add R8A7742 support
+> >   ARM: shmobile: r8a7742: Basic SoC support
+> >   cpufreq: dt: Add support for r8a7742
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
