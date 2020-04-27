@@ -2,192 +2,159 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6594CC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD896C55199
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 394AF2080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880E42075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:57:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZxAicqBE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5d4M2jz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgD0I4M (ORCPT
+        id S1726621AbgD0I5L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:56:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38510 "EHLO
+        Mon, 27 Apr 2020 04:57:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgD0I4M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:56:12 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F124DC061A41
-        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 01:56:11 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id t14so19509465wrw.12
-        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 01:56:11 -0700 (PDT)
+        with ESMTP id S1726183AbgD0I5K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:57:10 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AA10C061A10;
+        Mon, 27 Apr 2020 01:57:10 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id y24so19562180wma.4;
+        Mon, 27 Apr 2020 01:57:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=lnRwjXbCLNSgqmF0eAVoEuS/w3gfoX8hHq6Rr+bVouI=;
-        b=ZxAicqBE7gtw4KlxJ6AGM4EEvTxs4P5QWqjTN/QP75l4jYbxhStBX5mNkEp5kiu8m1
-         MFnZyigewABW+VSPUWQolDAw6v9IVj+nJFatqky/wUAeJeSbF8CqrWCiUtOblkyW6dna
-         YCgGyMLANbV4OXkW8KxF0XTMa0iHgCLBPkNQWHpx/XV7/iGj/lmp69XFcM+iGliXQyMs
-         lLwhayZDtTD3yqPZzlaTTUKRMECVfI3OORRUeSyYil1GxMAisl/BrOAqqL7jMvgV+oPD
-         LtlKIJA91Bs2XS1TdnI6szBJ82MUm9DqBKJuJzmJuBzp2+p8I2Scmko96n9BbUUnkCBt
-         7cEw==
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Jcofdwz9+t05uTAvna4ymutVAwmekuIi4pNGc9/MH88=;
+        b=Q5d4M2jz0Wl+6clQyaBEO2kE27ihpH/n/zKCNoR5NFAAQD625a4A/+auWeg6qrJawA
+         jGR2qBn0JrZnYf7qSaaPjd+QHediUI2IHZMSBuRMhYjEYXJF/abFd8uW6qj3Q4k/2FIc
+         HfOyQQFh7Om6oOkXvwLf00BmlW6ynC3vAylSpTpgjxiaMSxlssL1culT6yEle+zkt+G7
+         VWBMAI6HDXZNoIv1OZLghE1QmeHNhmQ06ca2JAS9uWxvSmCtibky3Aj9f2WMJnQAe9E3
+         Wgo4xlTuB9g6fG1VUUti0HpHlJBu1+C5r6cQlAs1aTEfXIAnzU7vlviA5I9kmmKntLoa
+         86pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=lnRwjXbCLNSgqmF0eAVoEuS/w3gfoX8hHq6Rr+bVouI=;
-        b=gSMEirpkkozPuYHQoxQE1wbkpWdl+XwXOCrMJUYmDD31iSWxZZyEs/+o/5XNXECiZc
-         zcPX00tI6rka55XELNy08du0IlwbggfP7sdBMDMHjui3M9j0loBioag9dxenJj6HY7aW
-         9AEudx5FTmVk//sSL4X8Hga6g44DQHLwOgEPQbuWk2cze0qqQre99wclXxEn6p1x7h9m
-         dooUxEHpCrSkB5OP+AL5+jnRfUXn5sV9x6TirQnLIrlAiJ3A2n9MZ01SRh+npm40/o6x
-         OvmjsSF8Tss/0M0Tpd2+J4QTB53TmC+dUPooIm0TCr5GyNHOJWAy6WQy8cVshPGYxr3P
-         h1jw==
-X-Gm-Message-State: AGi0PuZxu5TWdA3d9Nou8B/jvC/C1C1Rg2qWgXOpjM+NlU8zztyTIoKs
-        MXAGFMRt13N04YFmKXRPdg3eew==
-X-Google-Smtp-Source: APiQypLhubdjTPL7ywGgfEzi/OUKoNJ/LWk7kYZWC+WQcIxs4uRm7LCF9Ze4GDVIaPy2SAZAs5y+XQ==
-X-Received: by 2002:a5d:4092:: with SMTP id o18mr26042449wrp.227.1587977770645;
-        Mon, 27 Apr 2020 01:56:10 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id e2sm20113767wrv.89.2020.04.27.01.56.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 01:56:09 -0700 (PDT)
-References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
-        robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, jianxin.pan@amlogic.com,
-        linux-kernel@vger.kernel.org, yinxin_1989@aliyun.com,
-        linux-arm-kernel@lists.infradead.org, lnykww@gmail.com
-Subject: Re: [PATCH v5 0/3] Amlogic 32-bit Meson SoC SDHC MMC controller driver
-In-reply-to: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
-Date:   Mon, 27 Apr 2020 10:56:08 +0200
-Message-ID: <1jblnd2tp3.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Jcofdwz9+t05uTAvna4ymutVAwmekuIi4pNGc9/MH88=;
+        b=AKPjCrH4QVE1HqtQef474cgSQ8OqGP/P6gMOb2zC7hbv8jy3NuLf9ODNTNdnZXabN8
+         v7SrTifDwJS73XwSjvw1g8dD26yyNuDauei9T1FIpW3URT6FnynXvzdGxXuMz/nVROJM
+         UZkrIjQPtnGWVK2Nvg3iG+fFhf130xAW/xEGAChAf9TbCKzkP6od2r8FdoIyVGDKCBEy
+         FuzG/1G6eCoNCLqXPC/UFB8UU8X0WpaZdvJj9EqIbUVStcDFnbmSvVuWO4xymPHl4zPO
+         +4QT/v+Yr7xsGwwPjANJUxS2y7C/GKYLJeCUucN5l7hS0UNw1R0znzhtO5f8ES4uz7LQ
+         RH6Q==
+X-Gm-Message-State: AGi0PuZU/RzNQK9cBhVLs7RQtjvCsOSe3SINxDggAfaYJw06HcNx6aNU
+        ebPN9js65/LP5QKwt2QTWmdasevH
+X-Google-Smtp-Source: APiQypIwXrjjInfbjfDk9B1skhirM2+uI+xE5YfNG3+dy/5UjcY8PBtYZfDkyuRvwRt/tiB7c3z8UQ==
+X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr25177578wmg.177.1587977829209;
+        Mon, 27 Apr 2020 01:57:09 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id i129sm15502103wmi.20.2020.04.27.01.57.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 01:57:08 -0700 (PDT)
+To:     wens@kernel.org
+Cc:     devicetree@vger.kernel.org, dmurphy@ti.com, heiko@sntech.de,
+        jacek.anaszewski@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, pavel@ucw.cz,
+        robh+dt@kernel.org, wens@csie.org
+References: <20200427073132.29997-3-wens@kernel.org>
+Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
+ numbering for LED triggers
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
+Date:   Mon, 27 Apr 2020 10:57:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200427073132.29997-3-wens@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Chen-Yu,
 
-On Sat 28 Mar 2020 at 01:32, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> With SDIO now enabled, the numbering of the existing MMC host controllers
+> gets incremented by 1, as the SDIO host is the first one.
+> 
+> Increment the numbering of the MMC LED triggers to match.
+> 
+> Fixes: cf3c5397835f ("arm64: dts: rockchip: Enable sdio0 and uart0 on rk3399-roc-pc-mezzanine")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts | 8 ++++++++
+>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi          | 4 ++--
+>  2 files changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+> index 2acb3d500fb9..f0686fc276be 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+> @@ -38,6 +38,10 @@ vcc3v3_pcie: vcc3v3-pcie {
+>  	};
+>  };
+>  
+> +&diy_led {
+> +	linux,default-trigger = "mmc2";
+> +};
+> +
+>  &pcie_phy {
+>  	status = "okay";
+>  };
+> @@ -91,3 +95,7 @@ &uart0 {
+>  	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
+>  	status = "okay";
+>  };
+> +
+> +&yellow_led {
+> +	linux,default-trigger = "mmc1";
+> +};
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> index 9f225e9c3d54..bc060ac7972d 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> @@ -70,14 +70,14 @@ work-led {
+>  			linux,default-trigger = "heartbeat";
+>  		};
+>  
 
-> Hello,
->
-> this is the patchset for a driver for the Amlogic "SDHC" MMC controller
-> found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
->
-> The public S805 (Meson8b) datasheet has some documentation starting on
-> page 74: [0]
->
-> It's performance is still not as good as the driver from Amlogic's 3.10
-> kernel, but it does not corrupt data anymore (as RFC v1 did).
->
-> Special thanks to the people who supported me off-list - you are
-> amazing and deserve to be mentioned here:
-> - Xin Yin who helped me fix two more write corruption problems. I am
->   hoping that he will reply with Reviewed-by, Tested-by and Bug-fixed-by
-> - Jianxin Pan for sharing some of the internal workings of this MMC
->   controller with me
-> - Wei Wang for spotting the initial write corruption problem and helping
->   test this driver on his board. I have his permission to add his
->   Tested-by (off-list, he's Cc'ed so if there's any problem he can speak
->   up)
->
->
-> Changes since v4 at [4]:
-> - move the four clkin clock inputs to the start of the clock-names list
->   as suggested by Rob, affects patch #1
-> - fixed #include statement in dt-bindings example in patch #1
->
-> Changes since v3 at [3]:
-> - split the clock bits into a separate clock controller driver because
->   of two reasons: 1) it keeps the MMC controller driver mostly clean of
->   the clock bits
+> -		diy-led {
+> +		diy_led: diy-led {
 
-If the register is in the MMC controller register space and the MMC
-driver is the driver using these clocks, it is where the clocks belong.
-I don't get why it could be an issue ?
+This changes an existing nodename into something that is still not the
+preferred way. In the current Rockchip dts there are nodenames like
+'work', 'yellow' that causing warnings with the command:
 
-Is the clock block is shared with another device, like on the Gx family ?
+make -k ARCH=arm dtbs_check
 
-> 2) the pure clock controller can use
->   devm_clk_hw_register() (instead of devm_clk_register(), which is
->   deprecated) and the MMC controller can act as a pure clock consumer.
+Could you give a generic guide line/example, so all these changes are
+treated the same way? As if the naming follows the preferred 'led-0' line.
 
-Why can't you use devm_clk_hw_register in an MMC driver ?
-Unless I missed something, it is provided by clk-provider.h, which can be
-included by any driver.
-
-I'm not sure I understand why the support for this device is split in
-two drivers. Using CCF clocks out of "drivers/clk" is encouraged.
-
->   This also affects the dt-bindings which is why I dropped Rob's
->   Reviewed-by. Thanks to Ulf for the suggestions
->
-> Changes since v2 at [2]:
-> - rebased on top of v5.5-rc1
-> - added Rob's and Xin Yin's Reviewed-by and Tested-by (thank you!)
-> - (note: Kevin had v2 of this series in -next for a few days so the
->    build test robots could play with it. I haven't received any negative
->    feedback in that time)
->
-> Changes since RFC v1 at [1]:
-> - don't set MESON_SDHC_MISC_MANUAL_STOP to fix one of three write
->   corruption problems. the out-of-tree 3.10 "reference" driver doesn't
->   set it either
-> - check against data->flags instead of cmd->flags when testing for
->   MMC_DATA_WRITE as spotted by Xin Yin (many thanks!). This fixes
->   another write corruption problem
-> - clear the FIFOs after successfully transferring data as suggested by
->   Xin Yin (many thanks!). This is what the 3.10 driver did and fixes yet
->   another write corruption problem
-> - integrate the clock suggestions from Jianxin Pan so the driver is now
->   able to set up the clocks correctly for all known cases. documentation
->   is also added to the patch description. Thank you Jianxin for the
->   help!
-> - set the correct max_busy_timeout as suggested by Jianxin Pan (thanks!)
-> - convert the dt-bindings to .yaml (which is why I didn't add Rob's
->   Reviewed-by)
-> - switch to struct clk_parent_data as part of newer common clock
->   framework APIs to simplify the clock setup
-> - dropped CMD23 support because it seems to hurt read and write
->   performance by 10-20% in my tests. it's not clear why, but for now we
->   can live without this.
-> - use devm_platform_ioremap_resource instead of open-coding it
->
->
-> [0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
-> [1] https://patchwork.kernel.org/cover/11035505/
-> [2] http://lists.infradead.org/pipermail/linux-amlogic/2019-November/014576.html
-> [3] https://patchwork.kernel.org/cover/11283179/
-> [4] https://patchwork.kernel.org/cover/11329017/
->
-> Martin Blumenstingl (3):
->   dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
->   clk: meson: add a driver for the Meson8/8b/8m2 SDHC clock controller
->   mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
->
->  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   |   83 ++
->  drivers/clk/meson/Kconfig                     |    9 +
->  drivers/clk/meson/Makefile                    |    1 +
->  drivers/clk/meson/meson-mx-sdhc.c             |  212 ++++
->  drivers/mmc/host/Kconfig                      |   14 +
->  drivers/mmc/host/Makefile                     |    1 +
->  drivers/mmc/host/meson-mx-sdhc.c              | 1064 +++++++++++++++++
->  .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |    8 +
->  8 files changed, 1392 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
->  create mode 100644 drivers/clk/meson/meson-mx-sdhc.c
->  create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
->  create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
+>  			label = "red:diy";
+>  			gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
+>  			default-state = "off";
+>  			linux,default-trigger = "mmc1";
+>  		};
+>  
+> -		yellow-led {
+> +		yellow_led: yellow-led {
+>  			label = "yellow:yellow-led";
+>  			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+>  			default-state = "off";
+> -- 
+> 2.26.0
 
