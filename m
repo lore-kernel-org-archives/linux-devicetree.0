@@ -2,212 +2,140 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6B6C55199
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BC9C55199
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA0B2064A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBA320728
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:33:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="sFhbk/PU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="abmztt5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgD0I27 (ORCPT
+        id S1726589AbgD0Idb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:28:59 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:8656 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726003AbgD0I27 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:28:59 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03R8S5vl013283;
-        Mon, 27 Apr 2020 10:28:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=Ei68grOKsJeFCI9Ca78skkgOqw6dCGCXLGk/fJEiqBQ=;
- b=sFhbk/PUGRpNN8m9TEoWF1RDKSXWZyAp1ZJqe7r8Zl6YSgIgHU7/LLKpwJ3b45gk2nzv
- ZZMB0BGoLBP9z/Ln1Cwatp3WUkv0pjMiSRYpV95YPvoEahvX6oH7wG+CzsbXHO+P1MVB
- wEzvmrDBGOh48YrNRb8reSLJoSq5b5f46bhkbnPmSMNTZIvEg+nI8agtmaEcz1B6F8Eh
- qIxF0Z5mVwu3dAxH+1CsP/O6scKxCROl3hvX6IRqX5Au0NylIm2HSOqkvA9GZxEFdih0
- eZfhwUrMQePmnshfemoCQMJskFrh5O7ohtRRGzBzH0UFirRLo/g/c9/ND/VhkrkzhCaq UA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhq5rky9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 10:28:46 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 906D0100034;
-        Mon, 27 Apr 2020 10:28:45 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7D5E52AC589;
-        Mon, 27 Apr 2020 10:28:45 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 Apr
- 2020 10:28:42 +0200
-Subject: Re: [PATCH 2/2] arm: dts: stm32f769-disco: Enable MIPI DSI display
- support
-To:     Adrian Pop <pop.adrian61@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200424182139.32190-1-pop.adrian61@gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <3efb57a1-283b-f2f0-66a4-97e88c6c02d6@st.com>
-Date:   Mon, 27 Apr 2020 10:28:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Apr 2020 04:33:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgD0Idb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:33:31 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A898CC061A0F;
+        Mon, 27 Apr 2020 01:33:30 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id h4so5281408wmb.4;
+        Mon, 27 Apr 2020 01:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=w0nU7XWSKjZiq42hI6aJFP/wV037pceDvXS4f3Cj24g=;
+        b=abmztt5gJbmn/okxMUbQZq3wfbR/ooUc1lHRkBzCsYfwqY/b/rQ6IfE9Gdd9IIy0kJ
+         Q6piiNV6rQTZ3K0fPfXalydyufc+WO9ycBQd/npG373tXzphOEqqqYbAZHOcD6ZyHfN/
+         Ki3hCsk/ORwsvcEZV35MfxVEDM9JTddzQZtfGFL00l5UPp0axMtX15HOg2vuCPO9iAv/
+         hanG4dd7nuMjBdgZ5D3FgShsnF0qzJ97w3nN+Up1kfB7WlCXPh9W+xfMbPcsPrCYM3bc
+         lt7WCcTZSzxaDOuOaYaKoA1OmdkYbALxXPoS9XGkcuZNhQ0xEasOL3NOeCZb01+OTxcU
+         nDfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=w0nU7XWSKjZiq42hI6aJFP/wV037pceDvXS4f3Cj24g=;
+        b=fCzO0hfb1VLtNfdstsH2smOA0Lc7Kn9y87k/o6+8RzF0UFIE+BbCbPmGSDjHyuCiub
+         bdxszFeD34bskpzjNE+nwuivs0nAXYb+s3wKnpfC0ikXVS6nlU3FcLOOVoBrMg0YdRx4
+         SaUcP2EvkT0lArN2NIJsgDVhieHoYTgwbCJluihIlzJN2GMat4VziIv2LF6kvPc2hVAL
+         K6+JeSqy0eXXt2eSu92QS+sKrBlOBifDd4pTP4GhVZCMsCgvWtCsnUPBOBplIltlJWdB
+         P40rLYduo2f2K1sgPoXL67SkUTNECZ/tr5uKTFkZ5N8UEQOlz1P3Op23l6YjO7I4PbvF
+         ZM1w==
+X-Gm-Message-State: AGi0PuZcC7kFHCAoZlSmF08K0KZbOBn3TrtABbyfWn5p7LwoF/xhbBHX
+        K7eO3TYRHs7BxKf8suB4a/Q=
+X-Google-Smtp-Source: APiQypL9vQ25d/cx9/t2iweoGlzNivVSTWo7XTtXrJ5QP9N9j3FZH6z7MY/kfoDn/0qec5alrYVV6w==
+X-Received: by 2002:a1c:808c:: with SMTP id b134mr26231938wmd.131.1587976409450;
+        Mon, 27 Apr 2020 01:33:29 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id x18sm14448554wmi.29.2020.04.27.01.33.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 01:33:28 -0700 (PDT)
+To:     wens@kernel.org
+Cc:     devicetree@vger.kernel.org, dmurphy@ti.com, heiko@sntech.de,
+        jacek.anaszewski@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, pavel@ucw.cz,
+        robh+dt@kernel.org, wens@csie.org
+References: <20200427073132.29997-2-wens@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: leds: common: Drop enumeration for
+ linux,default-triggers
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <4044214d-5385-94b6-d985-e1f824a60c5e@gmail.com>
+Date:   Mon, 27 Apr 2020 10:33:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200424182139.32190-1-pop.adrian61@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200427073132.29997-2-wens@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-27_03:2020-04-24,2020-04-27 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adrian
+Hi Chen-Yu,
 
-On 4/24/20 8:21 PM, Adrian Pop wrote:
-> STM32f769-disco features a 4" MIPI DSI display: add support for it.
+> From: Chen-Yu Tsai <wens@csie.org>
 > 
-> Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
+> The bindings currently list a very small subset of valid triggers for
+> LEDs. Since many drivers or subsystems in Linux register custom
+> triggers, the list would become very hard to maintain.
+> 
+> Instead, just drop the list and allow free form strings.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 > ---
-
-Commit title should be ARM: dts: stm32: ...
-
-Can you explain a bit more in your commit message why do you use a 
-reserved memory pool for DMA and where this pool is located. (I assume 
-it's linked to a story of DMA and cache memory attribute on cortexM7...)
-
-Did you try this configuration with XIP boot ?
-
-regards
-alex
-
->   arch/arm/boot/dts/stm32f746.dtsi      | 34 ++++++++++++++++++
->   arch/arm/boot/dts/stm32f769-disco.dts | 50 +++++++++++++++++++++++++++
->   2 files changed, 84 insertions(+)
+>  .../devicetree/bindings/leds/common.yaml      | 21 +------------------
+>  1 file changed, 1 insertion(+), 20 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-> index 93c063796780..202bb6edc9f1 100644
-> --- a/arch/arm/boot/dts/stm32f746.dtsi
-> +++ b/arch/arm/boot/dts/stm32f746.dtsi
-> @@ -48,6 +48,19 @@ / {
->   	#address-cells = <1>;
->   	#size-cells = <1>;
->   
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		linux,dma {
-> +			compatible = "shared-dma-pool";
-> +			linux,dma-default;
-> +			no-map;
-> +			size = <0x10F000>;
-> +		};
-> +	};
-> +
->   	clocks {
->   		clk_hse: clk-hse {
->   			#clock-cells = <0>;
-> @@ -75,6 +88,27 @@ clk_i2s_ckin: clk-i2s-ckin {
->   	};
->   
->   	soc {
-> +		ltdc: display-controller@40016800 {
-> +			compatible = "st,stm32-ltdc";
-> +			reg = <0x40016800 0x200>;
-> +			interrupts = <88>, <89>;
-> +			resets = <&rcc STM32F7_APB2_RESET(LTDC)>;
-> +			clocks = <&rcc 1 CLK_LCD>;
-> +			clock-names = "lcd";
-> +			status = "disabled";
-> +		};
-> +
-> +		dsi: dsi@40016c00 {
-> +			compatible = "st,stm32-dsi";
-> +			reg = <0x40016c00 0x800>;
-> +			interrupts = <98>;
-> +			clocks = <&rcc 1 CLK_F769_DSI>, <&clk_hse>;
-> +			clock-names = "pclk", "ref";
-> +			resets = <&rcc STM32F7_APB2_RESET(DSI)>;
-> +			reset-names = "apb";
-> +			status = "disabled";
-> +		};
-> +
->   		timer2: timer@40000000 {
->   			compatible = "st,stm32-timer";
->   			reg = <0x40000000 0x400>;
-> diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-> index 1626e00bb2cb..30ebbc193e82 100644
-> --- a/arch/arm/boot/dts/stm32f769-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
-> @@ -153,3 +153,53 @@ &usbotg_hs {
->   	pinctrl-names = "default";
->   	status = "okay";
->   };
-> +
-> +&dsi {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			dsi_in: endpoint {
-> +				remote-endpoint = <&ltdc_out_dsi>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +			dsi_out: endpoint {
-> +				remote-endpoint = <&dsi_in_panel>;
-> +			};
-> +		};
-> +
-> +	};
-> +
-> +	panel: panel {
-> +		compatible = "orisetech,otm8009a";
-> +		reg = <0>; /* dsi virtual channel (0..3) */
-> +		reset-gpios = <&gpioj 15 GPIO_ACTIVE_LOW>;
-> +		status = "okay";
-> +
-> +		port {
-> +			dsi_in_panel: endpoint {
-> +				remote-endpoint = <&dsi_out>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&ltdc {
-> +	dma-ranges;
-> +	status = "okay";
-> +
-> +	port {
-> +		ltdc_out_dsi: endpoint {
-> +			remote-endpoint = <&dsi_in>;
-> +		};
-> +	};
-> +};
-> 
+> diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
+> index 4c270fde4567..3b3cdab3fc15 100644
+> --- a/Documentation/devicetree/bindings/leds/common.yaml
+> +++ b/Documentation/devicetree/bindings/leds/common.yaml
+> @@ -79,26 +79,7 @@ properties:
+>      description:
+>        This parameter, if present, is a string defining the trigger assigned to
+>        the LED.
+> -    allOf:
+> -      - $ref: /schemas/types.yaml#definitions/string
+> -    enum:
+> -        # LED will act as a back-light, controlled by the framebuffer system
+> -      - backlight
+> -        # LED will turn on (but for leds-gpio see "default-state" property in
+> -        # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
+> -      - default-on
+> -        # LED "double" flashes at a load average based rate
+> -      - heartbeat
+> -        # LED indicates disk activity
+> -      - disk-activity
+> -        # LED indicates IDE disk activity (deprecated), in new implementations
+> -        # use "disk-activity"
+> -      - ide-disk
+> -        # LED flashes at a fixed, configurable rate
+> -      - timer
+> -        # LED alters the brightness for the specified duration with one software
+> -        # timer (requires "led-pattern" property)
+> -      - pattern
+> +    $ref: /schemas/types.yaml#definitions/string
+
+This makes it free form, but deletes the documentation of options that
+are standard available for people without custom driver.
+Where should that info go?
+
+>  
+>    led-pattern:
+>      description: |
+> -- 
+> 2.26.0
+
