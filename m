@@ -2,153 +2,261 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC96C4CECD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 20:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992B3C54EEB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 20:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE18206D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 20:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B75E206D9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 20:19:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ncXxLCAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgD0UKm (ORCPT
+        id S1726609AbgD0UTt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:10:42 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:51304 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgD0UKl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 16:10:41 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 499wrG2wf8z1r57K;
-        Mon, 27 Apr 2020 22:10:38 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 499wrG17wnz1r5QD;
-        Mon, 27 Apr 2020 22:10:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id i4tqPQhTSciQ; Mon, 27 Apr 2020 22:10:36 +0200 (CEST)
-X-Auth-Info: GUUzWNkr5v3OccBIirF+3V7nXhtOcUNOL4F87dnWiJo=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon, 27 Apr 2020 22:10:36 +0200 (CEST)
-Subject: Re: [PATCH v2 04/12] mtd: rawnand: stm32_fmc2: manage all errors
- cases at probe time
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Christophe Kerello <christophe.kerello@st.com>, richard@nod.at,
-        vigneshr@ti.com, lee.jones@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, tony@atomide.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
- <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
- <20200427194747.224a2402@xps13>
- <40a9bac7-9ed4-b781-f2c2-2d90b4e82749@denx.de>
- <20200427200848.722f4c56@xps13>
- <3527f3b8-225d-6e5a-dd8a-0421d475f70b@denx.de>
- <20200427220806.13741ec0@xps13>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <456b04f5-4ed7-6f3f-b0e6-9276bea09b50@denx.de>
-Date:   Mon, 27 Apr 2020 22:10:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 27 Apr 2020 16:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726233AbgD0UTs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 16:19:48 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF0FC0A3BF5;
+        Mon, 27 Apr 2020 13:19:48 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b18so18046320ilf.2;
+        Mon, 27 Apr 2020 13:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5s0loVtM5y/Mu8RlGyMY/CFHxHbkF9cVopaZY4SvPTQ=;
+        b=ncXxLCAmlixclWzEhq/0uEYcZb8gCfIM5coXjw+oWF/e3H4s9jc9aY4LN+FRI/wsCu
+         BRkHwhiGy/iIBQNPJmUMLTSIaw38f/M7pTPAZugWHyb3awEveaEVXVjPga6EbZhwM2K8
+         j1ISysOMCeqd1b8S52YbEeINikf0s8AeutF1H5GQTDLGjqs7fdq5HNhThSezPGhskRLE
+         FPbnV5p517zOHa1yPkB2wMfmMXkUO5A+rlev4jUKqwEtY8YpNUo8hGS4B3n5fSe1fmmX
+         +Z1fDTmaU3g2ooSAEWHFoe1PzsyieFyP9MwaKmU0PQ41fEzAiJz1Dm4Z+xkNeGvDhNtI
+         7msQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5s0loVtM5y/Mu8RlGyMY/CFHxHbkF9cVopaZY4SvPTQ=;
+        b=pGLrzY7At21n0fLYnURbk4orqZ+j1fbhkoFqJ/E+cEHPVCf5735BTB6ZPybd8e40Ee
+         Kh4AFZrLkPQQxX74wwMxG6lOaF9BmDlNEYzlafTwN3VRXpLdvQcFL9t/Q4VzkwcMkteF
+         XPfAwtVfMv5lfCi8w7HSpN6gqtDA+jT4FTqyT5T7XX1bAvsfy2jRy7/Yym1MZZwesqKX
+         AWZ0ngT4XlprScvxG6LPJ/Llrub8/gr2+GOp2vAeuzAp21yDVrCHx148VS0SXuV/oDJo
+         y8LjUhf/ZELWMxMlLUgA7fPB5B1BstbihQPh6d97SFymUucz6bXMDfXY+LOX05qg3qVf
+         kvRQ==
+X-Gm-Message-State: AGi0PuabxtNVe/dMk+7lHTkicn8IoMhiIrv0BgNrStVi6809iSei/+vs
+        nDzegX/3ft7uv8YNWOXVE7QLjTTzz0iWMPhBWfqdJQZA
+X-Google-Smtp-Source: APiQypJcodvqO5ddV4GOs5fTOODKYraroYyrY4HoCLMH43zF1AzNJHGUe4aarg+twLgaXOEGOlRvHJhDC1i8ZWbpLns=
+X-Received: by 2002:a92:ce08:: with SMTP id b8mr5774742ilo.69.1588018788058;
+ Mon, 27 Apr 2020 13:19:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200427220806.13741ec0@xps13>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <8d29eba045ef18c5489e122b3668afc20431f15d.1587894279.git.baolin.wang7@gmail.com>
+ <6f8ac1af5a43d6fd487dc21c052624277325e6f1.1587894279.git.baolin.wang7@gmail.com>
+In-Reply-To: <6f8ac1af5a43d6fd487dc21c052624277325e6f1.1587894279.git.baolin.wang7@gmail.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Mon, 27 Apr 2020 15:19:37 -0500
+Message-ID: <CABb+yY31zAr9xfS3bWC5k=94L921CyhzA7fot3eJP1WYSvNCpw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, orsonzhai@gmail.com,
+        zhang.lyra@gmail.com, Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/27/20 10:08 PM, Miquel Raynal wrote:
-> Hi Marek,
-> 
-> Marek Vasut <marex@denx.de> wrote on Mon, 27 Apr 2020 21:46:44 +0200:
-> 
->> On 4/27/20 8:08 PM, Miquel Raynal wrote:
->> [...]
->>>>>>  	/* FMC2 init routine */
->>>>>>  	stm32_fmc2_init(fmc2);
->>>>>> @@ -1997,7 +2001,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
->>>>>>  	/* Scan to find existence of the device */
->>>>>>  	ret = nand_scan(chip, nand->ncs);
->>>>>>  	if (ret)
->>>>>> -		goto err_scan;
->>>>>> +		goto err_dma_setup;
->>>>>>  
->>>>>>  	ret = mtd_device_register(mtd, NULL, 0);
->>>>>>  	if (ret)
->>>>>> @@ -2010,7 +2014,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
->>>>>>  err_device_register:
->>>>>>  	nand_cleanup(chip);
->>>>>>  
->>>>>> -err_scan:
->>>>>> +err_dma_setup:
->>>>>>  	if (fmc2->dma_ecc_ch)
->>>>>>  		dma_release_channel(fmc2->dma_ecc_ch);
->>>>>>  	if (fmc2->dma_tx_ch)
->>>>>> @@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
->>>>>>  	sg_free_table(&fmc2->dma_data_sg);
->>>>>>  	sg_free_table(&fmc2->dma_ecc_sg);
->>>>>>  
->>>>>> +err_clk_disable:
->>>>>>  	clk_disable_unprepare(fmc2->clk);
->>>>>>  
->>>>>>  	return ret;    
->>>>>
->>>>> I didn't spot it during my earlier reviews but I really prefer using
->>>>> labels explaining what you do than having the same name of the function
->>>>> which failed. This way you don't have to rework the error path when
->>>>> you handle an additional error.
->>>>>
->>>>> So, would you mind doing this in two steps:
->>>>>
->>>>> 1/
->>>>> Replace
->>>>>
->>>>>     err_scan:
->>>>>
->>>>> with, eg.
->>>>>
->>>>>     release_dma_objs:    
->>>>
->>>> The ^err_ prefix in failpath labels is useful, since it's easily
->>>> possible to match on it with regexes ; not so much on arbitrary label name.  
->>>
->>> I guess so, but is it actually useful to catch labels in a regex? (real
->>> question)  
->>
->> I find it useful to have a unified way to find those labels, e.g.
->> err_because_foo:
->> err_because_bar:
->> err_last_one:
->> is much nicer than:
->> foo_failed:
->> bar_also_failed:
->> its_total_randomness:
-> 
-> My point being, Christophe, you can use err_ as a prefix but I think
-> it's better to use:
-> 
->     err_do_this_cleanup
-> 
-> than
-> 
->    err_this_failed
+On Mon, Apr 27, 2020 at 2:20 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> From: Baolin Wang <baolin.wang@unisoc.com>
+>
+> The Spreadtrum mailbox controller supports 8 channels to communicate
+> with MCUs, and it contains 2 different parts: inbox and outbox, which
+> are used to send and receive messages by IRQ mode.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> ---
+> Changes from v2:
+>  - None.
+>
+> Changes from v1:
+>  - None
+> ---
+>  drivers/mailbox/Kconfig        |   8 +
+>  drivers/mailbox/Makefile       |   2 +
+>  drivers/mailbox/sprd-mailbox.c | 350 +++++++++++++++++++++++++++++++++
+>  3 files changed, 360 insertions(+)
+>  create mode 100644 drivers/mailbox/sprd-mailbox.c
+>
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index 5a577a6734cf..e03f3fb5caed 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -236,4 +236,12 @@ config SUN6I_MSGBOX
+>           various Allwinner SoCs. This mailbox is used for communication
+>           between the application CPUs and the power management coprocessor.
+>
+> +config SPRD_MBOX
+> +       tristate "Spreadtrum Mailbox"
+> +       depends on ARCH_SPRD || COMPILE_TEST
+> +       help
+> +         Mailbox driver implementation for the Spreadtrum platform. It is used
+> +         to send message between application processors and MCU. Say Y here if
+> +         you want to build the Spreatrum mailbox controller driver.
+> +
+>  endif
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index 2e4364ef5c47..9caf4ede6ce0 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -50,3 +50,5 @@ obj-$(CONFIG_MTK_CMDQ_MBOX)   += mtk-cmdq-mailbox.o
+>  obj-$(CONFIG_ZYNQMP_IPI_MBOX)  += zynqmp-ipi-mailbox.o
+>
+>  obj-$(CONFIG_SUN6I_MSGBOX)     += sun6i-msgbox.o
+> +
+> +obj-$(CONFIG_SPRD_MBOX)                += sprd-mailbox.o
+> diff --git a/drivers/mailbox/sprd-mailbox.c b/drivers/mailbox/sprd-mailbox.c
+> new file mode 100644
+> index 000000000000..58e5388f190b
+> --- /dev/null
+> +++ b/drivers/mailbox/sprd-mailbox.c
+> @@ -0,0 +1,350 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Spreadtrum mailbox driver
+> + *
+> + * Copyright (c) 2020 Spreadtrum Communications Inc.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk.h>
+> +
+> +#define SPRD_MBOX_ID           0x0
+> +#define SPRD_MBOX_MSG_LOW      0x4
+> +#define SPRD_MBOX_MSG_HIGH     0x8
+> +#define SPRD_MBOX_TRIGGER      0xc
+> +#define SPRD_MBOX_FIFO_RST     0x10
+> +#define SPRD_MBOX_FIFO_STS     0x14
+> +#define SPRD_MBOX_IRQ_STS      0x18
+> +#define SPRD_MBOX_IRQ_MSK      0x1c
+> +#define SPRD_MBOX_LOCK         0x20
+> +#define SPRD_MBOX_FIFO_DEPTH   0x24
+> +
+> +/* Bit and mask definiation for inbox's SPRD_MBOX_FIFO_STS register */
+> +#define SPRD_INBOX_FIFO_DELIVER_MASK           GENMASK(23, 16)
+> +#define SPRD_INBOX_FIFO_OVERLOW_MASK           GENMASK(15, 8)
+> +#define SPRD_INBOX_FIFO_DELIVER_SHIFT          16
+> +#define SPRD_INBOX_FIFO_BUSY_MASK              GENMASK(7, 0)
+> +
+> +/* Bit and mask definiation for SPRD_MBOX_IRQ_STS register */
+> +#define SPRD_MBOX_IRQ_CLR                      BIT(0)
+> +
+> +/* Bit and mask definiation for outbox's SPRD_MBOX_FIFO_STS register */
+> +#define SPRD_OUTBOX_FIFO_FULL                  BIT(0)
+> +#define SPRD_OUTBOX_FIFO_WR_SHIFT              16
+> +#define SPRD_OUTBOX_FIFO_RD_SHIFT              24
+> +#define SPRD_OUTBOX_FIFO_POS_MASK              GENMASK(7, 0)
+> +
+> +/* Bit and mask definiation for inbox's SPRD_MBOX_IRQ_MSK register */
+> +#define SPRD_INBOX_FIFO_BLOCK_IRQ              BIT(0)
+> +#define SPRD_INBOX_FIFO_OVERFLOW_IRQ           BIT(1)
+> +#define SPRD_INBOX_FIFO_DELIVER_IRQ            BIT(2)
+> +#define SPRD_INBOX_FIFO_IRQ_MASK               GENMASK(2, 0)
+> +
+> +/* Bit and mask definiation for outbox's SPRD_MBOX_IRQ_MSK register */
+> +#define SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ         BIT(0)
+> +#define SPRD_OUTBOX_FIFO_IRQ_MASK              GENMASK(4, 0)
+> +
+> +#define SPRD_MBOX_CHAN_MAX                     8
+> +
+> +struct sprd_mbox_chan {
+> +       u8                      id;
+> +       struct mbox_chan        *chan;
+> +};
+If 'id' is all you need, please assign that to mbox_chan.con_priv and
+discard the sprd_mbox_chan. That will be much simpler.
 
-That's fine either way.
+> +
+> +struct sprd_mbox_priv {
+> +       struct mbox_controller  mbox;
+> +       struct device           *dev;
+> +       void __iomem            *inbox_base;
+> +       void __iomem            *outbox_base;
+> +       struct clk              *clk;
+> +       u32                     outbox_fifo_depth;
+> +
+> +       struct sprd_mbox_chan   mchan[SPRD_MBOX_CHAN_MAX];
+> +       struct mbox_chan        chan[SPRD_MBOX_CHAN_MAX];
+> +};
+> +
+.........
 
->>> Any way I suppose catching ":\n" is already a good approximation to
->>> find labels?  
->>
->> Not very practical with git grep (^err.*: works nicely though)
-> 
-> I suppose ^.*:$ would work the same ;)
+> +
+> +static irqreturn_t sprd_mbox_inbox_isr(int irq, void *data)
+> +{
+> +       struct sprd_mbox_priv *priv = data;
+> +       struct sprd_mbox_chan *mchan;
+> +       u32 fifo_sts, send_sts, id;
+> +
+> +       fifo_sts = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS);
+> +
+> +       /* Get the inbox data delivery status */
+> +       send_sts = (fifo_sts & SPRD_INBOX_FIFO_DELIVER_MASK) >>
+> +               SPRD_INBOX_FIFO_DELIVER_SHIFT;
+> +       if (!send_sts) {
+> +               dev_warn_ratelimited(priv->dev, "spurious inbox interrupt\n");
+> +               return IRQ_NONE;
+> +       }
+> +
+> +       while (send_sts) {
+> +               id = __ffs(send_sts);
+> +               send_sts &= (send_sts - 1);
+> +
+> +               mchan = &priv->mchan[id];
+> +               mbox_chan_txdone(mchan->chan, 0);
+> +       }
+> +
+> +       /* Clear FIFO delivery and overflow status */
+> +       writel(fifo_sts &
+> +              (SPRD_INBOX_FIFO_DELIVER_MASK | SPRD_INBOX_FIFO_OVERLOW_MASK),
+> +              priv->inbox_base + SPRD_MBOX_FIFO_RST);
+> +
+> +       /* Clear irq status */
+> +       writel(SPRD_MBOX_IRQ_CLR, priv->inbox_base + SPRD_MBOX_IRQ_STS);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int sprd_mbox_send_data(struct mbox_chan *chan, void *msg)
+> +{
+> +       struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
+> +       struct sprd_mbox_chan *mchan = chan->con_priv;
+> +       u32 *data = msg, busy;
+> +
+> +       /*
+> +        * Check if current channel is busy or not, and we can not send data
+> +        * if current channel is busy.
+> +        */
+> +       busy = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS) &
+> +               SPRD_INBOX_FIFO_BUSY_MASK;
+> +       if (busy & BIT(mchan->id)) {
+> +               dev_err(priv->dev, "Channel %d is busy\n", mchan->id);
+> +               return -EBUSY;
+> +       }
+Maybe check this before  mbox_chan_txdone(mchan->chan, 0) and avoid
+failing in send_data.
 
-Try and see how much other irrelevant stuff that sucks in ;-)
+Cheers!
