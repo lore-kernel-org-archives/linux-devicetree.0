@@ -2,141 +2,261 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDD5C81857
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 23:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294E9C81857
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 23:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17AC92072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 23:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18172078C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 23:30:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kguuEGw+"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="o8O64NcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgD0XJY (ORCPT
+        id S1726204AbgD0Xag (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 19:09:24 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:24831 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726285AbgD0XJY (ORCPT
+        Mon, 27 Apr 2020 19:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726251AbgD0Xag (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 19:09:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588028964; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=oMxZb5I+GDPuJhllgcs2iwGmqgsZIZTUBZ0afvMS0fU=;
- b=kguuEGw+ZCiOVeyvqN4L0kCpqhIrOJoBzylNNDzvMT7ghQFv/bzabcYzJKrmoUISPEXG4HRd
- qBrNzYL1FNk1uzwmP7L0T7n+0+Bjca7YfGkNs8xMeuCdj0gFD+07yuNzVxV5Q8rHXkKLZ9iO
- napKrnJB0JNA0LKE/s/QiFg0elg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea76613.7fdbc1aff998-smtp-out-n03;
- Mon, 27 Apr 2020 23:09:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 10FD8C432C2; Mon, 27 Apr 2020 23:09:07 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6377CC433CB;
-        Mon, 27 Apr 2020 23:09:06 +0000 (UTC)
+        Mon, 27 Apr 2020 19:30:36 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05CC3C0610D5
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 16:30:35 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id m67so19967561qke.12
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 16:30:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=quaCJQUXh16GBVFik8QA4Fip2ZkMv94tq1SIciD+mKk=;
+        b=o8O64NcOpReFrdICIw0R22TmhsUrXmbrt0Oquifi1kyyFHcemcPC6lPBakxI7oUNZq
+         I7jBqcLaHoph4I/bGwjn3uwtM6vuggTusUl58GAxe5waPDXDah/g/IYbbsYFVMyOYapE
+         xm/qUjg5KrYezq1T1+bryli0DAr3cgEWoapxeB3pDr5RsZOvuLE5fHI7yilkKPePGznk
+         c1k+PHdKAx/VWQbhHbfX2gJA2NXyOYciXI8KGCyw4cxm1hM15Rhyxy7q72pkFCYdXDWk
+         N8xX6/gYf2fFs7oNVE9x7OUWuiFd7NEMdvQ4EaNulCgqDIpIPsdEK2I1Io33CTLg9DYi
+         cp4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=quaCJQUXh16GBVFik8QA4Fip2ZkMv94tq1SIciD+mKk=;
+        b=q5Ar0cXePE5MTUPmDlz+Lj69ivvzrnHY9aCY0+qMkR08W6t4trwpeFUUpOGfgOOa+O
+         wrJfef+YYJ+0wSyWXnQZW14GcEkP5MmnLDFR0Pu+cb8qh6/fDl5NCqd/9KiggVhinO8e
+         kqQLONT8i4VMTzwt165UOYCd3Innv7ecCfclN6gHW4JjVAy/t61ZQrd0xbNqD0hNZqdh
+         Z+WAA3xzQ19Cfp3sm8zSkywKujvRgrhn2rF/9TZ8/FsqzcPO1H9zuNXuES5MXsHqPI2Q
+         eiIzk1f3YHbhKKf+Y1ndiTXScm63tzk7ifN4T0O2ui9QFR8WXLUf/VnOwtq2I3uOtJGM
+         XfCQ==
+X-Gm-Message-State: AGi0PubykoZIu76tlFumYbaEqlFFkdeXp8Kso8VCfHhsmN2FkRZAo7I5
+        rWHxBuQOP2ZQHv0oCqCitWroYw==
+X-Google-Smtp-Source: APiQypKQhsXJYAUPGeCAiGNzkd/+nPRyT2PYJttcnGCPjzLZOweUizR2QmY1YuuQpy+d1hOiuVGD1A==
+X-Received: by 2002:a37:4f45:: with SMTP id d66mr24593051qkb.318.1588030235080;
+        Mon, 27 Apr 2020 16:30:35 -0700 (PDT)
+Received: from x1 (ip-48-2-52-196.nyc.us.northamericancoax.com. [196.52.2.48])
+        by smtp.gmail.com with ESMTPSA id h6sm11956233qtd.79.2020.04.27.16.30.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 16:30:34 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 01:31:16 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: [PATCH] arm: dts: am33xx-l4: add gpio-line-names to gpio controllers
+Message-ID: <20200427233116.GA18917@x1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 27 Apr 2020 16:09:06 -0700
-From:   tanmay@codeaurora.org
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, swboyd@chromium.org,
-        seanpaul@chromium.org, abhinavk@codeaurora.org,
-        varar@codeaurora.org, aravindh@codeaurora.org,
-        freedreno@lists.freedesktop.org,
-        dri-devel <dri-devel-bounces@lists.freedesktop.org>
-Subject: Re: [PATCH 1/2] dt-bindings: msm: disp: Add Display Port HPD GPIO
- bindings
-In-Reply-To: <20200415152439.GA9882@bogus>
-References: <1586299709-14222-1-git-send-email-tanmay@codeaurora.org>
- <20200415152439.GA9882@bogus>
-Message-ID: <7fb3a6c19c244c4a37bded7cd249a1f8@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks Rob for reviews.
+Add gpio-line-names properties to the gpio controller nodes.  The names
+correspond to the AM335x pin names which are also the muxmode 0 signal
+names.  Refer to "Table 4-2. Pin Attributes" in the TI AM335x Sitara 
+Processors datasheet:
 
-We are using Display Port Controller block to detect hot plug.
-So we won't be using that pin as GPIO.
+http://www.ti.com/lit/ds/symlink/am3358.pdf
 
-I found now that we don't need any bindings for that pin in such case.
-So I am abandoning this patch series and upload new patch.
 
-Thanks.
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ arch/arm/boot/dts/am33xx-l4.dtsi | 134 +++++++++++++++++++++++++++++++
+ 1 file changed, 134 insertions(+)
 
-On 2020-04-15 08:24, Rob Herring wrote:
-> On Tue, Apr 07, 2020 at 03:48:28PM -0700, Tanmay Shah wrote:
->> Add Display Port HPD GPIO description in bindings
->> 
->> This Patch depends on:
->> 	https://patchwork.kernel.org/patch/11468505/
-> 
-> This belongs below the '---' and probably means you should send all 
-> this
-> as one series.
-> 
->> 
->> Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml | 7
-> +++++++
->>  1 file changed, 7 insertions(+)
->> 
->> diff --git
-> a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
->> index 761a01d..003f5f7 100644
->> --- a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
->> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
->> @@ -155,6 +155,11 @@ properties:
->>       data-lanes:
->>         description: Maximum number of lanes that can be used for
-> Display port.
->> 
->> +     dp-hpd-gpio:
-> 
-> We already have a standard property for this. Use it.
-> 
-> It belongs in the connector node as HPD is part of the connector.
-> 
->> +       maxItems: 1
->> +       description: Specifies HPD gpio for DP connector without
->> +                    USB PHY or AUX switch.
->> +
->>       usbplug-cc-gpio:
-> 
-> Note that this too should be in a connector node.
-> 
->>         maxItems: 1
->>         description: Specifies the usbplug orientation gpio.
->> @@ -282,6 +287,8 @@ examples:
->>          aux-sel-gpio = <&msmgpio 110 1>;
->>          usbplug-cc-gpio = <&msmgpio 90 1>;
->> 
->> +        dp-hpd-gpio = <&msmgpio 117 0>;
->> +
->>          ports {
->>              #address-cells = <1>;
->>              #size-cells = <0>;
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-> Forum,
->> a Linux Foundation Collaborative Project
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index 5ed7f3c58c0f..1ac574ebfe74 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -157,6 +157,39 @@
+ 				#interrupt-cells = <2>;
+ 				reg = <0x0 0x1000>;
+ 				interrupts = <96>;
++				gpio-line-names =
++					"MDIO_DATA",
++					"MDIO_CLK",
++					"SPI0_SCLK",
++					"SPI0_D0",
++					"SPI0_D1",
++					"SPI0_CS0",
++					"SPI0_CS1",
++					"ECAP0_IN_PWM0_OUT",
++					"LCD_DATA12",
++					"LCD_DATA13",
++					"LCD_DATA14",
++					"LCD_DATA15",
++					"UART1_CTSN",
++					"UART1_RTSN",
++					"UART1_RXD",
++					"UART1_TXD",
++					"GMII1_TXD3",
++					"GMII1_TXD2",
++					"USB0_DRVVBUS",
++					"XDMA_EVENT_INTR0",
++					"XDMA_EVENT_INTR1",
++					"GMII1_TXD1",
++					"GPMC_AD8",
++					"GPMC_AD9",
++					"NC",
++					"NC",
++					"GPMC_AD10",
++					"GPMC_AD11",
++					"GMII1_TXD0",
++					"RMII1_REFCLK",
++					"GPMC_WAIT0",
++					"GPMC_WPN";
+ 			};
+ 		};
+ 
+@@ -1304,6 +1337,39 @@
+ 				#interrupt-cells = <2>;
+ 				reg = <0x0 0x1000>;
+ 				interrupts = <98>;
++				gpio-line-names =
++					"GPMC_AD0",
++					"GPMC_AD1",
++					"GPMC_AD2",
++					"GPMC_AD3",
++					"GPMC_AD4",
++					"GPMC_AD5",
++					"GPMC_AD6",
++					"GPMC_AD7",
++					"UART0_CTSN",
++					"UART0_RTSN",
++					"UART0_RXD",
++					"UART0_TXD",
++					"GPMC_AD12",
++					"GPMC_AD13",
++					"GPMC_AD14",
++					"GPMC_AD15",
++					"GPMC_A0",
++					"GPMC_A1",
++					"GPMC_A2",
++					"GPMC_A3",
++					"GPMC_A4",
++					"GPMC_A5",
++					"GPMC_A6",
++					"GPMC_A7",
++					"GPMC_A8",
++					"GPMC_A9",
++					"GPMC_A10",
++					"GPMC_A11",
++					"GPMC_BE1N",
++					"GPMC_CSN0",
++					"GPMC_CSN1",
++					"GPMC_CSN2";
+ 			};
+ 		};
+ 
+@@ -1706,6 +1772,40 @@
+ 				#interrupt-cells = <2>;
+ 				reg = <0x0 0x1000>;
+ 				interrupts = <32>;
++				gpio-line-names =
++					"GPMC_CSN3",
++					"GPMC_CLK",
++					"GPMC_ADVN_ALE",
++					"GPMC_OEN_REN",
++					"GPMC_WEN",
++					"GPMC_BE0N_CLE",
++					"LCD_DATA0",
++					"LCD_DATA1",
++					"LCD_DATA2",
++					"LCD_DATA3",
++					"LCD_DATA4",
++					"LCD_DATA5",
++					"LCD_DATA6",
++					"LCD_DATA7",
++					"LCD_DATA8",
++					"LCD_DATA9",
++					"LCD_DATA10",
++					"LCD_DATA11",
++					"GMII1_RXD3",
++					"GMII1_RXD2",
++					"GMII1_RXD1",
++					"GMII1_RXD0",
++					"LCD_VSYNC",
++					"LCD_HSYNC",
++					"LCD_PCLK",
++					"LCD_AC_BIAS_EN",
++					"MMC0_DAT3",
++					"MMC0_DAT2",
++					"MMC0_DAT1",
++					"MMC0_DAT0",
++					"MMC0_CLK",
++					"MMC0_CMD";
++
+ 			};
+ 		};
+ 
+@@ -1739,6 +1839,40 @@
+ 				#interrupt-cells = <2>;
+ 				reg = <0x0 0x1000>;
+ 				interrupts = <62>;
++				gpio-line-names =
++					"GMII1_COL",
++					"GMII1_CRS",
++					"GMII1_RXER",
++					"GMII1_TXEN",
++					"GMII1_RXDV",
++					"I2C0_SDA",
++					"I2C0_SCL",
++					"EMU0",
++					"EMU1",
++					"GMII1_TXCLK",
++					"GMII1_RXCLK",
++					"NC",
++					"NC",
++					"USB1_DRVVBUS",
++					"MCASP0_ACLKX",
++					"MCASP0_FSX",
++					"MCASP0_AXR0",
++					"MCASP0_AHCLKR",
++					"MCASP0_ACLKR",
++					"MCASP0_FSR",
++					"MCASP0_AXR1",
++					"MCASP0_AHCLKX",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC";
++
+ 			};
+ 		};
+ 
+-- 
+2.20.1
+
