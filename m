@@ -1,111 +1,248 @@
-Return-Path: <SRS0=vHNE=6K=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D930C55194
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 23:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164F4C5519A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 01:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C2320700
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Apr 2020 23:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC495206A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 01:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgDZXZ0 (ORCPT
+        id S1726186AbgD0BQW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Apr 2020 19:25:26 -0400
-Received: from muru.com ([72.249.23.125]:51484 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgDZXZ0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Apr 2020 19:25:26 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id CD61C8107;
-        Sun, 26 Apr 2020 23:26:11 +0000 (UTC)
-Date:   Sun, 26 Apr 2020 16:25:20 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Pavel Machek <pavel@denx.de>, Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
- droid4 modem
-Message-ID: <20200426232520.GP37466@atomide.com>
-References: <20200421232752.3070-1-tony@atomide.com>
- <20200423114326.GQ18608@localhost>
- <20200424215040.GA14087@amd>
- <20200424221515.GM37466@atomide.com>
- <20200426200718.GA22980@amd>
+        Sun, 26 Apr 2020 21:16:22 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:42850 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbgD0BQW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Apr 2020 21:16:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id D139320138DE;
+        Mon, 27 Apr 2020 09:09:40 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MvDMbBypFzTg; Mon, 27 Apr 2020 09:09:40 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id A98B220139B7;
+        Mon, 27 Apr 2020 09:09:40 +0800 (HKT)
+Received: from [10.128.2.32] (unknown [124.217.189.18])
+        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 89849C019FB;
+        Mon, 27 Apr 2020 09:09:39 +0800 (HKT)
+Subject: Re: [PATCH v5 3/3] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200420042612.27752-1-chris.ruehl@gtsys.com.hk>
+ <20200420042612.27752-4-chris.ruehl@gtsys.com.hk>
+ <20200425203556.4c051fad@archlinux>
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Message-ID: <49b05b32-ba6a-50fe-a4a2-96248e672576@gtsys.com.hk>
+Date:   Mon, 27 Apr 2020 09:09:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200426200718.GA22980@amd>
+In-Reply-To: <20200425203556.4c051fad@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel@ucw.cz> [200426 20:08]:
-> Hi!
-> 
-> > > > > Here's v4 set of n_gsm serdev support patches, and the related protocol
-> > > > > driver for the modem found on Motorola Mapphone phones and tablets
-> > > > > like droid4.
-> > > > > 
-> > > > > This series only adds basic character device support for the serdev
-> > > > > driver. Other serdev consumer drivers for specific devices will be
-> > > > > posted separately.
-> > > > 
-> > > > I'm still missing an architectural (design) overview here -- reviewer
-> > > > time is a scarce resource.
-> > > > 
-> > > > I also suggested earlier that you include, at least as an RFC, one or
-> > > > more of your child-device drivers so that we can see how this ends up
-> > > > being used in the end (including an example devicetree).
-> > > 
-> > > Note that this is useful on its own: we have ofonod running on the top
-> > > of this doing calls and SMSes.
-> > 
-> > Yup.
-> > 
-> > > Tony: I know you have drivers depending on this somewhere (audio
-> > > routing and GPS), but I can't find them. It is not droid4-pending-v5.6
-> > > AFAICT. Do you have a pointer / could you publish them somewhere?
-> > 
-> > Hmm they should be there in droid4-pending-v5.6 branch [0]:
-> > 
-> > $ git log --abbrev=12 --pretty=format:"%h (\"%s\")" \
-> > 	v5.6..droid4-pending-v5.6 | grep -i -e gsm -e mot -e mdm
-> > e09590a260a4 ("mfd: motmdm: Fix oops on unload of motorola-mdm")
-> > f9252f9ff6bd ("mfd: motmdm: Revert bad list change")
-> > d733dcaf4416 ("mfd: motmdm: Fix issue with receiving data before ddata is set")
-> > 452d2b5d4c95 ("n_gsm: Build fixes for make randconfig build")
-> > 6882b27ea92a ("phy: mapphone-mdm6600: Fix write timeouts with shorter GPIO toggle interval")
-> > 58ff58c4b520 ("mfd: motmdm: Add basic DTMF support")
-> > e92b6f30e5ae ("ASoC: audio-graph-card: Add audio mixer for motorold mdm6600")
-> > c2caea5767d5 ("gnss: mot-mdm6600: Add support for Motorola Mapphone MDM6600 modem")
-> > a5f73b7b06f6 ("mfd: motmdm: Add Motorola TS 27.010 serdev driver for devices like droid4")
-> > 6c311d5aeb0a ("dt-bindings: mfd: motmdm: Add binding for motorola-mdm")
-> > cd02274b920e ("tty: n_gsm: Add support for serdev drivers")
-> > a73a48321c98 ("phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling")
-> 
-> Here's better try at getting gnss to work on top of linux-next... but
-> still no luck.
 
-Hmm that's about all it should take. Presumably you already tried
-diffing the related files against droid4-pending-v5.6 branch.
 
-I'm moving around things to work with a generic serdev-ngsm.c driver
-so I'm inbetween patches right now and don't have it working either
-probably for a few more days.
+On 26/4/2020 3:35 am, Jonathan Cameron wrote:
+> On Mon, 20 Apr 2020 12:26:08 +0800
+> Chris Ruehl <chris.ruehl@gtsys.com.hk> wrote:
+>
+>> Conversion of the ltc2632 to yaml format and name the file 'lltc,ltc2632.yaml'.
+>>
+>> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> There is something odd going on with indentation but otherwise looks fine to me.
+> However we need to leave time for a final DT review.
+>
+> Thanks,
+>
+> Jonathan
+I will wait for the review, and fix the indent together with / or without any 
+changes
+lining up. I think a good Idea to get a yaml extension for my 'vim'.
 
-Regards,
+Cheers,
 
-Tony
+Chris
+
+>> ---
+>> v5:
+>> correct require section
+>> set maintainer of analog.com
+>> v4..v2: no change
+>>
+>>   .../bindings/iio/dac/lltc,ltc2632.yaml        | 76 +++++++++++++++++++
+>>   .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
+>>   2 files changed, 76 insertions(+), 49 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+>>   delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+>> new file mode 100644
+>> index 000000000000..b0043144fbc4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+>> @@ -0,0 +1,76 @@
+>> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/iio/dac/lltc,ltc2632.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Linear Technology LTC263x 12-/10-/8-Bit Rail-to-Rail DAC
+>> +
+>> +maintainers:
+>> +  - Michael Hennerich <michael.hennerich@analog.com>
+>> +
+>> +description: |
+>> +  Bindings for the Linear Technology LTC2632/2634/2636 DAC
+>> +  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/LTC263[246].pdf
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - lltc,ltc2632-l12
+>> +      - lltc,ltc2632-l10
+>> +      - lltc,ltc2632-l8
+>> +      - lltc,ltc2632-h12
+>> +      - lltc,ltc2632-h10
+>> +      - lltc,ltc2632-h8
+>> +      - lltc,ltc2634-l12
+>> +      - lltc,ltc2634-l10
+>> +      - lltc,ltc2634-l8
+>> +      - lltc,ltc2634-h12
+>> +      - lltc,ltc2634-h10
+>> +      - lltc,ltc2634-h8
+>> +      - lltc,ltc2636-l12
+>> +      - lltc,ltc2636-l10
+>> +      - lltc,ltc2636-l8
+>> +      - lltc,ltc2636-h12
+>> +      - lltc,ltc2636-h10
+>> +      - lltc,ltc2636-h8
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  spi-max-frequency:
+>> +    maximum: 2000000
+>> +
+>> +  vref-supply:
+>> +    description:
+>> +	  Phandle to the external reference voltage supply. This should
+>> +      only be set if there is an external reference voltage connected to the VREF
+>> +      pin. If the property is not set the internal reference is used.
+> Odd intent going on there.
+>
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    vref: regulator-vref {
+>> +        compatible = "regulator-fixed";
+>> +        regulator-name = "vref-ltc2632";
+>> +        regulator-min-microvolt = <1250000>;
+>> +        regulator-max-microvolt = <1250000>;
+>> +        regulator-always-on;
+>> +    };
+>> +
+>> +    spi_master {
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +
+>> +      dac: ltc2632@0 {
+>> +        compatible = "lltc,ltc2632";
+>> +        reg = <0>;    /* CS0 */
+>> +        spi-max-frequency = <1000000>;
+>> +        vref-supply = <&vref>;
+>> +      };
+>> +    };
+>> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+>> deleted file mode 100644
+>> index 1ab9570cf219..000000000000
+>> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+>> +++ /dev/null
+>> @@ -1,49 +0,0 @@
+>> -Linear Technology LTC2632/2634/2636 DAC
+>> -
+>> -Required properties:
+>> - - compatible: Has to contain one of the following:
+>> -	lltc,ltc2632-l12
+>> -	lltc,ltc2632-l10
+>> -	lltc,ltc2632-l8
+>> -	lltc,ltc2632-h12
+>> -	lltc,ltc2632-h10
+>> -	lltc,ltc2632-h8
+>> -	lltc,ltc2634-l12
+>> -	lltc,ltc2634-l10
+>> -	lltc,ltc2634-l8
+>> -	lltc,ltc2634-h12
+>> -	lltc,ltc2634-h10
+>> -	lltc,ltc2634-h8
+>> -	lltc,ltc2636-l12
+>> -	lltc,ltc2636-l10
+>> -	lltc,ltc2636-l8
+>> -	lltc,ltc2636-h12
+>> -	lltc,ltc2636-h10
+>> -	lltc,ltc2636-h8
+>> -
+>> -Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
+>> -apply. In particular, "reg" and "spi-max-frequency" properties must be given.
+>> -
+>> -Optional properties:
+>> -	- vref-supply: Phandle to the external reference voltage supply. This should
+>> -	  only be set if there is an external reference voltage connected to the VREF
+>> -	  pin. If the property is not set the internal reference is used.
+>> -
+>> -Example:
+>> -
+>> -	vref: regulator-vref {
+>> -		compatible = "regulator-fixed";
+>> -		regulator-name = "vref-ltc2632";
+>> -		regulator-min-microvolt = <1250000>;
+>> -		regulator-max-microvolt = <1250000>;
+>> -		regulator-always-on;
+>> -	};
+>> -
+>> -	spi_master {
+>> -		dac: ltc2632@0 {
+>> -			compatible = "lltc,ltc2632-l12";
+>> -			reg = <0>; /* CS0 */
+>> -			spi-max-frequency = <1000000>;
+>> -			vref-supply = <&vref>; /* optional */
+>> -		};
+>> -	};
+
+-- 
+GTSYS Limited RFID Technology
+9/F, Unit E, R07, Kwai Shing Industrial Building Phase 2,
+42-46 Tai Lin Pai Road, Kwai Chung, N.T., Hong Kong
+Tel (852) 9079 9521
+
+Disclaimer: https://www.gtsys.com.hk/email/classified.html
+
