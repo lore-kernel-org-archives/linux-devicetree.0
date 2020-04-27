@@ -2,116 +2,92 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE465C4CECD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAEAC4CECC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A77C02173E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588010743;
-	bh=3sQzTpb+6EQHtl/5+DLUwh9oczyqWHopzdygG/nBKq4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Uz9Aa/ai8ibaHP3FhlXWEnjTePIIFkHf0EvKfBlczl2IxZ+QVrqZAyRzsV3CNu7Uk
-	 KlfZ/q7xv7ylykRdhFWDtI5djXKZSWYqH9renaUzAUs3PMoAMfYRMMGUsmkUFccckX
-	 +l0dAtQrJhxt1RO8eKNq6OozfTZr6f2xmRnsRvhE=
+	by mail.kernel.org (Postfix) with ESMTP id F3856206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:06:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="fMFxopEd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgD0SFn (ORCPT
+        id S1726259AbgD0SGN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:05:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgD0SFm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:05:42 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6E20206D4;
-        Mon, 27 Apr 2020 18:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588010742;
-        bh=3sQzTpb+6EQHtl/5+DLUwh9oczyqWHopzdygG/nBKq4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QD5I+wu7tUiwLoN/991mjtzmzF6o4uZAAk4sUawxC1Y5pkfnCS7en7gEsecvhWgat
-         jaUVnplapxn0VjVZI6srYWtKrplFDpBi+duaXdXr/2i0/6VGfwKTTUTVyM8cdQK0Wt
-         irZS8s/ZXa0sba+tRn2fRZHkkZHk4tDTGkliVrhs=
-Date:   Mon, 27 Apr 2020 19:05:39 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mon, 27 Apr 2020 14:06:13 -0400
+Received: from www381.your-server.de ([78.46.137.84]:33998 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgD0SGN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 14:06:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=b+JkcQ4uyv5WctR1jDZH5MFIn8xMbKa3wCFiPqWOx6Y=; b=fMFxopEd4lVmijPFIrjnk93xxo
+        35K+FqlokGWoWUAETAR0CM/dhdYpar4fZxtX2UYSjxvqCEIMAUDhZm2MqAMwI7sh5/kEE1snJI+Cn
+        uNM2qVeY3aEsKKmQb1jiSSV//Lrzl9dOgFzrJso1n+MnDEwwDel3j7TMk9xxNjHebIYNvpe61yfYJ
+        CcFSh4a+sYae2CQ7LyEOkpxwZu4NnYs8sWB7hWg6+N1j8jhC9zf9HurGq8s3AAzRzxP/5YCIdOh4H
+        V+nM943j77Tj0x5iiTmVhNBQu+cO6KX0KunNS3DLvC4gNmnCVfNqXklj7ahCMk7D8LWEvEWRtdwcQ
+        uTOk8QHg==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jT88v-0005c5-LE; Mon, 27 Apr 2020 20:06:09 +0200
+Received: from [82.135.70.60] (helo=[192.168.178.20])
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jT88v-000Ulx-9v; Mon, 27 Apr 2020 20:06:09 +0200
+Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
+To:     =?UTF-8?Q?Nuno_S=c3=a1?= <nuno.sa@analog.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 06/16] irqchip: add sl28cpld interrupt controller
- support
-Message-ID: <20200427180539.GF4383@sirena.org.uk>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-7-michael@walle.cc>
- <87pnbtqhr1.fsf@nanos.tec.linutronix.de>
- <87f141bce0a4fda04b550647306be296@walle.cc>
- <20200427174427.GE4383@sirena.org.uk>
- <5d63026fc7c8700c2c7fb15267a9e441@walle.cc>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+References: <20200413082445.17324-1-nuno.sa@analog.com>
+ <20200413082445.17324-6-nuno.sa@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
+Date:   Mon, 27 Apr 2020 20:06:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qftxBdZWiueWNAVY"
-Content-Disposition: inline
-In-Reply-To: <5d63026fc7c8700c2c7fb15267a9e441@walle.cc>
-X-Cookie: If your bread is stale, make toast.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200413082445.17324-6-nuno.sa@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25795/Mon Apr 27 14:00:10 2020)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 4/13/20 10:24 AM, Nuno Sá wrote:
+> [...]
+> +static irqreturn_t adis16475_trigger_handler(int irq, void *p)
+> +{
+> [...]
+> +	__be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
+> [...]
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, data, pf->timestamp);
 
---qftxBdZWiueWNAVY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If the timestamp is enabled the IIO core might insert padding between 
+the data channels and the timestamp. If that happens this will disclose 
+kernel stack memory to userspace.
 
-On Mon, Apr 27, 2020 at 08:01:14PM +0200, Michael Walle wrote:
-> Am 2020-04-27 19:44, schrieb Mark Brown:
+This needs either a memset(data, 0x00, sizeof(data)) or maybe put data 
+into the state struct and kzalloc it.
 
-> > Looking at the changelog there the "we can't be sure" bit is that
-> > coccinelle couldn't follow the flags through from the caller to make
-> > sure that IRQF_ONESHOT is set so we're just oring it in unconditionally.
+- Lars
 
-> So it is correct that IRQF_ONESHOT is also set in the driver which is
-> using regmap_add_irq_chip(), right?
-
-It shouldn't break anything and my instinct is that it's better form.
-
---qftxBdZWiueWNAVY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6nHvMACgkQJNaLcl1U
-h9ApOQf/S6MhJTO+bFChRr3cqXq9pRPnjvTfkt1e+TT+fIXOh2uMY8mRxXizy7En
-nNcSqd3id4MgeW/kEGX7lvy7/oekEZsIqZATQy0THN93fw1n/0t9u22LwLFW00/w
-MHfKqmnBMOv+o5aYUrJtsdspfhyS76FcRnaoe5gr6PPYtEbQnWRy4UV3HAPpp5mO
-3d+MFa4olzoLwjD7HKkcIbbuWy3QcYgSn7HWfkqRPl+g06FIivX0SqC7kKLvTMzw
-++5Oj+jFw8W3sfX0mcnF1U/PieOR5WYuy6PXUKcN4j2zy1XrEbfF3e9k/H6B710c
-UOuaJn2BH7J1F4zSNSNQlc4ihuaoPw==
-=Y8Z/
------END PGP SIGNATURE-----
-
---qftxBdZWiueWNAVY--
