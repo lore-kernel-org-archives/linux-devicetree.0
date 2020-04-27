@@ -2,216 +2,139 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D58EC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 05:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96058C5519A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 06:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 136052084D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 05:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A31421707
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 06:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgD0F6H (ORCPT
+        id S1726431AbgD0GBg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 01:58:07 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:44034 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgD0F6H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 01:58:07 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id CC27680487;
-        Mon, 27 Apr 2020 07:58:01 +0200 (CEST)
-Date:   Mon, 27 Apr 2020 07:57:55 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        devicetree@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Collabora Kernel ML <kernel@collabora.com>
-Subject: Re: [PATCH] get_maintainer: Add email addresses from .yaml files
-Message-ID: <20200427055755.GA21898@ravnborg.org>
-References: <87d082jtfn.fsf@collabora.com>
- <20200420175909.GA5810@ravnborg.org>
- <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
- <9a32f150f85f851d04afd148b2a9a5cf203f7ce1.camel@perches.com>
- <7beaedfd63017973b910dd21cac13ecb42dbe503.camel@perches.com>
+        Mon, 27 Apr 2020 02:01:36 -0400
+Received: from mga06.intel.com ([134.134.136.31]:29239 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726221AbgD0GBf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:01:35 -0400
+IronPort-SDR: wj6SPiLfZn1W+xoaByvY9ECQl+E6lvTOpqfsDMVAYvHZEtMvQwJclH9ZSZ3PFrDcU7Zg918rB/
+ IoQbFmR/CQZQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 23:01:34 -0700
+IronPort-SDR: Tbvmk32U8pXGkx1MtpOonsRz7dQHWFUGWcQDrlFH9X4px9KwcuhmgnP/3NtibVV60Lc23EbyEN
+ qNIffhnF9OCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,323,1583222400"; 
+   d="scan'208";a="292341155"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Apr 2020 23:01:33 -0700
+Received: from [10.215.243.21] (ekotax-mobl.gar.corp.intel.com [10.215.243.21])
+        by linux.intel.com (Postfix) with ESMTP id 72B9B580646;
+        Sun, 26 Apr 2020 23:01:30 -0700 (PDT)
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+To:     Mark Brown <broonie@kernel.org>
+Cc:     robh@kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        daniel.schwierzeck@gmail.com, hauke@hauke-m.de,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+ <20200424112505.GD5850@sirena.org.uk>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <616a5419-add3-085e-32dc-c83d9d975725@linux.intel.com>
+Date:   Mon, 27 Apr 2020 14:01:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7beaedfd63017973b910dd21cac13ecb42dbe503.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=8nJEP1OIZ-IA:10 a=IJv9LcIfAAAA:8 a=7gkXJVJtAAAA:8
-        a=e66IHeAwct5_nrS6dCUA:9 a=wPNLvfGTeEIA:10 a=cmr4hm9N53k6aw-X_--Q:22
-        a=E9Po1WZjFZOl8hwRPBS3:22
+In-Reply-To: <20200424112505.GD5850@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Joe.
 
-On Sun, Apr 26, 2020 at 10:40:52PM -0700, Joe Perches wrote:
-> .yaml files can contain maintainer/author addresses and it seems
-> unlikely or unnecessary that individual MAINTAINER file section
-> entries for each .yaml file will be created.
-> 
-> So dd the email addresses found in .yaml files to the default
-     ^
-     add
+On 4/24/2020 7:25 PM, Mark Brown wrote:
+> On Fri, Apr 24, 2020 at 06:42:30PM +0800, Dilip Kota wrote:
+>
+>> Synchronize tx, rx and error interrupts by registering to the
+>> same interrupt handler. Interrupt handler will recognize and process
+>> the appropriate interrupt on the basis of interrupt status register.
+>> Also, establish synchronization between the interrupt handler and
+>> transfer operation by taking the locks and registering the interrupt
+>> handler as thread IRQ which avoids the bottom half.
+>> Fixes the wrongly populated interrupt register offsets too.
+> This sounds like at least three different changes mixed together in one
+> commit, it makes it quite hard to tell what's going on.  If nothing else
+> the conversion from a workqueue to threaded interrupts should probably
+> be split out from merging the interrupts.
+While preparing the patches, i got puzzled to go with separate patches 
+(for threaded interrupts, unified interrupt handler and fixing the 
+register offset) or as a single patch!!.
+Finally i choose to go with single patch, because establishing 
+synchronization is the major reason for this change, for that reason 
+threaded interrupts and unified interrupts changes are done. And the 
+fixing offset is a single line change, so included in this patch itself. 
+And, on a lighter note, the whole patch is coming under 45 lines of code 
+changes.
+Please let me know your view.
+>
+>> -static irqreturn_t lantiq_ssc_err_interrupt(int irq, void *data)
+>> +static irqreturn_t lantiq_ssc_err_interrupt(struct lantiq_ssc_spi *spi)
+>>   {
+>> -	struct lantiq_ssc_spi *spi = data;
+>>   	u32 stat = lantiq_ssc_readl(spi, LTQ_SPI_STAT);
+>>   
+>> -	if (!(stat & LTQ_SPI_STAT_ERRORS))
+>> -		return IRQ_NONE;
+>> -
+> Why drop this?
+lantiq_ssc_err_interrupt() getting called, only if LTQ_SPI_IRNEN_E is 
+set in the interrupt status register.
+Once the 'LTQ_SPI_IRNEN_E' bit is set, there is no chance of all error 
+bits being unset in the SPI_STAT register, so the 'if condition' will 
+never be successful. Hence dropped it.
+>
+>> -	err = devm_request_irq(dev, rx_irq, lantiq_ssc_xmit_interrupt,
+>> -			       0, LTQ_SPI_RX_IRQ_NAME, spi);
+>> +	err = devm_request_threaded_irq(dev, rx_irq, NULL, lantiq_ssc_isr,
+>> +					IRQF_ONESHOT, LTQ_SPI_RX_IRQ_NAME, spi);
+>>   	if (err)
+>>   		goto err_master_put;
+>>   
+>> -	err = devm_request_irq(dev, tx_irq, lantiq_ssc_xmit_interrupt,
+>> -			       0, LTQ_SPI_TX_IRQ_NAME, spi);
+>> +	err = devm_request_threaded_irq(dev, tx_irq, NULL, lantiq_ssc_isr,
+>> +					IRQF_ONESHOT, LTQ_SPI_TX_IRQ_NAME, spi);
+>>   	if (err)
+>>   		goto err_master_put;
+>>   
+>> -	err = devm_request_irq(dev, err_irq, lantiq_ssc_err_interrupt,
+>> -			       0, LTQ_SPI_ERR_IRQ_NAME, spi);
+>> +	err = devm_request_threaded_irq(dev, err_irq, NULL, lantiq_ssc_isr,
+>> +					IRQF_ONESHOT, LTQ_SPI_ERR_IRQ_NAME, spi);
+> It's not clear to me that it's a benefit to combine all the interrupts
+> unconditionally - obviously where they're shared we need to but could
+> that be accomplished with IRQF_SHARED and even if it can't it seems like
+> something conditional would be better.
 
-> get_maintainer output.
-> 
-> The email addresses are marked with "(in file)" when using the
-> "--roles" or "--rolestats" options.
-> 
-> Miscellanea:
-> 
-> o Change $file_emails to $email_file_emails to avoid visual
->   naming conflicts with @file_emails
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Tested-by: Sam Ravnborg <sam@ravnborg.org>
+Lets take a case where Tx/Rx transfer interrupt got triggered and 
+followed by error interrupt(before finishing the tx/rx interrupt 
+execution) which is very less likely to occur, unified interrupt handler 
+establishes synchronization.
+Comparatively, unified interrupt handler is better for adding support to 
+the latest SoCs on which SPI have single interrupt line for tx,rx and 
+errors.
+On basis of these two points i felt to go with unified interrupt handler.
 
-The patch did not apply on top of -rc3, but it was trivial to fix.
-Tested and works like a charm.
-Thanks for doing this!
+Regards,
+Dilip
 
-	Sam
-
-> ---
->  scripts/get_maintainer.pl | 44 +++++++++++++++++++++++++++++---------------
->  1 file changed, 29 insertions(+), 15 deletions(-)
-> 
-> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-> index 6cbcd1..6d973f 100755
-> --- a/scripts/get_maintainer.pl
-> +++ b/scripts/get_maintainer.pl
-> @@ -57,7 +57,7 @@ my $status = 0;
->  my $letters = "";
->  my $keywords = 1;
->  my $sections = 0;
-> -my $file_emails = 0;
-> +my $email_file_emails = 0;
->  my $from_filename = 0;
->  my $pattern_depth = 0;
->  my $self_test = undef;
-> @@ -69,6 +69,12 @@ my $vcs_used = 0;
->  
->  my $exit = 0;
->  
-> +my @files = ();
-> +my @fixes = ();			# If a patch description includes Fixes: lines
-> +my @range = ();
-> +my @keyword_tvi = ();
-> +my @file_emails = ();
-> +
->  my %commit_author_hash;
->  my %commit_signer_hash;
->  
-> @@ -266,7 +272,7 @@ if (!GetOptions(
->  		'pattern-depth=i' => \$pattern_depth,
->  		'k|keywords!' => \$keywords,
->  		'sections!' => \$sections,
-> -		'fe|file-emails!' => \$file_emails,
-> +		'fe|file-emails!' => \$email_file_emails,
->  		'f|file' => \$from_filename,
->  		'find-maintainer-files' => \$find_maintainer_files,
->  		'mpath|maintainer-path=s' => \$maintainer_path,
-> @@ -424,6 +430,22 @@ sub read_all_maintainer_files {
->      }
->  }
->  
-> +sub maintainers_in_file {
-> +    my ($file) = @_;
-> +
-> +    return if ($file =~ m@\bMAINTAINERS$@);
-> +
-> +    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
-> +	open(my $f, '<', $file)
-> +	    or die "$P: Can't open $file: $!\n";
-> +	my $text = do { local($/) ; <$f> };
-> +	close($f);
-> +
-> +	my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
-> +	push(@file_emails, clean_file_emails(@poss_addr));
-> +    }
-> +}
-> +
->  #
->  # Read mail address map
->  #
-> @@ -504,12 +526,6 @@ sub read_mailmap {
->  
->  ## use the filenames on the command line or find the filenames in the patchfiles
->  
-> -my @files = ();
-> -my @fixes = ();			# If a patch description includes Fixes: lines
-> -my @range = ();
-> -my @keyword_tvi = ();
-> -my @file_emails = ();
-> -
->  if (!@ARGV) {
->      push(@ARGV, "&STDIN");
->  }
-> @@ -527,7 +543,7 @@ foreach my $file (@ARGV) {
->  	$file =~ s/^\Q${cur_path}\E//;	#strip any absolute path
->  	$file =~ s/^\Q${lk_path}\E//;	#or the path to the lk tree
->  	push(@files, $file);
-> -	if ($file ne "MAINTAINERS" && -f $file && ($keywords || $file_emails)) {
-> +	if ($file ne "MAINTAINERS" && -f $file && $keywords) {
->  	    open(my $f, '<', $file)
->  		or die "$P: Can't open $file: $!\n";
->  	    my $text = do { local($/) ; <$f> };
-> @@ -539,10 +555,6 @@ foreach my $file (@ARGV) {
->  		    }
->  		}
->  	    }
-> -	    if ($file_emails) {
-> -		my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
-> -		push(@file_emails, clean_file_emails(@poss_addr));
-> -	    }
->  	}
->      } else {
->  	my $file_cnt = @files;
-> @@ -923,6 +935,8 @@ sub get_maintainers {
->  		print("\n");
->  	    }
->  	}
-> +
-> +	maintainers_in_file($file);
->      }
->  
->      if ($keywords) {
-> @@ -1835,7 +1849,7 @@ tm toggle maintainers
->  tg toggle git entries
->  tl toggle open list entries
->  ts toggle subscriber list entries
-> -f  emails in file       [$file_emails]
-> +f  emails in file       [$email_file_emails]
->  k  keywords in file     [$keywords]
->  r  remove duplicates    [$email_remove_duplicates]
->  p# pattern match depth  [$pattern_depth]
-> @@ -1960,7 +1974,7 @@ EOT
->  		bool_invert(\$email_git_all_signature_types);
->  		$rerun = 1;
->  	    } elsif ($sel eq "f") {
-> -		bool_invert(\$file_emails);
-> +		bool_invert(\$email_file_emails);
->  		$rerun = 1;
->  	    } elsif ($sel eq "r") {
->  		bool_invert(\$email_remove_duplicates);
-> 
