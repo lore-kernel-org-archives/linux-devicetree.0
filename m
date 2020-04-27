@@ -2,92 +2,67 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D151EC5519A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D574BC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA7B42080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B844F2063A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgD0IEH (ORCPT
+        id S1726589AbgD0IEi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:04:07 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35669 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgD0IEG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:04:06 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e26so24752088otr.2;
-        Mon, 27 Apr 2020 01:04:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yp9HgL6YXH1Mrs7/xb1a0hjYzru62kco8NbdEX0q47w=;
-        b=fqf2apN6rMLx+bj9WGC0vXQnzxwveZ3ahvm450ePwDSnEHZcdxPaPSr7K7Pc3mvcBO
-         e0dCwnt1oE/748jia21S+QBQaSMeSy0+TbKHw8eKGEWYBboW5CpkqZJ15j2Ik7PlwKMV
-         wo7FXsWj9vBEzlGrojdmY+/2KY97+4j+W/+4q//gv8btJtdcZ665O1uix35th7eB82zT
-         VNNN2SJTpvAwAPOQUYmTjVNgAdIIqSpzzdvgOrf0mYRZkKxR61eb5z4FuB+Y21p6DWcM
-         ozXbyoaxVLuDb/MzThOx+KxyD23Kdtl0qKjb3zIDQY3gQ47X8fpRAx+2ow+cP+VGYazo
-         847g==
-X-Gm-Message-State: AGi0Pubo0I9AvwMRJ3PgvuQgaWmhUv+DIp3TxjZZIxeV2EeJ1y1nBb/1
-        6z8VQ85jsJup41aqcJhyxM3dCnbkA8o5QDSMiDY=
-X-Google-Smtp-Source: APiQypL9L0sStSs9sZCJMMiE2Zg4MITGkAayddwxMKwHPKdmjS62MIWjUuR1BBUAExNprGCWXUObgfMmOo6mye5Vn6w=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr16411444otn.107.1587974644288;
- Mon, 27 Apr 2020 01:04:04 -0700 (PDT)
+        Mon, 27 Apr 2020 04:04:38 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34172 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgD0IEi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:04:38 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: rcn)
+        with ESMTPSA id A8AAE2A00ED
+Date:   Mon, 27 Apr 2020 10:04:33 +0200
+From:   Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     devicetree@vger.kernel.org, kernel@collabora.com,
+        dri-devel@lists.freedesktop.org, robh+dt@kernel.org
+Subject: Re: [PATCH] dt-bindings: display: anx7814.txt: convert to yaml
+Message-ID: <20200427080433.6okx5jbq4pfasd63@rcn-XPS-13-9360>
+References: <20200424065354.23781-1-ricardo.canuelo@collabora.com>
+ <481401ed-93a4-6918-3d8b-6c769d8c7617@collabora.com>
 MIME-Version: 1.0
-References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587678050-23468-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1587678050-23468-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Apr 2020 10:03:52 +0200
-Message-ID: <CAMuHMdWiQd1x7+_qJnFzNbz27CwCW9yO431pUfYATE=0rM8J-Q@mail.gmail.com>
-Subject: Re: [PATCH 06/10] dt-bindings: clock: renesas: cpg-mssr: Document
- r8a7742 binding
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <481401ed-93a4-6918-3d8b-6c769d8c7617@collabora.com>
+User-Agent: NeoMutt/20171215
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add binding documentation for the RZ/G1H (R8A7742) Clock Pulse Generator
-> driver.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+On vie 24-04-2020 16:08:10, Enric Balletbo i Serra wrote:
+> Hi Ricardo,
+> 
+> Thank you for your patch.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in clk-renesas-for-v5.8.
+Hi Enric,
 
-Gr{oetje,eeting}s,
+Thanks for reviewing it.
 
-                        Geert
+> > +      "#size-cells":
+> > +        const: 0
+> > +
+> 
+> I don't' think you need to specify this. You can drop it (better double check
+> with Rob, though)
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I think you're right. I put it just to be clear about it and because
+some other yaml bindings specify them, but this is already well defined
+in Documentation/devicetree/bindings/mediavideo-interfaces.txt, which is
+referenced in the binding.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I agree with the rest of the comments.
+
+Kind regards,
+Ricardo
