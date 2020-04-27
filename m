@@ -2,247 +2,161 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 515E2C55199
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6396BC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36723206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AB52206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:09:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="diOEyOh/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbgD0KJa (ORCPT
+        id S1726485AbgD0KJw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:09:30 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36122 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgD0KJa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 06:09:30 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: rcn)
-        with ESMTPSA id 37DB42A0FED
-From:   =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-To:     devicetree@vger.kernel.org
-Cc:     kernel@collabora.com, dri-devel@lists.freedesktop.org,
-        robh+dt@kernel.org, enric.balletbo@collabora.com
-Subject: [PATCH v3] dt-bindings: display: anx7814.txt: convert to yaml
-Date:   Mon, 27 Apr 2020 12:09:08 +0200
-Message-Id: <20200427100908.11809-1-ricardo.canuelo@collabora.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 27 Apr 2020 06:09:52 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:45640 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbgD0KJw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 06:09:52 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RA9jdG122958;
+        Mon, 27 Apr 2020 05:09:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587982185;
+        bh=2gZqUqCzi7AFRq8mRGo3ZoQLutalkhB+Fu89IDdfbgI=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=diOEyOh/+/DnNA0ea8aWSqxZDUaPgxYrX2YLN7XbQnf0VKLcovy6kyW7Elgj0P+tn
+         6tDmy09OcWkVxrNMwIJ7Nx2rDg3zXtCvs8H+0koNCsmeZoZf+/lp78r8Z+MrlANcaD
+         FwCSy5BSdy+/TpdzN8RxPEB+ilPH0oIodLKiNIc4=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RA9ji4031080
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Apr 2020 05:09:45 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
+ Apr 2020 05:09:45 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 27 Apr 2020 05:09:45 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RA9gBX030680;
+        Mon, 27 Apr 2020 05:09:43 -0500
+Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-j721e-main.dtsi: Add DSS node
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jyri Sarha <jsarha@ti.com>
+References: <20200422091512.950-1-tomi.valkeinen@ti.com>
+ <20200422091512.950-2-tomi.valkeinen@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <ade3a177-f060-bc40-bcc1-494093e3071d@ti.com>
+Date:   Mon, 27 Apr 2020 13:09:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200422091512.950-2-tomi.valkeinen@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This converts the Analogix ANX7814 bridge DT binding to yaml. Port
-definitions and descriptions were expanded, apart from that it's a
-direct translation from the original binding.
+On 22/04/2020 12:15, Tomi Valkeinen wrote:
+> Add DSS node for J721E SoC.
 
-Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
----
-Changes in v3 (suggested by Sam Ravnborg):
-  - Rename example node i2c0 to i2c.
+Subject should drop .dtsi, I can fix that locally though. Got a question 
+below.
 
-Changes in v2 (suggested by Enric Balletbo):
-  - File name change: use full compatible string.
-  - Binding description removed.
-  - #address-cells and #size-cells properties removed from ports node.
-  - Example node renamed: anx7814 -> bridge.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 57 +++++++++++++++++++++++
+>   1 file changed, 57 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> index 0b9d14b838a1..21c362042ecf 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> @@ -736,6 +736,63 @@
+>   		};
+>   	};
+>   
+> +	dss: dss@04a00000 {
+> +		compatible = "ti,j721e-dss";
+> +		reg =
+> +			<0x00 0x04a00000 0x00 0x10000>, /* common_m */
+> +			<0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
+> +			<0x00 0x04b00000 0x00 0x10000>, /* common_s1*/
+> +			<0x00 0x04b10000 0x00 0x10000>, /* common_s2*/
+> +
+> +			<0x00 0x04a20000 0x00 0x10000>, /* vidl1 */
+> +			<0x00 0x04a30000 0x00 0x10000>, /* vidl2 */
+> +			<0x00 0x04a50000 0x00 0x10000>, /* vid1 */
+> +			<0x00 0x04a60000 0x00 0x10000>, /* vid2 */
+> +
+> +			<0x00 0x04a70000 0x00 0x10000>, /* ovr1 */
+> +			<0x00 0x04a90000 0x00 0x10000>, /* ovr2 */
+> +			<0x00 0x04ab0000 0x00 0x10000>, /* ovr3 */
+> +			<0x00 0x04ad0000 0x00 0x10000>, /* ovr4 */
+> +
+> +			<0x00 0x04a80000 0x00 0x10000>, /* vp1 */
+> +			<0x00 0x04aa0000 0x00 0x10000>, /* vp2 */
+> +			<0x00 0x04ac0000 0x00 0x10000>, /* vp3 */
+> +			<0x00 0x04ae0000 0x00 0x10000>, /* vp4 */
+> +			<0x00 0x04af0000 0x00 0x10000>; /* wb */
+> +
+> +		reg-names = "common_m", "common_s0",
+> +			"common_s1", "common_s2",
+> +			"vidl1", "vidl2","vid1","vid2",
+> +			"ovr1", "ovr2", "ovr3", "ovr4",
+> +			"vp1", "vp2", "vp3", "vp4",
+> +			"wb";
+> +
+> +		clocks =	<&k3_clks 152 0>,
+> +				<&k3_clks 152 1>,
+> +				<&k3_clks 152 4>,
+> +				<&k3_clks 152 9>,
+> +				<&k3_clks 152 13>;
+> +		clock-names = "fck", "vp1", "vp2", "vp3", "vp4";
+> +
+> +		power-domains = <&k3_pds 152 TI_SCI_PD_EXCLUSIVE>;
+> +
+> +		interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "common_m",
+> +				  "common_s0",
+> +				  "common_s1",
+> +				  "common_s2";
+> +
+> +		status = "disabled";
 
-Tested with:
-make dt_binding_check ARCH=arm64 DT_SCHEMA_FILES=<.../analogix,anx7814.yaml>
-make dtbs_check ARCH=arm64 DT_SCHEMA_FILES=<.../analogix,anx7814.yaml>
+Again, why disabled by default?
 
- .../display/bridge/analogix,anx7814.yaml      | 124 ++++++++++++++++++
- .../bindings/display/bridge/anx7814.txt       |  42 ------
- 2 files changed, 124 insertions(+), 42 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/anx7814.txt
+-Tero
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
-new file mode 100644
-index 000000000000..13f0b52edefd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
-@@ -0,0 +1,124 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/analogix,anx7814.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analogix ANX7814 SlimPort (Full-HD Transmitter)
-+
-+maintainers:
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - analogix,anx7808
-+      - analogix,anx7812
-+      - analogix,anx7814
-+      - analogix,anx7818
-+
-+  reg:
-+    maxItems: 1
-+    description: I2C address of the device.
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Should contain the INTP interrupt.
-+
-+  hpd-gpios:
-+    maxItems: 1
-+    description: Which GPIO to use for hpd.
-+
-+  pd-gpios:
-+    maxItems: 1
-+    description: Which GPIO to use for power down.
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: Which GPIO to use for reset.
-+
-+  dvdd10-supply:
-+    maxItems: 1
-+    description: Regulator for 1.0V digital core power.
-+
-+  ports:
-+    type: object
-+    description:
-+      A node containing input and output port nodes with endpoint
-+      definitions as documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+      Documentation/devicetree/bindings/graph.txt
-+
-+    properties:
-+      port@0:
-+        type: object
-+        description: Video port for HDMI input.
-+
-+        properties:
-+          reg:
-+            const: 0
-+
-+      port@1:
-+        type: object
-+        description:
-+          Video port for SlimPort, DisplayPort, eDP or MyDP output.
-+
-+        properties:
-+          reg:
-+            const: 1
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - hpd-gpios
-+  - pd-gpios
-+  - reset-gpios
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        anx7814: bridge@38 {
-+            compatible = "analogix,anx7814";
-+            reg = <0x38>;
-+            interrupt-parent = <&gpio0>;
-+            interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
-+            hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
-+            pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
-+            reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    anx7814_in: endpoint {
-+                        remote-endpoint = <&hdmi0_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    anx7814_out: endpoint {
-+                        remote-endpoint = <&edp_out>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/display/bridge/anx7814.txt b/Documentation/devicetree/bindings/display/bridge/anx7814.txt
-deleted file mode 100644
-index 17258747fff6..000000000000
---- a/Documentation/devicetree/bindings/display/bridge/anx7814.txt
-+++ /dev/null
-@@ -1,42 +0,0 @@
--Analogix ANX7814 SlimPort (Full-HD Transmitter)
-------------------------------------------------
--
--The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
--designed for portable devices.
--
--Required properties:
--
-- - compatible		: Must be one of:
--			  "analogix,anx7808"
--			  "analogix,anx7812"
--			  "analogix,anx7814"
--			  "analogix,anx7818"
-- - reg			: I2C address of the device
-- - interrupts		: Should contain the INTP interrupt
-- - hpd-gpios		: Which GPIO to use for hpd
-- - pd-gpios		: Which GPIO to use for power down
-- - reset-gpios		: Which GPIO to use for reset
--
--Optional properties:
--
-- - dvdd10-supply	: Regulator for 1.0V digital core power.
-- - Video port for HDMI input, using the DT bindings defined in [1].
--
--[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
--
--Example:
--
--	anx7814: anx7814@38 {
--		compatible = "analogix,anx7814";
--		reg = <0x38>;
--		interrupt-parent = <&gpio0>;
--		interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
--		hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
--		pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
--		reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
--		port {
--			anx7814_in: endpoint {
--				remote-endpoint = <&hdmi0_out>;
--			};
--		};
--	};
--- 
-2.18.0
+> +
+> +		dss_ports: ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +	};
+> +
+>   	mcasp0: mcasp@2b00000 {
+>   		compatible = "ti,am33xx-mcasp-audio";
+>   		reg = <0x0 0x02b00000 0x0 0x2000>,
+> 
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
