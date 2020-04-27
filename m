@@ -2,123 +2,102 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E510DC5519A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F36AC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C804E206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEC8206BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:00:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HIYDC723"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgD0N5B (ORCPT
+        id S1726953AbgD0OAr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:57:01 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42857 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgD0N5A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 09:57:00 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m18so26194421otq.9;
-        Mon, 27 Apr 2020 06:57:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lbW4CP+foDZ7c7LiUzqrWQ0Yn8i7eKW7LGOFzJFSjRk=;
-        b=TlpzW9uOKqrCvDYgdR0vIYgnLI2Sd2U4PQUJ02dLh1VIaVhnmTmZ6cDs2IPMWl9Bdh
-         3v83dwrbHc7OmRK5IeNov2Z+vCVx2BEUXegv5wnJBzgIulGH2Jlym1WtqtHVlFMdPBmL
-         8Rq7eVIph9DTNKlYC/d4sKL6eAYdNCV93pP6g4Nhr7szWxmilYsCaWpdja3L0+um3NZN
-         dZrMYFUzrLgwJpb3eQ8XmR/B8K0LCXgzifME6lBq4+uBEb4wq5H57o/m8HjapSHGPPeF
-         2AAdMKPmlbXp+B9xaQsdFDmc72GTAhMFc8OWlrrIAfDiFYDCYNwaaI4/OFX6SEx7fzCw
-         TJaw==
-X-Gm-Message-State: AGi0PuYtu+oQOxAkPZQ5jBZzDQJBw7/7YqMIY11qjwshUksMCtquL42q
-        rmUMmiNjG8i2ZFivvg8nqAigCuUmfwYACqmZAnI=
-X-Google-Smtp-Source: APiQypItatage2dW1ybVsZrW2pFyPk+1PxaK/KIBR0r2hz/mKUjiljs4/lAKgCXRXVtD2OMVZzrJKtiDNWGJfv4MhzQ=
-X-Received: by 2002:aca:d50f:: with SMTP id m15mr15973637oig.54.1587995819823;
- Mon, 27 Apr 2020 06:56:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200417140920.22596-1-geert+renesas@glider.be>
-In-Reply-To: <20200417140920.22596-1-geert+renesas@glider.be>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Apr 2020 15:56:48 +0200
-Message-ID: <CAMuHMdWzkV1SGvpOg31ZBLHPCGYSEOB1yM=vEKVDqnqJsXj3-Q@mail.gmail.com>
-Subject: Re: [PATCH RFC] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Apr 2020 10:00:47 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:46510 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726786AbgD0OAr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 10:00:47 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 06A19C033C;
+        Mon, 27 Apr 2020 14:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1587996046; bh=np9+0SGRO5CaLrwr1Pizf5LJopqBu07ZFdqwDx9Fs1Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HIYDC723zkMlQHI8NzCRQP2ThO+woMb/tkOCy8o3bXBb1pa3DpTNV++gMeuQTfsfR
+         wQgu0wipPf792I3GgsQYeSrbY0xFR+ElX00w2CalqK+OHuFecp0L5ski6Bb8nPStux
+         q0r/JVPCI6cl1d5AhgTsZr7Z+nlB4Kqz+Mf73EGSJRw7uxsDfl4xOCxJjCF/knfFUH
+         c7KE0WaCHRqM5LNHyJKOz3S7hegB0cbr0rv7R2ukFLcf36zUXWCtLPH41aQ0xUR1Br
+         1I1ticdTJPhYnLjWANpxJsoqS6RTRtnuV4gxEJ8gKoww55MHa69rxhtiOHEPsyLTrV
+         /5FTguflHuZUw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 2C463A005C;
+        Mon, 27 Apr 2020 14:00:41 +0000 (UTC)
+From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+Subject: [PATCH v3 0/4] drm: Add support for IPK DSI Host Driver
+Date:   Mon, 27 Apr 2020 16:00:32 +0200
+Message-Id: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 4:09 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Convert the Renesas Pin Function Controller (PFC) Device Tree binding
-> documentation to json-schema.
->
-> Document missing properties.
-> Drop deprecated and obsolete #gpio-range-cells property.
-> Update the example to match reality.
-> Drop consumer examples, as they do not belong here.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> How to describe that pin configuration nodes can have subnodes?
-> E.g.
->
->     arch/arm/boot/dts/sh73a0-kzm9g.dt.yaml: pin-controller@e6050000: mmc: Additional properties are not allowed ('cfg', 'mux' were unexpected)
->
-> Dropping "additionalProperties: false" from the patternProperties
-> section gets rid of these warnings, but of course it would be better if
-> the subnodes would be validated, too.
+Adds support for the display subsystem in the Synopsys
+DesignWare IPK devices.
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+The display pipeline is limited and does not have access to memory, the
+validation is done using a VPG (Video Pattern Generator), as DPI
+stimulus for the DW MIPI DSI Host.
 
-> +patternProperties:
-> +  "^.*$":
-> +    if:
-> +      type: object
-> +    then:
-> +      allOf:
-> +        - $ref: pincfg-node.yaml#
-> +        - $ref: pinmux-node.yaml#
-> +      description:
-> +        Pinctrl node's client devices use subnodes for desired pin
-> +        configuration.
-> +        Client device subnodes use below standard properties.
-> +
-> +      properties:
-> +        phandle: true
-> +        pins: true
-> +        groups: true
-> +        function: true
-> +        bias-disable: true
-> +        bias-pull-down: true
-> +        bias-pull-up: true
-> +        drive-strength:
-> +          enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset of supported values
-> +        power-source:
-> +          enum: [ 1800, 3300 ]
-> +        gpio-hog: true
-> +        gpios: true
-> +        output-high: true
-> +        output-low: true
+A Synopsys DesignWare MIPI DSI Host v1.40 is used in the IPK device, that
+so far, is fully compatible with the driver dw-mipi-dsi.
 
-The above list lacks the "input" property. Will add.
+To activate the VPG use the sysfs pattern variable, assigning values from
+0 (shutdown) to 4. The usage of the VPG and the Synopsys DesignWare MIPI
+DSI Host internal video generator is mutually exclusive.
 
-Gr{oetje,eeting}s,
+The submission of this driver aims to be used as a work base for the
+submission of enhancements over the Synopsys DesignWare MIPI DSI Host.
 
-                        Geert
+Angelo Ribeiro (4):
+  dt-bindings: display: Add IPK DSI subsystem bindings
+  drm: ipk: Add DRM driver for DesignWare IPK DSI
+  drm: ipk: Add extensions for DW MIPI DSI Host driver
+  MAINTAINERS: Add IPK MIPI DSI Host driver entry
+
+ .../bindings/display/snps,dw-ipk-dsi.yaml          | 159 ++++++
+ .../bindings/display/snps,dw-ipk-vpg.yaml          |  73 +++
+ MAINTAINERS                                        |   8 +
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/ipk/Kconfig                        |  22 +
+ drivers/gpu/drm/ipk/Makefile                       |   6 +
+ drivers/gpu/drm/ipk/dw-drv.c                       | 169 +++++++
+ drivers/gpu/drm/ipk/dw-ipk.h                       |  26 +
+ drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c              | 557 +++++++++++++++++++++
+ drivers/gpu/drm/ipk/dw-vpg.c                       | 412 +++++++++++++++
+ drivers/gpu/drm/ipk/dw-vpg.h                       |  48 ++
+ 12 files changed, 1483 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
+ create mode 100644 drivers/gpu/drm/ipk/Kconfig
+ create mode 100644 drivers/gpu/drm/ipk/Makefile
+ create mode 100644 drivers/gpu/drm/ipk/dw-drv.c
+ create mode 100644 drivers/gpu/drm/ipk/dw-ipk.h
+ create mode 100644 drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
+ create mode 100644 drivers/gpu/drm/ipk/dw-vpg.c
+ create mode 100644 drivers/gpu/drm/ipk/dw-vpg.h
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
