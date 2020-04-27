@@ -2,244 +2,161 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E397BC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3760C5519B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA5FC206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B6E4206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:51:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kWzVEYgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgD0Irp (ORCPT
+        id S1726485AbgD0Ivy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:47:45 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35128 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbgD0Irp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:47:45 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: rcn)
-        with ESMTPSA id 0ABB82A0832
-From:   =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-To:     devicetree@vger.kernel.org
-Cc:     kernel@collabora.com, dri-devel@lists.freedesktop.org,
-        robh+dt@kernel.org, enric.balletbo@collabora.com
-Subject: [PATCH v2] dt-bindings: display: anx7814.txt: convert to yaml
-Date:   Mon, 27 Apr 2020 10:46:58 +0200
-Message-Id: <20200427084658.27962-1-ricardo.canuelo@collabora.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 27 Apr 2020 04:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgD0Ivx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:51:53 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE08C0610D5
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 01:51:53 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x17so18784077wrt.5
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 01:51:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=YPX4x0jDIEDTz7nvc7sn5bHK6BG3ihIkRvdS/BPSLzE=;
+        b=kWzVEYgY/9/widQPXrFcowP4ZjgLQHkdS9enzKduSjdkfx0EjP8bo0XL/1eJr3WKSX
+         JaXngTlXbRhWYn2hX9lTbL3BYOqB19rkhQThOErWAmIF/qonKh6RswR09vTh231Wumen
+         kkhqjmo/YdeXh0zkjImVDbUiZWOQt5OyFIRoy4ZvEENcfdPREtsZ5U6G1/quPfUCxTIt
+         5WXJoK36jKqIJyTxsTPlB5EpFR3KR7+KpsTR2iyPEYyeeX6eEN0rh8FYAJP1NsCNeGda
+         ozRxEpQyGjVLx9eZmfL6/SZ/2VZ5D0pd0rGMWpG6pqLBK3piKAxPdyCLrOe8OBJMZ1fF
+         OK0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YPX4x0jDIEDTz7nvc7sn5bHK6BG3ihIkRvdS/BPSLzE=;
+        b=qit6n7y1MC7A47oZXrRLfx8Kf1otgCRzdw4orJXTKouGHXRgpZ/e8/NkVFZw5R28N7
+         BuofHU6J27ecAQe4euXBJxmWyhMM++bUndNF4hjfYrDDY44Fc91A5dQcAPp+cgK0+eJF
+         38eKnPNUri3hAYEkFkX2gVvBnraco2nmNVsAks4mpIBdefsBETem/PBtL0kVhCd7cqle
+         Jxs5Su5JIpyd0hTFieSUh8OUsHamKQJKiePQVmdsRFb++Oh4DS44opQ63jQA1KOlu/mQ
+         taeZ2haU945vUJMdk5ukndu21dslLqMSMBvQXIewu2am8XM64S1y3Tra51Zod7VNKnI3
+         SZ5w==
+X-Gm-Message-State: AGi0PuaHiN4Q2Mp7w/rdSM+sBxCPogzB6B3gLeBCDRSsetcYadc6a7Nt
+        at/+V0sNUZx2dv6wH6RkEOFdNg==
+X-Google-Smtp-Source: APiQypLxApUbpg3TJ0ILuchowzV4ZZ5EBCvXW4eaI3vv4CK0MLDKEWjIbJVseNky+c8kdrfJlPFTuQ==
+X-Received: by 2002:adf:dd8a:: with SMTP id x10mr26630284wrl.308.1587977511933;
+        Mon, 27 Apr 2020 01:51:51 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id x18sm14507505wmi.29.2020.04.27.01.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 01:51:51 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 09:51:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
+Message-ID: <20200427085149.GF3559@dell>
+References: <20200415162030.16414-1-sravanhome@gmail.com>
+ <20200415162030.16414-3-sravanhome@gmail.com>
+ <20200424071822.GM3612@dell>
+ <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
+ <20200424093720.GA3542@dell>
+ <864eb6ad-a605-c0a0-c3e7-23c0c70f5ede@gmail.com>
+ <20200424105319.GD8414@dell>
+ <c62cd5f2-6d82-0a2a-5ee5-a3e99e188a05@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <c62cd5f2-6d82-0a2a-5ee5-a3e99e188a05@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This converts the Analogix ANX7814 bridge DT binding to yaml. Port
-definitions and descriptions were expanded, apart from that it's a
-direct translation from the original binding.
+On Fri, 24 Apr 2020, saravanan sekar wrote:
 
-Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
----
-Changes in v2 (suggested by Enric Balletbo):
+> 
+> On 24/04/20 12:53 pm, Lee Jones wrote:
+> > On Fri, 24 Apr 2020, saravanan sekar wrote:
+> > 
+> > > Hi Lee,
+> > > 
+> > > On 24/04/20 11:37 am, Lee Jones wrote:
+> > > > On Fri, 24 Apr 2020, saravanan sekar wrote:
+> > > > 
+> > > > > Hi Lee,
+> > > > > 
+> > > > > On 24/04/20 9:18 am, Lee Jones wrote:
+> > > > > > On Wed, 15 Apr 2020, Saravanan Sekar wrote:
+> > > > > > 
+> > > > > > > mp2629 is a highly-integrated switching-mode battery charge management
+> > > > > > > device for single-cell Li-ion or Li-polymer battery.
+> > > > > > > 
+> > > > > > > Add MFD core enables chip access for ADC driver for battery readings,
+> > > > > > > and a power supply battery-charger driver
+> > > > > > > 
+> > > > > > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > > > > > ---
+> > > > > > >     drivers/mfd/Kconfig        |  9 ++++
+> > > > > > >     drivers/mfd/Makefile       |  2 +
+> > > > > > >     drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
+> > > > > > >     include/linux/mfd/mp2629.h | 19 +++++++++
+> > > > > > >     4 files changed, 116 insertions(+)
+> > > > > > >     create mode 100644 drivers/mfd/mp2629.c
+> > > > > > >     create mode 100644 include/linux/mfd/mp2629.h
+> > > > > > How is this driver registered?
+> > > > > > 
+> > > > > > Looks like it has device tree support.  Is there another way?
+> > > > > Yes, only using device tree
+> > > > Then how about using 'simple-mfd' and 'syscon'?
+> > > > 
+> > > > Then you can omit this driver completely.
+> > > The exception is to support for non device tree platform as well, but I have
+> > > tested only for ARM device tree platform.
+> > Is that a reality though?
+> > 
+> > How else do you see this realistically being registered?
+> > 
+> I understand that acpi related device table are not covered here, well I
+> don't have to platform to test so.
+> If you ask me to cover acpi related table, I can do but hard to test.
 
-  - File name change: use full compatible string.
-  - Binding description removed.
-  - #address-cells and #size-cells properties removed from ports node.
-  - Example node renamed: anx7814 -> bridge.
+I don't know of any reasons why syscon can't be used by ACPI.
 
-Tested with:
-make dt_binding_check ARCH=arm64 DT_SCHEMA_FILES=<.../analogix,anx7814.yaml>
-make dtbs_check ARCH=arm64 DT_SCHEMA_FILES=<.../analogix,anx7814.yaml>
+Please try to solve this issue using 'simple-mfd' and 'syscon'.
 
- .../display/bridge/analogix,anx7814.yaml      | 124 ++++++++++++++++++
- .../bindings/display/bridge/anx7814.txt       |  42 ------
- 2 files changed, 124 insertions(+), 42 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/anx7814.txt
+> > > > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > > > > > index 3c547ed575e6..85be799795aa 100644
+> > > > > > > --- a/drivers/mfd/Kconfig
+> > > > > > > +++ b/drivers/mfd/Kconfig
+> > > > > > > @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
+> > > > > > >     	help
+> > > > > > >     	  Select this if your MC13xxx is connected via an I2C bus.
+> > > > > > > +config MFD_MP2629
+> > > > > > > +	tristate "Monolithic power system MP2629 ADC and Battery charger"
+> > > > > > > +	depends on I2C
+> > > > > > > +	select REGMAP_I2C
+> > > > > > > +	help
+> > > > > > > +	  Select this option to enable support for monolithic power system
+> > > > > > > +	  battery charger. This provides ADC, thermal, battery charger power
+> > > > > > > +	  management functions on the systems.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
-new file mode 100644
-index 000000000000..5459336ac2f5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
-@@ -0,0 +1,124 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/analogix,anx7814.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analogix ANX7814 SlimPort (Full-HD Transmitter)
-+
-+maintainers:
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - analogix,anx7808
-+      - analogix,anx7812
-+      - analogix,anx7814
-+      - analogix,anx7818
-+
-+  reg:
-+    maxItems: 1
-+    description: I2C address of the device.
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Should contain the INTP interrupt.
-+
-+  hpd-gpios:
-+    maxItems: 1
-+    description: Which GPIO to use for hpd.
-+
-+  pd-gpios:
-+    maxItems: 1
-+    description: Which GPIO to use for power down.
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: Which GPIO to use for reset.
-+
-+  dvdd10-supply:
-+    maxItems: 1
-+    description: Regulator for 1.0V digital core power.
-+
-+  ports:
-+    type: object
-+    description:
-+      A node containing input and output port nodes with endpoint
-+      definitions as documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+      Documentation/devicetree/bindings/graph.txt
-+
-+    properties:
-+      port@0:
-+        type: object
-+        description: Video port for HDMI input.
-+
-+        properties:
-+          reg:
-+            const: 0
-+
-+      port@1:
-+        type: object
-+        description:
-+          Video port for SlimPort, DisplayPort, eDP or MyDP output.
-+
-+        properties:
-+          reg:
-+            const: 1
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - hpd-gpios
-+  - pd-gpios
-+  - reset-gpios
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        anx7814: bridge@38 {
-+            compatible = "analogix,anx7814";
-+            reg = <0x38>;
-+            interrupt-parent = <&gpio0>;
-+            interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
-+            hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
-+            pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
-+            reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    anx7814_in: endpoint {
-+                        remote-endpoint = <&hdmi0_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    anx7814_out: endpoint {
-+                        remote-endpoint = <&edp_out>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/display/bridge/anx7814.txt b/Documentation/devicetree/bindings/display/bridge/anx7814.txt
-deleted file mode 100644
-index 17258747fff6..000000000000
---- a/Documentation/devicetree/bindings/display/bridge/anx7814.txt
-+++ /dev/null
-@@ -1,42 +0,0 @@
--Analogix ANX7814 SlimPort (Full-HD Transmitter)
-------------------------------------------------
--
--The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
--designed for portable devices.
--
--Required properties:
--
-- - compatible		: Must be one of:
--			  "analogix,anx7808"
--			  "analogix,anx7812"
--			  "analogix,anx7814"
--			  "analogix,anx7818"
-- - reg			: I2C address of the device
-- - interrupts		: Should contain the INTP interrupt
-- - hpd-gpios		: Which GPIO to use for hpd
-- - pd-gpios		: Which GPIO to use for power down
-- - reset-gpios		: Which GPIO to use for reset
--
--Optional properties:
--
-- - dvdd10-supply	: Regulator for 1.0V digital core power.
-- - Video port for HDMI input, using the DT bindings defined in [1].
--
--[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
--
--Example:
--
--	anx7814: anx7814@38 {
--		compatible = "analogix,anx7814";
--		reg = <0x38>;
--		interrupt-parent = <&gpio0>;
--		interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
--		hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
--		pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
--		reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
--		port {
--			anx7814_in: endpoint {
--				remote-endpoint = <&hdmi0_out>;
--			};
--		};
--	};
 -- 
-2.18.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
