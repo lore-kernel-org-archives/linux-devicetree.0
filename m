@@ -2,155 +2,275 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED41FC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42421C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C51DB206BF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587995159;
-	bh=3MxQcvVPHDNmD2p3N2l3hfzoQ2koesDzgeGkr1Fk32M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lt+Kmj6iKl2p4iKIxzMRvbYu7YxTcQRrlyLGxHDZ+57ActEQNVRfpE4+ppxGqxtpl
-	 iVoXtNhF+GsiHD9hTnRLr5E9AsjCbL3ICznGhCw05Hto8cV74OSxAL4l6km9NgTwVd
-	 hphmdK5kxx0ybW2hAz8h8SCryqxI6S6DKgDzXEOc=
+	by mail.kernel.org (Postfix) with ESMTP id 21AB7206BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgD0Np7 (ORCPT
+        id S1727104AbgD0Nwt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:45:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgD0Np7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:45:59 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B69E20656;
-        Mon, 27 Apr 2020 13:45:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587995158;
-        bh=3MxQcvVPHDNmD2p3N2l3hfzoQ2koesDzgeGkr1Fk32M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nAIy47B/YDVL5Danw8xD23Ld34OvOTbTPmrU/CI5goQI1xMYPAKcvp0+SjisS199p
-         qmRXB54E8vvldxhf0QYIW0zhEexGHSX1QFT/JXVjmO09RIJZYKvWxGv9YdEyy/LnMj
-         t5Jj075Uyb2n5/Arr1e4H1EPdyWv1EGzaEEXFzkE=
-Date:   Mon, 27 Apr 2020 14:45:55 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     robh@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        daniel.schwierzeck@gmail.com, hauke@hauke-m.de,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-Message-ID: <20200427134555.GC4383@sirena.org.uk>
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <20200424112505.GD5850@sirena.org.uk>
- <616a5419-add3-085e-32dc-c83d9d975725@linux.intel.com>
+        Mon, 27 Apr 2020 09:52:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38344 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbgD0Nwt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 09:52:49 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 35BC626AE01
+Subject: Re: [PATCH v3] dt-bindings: display: anx7814.txt: convert to yaml
+To:     =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
+        devicetree@vger.kernel.org
+Cc:     kernel@collabora.com, dri-devel@lists.freedesktop.org,
+        robh+dt@kernel.org
+References: <20200427100908.11809-1-ricardo.canuelo@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <676aaa45-b4cb-104e-de37-2508f0ab634d@collabora.com>
+Date:   Mon, 27 Apr 2020 15:52:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Y5rl02BVI9TCfPar"
-Content-Disposition: inline
-In-Reply-To: <616a5419-add3-085e-32dc-c83d9d975725@linux.intel.com>
-X-Cookie: If your bread is stale, make toast.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200427100908.11809-1-ricardo.canuelo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Ricardo,
 
---Y5rl02BVI9TCfPar
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for your patch.
 
-On Mon, Apr 27, 2020 at 02:01:29PM +0800, Dilip Kota wrote:
-> On 4/24/2020 7:25 PM, Mark Brown wrote:
-> > On Fri, Apr 24, 2020 at 06:42:30PM +0800, Dilip Kota wrote:
+On 27/4/20 12:09, Ricardo Cañuelo wrote:
+> This converts the Analogix ANX7814 bridge DT binding to yaml. Port
+> definitions and descriptions were expanded, apart from that it's a
+> direct translation from the original binding.
+> 
+> Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+> Changes in v3 (suggested by Sam Ravnborg):
+>   - Rename example node i2c0 to i2c.
+> 
+> Changes in v2 (suggested by Enric Balletbo):
+>   - File name change: use full compatible string.
+>   - Binding description removed.
+>   - #address-cells and #size-cells properties removed from ports node.
+>   - Example node renamed: anx7814 -> bridge.
+> 
+> Tested with:
+> make dt_binding_check ARCH=arm64 DT_SCHEMA_FILES=<.../analogix,anx7814.yaml>
+> make dtbs_check ARCH=arm64 DT_SCHEMA_FILES=<.../analogix,anx7814.yaml>
+> 
+>  .../display/bridge/analogix,anx7814.yaml      | 124 ++++++++++++++++++
+>  .../bindings/display/bridge/anx7814.txt       |  42 ------
+>  2 files changed, 124 insertions(+), 42 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/anx7814.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
+> new file mode 100644
+> index 000000000000..13f0b52edefd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
+> @@ -0,0 +1,124 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/analogix,anx7814.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analogix ANX7814 SlimPort (Full-HD Transmitter)
+> +
+> +maintainers:
+> +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - analogix,anx7808
+> +      - analogix,anx7812
+> +      - analogix,anx7814
+> +      - analogix,anx7818
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: I2C address of the device.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: Should contain the INTP interrupt.
+> +
+> +  hpd-gpios:
+> +    maxItems: 1
+> +    description: Which GPIO to use for hpd.
+> +
+> +  pd-gpios:
+> +    maxItems: 1
+> +    description: Which GPIO to use for power down.
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: Which GPIO to use for reset.
+> +
+> +  dvdd10-supply:
+> +    maxItems: 1
+> +    description: Regulator for 1.0V digital core power.
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      A node containing input and output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +      Documentation/devicetree/bindings/graph.txt
+> +
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: Video port for HDMI input.
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +      port@1:
+> +        type: object
+> +        description:
+> +          Video port for SlimPort, DisplayPort, eDP or MyDP output.
+> +
+> +        properties:
+> +          reg:
+> +            const: 1
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
 
-> > > Synchronize tx, rx and error interrupts by registering to the
-> > > same interrupt handler. Interrupt handler will recognize and process
-> > > the appropriate interrupt on the basis of interrupt status register.
-> > > Also, establish synchronization between the interrupt handler and
-> > > transfer operation by taking the locks and registering the interrupt
-> > > handler as thread IRQ which avoids the bottom half.
-> > > Fixes the wrongly populated interrupt register offsets too.
+See below ...
 
-> > This sounds like at least three different changes mixed together in one
-> > commit, it makes it quite hard to tell what's going on.  If nothing else
-> > the conversion from a workqueue to threaded interrupts should probably
-> > be split out from merging the interrupts.
+> +  - hpd-gpios
+> +  - pd-gpios
+> +  - reset-gpios
 
-> While preparing the patches, i got puzzled to go with separate patches (for
-> threaded interrupts, unified interrupt handler and fixing the register
-> offset) or as a single patch!!.
+I know that these gpio attributes were required in the old binding and the
+driver handles these gpios as required, but assuming that we should really
+describe the hardware _not_ the driver, strictly talking, none of these gpios
+are really required. The same happens with the interrupt, you can left the pin
+floating and poll the registers.
 
-> Finally i choose to go with single patch, because establishing
-> synchronization is the major reason for this change, for that reason
-> threaded interrupts and unified interrupts changes are done. And the fixing
-> offset is a single line change, so included in this patch itself. And, on a
-> lighter note, the whole patch is coming under 45 lines of code changes.
-> Please let me know your view.
+So I am wondering if you should remove interrupts, *-gpios from required. Maybe
+Rob Herring can give us more light on this?
 
-The single line change to fix the offset sounds like an especially good
-candidate for splitting out as a separate patch.  It's not really about
-the number of lines but rather complexity.
+Other than that:
 
-> > > -static irqreturn_t lantiq_ssc_err_interrupt(int irq, void *data)
-> > > +static irqreturn_t lantiq_ssc_err_interrupt(struct lantiq_ssc_spi *spi)
-> > >   {
-> > > -	struct lantiq_ssc_spi *spi = data;
-> > >   	u32 stat = lantiq_ssc_readl(spi, LTQ_SPI_STAT);
-> > > -	if (!(stat & LTQ_SPI_STAT_ERRORS))
-> > > -		return IRQ_NONE;
-> > > -
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-> > Why drop this?
+Thanks,
+ Enric
 
-> lantiq_ssc_err_interrupt() getting called, only if LTQ_SPI_IRNEN_E is set in
-> the interrupt status register.
-> Once the 'LTQ_SPI_IRNEN_E' bit is set, there is no chance of all error bits
-> being unset in the SPI_STAT register, so the 'if condition' will never be
-> successful. Hence dropped it.
-
-So this is another separate change and TBH it doesn't seem like a huge
-win in that it's still potentially adding a bit of robustness.
-
-> > It's not clear to me that it's a benefit to combine all the interrupts
-> > unconditionally - obviously where they're shared we need to but could
-> > that be accomplished with IRQF_SHARED and even if it can't it seems like
-> > something conditional would be better.
-
-> Lets take a case where Tx/Rx transfer interrupt got triggered and followed
-> by error interrupt(before finishing the tx/rx interrupt execution) which is
-> very less likely to occur, unified interrupt handler establishes
-> synchronization.
-> Comparatively, unified interrupt handler is better for adding support to the
-> latest SoCs on which SPI have single interrupt line for tx,rx and errors.
-> On basis of these two points i felt to go with unified interrupt handler.
-
-Does the mutex not do this regardless of how the interrupt handlers are
-wired up?
-
---Y5rl02BVI9TCfPar
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6m4hIACgkQJNaLcl1U
-h9BnXQf/cy3IrY0a7wiBzhsjOU1o662IOJa9R5tJGhOl2+2vj11ySHT72XO3oZ38
-DAm4j9nidLgnQ1548Gw/BDXoKPTDm0A44sV9T5ENZhaq0pVtoLbdoLrJQvz+++Bh
-pLszD/QwvRDiLkovRBM2HuaA/vNwNkgHc93V7qlMuTLnnwZgW7BfJB9NN4uUF7i0
-46QfNFq2WsFHJ4pteRM4WfN22bzFOYE7W0Phf4wo+jDZY0SskUi1Ec+oMVU3nnWM
-6qo0Vlvfflv/1nV0Z4KwMu00C0f1cJce5eLvPUiUbtYTxxJhOk8aSPxk465Agt9L
-R6z2pQAwgrBR0K/in79rKpB36BMApQ==
-=WBop
------END PGP SIGNATURE-----
-
---Y5rl02BVI9TCfPar--
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        anx7814: bridge@38 {
+> +            compatible = "analogix,anx7814";
+> +            reg = <0x38>;
+> +            interrupt-parent = <&gpio0>;
+> +            interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
+> +            hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
+> +            pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
+> +            reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +                    anx7814_in: endpoint {
+> +                        remote-endpoint = <&hdmi0_out>;
+> +                    };
+> +                };
+> +
+> +                port@1 {
+> +                    reg = <1>;
+> +                    anx7814_out: endpoint {
+> +                        remote-endpoint = <&edp_out>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/display/bridge/anx7814.txt b/Documentation/devicetree/bindings/display/bridge/anx7814.txt
+> deleted file mode 100644
+> index 17258747fff6..000000000000
+> --- a/Documentation/devicetree/bindings/display/bridge/anx7814.txt
+> +++ /dev/null
+> @@ -1,42 +0,0 @@
+> -Analogix ANX7814 SlimPort (Full-HD Transmitter)
+> ------------------------------------------------
+> -
+> -The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
+> -designed for portable devices.
+> -
+> -Required properties:
+> -
+> - - compatible		: Must be one of:
+> -			  "analogix,anx7808"
+> -			  "analogix,anx7812"
+> -			  "analogix,anx7814"
+> -			  "analogix,anx7818"
+> - - reg			: I2C address of the device
+> - - interrupts		: Should contain the INTP interrupt
+> - - hpd-gpios		: Which GPIO to use for hpd
+> - - pd-gpios		: Which GPIO to use for power down
+> - - reset-gpios		: Which GPIO to use for reset
+> -
+> -Optional properties:
+> -
+> - - dvdd10-supply	: Regulator for 1.0V digital core power.
+> - - Video port for HDMI input, using the DT bindings defined in [1].
+> -
+> -[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> -
+> -Example:
+> -
+> -	anx7814: anx7814@38 {
+> -		compatible = "analogix,anx7814";
+> -		reg = <0x38>;
+> -		interrupt-parent = <&gpio0>;
+> -		interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
+> -		hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
+> -		pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
+> -		reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
+> -		port {
+> -			anx7814_in: endpoint {
+> -				remote-endpoint = <&hdmi0_out>;
+> -			};
+> -		};
+> -	};
+> 
