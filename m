@@ -2,180 +2,196 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE33C4CECD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B398AC4CECD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA212076A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:10:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asN92CUC"
+	by mail.kernel.org (Postfix) with ESMTP id A07232076A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgD0VKc (ORCPT
+        id S1726364AbgD0VWN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726285AbgD0VKc (ORCPT
+        Mon, 27 Apr 2020 17:22:13 -0400
+Received: from smtprelay0247.hostedemail.com ([216.40.44.247]:57052 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726030AbgD0VWK (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:10:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9340C0610D5;
-        Mon, 27 Apr 2020 14:10:31 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id t14so22197733wrw.12;
-        Mon, 27 Apr 2020 14:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YcKWIY2MXEY9yETNeWA3mpQlFZvVkwPb0tBInR/V9Qo=;
-        b=asN92CUC5fWcrPe0XiJkw+FAPmOPy18UXD8TQ1uD4Xy4Qrpt/AqSfmF92tkL9Wlajc
-         ZcCI9g2j0Fto+f34yJyrhkQ+62WUH51jRqCPCetSvGyWQXF1XOrz2zAx6IlWbutEexWU
-         LtXCwTzcFYksytsDyOkVHovzQyVhvxWMJPl0JIenB0otw81EFeOlUtkWFtcpRDE4zpWj
-         A+KGRIq2ow2PY1y+VPrLZKh++HZCDCBubF1KjM+cAO3s4jTd2xxgWhFcxkzkPQYc2CJb
-         xkAvDuoLiYRxFmOYC5f7TmFJQk20UhrZbsWL/oMAh4Uw30KkqPOXtF7ulUwQBMkXU8fB
-         0lQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YcKWIY2MXEY9yETNeWA3mpQlFZvVkwPb0tBInR/V9Qo=;
-        b=RP2zbjX8OJG+9d8WnBeiRzq6TU/RUnFijOEyEqGGMbm+GmJKtaoosSjJeXxSAziziV
-         Gu96916rSFKGQhhbOAS8qGpuuvIMGxDtV2Xhad+E7Ns9pOemVPjwrEykYgiSQBPADTPx
-         T3+5x7I+s5P9e0pb3szg80DRa8G+Yk8LYSU0eupWQpbF8FW3u3ujU0Uhc41ACnQKGSfN
-         yi2kJFhT0rDcHg6FwbmqSySP7J8O9epPRelhI7Q/jYK0OE2G0CPrMRU4Jfo9kbH8N3sc
-         ElRJGuLqhxnLzWkiKKNgwxIRUJeAwHPKRNTkr/ktqBRmQAYMPpN9zrIDxCQumWMvqrT9
-         k2gQ==
-X-Gm-Message-State: AGi0PuZf3BmSAhYkDKAPiZDb20rtZsPf/82EDf+qQUmsm9IMpkA7zzEy
-        aKQNLCkKKksyzu8PrJMVoiM=
-X-Google-Smtp-Source: APiQypIfnE9TCnw4ISHqihiv2DP5aBYbFtJjGfebMYH2oeRlrafHShe2ZdvRiHMknXIYaPxCeid2mw==
-X-Received: by 2002:a5d:6589:: with SMTP id q9mr27853808wru.136.1588021830326;
-        Mon, 27 Apr 2020 14:10:30 -0700 (PDT)
-Received: from [192.168.1.23] (acft175.neoplus.adsl.tpnet.pl. [83.9.221.175])
-        by smtp.gmail.com with ESMTPSA id q184sm511187wma.25.2020.04.27.14.10.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 14:10:29 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] leds: add sgm3140 driver
-To:     Luca Weiss <luca@z3ntu.xyz>, Pavel Machek <pavel@ucw.cz>
-Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20200421191354.1443017-1-luca@z3ntu.xyz>
- <20200421191354.1443017-3-luca@z3ntu.xyz> <20200427095102.GA21572@duo.ucw.cz>
- <318932736.Jt2qlLCP7m@g550jk>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <a5b4ddec-e0f9-f8e6-1763-87935569be97@gmail.com>
-Date:   Mon, 27 Apr 2020 23:10:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 17:22:10 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 138E81800293A;
+        Mon, 27 Apr 2020 21:22:09 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: kiss59_4cd4c705e0726
+X-Filterd-Recvd-Size: 5239
+Received: from joe-laptop.perches.com (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Apr 2020 21:22:07 +0000 (UTC)
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH V2] get_maintainer: Add email addresses from .yaml files
+Date:   Mon, 27 Apr 2020 14:22:06 -0700
+Message-Id: <e85006456d9dbae55286c67ac5263668a72f5b58.1588022228.git.joe@perches.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <318932736.Jt2qlLCP7m@g550jk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Luca,
+.yaml files can contain maintainer/author addresses and it seems
+unlikely or unnecessary that individual MAINTAINER file section
+entries for each .yaml file will be created.
 
-On 4/27/20 9:49 PM, Luca Weiss wrote:
-> On Montag, 27. April 2020 11:51:02 CEST Pavel Machek wrote:
->> Hi!
->>
->>> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
->>>
->>> This device is controlled by two GPIO pins, one for enabling and the
->>> second one for switching between torch and flash mode.
->>>
->>> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
->>
->> Thanks, applied, but... I may remove it again.
->>
->>> +++ b/drivers/leds/leds-sgm3140.c
->>> @@ -0,0 +1,320 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>
->> Would you consider GPL-2+?
-> 
-> I don't really have a preference either way but GPL-2.0-or-later is fine for
-> me.
-> 
->>
->>> +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
->>> +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
->>
->> Ok.
->>
->>> +static int sgm3140_probe(struct platform_device *pdev)
->>> +{
->>
->> ...
->>
->>> +	led_cdev->brightness_set_blocking = sgm3140_brightness_set;
->>> +	led_cdev->max_brightness = LED_ON;
->>
->> Don't do this, unless you really have 255 levels of brightness.
-> 
-> LED_ON is 1, so the brightness available is 0 - 1.
-> 
->>
->>> +	/* Create V4L2 Flash subdev */
->>> +	priv->v4l2_flash = v4l2_flash_init(&pdev->dev,
->>> +					   child_node,
->>> +					   fled_cdev, NULL,
->>> +					   &v4l2_sd_cfg);
->>> +	if (IS_ERR(priv->v4l2_flash)) {
->>
->> Does this need some #ifdef guards?
-> 
-> v4l2_flash_init has a NULL-returning version when CONFIG_V4L2_FLASH_LED_CLASS
-> is not defined (see https://elixir.bootlin.com/linux/latest/source/include/
-> media/v4l2-flash-led-class.h#L166 )
+So add the email addresses found in .yaml files to the default
+get_maintainer output.
 
-Correct.
+The email addresses are marked with "(in file)" when using the
+"--roles" or "--rolestats" options.
 
->>
->>> +		ret = PTR_ERR(priv->v4l2_flash);
->>> +		goto err;
->>> +	}
->>> +
->>> +	return ret;
->>
->> Should this return 0?
-> 
-> ret should be 0 here, so it shouldn't matter much.
-> 
->>
->>> +err:
->>> +	fwnode_handle_put(child_node);
->>> +	return ret;
->>> +}
->>
->> Does non-error path needs handle_put, too?
-> 
-> I don't think so, I'm passing child_node to v4l2_flash_init which then saves
-> the pointer to v4l2_subdev->fwnode.
-> 
-> The devm_led_classdev_flash_register_ext function also seems to store the
-> pointer (led_cdev->dev->fwnode = init_data->fwnode; in
-> led_classdev_register_ext)
+Miscellanea:
 
-The node needs to be held only during parsing, so you
-have to call fwnode_handle_put() for both paths.
+o Change $file_emails to $email_file_emails to avoid visual
+  naming conflicts with @file_emails
 
+Signed-off-by: Joe Perches <joe@perches.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Tested-by: Sam Ravnborg <sam@ravnborg.org>
+---
+
+V2: Fix dd/add typo
+    Add Sam's sign-offs
+    Resend using git format-patch git send-email and UTF-8 not 8-bit
+
+ scripts/get_maintainer.pl | 44 ++++++++++++++++++++++++++-------------
+ 1 file changed, 29 insertions(+), 15 deletions(-)
+
+diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+index 6cbcd1..6d973f 100755
+--- a/scripts/get_maintainer.pl
++++ b/scripts/get_maintainer.pl
+@@ -57,7 +57,7 @@ my $status = 0;
+ my $letters = "";
+ my $keywords = 1;
+ my $sections = 0;
+-my $file_emails = 0;
++my $email_file_emails = 0;
+ my $from_filename = 0;
+ my $pattern_depth = 0;
+ my $self_test = undef;
+@@ -69,6 +69,12 @@ my $vcs_used = 0;
+ 
+ my $exit = 0;
+ 
++my @files = ();
++my @fixes = ();			# If a patch description includes Fixes: lines
++my @range = ();
++my @keyword_tvi = ();
++my @file_emails = ();
++
+ my %commit_author_hash;
+ my %commit_signer_hash;
+ 
+@@ -266,7 +272,7 @@ if (!GetOptions(
+ 		'pattern-depth=i' => \$pattern_depth,
+ 		'k|keywords!' => \$keywords,
+ 		'sections!' => \$sections,
+-		'fe|file-emails!' => \$file_emails,
++		'fe|file-emails!' => \$email_file_emails,
+ 		'f|file' => \$from_filename,
+ 		'find-maintainer-files' => \$find_maintainer_files,
+ 		'mpath|maintainer-path=s' => \$maintainer_path,
+@@ -424,6 +430,22 @@ sub read_all_maintainer_files {
+     }
+ }
+ 
++sub maintainers_in_file {
++    my ($file) = @_;
++
++    return if ($file =~ m@\bMAINTAINERS$@);
++
++    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
++	open(my $f, '<', $file)
++	    or die "$P: Can't open $file: $!\n";
++	my $text = do { local($/) ; <$f> };
++	close($f);
++
++	my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
++	push(@file_emails, clean_file_emails(@poss_addr));
++    }
++}
++
+ #
+ # Read mail address map
+ #
+@@ -504,12 +526,6 @@ sub read_mailmap {
+ 
+ ## use the filenames on the command line or find the filenames in the patchfiles
+ 
+-my @files = ();
+-my @fixes = ();			# If a patch description includes Fixes: lines
+-my @range = ();
+-my @keyword_tvi = ();
+-my @file_emails = ();
+-
+ if (!@ARGV) {
+     push(@ARGV, "&STDIN");
+ }
+@@ -527,7 +543,7 @@ foreach my $file (@ARGV) {
+ 	$file =~ s/^\Q${cur_path}\E//;	#strip any absolute path
+ 	$file =~ s/^\Q${lk_path}\E//;	#or the path to the lk tree
+ 	push(@files, $file);
+-	if ($file ne "MAINTAINERS" && -f $file && ($keywords || $file_emails)) {
++	if ($file ne "MAINTAINERS" && -f $file && $keywords) {
+ 	    open(my $f, '<', $file)
+ 		or die "$P: Can't open $file: $!\n";
+ 	    my $text = do { local($/) ; <$f> };
+@@ -539,10 +555,6 @@ foreach my $file (@ARGV) {
+ 		    }
+ 		}
+ 	    }
+-	    if ($file_emails) {
+-		my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
+-		push(@file_emails, clean_file_emails(@poss_addr));
+-	    }
+ 	}
+     } else {
+ 	my $file_cnt = @files;
+@@ -923,6 +935,8 @@ sub get_maintainers {
+ 		print("\n");
+ 	    }
+ 	}
++
++	maintainers_in_file($file);
+     }
+ 
+     if ($keywords) {
+@@ -1835,7 +1849,7 @@ tm toggle maintainers
+ tg toggle git entries
+ tl toggle open list entries
+ ts toggle subscriber list entries
+-f  emails in file       [$file_emails]
++f  emails in file       [$email_file_emails]
+ k  keywords in file     [$keywords]
+ r  remove duplicates    [$email_remove_duplicates]
+ p# pattern match depth  [$pattern_depth]
+@@ -1960,7 +1974,7 @@ EOT
+ 		bool_invert(\$email_git_all_signature_types);
+ 		$rerun = 1;
+ 	    } elsif ($sel eq "f") {
+-		bool_invert(\$file_emails);
++		bool_invert(\$email_file_emails);
+ 		$rerun = 1;
+ 	    } elsif ($sel eq "r") {
+ 		bool_invert(\$email_remove_duplicates);
 -- 
-Best regards,
-Jacek Anaszewski
+2.26.0
+
