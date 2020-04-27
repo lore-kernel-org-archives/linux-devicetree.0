@@ -2,113 +2,68 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDD4C5519A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3845FC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE3FE20661
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124BB206B6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:50:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vDp3eq9i"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mL4UttTB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgD0KtX (ORCPT
+        id S1726952AbgD0Kuf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:49:23 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49552 "EHLO
+        Mon, 27 Apr 2020 06:50:35 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49670 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726507AbgD0KtW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 06:49:22 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RAnH7e001180;
-        Mon, 27 Apr 2020 05:49:17 -0500
+        with ESMTP id S1726881AbgD0Kue (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 06:50:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RAoQXT001400;
+        Mon, 27 Apr 2020 05:50:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587984557;
-        bh=pzsarCr4uG9L7jDuWrGGe+JBhzGxnj/BuclyDI8lbdo=;
+        s=ti-com-17Q1; t=1587984626;
+        bh=IGT8KtVf7PY2gZ9dU2q+ikbbXQeLIMBV50rwe1LAM80=;
         h=Subject:To:References:From:Date:In-Reply-To;
-        b=vDp3eq9i7TRn3fylKOcEURt7+3FEztuJbz5dVa1aJMCFnq1IEHMMeHNXmqIWTuHFy
-         YKitHxo0/UWf1yMSgWzzZny3WH7oEie87Q1C5hQhaPXFDHSSzD70dUUFUVp5Q9QI6F
-         +hii0yMl0cu/Q3OyP2ZXfURKn+CiMcuSGmfc+bMo=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RAnHxL082877
+        b=mL4UttTBU230xpooZ1c7vwuHNunAEuD65ZxU9nPRWzcn4X+OHnetVmvL1Q9v6MTQB
+         NIsXhHt3QqtXq43Hdz30XG41zctgvylQTy3Z3Nruu+To5kn10r/QgpLkVolIT+sRFB
+         5jOD488Lu2mtwWSoQIfHxY0gXAm/ziB1GOMlmvKc=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RAoQo3001900
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Apr 2020 05:49:17 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 27 Apr 2020 05:50:26 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 05:49:17 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2020 05:50:25 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 05:49:17 -0500
-Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RAnFcN097373;
-        Mon, 27 Apr 2020 05:49:15 -0500
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-j721e-main.dtsi: Add DSS node
-To:     Tero Kristo <t-kristo@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+ Frontend Transport; Mon, 27 Apr 2020 05:50:25 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RAoONg024515;
+        Mon, 27 Apr 2020 05:50:24 -0500
+Subject: Re: [PATCH 1/3] arm64: dts: ti: am654: Add DSS node
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jyri Sarha <jsarha@ti.com>
 References: <20200422091512.950-1-tomi.valkeinen@ti.com>
- <20200422091512.950-2-tomi.valkeinen@ti.com>
- <ade3a177-f060-bc40-bcc1-494093e3071d@ti.com>
- <47b7f858-a8d9-1c3b-4dca-2cc493f6730f@ti.com>
- <df93da78-132a-d02e-6561-5bb5fdfe7e53@ti.com>
-From:   Jyri Sarha <jsarha@ti.com>
-Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
- xsFNBFbdWt8BEADnCIkQrHIvAmuDcDzp1h2pO9s22nacEffl0ZyzIS//ruiwjMfSnuzhhB33
- fNEWzMjm7eqoUBi1BUAQIReS6won0cXIEXFg9nDYQ3wNTPyh+VRjBvlb/gRJlf4MQnJDTGDP
- S5i63HxYtOfjPMSsUSu8NvhbzayNkN5YKspJDu1cK5toRtyUn1bMzUSKDHfwpdmuCDgXZSj2
- t+z+c6u7yx99/j4m9t0SVlaMt00p1vJJ3HJ2Pkm3IImWvtIfvCmxnOsK8hmwgNQY6PYK1Idk
- puSRjMIGLqjZo071Z6dyDe08zv6DWL1fMoOYbAk/H4elYBaqEsdhUlDCJxZURcheQUnOMYXo
- /kg+7TP6RqjcyXoGgqjfkqlf3hYKmyNMq0FaYmUAfeqCWGOOy3PPxR/IiACezs8mMya1XcIK
- Hk/5JAGuwsqT80bvDFAB2XfnF+fNIie/n5SUHHejJBxngb9lFE90BsSfdcVwzNJ9gVf/TOJc
- qJEHuUx0WPi0taO7hw9+jXV8KTHp6CQPmDSikEIlW7/tJmVDBXQx8n4RMUk4VzjE9Y/m9kHE
- UVJ0bJYzMqECMTAP6KgzgkQCD7n8OzswC18PrK69ByGFpcm664uCAa8YiMuX92MnesKMiYPQ
- z1rvR5riXZdplziIRjFRX+68fvhPverrvjNVmzz0bAFwfVjBsQARAQABzRpKeXJpIFNhcmhh
- IDxqc2FyaGFAdGkuY29tPsLBeAQTAQIAIgUCVt1a3wIbAwYLCQgHAwIGFQgCCQoLBBYCAwEC
- HgECF4AACgkQkDazUNfWGUEVVhAAmFL/21tUhZECrDrP9FWuAUuDvg+1CgrrqBj7ZxKtMaiz
- qTcZwZdggp8bKlFaNrmsyrBsuPlAk99f7ToxufqbV5l/lAT3DdIkjb4nwN4rJkxqSU3PaUnh
- mDMKIAp6bo1N9L+h82LE6CjI89W4ydQp5i+cOeD/kbdxbHHvxgNwrv5x4gg1JvEQLVnUSHva
- R2kx7u2rlnq7OOyh9vU0MUq7U5enNNqdBjjBTeaOwa5xb3S2Cc9dR10mpFiy+jSSkuFOjPpc
- fLfr/s03NGqbZ4aXvZCGjCw4jclpTJkuWPKO+Gb+a/3oJ4qpGN9pJ+48n2Tx9MdSrR4aaXHi
- EYMrbYQz9ICJ5V80P5+yCY5PzCvqpkizP6vtKvRSi8itzsglauMZGu6GwGraMJNBgu5u+HIZ
- nfRtJO1AAiwuupOHxe1nH05c0zBJaEP4xJHyeyDsMDh+ThwbGwQmAkrLJZtOd3rTmqlJXnuj
- sfgQlFyC68t1YoMHukz9LHzg02xxBCaLb0KjslfwuDUTPrWtcDL1a5hccksrkHx7k9crVFA1
- o6XWsOPGKRHOGvYyo3TU3CRygXysO41UnGG40Q3B5R8RMwRHV925LOQIwEGF/6Os8MLgFXCb
- Lv3iJtan+PBdqO1Bv3u2fXUMbYgQ3v7jHctB8nHphwSwnHuGN7FAmto+SxzotE3OwU0EVt1a
- 3wEQAMHwOgNaIidGN8UqhSJJWDEfF/SPSCrsd3WsJklanbDlUCB3WFP2EB4k03JroIRvs7/V
- VMyITLQvPoKgaECbDS5U20r/Po/tmaAOEgC7m1VaWJUUEXhjYQIw7t/tSdWlo5XxZIcO4LwO
- Kf0S4BPrQux6hDLIFL8RkDH/8lKKc44ZnSLoF1gyjc5PUt6iwgGJRRkOD8gGxCv1RcUsu1xU
- U9lHBxdWdPmMwyXiyui1Vx7VJJyD55mqc7+qGrpDHG9yh3pUm2IWp7jVt/qw9+OE9dVwwhP9
- GV2RmBpDmB3oSFpk7lNvLJ11VPixl+9PpmRlozMBO00wA1W017EpDHgOm8XGkq++3wsFNOmx
- 6p631T2WuIthdCSlZ2kY32nGITWn4d8L9plgb4HnDX6smrMTy1VHVYX9vsHXzbqffDszQrHS
- wFo5ygKhbGNXO15Ses1r7Cs/XAZk3PkFsL78eDBHbQd+MveApRB7IyfffIz7pW1R1ZmCrmAg
- Bn36AkDXJTgUwWqGyJMd+5GHEOg1UPjR5Koxa4zFhj1jp1Fybn1t4N11cmEmWh0aGgI/zsty
- g/qtGRnFEywBbzyrDEoV4ZJy2Q5pnZohVhpbhsyETeYKQrRnMk/dIPWg6AJx38Cl4P9PK1JX
- 8VK661BG8GXsXJ3uZbPSu6K0+FiJy09N4IW7CPJNABEBAAHCwV8EGAECAAkFAlbdWt8CGwwA
- CgkQkDazUNfWGUFOfRAA5K/z9DXVEl2kkuMuIWkgtuuLQ7ZwqgxGP3dMA5z3Iv/N+VNRGbaw
- oxf+ZkTbJHEE/dWclj1TDtpET/t6BJNLaldLtJ1PborQH+0jTmGbsquemKPgaHeSU8vYLCdc
- GV/Rz+3FN0/fRdmoq2+bIHght4T6KZJ6jsrnBhm7y6gzjMOiftH6M5GXPjU0/FsU09qsk/af
- jbwLETaea0mlWMrLd9FC2KfVITA/f/YG2gqtUUF9WlizidyctWJqSTZn08MdzaoPItIkRUTv
- 6Bv6rmFn0daWkHt23BLd0ZP7e7pON1rqNVljWjWQ/b/E/SzeETrehgiyDr8pP+CLlC+vSQxi
- XtjhWjt1ItFLXxb4/HLZbb/L4gYX7zbZ3NwkON6Ifn3VU7UwqxGLmKfUwu/mFV+DXif1cKSS
- v6vWkVQ6Go9jPsSMFxMXPA5317sZZk/v18TAkIiwFqda3/SSjwc3e8Y76/DwPvUQd36lEbva
- uBrUXDDhCoiZnjQaNz/J+o9iYjuMTpY1Wp+igjIretYr9+kLvGsoPo/kTPWyiuh/WiFU2d6J
- PMCGFGhodTS5qmQA6IOuazek1qSZIl475u3E2uG98AEX/kRhSzgpsbvADPEUPaz75uvlmOCX
- tv+Sye9QT4Z1QCh3lV/Zh4GlY5lt4MwYnqFCxroK/1LpkLgdyQ4rRVw=
-Message-ID: <56c85293-cea2-d554-ae36-d34f19a4f290@ti.com>
-Date:   Mon, 27 Apr 2020 13:49:14 +0300
+ <591ddc8e-b45a-5a36-ae81-e1b92727dd2d@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <3708a94a-9c42-745b-3dc0-2271fcc266a5@ti.com>
+Date:   Mon, 27 Apr 2020 13:50:23 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <df93da78-132a-d02e-6561-5bb5fdfe7e53@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
+In-Reply-To: <591ddc8e-b45a-5a36-ae81-e1b92727dd2d@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
@@ -116,28 +71,79 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 27/04/2020 13:41, Tero Kristo wrote:
-> On 27/04/2020 13:37, Jyri Sarha wrote:
->> On 27/04/2020 13:09, Tero Kristo wrote:
->>>> +        status = "disabled";
->>>
->>> Again, why disabled by default?
->>>
+On 27/04/2020 13:08, Tero Kristo wrote:
+> On 22/04/2020 12:15, Tomi Valkeinen wrote:
+>> From: Jyri Sarha <jsarha@ti.com>
 >>
->> tidss device is not functional without a defined video-port. The driver
->> is not implemented in a way that it would handle a broken configuration
->> gracefully.
+>> Add DSS node to k3-am65-main.dtsi with labels for board specific
+>> support and syscon node for oldi-io-ctrl.
+>>
+>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>> ---
+>>   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 44 ++++++++++++++++++++++++
+>>   1 file changed, 44 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+>> index 11887c72f23a..7d1bc991708e 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+>> @@ -287,6 +287,11 @@
+>>               mux-reg-masks = <0x4080 0x3>, /* SERDES0 lane select */
+>>                       <0x4090 0x3>; /* SERDES1 lane select */
+>>           };
+>> +
+>> +        dss_oldi_io_ctrl: dss_oldi_io_ctrl@41E0 {
+>> +            compatible = "syscon";
+>> +            reg = <0x0000041E0 0x14>;
+>> +        };
+>>       };
+>>       dwc3_0: dwc3@4000000 {
+>> @@ -746,4 +751,43 @@
+>>               };
+>>           };
+>>       };
+>> +
+>> +    dss: dss@04a00000 {
+>> +        compatible = "ti,am65x-dss";
+>> +        reg =    <0x0 0x04a00000 0x0 0x1000>, /* common */
+>> +            <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
+>> +            <0x0 0x04a06000 0x0 0x1000>, /* vid */
+>> +            <0x0 0x04a07000 0x0 0x1000>, /* ovr1 */
+>> +            <0x0 0x04a08000 0x0 0x1000>, /* ovr2 */
+>> +            <0x0 0x04a0a000 0x0 0x1000>, /* vp1 */
+>> +            <0x0 0x04a0b000 0x0 0x1000>; /* vp2 */
+>> +        reg-names = "common", "vidl1", "vid",
+>> +            "ovr1", "ovr2", "vp1", "vp2";
+>> +
+>> +        ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+>> +
+>> +        power-domains = <&k3_pds 67 TI_SCI_PD_EXCLUSIVE>;
+>> +
+>> +        clocks =    <&k3_clks 67 1>,
+>> +                <&k3_clks 216 1>,
+>> +                <&k3_clks 67 2>;
+>> +        clock-names = "fck", "vp1", "vp2";
+>> +
+>> +        /*
+>> +         * Set vp2 clk (DPI_1_IN_CLK) mux to PLL4 via
+>> +         * DIV1. See "Figure 12-3365. DSS Integration"
+>> +         * in AM65x TRM for details.
+>> +         */
+>> +        assigned-clocks = <&k3_clks 67 2>;
+>> +        assigned-clock-parents = <&k3_clks 67 5>;
+>> +
+>> +        interrupts = <GIC_SPI 166 IRQ_TYPE_EDGE_RISING>;
+>> +
+>> +        status = "disabled";
 > 
-> What/where/when is the video-port going to be defined then? Is this
-> going to be done in an overlay?
-> 
+> Any reason why the node is disabled? Are you planning to enable it somewhere later on, or is that 
+> left for the user to do?
 
-Yes. It should be defined in the board specific dts or dtso file, where
-the video-connector or -panel is.
+It's enabled in board DT files or DT overlays which add a display and the DT graph for the 
+connections. Having DSS driver probe without any displays is a waste of resources.
 
-BR,
-Jyri
-
+  Tomi
 
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
