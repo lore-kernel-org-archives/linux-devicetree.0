@@ -4,25 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B153FC7C829
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1176C7C829
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 972D021556
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC892098B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgD0ITR (ORCPT
+        id S1726349AbgD0IT3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:19:17 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34394 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgD0ITG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:19:06 -0400
+        Mon, 27 Apr 2020 04:19:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbgD0ITE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:19:04 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4383BC061A0F;
+        Mon, 27 Apr 2020 01:19:04 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: aratiu)
-        with ESMTPSA id 3C94C2A0C8C
+        with ESMTPSA id 92B902A087E
 From:   Adrian Ratiu <adrian.ratiu@collabora.com>
 To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-rockchip@lists.infradead.org,
@@ -33,11 +36,11 @@ Cc:     Andrzej Hajda <a.hajda@samsung.com>,
         Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
         kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Subject: [PATCH v8 08/10] drm: stm: dw-mipi-dsi: let the bridge handle the HW version check
-Date:   Mon, 27 Apr 2020 11:19:50 +0300
-Message-Id: <20200427081952.3536741-9-adrian.ratiu@collabora.com>
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v8 06/10] ARM: dts: imx6qdl: add missing mipi dsi properties
+Date:   Mon, 27 Apr 2020 11:19:48 +0300
+Message-Id: <20200427081952.3536741-7-adrian.ratiu@collabora.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
 References: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
@@ -48,68 +51,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The stm mipi-dsi platform driver added a version test in
-commit fa6251a747b7 ("drm/stm: dsi: check hardware version")
-so that HW revisions other than v1.3x get rejected. The rockchip
-driver had no such check and just assumed register layouts are
-v1.3x compatible.
+Now that we have a proper driver for the imx6 mipi dsi host controller
+we can fill in the missing properties to get it working.
 
-Having such tests was a good idea because only v130/v131 layouts
-were supported at the time, however since adding multiple layout
-support in the bridge, the version is automatically checked for
-all drivers, compatible layouts get picked and unsupported HW is
-automatically rejected by the bridge, so there's no use keeping
-the test in the stm driver.
-
-The main reason prompting this change is that the stm driver
-test immediately disabled the peripheral clock after reading
-the version, making the bridge read version 0x0 immediately
-after in its own probe(), so we move the clock disabling after
-the bridge does the version test.
-
-Tested on STM32F769 and STM32MP1.
-
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Reported-by: Adrian Pop <pop.adrian61@gmail.com>
-Tested-by: Adrian Pop <pop.adrian61@gmail.com>
-Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
 ---
-New in v6.
+New in v8.
 ---
- drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/imx6qdl.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-index 2e1f2664495d0..7218e405d7e2b 100644
---- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-+++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-@@ -402,15 +402,6 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
- 		goto err_dsi_probe;
- 	}
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 98da446aa0f27..5f754c3cec052 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1203,7 +1203,15 @@ mipi_csi: mipi@21dc000 {
+ 			};
  
--	dsi->hw_version = dsi_read(dsi, DSI_VERSION) & VERSION;
--	clk_disable_unprepare(pclk);
--
--	if (dsi->hw_version != HWVER_130 && dsi->hw_version != HWVER_131) {
--		ret = -ENODEV;
--		DRM_ERROR("bad dsi hardware version\n");
--		goto err_dsi_probe;
--	}
--
- 	dw_mipi_dsi_stm_plat_data.base = dsi->base;
- 	dw_mipi_dsi_stm_plat_data.priv_data = dsi;
+ 			mipi_dsi: mipi@21e0000 {
++				compatible = "fsl,imx6-mipi-dsi", "snps,dw-mipi-dsi";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				reg = <0x021e0000 0x4000>;
++				interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
++				fsl,gpr = <&gpr>;
++				clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
++					 <&clks IMX6QDL_CLK_MIPI_IPG>;
++				clock-names = "ref", "pclk";
+ 				status = "disabled";
  
-@@ -423,6 +414,9 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
- 		goto err_dsi_probe;
- 	}
- 
-+	dsi->hw_version = dsi_read(dsi, DSI_VERSION) & VERSION;
-+	clk_disable_unprepare(pclk);
-+
- 	return 0;
- 
- err_dsi_probe:
+ 				ports {
 -- 
 2.26.0
 
