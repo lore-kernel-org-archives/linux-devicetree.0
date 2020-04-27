@@ -2,158 +2,109 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10258C4CECC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F5FC81CED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8BA02076A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F9D20775
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="jwTU6lnn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/EIr+RR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgD0Vni (ORCPT
+        id S1726270AbgD0Vvx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:43:38 -0400
-Received: from mail-eopbgr1400110.outbound.protection.outlook.com ([40.107.140.110]:28064
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726030AbgD0Vni (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:43:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ftSLy/Ceiy/XUMN15/KStoufX09Aed8RF98XzCsLrenBIwopFUYdYge2AqdQm/VMJW3Fk7YU0bY3OmlPuUHDRefMyk5mTU52FZKPQl6zjGWk0/H2/AXBrURZsPgtJ/wrs9QvHw+FHFl81ieN0BsAipTkHYrr8sjGj1NtAyLLT672R8L5KDoJLVuAqY1/qDEGMPkMEQUhHhhAplRu3VMmw2u5D81q0gI6Xpi/o2bHNjCrqtELl1jz551+HqZh3r8AWu9WAKJPkUkv65NdMBhoWoPEPs2Yrv1vuu/Do8EwhqoJbGzEhjBx3t8juMOThfYB3xb/tofhOx97/5ukYRE15w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eICSCz317Zmp6z9Ofv1kekiE32jgSg7nUKiaGGxhDyA=;
- b=jI6sDrX9dhMTjSAOWckPZsPMQmGegjsK4NHNpbJ/Po8JU65+nVaVcc+TFp68E0pvbYtXO09W/NQu86R7mo8xGJCAjd4+HvpJ96LumwmYUKV4S5Z2j942J7LrUdaTAaKe4v9cZ55BaMuEY8+mvzNrRELpkWV14F4cHiAcXHtHMxsLgbz8SPIMXWg0YMA0D7QJjMPZkUL/O+qCcgsi11xNMOQvZNXnt4kn97aykSQGx+PUJmZF18T3jckyQlErR+XBZhu0IQkhp/+QKe8ps7u+RFwhGJnRwqImkY4LtuNw/DYVhoN8zQlw/FVPRTUmqRpUQp5QOpL5n6e6jnUfBdxEOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+        Mon, 27 Apr 2020 17:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726253AbgD0Vvw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:51:52 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE8AC03C1A7
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 14:51:52 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t11so9310080pgg.2
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 14:51:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eICSCz317Zmp6z9Ofv1kekiE32jgSg7nUKiaGGxhDyA=;
- b=jwTU6lnnWCTatZhS++8qX5GGyL4gUsTE+6ZXisWkJ4xkHYGuJivk7S9ygIWVMHE01Tr0rj/DyDiu/T2HAWJnRzD/aueaeHneiNg6rFN6AUE/DRxV3+Xbnm+k33yVIunKxPy/XjppafjDE5GZATqqa105WUd+uk2neCBLCa3hIkU=
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
- OSBPR01MB1493.jpnprd01.prod.outlook.com (52.134.226.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.13; Mon, 27 Apr 2020 21:43:34 +0000
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::383a:9fc3:aaa4:d3b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::383a:9fc3:aaa4:d3b%7]) with mapi id 15.20.2937.023; Mon, 27 Apr 2020
- 21:43:34 +0000
-From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ARM: dts: r8a7743: Add missing compatible strings for
- iic3 node
-Thread-Topic: [PATCH] ARM: dts: r8a7743: Add missing compatible strings for
- iic3 node
-Thread-Index: AQHWHK+1m9VPteLoIEeShiDQLDt3XaiNY1uAgAAakFA=
-Date:   Mon, 27 Apr 2020 21:43:33 +0000
-Message-ID: <OSBPR01MB35901F08080A85F7EEE84E81AAAF0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-References: <1588004391-8461-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXG_hpb==xY88vCEguc-n8kg_4vjv_Xmmh5jEGr37BPKA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXG_hpb==xY88vCEguc-n8kg_4vjv_Xmmh5jEGr37BPKA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6ac8fe1c-8427-4a00-2d01-08d7eaf40925
-x-ms-traffictypediagnostic: OSBPR01MB1493:
-x-microsoft-antispam-prvs: <OSBPR01MB1493D622BE80EB226FCA3A3CAAAF0@OSBPR01MB1493.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1227;
-x-forefront-prvs: 0386B406AA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(39860400002)(376002)(136003)(366004)(9686003)(7696005)(66556008)(4326008)(81156014)(33656002)(8936002)(6506007)(52536014)(53546011)(66946007)(66476007)(6916009)(66446008)(64756008)(8676002)(76116006)(2906002)(186003)(316002)(86362001)(26005)(5660300002)(55016002)(71200400001)(54906003)(478600001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FkB+qOnQsYuBOVlPtX2gBrsWOcDYj927xi2O1Q7PyTCA/BdldL+vKvZBovOn3/NTC/u2aWbNyXOQlJ/HJB9/FI7DcbeQDIYou85l6REDA9UoRSmQg3xua2Q4/pyBvVc9kPNGswsHbUj8/3cVeIYoe0LMb2BBh9sJ9zRwxF5D4xmCQugifsaGPh86RE8HER6pcEJs3f8UJhCnV5I6ymlqnDKUoPHojoDPYawuyTXIfSG/HDpGKGHuuRec3vrMtlACJIrpCFriK32igc7/Q+/ZZ6nl0+G4O83adBrMdQ1Blu/FCUQ5P3oj6MPm0BP1+5u4Lesd63b44Kl+tOAGPHrFpVKMzBcaXYSAlxUnUxqRwDi4hpv/mRnSnUwm8uz5U0+1DCNkgyPneukFAv0PV4m0iYPo8RZjX+4PRep8vRD3RNBvMO+zuxA9LQWFNbPsqvn/J0DMK9+I2VhUXZI1vGJPaJsnkh/7J9DEL5IsN1NjqV9GV5jU3C66feobskNmE9EGYVwfKr1pi8aXedcxA796OA==
-x-ms-exchange-antispam-messagedata: o7dF0ANGqZghu8Rh7Whnre6iUVpwHM7y32r7cAvkcQyofkIzBqo79cRuWwdS6tBdPLoNX4APC9o2ba81/PDfMDV/joNedSERFoibylkSJe5do02UxDlemBvvANFjNZva39mpVx0g/oIe7I3mbGHUz9RWYEOcRTpvA2KbswuJOO6amRU5UY6YZxykjKURTBLd+vXArrh+IeDsFK7gMZWxpkMjplqPei/vzV3LwMd5R+qNLG8aLPNtBZEYDg5gkpcK8ZUE5TbZ7WfkBHR8sJgGxXw/32a+nBY+cUB6w00rLNF5toE9gJMGiQ2+60h+1rCHj8hVtti7NlN/5gx8SCp9OSX/Xgt6c5V3hjZ4QVE6UOY8DyDbMj6SzXgMxrslqyZzizQgz+kbLrlUTYnHggwjUHhqslKiTO0GTpjpN83SwwAwk/Ur2OWLDyRnVjbaQBVplLo3YFjI3Wcnv4r7OJRghbEgKKMRtRGFzhk6V8ceN1mrfK5S89P9MOhWTnSQQK9+3VkBfm1uSUve86sgPBK9NGIIwFFnrtBMgG3p5fzRvhKuwdB+thf1ykGljDMNj7ZVfs+Pfcl6zmNuRIczWzygRx1uqLdBPqrAY+slUYieV8JfH/uiTDP93aL83Nokxe+MwP3std++Qg5muGw9oM0dYgW4Qs8FEM2BSEbcBdw3SpkglmtgmW5OIWt9gzBh+PWIdy8sGU+uQljA4IuH24V5R42spOU1S2JgQoCs2GNgYUDJjMMxwRDQDIaoPZGCrsyAvyc3TdknIXYMO+hBmryGbB2/Pefj7C62MWZJxclvw7A=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2US+UFErdQz+/2WUCZdQSrynGNoBUJIwL6mFZZjO4Zk=;
+        b=R/EIr+RRamTRbKEAIuBhHKtxaZewTjKE+LoWnkc6pD9eXhURKoBWUI4TmJyQusVmxP
+         jOByzuGCKpFdP9gc4/+Qkuces3cOPbZGbpK8Xb0bGwpey/X184pwhchY4wkJaj1Ja18d
+         ezEjZlzbb/RPusZpc4a8A7uzoMB90e2nYlB6QmhrB/GCOW5qjRYmeC4clKzYjjTQJz62
+         A5LU5tKEnL0jix2gPrIJMSTx2tQpcWR8K5FQRSml2SIT/K/F0hI2tj/EiZYa27s6232T
+         0q3JFgy7tEtWSEeVAMXJtCJAgPIoeElTBbGf6s68t3zak1GwAXvtYfIeSsJPxgZGokhg
+         vmeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2US+UFErdQz+/2WUCZdQSrynGNoBUJIwL6mFZZjO4Zk=;
+        b=KYvtyATPoKb51C9Q1qhMuM9F/wQo2ZVJCO7fDLMisPK70fXc5YpHFE+hi1p+ecIy1j
+         92cCMeeX2ERD1bG0wRbmzPjKuiKvb09sAUEN4xKrmVHooQuQmseFwUinK0N5so4sUOAr
+         ooR9RyWEjchDi7Y9S62SpRX+dJTL404a6E3RCznTVEwbAdGehI0Zjd2v4K8sv4loXM6R
+         kSkHmra87+0JyEbn/j+W+WHHhjZr1xZt+TTsZhr5q56rgkhXhCWFKuXv8bU8A0tjum+N
+         OhI5vd+ptR6eJuFmfdG2ACG9QLU11/4t1VYFwX7ATZzQNyogG7jm3g2EIpRTjQdwRvNi
+         B4Eg==
+X-Gm-Message-State: AGi0PuYTTpHXxvyVJrJqLyCle7KYXh9+AJrqUBTrMEv2l+vFhZX9cC0o
+        D5+Umanv0N2r958h+U/RxmqI0w==
+X-Google-Smtp-Source: APiQypI9w3mN/5nhDZ6PT2DjOc9Txq+MTciQT5JDWxwj7p1+7MIALxUJUUbrsUd/RNQXKiPBr/2zFg==
+X-Received: by 2002:a63:241:: with SMTP id 62mr5334082pgc.38.1588024311660;
+        Mon, 27 Apr 2020 14:51:51 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j5sm4153876pfh.58.2020.04.27.14.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 14:51:50 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sm8250-mtp: Drop PM8150 ldo11
+Date:   Mon, 27 Apr 2020 14:51:17 -0700
+Message-Id: <20200427215117.2900139-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ac8fe1c-8427-4a00-2d01-08d7eaf40925
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 21:43:33.9977
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9Vp8JdcqSkoS3Y7C+Af5t6/2sKvN21Bm5TgJ3JIaOq7/312fZqALC8FXT9uhcjo4nr/vzD62AXARSX8r8ITmzAo1ooZ0Pe3XOACk26usn35ewsKmc7UOsMdARncFOB6M
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB1493
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQg
-VXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gU2VudDogMjcgQXByaWwgMjAy
-MCAyMTowMA0KPiBUbzogUHJhYmhha2FyIE1haGFkZXYgTGFkIDxwcmFiaGFrYXIubWFoYWRldi1s
-YWQucmpAYnAucmVuZXNhcy5jb20+DQo+IENjOiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3Jl
-bmVzYXNAZ2xpZGVyLmJlPjsgTWFnbnVzIERhbW0gPG1hZ251cy5kYW1tQGdtYWlsLmNvbT47IFJv
-YiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBMYWQgUHJhYmhha2FyIDxwcmFiaGFr
-YXIuY3NlbmdnQGdtYWlsLmNvbT47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVO
-RUQgREVWSUNFIFRSRUUgQklORElOR1MNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsg
-TGludXgtUmVuZXNhcyA8bGludXgtcmVuZXNhcy1zb2NAdmdlci5rZXJuZWwub3JnPjsgTGludXgg
-S2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+
-IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIEFSTTogZHRzOiByOGE3NzQzOiBBZGQgbWlzc2luZyBjb21w
-YXRpYmxlIHN0cmluZ3MgZm9yIGlpYzMgbm9kZQ0KPg0KPiBIaSBQcmFiaGFrYXIsDQo+DQo+IE9u
-IE1vbiwgQXByIDI3LCAyMDIwIGF0IDY6MjAgUE0gTGFkIFByYWJoYWthcg0KPiA8cHJhYmhha2Fy
-Lm1haGFkZXYtbGFkLnJqQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBBZGQgbWlzc2luZyBj
-b21wYXRpYmxlIHN0cmluZ3MgInJlbmVzYXMscmNhci1nZW4yLWlpYyIgYW5kDQo+ID4gInJlbmVz
-YXMscm1vYmlsZS1paWMiIHRvIGlpYzMgbm9kZSBvZiByOGE3NzQzIFNvQy4NCj4gPg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IExhZCBQcmFiaGFrYXIgPHByYWJoYWthci5tYWhhZGV2LWxhZC5yakBicC5y
-ZW5lc2FzLmNvbT4NCj4NCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0KPg0KPiA+IC0tLSBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L3I4YTc3NDMuZHRzaQ0KPiA+IEBAIC01NTEsNyArNTUxLDkgQEANCj4gPiAgICAgICAgICAgICAg
-ICAgICAgICAgICAvKiBkb2Vzbid0IG5lZWQgcGlubXV4ICovDQo+ID4gICAgICAgICAgICAgICAg
-ICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gICAgICAgICAgICAgICAgICAgICAg
-ICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0
-aWJsZSA9ICJyZW5lc2FzLGlpYy1yOGE3NzQzIjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gInJlbmVzYXMsaWljLXI4YTc3NDMiLA0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAicmVuZXNhcyxyY2FyLWdlbjItaWljIiwNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInJlbmVzYXMscm1vYmlsZS1paWMiOw0K
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4ZTYwYjAwMDAgMCAweDQyNT47
-DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE3MyBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3Mg
-PSA8JmNwZyBDUEdfTU9EIDkyNj47DQo+DQo+IFRoaXMgd2FzIGludGVudGlvbmFsLCBjZnIuIGNv
-bW1pdCAwNzJiODE3NTg5YjE3NjYwICgiQVJNOiBkdHM6IHI4YTc3NDM6DQo+IFJlbW92ZSBnZW5l
-cmljIGNvbXBhdGlibGUgc3RyaW5nIGZyb20gaWljMyIpLCBhbmQgbXkgcmV2aWV3IGNvbW1lbnRz
-IG9uDQo+ICJbUEFUQ0ggMDIvMjJdIEFSTTogZHRzOiByOGE3NzQ0OiBBZGQgSTJDIGFuZCBJSUMg
-c3VwcG9ydCINCj4gKGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWRldmljZXRyZWUvQ0FN
-dUhNZFZ0MkREUUo5VWQ2aT1HV0FlV1cwVGRwRjV4aUN4dFJpdjBkWlRHQ1BFdDhBQG1haWwuZ21h
-aWwuY29tLykuDQo+DQo+IFRoZSBub3RlIGF0IHRoZSBib3R0b20gb2YgU2VjdGlvbiA0NS4xIG9m
-IHRoZSBSWi9HMSBIYXJkd2FyZSBVc2VyJ3MNCj4gTWFudWFsIHNheXM6ICJBdXRvbWF0aWMgdHJh
-bnNtaXNzaW9uIGZvciBQTUlDIGNvbnRyb2wgKERWRlMpIGlzIG5vdA0KPiBhdmFpbGFibGUgLi4u
-Ii4NCj4NCkNvbXBsZXRlbHkgbWlzc2VkIHRoYXQsIHRoYW5rIHlvdSBmb3IgcG9pbnRpbmcgaXQg
-b3V0Lg0KDQpDaGVlcnMsDQotLVByYWJoYWthcg0KDQo+IEdye29ldGplLGVldGluZ31zLA0KPg0K
-PiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJo
-b2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4
-LW02OGsub3JnDQo+DQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwg
-cGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0
-byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0
-aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRz
-DQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgR21iSCwgR2VzY2hhZWZ0c2Z1ZWhyZXIv
-UHJlc2lkZW50OiBDYXJzdGVuIEphdWNoLCBTaXR6IGRlciBHZXNlbGxzY2hhZnQvUmVnaXN0ZXJl
-ZCBvZmZpY2U6IER1ZXNzZWxkb3JmLCBBcmNhZGlhc3RyYXNzZSAxMCwgNDA0NzIgRHVlc3NlbGRv
-cmYsIEdlcm1hbnksIEhhbmRlbHNyZWdpc3Rlci9Db21tZXJjaWFsIFJlZ2lzdGVyOiBEdWVzc2Vs
-ZG9yZiwgSFJCIDM3MDggVVN0LUlETnIuL1RheCBpZGVudGlmaWNhdGlvbiBuby46IERFIDExOTM1
-MzQwNiBXRUVFLVJlZy4tTnIuL1dFRUUgcmVnLiBuby46IERFIDE0OTc4NjQ3DQo=
+PM8150 ldo11 on the MTP is wired to VDD_SSC_CX and controlled in levels,
+rather than as a regulator. As such it's available from the rpmhpd as
+the SM8250_LCX power domain.
+
+Fixes: ec13d5c23a33 ("arm64: dts: qcom: sm8250-mtp: Add pm8150, pm8150l and pm8009")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8250-mtp.dts | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+index e9acda9f5b83..0c6b936be471 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+@@ -136,13 +136,6 @@ vreg_l10a_1p8: ldo10 {
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+-		vreg_l11a_0p75: ldo11 {
+-			regulator-name = "vreg_l11a_0p75";
+-			regulator-min-microvolt = <800000>;
+-			regulator-max-microvolt = <800000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+-		};
+-
+ 		vreg_l12a_1p8: ldo12 {
+ 			regulator-name = "vreg_l12a_1p8";
+ 			regulator-min-microvolt = <1800000>;
+-- 
+2.24.0
+
