@@ -2,140 +2,378 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BC9C55199
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F4FC5519A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCBA320728
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F182C21556
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="abmztt5g"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PZD3quaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgD0Idb (ORCPT
+        id S1726785AbgD0Ilx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:33:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34968 "EHLO
+        Mon, 27 Apr 2020 04:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgD0Idb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:33:31 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A898CC061A0F;
-        Mon, 27 Apr 2020 01:33:30 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id h4so5281408wmb.4;
-        Mon, 27 Apr 2020 01:33:30 -0700 (PDT)
+        with ESMTP id S1726183AbgD0Ilx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:41:53 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B1B1C061A0F
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 01:41:52 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id i10so19479193wrv.10
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 01:41:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w0nU7XWSKjZiq42hI6aJFP/wV037pceDvXS4f3Cj24g=;
-        b=abmztt5gJbmn/okxMUbQZq3wfbR/ooUc1lHRkBzCsYfwqY/b/rQ6IfE9Gdd9IIy0kJ
-         Q6piiNV6rQTZ3K0fPfXalydyufc+WO9ycBQd/npG373tXzphOEqqqYbAZHOcD6ZyHfN/
-         Ki3hCsk/ORwsvcEZV35MfxVEDM9JTddzQZtfGFL00l5UPp0axMtX15HOg2vuCPO9iAv/
-         hanG4dd7nuMjBdgZ5D3FgShsnF0qzJ97w3nN+Up1kfB7WlCXPh9W+xfMbPcsPrCYM3bc
-         lt7WCcTZSzxaDOuOaYaKoA1OmdkYbALxXPoS9XGkcuZNhQ0xEasOL3NOeCZb01+OTxcU
-         nDfw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=8DTpZ7QTAlg896NKaUsrKf14877jsurbWtqJgSM1X8Q=;
+        b=PZD3quaPIQ9tiPvCvWJ2uQoeuPgAd1sOCq9CwAQOnqSvpQjqtxjrO52MrMwoR+SrWU
+         I9fGX6jmA8CUm7OYAWf5yIczA6MeAQssu3Bq5UqyaUmidJ2TDz8ux2GWsBiR6A7LxZJI
+         Unh9imc3LyCceAdy+3ZWRXpQ+9UT2r4rHR36rKUKe4MrDQ5vNH7qTAQi7+NcJaiHHWBN
+         21/ppNC3BEAUIIRM9GNHfZjRZIhoM03Gk3KNPOMZfKBICHqwUEzHs+qJ2AY/i2684EM9
+         X/5VVGs/GXWqVuMOyw3NJ/y9hIu5YwdIkv6Pb44NOZ+yNEP9s5DKOQc62A9KEnbwG8bU
+         LFuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w0nU7XWSKjZiq42hI6aJFP/wV037pceDvXS4f3Cj24g=;
-        b=fCzO0hfb1VLtNfdstsH2smOA0Lc7Kn9y87k/o6+8RzF0UFIE+BbCbPmGSDjHyuCiub
-         bdxszFeD34bskpzjNE+nwuivs0nAXYb+s3wKnpfC0ikXVS6nlU3FcLOOVoBrMg0YdRx4
-         SaUcP2EvkT0lArN2NIJsgDVhieHoYTgwbCJluihIlzJN2GMat4VziIv2LF6kvPc2hVAL
-         K6+JeSqy0eXXt2eSu92QS+sKrBlOBifDd4pTP4GhVZCMsCgvWtCsnUPBOBplIltlJWdB
-         P40rLYduo2f2K1sgPoXL67SkUTNECZ/tr5uKTFkZ5N8UEQOlz1P3Op23l6YjO7I4PbvF
-         ZM1w==
-X-Gm-Message-State: AGi0PuZcC7kFHCAoZlSmF08K0KZbOBn3TrtABbyfWn5p7LwoF/xhbBHX
-        K7eO3TYRHs7BxKf8suB4a/Q=
-X-Google-Smtp-Source: APiQypL9vQ25d/cx9/t2iweoGlzNivVSTWo7XTtXrJ5QP9N9j3FZH6z7MY/kfoDn/0qec5alrYVV6w==
-X-Received: by 2002:a1c:808c:: with SMTP id b134mr26231938wmd.131.1587976409450;
-        Mon, 27 Apr 2020 01:33:29 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id x18sm14448554wmi.29.2020.04.27.01.33.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 01:33:28 -0700 (PDT)
-To:     wens@kernel.org
-Cc:     devicetree@vger.kernel.org, dmurphy@ti.com, heiko@sntech.de,
-        jacek.anaszewski@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, pavel@ucw.cz,
-        robh+dt@kernel.org, wens@csie.org
-References: <20200427073132.29997-2-wens@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: leds: common: Drop enumeration for
- linux,default-triggers
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <4044214d-5385-94b6-d985-e1f824a60c5e@gmail.com>
-Date:   Mon, 27 Apr 2020 10:33:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=8DTpZ7QTAlg896NKaUsrKf14877jsurbWtqJgSM1X8Q=;
+        b=EjKITqkOg6mSPjSyS5RMIRj4wfiiqqtewD3sJdPF3wBeMUTdG6gBXkJ0iUr4TsPgwX
+         vHRifi7dGwQFeZLl8uVcHwwHXdicl5GC/HflxE+2WkxvwVXP9EBY1qesQ5oYQlVFXF3u
+         0A1+94+KeQm7UwKLp7B/RI0mcDZtDq/h/elYygi7wEiBfJjp8hH+arAt/+aG6YeQmVSZ
+         06Nt5ZAaDoQm2IBEMFrpCjDWTi1yMDTCOOyF2zMbDfsF5RcknIIpD7DpITquesmPooSo
+         wn6ZtO5y+WpkNYGdJSNGcnBS1zbvRNGU7XIBGG7Bn5tIK8sCcaKx5ANBzG6VB3Tibr1Y
+         IrtQ==
+X-Gm-Message-State: AGi0PuYyjEW/6PTa0g/Vpe/59om4ov8vd55gwI5LIAQ4i/YCZ4JOJ/Ae
+        duRvFyVvM+2TqfxJktSBXYM5Ug==
+X-Google-Smtp-Source: APiQypLRQPsncevt7ufFgtwISI8nUtLk4di5UjL7O718ObKF5S82cJcx6T0AVuQXT17USzPlqcg/Vg==
+X-Received: by 2002:adf:a15d:: with SMTP id r29mr24633058wrr.134.1587976911054;
+        Mon, 27 Apr 2020 01:41:51 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id x18sm19836833wrv.12.2020.04.27.01.41.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 01:41:50 -0700 (PDT)
+References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com> <20200328003249.1248978-3-martin.blumenstingl@googlemail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
+        robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, jianxin.pan@amlogic.com,
+        linux-kernel@vger.kernel.org, yinxin_1989@aliyun.com,
+        linux-arm-kernel@lists.infradead.org, lnykww@gmail.com
+Subject: Re: [PATCH v5 2/3] clk: meson: add a driver for the Meson8/8b/8m2 SDHC clock controller
+In-reply-to: <20200328003249.1248978-3-martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 Apr 2020 10:41:49 +0200
+Message-ID: <1jd07t2ucy.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200427073132.29997-2-wens@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chen-Yu,
 
-> From: Chen-Yu Tsai <wens@csie.org>
-> 
-> The bindings currently list a very small subset of valid triggers for
-> LEDs. Since many drivers or subsystems in Linux register custom
-> triggers, the list would become very hard to maintain.
-> 
-> Instead, just drop the list and allow free form strings.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+On Sat 28 Mar 2020 at 01:32, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+
+> The SDHC (MMC) controller embeds a clock controller inside one of the
+> SDHC registers. The outputs of thisclock controller are dedicated to the
+> SDHC controller.
+>
+> Implement a dedicated clock controller driver so we can keep all the
+> clock specific logic outside of the MMC controller driver. There is no
+> dedicated clock controller OF node because the hardware is a big SDHC IP
+> block with an embedded clock controller (so the .dts doesn't need a
+> separate clock controller node). Instead this driver re-uses the regmap
+> as registered by the (platform_device) parent.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../devicetree/bindings/leds/common.yaml      | 21 +------------------
->  1 file changed, 1 insertion(+), 20 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
-> index 4c270fde4567..3b3cdab3fc15 100644
-> --- a/Documentation/devicetree/bindings/leds/common.yaml
-> +++ b/Documentation/devicetree/bindings/leds/common.yaml
-> @@ -79,26 +79,7 @@ properties:
->      description:
->        This parameter, if present, is a string defining the trigger assigned to
->        the LED.
-> -    allOf:
-> -      - $ref: /schemas/types.yaml#definitions/string
-> -    enum:
-> -        # LED will act as a back-light, controlled by the framebuffer system
-> -      - backlight
-> -        # LED will turn on (but for leds-gpio see "default-state" property in
-> -        # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
-> -      - default-on
-> -        # LED "double" flashes at a load average based rate
-> -      - heartbeat
-> -        # LED indicates disk activity
-> -      - disk-activity
-> -        # LED indicates IDE disk activity (deprecated), in new implementations
-> -        # use "disk-activity"
-> -      - ide-disk
-> -        # LED flashes at a fixed, configurable rate
-> -      - timer
-> -        # LED alters the brightness for the specified duration with one software
-> -        # timer (requires "led-pattern" property)
-> -      - pattern
-> +    $ref: /schemas/types.yaml#definitions/string
-
-This makes it free form, but deletes the documentation of options that
-are standard available for people without custom driver.
-Where should that info go?
-
+>  drivers/clk/meson/Kconfig         |   9 ++
+>  drivers/clk/meson/Makefile        |   1 +
+>  drivers/clk/meson/meson-mx-sdhc.c | 212 ++++++++++++++++++++++++++++++
+>  3 files changed, 222 insertions(+)
+>  create mode 100644 drivers/clk/meson/meson-mx-sdhc.c
+>
+> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
+> index dabeb435d067..8769335d2d46 100644
+> --- a/drivers/clk/meson/Kconfig
+> +++ b/drivers/clk/meson/Kconfig
+> @@ -53,6 +53,15 @@ config COMMON_CLK_MESON8B
+>  	  S805 (Meson8b) and S812 (Meson8m2) devices. Say Y if you
+>  	  want peripherals and CPU frequency scaling to work.
 >  
->    led-pattern:
->      description: |
-> -- 
-> 2.26.0
+> +config COMMON_CLK_MESON_MX_SDHC
+> +	tristate "Meson MX SDHC MMC Clock Controller Driver"
+> +	depends on ARCH_MESON
+> +	select COMMON_CLK_MESON_REGMAP
+> +	help
+> +	  Support for the SDHC clock controller on Amlogic Meson8/8b/8m2 SoCs
+> +	  devices. Say Y or M if you want to use the SDHC MMC controller.
+> +	  Otherwise say N.
+> +
+>  config COMMON_CLK_GXBB
+>  	bool
+>  	depends on ARCH_MESON
+> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
+> index 6eca2a406ee3..b71c7ae78dbd 100644
+> --- a/drivers/clk/meson/Makefile
+> +++ b/drivers/clk/meson/Makefile
+> @@ -19,3 +19,4 @@ obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
+>  obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
+>  obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
+>  obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o meson8-ddr.o
+> +obj-$(CONFIG_COMMON_CLK_MESON_MX_SDHC) += meson-mx-sdhc.o
+> diff --git a/drivers/clk/meson/meson-mx-sdhc.c b/drivers/clk/meson/meson-mx-sdhc.c
+> new file mode 100644
+> index 000000000000..b98a35d99f65
+> --- /dev/null
+> +++ b/drivers/clk/meson/meson-mx-sdhc.c
+> @@ -0,0 +1,212 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Amlogic Meson SDHC clock controller
+> + *
+> + * Copyright (C) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> + */
+> +
+> +#include <dt-bindings/clock/meson-mx-sdhc-clkc.h>
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "clk-regmap.h"
+> +#include "clk-pll.h"
+
+If you need the pll clocks, it should probably appear in the Kconfig
+deps as well
+
+> +
+> +#define MESON_SDHC_CLKC			0x10
+> +
+> +static const struct clk_regmap meson_mx_sdhc_src_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = MESON_SDHC_CLKC,
+> +		.mask = 0x3,
+> +		.shift = 16,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "sdhc_src_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_data = (const struct clk_parent_data[]) {
+> +			{ .fw_name = "clkin0", .index = -1, },
+> +			{ .fw_name = "clkin1", .index = -1, },
+> +			{ .fw_name = "clkin2", .index = -1, },
+> +			{ .fw_name = "clkin3", .index = -1, },
+
+When fw_name is specified, setting the index is not necessary
+
+> +		},
+> +		.num_parents = 4,
+> +	},
+> +};
+> +
+> +static const struct clk_div_table meson_mx_sdhc_div_table[] = {
+> +	{ .div = 6, .val = 5, },
+> +	{ .div = 8, .val = 7, },
+> +	{ .div = 9, .val = 8, },
+> +	{ .div = 10, .val = 9, },
+> +	{ .div = 12, .val = 11, },
+> +	{ .div = 16, .val = 15, },
+> +	{ .div = 18, .val = 17, },
+> +	{ .div = 34, .val = 33, },
+> +	{ .div = 142, .val = 141, },
+> +	{ .div = 850, .val = 849, },
+> +	{ .div = 2126, .val = 2125, },
+> +	{ .div = 4096, .val = 4095, },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static const struct clk_regmap meson_mx_sdhc_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = MESON_SDHC_CLKC,
+> +		.shift = 0,
+> +		.width = 12,
+> +		.table = meson_mx_sdhc_div_table,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "sdhc_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_data = (const struct clk_parent_data[]) {
+> +			{ .name = "sdhc_src_sel", .index = -1, },
+
+Any reason for using the lagacy names and not the clk_hw pointers ?
+Same comment for the rest of the clocks
+
+> +		},
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static const struct clk_regmap meson_mx_sdhc_mod_clk_en = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = MESON_SDHC_CLKC,
+> +		.bit_idx = 15,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "sdhc_mod_clk_on",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_data = (const struct clk_parent_data[]) {
+> +			{ .name = "sdhc_div", .index = -1, },
+> +		},
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_GATE,
+
+Why can't the clock change rate unless gated ? Maybe you prefer to
+change the rate in the mmc while clock is gated, but this is the
+handling of the clock by the mmc driver, not a constraint of the actual
+clock HW, isn't it ?
+
+Also, this is a gate so I suppose the rate propagates through it ?
+Can you explain why CLK_SET_RATE_PARENT is not set  ?
+
+> +	},
+> +};
+> +
+> +static const struct clk_regmap meson_mx_sdhc_tx_clk_en = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = MESON_SDHC_CLKC,
+> +		.bit_idx = 14,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "sdhc_tx_clk_on",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_data = (const struct clk_parent_data[]) {
+> +			{ .name = "sdhc_div", .index = -1, },
+> +		},
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_GATE,
+> +	},
+> +};
+> +
+> +static const struct clk_regmap meson_mx_sdhc_rx_clk_en = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = MESON_SDHC_CLKC,
+> +		.bit_idx = 13,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "sdhc_rx_clk_on",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_data = (const struct clk_parent_data[]) {
+> +			{ .name = "sdhc_div", .index = -1, },
+> +		},
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT | CLK_SET_RATE_GATE,
+
+Ok so apparently you only want to set the rate through the RX clock.
+You are free to call set_rate() only on this clock in the mmc driver.
+However, I don't think this should reflect as clock constraints.
+
+> +	},
+> +};
+> +
+> +static const struct clk_regmap meson_mx_sdhc_sd_clk_en = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = MESON_SDHC_CLKC,
+> +		.bit_idx = 12,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "sdhc_sd_clk_on",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_data = (const struct clk_parent_data[]) {
+> +			{ .name = "sdhc_div", .index = -1, },
+> +		},
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT | CLK_SET_RATE_GATE,
+
+... now I lost with these flags. I'm sure there is an idea related to
+the mmc driver. Clockwise, I don't get it.
+
+> +	},
+> +};
+> +
+> +static const struct clk_regmap *meson_mx_sdhc_clk_regmaps[] = {
+> +	[SDHC_CLKID_SRC_SEL]	= &meson_mx_sdhc_src_sel,
+> +	[SDHC_CLKID_DIV]	= &meson_mx_sdhc_div,
+> +	[SDHC_CLKID_MOD_CLK]	= &meson_mx_sdhc_mod_clk_en,
+> +	[SDHC_CLKID_SD_CLK]	= &meson_mx_sdhc_sd_clk_en,
+> +	[SDHC_CLKID_TX_CLK]	= &meson_mx_sdhc_tx_clk_en,
+> +	[SDHC_CLKID_RX_CLK]	= &meson_mx_sdhc_rx_clk_en,
+> +};
+> +
+> +#define MESON_MX_SDHC_NUM_CLKS ARRAY_SIZE(meson_mx_sdhc_clk_regmaps)
+> +
+> +static int meson_mx_sdhc_clkc_probe(struct platform_device *pdev)
+> +{
+> +	struct device *parent = pdev->dev.parent;
+> +	struct clk_hw_onecell_data *onecell_data;
+> +	struct clk_regmap *clk_regmap;
+> +	struct regmap *regmap;
+> +	int i, ret;
+> +
+> +	regmap = dev_get_regmap(parent, NULL);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	clk_regmap = devm_kcalloc(parent, sizeof(*clk_regmap),
+> +				  MESON_MX_SDHC_NUM_CLKS, GFP_KERNEL);
+> +	if (!clk_regmap)
+> +		return -ENOMEM;
+> +
+> +	onecell_data = devm_kzalloc(parent,
+> +				    struct_size(onecell_data, hws,
+> +						MESON_MX_SDHC_NUM_CLKS),
+> +				    GFP_KERNEL);
+> +	if (!onecell_data)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < MESON_MX_SDHC_NUM_CLKS; i++) {
+> +		memcpy(&clk_regmap[i], meson_mx_sdhc_clk_regmaps[i],
+> +		       sizeof(*clk_regmap));
+> +
+> +		clk_regmap[i].map = regmap;
+> +		onecell_data->hws[i] = &clk_regmap[i].hw;
+> +
+> +		ret = devm_clk_hw_register(parent, onecell_data->hws[i]);
+> +		if (ret) {
+> +			dev_err(parent,
+> +				"Registration of SDHC clock %d failed\n", i);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	onecell_data->num = MESON_MX_SDHC_NUM_CLKS;
+> +
+> +	return devm_of_clk_add_hw_provider(parent, of_clk_hw_onecell_get,
+> +					   onecell_data);
+> +}
+> +
+> +static const struct platform_device_id meson_mx_sdhc_clkc_ids[] = {
+> +	{ "meson8-sdhc-clkc" },
+> +	{ "meson8b-sdhc-clkc" },
+> +	{ "meson8m2-sdhc-clkc" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(platform, meson_mx_sdhc_clkc_ids);
+> +
+> +static struct platform_driver meson_mx_sdhc_clkc_driver = {
+> +	.id_table	= meson_mx_sdhc_clkc_ids,
+> +	.probe		= meson_mx_sdhc_clkc_probe,
+> +	.driver		= {
+> +		.name	= "meson-mx-sdhc-clkc",
+> +	},
+> +};
+> +module_platform_driver(meson_mx_sdhc_clkc_driver);
+> +
+> +MODULE_DESCRIPTION("Amlogic Meson8/8b/8m2 SDHC clock controller driver");
+> +MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl@googlemail.com>");
+> +MODULE_LICENSE("GPL v2");
 
