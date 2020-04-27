@@ -2,161 +2,192 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3760C5519B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6594CC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6E4206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394AF2080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kWzVEYgY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZxAicqBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgD0Ivy (ORCPT
+        id S1726621AbgD0I4M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:51:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37844 "EHLO
+        Mon, 27 Apr 2020 04:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgD0Ivx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:51:53 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE08C0610D5
-        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 01:51:53 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x17so18784077wrt.5
-        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 01:51:53 -0700 (PDT)
+        with ESMTP id S1726003AbgD0I4M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 04:56:12 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F124DC061A41
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 01:56:11 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id t14so19509465wrw.12
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 01:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=YPX4x0jDIEDTz7nvc7sn5bHK6BG3ihIkRvdS/BPSLzE=;
-        b=kWzVEYgY/9/widQPXrFcowP4ZjgLQHkdS9enzKduSjdkfx0EjP8bo0XL/1eJr3WKSX
-         JaXngTlXbRhWYn2hX9lTbL3BYOqB19rkhQThOErWAmIF/qonKh6RswR09vTh231Wumen
-         kkhqjmo/YdeXh0zkjImVDbUiZWOQt5OyFIRoy4ZvEENcfdPREtsZ5U6G1/quPfUCxTIt
-         5WXJoK36jKqIJyTxsTPlB5EpFR3KR7+KpsTR2iyPEYyeeX6eEN0rh8FYAJP1NsCNeGda
-         ozRxEpQyGjVLx9eZmfL6/SZ/2VZ5D0pd0rGMWpG6pqLBK3piKAxPdyCLrOe8OBJMZ1fF
-         OK0Q==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=lnRwjXbCLNSgqmF0eAVoEuS/w3gfoX8hHq6Rr+bVouI=;
+        b=ZxAicqBE7gtw4KlxJ6AGM4EEvTxs4P5QWqjTN/QP75l4jYbxhStBX5mNkEp5kiu8m1
+         MFnZyigewABW+VSPUWQolDAw6v9IVj+nJFatqky/wUAeJeSbF8CqrWCiUtOblkyW6dna
+         YCgGyMLANbV4OXkW8KxF0XTMa0iHgCLBPkNQWHpx/XV7/iGj/lmp69XFcM+iGliXQyMs
+         lLwhayZDtTD3yqPZzlaTTUKRMECVfI3OORRUeSyYil1GxMAisl/BrOAqqL7jMvgV+oPD
+         LtlKIJA91Bs2XS1TdnI6szBJ82MUm9DqBKJuJzmJuBzp2+p8I2Scmko96n9BbUUnkCBt
+         7cEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YPX4x0jDIEDTz7nvc7sn5bHK6BG3ihIkRvdS/BPSLzE=;
-        b=qit6n7y1MC7A47oZXrRLfx8Kf1otgCRzdw4orJXTKouGHXRgpZ/e8/NkVFZw5R28N7
-         BuofHU6J27ecAQe4euXBJxmWyhMM++bUndNF4hjfYrDDY44Fc91A5dQcAPp+cgK0+eJF
-         38eKnPNUri3hAYEkFkX2gVvBnraco2nmNVsAks4mpIBdefsBETem/PBtL0kVhCd7cqle
-         Jxs5Su5JIpyd0hTFieSUh8OUsHamKQJKiePQVmdsRFb++Oh4DS44opQ63jQA1KOlu/mQ
-         taeZ2haU945vUJMdk5ukndu21dslLqMSMBvQXIewu2am8XM64S1y3Tra51Zod7VNKnI3
-         SZ5w==
-X-Gm-Message-State: AGi0PuaHiN4Q2Mp7w/rdSM+sBxCPogzB6B3gLeBCDRSsetcYadc6a7Nt
-        at/+V0sNUZx2dv6wH6RkEOFdNg==
-X-Google-Smtp-Source: APiQypLxApUbpg3TJ0ILuchowzV4ZZ5EBCvXW4eaI3vv4CK0MLDKEWjIbJVseNky+c8kdrfJlPFTuQ==
-X-Received: by 2002:adf:dd8a:: with SMTP id x10mr26630284wrl.308.1587977511933;
-        Mon, 27 Apr 2020 01:51:51 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id x18sm14507505wmi.29.2020.04.27.01.51.50
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=lnRwjXbCLNSgqmF0eAVoEuS/w3gfoX8hHq6Rr+bVouI=;
+        b=gSMEirpkkozPuYHQoxQE1wbkpWdl+XwXOCrMJUYmDD31iSWxZZyEs/+o/5XNXECiZc
+         zcPX00tI6rka55XELNy08du0IlwbggfP7sdBMDMHjui3M9j0loBioag9dxenJj6HY7aW
+         9AEudx5FTmVk//sSL4X8Hga6g44DQHLwOgEPQbuWk2cze0qqQre99wclXxEn6p1x7h9m
+         dooUxEHpCrSkB5OP+AL5+jnRfUXn5sV9x6TirQnLIrlAiJ3A2n9MZ01SRh+npm40/o6x
+         OvmjsSF8Tss/0M0Tpd2+J4QTB53TmC+dUPooIm0TCr5GyNHOJWAy6WQy8cVshPGYxr3P
+         h1jw==
+X-Gm-Message-State: AGi0PuZxu5TWdA3d9Nou8B/jvC/C1C1Rg2qWgXOpjM+NlU8zztyTIoKs
+        MXAGFMRt13N04YFmKXRPdg3eew==
+X-Google-Smtp-Source: APiQypLhubdjTPL7ywGgfEzi/OUKoNJ/LWk7kYZWC+WQcIxs4uRm7LCF9Ze4GDVIaPy2SAZAs5y+XQ==
+X-Received: by 2002:a5d:4092:: with SMTP id o18mr26042449wrp.227.1587977770645;
+        Mon, 27 Apr 2020 01:56:10 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id e2sm20113767wrv.89.2020.04.27.01.56.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 01:51:51 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 09:51:49 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200427085149.GF3559@dell>
-References: <20200415162030.16414-1-sravanhome@gmail.com>
- <20200415162030.16414-3-sravanhome@gmail.com>
- <20200424071822.GM3612@dell>
- <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
- <20200424093720.GA3542@dell>
- <864eb6ad-a605-c0a0-c3e7-23c0c70f5ede@gmail.com>
- <20200424105319.GD8414@dell>
- <c62cd5f2-6d82-0a2a-5ee5-a3e99e188a05@gmail.com>
+        Mon, 27 Apr 2020 01:56:09 -0700 (PDT)
+References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
+        robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, jianxin.pan@amlogic.com,
+        linux-kernel@vger.kernel.org, yinxin_1989@aliyun.com,
+        linux-arm-kernel@lists.infradead.org, lnykww@gmail.com
+Subject: Re: [PATCH v5 0/3] Amlogic 32-bit Meson SoC SDHC MMC controller driver
+In-reply-to: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 Apr 2020 10:56:08 +0200
+Message-ID: <1jblnd2tp3.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c62cd5f2-6d82-0a2a-5ee5-a3e99e188a05@gmail.com>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Apr 2020, saravanan sekar wrote:
 
-> 
-> On 24/04/20 12:53 pm, Lee Jones wrote:
-> > On Fri, 24 Apr 2020, saravanan sekar wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > On 24/04/20 11:37 am, Lee Jones wrote:
-> > > > On Fri, 24 Apr 2020, saravanan sekar wrote:
-> > > > 
-> > > > > Hi Lee,
-> > > > > 
-> > > > > On 24/04/20 9:18 am, Lee Jones wrote:
-> > > > > > On Wed, 15 Apr 2020, Saravanan Sekar wrote:
-> > > > > > 
-> > > > > > > mp2629 is a highly-integrated switching-mode battery charge management
-> > > > > > > device for single-cell Li-ion or Li-polymer battery.
-> > > > > > > 
-> > > > > > > Add MFD core enables chip access for ADC driver for battery readings,
-> > > > > > > and a power supply battery-charger driver
-> > > > > > > 
-> > > > > > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > > > > > ---
-> > > > > > >     drivers/mfd/Kconfig        |  9 ++++
-> > > > > > >     drivers/mfd/Makefile       |  2 +
-> > > > > > >     drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
-> > > > > > >     include/linux/mfd/mp2629.h | 19 +++++++++
-> > > > > > >     4 files changed, 116 insertions(+)
-> > > > > > >     create mode 100644 drivers/mfd/mp2629.c
-> > > > > > >     create mode 100644 include/linux/mfd/mp2629.h
-> > > > > > How is this driver registered?
-> > > > > > 
-> > > > > > Looks like it has device tree support.  Is there another way?
-> > > > > Yes, only using device tree
-> > > > Then how about using 'simple-mfd' and 'syscon'?
-> > > > 
-> > > > Then you can omit this driver completely.
-> > > The exception is to support for non device tree platform as well, but I have
-> > > tested only for ARM device tree platform.
-> > Is that a reality though?
-> > 
-> > How else do you see this realistically being registered?
-> > 
-> I understand that acpi related device table are not covered here, well I
-> don't have to platform to test so.
-> If you ask me to cover acpi related table, I can do but hard to test.
+On Sat 28 Mar 2020 at 01:32, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-I don't know of any reasons why syscon can't be used by ACPI.
+> Hello,
+>
+> this is the patchset for a driver for the Amlogic "SDHC" MMC controller
+> found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
+>
+> The public S805 (Meson8b) datasheet has some documentation starting on
+> page 74: [0]
+>
+> It's performance is still not as good as the driver from Amlogic's 3.10
+> kernel, but it does not corrupt data anymore (as RFC v1 did).
+>
+> Special thanks to the people who supported me off-list - you are
+> amazing and deserve to be mentioned here:
+> - Xin Yin who helped me fix two more write corruption problems. I am
+>   hoping that he will reply with Reviewed-by, Tested-by and Bug-fixed-by
+> - Jianxin Pan for sharing some of the internal workings of this MMC
+>   controller with me
+> - Wei Wang for spotting the initial write corruption problem and helping
+>   test this driver on his board. I have his permission to add his
+>   Tested-by (off-list, he's Cc'ed so if there's any problem he can speak
+>   up)
+>
+>
+> Changes since v4 at [4]:
+> - move the four clkin clock inputs to the start of the clock-names list
+>   as suggested by Rob, affects patch #1
+> - fixed #include statement in dt-bindings example in patch #1
+>
+> Changes since v3 at [3]:
+> - split the clock bits into a separate clock controller driver because
+>   of two reasons: 1) it keeps the MMC controller driver mostly clean of
+>   the clock bits
 
-Please try to solve this issue using 'simple-mfd' and 'syscon'.
+If the register is in the MMC controller register space and the MMC
+driver is the driver using these clocks, it is where the clocks belong.
+I don't get why it could be an issue ?
 
-> > > > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > > > > > index 3c547ed575e6..85be799795aa 100644
-> > > > > > > --- a/drivers/mfd/Kconfig
-> > > > > > > +++ b/drivers/mfd/Kconfig
-> > > > > > > @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
-> > > > > > >     	help
-> > > > > > >     	  Select this if your MC13xxx is connected via an I2C bus.
-> > > > > > > +config MFD_MP2629
-> > > > > > > +	tristate "Monolithic power system MP2629 ADC and Battery charger"
-> > > > > > > +	depends on I2C
-> > > > > > > +	select REGMAP_I2C
-> > > > > > > +	help
-> > > > > > > +	  Select this option to enable support for monolithic power system
-> > > > > > > +	  battery charger. This provides ADC, thermal, battery charger power
-> > > > > > > +	  management functions on the systems.
+Is the clock block is shared with another device, like on the Gx family ?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> 2) the pure clock controller can use
+>   devm_clk_hw_register() (instead of devm_clk_register(), which is
+>   deprecated) and the MMC controller can act as a pure clock consumer.
+
+Why can't you use devm_clk_hw_register in an MMC driver ?
+Unless I missed something, it is provided by clk-provider.h, which can be
+included by any driver.
+
+I'm not sure I understand why the support for this device is split in
+two drivers. Using CCF clocks out of "drivers/clk" is encouraged.
+
+>   This also affects the dt-bindings which is why I dropped Rob's
+>   Reviewed-by. Thanks to Ulf for the suggestions
+>
+> Changes since v2 at [2]:
+> - rebased on top of v5.5-rc1
+> - added Rob's and Xin Yin's Reviewed-by and Tested-by (thank you!)
+> - (note: Kevin had v2 of this series in -next for a few days so the
+>    build test robots could play with it. I haven't received any negative
+>    feedback in that time)
+>
+> Changes since RFC v1 at [1]:
+> - don't set MESON_SDHC_MISC_MANUAL_STOP to fix one of three write
+>   corruption problems. the out-of-tree 3.10 "reference" driver doesn't
+>   set it either
+> - check against data->flags instead of cmd->flags when testing for
+>   MMC_DATA_WRITE as spotted by Xin Yin (many thanks!). This fixes
+>   another write corruption problem
+> - clear the FIFOs after successfully transferring data as suggested by
+>   Xin Yin (many thanks!). This is what the 3.10 driver did and fixes yet
+>   another write corruption problem
+> - integrate the clock suggestions from Jianxin Pan so the driver is now
+>   able to set up the clocks correctly for all known cases. documentation
+>   is also added to the patch description. Thank you Jianxin for the
+>   help!
+> - set the correct max_busy_timeout as suggested by Jianxin Pan (thanks!)
+> - convert the dt-bindings to .yaml (which is why I didn't add Rob's
+>   Reviewed-by)
+> - switch to struct clk_parent_data as part of newer common clock
+>   framework APIs to simplify the clock setup
+> - dropped CMD23 support because it seems to hurt read and write
+>   performance by 10-20% in my tests. it's not clear why, but for now we
+>   can live without this.
+> - use devm_platform_ioremap_resource instead of open-coding it
+>
+>
+> [0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
+> [1] https://patchwork.kernel.org/cover/11035505/
+> [2] http://lists.infradead.org/pipermail/linux-amlogic/2019-November/014576.html
+> [3] https://patchwork.kernel.org/cover/11283179/
+> [4] https://patchwork.kernel.org/cover/11329017/
+>
+> Martin Blumenstingl (3):
+>   dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
+>   clk: meson: add a driver for the Meson8/8b/8m2 SDHC clock controller
+>   mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
+>
+>  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   |   83 ++
+>  drivers/clk/meson/Kconfig                     |    9 +
+>  drivers/clk/meson/Makefile                    |    1 +
+>  drivers/clk/meson/meson-mx-sdhc.c             |  212 ++++
+>  drivers/mmc/host/Kconfig                      |   14 +
+>  drivers/mmc/host/Makefile                     |    1 +
+>  drivers/mmc/host/meson-mx-sdhc.c              | 1064 +++++++++++++++++
+>  .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |    8 +
+>  8 files changed, 1392 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+>  create mode 100644 drivers/clk/meson/meson-mx-sdhc.c
+>  create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
+>  create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
+
