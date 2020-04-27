@@ -2,91 +2,94 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67803C55199
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB5BC5519E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 522372051A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366872098B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgD0HkI (ORCPT
+        id S1726785AbgD0Hmr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:40:08 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46106 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgD0HkH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 03:40:07 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z25so24554936otq.13;
-        Mon, 27 Apr 2020 00:40:07 -0700 (PDT)
+        Mon, 27 Apr 2020 03:42:47 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:40407 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgD0Hmp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 03:42:45 -0400
+Received: by mail-yb1-f193.google.com with SMTP id f13so8976267ybk.7;
+        Mon, 27 Apr 2020 00:42:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wek6tBW+YiNXLDCAullGByq6Df5JS2eLcCF9PYMe2Os=;
-        b=ND7POKYuoI6rTC3LmAxQ+pwr5LFZ2G+NpUewCsRadwFbXudr6Os8Oc/SY9/bViRZOr
-         bwIODOsjZ2hzF0mdxNFlEGkjk27Ep5yBKH4Ka6AR1hT7PHDU0YKtoXip9qm9dM56h62v
-         pAbIInZHuWYZFJx+uhFZ5hetvbBtaSfiYMwbLaCMeyrntJPp61f0tbzHiK1b3Yt/2Ajw
-         9PyJD7h2uBk9iZSgQBzKEEI5004uonphP48F2YFX2WSmW3J8mYguMvRvZzsS7tdbs144
-         K0zj9wRL+Q0J7VJyZJ0AgctXFJHnpGVPkZ7OIPLkDt8PVkIsOn1/BKp0JGk1kJwUh6rE
-         IxIQ==
-X-Gm-Message-State: AGi0PuYEieeMzv/ehL2yvJvjdg8bJ6Rvd5erFJ/PuuVNc4EPTGuWQlRJ
-        /cfpzc6PQlGRc7+o/U+B/PUm+S5vOegjP41dfqk=
-X-Google-Smtp-Source: APiQypJsr17J2GPmA+VqMopmvfDZIJGNi04BuJZW9HgLZVc+RHHoovs3TupqRwUjD9U4Un5Q+0yM9r1PgNT/e3hjXEI=
-X-Received: by 2002:aca:895:: with SMTP id 143mr14265203oii.153.1587973206830;
- Mon, 27 Apr 2020 00:40:06 -0700 (PDT)
+        bh=7HDE8ph93EI2vOePc5ywVTgnLdaOVxztdKRCyPN5Qdw=;
+        b=IOJzamf8OgTB7SIpo/NaEc7tMItPB90nfPDnCKPs1EodhWcDBKChSF+miIlCAy/MZv
+         fJ3d+JrfeSxOm0td6knQTV5XFOGn0pqC/OxFawNfnosRM4b8HW1Wn4Q+snyPW+q/yJZd
+         rfBtOMvrbe0CfFB8ifB4D7fCmhaPhcadwdQhefhWcDvszF3zHA+KDI8Aql22PcmTN5G7
+         EgWn0wtrcjwX6pE79D6w3UdX4rV8A36TRLJ7r4L1yjYjT8NSamw0G8cWDQVZcOMJd4AR
+         Q2rUIhPLM0MtoRUN/B6efN3DUO/tnTVWUyVcSWtEcOWFw5uzHvNLZ0Qgj6bifpotmyaC
+         U+Tg==
+X-Gm-Message-State: AGi0PuY4Re6h2fUPpEe8bx1Oci1eQ7yq6g8HrrxAqtYKuE7sz84h7l8f
+        /OnCFxAJlW8zHWDk06HlxIfziOV52yg/A6eoz9/GmBvU
+X-Google-Smtp-Source: APiQypIs6NvYWnWH/ktGUdZ2rE2Z5KmJb3YhfiR/lt5cCzkoxxCqS3BQi8X2Ml1ldVHBef942mt8n8y7vFl2hwtoB3Q=
+X-Received: by 2002:a25:c646:: with SMTP id k67mr11247591ybf.309.1587973363986;
+ Mon, 27 Apr 2020 00:42:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587678050-23468-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1587678050-23468-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Apr 2020 09:39:55 +0200
-Message-ID: <CAMuHMdUWwvLeuTY=DVwE3GK233dC0NNPPeeihSQX9TXKrhbA4A@mail.gmail.com>
-Subject: Re: [PATCH 01/10] dt-bindings: power: rcar-sysc: Document r8a7742
- SYSC binding
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com> <20200427060551.1372591-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200427060551.1372591-2-jiaxun.yang@flygoat.com>
+From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
+Date:   Mon, 27 Apr 2020 09:42:32 +0200
+Message-ID: <CAAdtpL59=bpmEUgY56=xHS3w5ddtdVGjKnnW7i++a5sTzPs+3Q@mail.gmail.com>
+Subject: Re: [PATCH v6 1/5] PCI: Don't disable decoding when mmio_always_on is set
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add binding documentation for the RZ/G1H (R8A7742) SYSC block.
+On Mon, Apr 27, 2020 at 8:08 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Don't disable MEM/IO decoing when a device have both non_compliant_bars
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.8.
+Typo "decoing" -> "decoding"
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> and mmio_always_on.
+>
+> That would allow us quirk devices with junk in BARs but can't disable
+> their decoding.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  drivers/pci/probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 77b8a145c39b..d9c2c3301a8a 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
+>         /* Device class may be changed after fixup */
+>         class = dev->class >> 8;
+>
+> -       if (dev->non_compliant_bars) {
+> +       if (dev->non_compliant_bars && !dev->mmio_always_on) {
+>                 pci_read_config_word(dev, PCI_COMMAND, &cmd);
+>                 if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+>                         pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
+> --
+> 2.26.0.rc2
+>
