@@ -2,103 +2,75 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9939BC55199
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 15:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7DFC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 16:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D99220661
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 15:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4BA20661
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 16:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588003843;
+	bh=6y+UP73Vxjpn15HNvNYlaPBEXH1uzwIZb3nl5q1GqOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BOFNx3lwuk0pnjXyko2VjrCrOQyeCUNU71cS+VdIVc3hWup6s1p7tXrhhU09hKeW3
+	 J9pUFhkIMhrTTtLQR9rHWWMlpxJ1NCAGFv39FpQQNI+b3ZeVhwyUdUAgc2S1i3upaD
+	 GomgJuJr120ixpOQzuvzaW7fEuyAqASE8xgqzAcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgD0Pvg convert rfc822-to-8bit (ORCPT
+        id S1728283AbgD0QKn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:51:36 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:35021 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgD0Pvf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 11:51:35 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 43A08200005;
-        Mon, 27 Apr 2020 15:51:29 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 17:51:27 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200427175127.0518c193@xps13>
-In-Reply-To: <20200424183612.4cfdbb6a@collabora.com>
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200424183612.4cfdbb6a@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Apr 2020 12:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbgD0QKm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 12:10:42 -0400
+Received: from localhost (unknown [171.76.79.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2FC8205C9;
+        Mon, 27 Apr 2020 16:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588003842;
+        bh=6y+UP73Vxjpn15HNvNYlaPBEXH1uzwIZb3nl5q1GqOQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aR1yAoAqwS+RgrXbE1AAsuiTXEZV7W92AcrPzeyict0PPlEUiEHKWRkvmzMO4oKO1
+         8t1vZ23bc52pz9LNTyHP2+DXUHAnnbaSQ9r7UrlG/lPkXnZN2nk3zjzIC/SsQo75Oa
+         DMs/H54jSMbM7I0mxVYOer0nm3Bobcrh/qb1G+S0=
+Date:   Mon, 27 Apr 2020 21:40:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Pierre-Yves Mordret <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH 0/2] STM32 DMA Direct mode
+Message-ID: <20200427161038.GJ56386@vkoul-mobl.Dlink>
+References: <20200422102904.1448-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422102904.1448-1-amelie.delaunay@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ramuthevar,
+On 22-04-20, 12:29, Amelie Delaunay wrote:
+> By default, the driver compute if the FIFO must operate in direct mode or with
+> FIFO threshold. Direct mode is allowed only if computed source burst and
+> destination burst are disabled. But with memory source or destination, burst
+> is always > 0.
+> Direct mode is useful when the peripheral requires an immediate and single
+> transfer to or from the memory after each DMA request.
+> This patchset adds a way to force Direct mode through device tree.
 
-> > +static int ebu_nand_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct ebu_nand_controller *ebu_host;
-> > +	struct nand_chip *nand;
-> > +	phys_addr_t nandaddr_pa;
-> > +	struct mtd_info *mtd;
-> > +	struct resource *res;
-> > +	int ret;
-> > +	u32 cs;
-> > +
-> > +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
-> > +	if (!ebu_host)
-> > +		return -ENOMEM;
-> > +
-> > +	ebu_host->dev = dev;
-> > +	nand_controller_init(&ebu_host->controller);
-> > +
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
-> > +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(ebu_host->ebu_addr))
-> > +		return PTR_ERR(ebu_host->ebu_addr);
-> > +
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
-> > +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(ebu_host->nand_addr))
-> > +		return PTR_ERR(ebu_host->nand_addr);
-> > +
-> > +	ret = device_property_read_u32(dev, "nand,cs", &cs);  
-> 
-> CS ids should be encoded in the reg property (see [1]).
+Applied, thanks
 
-Is it your choice to only support a single CS or is it actually a
-controller limitation? If the latter, it would be much better I think
-to anticipate the addition of the support for another CS. And in
-this case there are many places in this driver that should be
-more generic.
-
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to get chip select: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ebu_host->cs = cs;
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand_cs0");  
-
-Thanks,
-Miquèl
+-- 
+~Vinod
