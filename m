@@ -2,121 +2,78 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EDDC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA84DC55199
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3CC2075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587998752;
-	bh=hzyH6N5EnDxhPKQQ5UvUR/8HV/kEX+gyqgaSd5fYiJM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fdangJOTZTYfm/rdNyl+TC21LRnmcDGUicsQWPl5mDwn/KYlBFsp//UgjGR/IfUvV
-	 4KRO9Dr9FQpia8EGu2BSeuuB/40Z8uqwfMuuz8LJDU6nnuS9lJK1xp7JU8wbRtdOHS
-	 jXSSdgCKG0srgfpk7f4nESKsOIgz9m3dPETsEwx0=
+	by mail.kernel.org (Postfix) with ESMTP id CED0920656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgD0Opt (ORCPT
+        id S1728119AbgD0O4C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:45:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57120 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 10:56:02 -0400
+Received: from v6.sk ([167.172.42.174]:60332 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbgD0Opt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:45:49 -0400
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BCA020735;
-        Mon, 27 Apr 2020 14:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587998748;
-        bh=hzyH6N5EnDxhPKQQ5UvUR/8HV/kEX+gyqgaSd5fYiJM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=a4HIWd9Qbyw7ELAfzbc7ggl1+0Nc3Xu00nmH0hlJk/DLP4Cs5Z6yM+hcMt0Nqk10z
-         HStRqb76tx7vxWgQ88hK9ixXDfH9VNt4fIMsLVQ9HT60o5QNA8yP0b6QlFWDOJo+94
-         HodFiwyK0j8+v/OLPGEvGRcFcpOvAVTJz/mtj868=
-Received: by mail-lj1-f180.google.com with SMTP id g4so17885715ljl.2;
-        Mon, 27 Apr 2020 07:45:48 -0700 (PDT)
-X-Gm-Message-State: AGi0PubfHRjBE7ADB1goN1C6B9t76ezfXB+is3IECePQEJQJvSphZN8/
-        zzmfcNOBSgZsAk2YBVwBuv13yIL5ekj9HLZFpEQ=
-X-Google-Smtp-Source: APiQypIYAxuucnWJ+KLeLiZ/eZeN9zwsLRkWbBppV3NYP8NhxpBQLXs9ImaV6BNcc6lA42ZvRxZZcB46DK7wq1k5/iI=
-X-Received: by 2002:a2e:2a82:: with SMTP id q124mr15173172ljq.155.1587998746563;
- Mon, 27 Apr 2020 07:45:46 -0700 (PDT)
+        id S1726651AbgD0O4C (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 10:56:02 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 49CE4610A7;
+        Mon, 27 Apr 2020 14:55:30 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 16:55:27 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] mfd: Add ENE KB3930 Embedded Controller driver
+Message-ID: <20200427145527.GA71654@furthur.local>
+References: <20200424221123.106527-1-lkundrak@v3.sk>
+ <20200427064824.GB3559@dell>
 MIME-Version: 1.0
-References: <20200427073132.29997-3-wens@kernel.org> <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
- <CAGb2v66Piu5_2bdqvWV3eEn2Se_y1MNKWvvYBv_J7DA-8jBhbQ@mail.gmail.com>
- <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com> <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
- <74a984fc-ce57-211b-936c-2d77e2e642bb@gmail.com> <a81840d3-813b-51b5-767c-e0d9d270200e@gmail.com>
-In-Reply-To: <a81840d3-813b-51b5-767c-e0d9d270200e@gmail.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Mon, 27 Apr 2020 22:45:34 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65Gtm88MJTTw_MxB0sc8m5=EVzom7zw2Ro_UJgqjOQKkA@mail.gmail.com>
-Message-ID: <CAGb2v65Gtm88MJTTw_MxB0sc8m5=EVzom7zw2Ro_UJgqjOQKkA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
- numbering for LED triggers
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, dmurphy@ti.com,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        jacek.anaszewski@gmail.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427064824.GB3559@dell>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:12 PM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Hi,
->
-> >> So for fixing up the LED node names, we'd probably want the following:
-> >>
-> >>     diy_led: led-0
-> >>     yellow_led: led-1
-> >>     work_led: led-2
->
-> Change proposal for led nodes to comply with preexisting dts.
-> Does this work?
->
-> diy_led: led_0: led-0
-> yellow_led: led_1: led-1
-> work_led: led_2: led-2
->
->
-> blue: led_0: led-0
->
-> A check does not give any warnings.
->
-> make -k ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/leds-gpio.yaml
+On Mon, Apr 27, 2020 at 07:48:24AM +0100, Lee Jones wrote:
+> On Sat, 25 Apr 2020, Lubomir Rintel wrote:
+> 
+> > Hi,
+> > 
+> > please take a look at the following patch set and consider applying it
+> > to the MFD tree. It a new driver with DT binding documentation changes,
+> > utilized by the LED driver submitted here:
+> > 
+> > https://lore.kernel.org/lkml/20200424220240.106055-1-lkundrak@v3.sk/
+> 
+> What is this?  The subject suggests this is a cover-letter for a
+> patch-set, but the patches are not attached to it.  If this is the
+> case, please ensure that you send it --threaded using
+> 
+>  `git send-email`
+> 
+> If it's just a random plea to go look at some set posted onto a
+> mailing list without me on Cc, then no.  Please send the set again,
+> properly, with me listed as a recipient.
 
-IMO the led_N labels are kind of useless... they don't convey the
-information needed to identify the device.
+It indeed is a cover letter for a patch set, it had the patches chained to
+it, with you as a recipient, and it was sent with git send-email. If you
+haven't recevied them then I have no idea why. I do apologize in case it's
+my fault.
 
-A reader seeing
+Perhaps your spam filter dropped them? In that case I'm wondering what
+could bump the spam score for the patches, but not the cover letter.
+In any case, the archive received them:
 
-    &led_0 {
-        linux,default_triggger = "activity";
-    };
+https://lore.kernel.org/lkml/20200424221123.106527-1-lkundrak@v3.sk/
 
-in some device tree (overlay) has no idea what this snippet is supposed
-to do. The person has to go back to the base dts / dtsi file to figure
-that out.
+I wouldn't mind resending the messages, but I'd prefer to understand
+what happened to them first.
 
-But seriously, you should start a separate thread to discuss this issue.
-
-ChenYu
-
-> >
-> > That doesn't look pretty either.
-> > Would like to hear the maintainers view on how to handle other cases
-> > without 'led' like for example 'blue' for mk808.
-> >
+Lubo
