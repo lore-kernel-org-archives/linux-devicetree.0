@@ -2,180 +2,162 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BABC4CECC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 19:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841D5C4CECD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 19:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E328C214AF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 19:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D43206B8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 19:54:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="XgxUF9Vy";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="pbNz3UCZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="K3QM6nur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbgD0TuI (ORCPT
+        id S1726205AbgD0Tyd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:50:08 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:53132 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgD0TuI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:50:08 -0400
-Received: by mail.z3ntu.xyz (Postfix, from userid 182)
-        id 2477BC4D5F; Mon, 27 Apr 2020 19:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1588017006; bh=Tp5K0z6qXk66LE+x4u+qGGY18uOXh/OQIqEnu5hZFXg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=XgxUF9Vyf52xMS3BxfBY340LUDK+q6P4zfeGyNkRPGJKJQRuEZGKkmG0IywjstE1d
-         YVcJ9+L4y5alvyz8HYnMnGGK4DFZbOaBEAlB4W4a5FkUo1+pKkTPrO74965c1gSPvB
-         CzMwQ+WPAlGueZT+gRjdaruDvji8BV4n3DcFcQBY=
-Received: from g550jk.localnet (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 78112C4C9D;
-        Mon, 27 Apr 2020 19:49:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1588016997; bh=Tp5K0z6qXk66LE+x4u+qGGY18uOXh/OQIqEnu5hZFXg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=pbNz3UCZ4ArCYHMDrSstU3Ei+42CwaW2E6sA6fEd4B3Ds5xdLdg87gkkHJ9EOuxWv
-         mS2RG4rD+ZiBT0uF6/g0Pg0aaIWZ2wXShtqffynnT1izO8Y+ukVdAv2nsgM/fFDyHa
-         qmOYcX/5wTQ3Uo/gIOWSwWoN0t/79F4nq+fL/Pzs=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
+        Mon, 27 Apr 2020 15:54:33 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58946 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgD0Tyc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 15:54:32 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RJsDMO007386;
+        Mon, 27 Apr 2020 14:54:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588017253;
+        bh=dwly5aN+uAHdquqvnejrhvQPF5JgoVydz5AkBpeUbCI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=K3QM6nurhmKSBibvGWCs0BBJ8FGXQGmtn2TASc56KnQTAqVf0IG5ni6P6f52VSRzM
+         gZZIdiWq1bmYtxQG0MkSjgY5f4x8b777rx/bpX4Y4Tg+RnYbla+LWoCd4aizR16aQO
+         fBugqJ99DU6sWe/if/S3ljKYaNfit6OM5ZRjsVB4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RJsDBm005665;
+        Mon, 27 Apr 2020 14:54:13 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
+ Apr 2020 14:54:12 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 27 Apr 2020 14:54:12 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RJsBYI080761;
+        Mon, 27 Apr 2020 14:54:11 -0500
+Subject: Re: [PATCH 4/4] remoteproc/k3-dsp: Add support for C71x DSPs
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v3 2/2] leds: add sgm3140 driver
-Date:   Mon, 27 Apr 2020 21:49:54 +0200
-Message-ID: <318932736.Jt2qlLCP7m@g550jk>
-In-Reply-To: <20200427095102.GA21572@duo.ucw.cz>
-References: <20200421191354.1443017-1-luca@z3ntu.xyz> <20200421191354.1443017-3-luca@z3ntu.xyz> <20200427095102.GA21572@duo.ucw.cz>
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Clement Leger <cleger@kalray.eu>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200325204701.16862-1-s-anna@ti.com>
+ <20200325204701.16862-5-s-anna@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <59ac4e15-205a-7205-d013-da91b7426688@ti.com>
+Date:   Mon, 27 Apr 2020 14:54:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4979951.K97e9W9pSL"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+In-Reply-To: <20200325204701.16862-5-s-anna@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---nextPart4979951.K97e9W9pSL
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-On Montag, 27. April 2020 11:51:02 CEST Pavel Machek wrote:
-> Hi!
+On 3/25/20 3:47 PM, Suman Anna wrote:
+> The Texas Instrument's K3 J721E SoCs have a newer next-generation
+> C71x DSP Subsystem in the MAIN voltage domain in addition to the
+> previous generation C66x DSP subsystems. The C71x DSP subsystem is
+> based on the TMS320C71x DSP CorePac module. The C71x CPU is a true
+> 64-bit machine including 64-bit memory addressing and single-cycle
+> 64-bit base arithmetic operations and supports vector signal processing
+> providing a significant lift in DSP processing power over C66x DSPs.
+> J721E SoCs use a C711 (a one-core 512-bit vector width CPU core) DSP
+> that is cache coherent with the A72 Arm cores.
 > 
-> > Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
-> > 
-> > This device is controlled by two GPIO pins, one for enabling and the
-> > second one for switching between torch and flash mode.
-> > 
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> Each subsystem has one or more Fixed/Floating-Point DSP CPUs, with 32 KB
+> of L1P Cache, 48 KB of L1D SRAM that can be configured and partitioned as
+> either RAM and/or Cache, and 512 KB of L2 SRAM configurable as either RAM
+> and/or Cache. The CorePac also includes a Matrix Multiplication Accelerator
+> (MMA), a Stream Engine (SE) and a C71x Memory Management Unit (CMMU), an
+> Interrupt Controller (INTC) and a Powerdown Management Unit (PMU) modules.
 > 
-> Thanks, applied, but... I may remove it again.
+> Update the existing K3 DSP remoteproc driver to add support for this C71x
+> DSP subsystem. The firmware loading support is provided by using the newly
+> added 64-bit ELF loader support, and is limited to images using only
+> external DDR memory at the moment. The L1D and L2 SRAMs are used as scratch
+> memory when using as RAMs, and cannot be used for loadable segments. The
+> CMMU is also not supported to begin with, and the driver is designed to
+> treat the MMU as if it is in bypass mode.
 > 
-> > +++ b/drivers/leds/leds-sgm3140.c
-> > @@ -0,0 +1,320 @@
-> > +// SPDX-License-Identifier: GPL-2.0
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>   drivers/remoteproc/ti_k3_dsp_remoteproc.c | 17 +++++++++++++++++
+>   1 file changed, 17 insertions(+)
 > 
-> Would you consider GPL-2+?
+> diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> index 7b712ef74611..48d26f7d5f48 100644
+> --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> @@ -649,6 +649,9 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
+>   
+>   	rproc->has_iommu = false;
+>   	rproc->recovery_disabled = true;
+> +	/* C71x is a 64-bit processor, so plug in generic .sanity_check ops */
+> +	rproc->ops->sanity_check = rproc_elf_sanity_check;
+> +
 
-I don't really have a preference either way but GPL-2.0-or-later is fine for 
-me.
+Will drop this on the next version, this is no longer needed after 
+commit e29ff72b7794 ("remoteproc: remove rproc_elf32_sanity_check") 
+currently on rproc-next.
 
+regards
+Suman
+
+
+>   	kproc = rproc->priv;
+>   	kproc->rproc = rproc;
+>   	kproc->dev = dev;
+> @@ -789,6 +792,12 @@ static const struct k3_dsp_mem_data c66_mems[] = {
+>   	{ .name = "l1dram", .dev_addr = 0xf00000 },
+>   };
+>   
+> +/* C71x cores only have a L1P Cache, there are no L1P SRAMs */
+> +static const struct k3_dsp_mem_data c71_mems[] = {
+> +	{ .name = "l2sram", .dev_addr = 0x800000 },
+> +	{ .name = "l1dram", .dev_addr = 0xe00000 },
+> +};
+> +
+>   static const struct k3_dsp_dev_data c66_data = {
+>   	.mems = c66_mems,
+>   	.num_mems = ARRAY_SIZE(c66_mems),
+> @@ -796,8 +805,16 @@ static const struct k3_dsp_dev_data c66_data = {
+>   	.uses_lreset = true,
+>   };
+>   
+> +static const struct k3_dsp_dev_data c71_data = {
+> +	.mems = c71_mems,
+> +	.num_mems = ARRAY_SIZE(c71_mems),
+> +	.boot_align_addr = SZ_2M,
+> +	.uses_lreset = false,
+> +};
+> +
+>   static const struct of_device_id k3_dsp_of_match[] = {
+>   	{ .compatible = "ti,j721e-c66-dsp", .data = &c66_data, },
+> +	{ .compatible = "ti,j721e-c71-dsp", .data = &c71_data, },
+>   	{ /* sentinel */ },
+>   };
+>   MODULE_DEVICE_TABLE(of, k3_dsp_of_match);
 > 
-> > +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-> > +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-> 
-> Ok.
-> 
-> > +static int sgm3140_probe(struct platform_device *pdev)
-> > +{
-> 
-> ...
-> 
-> > +	led_cdev->brightness_set_blocking = sgm3140_brightness_set;
-> > +	led_cdev->max_brightness = LED_ON;
-> 
-> Don't do this, unless you really have 255 levels of brightness.
-
-LED_ON is 1, so the brightness available is 0 - 1.
-
-> 
-> > +	/* Create V4L2 Flash subdev */
-> > +	priv->v4l2_flash = v4l2_flash_init(&pdev->dev,
-> > +					   child_node,
-> > +					   fled_cdev, NULL,
-> > +					   &v4l2_sd_cfg);
-> > +	if (IS_ERR(priv->v4l2_flash)) {
-> 
-> Does this need some #ifdef guards?
-
-v4l2_flash_init has a NULL-returning version when CONFIG_V4L2_FLASH_LED_CLASS 
-is not defined (see https://elixir.bootlin.com/linux/latest/source/include/
-media/v4l2-flash-led-class.h#L166 )
-
-> 
-> > +		ret = PTR_ERR(priv->v4l2_flash);
-> > +		goto err;
-> > +	}
-> > +
-> > +	return ret;
-> 
-> Should this return 0?
-
-ret should be 0 here, so it shouldn't matter much.
-
-> 
-> > +err:
-> > +	fwnode_handle_put(child_node);
-> > +	return ret;
-> > +}
-> 
-> Does non-error path needs handle_put, too?
-
-I don't think so, I'm passing child_node to v4l2_flash_init which then saves 
-the pointer to v4l2_subdev->fwnode. 
-
-The devm_led_classdev_flash_register_ext function also seems to store the 
-pointer (led_cdev->dev->fwnode = init_data->fwnode; in 
-led_classdev_register_ext)
-
-> 
-> Best regards,
-> 								
-	Pavel
-
-Regards,
-Luca
---nextPart4979951.K97e9W9pSL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEObrSLwgs2pG6FY/6cthDuJ1N11YFAl6nN2IACgkQcthDuJ1N
-11aAZBAA0i4n3JlvsQXSwCK/Fm8tiPmVsJPyFwa/Pt2f4xSUnBtjbBxnkdEt6MhK
-SnYIfBNZAjnTcNQeIObdGMjJ6nhMVk3zqXD8P2QfxQJL3I9izpjQv0cDsMzmFrsk
-JKjWeBCayt/AjhOU5pF48nOe6MDAzNNP+Eg1He2HMzJi43klsuRBtqadn6AzTgWz
-xaCX+BcZDdMZv+ZaJOfUkRkWVEjN2OvIRBSj3uIZMZ09+fTMSUgy26aWyxWMjMYX
-N+jqlBzVfp+UBBHcE3vwTqwlVfn4f5cNlhIAN+g9QtTAZ5/1gH7uMzIAaqZamvJp
-5ckBQvoz07051RkHmlbc5RrJf1rMuVJvnSlFw+MI5jGg7q0GmL6qTE9E8d46KT/8
-L9FV3uHJzeaos5DkGAZ40T0UmB130RzfvIpXcnq6r8dpTatduGHae1Rli8+bsTuL
-CFMywEMutthCiC9ql+FVByTlysTNRZO9V8ca3CwTFVDy90AxfjkZg5Wclo4wkE+o
-3Pj106n1C8jqfRX9dhO79LlcnG6+DOzim0+V+S78pHBPrvzQMVBLExC+VWZiia2a
-Ptk0vbKes2A6BRWWjSNFPun0X1aryXDl3gk3YAeBAN14tjMpepx8JrnzPGRpMD3a
-7rm2xshmhiGC1ncqGW8WUosoEc61IOHXZPN1Pz6osY1RXCm2zzY=
-=y4oW
------END PGP SIGNATURE-----
-
---nextPart4979951.K97e9W9pSL--
-
-
 
