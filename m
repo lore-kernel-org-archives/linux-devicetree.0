@@ -2,130 +2,166 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6893FC5519E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401FDC55199
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42CB0206CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BFB6206CD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hgm0O5D0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I6JmHCAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgD0KWp (ORCPT
+        id S1726855AbgD0K2Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:22:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726589AbgD0KWo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:22:44 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E85CC03C1A7
-        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 03:22:44 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 18so7587294pfv.8
-        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 03:22:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1CyxLaZcj63tQcR7tpc4uGoE1KDGBKikBpluCv751iQ=;
-        b=Hgm0O5D0lCarAkzn4DV0qMdx7tM3kC1QJVrjbaAa/X38bcsMUwXZDOePZRakepLaEi
-         ya2IRGM2AuFx6/UTyzBLHVx9q79FtdJq/l/m3VSUHXUvl5AGOsXg02/t+JpagqTKBY+l
-         obX+tcG3SyQnpGzNDAdirBSQEglqgR6wCxsUrwAQQzjt2Bu+XzZsIEHvDpjMra1GLSlQ
-         MSEf4ffKitmCDwnSIVAkqJSZNUB/aQfo6Ui2zLT0F5Ryz8LEqvNYgvQGnyKwe77+XYoS
-         Vxb+SytqcBGuoccm99VXH3I6Ke6RBkkw2FA3eFkxWF4W/BvMnNrec62dGeUBH+npxyEk
-         XcPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1CyxLaZcj63tQcR7tpc4uGoE1KDGBKikBpluCv751iQ=;
-        b=s7uGJd29WMNungCSCHQUwYKJePi3u0PdIOq5V4dAIqyVo99TO8hC9S4Pf+GQ1yTokO
-         aO7l5NciLhtl3eoM4wXZ/st6P2STFkr/c22Qgnp+R2Gb/U9GVOiFnZP49mMM5an2hQto
-         qMxpFYRgiC3lN2sKXZ1BYFXpOMSY9IjOSGmxqiBYIOs52aKtksW2Dsl0CrbAqpYvG2lM
-         OIrOYqL4slrzWvc/AT8FSKAjvL1qreyzFzli52i1LddvxEs+XsA7MVaTPNbJOHuc3+Q7
-         mQBeaLVLaZkVv45XJ8zXoCXFkxKKrohgLb8QQEVx2Mn13lZus/lhYfUnZfq/uAjtOTw6
-         26NQ==
-X-Gm-Message-State: AGi0PuaFUnedpNc5CDY7/yyFQJjEKCpensnVGjPbBzFbHbTj8O5OBGwi
-        +IYpunVj5V/m29s4So3topYmFQ==
-X-Google-Smtp-Source: APiQypK3z4yQqpVlHsZhnbToQmUFhKubYEh51/9LQwynKZdCC2YUpDM70yeaRzHItaf4MzlKveltLA==
-X-Received: by 2002:a62:fc82:: with SMTP id e124mr23801311pfh.126.1587982963367;
-        Mon, 27 Apr 2020 03:22:43 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id h31sm11276301pjb.33.2020.04.27.03.22.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Apr 2020 03:22:42 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 15:52:40 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH 10/10] cpufreq: dt: Add support for r8a7742
-Message-ID: <20200427102240.jsskbskczvctvcwv@vireshk-i7>
-References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587678050-23468-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV6J-_gBkzhUXtA8OrxhJVzyrAqjA8oeGJGBp86X-C3Nw@mail.gmail.com>
- <20200427092408.g2vpc6j2c6it4x2i@vireshk-i7>
- <CA+V-a8vwF=u53dZ_U4vX3oAUHrBh5uVUBeOTiDqTZJfV8UUeCA@mail.gmail.com>
+        Mon, 27 Apr 2020 06:28:16 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33592 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgD0K2P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 06:28:15 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RASC6I053238;
+        Mon, 27 Apr 2020 05:28:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587983292;
+        bh=OIoRkEDtSdqjO07eoDGoCXzJPcwcaFncwmq6XymLSwQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=I6JmHCAwl0UmdN6MVgBG7ihi8V0D6OjmzdLnTWGgj6DEW/JyGj09c7o7gPOXG63LQ
+         naaPd8fQRButejVsBYVlpq3/tXzzgdkTzhyFc4mJ6Z4tZofTAoBHmht/0+yhHcjnQb
+         iTAIDeLMxwe7MBTmSvRRDvqkKTSn5tY2T86GfoNc=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RASC93101456
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Apr 2020 05:28:12 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
+ Apr 2020 05:28:12 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 27 Apr 2020 05:28:12 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RAS9l5043373;
+        Mon, 27 Apr 2020 05:28:10 -0500
+Subject: Re: [PATCH] arm64: dts: ti: k3-am65-main: Add ehrpwm nodes
+To:     Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200322112630.25541-1-vigneshr@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <0ebef6a3-7b0e-fc3a-3101-7e1a135093b0@ti.com>
+Date:   Mon, 27 Apr 2020 13:28:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8vwF=u53dZ_U4vX3oAUHrBh5uVUBeOTiDqTZJfV8UUeCA@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200322112630.25541-1-vigneshr@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 27-04-20, 11:20, Lad, Prabhakar wrote:
-> Hi Viresh,
+On 22/03/2020 13:26, Vignesh Raghavendra wrote:
+> Add DT nodes for all ehrpwm instances present on AM654 EVM.
 > 
-> On Mon, Apr 27, 2020 at 10:24 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 27-04-20, 11:22, Geert Uytterhoeven wrote:
-> > > Hi Prabhakar,
-> > >
-> > > This patch should be merged through Viresh's cpufreq tree (CCed).
-> > >
-> > > On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
-> > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > Add the compatible strings for supporting the generic cpufreq driver on
-> > > > the Renesas RZ/G1H (R8A7742) SoC.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > >
-> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Prabhakar,
-> >
-> > Please resend the patch with all dependencies to me so I can apply it.
-> >
-> This is the only patch which is needed for R8A7742 SoC which needs to
-> be applied for drivers/cpufreq. Shall I still repost it or you are
-> happy to pick this one up ?
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+> 
+> clk driver and bindings has been merged to clk-next tree.
 
-would be easier for me if you repost it. I don't have it in my
-mailbox.
+Queued up for 5.8, thanks.
 
--- 
-viresh
+-Tero
+
+> 
+>   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 60 ++++++++++++++++++++++++
+>   1 file changed, 60 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> index e5df20a2d2f9..da6427bed801 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> @@ -285,6 +285,12 @@ serdes_mux: mux-controller {
+>   			mux-reg-masks = <0x4080 0x3>, /* SERDES0 lane select */
+>   					<0x4090 0x3>; /* SERDES1 lane select */
+>   		};
+> +
+> +		ehrpwm_tbclk: syscon@4140 {
+> +			compatible = "ti,am654-ehrpwm-tbclk", "syscon";
+> +			reg = <0x4140 0x18>;
+> +			#clock-cells = <1>;
+> +		};
+>   	};
+>   
+>   	dwc3_0: dwc3@4000000 {
+> @@ -742,4 +748,58 @@ csi2_0: port@0 {
+>   			};
+>   		};
+>   	};
+> +
+> +	ehrpwm0: pwm@3000000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3000000 0x0 0x100>;
+> +		power-domains = <&k3_pds 40 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 0>, <&k3_clks 40 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
+> +
+> +	ehrpwm1: pwm@3010000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3010000 0x0 0x100>;
+> +		power-domains = <&k3_pds 41 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 1>, <&k3_clks 41 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
+> +
+> +	ehrpwm2: pwm@3020000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3020000 0x0 0x100>;
+> +		power-domains = <&k3_pds 42 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 2>, <&k3_clks 42 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
+> +
+> +	ehrpwm3: pwm@3030000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3030000 0x0 0x100>;
+> +		power-domains = <&k3_pds 43 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 3>, <&k3_clks 43 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
+> +
+> +	ehrpwm4: pwm@3040000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3040000 0x0 0x100>;
+> +		power-domains = <&k3_pds 44 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 4>, <&k3_clks 44 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
+> +
+> +	ehrpwm5: pwm@3050000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3050000 0x0 0x100>;
+> +		power-domains = <&k3_pds 45 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 5>, <&k3_clks 45 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
+>   };
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
