@@ -2,74 +2,90 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A85C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 06:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8213C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 06:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1469206B6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 06:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC02F2072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 06:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgD0G2u (ORCPT
+        id S1726557AbgD0GdG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:28:50 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:38196 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726407AbgD0G2u (ORCPT
+        Mon, 27 Apr 2020 02:33:06 -0400
+Received: from smtprelay0047.hostedemail.com ([216.40.44.47]:33794 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726221AbgD0GdG (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:28:50 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 27 Apr 2020 11:58:47 +0530
-Received: from c-skakit-linux.qualcomm.com ([10.242.50.210])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 27 Apr 2020 11:58:32 +0530
-Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
-        id 36AFB3BD4; Mon, 27 Apr 2020 11:58:31 +0530 (IST)
-From:   satya priya <skakit@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy.qti.qualcomm.com@qualcomm.com,
-        satya priya <skakit@codeaurora.org>
-Subject: [PATCH] arm64: dts: sc7180: Add wakeup support over UART RX
-Date:   Mon, 27 Apr 2020 11:57:24 +0530
-Message-Id: <1587968844-26667-1-git-send-email-skakit@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 27 Apr 2020 02:33:06 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 08A06100E7B45;
+        Mon, 27 Apr 2020 06:33:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: shape82_1aade746dd105
+X-Filterd-Recvd-Size: 2237
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Apr 2020 06:33:03 +0000 (UTC)
+Message-ID: <79ade7bc8ce57ef11f94011bad1842372c61fdd7.camel@perches.com>
+Subject: Re: [PATCH] get_maintainer: Add email addresses from .yaml files
+From:   Joe Perches <joe@perches.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Collabora Kernel ML <kernel@collabora.com>
+Date:   Sun, 26 Apr 2020 23:33:02 -0700
+In-Reply-To: <20200427055755.GA21898@ravnborg.org>
+References: <87d082jtfn.fsf@collabora.com>
+         <20200420175909.GA5810@ravnborg.org>
+         <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
+         <9a32f150f85f851d04afd148b2a9a5cf203f7ce1.camel@perches.com>
+         <7beaedfd63017973b910dd21cac13ecb42dbe503.camel@perches.com>
+         <20200427055755.GA21898@ravnborg.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the necessary pinctrl and interrupts to make UART
-wakeup capable.
+On Mon, 2020-04-27 at 07:57 +0200, Sam Ravnborg wrote:
+> Hi Joe.
 
-Signed-off-by: satya priya <skakit@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Hi Sam.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 4216b57..3a49603 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -637,9 +637,12 @@
- 				reg = <0 0x0088c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
--				pinctrl-names = "default";
-+				pinctrl-names = "default", "sleep";
- 				pinctrl-0 = <&qup_uart3_default>;
--				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
-+				pinctrl-1 = <&qup_uart3_default>;
-+				interrupts-extended =
-+					<&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
-+					<&tlmm 41 0>;
- 				status = "disabled";
- 			};
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+> On Sun, Apr 26, 2020 at 10:40:52PM -0700, Joe Perches wrote:
+> > .yaml files can contain maintainer/author addresses and it seems
+> > unlikely or unnecessary that individual MAINTAINER file section
+> > entries for each .yaml file will be created.
+> > 
+> > So dd the email addresses found in .yaml files to the default
+>      ^
+>      add
+
+Andrew, can you add the a to this please?
+
+> Signed-off-by: Joe Perches <joe@perches.com>
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> Tested-by: Sam Ravnborg <sam@ravnborg.org>
+> 
+> The patch did not apply on top of -rc3, but it was trivial to fix.
+> Tested and works like a charm.
+> Thanks for doing this!
+
+As most of my patches, it was done using -next
+
+cheers, Joe
 
