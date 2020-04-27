@@ -2,89 +2,121 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA446C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EDDC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A671C206D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3CC2075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587998752;
+	bh=hzyH6N5EnDxhPKQQ5UvUR/8HV/kEX+gyqgaSd5fYiJM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fdangJOTZTYfm/rdNyl+TC21LRnmcDGUicsQWPl5mDwn/KYlBFsp//UgjGR/IfUvV
+	 4KRO9Dr9FQpia8EGu2BSeuuB/40Z8uqwfMuuz8LJDU6nnuS9lJK1xp7JU8wbRtdOHS
+	 jXSSdgCKG0srgfpk7f4nESKsOIgz9m3dPETsEwx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgD0OpW (ORCPT
+        id S1728094AbgD0Opt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:45:22 -0400
-Received: from smtprelay0059.hostedemail.com ([216.40.44.59]:60030 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727077AbgD0OpV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:45:21 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 925CE181D303C;
-        Mon, 27 Apr 2020 14:45:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: laugh55_689d99d258c14
-X-Filterd-Recvd-Size: 2256
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 27 Apr 2020 14:45:18 +0000 (UTC)
-Message-ID: <afe39d6c755dbc0d79e913b531ed12ed94ec1b13.camel@perches.com>
-Subject: Re: [PATCH v3 4/4] MAINTAINERS: Add IPK MIPI DSI Host driver entry
-From:   Joe Perches <joe@perches.com>
-To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-Date:   Mon, 27 Apr 2020 07:45:17 -0700
-In-Reply-To: <abe4ca0b0662c17212fc5107080e949f1d3377c1.1587992776.git.angelo.ribeiro@synopsys.com>
-References: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
-         <abe4ca0b0662c17212fc5107080e949f1d3377c1.1587992776.git.angelo.ribeiro@synopsys.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Mon, 27 Apr 2020 10:45:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727881AbgD0Opt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 10:45:49 -0400
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BCA020735;
+        Mon, 27 Apr 2020 14:45:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587998748;
+        bh=hzyH6N5EnDxhPKQQ5UvUR/8HV/kEX+gyqgaSd5fYiJM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=a4HIWd9Qbyw7ELAfzbc7ggl1+0Nc3Xu00nmH0hlJk/DLP4Cs5Z6yM+hcMt0Nqk10z
+         HStRqb76tx7vxWgQ88hK9ixXDfH9VNt4fIMsLVQ9HT60o5QNA8yP0b6QlFWDOJo+94
+         HodFiwyK0j8+v/OLPGEvGRcFcpOvAVTJz/mtj868=
+Received: by mail-lj1-f180.google.com with SMTP id g4so17885715ljl.2;
+        Mon, 27 Apr 2020 07:45:48 -0700 (PDT)
+X-Gm-Message-State: AGi0PubfHRjBE7ADB1goN1C6B9t76ezfXB+is3IECePQEJQJvSphZN8/
+        zzmfcNOBSgZsAk2YBVwBuv13yIL5ekj9HLZFpEQ=
+X-Google-Smtp-Source: APiQypIYAxuucnWJ+KLeLiZ/eZeN9zwsLRkWbBppV3NYP8NhxpBQLXs9ImaV6BNcc6lA42ZvRxZZcB46DK7wq1k5/iI=
+X-Received: by 2002:a2e:2a82:: with SMTP id q124mr15173172ljq.155.1587998746563;
+ Mon, 27 Apr 2020 07:45:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200427073132.29997-3-wens@kernel.org> <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
+ <CAGb2v66Piu5_2bdqvWV3eEn2Se_y1MNKWvvYBv_J7DA-8jBhbQ@mail.gmail.com>
+ <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com> <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
+ <74a984fc-ce57-211b-936c-2d77e2e642bb@gmail.com> <a81840d3-813b-51b5-767c-e0d9d270200e@gmail.com>
+In-Reply-To: <a81840d3-813b-51b5-767c-e0d9d270200e@gmail.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Mon, 27 Apr 2020 22:45:34 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65Gtm88MJTTw_MxB0sc8m5=EVzom7zw2Ro_UJgqjOQKkA@mail.gmail.com>
+Message-ID: <CAGb2v65Gtm88MJTTw_MxB0sc8m5=EVzom7zw2Ro_UJgqjOQKkA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
+ numbering for LED triggers
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>, dmurphy@ti.com,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        jacek.anaszewski@gmail.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2020-04-27 at 16:00 +0200, Angelo Ribeiro wrote:
-> Creates entry for Synopsys DesignWare IPK DRM driver and
-> adds myself as maintainer.
-[]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -5507,6 +5507,14 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
->  F:	Documentation/devicetree/bindings/display/ste,mcde.txt
->  F:	drivers/gpu/drm/mcde/
->  
-> +DRM DRIVER FOR SYNOPSYS DESIGNWARE IPK
-> +M:	Angelo Ribeiro <angelo.ribeiro@synopsys.com>
-> +L:	dri-devel@lists.freedesktop.org
-> +S:	Maintained
-> +F:	drivers/gpu/drm/ipk/
-> +F:	Documentation/devicetree/bindings/display/ipk/
-> +T:	git git://anongit.freedesktop.org/drm/drm-misc
+On Mon, Apr 27, 2020 at 10:12 PM Johan Jonker <jbx6244@gmail.com> wrote:
+>
+> Hi,
+>
+> >> So for fixing up the LED node names, we'd probably want the following:
+> >>
+> >>     diy_led: led-0
+> >>     yellow_led: led-1
+> >>     work_led: led-2
+>
+> Change proposal for led nodes to comply with preexisting dts.
+> Does this work?
+>
+> diy_led: led_0: led-0
+> yellow_led: led_1: led-1
+> work_led: led_2: led-2
+>
+>
+> blue: led_0: led-0
+>
+> A check does not give any warnings.
+>
+> make -k ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/leds-gpio.yaml
 
-There is now a preferred order for the entries in a section.
+IMO the led_N labels are kind of useless... they don't convey the
+information needed to identify the device.
 
-Please use:
+A reader seeing
 
-DRM DRIVER FOR SYNOPSYS DESIGNWARE IPK
-M:	Angelo Ribeiro <angelo.ribeiro@synopsys.com>
-L:	dri-devel@lists.freedesktop.org>
-S:	Maintained
-T:	git git://anongit.freedesktop.org/drm/drm-misc
-F:	Document
-ation/devicetree/bindings/display/ipk/>
-F:	drivers/gpu/drm/ipk/
+    &led_0 {
+        linux,default_triggger = "activity";
+    };
 
+in some device tree (overlay) has no idea what this snippet is supposed
+to do. The person has to go back to the base dts / dtsi file to figure
+that out.
 
+But seriously, you should start a separate thread to discuss this issue.
+
+ChenYu
+
+> >
+> > That doesn't look pretty either.
+> > Would like to hear the maintainers view on how to handle other cases
+> > without 'led' like for example 'blue' for mk808.
+> >
