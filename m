@@ -2,146 +2,427 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,WEIRD_QUOTING autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4D4C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 11:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF704C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 11:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2437206CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 11:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CCE206BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 11:11:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SnzKRxZD"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="N+WGbFSC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgD0LKe (ORCPT
+        id S1726907AbgD0LLc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:10:34 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37512 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgD0LKe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 07:10:34 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RBASf7062582;
-        Mon, 27 Apr 2020 06:10:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587985828;
-        bh=6o3fHUTIK3/xLXNdQ8fFKAoInXTV8g8rkJSR1shX2f8=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=SnzKRxZDQ5HhfrFr8/I5Z3jt0JQUdqAlYDRSZnq+kZNgHk37fklNE78mz2xMF26bj
-         BZoKFkJewpCLbsdqlr2REGLJwdh5DlF9uX460SjvlXpzrpCUm1rlT8O0JnTrkcFejl
-         E8C44IqonZFUIndgXlD5wKXP7MSxKJvBrdpV1h7o=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RBASaT115728
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Apr 2020 06:10:28 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 06:10:27 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 06:10:27 -0500
-Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RBAPaE007985;
-        Mon, 27 Apr 2020 06:10:26 -0500
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-j721e-main.dtsi: Add DSS node
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200422091512.950-1-tomi.valkeinen@ti.com>
- <20200422091512.950-2-tomi.valkeinen@ti.com>
- <ade3a177-f060-bc40-bcc1-494093e3071d@ti.com>
- <47b7f858-a8d9-1c3b-4dca-2cc493f6730f@ti.com>
- <fa497e8d-7911-5f3d-cf91-347370f8edaa@ti.com>
-From:   Jyri Sarha <jsarha@ti.com>
-Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <217c0c14-f4fb-7321-9f57-205df0cd01fe@ti.com>
-Date:   Mon, 27 Apr 2020 14:10:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Apr 2020 07:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726604AbgD0LLb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 07:11:31 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7431EC0610D5;
+        Mon, 27 Apr 2020 04:11:31 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id g16so13130715eds.1;
+        Mon, 27 Apr 2020 04:11:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cYrmFZxs8semvvpV6t6EBUmZhrTRTZ0f8zlUla6LICQ=;
+        b=N+WGbFSCdZbEUenghH0QLH3BTBuZdhZlrDZ5D2+d4BYZTAk4cbLlYI22WhrK6o+rW2
+         tRjzrnLR5Xjb+HiTR4E8HLsaNJ8F0wX9v5e/VzjrvAnE+NPm7ugas1CcUbsZc+Fj8lYo
+         y458imnNR2j6IJ1SyVLN32+/T/vROkI3zdRV4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cYrmFZxs8semvvpV6t6EBUmZhrTRTZ0f8zlUla6LICQ=;
+        b=ce9AWaQCuGawpCXD4dJlEEWJxWvU0cYo10XZKhVfOqaDwg8f7p9w6pgnQDfyZH4JMJ
+         a5hl1y6/o3mpMA4GxZhUTgZwi3BbnNuL0dzyNg/tOcDQ5IPJHtN3IdQhkYkn/TsvQysn
+         GasXwuEt4mmenJ7HKFT/XFeNaiHzr8mLwnc+wVlM9z9U6qjqbHS+LaHSpygLO4F6qAI6
+         Br11Q9F9eBdIwi9xR1xn8UfRuoWcMPZ+J5tuSnJQRGDOMXhvT75Tnc/pbaqZmmeVgW0p
+         J4dVXobXT6PCE6NzOHXhm5/eCl3IF0Hho4cMvW0KMnnc/7l9IjZD1hHpGEVjA6ohUQy/
+         vXKQ==
+X-Gm-Message-State: AGi0PuZ3O22UToAqGB+EIob7q9wRU1iHOAayjg3Nxyg17OeIJG/F8Zv1
+        I9shuLRig0JvfKOYtbHIf1n3zk5D5YfoR200FmkQHAJJ
+X-Google-Smtp-Source: APiQypJvTNP86+jD/SHwvVQQVFl05qRnj1+nh6IFWFMoDkqa+B4ehZ42APUY7IeEMp2DwNA/nH6GyozhlIz0M1az0EU=
+X-Received: by 2002:aa7:cf16:: with SMTP id a22mr17747545edy.77.1587985890008;
+ Mon, 27 Apr 2020 04:11:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <fa497e8d-7911-5f3d-cf91-347370f8edaa@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200424135303.20952-1-a.filippov@yadro.com>
+In-Reply-To: <20200424135303.20952-1-a.filippov@yadro.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 27 Apr 2020 11:11:18 +0000
+Message-ID: <CACPK8XcP3V=8fAUfNvRFqPU9G38dGR43Kpp=Uxm=P_AjrMnzBQ@mail.gmail.com>
+Subject: Re: [PATCH v5] ARM: DTS: Aspeed: Add YADRO Nicole BMC
+To:     Alexander Filippov <a.filippov@yadro.com>
+Cc:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 27/04/2020 13:51, Tomi Valkeinen wrote:
-> On 27/04/2020 13:37, Jyri Sarha wrote:
->> On 27/04/2020 13:09, Tero Kristo wrote:
->>>> +        status = "disabled";
->>>
->>> Again, why disabled by default?
->>>
->>
->> tidss device is not functional without a defined video-port. The driver
->> is not implemented in a way that it would handle a broken configuration
->> gracefully.
-> 
-> Then we need to fix it. The driver should handle the case where there
-> are no ports defined just fine.
-> 
+On Fri, 24 Apr 2020 at 13:53, Alexander Filippov <a.filippov@yadro.com> wrote:
+>
+> Nicole is an OpenPower machine with an Aspeed 2500 BMC SoC manufactured
+> by YADRO.
+>
+> Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
 
-Just by reading the code, I would say that currently the probe would
-fail with returned -ENOMEM after calling drm_vblank_init() with zero CRTCs.
+This looks good to me.
 
-So should the probe fail gracefully and silently, or should we try to
-register a DRM device with no CRTCs? Is that even possible?
+Andrew, do you have any comments before I merge?
 
-BR,
-Jyri
-
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> ---
+>  arch/arm/boot/dts/Makefile                  |   1 +
+>  arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts | 316 ++++++++++++++++++++
+>  2 files changed, 317 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e8dd99201397..6f9fe0f959f2 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1347,6 +1347,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+>         aspeed-bmc-microsoft-olympus.dtb \
+>         aspeed-bmc-opp-lanyang.dtb \
+>         aspeed-bmc-opp-mihawk.dtb \
+> +       aspeed-bmc-opp-nicole.dtb \
+>         aspeed-bmc-opp-palmetto.dtb \
+>         aspeed-bmc-opp-romulus.dtb \
+>         aspeed-bmc-opp-swift.dtb \
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts b/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
+> new file mode 100644
+> index 000000000000..31b7e83adc46
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
+> @@ -0,0 +1,316 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright 2019 YADRO
+> +/dts-v1/;
+> +#include "aspeed-g5.dtsi"
+> +#include <dt-bindings/gpio/aspeed-gpio.h>
+> +
+> +/ {
+> +       model = "Nicole BMC";
+> +       compatible = "yadro,nicole-bmc", "aspeed,ast2500";
+> +
+> +       chosen {
+> +               stdout-path = &uart5;
+> +               bootargs = "console=ttyS4,115200 earlyprintk";
+> +       };
+> +
+> +       memory@80000000 {
+> +               reg = <0x80000000 0x20000000>;
+> +       };
+> +
+> +       reserved-memory {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +
+> +               vga_memory: framebuffer@9f000000 {
+> +                       no-map;
+> +                       reg = <0x9f000000 0x01000000>; /* 16M */
+> +               };
+> +
+> +               flash_memory: region@98000000 {
+> +                       no-map;
+> +                       reg = <0x98000000 0x04000000>; /* 64M */
+> +               };
+> +
+> +               coldfire_memory: codefire_memory@9ef00000 {
+> +                       reg = <0x9ef00000 0x00100000>;
+> +                       no-map;
+> +               };
+> +
+> +               gfx_memory: framebuffer {
+> +                       size = <0x01000000>;
+> +                       alignment = <0x01000000>;
+> +                       compatible = "shared-dma-pool";
+> +                       reusable;
+> +               };
+> +
+> +               video_engine_memory: jpegbuffer {
+> +                       size = <0x02000000>;    /* 32M */
+> +                       alignment = <0x01000000>;
+> +                       compatible = "shared-dma-pool";
+> +                       reusable;
+> +               };
+> +       };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               power {
+> +                       gpios = <&gpio ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
+> +               };
+> +
+> +               identify {
+> +                       gpios = <&gpio ASPEED_GPIO(AA, 7) GPIO_ACTIVE_HIGH>;
+> +               };
+> +
+> +               alarm_red {
+> +                       gpios = <&gpio ASPEED_GPIO(AA, 3) GPIO_ACTIVE_HIGH>;
+> +               };
+> +
+> +               alarm_yellow {
+> +                       gpios = <&gpio ASPEED_GPIO(AA, 1) GPIO_ACTIVE_HIGH>;
+> +               };
+> +       };
+> +
+> +       fsi: gpio-fsi {
+> +               compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
+> +               #address-cells = <2>;
+> +               #size-cells = <0>;
+> +               no-gpio-delays;
+> +
+> +               memory-region = <&coldfire_memory>;
+> +               aspeed,sram = <&sram>;
+> +               aspeed,cvic = <&cvic>;
+> +
+> +               clock-gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
+> +               data-gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
+> +               mux-gpios = <&gpio ASPEED_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
+> +               enable-gpios = <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
+> +               trans-gpios = <&gpio ASPEED_GPIO(P, 1) GPIO_ACTIVE_HIGH>;
+> +       };
+> +
+> +       gpio-keys {
+> +               compatible = "gpio-keys";
+> +
+> +               checkstop {
+> +                       label = "checkstop";
+> +                       gpios = <&gpio ASPEED_GPIO(J, 2) GPIO_ACTIVE_LOW>;
+> +                       linux,code = <ASPEED_GPIO(J, 2)>;
+> +               };
+> +       };
+> +
+> +       iio-hwmon-battery {
+> +               compatible = "iio-hwmon";
+> +               io-channels = <&adc 12>;
+> +       };
+> +};
+> +
+> +&fmc {
+> +       status = "okay";
+> +       flash@0 {
+> +               status = "okay";
+> +               m25p,fast-read;
+> +               label = "bmc";
+> +               spi-max-frequency = <50000000>;
+> +#include "openbmc-flash-layout.dtsi"
+> +       };
+> +};
+> +
+> +&spi1 {
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_spi1_default>;
+> +
+> +       flash@0 {
+> +               status = "okay";
+> +               m25p,fast-read;
+> +               label = "pnor";
+> +               spi-max-frequency = <100000000>;
+> +       };
+> +};
+> +
+> +&lpc_ctrl {
+> +       status = "okay";
+> +       memory-region = <&flash_memory>;
+> +       flash = <&spi1>;
+> +};
+> +
+> +&uart1 {
+> +       /* Rear RS-232 connector */
+> +       status = "okay";
+> +
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_txd1_default
+> +                       &pinctrl_rxd1_default
+> +                       &pinctrl_nrts1_default
+> +                       &pinctrl_ndtr1_default
+> +                       &pinctrl_ndsr1_default
+> +                       &pinctrl_ncts1_default
+> +                       &pinctrl_ndcd1_default
+> +                       &pinctrl_nri1_default>;
+> +};
+> +
+> +&uart5 {
+> +       status = "okay";
+> +};
+> +
+> +&mac0 {
+> +       status = "okay";
+> +
+> +       use-ncsi;
+> +
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_rmii1_default>;
+> +       clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
+> +                <&syscon ASPEED_CLK_MAC1RCLK>;
+> +       clock-names = "MACCLK", "RCLK";
+> +};
+> +
+> +&i2c0 {
+> +       status = "okay";
+> +
+> +       eeprom@50 {
+> +               compatible = "atmel,24c256";
+> +               reg = <0x50>;
+> +               pagesize = <64>;
+> +       };
+> +};
+> +
+> +&i2c2 {
+> +       status = "okay";
+> +       /* CPU0 characterization connector */
+> +};
+> +
+> +&i2c3 {
+> +       status = "okay";
+> +       /* CLK GEN SI5338 */
+> +};
+> +
+> +&i2c4 {
+> +       status = "okay";
+> +       /* Voltage regulators for CPU0 */
+> +};
+> +
+> +&i2c5 {
+> +       status = "okay";
+> +       /* Voltage regulators for CPU1 */
+> +};
+> +
+> +&i2c6 {
+> +       status = "okay";
+> +
+> +       rtc@32 {
+> +               compatible = "epson,rx8900";
+> +               reg = <0x32>;
+> +       };
+> +};
+> +
+> +&i2c7 {
+> +       status = "okay";
+> +       /* CPLD */
+> +};
+> +
+> +&gpio {
+> +       gpio-line-names =
+> +       /*A0-A7*/       "","cfam-reset","","","","","fsi-mux","",
+> +       /*B0-B7*/       "","","","","","","","",
+> +       /*C0-C7*/       "","","","","","","","",
+> +       /*D0-D7*/       "fsi-enable","","","nic_func_mode0","nic_func_mode1","","","",
+> +       /*E0-E7*/       "","ncsi_cfg","","","","","","",
+> +       /*F0-F7*/       "","","","","","","","",
+> +       /*G0-G7*/       "","","","","","","","",
+> +       /*H0-H7*/       "","","","","","","","",
+> +       /*I0-I7*/       "","","","","","","","",
+> +       /*J0-J7*/       "","","checkstop","","","","","",
+> +       /*K0-K7*/       "","","","","","","","",
+> +       /*L0-L7*/       "","","","","","","","",
+> +       /*M0-M7*/       "","","","","","","","",
+> +       /*N0-N7*/       "","","","","","","","",
+> +       /*O0-O7*/       "","","id-button","","","","","",
+> +       /*P0-P7*/       "","fsi-trans","","","","","","",
+> +       /*Q0-Q7*/       "","","","","","","","",
+> +       /*R0-R7*/       "","","","","","","","",
+> +       /*S0-S7*/       "","","","","","","","seq_cont",
+> +       /*T0-T7*/       "","","","","","","","",
+> +       /*U0-U7*/       "","","","","","","","",
+> +       /*V0-V7*/       "","","","","","","","",
+> +       /*W0-W7*/       "","","","","","","","",
+> +       /*X0-X7*/       "","","","","","","","",
+> +       /*Y0-Y7*/       "","","","","","","","",
+> +       /*Z0-Z7*/       "","","","","","","","",
+> +       /*AA0-AA7*/     "fsi-clock","led_alarm_yellow","fsi-data","led_alarm_red",
+> +                       "led_power","","","led_identify",
+> +       /*AB0-AB7*/     "","","","","","","","",
+> +       /*AC0-AC7*/     "","","","","","","","";
+> +
+> +       nic_func_mode0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +       };
+> +       nic_func_mode1 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +       };
+> +       seq_cont {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +       };
+> +       ncsi_cfg {
+> +               gpio-hog;
+> +               input;
+> +               gpios = <ASPEED_GPIO(E, 1) GPIO_ACTIVE_HIGH>;
+> +       };
+> +};
+> +
+> +&vuart {
+> +       status = "okay";
+> +};
+> +
+> +&gfx {
+> +       status = "okay";
+> +       memory-region = <&gfx_memory>;
+> +};
+> +
+> +&pinctrl {
+> +       aspeed,external-nodes = <&gfx &lhc>;
+> +};
+> +
+> +&ibt {
+> +       status = "okay";
+> +};
+> +
+> +&vhub {
+> +       status = "okay";
+> +};
+> +
+> +&adc {
+> +       status = "okay";
+> +
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_adc0_default
+> +                       &pinctrl_adc1_default
+> +                       &pinctrl_adc2_default
+> +                       &pinctrl_adc3_default
+> +                       &pinctrl_adc4_default
+> +                       &pinctrl_adc5_default
+> +                       &pinctrl_adc6_default
+> +                       &pinctrl_adc7_default
+> +                       &pinctrl_adc8_default
+> +                       &pinctrl_adc9_default
+> +                       &pinctrl_adc10_default
+> +                       &pinctrl_adc11_default
+> +                       &pinctrl_adc12_default
+> +                       &pinctrl_adc13_default
+> +                       &pinctrl_adc14_default
+> +                       &pinctrl_adc15_default>;
+> +};
+> +
+> +&video {
+> +       status = "okay";
+> +       memory-region = <&video_engine_memory>;
+> +};
+> +
+> +#include "ibm-power9-dual.dtsi"
+> --
+> 2.21.1
+>
