@@ -2,195 +2,214 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F67C55199
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C83C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E53E7206CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C659206CD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 14:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgD0Obs (ORCPT
+        id S1727855AbgD0Oin (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:31:48 -0400
-Received: from muru.com ([72.249.23.125]:51522 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgD0Obs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:31:48 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E62BE8087;
-        Mon, 27 Apr 2020 14:32:34 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 07:31:44 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent
- and clocksource support
-Message-ID: <20200427143144.GQ37466@atomide.com>
-References: <20200417165519.4979-1-tony@atomide.com>
- <20200417165519.4979-3-tony@atomide.com>
- <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
+        Mon, 27 Apr 2020 10:38:43 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.4]:40665 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727807AbgD0Oin (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 10:38:43 -0400
+Received: from [100.113.0.171] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-a.eu-central-1.aws.symcld.net id C7/AC-37389-07EE6AE5; Mon, 27 Apr 2020 14:38:40 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRWlGSWpSXmKPExsVy8MN7Xd2Cd8v
+  iDB7NZ7aYf+Qcq8XhRS8YLW5++sZqcXnXHDaLpdcvMlm07j3C7sDmsWbeGkaPnbPusntsWtXJ
+  5vF5k1wASxRrZl5SfkUCa8afW8tZC3ZqVpzfUNDAuEWpi5GLQ0hgLaNEQ1MLSxcjJ5BTKfHo/
+  R/2LkYODl6BCImF9+VBwpwCZhLLbi1jAgkLCZhK/Ow3AwmzCehIPJq5ngnEZhFQlXj84yUriC
+  0s4Ctx4Us7WFxEoFziwMeZrCCrmAWmMUrs+XiYGSTBKyAocXLmE7C1zAISEgdfvGCGOEFL4ty
+  aVYwTGHlnISmbhaRsASPTKkbLpKLM9IyS3MTMHF1DAwNdQ0NjXSBpZK6XWKWbqJdaqpucmldS
+  lAiU1UssL9YrrsxNzknRy0st2cQIDNWUQob6HYyb177XO8QoycGkJMp7cvWyOCG+pPyUyozE4
+  oz4otKc1OJDjDIcHEoSvOxvgXKCRanpqRVpmTnAuIFJS3DwKInwXgNJ8xYXJOYWZ6ZDpE4xGn
+  P83rBkETPHg6v3VjELseTl56VKifOuBSkVACnNKM2DGwSL50uMslLCvIwMDAxCPAWpRbmZJaj
+  yrxjFORiVhHnlQKbwZOaVwO17BXQKE9ApVfKLQU4pSURISTUwxUz2b3b7u2zmc8HYiYWiT+pr
+  I8ytrK3Oe0fwfxd+fchtemdLRv6V9r7UyWn1mQs0FDqmrDqX6aJ/qjf2/Lxmd1uXnbZZrlfbB
+  Uv9U/6k7g1JfHL+0jktr7jT61++Ylo7sXttnUiUc/mMJ34TM/4rnf35oOPI9DfH566MDWJ7c7
+  ZdqHHZ2hOXe94J3+/JefyMl+NB91XWzOtR09pnOZXPPMxUUNB+uOv//W1RCyVdS+OnTYhasvd
+  GnqPQjJWN3KybZ/997pSh+uDCp2PX1Walq0fbur37qLvw4X3+Fa/4HX6pK33P/VV414312bll
+  LZU83Kp7tJeENfDK8+a1+1+eOsNmw/x7e/8z/MmZoya2SImlOCPRUIu5qDgRAA5sysFiAwAA
+X-Env-Sender: roy.im.opensource@diasemi.com
+X-Msg-Ref: server-9.tower-223.messagelabs.com!1587998319!3025129!2
+X-Originating-IP: [193.240.239.45]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 12847 invoked from network); 27 Apr 2020 14:38:40 -0000
+Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
+  by server-9.tower-223.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 27 Apr 2020 14:38:40 -0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Mon, 27 Apr 2020 16:38:37 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 7A5EF13F673; Mon, 27 Apr 2020 23:38:36 +0900 (KST)
+Message-ID: <4f41d01f505e35543e3840f9ad453dd7373fa91b.1587975654.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1587975654.git.Roy.Im@diasemi.com>
+References: <cover.1587975654.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Mon, 27 Apr 2020 17:20:53 +0900
+Subject: [PATCH V12 2/3] dt-bindings: input: Add document bindings for DA7280
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Add device tree binding information for DA7280 haptic driver.
+Example bindings for DA7280 are added.
 
-* Daniel Lezcano <daniel.lezcano@linaro.org> [200427 09:19]:
-> On 17/04/2020 18:55, Tony Lindgren wrote:
-> > --- a/Documentation/devicetree/bindings/timer/ti,timer.txt
-> > +++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
-> > @@ -14,6 +14,8 @@ Required properties:
-> >  			ti,omap5430-timer (applicable to OMAP543x devices)
-> >  			ti,am335x-timer	(applicable to AM335x devices)
-> >  			ti,am335x-timer-1ms (applicable to AM335x devices)
-> > +			ti,dmtimer-clockevent (when used as for clockevent)
-> > +			ti,dmtimer-clocksource (when used as for clocksource)
-> 
-> Please, submit a separate patch for this.
-> 
-> Before you resend as is, this will be nacked as clocksource / clockevent
-> is not a hardware description but a Linux thing.
-> 
-> Finding a way to characterize that from the DT is an endless discussion
-> since years, so I suggest to use a single property for the timer eg
-> <ti,dmtimer> and initialize the clocksource and the clockevent in the
-> driver.
+Reviewed-by: Rob Herring <robh@kernel.org>.
 
-Hmm good point. We still need to specify which timer is a clocksource
-and which one a clockevent somehow.
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
 
-Maybe we could have a generic properties like the clock framework such as:
+---
+v11: No changes.
+v10: No changes.
+v9: No changes.
+v8: Updated descriptions for new properties.
+v7: No changes.
+v6: No changes.
+v5: Updated descriptions and fixed errors.
+v4: Fixed commit message, properties.
+v3: Fixed subject format.
+v2: No changes
 
-assigned-system-clocksource
-assigned-system-clockevent
 
-Or do we already have something similar that can be used?
+ .../devicetree/bindings/input/dlg,da7280.txt       | 109 +++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
 
-> > diff --git a/drivers/clocksource/timer-ti-dm-systimer.c b/drivers/clocksource/timer-ti-dm-systimer.c
-> > new file mode 100644
-> > --- /dev/null
-> > +++ b/drivers/clocksource/timer-ti-dm-systimer.c
-> > +struct dmtimer_clocksource {
-> > +	struct clocksource dev;
-> > +	struct omap_dm_timer timer;
-> 
-> The usage of the timer field is to use the __omap_dm_timer_* helpers
-> function which does a busy looping on the status before read/write the
-> register. AFAICS, for the clocksource, the posted argument is zero, thus
-> it is possible to replace the calls to these helpers to a write / read
-> and perhaps the struct omap_dm_timer could be removed from the
-> clocksource structure.
-> 
-> The driver gets obfuscated by calls to helpers which does 'posted' things.
-> 
-> Why not remove those and handle the case in the driver to make it
-> self-encapsuled and remove the omap_dm_timer structure usage in this driver.
+diff --git a/Documentation/devicetree/bindings/input/dlg,da7280.txt b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+new file mode 100644
+index 0000000..e6b719d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+@@ -0,0 +1,109 @@
++Dialog Semiconductor DA7280 Haptics bindings
++
++Required properties:
++- compatible: Should be "dlg,da7280".
++- reg: Specifies the I2C slave address.
++
++- interrupt-parent : Specifies the phandle of the interrupt controller to
++  which the IRQs from DA7280 are delivered to.
++
++- dlg,actuator-type: Set Actuator type. it should be one of:
++  "LRA" - Linear Resonance Actuator type.
++  "ERM-bar" - Bar type Eccentric Rotating Mass.
++  "ERM-coin" - Coin type Eccentric Rotating Mass.
++
++- dlg,const-op-mode: Haptic operation mode for FF_CONSTANT.
++  Possible values:
++	1 - Direct register override(DRO) mode triggered by i2c(default),
++	2 - PWM data source mode controlled by PWM duty,
++- dlg,periodic-op-mode: Haptic operation mode for FF_PERIODIC.
++  Possible values:
++	1 - Register triggered waveform memory(RTWM) mode, the pattern
++	    assigned to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
++	2 - Edge triggered waveform memory(ETWM) mode, external GPI(N)
++	    control are required to enable/disable and it needs to keep
++	    device enabled by sending magnitude (X > 0),
++	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below.
++	The default value is 1 for both of the operation modes.
++	For more details, please see the datasheet.
++
++- dlg,nom-microvolt: Nominal actuator voltage rating.
++  Valid values: 0 - 6000000.
++- dlg,abs-max-microvolt: Absolute actuator maximum voltage rating.
++  Valid values: 0 - 6000000.
++- dlg,imax-microamp: Actuator max current rating.
++  Valid values: 0 - 252000.
++  Default: 130000.
++- dlg,impd-micro-ohms: the impedance of the actuator in micro ohms.
++  Valid values: 0 - 1500000000.
++
++Optional properties:
++- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
++  PWM properties should be named "pwms". And number of cell is different
++  for each pwm device.
++  (See Documentation/devicetree/bindings/pwm/pwm.txt
++   for further information relating to pwm properties)
++
++- dlg,ps-seq-id: the PS_SEQ_ID(pattern ID in waveform memory inside chip)
++  to play back when RTWM-MODE is enabled.
++  Valid range: 0 - 15.
++- dlg,ps-seq-loop: the PS_SEQ_LOOP, Number of times the pre-stored sequence
++  pointed to by PS_SEQ_ID or GPI(N)_SEQUENCE_ID is repeated.
++  Valid range: 0 - 15.
++- dlg,gpiN-seq-id: the GPI(N)_SEQUENCE_ID, pattern to play
++  when gpi0 is triggered, 'N' must be 0 - 2.
++  Valid range: 0 - 15.
++- dlg,gpiN-mode: the pattern mode which can select either
++  "Single-pattern" or "Multi-pattern", 'N' must be 0 - 2.
++- dlg,gpiN-polarity: gpiN polarity which can be chosen among
++  "Rising-edge", "Falling-edge" and "Both-edge",
++  'N' must be 0 - 2
++  Haptic will work by this edge option in case of ETWM mode.
++
++- dlg,resonant-freq-hz: use in case of LRA.
++  the frequency range: 50 - 300.
++  Default: 205.
++
++- dlg,bemf-sens-enable: Enable for internal loop computations.
++- dlg,freq-track-enable: Enable for resonant frequency tracking.
++- dlg,acc-enable: Enable for active acceleration.
++- dlg,rapid-stop-enable: Enable for rapid stop.
++- dlg,amp-pid-enable: Enable for the amplitude PID.
++- dlg,mem-array: Customized waveform memory(patterns) data downloaded to
++  the device during initialization. This is an array of 100 values(u8).
++
++For further information, see device datasheet.
++
++======
++
++Example:
++
++	haptics: da7280-haptics@4a {
++		compatible = "dlg,da7280";
++		reg = <0x4a>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++		dlg,actuator-type = "LRA";
++		dlg,dlg,const-op-mode = <1>;
++		dlg,dlg,periodic-op-mode = <1>;
++		dlg,nom-microvolt = <2000000>;
++		dlg,abs-max-microvolt = <2000000>;
++		dlg,imax-microamp = <170000>;
++		dlg,resonant-freq-hz = <180>;
++		dlg,impd-micro-ohms = <10500000>;
++		dlg,freq-track-enable;
++		dlg,rapid-stop-enable;
++		dlg,mem-array = <
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++		>;
++
++	};
+-- 
+end-of-patch for PATCH V12
 
-Hmm that's a good comment indeed. If we can just use readl/writel for
-clockevent and clocksource driver without worrying about the posted mode
-flags, we can make all the old helpers static for the generic dmtimer
-driver. I'll take a look.
-
-> > +static int dmtimer_systimer_type2_reset(struct omap_dm_timer *timer)
-> > +{
-> > +	void __iomem *sysc = timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET;
-> > +	u32 l;
-> > +
-> 
-> Isn't missing a write here ?
-
-Oops thanks for spotting it. Without that the mode can be whatever left
-over from the bootloader.
-
-> > +static int __init dmtimer_systimer_tag_disabled(struct device_node *np)
-> > +{
-> > +	struct property *prop;
-> > +
-> > +	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
-> > +	if (!prop)
-> > +		return -ENOMEM;
-> > +
-> > +	prop->name = "status";
-> > +	prop->value = "disabled";
-> > +	prop->length = strlen(prop->value);
-> > +
-> > +	return of_add_property(np, prop);
-> 
-> Why not add this property in the DT instead ? That sounds hackish
-
-Yes that's a good point too. We need to configure the source clock anyways
-for the clocksource and clockevent in devicetree anyways, so setting it
-disabled there totally makes sense.
-
-> > +	dmtimer_systimer_enable(timer);
-> > +	dmtimer_systimer_reset(timer);
-> > +	pr_debug("dmtimer rev %08x sysc %08x\n", readl_relaxed(timer->io_base),
-> > +		 readl_relaxed(timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET));
-> > +
-> > +	if (of_find_property(np, "ti,timer-alwon", NULL))
-> > +		timer->capability |= OMAP_TIMER_ALWON;
-> 
-> Where is used this capability in this driver ?
-
-That is just something we should show in dmesg for info as that helps to
-understand the board specific system timer configuration for PM related
-issues folks end up reporting.
-
-> > +static struct irqaction dmtimer_clockevent_irq = {
-> > +	.name		= "gp_timer",
-> > +	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
-> 
-> Why do you need IRQF_IRQPOLL ?
-
-I'll check if that's needed. Probably just something that has mutated into
-the old timer code somehow.
-
-> > +	pa = of_translate_address(np, of_get_address(np, 0, NULL, NULL));
-> > +	pr_info("TI gptimer clockevent: %stimer@%08x at %lu Hz\n",
-> > +		timer->capability & OMAP_TIMER_ALWON ? "always-on " : "",
-> > +		pa, timer->rate);
-> 
-> %pOF instead of of_translate_address ?
-
-That just 0 from the interconnect target module here. But doing %pOF
-on the np->parent should work here and for the clocksource.
-
-> > diff --git a/include/clocksource/timer-ti-dm.h b/include/clocksource/timer-ti-dm.h
-> > --- a/include/clocksource/timer-ti-dm.h
-> > +++ b/include/clocksource/timer-ti-dm.h
-> > @@ -97,6 +97,7 @@ struct omap_dm_timer {
-> >  	int id;
-> >  	int irq;
-> >  	struct clk *fclk;
-> > +	struct clk *iclk;
-> 
-> No need of these clocks in the structure as they are used only to
-> initialize.
-
-OK I'll make them local.
-
-Thanks for the review! I'll fix up the other issues you spotted too,
-they all seem good comments.
-
-Regards,
-
-Tony
