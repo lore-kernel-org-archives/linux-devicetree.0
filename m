@@ -2,69 +2,129 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B26C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 09:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B321DC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 09:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA4E8206B8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 09:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C4F3206CD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 09:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgD0JuN (ORCPT
+        id S1726755AbgD0JvF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:50:13 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35928 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgD0JuN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 05:50:13 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: rcn)
-        with ESMTPSA id A6FFF2A0DCF
-Date:   Mon, 27 Apr 2020 11:50:07 +0200
-From:   Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org, enric.balletbo@collabora.com,
-        robh+dt@kernel.org, kernel@collabora.com,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2] dt-bindings: display: anx7814.txt: convert to yaml
-Message-ID: <20200427095007.5b5hauxev7yho2bj@rcn-XPS-13-9360>
-References: <20200427084658.27962-1-ricardo.canuelo@collabora.com>
- <20200427090900.GA25058@ravnborg.org>
+        Mon, 27 Apr 2020 05:51:05 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:60140 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgD0JvF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 05:51:05 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 046F01C0244; Mon, 27 Apr 2020 11:51:03 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 11:51:02 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v3 2/2] leds: add sgm3140 driver
+Message-ID: <20200427095102.GA21572@duo.ucw.cz>
+References: <20200421191354.1443017-1-luca@z3ntu.xyz>
+ <20200421191354.1443017-3-luca@z3ntu.xyz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200427090900.GA25058@ravnborg.org>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200421191354.1443017-3-luca@z3ntu.xyz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On lun 27-04-2020 11:09:00, Sam Ravnborg wrote:
-> Hi Ricardo.
-> 
-> On Mon, Apr 27, 2020 at 10:46:58AM +0200, Ricardo Cañuelo wrote:
-> > This converts the Analogix ANX7814 bridge DT binding to yaml. Port
-> > definitions and descriptions were expanded, apart from that it's a
-> > direct translation from the original binding.
-> > 
-> > Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-> 
-> One comment below, with that fixed:
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
->
-> ...
->
-> > +
-> > +    i2c0 {
-> Name this i2c
 
-Hi Sam,
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the review, I'll do that.
+Hi!
 
-Cheers,
-Ricardo
+> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+>=20
+> This device is controlled by two GPIO pins, one for enabling and the
+> second one for switching between torch and flash mode.
+>=20
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+
+Thanks, applied, but... I may remove it again.
+
+> +++ b/drivers/leds/leds-sgm3140.c
+> @@ -0,0 +1,320 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+Would you consider GPL-2+?
+
+> +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
+> +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
+
+Ok.
+
+> +static int sgm3140_probe(struct platform_device *pdev)
+> +{
+=2E..
+> +	led_cdev->brightness_set_blocking =3D sgm3140_brightness_set;
+> +	led_cdev->max_brightness =3D LED_ON;
+
+Don't do this, unless you really have 255 levels of brightness.
+
+> +	/* Create V4L2 Flash subdev */
+> +	priv->v4l2_flash =3D v4l2_flash_init(&pdev->dev,
+> +					   child_node,
+> +					   fled_cdev, NULL,
+> +					   &v4l2_sd_cfg);
+> +	if (IS_ERR(priv->v4l2_flash)) {
+
+Does this need some #ifdef guards?
+
+> +		ret =3D PTR_ERR(priv->v4l2_flash);
+> +		goto err;
+> +	}
+> +
+> +	return ret;
+
+Should this return 0?
+
+> +err:
+> +	fwnode_handle_put(child_node);
+> +	return ret;
+> +}
+
+Does non-error path needs handle_put, too?
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqarBgAKCRAw5/Bqldv6
+8tcQAKCWUTuRy7TvgT2+F1Aj1oFotUcn9wCgvlDQBHg5Trhv/KEKFw2CkG70ke8=
+=EEZa
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
