@@ -2,263 +2,180 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DDEC4CECC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE33C4CECD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8B02076A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA212076A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Veb/ERmM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asN92CUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgD0VFA (ORCPT
+        id S1726853AbgD0VKc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:05:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40090 "EHLO
+        Mon, 27 Apr 2020 17:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726384AbgD0VFA (ORCPT
+        by vger.kernel.org with ESMTP id S1726285AbgD0VKc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:05:00 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA0BC03C1A7
-        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 14:04:59 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a21so16273701ljj.11
-        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 14:04:59 -0700 (PDT)
+        Mon, 27 Apr 2020 17:10:32 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9340C0610D5;
+        Mon, 27 Apr 2020 14:10:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id t14so22197733wrw.12;
+        Mon, 27 Apr 2020 14:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FRzDYtIIz0JW+6PZb2zruuBk+QvKYrYZ56R5C7QkFt4=;
-        b=Veb/ERmM/Fvq5x+hnKuzFr+Oi2EvWj3JMRKfS5dreGvXGR7HHDRzCltSvz8iL74KVf
-         vvXa7kQbiusaDvTAOk156Mf7hON3TX2a0FzndnVBAxLoFchHk+njI5H4pAE1kRF3vJo9
-         NexN1jeZjghvsKd2uYooTEC2xo2RIMb7tJyhddQpRSVYJHnyIDBhUWfhvuemKFtWPkyv
-         n+PH/T6Vl0pT7/m/aNwSdWgVFoULgg4DBzPqtfCljbt7hQFJVC+KhAx8/0MD/DpFChAt
-         gnJ5gRLO3ljMyqRBuJAfJwiBuLZqD4q3UecBSDcPrZjGo6g2UuSmLpr+wyuN0e+GOLaF
-         tUyg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YcKWIY2MXEY9yETNeWA3mpQlFZvVkwPb0tBInR/V9Qo=;
+        b=asN92CUC5fWcrPe0XiJkw+FAPmOPy18UXD8TQ1uD4Xy4Qrpt/AqSfmF92tkL9Wlajc
+         ZcCI9g2j0Fto+f34yJyrhkQ+62WUH51jRqCPCetSvGyWQXF1XOrz2zAx6IlWbutEexWU
+         LtXCwTzcFYksytsDyOkVHovzQyVhvxWMJPl0JIenB0otw81EFeOlUtkWFtcpRDE4zpWj
+         A+KGRIq2ow2PY1y+VPrLZKh++HZCDCBubF1KjM+cAO3s4jTd2xxgWhFcxkzkPQYc2CJb
+         xkAvDuoLiYRxFmOYC5f7TmFJQk20UhrZbsWL/oMAh4Uw30KkqPOXtF7ulUwQBMkXU8fB
+         0lQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FRzDYtIIz0JW+6PZb2zruuBk+QvKYrYZ56R5C7QkFt4=;
-        b=TovXwHw6TBlk/FEtq6M1FTILEWICDBtmik0BnczuCYckf/wERQvNxUBaNoeQ/hWong
-         si1Y60bFXgAiMfT1ybTj3YBOhueneQBMKnQi+4xx5uEwXQJv488vYP2NgnJPPu6RBYHg
-         7o+xmb3tlxYLOUVa2gLB/Maz2lIQ1lUQNhtZnbS1yJKCU5UxG9snHqOHBJ/tDyKB+1Dd
-         fyc4eRWi/EUCXW7uHhiQgBXAx3Usi6DhgRlJdrsKF31sFJSDK8reVbUd0it9fDxGf55Z
-         ezL+bPpYyMGvCMFLRu2FBnP2rCVu+Z9fobH50BAPbjBho46uSQjmP2TXcez3D5SloSoW
-         /zuQ==
-X-Gm-Message-State: AGi0Puao7J4BT0o123t+w2cETyLL5j2DRE/fkUgbhG1PkUn7B5n6l668
-        BenzeibgrVbqkUaMxhM6cAHRAy+ph5Op5CoMKBZ7xA==
-X-Google-Smtp-Source: APiQypJcRRtGTPVXnm8p8UXKalah/OzYXIqyedCHVb9HaBb9PhwfiYx7P9YHDFpHDH41Il/4E23OcBSc4zh1bxD3DHw=
-X-Received: by 2002:a2e:9785:: with SMTP id y5mr14239323lji.66.1588021497399;
- Mon, 27 Apr 2020 14:04:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200328185916.98423-1-rajatja@google.com> <20200328185916.98423-2-rajatja@google.com>
- <20200424210316.GI125362@dtor-ws>
-In-Reply-To: <20200424210316.GI125362@dtor-ws>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 27 Apr 2020 14:04:20 -0700
-Message-ID: <CACK8Z6GN63_KuQy3jieTn7uG6T4KQ7jRNKf0_4CVsGkCcY+enA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] Input: atkbd: Expose function row physical map to userspace
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Dmitry Torokhov <dtor@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YcKWIY2MXEY9yETNeWA3mpQlFZvVkwPb0tBInR/V9Qo=;
+        b=RP2zbjX8OJG+9d8WnBeiRzq6TU/RUnFijOEyEqGGMbm+GmJKtaoosSjJeXxSAziziV
+         Gu96916rSFKGQhhbOAS8qGpuuvIMGxDtV2Xhad+E7Ns9pOemVPjwrEykYgiSQBPADTPx
+         T3+5x7I+s5P9e0pb3szg80DRa8G+Yk8LYSU0eupWQpbF8FW3u3ujU0Uhc41ACnQKGSfN
+         yi2kJFhT0rDcHg6FwbmqSySP7J8O9epPRelhI7Q/jYK0OE2G0CPrMRU4Jfo9kbH8N3sc
+         ElRJGuLqhxnLzWkiKKNgwxIRUJeAwHPKRNTkr/ktqBRmQAYMPpN9zrIDxCQumWMvqrT9
+         k2gQ==
+X-Gm-Message-State: AGi0PuZf3BmSAhYkDKAPiZDb20rtZsPf/82EDf+qQUmsm9IMpkA7zzEy
+        aKQNLCkKKksyzu8PrJMVoiM=
+X-Google-Smtp-Source: APiQypIfnE9TCnw4ISHqihiv2DP5aBYbFtJjGfebMYH2oeRlrafHShe2ZdvRiHMknXIYaPxCeid2mw==
+X-Received: by 2002:a5d:6589:: with SMTP id q9mr27853808wru.136.1588021830326;
+        Mon, 27 Apr 2020 14:10:30 -0700 (PDT)
+Received: from [192.168.1.23] (acft175.neoplus.adsl.tpnet.pl. [83.9.221.175])
+        by smtp.gmail.com with ESMTPSA id q184sm511187wma.25.2020.04.27.14.10.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 14:10:29 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] leds: add sgm3140 driver
+To:     Luca Weiss <luca@z3ntu.xyz>, Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@google.com>,
-        Zentaro Kavanagh <zentaro@google.com>,
-        Dominik Behr <dbehr@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20200421191354.1443017-1-luca@z3ntu.xyz>
+ <20200421191354.1443017-3-luca@z3ntu.xyz> <20200427095102.GA21572@duo.ucw.cz>
+ <318932736.Jt2qlLCP7m@g550jk>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <a5b4ddec-e0f9-f8e6-1763-87935569be97@gmail.com>
+Date:   Mon, 27 Apr 2020 23:10:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <318932736.Jt2qlLCP7m@g550jk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Hi Luca,
 
-On Fri, Apr 24, 2020 at 2:03 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Rajat,
->
-> On Sat, Mar 28, 2020 at 11:59:13AM -0700, Rajat Jain wrote:
-> > Certain keyboards have their top-row keys intended
-> > for actions such as "Browser back", "Browser Refresh", "Fullscreen"
-> > etc as their primary mode, thus they will send physical codes for those
-> > actions. Further, they don't have a dedicated "Fn" key so don't have
-> > the capability to generate function key codes (e.g. F1, F2 etc..).
-> > However in this case, if userspace still wants to "synthesize" those
-> > function keys using the top row action keys, it needs to know the
-> > physical position of the top row keys. (Essentially a mapping between
-> > usage codes and a physical location in the top row).
-> >
-> > This patch enhances the atkbd driver to receive such a mapping from the
-> > firmware / device tree, and expose it to userspace in the form of
-> > a function-row-physmap attribute. The attribute would be a space
-> > separated ordered list of physical codes, for the keys in the function
-> > row, in left-to-right order.
-> >
-> > The attribute will only be present if the kernel knows about such
-> > mapping, otherwise the attribute shall not be visible.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > v4: Same as v3
-> > v3: Change to dev_dbg and remove unecessary error check
-> > v2: Remove the Change-Id from the commit log
-> >
-> >  drivers/input/keyboard/atkbd.c | 56 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 56 insertions(+)
-> >
-> > diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
-> > index 7e3eae54c1926..3b20aba1861cd 100644
-> > --- a/drivers/input/keyboard/atkbd.c
-> > +++ b/drivers/input/keyboard/atkbd.c
-> > @@ -24,6 +24,7 @@
-> >  #include <linux/libps2.h>
-> >  #include <linux/mutex.h>
-> >  #include <linux/dmi.h>
-> > +#include <linux/property.h>
-> >
-> >  #define DRIVER_DESC  "AT and PS/2 keyboard driver"
-> >
-> > @@ -63,6 +64,8 @@ static bool atkbd_terminal;
-> >  module_param_named(terminal, atkbd_terminal, bool, 0);
-> >  MODULE_PARM_DESC(terminal, "Enable break codes on an IBM Terminal keyboard connected via AT/PS2");
-> >
-> > +#define MAX_FUNCTION_ROW_KEYS        24
-> > +
-> >  /*
-> >   * Scancode to keycode tables. These are just the default setting, and
-> >   * are loadable via a userland utility.
-> > @@ -230,6 +233,9 @@ struct atkbd {
-> >
-> >       /* Serializes reconnect(), attr->set() and event work */
-> >       struct mutex mutex;
-> > +
-> > +     u16 function_row_physmap[MAX_FUNCTION_ROW_KEYS];
-> > +     int num_function_row_keys;
-> >  };
-> >
-> >  /*
-> > @@ -283,6 +289,7 @@ static struct device_attribute atkbd_attr_##_name =                               \
-> >       __ATTR(_name, S_IRUGO, atkbd_do_show_##_name, NULL);
-> >
-> >  ATKBD_DEFINE_RO_ATTR(err_count);
-> > +ATKBD_DEFINE_RO_ATTR(function_row_physmap);
-> >
-> >  static struct attribute *atkbd_attributes[] = {
-> >       &atkbd_attr_extra.attr,
-> > @@ -292,11 +299,42 @@ static struct attribute *atkbd_attributes[] = {
-> >       &atkbd_attr_softrepeat.attr,
-> >       &atkbd_attr_softraw.attr,
-> >       &atkbd_attr_err_count.attr,
-> > +     &atkbd_attr_function_row_physmap.attr,
-> >       NULL
-> >  };
-> >
-> > +static ssize_t atkbd_show_function_row_physmap(struct atkbd *atkbd, char *buf)
-> > +{
-> > +     ssize_t size = 0;
-> > +     int i;
-> > +
-> > +     if (!atkbd->num_function_row_keys)
-> > +             return 0;
-> > +
-> > +     for (i = 0; i < atkbd->num_function_row_keys; i++)
-> > +             size += sprintf(buf + size, "%02X ",
-> > +                             atkbd->function_row_physmap[i]);
-> > +     size += sprintf(buf + size, "\n");
->
-> Can we change this to scnprintf() with PAGE_SIZE as the initial limit?
+On 4/27/20 9:49 PM, Luca Weiss wrote:
+> On Montag, 27. April 2020 11:51:02 CEST Pavel Machek wrote:
+>> Hi!
+>>
+>>> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+>>>
+>>> This device is controlled by two GPIO pins, one for enabling and the
+>>> second one for switching between torch and flash mode.
+>>>
+>>> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+>>
+>> Thanks, applied, but... I may remove it again.
+>>
+>>> +++ b/drivers/leds/leds-sgm3140.c
+>>> @@ -0,0 +1,320 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>
+>> Would you consider GPL-2+?
+> 
+> I don't really have a preference either way but GPL-2.0-or-later is fine for
+> me.
+> 
+>>
+>>> +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
+>>> +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
+>>
+>> Ok.
+>>
+>>> +static int sgm3140_probe(struct platform_device *pdev)
+>>> +{
+>>
+>> ...
+>>
+>>> +	led_cdev->brightness_set_blocking = sgm3140_brightness_set;
+>>> +	led_cdev->max_brightness = LED_ON;
+>>
+>> Don't do this, unless you really have 255 levels of brightness.
+> 
+> LED_ON is 1, so the brightness available is 0 - 1.
+> 
+>>
+>>> +	/* Create V4L2 Flash subdev */
+>>> +	priv->v4l2_flash = v4l2_flash_init(&pdev->dev,
+>>> +					   child_node,
+>>> +					   fled_cdev, NULL,
+>>> +					   &v4l2_sd_cfg);
+>>> +	if (IS_ERR(priv->v4l2_flash)) {
+>>
+>> Does this need some #ifdef guards?
+> 
+> v4l2_flash_init has a NULL-returning version when CONFIG_V4L2_FLASH_LED_CLASS
+> is not defined (see https://elixir.bootlin.com/linux/latest/source/include/
+> media/v4l2-flash-led-class.h#L166 )
 
-Done.
+Correct.
 
->
-> > +     return size;
-> > +}
-> > +
-> > +static umode_t atkbd_attr_is_visible(struct kobject *kobj,
-> > +                             struct attribute *attr, int i)
-> > +{
-> > +     struct device *dev = container_of(kobj, struct device, kobj);
-> > +     struct serio *serio = to_serio_port(dev);
-> > +     struct atkbd *atkbd = serio_get_drvdata(serio);
-> > +
-> > +     if (attr == &atkbd_attr_function_row_physmap.attr &&
-> > +         !atkbd->num_function_row_keys)
-> > +             return 0;
-> > +
-> > +     return attr->mode;
-> > +}
-> > +
-> >  static struct attribute_group atkbd_attribute_group = {
-> >       .attrs  = atkbd_attributes,
-> > +     .is_visible = atkbd_attr_is_visible,
-> >  };
-> >
-> >  static const unsigned int xl_table[] = {
-> > @@ -1121,6 +1159,22 @@ static void atkbd_set_device_attrs(struct atkbd *atkbd)
-> >       }
-> >  }
-> >
-> > +static void atkbd_parse_fwnode_data(struct serio *serio)
-> > +{
-> > +     struct atkbd *atkbd = serio_get_drvdata(serio);
-> > +     struct device *dev = &serio->dev;
-> > +     int n;
-> > +
-> > +     /* Parse "function-row-physmap" property */
-> > +     n = device_property_count_u16(dev, "function-row-physmap");
->
-> I think for ACPI case it does not matter, but if we ever have device
-> tree using it, it will lead to less errors if we use u32 as the element
-> size. Do you mind switching to it?
+>>
+>>> +		ret = PTR_ERR(priv->v4l2_flash);
+>>> +		goto err;
+>>> +	}
+>>> +
+>>> +	return ret;
+>>
+>> Should this return 0?
+> 
+> ret should be 0 here, so it shouldn't matter much.
+> 
+>>
+>>> +err:
+>>> +	fwnode_handle_put(child_node);
+>>> +	return ret;
+>>> +}
+>>
+>> Does non-error path needs handle_put, too?
+> 
+> I don't think so, I'm passing child_node to v4l2_flash_init which then saves
+> the pointer to v4l2_subdev->fwnode.
+> 
+> The devm_led_classdev_flash_register_ext function also seems to store the
+> pointer (led_cdev->dev->fwnode = init_data->fwnode; in
+> led_classdev_register_ext)
 
-Done and posted the new patchset here:
-https://patchwork.kernel.org/patch/11513295/
+The node needs to be held only during parsing, so you
+have to call fwnode_handle_put() for both paths.
 
-Thanks,
-Rajat
-
->
-> > +     if (n > 0 && n <= MAX_FUNCTION_ROW_KEYS &&
-> > +         !device_property_read_u16_array(dev, "function-row-physmap",
-> > +                                         atkbd->function_row_physmap, n)) {
-> > +             atkbd->num_function_row_keys = n;
-> > +             dev_dbg(dev, "FW reported %d function-row key locations\n", n);
-> > +     }
-> > +}
-> > +
-> >  /*
-> >   * atkbd_connect() is called when the serio module finds an interface
-> >   * that isn't handled yet by an appropriate device driver. We check if
-> > @@ -1184,6 +1238,8 @@ static int atkbd_connect(struct serio *serio, struct serio_driver *drv)
-> >               atkbd->id = 0xab00;
-> >       }
-> >
-> > +     atkbd_parse_fwnode_data(serio);
-> > +
-> >       atkbd_set_keycode_table(atkbd);
-> >       atkbd_set_device_attrs(atkbd);
-> >
->
-> Thanks.
->
-> --
-> Dmitry
+-- 
+Best regards,
+Jacek Anaszewski
