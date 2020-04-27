@@ -2,251 +2,119 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55640C5519A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94136C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32346206D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587983615;
-	bh=aOaIIKszeCrTqlWbseYknAJ8SMIcs8kkPSNhJjQ6u9E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NMzQnlSut783BY2Pxv/NBE6ehBFOLWqmK2GS1NQwRXyklMmbsxhD8tUDLwsQpO+oD
-	 wZQaNUo4LRuNVPLkARdwH3Lq0WiA9EaLhjxrLBAvPHgeU/1uGW2ulq8n5/Vcr/yq46
-	 /GN2GfQt5g3n4wrIewlJ5sQOW4+hr4ohMGy9RwiA=
+	by mail.kernel.org (Postfix) with ESMTP id 6D9C8206CD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 10:36:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="WqtMusq0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgD0Kde (ORCPT
+        id S1726700AbgD0Kgh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:33:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726504AbgD0Kde (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:33:34 -0400
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB5320735;
-        Mon, 27 Apr 2020 10:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587983613;
-        bh=aOaIIKszeCrTqlWbseYknAJ8SMIcs8kkPSNhJjQ6u9E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UlRBMPvoNLzTUwJ+zdPpThA5L0s9xRgXLrZ8eoGDZIuwANdtW9I2jCMH1GosymYX+
-         tqmIYiXCOMHVIHBBOgjhC3Tg4TVYun5gpZadxN0GAuLqRrOQsaRVpHyxhn9dUns24N
-         NfDLQ7IjDJICa6jSUq0JV9hPvXX4Jr7dLl/rSUJk=
-Received: by mail-lj1-f171.google.com with SMTP id a21so16998918ljb.9;
-        Mon, 27 Apr 2020 03:33:33 -0700 (PDT)
-X-Gm-Message-State: AGi0Publ4NBWfABfdbmiUyf5FeYs8Khn0/LXyuaUdfriEYqFoTfqRDj2
-        kCs/htPvrI0vbXKTSYd0kIkRJ4DER1uS/bwjp90=
-X-Google-Smtp-Source: APiQypIqOK1mjsOHL1arjUsIJmqjBh9f6SaKAQkyQrjJ4yAtDn+rUtD2oFnEgN8nt8ZLYAHmAznVhXsvWd0e3gOKPI0=
-X-Received: by 2002:a05:651c:48a:: with SMTP id s10mr13149460ljc.226.1587983611214;
- Mon, 27 Apr 2020 03:33:31 -0700 (PDT)
+        Mon, 27 Apr 2020 06:36:37 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:29322 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726504AbgD0Kgh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 06:36:37 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RAaGWH009962;
+        Mon, 27 Apr 2020 05:36:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=OOTbH6J0LXbyL05jmtZltIdW1VwK87T91qGzwTutrOo=;
+ b=WqtMusq09J8w4C15t+/5TY9EygUGgKqRf5OkJrIUCGeIvWQe4g25hQLNbyOm27fbSHn1
+ fSmN7Y6TOBYe+Al4OxqrkwqHdIICKBrPyLHUZQtxew3xX55hx8vXm3Dv8NTaxfx9qqav
+ OEXMveiU1p6rgTg5Pq1Oe8/gp8f4AlxlaZpwWbpPXoc9SCrf0bo3EFAMnNnSgCU2kLSm
+ +z4OVaOyNsYubDzTMnHGfwWHmtRTGMRfEbgHMFGu/HfQH8ZlmMSbiEEFDqze5vRAEzdO
+ JSgg4sP+xIa2mvs4a7YyB4usOZVR8DdefZH3cx+xTtT5aCa0+07Zfy94yH6mu4eGJNn5 Vg== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 30mhmqu12w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 27 Apr 2020 05:36:16 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Apr
+ 2020 11:36:14 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Mon, 27 Apr 2020 11:36:14 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 692D82C8;
+        Mon, 27 Apr 2020 10:36:14 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 10:36:14 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <jdelvare@suse.com>,
+        <linux@roeck-us.net>, <linus.walleij@linaro.org>
+CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH 6/6] mfd: lochnagar: Move binding over to dtschema
+Message-ID: <20200427103614.GM44490@ediswmail.ad.cirrus.com>
+References: <20200427102812.23251-1-ckeepax@opensource.cirrus.com>
+ <20200427102812.23251-6-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-References: <20200427073132.29997-3-wens@kernel.org> <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
- <CAGb2v66Piu5_2bdqvWV3eEn2Se_y1MNKWvvYBv_J7DA-8jBhbQ@mail.gmail.com> <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com>
-In-Reply-To: <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Mon, 27 Apr 2020 18:33:19 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
-Message-ID: <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
- numbering for LED triggers
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, dmurphy@ti.com,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        jacek.anaszewski@gmail.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200427102812.23251-6-ckeepax@opensource.cirrus.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015 bulkscore=0
+ spamscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0 phishscore=0
+ suspectscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004270096
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 6:09 PM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> On 4/27/20 11:17 AM, Chen-Yu Tsai wrote:
-> > On Mon, Apr 27, 2020 at 4:57 PM Johan Jonker <jbx6244@gmail.com> wrote:
-> >>
-> >> Hi Chen-Yu,
-> >>
-> >>> From: Chen-Yu Tsai <wens@csie.org>
-> >>>
-> >>> With SDIO now enabled, the numbering of the existing MMC host controllers
-> >>> gets incremented by 1, as the SDIO host is the first one.
-> >>>
-> >>> Increment the numbering of the MMC LED triggers to match.
-> >>>
-> >>> Fixes: cf3c5397835f ("arm64: dts: rockchip: Enable sdio0 and uart0 on rk3399-roc-pc-mezzanine")
-> >>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> >>> ---
-> >>>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts | 8 ++++++++
-> >>>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi          | 4 ++--
-> >>>  2 files changed, 10 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> >>> index 2acb3d500fb9..f0686fc276be 100644
-> >>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> >>> @@ -38,6 +38,10 @@ vcc3v3_pcie: vcc3v3-pcie {
-> >>>       };
-> >>>  };
-> >>>
-> >>> +&diy_led {
->
-> >>> +     linux,default-trigger = "mmc2";
->
-> If you decide to use a free form trigger that is not a 'standard' one,
-> then it becomes a user property.
-> User defined properties should not go in a generic dts.
-> It's up to the user what function he/she gives to that led!
+On Mon, Apr 27, 2020 at 11:28:12AM +0100, Charles Keepax wrote:
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+> +            lochnagar-pinctrl {
+> +                compatible = "cirrus,lochnagar-pinctrl";
+> +
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +                gpio-ranges = <&lochnagar 0 0 LOCHNAGAR2_PIN_NUM_GPIOS>;
+> +
+> +                pinctrl-names = "default";
+> +                pinctrl-0 = <&pinsettings>;
 
-The original (in the base .dtsi file for this series of boards) trigger
-is already a non-standard, i.e. not listed in the bindings, one.
+This seems to cause the following error:
 
-Now I would very much like to get rid of user specific stuff, and I
-also mentioned that in the previous round of discussions. No one said
-anything.
+Documentation/devicetree/bindings/mfd/cirrus,lochnagar.example.dt.yaml:
+lochnagar@22: lochnagar-pinctrl:pin-settings:phandle: [[4]] is not of type 'object'
 
-> >>> +};
-> >>> +
-> >>>  &pcie_phy {
-> >>>       status = "okay";
-> >>>  };
-> >>> @@ -91,3 +95,7 @@ &uart0 {
-> >>>       pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-> >>>       status = "okay";
-> >>>  };
-> >>> +
-> >>> +&yellow_led {
-> >>> +     linux,default-trigger = "mmc1";
-> >>> +};
-> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> >>> index 9f225e9c3d54..bc060ac7972d 100644
-> >>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> >>> @@ -70,14 +70,14 @@ work-led {
-> >>>                       linux,default-trigger = "heartbeat";
-> >>>               };
-> >>>
-> >>
-> >>> -             diy-led {
-> >>> +             diy_led: diy-led {
-> >>
-> >> This changes an existing nodename into something that is still not the
->
-> Correction:
-> It takes an existing nodename and adds a label.
+I think the schema is correct and the problem is one of tooling,
+I have been poking at it for a while but can't seem to find a way
+to silence this one. Any advice would be greatly appreciated.
 
-OK.
+Thanks,
+Charles
 
-> >> preferred way. In the current Rockchip dts there are nodenames like
-> >> 'work', 'yellow' that causing warnings with the command:
-> >
-> > This doesn't change the node name at all. It only adds a label.
-> > If it doesn't pass the check now, it didn't pass the check before.
-> >
-> > I just realized that the footnote I added before is gone because I
-> > regenerated the patches. The original footnote was something along
-> > the lines of:
-> >
-> > I opted to not change the node names nor the labels as the discussion
-> > had not concluded. The other reason being that people may have scripts
-> > or device tree overlays depending on the existing node names.
-> >
-> > Previously I asked the following but got no response:
-> >
-> >     Is changing this after it has been in some kernel releases OK? Wouldn't
-> >     it be considered a break of sysfs ABI?
-> >
-> >     Also, is there some guideline on how to name the labels? For sunxi we've
-> >     been doing "${vendor}:${color}:${function}" since forever.
-> >
-> >     As far as I can tell, the hardware vendor [1] has no specific uses for
-> >     these two (red and yellow) LEDs designed in. And their GPIO lines are
-> >     simply labeled "DIY" (for the red one) and "YELLOW". So I'm not sure
-> >     if putting "our" interpretations and the default-trigger into the
-> >     label is wise.
-> >
-> >     For reference, the green one has its GPIO line labeled "WORK", and their
-> >     intention from [1] is to have it as some sort of power / activity indicator.
-> >     Hence it is named / labeled "work".
-> >
-> >     As for the node names, I think we can keep it as is for now. It's not
-> >     the preferred form, but there's really no need to change it either.
-> >     And some overlay or script might actually expect that name.
-> >
-> >> make -k ARCH=arm dtbs_check
-> >>
-> >> Could you give a generic guide line/example, so all these changes are
-> >> treated the same way? As if the naming follows the preferred 'led-0' line.
-> >
-> > I'm not sure what you are asking for.
->
-> Your nodename just happend to contain 'led' to pass the regex.
-> There are many other names in use.
-
-Right. So if it passes, what's the problem?
-
-> 'If' the DT maintainer (=Heiko) decides the get rid of all the warnings
-> for led nodes then that change would require all nodename to be handled
-> to same (=preferred way):
->
-> Change this:
->
-> diy_led: diy-led
-> yellow_led: yellow-led
->
-> Into something like:
->
-> led_0: led-0
-> led_1: led-1
-
-As I already said, if the maintainers want to clean this up, I am happy to
-provide patches towards this. That is not the case right now. Furthermore,
-that cleanup is not directly related to what I'm trying to fix in this
-patch, which is, from the original submitter's point of view, incorrect
-triggers are used when the mezzanine board is added.
-
-Also, DT labels "led_0" and "led_1" are useless. They have no relation to
-what is used in the schematics, which are "work", "diy", and "yellow". The
-board itself doesn't have anything silk-screened on, so on that end the only
-thing to go with is the color.
-
-So for fixing up the LED node names, we'd probably want the following:
-
-    diy_led: led-0
-    yellow_led: led-1
-    work_led: led-2
-
-Is that what you're asking for?
-
-
-ChenYu
-
-> >
-> > ChenYu
-> >
-> >>>                       label = "red:diy";
-> >>>                       gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
-> >>>                       default-state = "off";
-> >>>                       linux,default-trigger = "mmc1";
-> >>>               };
-> >>>
-> >>> -             yellow-led {
-> >>> +             yellow_led: yellow-led {
-> >>>                       label = "yellow:yellow-led";
-> >>>                       gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-> >>>                       default-state = "off";
-> >>> --
-> >>> 2.26.0
-> >>
->
+> +
+> +                pinsettings: pin-settings {
+> +                    ap2aif {
+> +                        input-enable;
+> +                        groups = "gf-aif1";
+> +                        function = "codec-aif3";
+> +                    };
+> +                    codec2aif {
+> +                        output-enable;
+> +                        groups = "codec-aif3";
+> +                        function = "gf-aif1";
+> +                    };
+> +                };
+> +            };
