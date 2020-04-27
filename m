@@ -2,196 +2,95 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B398AC4CECD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D1BC4CECC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A07232076A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D2E2076A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 21:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588022910;
+	bh=TI+Bio5sKlYlT/Nx52QoQXgZYPcyzD3Ih+se/keVCsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LTVSFWWmCf05y20BTFSomysPMhagmfrNvYdnew0RG0qjP6uUF173jr0O1mtTDWXbp
+	 hVP3moEbHasgQQLQecm7YLDHM2cFnR69unuOJ5JNoz/RsoBS+Rg3D/NW8RLDui88SF
+	 ac2UMwzq6MoMvr8twivTq5jby/CoQDe8YZMt4YFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgD0VWN (ORCPT
+        id S1726204AbgD0V23 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:22:13 -0400
-Received: from smtprelay0247.hostedemail.com ([216.40.44.247]:57052 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726030AbgD0VWK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:22:10 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 138E81800293A;
-        Mon, 27 Apr 2020 21:22:09 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: kiss59_4cd4c705e0726
-X-Filterd-Recvd-Size: 5239
-Received: from joe-laptop.perches.com (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 27 Apr 2020 21:22:07 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH V2] get_maintainer: Add email addresses from .yaml files
-Date:   Mon, 27 Apr 2020 14:22:06 -0700
-Message-Id: <e85006456d9dbae55286c67ac5263668a72f5b58.1588022228.git.joe@perches.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 27 Apr 2020 17:28:29 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33026 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgD0V23 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 17:28:29 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j26so28953362ots.0;
+        Mon, 27 Apr 2020 14:28:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=phD6dC2Al/yY/sFl+4yOknV0vS+D1yw4j8TAayBjiFg=;
+        b=iukvoNJ2cPgAKzNmwckbw1VCQRnySWWsYHhnCcqtJDMI9AOULxeE7FJSUiDlMrkTSf
+         uPFHkWS47KxNGdFCnEQf8iAlzlS1WzXE5R/YgeCuPRh8uiA1m8fosA9WLHCzkOJ4ZN1X
+         nNtCQWYFga04Bk1uq7db/Ts7Ckc4eMhU5s6OQwK3Sqr2djr7OuL2dRxsHKPGyxBYJfNZ
+         Zv6Z8zXldj+RJKc5uX1LxZlZ64+GX6ASe4hVkc7SSKgmxA/+P9ySBruJIYLA1RZtpqMp
+         tRit7NXRZUIKFgaDO5M7ZWL2Z9Za9JGHkVc8+Icmb0/vsKr4I4HnwPSrKugJYjuC4Ocu
+         qqPw==
+X-Gm-Message-State: AGi0Pua98pTD3JOujhGuPiiWUjS5wZ8uiuoGwPiDK0GMekd6DsbgkTEf
+        h+QT3VcEmUucC8jA5Qku3Qa8VrE=
+X-Google-Smtp-Source: APiQypJpmhS3vEKwGO9a8rjv0tcUcZmOuxpwt+49p18dJ+soi/+5A308a/uPpAMwYkKk2MszA4Qv+g==
+X-Received: by 2002:a54:4483:: with SMTP id v3mr637135oiv.0.1588022908294;
+        Mon, 27 Apr 2020 14:28:28 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q142sm4345841oic.44.2020.04.27.14.28.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 14:28:27 -0700 (PDT)
+Received: (nullmailer pid 26250 invoked by uid 1000);
+        Mon, 27 Apr 2020 21:28:26 -0000
+Date:   Mon, 27 Apr 2020 16:28:26 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: Re: [PATCH 5/6] dt-bindings: iio: scd30: add device binding file
+Message-ID: <20200427212826.GA25672@bogus>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+ <20200422141135.86419-6-tomasz.duszynski@octakon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422141135.86419-6-tomasz.duszynski@octakon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-.yaml files can contain maintainer/author addresses and it seems
-unlikely or unnecessary that individual MAINTAINER file section
-entries for each .yaml file will be created.
+On Wed, 22 Apr 2020 16:11:34 +0200, Tomasz Duszynski wrote:
+> Add SCD30 sensor binding file.
+> 
+> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> ---
+>  .../iio/chemical/sensirion,scd30.yaml         | 71 +++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> 
 
-So add the email addresses found in .yaml files to the default
-get_maintainer output.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-The email addresses are marked with "(in file)" when using the
-"--roles" or "--rolestats" options.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.example.dt.yaml: scd30@61: 'interrupt-parrent' does not match any of the regexes: 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.example.dt.yaml: scd30: 'interrupt-parrent' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-Miscellanea:
+See https://patchwork.ozlabs.org/patch/1275131
 
-o Change $file_emails to $email_file_emails to avoid visual
-  naming conflicts with @file_emails
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-Signed-off-by: Joe Perches <joe@perches.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Tested-by: Sam Ravnborg <sam@ravnborg.org>
----
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-V2: Fix dd/add typo
-    Add Sam's sign-offs
-    Resend using git format-patch git send-email and UTF-8 not 8-bit
-
- scripts/get_maintainer.pl | 44 ++++++++++++++++++++++++++-------------
- 1 file changed, 29 insertions(+), 15 deletions(-)
-
-diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-index 6cbcd1..6d973f 100755
---- a/scripts/get_maintainer.pl
-+++ b/scripts/get_maintainer.pl
-@@ -57,7 +57,7 @@ my $status = 0;
- my $letters = "";
- my $keywords = 1;
- my $sections = 0;
--my $file_emails = 0;
-+my $email_file_emails = 0;
- my $from_filename = 0;
- my $pattern_depth = 0;
- my $self_test = undef;
-@@ -69,6 +69,12 @@ my $vcs_used = 0;
- 
- my $exit = 0;
- 
-+my @files = ();
-+my @fixes = ();			# If a patch description includes Fixes: lines
-+my @range = ();
-+my @keyword_tvi = ();
-+my @file_emails = ();
-+
- my %commit_author_hash;
- my %commit_signer_hash;
- 
-@@ -266,7 +272,7 @@ if (!GetOptions(
- 		'pattern-depth=i' => \$pattern_depth,
- 		'k|keywords!' => \$keywords,
- 		'sections!' => \$sections,
--		'fe|file-emails!' => \$file_emails,
-+		'fe|file-emails!' => \$email_file_emails,
- 		'f|file' => \$from_filename,
- 		'find-maintainer-files' => \$find_maintainer_files,
- 		'mpath|maintainer-path=s' => \$maintainer_path,
-@@ -424,6 +430,22 @@ sub read_all_maintainer_files {
-     }
- }
- 
-+sub maintainers_in_file {
-+    my ($file) = @_;
-+
-+    return if ($file =~ m@\bMAINTAINERS$@);
-+
-+    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
-+	open(my $f, '<', $file)
-+	    or die "$P: Can't open $file: $!\n";
-+	my $text = do { local($/) ; <$f> };
-+	close($f);
-+
-+	my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
-+	push(@file_emails, clean_file_emails(@poss_addr));
-+    }
-+}
-+
- #
- # Read mail address map
- #
-@@ -504,12 +526,6 @@ sub read_mailmap {
- 
- ## use the filenames on the command line or find the filenames in the patchfiles
- 
--my @files = ();
--my @fixes = ();			# If a patch description includes Fixes: lines
--my @range = ();
--my @keyword_tvi = ();
--my @file_emails = ();
--
- if (!@ARGV) {
-     push(@ARGV, "&STDIN");
- }
-@@ -527,7 +543,7 @@ foreach my $file (@ARGV) {
- 	$file =~ s/^\Q${cur_path}\E//;	#strip any absolute path
- 	$file =~ s/^\Q${lk_path}\E//;	#or the path to the lk tree
- 	push(@files, $file);
--	if ($file ne "MAINTAINERS" && -f $file && ($keywords || $file_emails)) {
-+	if ($file ne "MAINTAINERS" && -f $file && $keywords) {
- 	    open(my $f, '<', $file)
- 		or die "$P: Can't open $file: $!\n";
- 	    my $text = do { local($/) ; <$f> };
-@@ -539,10 +555,6 @@ foreach my $file (@ARGV) {
- 		    }
- 		}
- 	    }
--	    if ($file_emails) {
--		my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
--		push(@file_emails, clean_file_emails(@poss_addr));
--	    }
- 	}
-     } else {
- 	my $file_cnt = @files;
-@@ -923,6 +935,8 @@ sub get_maintainers {
- 		print("\n");
- 	    }
- 	}
-+
-+	maintainers_in_file($file);
-     }
- 
-     if ($keywords) {
-@@ -1835,7 +1849,7 @@ tm toggle maintainers
- tg toggle git entries
- tl toggle open list entries
- ts toggle subscriber list entries
--f  emails in file       [$file_emails]
-+f  emails in file       [$email_file_emails]
- k  keywords in file     [$keywords]
- r  remove duplicates    [$email_remove_duplicates]
- p# pattern match depth  [$pattern_depth]
-@@ -1960,7 +1974,7 @@ EOT
- 		bool_invert(\$email_git_all_signature_types);
- 		$rerun = 1;
- 	    } elsif ($sel eq "f") {
--		bool_invert(\$file_emails);
-+		bool_invert(\$email_file_emails);
- 		$rerun = 1;
- 	    } elsif ($sel eq "r") {
- 		bool_invert(\$email_remove_duplicates);
--- 
-2.26.0
-
+Please check and re-submit.
