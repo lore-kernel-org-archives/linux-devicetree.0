@@ -2,86 +2,157 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C306C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 12:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86202C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5561C206CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 12:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D9F8206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cbz4Hp9Q"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="NGSABjbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgD0MzM (ORCPT
+        id S1727077AbgD0NVW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:55:12 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46546 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726539AbgD0MzM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:55:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587992112; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=4mP6dQFWPdpAhTmO8LPPmv6P1d3SYXdgzN2cqvje2UY=; b=cbz4Hp9QhhDqGxrRKnhk2OQ5CzAjGuYgLUFU9QX+JdY57AtEdIvNvmUUcxrK+S6bjXBHXDPz
- 62HkcwN7B3RqJR12KCDoFRReNnJlybcU3DyJs7b5l1kYEEjzxwgRrVxYwdp/Ftxosl8lXu46
- qkY7esSgCTr8vTwFsSTBP3htQB0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea6d630.7f19aebbe618-smtp-out-n02;
- Mon, 27 Apr 2020 12:55:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 152D0C44788; Mon, 27 Apr 2020 12:55:10 +0000 (UTC)
-Received: from [192.168.1.100] (unknown [157.44.245.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jprakash)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04E9DC433F2;
-        Mon, 27 Apr 2020 12:55:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04E9DC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
-Subject: Re: [PATCH V2 2/3] iio: adc: Add PMIC7 ADC bindings
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mon, 27 Apr 2020 09:21:22 -0400
+Received: from mail-eopbgr1310115.outbound.protection.outlook.com ([40.107.131.115]:43952
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726651AbgD0NVW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 09:21:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CItuy1cqN8+MVlb+aL0L6v4/FBPWcvVPKttb+lFOg+TszrnV0MWRx+47G27RCu8nurwZYOFIFSKwkGs4guvj9oRFHwGg+LNk4uEiX/69S+fayjfnnlc+ZchZ20GP8BHeXbJNQmvAC4PqtBmsvD3amQkG1VSP9PM0E8tSpjJuMxx9ttWUB/hE345vjcvfW67lFrO3ewqHxWflIPCDL566piLQLfI8LY7wy4dk4TW7I0C7X+V+4tlmaznYItkKG8DFS7r6pt3IMNFgjmQUIaCIa3qai/3t6RlCSAQ42Oa2SNfEcQ3ui/u1fXsbi2G1HpAjnwRRKcbDgFLnKu2u53YFtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qcJIpyftj+669IYyd8PWOSybRTk2PfOnt/54JMJycOY=;
+ b=UDdCvkltYMh/6dWQZ7mkw3fXRfvC3+xjgwwUrs27/SFS+REj5mEdqCBc6P14sca7epuBS062xz5Srrhl6RKOfZYklHxh0++4R7RIQrO1YD2rGHN3bH5GQ1RGCNv+fmH+x1HXDLasf42E9IW6k0ilAB+Xq6CraEMCUf0peWmnlhIP+PE2Xzlq0g2hW4qNTVBrQi0aYmndF0ycB+JVl/jhFpaekVQdvSjV8BbllVQ8owlA06J8vJ7A35sClZw6nGuH4S3m6vh+IfKNgvrIL9WRYxWOc1poufaGJmRGs0sejc+IJ2z19jYKJZihhKSMVP517CSO1HRwW9BriCsjEegHLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qcJIpyftj+669IYyd8PWOSybRTk2PfOnt/54JMJycOY=;
+ b=NGSABjbFqsgo9bAqNNvmdgWfI6FD+5IOpJZFG1skvH2gZtK+1gWDGC5lYwFcvtojLdMauq4fOLXY3Gf8H+Czqsdur/BzNep9q91Qq9Kw8x3hHJx/ApVpaiNAocQOf14YbQTOoVd+YINfSKNyoD13c0L3iBdEw6/m+pDgV/IAaYs=
+Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com (20.177.98.81) by
+ TY2PR01MB2234.jpnprd01.prod.outlook.com (52.133.182.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.22; Mon, 27 Apr 2020 13:21:16 +0000
+Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com
+ ([fe80::15c5:58a4:5913:d859]) by TY2PR01MB2924.jpnprd01.prod.outlook.com
+ ([fe80::15c5:58a4:5913:d859%7]) with mapi id 15.20.2937.023; Mon, 27 Apr 2020
+ 13:21:15 +0000
+From:   Gareth Williams <gareth.williams.jx@renesas.com>
+To:     Gareth Williams <gareth.williams.jx@renesas.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-References: <1586942266-21480-1-git-send-email-jprakash@codeaurora.org>
- <1586942266-21480-3-git-send-email-jprakash@codeaurora.org>
- <20200418171845.4ae85c57@archlinux>
-From:   Jishnu Prakash <jprakash@codeaurora.org>
-Message-ID: <0a945e45-3e48-0f6f-3c62-b2a476ae0339@codeaurora.org>
-Date:   Mon, 27 Apr 2020 18:25:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200418171845.4ae85c57@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+CC:     Phil Edworthy <phil.edworthy@renesas.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/3]
+Thread-Topic: [PATCH 0/3]
+Thread-Index: AQHWHGzvXFhntU7vAESnsWWN43lNnKiM8Q4w
+Date:   Mon, 27 Apr 2020 13:21:15 +0000
+Message-ID: <TY2PR01MB2924A29DED5C3AD29950D863DFAF0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+References: <1587975709-2092-1-git-send-email-gareth.williams.jx@renesas.com>
+In-Reply-To: <1587975709-2092-1-git-send-email-gareth.williams.jx@renesas.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gareth.williams.jx@renesas.com; 
+x-originating-ip: [79.64.184.175]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: abca37ea-b24f-4a6d-ada6-08d7eaaddd44
+x-ms-traffictypediagnostic: TY2PR01MB2234:|TY2PR01MB2234:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB22345E80EB465787E438AD65DFAF0@TY2PR01MB2234.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0386B406AA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB2924.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(2906002)(5660300002)(478600001)(71200400001)(76116006)(66556008)(316002)(9686003)(66476007)(66946007)(66446008)(54906003)(110136005)(64756008)(55016002)(4326008)(33656002)(7696005)(186003)(6506007)(81156014)(8676002)(8936002)(7416002)(52536014)(86362001)(26005)(921003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4nq0VGgTlC90TaNfh0o3sKJ4gGwVNzl31gYu2LD8X7cgos6we06NLX6Pc/su7FmMlyAR2F+gvS+MIUe3uqLNcXVmYM0o6FUmnAoRFhEJiyaeJ7M6xjEhASGdWV+QwyGOoX8lu9yxk2EXErh4fAZ2cyegI3xXl2h1k46Lamw165uvY5QfF4f+u1rRGSbZ4AYI+7hSymZIpNXlUI0vASzp0NUFajbX+l872/EkIma2qbEC/y9eBTj9nD+55Oe0lRfXcJNAXOa/zMIDBDTFMAMV3nv0BEVN1Z9bLFUaGTSH8FjywE/UnEAqGTx9AUPFd/lOz19pJunn35cg3zh7kKb/fs7gnFubgXWwkJn3kH8uHkJbuZPleL9ZRRvDXIYVra/hoEX0XlWHFqOVXGxzbrr1YLzFGEDnRgZAsQvvTaKb03328f/QkJojweYWULYsKMk+wQTCr6MmSA6GB0zdv7W+hMmbZeluB0xkvrhb3zEx1KQ=
+x-ms-exchange-antispam-messagedata: wv9FVRUGdG1J4a9yKYTiKrc4WdJ+kbY/tL+yPDRerP3RNF1C3FudEQ54YbTZu2Ewb9m7LIjHDkS24b9nTfyAQg+D6dq0WLraC4MdTwseG5krQoa3XJ+SGSylvEO5p7RSNmEWQxy/+cY3STzDMhFMoORv46WzTJYCyKEwTI3x+9XqG+EOH+mUS0eq2DhzC89JYR4n9QoJGGH82bh+V5jcsJDjLzz5dD9A/KMW/sx+5WvbK51n+xqV/Ke0PEoNu1kXuClTP6lNuH5xbeP/JI0FkOktW9K7Y7H/Cook6j2InIOXC6r4iRbwfGKwom/V3cmyLWp1EMiw+YOI+SpSsZsKfdp+QufdKFijJ6XYB4O0OFiJWObtHewgbTXgnZ5OiImKl8Cn+0OqQx7S0j3kO1elSmTH3NG5dRT80aIIAGbhFLoP8CGWfMRtdsZkLOEO4601v+PFNhEIW8Us9sOS98gcFefrC11dWEW7oIq6+cjw4urM/gVTWsWficfxpMl/j9DMQHPPKhhAWmggiuHZ0KYUKUVO4SuzLcCdYsYIMU+eJuDKQK3++IsKiqU+IVWgk/PEOmcS3fV7qGLaXeV8O7JT4s6R8Gfo9rzBNsWX2ShDYmE+1bxno4Bp0HUKFlw4qBXOXmrTOMCTh5jhDhHXQq9rbxk4jv/DLECpTC+AXtJiZHyhb8/oMhP0A3rXkoMJl8tLLvjgYTquvmnfXCGYk5qTc86ELkY0/p+F/sEBs1CFKM8nK6P0ldkuBJMIqKkLq1XAhNO7/T6QZyJn+zncXOL63Sr8OEcvR6LA1cqLJKhjZJY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: abca37ea-b24f-4a6d-ada6-08d7eaaddd44
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 13:21:15.7002
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1fe1q6nfh6UHzk9Oji9cDYVqD/v+Jl+ylU9ojoA/ALg4zW4Zj6VRXSdU1CkSFadctSq97n9xtBkiIDQZB2aP+DZmmL/LRuy9uLnSoz1b5gQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2234
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jonathan,
+Hi All,
 
-On 4/18/2020 9:48 PM, Jonathan Cameron wrote:
-> On Wed, 15 Apr 2020 14:47:45 +0530
-> Jishnu Prakash <jprakash@codeaurora.org> wrote:
->
-> We are enforcing them in the binding. Does it make sense to put them here as well?
-> Just seems like something that will get out of sync to me.
-I'll remove the redundant parts of the descriptions in the next post.
->
+I noticed some API changes that were not present when I first wrote this dr=
+iver.=20
+This will need correcting so I will send out a second version and respond=20
+to Sam Ravnborg's feedback at the same time. I recommend waiting for that
+version before reviewing as this will not function on Linux-next otherwise.
+
+Gareth
+
+On Mon, Apr 27, 2020 at 09:21:49AM +0100, Gareth Williams wrote:
+>=20
+> This series adds DRM support for the Digital Blocks db9000 LCD controller=
+ with
+> RZ/N1 specific changes and updates simple-panel to include the associated
+> panel. As this has not previously been documented, also include a yaml fi=
+le to
+> provide this.
+>=20
+> Gareth Williams (3):
+>   drm/db9000: Add Digital Blocks DB9000 LCD Controller
+>   drm/db9000: Add bindings documentation for LCD controller
+>   drm/panel: simple: Add Newhaven ATXL#-CTP panel
+>=20
+>  .../devicetree/bindings/display/db9000,du.yaml     |  87 ++
+>  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+>  drivers/gpu/drm/Kconfig                            |   2 +
+>  drivers/gpu/drm/Makefile                           |   1 +
+>  drivers/gpu/drm/digital-blocks/Kconfig             |  13 +
+>  drivers/gpu/drm/digital-blocks/Makefile            |   3 +
+>  drivers/gpu/drm/digital-blocks/db9000-du.c         | 953
+> +++++++++++++++++++++
+>  drivers/gpu/drm/digital-blocks/db9000-du.h         | 192 +++++
+>  drivers/gpu/drm/panel/panel-simple.c               |  27 +
+>  9 files changed, 1280 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/display/db9000,du.yaml
+>  create mode 100644 drivers/gpu/drm/digital-blocks/Kconfig
+>  create mode 100644 drivers/gpu/drm/digital-blocks/Makefile
+>  create mode 100644 drivers/gpu/drm/digital-blocks/db9000-du.c
+>  create mode 100644 drivers/gpu/drm/digital-blocks/db9000-du.h
+>=20
+> --
+> 2.7.4
+
