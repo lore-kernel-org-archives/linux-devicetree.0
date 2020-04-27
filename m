@@ -4,43 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB88C4CECC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55086C4CECC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0C2214D8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377CE214AF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgD0SIx convert rfc822-to-8bit (ORCPT
+        id S1726208AbgD0SWS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:08:53 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:36851 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgD0SIx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 14:08:53 -0400
+        Mon, 27 Apr 2020 14:22:18 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:42851 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgD0SWS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 14:22:18 -0400
 X-Originating-IP: 91.224.148.103
 Received: from xps13 (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 621E0FF80C;
-        Mon, 27 Apr 2020 18:08:49 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 20:08:48 +0200
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 6483A20005;
+        Mon, 27 Apr 2020 18:22:13 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 20:22:12 +0200
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Marek Vasut <marex@denx.de>
-Cc:     Christophe Kerello <christophe.kerello@st.com>, richard@nod.at,
-        vigneshr@ti.com, lee.jones@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, tony@atomide.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 04/12] mtd: rawnand: stm32_fmc2: manage all errors
- cases at probe time
-Message-ID: <20200427200848.722f4c56@xps13>
-In-Reply-To: <40a9bac7-9ed4-b781-f2c2-2d90b4e82749@denx.de>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v2 06/12] mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS
+ for timeouts
+Message-ID: <20200427202212.0235d987@xps13>
+In-Reply-To: <1586966256-29548-7-git-send-email-christophe.kerello@st.com>
 References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
-        <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
-        <20200427194747.224a2402@xps13>
-        <40a9bac7-9ed4-b781-f2c2-2d90b4e82749@denx.de>
+        <1586966256-29548-7-git-send-email-christophe.kerello@st.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
@@ -51,111 +48,68 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marek,
+Hi Christophe,
 
-Marek Vasut <marex@denx.de> wrote on Mon, 27 Apr 2020 19:59:34 +0200:
+Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
+2020 17:57:30 +0200:
 
-> On 4/27/20 7:47 PM, Miquel Raynal wrote:
-> > Hi Christophe,
-> > 
-> > Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
-> > 2020 17:57:28 +0200:
-> >   
-> >> This patch defers its probe when the expected reset control is not
-> >> yet ready. This patch also handles properly all errors cases at probe
-> >> time.
-> >>
-> >> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >> ---
-> >>  drivers/mtd/nand/raw/stm32_fmc2_nand.c | 13 +++++++++----
-> >>  1 file changed, 9 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> >> index b6d45cd..0a96797 100644
-> >> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> >> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> >> @@ -1967,7 +1967,11 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
-> >>  	}
-> >>  
-> >>  	rstc = devm_reset_control_get(dev, NULL);
-> >> -	if (!IS_ERR(rstc)) {
-> >> +	if (IS_ERR(rstc)) {
-> >> +		ret = PTR_ERR(rstc);
-> >> +		if (ret == -EPROBE_DEFER)
-> >> +			goto err_clk_disable;
-> >> +	} else {
-> >>  		reset_control_assert(rstc);
-> >>  		reset_control_deassert(rstc);
-> >>  	}
-> >> @@ -1975,7 +1979,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
-> >>  	/* DMA setup */
-> >>  	ret = stm32_fmc2_dma_setup(fmc2);
-> >>  	if (ret)
-> >> -		return ret;
-> >> +		goto err_dma_setup;
-> >>  
-> >>  	/* FMC2 init routine */
-> >>  	stm32_fmc2_init(fmc2);
-> >> @@ -1997,7 +2001,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
-> >>  	/* Scan to find existence of the device */
-> >>  	ret = nand_scan(chip, nand->ncs);
-> >>  	if (ret)
-> >> -		goto err_scan;
-> >> +		goto err_dma_setup;
-> >>  
-> >>  	ret = mtd_device_register(mtd, NULL, 0);
-> >>  	if (ret)
-> >> @@ -2010,7 +2014,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
-> >>  err_device_register:
-> >>  	nand_cleanup(chip);
-> >>  
-> >> -err_scan:
-> >> +err_dma_setup:
-> >>  	if (fmc2->dma_ecc_ch)
-> >>  		dma_release_channel(fmc2->dma_ecc_ch);
-> >>  	if (fmc2->dma_tx_ch)
-> >> @@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
-> >>  	sg_free_table(&fmc2->dma_data_sg);
-> >>  	sg_free_table(&fmc2->dma_ecc_sg);
-> >>  
-> >> +err_clk_disable:
-> >>  	clk_disable_unprepare(fmc2->clk);
-> >>  
-> >>  	return ret;  
-> > 
-> > I didn't spot it during my earlier reviews but I really prefer using
-> > labels explaining what you do than having the same name of the function
-> > which failed. This way you don't have to rework the error path when
-> > you handle an additional error.
-> > 
-> > So, would you mind doing this in two steps:
-> > 
-> > 1/
-> > Replace
-> > 
-> >     err_scan:
-> > 
-> > with, eg.
-> > 
-> >     release_dma_objs:  
+> This patch removes the constant FMC2_TIMEOUT_US.
+> FMC2_TIMEOUT_MS is set to 5 seconds and this constant is used
+> each time that we need to wait (except when the timeout value
+> is set by the framework)
 > 
-> The ^err_ prefix in failpath labels is useful, since it's easily
-> possible to match on it with regexes ; not so much on arbitrary label name.
-
-I guess so, but is it actually useful to catch labels in a regex? (real
-question)
-
-Any way I suppose catching ":\n" is already a good approximation to
-find labels?
-
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
+>  drivers/mtd/nand/raw/stm32_fmc2_nand.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 > 
-> btw would it make sense to split the first three patches of this series
-> into a separate series ? This rawnand part seems more like an unrelated
-> cleanup.
+> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> index ab53314..f159c39 100644
+> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> @@ -37,8 +37,7 @@
+>  /* Max ECC buffer length */
+>  #define FMC2_MAX_ECC_BUF_LEN		(FMC2_BCHDSRS_LEN * FMC2_MAX_SG)
+>  
+> -#define FMC2_TIMEOUT_US			1000
+> -#define FMC2_TIMEOUT_MS			1000
+> +#define FMC2_TIMEOUT_MS			5000
+>  
+>  /* Timings */
+>  #define FMC2_THIZ			1
+> @@ -525,9 +524,9 @@ static int stm32_fmc2_ham_calculate(struct nand_chip *chip, const u8 *data,
+>  	u32 sr, heccr;
+>  	int ret;
+>  
+> -	ret = readl_relaxed_poll_timeout(fmc2->io_base + FMC2_SR,
+> -					 sr, sr & FMC2_SR_NWRF, 10,
+> -					 FMC2_TIMEOUT_MS);
+> +	ret = readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR,
+> +						sr, sr & FMC2_SR_NWRF, 1,
+> +						1000 * FMC2_TIMEOUT_MS);
 
-As it seems that the MFD discussion can take longer, then I would say
-yes, at least for the cleanup/misc changes part.
+Is the _atomic suffix needed here? If yes it would deserve a separate
+patch with Fixes/Stable tags.
 
+>  	if (ret) {
+>  		dev_err(fmc2->dev, "ham timeout\n");
+>  		return ret;
+> @@ -1315,7 +1314,7 @@ static int stm32_fmc2_waitrdy(struct nand_chip *chip, unsigned long timeout_ms)
+>  	/* Check if there is no pending requests to the NAND flash */
+>  	if (readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR, sr,
+>  					      sr & FMC2_SR_NWRF, 1,
+> -					      FMC2_TIMEOUT_US))
+> +					      1000 * FMC2_TIMEOUT_MS))
+>  		dev_warn(fmc2->dev, "Waitrdy timeout\n");
+>  
+>  	/* Wait tWB before R/B# signal is low */
+
+You change the timeouts from 1ms to 5s.
+
+Maybe 5s is a little bit too much IMHO but we don't really care as this
+is a timeout. However 1ms is tight. If you are changing this value
+because it triggers error (eg. when the machine is loaded), then it is
+a fix and should appear like it.
 
 Thanks,
 Miquèl
