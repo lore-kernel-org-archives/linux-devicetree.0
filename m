@@ -2,92 +2,160 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAEAC4CECC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB88C4CECC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3856206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:06:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="fMFxopEd"
+	by mail.kernel.org (Postfix) with ESMTP id BE0C2214D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:08:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgD0SGN (ORCPT
+        id S1726189AbgD0SIx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:06:13 -0400
-Received: from www381.your-server.de ([78.46.137.84]:33998 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgD0SGN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 14:06:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=b+JkcQ4uyv5WctR1jDZH5MFIn8xMbKa3wCFiPqWOx6Y=; b=fMFxopEd4lVmijPFIrjnk93xxo
-        35K+FqlokGWoWUAETAR0CM/dhdYpar4fZxtX2UYSjxvqCEIMAUDhZm2MqAMwI7sh5/kEE1snJI+Cn
-        uNM2qVeY3aEsKKmQb1jiSSV//Lrzl9dOgFzrJso1n+MnDEwwDel3j7TMk9xxNjHebIYNvpe61yfYJ
-        CcFSh4a+sYae2CQ7LyEOkpxwZu4NnYs8sWB7hWg6+N1j8jhC9zf9HurGq8s3AAzRzxP/5YCIdOh4H
-        V+nM943j77Tj0x5iiTmVhNBQu+cO6KX0KunNS3DLvC4gNmnCVfNqXklj7ahCMk7D8LWEvEWRtdwcQ
-        uTOk8QHg==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jT88v-0005c5-LE; Mon, 27 Apr 2020 20:06:09 +0200
-Received: from [82.135.70.60] (helo=[192.168.178.20])
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jT88v-000Ulx-9v; Mon, 27 Apr 2020 20:06:09 +0200
-Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
-To:     =?UTF-8?Q?Nuno_S=c3=a1?= <nuno.sa@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
- <20200413082445.17324-6-nuno.sa@analog.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
-Date:   Mon, 27 Apr 2020 20:06:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 14:08:53 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:36851 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgD0SIx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 14:08:53 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 621E0FF80C;
+        Mon, 27 Apr 2020 18:08:49 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 20:08:48 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Marek Vasut <marex@denx.de>
+Cc:     Christophe Kerello <christophe.kerello@st.com>, richard@nod.at,
+        vigneshr@ti.com, lee.jones@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, tony@atomide.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 04/12] mtd: rawnand: stm32_fmc2: manage all errors
+ cases at probe time
+Message-ID: <20200427200848.722f4c56@xps13>
+In-Reply-To: <40a9bac7-9ed4-b781-f2c2-2d90b4e82749@denx.de>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
+        <20200427194747.224a2402@xps13>
+        <40a9bac7-9ed4-b781-f2c2-2d90b4e82749@denx.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200413082445.17324-6-nuno.sa@analog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25795/Mon Apr 27 14:00:10 2020)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/13/20 10:24 AM, Nuno Sá wrote:
-> [...]
-> +static irqreturn_t adis16475_trigger_handler(int irq, void *p)
-> +{
-> [...]
-> +	__be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
-> [...]
-> +
-> +	iio_push_to_buffers_with_timestamp(indio_dev, data, pf->timestamp);
+Hi Marek,
 
-If the timestamp is enabled the IIO core might insert padding between 
-the data channels and the timestamp. If that happens this will disclose 
-kernel stack memory to userspace.
+Marek Vasut <marex@denx.de> wrote on Mon, 27 Apr 2020 19:59:34 +0200:
 
-This needs either a memset(data, 0x00, sizeof(data)) or maybe put data 
-into the state struct and kzalloc it.
+> On 4/27/20 7:47 PM, Miquel Raynal wrote:
+> > Hi Christophe,
+> > 
+> > Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
+> > 2020 17:57:28 +0200:
+> >   
+> >> This patch defers its probe when the expected reset control is not
+> >> yet ready. This patch also handles properly all errors cases at probe
+> >> time.
+> >>
+> >> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> >> ---
+> >>  drivers/mtd/nand/raw/stm32_fmc2_nand.c | 13 +++++++++----
+> >>  1 file changed, 9 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> >> index b6d45cd..0a96797 100644
+> >> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> >> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> >> @@ -1967,7 +1967,11 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+> >>  	}
+> >>  
+> >>  	rstc = devm_reset_control_get(dev, NULL);
+> >> -	if (!IS_ERR(rstc)) {
+> >> +	if (IS_ERR(rstc)) {
+> >> +		ret = PTR_ERR(rstc);
+> >> +		if (ret == -EPROBE_DEFER)
+> >> +			goto err_clk_disable;
+> >> +	} else {
+> >>  		reset_control_assert(rstc);
+> >>  		reset_control_deassert(rstc);
+> >>  	}
+> >> @@ -1975,7 +1979,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+> >>  	/* DMA setup */
+> >>  	ret = stm32_fmc2_dma_setup(fmc2);
+> >>  	if (ret)
+> >> -		return ret;
+> >> +		goto err_dma_setup;
+> >>  
+> >>  	/* FMC2 init routine */
+> >>  	stm32_fmc2_init(fmc2);
+> >> @@ -1997,7 +2001,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+> >>  	/* Scan to find existence of the device */
+> >>  	ret = nand_scan(chip, nand->ncs);
+> >>  	if (ret)
+> >> -		goto err_scan;
+> >> +		goto err_dma_setup;
+> >>  
+> >>  	ret = mtd_device_register(mtd, NULL, 0);
+> >>  	if (ret)
+> >> @@ -2010,7 +2014,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+> >>  err_device_register:
+> >>  	nand_cleanup(chip);
+> >>  
+> >> -err_scan:
+> >> +err_dma_setup:
+> >>  	if (fmc2->dma_ecc_ch)
+> >>  		dma_release_channel(fmc2->dma_ecc_ch);
+> >>  	if (fmc2->dma_tx_ch)
+> >> @@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+> >>  	sg_free_table(&fmc2->dma_data_sg);
+> >>  	sg_free_table(&fmc2->dma_ecc_sg);
+> >>  
+> >> +err_clk_disable:
+> >>  	clk_disable_unprepare(fmc2->clk);
+> >>  
+> >>  	return ret;  
+> > 
+> > I didn't spot it during my earlier reviews but I really prefer using
+> > labels explaining what you do than having the same name of the function
+> > which failed. This way you don't have to rework the error path when
+> > you handle an additional error.
+> > 
+> > So, would you mind doing this in two steps:
+> > 
+> > 1/
+> > Replace
+> > 
+> >     err_scan:
+> > 
+> > with, eg.
+> > 
+> >     release_dma_objs:  
+> 
+> The ^err_ prefix in failpath labels is useful, since it's easily
+> possible to match on it with regexes ; not so much on arbitrary label name.
 
-- Lars
+I guess so, but is it actually useful to catch labels in a regex? (real
+question)
 
+Any way I suppose catching ":\n" is already a good approximation to
+find labels?
+
+> 
+> btw would it make sense to split the first three patches of this series
+> into a separate series ? This rawnand part seems more like an unrelated
+> cleanup.
+
+As it seems that the MFD discussion can take longer, then I would say
+yes, at least for the cleanup/misc changes part.
+
+
+Thanks,
+Miquèl
