@@ -2,97 +2,155 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F88C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED41FC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B68920656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51DB206BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 13:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587995053;
-	bh=OhxRsSwwdvnGxdpaeF4FzeJ/8kd+1iigCwEMEzTAriA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=rsCWpSOpn2Q7MAbqO5zeh9eBZB4SdodpL9cX0CgDrWYSduXut4WPa9lOMwPM7I36c
-	 EFgyqQeLzMYVW6jVQrrYlliM+Mn1IHS0+VARubRkRXWfREqOrul2wJv98houFDhrKf
-	 btLnkZy6ja25Z7BZEfUCEdDVGinbkRK9PtmOr5uA=
+	s=default; t=1587995159;
+	bh=3MxQcvVPHDNmD2p3N2l3hfzoQ2koesDzgeGkr1Fk32M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lt+Kmj6iKl2p4iKIxzMRvbYu7YxTcQRrlyLGxHDZ+57ActEQNVRfpE4+ppxGqxtpl
+	 iVoXtNhF+GsiHD9hTnRLr5E9AsjCbL3ICznGhCw05Hto8cV74OSxAL4l6km9NgTwVd
+	 hphmdK5kxx0ybW2hAz8h8SCryqxI6S6DKgDzXEOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgD0NoM (ORCPT
+        id S1727845AbgD0Np7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:44:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60758 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 09:45:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgD0NoM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:44:12 -0400
+        id S1726539AbgD0Np7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 09:45:59 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A25B206B6;
-        Mon, 27 Apr 2020 13:44:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B69E20656;
+        Mon, 27 Apr 2020 13:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587995052;
-        bh=OhxRsSwwdvnGxdpaeF4FzeJ/8kd+1iigCwEMEzTAriA=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=b/spQsEs9VVzo3Kdr0A9ZLsBkBHmawqed3tSX6DJ3TLn/CcAHoS3m2q2UcWkVhu3T
-         SPec862zYs/vJjVWrhth2UKYCna5yxChwTIzCKwKCHx03Wfjrv/18KT3Y8HsX71lcg
-         iMOSVJwmPKRiWrBHIw9y+yQ7So4KryOoD8x4ooMg=
-Date:   Mon, 27 Apr 2020 14:44:09 +0100
+        s=default; t=1587995158;
+        bh=3MxQcvVPHDNmD2p3N2l3hfzoQ2koesDzgeGkr1Fk32M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nAIy47B/YDVL5Danw8xD23Ld34OvOTbTPmrU/CI5goQI1xMYPAKcvp0+SjisS199p
+         qmRXB54E8vvldxhf0QYIW0zhEexGHSX1QFT/JXVjmO09RIJZYKvWxGv9YdEyy/LnMj
+         t5Jj075Uyb2n5/Arr1e4H1EPdyWv1EGzaEEXFzkE=
+Date:   Mon, 27 Apr 2020 14:45:55 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Iskren Chernev <iskren.chernev@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-In-Reply-To: <20200425125335.2674534-1-iskren.chernev@gmail.com>
-References: <20200425125335.2674534-1-iskren.chernev@gmail.com>
-Subject: Re: [PATCH] regulator: max77826: Remove erroneous additionalProperties
-Message-Id: <158799504950.16924.8566981464657105053.b4-ty@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     robh@kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        daniel.schwierzeck@gmail.com, hauke@hauke-m.de,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+Message-ID: <20200427134555.GC4383@sirena.org.uk>
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+ <20200424112505.GD5850@sirena.org.uk>
+ <616a5419-add3-085e-32dc-c83d9d975725@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Y5rl02BVI9TCfPar"
+Content-Disposition: inline
+In-Reply-To: <616a5419-add3-085e-32dc-c83d9d975725@linux.intel.com>
+X-Cookie: If your bread is stale, make toast.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 25 Apr 2020 15:53:35 +0300, Iskren Chernev wrote:
-> In this particular location additionalProperties actually declares a property
-> named `additionalProperties` instead of specifying there should be no other
-> properties.
-> 
-> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
-> ---
-> Fix bindings documentation for max77826 regulator as discussed in
-> https://lore.kernel.org/lkml/20200413164440.1138178-1-iskren.chernev@gmail.com/T/#m9e9904560e68bcd98980fa0e68fe190525033af6
-> 
-> [...]
 
-Applied to
+--Y5rl02BVI9TCfPar
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.8
+On Mon, Apr 27, 2020 at 02:01:29PM +0800, Dilip Kota wrote:
+> On 4/24/2020 7:25 PM, Mark Brown wrote:
+> > On Fri, Apr 24, 2020 at 06:42:30PM +0800, Dilip Kota wrote:
 
-Thanks!
+> > > Synchronize tx, rx and error interrupts by registering to the
+> > > same interrupt handler. Interrupt handler will recognize and process
+> > > the appropriate interrupt on the basis of interrupt status register.
+> > > Also, establish synchronization between the interrupt handler and
+> > > transfer operation by taking the locks and registering the interrupt
+> > > handler as thread IRQ which avoids the bottom half.
+> > > Fixes the wrongly populated interrupt register offsets too.
 
-[1/1] regulator: max77826: Remove erroneous additionalProperties
-      commit: 48dd1a7938e37d6d6414a20266394f858b37f10a
+> > This sounds like at least three different changes mixed together in one
+> > commit, it makes it quite hard to tell what's going on.  If nothing else
+> > the conversion from a workqueue to threaded interrupts should probably
+> > be split out from merging the interrupts.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+> While preparing the patches, i got puzzled to go with separate patches (for
+> threaded interrupts, unified interrupt handler and fixing the register
+> offset) or as a single patch!!.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> Finally i choose to go with single patch, because establishing
+> synchronization is the major reason for this change, for that reason
+> threaded interrupts and unified interrupts changes are done. And the fixing
+> offset is a single line change, so included in this patch itself. And, on a
+> lighter note, the whole patch is coming under 45 lines of code changes.
+> Please let me know your view.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+The single line change to fix the offset sounds like an especially good
+candidate for splitting out as a separate patch.  It's not really about
+the number of lines but rather complexity.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> > > -static irqreturn_t lantiq_ssc_err_interrupt(int irq, void *data)
+> > > +static irqreturn_t lantiq_ssc_err_interrupt(struct lantiq_ssc_spi *spi)
+> > >   {
+> > > -	struct lantiq_ssc_spi *spi = data;
+> > >   	u32 stat = lantiq_ssc_readl(spi, LTQ_SPI_STAT);
+> > > -	if (!(stat & LTQ_SPI_STAT_ERRORS))
+> > > -		return IRQ_NONE;
+> > > -
 
-Thanks,
-Mark
+> > Why drop this?
+
+> lantiq_ssc_err_interrupt() getting called, only if LTQ_SPI_IRNEN_E is set in
+> the interrupt status register.
+> Once the 'LTQ_SPI_IRNEN_E' bit is set, there is no chance of all error bits
+> being unset in the SPI_STAT register, so the 'if condition' will never be
+> successful. Hence dropped it.
+
+So this is another separate change and TBH it doesn't seem like a huge
+win in that it's still potentially adding a bit of robustness.
+
+> > It's not clear to me that it's a benefit to combine all the interrupts
+> > unconditionally - obviously where they're shared we need to but could
+> > that be accomplished with IRQF_SHARED and even if it can't it seems like
+> > something conditional would be better.
+
+> Lets take a case where Tx/Rx transfer interrupt got triggered and followed
+> by error interrupt(before finishing the tx/rx interrupt execution) which is
+> very less likely to occur, unified interrupt handler establishes
+> synchronization.
+> Comparatively, unified interrupt handler is better for adding support to the
+> latest SoCs on which SPI have single interrupt line for tx,rx and errors.
+> On basis of these two points i felt to go with unified interrupt handler.
+
+Does the mutex not do this regardless of how the interrupt handlers are
+wired up?
+
+--Y5rl02BVI9TCfPar
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6m4hIACgkQJNaLcl1U
+h9BnXQf/cy3IrY0a7wiBzhsjOU1o662IOJa9R5tJGhOl2+2vj11ySHT72XO3oZ38
+DAm4j9nidLgnQ1548Gw/BDXoKPTDm0A44sV9T5ENZhaq0pVtoLbdoLrJQvz+++Bh
+pLszD/QwvRDiLkovRBM2HuaA/vNwNkgHc93V7qlMuTLnnwZgW7BfJB9NN4uUF7i0
+46QfNFq2WsFHJ4pteRM4WfN22bzFOYE7W0Phf4wo+jDZY0SskUi1Ec+oMVU3nnWM
+6qo0Vlvfflv/1nV0Z4KwMu00C0f1cJce5eLvPUiUbtYTxxJhOk8aSPxk465Agt9L
+R6z2pQAwgrBR0K/in79rKpB36BMApQ==
+=WBop
+-----END PGP SIGNATURE-----
+
+--Y5rl02BVI9TCfPar--
