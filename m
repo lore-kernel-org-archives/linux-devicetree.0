@@ -2,484 +2,184 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 734E2C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B932C5519A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4178D2080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F0721707
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7EuGknA"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="KhkIJ1jj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgD0HUR (ORCPT
+        id S1726750AbgD0HYM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:20:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51742 "EHLO
+        Mon, 27 Apr 2020 03:24:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgD0HUR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 03:20:17 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1B41C061A0F;
-        Mon, 27 Apr 2020 00:20:15 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id z6so6655126plk.10;
-        Mon, 27 Apr 2020 00:20:15 -0700 (PDT)
+        with ESMTP id S1726725AbgD0HYM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 03:24:12 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A3D1C061A0F
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 00:24:11 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a7so7084850pju.2
+        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 00:24:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=eHzm0rLSPDAeSQ2zZUQKryKqqKCIPNRvY/fHGpK4Z14=;
-        b=Q7EuGknAfKytOHIM8+rfIXlDJnJfBO4Mz/eQrGeB2YHB0es514q60zBN3YYmjJ/D1U
-         D6adAO5d0znnISnyyPySe7mPaKy3wBjTsQQvJqf7MCLq3UvxhiU94LvnRxS9lKG4NCMJ
-         viwhsuTkWvgqxhV/VjDcST263h9R+ADyXjnRpbsaVPiPVV6NUyISLgGYpevPN7sTxYgJ
-         gcpx+tZZOEdSOv+3OBmyWeXW0xbisAa+EcH8DQU+Lsad6QRZ953vEbLyMZkHtEFhs4a9
-         47m+MSymFzFrlZTGsnp/E0wi/4KBPR4jGPZTmYsDw/cabAFAEzTmlqqmklIC5gB5+5aO
-         g89Q==
+         :mime-version:content-transfer-encoding;
+        bh=XOcbyKgA0Bpvq+avYOz1rNm0o9oBZQ47QSXwocd5JDs=;
+        b=KhkIJ1jjdAjc7I6o69UtZUncp44UuyyZDD/4xfQF8CirYMTf9cJeFRIellap23PRfm
+         Ed//agPd2fbamkS4hNwvCoCC8NRPHuPKEYG7l9G4FvrsbfVqnJ8B5PFcqLUUUMxxb8yp
+         0jfEUyV0ROpnkgmchA824E5slER3IVZ4493vNeNZEtvSboA81qZ/k0P7DEKDCN4N2/7+
+         Yj+/tpZDGmES2G1MG1YAAW0FqdW/XisAk9EoRGyszIar3N9nhLwequneqKONdiSRKxsb
+         pNV5YP0VFyGcTA/cVucnh3gT7ND/v71VY3sIMVhiCUeu/m5k73fyCzeWXX/OnLWKP/Qa
+         wUuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=eHzm0rLSPDAeSQ2zZUQKryKqqKCIPNRvY/fHGpK4Z14=;
-        b=ElHfyRS8B+KtWjhaiaoacb/Dweedo+ziqWCa1pUkso5KfD04QUYKw3l2lm+6Vkp1SY
-         UNTupcvae0WMr7O5r3eezsuK63/70j3A/tuhB4R3kWMB2QBnHIiJ5aqbZ79vpLpVEBrg
-         uGYrkDy9uUCjFXCWW/L3IutAG0R3ErSFGkPi2XQ+dmVp/oTsucYUXz9gtx4k0I45Fuyl
-         Ya+Wx9vVpezD6HIje9Q2z5zWs7zY0BAMuI1SX2UIhquMTI/dsGvY4poj+uoBG4MrC3L8
-         oJfqZx7nrnIMRpiciSN9j30LHWOMXsFlml1WZsuBDUHHNkCBPFsPyP27pzQupwk3agsy
-         97+Q==
-X-Gm-Message-State: AGi0PubZ5ttzVsZuW2XXy1pTkYyJL/E5987yzu8CgPCETJRKJ3dRWfpA
-        XXtwqy6dSDjZ6AlLQO6mtVU=
-X-Google-Smtp-Source: APiQypKBKivqncoUCqG4hD6G/OWQ5lW1YjUY6jFfuSCVFLXIDg+UGdQ/6m9AywSL4AvhTlw5pIYq4w==
-X-Received: by 2002:a17:902:a40e:: with SMTP id p14mr22548952plq.132.1587972015236;
-        Mon, 27 Apr 2020 00:20:15 -0700 (PDT)
-Received: from localhost.localdomain ([45.135.186.129])
-        by smtp.gmail.com with ESMTPSA id o21sm10104124pgk.16.2020.04.27.00.20.10
+         :references:mime-version:content-transfer-encoding;
+        bh=XOcbyKgA0Bpvq+avYOz1rNm0o9oBZQ47QSXwocd5JDs=;
+        b=pghj2KLyE7a0SyCRAphh/kQn79d6GJVMl5+TovH5CZ7bcVrnYxw1gPzNgk7aQcRynS
+         sExLQYaelYQmjGbbhdcjuJgFQFFtsCUW4KKjSJ1mZ2FsnZK+nxjpuh0b7pjzmxsiaOyX
+         E7OrjDnE0FE2lB+Xp/NZeSiibGRdN4We1cQAAqLFfI2zogO8uT6lcY/GCufbh4X1/HzG
+         j7igcDKr9ZpEojSvt09WVIeS/3yez9lj5A3iiaNv8Plv3QRHskHEd9aaRpb6n9VA5Cvv
+         WuJq4Ah1e1sZPam2vxA7s6cnDylE3slSCm0Iq9w/jfvTYhyEKqSTFO0reiK81wGGRkDF
+         90pQ==
+X-Gm-Message-State: AGi0PubavgMHeukxOkEEWKOxIxI/3d8GmDqSoEXFTMqVKMfivSrlEMYX
+        GAyXay4bbMPIf+bfK3UQUbQoDA==
+X-Google-Smtp-Source: APiQypLZ1hE4GjmvgAhgyfKaFcwMZtgCX6AntRqvDptj+irvRENaKBgzUmWEYk/9JfJE78Am8sJHpA==
+X-Received: by 2002:a17:90a:252f:: with SMTP id j44mr21962732pje.9.1587972250735;
+        Mon, 27 Apr 2020 00:24:10 -0700 (PDT)
+Received: from starnight.168.95.1.1 ([150.117.130.110])
+        by smtp.googlemail.com with ESMTPSA id t3sm11570687pfq.110.2020.04.27.00.24.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 00:20:14 -0700 (PDT)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     robh+dt@kernel.org, jassisinghbrar@gmail.com
-Cc:     orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v3 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-Date:   Mon, 27 Apr 2020 15:19:54 +0800
-Message-Id: <6f8ac1af5a43d6fd487dc21c052624277325e6f1.1587894279.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <8d29eba045ef18c5489e122b3668afc20431f15d.1587894279.git.baolin.wang7@gmail.com>
-References: <8d29eba045ef18c5489e122b3668afc20431f15d.1587894279.git.baolin.wang7@gmail.com>
-In-Reply-To: <8d29eba045ef18c5489e122b3668afc20431f15d.1587894279.git.baolin.wang7@gmail.com>
-References: <8d29eba045ef18c5489e122b3668afc20431f15d.1587894279.git.baolin.wang7@gmail.com>
+        Mon, 27 Apr 2020 00:24:10 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux@endlessm.com
+Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
+Date:   Mon, 27 Apr 2020 15:23:42 +0800
+Message-Id: <20200427072342.5499-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Baolin Wang <baolin.wang@unisoc.com>
+Hi Maxime,
 
-The Spreadtrum mailbox controller supports 8 channels to communicate
-with MCUs, and it contains 2 different parts: inbox and outbox, which
-are used to send and receive messages by IRQ mode.
+Thanks for your V2 patch series!  I'm testing it.
 
-Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
-Changes from v2:
- - None.
+This patch series is applied upon mainline kernel 5.7-rc2 cleanly and built.
+System can boot into console text mode, but no graphic UI.
 
-Changes from v1:
- - None
----
- drivers/mailbox/Kconfig        |   8 +
- drivers/mailbox/Makefile       |   2 +
- drivers/mailbox/sprd-mailbox.c | 350 +++++++++++++++++++++++++++++++++
- 3 files changed, 360 insertions(+)
- create mode 100644 drivers/mailbox/sprd-mailbox.c
+Get the error in vc5_hdmi_phy_init(), and full dmesg is at [1]:
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index 5a577a6734cf..e03f3fb5caed 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -236,4 +236,12 @@ config SUN6I_MSGBOX
- 	  various Allwinner SoCs. This mailbox is used for communication
- 	  between the application CPUs and the power management coprocessor.
- 
-+config SPRD_MBOX
-+	tristate "Spreadtrum Mailbox"
-+	depends on ARCH_SPRD || COMPILE_TEST
-+	help
-+	  Mailbox driver implementation for the Spreadtrum platform. It is used
-+	  to send message between application processors and MCU. Say Y here if
-+	  you want to build the Spreatrum mailbox controller driver.
-+
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index 2e4364ef5c47..9caf4ede6ce0 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -50,3 +50,5 @@ obj-$(CONFIG_MTK_CMDQ_MBOX)	+= mtk-cmdq-mailbox.o
- obj-$(CONFIG_ZYNQMP_IPI_MBOX)	+= zynqmp-ipi-mailbox.o
- 
- obj-$(CONFIG_SUN6I_MSGBOX)	+= sun6i-msgbox.o
-+
-+obj-$(CONFIG_SPRD_MBOX)		+= sprd-mailbox.o
-diff --git a/drivers/mailbox/sprd-mailbox.c b/drivers/mailbox/sprd-mailbox.c
-new file mode 100644
-index 000000000000..58e5388f190b
---- /dev/null
-+++ b/drivers/mailbox/sprd-mailbox.c
-@@ -0,0 +1,350 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Spreadtrum mailbox driver
-+ *
-+ * Copyright (c) 2020 Spreadtrum Communications Inc.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+
-+#define SPRD_MBOX_ID		0x0
-+#define SPRD_MBOX_MSG_LOW	0x4
-+#define SPRD_MBOX_MSG_HIGH	0x8
-+#define SPRD_MBOX_TRIGGER	0xc
-+#define SPRD_MBOX_FIFO_RST	0x10
-+#define SPRD_MBOX_FIFO_STS	0x14
-+#define SPRD_MBOX_IRQ_STS	0x18
-+#define SPRD_MBOX_IRQ_MSK	0x1c
-+#define SPRD_MBOX_LOCK		0x20
-+#define SPRD_MBOX_FIFO_DEPTH	0x24
-+
-+/* Bit and mask definiation for inbox's SPRD_MBOX_FIFO_STS register */
-+#define SPRD_INBOX_FIFO_DELIVER_MASK		GENMASK(23, 16)
-+#define SPRD_INBOX_FIFO_OVERLOW_MASK		GENMASK(15, 8)
-+#define SPRD_INBOX_FIFO_DELIVER_SHIFT		16
-+#define SPRD_INBOX_FIFO_BUSY_MASK		GENMASK(7, 0)
-+
-+/* Bit and mask definiation for SPRD_MBOX_IRQ_STS register */
-+#define SPRD_MBOX_IRQ_CLR			BIT(0)
-+
-+/* Bit and mask definiation for outbox's SPRD_MBOX_FIFO_STS register */
-+#define SPRD_OUTBOX_FIFO_FULL			BIT(0)
-+#define SPRD_OUTBOX_FIFO_WR_SHIFT		16
-+#define SPRD_OUTBOX_FIFO_RD_SHIFT		24
-+#define SPRD_OUTBOX_FIFO_POS_MASK		GENMASK(7, 0)
-+
-+/* Bit and mask definiation for inbox's SPRD_MBOX_IRQ_MSK register */
-+#define SPRD_INBOX_FIFO_BLOCK_IRQ		BIT(0)
-+#define SPRD_INBOX_FIFO_OVERFLOW_IRQ		BIT(1)
-+#define SPRD_INBOX_FIFO_DELIVER_IRQ		BIT(2)
-+#define SPRD_INBOX_FIFO_IRQ_MASK		GENMASK(2, 0)
-+
-+/* Bit and mask definiation for outbox's SPRD_MBOX_IRQ_MSK register */
-+#define SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ		BIT(0)
-+#define SPRD_OUTBOX_FIFO_IRQ_MASK		GENMASK(4, 0)
-+
-+#define SPRD_MBOX_CHAN_MAX			8
-+
-+struct sprd_mbox_chan {
-+	u8			id;
-+	struct mbox_chan	*chan;
-+};
-+
-+struct sprd_mbox_priv {
-+	struct mbox_controller	mbox;
-+	struct device		*dev;
-+	void __iomem		*inbox_base;
-+	void __iomem		*outbox_base;
-+	struct clk		*clk;
-+	u32			outbox_fifo_depth;
-+
-+	struct sprd_mbox_chan	mchan[SPRD_MBOX_CHAN_MAX];
-+	struct mbox_chan	chan[SPRD_MBOX_CHAN_MAX];
-+};
-+
-+static struct sprd_mbox_priv *to_sprd_mbox_priv(struct mbox_controller *mbox)
-+{
-+	return container_of(mbox, struct sprd_mbox_priv, mbox);
-+}
-+
-+static u32 sprd_mbox_get_fifo_len(struct sprd_mbox_priv *priv, u32 fifo_sts)
-+{
-+	u32 wr_pos = (fifo_sts >> SPRD_OUTBOX_FIFO_WR_SHIFT) &
-+		SPRD_OUTBOX_FIFO_POS_MASK;
-+	u32 rd_pos = (fifo_sts >> SPRD_OUTBOX_FIFO_RD_SHIFT) &
-+		SPRD_OUTBOX_FIFO_POS_MASK;
-+	u32 fifo_len;
-+
-+	/*
-+	 * If the read pointer is equal with write pointer, which means the fifo
-+	 * is full or empty.
-+	 */
-+	if (wr_pos == rd_pos) {
-+		if (fifo_sts & SPRD_OUTBOX_FIFO_FULL)
-+			fifo_len = priv->outbox_fifo_depth;
-+		else
-+			fifo_len = 0;
-+	} else if (wr_pos > rd_pos) {
-+		fifo_len = wr_pos - rd_pos;
-+	} else {
-+		fifo_len = priv->outbox_fifo_depth - rd_pos + wr_pos;
-+	}
-+
-+	return fifo_len;
-+}
-+
-+static irqreturn_t sprd_mbox_outbox_isr(int irq, void *data)
-+{
-+	struct sprd_mbox_priv *priv = data;
-+	struct sprd_mbox_chan *mchan;
-+	u32 fifo_sts, fifo_len, msg[2];
-+	int i, id;
-+
-+	fifo_sts = readl(priv->outbox_base + SPRD_MBOX_FIFO_STS);
-+
-+	fifo_len = sprd_mbox_get_fifo_len(priv, fifo_sts);
-+	if (!fifo_len) {
-+		dev_warn_ratelimited(priv->dev, "spurious outbox interrupt\n");
-+		return IRQ_NONE;
-+	}
-+
-+	for (i = 0; i < fifo_len; i++) {
-+		msg[0] = readl(priv->outbox_base + SPRD_MBOX_MSG_LOW);
-+		msg[1] = readl(priv->outbox_base + SPRD_MBOX_MSG_HIGH);
-+		id = readl(priv->outbox_base + SPRD_MBOX_ID);
-+
-+		mchan = &priv->mchan[id];
-+		mbox_chan_received_data(mchan->chan, (void *)msg);
-+
-+		/* Trigger to update outbox FIFO pointer */
-+		writel(0x1, priv->outbox_base + SPRD_MBOX_TRIGGER);
-+	}
-+
-+	/* Clear irq status after reading all message. */
-+	writel(SPRD_MBOX_IRQ_CLR, priv->outbox_base + SPRD_MBOX_IRQ_STS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t sprd_mbox_inbox_isr(int irq, void *data)
-+{
-+	struct sprd_mbox_priv *priv = data;
-+	struct sprd_mbox_chan *mchan;
-+	u32 fifo_sts, send_sts, id;
-+
-+	fifo_sts = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS);
-+
-+	/* Get the inbox data delivery status */
-+	send_sts = (fifo_sts & SPRD_INBOX_FIFO_DELIVER_MASK) >>
-+		SPRD_INBOX_FIFO_DELIVER_SHIFT;
-+	if (!send_sts) {
-+		dev_warn_ratelimited(priv->dev, "spurious inbox interrupt\n");
-+		return IRQ_NONE;
-+	}
-+
-+	while (send_sts) {
-+		id = __ffs(send_sts);
-+		send_sts &= (send_sts - 1);
-+
-+		mchan = &priv->mchan[id];
-+		mbox_chan_txdone(mchan->chan, 0);
-+	}
-+
-+	/* Clear FIFO delivery and overflow status */
-+	writel(fifo_sts &
-+	       (SPRD_INBOX_FIFO_DELIVER_MASK | SPRD_INBOX_FIFO_OVERLOW_MASK),
-+	       priv->inbox_base + SPRD_MBOX_FIFO_RST);
-+
-+	/* Clear irq status */
-+	writel(SPRD_MBOX_IRQ_CLR, priv->inbox_base + SPRD_MBOX_IRQ_STS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sprd_mbox_send_data(struct mbox_chan *chan, void *msg)
-+{
-+	struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-+	struct sprd_mbox_chan *mchan = chan->con_priv;
-+	u32 *data = msg, busy;
-+
-+	/*
-+	 * Check if current channel is busy or not, and we can not send data
-+	 * if current channel is busy.
-+	 */
-+	busy = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS) &
-+		SPRD_INBOX_FIFO_BUSY_MASK;
-+	if (busy & BIT(mchan->id)) {
-+		dev_err(priv->dev, "Channel %d is busy\n", mchan->id);
-+		return -EBUSY;
-+	}
-+
-+	/* Write data into inbox FIFO, and only support 8 bytes every time */
-+	writel(data[0], priv->inbox_base + SPRD_MBOX_MSG_LOW);
-+	writel(data[1], priv->inbox_base + SPRD_MBOX_MSG_HIGH);
-+
-+	/* Set target core id */
-+	writel(mchan->id, priv->inbox_base + SPRD_MBOX_ID);
-+
-+	/* Trigger remote request */
-+	writel(0x1, priv->inbox_base + SPRD_MBOX_TRIGGER);
-+
-+	return 0;
-+}
-+
-+static int sprd_mbox_startup(struct mbox_chan *chan)
-+{
-+	struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-+	u32 val;
-+
-+	/* Select outbox FIFO mode and reset the outbox FIFO status */
-+	writel(0x0, priv->outbox_base + SPRD_MBOX_FIFO_RST);
-+
-+	/* Enable inbox FIFO overflow and delivery interrupt */
-+	val = readl(priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-+	val &= ~(SPRD_INBOX_FIFO_OVERFLOW_IRQ | SPRD_INBOX_FIFO_DELIVER_IRQ);
-+	writel(val, priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-+
-+	/* Enable outbox FIFO not empty interrupt */
-+	val = readl(priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-+	val &= ~SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ;
-+	writel(val, priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-+
-+	return 0;
-+}
-+
-+static void sprd_mbox_shutdown(struct mbox_chan *chan)
-+{
-+	struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-+
-+	/* Disable inbox & outbox interrupt */
-+	writel(SPRD_INBOX_FIFO_IRQ_MASK, priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-+	writel(SPRD_OUTBOX_FIFO_IRQ_MASK, priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-+}
-+
-+static const struct mbox_chan_ops sprd_mbox_ops = {
-+	.send_data    = sprd_mbox_send_data,
-+	.startup      = sprd_mbox_startup,
-+	.shutdown     = sprd_mbox_shutdown,
-+};
-+
-+static void sprd_mbox_disable(void *data)
-+{
-+	struct sprd_mbox_priv *priv = data;
-+
-+	clk_disable_unprepare(priv->clk);
-+}
-+
-+static int sprd_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sprd_mbox_priv *priv;
-+	int i, ret, inbox_irq, outbox_irq;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+
-+	/*
-+	 * The Spreadtrum mailbox uses an inbox to send messages to the target
-+	 * core, and uses an outbox to receive messages from other cores.
-+	 *
-+	 * Thus the mailbox controller supplies 2 different register addresses
-+	 * and IRQ numbers for inbox and outbox.
-+	 */
-+	priv->inbox_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->inbox_base))
-+		return PTR_ERR(priv->inbox_base);
-+
-+	priv->outbox_base = devm_platform_ioremap_resource(pdev, 1);
-+	if (IS_ERR(priv->outbox_base))
-+		return PTR_ERR(priv->outbox_base);
-+
-+	priv->clk = devm_clk_get(dev, "enable");
-+	if (IS_ERR(priv->clk)) {
-+		dev_err(dev, "failed to get mailbox clock\n");
-+		return PTR_ERR(priv->clk);
-+	}
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, sprd_mbox_disable, priv);
-+	if (ret) {
-+		dev_err(dev, "failed to add mailbox disable action\n");
-+		return ret;
-+	}
-+
-+	inbox_irq = platform_get_irq(pdev, 0);
-+	if (inbox_irq < 0)
-+		return inbox_irq;
-+
-+	ret = devm_request_irq(dev, inbox_irq, sprd_mbox_inbox_isr,
-+			       IRQF_NO_SUSPEND, dev_name(dev), priv);
-+	if (ret) {
-+		dev_err(dev, "failed to request inbox IRQ: %d\n", ret);
-+		return ret;
-+	}
-+
-+	outbox_irq = platform_get_irq(pdev, 1);
-+	if (outbox_irq < 0)
-+		return outbox_irq;
-+
-+	ret = devm_request_irq(dev, outbox_irq, sprd_mbox_outbox_isr,
-+			       IRQF_NO_SUSPEND, dev_name(dev), priv);
-+	if (ret) {
-+		dev_err(dev, "failed to request outbox IRQ: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Get the default outbox FIFO depth */
-+	priv->outbox_fifo_depth =
-+		readl(priv->outbox_base + SPRD_MBOX_FIFO_DEPTH) + 1;
-+	priv->mbox.dev = dev;
-+	priv->mbox.chans = &priv->chan[0];
-+	priv->mbox.num_chans = SPRD_MBOX_CHAN_MAX;
-+	priv->mbox.ops = &sprd_mbox_ops;
-+	priv->mbox.txdone_irq = true;
-+
-+	for (i = 0; i < SPRD_MBOX_CHAN_MAX; i++) {
-+		priv->chan[i].con_priv = &priv->mchan[i];
-+
-+		priv->mchan[i].chan = &priv->chan[i];
-+		priv->mchan[i].id = i;
-+	}
-+
-+	ret = devm_mbox_controller_register(dev, &priv->mbox);
-+	if (ret) {
-+		dev_err(dev, "failed to register mailbox: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sprd_mbox_of_match[] = {
-+	{ .compatible = "sprd,sc9860-mailbox", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, sprd_mbox_of_match);
-+
-+static struct platform_driver sprd_mbox_driver = {
-+	.driver = {
-+		.name = "sprd-mailbox",
-+		.of_match_table = sprd_mbox_of_match,
-+	},
-+	.probe	= sprd_mbox_probe,
-+};
-+module_platform_driver(sprd_mbox_driver);
-+
-+MODULE_AUTHOR("Baolin Wang <baolin.wang@unisoc.com>");
-+MODULE_DESCRIPTION("Spreadtrum mailbox driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
+[    5.587543] vc4_hdmi fef00700.hdmi: Unknown register ID 46
+[    5.587700] debugfs: Directory 'fef00700.hdmi' with parent 'vc4-hdmi' already present!
+[    5.588070] vc4_hdmi fef00700.hdmi: vc4-hdmi-hifi <-> fef00700.hdmi mapping ok
+[    5.588076] vc4_hdmi fef00700.hdmi: ASoC: no DMI vendor name!
+[    5.588263] vc4-drm gpu: bound fef00700.hdmi (ops vc4_hdmi_ops)
+[    5.588299] vc4_hdmi fef05700.hdmi: Unknown register ID 46
+[    5.588373] debugfs: Directory 'vc4-hdmi' with parent 'asoc' already present!
+[    5.588673] vc4_hdmi fef05700.hdmi: vc4-hdmi-hifi <-> fef05700.hdmi mapping ok
+[    5.588677] vc4_hdmi fef05700.hdmi: ASoC: no DMI vendor name!
+[    5.588809] vc4-drm gpu: bound fef05700.hdmi (ops vc4_hdmi_ops)
+[    5.588854] vc4-drm gpu: bound fe806000.vec (ops vc4_vec_ops)
+[    5.588897] vc4-drm gpu: bound fe004000.txp (ops vc4_txp_ops)
+[    5.588934] vc4-drm gpu: bound fe400000.hvs (ops vc4_hvs_ops)
+[    5.588990] vc4-drm gpu: bound fe206000.pixelvalve (ops vc4_crtc_ops)
+[    5.589030] vc4-drm gpu: bound fe207000.pixelvalve (ops vc4_crtc_ops)
+[    5.589074] vc4-drm gpu: bound fe20a000.pixelvalve (ops vc4_crtc_ops)
+[    5.589106] vc4-drm gpu: bound fe216000.pixelvalve (ops vc4_crtc_ops)
+[    5.589145] vc4-drm gpu: bound fec12000.pixelvalve (ops vc4_crtc_ops)
+[    5.589294] checking generic (3e513000 6d8c00) vs hw (0 ffffffffffffffff)
+[    5.589297] fb0: switching to vc4drmfb from simple
+[    5.589433] Console: switching to colour dummy device 80x25
+[    5.589481] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    5.589816] [drm] Initialized vc4 0.0.0 20140616 for gpu on minor 0
+[    5.601079] ------------[ cut here ]------------
+[    5.601095] WARNING: CPU: 2 PID: 127 at drivers/gpu/drm/vc4/vc4_hdmi_phy.c:413 vc5_hdmi_phy_init+0x7ac/0x2078
+[    5.601097] Modules linked in:
+[    5.601103] CPU: 2 PID: 127 Comm: kworker/2:1 Not tainted 5.7.0-rc2-00091-ga181df59a930 #7
+[    5.601105] Hardware name: Raspberry Pi 4 Model B (DT)
+[    5.601112] Workqueue: events deferred_probe_work_func
+[    5.601116] pstate: 20000005 (nzCv daif -PAN -UAO)
+[    5.601119] pc : vc5_hdmi_phy_init+0x7ac/0x2078
+[    5.601123] lr : vc4_hdmi_encoder_enable+0x1b8/0x1ac0
+[    5.601124] sp : ffff80001217b410
+[    5.601126] x29: ffff80001217b410 x28: ffff0000ec6370f0 
+[    5.601129] x27: ffff0000f650d400 x26: 000000008a500000 
+[    5.601132] x25: ffff8000113b4ac0 x24: 0000000000002060 
+[    5.601135] x23: 000000000a500000 x22: 0000000000000300 
+[    5.601137] x21: 0000000008d9ee20 x20: ffff0000ec535080 
+[    5.601140] x19: 000000010989e7c0 x18: 0000000000000000 
+[    5.601142] x17: 0000000000000001 x16: 0000000000005207 
+[    5.601145] x15: 00004932ad293c92 x14: 0000000000000137 
+[    5.601147] x13: ffff800010015000 x12: 0000000000000001 
+[    5.601150] x11: 0000000000000001 x10: 0000000000000000 
+[    5.601152] x9 : 0000000000000000 x8 : ffff800010015038 
+[    5.601154] x7 : 0000000000000001 x6 : ffff80001217b368 
+[    5.601157] x5 : 0000000000000000 x4 : 000000000000004c 
+[    5.601159] x3 : 0000000000000000 x2 : ffff8000113b4ac0 
+[    5.601162] x1 : ffff8000120c5f44 x0 : 00000000dc8984ff 
+[    5.601164] Call trace:
+[    5.601169]  vc5_hdmi_phy_init+0x7ac/0x2078
+[    5.601172]  vc4_hdmi_encoder_enable+0x1b8/0x1ac0
+[    5.601176]  drm_atomic_helper_commit_modeset_enables+0x224/0x248
+[    5.601179]  vc4_atomic_complete_commit+0x400/0x558
+[    5.601182]  vc4_atomic_commit+0x1e0/0x200
+[    5.601185]  drm_atomic_commit+0x4c/0x60
+[    5.601190]  drm_client_modeset_commit_atomic.isra.0+0x17c/0x238
+[    5.601192]  drm_client_modeset_commit_locked+0x5c/0x198
+[    5.601195]  drm_client_modeset_commit+0x30/0x58
+[    5.601201]  drm_fb_helper_restore_fbdev_mode_unlocked+0x78/0xe0
+[    5.601204]  drm_fb_helper_set_par+0x30/0x68
+[    5.601208]  fbcon_init+0x3d4/0x598
+[    5.601212]  visual_init+0xb0/0x108
+[    5.601214]  do_bind_con_driver+0x1d0/0x3a8
+[    5.601217]  do_take_over_console+0x144/0x208
+[    5.601219]  do_fbcon_takeover+0x68/0xd8
+[    5.601222]  fbcon_fb_registered+0x100/0x118
+[    5.601226]  register_framebuffer+0x1f4/0x338
+[    5.601229]  __drm_fb_helper_initial_config_and_unlock+0x2f8/0x4a0
+[    5.601232]  drm_fbdev_client_hotplug+0xd4/0x1b0
+[    5.601235]  drm_fbdev_generic_setup+0xb0/0x130
+[    5.601238]  vc4_drm_bind+0x184/0x1a0
+[    5.601241]  try_to_bring_up_master+0x168/0x1c8
+[    5.601244]  __component_add+0xa4/0x170
+[    5.601246]  component_add+0x14/0x20
+[    5.601248]  vc4_vec_dev_probe+0x20/0x30
+[    5.601252]  platform_drv_probe+0x54/0xa8
+[    5.601254]  really_probe+0xd8/0x320
+[    5.601256]  driver_probe_device+0x58/0xf0
+[    5.601258]  __device_attach_driver+0x84/0xc8
+[    5.601263]  bus_for_each_drv+0x78/0xc8
+[    5.601265]  __device_attach+0xe4/0x140
+[    5.601267]  device_initial_probe+0x14/0x20
+[    5.601269]  bus_probe_device+0x9c/0xa8
+[    5.601271]  deferred_probe_work_func+0x74/0xb0
+[    5.601276]  process_one_work+0x1bc/0x338
+[    5.601279]  worker_thread+0x1f8/0x428
+[    5.601282]  kthread+0x138/0x158
+[    5.601286]  ret_from_fork+0x10/0x1c
+[    5.601288] ---[ end trace cfba0996218c3f3d ]---
 
+[1]: https://gist.github.com/starnight/2236cf350737e3b0e9f05135fc7c910e
+
+Jian-Hong Pan
