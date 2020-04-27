@@ -2,100 +2,144 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726D6C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C946C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 15:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9C8206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD8120656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 15:43:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588002224;
+	bh=w1azKjWdrnZjgbv7B4X2uNjhbZ3vn8MbYNztK+jcxrY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=DUpXr+3CgZvVa/syqmkBnqw9CZrgVpdndE2XLOW33B5hQtn3tSGLGXT205rvg+Sg4
+	 QzvKuapnjD8LwprqvSF3afSIHiHe6flf6nfKfNKiMRUaTfCfn0RXXwEwNwnTxZ+2+W
+	 RFys+Aj+MhOoDXkxgkfN/raQMipIYq0LnCZb2ZDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgD0Piz convert rfc822-to-8bit (ORCPT
+        id S1727073AbgD0Pnl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:38:55 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47463 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgD0Piz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 11:38:55 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 2D5C0C0011;
-        Mon, 27 Apr 2020 15:38:48 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 17:38:46 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, richard@nod.at, vigneshr@ti.com,
-        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
-        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
-        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200427173846.3866c506@xps13>
-In-Reply-To: <20200418105533.477ce529@collabora.com>
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200418105533.477ce529@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Apr 2020 11:43:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbgD0Pnk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 11:43:40 -0400
+Received: from [192.168.1.30] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23DF720656;
+        Mon, 27 Apr 2020 15:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588002219;
+        bh=w1azKjWdrnZjgbv7B4X2uNjhbZ3vn8MbYNztK+jcxrY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=wusn4jm4VJuXs9dMAqHmy04sX89KZFH7THfQdVKLxE/Ymc9REmPdgLaaU7WSl9I1v
+         DVWK+V8UJJJBSnXTmPYi6w57jbM08G+goe7jfA+jVsWfEvKbbpxWFaMEsbfZScZ79V
+         POC+rBRzhyh3+jO3BzqimC/d5EvHCF/gxB+9cRFM=
+Subject: Re: [PATCHv7 0/5] clk: agilex: add clock driver
+To:     linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+References: <20200415164642.29382-1-dinguyen@kernel.org>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <5ec389fa-c0ff-93a5-e3f4-a42090b6f2e3@kernel.org>
+Date:   Mon, 27 Apr 2020 10:43:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200415164642.29382-1-dinguyen@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi Stephen,
 
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Sat, 18 Apr
-2020 10:55:33 +0200:
+Was wondering if you have any comments on this series?
 
-> On Fri, 17 Apr 2020 16:21:47 +0800
-> "Ramuthevar,Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+On 4/15/20 11:46 AM, Dinh Nguyen wrote:
+> Hi,
 > 
-> > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> > 
-> > This patch adds the new IP of Nand Flash Controller(NFC) support
-> > on Intel's Lightning Mountain(LGM) SoC.
-> > 
-> > DMA is used for burst data transfer operation, also DMA HW supports
-> > aligned 32bit memory address and aligned data access by default.
-> > DMA burst of 8 supported. Data register used to support the read/write
-> > operation from/to device.
-> > 
-> > NAND controller driver implements ->exec_op() to replace legacy hooks,
-> > these specific call-back method to execute NAND operations.
-> > 
-> > Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> > ---
-> >  drivers/mtd/nand/raw/Kconfig          |   7 +
-> >  drivers/mtd/nand/raw/Makefile         |   1 +
-> >  drivers/mtd/nand/raw/intel_lgm_nand.c | 740 ++++++++++++++++++++++++++++++++++  
+> This is version 7 of the patchset to add a clock driver to the Agilex
+> platform.
 > 
-> I wonder if we shouldn't name the driver infineon-nand-controller.c
-> since the original design comes from Infineon IIUC. intel_lgm_nand.c is
-> definitely misleading, as we also have a nand_intel.c file which is for
-> Intel NAND chips (not NAND controllers). If we keep intel in the name,
-> let's at least add a "-controller" suffix to make it clear.
+> The change from v6 is to correct the dt-bindings document to include the
+> license header to be "(GPL-2.0-only OR BSD-2-Clause)".
 > 
-> Side note for Miquel: I guess we would also benefit from having a clear
-> core vs controller-drivers split as recently done for spi-nor (a
-> controller subdir has been created).
-
-I would even like a core vs controller drivers vs nand chips drivers.
-
-Macronix for instance has a NAND controller driver and a NAND chip
-driver, that's why, even if it is a bit long, I enforce the -nfc or
--nand-controller (my favorite) suffix now.
+> Thanks,
+> 
+> Dinh Nguyen (5):
+>   clk: socfpga: stratix10: use new parent data scheme
+>   clk: socfpga: remove clk_ops enable/disable methods
+>   clk: socfpga: add const to _ops data structures
+>   dt-bindings: documentation: add clock bindings information for Agilex
+>   clk: socfpga: agilex: add clock driver for the Agilex platform
+> 
+>  .../bindings/clock/intel,agilex.yaml          |  46 ++
+>  drivers/clk/Makefile                          |   3 +-
+>  drivers/clk/socfpga/Makefile                  |   2 +
+>  drivers/clk/socfpga/clk-agilex.c              | 454 ++++++++++++++++++
+>  drivers/clk/socfpga/clk-gate-s10.c            |   5 +-
+>  drivers/clk/socfpga/clk-periph-s10.c          |  10 +-
+>  drivers/clk/socfpga/clk-pll-a10.c             |   4 +-
+>  drivers/clk/socfpga/clk-pll-s10.c             |  78 ++-
+>  drivers/clk/socfpga/clk-pll.c                 |   4 +-
+>  drivers/clk/socfpga/clk-s10.c                 | 160 ++++--
+>  drivers/clk/socfpga/stratix10-clk.h           |  10 +-
+>  include/dt-bindings/clock/agilex-clock.h      |  70 +++
+>  12 files changed, 794 insertions(+), 52 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+>  create mode 100644 drivers/clk/socfpga/clk-agilex.c
+>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
+> 
 
 Thanks,
-Miquèl
+Dinh
