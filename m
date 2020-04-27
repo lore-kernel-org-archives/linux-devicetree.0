@@ -2,384 +2,216 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B765C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 06:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E270BC5519A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 06:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B94206B6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 06:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A632072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 06:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgD0GWI (ORCPT
+        id S1726537AbgD0G0h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:22:08 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46296 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgD0GWI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 02:22:08 -0400
-Received: by mail-io1-f67.google.com with SMTP id i3so17552717ioo.13;
-        Sun, 26 Apr 2020 23:22:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kUJ2IOIfZxc2gfoEAE1R4dapVEqh0mafu/Wcnar+8RI=;
-        b=o8NQdbkM103DitvkcE3nC2m03MpA/MxYycaNUGuqokiAmc71tXX+y4yL8pn9BuHt6z
-         Ph4axFmEUTl6doanBv0MKCGBE0Mvnx3htIdJoFgalnMTmjUb6sneJGg67A2sw+UndD4O
-         Xinl34k1uVXHHe9iOFurmpcQF4B07wtPZOa8OQmTGKPxHLfzi6JRSwa4iPdLVM39A/fn
-         ZlkahTnRgXJhjY5fGF5n04zslFioqMhT/lv3cvG0S2hNTWFt3vx3EPrv0jImoQjG1s54
-         gjfBYHtqdg9gjW6/xWboHjNoftt6IjgyWzvappNU52cyuMbYYAvlrmp9iwtFXvDL476x
-         uv5Q==
-X-Gm-Message-State: AGi0PuZhUMgbw2TdRJ0ipb5Z8ykR+Sb+8iDVC6vq+D+/Q+xP8ChJNhol
-        U7ifJ8Fm1TA2RnlaP+GpB5j4hDFOv5hUjOfpKKE=
-X-Google-Smtp-Source: APiQypLTXYVHGj4OZ9F8Y+OXygAXLihV/4FSAKsGQ3yTl4KGJR68eW0l8GDI3OzdJckJhTVLIjAkm9Sgdbk3Rre0DrE=
-X-Received: by 2002:a6b:5109:: with SMTP id f9mr19693167iob.125.1587968526932;
- Sun, 26 Apr 2020 23:22:06 -0700 (PDT)
+        Mon, 27 Apr 2020 02:26:37 -0400
+Received: from mail1.bemta25.messagelabs.com ([46.226.52.112]:62495 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726407AbgD0G0g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:26:36 -0400
+Received: from [100.112.198.136] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-b.eu-west-1.aws.symcld.net id 95/2A-39246-71B76AE5; Mon, 27 Apr 2020 06:26:31 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRWlGSWpSXmKPExsVy8MN7XV3x6mV
+  xBvf+CVnMP3KO1eLwoheMFjc/fWO1uLxrDpvF0usXmSxa9x5hd2DzWDNvDaPHzll32T02repk
+  8/i8SS6AJYo1My8pvyKBNePthXa2ggOaFW87NBsYdyl1MXJxCAmsZZTYsGgLaxcjJ5BTKTH15
+  TtmEJtXIEJiytXjYDangJnEinWvmSBqTCW239rADmKzCehIPJq5HizOIqAq0bVtFZgtLBAqsf
+  PQezYQW0SgXOLAx5msIMuYBaYxSuz5eBhqgaDEyZlPWEBsZgEJiYMvXjBDLNCSOLdmFeMERt5
+  ZSMpmISlbwMi0itEiqSgzPaMkNzEzR9fQwEDX0NBI19DSXNfQzEQvsUo3SS+1VLc8tbhE11Av
+  sbxYr7gyNzknRS8vtWQTIzBYUwqOLtnBuG35e71DjJIcTEqivHqxy+KE+JLyUyozEosz4otKc
+  1KLDzHKcHAoSfC+rgTKCRalpqdWpGXmACMHJi3BwaMkwlsKkuYtLkjMLc5Mh0idYjTm+L1hyS
+  JmjgdX761iFmLJy89LlRLnVa4CKhUAKc0ozYMbBIvoS4yyUsK8jAwMDEI8BalFuZklqPKvGMU
+  5GJWEeSeBLOTJzCuB2/cK6BQmoFOq5BeDnFKSiJCSamAK+/xD2yXgCcvLWQZWh1enKfPW+Jb0
+  sTU5/fpav/uv3jO235Vs070smfaJGkecu7TD66/oe4H/Yh1zZW/yN+zfcf0r07U7MzVnxOTnR
+  7/W2JiY/mvDZ++AyqfThH0rt9T52zGYxGjLl6y2svn8lvnXXUndY3Prv7irsJZZmAjqhyq+Xf
+  oy+1JWQ9dH1p8PM74GbEz9Hs0hv7/q4vz+HZm7Zhds5b2zUZyB6z+Tm9JPo0f7Jh3+xFSbZxt
+  /a/rUO8zHa2znTFjgtzxR+FfAUovUiPLUYN8t5xmWl99X3Mm43859AvOBhRkz7pYcqZ5fnN7T
+  wed1/0PilbgdB/84rX19/Ipf5eppZoo/eXk7GC8rsRRnJBpqMRcVJwIA8JlLz2MDAAA=
+X-Env-Sender: roy.im.opensource@diasemi.com
+X-Msg-Ref: server-19.tower-292.messagelabs.com!1587968789!3549008!4
+X-Originating-IP: [193.240.239.45]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 23462 invoked from network); 27 Apr 2020 06:26:31 -0000
+Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
+  by server-19.tower-292.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 27 Apr 2020 06:26:31 -0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Mon, 27 Apr 2020 08:26:29 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ DE82F13F673; Mon, 27 Apr 2020 15:26:27 +0900 (KST)
+Message-ID: <05548b281e4aca82fb10bc03dd202f2b50e27d89.1587949032.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1587949032.git.Roy.Im@diasemi.com>
+References: <cover.1587949032.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Mon, 27 Apr 2020 09:57:11 +0900
+Subject: [RESEND PATCH V11 2/3] dt-bindings: input: Add document bindings for
+ DA7280
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com> <20200427060551.1372591-3-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200427060551.1372591-3-jiaxun.yang@flygoat.com>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Mon, 27 Apr 2020 14:29:34 +0800
-Message-ID: <CAAhV-H6JpHUJ_aQ0zSzMquSQBkA5Roo6bOUqhLys_AZhbp1UmA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/5] PCI: Add Loongson PCI Controller support
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Jiaxun,
+Add device tree binding information for DA7280 haptic driver.
+Example bindings for DA7280 are added.
 
-On Mon, Apr 27, 2020 at 2:06 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> This controller can be found on Loongson-2K SoC, Loongson-3
-> systems with RS780E/LS7A PCH.
->
-> The RS780E part of code was previously located at
-> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
-> driver implementation.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->
-> --
-> v2:
->         - Clean up according to rob's suggestions
->         - Claim that it can't work as a module
-> v3:
->         - Fix a typo
-> v4:
->         - More clean-ups: Drop flag check, use devfn
-> ---
->  drivers/pci/controller/Kconfig        |  10 +
->  drivers/pci/controller/Makefile       |   1 +
->  drivers/pci/controller/pci-loongson.c | 251 ++++++++++++++++++++++++++
->  3 files changed, 262 insertions(+)
->  create mode 100644 drivers/pci/controller/pci-loongson.c
->
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 91bfdb784829..ae36edb1d7db 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -258,6 +258,16 @@ config PCI_HYPERV_INTERFACE
->           The Hyper-V PCI Interface is a helper driver allows other drivers to
->           have a common interface with the Hyper-V PCI frontend driver.
->
-> +config PCI_LOONGSON
-> +       bool "LOONGSON PCI Controller"
-> +       depends on MACH_LOONGSON64 || COMPILE_TEST
-> +       depends on OF
-> +       depends on PCI_QUIRKS
-> +       default MACH_LOONGSON64
-> +       help
-> +         Say Y here if you want to enable PCI controller support on
-> +         Loongson systems.
-> +
->  source "drivers/pci/controller/dwc/Kconfig"
->  source "drivers/pci/controller/mobiveil/Kconfig"
->  source "drivers/pci/controller/cadence/Kconfig"
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 158c59771824..fbac4b0190a0 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
->  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
->  obj-$(CONFIG_VMD) += vmd.o
->  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
-> +obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
->  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
->  obj-y                          += dwc/
->  obj-y                          += mobiveil/
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> new file mode 100644
-> index 000000000000..6cb8de384d36
-> --- /dev/null
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -0,0 +1,251 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Loongson PCI Host Controller Driver
-> + *
-> + * Copyright (C) 2020 Jiaxun Yang <jiaxun.yang@flygoat.com>
-> + */
-> +
-> +#include <linux/of_device.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_ids.h>
-> +
-> +#include "../pci.h"
-> +
-> +/* Device IDs */
-> +#define DEV_PCIE_PORT_0        0x7a09
-> +#define DEV_PCIE_PORT_1        0x7a19
-> +#define DEV_PCIE_PORT_2        0x7a29
-> +
-> +#define DEV_LS2K_APB   0x7a02
-> +#define DEV_LS7A_CONF  0x7a10
-> +#define DEV_LS7A_LPC   0x7a0c
-> +
-> +#define FLAG_CFG0      BIT(0)
-> +#define FLAG_CFG1      BIT(1)
-> +#define FLAG_DEV_FIX   BIT(2)
-> +
-> +struct loongson_pci {
-> +       void __iomem *cfg0_base;
-> +       void __iomem *cfg1_base;
-> +       struct platform_device *pdev;
-> +       u32 flags;
-> +};
-> +
-> +/* Fixup wrong class code in PCIe bridges */
-> +static void bridge_class_quirk(struct pci_dev *dev)
-> +{
-> +       dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_PCIE_PORT_0, bridge_class_quirk);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_PCIE_PORT_1, bridge_class_quirk);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_PCIE_PORT_2, bridge_class_quirk);
-> +
-> +static void system_bus_quirk(struct pci_dev *pdev)
-> +{
-> +       u16 tmp;
-> +
-> +       pdev->mmio_always_on = 1;
-> +       pdev->non_compliant_bars = 1;
-> +       /* Enable MEM & IO Decoding */
-> +       pci_read_config_word(pdev, PCI_STATUS, &tmp);
-> +       tmp |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
-> +       pci_write_config_word(pdev, PCI_STATUS, tmp);
-> +}
-> +
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_LS2K_APB, system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_LS7A_CONF, system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +                       DEV_LS7A_LPC, system_bus_quirk);
-> +
-> +static void loongson_mrrs_quirk(struct pci_dev *dev)
-> +{
-> +       struct pci_bus *bus = dev->bus;
-> +       struct pci_dev *bridge;
-> +       static const struct pci_device_id bridge_devids[] = {
-> +               { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> +               { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> +               { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> +               { 0, },
-> +       };
-> +
-> +
-> +       /* look for the matching bridge */
-> +       while (!pci_is_root_bus(bus)) {
-> +               bridge = bus->self;
-> +               bus = bus->parent;
-> +               /*
-> +                * Some Loongson PCIE ports has a h/w limitation of
-> +                * 256 bytes maximum read request size. It can't handle
-> +                * anything higher than this. So force this limit on
-> +                * any devices attached under these ports.
-> +                */
-> +               if (pci_match_id(bridge_devids, bridge)) {
-> +                       if (pcie_get_readrq(dev) > 256) {
-> +                               dev_info(&dev->dev, "limiting MRRS to 256\n");
-> +                               pcie_set_readrq(dev, 256);
-> +                       }
-> +                       break;
-> +               }
-> +       }
-> +}
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-> +
-> +static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
-> +                               unsigned int devfn, int where)
-> +{
-> +       unsigned long addroff = 0x0;
-> +
-> +       if (bus != 0)
-> +               addroff |= BIT(28); /* Type 1 Access */
-> +       addroff |= (where & 0xff) | ((where & 0xf00) << 16);
-> +       addroff |= (bus << 16) | (devfn << 8);
-> +       return priv->cfg1_base + addroff;
-> +}
-> +
-> +static void __iomem *cfg0_map(struct loongson_pci *priv, int bus,
-> +                               unsigned int devfn, int where)
-> +{
-> +       unsigned long addroff = 0x0;
-> +
-> +       if (bus != 0)
-> +               addroff |= BIT(24); /* Type 1 Access */
-> +       addroff |= (bus << 16) | (devfn << 8) | where;
-> +       return priv->cfg0_base + addroff;
-> +}
-> +
-> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +                              int where)
-> +{
-> +       unsigned char busnum = bus->number;
-> +       struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
-> +       struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
-> +
-> +       /*
-> +        * Do not read more than one device on the bus other than
-> +        * the host bridge.
-> +        */
-> +       if (bus->primary != 0 && PCI_SLOT(devfn) > 0 &&
-> +               priv->flags & FLAG_DEV_FIX)
-> +               return NULL;
-> +
-> +       /* CFG0 can only access standard space */
-> +       if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
-> +               return cfg0_map(priv, busnum, devfn, where);
-> +
-> +       /* CFG1 can access extended space */
-> +       if (where < PCI_CFG_SPACE_EXP_SIZE && priv->cfg1_base)
-> +               return cfg1_map(priv, busnum, devfn, where);
-> +
-> +       return NULL;
-> +}
-> +
-> +static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> +{
-> +       int irq;
-> +       u8 val;
-> +
-> +       irq = of_irq_parse_and_map_pci(dev, slot, pin);
-> +       if (irq > 0)
-> +               return irq;
-> +
-> +       /* Care i8259 legacy systems */
-> +       pci_read_config_byte(dev, PCI_INTERRUPT_LINE, &val);
-> +       /* i8259 only have 15 IRQs */
-> +       if (val > 15)
-> +               return 0;
-> +
-> +       return val;
-> +}
-> +
-> +/* H/w only accept 32-bit PCI operations */
-> +static struct pci_ops loongson_pci_ops = {
-> +       .map_bus = pci_loongson_map_bus,
-> +       .read   = pci_generic_config_read32,
-> +       .write  = pci_generic_config_write32,
-> +};
-> +
-> +static const struct of_device_id loongson_pci_of_match[] = {
-> +       { .compatible = "loongson,rs780e-pci",
-> +               .data = (void *)(FLAG_CFG0), },
-> +       { .compatible = "loongson,ls2k-pci",
-> +               .data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
-> +       { .compatible = "loongson,ls7a-pci",
-> +               .data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
-I suggest to use alpha-betical order here: ls2k, ls7a and rs780 at last.
+Reviewed-by: Rob Herring <robh@kernel.org>.
 
-> +       {}
-> +};
-> +
-> +static int loongson_pci_probe(struct platform_device *pdev)
-> +{
-> +       struct loongson_pci *priv;
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *node = dev->of_node;
-> +       struct pci_host_bridge *bridge;
-> +       struct resource *regs;
-> +       int err;
-> +
-> +       if (!node)
-> +               return -ENODEV;
-> +
-> +       bridge = devm_pci_alloc_host_bridge(dev, sizeof(*priv));
-> +       if (!bridge)
-> +               return -ENODEV;
-> +
-> +       priv = pci_host_bridge_priv(bridge);
-> +       priv->pdev = pdev;
-> +       priv->flags = (unsigned long)of_device_get_match_data(dev);
-> +
-> +       regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!regs) {
-> +               dev_err(dev, "missing mem resources for cfg0\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
-> +       if (IS_ERR(priv->cfg0_base))
-> +               return PTR_ERR(priv->cfg0_base);
-> +
-> +       /* CFG1 is optional */
-> +       if (priv->flags & FLAG_CFG1) {
-> +               regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +               if (!regs)
-> +                       dev_info(dev, "missing mem resource for cfg1\n");
-> +               else {
-> +                       priv->cfg1_base = devm_pci_remap_cfg_resource(dev, regs);
-> +                       if (IS_ERR(priv->cfg1_base))
-> +                               priv->cfg1_base = NULL;
-> +               }
-> +       }
-> +
-> +       err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-> +                                               &bridge->dma_ranges, NULL);
-> +       if (err) {
-> +               dev_err(dev, "Failed to get bridge resources\n");
-> +               return err;
-> +       }
-> +
-> +       bridge->dev.parent = dev;
-> +       bridge->sysdata = priv;
-> +       bridge->ops = &loongson_pci_ops;
-> +       bridge->map_irq = loongson_map_irq;
-> +
-> +       err = pci_host_probe(bridge);
-> +       if (err)
-> +               return err;
-> +
-> +       return 0;
-> +}
-> +
-> +static struct platform_driver loongson_pci_driver = {
-> +       .driver = {
-> +               .name = "loongson-pci",
-> +               .of_match_table = loongson_pci_of_match,
-> +       },
-> +       .probe = loongson_pci_probe,
-> +};
-> +builtin_platform_driver(loongson_pci_driver);
-> --
-> 2.26.0.rc2
->
-Thanks,
-Huacai
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+
+---
+v11: No changes.
+v10: No changes.
+v9: No changes.
+v8: Updated descriptions for new properties.
+v7: No changes.
+v6: No changes.
+v5: Updated descriptions and fixed errors.
+v4: Fixed commit message, properties.
+v3: Fixed subject format.
+v2: No changes
+
+
+ .../devicetree/bindings/input/dlg,da7280.txt       | 109 +++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+
+diff --git a/Documentation/devicetree/bindings/input/dlg,da7280.txt b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+new file mode 100644
+index 0000000..e6b719d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+@@ -0,0 +1,109 @@
++Dialog Semiconductor DA7280 Haptics bindings
++
++Required properties:
++- compatible: Should be "dlg,da7280".
++- reg: Specifies the I2C slave address.
++
++- interrupt-parent : Specifies the phandle of the interrupt controller to
++  which the IRQs from DA7280 are delivered to.
++
++- dlg,actuator-type: Set Actuator type. it should be one of:
++  "LRA" - Linear Resonance Actuator type.
++  "ERM-bar" - Bar type Eccentric Rotating Mass.
++  "ERM-coin" - Coin type Eccentric Rotating Mass.
++
++- dlg,const-op-mode: Haptic operation mode for FF_CONSTANT.
++  Possible values:
++	1 - Direct register override(DRO) mode triggered by i2c(default),
++	2 - PWM data source mode controlled by PWM duty,
++- dlg,periodic-op-mode: Haptic operation mode for FF_PERIODIC.
++  Possible values:
++	1 - Register triggered waveform memory(RTWM) mode, the pattern
++	    assigned to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
++	2 - Edge triggered waveform memory(ETWM) mode, external GPI(N)
++	    control are required to enable/disable and it needs to keep
++	    device enabled by sending magnitude (X > 0),
++	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below.
++	The default value is 1 for both of the operation modes.
++	For more details, please see the datasheet.
++
++- dlg,nom-microvolt: Nominal actuator voltage rating.
++  Valid values: 0 - 6000000.
++- dlg,abs-max-microvolt: Absolute actuator maximum voltage rating.
++  Valid values: 0 - 6000000.
++- dlg,imax-microamp: Actuator max current rating.
++  Valid values: 0 - 252000.
++  Default: 130000.
++- dlg,impd-micro-ohms: the impedance of the actuator in micro ohms.
++  Valid values: 0 - 1500000000.
++
++Optional properties:
++- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
++  PWM properties should be named "pwms". And number of cell is different
++  for each pwm device.
++  (See Documentation/devicetree/bindings/pwm/pwm.txt
++   for further information relating to pwm properties)
++
++- dlg,ps-seq-id: the PS_SEQ_ID(pattern ID in waveform memory inside chip)
++  to play back when RTWM-MODE is enabled.
++  Valid range: 0 - 15.
++- dlg,ps-seq-loop: the PS_SEQ_LOOP, Number of times the pre-stored sequence
++  pointed to by PS_SEQ_ID or GPI(N)_SEQUENCE_ID is repeated.
++  Valid range: 0 - 15.
++- dlg,gpiN-seq-id: the GPI(N)_SEQUENCE_ID, pattern to play
++  when gpi0 is triggered, 'N' must be 0 - 2.
++  Valid range: 0 - 15.
++- dlg,gpiN-mode: the pattern mode which can select either
++  "Single-pattern" or "Multi-pattern", 'N' must be 0 - 2.
++- dlg,gpiN-polarity: gpiN polarity which can be chosen among
++  "Rising-edge", "Falling-edge" and "Both-edge",
++  'N' must be 0 - 2
++  Haptic will work by this edge option in case of ETWM mode.
++
++- dlg,resonant-freq-hz: use in case of LRA.
++  the frequency range: 50 - 300.
++  Default: 205.
++
++- dlg,bemf-sens-enable: Enable for internal loop computations.
++- dlg,freq-track-enable: Enable for resonant frequency tracking.
++- dlg,acc-enable: Enable for active acceleration.
++- dlg,rapid-stop-enable: Enable for rapid stop.
++- dlg,amp-pid-enable: Enable for the amplitude PID.
++- dlg,mem-array: Customized waveform memory(patterns) data downloaded to
++  the device during initialization. This is an array of 100 values(u8).
++
++For further information, see device datasheet.
++
++======
++
++Example:
++
++	haptics: da7280-haptics@4a {
++		compatible = "dlg,da7280";
++		reg = <0x4a>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++		dlg,actuator-type = "LRA";
++		dlg,dlg,const-op-mode = <1>;
++		dlg,dlg,periodic-op-mode = <1>;
++		dlg,nom-microvolt = <2000000>;
++		dlg,abs-max-microvolt = <2000000>;
++		dlg,imax-microamp = <170000>;
++		dlg,resonant-freq-hz = <180>;
++		dlg,impd-micro-ohms = <10500000>;
++		dlg,freq-track-enable;
++		dlg,rapid-stop-enable;
++		dlg,mem-array = <
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++		>;
++
++	};
+-- 
+end-of-patch for RESEND PATCH V11
+
