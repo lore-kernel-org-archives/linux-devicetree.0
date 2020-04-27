@@ -2,105 +2,125 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2D3C4CECC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45943C4CECC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 063B320728
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A3E214AF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 18:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgD0SaG (ORCPT
+        id S1726540AbgD0SdU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:30:06 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40228 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgD0SaG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 14:30:06 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E82952A0D29;
-        Mon, 27 Apr 2020 19:30:03 +0100 (BST)
-Date:   Mon, 27 Apr 2020 20:30:01 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, richard@nod.at, vigneshr@ti.com,
-        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
-        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
-        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200427203001.1d583322@collabora.com>
-In-Reply-To: <20200427173846.3866c506@xps13>
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200418105533.477ce529@collabora.com>
-        <20200427173846.3866c506@xps13>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 27 Apr 2020 14:33:20 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:43633 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgD0SdU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 14:33:20 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 2C647FF806;
+        Mon, 27 Apr 2020 18:33:15 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 20:33:14 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v2 07/12] mtd: rawnand: stm32_fmc2: cleanup
+Message-ID: <20200427203314.798b3c4e@xps13>
+In-Reply-To: <1586966256-29548-8-git-send-email-christophe.kerello@st.com>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-8-git-send-email-christophe.kerello@st.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 27 Apr 2020 17:38:46 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+Hi Christophe,
 
-> Hi Boris,
-> 
-> Boris Brezillon <boris.brezillon@collabora.com> wrote on Sat, 18 Apr
-> 2020 10:55:33 +0200:
-> 
-> > On Fri, 17 Apr 2020 16:21:47 +0800
-> > "Ramuthevar,Vadivel MuruganX"
-> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> >   
-> > > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> > > 
-> > > This patch adds the new IP of Nand Flash Controller(NFC) support
-> > > on Intel's Lightning Mountain(LGM) SoC.
-> > > 
-> > > DMA is used for burst data transfer operation, also DMA HW supports
-> > > aligned 32bit memory address and aligned data access by default.
-> > > DMA burst of 8 supported. Data register used to support the read/write
-> > > operation from/to device.
-> > > 
-> > > NAND controller driver implements ->exec_op() to replace legacy hooks,
-> > > these specific call-back method to execute NAND operations.
-> > > 
-> > > Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> > > ---
-> > >  drivers/mtd/nand/raw/Kconfig          |   7 +
-> > >  drivers/mtd/nand/raw/Makefile         |   1 +
-> > >  drivers/mtd/nand/raw/intel_lgm_nand.c | 740 ++++++++++++++++++++++++++++++++++    
-> > 
-> > I wonder if we shouldn't name the driver infineon-nand-controller.c
-> > since the original design comes from Infineon IIUC. intel_lgm_nand.c is
-> > definitely misleading, as we also have a nand_intel.c file which is for
-> > Intel NAND chips (not NAND controllers). If we keep intel in the name,
-> > let's at least add a "-controller" suffix to make it clear.
-> > 
-> > Side note for Miquel: I guess we would also benefit from having a clear
-> > core vs controller-drivers split as recently done for spi-nor (a
-> > controller subdir has been created).  
-> 
-> I would even like a core vs controller drivers vs nand chips drivers.
-> 
-> Macronix for instance has a NAND controller driver and a NAND chip
-> driver, that's why, even if it is a bit long, I enforce the -nfc or
-> -nand-controller (my favorite) suffix now.
+Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
+2020 17:57:31 +0200:
 
-Maybe we can make it happen. I mean, moving drivers to a sub-dir is
-pretty easy ;).
+> This patch renames functions and local variables to be ready to use
+> stm32_fmc2 structure.
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
+
+> -static int stm32_fmc2_setup_interface(struct nand_chip *chip, int chipnr,
+> -				      const struct nand_data_interface *conf)
+> +static int stm32_fmc2_nfc_setup_interface(struct nand_chip *chip, int chipnr,
+> +					  const struct nand_data_interface *cf)
+
+I suppose you s/conf/cf/ because of the 80 chars boundary. In this case
+I don't mind crossing it, I don't think it is better to rename the
+conf parameter for this reason.
+
+>  {
+>  	const struct nand_sdr_timings *sdrt;
+>  
+> -	sdrt = nand_get_sdr_timings(conf);
+> +	sdrt = nand_get_sdr_timings(cf);
+>  	if (IS_ERR(sdrt))
+>  		return PTR_ERR(sdrt);
+>  
+>  	if (chipnr == NAND_DATA_IFACE_CHECK_ONLY)
+>  		return 0;
+>  
+> -	stm32_fmc2_calc_timings(chip, sdrt);
+> -	stm32_fmc2_timings_init(chip);
+> +	stm32_fmc2_nfc_calc_timings(chip, sdrt);
+> +	stm32_fmc2_nfc_timings_init(chip);
+>  
+>  	return 0;
+>  }
+>  
+
+[...]
+
+>  
+> -static struct platform_driver stm32_fmc2_driver = {
+> -	.probe	= stm32_fmc2_probe,
+> -	.remove	= stm32_fmc2_remove,
+> +static struct platform_driver stm32_fmc2_nfc_driver = {
+> +	.probe	= stm32_fmc2_nfc_probe,
+> +	.remove	= stm32_fmc2_nfc_remove,
+>  	.driver	= {
+> -		.name = "stm32_fmc2_nand",
+> -		.of_match_table = stm32_fmc2_match,
+> -		.pm = &stm32_fmc2_pm_ops,
+> +		.name = "stm32_fmc2_nfc",
+> +		.of_match_table = stm32_fmc2_nfc_match,
+> +		.pm = &stm32_fmc2_nfc_pm_ops,
+>  	},
+>  };
+> -module_platform_driver(stm32_fmc2_driver);
+> +module_platform_driver(stm32_fmc2_nfc_driver);
+>  
+> -MODULE_ALIAS("platform:stm32_fmc2_nand");
+> +MODULE_ALIAS("platform:stm32_fmc2_nfc");
+>  MODULE_AUTHOR("Christophe Kerello <christophe.kerello@st.com>");
+> -MODULE_DESCRIPTION("STMicroelectronics STM32 FMC2 nand driver");
+> +MODULE_DESCRIPTION("STMicroelectronics STM32 FMC2 nfc driver");
+
+I would prefer: s/nfc/NFC/ here please.
+
+>  MODULE_LICENSE("GPL v2");
+
+With these two nits,
+
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Thanks,
+Miquèl
