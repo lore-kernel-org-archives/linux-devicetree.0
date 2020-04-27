@@ -2,137 +2,173 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2624C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093D7C4CECC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1DE2076A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A2920775
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 17:40:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h3fldpMo"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="jZOn6q/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgD0R0N (ORCPT
+        id S1726259AbgD0RkS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:26:13 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45048 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgD0R0M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 13:26:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RHQ8Rp103828;
-        Mon, 27 Apr 2020 12:26:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588008369;
-        bh=j3QH00sY/Htwct4WFyjr8/dZw3NB/QmGpMKW/G19WeM=;
-        h=From:To:CC:Subject:Date;
-        b=h3fldpMoyf0BEKHpn3WjlQtgYlCzTgAVKdtTRO4autseuCbo/k2QGw0wtqnx6Ga1Y
-         ZdO4XLnMnV3y9zheZtPbHHZWmnyl9ngvU+mCQQdIJhELm0RUc4DmzTg+hY06geFV7Z
-         oR++m/QDQ2qaN/knYCD7oJvYYZMHgElJ3DwPFQNw=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RHQ818064603;
-        Mon, 27 Apr 2020 12:26:08 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 12:26:08 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 12:26:08 -0500
-Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RHQ5TE072591;
-        Mon, 27 Apr 2020 12:26:06 -0500
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH] arm: dts: Add 32KHz clock as default clock source
-Date:   Mon, 27 Apr 2020 22:56:04 +0530
-Message-ID: <20200427172604.16351-1-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 27 Apr 2020 13:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726189AbgD0RkS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:40:18 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56D2C0610D5;
+        Mon, 27 Apr 2020 10:40:17 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id A316B2305C;
+        Mon, 27 Apr 2020 19:40:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588009213;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Mb7wOIhi91zTa7OdCwnok2RD4/Y3FAeCxF/iMp7nN6o=;
+        b=jZOn6q/jxrjwYNn4nj3d83zoUJgdzvpe11GNFG7mRNPqsDk605zmppuXrjG6DwI9lToeYu
+        hv+XTWKczoGnq1p/Vnvk/7ctIF/9ikivCHAneUAnz7kw7CjEkx+6UB5FgdL5xAtJTg6voE
+        R4T413P+f5UjxDP86b2VwSVDn779YB4=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 27 Apr 2020 19:40:11 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 06/16] irqchip: add sl28cpld interrupt controller
+ support
+In-Reply-To: <87pnbtqhr1.fsf@nanos.tec.linutronix.de>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-7-michael@walle.cc>
+ <87pnbtqhr1.fsf@nanos.tec.linutronix.de>
+Message-ID: <87f141bce0a4fda04b550647306be296@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: A316B2305C
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[24];
+         NEURAL_HAM(-0.00)[-0.766];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[linux.intel.com,vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Clocksource to timer configured in pwm mode can be selected using the DT
-property ti,clock-source. There are few pwm timers which are not
-selecting the clock source and relying on default value in hardware or
-selected by driver. Instead of relying on default value, always select
-the clock source from DT. 
+Hi Thomas,
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
-Tony,
-	This is in preparation with removal of selecting clock source in
-	prepare() api. Let me know if you prefer separate patches for
-	each dts.
+thanks for the review.
 
- arch/arm/boot/dts/am335x-guardian.dts            | 1 +
- arch/arm/boot/dts/am3517-evm.dts                 | 1 +
- arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi | 1 +
- arch/arm/boot/dts/omap3-gta04.dtsi               | 1 +
- 4 files changed, 4 insertions(+)
+Am 2020-04-27 13:40, schrieb Thomas Gleixner:
+> Michael Walle <michael@walle.cc> writes:
+> 
+>> This patch adds support for the interrupt controller inside the sl28
+> 
+> git grep 'This patch' Documentation/process/
 
-diff --git a/arch/arm/boot/dts/am335x-guardian.dts b/arch/arm/boot/dts/am335x-guardian.dts
-index 81e0f63e94d3..0ebe9e2c150e 100644
---- a/arch/arm/boot/dts/am335x-guardian.dts
-+++ b/arch/arm/boot/dts/am335x-guardian.dts
-@@ -105,6 +105,7 @@
- 		ti,timers = <&timer7>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&dmtimer7_pins>;
-+		ti,clock-source = <0x01>;
- 	};
- 
- 	vmmcsd_fixed: regulator-3v3 {
-diff --git a/arch/arm/boot/dts/am3517-evm.dts b/arch/arm/boot/dts/am3517-evm.dts
-index a1fd3e63e86e..92466b9eb6ba 100644
---- a/arch/arm/boot/dts/am3517-evm.dts
-+++ b/arch/arm/boot/dts/am3517-evm.dts
-@@ -156,6 +156,7 @@
- 		pinctrl-0 = <&pwm_pins>;
- 		ti,timers = <&timer11>;
- 		#pwm-cells = <3>;
-+		ti,clock-source = <0x01>;
- 	};
- 
- 	/* HS USB Host PHY on PORT 1 */
-diff --git a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
-index f7b82ced4080..381f0e82bb70 100644
---- a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
-+++ b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
-@@ -65,6 +65,7 @@
- 		pinctrl-0 = <&pwm_pins>;
- 		ti,timers = <&timer10>;
- 		#pwm-cells = <3>;
-+		ti,clock-source = <0x01>;
- 	};
- 
- };
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 409a758c99f1..ecc45862b4f3 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -150,6 +150,7 @@
- 		compatible = "ti,omap-dmtimer-pwm";
- 		ti,timers = <&timer11>;
- 		#pwm-cells = <3>;
-+		ti,clock-source = <0x01>;
- 	};
- 
- 	hsusb2_phy: hsusb2_phy {
--- 
-2.23.0
+ok.
 
+> 
+>> CPLD management controller.
+>> 
+>> +static int sl28cpld_intc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct sl28cpld_intc *irqchip;
+>> +	struct resource *res;
+>> +	unsigned int irq;
+>> +	int ret;
+>> +
+>> +	if (!pdev->dev.parent)
+>> +		return -ENODEV;
+>> +
+>> +	irqchip = devm_kzalloc(&pdev->dev, sizeof(*irqchip), GFP_KERNEL);
+>> +	if (!irqchip)
+>> +		return -ENOMEM;
+>> +
+>> +	irqchip->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+>> +	if (!irqchip->regmap)
+>> +		return -ENODEV;
+>> +
+>> +	irq = platform_get_irq(pdev, 0);
+>> +	if (irq < 0)
+>> +		return irq;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+>> +	if (!res)
+>> +		return -EINVAL;
+>> +
+>> +	irqchip->chip.name = "sl28cpld-intc";
+>> +	irqchip->chip.irqs = sl28cpld_irqs;
+>> +	irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
+>> +	irqchip->chip.num_regs = 1;
+>> +	irqchip->chip.status_base = res->start + INTC_IP;
+>> +	irqchip->chip.mask_base = res->start + INTC_IE;
+>> +	irqchip->chip.mask_invert = true,
+>> +	irqchip->chip.ack_base = res->start + INTC_IP;
+>> +
+>> +	ret = devm_regmap_add_irq_chip(&pdev->dev, irqchip->regmap, irq,
+>> +				       IRQF_SHARED | IRQF_ONESHOT, 0,
+> 
+> What's the point of IRQF_SHARED | IRQF_ONESHOT here?
+
+IRQF_SHARED because this interrupt is shared with all the blocks
+which can generate interrupts, i.e. the GPIO contollers.
+
+IRQF_ONESHOT, because its is a threaded interrupt with no primary
+handler. But I just noticed, that regmap-irq will also set the
+IRQF_ONESHOT. But that the commit 09cadf6e088b ("regmap-irq:
+set IRQF_ONESHOT flag to ensure IRQ request") reads like it is
+just there to be sure. So I don't know if it should also be set
+here.
+
+-michael
+
+> 
+>> +				       &irqchip->chip, &irqchip->irq_data);
+> 
+> Thanks,
+> 
+>         tglx
