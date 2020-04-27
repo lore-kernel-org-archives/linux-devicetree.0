@@ -2,45 +2,44 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F714C7C880
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DB4C7C881
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBEC2087E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591132051A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 07:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587972717;
-	bh=SP8aLjy9l4P/fkjE4Dozlhxl5z9646o52s6YgA7cBHc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fVGobv3Vz5ZUaiakbckWz0rMJcp1JoOIAbYLH6gI1VLUxqUm5B4Itpuf5FNaNHKFW
-	 bBoqWka+PY+G/rI6IK4n8diwkLXyQZjffjfnBbRx1BB8hyogbUWQWVnCc4QZPbviwc
-	 h+AMpKziD4y4mjy26EAKZCGqj4CSQzjeIxOKKW1E=
+	s=default; t=1587972718;
+	bh=DZdOOmaliopb1c/d+hQBZorZ2uag5Ojix0LVE++Gam4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AasCFp4yoNHafCyMHJx6U7uzSdok005dkQK4ZxNZUbtG3lUShXW5s0ZlkVxXy5/zI
+	 Tpo8RyteZaNrKxfzPV1Z5+JYXEnIbsA6NdLVkGSRfWLGSeJu414lj4H7d8QGLZ9og8
+	 ZN0nk+QnDn33NoJwWeJA/d0H9bBqm/ePhXG4MBJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgD0Hbp (ORCPT
+        id S1726636AbgD0Hbp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 27 Apr 2020 03:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:35484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726507AbgD0Hbp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726543AbgD0Hbp (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 27 Apr 2020 03:31:45 -0400
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1F0A2078E;
+        by mail.kernel.org (Postfix) with ESMTPSA id ACD8E2087E;
         Mon, 27 Apr 2020 07:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587972704;
-        bh=SP8aLjy9l4P/fkjE4Dozlhxl5z9646o52s6YgA7cBHc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0C6XeUyNg6YZJHHn9hnpBRZSaZp4t0vkz/pLHBmSXFNBNzGqiReNP8+Gm/aO3eFVw
-         N/Q4Sqs64q1H8m/bG+ibxtwVGAFQ3q5etv8UVWuNivr7lI+nRENcMeJoQOiep+Sgt+
-         w1E2YF7rrRXQpI1i9l5RPkiIx06ltj0btviqS0q0=
+        bh=DZdOOmaliopb1c/d+hQBZorZ2uag5Ojix0LVE++Gam4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=D+OF96DcXa41/8DKZPoNSCHmxtCvE5jf5wXLWbN4j9ZtdbXntBxH5/iq+k9WcAPMs
+         K3O6VCUxQWjBGbIX5rHgyxbO8LgcfvKmiAEmYFnTZpUcB+ZJg2LTvjRZ8biskEB5V8
+         z6REXBnynG5PCkM3lHhLvTk3PgcQ166jiloQYtAE=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 78BA35FD54; Mon, 27 Apr 2020 15:31:42 +0800 (CST)
+        id 602325FBB9; Mon, 27 Apr 2020 15:31:42 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>,
@@ -48,12 +47,10 @@ To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
 Cc:     Chen-Yu Tsai <wens@csie.org>, linux-rockchip@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] arm64: dts: rockchip: rk3328-roc-cc: Set dr_mode to "host" for OTG
-Date:   Mon, 27 Apr 2020 15:31:32 +0800
-Message-Id: <20200427073132.29997-4-wens@kernel.org>
+Subject: [PATCH v2 0/3] arm64: dts: rockchip: misc. cleanups and improvements
+Date:   Mon, 27 Apr 2020 15:31:29 +0800
+Message-Id: <20200427073132.29997-1-wens@kernel.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200427073132.29997-1-wens@kernel.org>
-References: <20200427073132.29997-1-wens@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -63,28 +60,39 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-The board has a standard USB A female port connected to the USB OTG
-controller's data pins. Set dr_mode in the OTG controller node to
-indicate this usage, instead of having the implementation guess.
+Hi,
 
-Fixes: 2171f4fdac06 ("arm64: dts: rockchip: add roc-rk3328-cc board")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 1 +
- 1 file changed, 1 insertion(+)
+Here is the remaining patch for roc-rk3399-pc, along with a few other
+new patches.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 8d553c92182a..56e79ce9101b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-@@ -334,6 +334,7 @@ &uart2 {
- };
- 
- &usb20_otg {
-+	dr_mode = "host";
- 	status = "okay";
- };
- 
+  - Based on discussions from v1, patch one, newly added, drops the list
+    of valid values for linux,default-triggers.
+
+  - Patch two is the same as in v1
+
+  - Patch three, new, sets dr_mode to "host" to the dwc2 OTG controller,
+    matching what the board uses it for, a host port. This gets rid of
+    a warning from the kernel.
+
+Please have a look.
+
+
+Regards
+ChenYu
+
+
+Chen-Yu Tsai (3):
+  dt-bindings: leds: common: Drop enumeration for linux,default-triggers
+  arm64: dts: rockchip: rk3399-roc-pc: Fix MMC numbering for LED
+    triggers
+  arm64: dts: rockchip: rk3328-roc-cc: Set dr_mode to "host" for OTG
+
+ .../devicetree/bindings/leds/common.yaml      | 21 +------------------
+ .../arm64/boot/dts/rockchip/rk3328-roc-cc.dts |  1 +
+ .../dts/rockchip/rk3399-roc-pc-mezzanine.dts  |  8 +++++++
+ .../boot/dts/rockchip/rk3399-roc-pc.dtsi      |  4 ++--
+ 4 files changed, 12 insertions(+), 22 deletions(-)
+
 -- 
 2.26.0
 
