@@ -2,55 +2,73 @@ Return-Path: <SRS0=/Yzg=6L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F9DC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 05:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD65C55199
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 05:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF8D6206B6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 05:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CBB12084D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Apr 2020 05:42:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BbQaEPW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgD0Fk5 (ORCPT
+        id S1726623AbgD0Fmg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 01:40:57 -0400
-Received: from smtprelay0202.hostedemail.com ([216.40.44.202]:57318 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726172AbgD0Fk5 (ORCPT
+        Mon, 27 Apr 2020 01:42:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726512AbgD0Fmg (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 01:40:57 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id CBBFF100E7B40;
-        Mon, 27 Apr 2020 05:40:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: owl97_7daddaa7d028
-X-Filterd-Recvd-Size: 5572
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 27 Apr 2020 05:40:53 +0000 (UTC)
-Message-ID: <7beaedfd63017973b910dd21cac13ecb42dbe503.camel@perches.com>
-Subject: [PATCH] get_maintainer: Add email addresses from .yaml files
-From:   Joe Perches <joe@perches.com>
-To:     Rob Herring <robh+dt@kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Adrian Ratiu <adrian.ratiu@collabora.com>,
-        devicetree@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Collabora Kernel ML <kernel@collabora.com>
-Date:   Sun, 26 Apr 2020 22:40:52 -0700
-In-Reply-To: <9a32f150f85f851d04afd148b2a9a5cf203f7ce1.camel@perches.com>
-References: <87d082jtfn.fsf@collabora.com>
-         <20200420175909.GA5810@ravnborg.org>
-         <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
-         <9a32f150f85f851d04afd148b2a9a5cf203f7ce1.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Mon, 27 Apr 2020 01:42:36 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA6FC061A41
+        for <devicetree@vger.kernel.org>; Sun, 26 Apr 2020 22:42:36 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d184so8451470pfd.4
+        for <devicetree@vger.kernel.org>; Sun, 26 Apr 2020 22:42:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=S7iDJl+P8l2tDxO1XbtmVx7feXA+RtlRnZQzWbR1KCQ=;
+        b=BbQaEPW/zDNX8G8dA8Cjp6b7T5/J4+qeFvDgjuUj/mN9iX1CMi6K4/+hHjTLJ0nLXM
+         jTovYFZWpVZtdbTkLUL7pG9dJTnpR8t7AX88lZPVo9qhcdWJFFCyMRuSSMo97qVWhSKD
+         7V6rGfTyEAlaqocyU23aZD78ieLI/fun5WsVDeFO9zLauAISoY0aAejvxwKKx6CyCGva
+         aCKb5/5VC+ai4a8aPhJXmDbj7t/2lQiRGf5YfTezg3D8dKiyS5S4MO0oAZydNwOrGtDk
+         rxnIhDb1D73YfujxVT8f1mcd7HmSoF+psE8wYdyqYmD9yyI3KWswzJwhdQVHUzy6h2g3
+         ZSqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=S7iDJl+P8l2tDxO1XbtmVx7feXA+RtlRnZQzWbR1KCQ=;
+        b=pXl2EUOih/Tp5bQVTzL33xeR1mlvJhlnI47MyQ2WvfV7zka9VZqBX4tx56SaRY32uk
+         T8CBu3lhBsEYFdFvT2xNLQRU2iVS/Tq6FXodo3BPTXriUezWmACZW3OadPF5CEhbZZEt
+         /E1hJ/fWVd0f5NWTN09tVPmfcjr6+0JW3WXgOyWSL7of13chQhdXOxAB2H4TYGOoNvRS
+         usOTnTDnICkfcdtXxnw/k8W7GR0vAsZW6VSPlqDTh2ccCdevZ7701Dh1dK3x1y3P4m3b
+         t8rglrHqs+4lfYdEoiyPWcb6UTjbaUCrBMV3hJNq4fTsMqsWoYDjbIEI7Kg0IOY1JQnf
+         yQJw==
+X-Gm-Message-State: AGi0PuZ/OC3yNMynzJoMx7PQx6wpi4cx4lDaP68cpMts6HM8V4gGVgtw
+        S8bpfYR6KjzK/0oB6euL76bJJQ==
+X-Google-Smtp-Source: APiQypIPQJak3AVIzrbXaNSFwIn3GL2iOHSkQBPm+c3nVnIMeJ3QrdBl1RQ4owlASd3uL25gnBkUbQ==
+X-Received: by 2002:a65:4b8d:: with SMTP id t13mr20292240pgq.388.1587966155786;
+        Sun, 26 Apr 2020 22:42:35 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f3sm10172355pjo.24.2020.04.26.22.42.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 22:42:35 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] soc: qcom: aoss: Add SM8250 compatible
+Date:   Sun, 26 Apr 2020 22:42:02 -0700
+Message-Id: <20200427054202.2822144-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -58,143 +76,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-.yaml files can contain maintainer/author addresses and it seems
-unlikely or unnecessary that individual MAINTAINER file section
-entries for each .yaml file will be created.
+Add SM8250 compatible to the qcom_aoss binding and driver.
 
-So dd the email addresses found in .yaml files to the default
-get_maintainer output.
-
-The email addresses are marked with "(in file)" when using the
-"--roles" or "--rolestats" options.
-
-Miscellanea:
-
-o Change $file_emails to $email_file_emails to avoid visual
-  naming conflicts with @file_emails
-
-Signed-off-by: Joe Perches <joe@perches.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- scripts/get_maintainer.pl | 44 +++++++++++++++++++++++++++++---------------
- 1 file changed, 29 insertions(+), 15 deletions(-)
+ Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 1 +
+ drivers/soc/qcom/qcom_aoss.c                                 | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-index 6cbcd1..6d973f 100755
---- a/scripts/get_maintainer.pl
-+++ b/scripts/get_maintainer.pl
-@@ -57,7 +57,7 @@ my $status = 0;
- my $letters = "";
- my $keywords = 1;
- my $sections = 0;
--my $file_emails = 0;
-+my $email_file_emails = 0;
- my $from_filename = 0;
- my $pattern_depth = 0;
- my $self_test = undef;
-@@ -69,6 +69,12 @@ my $vcs_used = 0;
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+index 4fc571e78f01..953add19e937 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+@@ -19,6 +19,7 @@ power-domains.
+ 		    "qcom,sc7180-aoss-qmp"
+ 		    "qcom,sdm845-aoss-qmp"
+ 		    "qcom,sm8150-aoss-qmp"
++		    "qcom,sm8250-aoss-qmp"
  
- my $exit = 0;
- 
-+my @files = ();
-+my @fixes = ();			# If a patch description includes Fixes: lines
-+my @range = ();
-+my @keyword_tvi = ();
-+my @file_emails = ();
-+
- my %commit_author_hash;
- my %commit_signer_hash;
- 
-@@ -266,7 +272,7 @@ if (!GetOptions(
- 		'pattern-depth=i' => \$pattern_depth,
- 		'k|keywords!' => \$keywords,
- 		'sections!' => \$sections,
--		'fe|file-emails!' => \$file_emails,
-+		'fe|file-emails!' => \$email_file_emails,
- 		'f|file' => \$from_filename,
- 		'find-maintainer-files' => \$find_maintainer_files,
- 		'mpath|maintainer-path=s' => \$maintainer_path,
-@@ -424,6 +430,22 @@ sub read_all_maintainer_files {
-     }
- }
- 
-+sub maintainers_in_file {
-+    my ($file) = @_;
-+
-+    return if ($file =~ m@\bMAINTAINERS$@);
-+
-+    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
-+	open(my $f, '<', $file)
-+	    or die "$P: Can't open $file: $!\n";
-+	my $text = do { local($/) ; <$f> };
-+	close($f);
-+
-+	my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
-+	push(@file_emails, clean_file_emails(@poss_addr));
-+    }
-+}
-+
- #
- # Read mail address map
- #
-@@ -504,12 +526,6 @@ sub read_mailmap {
- 
- ## use the filenames on the command line or find the filenames in the patchfiles
- 
--my @files = ();
--my @fixes = ();			# If a patch description includes Fixes: lines
--my @range = ();
--my @keyword_tvi = ();
--my @file_emails = ();
--
- if (!@ARGV) {
-     push(@ARGV, "&STDIN");
- }
-@@ -527,7 +543,7 @@ foreach my $file (@ARGV) {
- 	$file =~ s/^\Q${cur_path}\E//;	#strip any absolute path
- 	$file =~ s/^\Q${lk_path}\E//;	#or the path to the lk tree
- 	push(@files, $file);
--	if ($file ne "MAINTAINERS" && -f $file && ($keywords || $file_emails)) {
-+	if ($file ne "MAINTAINERS" && -f $file && $keywords) {
- 	    open(my $f, '<', $file)
- 		or die "$P: Can't open $file: $!\n";
- 	    my $text = do { local($/) ; <$f> };
-@@ -539,10 +555,6 @@ foreach my $file (@ARGV) {
- 		    }
- 		}
- 	    }
--	    if ($file_emails) {
--		my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
--		push(@file_emails, clean_file_emails(@poss_addr));
--	    }
- 	}
-     } else {
- 	my $file_cnt = @files;
-@@ -923,6 +935,8 @@ sub get_maintainers {
- 		print("\n");
- 	    }
- 	}
-+
-+	maintainers_in_file($file);
-     }
- 
-     if ($keywords) {
-@@ -1835,7 +1849,7 @@ tm toggle maintainers
- tg toggle git entries
- tl toggle open list entries
- ts toggle subscriber list entries
--f  emails in file       [$file_emails]
-+f  emails in file       [$email_file_emails]
- k  keywords in file     [$keywords]
- r  remove duplicates    [$email_remove_duplicates]
- p# pattern match depth  [$pattern_depth]
-@@ -1960,7 +1974,7 @@ EOT
- 		bool_invert(\$email_git_all_signature_types);
- 		$rerun = 1;
- 	    } elsif ($sel eq "f") {
--		bool_invert(\$file_emails);
-+		bool_invert(\$email_file_emails);
- 		$rerun = 1;
- 	    } elsif ($sel eq "r") {
- 		bool_invert(\$email_remove_duplicates);
-
+ - reg:
+ 	Usage: required
+diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
+index f43a2e07ee83..ed2c687c16b3 100644
+--- a/drivers/soc/qcom/qcom_aoss.c
++++ b/drivers/soc/qcom/qcom_aoss.c
+@@ -599,6 +599,7 @@ static const struct of_device_id qmp_dt_match[] = {
+ 	{ .compatible = "qcom,sc7180-aoss-qmp", },
+ 	{ .compatible = "qcom,sdm845-aoss-qmp", },
+ 	{ .compatible = "qcom,sm8150-aoss-qmp", },
++	{ .compatible = "qcom,sm8250-aoss-qmp", },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, qmp_dt_match);
+-- 
+2.24.0
 
