@@ -2,510 +2,276 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674F5C83004
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6E3C83004
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39C8C206C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588069244;
-	bh=4OeVg93gCmdUJAPkUzPIsytJfzhNuFzitSg+GbhXwnQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ejYgjAWIfEr0YV1ul3Y6BuywfpxsXu81xG4rZz6RfFJtDNNSnS3zPD3O6UU/LGBsv
-	 9EpH5WKXuCEJ5QIucyUBNEeHaZaMUmPUMT4rFkp4801izGDaIvl8dedTdSPhbdgRPQ
-	 D7ggP3/sMgtm9sybiDNGGmql6Jj/4xjiRhvC150Y=
+	by mail.kernel.org (Postfix) with ESMTP id 5BC1F206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:22:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jvnMpYc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgD1KUg convert rfc822-to-8bit (ORCPT
+        id S1727805AbgD1KWD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:20:36 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42134 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgD1KUc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 06:20:32 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s10so15956940edy.9;
-        Tue, 28 Apr 2020 03:20:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=8XVZLy+Z2aeMWzOQ+xj/bdTQQafaM8Qg8Ml+JBIWjas=;
-        b=cl+J/wqdAjDYff7hircxN1GX+7chdHuwQocv0aAK+LKe478kxYFx8i6rFmibpAqpJt
-         twq8SRbuQGWwi9Gu20OD+tbiPiquq55K2IlkHpQLCmPHf0GnIpbHAMItVIVRsVNZu0II
-         414E/STEIMcImUppioMniADemUgoRv+AsGtq/hPXwlVEpTNlMAsqHOJuUsqilB8z86ZO
-         ZetMs4wybnQ4bxyWfJYUaEX7YfN6NeQclyyNctHVAFQ1+0nWcahF3X+/KL2qGQ2nrG4A
-         qZUn6rsBudVvu3VnZ9ztCiQhE7KUw2HfxDoAkUbyDlOOt7M59HtrudyhPcjtwnSHIzAR
-         km3Q==
-X-Gm-Message-State: AGi0PubF6bIEPkQeSZJG1WVu00+njBdzs2pR/MPSnppOHQ7TOsvgReJ+
-        SVHA3hTHAeJWqIicFZ7gGRQ=
-X-Google-Smtp-Source: APiQypIlj9J3oWIIsF+MLx39oTKzFj0RUM+Tt9CdhuA54Gum3uRwO43yYz3yLqCIKNQNoLSMIfC2Hw==
-X-Received: by 2002:aa7:d5d4:: with SMTP id d20mr22422707eds.369.1588069228872;
-        Tue, 28 Apr 2020 03:20:28 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.237])
-        by smtp.googlemail.com with ESMTPSA id r19sm260813edo.12.2020.04.28.03.20.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Apr 2020 03:20:28 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:20:26 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kgene@kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Subject: Re: [PATCH 06/13] arm: dts: s5pv210: aries: Add support for more
- devices
-Message-ID: <20200428102026.GB23963@kozik-lap>
-References: <20200426183604.28494-1-xc-racer2@live.ca>
- <BN6PR04MB0660563639D091548BFCCFF2A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Tue, 28 Apr 2020 06:22:03 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:63877 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727114AbgD1KWD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 06:22:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588069322; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=EMcwWVpuTkQ0cpuqYpXFbzPZiEdvxpXwtQZJuGAwl6o=; b=jvnMpYc0CWdcporg9etlOx3/FZ6Fmccblpip1CfAv2uTktaA/4KsAqIRiL+SEzGvYsOXtSJH
+ HzlEfyqgPC49ta5897TnztMN/j8ZU7lFJkaa8cS8bR3dw6BLPhJLpxenBoe2q5OboEOPnwf2
+ zsGVajz3NFAua/AMrLvvYVdCnpY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea803c9.7fbb858dddc0-smtp-out-n04;
+ Tue, 28 Apr 2020 10:22:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 519CBC432C2; Tue, 28 Apr 2020 10:22:01 +0000 (UTC)
+Received: from [192.168.43.98] (unknown [157.48.58.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 34FE7C433CB;
+        Tue, 28 Apr 2020 10:21:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 34FE7C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V4 4/9] soc: qcom-geni-se: Add interconnect support to fix
+ earlycon crash
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+References: <1586946198-13912-1-git-send-email-akashast@codeaurora.org>
+ <1586946198-13912-5-git-send-email-akashast@codeaurora.org>
+ <20200416003112.GA199755@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <146cf8db-3c09-39a6-2886-bec0db289948@codeaurora.org>
+Date:   Tue, 28 Apr 2020 15:51:44 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <BN6PR04MB0660563639D091548BFCCFF2A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200416003112.GA199755@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 11:35:57AM -0700, Jonathan Bakker wrote:
-> Add support for following devices:
->   - touchkeys connected over i2c-gpio
->   - s6e63m0 panel connected over spi-gpio
->   - fsa9480 microusb switch over i2c-gpio
->   - wm8994 over i2c-gpio (no machine driver yet)
->   - all common i2c-gpio devices
+Hi Matthias,
 
-Please split it per functionality, e.g.:
-1. Add sound,
-2. Add panel,
-3. Add touchkeys (unless part of panel),
-4. The remaining i2c-gpio devices without bindings could go as one.
+On 4/16/2020 6:01 AM, Matthias Kaehlcke wrote:
+> Hi Akash,
+>
+> On Wed, Apr 15, 2020 at 03:53:13PM +0530, Akash Asthana wrote:
+>> QUP core clock is shared among all the SE drivers present on particular
+>> QUP wrapper, the system will reset(unclocked access) if earlycon used after
+>> QUP core clock is put to 0 from other SE drivers before real console comes
+>> up.
+>>
+>> As earlycon can't vote for it's QUP core need, to fix this add ICC
+>> support to common/QUP wrapper driver and put vote for QUP core from
+>> probe on behalf of earlycon and remove vote during earlycon exit call.
+>>
+>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>> Reported-by: Matthias Kaehlcke <mka@chromium.org>
+>> ---
+>> Change in V3:
+>>   - Add geni_remove_earlycon_icc_vote API that will be used by earlycon
+>>     exit function to remove ICC vote for earlyconsole.
+>>   - Remove suspend/resume hook for geni-se driver as we are no longer
+>>     removing earlyconsole ICC vote from system suspend, we are removing
+>>     from earlycon exit.
+>>
+>> Change in V4:
+>>   - As per Matthias comment make 'earlycon_wrapper' as static structure.
+>>
+>>   drivers/soc/qcom/qcom-geni-se.c       | 50 +++++++++++++++++++++++++++++++++++
+>>   drivers/tty/serial/qcom_geni_serial.c |  7 +++++
+>>   include/linux/qcom-geni-se.h          |  2 ++
+>>   3 files changed, 59 insertions(+)
+>>
+>> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+>> index 1527bc4..727ad2e 100644
+>> --- a/drivers/soc/qcom/qcom-geni-se.c
+>> +++ b/drivers/soc/qcom/qcom-geni-se.c
+>> @@ -90,8 +90,11 @@ struct geni_wrapper {
+>>   	struct device *dev;
+>>   	void __iomem *base;
+>>   	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+>> +	struct geni_icc_path to_core;
+>>   };
+>>   
+>> +static struct geni_wrapper *earlycon_wrapper;
+>> +
+>>   #define QUP_HW_VER_REG			0x4
+>>   
+>>   /* Common SE registers */
+>> @@ -781,6 +784,26 @@ int geni_icc_vote_off(struct geni_se *se)
+>>   }
+>>   EXPORT_SYMBOL(geni_icc_vote_off);
+>>   
+>> +void geni_remove_earlycon_icc_vote(void)
+>> +{
+>> +	struct geni_wrapper *wrapper = earlycon_wrapper;
+>> +	struct device_node *parent = of_get_next_parent(wrapper->dev->of_node);
+>> +	struct device_node *child;
+>> +
+>> +	for_each_child_of_node(parent, child) {
+>> +		if (of_device_is_compatible(child, "qcom,geni-se-qup")) {
+>> +			wrapper = platform_get_drvdata(of_find_device_by_node(
+>> +					child));
+>> +			icc_put(wrapper->to_core.path);
+>> +			wrapper->to_core.path = NULL;
+>> +		}
+>> +	}
+>> +	of_node_put(parent);
+>> +
+>> +	earlycon_wrapper = NULL;
+>> +}
+>> +EXPORT_SYMBOL(geni_remove_earlycon_icc_vote);
+>> +
+>>   static int geni_se_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device *dev = &pdev->dev;
+>> @@ -808,6 +831,33 @@ static int geni_se_probe(struct platform_device *pdev)
+>>   		}
+>>   	}
+>>   
+>> +#ifdef CONFIG_SERIAL_EARLYCON
+>> +	wrapper->to_core.path = devm_of_icc_get(dev, "qup-core");
+>> +	if (IS_ERR(wrapper->to_core.path))
+>> +		return PTR_ERR(wrapper->to_core.path);
+>> +	/*
+>> +	 * Put minmal BW request on core clocks on behalf of early console.
+>> +	 * The vote will be removed earlycon exit function.
+>> +	 *
+>> +	 * Note: We are putting vote on each QUP wrapper instead only to which
+>> +	 * earlycon is connected because QUP core clock of different wrapper
+>> +	 * share same voltage domain. If core1 is put to 0, then core2 will
+>> +	 * also run at 0, if not voted. Default ICC vote will be removed ASA
+>> +	 * we touch any of the core clock.
+>> +	 * core1 = core2 = max(core1, core2)
+>> +	 */
+>> +	ret = icc_set_bw(wrapper->to_core.path, GENI_DEFAULT_BW, 0);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "%s: ICC BW voting failed for core\n",
+>> +			__func__);
+>> +		return ret;
+>> +	}
+>> +
+>> +	if (of_get_compatible_child(pdev->dev.of_node, "qcom,geni-debug-uart"))
+>> +		earlycon_wrapper = wrapper;
+>> +	of_node_put(pdev->dev.of_node);
+>> +#endif
+>> +
+>>   	dev_set_drvdata(dev, wrapper);
+>>   	dev_dbg(dev, "GENI SE Driver probed\n");
+>>   	return devm_of_platform_populate(dev);
+>> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+>> index 6119090..8c5d97c 100644
+>> --- a/drivers/tty/serial/qcom_geni_serial.c
+>> +++ b/drivers/tty/serial/qcom_geni_serial.c
+>> @@ -1090,6 +1090,12 @@ static void qcom_geni_serial_earlycon_write(struct console *con,
+>>   	__qcom_geni_serial_console_write(&dev->port, s, n);
+>>   }
+>>   
+>> +static int qcom_geni_serial_earlycon_exit(struct console *con)
+>> +{
+>> +	geni_remove_earlycon_icc_vote();
+>> +	return 0;
+>> +}
+>> +
+>>   static int __init qcom_geni_serial_earlycon_setup(struct earlycon_device *dev,
+>>   								const char *opt)
+>>   {
+>> @@ -1135,6 +1141,7 @@ static int __init qcom_geni_serial_earlycon_setup(struct earlycon_device *dev,
+>>   	writel(stop_bit_len, uport->membase + SE_UART_TX_STOP_BIT_LEN);
+>>   
+>>   	dev->con->write = qcom_geni_serial_earlycon_write;
+>> +	dev->con->exit = qcom_geni_serial_earlycon_exit;
+> The idea of using the exit handler of the early console to remove the
+> votes seemed appealing at first, however it has a drawback: the bandwidth
+> requests in geni_se_probe() are always made when CONFIG_SERIAL_EARLYCON=y,
+> also when the system doesn't actually use an early console. On such a
+> system the votes would never be removed.
+>
+> A possible alternative could seem to remove the vote at the end of
+> qcom_geni_serial_probe() of the 'normal' console, but it has a similar
+> problem: the system could not even have a normal console. One could
+> possibly argue that CONFIG_SERIAL_QCOM_GENI_CONSOLE shouldn't be set
+> on such a system, however it could be enabled to have a console for
+> development, and in production the same kernel config is used, but
+> with the console disabled through the device tree.
+>
+> I don't really have a good idea at this point, maybe we just need
+> something as ugly as a delayed work to remove the votes. Other
+> suggestions are welcome :)
 
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
->  arch/arm/boot/dts/s5pv210-aries.dtsi      | 282 ++++++++++++++++++++--
->  arch/arm/boot/dts/s5pv210-fascinate4g.dts |   6 +
->  2 files changed, 270 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5pv210-aries.dtsi
-> index f83df426f2b6..ef966d13d83d 100644
-> --- a/arch/arm/boot/dts/s5pv210-aries.dtsi
-> +++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
-> @@ -12,8 +12,14 @@
->  	compatible = "samsung,aries", "samsung,s5pv210";
->  
->  	aliases {
-> +		i2c4 = &i2c_sound;
-> +		i2c5 = &i2c_accel;
->  		i2c6 = &i2c_pmic;
-> +		i2c7 = &i2c_musb;
->  		i2c9 = &i2c_fuel;
-> +		i2c10 = &i2c_touchkey;
-> +		i2c11 = &i2c_prox;
-> +		i2c12 = &i2c_magnetometer;
->  	};
->  
->  	memory@30000000 {
-> @@ -48,6 +54,18 @@
->  		gpio = <&gpj1 1 GPIO_ACTIVE_HIGH>;
->  	};
->  
-> +	touchkey_vdd: regulator-fixed-1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VTOUCH_3.3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		enable-active-high;
-> +		gpio = <&gpj3 2 GPIO_ACTIVE_HIGH>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&touchkey_vdd_ena>;
-> +	};
-> +
->  	wifi_pwrseq: wifi-pwrseq {
->  		compatible = "mmc-pwrseq-simple";
->  		reset-gpios = <&gpg1 2 GPIO_ACTIVE_LOW>;
-> @@ -57,7 +75,69 @@
->  		power-off-delay-us = <500>;
->  	};
->  
-> -	i2c_pmic: i2c-gpio-0 {
-> +	i2c_sound: i2c-gpio-0 {
-> +		compatible = "i2c-gpio";
-> +		sda-gpios = <&mp05 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		scl-gpios = <&mp05 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		i2c-gpio,delay-us = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sound_i2c_pins>;
-> +
-> +		wm8994: wm8994@1a {
-> +			compatible = "wlf,wm8994";
-> +			reg = <0x1a>;
-> +
-> +			#sound-dai-cells = <0>;
-> +
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +
-> +			clocks = <&clocks MOUT_CLKOUT>;
-> +			clock-names = "MCLK1";
-> +
-> +			AVDD2-supply = <&buck3_reg>;
-> +			DBVDD-supply = <&buck3_reg>;
+I think we can do something like below. Before voting we are checking 
+whether earlyconsole ("qcom_geni") exits or not.  The name is fixed from 
+earlycon declaration file@drivers/tty/serial/qcom_geni_serial.c
 
-No such supply, check the bindings.
+OF_EARLYCON_DECLARE(qcom_geni, "qcom,geni-debug-uart",
+                                 qcom_geni_serial_earlycon_setup);
 
-> +			CPVDD-supply = <&buck3_reg>;
-> +			SPKVDD1-supply = <&buck3_reg>;
-> +			SPKVDD2-supply = <&buck3_reg>;
-> +
-> +			wlf,gpio-cfg = <0xa101 0x8100 0x0100 0x0100 0x8100
-> +					0xa101 0x0100 0x8100 0x0100 0x0100
-> +					0x0100>;
-> +
-> +			wlf,ldo1ena = <&gpf3 4 GPIO_ACTIVE_HIGH>;
-> +			wlf,ldo2ena = <&gpf3 4 GPIO_ACTIVE_HIGH>;
-> +
-> +			wlf,lineout1-se;
-> +			wlf,lineout2-se;
-> +
-> +			assigned-clocks = <&clocks MOUT_CLKOUT>;
-> +			assigned-clock-rates = <0>;
-> +			assigned-clock-parents = <&xusbxti>;
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&codec_ldo>;
-> +		};
-> +	};
-> +
-> +	i2c_accel: i2c-gpio-1 {
-> +		compatible = "i2c-gpio";
-> +		sda-gpios = <&gpj3 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		scl-gpios = <&gpj3 7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		i2c-gpio,delay-us = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&accel_i2c_pins>;
-> +
-> +		/* bma023 accelerometer, no mainline binding */
+====================================================================================
 
-status disabled ... unless you need it for user-space I2C tools?
+@@ -809,6 +809,8 @@ static int geni_se_probe(struct platform_device *pdev)
+         struct device *dev = &pdev->dev;
+         struct resource *res;
+         struct geni_wrapper *wrapper;
++       struct console *bcon = NULL;
++       int earlycon_present = 0;
+         int ret;
 
-> +	};
-> +
-> +	i2c_pmic: i2c-gpio-2 {
->  		compatible = "i2c-gpio";
->  		sda-gpios = <&gpj4 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->  		scl-gpios = <&gpj4 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> @@ -137,8 +217,6 @@
->  					regulator-name = "VLCD_1.8V";
->  					regulator-min-microvolt = <1800000>;
->  					regulator-max-microvolt = <1800000>;
-> -					/* Till we get panel driver */
-> -					regulator-always-on;
->  
->  					regulator-state-mem {
->  						regulator-off-in-suspend;
-> @@ -237,8 +315,6 @@
->  					regulator-name = "VCC_3.0V_LCD";
->  					regulator-min-microvolt = <3000000>;
->  					regulator-max-microvolt = <3000000>;
-> -					/* Till we get panel driver */
-> -					regulator-always-on;
->  
->  					regulator-state-mem {
->  						regulator-off-in-suspend;
-> @@ -309,7 +385,26 @@
->  		};
->  	};
->  
-> -	i2c_fuel: i2c-gpio-1 {
-> +	i2c_musb: i2c-gpio-3 {
-> +		compatible = "i2c-gpio";
-> +		sda-gpios = <&gpj3 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		scl-gpios = <&gpj3 5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		i2c-gpio,delay-us = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&musb_i2c_pins>;
-> +
-> +		fsa9480: musb@25 {
-> +			compatible = "fcs,fsa9480";
-> +			reg = <0x25>;
-> +			interrupt-parent = <&gph2>;
-> +			interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-> +		};
-> +	};
-> +
-> +	i2c_fuel: i2c-gpio-4 {
->  		compatible = "i2c-gpio";
->  		sda-gpios = <&mp05 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->  		scl-gpios = <&mp05 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> @@ -328,6 +423,60 @@
->  		};
->  	};
->  
-> +	i2c_touchkey: i2c-gpio-5 {
-> +		compatible = "i2c-gpio";
-> +		sda-gpios = <&gpj3 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		scl-gpios = <&gpj3 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		i2c-gpio,delay-us = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&touchkey_i2c_pins>;
-> +
-> +		touchkey@20 {
-> +			compatible = "cypress,aries-touchkey";
-> +			reg = <0x20>;
-> +			vdd-supply = <&touchkey_vdd>;
-> +			vcc-supply = <&buck3_reg>;
-> +			linux,keycodes = <KEY_MENU KEY_BACK
-> +					  KEY_HOMEPAGE KEY_SEARCH>;
-> +			interrupt-parent = <&gpj4>;
-> +			interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&touchkey_irq>;
-> +		};
-> +	};
-> +
-> +	i2c_prox: i2c-gpio-6 {
-> +		compatible = "i2c-gpio";
-> +		sda-gpios = <&gpg2 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		scl-gpios = <&gpg0 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		i2c-gpio,delay-us = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&prox_i2c_pins>;
-> +
-> +		/* Sharp gp2a prox/light sensor, incomplete mainline binding */
+         wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
+@@ -832,6 +834,15 @@ static int geni_se_probe(struct platform_device *pdev)
+         }
 
-The same - disable, unless you access it from user-space.
+  #ifdef CONFIG_SERIAL_EARLYCON
++       if (console_drivers)
++               for_each_console(bcon)
++                       if (!strcmp(bcon->name, "qcom_geni")) {
++                               earlycon_present = 1;
++                               break;
++                       }
++       if(!earlycon_present)
++               goto exit;
++
+         wrapper->to_core.path = devm_of_icc_get(dev, "qup-core");
+         if (IS_ERR(wrapper->to_core.path))
+                 return PTR_ERR(wrapper->to_core.path);
+@@ -858,6 +869,7 @@ static int geni_se_probe(struct platform_device *pdev)
+         of_node_put(pdev->dev.of_node);
+  #endif
 
-> +	};
-> +
-> +	i2c_magnetometer: i2c-gpio-7 {
-> +		compatible = "i2c-gpio";
-> +		sda-gpios = <&gpj0 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		scl-gpios = <&gpj0 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		i2c-gpio,delay-us = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&magnetometer_i2c_pins>;
-> +
-> +		/* Yamaha yas529 magnetometer, no mainline binding */
++exit:
+         dev_set_drvdata(dev, wrapper);
+         dev_dbg(dev, "GENI SE Driver probed\n");
+         return devm_of_platform_populate(dev);
 
-The same - disable, unless you access it from user-space.
+======================================================================================
 
-> +	};
-> +
->  	vibrator: pwm-vibrator {
->  		compatible = "pwm-vibrator";
->  		pwms = <&pwm 1 44642 0>;
-> @@ -343,6 +492,39 @@
->  		offset = <0x681c>; /* PS_HOLD_CONTROL */
->  		value = <0x5200>;
->  	};
-> +
-> +	spi_lcd: spi-gpio-0 {
-> +		compatible = "spi-gpio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		sck-gpios = <&mp04 1 GPIO_ACTIVE_HIGH>;
-> +		mosi-gpios = <&mp04 3 GPIO_ACTIVE_HIGH>;
-> +		cs-gpios = <&mp01 1 GPIO_ACTIVE_HIGH>;
-> +		num-chipselects = <1>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&lcd_spi_pins>;
-> +
-> +		panel@0 {
-> +			compatible = "samsung,s6e63m0";
-> +			reg = <0>;
-> +			reset-gpios = <&mp05 5 GPIO_ACTIVE_LOW>;
-> +			vdd3-supply = <&ldo7_reg>;
-> +			vci-supply = <&ldo17_reg>;
-> +			spi-cs-high;
-> +			spi-max-frequency = <1200000>;
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&panel_rst>;
-> +
-> +			port {
-> +				lcd_ep: endpoint {
-> +					remote-endpoint = <&fimd_ep>;
-> +				};
-> +			};
-> +		};
-> +	};
->  };
->  
->  &fimd {
-> @@ -353,18 +535,13 @@
->  	samsung,invert-vden;
->  	samsung,invert-vclk;
->  
-> -	display-timings {
-> -		timing-0 {
-> -			/* 480x800@60Hz */
-> -			clock-frequency = <25628040>;
-> -			hactive = <480>;
-> -			vactive = <800>;
-> -			hfront-porch = <16>;
-> -			hback-porch = <16>;
-> -			hsync-len = <2>;
-> -			vfront-porch = <28>;
-> -			vback-porch = <1>;
-> -			vsync-len = <2>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	port@3 {
-> +		reg = <3>;
-> +		fimd_ep: endpoint {
-> +			remote-endpoint = <&lcd_ep>;
->  		};
->  	};
->  };
-> @@ -405,6 +582,19 @@
->  		samsung,pin-val = <1>;
->  	};
->  
-> +	codec_ldo: codec-ldo {
-> +		samsung,pins = "gpf3-4";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-> +	};
-> +
-> +	prox_i2c_pins: gp2a-i2c-pins {
-> +		samsung,pins = "gpg0-2", "gpg2-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_F>;
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
-> +
->  	wlan_gpio_rst: wlan-gpio-rst {
->  		samsung,pins = "gpg1-2";
->  		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> @@ -438,6 +628,13 @@
->  		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
->  	};
->  
-> +	magnetometer_i2c_pins: yas529-i2c-pins {
-> +		samsung,pins = "gpj0-0", "gpj0-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_F>;
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
-> +
->  	ts_irq: ts-irq {
->  		samsung,pins = "gpj0-5";
->  		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
-> @@ -445,17 +642,66 @@
->  		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
->  	};
->  
-> +	touchkey_i2c_pins: touchkey-i2c-pins {
-> +		samsung,pins = "gpj3-0", "gpj3-1";
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
-> +
-> +	touchkey_vdd_ena: touchkey-vdd-ena {
-> +		samsung,pins = "gpj3-2";
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
-> +
-> +	musb_i2c_pins: musb-i2c-pins {
-> +		samsung,pins = "gpj3-4", "gpj3-5";
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
-> +
-> +	accel_i2c_pins: accel-i2c-pins {
-> +		samsung,pins = "gpj3-6", "gpj3-7";
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
-> +
->  	pmic_i2c_pins: pmic-i2c-pins {
->  		samsung,pins = "gpj4-0", "gpj4-3";
->  		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
->  		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
->  	};
->  
-> +	touchkey_irq: touchkey-irq {
-> +		samsung,pins = "gpj4-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_UP>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
-> +
-> +	lcd_spi_pins: spi-lcd-pins {
-> +		samsung,pins = "mp01-1", "mp04-1", "mp04-3";
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
-> +
->  	fg_i2c_pins: fg-i2c-pins {
->  		samsung,pins = "mp05-0", "mp05-1";
->  		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
->  		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
->  	};
-> +
-> +	sound_i2c_pins: sound-i2c-pins {
-> +		samsung,pins = "mp05-2", "mp05-3";
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
-> +
-> +	panel_rst: panel-rst {
-> +		samsung,pins = "mp05-5";
-> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
->  };
->  
->  &pwm {
-> diff --git a/arch/arm/boot/dts/s5pv210-fascinate4g.dts b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
-> index 94dcb9b64b9a..42e6e2de197d 100644
-> --- a/arch/arm/boot/dts/s5pv210-fascinate4g.dts
-> +++ b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
-> @@ -278,3 +278,9 @@
->  		PIN_SLP(mp07-7, INPUT, DOWN);
->  	};
->  };
-> +
-> +&wm8994 {
-> +	/* GPIO3 (BCLK2) and GPIO4 (LRCLK2) as outputs */
-> +	wlf,gpio-cfg = <0xa101 0x8100 0x8100 0x8100 0x8100 0xa101
-> +		0x0100 0x8100 0x0100 0x0100 0x0100>;
+Regards,
 
-Indent the line till opening <.
+Akash
 
-Best regards,
-Krzysztof
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
