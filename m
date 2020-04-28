@@ -2,112 +2,118 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B628C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 13:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDC0C83001
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 13:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 391E6206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 13:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588080253;
-	bh=MAzmc0W8BMbkDnvxtQl2oe0CfTiYNxikPTypwNDL8S4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=glqONd6RJ8hLIx3PHOQl5r+Cc7WoeOE0E/wtF55Tn6Rvr5z5Ob7JujSqCpoetMS7x
-	 PQN0PVnVaqIkJs2CzzPWmMtrekaFmk5ri/BTp4DpKAhMUfB7UWQVUIVrfsUIX5dp0P
-	 pcKKI3wLO9bCTl/GWsGS6X1Hai09ABSbj1zyjyKI=
+	by mail.kernel.org (Postfix) with ESMTP id 66C6E206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 13:38:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aplMtfo7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgD1NYM (ORCPT
+        id S1726973AbgD1Nii (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:24:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726827AbgD1NYM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:24:12 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 28 Apr 2020 09:38:38 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53553 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726846AbgD1Nih (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:38:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588081117; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=XK1XlfC8Wej1iBzqIag/dJ1a4PtF0Yy+Zp/TpvAjr0s=; b=aplMtfo7+55hXGSrNv+Cdhq80R63CTuyGEWRuAGQHLjECc7z8uxEak/33Kpi5JjPySCUWLBk
+ 01w6himnPgXeYIAYnDClGFsIYWvoE98+A1lWt0IFy5fk8I38EUxsXZQG1vGQcZRVz8C5SNvN
+ +S3KweEibbCAYE9sZCdfvorIRCI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea831dc.7fcd18e9c458-smtp-out-n03;
+ Tue, 28 Apr 2020 13:38:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 54266C433D2; Tue, 28 Apr 2020 13:38:36 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C092E206D7
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 13:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588080251;
-        bh=MAzmc0W8BMbkDnvxtQl2oe0CfTiYNxikPTypwNDL8S4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KPYNeiwH38T00VKHYENK6pdon5p1XDRXwCIPSn6o/i/engVbnfgnkPd07oVD7rMuB
-         USWVFRlTN05TB8sS4gaDbHj6pksEh+lCVB6ldfbknrClcTESSmA7lrbjdG3EmNabES
-         RJKJjPjRAFty3fLFmJnh4ZoQZvRQiET2E2u0vlX0=
-Received: by mail-ot1-f45.google.com with SMTP id e26so32574947otr.2
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 06:24:11 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaBzs7tyXxElhE3naMWW9XY71B3miOTOdEzrkjBr6qFsGwsCh9J
-        p2ctrVDJkSEbQ8f480RRwt+E7N7n+GLPsHyIDw==
-X-Google-Smtp-Source: APiQypLPN1zIwiUl/lZdTAxejLTb/tMJFdWABheE8C8SguCoESJx3qPNaYkZoZMETESKMayNGYlN5utgW7kwPD7gTqI=
-X-Received: by 2002:aca:1904:: with SMTP id l4mr2941731oii.106.1588080251111;
- Tue, 28 Apr 2020 06:24:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <6cdf20c3-7b74-679c-0e6f-4d385d12f9fe@xilinx.com>
-In-Reply-To: <6cdf20c3-7b74-679c-0e6f-4d385d12f9fe@xilinx.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 28 Apr 2020 08:23:59 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+ehJSK7sjqmKtWOVjr-QZ3LDB+ywCO85uF8WJ+cB=AAw@mail.gmail.com>
-Message-ID: <CAL_Jsq+ehJSK7sjqmKtWOVjr-QZ3LDB+ywCO85uF8WJ+cB=AAw@mail.gmail.com>
-Subject: Re: u-boot DT configuration node
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "u-boot@lists.denx.de" <u-boot@lists.denx.de>,
-        Tom Rini <trini@konsulko.com>,
-        Loic Poulain <loic.poulain@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7E78C433CB;
+        Tue, 28 Apr 2020 13:38:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E7E78C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v3 00/17] DVFS for IO devices on sdm845 and sc7180
+Date:   Tue, 28 Apr 2020 19:02:48 +0530
+Message-Id: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 4:23 AM Michal Simek <michal.simek@xilinx.com> wrote:
->
-> Hi Rob and others,
->
-> for couple of years already u-boot is using config node in root DT for
-> u-boot configuration.
->
-> Here is one example in u-boot source code.
-> https://gitlab.denx.de/u-boot/u-boot/-/blob/master/arch/arm/dts/exynos5250-spring.dts#L47
->
-> And here is dt binding description
-> https://gitlab.denx.de/u-boot/u-boot/-/blob/master/doc/device-tree-bindings/config.txt
->
-> I was checking dt binding specification and there no such a thing
-> described there. It means I expect this is more adhoc u-boot solution.
-> We have reached the point where could be beneficial to put some u-boot
-> specific configurations to DT.
->
-> Actually I have done similar thing some time ago too by using chosen
-> node and add xilinx specific property there to point to eeprom.
-> https://gitlab.denx.de/u-boot/u-boot/-/blob/master/arch/arm/dts/zynqmp-zcu102-revA.dts#L39
+Changes in v3:
+1. Added better error handling for dev_pm_opp_of_add_table()
+2. Some minor changes and fixes in PATCH 12/17 as compared to v2
+3. Dropped the mmc patch since its picked up by Ulf
 
-In this case, I think an alias should be used as it's more of just a
-shortcut to finding a specific node.
+1. Added error handling for dev_pm_opp_set_clkname()
+and dev_pm_opp_of_add_table()
+2. Used dev_pm_opp_put_clkname() in the cleanup path
+3. Dropped the OPP patch pulled in by Viresh [1]
+4. Dropped the UFS patches since they had some major rework
+needed because of changes that were merged in the merge window
+and I don't have a UFS device currently to validate the changes.
 
-> I think it is a time to discuss it and do it properly.
->
-> First of all my question is where we could list SW prefixes to make sure
-> that they are listed and everybody is aware about it. We have
-> vendor-prefixes and we should have a way to record also prefixes for sw
-> projects. U-Boot is using u-boot. Xen has file in the kernel with using
-> xen prefix. At least these two should be listed.
+We have had support added in the OPP core for a while now to support
+DVFS for IO devices, and this series uses that infrastructure to
+add DVFS support for various IO devices in sdm845 and sc7180 SoCs.
 
-Documentation/devicetree/bindings/vendor-prefixes.yaml.
+[1] https://lkml.org/lkml/2020/4/14/98
 
-> Next my question is what is the recommended way to pass sw specific
-> parameters via DT? I think using chosen node is more appropriate then
-> adhoc config node. Or is there a better way how this should be done?
+Rajendra Nayak (17):
+  tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
+  spi: spi-geni-qcom: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add OPP table for all qup devices
+  arm64: dts: sc7180: Add OPP table for all qup devices
+  drm/msm/dpu: Use OPP API to set clk/perf state
+  drm/msm: dsi: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
+  arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
+  mmc: sdhci-msm: Fix error handling for dev_pm_opp_of_add_table()
+  arm64: dts: sdm845: Add sdhc opps and power-domains
+  arm64: dts: sc7180: Add sdhc opps and power-domains
+  media: venus: core: Add support for opp tables/perf voting
+  arm64: dts: sdm845: Add OPP tables and power-domains for venus
+  arm64: dts: sc7180: Add OPP tables and power-domains for venus
+  spi: spi-qcom-qspi: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add qspi opps and power-domains
+  arm64: dts: sc7180: Add qspi opps and power-domains
 
-/chosen
+ arch/arm64/boot/dts/qcom/sc7180.dtsi           | 199 +++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi           | 266 ++++++++++++++++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  |   3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        |  25 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |   4 +
+ drivers/gpu/drm/msm/dsi/dsi.h                  |   2 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c              |   4 +-
+ drivers/gpu/drm/msm/dsi/dsi_host.c             |  58 ++++++
+ drivers/media/platform/qcom/venus/core.c       |  28 +++
+ drivers/media/platform/qcom/venus/core.h       |   5 +
+ drivers/media/platform/qcom/venus/pm_helpers.c |  37 +++-
+ drivers/mmc/host/sdhci-msm.c                   |  27 ++-
+ drivers/spi/spi-geni-qcom.c                    |  26 ++-
+ drivers/spi/spi-qcom-qspi.c                    |  29 ++-
+ drivers/tty/serial/qcom_geni_serial.c          |  34 +++-
+ include/linux/qcom-geni-se.h                   |   4 +
+ 16 files changed, 719 insertions(+), 32 deletions(-)
 
-For vendor specific things though I would be cautious. If they are
-settings for a specific device, then they probably belong in the
-device's node. Second, are they really vendor specific? What we don't
-want is each vendor doing the same thing in slightly different ways.
-
-Rob
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
