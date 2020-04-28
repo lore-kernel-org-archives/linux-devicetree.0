@@ -2,177 +2,147 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA346C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BF2C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F87D20730
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7806E20730
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ekHX1BRP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gXKvxnxN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oZh07Ggo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgD1QEX (ORCPT
+        id S1728273AbgD1QFB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:04:23 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:52795 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728037AbgD1QEW (ORCPT
+        Tue, 28 Apr 2020 12:05:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728281AbgD1QFA (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:04:22 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 2FE3D5FA;
-        Tue, 28 Apr 2020 12:04:21 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 28 Apr 2020 12:04:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=sOFZ1jPclsSm3u+h/VuhDsJZx7b
-        YOtqGCr5nWlpsVh8=; b=ekHX1BRP+1TfVz1t22l+bCdNvO/JzeQA6e1nC954d4t
-        rugCIEuZ2M2dWlEhMvSRZ4oA5UJN/TFTwHhTkMpX1eHjW/IJqhA24mA1ZLW6ADi2
-        ds41Pi/0PKU7IBUJztJ2fMbH24oDPRpcSKr6TSlUTNwnoEfEms/G9QS+fKVl2iKT
-        g17IGuNcD1m7j2dzaLwyBq/6ZKpJhDjPiYaWNu/1F6BavVzE/KrjFM7DsilU6TLr
-        0lHD+FzZygGLcEevSvRb7A7f4NwRtsm2kphDtYfD1ry+lzvYJvHRigGWVNR+z6+T
-        69c0QuwMZlF4ksNiGEovncrc1hbLSbJT8v1snxvA1Wg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=sOFZ1j
-        PclsSm3u+h/VuhDsJZx7bYOtqGCr5nWlpsVh8=; b=gXKvxnxNmCf3WzsWvfJxkq
-        RNCq20RIfaux0rfvjpbZCbZgyGFomX2PW8pAhVUDi0QyecEHnbpX6L5R7JlQ1EpD
-        aWZSxc8TjVtV/jCZlbvZ6UFzl+c0Z6sIfRUmbtnKfgnKE8XRtgjUEh6tk/dEy/bH
-        NrGFoDPbAk6vIDYzpPMPbJh7RqPmEXKOp6tnBRLNah4Wuoj9k73C/VlBfQV+H4SC
-        1kdf8Ieh8ZjyLvNXatnoL4SRDZBt2lidxPam/d8XFQMLbSvKCXDpHvYkMHgyb6Nr
-        mj2OTA1MuhWAd3DkcEOFCMtT7c3E5O7D9A15hCLzhdqhDMajahNsznB2+jBc1Iew
-        ==
-X-ME-Sender: <xms:A1SoXgPyPISErhLyus-Su-GMKMbZFWO0F3E6774q64G3isa-TqfrWw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugdelhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:A1SoXgqgsqFCW-8s3uz2IiEo8frR3GgpaC4i3pHB53t_H9S02lhFcw>
-    <xmx:A1SoXmlhcIkmeYJJhvXDDXSA7D1pqfRXHo3SIVaJiuGm_E6fEuZRag>
-    <xmx:A1SoXgzuKmdtl820vHTZvitDHafGzX5L1UfDZrxYMyTmPJNgbsVMng>
-    <xmx:BFSoXu5UwG_QI_x28zWwyD59bvLsERgxEGoqiXQ7gqsokpHr_cgGY4ZNc2I>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0FF803280059;
-        Tue, 28 Apr 2020 12:04:18 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 18:04:17 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH 4/7] arm64: dts: allwinner: a64: Add HDMI audio
-Message-ID: <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
-References: <20200426120442.11560-1-peron.clem@gmail.com>
- <20200426120442.11560-5-peron.clem@gmail.com>
- <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
- <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
+        Tue, 28 Apr 2020 12:05:00 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8C7C03C1AC
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 09:05:00 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id s10so25322643wrr.0
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 09:05:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ly3qwI+0y9oxwjserDT6tM7N3L1x1899PXU3tkelq/I=;
+        b=oZh07GgoDz13qsfDQ9O+AGgTyw5NZfvmaV0z/+pBF+6wH3B1PTaac+2kX5a7WHcf5S
+         4JvFAFlb7AKdvg6KUFSoSDlKapm9q+t2lq+JLTB/WcByZo703gl7gjC7M7u72FalBMa9
+         brk2RbG57ot+aHP8nFYURh7zNa7wtHgP+a2MNiEXwZo2cVVqO7s8+m+XMjMhvHnA5wxp
+         9eVV6TNEd5JiHskY0ys8QsQ0N2ewAR8uNLSIldnAYoM2LoS8e2GNqlT9Ki8p1qtuUeFT
+         FWutmsihVPS6cICths1wNX6qlXLA4XhPMcT5gMTRINUlMm7JWbKi1z3lTEdfiwbG6EZz
+         bwGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ly3qwI+0y9oxwjserDT6tM7N3L1x1899PXU3tkelq/I=;
+        b=svCkvFam5cnya/NElN72clKFA0rRjhnGR3ICeAcw07hOYUQ/mhSPpHnxkYS3M5FqbO
+         eluLbsO4mGB/xqNbXhBH0Dcp0/KOiMaZzD8zSX7NQzga4cezI66HudY08iaFYaAjQrAU
+         9AFXjFdCL3N9tMzMMf/LM/4eJaey53BjPpvyKVOkr0Ir22HodHDtys/fk38m7hfxUbvL
+         1mqEFzj+MzRyY4g9sq7bk0Q2q077CIZMMIa2In9WDBYc34dn7XJK6ceMf7e4JYtVAb3r
+         kG4gd57EphTmVARSqW1+ZrtaVlvEfWnHrdXnQE+t2bkobNArBYmfXmWeIjukNJRGbWtg
+         LmzQ==
+X-Gm-Message-State: AGi0Pub0SsODnghXFs6jdvkXA1ZCLY9LslDlDyQZJNbid0E4U55S7p/e
+        qtw6HYPM1u1M8gXzfiiW6gdFWQ==
+X-Google-Smtp-Source: APiQypKdYPNEuZ/XS4QnNVV03+UTEkigMqL4aSRmAYR9slx/dFNC24FTbjFcex9II3KPD3Q985FwuQ==
+X-Received: by 2002:adf:92c2:: with SMTP id 60mr32585664wrn.379.1588089899078;
+        Tue, 28 Apr 2020 09:04:59 -0700 (PDT)
+Received: from [192.168.0.136] ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id w6sm26860023wrm.86.2020.04.28.09.04.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 09:04:58 -0700 (PDT)
+Subject: Re: [PATCH V4 1/9] interconnect: Add devm_of_icc_get() as exported
+ API for users
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org
+References: <1586946198-13912-1-git-send-email-akashast@codeaurora.org>
+ <1586946198-13912-2-git-send-email-akashast@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <1f2cb1e2-31da-00ab-7bd9-7f515c307288@linaro.org>
+Date:   Tue, 28 Apr 2020 19:04:56 +0300
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rbultuas4kxpkny5"
-Content-Disposition: inline
-In-Reply-To: <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
+In-Reply-To: <1586946198-13912-2-git-send-email-akashast@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Akash,
 
---rbultuas4kxpkny5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 4/15/20 13:23, Akash Asthana wrote:
+> Users can use devm version of of_icc_get() to benefit from automatic
+> resource release.
+> 
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> Reviewed by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-On Tue, Apr 28, 2020 at 10:54:00AM +0200, Cl=E9ment P=E9ron wrote:
-> Hi Maxime,
->=20
-> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wrote:
-> >
-> > On Sun, Apr 26, 2020 at 02:04:39PM +0200, Cl=E9ment P=E9ron wrote:
-> > > From: Marcus Cooper <codekipper@gmail.com>
-> > >
-> > > Add a simple-soundcard to link audio between HDMI and I2S.
-> > >
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++=
-++
-> > >  1 file changed, 21 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm=
-64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > index e56e1e3d4b73..08ab6b5e72a5 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > @@ -102,6 +102,25 @@
-> > >               status =3D "disabled";
-> > >       };
-> > >
-> > > +     hdmi_sound: hdmi-sound {
-> > > +             compatible =3D "simple-audio-card";
-> > > +             simple-audio-card,format =3D "i2s";
-> > > +             simple-audio-card,name =3D "allwinner,hdmi";
-> >
-> > I'm not sure what the usual card name should be like though. I would as=
-sume that
-> > this should be something specific enough so that you're able to differe=
-ntiate
-> > between boards / SoC so that the userspace can choose a different confi=
-guration
-> > based on it?
->=20
-> I really don't know what we should use here,
-> I just have a look at other SoC:
-> rk3328: "HDMI"
-> rk3399: "hdmi-sound"
-> r8a774c0-cat874: "CAT874 HDMI sound"
->=20
-> But maybe it's time to introduce proper name:
-> What about :
-> sun50i-a64-hdmi
-> sun50i-h6-hdmi
+Thank you for this patch! I am applying it, so there is no need to re-send it.
 
-It's pretty much what we've been using for the other sound cards we have, s=
-o it
-makes sense to me.
+BR,
+Georgi
 
-> How should we handle this with h3 / h5 ?
-> settings the simple-audio-card,name in each SoC dts?
-> Or using sun50i-h3-hdmi as they are both identical?
-
-Yeah, we can do the latter
-
-Maxime
-
---rbultuas4kxpkny5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqhUAQAKCRDj7w1vZxhR
-xThzAQCdfGqGBenInfXFcERmsGo6KmDYj/IpfZqqLJhS7hMAmAEAu4oEes/hmj4+
-lop9h0Zfn5J8S9rkeex26DXrp2LOsQY=
-=x+kX
------END PGP SIGNATURE-----
-
---rbultuas4kxpkny5--
