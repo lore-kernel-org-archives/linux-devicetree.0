@@ -2,349 +2,132 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9253C83007
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EF4C8300A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8D64206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588068172;
-	bh=6EvPvDn4hfJc3RQhxMxOiskjhaR1xPJY2/XDcNYu2y0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EfJguBskWig+dkn3UqCX/3feg+N0KYxxuV1ez9pKEddiggIxsBLpUJiVN1kF6aAGW
-	 olXNvlbTymFNKQKBLfNV+9mBDRgdptqKAv1QdodqzyfZlez2JpwBGZ85shBttkkSga
-	 Wl+qcLDALjVofVEQjrFLk5L48UGwi0TKszWiACWc=
+	by mail.kernel.org (Postfix) with ESMTP id 6293A206B8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:04:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Z+8pq0oL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aKShKvUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgD1KCw (ORCPT
+        id S1727830AbgD1KD6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:02:52 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:45327 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbgD1KCv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 06:02:51 -0400
-Received: by mail-ej1-f67.google.com with SMTP id rh22so16762387ejb.12;
-        Tue, 28 Apr 2020 03:02:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FdgTZhQz7Q5QmkJw9fgTQ4qIxRdbshIzbPzMNz/iR0Y=;
-        b=X2JgyMsXfBDE8/GIlhbuG3Tsyi+wiUAsL8avvBVkK3Ja6w9ReUF0cZ6PZII/OVkPFZ
-         Rlq+Jvv02hEg4V82/XrLBz3gLfzRIPawD/pso/AOxtrQAUmErrICkPpgYb9ieGuaLLNx
-         t/KEPc2zvGeGe7EdL1KtXyIRYruFtsagEU+bHVUXTot21Vg72wJuHGM80WMExQcADbUF
-         716n8pyEoBHCi8BIx8IBR9zOLyc0T0AweVVydD9A6AeeSk7fSRuupZhOvW347Ahm5lUC
-         Y+nBTYkiH+m5el/HjCz1Jv+4SmDMpZzH228fac+RqhAYLkmjavy4m2WtCjXesojmXZy2
-         YZow==
-X-Gm-Message-State: AGi0PuZvVUmrpB8BO8eTmPCmSOeS+NpHuxASKYwIKDtp9B0g3DwME4UB
-        Wu5SaSyXBSLS/NLEhNKFJ0k=
-X-Google-Smtp-Source: APiQypLNHR35H8mMj7YM6wlGtmknjJpqsf8ucJzMlAVC6jgxX/rMDRMP53hjmGcXj1nX3rrXkSLHYQ==
-X-Received: by 2002:a17:906:a39a:: with SMTP id k26mr22838875ejz.172.1588068166900;
-        Tue, 28 Apr 2020 03:02:46 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.237])
-        by smtp.googlemail.com with ESMTPSA id ks10sm402601ejb.89.2020.04.28.03.02.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Apr 2020 03:02:46 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:02:44 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kgene@kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/13] arm: dts: s5pv210: fascinate4g: Add sleep GPIO
- configuration
-Message-ID: <20200428100244.GA23963@kozik-lap>
-References: <20200426183604.28494-1-xc-racer2@live.ca>
- <BN6PR04MB0660532FF97089208CCEEB2AA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Tue, 28 Apr 2020 06:03:58 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:52533 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726932AbgD1KD6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 06:03:58 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E5B58580339;
+        Tue, 28 Apr 2020 06:03:56 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 28 Apr 2020 06:03:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=bfyRrpRNqGk3bD/MI+xjZ+HE0Cw
+        EJYIH+SprH0vjLlU=; b=Z+8pq0oLT7a7qD4AKlOw9YLXd1wCk+G5aFOuHQFD01Q
+        VnJYOdscNtcwEibPnzQneHtKoUU7enhp8cxYc1EA3G1pGsxGAeGS1aNwePclf9mH
+        VQQMTMh+wXvTfzhWyee5I4vNMeo+xoSMG8gxhgQ7FDquy9GbcthWjoiXYP7FoA1O
+        rJkpe5z3kH2X8K2nW4Et6B64dKFvB1TMcJ//Vvwf5n8YAlXIaHKhD/gbZy87i5GA
+        cbikWRD5p3os1pJ3bcMkWCvgzUVelxrYXNi98FiXbOoXQCubQMDE2i/Yu5/idrEL
+        34TfwHISWbYuSQepV+1XgM177rWCVMGD8DVZm4gK/6Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=bfyRrp
+        RNqGk3bD/MI+xjZ+HE0CwEJYIH+SprH0vjLlU=; b=aKShKvUn+J6r4/GBqVSb6o
+        elewB6YnWE7rJO+jVEJHKRX4qnBUT1NiNi61EIf0Uj7MRQQ0TDWkuZZatiEUgA4A
+        6+XeQYmrshabRuNRRLG6MCkEv7Xn2mF7FwJ0yz8j5DdLo5ayy9OqY78AkdhzHeIh
+        LZCI4EqlGDQPy+TsahyxA4bii2cD1Sm0b0XlWQmzRRCdEm0WFT3PeBuaTYWwJwNc
+        ZAeeNUF90qjoRJ6xIcpC4gj8LMubqPoWb1iSJ6hieSuXL+7Entcf2wLJbvhn/xrP
+        DuAhJd467p8NcYG9hH/zDVMG/v0DRJksBSlAmvG40Nsu2mi1yttJG3DAGQbTwi6w
+        ==
+X-ME-Sender: <xms:i_-nXnb__Ic3afkNaHTDJn_hnUgQ8f6wDG4silLUF2ixSudkZyDfTQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugddvfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:i_-nXu8dzWVuc8z1fAXfP7ybogPcfXXlgD3KZKJfk32Kc9wV2AgxHg>
+    <xmx:i_-nXhAdiBirlYu-f1yUYyaGg5OEHxra4pz9fgh-oyX_R6XcdYGWwA>
+    <xmx:i_-nXisdpIP3hBSqk-PMGUylNUNDEQpJG3LXCm4WKEqpm9PK-QUm1w>
+    <xmx:jP-nXpDH7HYCZWyhumEYlOf9r1wEUbGPrrUzjtNvcc6Z03kLmP-kIA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D877D3280068;
+        Tue, 28 Apr 2020 06:03:54 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 12:03:52 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Alistair Francis <alistair@alistair23.me>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>, wens@csie.org,
+        anarsoul@gmail.com, devicetree@vger.kernel.org,
+        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [DO-NOT-MERGE][PATCH v4 3/3] arm64: allwinner: Enable Bluetooth
+ and WiFi on sopine baseboard
+Message-ID: <20200428100352.g7g7kh5e4vpde3es@gilmour.lan>
+References: <20200425155531.2816584-1-alistair@alistair23.me>
+ <20200425155531.2816584-3-alistair@alistair23.me>
+ <417EB5CB-F57F-4B7E-A81E-9ECE166BE217@holtmann.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tpogyn2zhltbavuh"
 Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660532FF97089208CCEEB2AA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <417EB5CB-F57F-4B7E-A81E-9ECE166BE217@holtmann.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 11:35:53AM -0700, Jonathan Bakker wrote:
-> In order to minimize leakage current during sleep, set a config
-> for sleep GPIOs.
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> ---
->  arch/arm/boot/dts/s5pv210-fascinate4g.dts | 242 ++++++++++++++++++++++
->  1 file changed, 242 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/s5pv210-fascinate4g.dts b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
-> index 07a8d9bbe5b8..94dcb9b64b9a 100644
-> --- a/arch/arm/boot/dts/s5pv210-fascinate4g.dts
-> +++ b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
-> @@ -36,3 +36,245 @@
->  		};
->  	};
->  };
-> +
-> +&pinctrl0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sleep_cfg>;
-> +
-> +	sleep_cfg: sleep-cfg {
-> +		PIN_SLP(gpa0-0, PREV, NONE);
-> +		PIN_SLP(gpa0-1, PREV, NONE);
-> +		PIN_SLP(gpa0-2, PREV, NONE);
-> +		PIN_SLP(gpa0-3, OUT1, NONE);
 
-I would be happy to see some reasoning why certain pins have disabled
-pull down (e.g. they are not connected or you use the same configuration
-as running one) and why you set them as output.
+--tpogyn2zhltbavuh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +		PIN_SLP(gpa0-4, PREV, NONE);
-> +		PIN_SLP(gpa0-5, PREV, NONE);
-> +		PIN_SLP(gpa0-6, PREV, NONE);
-> +		PIN_SLP(gpa0-7, PREV, NONE);
-> +
-> +		PIN_SLP(gpa1-0, INPUT, DOWN);
-> +		PIN_SLP(gpa1-1, OUT0, NONE);
-> +		PIN_SLP(gpa1-2, INPUT, DOWN);
-> +		PIN_SLP(gpa1-3, OUT0, NONE);
-> +
-> +		PIN_SLP(gpb-0, OUT0, NONE);
-> +		PIN_SLP(gpb-1, OUT1, NONE);
-> +		PIN_SLP(gpb-2, OUT0, NONE);
-> +		PIN_SLP(gpb-3, PREV, NONE);
-> +		PIN_SLP(gpb-4, INPUT, NONE);
-> +		PIN_SLP(gpb-5, PREV, NONE);
-> +		PIN_SLP(gpb-6, INPUT, DOWN);
-> +		PIN_SLP(gpb-7, OUT0, NONE);
-> +
-> +		PIN_SLP(gpc0-0, OUT0, NONE);
-> +		PIN_SLP(gpc0-1, INPUT, DOWN);
-> +		PIN_SLP(gpc0-2, OUT0, NONE);
-> +		PIN_SLP(gpc0-3, INPUT, DOWN);
-> +		PIN_SLP(gpc0-4, OUT0, NONE);
-> +
-> +		PIN_SLP(gpc1-0, INPUT, DOWN);
-> +		PIN_SLP(gpc1-1, INPUT, DOWN);
-> +		PIN_SLP(gpc1-2, INPUT, DOWN);
-> +		PIN_SLP(gpc1-3, INPUT, DOWN);
-> +		PIN_SLP(gpc1-4, INPUT, DOWN);
-> +
-> +		PIN_SLP(gpd0-0, INPUT, DOWN);
-> +		PIN_SLP(gpd0-1, OUT0, NONE);
-> +		PIN_SLP(gpd0-2, INPUT, DOWN);
-> +		PIN_SLP(gpd0-3, INPUT, DOWN);
-> +
-> +		PIN_SLP(gpd1-0, INPUT, NONE);
-> +		PIN_SLP(gpd1-1, INPUT, NONE);
-> +		PIN_SLP(gpd1-2, INPUT, DOWN);
-> +		PIN_SLP(gpd1-3, INPUT, DOWN);
-> +		PIN_SLP(gpd1-4, INPUT, DOWN);
-> +		PIN_SLP(gpd1-5, INPUT, DOWN);
-> +
-> +		PIN_SLP(gpe0-0, INPUT, DOWN);
-> +		PIN_SLP(gpe0-1, INPUT, DOWN);
-> +		PIN_SLP(gpe0-2, INPUT, DOWN);
-> +		PIN_SLP(gpe0-3, INPUT, DOWN);
-> +		PIN_SLP(gpe0-4, INPUT, DOWN);
-> +		PIN_SLP(gpe0-5, INPUT, DOWN);
-> +		PIN_SLP(gpe0-6, INPUT, DOWN);
-> +		PIN_SLP(gpe0-7, INPUT, DOWN);
-> +
-> +		PIN_SLP(gpe1-0, INPUT, DOWN);
-> +		PIN_SLP(gpe1-1, INPUT, DOWN);
-> +		PIN_SLP(gpe1-2, INPUT, DOWN);
-> +		PIN_SLP(gpe1-3, OUT0, NONE);
-> +		PIN_SLP(gpe1-4, INPUT, DOWN);
-> +
-> +		PIN_SLP(gpf0-0, OUT0, NONE);
-> +		PIN_SLP(gpf0-1, OUT0, NONE);
-> +		PIN_SLP(gpf0-2, OUT0, NONE);
-> +		PIN_SLP(gpf0-3, OUT0, NONE);
-> +		PIN_SLP(gpf0-4, OUT0, NONE);
-> +		PIN_SLP(gpf0-5, OUT0, NONE);
-> +		PIN_SLP(gpf0-6, OUT0, NONE);
-> +		PIN_SLP(gpf0-7, OUT0, NONE);
-> +
-> +		PIN_SLP(gpf1-0, OUT0, NONE);
-> +		PIN_SLP(gpf1-1, OUT0, NONE);
-> +		PIN_SLP(gpf1-2, OUT0, NONE);
-> +		PIN_SLP(gpf1-3, OUT0, NONE);
-> +		PIN_SLP(gpf1-4, OUT0, NONE);
-> +		PIN_SLP(gpf1-5, OUT0, NONE);
-> +		PIN_SLP(gpf1-6, OUT0, NONE);
-> +		PIN_SLP(gpf1-7, OUT0, NONE);
-> +
-> +		PIN_SLP(gpf2-0, OUT0, NONE);
-> +		PIN_SLP(gpf2-1, OUT0, NONE);
-> +		PIN_SLP(gpf2-2, OUT0, NONE);
-> +		PIN_SLP(gpf2-3, OUT0, NONE);
-> +		PIN_SLP(gpf2-4, OUT0, NONE);
-> +		PIN_SLP(gpf2-5, OUT0, NONE);
-> +		PIN_SLP(gpf2-6, OUT0, NONE);
-> +		PIN_SLP(gpf2-7, OUT0, NONE);
-> +
-> +		PIN_SLP(gpf3-0, OUT0, NONE);
-> +		PIN_SLP(gpf3-1, OUT0, NONE);
-> +		PIN_SLP(gpf3-2, OUT0, NONE);
-> +		PIN_SLP(gpf3-3, OUT0, NONE);
-> +		PIN_SLP(gpf3-4, PREV, NONE);
-> +		PIN_SLP(gpf3-5, INPUT, DOWN);
-> +
-> +		PIN_SLP(gpg0-0, INPUT, DOWN);
-> +		PIN_SLP(gpg0-1, INPUT, DOWN);
-> +		PIN_SLP(gpg0-2, INPUT, NONE);
-> +		PIN_SLP(gpg0-3, INPUT, DOWN);
-> +		PIN_SLP(gpg0-4, INPUT, DOWN);
-> +		PIN_SLP(gpg0-5, INPUT, DOWN);
-> +		PIN_SLP(gpg0-6, INPUT, DOWN);
-> +
-> +		PIN_SLP(gpg1-0, OUT0, NONE);
-> +		PIN_SLP(gpg1-1, OUT1, NONE);
-> +		PIN_SLP(gpg1-2, PREV, NONE);
-> +		PIN_SLP(gpg1-3, OUT1, NONE);
-> +		PIN_SLP(gpg1-4, OUT1, NONE);
-> +		PIN_SLP(gpg1-5, OUT1, NONE);
-> +		PIN_SLP(gpg1-6, OUT1, NONE);
-> +
-> +		PIN_SLP(gpg2-0, OUT0, NONE);
-> +		PIN_SLP(gpg2-1, OUT0, NONE);
-> +		PIN_SLP(gpg2-2, INPUT, NONE);
-> +		PIN_SLP(gpg2-3, OUT0, NONE);
-> +		PIN_SLP(gpg2-4, OUT0, NONE);
-> +		PIN_SLP(gpg2-5, OUT0, NONE);
-> +		PIN_SLP(gpg2-6, OUT0, NONE);
-> +
-> +		PIN_SLP(gpg3-0, PREV, UP);
-> +		PIN_SLP(gpg3-1, PREV, UP);
-> +		PIN_SLP(gpg3-2, INPUT, NONE);
-> +		PIN_SLP(gpg3-3, INPUT, DOWN);
-> +		PIN_SLP(gpg3-4, OUT0, NONE);
-> +		PIN_SLP(gpg3-5, OUT0, NONE);
-> +		PIN_SLP(gpg3-6, INPUT, DOWN);
-> +
-> +		PIN_SLP(gpi-0, PREV, NONE);
+Hi Marcel,
 
-No such name. Did you mean gpgi?
+On Tue, Apr 28, 2020 at 11:51:24AM +0200, Marcel Holtmann wrote:
+> Hi Alistair,
+>=20
+> > The sopine board has an optional RTL8723BS WiFi + BT module that can be
+> > connected to UART1. Add this to the device tree so that it will work
+> > for users if connected.
+> >=20
+> > Signed-off-by: Alistair Francis <alistair@alistair23.me>
+> > ---
+> > .../allwinner/sun50i-a64-sopine-baseboard.dts | 29 +++++++++++++++++++
+> > 1 file changed, 29 insertions(+)
+>=20
+> so I am bit confused on what to do with this series? Do you want me to ap=
+ply a
+> subset of patches or do you require specific reviews or acks?
 
+Applying 1 and 2 and leaving 3 aside would be great :)
 
-> +		PIN_SLP(gpi-1, INPUT, DOWN);
-> +		PIN_SLP(gpi-2, PREV, NONE);
-> +		PIN_SLP(gpi-3, PREV, NONE);
-> +		PIN_SLP(gpi-4, PREV, NONE);
-> +		PIN_SLP(gpi-5, INPUT, DOWN);
-> +		PIN_SLP(gpi-6, INPUT, DOWN);
-> +
-> +		PIN_SLP(gpj0-0, INPUT, NONE);
-> +		PIN_SLP(gpj0-1, INPUT, NONE);
-> +		PIN_SLP(gpj0-2, INPUT, NONE);
-> +		PIN_SLP(gpj0-3, INPUT, NONE);
-> +		PIN_SLP(gpj0-4, INPUT, NONE);
-> +		PIN_SLP(gpj0-5, INPUT, DOWN);
-> +		PIN_SLP(gpj0-6, OUT0, NONE);
-> +		PIN_SLP(gpj0-7, INPUT, NONE);
-> +
-> +		PIN_SLP(gpj1-0, OUT1, NONE);
-> +		PIN_SLP(gpj1-1, OUT0, NONE);
-> +		PIN_SLP(gpj1-2, INPUT, DOWN);
-> +		PIN_SLP(gpj1-3, PREV, NONE);
-> +		PIN_SLP(gpj1-4, PREV, NONE);
-> +		PIN_SLP(gpj1-5, OUT0, NONE);
-> +
-> +		PIN_SLP(gpj2-0, INPUT, DOWN);
-> +		PIN_SLP(gpj2-1, INPUT, DOWN);
-> +		PIN_SLP(gpj2-2, OUT0, NONE);
-> +		PIN_SLP(gpj2-3, INPUT, DOWN);
-> +		PIN_SLP(gpj2-4, INPUT, DOWN);
-> +		PIN_SLP(gpj2-5, PREV, NONE);
-> +		PIN_SLP(gpj2-6, PREV, NONE);
-> +		PIN_SLP(gpj2-7, INPUT, DOWN);
-> +
-> +		PIN_SLP(gpj3-0, INPUT, NONE);
-> +		PIN_SLP(gpj3-1, INPUT, NONE);
-> +		PIN_SLP(gpj3-2, OUT0, NONE);
-> +		PIN_SLP(gpj3-3, INPUT, DOWN);
-> +		PIN_SLP(gpj3-4, INPUT, NONE);
-> +		PIN_SLP(gpj3-5, INPUT, NONE);
-> +		PIN_SLP(gpj3-6, INPUT, NONE);
-> +		PIN_SLP(gpj3-7, INPUT, NONE);
-> +
-> +		PIN_SLP(gpj4-0, INPUT, NONE);
-> +		PIN_SLP(gpj4-1, INPUT, DOWN);
-> +		PIN_SLP(gpj4-2, PREV, NONE);
-> +		PIN_SLP(gpj4-3, INPUT, NONE);
-> +		PIN_SLP(gpj4-4, INPUT, DOWN);
-> +
-> +		PIN_SLP(mp01-0, OUT1, NONE);
-> +		PIN_SLP(mp01-1, OUT0, NONE);
-> +		PIN_SLP(mp01-2, INPUT, DOWN);
-> +		PIN_SLP(mp01-3, INPUT, DOWN);
-> +		PIN_SLP(mp01-4, OUT1, NONE);
-> +		PIN_SLP(mp01-5, INPUT, DOWN);
-> +		PIN_SLP(mp01-6, INPUT, DOWN);
-> +		PIN_SLP(mp01-7, INPUT, DOWN);
-> +
-> +		PIN_SLP(mp02-0, INPUT, DOWN);
-> +		PIN_SLP(mp02-1, INPUT, DOWN);
-> +		PIN_SLP(mp02-2, INPUT, NONE);
-> +		PIN_SLP(mp02-3, INPUT, DOWN);
-> +
-> +		PIN_SLP(mp03-0, INPUT, DOWN);
-> +		PIN_SLP(mp03-1, INPUT, DOWN);
-> +		PIN_SLP(mp03-2, OUT1, NONE);
-> +		PIN_SLP(mp03-3, OUT0, NONE);
-> +		PIN_SLP(mp03-4, INPUT, NONE);
-> +		PIN_SLP(mp03-5, OUT0, NONE);
-> +		PIN_SLP(mp03-6, INPUT, DOWN);
-> +		PIN_SLP(mp03-7, INPUT, DOWN);
-> +
-> +		PIN_SLP(mp04-0, INPUT, DOWN);
-> +		PIN_SLP(mp04-1, OUT0, NONE);
-> +		PIN_SLP(mp04-2, INPUT, DOWN);
-> +		PIN_SLP(mp04-3, OUT0, NONE);
-> +		PIN_SLP(mp04-4, INPUT, DOWN);
-> +		PIN_SLP(mp04-5, INPUT, DOWN);
-> +		PIN_SLP(mp04-6, OUT0, NONE);
-> +		PIN_SLP(mp04-7, INPUT, DOWN);
-> +
-> +		PIN_SLP(mp05-0, INPUT, NONE);
-> +		PIN_SLP(mp05-1, INPUT, NONE);
-> +		PIN_SLP(mp05-2, INPUT, NONE);
-> +		PIN_SLP(mp05-3, INPUT, NONE);
-> +		PIN_SLP(mp05-4, INPUT, DOWN);
-> +		PIN_SLP(mp05-5, OUT0, NONE);
-> +		PIN_SLP(mp05-6, INPUT, DOWN);
-> +		PIN_SLP(mp05-7, PREV, NONE);
-> +
-> +		PIN_SLP(mp06-0, INPUT, DOWN);
-> +		PIN_SLP(mp06-1, INPUT, DOWN);
-> +		PIN_SLP(mp06-2, INPUT, DOWN);
-> +		PIN_SLP(mp06-3, INPUT, DOWN);
-> +		PIN_SLP(mp06-4, INPUT, DOWN);
-> +		PIN_SLP(mp06-5, INPUT, DOWN);
-> +		PIN_SLP(mp06-6, INPUT, DOWN);
-> +		PIN_SLP(mp06-7, INPUT, DOWN);
-> +
-> +		PIN_SLP(mp07-0, INPUT, DOWN);
-> +		PIN_SLP(mp07-1, INPUT, DOWN);
-> +		PIN_SLP(mp07-2, INPUT, DOWN);
-> +		PIN_SLP(mp07-3, INPUT, DOWN);
-> +		PIN_SLP(mp07-4, INPUT, DOWN);
-> +		PIN_SLP(mp07-5, INPUT, DOWN);
-> +		PIN_SLP(mp07-6, INPUT, DOWN);
-> +		PIN_SLP(mp07-7, INPUT, DOWN);
-> +	};
+Thanks!
+Maxime
 
-What about gphX?
+--tpogyn2zhltbavuh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Best regards,
-Krzysztof
+-----BEGIN PGP SIGNATURE-----
 
-> +};
-> -- 
-> 2.20.1
-> 
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqf/gwAKCRDj7w1vZxhR
+xYVMAP4nKDRimgu3t5jMwZnN+FtExoWjy6v+yWcUECMXuEsnGQEAzpQYH50JCwwP
+eZsHDHII6Y9Hkgf0t2cj0zr5cBRAGwM=
+=avZ8
+-----END PGP SIGNATURE-----
+
+--tpogyn2zhltbavuh--
