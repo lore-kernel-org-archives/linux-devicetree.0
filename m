@@ -2,78 +2,53 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E8BC83001
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 00:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C002C83004
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 01:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B07208FE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 00:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E52206E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 01:16:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XNvI8bae"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="KpvpSpyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgD1ABt (ORCPT
+        id S1726357AbgD1BQ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 20:01:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726361AbgD1ABs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Apr 2020 20:01:48 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA1D7C03C1A9
-        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 17:01:46 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id h12so426126pjz.1
-        for <devicetree@vger.kernel.org>; Mon, 27 Apr 2020 17:01:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1s/dsw3iQ5+KLo+HnIszPH3KY3xtYoHt7IVuj3QhLHU=;
-        b=XNvI8baeWbFOlqlhE8xT1QWuu1S8IwUV53ybwKKHilfeMad9u86/Uf3LdqVk3ZOryZ
-         c6KHmlE+ZFcis9At+kwW5gX7bge93AvjplIQf7HxNFsh9x4qPnGPTl50398M9joshJ+P
-         mOYz9wHPLNh3cQzkWnvbtFhAqhD5327iTLGlPglQg9kcRzscpFewWWLCTGeo/Jp5h/O2
-         IhCzlCJeyPWcD3ovB/UldAl7i5yDmzvjSAPwmwCQT+lY2iExK1IFlCk1ZEJY0GOtXO+I
-         mIOShl7d4YKDbHlxR/3xnnr93oOcQlxIghqMJoTqohMQDdA80dCEOuzqTEhlfLhhTv5e
-         WEPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1s/dsw3iQ5+KLo+HnIszPH3KY3xtYoHt7IVuj3QhLHU=;
-        b=SuL4WRz/I0XltY/IygqF4dDvkk6FaS553L1kASsFu9C2lGmNNB5Q2g81/UzrtsXQVm
-         OCO/9iCUC/gjjc7aqmaIXXPhG+916vDi+oQer5L/y/ACEA5RIv+d1IJonth6np9sDFFD
-         2oc2t3NaM1ukHZOHNYJN0QSY+/rtKgEdPsFyG7BR+5Idkx9ejr8c6rIDfS1w+CFBoLUV
-         b1ygwu7ve7PG8YZQ429FbOkGJH7apcUXTQV5BNZsPzZ0DvTcD+SRwoNtpPAKYGu9Eag7
-         8iBZobeV0rOQI8deYW9oMbxl23oPrqmMY3ppEf6HLeT4PZZNgl49VuspisdgBF7srxSw
-         7jsg==
-X-Gm-Message-State: AGi0PuaUvXoZzncmggBDpBGGsg1hSe8PXGYzbVOeEE+Q9CxwFCM1woOU
-        AHlgEwrvU316p1m1Q7PaPbOlhg==
-X-Google-Smtp-Source: APiQypLTLSeLx4582wk1BaOWz0qb2oLn0Mzn+JdglqHV4PiHoKagI4kSJkJbxuaIo/LC7hsyhR/UJg==
-X-Received: by 2002:a17:902:8608:: with SMTP id f8mr25757854plo.110.1588032106375;
-        Mon, 27 Apr 2020 17:01:46 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id cp22sm363850pjb.28.2020.04.27.17.01.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 17:01:45 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 2/2] remoteproc: qcom: pas: Add SM8250 PAS remoteprocs
-Date:   Mon, 27 Apr 2020 17:01:10 -0700
-Message-Id: <20200428000110.2958704-2-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200428000110.2958704-1-bjorn.andersson@linaro.org>
-References: <20200428000110.2958704-1-bjorn.andersson@linaro.org>
+        Mon, 27 Apr 2020 21:16:27 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:60258 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbgD1BQ1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 21:16:27 -0400
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id D7F792049E;
+        Tue, 28 Apr 2020 01:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1588036582; bh=YpbKFu2GtHuJRM3elJ1UDPWZ42z5iYMpD3wZVprdR/8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KpvpSpyyHeInj2hqGchbkiq09c63G1ENf9haGk7dFZPGammg8EawvRr/YwVlxJooX
+         kxJlHf0Y9TGG5/uFX8jLJU1WPUgMA7/Fdfiysfm54tYp0n737kCdNQ+cVlewm+RDLo
+         /bmg6AcNc4aNmPuvfyPhxBE7ppHaiZsPgYb3o/GWd57D07ndZ/IX0MBMekLGjnJdkB
+         PpM1TQmjDeUQj/ECZAjncTEvhB9NyobtCgmrIvCiEvWlYX2H8wkz4PzQr2jhEiaw26
+         Ej+bD6lnA6cHQTeF91p+x/9LE15Xd8+YrQ7lX54Axpmd7x0hB8L0prOpVwbCCp8fDg
+         xZ+shF5SWa8mg==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/5] Loongson PCI Generic Driver 
+Date:   Tue, 28 Apr 2020 09:14:15 +0800
+Message-Id: <20200428011429.1852081-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+References: 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -81,108 +56,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add audio, compute and sensor DSP compatibles to the Qualcomm PAS
-binding and driver.
+Hi,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/remoteproc/qcom_q6v5_pas.c | 62 ++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+This series converts Loongson PCI into a generic PCI controller
+driver and adds support for LS2K SoC and LS7A PCH's PCI support.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index 8ecc157f1ed1..5f2266c74448 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -508,6 +508,26 @@ static const struct adsp_data sm8150_adsp_resource = {
- 		.ssctl_id = 0x14,
- };
- 
-+static const struct adsp_data sm8250_adsp_resource = {
-+	.crash_reason_smem = 423,
-+	.firmware_name = "adsp.mdt",
-+	.pas_id = 1,
-+	.has_aggre2_clk = false,
-+	.auto_boot = true,
-+	.active_pd_names = (char*[]){
-+		"load_state",
-+		NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+		"cx",
-+		"mx",
-+		NULL
-+	},
-+	.ssr_name = "lpass",
-+	.sysmon_name = "adsp",
-+	.ssctl_id = 0x14,
-+};
-+
- static const struct adsp_data msm8998_adsp_resource = {
- 		.crash_reason_smem = 423,
- 		.firmware_name = "adsp.mdt",
-@@ -553,6 +573,25 @@ static const struct adsp_data sm8150_cdsp_resource = {
- 	.ssctl_id = 0x17,
- };
- 
-+static const struct adsp_data sm8250_cdsp_resource = {
-+	.crash_reason_smem = 601,
-+	.firmware_name = "cdsp.mdt",
-+	.pas_id = 18,
-+	.has_aggre2_clk = false,
-+	.auto_boot = true,
-+	.active_pd_names = (char*[]){
-+		"load_state",
-+		NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+		"cx",
-+		NULL
-+	},
-+	.ssr_name = "cdsp",
-+	.sysmon_name = "cdsp",
-+	.ssctl_id = 0x17,
-+};
-+
- static const struct adsp_data mpss_resource_init = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "modem.mdt",
-@@ -604,6 +643,26 @@ static const struct adsp_data sm8150_slpi_resource = {
- 		.ssctl_id = 0x16,
- };
- 
-+static const struct adsp_data sm8250_slpi_resource = {
-+	.crash_reason_smem = 424,
-+	.firmware_name = "slpi.mdt",
-+	.pas_id = 12,
-+	.has_aggre2_clk = false,
-+	.auto_boot = true,
-+	.active_pd_names = (char*[]){
-+		"load_state",
-+		NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+		"lcx",
-+		"lmx",
-+		NULL
-+	},
-+	.ssr_name = "dsps",
-+	.sysmon_name = "slpi",
-+	.ssctl_id = 0x16,
-+};
-+
- static const struct adsp_data msm8998_slpi_resource = {
- 		.crash_reason_smem = 424,
- 		.firmware_name = "slpi.mdt",
-@@ -644,6 +703,9 @@ static const struct of_device_id adsp_of_match[] = {
- 	{ .compatible = "qcom,sm8150-cdsp-pas", .data = &sm8150_cdsp_resource},
- 	{ .compatible = "qcom,sm8150-mpss-pas", .data = &mpss_resource_init},
- 	{ .compatible = "qcom,sm8150-slpi-pas", .data = &sm8150_slpi_resource},
-+	{ .compatible = "qcom,sm8250-adsp-pas", .data = &sm8250_adsp_resource},
-+	{ .compatible = "qcom,sm8250-cdsp-pas", .data = &sm8250_cdsp_resource},
-+	{ .compatible = "qcom,sm8250-slpi-pas", .data = &sm8250_slpi_resource},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, adsp_of_match);
+Is it possible to let patch 1~3 go through PCI tree and patch
+4~5 go through MIPS tree?
+
+Thanks.
+
+v6: Drop first the patch of previous versions. Driver code clean-ups
+according to rob's suggestion.
+
+It looks like I had a wrong impression on generic IO port handeling
+and now the issue has been fixed, I implemented PCI_IOBASE for MIPS[1].
+Now the address is uniform here.
+
+[1]: https://patchwork.kernel.org/cover/11510499/
+
+v7: Fix some minor issues.
+
+Jiaxun Yang (5):
+  PCI: Don't disable decoding when mmio_always_on is set
+  PCI: Add Loongson PCI Controller support
+  dt-bindings: Document Loongson PCI Host Controller
+  MIPS: DTS: Loongson64: Add PCI Controller Node
+  MIPS: Loongson64: Switch to generic PCI driver
+
+ .../devicetree/bindings/pci/loongson.yaml     |  62 +++++
+ arch/mips/Kconfig                             |   1 +
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  12 +
+ arch/mips/loongson64/Makefile                 |   2 +-
+ arch/mips/loongson64/vbios_quirk.c            |  29 ++
+ arch/mips/pci/Makefile                        |   1 -
+ arch/mips/pci/fixup-loongson3.c               |  71 -----
+ arch/mips/pci/ops-loongson3.c                 | 116 --------
+ drivers/pci/controller/Kconfig                |  10 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pci-loongson.c         | 251 ++++++++++++++++++
+ drivers/pci/probe.c                           |   2 +-
+ 12 files changed, 368 insertions(+), 190 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
+ create mode 100644 arch/mips/loongson64/vbios_quirk.c
+ delete mode 100644 arch/mips/pci/fixup-loongson3.c
+ delete mode 100644 arch/mips/pci/ops-loongson3.c
+ create mode 100644 drivers/pci/controller/pci-loongson.c
+
 -- 
-2.24.0
+2.26.0.rc2
 
