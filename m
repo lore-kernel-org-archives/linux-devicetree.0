@@ -2,101 +2,128 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDB5C83001
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01501C83001
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BD8D206C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5DF6206C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:36:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GNiAeQhg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwnL/1+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgD1Oc3 (ORCPT
+        id S1727863AbgD1Ogm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34574 "EHLO
+        Tue, 28 Apr 2020 10:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727117AbgD1Oc3 (ORCPT
+        by vger.kernel.org with ESMTP id S1727845AbgD1Ogm (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:32:29 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 196C2C03C1AC
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 07:32:29 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id h4so8157540ljg.12
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 07:32:29 -0700 (PDT)
+        Tue, 28 Apr 2020 10:36:42 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097B0C03C1AB;
+        Tue, 28 Apr 2020 07:36:42 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id k6so23087033iob.3;
+        Tue, 28 Apr 2020 07:36:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=psr7yNqTXqMfQvqVzYJ3WgK/XrorFzoihdkLU14qe3w=;
-        b=GNiAeQhgB/N+m40azYZMqkMYXjkfb7QkJq/BtD6t0WwK9uLf8zfINMclqp7OsmxGDZ
-         H7p5uQXQhNAIxz/85JMYPZgfGGWVucEvqeAs0Vm//oqQLmsZsGxg+GrHGXMbCtJ01BRj
-         10tN2AYH7R6BQlgRnqwLhnqCu55YUoKgD/shuGy6qCrkfLGuwBraErTOfjk3qO2zNy74
-         UYWFVk7AFpbRGXfapyYzscgE4U207W4wdvXzgCVEC3UCuupa+aZpO6q2HtqwrDmZInO0
-         DurvuXNHk81MnOMb/bQv4ZwbRpwTaeQG0pHbo1Fb33CGAWUjuY7RnO68aYP5eZterWHO
-         SaIg==
+         :cc:content-transfer-encoding;
+        bh=VPA9Kxr39ERnqwIoc2UJSAp5IoBA3dbxr68iA+juyP0=;
+        b=FwnL/1+AgacLVrzfCLrLz36o10+EmBtDT+Vx71m9oQ+I8Ep9EruaY8kVJkEYTxwWXr
+         9mOoV34Me4r25FtQL4YIVI1WVIVyNTGJK3zSm5wkSCPHE+jnDdwe8NCx9Zz/Iyqozj4x
+         Ru/LBFO5YLFEmUqcxt3LPB/c+vkH0Gq2GNhQFwD/3Om8Pufxq/LBJGmYKrJI2cgyygFA
+         /KDRbpoVEG3SaE2JJ1Sl/nF5C1H4Disv6rZrIdh6EUgw/R53UwhrWWCzxwA8WJVh/hUy
+         JPoJ0VP1t3RZs7VoNBMzXnRTP2nnt1Cw16eNbJ98uAjMlPANVBDzEt5854f2gIwdTT4i
+         c67w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=psr7yNqTXqMfQvqVzYJ3WgK/XrorFzoihdkLU14qe3w=;
-        b=nuEKQqZNmq1GdgRYt5aNyRAlnxNtz9JWW67qgacBrvcVA41WJ5xUlDEvdSZFUMH7zA
-         421pFc8Tpy1orB4XCzn9RsDy4b3s5Uf7Vmm4oxKRC9jQvHnVbV6MlqzidNI9LAuRtuqE
-         YeLOMMP5Ox/lhEYRESys84u2t7J4SVSaGTNrWTQVAibKOoD4z2U3JhS5z3azPlvytUwZ
-         P6/cNNcYUjGrT8itxMT/scggUT6RB0uVPcZT3nr/Ib61kyXFhrE2MmYsMce2CthgT6Yv
-         YC3F+Cyks0AR+dmlrMB/k7L3c63G/2VAaaPIoDfDtDpMr5TdqBwcFN9MUQhHy+tES+f4
-         eLow==
-X-Gm-Message-State: AGi0PubS6Qsbr1TsjYlqKDLfiq27+yWFJf//uSLxS+WT4tRhduXze426
-        n30WSnDpi5JAKw38UU+p7ltoPIL+Wou3KbnJ5oQ4Fg==
-X-Google-Smtp-Source: APiQypKVikJwVUY4aCnhdxfj2r5hZ+MavanhuJYX2Qu/0kL47XqZliyypaH3vT3ucDc/5Fb1DO9yg2SDlr/F5VKH+JE=
-X-Received: by 2002:a2e:8805:: with SMTP id x5mr18610567ljh.223.1588084347589;
- Tue, 28 Apr 2020 07:32:27 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VPA9Kxr39ERnqwIoc2UJSAp5IoBA3dbxr68iA+juyP0=;
+        b=WzRe62VY2fVIL1IhtQvYz6EQVb3prMW0c60WnxpoAr3WvziSBEuwjQ2FNqueVGxnuV
+         9snfiGGQOmbJhZbEj6Z3eGX3emZEeobvt/DzYtFfUjOdQ9XWvycrBqj0gsg8RSbfoTyS
+         SVj3H8ACgpJbuGT5fy2+4cK+XlzwO2X1liBaJ0rB9XIY11Z/786ED+U5p5rjZ0IkQwpw
+         FdIVjgfaoIoj0VWTI93bP1WTak3UOiU6TpAHZ6zvFW81Bj/SK8sNwAh6JIRlz5XC37/p
+         2HiNWe+zX8v7pIXO8Ug1X9KLSfvnZ+qN48wU640iPmC7o3jy+7gM0cK6PUtMi79yPeEt
+         KoyA==
+X-Gm-Message-State: AGi0PuZ/Fjg8nvaHNkZkwoDV1MilUEwbst40VP+a1gEvZvQtiS55RL2J
+        G+rh5viAMLZ+DuRTqSBly5BRLEFibuDVpNulMY8=
+X-Google-Smtp-Source: APiQypJWKcOZwolIsn7a73yc4aMqWx+mk2KAdEK/HRRLB/AFX92WYN4FJ4pKWxX8TsolxV933sbSRmnXvsBuyeUoSoo=
+X-Received: by 2002:a5d:84d4:: with SMTP id z20mr15044943ior.36.1588084601133;
+ Tue, 28 Apr 2020 07:36:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200420134800.31604-1-benjamin.gaignard@st.com>
- <20200420134800.31604-2-benjamin.gaignard@st.com> <CACRpkdatGwWyruTLC=+BUtnunvqyxnXAYDhcHqy26oeud8Bs1w@mail.gmail.com>
- <13b16e13-690b-ad3f-a800-28c7805cbb96@st.com>
-In-Reply-To: <13b16e13-690b-ad3f-a800-28c7805cbb96@st.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 16:32:16 +0200
-Message-ID: <CACRpkdYLxX-vYypC=9xxuWRQ43v-xm6=LC1shdC2ciH3BtxsYQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] dt-bindings: bus: Add firewall bindings
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200426104115.22630-1-peron.clem@gmail.com> <20200426104115.22630-8-peron.clem@gmail.com>
+ <20200428081444.vddwswsorl5tf7yp@gilmour.lan>
+In-Reply-To: <20200428081444.vddwswsorl5tf7yp@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Tue, 28 Apr 2020 16:36:30 +0200
+Message-ID: <CAJiuCcf6xzB+HhV4GSOuawi3FJDeA4dvHXkKMV36+UF8gLLj7w@mail.gmail.com>
+Subject: Re: [PATCH v3 7/7] arm64: dts: sun50i-h6: Add HDMI audio to H6 DTSI
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Marcus Cooper <codekipper@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 3:13 PM Benjamin GAIGNARD
-<benjamin.gaignard@st.com> wrote:
+Hi Maxime,
 
-> Does the following description sound good for you:
-> Firewall properties provide the possible firewall bus controller
-> configurations for a device.
-> Bus firewall controllers are typically used to control if a hardware
-> block can perform read or write operations on bus.
-> The contents of the firewall bus configuration properties are defined by
-> the binding for the individual firewall controller device.
-> The first configuration 'firewall-0' or the one named 'default' is
-> applied before probing the device itself.
+On Tue, 28 Apr 2020 at 10:14, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> On Sun, Apr 26, 2020 at 12:41:15PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > Add a simple-soundcard to link audio between HDMI and I2S.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 31 ++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-h6.dtsi
+> > index a5ee68388bd3..558fe63739cb 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -88,6 +88,24 @@
+> >                       (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> >       };
+> >
+> > +     sound_hdmi: sound {
+> > +             compatible =3D "simple-audio-card";
+> > +             simple-audio-card,format =3D "i2s";
+> > +             simple-audio-card,name =3D "allwinner-hdmi";
+>
+> It doesn't seem to be on purpose, but the name is different from the othe=
+r
+> series you sent.
 
-Looks good to me!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-with this added.
+Indeed, I have sent this serie before looking at the other.
 
-Yours,
-Linus Walleij
+I will change this to keep coherency, once we agree on the correct card nam=
+e.
+
+Thanks for the review,
+Clement
+
+>
+> Maxime
