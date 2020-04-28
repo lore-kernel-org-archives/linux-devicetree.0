@@ -2,254 +2,177 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F99C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA346C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3CE820663
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:58:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588089529;
-	bh=XURTnujkc5v5JlmmNUQa1ZLAMcR9qrI6O60YpCe1NZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H1iBYiJ1NQoltEpjSSyMJHjx7oi0Csrk08E1HyzgF7LxqK+q4QSUcGGXf5vF3981v
-	 nPrPL8r8FMOguKeIkguq2tXyFiQ8smRZ3+zDyqG7blftcVtty8idE2liBmy73dETaU
-	 flPzL7/Qf/kSJ/AI2Zegu8and1XzsdSI4pIuF3Cs=
+	by mail.kernel.org (Postfix) with ESMTP id 7F87D20730
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:04:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ekHX1BRP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gXKvxnxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgD1P6t (ORCPT
+        id S1727957AbgD1QEX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:58:49 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33864 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbgD1P6s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 11:58:48 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 72so33488335otu.1;
-        Tue, 28 Apr 2020 08:58:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MivbelJxNHa4mdFZfVhvWBP5Vwv2IXDtOtO6A6eppmk=;
-        b=YyGmKNyi5r8qSORYGgMGiUdYHSnp9UN1KD7+lKwZwpJMfGiJiiUsxarrNvQGpc+H0r
-         +C/aDCl6iYlD87DXHuVDy6+O14W61UNHXtGmxT4hVRAXvK2vKdFhsT4HxvyAXbFojI8Z
-         rjp/eh6shjNdbdeBKRyliI/B8XG3oHfSL35UNz1hs4X2n8O5+TUTP5R7OS2H8eyt8REV
-         awUSWmRjH3TDTk271vPr75IK7tbeZS5nPiL/LxFrYiQGotfZYdnamSUaVBHjKr7cc/04
-         tSfKx9xALeA+bxT0TNHaK1j4LJC0JTBQRY+lzid7cBnWwUfx5KcE8J5/lGLaqP1NhGJE
-         aHmQ==
-X-Gm-Message-State: AGi0PuauXMIsuI2o9pDf57Co8LKUzu5++qnY3V9pfYnPZhrPczaXycj1
-        mqMgh29Fdtk4pKBqGt5JAA==
-X-Google-Smtp-Source: APiQypL2q5pmI3xD++E1lAurIiqAjUjSCNH77eIrxVFi+r/6KnDIqJqluLOrTGCDXGiX60gxAFnFzg==
-X-Received: by 2002:aca:4a0c:: with SMTP id x12mr3438710oia.19.1588089527751;
-        Tue, 28 Apr 2020 08:58:47 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q142sm4938585oic.44.2020.04.28.08.58.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 08:58:47 -0700 (PDT)
-Received: (nullmailer pid 2205 invoked by uid 1000);
-        Tue, 28 Apr 2020 15:58:46 -0000
-Date:   Tue, 28 Apr 2020 10:58:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] devicetree: bindings: phy: Document ipq806x dwc3
- qcom phy
-Message-ID: <20200428155846.GA29778@bogus>
-References: <20200415210729.9618-1-ansuelsmth@gmail.com>
- <20200415210729.9618-2-ansuelsmth@gmail.com>
+        Tue, 28 Apr 2020 12:04:23 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:52795 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728037AbgD1QEW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:04:22 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 2FE3D5FA;
+        Tue, 28 Apr 2020 12:04:21 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 28 Apr 2020 12:04:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=sOFZ1jPclsSm3u+h/VuhDsJZx7b
+        YOtqGCr5nWlpsVh8=; b=ekHX1BRP+1TfVz1t22l+bCdNvO/JzeQA6e1nC954d4t
+        rugCIEuZ2M2dWlEhMvSRZ4oA5UJN/TFTwHhTkMpX1eHjW/IJqhA24mA1ZLW6ADi2
+        ds41Pi/0PKU7IBUJztJ2fMbH24oDPRpcSKr6TSlUTNwnoEfEms/G9QS+fKVl2iKT
+        g17IGuNcD1m7j2dzaLwyBq/6ZKpJhDjPiYaWNu/1F6BavVzE/KrjFM7DsilU6TLr
+        0lHD+FzZygGLcEevSvRb7A7f4NwRtsm2kphDtYfD1ry+lzvYJvHRigGWVNR+z6+T
+        69c0QuwMZlF4ksNiGEovncrc1hbLSbJT8v1snxvA1Wg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=sOFZ1j
+        PclsSm3u+h/VuhDsJZx7bYOtqGCr5nWlpsVh8=; b=gXKvxnxNmCf3WzsWvfJxkq
+        RNCq20RIfaux0rfvjpbZCbZgyGFomX2PW8pAhVUDi0QyecEHnbpX6L5R7JlQ1EpD
+        aWZSxc8TjVtV/jCZlbvZ6UFzl+c0Z6sIfRUmbtnKfgnKE8XRtgjUEh6tk/dEy/bH
+        NrGFoDPbAk6vIDYzpPMPbJh7RqPmEXKOp6tnBRLNah4Wuoj9k73C/VlBfQV+H4SC
+        1kdf8Ieh8ZjyLvNXatnoL4SRDZBt2lidxPam/d8XFQMLbSvKCXDpHvYkMHgyb6Nr
+        mj2OTA1MuhWAd3DkcEOFCMtT7c3E5O7D9A15hCLzhdqhDMajahNsznB2+jBc1Iew
+        ==
+X-ME-Sender: <xms:A1SoXgPyPISErhLyus-Su-GMKMbZFWO0F3E6774q64G3isa-TqfrWw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugdelhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:A1SoXgqgsqFCW-8s3uz2IiEo8frR3GgpaC4i3pHB53t_H9S02lhFcw>
+    <xmx:A1SoXmlhcIkmeYJJhvXDDXSA7D1pqfRXHo3SIVaJiuGm_E6fEuZRag>
+    <xmx:A1SoXgzuKmdtl820vHTZvitDHafGzX5L1UfDZrxYMyTmPJNgbsVMng>
+    <xmx:BFSoXu5UwG_QI_x28zWwyD59bvLsERgxEGoqiXQ7gqsokpHr_cgGY4ZNc2I>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0FF803280059;
+        Tue, 28 Apr 2020 12:04:18 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 18:04:17 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH 4/7] arm64: dts: allwinner: a64: Add HDMI audio
+Message-ID: <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
+References: <20200426120442.11560-1-peron.clem@gmail.com>
+ <20200426120442.11560-5-peron.clem@gmail.com>
+ <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
+ <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rbultuas4kxpkny5"
 Content-Disposition: inline
-In-Reply-To: <20200415210729.9618-2-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:07:27PM +0200, Ansuel Smith wrote:
-> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-> inizialize and use usb on ipq806x SoC.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
-> v3:
-> * Use explicit reg instead of regmap
-> 
->  .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 58 +++++++++++++++
->  .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 70 +++++++++++++++++++
->  2 files changed, 128 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-> new file mode 100644
-> index 000000000000..c019de7478e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description:
-> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
-> +  own node.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ipq806x-usb-phy-hs
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description: |
-> +      - "ref" Is required
-> +      - "xo"	Optional external reference clock
-> +    items:
-> +      - const: ref
-> +      - const: xo
-> +
-> +required:
-> +  - compatible
-> +  - "#phy-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> +
-> +    hs_phy_0: phy@110f8800 {
-> +      compatible = "qcom,ipq806x-usb-phy-hs";
-> +      reg = <0x110f8800 0x30>;
-> +      clocks = <&gcc USB30_0_UTMI_CLK>;
-> +      clock-names = "ref";
-> +      #phy-cells = <0>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-> new file mode 100644
-> index 000000000000..29a7d3aed289
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description:
-> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
-> +  own node.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ipq806x-usb-phy-ss
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description: |
-> +      - "ref" Is required
-> +      - "xo"	Optional external reference clock
-> +    items:
-> +      - const: ref
-> +      - const: xo
-> +
-> +  rx_eq:
 
-qcom,rx-eq
+--rbultuas4kxpkny5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +    maxItems: 1
+On Tue, Apr 28, 2020 at 10:54:00AM +0200, Cl=E9ment P=E9ron wrote:
+> Hi Maxime,
+>=20
+> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > On Sun, Apr 26, 2020 at 02:04:39PM +0200, Cl=E9ment P=E9ron wrote:
+> > > From: Marcus Cooper <codekipper@gmail.com>
+> > >
+> > > Add a simple-soundcard to link audio between HDMI and I2S.
+> > >
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++=
+++
+> > >  1 file changed, 21 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm=
+64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > index e56e1e3d4b73..08ab6b5e72a5 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > @@ -102,6 +102,25 @@
+> > >               status =3D "disabled";
+> > >       };
+> > >
+> > > +     hdmi_sound: hdmi-sound {
+> > > +             compatible =3D "simple-audio-card";
+> > > +             simple-audio-card,format =3D "i2s";
+> > > +             simple-audio-card,name =3D "allwinner,hdmi";
+> >
+> > I'm not sure what the usual card name should be like though. I would as=
+sume that
+> > this should be something specific enough so that you're able to differe=
+ntiate
+> > between boards / SoC so that the userspace can choose a different confi=
+guration
+> > based on it?
+>=20
+> I really don't know what we should use here,
+> I just have a look at other SoC:
+> rk3328: "HDMI"
+> rk3399: "hdmi-sound"
+> r8a774c0-cat874: "CAT874 HDMI sound"
+>=20
+> But maybe it's time to introduce proper name:
+> What about :
+> sun50i-a64-hdmi
+> sun50i-h6-hdmi
 
-Is this an array?
+It's pretty much what we've been using for the other sound cards we have, s=
+o it
+makes sense to me.
 
-> +    description: Override value for rx_eq. Default is 4.
-> +
-> +  tx_deamp_3_5db:
+> How should we handle this with h3 / h5 ?
+> settings the simple-audio-card,name in each SoC dts?
+> Or using sun50i-h3-hdmi as they are both identical?
 
-qcom,tx-deamp-3-5db
+Yeah, we can do the latter
 
-> +    maxItems: 1
-> +    description: Override value for transmit preemphasis. Default is 23.
+Maxime
 
-default: 23
+--rbultuas4kxpkny5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +  mpll:
+-----BEGIN PGP SIGNATURE-----
 
-qcom,mpll
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqhUAQAKCRDj7w1vZxhR
+xThzAQCdfGqGBenInfXFcERmsGo6KmDYj/IpfZqqLJhS7hMAmAEAu4oEes/hmj4+
+lop9h0Zfn5J8S9rkeex26DXrp2LOsQY=
+=x+kX
+-----END PGP SIGNATURE-----
 
-> +    maxItems: 1
-> +    description: Override value for mpll. Default is 0.
-
-Constraints?
-
-default: 0
-
-> +
-> +required:
-> +  - compatible
-> +  - "#phy-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> +
-> +    ss_phy_0: phy@110f8830 {
-> +      compatible = "qcom,ipq806x-usb-phy-ss";
-> +      reg = <0x110f8830 0x30>;
-> +      clocks = <&gcc USB30_0_MASTER_CLK>;
-> +      clock-names = "ref";
-> +      #phy-cells = <0>;
-> +    };
-> -- 
-> 2.25.1
-> 
+--rbultuas4kxpkny5--
