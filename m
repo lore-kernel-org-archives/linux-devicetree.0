@@ -2,369 +2,510 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DFDC83004
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674F5C83004
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4C74206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:19:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="kgKO0cBP"
+	by mail.kernel.org (Postfix) with ESMTP id 39C8C206C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:20:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588069244;
+	bh=4OeVg93gCmdUJAPkUzPIsytJfzhNuFzitSg+GbhXwnQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ejYgjAWIfEr0YV1ul3Y6BuywfpxsXu81xG4rZz6RfFJtDNNSnS3zPD3O6UU/LGBsv
+	 9EpH5WKXuCEJ5QIucyUBNEeHaZaMUmPUMT4rFkp4801izGDaIvl8dedTdSPhbdgRPQ
+	 D7ggP3/sMgtm9sybiDNGGmql6Jj/4xjiRhvC150Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgD1KTN (ORCPT
+        id S1727961AbgD1KUg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727813AbgD1KTI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:19:08 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A293C03C1AC
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 03:19:04 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id z6so2229629wml.2
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 03:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kG3pAr197zg/lS7mr8VNmBDpYyQu9IqibYfSDpBEn7k=;
-        b=kgKO0cBP5Bssi7//kT69CO7mZYdf7AyFI1rR8/f/GDrUOTsB4qJ+hKHVFiJ9XtAS/o
-         qP+mV4FkHAYXgBQdP2KVdASCvVYZOtS4NY0qKQYpCQ4aOLNXho1KhTsnQToVN3oudcCY
-         PExtKt2Fx6dhe7iJ0BX5OyWPtd3rl8z+CcTqw=
+        Tue, 28 Apr 2020 06:20:36 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42134 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727114AbgD1KUc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 06:20:32 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s10so15956940edy.9;
+        Tue, 28 Apr 2020 03:20:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=kG3pAr197zg/lS7mr8VNmBDpYyQu9IqibYfSDpBEn7k=;
-        b=rukPLkzOEniRmcMDkFs7+WAtf6WFVX6IzUtMrow1MUQLa/1Xc+CiQVjX1sisDD/lgL
-         2nT0On76samBONUo8jyToC9zn/2P64/d9KXtf1UcKfFOWKnjOexy6IDu5p6WwG7ZNeod
-         mjNYR63G8DDyTTfVYnHydyrU6wQNuj9CFgs8SzD+E1dkoApDCGaNX/Q3CsPLozgzWn2+
-         sTKoC1sXHWpfxlt4i/Y0wvF6DEqJiGOVz/wRDOR+vauzJkvFPfeM5flk5sXxUp9VRQUm
-         95slTr2aPBgLXksPmbW+QZDaItCVk7n9x3P4wDTtgjj67Nf+msY+WY4/2O52MgACpfQc
-         kMBQ==
-X-Gm-Message-State: AGi0PuavxvnBgfmr0RAJ8ONCZRFl4Hh5N+85aw2mN3wla01xMqYb5334
-        dJReoSeuARsZxkTWsIbOWEz4Ow==
-X-Google-Smtp-Source: APiQypKo38IfQ2C40mSf8kIDZj3p6vDuj6I8VfusT2k9k8ZJbwXy1/pntxWf3JXgC9wEVd95IwAP8w==
-X-Received: by 2002:a1c:a90a:: with SMTP id s10mr3498028wme.99.1588069142896;
-        Tue, 28 Apr 2020 03:19:02 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id w18sm24063758wrn.55.2020.04.28.03.19.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 03:19:02 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:19:00 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        dri-devel@lists.freedesktop.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v3 1/2] DRM: ARC: add HDMI 2.0 TX encoder support
-Message-ID: <20200428101900.GG3456981@phenom.ffwll.local>
-Mail-Followup-To: Neil Armstrong <narmstrong@baylibre.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        dri-devel@lists.freedesktop.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, Sam Ravnborg <sam@ravnborg.org>
-References: <20200414232929.22788-1-Eugeniy.Paltsev@synopsys.com>
- <20200414232929.22788-2-Eugeniy.Paltsev@synopsys.com>
- <20200415173320.GG3456981@phenom.ffwll.local>
- <267d49d8-a73a-0317-cb50-0f63f0ced049@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=8XVZLy+Z2aeMWzOQ+xj/bdTQQafaM8Qg8Ml+JBIWjas=;
+        b=cl+J/wqdAjDYff7hircxN1GX+7chdHuwQocv0aAK+LKe478kxYFx8i6rFmibpAqpJt
+         twq8SRbuQGWwi9Gu20OD+tbiPiquq55K2IlkHpQLCmPHf0GnIpbHAMItVIVRsVNZu0II
+         414E/STEIMcImUppioMniADemUgoRv+AsGtq/hPXwlVEpTNlMAsqHOJuUsqilB8z86ZO
+         ZetMs4wybnQ4bxyWfJYUaEX7YfN6NeQclyyNctHVAFQ1+0nWcahF3X+/KL2qGQ2nrG4A
+         qZUn6rsBudVvu3VnZ9ztCiQhE7KUw2HfxDoAkUbyDlOOt7M59HtrudyhPcjtwnSHIzAR
+         km3Q==
+X-Gm-Message-State: AGi0PubF6bIEPkQeSZJG1WVu00+njBdzs2pR/MPSnppOHQ7TOsvgReJ+
+        SVHA3hTHAeJWqIicFZ7gGRQ=
+X-Google-Smtp-Source: APiQypIlj9J3oWIIsF+MLx39oTKzFj0RUM+Tt9CdhuA54Gum3uRwO43yYz3yLqCIKNQNoLSMIfC2Hw==
+X-Received: by 2002:aa7:d5d4:: with SMTP id d20mr22422707eds.369.1588069228872;
+        Tue, 28 Apr 2020 03:20:28 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.237])
+        by smtp.googlemail.com with ESMTPSA id r19sm260813edo.12.2020.04.28.03.20.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Apr 2020 03:20:28 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 12:20:26 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     kgene@kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH 06/13] arm: dts: s5pv210: aries: Add support for more
+ devices
+Message-ID: <20200428102026.GB23963@kozik-lap>
+References: <20200426183604.28494-1-xc-racer2@live.ca>
+ <BN6PR04MB0660563639D091548BFCCFF2A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <267d49d8-a73a-0317-cb50-0f63f0ced049@baylibre.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <BN6PR04MB0660563639D091548BFCCFF2A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 05:55:38PM +0200, Neil Armstrong wrote:
-> On 15/04/2020 19:33, Daniel Vetter wrote:
-> > On Wed, Apr 15, 2020 at 02:29:28AM +0300, Eugeniy Paltsev wrote:
-> >> The Synopsys ARC SoCs (like HSDK4xD) include on-chip DesignWare HDMI
-> >> encoders. Support them with a platform driver to provide platform glue
-> >> data to the dw-hdmi driver.
-> >>
-> >> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> >> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> >> ---
-> >>  MAINTAINERS                       |   6 ++
-> >>  drivers/gpu/drm/Makefile          |   2 +-
-> >>  drivers/gpu/drm/arc/Kconfig       |   7 ++
-> >>  drivers/gpu/drm/arc/Makefile      |   1 +
-> >>  drivers/gpu/drm/arc/arc-dw-hdmi.c | 116 ++++++++++++++++++++++++++++++
-> >>  5 files changed, 131 insertions(+), 1 deletion(-)
-> >>  create mode 100644 drivers/gpu/drm/arc/arc-dw-hdmi.c
-> >>
-> >> diff --git a/MAINTAINERS b/MAINTAINERS
-> >> index a6fbdf354d34..2aaed1190370 100644
-> >> --- a/MAINTAINERS
-> >> +++ b/MAINTAINERS
-> >> @@ -1258,6 +1258,12 @@ S:	Supported
-> >>  F:	drivers/gpu/drm/arc/
-> >>  F:	Documentation/devicetree/bindings/display/snps,arcpgu.txt
-> >>  
-> >> +ARC DW HDMI DRIVER
-> >> +M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> >> +S:	Supported
-> >> +F:	drivers/gpu/drm/arc/arc-dw-hdmi.c
-> >> +F:	Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
-> >> +
-> >>  ARCNET NETWORK LAYER
-> >>  M:	Michael Grzeschik <m.grzeschik@pengutronix.de>
-> >>  L:	netdev@vger.kernel.org
-> >> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> >> index 6493088a0fdd..5b0bcf7f45cd 100644
-> >> --- a/drivers/gpu/drm/Makefile
-> >> +++ b/drivers/gpu/drm/Makefile
-> >> @@ -109,7 +109,7 @@ obj-y			+= panel/
-> >>  obj-y			+= bridge/
-> >>  obj-$(CONFIG_DRM_FSL_DCU) += fsl-dcu/
-> >>  obj-$(CONFIG_DRM_ETNAVIV) += etnaviv/
-> >> -obj-$(CONFIG_DRM_ARCPGU)+= arc/
-> >> +obj-y			+= arc/
-> >>  obj-y			+= hisilicon/
-> >>  obj-$(CONFIG_DRM_ZTE)	+= zte/
-> >>  obj-$(CONFIG_DRM_MXSFB)	+= mxsfb/
-> >> diff --git a/drivers/gpu/drm/arc/Kconfig b/drivers/gpu/drm/arc/Kconfig
-> >> index e8f3d63e0b91..baec9d2a4fba 100644
-> >> --- a/drivers/gpu/drm/arc/Kconfig
-> >> +++ b/drivers/gpu/drm/arc/Kconfig
-> >> @@ -8,3 +8,10 @@ config DRM_ARCPGU
-> >>  	  Choose this option if you have an ARC PGU controller.
-> >>  
-> >>  	  If M is selected the module will be called arcpgu.
-> >> +
-> >> +config DRM_ARC_DW_HDMI
-> >> +	tristate "ARC DW HDMI"
-> >> +	depends on DRM && OF
-> >> +	select DRM_DW_HDMI
-> >> +	help
-> >> +	  Synopsys DW HDMI driver for various ARC development boards
-> >> diff --git a/drivers/gpu/drm/arc/Makefile b/drivers/gpu/drm/arc/Makefile
-> >> index c7028b7427b3..7a156d8c2c3c 100644
-> >> --- a/drivers/gpu/drm/arc/Makefile
-> >> +++ b/drivers/gpu/drm/arc/Makefile
-> >> @@ -1,3 +1,4 @@
-> >>  # SPDX-License-Identifier: GPL-2.0-only
-> >>  arcpgu-y := arcpgu_crtc.o arcpgu_hdmi.o arcpgu_sim.o arcpgu_drv.o
-> >>  obj-$(CONFIG_DRM_ARCPGU) += arcpgu.o
-> >> +obj-$(CONFIG_DRM_ARC_DW_HDMI) += arc-dw-hdmi.o
-> >> diff --git a/drivers/gpu/drm/arc/arc-dw-hdmi.c b/drivers/gpu/drm/arc/arc-dw-hdmi.c
-> >> new file mode 100644
-> >> index 000000000000..46a6ee09b302
-> >> --- /dev/null
-> >> +++ b/drivers/gpu/drm/arc/arc-dw-hdmi.c
-> >> @@ -0,0 +1,116 @@
-> >> +// SPDX-License-Identifier: GPL-2.0+
-> >> +//
-> >> +// Synopsys DW HDMI driver for various ARC development boards
-> >> +//
-> >> +// Copyright (C) 2020 Synopsys
-> >> +// Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> >> +
-> >> +#include <linux/component.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <drm/bridge/dw_hdmi.h>
-> >> +#include <drm/drm_crtc_helper.h>
-> >> +#include <drm/drm_edid.h>
-> >> +#include <drm/drm_encoder_slave.h>
-> >> +#include <drm/drm_of.h>
-> >> +
-> >> +static const struct dw_hdmi_mpll_config snps_hdmi_mpll_cfg[] = {
-> >> +	{
-> >> +		27000000, {
-> >> +			{ 0x00B3, 0x0000 },
-> >> +			{ 0x00B3, 0x0000 },
-> >> +			{ 0x00B3, 0x0000 }
-> >> +		},
-> >> +	}, {
-> >> +		74250000, {
-> >> +			{ 0x0072, 0x0001},
-> >> +			{ 0x0072, 0x0001},
-> >> +			{ 0x0072, 0x0001}
-> >> +		},
-> >> +	}, {
-> >> +		148500000, {
-> >> +			{ 0x0051, 0x0002},
-> >> +			{ 0x0051, 0x0002},
-> >> +			{ 0x0051, 0x0002}
-> >> +		},
-> >> +	}, {
-> >> +		~0UL, {
-> >> +			{ 0x00B3, 0x0000 },
-> >> +			{ 0x00B3, 0x0000 },
-> >> +			{ 0x00B3, 0x0000 },
-> >> +		},
-> >> +	}
-> >> +};
-> >> +
-> >> +static const struct dw_hdmi_curr_ctrl snps_hdmi_cur_ctr[] = {
-> >> +	/* pixelclk    bpp8    bpp10   bpp12 */
-> >> +	{ 27000000,  { 0x0000, 0x0000, 0x0000 }, },
-> >> +	{ 74250000,  { 0x0008, 0x0008, 0x0008 }, },
-> >> +	{ 148500000, { 0x001b, 0x001b, 0x001b }, },
-> >> +	{ ~0UL,      { 0x0000, 0x0000, 0x0000 }, }
-> >> +};
-> >> +
-> >> +
-> >> +static const struct dw_hdmi_phy_config snps_hdmi_phy_config[] = {
-> >> +	/* pixelclk   symbol  term    vlev */
-> >> +	{ 27000000,   0x8009, 0x0004, 0x0232},
-> >> +	{ 74250000,   0x8009, 0x0004, 0x0232},
-> >> +	{ 148500000,  0x8009, 0x0004, 0x0232},
-> >> +	{ ~0UL,       0x8009, 0x0004, 0x0232}
-> >> +};
-> >> +
-> >> +static struct dw_hdmi_plat_data snps_dw_hdmi_drv_data = {
-> >> +	.mpll_cfg   = snps_hdmi_mpll_cfg,
-> >> +	.cur_ctr    = snps_hdmi_cur_ctr,
-> >> +	.phy_config = snps_hdmi_phy_config,
-> >> +};
-> >> +
-> >> +static const struct of_device_id snps_dw_hdmi_dt_ids[] = {
-> >> +	{ .compatible = "snps,arc-dw-hdmi-hsdk", .data = &snps_dw_hdmi_drv_data },
-> >> +	{ /* sentinel */ }
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, snps_dw_hdmi_dt_ids);
-> >> +
-> >> +static int snps_dw_hdmi_probe(struct platform_device *pdev)
-> >> +{
-> >> +	const struct dw_hdmi_plat_data *plat_data;
-> >> +	const struct of_device_id *match;
-> >> +	struct dw_hdmi *hdmi;
-> >> +
-> >> +	if (!pdev->dev.of_node)
-> >> +		return -ENODEV;
-> >> +
-> >> +	match = of_match_node(snps_dw_hdmi_dt_ids, pdev->dev.of_node);
-> >> +	plat_data = match->data;
-> >> +
-> >> +	hdmi = dw_hdmi_probe(pdev, plat_data);
-> > 
-> > So this is kinda not how bridge drivers are supposed to be done nowadays,
-> > direct calling into the driver was the old way, and dw-hdmi still works
-> > like that. Modern way is roughly
-> > - bridge drivers bind automatically to any bridge they support
-> > - bridge drivers publish a bridge with drm_bridge_add()
-> > - the driver using the bridge fishes out with dt magic using
-> >   of_drm_find_bridge() or another of the related of_ functions
-> 
-> dw-hdmi is an IP, with some platform specific code and arrays to make it work
-> on very different systems, thus we can't use this scheme everywhere....
-> 
-> Some platforms (like r-car) uses the "right" model because the IP is integrated
-> as-is with the default PHY and as an independent IP on the system.
-> 
-> It's definitely not the case on Rockchip/Amlogic/Allwinner systems,
-> and even worse on Amlogic system having a glue on top of the IP, and a
-> custom PHY instead of the Synopsys PHY.
-> 
-> Thus it would be great this would be the case on a Synopsys SoC... but like
-> other platforms they have platform specific parameters.
-> 
-> All this has been discussed and reviewed a few years ago, I would
-> personally prefer "fishing out a bridge using dt magic" instead having
-> 1k glue code around the IP.
+On Sun, Apr 26, 2020 at 11:35:57AM -0700, Jonathan Bakker wrote:
+> Add support for following devices:
+>   - touchkeys connected over i2c-gpio
+>   - s6e63m0 panel connected over spi-gpio
+>   - fsa9480 microusb switch over i2c-gpio
+>   - wm8994 over i2c-gpio (no machine driver yet)
+>   - all common i2c-gpio devices
 
-I'm not opposed to the per-instance glue code, that seems required. I'm
-kinda questioning where it is.
-
-Current design is that the glue code is in the drm_device driver side of
-things, with the drm_bridge somewhat awkward in-between. That doesn't seem
-very clean.
-
-I think more suitable for drm_bridge would be to push all the glue behind
-the drm_bridge (maybe into separate files in a drm/bridge/dw-hdmi/
-directory), and the drm_device driver side simply grabs a drm_bridge and
-that's it. Then the drm_bridge abstraction lines up with the code
-organization again. Atm it's a bit a confusing state of things.
-
-Plan B would be to give up dw-hdmi being a drm_bridge, and rework dw-hdmi
-to be some kind of helper library to build a driver for a specific dw-hdmi
-instance. I think that would also be a clean design.
-
-But right now we kinda have a bit of both, so not really abstracted, but
-also not really a clean helper without midlayer either, and that doesn't
-look great.
--Daniel
+Please split it per functionality, e.g.:
+1. Add sound,
+2. Add panel,
+3. Add touchkeys (unless part of panel),
+4. The remaining i2c-gpio devices without bindings could go as one.
 
 > 
-> Neil
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+>  arch/arm/boot/dts/s5pv210-aries.dtsi      | 282 ++++++++++++++++++++--
+>  arch/arm/boot/dts/s5pv210-fascinate4g.dts |   6 +
+>  2 files changed, 270 insertions(+), 18 deletions(-)
 > 
-> > 
-> > I know a bit late, just spotted this because you brought your series here
-> > up in my arc cleanup series, but can you pls look into adjusting
-> > accordingly?
-> > 
-> > I shouldn't take more than moving this binding here into the dw-hdmi
-> > driver, and switching arc itself over to the of_drm_find_bridge() call.
-> > That way we could slowly work to transform old bridge drivers like dw-hdmi
-> > to the new way, instead of adding more cases that will never get
-> > converted.
-> > 
-> > Other upside is that arc stays a neat&tiny driver :-)
-> > 
-> > Thanks, Daniel
-> > 
-> >> +	if (IS_ERR(hdmi))
-> >> +		return PTR_ERR(hdmi);
-> >> +
-> >> +	platform_set_drvdata(pdev, hdmi);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int snps_dw_hdmi_remove(struct platform_device *pdev)
-> >> +{
-> >> +	struct dw_hdmi *hdmi = platform_get_drvdata(pdev);
-> >> +
-> >> +	dw_hdmi_remove(hdmi);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static struct platform_driver snps_dw_hdmi_platform_driver = {
-> >> +	.probe  = snps_dw_hdmi_probe,
-> >> +	.remove = snps_dw_hdmi_remove,
-> >> +	.driver = {
-> >> +		.name = KBUILD_MODNAME,
-> >> +		.of_match_table = snps_dw_hdmi_dt_ids,
-> >> +	},
-> >> +};
-> >> +module_platform_driver(snps_dw_hdmi_platform_driver);
-> >> +
-> >> +MODULE_LICENSE("GPL v2");
-> >> +MODULE_DESCRIPTION("ARC specific DW-HDMI driver extension");
-> >> +MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
-> >> -- 
-> >> 2.21.1
-> >>
-> > 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5pv210-aries.dtsi
+> index f83df426f2b6..ef966d13d83d 100644
+> --- a/arch/arm/boot/dts/s5pv210-aries.dtsi
+> +++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
+> @@ -12,8 +12,14 @@
+>  	compatible = "samsung,aries", "samsung,s5pv210";
+>  
+>  	aliases {
+> +		i2c4 = &i2c_sound;
+> +		i2c5 = &i2c_accel;
+>  		i2c6 = &i2c_pmic;
+> +		i2c7 = &i2c_musb;
+>  		i2c9 = &i2c_fuel;
+> +		i2c10 = &i2c_touchkey;
+> +		i2c11 = &i2c_prox;
+> +		i2c12 = &i2c_magnetometer;
+>  	};
+>  
+>  	memory@30000000 {
+> @@ -48,6 +54,18 @@
+>  		gpio = <&gpj1 1 GPIO_ACTIVE_HIGH>;
+>  	};
+>  
+> +	touchkey_vdd: regulator-fixed-1 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VTOUCH_3.3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		enable-active-high;
+> +		gpio = <&gpj3 2 GPIO_ACTIVE_HIGH>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&touchkey_vdd_ena>;
+> +	};
+> +
+>  	wifi_pwrseq: wifi-pwrseq {
+>  		compatible = "mmc-pwrseq-simple";
+>  		reset-gpios = <&gpg1 2 GPIO_ACTIVE_LOW>;
+> @@ -57,7 +75,69 @@
+>  		power-off-delay-us = <500>;
+>  	};
+>  
+> -	i2c_pmic: i2c-gpio-0 {
+> +	i2c_sound: i2c-gpio-0 {
+> +		compatible = "i2c-gpio";
+> +		sda-gpios = <&mp05 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		scl-gpios = <&mp05 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		i2c-gpio,delay-us = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sound_i2c_pins>;
+> +
+> +		wm8994: wm8994@1a {
+> +			compatible = "wlf,wm8994";
+> +			reg = <0x1a>;
+> +
+> +			#sound-dai-cells = <0>;
+> +
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +
+> +			clocks = <&clocks MOUT_CLKOUT>;
+> +			clock-names = "MCLK1";
+> +
+> +			AVDD2-supply = <&buck3_reg>;
+> +			DBVDD-supply = <&buck3_reg>;
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+No such supply, check the bindings.
+
+> +			CPVDD-supply = <&buck3_reg>;
+> +			SPKVDD1-supply = <&buck3_reg>;
+> +			SPKVDD2-supply = <&buck3_reg>;
+> +
+> +			wlf,gpio-cfg = <0xa101 0x8100 0x0100 0x0100 0x8100
+> +					0xa101 0x0100 0x8100 0x0100 0x0100
+> +					0x0100>;
+> +
+> +			wlf,ldo1ena = <&gpf3 4 GPIO_ACTIVE_HIGH>;
+> +			wlf,ldo2ena = <&gpf3 4 GPIO_ACTIVE_HIGH>;
+> +
+> +			wlf,lineout1-se;
+> +			wlf,lineout2-se;
+> +
+> +			assigned-clocks = <&clocks MOUT_CLKOUT>;
+> +			assigned-clock-rates = <0>;
+> +			assigned-clock-parents = <&xusbxti>;
+> +
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&codec_ldo>;
+> +		};
+> +	};
+> +
+> +	i2c_accel: i2c-gpio-1 {
+> +		compatible = "i2c-gpio";
+> +		sda-gpios = <&gpj3 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		scl-gpios = <&gpj3 7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		i2c-gpio,delay-us = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&accel_i2c_pins>;
+> +
+> +		/* bma023 accelerometer, no mainline binding */
+
+status disabled ... unless you need it for user-space I2C tools?
+
+> +	};
+> +
+> +	i2c_pmic: i2c-gpio-2 {
+>  		compatible = "i2c-gpio";
+>  		sda-gpios = <&gpj4 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+>  		scl-gpios = <&gpj4 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> @@ -137,8 +217,6 @@
+>  					regulator-name = "VLCD_1.8V";
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+> -					/* Till we get panel driver */
+> -					regulator-always-on;
+>  
+>  					regulator-state-mem {
+>  						regulator-off-in-suspend;
+> @@ -237,8 +315,6 @@
+>  					regulator-name = "VCC_3.0V_LCD";
+>  					regulator-min-microvolt = <3000000>;
+>  					regulator-max-microvolt = <3000000>;
+> -					/* Till we get panel driver */
+> -					regulator-always-on;
+>  
+>  					regulator-state-mem {
+>  						regulator-off-in-suspend;
+> @@ -309,7 +385,26 @@
+>  		};
+>  	};
+>  
+> -	i2c_fuel: i2c-gpio-1 {
+> +	i2c_musb: i2c-gpio-3 {
+> +		compatible = "i2c-gpio";
+> +		sda-gpios = <&gpj3 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		scl-gpios = <&gpj3 5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		i2c-gpio,delay-us = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&musb_i2c_pins>;
+> +
+> +		fsa9480: musb@25 {
+> +			compatible = "fcs,fsa9480";
+> +			reg = <0x25>;
+> +			interrupt-parent = <&gph2>;
+> +			interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
+> +		};
+> +	};
+> +
+> +	i2c_fuel: i2c-gpio-4 {
+>  		compatible = "i2c-gpio";
+>  		sda-gpios = <&mp05 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+>  		scl-gpios = <&mp05 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> @@ -328,6 +423,60 @@
+>  		};
+>  	};
+>  
+> +	i2c_touchkey: i2c-gpio-5 {
+> +		compatible = "i2c-gpio";
+> +		sda-gpios = <&gpj3 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		scl-gpios = <&gpj3 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		i2c-gpio,delay-us = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&touchkey_i2c_pins>;
+> +
+> +		touchkey@20 {
+> +			compatible = "cypress,aries-touchkey";
+> +			reg = <0x20>;
+> +			vdd-supply = <&touchkey_vdd>;
+> +			vcc-supply = <&buck3_reg>;
+> +			linux,keycodes = <KEY_MENU KEY_BACK
+> +					  KEY_HOMEPAGE KEY_SEARCH>;
+> +			interrupt-parent = <&gpj4>;
+> +			interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&touchkey_irq>;
+> +		};
+> +	};
+> +
+> +	i2c_prox: i2c-gpio-6 {
+> +		compatible = "i2c-gpio";
+> +		sda-gpios = <&gpg2 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		scl-gpios = <&gpg0 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		i2c-gpio,delay-us = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&prox_i2c_pins>;
+> +
+> +		/* Sharp gp2a prox/light sensor, incomplete mainline binding */
+
+The same - disable, unless you access it from user-space.
+
+> +	};
+> +
+> +	i2c_magnetometer: i2c-gpio-7 {
+> +		compatible = "i2c-gpio";
+> +		sda-gpios = <&gpj0 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		scl-gpios = <&gpj0 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		i2c-gpio,delay-us = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&magnetometer_i2c_pins>;
+> +
+> +		/* Yamaha yas529 magnetometer, no mainline binding */
+
+The same - disable, unless you access it from user-space.
+
+> +	};
+> +
+>  	vibrator: pwm-vibrator {
+>  		compatible = "pwm-vibrator";
+>  		pwms = <&pwm 1 44642 0>;
+> @@ -343,6 +492,39 @@
+>  		offset = <0x681c>; /* PS_HOLD_CONTROL */
+>  		value = <0x5200>;
+>  	};
+> +
+> +	spi_lcd: spi-gpio-0 {
+> +		compatible = "spi-gpio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		sck-gpios = <&mp04 1 GPIO_ACTIVE_HIGH>;
+> +		mosi-gpios = <&mp04 3 GPIO_ACTIVE_HIGH>;
+> +		cs-gpios = <&mp01 1 GPIO_ACTIVE_HIGH>;
+> +		num-chipselects = <1>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&lcd_spi_pins>;
+> +
+> +		panel@0 {
+> +			compatible = "samsung,s6e63m0";
+> +			reg = <0>;
+> +			reset-gpios = <&mp05 5 GPIO_ACTIVE_LOW>;
+> +			vdd3-supply = <&ldo7_reg>;
+> +			vci-supply = <&ldo17_reg>;
+> +			spi-cs-high;
+> +			spi-max-frequency = <1200000>;
+> +
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&panel_rst>;
+> +
+> +			port {
+> +				lcd_ep: endpoint {
+> +					remote-endpoint = <&fimd_ep>;
+> +				};
+> +			};
+> +		};
+> +	};
+>  };
+>  
+>  &fimd {
+> @@ -353,18 +535,13 @@
+>  	samsung,invert-vden;
+>  	samsung,invert-vclk;
+>  
+> -	display-timings {
+> -		timing-0 {
+> -			/* 480x800@60Hz */
+> -			clock-frequency = <25628040>;
+> -			hactive = <480>;
+> -			vactive = <800>;
+> -			hfront-porch = <16>;
+> -			hback-porch = <16>;
+> -			hsync-len = <2>;
+> -			vfront-porch = <28>;
+> -			vback-porch = <1>;
+> -			vsync-len = <2>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	port@3 {
+> +		reg = <3>;
+> +		fimd_ep: endpoint {
+> +			remote-endpoint = <&lcd_ep>;
+>  		};
+>  	};
+>  };
+> @@ -405,6 +582,19 @@
+>  		samsung,pin-val = <1>;
+>  	};
+>  
+> +	codec_ldo: codec-ldo {
+> +		samsung,pins = "gpf3-4";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +	};
+> +
+> +	prox_i2c_pins: gp2a-i2c-pins {
+> +		samsung,pins = "gpg0-2", "gpg2-2";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_F>;
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+>  	wlan_gpio_rst: wlan-gpio-rst {
+>  		samsung,pins = "gpg1-2";
+>  		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> @@ -438,6 +628,13 @@
+>  		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+>  	};
+>  
+> +	magnetometer_i2c_pins: yas529-i2c-pins {
+> +		samsung,pins = "gpj0-0", "gpj0-1";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_F>;
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+>  	ts_irq: ts-irq {
+>  		samsung,pins = "gpj0-5";
+>  		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+> @@ -445,17 +642,66 @@
+>  		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+>  	};
+>  
+> +	touchkey_i2c_pins: touchkey-i2c-pins {
+> +		samsung,pins = "gpj3-0", "gpj3-1";
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+> +	touchkey_vdd_ena: touchkey-vdd-ena {
+> +		samsung,pins = "gpj3-2";
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+> +	musb_i2c_pins: musb-i2c-pins {
+> +		samsung,pins = "gpj3-4", "gpj3-5";
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+> +	accel_i2c_pins: accel-i2c-pins {
+> +		samsung,pins = "gpj3-6", "gpj3-7";
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+>  	pmic_i2c_pins: pmic-i2c-pins {
+>  		samsung,pins = "gpj4-0", "gpj4-3";
+>  		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+>  		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+>  	};
+>  
+> +	touchkey_irq: touchkey-irq {
+> +		samsung,pins = "gpj4-1";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_UP>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+> +	lcd_spi_pins: spi-lcd-pins {
+> +		samsung,pins = "mp01-1", "mp04-1", "mp04-3";
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+>  	fg_i2c_pins: fg-i2c-pins {
+>  		samsung,pins = "mp05-0", "mp05-1";
+>  		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+>  		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+>  	};
+> +
+> +	sound_i2c_pins: sound-i2c-pins {
+> +		samsung,pins = "mp05-2", "mp05-3";
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+> +	panel_rst: panel-rst {
+> +		samsung,pins = "mp05-5";
+> +		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+>  };
+>  
+>  &pwm {
+> diff --git a/arch/arm/boot/dts/s5pv210-fascinate4g.dts b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
+> index 94dcb9b64b9a..42e6e2de197d 100644
+> --- a/arch/arm/boot/dts/s5pv210-fascinate4g.dts
+> +++ b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
+> @@ -278,3 +278,9 @@
+>  		PIN_SLP(mp07-7, INPUT, DOWN);
+>  	};
+>  };
+> +
+> +&wm8994 {
+> +	/* GPIO3 (BCLK2) and GPIO4 (LRCLK2) as outputs */
+> +	wlf,gpio-cfg = <0xa101 0x8100 0x8100 0x8100 0x8100 0xa101
+> +		0x0100 0x8100 0x0100 0x0100 0x0100>;
+
+Indent the line till opening <.
+
+Best regards,
+Krzysztof
