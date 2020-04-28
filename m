@@ -2,193 +2,286 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BC4C83004
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 21:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7D1C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 22:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1AAD20787
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 21:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85363206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 22:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgD1VjY (ORCPT
+        id S1726307AbgD1WG3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:39:24 -0400
-Received: from mail-bn8nam11olkn2066.outbound.protection.outlook.com ([40.92.20.66]:52125
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726256AbgD1VjY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:39:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fPx7g9ao5an1V3FvVMpMRbg0SI7mbUxSLYUuZKO6DBmmEKCdlIkkZOzl2WOSCs++1QdJ5EI6E14f9GkiGlQ8XIR8kBBc3wF/QpHSQ6sC1bg6ZGdE4cBQvtR481JYSNL1J25A7GSzA5OcjshtSd/2BjONqSxvwgyu7x0s2sPdP27c32vX3gPVzVSUjrnwJnfeYSE7xU79vnn/zWVYoNUTzVuLC8seon9ktI9dKPhqCbYJA3oc+GxzC6GAXdYMYQo/c/Qt9/qjuZdeaYUXFwFgk0H7uqPs1+gVnr+DdlsXGtZupk5UwqRPeUvQGzFqORfLyOpJqmJ+n93wKt107ms9KQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zt+11Ldtf3glce+SciMw/wPMLwOlV8OmZlM/x7y8ADs=;
- b=jZEBnxT0vTa0dvROqUXqsmKYQbcFKCd2vx0lBPxIcyQpbpnaF/ris1AHlFh4nrv1XaYjpFDk1Q3AsppTmCn0kTD/FycEeXH/AZARmKdHiBPjxl4PbH8soDcmAzioazND+g7W8CBEU7Rs4C1G34XpzzPKiyTRZM4Qu3Q/WcHW++0HPaRSlszKFXQ3KLDn5vi1VHkInkm8NvQWLPvOM2j3gBcJkQ6WuYgoMI6HmovurXEAA+m6miVdN2u3yysL9/wax981495950VUN9tLEDr62ajTEQes65dqcn8cuPqRmWuYOwPWbjN7DC4HPXMdeuMA0tx5tzPz45HmcmqYhGrouQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:fc4d::46) by
- DM6NAM11HT249.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4d::212)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Tue, 28 Apr
- 2020 21:39:20 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc4d::4e) by DM6NAM11FT033.mail.protection.outlook.com
- (2a01:111:e400:fc4d::221) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
- Transport; Tue, 28 Apr 2020 21:39:20 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:28F5F02185C5E04051ED80926CB782C29EE4DB171420ABC2B053968DABB39086;UpperCasedChecksum:279D0200178AC5B999032F9459168FADA96122720AA5FE5D30D8AA4363ACA612;SizeAsReceived:10027;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
- 21:39:20 +0000
-Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        Tue, 28 Apr 2020 18:06:29 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:42994 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726256AbgD1WG3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:06:29 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 96AD3634C8F;
+        Wed, 29 Apr 2020 01:05:29 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jTYM5-00028u-1o; Wed, 29 Apr 2020 01:05:29 +0300
+Date:   Wed, 29 Apr 2020 01:05:29 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-References: <cover.1587760454.git.hns@goldelico.com>
- <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
- <NYBE9Q.YH08US7A7DC3@crapouillou.net>
- <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200427154617.GA1798@pi3>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB06605F014024061C894AFBA4A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Tue, 28 Apr 2020 14:39:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200427154617.GA1798@pi3>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MWHPR20CA0038.namprd20.prod.outlook.com
- (2603:10b6:300:ed::24) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <7bf2cb45-d9a1-7c3f-9efc-8dd0e8d7939a@live.ca>
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v8 v5 1/3] media: dt-bindings: ov8856: Document YAML
+ bindings
+Message-ID: <20200428220528.GX934@valkosipuli.retiisi.org.uk>
+References: <20200428180718.1609826-1-robert.foss@linaro.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb67:7300:9f89:4b96:de0b:cd14] (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by MWHPR20CA0038.namprd20.prod.outlook.com (2603:10b6:300:ed::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Tue, 28 Apr 2020 21:39:17 +0000
-X-Microsoft-Original-Message-ID: <7bf2cb45-d9a1-7c3f-9efc-8dd0e8d7939a@live.ca>
-X-TMN:  [XQ4bYy16QTd757uucX8/ZshxJB4VRIHnZHfMejwEPlAMFVFR72l3yAYYxtSchIi7]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: dabcd893-72f5-4de7-f4ef-08d7ebbc9be1
-X-MS-TrafficTypeDiagnostic: DM6NAM11HT249:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8kNBP7qn0kIsRMXv3mgH2CWAkzQVGL1asywzAwJmrIt7xgR7xunct+WroNd3uT34UTfSFySXiN3LP6DWyfoDC//QlNMs+Iy0J9E+/xPlgCm+LWm/jx9nW+OrxPJdXPzPrb+Rp7jQF+0BAAM97mCzrodYt2VrLKYOqCKZZpg0hMvimvN1JGdV+ZnIm7g5DSLMN2KRU5ZSw9+KaBNIpnLu3w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: 5X16aCAa4cWHX0E0zbWBl0Xt+Xq1kyp0gZPcIQV3xtpSF5JqYgEfymJM1Bg2C4Az+tQYt1BT38WYBan9AeZQ+iWh0rfSPGeb10MipmTV14n5HIDqvPJQd7TUNR656DNWP0syTJ2elTIRCXFbG2oVkjaAW83Gp1jZE17IghT1uEVsCAA0jejdW3AyHJnHpM4/MMVG7O56z+1/bz/yHIJlWg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dabcd893-72f5-4de7-f4ef-08d7ebbc9be1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 21:39:20.3378
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM11HT249
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428180718.1609826-1-robert.foss@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hi Robert,
 
-On 2020-04-27 8:46 a.m., Krzysztof Kozlowski wrote:
-> On Sun, Apr 26, 2020 at 07:57:12AM -0700, Jonathan Bakker wrote:
->> Hi Paul,
->>
->> On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
->>>
->>>
->>> Le ven. 24 avril 2020 à 22:34, H. Nikolaus Schaller <hns@goldelico.com> a écrit :
->>>> From: Jonathan Bakker <xc-racer2@live.ca>
->>>>
->>>> All s5pv210 devices have a PowerVR SGX 540 (revision 120) attached.
->>>>
->>>> There is no external regulator for it so it can be enabled by default.
->>>>
->>>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>> ---
->>>>  arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
->>>>  1 file changed, 13 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
->>>> index 2ad642f51fd9..abbdda205c1b 100644
->>>> --- a/arch/arm/boot/dts/s5pv210.dtsi
->>>> +++ b/arch/arm/boot/dts/s5pv210.dtsi
->>>> @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
->>>>              #interrupt-cells = <1>;
->>>>          };
->>>>
->>>> +        gpu: gpu@f3000000 {
->>>> +            compatible = "samsung,s5pv210-sgx540-120";
+Thanks for the update. Some small matters below.
+
+On Tue, Apr 28, 2020 at 08:07:16PM +0200, Robert Foss wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 > 
-> This should not pass the bindings check because you missed last
-> compatibles.
+> This patch adds documentation of device tree in YAML schema for the
+> OV8856 CMOS image sensor.
 > 
-
-Thanks for pointing that out, I'll add it and make sure it passes the bindings check.
-
->>>> +            reg = <0xf3000000 0x10000>;
->>>> +            interrupt-parent = <&vic2>;
->>>> +            interrupts = <10>;
->>>> +            clock-names = "core";
->>>> +            clocks = <&clocks CLK_G3D>;
->>>> +
->>>> +            assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
->>>> +            assigned-clock-rates = <0>, <66700000>;
->>>> +            assigned-clock-parents = <&clocks MOUT_MPLL>;
->>>
->>> What are these clocks for, and why are they reparented / reclocked?
->>>
->>> Shouldn't they be passed to 'clocks' as well?
->>>
->>> -Paul
->>>
->>
->> The G3D clock system can have multiple parents, and for stable operation
->> it's recommended to use the MPLL clock as the parent (which in turn
->> is actually a mux as well).  MOUT_G3D is simply the mux for CLK_G3D
->> (SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could equally be CLK_G3D
->> (and probably should be, for readability) as CLK_G3D is simply the gate and
->> DOUT_G3D is the divider for it.
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
 > 
-> Good point, it should be CLK_G3D instead of DOUT.  Can you fix this as
-> well?
-
-Yep, will do.  Nikolaus, I'll send you an updated patch to include.
-
+> - Changes since v7:
+>   * Marco: Make 'port' property optional
+>   * Maxime & Sakari: Add 'link-frequencies' property to dt binding
+>   * robher: Improve description for 'port' property
 > 
-> Best regards,
-> Krzysztof
+> - Changes since v6:
+>   * Marco: remove qcom specifics from DT example
+>    
+> - Changes since v5:
+>   * Add assigned-clocks and assigned-clock-rates
+>   * robher: dt-schema errors
 > 
+> - Changes since v4:
+>   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+>   * Add clock-lanes property to example
+>   * robher: Fix syntax error in devicetree example
+> 
+> - Changes since v3:
+>   * robher: Fix syntax error
+>   * robher: Removed maxItems
+>   * Fixes yaml 'make dt-binding-check' errors
+> 
+> - Changes since v2:
+>   Fixes comments from from Andy, Tomasz, Sakari, Rob.
+>   * Convert text documentation to YAML schema.
+> 
+> - Changes since v1:
+>   Fixes comments from Sakari, Tomasz
+>   * Add clock-frequency and link-frequencies in DT
+> 
+>  .../devicetree/bindings/media/i2c/ov8856.yaml | 140 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 141 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> new file mode 100644
+> index 000000000000..f78d3eae81cb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> @@ -0,0 +1,140 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright (c) 2019 MediaTek Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
+> +
+> +maintainers:
+> +  - Ben Kao <ben.kao@intel.com>
+> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
 
-Thanks,
-Jonathan
+I guess Dongchun would be the maintainer for these bindings, not Ben.
+Please also cc Ben in the next version.
+
+> +
+> +description: |-
+> +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
+> +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
+> +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
+> +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
+> +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
+> +  serial data output (up to 4-lane).
+> +
+> +properties:
+> +  compatible:
+> +    const: ovti,ov8856
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description:
+> +      Input clock for the sensor.
+> +    items:
+> +      - const: xvclk
+> +
+> +  clock-frequency:
+> +    description:
+> +      Frequency of the xvclk clock in Hertz.
+> +
+> +  dovdd-supply:
+> +    description:
+> +      Definition of the regulator used as interface power supply.
+> +
+> +  avdd-supply:
+> +    description:
+> +      Definition of the regulator used as analog power supply.
+> +
+> +  dvdd-supply:
+> +    description:
+> +      Definition of the regulator used as digital power supply.
+> +
+> +  reset-gpios:
+> +    description:
+> +      The phandle and specifier for the GPIO that controls sensor reset.
+> +      This corresponds to the hardware pin XSHUTDOWN which is physically
+> +      active low.
+> +
+> +  port:
+> +    type: object
+> +    additionalProperties: false
+> +    description:
+> +      A node containing an output port node with an endpoint definition
+> +      as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +
+> +        properties:
+> +          clock-lanes:
+
+Does the sensor support lane reordering? If not, please omit this.
+
+> +            maxItems: 1
+> +
+> +          data-lanes:
+> +            maxItems: 1
+
+Hmm. The example has four lanes. Do I miss something?
+
+> +
+> +          link-frequencies:
+> +            maxItems: 1
+
+The number of items in link-frequencies should not be limited to one
+either.
+
+> +
+> +          remote-endpoint: true
+> +
+> +        required:
+> +          - clock-lanes
+> +          - data-lanes
+> +          - remote-endpoint
+> +          - link-frequencies
+> +
+> +    required:
+> +      - endpoint
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - clock-frequency
+> +  - dovdd-supply
+> +  - avdd-supply
+> +  - dvdd-supply
+> +  - reset-gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ov8856: camera@10 {
+> +            compatible = "ovti,ov8856";
+> +            reg = <0x10>;
+> +
+> +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&clk_24m_cam>;
+> +
+> +            clocks = <&cam_osc>;
+> +            clock-names = "xvclk";
+> +            clock-frequency = <19200000>;
+> +
+> +            avdd-supply = <&mt6358_vcama2_reg>;
+> +            dvdd-supply = <&mt6358_vcamd_reg>;
+> +            dovdd-supply = <&mt6358_vcamio_reg>;
+> +
+> +            port {
+> +                wcam_out: endpoint {
+> +                    remote-endpoint = <&mipi_in_wcam>;
+> +                    clock-lanes = <0>;
+> +                    data-lanes = <1 2 3 4>;
+> +                    link-frequencies = /bits/ 64 <360000000 180000000>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +...
+> \ No newline at end of file
+
+^
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 26f281d9f32a..84b262afd13d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12489,6 +12489,7 @@ L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://linuxtv.org/media_tree.git
+>  F:	drivers/media/i2c/ov8856.c
+> +F:	Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+>  
+>  OMNIVISION OV9640 SENSOR DRIVER
+>  M:	Petr Cvek <petrcvekcz@gmail.com>
+
+-- 
+Kind regards,
+
+Sakari Ailus
