@@ -2,142 +2,163 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B8BC83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B936C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A122A2063A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1298B20B80
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:49:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="o/zLeawy";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="plxc6RQU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V2Zm63dU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgD1Qp3 (ORCPT
+        id S1728291AbgD1QtY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:45:29 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:46579 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728022AbgD1Qp2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:45:28 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id A942B5C00ED;
-        Tue, 28 Apr 2020 12:45:27 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 28 Apr 2020 12:45:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=S+DukyifHC2vsrH7Z+Bw4PDmgSK
-        o2q4QVE9pfyHeloc=; b=o/zLeawy0XQRg1eQ7+597/fdWE/olg18atu9Wo9OpAV
-        qzO2RXEsn8o6ljpJCmcHtU3aSPv8TGrdRsl3C/di7b6qEVeuxn++mSeRZJUIp8Q0
-        VuIaPoYH/IqD7GHhKdZWddRa4sVZR4nlrzdkOlVmTxn0n264NaAyWmqKlWUEKxCn
-        yh/sgs4yR53G17xdi+bSLGHGBtSeqL1knY4u70hTGH1JP4nL6yv6GM2qogkN1O8c
-        J3245jYrz9gp0GTvqjJkuTDsSgCXECue0dmOsZKFgPbXAMKTFbDlP2Tcpm76UWZj
-        gxaONyZPXsd6+I5GDkWhO84dpc9daW0yT8vfxKAVilA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=S+Duky
-        ifHC2vsrH7Z+Bw4PDmgSKo2q4QVE9pfyHeloc=; b=plxc6RQUfAVXjjOqju4TEk
-        p87bIvcNyBu/Oy2aIbCzsLzgKQbl1Joq1ZXevIR3YiEbg51CvULI62q8NcFHbpK9
-        jaMKj9+Jjmd4LGLLje5rNhbeTT/xEfGyW9CG/wa/V7N4YSRgqEFn8OGkJmypQ9N6
-        0aeYbI5LaGFw8Efc/psgzzWILoJ77Gt/ITRR7VBh/m2AC4FfcSRMjWwW70Qgry8n
-        9rQZhr8htYwKizqSiDtXu66fCRB9F+yGtpVqEhEcEZC0bPCZEcj2iCMb0QEG1PpI
-        trihGpHK0Ozvl7BDXAdP1Gm0lHDbM3k12EoCOtWaaVK3Qmmd8TBTj+vQ+rJB0C3Q
-        ==
-X-ME-Sender: <xms:pF2oXpnWDItsLSB1PqG7oa1lq9AlwFoCa-vwz5IQl3xjBQNi-BJvJA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugddutdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:pF2oXidgBl28_W9q_r39J5Gz9hOsjAmhKRbR8RsLmONfdxOOMUALdA>
-    <xmx:pF2oXlPAhCNv08hbAdBrrxQieLsf0xwGIamgkJrrSdDdK8Wr0MNu6w>
-    <xmx:pF2oXtOIsWGSMIntahD8XJCDI99GsCuImlHHCdMry537_ogbB-v5HA>
-    <xmx:p12oXmy8Q_Vesgwl9mt6FFYzJ-tX4A6A5Ifj1l4w4eR3eW18vRMs1Q>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 125803280059;
-        Tue, 28 Apr 2020 12:45:23 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 18:45:22 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 28 Apr 2020 12:49:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728106AbgD1QtY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 12:49:24 -0400
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B128C03C1AB;
+        Tue, 28 Apr 2020 09:49:22 -0700 (PDT)
+Received: by mail-io1-xd31.google.com with SMTP id y26so13849289ioj.2;
+        Tue, 28 Apr 2020 09:49:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JS/Zae/slzX90tyUKT8r1SH4RG9V4TT4VPt705M4mKg=;
+        b=V2Zm63dUiV3TTv4NusICrNtW9C+4hSQl0AvbqXXwN9RUmiI2qh/MP3EwePMMaD6a3H
+         kFLvQEXGLfR1WPfk4I0a9Y2RxpET6/nFUP4Ft4xTMJcAII5++HFxk1cCU3ABcP0WGCBv
+         nndZMG95rXNmP//mN3kFoluvP77qYaq7X9cyIGn8PEzpTldV/jmN3iYRV7+m55+o0q8V
+         q07b1GUUU5enXKzG3nfwrzvw+qOQ73O7dRelONAy1hj+91aCmG8VWR4zYfgXV/fjDWx6
+         sMJi9jhhaPpWcMWsBcS3Gue2AI67aQf4styimAP23+ASIOpa5fzTd70raNY04b0R9qT2
+         ibjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JS/Zae/slzX90tyUKT8r1SH4RG9V4TT4VPt705M4mKg=;
+        b=YMffzJqyuS5od+Xk/+ug7MT+d/vZS9Qn1tgu6R4V3EziTyySu0AsPu/nQpXleo6T0d
+         jZdvC5tVDwya41rTKASyZGrdiqfkVgLpePpM5YbUn+iSgriDGy2Z/8Dj2DtnjEdNv7AA
+         D/CR47iK5JvL0etdUGguYICB9M5uwom3aHoZ6v5xH9UM5Hu4KvfvoaQ6fM83c5EOj3iZ
+         9edEcq5t3rDjTUAyThGfhAd1gTc7GXthY7KMa5pm46yY3NNTGy3X+P6kqr8XflKVRNeN
+         iK0nAI1WJ+nk0f40BPPDIDRbhbG1xMB1+ZupWvsEMJYiPTi9KYScYbVBRIs1UO3BAoWG
+         MXpg==
+X-Gm-Message-State: AGi0Pua8zeMu+4fxq2xt6s3GDsR6ttwzCON1P42OQf/UUD+niZNPtXdJ
+        Sk4DHQs2Oh0vc9VEV6lc+20l/kUkz3pzUC7ZOFM=
+X-Google-Smtp-Source: APiQypKVVDj4+SrA1Wh3npapyS8is6Ny7tWN7gGRKKd2wbPbADnpfEAZaApyWXCE8Ach3PRxG824Bn1lotSb4OuXfiE=
+X-Received: by 2002:a5d:9494:: with SMTP id v20mr26961821ioj.101.1588092561434;
+ Tue, 28 Apr 2020 09:49:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200426120442.11560-1-peron.clem@gmail.com> <20200426120442.11560-5-peron.clem@gmail.com>
+ <20200428080020.35qcuylwq2ylmubu@gilmour.lan> <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
+ <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
+In-Reply-To: <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Tue, 28 Apr 2020 18:49:10 +0200
+Message-ID: <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
+Subject: Audio sound card name [was [PATCH 4/7] arm64: dts: allwinner: a64:
+ Add HDMI audio]
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
         devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v2] arm64: dts: allwinner: h6: Use
- dummy regulator for Tanix TX6
-Message-ID: <20200428164522.p7ypca7zwocc7alq@gilmour.lan>
-References: <20200428142629.8950-1-peron.clem@gmail.com>
- <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
- <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cbn7zzdgl2fsor3b"
-Content-Disposition: inline
-In-Reply-To: <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
+        Marcus Cooper <codekipper@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Mark, Rob,
 
---cbn7zzdgl2fsor3b
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Apr 28, 2020 at 06:23:35PM +0200, Cl=E9ment P=E9ron wrote:
-> Hi Robin,
->=20
-> On Tue, 28 Apr 2020 at 17:21, Robin Murphy <robin.murphy@arm.com> wrote:
+On Tue, 28 Apr 2020 at 18:04, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> On Tue, Apr 28, 2020 at 10:54:00AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi Maxime,
 > >
-> > On 2020-04-28 3:26 pm, Cl=E9ment P=E9ron wrote:
-> > > Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-> > > voltage to meet OPP table, the DVFS is not working as expected.
+> > On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wrote:
+> > >
+> > > On Sun, Apr 26, 2020 at 02:04:39PM +0200, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > From: Marcus Cooper <codekipper@gmail.com>
+> > > >
+> > > > Add a simple-soundcard to link audio between HDMI and I2S.
+> > > >
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > ---
+> > > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++=
+++++
+> > > >  1 file changed, 21 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/a=
+rm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > index e56e1e3d4b73..08ab6b5e72a5 100644
+> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > @@ -102,6 +102,25 @@
+> > > >               status =3D "disabled";
+> > > >       };
+> > > >
+> > > > +     hdmi_sound: hdmi-sound {
+> > > > +             compatible =3D "simple-audio-card";
+> > > > +             simple-audio-card,format =3D "i2s";
+> > > > +             simple-audio-card,name =3D "allwinner,hdmi";
+> > >
+> > > I'm not sure what the usual card name should be like though. I would =
+assume that
+> > > this should be something specific enough so that you're able to diffe=
+rentiate
+> > > between boards / SoC so that the userspace can choose a different con=
+figuration
+> > > based on it?
 > >
-> > Hmm, isn't that really a bug in the DVFS code? I guess it's just blindly
-> > propagating -EINVAL from the fixed regulators not implementing
-> > set_voltage, but AFAICS it has no real excuse not to be cleverer and
-> > still allow switching frequency as long as the voltage *is* high enough
-> > for the given OPP. I wonder how well it works if the regulator is
-> > programmable but shared with other consumers... that case probably can't
-> > be hacked around in DT.
->=20
-> Like you, I thought that the DVFS was clever enough to understand this
-> but guess not..
->=20
-> Maybe they are some cases where you don't want to leave the voltage high =
-and
-> reduce the frequency. But I don't know such case.
+> > I really don't know what we should use here,
+> > I just have a look at other SoC:
+> > rk3328: "HDMI"
+> > rk3399: "hdmi-sound"
+> > r8a774c0-cat874: "CAT874 HDMI sound"
+> >
+> > But maybe it's time to introduce proper name:
+> > What about :
+> > pat
+> > sun50i-h6-hdmi
+>
+> It's pretty much what we've been using for the other sound cards we have,=
+ so it
+> makes sense to me.
 
-I assume the intent was to prevent a regulator driver to overshoot and end =
-up
-over-volting the CPU which would be pretty bad.
+I have a question regarding the simple-audio-card,name.
+In this patch, I would like to introduce a simple-audio-card for the
+Allwinner A64 HDMI.
 
-I guess we could check that the voltage is in the range opp < actual voltag=
-e <
-max opp voltage ?
+What should be the preferred name for this sound card?
+"sun50i-a64-hdmi" ? "allwinner, sun50i-a64-hdmi" ?
 
-Maxime
+Thanks for your tips,
+Clement
 
---cbn7zzdgl2fsor3b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqhdogAKCRDj7w1vZxhR
-xf6IAP9w+DY1O6bT4B3lg/+eirUFYM1skafnWKyx1f2y49KdYQEA2gJSF//W+64e
-k+em/HwQHNH7fcP/zuv+U6G30n1Ocgs=
-=CEt2
------END PGP SIGNATURE-----
-
---cbn7zzdgl2fsor3b--
+>
+> > How should we handle this with h3 / h5 ?
+> > settings the simple-audio-card,name in each SoC dts?
+> > Or using sun50i-h3-hdmi as they are both identical?
+>
+> Yeah, we can do the latter
+>
+> Maxime
