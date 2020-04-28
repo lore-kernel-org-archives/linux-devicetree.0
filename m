@@ -2,167 +2,116 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B359C83008
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBC9C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF40206D8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588086580;
-	bh=L7RkvkjJajMkB/owDJd0eFmjozHvHc279EqLHLKIFXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HjubCQgWJKQneAS4OF7VbBfEoJnjXazJ6HfW7VDQldUYtTohE/po/0uMARsWWwT+d
-	 SuHdqhM5ShzGSXvJzeisdf9r6r0mddl4AEyAaFN2fbYMHzz2pm6OJ8HzJh+YpLkoQY
-	 mhs7zkRyzRKCCLjI2O7lwMf61xbMhF8q5WVdI7FM=
+	by mail.kernel.org (Postfix) with ESMTP id 47A1E2186A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgD1PJf (ORCPT
+        id S1728138AbgD1PVh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:09:35 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45056 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgD1PJe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 11:09:34 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e20so33149856otk.12;
-        Tue, 28 Apr 2020 08:09:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FEtkU4hcjYXFmjYfyqu325vicHnMHo34pYaXMraZzDM=;
-        b=MSzdK9eL6RarXRAXGxpFZCxKaYoEwEkQw0jcqso6SM5bBB+YGFogDT+2oxUgEXek3S
-         /zPjHYEAN3GVlFCwPo6/3hIK4sdzavpU28MFG4EUCHcTr1SWy/lyD6arlLr2JG5keluT
-         +SHtDS8tJLMaAOkqAyifftsDu9ucmbNguhdT1iAOq6+PC7IXMifg3B24sGMmy9QB6h/7
-         ZKqHX3Es+szWNwupVdi4MnQUvpQ68X+x+bC7MsPvj9dv9uwA1zg/JUjMXsK7beP+LqTP
-         rFSzeykw1NlbBWo+JzqZy3VupXEvpFslUC/B+QsDCiD9aOMX4n9+E6jNMfBdRrZypKfS
-         pRxA==
-X-Gm-Message-State: AGi0PuauVY2Kj6f7HHZEnjT3bqK+Bio0YZ1ZJqvKV/usmMtNjqTcUnA/
-        8O1AgfgNKZ2W7LS5RDz5BA==
-X-Google-Smtp-Source: APiQypKmYM+VdqehUo6MhirkRmkVcweA2beGuUjgMoVitv5BtZ9cDwt/Cg8BC2ldu07VXvCN5xX9Iw==
-X-Received: by 2002:a05:6830:141:: with SMTP id j1mr8997476otp.294.1588086572206;
-        Tue, 28 Apr 2020 08:09:32 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u9sm4102772ote.47.2020.04.28.08.09.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 08:09:31 -0700 (PDT)
-Received: (nullmailer pid 31119 invoked by uid 1000);
-        Tue, 28 Apr 2020 15:09:30 -0000
-Date:   Tue, 28 Apr 2020 10:09:30 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v3 2/3] dt-bindings: add Qualcomm IPQ4019 MDIO bindings
-Message-ID: <20200428150930.GA25643@bogus>
-References: <20200415150244.2737206-1-robert.marko@sartura.hr>
- <20200415150244.2737206-2-robert.marko@sartura.hr>
+        Tue, 28 Apr 2020 11:21:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:54022 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728788AbgD1PVd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:21:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B23530E;
+        Tue, 28 Apr 2020 08:21:32 -0700 (PDT)
+Received: from [10.57.33.170] (unknown [10.57.33.170])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E72243F305;
+        Tue, 28 Apr 2020 08:21:30 -0700 (PDT)
+Subject: Re: [PATCH v2] arm64: dts: allwinner: h6: Use dummy regulator for
+ Tanix TX6
+To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Piotr Oniszczuk <warpme@o2.pl>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200428142629.8950-1-peron.clem@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
+Date:   Tue, 28 Apr 2020 16:21:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415150244.2737206-2-robert.marko@sartura.hr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200428142629.8950-1-peron.clem@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 05:02:46PM +0200, Robert Marko wrote:
-> This patch adds the binding document for the IPQ40xx MDIO driver.
+On 2020-04-28 3:26 pm, Clément Péron wrote:
+> Tanix TX6 has a fixed regulator. As DVFS is instructed to change
+> voltage to meet OPP table, the DVFS is not working as expected.
+
+Hmm, isn't that really a bug in the DVFS code? I guess it's just blindly 
+propagating -EINVAL from the fixed regulators not implementing 
+set_voltage, but AFAICS it has no real excuse not to be cleverer and 
+still allow switching frequency as long as the voltage *is* high enough 
+for the given OPP. I wonder how well it works if the regulator is 
+programmable but shared with other consumers... that case probably can't 
+be hacked around in DT.
+
+Robin.
+
+> Avoid to introduce a new dedicated OPP Table where voltage are
+> equals to the fixed regulator as it will only duplicate all the OPPs.
+> Instead remove the fixed regulator so the DVFS framework will create
+> dummy regulator and will have the same behavior.
 > 
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> Cc: Luka Perkov <luka.perkov@sartura.hr>
+> Add some comments to explain this in the device-tree.
+> 
+> Reported-by: Piotr Oniszczuk <warpme@o2.pl>
+> Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6")
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
 > ---
-> Changes from v2 to v3:
-> * Remove status from example
+>   .../boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 18 ++++++++++++++++--
+>   1 file changed, 16 insertions(+), 2 deletions(-)
 > 
->  .../bindings/net/qcom,ipq40xx-mdio.yaml       | 61 +++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-> new file mode 100644
-> index 000000000000..8d4542ccd38c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings please:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/qcom,ipq40xx-mdio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> index be81330db14f..3e96fcb317ea 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> @@ -48,7 +48,15 @@
+>   };
+>   
+>   &cpu0 {
+> -	cpu-supply = <&reg_vdd_cpu_gpu>;
+> +	/*
+> +	 * Don't specify the CPU regulator, as it's a fixed
+> +	 * regulator DVFS will not work as it is intructed
+> +	 * to reach a voltage which can't be reached.
+> +	 * Not specifying a regulator will create a dummy
+> +	 * regulator allowing all OPPs.
+> +	 *
+> +	 * cpu-supply = <&reg_vdd_cpu_gpu>;
+> +	 */
+>   };
+>   
+>   &de {
+> @@ -68,7 +76,13 @@
+>   };
+>   
+>   &gpu {
+> -	mali-supply = <&reg_vdd_cpu_gpu>;
+> +	/*
+> +	 * Don't specify the GPU regulator, see comment
+> +	 * above for the CPU supply.
+> +	 *
+> +	 * mali-supply = <&reg_vdd_cpu_gpu>;
+> +	 */
 > +
-> +title: Qualcomm IPQ40xx MDIO Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Robert Marko <robert.marko@sartura.hr>
-> +
-> +allOf:
-> +  - $ref: "mdio.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ipq40xx-mdio
-
-Don't use wildcards in compatible names. Should be SoC specific. If 'all 
-the same', then use a fallback to the 1st implementation.
-
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    mdio@90000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      compatible = "qcom,ipq40xx-mdio";
-> +      reg = <0x90000 0x64>;
-> +
-> +      ethphy0: ethernet-phy@0 {
-> +        reg = <0>;
-> +      };
-> +
-> +      ethphy1: ethernet-phy@1 {
-> +        reg = <1>;
-> +      };
-> +
-> +      ethphy2: ethernet-phy@2 {
-> +        reg = <2>;
-> +      };
-> +
-> +      ethphy3: ethernet-phy@3 {
-> +        reg = <3>;
-> +      };
-> +
-> +      ethphy4: ethernet-phy@4 {
-> +        reg = <4>;
-> +      };
-> +    };
-> -- 
-> 2.26.0
+>   	status = "okay";
+>   };
+>   
 > 
