@@ -2,128 +2,119 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01501C83001
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CADC83008
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5DF6206C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B616A20746
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:39:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwnL/1+A"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="toML35UX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgD1Ogm (ORCPT
+        id S1727881AbgD1Ojt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:36:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35222 "EHLO
+        Tue, 28 Apr 2020 10:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727845AbgD1Ogm (ORCPT
+        by vger.kernel.org with ESMTP id S1726868AbgD1Ojs (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:36:42 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097B0C03C1AB;
-        Tue, 28 Apr 2020 07:36:42 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id k6so23087033iob.3;
-        Tue, 28 Apr 2020 07:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VPA9Kxr39ERnqwIoc2UJSAp5IoBA3dbxr68iA+juyP0=;
-        b=FwnL/1+AgacLVrzfCLrLz36o10+EmBtDT+Vx71m9oQ+I8Ep9EruaY8kVJkEYTxwWXr
-         9mOoV34Me4r25FtQL4YIVI1WVIVyNTGJK3zSm5wkSCPHE+jnDdwe8NCx9Zz/Iyqozj4x
-         Ru/LBFO5YLFEmUqcxt3LPB/c+vkH0Gq2GNhQFwD/3Om8Pufxq/LBJGmYKrJI2cgyygFA
-         /KDRbpoVEG3SaE2JJ1Sl/nF5C1H4Disv6rZrIdh6EUgw/R53UwhrWWCzxwA8WJVh/hUy
-         JPoJ0VP1t3RZs7VoNBMzXnRTP2nnt1Cw16eNbJ98uAjMlPANVBDzEt5854f2gIwdTT4i
-         c67w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VPA9Kxr39ERnqwIoc2UJSAp5IoBA3dbxr68iA+juyP0=;
-        b=WzRe62VY2fVIL1IhtQvYz6EQVb3prMW0c60WnxpoAr3WvziSBEuwjQ2FNqueVGxnuV
-         9snfiGGQOmbJhZbEj6Z3eGX3emZEeobvt/DzYtFfUjOdQ9XWvycrBqj0gsg8RSbfoTyS
-         SVj3H8ACgpJbuGT5fy2+4cK+XlzwO2X1liBaJ0rB9XIY11Z/786ED+U5p5rjZ0IkQwpw
-         FdIVjgfaoIoj0VWTI93bP1WTak3UOiU6TpAHZ6zvFW81Bj/SK8sNwAh6JIRlz5XC37/p
-         2HiNWe+zX8v7pIXO8Ug1X9KLSfvnZ+qN48wU640iPmC7o3jy+7gM0cK6PUtMi79yPeEt
-         KoyA==
-X-Gm-Message-State: AGi0PuZ/Fjg8nvaHNkZkwoDV1MilUEwbst40VP+a1gEvZvQtiS55RL2J
-        G+rh5viAMLZ+DuRTqSBly5BRLEFibuDVpNulMY8=
-X-Google-Smtp-Source: APiQypJWKcOZwolIsn7a73yc4aMqWx+mk2KAdEK/HRRLB/AFX92WYN4FJ4pKWxX8TsolxV933sbSRmnXvsBuyeUoSoo=
-X-Received: by 2002:a5d:84d4:: with SMTP id z20mr15044943ior.36.1588084601133;
- Tue, 28 Apr 2020 07:36:41 -0700 (PDT)
+        Tue, 28 Apr 2020 10:39:48 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92726C03C1AB;
+        Tue, 28 Apr 2020 07:39:48 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id DD1D322FE6;
+        Tue, 28 Apr 2020 16:39:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588084785;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VljnFWRje4D0ru9e1R32t4AeXBUBPd+3TTh0NdwxNg0=;
+        b=toML35UXiuO/pHVOeK9HR/DC0PB0wxQEVGlm7qwqQIB7OAAjl0JywWe+p3OUN++VwB0caY
+        iHa060chUra4KIS7CwEXRsTp17tZkdr1ZKXj1F6sKZ2TR8DcvHK/1RPnJ8Yc/6mdVhb3nO
+        nm0qRY5Ks5FPSrPFg82RuwiH4jv90tI=
 MIME-Version: 1.0
-References: <20200426104115.22630-1-peron.clem@gmail.com> <20200426104115.22630-8-peron.clem@gmail.com>
- <20200428081444.vddwswsorl5tf7yp@gilmour.lan>
-In-Reply-To: <20200428081444.vddwswsorl5tf7yp@gilmour.lan>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 28 Apr 2020 16:36:30 +0200
-Message-ID: <CAJiuCcf6xzB+HhV4GSOuawi3FJDeA4dvHXkKMV36+UF8gLLj7w@mail.gmail.com>
-Subject: Re: [PATCH v3 7/7] arm64: dts: sun50i-h6: Add HDMI audio to H6 DTSI
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Marcus Cooper <codekipper@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Apr 2020 16:39:44 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 04/16] dt-bindings: mfd: Add bindings for sl28cpld
+In-Reply-To: <20200428124825.GT185537@smile.fi.intel.com>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-5-michael@walle.cc>
+ <20200428124825.GT185537@smile.fi.intel.com>
+Message-ID: <8cc4a2bd3fcaf836d7f393ce2425c872@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: DD1D322FE6
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[24];
+         NEURAL_HAM(-0.00)[-0.787];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
+Am 2020-04-28 14:48, schrieb Andy Shevchenko:
+> On Thu, Apr 23, 2020 at 07:45:31PM +0200, Michael Walle wrote:
+>> This adds device tree bindings for the board management controller 
+>> found
+>> on the Kontron SMARC-sAL28 board.
+> 
+> I think it should be independent patches (same way as you do for 
+> drivers).
 
-On Tue, 28 Apr 2020 at 10:14, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Sun, Apr 26, 2020 at 12:41:15PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > Add a simple-soundcard to link audio between HDMI and I2S.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 31 ++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun50i-h6.dtsi
-> > index a5ee68388bd3..558fe63739cb 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -88,6 +88,24 @@
-> >                       (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> >       };
-> >
-> > +     sound_hdmi: sound {
-> > +             compatible =3D "simple-audio-card";
-> > +             simple-audio-card,format =3D "i2s";
-> > +             simple-audio-card,name =3D "allwinner-hdmi";
->
-> It doesn't seem to be on purpose, but the name is different from the othe=
-r
-> series you sent.
+It used to be several patches but Rob suggested to put it into one:
+https://lore.kernel.org/linux-devicetree/20200330223535.GA31402@bogus/
 
-Indeed, I have sent this serie before looking at the other.
+-michael
 
-I will change this to keep coherency, once we agree on the correct card nam=
-e.
-
-Thanks for the review,
-Clement
-
->
-> Maxime
+> 
+>>  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  51 ++++++
+>>  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 +++
+>>  .../bindings/mfd/kontron,sl28cpld.yaml        | 162 
+>> ++++++++++++++++++
+>>  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+>>  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
