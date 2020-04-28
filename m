@@ -2,122 +2,218 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B23C83008
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E50C83009
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976DB20656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6476820656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="LeCX3Zjl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kq3im6G2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgD1QbI (ORCPT
+        id S1728217AbgD1Qcu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:31:08 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:65036 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727920AbgD1QbH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:31:07 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SGSBjo006731;
-        Tue, 28 Apr 2020 18:30:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=ic7llUtkSK0ilmom6xcazPRbfZzypbw4vTA5QnUR8n0=;
- b=LeCX3ZjlnxfQNQtSeZlUTzxTpILz/ztv+4YcNIGtzEBUgAHIrF8edghSdGAJeiMmSsfi
- ICedDnNomNemROz4MEpcGqaBER4nF5KihKaiKLpluJSAEvnj3QnSFDn+QCnzrSB9BO20
- EX5PBH2uN98p19LzH6clzmKcRxc+g6gLE7AeDgmCklmBwnJu/ZcJuZWvbiwgeF/XihHd
- pVZXxbcQfb7ctWhRm8epu3ReWRfRwpLLaWdDZwOL53MtcbaRUh8biIIH6NvjKFFqt4aQ
- V0IGDT2wyZv1jHdnm8ZvDIy4UkWDJb1SegVSEg8jAoeIt7Dh2YEukh1s3odv6Vvq01OI eQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30n4j5w64w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 18:30:58 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2F23C10002A;
-        Tue, 28 Apr 2020 18:30:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 204942A497E;
-        Tue, 28 Apr 2020 18:30:57 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 28 Apr
- 2020 18:30:53 +0200
-Subject: Re: [PATCH v2] ARM: dts: stm32: add cortex-M4 pdds management in
- Cortex-M4 node
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>
-References: <20200401150339.7933-1-arnaud.pouliquen@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <21895154-7930-8354-0ddb-5c646cf6840e@st.com>
-Date:   Tue, 28 Apr 2020 18:30:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 28 Apr 2020 12:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727920AbgD1Qct (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 12:32:49 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AA1DC03C1AB;
+        Tue, 28 Apr 2020 09:32:49 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id g16so16903571eds.1;
+        Tue, 28 Apr 2020 09:32:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2qqW799+HyF2Wu1dNjLV/flMm63iL6Ca6J7Iog3lLWc=;
+        b=Kq3im6G2fM6gJlqVbnR7mFw3MsPG03Yyop9QuNdzkCmIpo1BTfus/PBvM8dD3EBeFp
+         9mptje/OKsZ+kLHmfaXvQLR90ERhU++VjWtcLv3noHdXgySzrqOMh3FUTpi0CUlWoK/8
+         9lmY3/c+SaegTnTYbU0Ij9uQXN2KmS2V9uUH11ZoknM8vVX0dGm7hWb2FOq4Blb3EEr4
+         dNwbaL2mebMqTFRp4VOeyQCxHZdhJS0roycBBZ0wlCcO/FPWT1QJ6kaBPJ8iDvZA0Sfr
+         GHv/8qNMGEeo43u/fw8QjotCwf1N+K3IF5ZErmPYBheqcTqGezVVsrlobB/iVvaO5uuD
+         QueQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2qqW799+HyF2Wu1dNjLV/flMm63iL6Ca6J7Iog3lLWc=;
+        b=MiQKaBVfnwfEt78mgehTgrSx6Wh5tyeuABqnc2fSL5X7UdjzCsz6ab2zWgrQElZUec
+         KyhdnAR//E90kbaY1uA8UeriWTMnGFJHyErkk5eHY5ynCdlOMVxiiyjYT8wixRlx8qwe
+         5bMBuEt9zRfSd/xcsvivOCetjPT65Ca0EnNV0M1WNRmXvCk2aBQ2l31TauQSOtyP73TB
+         v7V0RmZY20BEI4U2p23ob71EBpEOvi+0f6KnmZ4SeEvGmJthOrYUug32tUACWCXhmw8w
+         gcxbWgInur9T3reoJcuZvxEq6vNp41WWjsGzX47iQMWS5tmmpRbJaw3m/LE7evSLLjYl
+         oRhw==
+X-Gm-Message-State: AGi0PuYD6r9qWk2aJcLrItNvarcFd3oOMDM/fuMae3fL6NB2Me788cVu
+        5N3kCB8FaOnZR9LamH6R3ciGaY051kZSLSSzrPlphWL/
+X-Google-Smtp-Source: APiQypKVOWS0ju9saQ65COkWMwGdZrVXzxnXC6xYv19adm5Pgg9snY4hju2y8SnJwZR+KZM4j2KGIJYSM8xx21EjpU8=
+X-Received: by 2002:a05:6402:22ea:: with SMTP id dn10mr23067239edb.70.1588091568165;
+ Tue, 28 Apr 2020 09:32:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200401150339.7933-1-arnaud.pouliquen@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_11:2020-04-28,2020-04-28 signatures=0
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org> <1588080785-6812-6-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <1588080785-6812-6-git-send-email-rnayak@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 28 Apr 2020 09:32:36 -0700
+Message-ID: <CAF6AEGsEgZc=NehvFH2bRfHxcM1uR6s3sLLhk-cQPXM0SXw6Lw@mail.gmail.com>
+Subject: Re: [PATCH v3 05/17] drm/msm/dpu: Use OPP API to set clk/perf state
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Arnaud
+On Tue, Apr 28, 2020 at 6:39 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>
+> On some qualcomm platforms DPU needs to express a perforamnce state
 
-On 4/1/20 5:03 PM, Arnaud Pouliquen wrote:
-> Add declarations related to the syscon pdds for deep sleep management.
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+s/perforamnce/performance/
+
+> requirement on a power domain depennding on the clock rates.
+
+s/depennding/depending/
+
+> Use OPP table from DT to register with OPP framework and use
+> dev_pm_opp_set_rate() to set the clk/perf state.
+>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Rob Clark <robdclark@gmail.com>
+> Cc: Sean Paul <sean@poorly.run>
+> Cc: dri-devel@lists.freedesktop.org
 > ---
-> v2: patch rebasing
-> 
->   arch/arm/boot/dts/stm32mp151.dtsi | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-> index 5260818543e5..a40772eac487 100644
-> --- a/arch/arm/boot/dts/stm32mp151.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp151.dtsi
-> @@ -1124,6 +1124,11 @@
->   			};
->   		};
->   
-> +		pwr_mcu: pwr_mcu@50001014 {
-> +			compatible = "syscon";
-> +			reg = <0x50001014 0x4>;
-> +		};
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c |  3 ++-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 25 ++++++++++++++++++++++++-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  4 ++++
+>  3 files changed, 30 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> index 11f2beb..fe5717df 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/errno.h>
+>  #include <linux/mutex.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/sort.h>
+>  #include <linux/clk.h>
+>  #include <linux/bitmap.h>
+> @@ -239,7 +240,7 @@ static int _dpu_core_perf_set_core_clk_rate(struct dpu_kms *kms, u64 rate)
+>                 rate = core_clk->max_rate;
+>
+>         core_clk->rate = rate;
+> -       return msm_dss_clk_set_rate(core_clk, 1);
+> +       return dev_pm_opp_set_rate(&kms->pdev->dev, core_clk->rate);
+
+I think this leaves msm_dss_clk_set_rate() unused now?
+
+
+Other than that,
+
+Reviewed-by: Rob Clark <robdclark@chromium.org>
+
+>  }
+>
+>  static u64 _dpu_core_perf_get_core_clk_rate(struct dpu_kms *kms)
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index ce19f1d..2f53bbf 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/dma-buf.h>
+>  #include <linux/of_irq.h>
+> +#include <linux/pm_opp.h>
+>
+>  #include <drm/drm_crtc.h>
+>  #include <drm/drm_file.h>
+> @@ -1033,11 +1034,23 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+>         if (!dpu_kms)
+>                 return -ENOMEM;
+>
+> +       dpu_kms->opp_table = dev_pm_opp_set_clkname(dev, "core");
+> +       if (IS_ERR(dpu_kms->opp_table))
+> +               return PTR_ERR(dpu_kms->opp_table);
+> +       /* OPP table is optional */
+> +       ret = dev_pm_opp_of_add_table(dev);
+> +       if (!ret) {
+> +               dpu_kms->has_opp_table = true;
+> +       } else if (ret != -ENODEV) {
+> +               dev_err(dev, "Invalid OPP table in Device tree\n");
+> +               return ret;
+> +       }
 > +
->   		exti: interrupt-controller@5000d000 {
->   			compatible = "st,stm32mp1-exti", "syscon";
->   			interrupt-controller;
-> @@ -1700,6 +1705,7 @@
->   			resets = <&rcc MCU_R>;
->   			st,syscfg-holdboot = <&rcc 0x10C 0x1>;
->   			st,syscfg-tz = <&rcc 0x000 0x1>;
-> +			st,syscfg-pdds = <&pwr_mcu 0x0 0x1>;
->   			status = "disabled";
->   		};
->   	};
-> 
-
-Applied on stm32-next.
-
-Thanks.
-Alex
+>         mp = &dpu_kms->mp;
+>         ret = msm_dss_parse_clock(pdev, mp);
+>         if (ret) {
+>                 DPU_ERROR("failed to parse clocks, ret=%d\n", ret);
+> -               return ret;
+> +               goto err;
+>         }
+>
+>         platform_set_drvdata(pdev, dpu_kms);
+> @@ -1051,6 +1064,11 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+>
+>         priv->kms = &dpu_kms->base;
+>         return ret;
+> +err:
+> +       if (dpu_kms->has_opp_table)
+> +               dev_pm_opp_of_remove_table(dev);
+> +       dev_pm_opp_put_clkname(dpu_kms->opp_table);
+> +       return ret;
+>  }
+>
+>  static void dpu_unbind(struct device *dev, struct device *master, void *data)
+> @@ -1059,6 +1077,9 @@ static void dpu_unbind(struct device *dev, struct device *master, void *data)
+>         struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+>         struct dss_module_power *mp = &dpu_kms->mp;
+>
+> +       if (dpu_kms->has_opp_table)
+> +               dev_pm_opp_of_remove_table(dev);
+> +       dev_pm_opp_put_clkname(dpu_kms->opp_table);
+>         msm_dss_put_clk(mp->clk_config, mp->num_clk);
+>         devm_kfree(&pdev->dev, mp->clk_config);
+>         mp->num_clk = 0;
+> @@ -1090,6 +1111,8 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+>         struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+>         struct dss_module_power *mp = &dpu_kms->mp;
+>
+> +       /* Drop the performance state vote */
+> +       dev_pm_opp_set_rate(dev, 0);
+>         rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
+>         if (rc)
+>                 DPU_ERROR("clock disable failed rc:%d\n", rc);
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+> index 211f5de9..2a52e4e 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+> @@ -128,6 +128,10 @@ struct dpu_kms {
+>
+>         struct platform_device *pdev;
+>         bool rpm_enabled;
+> +
+> +       struct opp_table *opp_table;
+> +       bool has_opp_table;
+> +
+>         struct dss_module_power mp;
+>
+>         /* reference count bandwidth requests, so we know when we can
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
