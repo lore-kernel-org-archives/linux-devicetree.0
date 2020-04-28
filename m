@@ -2,124 +2,158 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648CC83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D682FC83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54315206A5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4022206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zXun4602"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JeZv+NxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgD1HDa (ORCPT
+        id S1726315AbgD1Hhv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:03:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726291AbgD1HDa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:03:30 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AF5FC03C1AA
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 00:03:30 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f13so23241300wrm.13
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 00:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=d80p8k51RV8Ii31H8c+Iq6vujq3CggrPsTKCRimkvi4=;
-        b=zXun4602okDGRYn8XiLEIHtsfd9v1rIwMMKeu+9hiWx2ZG/wJd3ht1CLbz/PPWSPzx
-         Xs/SGjQnIpi+0oDrczAeaVSDJD57qpno8vVy/PCokt/MlwZ/B3y4NIDOoIlZZd1ES49Z
-         SZR34DXDeT6Y1ajYv83ohSDh1wpyPD0aUWMJdHFb5hwV/mJlj9LIXKXU+uYfjkgirS6a
-         lHsOEZCEcvEebukq22aTjSB7xg1QO2hTypVt5JWWvi92tMy5J+fnTeNPaiXcv5ltXVj/
-         W+y4HIEce1zmyGtpa2sGAHF3x+Pp0HSBBzCvsR1cNLJVP94gnlyKz79YF7IjHUYNSL20
-         wS0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=d80p8k51RV8Ii31H8c+Iq6vujq3CggrPsTKCRimkvi4=;
-        b=RB9yB8NGYLKgdcyYaZm/wKJF1TSvk9Us2VSJz3IUDjQ+gmHMRNo81PhTTZDC1zj1Mb
-         ten6a8Kd7UveDVkjUxgIqD4mGxvAjS/IDMhs1QhfP92fZstmybHMMbZaTmD1w4wDmOzg
-         +3p4cOfk1BNy3P75HZN0K4gI/upuNjlW6PgaoO5F99AodTPbu71G+qMWK5bsPInFoGea
-         6MmmaJazXsObErt31Zzp9ShztUR4RWS41gHbZeqjXu7uVZfbLes2yqRCNgEfZOk5A7Ow
-         ZYnt/m7PEX9rKuPPzpfMvoA88av7d9aWUBQ8TzqkjH+gq/1AAo+ViPUMiovQgVhMuhhj
-         fFpw==
-X-Gm-Message-State: AGi0PuaL95AEsff8ACxmQu3nnkyXRah4PPqq3X5noitSQj6StXNOcKDm
-        Bbs3RkOgJqd6jGrm8Vu3cWmdPw==
-X-Google-Smtp-Source: APiQypJcL3tHBCbLlcc7UeQUAGJ2UgtgMo77ETUj1h5CMVB6neW1tCihGzh0jeWgP3NKFnYTOQn4wA==
-X-Received: by 2002:adf:f98e:: with SMTP id f14mr31210015wrr.253.1588057409075;
-        Tue, 28 Apr 2020 00:03:29 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id m8sm25497629wrx.54.2020.04.28.00.03.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 00:03:28 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 08:03:26 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Adrian Pop <pop.adrian61@gmail.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm: dt-bindings: mfd: stm32f-rcc: Add missing DSI
- clock
-Message-ID: <20200428070326.GH3559@dell>
-References: <20200424181642.32084-1-pop.adrian61@gmail.com>
- <20200427064910.GC3559@dell>
- <CAP-HsdQOyWrz+Y7gR9jrNjX09NCYB1EWK7swMQDZ-v-VJLGRMw@mail.gmail.com>
+        Tue, 28 Apr 2020 03:37:51 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51370 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbgD1Hhv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 03:37:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03S7bkRO101845;
+        Tue, 28 Apr 2020 02:37:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588059466;
+        bh=O9oTLB3jQJfcVXDqg1A605+vTcYSVQlvUCOUCgtMw7M=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=JeZv+NxO08ND9ofrlVteGz2EadykJerIiT9RRY7+/iVZ1xCVDbw/1uJyKdJQKCn4Z
+         4DZ+BPIhAvUupo9Aded3ywm7n2Zo7Psnf2ZeveU/a0RPF6O71QnHHJ9BOFAWWybZtH
+         fL/lQ2za4yuFOGGHcgSoxdA8xo0zlV96lWvtjZag=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03S7bkuw086112;
+        Tue, 28 Apr 2020 02:37:46 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Apr 2020 02:37:45 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Apr 2020 02:37:45 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03S7bhlt121897;
+        Tue, 28 Apr 2020 02:37:43 -0500
+Subject: Re: [PATCH] arm: dts: am33xx-l4: add gpio-line-names to gpio
+ controllers
+To:     Drew Fustini <drew@beagleboard.org>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+References: <20200427233116.GA18917@x1>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <b15f2577-8a7d-4c18-1633-d47133247f49@ti.com>
+Date:   Tue, 28 Apr 2020 10:37:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-HsdQOyWrz+Y7gR9jrNjX09NCYB1EWK7swMQDZ-v-VJLGRMw@mail.gmail.com>
+In-Reply-To: <20200427233116.GA18917@x1>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 27 Apr 2020, Adrian Pop wrote:
 
-> On Mon, Apr 27, 2020 at 9:49 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Fri, 24 Apr 2020, Adrian Pop wrote:
-> >
-> > > Add missing clock.
-> > >
-> > > Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
-> > > ---
-> > >  include/dt-bindings/mfd/stm32f7-rcc.h | 1 +
-> > >  1 file changed, 1 insertion(+)
-> >
-> > I assume patch 2 depends on this?
+
+On 28/04/2020 02:31, Drew Fustini wrote:
+> Add gpio-line-names properties to the gpio controller nodes.  The names
+> correspond to the AM335x pin names which are also the muxmode 0 signal
+> names.  Refer to "Table 4-2. Pin Attributes" in the TI AM335x Sitara
+> Processors datasheet:
 > 
-> Yes, second patch depends on this.
+> http://www.ti.com/lit/ds/symlink/am3358.pdf
 > 
-> >
-> > If so, where is it?  Why isn't it in my inbox?
-> >
 > 
-> Here it is:
-> 
-> STM32f769-disco features a 4" MIPI DSI display: add support for it.
-> 
-> Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
 > ---
->  arch/arm/boot/dts/stm32f746.dtsi      | 34 ++++++++++++++++++
->  arch/arm/boot/dts/stm32f769-disco.dts | 50 +++++++++++++++++++++++++++
->  2 files changed, 84 insertions(+)
+>   arch/arm/boot/dts/am33xx-l4.dtsi | 134 +++++++++++++++++++++++++++++++
+>   1 file changed, 134 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+> index 5ed7f3c58c0f..1ac574ebfe74 100644
+> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
+> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+> @@ -157,6 +157,39 @@
+>   				#interrupt-cells = <2>;
+>   				reg = <0x0 0x1000>;
+>   				interrupts = <96>;
+> +				gpio-line-names =
+> +					"MDIO_DATA",
+> +					"MDIO_CLK",
+> +					"SPI0_SCLK",
+> +					"SPI0_D0",
+> +					"SPI0_D1",
+> +					"SPI0_CS0",
+> +					"SPI0_CS1",
+> +					"ECAP0_IN_PWM0_OUT",
+> +					"LCD_DATA12",
+> +					"LCD_DATA13",
+> +					"LCD_DATA14",
+> +					"LCD_DATA15",
+> +					"UART1_CTSN",
+> +					"UART1_RTSN",
+> +					"UART1_RXD",
+> +					"UART1_TXD",
+> +					"GMII1_TXD3",
+> +					"GMII1_TXD2",
+> +					"USB0_DRVVBUS",
+> +					"XDMA_EVENT_INTR0",
+> +					"XDMA_EVENT_INTR1",
+> +					"GMII1_TXD1",
+> +					"GPMC_AD8",
+> +					"GPMC_AD9",
+> +					"NC",
+> +					"NC",
+> +					"GPMC_AD10",
+> +					"GPMC_AD11",
+> +					"GMII1_TXD0",
+> +					"RMII1_REFCLK",
+> +					"GPMC_WAIT0",
+> +					"GPMC_WPN";
+>   			};
+This misuse GPIO DT bindings:
+"
+Optionally, a GPIO controller may have a "gpio-line-names" property. This is
+an array of strings defining the names of the GPIO lines going out of the
+GPIO controller. This name should be the most meaningful producer name
+for the system, such as a rail name indicating the usage. Package names
+such as pin name are discouraged: such lines have opaque names (since they
+are by definition generic purpose) and such names are usually not very
+helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
+reasonable line names as they describe what the line is used for. "GPIO0"
+is not a good name to give to a GPIO line. Placeholders are discouraged:
+rather use the "" (blank string) if the use of the GPIO line is undefined
+in your design. The names are assigned starting from line offset 0 from
+left to right from the passed array. An incomplete array (where the number
+of passed named are less than ngpios) will still be used up until the last
+provided valid line index.
+"
 
-When you resubmit this, please add all recipients to all patches.
+
+Additional note. On other TI SoCs like am437x the same gpio line can be routed to more
+than one pin (but only one pin can be used).
+gpio0_0 GPIO IO -> A17, D16
+
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+grygorii
