@@ -2,137 +2,91 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FE8C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BC2C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC02C206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:26:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1PNM85k"
+	by mail.kernel.org (Postfix) with ESMTP id 6C18C206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588084085;
+	bh=D7QNgWTGi3LFiveU1UlSuH8oqtvhgNGqKALwImoVYkY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rqU4psxjpfgNSmBxmtnlOZ0wYC9091lpoJaNdUc2oE8iRKeHgXPK/pf5336zeCs+v
+	 nuLX+dnS+x886jPJ4jXtxWPGTKtpKkNjMI+9u3S5agQfGwgvNZuGGs/j0NReqQiqFp
+	 VpIMCqsRCDgm11nz7S2U25Bk5j2EtiPP5xP8vhqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgD1O0e (ORCPT
+        id S1727803AbgD1O2E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726900AbgD1O0e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:26:34 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD13BC03C1AB;
-        Tue, 28 Apr 2020 07:26:33 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b11so24872285wrs.6;
-        Tue, 28 Apr 2020 07:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hG1iewHRLomP7TVu4ek95y5UWXfro8sk9H3gDbdYkFU=;
-        b=e1PNM85kPudrtghx5esFXKTU72xQjtksJL6Cxf/4nXufhl1oWdxTsWEX/sQzVqwAfz
-         zn/8/hXeVC9v2d6fGq/uuidWo5LQvWQGdxAcgErMR8deJaEflxX9NvSrXbiEExJZjUkU
-         h52KUrhA4ZJe7aTj+nbDJtiTG3dq/A61TtI0Gram/0KFNcSQfSB5PksuUH1khvhpTdhw
-         BDxZVMWdpipYzYcZOsaEmD7tR4qUi8LtkckQeORuB0taY1u5xHJtB1UAVN4xaRb4/2O6
-         VjVkb0PgO+Ban1Q1ZGLh2xy424SxSGFn6UB9f1TrlsaOqfPFOh+PnnkSH3za2B8Xz/Uv
-         dmww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hG1iewHRLomP7TVu4ek95y5UWXfro8sk9H3gDbdYkFU=;
-        b=G3bjHrJ/cH8B7op3G0NmHcDA09L94ZqS86DE1/t1wqv0p2H2IXMumB8Rw6OeRz56+F
-         0ZAtvwx2fkZMSu53eLuOissDgPjc9URUXpUm0sf1tBSqMwMPziN1CHqorgJYOH8x+CSL
-         nr+Rw6YmEvHT5jd6wn5P8whDBQr8O+FjVpdZ+uWOuS4rSET+rP141IzmJP2JULDrUzCs
-         tIy0XpztoDFPQnv1AhtFvLdUcfPEnuRzQF/oJmmUlJlSNwW4k/3Xf0H+Ttvw2NQ2oph6
-         y/P4Zo7lrDlSGZJUx2AUrakxuCy29groYo+eVvZYLbrWDXxXUd0D1GWO1nAO9NgD1yIc
-         3kAA==
-X-Gm-Message-State: AGi0PuZBmvi4kZ+Aeg6fAux8LhUZ9RNd6XmocoRmTGR0jIgiJXoW9ykf
-        Kc8yLenM+r5WASMi6fOejy4=
-X-Google-Smtp-Source: APiQypJ7gR281FtErynXrsmeODO1gY7gzdn3z5Z1gvMXwBRkdEPTT8anxYrfO/GsOajLTJDAcgNnfQ==
-X-Received: by 2002:a5d:4b0a:: with SMTP id v10mr11519520wrq.342.1588083992303;
-        Tue, 28 Apr 2020 07:26:32 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:9542:27c5:80f1:9810])
-        by smtp.gmail.com with ESMTPSA id h6sm3367106wmf.31.2020.04.28.07.26.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 07:26:31 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Piotr Oniszczuk <warpme@o2.pl>
-Subject: [PATCH v2] arm64: dts: allwinner: h6: Use dummy regulator for Tanix TX6
-Date:   Tue, 28 Apr 2020 16:26:29 +0200
-Message-Id: <20200428142629.8950-1-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 28 Apr 2020 10:28:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbgD1O2E (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:28:04 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 029E2206E2;
+        Tue, 28 Apr 2020 14:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588084084;
+        bh=D7QNgWTGi3LFiveU1UlSuH8oqtvhgNGqKALwImoVYkY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o29hVvvQad0SDi9yf0TpO1MvWtpwYZqpd618/5yEjDqWmjCyASAVgED8qreXsCwJ6
+         pcjomR4yyq7assm3J+isPP0SgXijqTklM/ILcQhMOnvia80RWdj+wTzAbPqTGXzcOp
+         hB1VoplClc9b9cPdQ4oqVX4wYoPzFaBl3t+jSxJY=
+Received: by mail-ot1-f50.google.com with SMTP id m18so32846836otq.9;
+        Tue, 28 Apr 2020 07:28:03 -0700 (PDT)
+X-Gm-Message-State: AGi0PubPO6F5cX1OybNPgbTqCkWWTW6O/JBomtOk+VDr6xhtAgYPRetE
+        cTx1gf3BDUQz5R9cx2xj2i758KHHVVCwf60xoQ==
+X-Google-Smtp-Source: APiQypK3X4aUyiYhPAHhaTh4SayCKXYiLxNTHCd8y/oQZhydp53nEzkfEni/GtmVYYFLz/z1zRBGLXTAo3ngLC2yGQU=
+X-Received: by 2002:a9d:1441:: with SMTP id h59mr23106980oth.192.1588084083280;
+ Tue, 28 Apr 2020 07:28:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200420215728.1927434-1-bjorn.andersson@linaro.org> <20200425175842.GA3773@ravnborg.org>
+In-Reply-To: <20200425175842.GA3773@ravnborg.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 28 Apr 2020 09:27:51 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL6bMwrXZqvGz_H_aJi+EeoikBwKznLP2VomJ=Wn822Rg@mail.gmail.com>
+Message-ID: <CAL_JsqL6bMwrXZqvGz_H_aJi+EeoikBwKznLP2VomJ=Wn822Rg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: simple: Add IVO M133NWF4 R0
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-voltage to meet OPP table, the DVFS is not working as expected.
+On Sat, Apr 25, 2020 at 12:58 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Bj=C3=B6rn.
+>
+> On Mon, Apr 20, 2020 at 02:57:27PM -0700, Bjorn Andersson wrote:
+> > Define the vendor prefix for InfoVision Optoelectronics and add their
+> > M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel to the compatible list
+> > of panel-simple.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>
+> I got OK for the vendor prefix on irc so patch is now added to
+> drm-misc-next.
+> Another time please use a dedicated patch for vendor-prefix
+> so it is not hidden with other stuff. This way the chance
+> to get the attention of the right people is better.
 
-Avoid to introduce a new dedicated OPP Table where voltage are
-equals to the fixed regulator as it will only duplicate all the OPPs.
-Instead remove the fixed regulator so the DVFS framework will create
-dummy regulator and will have the same behavior.
+I should have mentioned there's basically one thing to check:
+alphabetical order.
 
-Add some comments to explain this in the device-tree.
+The good news is both files got it wrong, so at least we're consistent. :)
 
-Reported-by: Piotr Oniszczuk <warpme@o2.pl>
-Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6")
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- .../boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-index be81330db14f..3e96fcb317ea 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-@@ -48,7 +48,15 @@
- };
- 
- &cpu0 {
--	cpu-supply = <&reg_vdd_cpu_gpu>;
-+	/*
-+	 * Don't specify the CPU regulator, as it's a fixed
-+	 * regulator DVFS will not work as it is intructed
-+	 * to reach a voltage which can't be reached.
-+	 * Not specifying a regulator will create a dummy
-+	 * regulator allowing all OPPs.
-+	 *
-+	 * cpu-supply = <&reg_vdd_cpu_gpu>;
-+	 */
- };
- 
- &de {
-@@ -68,7 +76,13 @@
- };
- 
- &gpu {
--	mali-supply = <&reg_vdd_cpu_gpu>;
-+	/*
-+	 * Don't specify the GPU regulator, see comment
-+	 * above for the CPU supply.
-+	 *
-+	 * mali-supply = <&reg_vdd_cpu_gpu>;
-+	 */
-+
- 	status = "okay";
- };
- 
--- 
-2.20.1
-
+Rob
