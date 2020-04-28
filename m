@@ -2,206 +2,193 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88034C83007
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 21:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BC4C83004
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 21:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65E5720731
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 21:02:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HU3s4HDE"
+	by mail.kernel.org (Postfix) with ESMTP id B1AAD20787
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 21:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgD1VCp (ORCPT
+        id S1726701AbgD1VjY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 17:02:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726355AbgD1VCo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 17:02:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26124C03C1AC;
-        Tue, 28 Apr 2020 14:02:44 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id i10so26344735wrv.10;
-        Tue, 28 Apr 2020 14:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eWCTEhvwNRaNadOXmecV0z32iIc2uE0AhWz2k37iTCw=;
-        b=HU3s4HDERN8COZGxh0orthI/O45TIxFKJuushU2seXrnpAEquoc3nbgfyXTUJqzj9k
-         pWwIHJRdvf+7MMaNKbXjUGwJktm/ZNmBhJGIURXrip0LQRzZSFyCXyNvgQ7ZXjd1QmP1
-         uHbj+SO69myxFboNXV4sp05wy+K7U1UurOo5Y5kAUiIRcZBx714eWic2l1YD8n672rdH
-         g/F01jHZhGdwWzK622G5Q70hcTHIWuh5NVqkjugxhV5GziaWtHOuYjhbapN5KABqJ3IC
-         vTZfOWoajKPDWHBncj5EYFykYEpgfpHFquYckjfh5f0MQpaLMvh0xS/MJdOja7VtncDR
-         k1OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eWCTEhvwNRaNadOXmecV0z32iIc2uE0AhWz2k37iTCw=;
-        b=MIY+uFRyLNfvo4hGjGijPCOAuPmXqbHRFSK5QAK5PT5e7HwB7tFF+7IyyWkbImx5Kz
-         HEaPKElV548skhdK8R8rBAhx9SBUkW1bl5vLiVP7wP8LQcWkB8ir2qTDZ1CM4woIM7CG
-         sl/GcUlMD5DlUZG1aZ8a/E8RmO49F7+/FAVzOTZ/q6BB+DRTXkuwPI4J6/Y4BJmS6l7n
-         qE6auvTWsQIVtNid6l/yRT9RWDEwyjeHGE6FKb+LwBpb5R5BTcc7fFulw6/9gQGQTj3N
-         MPW7hoWWzZl9i0cATH0ExzVhrbATf2cssCsLe6auiDejTpM8I7TmZZ8G16lRMuX/AAXc
-         YbQA==
-X-Gm-Message-State: AGi0PuYB6n2v9Japr7Mzmb4e8JO4Hk7wmH6LMP/cFEoqCNbUrOlNFYVy
-        DB2t+qvRyzwOWf1L/7vCR3w=
-X-Google-Smtp-Source: APiQypLK5mVgspHODgpms7tHVmrk9rRXZgJplGen8SCZv1xfJziKnPAg1m+4drZuLFAUuML0sAcakw==
-X-Received: by 2002:a5d:4dcd:: with SMTP id f13mr34348682wru.417.1588107762824;
-        Tue, 28 Apr 2020 14:02:42 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id x18sm4709243wmi.29.2020.04.28.14.02.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 14:02:42 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
-        ulf.hansson@linaro.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        jianxin.pan@amlogic.com, linux-kernel@vger.kernel.org,
-        yinxin_1989@aliyun.com, linux-arm-kernel@lists.infradead.org,
-        lnykww@gmail.com, linux.amoon@gmail.com, jbrunet@baylibre.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v6 1/2] dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
-Date:   Tue, 28 Apr 2020 23:02:28 +0200
-Message-Id: <20200428210229.703309-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428210229.703309-1-martin.blumenstingl@googlemail.com>
-References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com>
-MIME-Version: 1.0
+        Tue, 28 Apr 2020 17:39:24 -0400
+Received: from mail-bn8nam11olkn2066.outbound.protection.outlook.com ([40.92.20.66]:52125
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726256AbgD1VjY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 17:39:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fPx7g9ao5an1V3FvVMpMRbg0SI7mbUxSLYUuZKO6DBmmEKCdlIkkZOzl2WOSCs++1QdJ5EI6E14f9GkiGlQ8XIR8kBBc3wF/QpHSQ6sC1bg6ZGdE4cBQvtR481JYSNL1J25A7GSzA5OcjshtSd/2BjONqSxvwgyu7x0s2sPdP27c32vX3gPVzVSUjrnwJnfeYSE7xU79vnn/zWVYoNUTzVuLC8seon9ktI9dKPhqCbYJA3oc+GxzC6GAXdYMYQo/c/Qt9/qjuZdeaYUXFwFgk0H7uqPs1+gVnr+DdlsXGtZupk5UwqRPeUvQGzFqORfLyOpJqmJ+n93wKt107ms9KQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zt+11Ldtf3glce+SciMw/wPMLwOlV8OmZlM/x7y8ADs=;
+ b=jZEBnxT0vTa0dvROqUXqsmKYQbcFKCd2vx0lBPxIcyQpbpnaF/ris1AHlFh4nrv1XaYjpFDk1Q3AsppTmCn0kTD/FycEeXH/AZARmKdHiBPjxl4PbH8soDcmAzioazND+g7W8CBEU7Rs4C1G34XpzzPKiyTRZM4Qu3Q/WcHW++0HPaRSlszKFXQ3KLDn5vi1VHkInkm8NvQWLPvOM2j3gBcJkQ6WuYgoMI6HmovurXEAA+m6miVdN2u3yysL9/wax981495950VUN9tLEDr62ajTEQes65dqcn8cuPqRmWuYOwPWbjN7DC4HPXMdeuMA0tx5tzPz45HmcmqYhGrouQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
+ (2a01:111:e400:fc4d::46) by
+ DM6NAM11HT249.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4d::212)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Tue, 28 Apr
+ 2020 21:39:20 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc4d::4e) by DM6NAM11FT033.mail.protection.outlook.com
+ (2a01:111:e400:fc4d::221) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
+ Transport; Tue, 28 Apr 2020 21:39:20 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:28F5F02185C5E04051ED80926CB782C29EE4DB171420ABC2B053968DABB39086;UpperCasedChecksum:279D0200178AC5B999032F9459168FADA96122720AA5FE5D30D8AA4363ACA612;SizeAsReceived:10027;Count:50
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
+ 21:39:20 +0000
+Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+References: <cover.1587760454.git.hns@goldelico.com>
+ <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
+ <NYBE9Q.YH08US7A7DC3@crapouillou.net>
+ <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <20200427154617.GA1798@pi3>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB06605F014024061C894AFBA4A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Tue, 28 Apr 2020 14:39:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+In-Reply-To: <20200427154617.GA1798@pi3>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MWHPR20CA0038.namprd20.prod.outlook.com
+ (2603:10b6:300:ed::24) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <7bf2cb45-d9a1-7c3f-9efc-8dd0e8d7939a@live.ca>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb67:7300:9f89:4b96:de0b:cd14] (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by MWHPR20CA0038.namprd20.prod.outlook.com (2603:10b6:300:ed::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Tue, 28 Apr 2020 21:39:17 +0000
+X-Microsoft-Original-Message-ID: <7bf2cb45-d9a1-7c3f-9efc-8dd0e8d7939a@live.ca>
+X-TMN:  [XQ4bYy16QTd757uucX8/ZshxJB4VRIHnZHfMejwEPlAMFVFR72l3yAYYxtSchIi7]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: dabcd893-72f5-4de7-f4ef-08d7ebbc9be1
+X-MS-TrafficTypeDiagnostic: DM6NAM11HT249:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8kNBP7qn0kIsRMXv3mgH2CWAkzQVGL1asywzAwJmrIt7xgR7xunct+WroNd3uT34UTfSFySXiN3LP6DWyfoDC//QlNMs+Iy0J9E+/xPlgCm+LWm/jx9nW+OrxPJdXPzPrb+Rp7jQF+0BAAM97mCzrodYt2VrLKYOqCKZZpg0hMvimvN1JGdV+ZnIm7g5DSLMN2KRU5ZSw9+KaBNIpnLu3w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: 5X16aCAa4cWHX0E0zbWBl0Xt+Xq1kyp0gZPcIQV3xtpSF5JqYgEfymJM1Bg2C4Az+tQYt1BT38WYBan9AeZQ+iWh0rfSPGeb10MipmTV14n5HIDqvPJQd7TUNR656DNWP0syTJ2elTIRCXFbG2oVkjaAW83Gp1jZE17IghT1uEVsCAA0jejdW3AyHJnHpM4/MMVG7O56z+1/bz/yHIJlWg==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dabcd893-72f5-4de7-f4ef-08d7ebbc9be1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 21:39:20.3378
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM11HT249
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This documents the devicetree bindings for the SDHC MMC host controller
-found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
-bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
-HS200 mode (up to 100MHz clock). It embeds an internal clock controller
-which outputs four clocks (mod_clk, sd_clk, tx_clk and rx_clk) and is
-fed by four external input clocks (clkin[0-3]). "pclk" is the module
-register clock, it has to be enabled to access the registers.
+Hi Krzysztof,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   | 83 +++++++++++++++++++
- .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |  8 ++
- 2 files changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
- create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
+On 2020-04-27 8:46 a.m., Krzysztof Kozlowski wrote:
+> On Sun, Apr 26, 2020 at 07:57:12AM -0700, Jonathan Bakker wrote:
+>> Hi Paul,
+>>
+>> On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
+>>>
+>>>
+>>> Le ven. 24 avril 2020 à 22:34, H. Nikolaus Schaller <hns@goldelico.com> a écrit :
+>>>> From: Jonathan Bakker <xc-racer2@live.ca>
+>>>>
+>>>> All s5pv210 devices have a PowerVR SGX 540 (revision 120) attached.
+>>>>
+>>>> There is no external regulator for it so it can be enabled by default.
+>>>>
+>>>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
+>>>>  1 file changed, 13 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+>>>> index 2ad642f51fd9..abbdda205c1b 100644
+>>>> --- a/arch/arm/boot/dts/s5pv210.dtsi
+>>>> +++ b/arch/arm/boot/dts/s5pv210.dtsi
+>>>> @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
+>>>>              #interrupt-cells = <1>;
+>>>>          };
+>>>>
+>>>> +        gpu: gpu@f3000000 {
+>>>> +            compatible = "samsung,s5pv210-sgx540-120";
+> 
+> This should not pass the bindings check because you missed last
+> compatibles.
+> 
 
-diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
-new file mode 100644
-index 000000000000..1ca44529f622
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/amlogic,meson-mx-sdhc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amlogic Meson SDHC controller Device Tree Bindings
-+
-+allOf:
-+  - $ref: "mmc-controller.yaml"
-+
-+maintainers:
-+  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+
-+description: |
-+  The SDHC MMC host controller on Amlogic SoCs provides an eMMC and MMC
-+  card interface with 1/4/8-bit bus width.
-+  It supports eMMC spec 4.4x/4.5x including HS200 (up to 100MHz clock).
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - amlogic,meson8-sdhc
-+        - amlogic,meson8b-sdhc
-+        - amlogic,meson8m2-sdhc
-+      - const: amlogic,meson-mx-sdhc
-+
-+  reg:
-+    minItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+
-+  "#clock-cells":
-+    const: 1
-+
-+  clocks:
-+    minItems: 9
-+
-+  clock-names:
-+    items:
-+      - const: clkin0
-+      - const: clkin1
-+      - const: clkin2
-+      - const: clkin3
-+      - const: pclk
-+      - const: mod_clk
-+      - const: sd_clk
-+      - const: tx_clk
-+      - const: rx_clk
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#clock-cells"
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/meson-mx-sdhc-clkc.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    sdhc: mmc@8e00 {
-+      compatible = "amlogic,meson8-sdhc", "amlogic,meson-mx-sdhc";
-+      reg = <0x8e00 0x42>;
-+      interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
-+      #clock-cells = <1>;
-+      clocks = <&xtal>,
-+               <&fclk_div4>,
-+               <&fclk_div3>,
-+               <&fclk_div5>,
-+               <&sdhc_pclk>,
-+               <&sdhc SDHC_CLKID_MOD_CLK>,
-+               <&sdhc SDHC_CLKID_SD_CLK>,
-+               <&sdhc SDHC_CLKID_TX_CLK>,
-+               <&sdhc SDHC_CLKID_RX_CLK>;
-+      clock-names = "clkin0", "clkin1", "clkin2", "clkin3", "pclk",
-+                    "mod_clk", "sd_clk", "tx_clk", "rx_clk";
-+    };
-diff --git a/include/dt-bindings/clock/meson-mx-sdhc-clkc.h b/include/dt-bindings/clock/meson-mx-sdhc-clkc.h
-new file mode 100644
-index 000000000000..ad9f6e4dc426
---- /dev/null
-+++ b/include/dt-bindings/clock/meson-mx-sdhc-clkc.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#define SDHC_CLKID_SRC_SEL	0
-+#define SDHC_CLKID_DIV		1
-+#define SDHC_CLKID_MOD_CLK	2
-+#define SDHC_CLKID_SD_CLK	3
-+#define SDHC_CLKID_TX_CLK	4
-+#define SDHC_CLKID_RX_CLK	5
--- 
-2.26.2
+Thanks for pointing that out, I'll add it and make sure it passes the bindings check.
 
+>>>> +            reg = <0xf3000000 0x10000>;
+>>>> +            interrupt-parent = <&vic2>;
+>>>> +            interrupts = <10>;
+>>>> +            clock-names = "core";
+>>>> +            clocks = <&clocks CLK_G3D>;
+>>>> +
+>>>> +            assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
+>>>> +            assigned-clock-rates = <0>, <66700000>;
+>>>> +            assigned-clock-parents = <&clocks MOUT_MPLL>;
+>>>
+>>> What are these clocks for, and why are they reparented / reclocked?
+>>>
+>>> Shouldn't they be passed to 'clocks' as well?
+>>>
+>>> -Paul
+>>>
+>>
+>> The G3D clock system can have multiple parents, and for stable operation
+>> it's recommended to use the MPLL clock as the parent (which in turn
+>> is actually a mux as well).  MOUT_G3D is simply the mux for CLK_G3D
+>> (SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could equally be CLK_G3D
+>> (and probably should be, for readability) as CLK_G3D is simply the gate and
+>> DOUT_G3D is the divider for it.
+> 
+> Good point, it should be CLK_G3D instead of DOUT.  Can you fix this as
+> well?
+
+Yep, will do.  Nikolaus, I'll send you an updated patch to include.
+
+> 
+> Best regards,
+> Krzysztof
+> 
+
+Thanks,
+Jonathan
