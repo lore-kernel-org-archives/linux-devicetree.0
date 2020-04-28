@@ -2,158 +2,142 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D682FC83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBD7C83007
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4022206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:37:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JeZv+NxO"
+	by mail.kernel.org (Postfix) with ESMTP id 754D2206B8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgD1Hhv (ORCPT
+        id S1726315AbgD1Hk7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:37:51 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51370 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgD1Hhv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 03:37:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03S7bkRO101845;
-        Tue, 28 Apr 2020 02:37:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588059466;
-        bh=O9oTLB3jQJfcVXDqg1A605+vTcYSVQlvUCOUCgtMw7M=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=JeZv+NxO08ND9ofrlVteGz2EadykJerIiT9RRY7+/iVZ1xCVDbw/1uJyKdJQKCn4Z
-         4DZ+BPIhAvUupo9Aded3ywm7n2Zo7Psnf2ZeveU/a0RPF6O71QnHHJ9BOFAWWybZtH
-         fL/lQ2za4yuFOGGHcgSoxdA8xo0zlV96lWvtjZag=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03S7bkuw086112;
-        Tue, 28 Apr 2020 02:37:46 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Apr 2020 02:37:45 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Apr 2020 02:37:45 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03S7bhlt121897;
-        Tue, 28 Apr 2020 02:37:43 -0500
-Subject: Re: [PATCH] arm: dts: am33xx-l4: add gpio-line-names to gpio
- controllers
-To:     Drew Fustini <drew@beagleboard.org>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-References: <20200427233116.GA18917@x1>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <b15f2577-8a7d-4c18-1633-d47133247f49@ti.com>
-Date:   Tue, 28 Apr 2020 10:37:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 03:40:59 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:11039 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgD1Hk6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 03:40:58 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 65549240008;
+        Tue, 28 Apr 2020 07:40:50 +0000 (UTC)
+Date:   Tue, 28 Apr 2020 09:40:49 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
+        hauke.mehrtens@intel.com, qi-ming.wu@intel.com, vigneshr@ti.com,
+        arnd@arndb.de, richard@nod.at, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200428094049.3c0d4730@xps13>
+In-Reply-To: <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
+References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200424183612.4cfdbb6a@collabora.com>
+        <20200427175127.0518c193@xps13>
+        <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
+        <20200428082759.25065146@collabora.com>
+        <38334812-21b9-5b2c-db84-01c9eacc84d0@linux.intel.com>
+        <20200428084704.5e04232a@collabora.com>
+        <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200427233116.GA18917@x1>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Vadivel MuruganX,
 
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote on Tue, 28 Apr 2020
+14:50:35 +0800:
 
-On 28/04/2020 02:31, Drew Fustini wrote:
-> Add gpio-line-names properties to the gpio controller nodes.  The names
-> correspond to the AM335x pin names which are also the muxmode 0 signal
-> names.  Refer to "Table 4-2. Pin Attributes" in the TI AM335x Sitara
-> Processors datasheet:
+> Hi Boris,
 > 
-> http://www.ti.com/lit/ds/symlink/am3358.pdf
+> On 28/4/2020 2:47 pm, Boris Brezillon wrote:
+> > On Tue, 28 Apr 2020 14:40:58 +0800
+> > "Ramuthevar, Vadivel MuruganX"
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >   
+> >> Hi Boris,
+> >>
+> >> On 28/4/2020 2:27 pm, Boris Brezillon wrote:  
+> >>> On Tue, 28 Apr 2020 14:17:30 +0800
+> >>> "Ramuthevar, Vadivel MuruganX"
+> >>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:  
+> >>>    >>>> Hi Miquel,  
+> >>>>
+> >>>>       Thank you very much for the review comments and your time...
+> >>>>
+> >>>> On 27/4/2020 11:51 pm, Miquel Raynal wrote:  
+> >>>>> Hi Ramuthevar,  
+> >>>>>       >>>>>>> +static int ebu_nand_probe(struct platform_device *pdev)  
+> >>>>>>> +{
+> >>>>>>> +	struct device *dev = &pdev->dev;
+> >>>>>>> +	struct ebu_nand_controller *ebu_host;
+> >>>>>>> +	struct nand_chip *nand;
+> >>>>>>> +	phys_addr_t nandaddr_pa;
+> >>>>>>> +	struct mtd_info *mtd;
+> >>>>>>> +	struct resource *res;
+> >>>>>>> +	int ret;
+> >>>>>>> +	u32 cs;
+> >>>>>>> +
+> >>>>>>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+> >>>>>>> +	if (!ebu_host)
+> >>>>>>> +		return -ENOMEM;
+> >>>>>>> +
+> >>>>>>> +	ebu_host->dev = dev;
+> >>>>>>> +	nand_controller_init(&ebu_host->controller);
+> >>>>>>> +
+> >>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+> >>>>>>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
+> >>>>>>> +	if (IS_ERR(ebu_host->ebu_addr))
+> >>>>>>> +		return PTR_ERR(ebu_host->ebu_addr);
+> >>>>>>> +
+> >>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+> >>>>>>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
+> >>>>>>> +	if (IS_ERR(ebu_host->nand_addr))
+> >>>>>>> +		return PTR_ERR(ebu_host->nand_addr);
+> >>>>>>> +
+> >>>>>>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);  
+> >>>>>>
+> >>>>>> CS ids should be encoded in the reg property (see [1]).  
+> >>>>>
+> >>>>> Is it your choice to only support a single CS or is it actually a
+> >>>>> controller limitation?  
+> >>>>
+> >>>> Yes , its controller limitation to support only one CS  
+> >>>
+> >>> I'm pretty sure that's not true, otherwise you wouldn't have to select
+> >>> the CS you want to use :P.  
+> >>
+> >> At a time it supports only one chip select.  
+> > 
+> > Yes, like 99% of the NAND controllers, but that doesn't mean you can't
+> > support multi-CS chips. All you have to do is attach an array of
+> > ebu_nand_cs to your ebu_nand_chip (as done in the atmel driver I
+> > pointed to). nand_operation.cs tells you which CS (index in your
+> > ebu_nand_cs array) a specific operation is targeting, and you can pick
+> > the right MMIO range/reg value based on that.  
 > 
-> 
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
->   arch/arm/boot/dts/am33xx-l4.dtsi | 134 +++++++++++++++++++++++++++++++
->   1 file changed, 134 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-> index 5ed7f3c58c0f..1ac574ebfe74 100644
-> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
-> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-> @@ -157,6 +157,39 @@
->   				#interrupt-cells = <2>;
->   				reg = <0x0 0x1000>;
->   				interrupts = <96>;
-> +				gpio-line-names =
-> +					"MDIO_DATA",
-> +					"MDIO_CLK",
-> +					"SPI0_SCLK",
-> +					"SPI0_D0",
-> +					"SPI0_D1",
-> +					"SPI0_CS0",
-> +					"SPI0_CS1",
-> +					"ECAP0_IN_PWM0_OUT",
-> +					"LCD_DATA12",
-> +					"LCD_DATA13",
-> +					"LCD_DATA14",
-> +					"LCD_DATA15",
-> +					"UART1_CTSN",
-> +					"UART1_RTSN",
-> +					"UART1_RXD",
-> +					"UART1_TXD",
-> +					"GMII1_TXD3",
-> +					"GMII1_TXD2",
-> +					"USB0_DRVVBUS",
-> +					"XDMA_EVENT_INTR0",
-> +					"XDMA_EVENT_INTR1",
-> +					"GMII1_TXD1",
-> +					"GPMC_AD8",
-> +					"GPMC_AD9",
-> +					"NC",
-> +					"NC",
-> +					"GPMC_AD10",
-> +					"GPMC_AD11",
-> +					"GMII1_TXD0",
-> +					"RMII1_REFCLK",
-> +					"GPMC_WAIT0",
-> +					"GPMC_WPN";
->   			};
-This misuse GPIO DT bindings:
-"
-Optionally, a GPIO controller may have a "gpio-line-names" property. This is
-an array of strings defining the names of the GPIO lines going out of the
-GPIO controller. This name should be the most meaningful producer name
-for the system, such as a rail name indicating the usage. Package names
-such as pin name are discouraged: such lines have opaque names (since they
-are by definition generic purpose) and such names are usually not very
-helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
-reasonable line names as they describe what the line is used for. "GPIO0"
-is not a good name to give to a GPIO line. Placeholders are discouraged:
-rather use the "" (blank string) if the use of the GPIO line is undefined
-in your design. The names are assigned starting from line offset 0 from
-left to right from the passed array. An incomplete array (where the number
-of passed named are less than ngpios) will still be used up until the last
-provided valid line index.
-"
+> Agreed, sure I will add that and update next series of patches .
 
+There are also many other places where you assume blindly that there
+is only one CS. You can check the Atmel NAND controller driver as Boris
+said and we will probably propose more little changes to be more
+generic.
 
-Additional note. On other TI SoCs like am437x the same gpio line can be routed to more
-than one pin (but only one pin can be used).
-gpio0_0 GPIO IO -> A17, D16
-
-
--- 
-Best regards,
-grygorii
+Thanks,
+Miquèl
