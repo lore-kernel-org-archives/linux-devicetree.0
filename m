@@ -2,137 +2,183 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0C9C83004
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEE6C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC12B2051A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:34:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="exRDfo3x"
+	by mail.kernel.org (Postfix) with ESMTP id 5C5CA2051A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgD1Gdg (ORCPT
+        id S1726423AbgD1GfE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726284AbgD1Gdg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:33:36 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018FEC03C1A9;
-        Mon, 27 Apr 2020 23:33:36 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 2138820CDE;
-        Tue, 28 Apr 2020 06:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1588055615; bh=tM9mU9m/7GbgevvpCla3WmP7vNgLDezA1ofrTasUkjQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=exRDfo3x0Xum/awSZYLfgFGUj3eiROPhW6nOGPM8n1pxv1rnr5gL+8BrA1CsQJM9r
-         ovDO7wJkSLxviH/wnPcQhWlVFaNVY/+UzXJ6jilPtkV74CRwO3y5ef8BuTC4e5xVyy
-         Sl6/5vnMGIffkUVcEZTl/6NExNNQc2d9jeuwbt17xGWsmPqXeCwcZf55qz1JjtG7l8
-         +aZgNus9vaIcoRqKbuYBwBMIOJkKlDIJiip4TWL3fYYzGq+vUaZk3ibVB2zK0Ip3Gf
-         A4EUQAUwsd4mxl8gBQH3fd5brKIYp0ZmBUpE1ID+pKwxi01nDgHou0BpseAA63JCk8
-         +EP+3Cht6DguA==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     maz@kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+        Tue, 28 Apr 2020 02:35:04 -0400
+Received: from mx.socionext.com ([202.248.49.38]:22326 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbgD1GfD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 02:35:03 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 28 Apr 2020 15:35:01 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id C2875180105;
+        Tue, 28 Apr 2020 15:35:01 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 28 Apr 2020 15:35:01 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 808AA1A01BB;
+        Tue, 28 Apr 2020 15:35:01 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH v2 2/6] dt-bindings: interrupt-controller: Add Loongson HTVEC
-Date:   Tue, 28 Apr 2020 14:32:41 +0800
-Message-Id: <20200428063247.2223499-2-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200428063247.2223499-1-jiaxun.yang@flygoat.com>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
- <20200428063247.2223499-1-jiaxun.yang@flygoat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 1/3] dt-bindings: phy: Convert UniPhier PCIe-PHY controller to json-schema
+Date:   Tue, 28 Apr 2020 15:34:48 +0900
+Message-Id: <1588055690-13200-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add binding for Loongson-3 HyperTransport Interrupt Vector Controller.
+Convert the UniPhier PCIe-PHY controller to DT schema format.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
- .../interrupt-controller/loongson,htvec.yaml  | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+ .../bindings/phy/socionext,uniphier-pcie-phy.yaml  | 77 ++++++++++++++++++++++
+ .../devicetree/bindings/phy/uniphier-pcie-phy.txt  | 36 ----------
+ 2 files changed, 77 insertions(+), 36 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/socionext,uniphier-pcie-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/uniphier-pcie-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+diff --git a/Documentation/devicetree/bindings/phy/socionext,uniphier-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/socionext,uniphier-pcie-phy.yaml
 new file mode 100644
-index 000000000000..547a80c89eba
+index 0000000..86f4909
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
-@@ -0,0 +1,59 @@
++++ b/Documentation/devicetree/bindings/phy/socionext,uniphier-pcie-phy.yaml
+@@ -0,0 +1,77 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,htvec.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/phy/socionext,uniphier-pcie-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Loongson-3 HyperTransport Interrupt Vector Controller
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
++title: Socionext UniPhier PCIe PHY
 +
 +description: |
-+  This interrupt controller is found in the Loongson-3 family of chips for
-+  receiving vectorized interrupts from PCH's interrupt controller.
++  This describes the devicetree bindings for PHY interface built into
++  PCIe controller implemented on Socionext UniPhier SoCs.
++
++maintainers:
++  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 +
 +properties:
 +  compatible:
-+    const: loongson,htvec-1.0
++    enum:
++      - socionext,uniphier-pro5-pcie-phy
++      - socionext,uniphier-ld20-pcie-phy
++      - socionext,uniphier-pxs3-pcie-phy
 +
 +  reg:
-+    maxItems: 1
++    description: PHY register region (offset and length)
 +
-+  interrupts:
++  "#phy-cells":
++    const: 0
++
++  clocks:
 +    minItems: 1
-+    maxItems: 4
-+    description: |
-+      Four parent interrupts that receive chained interrupts.
++    maxItems: 2
 +
-+  interrupt-controller: true
++  clock-names:
++    oneOf:
++      - items:            # for Pro5
++        - const: gio
++        - const: link
++      - const: link       # for others
 +
-+  '#interrupt-cells':
-+    const: 1
++  resets:
++    minItems: 1
++    maxItems: 2
++
++  reset-names:
++    oneOf:
++      - items:            # for Pro5
++        - const: gio
++        - const: link
++      - const: link       # for others
++
++  socionext,syscon:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: A phandle to system control to set configurations for phy
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - '#interrupt-cells'
++  - "#phy-cells"
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++
++additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    htvec: interrupt-controller@1fb000080 {
-+      compatible = "loongson,htvec-1.0";
-+      reg = <0xfb000080 0x40>;
-+      interrupt-controller;
-+      #interrupt-cells = <1>;
-+
-+      interrupt-parent = <&liointc>;
-+      interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-+                    <25 IRQ_TYPE_LEVEL_HIGH>,
-+                    <26 IRQ_TYPE_LEVEL_HIGH>,
-+                    <27 IRQ_TYPE_LEVEL_HIGH>;
++    pcie_phy: phy@66038000 {
++        compatible = "socionext,uniphier-ld20-pcie-phy";
++        reg = <0x66038000 0x4000>;
++        #phy-cells = <0>;
++        clock-names = "link";
++        clocks = <&sys_clk 24>;
++        reset-names = "link";
++        resets = <&sys_rst 24>;
++        socionext,syscon = <&soc_glue>;
 +    };
-+...
+diff --git a/Documentation/devicetree/bindings/phy/uniphier-pcie-phy.txt b/Documentation/devicetree/bindings/phy/uniphier-pcie-phy.txt
+deleted file mode 100644
+index 3cee372..0000000
+--- a/Documentation/devicetree/bindings/phy/uniphier-pcie-phy.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-Socionext UniPhier PCIe PHY bindings
+-
+-This describes the devicetree bindings for PHY interface built into
+-PCIe controller implemented on Socionext UniPhier SoCs.
+-
+-Required properties:
+-- compatible: Should contain one of the following:
+-    "socionext,uniphier-pro5-pcie-phy" - for Pro5 PHY
+-    "socionext,uniphier-ld20-pcie-phy" - for LD20 PHY
+-    "socionext,uniphier-pxs3-pcie-phy" - for PXs3 PHY
+-- reg: Specifies offset and length of the register set for the device.
+-- #phy-cells: Must be zero.
+-- clocks: A list of phandles to the clock gate for PCIe glue layer
+-	including this phy.
+-- clock-names: For Pro5 only, should contain the following:
+-    "gio", "link" - for Pro5 SoC
+-- resets: A list of phandles to the reset line for PCIe glue layer
+-	including this phy.
+-- reset-names: For Pro5 only, should contain the following:
+-    "gio", "link" - for Pro5 SoC
+-
+-Optional properties:
+-- socionext,syscon: A phandle to system control to set configurations
+-	for phy.
+-
+-Refer to phy/phy-bindings.txt for the generic PHY binding properties.
+-
+-Example:
+-	pcie_phy: phy@66038000 {
+-		compatible = "socionext,uniphier-ld20-pcie-phy";
+-		reg = <0x66038000 0x4000>;
+-		#phy-cells = <0>;
+-		clocks = <&sys_clk 24>;
+-		resets = <&sys_rst 24>;
+-		socionext,syscon = <&soc_glue>;
+-	};
 -- 
-2.26.0.rc2
+2.7.4
 
