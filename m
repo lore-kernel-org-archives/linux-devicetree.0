@@ -2,98 +2,164 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABFFC83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F2BC83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25851206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E99206F0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:48:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="dUDumjdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgD1Mpx (ORCPT
+        id S1726794AbgD1MsK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:45:53 -0400
-Received: from mga03.intel.com ([134.134.136.65]:25689 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbgD1Mpx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:45:53 -0400
-IronPort-SDR: ITh+OnsDVeDP/TbJ6XA/qJXUjHEDdvC9FXOLN18GtmPHVhXSUBop2V1IK2fUbTmNaIuk29MwOE
- kj1Yfq++fqOg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 05:45:52 -0700
-IronPort-SDR: TP/uYczxk/lwtQIzH/+Zyl5uqP030jf1kAkw25vGqAYSII1wYmovbE/eUDO84cwwMYEz7zYIli
- glcT10kijuRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="459221981"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Apr 2020 05:45:46 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jTPcS-003YlK-Qg; Tue, 28 Apr 2020 15:45:48 +0300
-Date:   Tue, 28 Apr 2020 15:45:48 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of
- the child device
-Message-ID: <20200428124548.GS185537@smile.fi.intel.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-3-michael@walle.cc>
+        Tue, 28 Apr 2020 08:48:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726620AbgD1MsK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 08:48:10 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA80C03C1A9
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 05:48:09 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id e20so32316056otk.12
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 05:48:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gIMUGicgwmIFtnYG9N3fQPjEXkbOpiDE/URudlFOW5s=;
+        b=dUDumjdTIlGGpNmZYXHngArdwQWCCtin2qUEkmCJQtwAgVH3K5XgViZI81wZ44IjG7
+         Zq9hacLuuX3LoskBpPXvwEKqsb+nyh8KlA22O07jpgEn9K3uC6ACaKAN8PKic/lPqIH3
+         aGuwroFwfXlxdyxjbX0M5ZO8aNaVayipg4ovDBY1QrVdSeb7pZN8F9XkXds1YomIXvTY
+         YmfpZJC7mu05HAL4WFjKaNy2UHPs3FQx9op/si0XAJd964b+EV57407V2UZmA/ay/P77
+         xLf+QNzD7vJnw4QY7Rt6Ymk3pNiAJ9KUWkKYygNBJf6EbhdoOzp+JfBNNHOfuB1A5awb
+         aYQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gIMUGicgwmIFtnYG9N3fQPjEXkbOpiDE/URudlFOW5s=;
+        b=SqUV65Fj5HIHCSTSqtqMG6NcLgfkrUinzJgG3IQcZcxc0E3jUpjZbh4gWlPvF9VV3E
+         mXdoFFPm26m3Zf8riPfgzWnomWW7V/+frvcB7pgD5hod+WiLz7p0Kdz+ZvLvMgyGw1Nl
+         9PmL7tgzpQHZBoEvbwz8LmHx0mkkDFzqtoZ4GwJW0XVuvgq1zH26RqUdq2/9hNZy5Jkn
+         us1D9N7fUx0+RNF+WYKzYLdsKqaiL/u964rs5XWdg1Qi1L/l5H+kK6mslNud/HNa3d/K
+         TeH66clknQ2n8SLpn0WAfs4F5eynqL4kEgKHF6yIkeyHIgH008xRmhsVfiQjjndP07zA
+         IoNQ==
+X-Gm-Message-State: AGi0PuZw8OEHEuW418Os3YYrNSO0OznNO93P8lUyb8aYmLlSlbaeqDz3
+        C0ByIDJbZrH7MELFFv8NEgVWXjLUzuXiETwECYhBTg==
+X-Google-Smtp-Source: APiQypJfEP180kCuws7+abjZcT8dPX9zxxKNlOozz0+TthkUItgt4+ccPZriFdCypuPgxcXtg9LpjV+6NqVW8gqrIFU=
+X-Received: by 2002:a05:6830:13d4:: with SMTP id e20mr22370151otq.66.1588078089294;
+ Tue, 28 Apr 2020 05:48:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423174543.17161-3-michael@walle.cc>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200401163542.83278-1-robert.marko@sartura.hr> <20200427164514.GQ56386@vkoul-mobl.Dlink>
+In-Reply-To: <20200427164514.GQ56386@vkoul-mobl.Dlink>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Tue, 28 Apr 2020 14:47:58 +0200
+Message-ID: <CA+HBbNHT7bOM68zBGAHO0Pi9WrBc244Qewwe5JV7fNhNUGPZ4Q@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] phy: add driver for Qualcomm IPQ40xx USB PHY
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 07:45:29PM +0200, Michael Walle wrote:
-> Commit cdfee5623290 ("driver core: initialize a default DMA mask for
-> platform device") initialize the DMA of a platform device. But if the
-> parent doesn't have a dma_mask set, for example if it's an I2C device,
-> the dma_mask of the child platform device will be set to zero again.
-> Which leads to many "DMA mask not set" warnings, if the MFD cell has the
-> of_compatible property set.
-
-I'm wondering why parent doesn't have it.
-I remember we have explicit patches in the past for buses such as PCI and AMBA
-to set default DMA mask for all physical devices on the respective bus, of
-course they can individually override it later.
-
-So, this seems to me a paper over the real issue (absence of default DMA mask
-where it's needed) and devices should explicitly define it if they disagree
-with default.
-
-If I'm wrong, you really need elaborate commit message much better.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+On Mon, Apr 27, 2020 at 6:45 PM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> Hello Robert,
+>
+> On 01-04-20, 18:35, Robert Marko wrote:
+>
+> > +static int ipq4019_ss_phy_power_on(struct phy *_phy)
+> > +{
+> > +     struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
+> > +
+> > +     ipq4019_ss_phy_power_off(_phy);
+> > +
+> > +     reset_control_deassert(phy->por_rst);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static struct phy_ops ipq4019_usb_ss_phy_ops = {
+> > +     .power_on       = ipq4019_ss_phy_power_on,
+> > +     .power_off      = ipq4019_ss_phy_power_off,
+> > +};
+> > +
+> > +static int ipq4019_hs_phy_power_off(struct phy *_phy)
+> > +{
+> > +     struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
+> > +
+> > +     reset_control_assert(phy->por_rst);
+> > +     msleep(10);
+>
+> why not call ipq4019_ss_phy_power_off() here as well?
+Its not necessary, SS and HS PHY-s are separated but share
+the same register space.
+So when HS PHY is controlled, SS PHY can remain working.
+>
+> > +
+> > +     reset_control_assert(phy->srif_rst);
+> > +     msleep(10);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int ipq4019_hs_phy_power_on(struct phy *_phy)
+> > +{
+> > +     struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
+> > +
+> > +     ipq4019_hs_phy_power_off(_phy);
+> > +
+> > +     reset_control_deassert(phy->srif_rst);
+> > +     msleep(10);
+> > +
+> > +     reset_control_deassert(phy->por_rst);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static struct phy_ops ipq4019_usb_hs_phy_ops = {
+> > +     .power_on       = ipq4019_hs_phy_power_on,
+> > +     .power_off      = ipq4019_hs_phy_power_off,
+> > +};
+>
+> So this is fiddling with resets, what about phy configuration and
+> calibration, who take care of that?
+As as I understand, since I don't have documentation access is that no
+calibration and configuration except to properly reset them are needed.
+Development hardware required some magic register values to be
+written but in the previous revisions of this driver it was
+discovered that they were leftovers from the development HW.
+>
+> > +static int ipq4019_usb_phy_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct resource *res;
+> > +     struct phy_provider *phy_provider;
+> > +     struct ipq4019_usb_phy *phy;
+> > +     const struct of_device_id *match;
+> > +
+> > +     match = of_match_device(ipq4019_usb_phy_of_match, &pdev->dev);
+> > +     if (!match)
+> > +             return -ENODEV;
+>
+> you are using this to get match-data few lines below, why not use
+> of_device_get_match_data() and get the match->data which you are
+> interested in?
+Thanks, I will look into it.
+>
+> --
+> ~Vinod
