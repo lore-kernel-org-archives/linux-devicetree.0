@@ -2,164 +2,122 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D01C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF60C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9280206A1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0A7206F0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:16:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xbzojtDs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjR9IzQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgD1MPw (ORCPT
+        id S1726746AbgD1MQe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:15:52 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60006 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726361AbgD1MPv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 08:15:51 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03SCFbpt072985;
-        Tue, 28 Apr 2020 07:15:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588076137;
-        bh=IuxjdxK7NasDcszeJelN8aR/wUlRIl8nDCnQAwJveeI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xbzojtDsYfeF8zrUaJvvzeetksYTpcJs3x2C6TBwT0506nGn+a3tmd1xI3BzE6gqz
-         RurWcfwxPlEDG6SUWDwLbQ5vBRbppRPiP+udIOOx8chn3kwp6VUCj9Nc0LMCVknSa2
-         4lha9/mAYOTqXhvfLN1jliMOtmpHYKzwhJU+a31o=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03SCFahW034748
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Apr 2020 07:15:36 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Apr 2020 07:15:36 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Apr 2020 07:15:36 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03SCFVOQ078450;
-        Tue, 28 Apr 2020 07:15:33 -0500
-Subject: Re: [PATCH v14 2/2] i2c: core: support bus regulator controlling in
- adapter
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-References: <20200428061813.27072-1-bibby.hsieh@mediatek.com>
- <20200428061813.27072-3-bibby.hsieh@mediatek.com>
- <e3583893-f49d-0e78-6414-ed565099af63@ti.com>
- <CAAFQd5DEuYWzZz=SeOTjJg_vxaYdYuf_vw-UFVMRYDBKxdtL0A@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <f6f59d2e-68cd-e51d-bf7f-d5665c56b61b@ti.com>
-Date:   Tue, 28 Apr 2020 15:15:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 08:16:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726361AbgD1MQc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 08:16:32 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A793C03C1A9;
+        Tue, 28 Apr 2020 05:16:32 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k13so24408923wrw.7;
+        Tue, 28 Apr 2020 05:16:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KJcceZKHt8YY/nAlytIbRqg+XVhvkXqTJQkvmynr/Jo=;
+        b=PjR9IzQ8VD3sksu/DJg+ZCI27xjQM2hp3LDGLLrBEn6lwZoi0hx0FbNn34GGPXBU0g
+         4Pyqp/f/L4WeeqIp40aL724tWTQGScWi8CBHzbhDCa6DXk9WPMrG89YTkEe2hM2eRpXX
+         XYQPpDzxx6W2PQ8VlJbvMlL499j+fGlTO9BjitN8n/U4zyLsmf2xwczWdpmdaRgmDVVB
+         DALWUIskfHDPpTFWeGfrQvjp3y9Br9LsaksIico9cRhGq3JgwHmU+UPM+7zEBYOSYH5P
+         tbmeKkMJZC/w+gw8S0W7mw4EQa1I4aUe6ln2WUkDQHsNzyfXSx2qKvpVrm9r3SsvcYvY
+         GwBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KJcceZKHt8YY/nAlytIbRqg+XVhvkXqTJQkvmynr/Jo=;
+        b=WJSzPyA6963HzxAR5jVQyknqMG1cG6TctzoOu4XWm4lth2/eTn6KqPnuV/9QQbRLIJ
+         QnMFcQMevyaSTO3PlKn9It5ULukrMCt9v90fjFlHnCY+JbaCgiu/0TzhCoyx3LUjvrnS
+         fAdUImpmKwd8bHs3UeTdE/9c3ebHEFB2xMv9BSXbLdDo9LHjBZ6e7lSWJG7pCfSZbPuB
+         e1jU/2uYFGrJr2E+zf1RtYlr1WclJtAO2XFtiG1OkGVKy/XhXke7XH9ZI9hHQHCmwAEc
+         XmiY1bTYW/hGTo3NDCi70W30QADQFJeGAC58iaI6iqpBs9KbMuBW9yhvFZy1FeynJlLp
+         KVIA==
+X-Gm-Message-State: AGi0PubD6celFiJxp4xp/ecPpK0uZ6TNYlhp039i/zEsu6Mt511Sm12/
+        qpRRHztd78Cg+bbIY517OtY=
+X-Google-Smtp-Source: APiQypInzRT5VmQThYG3hxKLRxdUsWIeHCEjdaSPbMEX3fOsSnTEiOElIJit9A8BQBrWmmHk6GooDQ==
+X-Received: by 2002:adf:e9cb:: with SMTP id l11mr32334378wrn.24.1588076191212;
+        Tue, 28 Apr 2020 05:16:31 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id s30sm25530090wrb.67.2020.04.28.05.16.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 05:16:27 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 14:16:26 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH V1 2/4] arm64: tegra: Add xudc node for Tegra194
+Message-ID: <20200428121626.GL3592148@ulmo>
+References: <1587022460-31988-1-git-send-email-nkristam@nvidia.com>
+ <1587022460-31988-3-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAFQd5DEuYWzZz=SeOTjJg_vxaYdYuf_vw-UFVMRYDBKxdtL0A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="m+jEI8cDoTn6Mu9E"
+Content-Disposition: inline
+In-Reply-To: <1587022460-31988-3-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+--m+jEI8cDoTn6Mu9E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 28/04/2020 14:44, Tomasz Figa wrote:
-> On Tue, Apr 28, 2020 at 1:25 PM Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
->>
->>
->>
->> On 28/04/2020 09:18, Bibby Hsieh wrote:
->>> Although in the most platforms, the bus power of i2c
->>> are alway on, some platforms disable the i2c bus power
->>> in order to meet low power request.
->>>
->>> We get and enable bulk regulator in i2c adapter device.
->>>
->>> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
->>> ---
->>>    drivers/i2c/i2c-core-base.c | 82 +++++++++++++++++++++++++++++++++++++
->>>    include/linux/i2c.h         |  2 +
->>>    2 files changed, 84 insertions(+)
->>>
->>> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
->>> index 5cc0b0ec5570..f81b42a4ed07 100644
->>> --- a/drivers/i2c/i2c-core-base.c
->>> +++ b/drivers/i2c/i2c-core-base.c
->>> @@ -313,6 +313,7 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
->>>    static int i2c_device_probe(struct device *dev)
->>>    {
->>>        struct i2c_client       *client = i2c_verify_client(dev);
->>> +     struct i2c_adapter      *adap = client->adapter;
->>>        struct i2c_driver       *driver;
->>>        int status;
->>>
->>> @@ -378,6 +379,12 @@ static int i2c_device_probe(struct device *dev)
->>>
->>>        dev_dbg(dev, "probe\n");
->>>
->>> +     status = regulator_enable(adap->bus_regulator);
->>> +     if (status < 0) {
->>> +             dev_err(&adap->dev, "Failed to enable power regulator\n");
->>> +             goto err_clear_wakeup_irq;
->>> +     }
->>> +
->>
->> Sry, but this is confusing.
->> What if there is separate regulators for I2C device and bus/adapter?
->>
->> I2C bus is transaction based and usually I2C bus drivers ensures that i2c bus is
->> in proper state to perform transaction. While I2C devices can be enable, configured and
->> function without actually interacting with I2C bus unless required (irq for example).
->>
->> With you change any I2C device will enable and keep bus regulator on all the time it's active
->> even if there is no I2C interruptions.
-> 
-> The I2C SDA/SCL lines must stay high for all the time the bus is idle.
-> The regulator in question here is exactly the regulator that drives
-> the voltage rail the SDA/SCL lines are pulled up to and so it needs to
-> be enabled all the time any slave device is active and expects the I2C
-> bus to be in a valid state.
-> 
->>
->> Following the problem description it seems
->>    - i2c bus driver should get regulator and ensure it's enabled for the duration of transaction(s)
-> 
-> That's not necessary given the point below, because the slave driver
-> must not trigger any I2C transactions when the slave device is not
-> active.
-> 
->>    - i2c device should get its own regulator (or the same if shared)  ensure it's enabled for
->>      the period device is active.
-> 
-> This is a board design aspect and not specific to any particular I2C
-> slave device, so slave drivers should not be aware of it. This patch
-> exactly attempts to get this SDA/SCL regulator on behalf of the slave
-> device.
+On Thu, Apr 16, 2020 at 01:04:18PM +0530, Nagarjuna Kristam wrote:
+> Tegra194 has one XUSB device mode controller, which can be operated
+> HS and SS modes. Add DT entry for XUSB device mode controller
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 
-Thank you for your explanation.
+Looks good to me, I'll pick this up into the Tegra tree.
 
+Thierry
 
+--m+jEI8cDoTn6Mu9E
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Best regards,
-grygorii
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6oHpcACgkQ3SOs138+
+s6F38w/8DcNjQD7ygu05FLIvH5mMzvp/ZOq1zIJxBqJ39kNj1aGgyT1wlnw0d6o7
+MfdVgIC2Z4rRXaGjGkD1UAvatjkgOUhdONYBJVM7FvoGmv/+1KRSR03ibr+EZtvy
+WfCxoj11GHauJlzuYulg+6fpnCxzhXn4RSBDSm1/12Vp3BbQvjOcdidEHCQYbDHy
+mV8ylgoNrJ/DW56wsWlMYsdoTWBuSh6S3NsC1rEzKVs31+qcp1qIhVTJegdS4KZF
+hr6QasS7SQy2z1VRkFqh+D4fRUErOWHiheJ0EPO/UQpQTnQQW3hO9IHEV3r1N3BQ
+SJV6/4pDaJuKJE1qXfu5QfqYuoD5ZR2ViWE3cEc6VNxGoRu1uGTfs+/fDi0Bz6oR
+INDmJuNXyB+KtrWWooSQMOZ5naawEDRHojCvDJUA+l/474MI6v/RxLCoj9QD9ECx
+AvbALWhpwSzUJWszB4cMBdMuDmKE23V85gDU4Md7VcwqOSelUnoauVeVNmlKwAt7
+Y4FmRC5pL7CZCnP0jHGAEexEnxQaCbMdXe3TN9eRt5RVqj0ks3MkWyJ7PIu63Bu1
+o4yZma2mkq7skiM2e9Ari8JgMBQ+EjBHtpG4kshmkJJpzbrDHH79f3w9hTw49q25
+MCSr+mpc2gnWKx1BPBJHlGSKVVHXyWNEWWFdbI4eK8dmnsVnm0s=
+=2SXp
+-----END PGP SIGNATURE-----
+
+--m+jEI8cDoTn6Mu9E--
