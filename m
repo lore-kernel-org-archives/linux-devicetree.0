@@ -2,140 +2,118 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5CCC83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6EDC83007
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA7DC206A5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:14:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="V7lGextH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0KR9/7Z4"
+	by mail.kernel.org (Postfix) with ESMTP id 00FDA2064A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:25:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgD1IOs (ORCPT
+        id S1726775AbgD1IZV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:14:48 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:43963 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726621AbgD1IOs (ORCPT
+        Tue, 28 Apr 2020 04:25:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726490AbgD1IZV (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:14:48 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id EC5E25800DA;
-        Tue, 28 Apr 2020 04:14:46 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 28 Apr 2020 04:14:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=Rl2dKFp212hN23zX63f+C/P6dfS
-        tbQu0uWJ4H7pCcec=; b=V7lGextHwtaxIFTLlazW3bKC48l9uSC2as9K94BLlMN
-        z+AIrtVYMgFeI5s1fzR2vZJLTgCYuMiBHXX8XjwKg40/GBOj9YbDA8X3/9dtlL2p
-        Ej2qudOwnoPoD9HGVJLJ8dtKa7sjd/lGCFZcVV8/0BYE+V4Gw1pSyKcpfTroKhkf
-        KwRym875pnQhhDJwsEA7HoCRGs+5gYjlAisfoxfEoDdudnOXt9J8mFNU/VNRKi9H
-        ae0dMzVTUQpVx/8162Z2XjOeCVGYggcWGm1Z92aTlEUDLmUxdFlyHdO2VWBzGMqi
-        ic9o79CB86xGTeVdfrkOBgE+nJARcul+d1ZZceJiOAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Rl2dKF
-        p212hN23zX63f+C/P6dfStbQu0uWJ4H7pCcec=; b=0KR9/7Z4PvGy27sTQOgVhj
-        fGBAcavBXb62ROKnUOLF+FhaTXS1GLunRIez5dtgmzfkV37pamU2rRkRFGMSVzpL
-        9flAOJrM3Xg9COKeQPuLSHSw8gwvwjQ9zWKuCLxiXWDdrGuxQ/rVVkzMBg4KSOXn
-        6TlxnGOu3BsGNZ89VLacYb9DB+bll6azrrXztMMNlwksskTU/cC1HtY2ZjW7Tk6p
-        OdosNU7dG2H61smxEyfMxjjLcLOKqIHFAMA3CNthGapohsg2TmBAzu2hZ29P2idq
-        W74I9/CgUDRPa56fZZ7sxMSLHirhyUyXf3U1jUdVkLPFWRamKxx/JUM0z2SJ3RFA
-        ==
-X-ME-Sender: <xms:9uWnXsCpwV72yiqvxhE4nlArD6ON2JmAIoGATUy4T4viAwDmIL002Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugddtvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:9uWnXgYfvH5yydUG2zNGQbmZvHRp1Jgmr6I2BlxSAswQCOVr9Hd72Q>
-    <xmx:9uWnXkvL3rjW4j_ePDEEF4RS3SbMxrhRIp6P0PFVwJegIDnkOFqqrw>
-    <xmx:9uWnXi9ad555hJxDt44hBAfwSzBHkpTsqqS5RQnRq1C3b-mP-reWIg>
-    <xmx:9uWnXgFEU8EeGc3Pciue44v7fhSNlZ52z06WyNWJc36pdBh_avXZxQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BBFA13065E8D;
-        Tue, 28 Apr 2020 04:14:45 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 10:14:44 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Marcus Cooper <codekipper@gmail.com>
-Subject: Re: [PATCH v3 7/7] arm64: dts: sun50i-h6: Add HDMI audio to H6 DTSI
-Message-ID: <20200428081444.vddwswsorl5tf7yp@gilmour.lan>
-References: <20200426104115.22630-1-peron.clem@gmail.com>
- <20200426104115.22630-8-peron.clem@gmail.com>
+        Tue, 28 Apr 2020 04:25:21 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28306C03C1A9
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 01:25:21 -0700 (PDT)
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jTLYD-0005oz-3B; Tue, 28 Apr 2020 10:25:09 +0200
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jTLYA-0003sR-0V; Tue, 28 Apr 2020 10:25:06 +0200
+Date:   Tue, 28 Apr 2020 10:25:05 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Robert Foss <robert.foss@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v7 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200428082505.GA22489@pengutronix.de>
+References: <20200408110816.2712841-1-robert.foss@linaro.org>
+ <20200408110816.2712841-2-robert.foss@linaro.org>
+ <20200415160729.GA4438@bogus>
+ <20200415162110.bmorj4u4hkqohqjx@pengutronix.de>
+ <CAG3jFysg34=HJ7xefuAKw4Uq6W0POm5TsJmzQku6WwkhH_j=-w@mail.gmail.com>
+ <20200428075504.ovzugt2mbgan7z3k@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="34tj5oypfixbg5ni"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200426104115.22630-8-peron.clem@gmail.com>
+In-Reply-To: <20200428075504.ovzugt2mbgan7z3k@gilmour.lan>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:23:30 up 66 days, 19:40, 148 users,  load average: 0.03, 0.16,
+ 0.38
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 20-04-28 09:55, Maxime Ripard wrote:
+> On Mon, Apr 27, 2020 at 05:13:42PM +0200, Robert Foss wrote:
+> > On Wed, 15 Apr 2020 at 18:21, Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > >
+> > > On 20-04-15 11:07, Rob Herring wrote:
+> > > > On Wed, Apr 08, 2020 at 01:08:14PM +0200, Robert Foss wrote:
+> > > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 
---34tj5oypfixbg5ni
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-On Sun, Apr 26, 2020 at 12:41:15PM +0200, Cl=E9ment P=E9ron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
->=20
-> Add a simple-soundcard to link audio between HDMI and I2S.
->=20
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 31 ++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
-ot/dts/allwinner/sun50i-h6.dtsi
-> index a5ee68388bd3..558fe63739cb 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -88,6 +88,24 @@
->  			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->  	};
-> =20
-> +	sound_hdmi: sound {
-> +		compatible =3D "simple-audio-card";
-> +		simple-audio-card,format =3D "i2s";
-> +		simple-audio-card,name =3D "allwinner-hdmi";
+> > > > > +  clock-names:
+> > > > > +    description:
+> > > > > +      Input clock for the sensor.
+> > > > > +    items:
+> > > > > +      - const: xvclk
+> > > > > +
+> > > > > +  assigned-clocks:
+> > > > > +    description:
+> > > > > +      Input clock for the sensor.
+> > > > > +
+> > > > > +  assigned-clock-rates:
+> > > > > +    description:
+> > > > > +      Frequency of the xvclk clock in Hertz.
+> > > >
+> > > > These 2 should have a 'maxItems: 1'
+> > >
+> > > Don't know why those properties are needed here.. IMHO this shouldn't be
+> > > part of the binding or at least it should be optional and not required.
+> > > All we need is the clocks and the clock-names property.
+> > 
+> > Thanks Marco, I'll make it optional for the next revision.
+> 
+> Well, the whole discussion we had was about removing them entirely?
 
-It doesn't seem to be on purpose, but the name is different from the other
-series you sent.
++1 from my side. It is part of the system integration and not part of
+this device.
 
-Maxime
+Regards,
+  Marco
 
---34tj5oypfixbg5ni
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqfl9AAKCRDj7w1vZxhR
-xSzfAQCyUP2gys2O31vFV8nbzG01R6D7k8xImWeYCJji+veaSgEA8v2gBNki9GaR
-+i4rWPFMYJfnRvxQOzIiQzMgStA4hQ4=
-=PQem
------END PGP SIGNATURE-----
-
---34tj5oypfixbg5ni--
+> Maxime
