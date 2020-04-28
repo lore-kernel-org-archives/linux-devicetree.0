@@ -2,115 +2,94 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D9EC83007
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70488C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F936206C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588069566;
-	bh=rru8l4Bm6wpCte8jUr7SS5h+I8zMs5cQo4003bnToGw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u8O67061DCqUDDslywqAyvZCT70YIpzq5ANODc1ACxUrf7EPUOnxX75nVvDI6IVMr
-	 U3kiXvS0pmWJtmT4/2YJbCOTE1d8hXzIcWr6LZFYXYUJtmJbWC/8RT+Ec+mG8huEiH
-	 Wv1gHZkqoO0iaYVZmpe2B0hTpnXing/qTX1B2kB4=
+	by mail.kernel.org (Postfix) with ESMTP id 4F881206A1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:29:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgD1K0F (ORCPT
+        id S1726343AbgD1K3Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:26:05 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42611 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727105AbgD1K0F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 06:26:05 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s10so15966806edy.9;
-        Tue, 28 Apr 2020 03:26:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D19EgHm/8BStTYYiX33bzJpL0gjuVR6x68nTLwLkEok=;
-        b=X6mbEkqjLIqruphdEYhNrzj2fdT7f6lFvf5WIfA1yWTwELNKfv24oFgMK1il20S9+S
-         f6UKqZ/1mnmVGkK98an0EeWtjVQOHmB9Slo79gpKPYYrZvCY+trCLL+omgIyYQayOPLW
-         aXN1Ng7Cy1qynBGCEiSvVqJ+VdS7i9Az3+vKqjLAxLXpob9jWS76AdBtdeFAyf4w0BY2
-         mjU+6fgOrZRb0r5lusoMhS4zOstzHe+l7cyQoBSA7Yhpcv4hI5D11c/n6DPck4uCaBsx
-         uKU6y/kTk2OU0t+Aq52JhiwayXfgxYgHhJ7ww4vmc0yt0jt8HDv1Xsu8i6xKMAlhiCrj
-         mdrg==
-X-Gm-Message-State: AGi0PubfwtJZqLuH8j+Wb24T9t6KaaZHI6iKaj+qOAzQZUqvRFAgM9uo
-        46qfx7DLL+vD+e42v5uVB18=
-X-Google-Smtp-Source: APiQypIySyRRLgxTsKOJvhiqPdeQHDwTqC6HW2bn+FZyDWntLyruBapInnwMX7MdEj+FvFYclV5ZOg==
-X-Received: by 2002:a50:ec0c:: with SMTP id g12mr22967324edr.140.1588069562934;
-        Tue, 28 Apr 2020 03:26:02 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.237])
-        by smtp.googlemail.com with ESMTPSA id r4sm407418ejz.28.2020.04.28.03.26.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Apr 2020 03:26:02 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:26:00 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kgene@kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/13] arm: dts: s5pv210: Add an ADC node
-Message-ID: <20200428102600.GC23963@kozik-lap>
-References: <20200426183604.28494-1-xc-racer2@live.ca>
- <BN6PR04MB0660AAB00F5D36E2FEE22DE8A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Tue, 28 Apr 2020 06:29:25 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:60741 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgD1K3Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 06:29:25 -0400
+Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N7zJl-1j8Slk0BW7-0151mp; Tue, 28 Apr 2020 12:29:23 +0200
+Received: by mail-qt1-f175.google.com with SMTP id z90so16777275qtd.10;
+        Tue, 28 Apr 2020 03:29:19 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaEzZ9lXoaV0P/0gznngXFbu65OUwIPXFwI6v99nnn5CbHm2Ei1
+        qQYTbyAODisEizg4oRawc3r633bqYnBaw9CzV9U=
+X-Google-Smtp-Source: APiQypKhnq3/Wss+OoRFjOQsqmAF7V3ZB8I32IaOWidhbDzgpeLsUO8NqJdgDqyVWcWGVB1IlWYAM4APKq/hkKuddMg=
+X-Received: by 2002:ac8:4e2c:: with SMTP id d12mr27367360qtw.204.1588069758853;
+ Tue, 28 Apr 2020 03:29:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660AAB00F5D36E2FEE22DE8A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1585889042.git.eswara.kota@linux.intel.com>
+ <9c58aeb1561f28f302921d54aee75942545c4971.1585889042.git.eswara.kota@linux.intel.com>
+ <20200417093551.GH2167633@dell> <d5b7eb87-7468-a1c4-bf19-d676c8e9c49d@linux.intel.com>
+ <20200428100538.GM3559@dell>
+In-Reply-To: <20200428100538.GM3559@dell>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 28 Apr 2020 12:29:02 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1DP2JNUKP7X=+oPypVZqOHrkByOr3hEXw+3mu2fP49Sw@mail.gmail.com>
+Message-ID: <CAK8P3a1DP2JNUKP7X=+oPypVZqOHrkByOr3hEXw+3mu2fP49Sw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v6 1/4] mfd: syscon: Add fwnode_to_regmap
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kishon <kishon@ti.com>, DTML <devicetree@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:eOSOkVGCe92qoxV6q9UDWybPC5J3V7C4wBiiws1XQI12tDwvbqJ
+ XN+RvFFD2lqmanEQKLGAGOIBpW6BqCRCRHDPl+r4EC3xPR986/oixubRLF4Zrc0hh1Imb6c
+ fiTrqKueIScI8QQk9pKlk0M3fOs8HZP99Pyim1jEz2wtveL33ut3gW4sKWHGRWx2BVcJ+w2
+ mup5Ri3aDElNTipE9/o8g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NU0xku3jdYI=:T23XrRhZ21r4lDEjmesagI
+ 1xlQ5FOeLpy94iyxmHFrFTK8OX1YTYwUqlZy5VQybkrdCtS/0ZVsjhKsyzOu9Z92SY5b8XS4C
+ RHwDvu8edMgsB8BvwMLdT5krkhYKcTHN81E+jHRFB6mjWkq3LUCjsIiD6PnL6Ne5gmGPCWMbw
+ IBA1HjW4ncK3WtVL81L+bIYWIO1KzsiVD7Uv1kxXbeZKDnw2qEiHtdBztguVnTbzNPeicZG4L
+ 74l48ALUnH9M1Qwl8xzHL3A+Azb8GLSilX8JPBbN7mcWAyLNmvaPUigOb6TuGaltMu+X/QYE+
+ XCBHJtyZd20jkRfz76dnWW/ClsUFpRpPhE3ZvXlRHt4TOuCpLhKEO+vI9dycePgGSxEMw2Cue
+ yzDDJxGqkmTCg/qUiQTbIG7+bZQ7NUeMNJ2fCgDjYqk8c6L55yF61juVDzg9h9KkkGGlk2fRj
+ PGg5i8CLJykNHf6hJx8nRNaR2Y6ME8mbdkh1eBrLwF2xJePE7PCcfCyTxeBu8V7HvVWVR7Ytc
+ rR84uCFSzgI1W/g3IiEzH0t56KuSEOBA95gTUU9/rrm6nqCmfjXrwAInboEtL9B6JxfjBPi3O
+ AjeD1Jb53MKQhXp0DFvjSquLKQO9pOtX2GoSmalWfK83y6+aJJFyUpg/8W3T2Tx1CuafJP6GI
+ z83ugZABVBEi6FEnBSCLgvA8nJqjN5Cy0OxjeljjhE8TB2Qrpiz31dhGe5iKboUkqk1+CS+Yu
+ EzwDg0sKi21amKyL/8AZU31rBBEeFtSDWEEnf3JqWcurPfANqQUznl69JOavmqy9zXLEJ+FXv
+ w2kKA5hA7SPkd0paM/qRagcU/YtiLKQjirn3bKC7SQKAMi9RUIp3a6tsdU0eSdCDcqi0j4xFE
+ 0j1BKnIJw4TSG2qJ9hhQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 11:36:00AM -0700, Jonathan Bakker wrote:
-> The exynos-adc driver now supports the S5PV210, so add the DT
-> node so that devices can use it.
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> ---
->  arch/arm/boot/dts/s5pv210.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-> index 2ad642f51fd9..b3b6ad2889f9 100644
-> --- a/arch/arm/boot/dts/s5pv210.dtsi
-> +++ b/arch/arm/boot/dts/s5pv210.dtsi
-> @@ -159,6 +159,18 @@
->  			};
->  		};
->  
-> +		adc: adc@126c0000 {
-> +			compatible = "samsung,s5pv210-adc";
-> +			reg = <0xe1700000 0x1000>;
+On Tue, Apr 28, 2020 at 12:05 PM Lee Jones <lee.jones@linaro.org> wrote:
+> On Tue, 21 Apr 2020, Dilip Kota wrote:
+> >
+> > But, i feel return error for ACPI or oother, looks better because
+> > 'device_node' has fwnode pointer. And provide description
+> > in the header file, mentioning function is success for 'OF' and returns
+> > error for the rest.
+>
+> I don't think this patch adds much to be honest.
+>
+> Better to just do:
+>
+>     device_node_get_regmap(to_of_node(fwnode), false);
+>
+> ... from the call site I think.
 
-reg does not match the node address.
+Agreed, or just use the of_node pointer consistently in the driver that uses
+it and avoid the use of the fwnode interface entirely when dealing with a
+modern driver that does not need to support board files any more.
 
-Run "make dtbs W=1" and be sure there are no new warnings.
-
-Best regards,
-Krzysztof
-
-
-> +			interrupt-parent = <&vic2>;
-> +			interrupts = <23>, <24>;
-> +			clocks = <&clocks CLK_TSADC>;
-> +			clock-names = "adc";
-> +			#io-channel-cells = <1>;
-> +			io-channel-ranges;
-> +			status = "disabled";
-> +		};
-> +
->  		spi0: spi@e1300000 {
->  			compatible = "samsung,s5pv210-spi";
->  			reg = <0xe1300000 0x1000>;
-> -- 
-> 2.20.1
-> 
+      Arnd
