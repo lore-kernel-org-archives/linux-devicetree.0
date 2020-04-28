@@ -2,101 +2,137 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB1EC83001
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FE8C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69BF7206D9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC02C206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:26:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1PNM85k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgD1OOv (ORCPT
+        id S1726929AbgD1O0e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:14:51 -0400
-Received: from mga18.intel.com ([134.134.136.126]:59849 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727988AbgD1OOu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:14:50 -0400
-IronPort-SDR: LLcMwZjGyzTvoMbcz8Yfbr/pGk8dbxhv8ppinSi76U29XoFTg5e1KAM7L0YR0Rdxa5+gj+YSlB
- lhtU9MvoMrng==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 07:14:50 -0700
-IronPort-SDR: p91jQfLvoy5gFXMynjK2xfww/QM1aHbNBf/AbnH1flOme0Ro77zKsxpiEx5vPV17XlPHmN9jzH
- c2rrz2y3Xkqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="459245444"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Apr 2020 07:14:46 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jTR0b-003ZOj-Uc; Tue, 28 Apr 2020 17:14:49 +0300
-Date:   Tue, 28 Apr 2020 17:14:49 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] spi: dw: Add support for Intel Keem Bay SPI
-Message-ID: <20200428141449.GV185537@smile.fi.intel.com>
-References: <20200422141142.25591-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+        Tue, 28 Apr 2020 10:26:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726900AbgD1O0e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:26:34 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD13BC03C1AB;
+        Tue, 28 Apr 2020 07:26:33 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id b11so24872285wrs.6;
+        Tue, 28 Apr 2020 07:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hG1iewHRLomP7TVu4ek95y5UWXfro8sk9H3gDbdYkFU=;
+        b=e1PNM85kPudrtghx5esFXKTU72xQjtksJL6Cxf/4nXufhl1oWdxTsWEX/sQzVqwAfz
+         zn/8/hXeVC9v2d6fGq/uuidWo5LQvWQGdxAcgErMR8deJaEflxX9NvSrXbiEExJZjUkU
+         h52KUrhA4ZJe7aTj+nbDJtiTG3dq/A61TtI0Gram/0KFNcSQfSB5PksuUH1khvhpTdhw
+         BDxZVMWdpipYzYcZOsaEmD7tR4qUi8LtkckQeORuB0taY1u5xHJtB1UAVN4xaRb4/2O6
+         VjVkb0PgO+Ban1Q1ZGLh2xy424SxSGFn6UB9f1TrlsaOqfPFOh+PnnkSH3za2B8Xz/Uv
+         dmww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hG1iewHRLomP7TVu4ek95y5UWXfro8sk9H3gDbdYkFU=;
+        b=G3bjHrJ/cH8B7op3G0NmHcDA09L94ZqS86DE1/t1wqv0p2H2IXMumB8Rw6OeRz56+F
+         0ZAtvwx2fkZMSu53eLuOissDgPjc9URUXpUm0sf1tBSqMwMPziN1CHqorgJYOH8x+CSL
+         nr+Rw6YmEvHT5jd6wn5P8whDBQr8O+FjVpdZ+uWOuS4rSET+rP141IzmJP2JULDrUzCs
+         tIy0XpztoDFPQnv1AhtFvLdUcfPEnuRzQF/oJmmUlJlSNwW4k/3Xf0H+Ttvw2NQ2oph6
+         y/P4Zo7lrDlSGZJUx2AUrakxuCy29groYo+eVvZYLbrWDXxXUd0D1GWO1nAO9NgD1yIc
+         3kAA==
+X-Gm-Message-State: AGi0PuZBmvi4kZ+Aeg6fAux8LhUZ9RNd6XmocoRmTGR0jIgiJXoW9ykf
+        Kc8yLenM+r5WASMi6fOejy4=
+X-Google-Smtp-Source: APiQypJ7gR281FtErynXrsmeODO1gY7gzdn3z5Z1gvMXwBRkdEPTT8anxYrfO/GsOajLTJDAcgNnfQ==
+X-Received: by 2002:a5d:4b0a:: with SMTP id v10mr11519520wrq.342.1588083992303;
+        Tue, 28 Apr 2020 07:26:32 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:9542:27c5:80f1:9810])
+        by smtp.gmail.com with ESMTPSA id h6sm3367106wmf.31.2020.04.28.07.26.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 07:26:31 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
+        Piotr Oniszczuk <warpme@o2.pl>
+Subject: [PATCH v2] arm64: dts: allwinner: h6: Use dummy regulator for Tanix TX6
+Date:   Tue, 28 Apr 2020 16:26:29 +0200
+Message-Id: <20200428142629.8950-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422141142.25591-1-wan.ahmad.zainie.wan.mohamad@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:11:35PM +0800, Wan Ahmad Zainie wrote:
-> This patchset adds support for DesignWare DWC_ssi. This soft IP
-> is an AMBA version 2.0-compliant AHB slave device. Existing driver
-> already supports the older APB version.
-> 
-> Intel Keem Bay SPI controller is using this IP. This patchset is
-> tested on Keem Bay evaluation module board.
+Tanix TX6 has a fixed regulator. As DVFS is instructed to change
+voltage to meet OPP table, the DVFS is not working as expected.
 
-Rob, can we get your Ack if everything is okay, please?
+Avoid to introduce a new dedicated OPP Table where voltage are
+equals to the fixed regulator as it will only duplicate all the OPPs.
+Instead remove the fixed regulator so the DVFS framework will create
+dummy regulator and will have the same behavior.
 
-I have more patches coming to this driver and I would not like to delay this
-series to be applied.
+Add some comments to explain this in the device-tree.
 
-> 
-> Changes since v1:
-> - Rework the third patch based on Rob's feedback.
-> 
-> 
-> Wan Ahmad Zainie (7):
->   spi: dw: Fix typo in few registers name
->   spi: dw: Add update_cr0() callback to update CTRLR0
->   dt-bindings: spi: dw-apb-ssi: Convert bindings to json-schema
->   dt-bindings: spi: dw-apb-ssi: Add compatible string for DesignWare
->     DWC_ssi
->   spi: dw: Add support for DesignWare DWC_ssi
->   dt-bindings: spi: dw-apb-ssi: Add Intel Keem Bay support
->   spi: dw: Add support for Intel Keem Bay SPI
-> 
->  .../bindings/spi/snps,dw-apb-ssi.txt          |  41 ------
->  .../bindings/spi/snps,dw-apb-ssi.yaml         |  72 ++++++++++
->  drivers/spi/spi-dw-mid.c                      |   4 +
->  drivers/spi/spi-dw-mmio.c                     |  57 +++++++-
->  drivers/spi/spi-dw.c                          | 125 +++++++++++++-----
->  drivers/spi/spi-dw.h                          |  25 +++-
->  6 files changed, 243 insertions(+), 81 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> 
-> -- 
-> 2.17.1
-> 
+Reported-by: Piotr Oniszczuk <warpme@o2.pl>
+Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6")
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ .../boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+index be81330db14f..3e96fcb317ea 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+@@ -48,7 +48,15 @@
+ };
+ 
+ &cpu0 {
+-	cpu-supply = <&reg_vdd_cpu_gpu>;
++	/*
++	 * Don't specify the CPU regulator, as it's a fixed
++	 * regulator DVFS will not work as it is intructed
++	 * to reach a voltage which can't be reached.
++	 * Not specifying a regulator will create a dummy
++	 * regulator allowing all OPPs.
++	 *
++	 * cpu-supply = <&reg_vdd_cpu_gpu>;
++	 */
+ };
+ 
+ &de {
+@@ -68,7 +76,13 @@
+ };
+ 
+ &gpu {
+-	mali-supply = <&reg_vdd_cpu_gpu>;
++	/*
++	 * Don't specify the GPU regulator, see comment
++	 * above for the CPU supply.
++	 *
++	 * mali-supply = <&reg_vdd_cpu_gpu>;
++	 */
++
+ 	status = "okay";
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
