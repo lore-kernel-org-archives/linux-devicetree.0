@@ -2,129 +2,83 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF22DC83004
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EDBC83004
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A9720730
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B64206E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:18:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qa78bEsT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgD1GRi (ORCPT
+        id S1726333AbgD1GS2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:17:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:14174 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbgD1GRi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:17:38 -0400
-IronPort-SDR: 6aXIsBinpEfVIAM1O58JEgJbGel1RqKVIfoovdBmQu8xS6ZiXCbJotkyIsOUwAg1CQp1Mqttdm
- 2SNC+UcUcTFA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 23:17:37 -0700
-IronPort-SDR: mRAV00zSt3LyjUtwUnQBgVJYxZssHaTeZYd55g7dy7apgmpnumrhAXhHjflr8IZvS/GcJEj/DG
- fJ/ZM+6gzOrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="257519578"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 27 Apr 2020 23:17:37 -0700
-Received: from [10.214.149.60] (vramuthx-mobl1.gar.corp.intel.com [10.214.149.60])
-        by linux.intel.com (Postfix) with ESMTP id 39A80580B9C;
-        Mon, 27 Apr 2020 23:17:32 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200424183612.4cfdbb6a@collabora.com> <20200427175127.0518c193@xps13>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
-Date:   Tue, 28 Apr 2020 14:17:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 02:18:28 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:65234 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726309AbgD1GS2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 02:18:28 -0400
+X-UUID: 6152f988bbc8476f8de1f9856db04554-20200428
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=puI0Sym2Yuv0B48OkoxjSpO6yWq9oS75PXbbSDPyG2k=;
+        b=qa78bEsTT7CPwLaY3BSCahKjYsJlrPphg0VX8ENoAVVJOgS8vgEVyiqe97mXbpcS517KiAQEM6J8oduwjbuxLP1sX/eY5lotfnSAKWu8hN+BPOyPRA2b/t9MqjUmXeSAN2nb5mNeyVXnu6H9d06Ite8hlfTH1sukAN3d7DWNAvo=;
+X-UUID: 6152f988bbc8476f8de1f9856db04554-20200428
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1887070626; Tue, 28 Apr 2020 14:18:25 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 28 Apr 2020 14:18:23 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 28 Apr 2020 14:18:22 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-i2c@vger.kernel.org>
+CC:     <tfiga@chromium.org>, <drinkcat@chromium.org>,
+        <srv_heupstream@mediatek.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v14 0/2] add power control in i2c
+Date:   Tue, 28 Apr 2020 14:18:11 +0800
+Message-ID: <20200428061813.27072-1-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <20200427175127.0518c193@xps13>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Miquel,
+QWx0aG91Z2ggaW4gdGhlIG1vc3QgcGxhdGZvcm1zLCB0aGUgcG93ZXIgb2YgZWVwcm9tDQphbmQg
+aTJjIGFyZSBhbHdheSBvbiwgc29tZSBwbGF0Zm9ybXMgZGlzYWJsZSB0aGUNCmVlcHJvbSBhbmQg
+aTJjIHBvd2VyIGluIG9yZGVyIHRvIG1lZXQgbG93IHBvd2VyIHJlcXVlc3QuDQoNClRoaXMgcGF0
+Y2ggYWRkIHRoZSBwbV9ydW50aW1lIG9wcyB0byBjb250cm9sIHBvd2VyIHRvDQpzdXBwb3J0IGFs
+bCBwbGF0Zm9ybXMuDQoNCkNoYW5nZXMgc2luY2UgdjEzOg0KIC0gZml4dXAgc29tZSBsb2dpYyBl
+cnJvcg0KDQpDaGFuZ2VzIHNpbmNlIHYxMjoNCiAtIHJlYmFzZSBvbnRvIHY1LjctcmMxDQogLSBj
+aGFuZ2UgdGhlIHByb3BlcnR5IGRlc2NyaXB0aW9uIGluIGJpbmRpbmcNCg0KQ2hhbmdlcyBzaW5j
+ZSB2MTE6DQogLSB1c2Ugc3VzcGVuZF9sYXRlL3Jlc3VtZV9lYXJseSBpbnN0ZWFkIG9mIHN1c3Bl
+bmQvcmVzdW1lDQogLSByZWJhc2Ugb250byB2NS42LXJjMQ0KDQpDaGFuZ2VzIHNpbmNlIHYxMDoN
+CiAtIGZpeHVwIHNvbWUgd29ybmcgY29kZXMNCg0KQ2hhbmdlcyBzaW5jZSB2OToNCiAtIGZpeHVw
+IGJ1aWxkIGVycm9yDQogLSByZW1vdmUgcmVkdW5kYW50IGNvZGUNCg0KQ2hhbmdlcyBzaW5jZSB2
+ODoNCiAtIGZpeHVwIHNvbWUgd3JvbmcgY29kZQ0KIC0gcmVtb3ZlIHJlZHVuZGFudCBtZXNzYWdl
+DQoNCkNoYW5nZXMgc2luY2Ugdjc6DQogLSBhZGQgYmluZGluZyBkZXNjcmliZSBzdXBwbHkgcHJv
+cGVydHkgaW4gaTJjIGFuZCBhdDI0Lg0KIC0gbW92ZSBpMmMgYnVzIHN1cHBseSBjb250cm9sIGlu
+IGkyYy1jb3JlLg0KIC0gcmViYXNlIG9udG8gdjUuNS1yYzENCg0KICAgICAgICBbLi4uIHNuaXAg
+Li4uXQ0KDQpCaWJieSBIc2llaCAoMik6DQogIGR0LWJpbmRpbmc6IGkyYzogYWRkIGJ1cy1zdXBw
+bHkgcHJvcGVydHkNCiAgaTJjOiBjb3JlOiBzdXBwb3J0IGJ1cyByZWd1bGF0b3IgY29udHJvbGxp
+bmcgaW4gYWRhcHRlcg0KDQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9p
+MmMudHh0IHwgIDMgKw0KIGRyaXZlcnMvaTJjL2kyYy1jb3JlLWJhc2UuYyAgICAgICAgICAgICAg
+ICAgICB8IDgyICsrKysrKysrKysrKysrKysrKysNCiBpbmNsdWRlL2xpbnV4L2kyYy5oICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgMiArDQogMyBmaWxlcyBjaGFuZ2VkLCA4NyBpbnNlcnRp
+b25zKCspDQoNCi0tIA0KMi4xOC4wDQo=
 
-    Thank you very much for the review comments and your time...
-
-On 27/4/2020 11:51 pm, Miquel Raynal wrote:
-> Hi Ramuthevar,
-> 
->>> +static int ebu_nand_probe(struct platform_device *pdev)
->>> +{
->>> +	struct device *dev = &pdev->dev;
->>> +	struct ebu_nand_controller *ebu_host;
->>> +	struct nand_chip *nand;
->>> +	phys_addr_t nandaddr_pa;
->>> +	struct mtd_info *mtd;
->>> +	struct resource *res;
->>> +	int ret;
->>> +	u32 cs;
->>> +
->>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
->>> +	if (!ebu_host)
->>> +		return -ENOMEM;
->>> +
->>> +	ebu_host->dev = dev;
->>> +	nand_controller_init(&ebu_host->controller);
->>> +
->>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
->>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
->>> +	if (IS_ERR(ebu_host->ebu_addr))
->>> +		return PTR_ERR(ebu_host->ebu_addr);
->>> +
->>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
->>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
->>> +	if (IS_ERR(ebu_host->nand_addr))
->>> +		return PTR_ERR(ebu_host->nand_addr);
->>> +
->>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
->>
->> CS ids should be encoded in the reg property (see [1]).
-> 
-> Is it your choice to only support a single CS or is it actually a
-> controller limitation?
-
-Yes , its controller limitation to support only one CS
-
-Regards
-Vadivel
-  If the latter, it would be much better I think
-> to anticipate the addition of the support for another CS. And in
-> this case there are many places in this driver that should be
-> more generic.
-> 
->>> +	if (ret) {
->>> +		dev_err(dev, "failed to get chip select: %d\n", ret);
->>> +		return ret;
->>> +	}
->>> +
->>> +	ebu_host->cs = cs;
->>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand_cs0");
-> 
-> Thanks,
-> Miquèl
-> 
