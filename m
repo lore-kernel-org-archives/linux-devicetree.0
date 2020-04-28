@@ -2,117 +2,93 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43D3C83001
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 18:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FB6C83007
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 18:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91A5B206A1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 18:02:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fYgGHly7"
+	by mail.kernel.org (Postfix) with ESMTP id 49B65206A1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 18:07:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588097244;
+	bh=6Q6rZsQKt3VbM5vsorruYmknW9KDG4BhASuWxBjwPps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NAvO/jxIiq3dNb9xU3ouhVGDG2pBGLXnpsb38igxggHJRmcmZyluqwjEY8o6iwKJN
+	 DtB2pkWvRXk1FTshM+pkYiSKgSGZ2ZCpwyW6t5Dvd3USwusLaGrfufRzwGsperbWXn
+	 V3/FVwPn0lWfMA2QrMmR+aHJUH44olwkPh/YAjqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgD1SCn (ORCPT
+        id S1728023AbgD1SHX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 14:02:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgD1SCm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 14:02:42 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2259AC03C1AB
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 11:02:42 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 18so11059930pfx.6
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 11:02:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=mENmQ6Pb7H8tmR1MjtMLs0ubXE4BKzkIreYYg9JTmwQ=;
-        b=fYgGHly79Oyel+aDS8shmE3wA06fO5kZLL/u3s85DS992pSDgr08Jx2wajFH7j1jHC
-         Dm1K5xERcf6FhGPMuwNcv14JeebOPQZorvUlcLz9r0RxfDLF+gRc1j1BvIQq3RNpOm6Q
-         9EMp+/yW1t/Q54ZgaBMcfsk1FEOfsZMCpkjScN0nwNDQzMFzUhf4HwlvdsjFpCVrgXEi
-         EYB+aGQalOJeufMo73XeoDc9GtUPILpD4ag+vQctucSuvpTuQySVWKSYNmE/AT+LcaHE
-         kI7bunItPbbWP55YlZJPCWyIY1A8G2+MqmrVUznPsc3Sd/HNKegH3CuGA+CTuEFt/kBt
-         Fmrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mENmQ6Pb7H8tmR1MjtMLs0ubXE4BKzkIreYYg9JTmwQ=;
-        b=LzNFKuWkS3EfWbW0xtgfU0C8HU8Hst4jciL9gEWgYnRaKdMkCTiecZpD5b8SVvn8bN
-         w2XP35nPR8j4bhgw5CgNM60b2I+Yzq5JkeKY97DuMfgmwBgBwSeG3HzweS+MfJVbLCpp
-         5K4npDwZtMvWS7mTPfGy2O9rcMHrcxk6vspqZIBCgyVeplb61+OmOEZUh0UV8OBDAG1w
-         iY8ABJ0joLdASZdhf4x7hs+SSaePVTvlPNBJdR9MMKCApXIcVbSR4XihqLwkYTsTTqZK
-         rsvXd58vJd3+/PV/YGlWpOJ7sXEhThy9CKmrFSbbR+XfXbqeejii1J45daKhOMbDigZJ
-         Eriw==
-X-Gm-Message-State: AGi0PuYAyeoLj8V/YB16fKyW8kh0ozeGFqstULx4OEf98wj5qJ5eYE/c
-        b8dYubRKSOAVn51nhwMyAYNsTg1GyAc=
-X-Google-Smtp-Source: APiQypJTI6DwHabWRQCA/LwS+jwG4QtUCwBuv+PQUF/I35yfyK+EKVAsd6jfQyV+7Qv9CI1ziwgX/w==
-X-Received: by 2002:aa7:8593:: with SMTP id w19mr30860532pfn.97.1588096961545;
-        Tue, 28 Apr 2020 11:02:41 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h197sm16248994pfe.208.2020.04.28.11.02.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 11:02:40 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 11:02:38 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: simple: Add IVO M133NWF4 R0
-Message-ID: <20200428180238.GK987656@yoga>
-References: <20200420215728.1927434-1-bjorn.andersson@linaro.org>
- <20200425175842.GA3773@ravnborg.org>
- <CAL_JsqL6bMwrXZqvGz_H_aJi+EeoikBwKznLP2VomJ=Wn822Rg@mail.gmail.com>
- <20200428170559.GC27234@ravnborg.org>
+        Tue, 28 Apr 2020 14:07:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727827AbgD1SHX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 14:07:23 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63D05206A1;
+        Tue, 28 Apr 2020 18:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588097242;
+        bh=6Q6rZsQKt3VbM5vsorruYmknW9KDG4BhASuWxBjwPps=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y2YmrdxTyFXsLPz3KoKzlB5aMEhzBWJUyFz9KQ206ampsbEYlXj73HWwL2v/8k7aS
+         F6a1PD3oQdwDZb4asZS5W7G/Fk2ujh/pYI+s9155m0v2CtQONf8YxE+hYNpS5fgnp0
+         +zyjD00XiMMQLgdVF1W7Dy4RzHYCrCuxhA/LxXKE=
+Date:   Tue, 28 Apr 2020 19:07:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        robh+dt@kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] spi: dw: Add support for Intel Keem Bay SPI
+Message-ID: <20200428180720.GO5677@sirena.org.uk>
+References: <20200422141142.25591-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200428141449.GV185537@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RHdRtM27np9fZUoh"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200428170559.GC27234@ravnborg.org>
+In-Reply-To: <20200428141449.GV185537@smile.fi.intel.com>
+X-Cookie: Eschew obfuscation.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 28 Apr 10:05 PDT 2020, Sam Ravnborg wrote:
 
-> Hi Rob.
-> 
-> On Tue, Apr 28, 2020 at 09:27:51AM -0500, Rob Herring wrote:
-> > On Sat, Apr 25, 2020 at 12:58 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> > >
-> > > Hi Björn.
-> > >
-> > > On Mon, Apr 20, 2020 at 02:57:27PM -0700, Bjorn Andersson wrote:
-> > > > Define the vendor prefix for InfoVision Optoelectronics and add their
-> > > > M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel to the compatible list
-> > > > of panel-simple.
-> > > >
-> > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > >
-> > > I got OK for the vendor prefix on irc so patch is now added to
-> > > drm-misc-next.
-> > > Another time please use a dedicated patch for vendor-prefix
-> > > so it is not hidden with other stuff. This way the chance
-> > > to get the attention of the right people is better.
-> > 
-> > I should have mentioned there's basically one thing to check:
-> > alphabetical order.
-> I thought I checked that, but obviously not - hrmpf..
+--RHdRtM27np9fZUoh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sorry about that, I thought I did double check that before posting it...
+On Tue, Apr 28, 2020 at 05:14:49PM +0300, Andy Shevchenko wrote:
 
-> I will post a follow-up patch for drm-misc-next to fix it.
-> 
+> Rob, can we get your Ack if everything is okay, please?
 
-Thank you,
-Bjorn
+> I have more patches coming to this driver and I would not like to delay this
+> series to be applied.
+
+If there are problems with the DT binding conversion it'd be good to
+make sure the next version of the series that moves it to the last patch
+so the rest of the series isn't blocked on it.
+
+--RHdRtM27np9fZUoh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6ocNcACgkQJNaLcl1U
+h9A66Qf/cMqeJIlT91QLvY9dPiqnO1A10PHzEQwAtrdnlQ+90vx1tk7LFDWma9ju
+Z4mQoYt+c9hli2iykz3Cv/ch93D5x4//GckKbZQlpnfnB1DQ3Zy0Ta6CTnxgpr66
+bINssfFcMX35TPNgVxTo54EdHXgDSC3aBQrMz8mIg8LdJ+Abc8EaqoYoPpSr3x7w
+Gz8CswZfKFTAB8o0L1jYL4+ucui74ij2MA+SG0jkiF9OPkaj996Er8aCwro7SY4F
+fOxl1jjHi4Rq3FmYazj+U5Pqa8z/TYQQeKunF20T1CXrhH3XMtAY9wUU27QS8OLr
+FlwPxbVl1bjGFKJbqwHlX89WHqcMDQ==
+=FKgl
+-----END PGP SIGNATURE-----
+
+--RHdRtM27np9fZUoh--
