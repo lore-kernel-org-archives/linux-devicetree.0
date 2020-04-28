@@ -2,107 +2,258 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527B7C83007
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85495C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3164D206B8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEC8206A5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgD1G2F (ORCPT
+        id S1726378AbgD1Gb2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:28:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45482 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgD1G2F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 02:28:05 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 35D7B2A122C;
-        Tue, 28 Apr 2020 07:28:03 +0100 (BST)
-Date:   Tue, 28 Apr 2020 08:27:59 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200428082759.25065146@collabora.com>
-In-Reply-To: <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200424183612.4cfdbb6a@collabora.com>
-        <20200427175127.0518c193@xps13>
-        <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 28 Apr 2020 02:31:28 -0400
+Received: from mx.socionext.com ([202.248.49.38]:22277 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726361AbgD1Gb1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 02:31:27 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 28 Apr 2020 15:31:25 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id C9C4060057;
+        Tue, 28 Apr 2020 15:31:25 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 28 Apr 2020 15:31:25 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 8D37D1A01BB;
+        Tue, 28 Apr 2020 15:31:25 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH net] dt-bindings: net: Convert UniPhier AVE4 controller to json-schema
+Date:   Tue, 28 Apr 2020 15:31:22 +0900
+Message-Id: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 28 Apr 2020 14:17:30 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+Convert the UniPhier AVE4 controller binding to DT schema format.
+This changes phy-handle property to required.
 
-> Hi Miquel,
-> 
->     Thank you very much for the review comments and your time...
-> 
-> On 27/4/2020 11:51 pm, Miquel Raynal wrote:
-> > Hi Ramuthevar,
-> >   
-> >>> +static int ebu_nand_probe(struct platform_device *pdev)
-> >>> +{
-> >>> +	struct device *dev = &pdev->dev;
-> >>> +	struct ebu_nand_controller *ebu_host;
-> >>> +	struct nand_chip *nand;
-> >>> +	phys_addr_t nandaddr_pa;
-> >>> +	struct mtd_info *mtd;
-> >>> +	struct resource *res;
-> >>> +	int ret;
-> >>> +	u32 cs;
-> >>> +
-> >>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
-> >>> +	if (!ebu_host)
-> >>> +		return -ENOMEM;
-> >>> +
-> >>> +	ebu_host->dev = dev;
-> >>> +	nand_controller_init(&ebu_host->controller);
-> >>> +
-> >>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
-> >>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
-> >>> +	if (IS_ERR(ebu_host->ebu_addr))
-> >>> +		return PTR_ERR(ebu_host->ebu_addr);
-> >>> +
-> >>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
-> >>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
-> >>> +	if (IS_ERR(ebu_host->nand_addr))
-> >>> +		return PTR_ERR(ebu_host->nand_addr);
-> >>> +
-> >>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);  
-> >>
-> >> CS ids should be encoded in the reg property (see [1]).  
-> > 
-> > Is it your choice to only support a single CS or is it actually a
-> > controller limitation?  
-> 
-> Yes , its controller limitation to support only one CS
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ .../bindings/net/socionext,uniphier-ave4.txt       |  64 ------------
+ .../bindings/net/socionext,uniphier-ave4.yaml      | 109 +++++++++++++++++++++
+ MAINTAINERS                                        |   2 +-
+ 3 files changed, 110 insertions(+), 65 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+ create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
 
-I'm pretty sure that's not true, otherwise you wouldn't have to select
-the CS you want to use :P.
+diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+deleted file mode 100644
+index 4e85fc4..0000000
+--- a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
++++ /dev/null
+@@ -1,64 +0,0 @@
+-* Socionext AVE ethernet controller
+-
+-This describes the devicetree bindings for AVE ethernet controller
+-implemented on Socionext UniPhier SoCs.
+-
+-Required properties:
+- - compatible: Should be
+-	- "socionext,uniphier-pro4-ave4" : for Pro4 SoC
+-	- "socionext,uniphier-pxs2-ave4" : for PXs2 SoC
+-	- "socionext,uniphier-ld11-ave4" : for LD11 SoC
+-	- "socionext,uniphier-ld20-ave4" : for LD20 SoC
+-	- "socionext,uniphier-pxs3-ave4" : for PXs3 SoC
+- - reg: Address where registers are mapped and size of region.
+- - interrupts: Should contain the MAC interrupt.
+- - phy-mode: See ethernet.txt in the same directory. Allow to choose
+-	"rgmii", "rmii", "mii", or "internal" according to the PHY.
+-	The acceptable mode is SoC-dependent.
+- - phy-handle: Should point to the external phy device.
+-	See ethernet.txt file in the same directory.
+- - clocks: A phandle to the clock for the MAC.
+-	For Pro4 SoC, that is "socionext,uniphier-pro4-ave4",
+-	another MAC clock, GIO bus clock and PHY clock are also required.
+- - clock-names: Should contain
+-	- "ether", "ether-gb", "gio", "ether-phy" for Pro4 SoC
+-	- "ether" for others
+- - resets: A phandle to the reset control for the MAC. For Pro4 SoC,
+-	GIO bus reset is also required.
+- - reset-names: Should contain
+-	- "ether", "gio" for Pro4 SoC
+-	- "ether" for others
+- - socionext,syscon-phy-mode: A phandle to syscon with one argument
+-	that configures phy mode. The argument is the ID of MAC instance.
+-
+-The MAC address will be determined using the optional properties
+-defined in ethernet.txt.
+-
+-Required subnode:
+- - mdio: A container for child nodes representing phy nodes.
+-         See phy.txt in the same directory.
+-
+-Example:
+-
+-	ether: ethernet@65000000 {
+-		compatible = "socionext,uniphier-ld20-ave4";
+-		reg = <0x65000000 0x8500>;
+-		interrupts = <0 66 4>;
+-		phy-mode = "rgmii";
+-		phy-handle = <&ethphy>;
+-		clock-names = "ether";
+-		clocks = <&sys_clk 6>;
+-		reset-names = "ether";
+-		resets = <&sys_rst 6>;
+-		socionext,syscon-phy-mode = <&soc_glue 0>;
+-		local-mac-address = [00 00 00 00 00 00];
+-
+-		mdio {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			ethphy: ethphy@1 {
+-				reg = <1>;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
+new file mode 100644
+index 0000000..fd31e87
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
+@@ -0,0 +1,109 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/socionext,uniphier-ave4.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Socionext AVE ethernet controller
++
++maintainers:
++  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
++
++description: |
++  This describes the devicetree bindings for AVE ethernet controller
++  implemented on Socionext UniPhier SoCs.
++
++allOf:
++  - $ref: ethernet-controller.yaml#
++
++properties:
++  compatible:
++    enum:
++      - socionext,uniphier-pro4-ave4
++      - socionext,uniphier-pxs2-ave4
++      - socionext,uniphier-ld11-ave4
++      - socionext,uniphier-ld20-ave4
++      - socionext,uniphier-pxs3-ave4
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  phy-mode:
++    $ref: ethernet-controller.yaml#/properties/phy-mode
++
++  phy-handle:
++    $ref: ethernet-controller.yaml#/properties/phy-handle
++
++  clocks:
++    minItems: 1
++    maxItems: 4
++
++  clock-names:
++    oneOf:
++      - items:          # for Pro4
++        - const: gio
++        - const: ether
++        - const: ether-gb
++        - const: ether-phy
++      - const: ether    # for others
++
++  resets:
++    minItems: 1
++    maxItems: 2
++
++  reset-names:
++    oneOf:
++      - items:          # for Pro4
++        - const: gio
++        - const: ether
++      - const: ether    # for others
++
++  socionext,syscon-phy-mode:
++    $ref: /schemas/types.yaml#definitions/phandle-array
++    description:
++      A phandle to syscon with one argument that configures phy mode.
++      The argument is the ID of MAC instance.
++
++  mdio:
++    $ref: mdio.yaml#
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - phy-mode
++  - phy-handle
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - mdio
++
++additionalProperties: false
++
++examples:
++  - |
++    ether: ethernet@65000000 {
++        compatible = "socionext,uniphier-ld20-ave4";
++                reg = <0x65000000 0x8500>;
++                interrupts = <0 66 4>;
++                phy-mode = "rgmii";
++                phy-handle = <&ethphy>;
++                clock-names = "ether";
++                clocks = <&sys_clk 6>;
++                reset-names = "ether";
++                resets = <&sys_rst 6>;
++                socionext,syscon-phy-mode = <&soc_glue 0>;
++
++                mdio {
++                        #address-cells = <1>;
++                        #size-cells = <0>;
++
++                        ethphy: ethernet-phy@1 {
++                                reg = <1>;
++                        };
++                };
++        };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a1558eb..0ee65e2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15590,7 +15590,7 @@ SOCIONEXT (SNI) AVE NETWORK DRIVER
+ M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
++F:	Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
+ F:	drivers/net/ethernet/socionext/sni_ave.c
+ 
+ SOCIONEXT (SNI) NETSEC NETWORK DRIVER
+-- 
+2.7.4
+
