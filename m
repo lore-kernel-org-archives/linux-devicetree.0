@@ -2,173 +2,104 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CB8C83001
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40E0C83001
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9D2720730
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE31720656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVPckYKw"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RkCcn1JC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgD1QXs (ORCPT
+        id S1728106AbgD1QaQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgD1QXr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 12:23:47 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBDA5C03C1AB;
-        Tue, 28 Apr 2020 09:23:47 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id k6so23626268iob.3;
-        Tue, 28 Apr 2020 09:23:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=j6RRU0nrN7yUPwoTU3WwW56lws6VJ5/MsTtHloArhl0=;
-        b=AVPckYKwTeUisgWMXpahkhhvCC0B7KCgpPE6LKFrZcDSoFrpV7e9aReBGpKH/Fomx2
-         PLRSSFlRLBDnumFZpkYSJNBW/iSoL66EK4Cbx/t/yziGMfC8r3ByxTf0S3KvMExFrzSx
-         vdKXUJHTDxbvPYE1oBg8rw9hS6mGMi8XDuL8qFWYlM2vEI7CqPGHgRHRobFo2FQk1dPC
-         ywpr8WEhqy7y5oD97LeDunmNnuC9DvGi+ZiQ5xnJtgP+8OaMiRBlE+O83DUh4XBKkvU1
-         ZQaT87Awc6BKGbQNEB4qwY81/wY/6KsXMMrB1lAh/Y3Ms521kx9LE+r7lyl1+LUz1DMF
-         pu/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=j6RRU0nrN7yUPwoTU3WwW56lws6VJ5/MsTtHloArhl0=;
-        b=RTsdgq3rGOnNjRbZAzJ2OzLOhlPE4Gkf0W+db0SLPaanL/rr90h14Gpqx89bEQEmPq
-         fvvobLua2Qo5xqpl4MFtOim5iA1NzqTpAVTDyVgfWQ7D/0QDOA7fmkvDiepdGaAGkCtU
-         iNWcHSqDbR436KOC36SilEYJBfX3nF6+23yrPcu4uuzaFpd3ODtn2dlyNxXRjtzbJlC/
-         HyxjcpQkE/vwWAfBZSGmtviczyvGpq+FkwFeWPc4737tcd0SEoE4LM3eq6MthxQ5hdhX
-         3Gva893lxQNdLFOl/ydxf871QxZYWvomiwqTHEznFPAIm9fRR1zYzczPFmwlBOrhKFYu
-         x+aQ==
-X-Gm-Message-State: AGi0PuZBSKR3x96yHvXBAcI20G/jFT23v2j6s4xUOCs9Tr6acB/JUYP3
-        m2lQHna0mE5vzAaWyCSEhrp5oZG0NoRk/kYogGk=
-X-Google-Smtp-Source: APiQypJOl6MpBa2BRYe8Hr+y09c1rJYJoKiTY9WejKqf4GN+4FJ4o0seuR6Q1T+jNayBJixEcXKBGhrTo0lIBL1OtX0=
-X-Received: by 2002:a02:a004:: with SMTP id a4mr25699613jah.18.1588091027057;
- Tue, 28 Apr 2020 09:23:47 -0700 (PDT)
+        Tue, 28 Apr 2020 12:30:16 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1272 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728103AbgD1QaQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:30:16 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SGSJs9028011;
+        Tue, 28 Apr 2020 18:30:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=NGkABTisrRFiR0U388ihye531O2dm6SDun433lkNoMA=;
+ b=RkCcn1JCuaitkxrH921aZVHoXEJ9ZfE3vWn0dSduBNt56e6FiXSpymRcVgwq5wgWxdAP
+ 3yaF2ZciHRHwbsYkHaJbXc41GQbtN/h/yIDl2951ZXz9z1HNKA5LWcZe56OiQxap9NnB
+ Grq1+mV1tC76LL3K89lYZEGq1qla4YVIxDgovh/BJ/+HsiUPbRHOEQC+8AsDlVJYXBO7
+ MtMUin0osCda6vVrjZiSdHghI5dGIVVcs7LyCZ8WWISEdyjNpUSmVTWVVSrAlMBPl8WX
+ CVbGyARjcpIcBzP6ZoXJR6l68nM0FUbp6qZqWjn+AB/aUYEjuTTuUgnWQCYlFLDikGmD QA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30mhq61361-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 18:30:03 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C1C5D10002A;
+        Tue, 28 Apr 2020 18:30:02 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A74702B22EB;
+        Tue, 28 Apr 2020 18:30:02 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 28 Apr
+ 2020 18:29:57 +0200
+Subject: Re: [PATCH 0/5] i2c: i2c-stm32f7: enhance FastModePlus support
+To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>,
+        <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
+        <mcoquelin.stm32@gmail.com>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+References: <1579795970-22319-1-git-send-email-alain.volmat@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <baec4a71-3616-5c55-a528-6c79e49b8255@st.com>
+Date:   Tue, 28 Apr 2020 18:29:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200428142629.8950-1-peron.clem@gmail.com> <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
-In-Reply-To: <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 28 Apr 2020 18:23:35 +0200
-Message-ID: <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v2] arm64: dts: allwinner: h6: Use dummy
- regulator for Tanix TX6
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1579795970-22319-1-git-send-email-alain.volmat@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_11:2020-04-28,2020-04-28 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robin,
+Hi Alain
 
-On Tue, 28 Apr 2020 at 17:21, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-04-28 3:26 pm, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-> > voltage to meet OPP table, the DVFS is not working as expected.
->
-> Hmm, isn't that really a bug in the DVFS code? I guess it's just blindly
-> propagating -EINVAL from the fixed regulators not implementing
-> set_voltage, but AFAICS it has no real excuse not to be cleverer and
-> still allow switching frequency as long as the voltage *is* high enough
-> for the given OPP. I wonder how well it works if the regulator is
-> programmable but shared with other consumers... that case probably can't
-> be hacked around in DT.
+On 1/23/20 5:12 PM, Alain Volmat wrote:
+> This serie enhance Fast Mode Plus support in the i2c-stm32f7 driver
+> (support suspend/resume) and add the support for the stm32mp15 SoC
+> that has new syscfg bits.
+> 
+> Alain Volmat (5):
+>    i2c: i2c-stm32f7: disable/restore Fast Mode Plus bits in low power
+>      modes
+>    dt-bindings: i2c: i2c-stm32f7: add st,stm32mp15-i2c compatible
+>    i2c: i2c-stm32f7: add a new st,stm32mp15-i2c compatible
+>    ARM: dts: stm32: use st,stm32mp15-i2c compatible for stm32mp151
+>    ARM: dts: stm32: add Fast Mode Plus info in I2C nodes of stm32mp151
+> 
+>   .../devicetree/bindings/i2c/st,stm32-i2c.yaml      |  6 +-
+>   arch/arm/boot/dts/stm32mp151.dtsi                  | 18 ++++--
+>   drivers/i2c/busses/i2c-stm32f7.c                   | 75 +++++++++++++++++++---
+>   3 files changed, 83 insertions(+), 16 deletions(-)
+> 
 
-Like you, I thought that the DVFS was clever enough to understand this
-but guess not..
-
-Maybe they are some cases where you don't want to leave the voltage high an=
-d
-reduce the frequency. But I don't know such case.
-
-Regards,
-Clement
+patches [4][5] (DT) applied on stm32-next.
 
 
-
-
->
-> Robin.
->
-> > Avoid to introduce a new dedicated OPP Table where voltage are
-> > equals to the fixed regulator as it will only duplicate all the OPPs.
-> > Instead remove the fixed regulator so the DVFS framework will create
-> > dummy regulator and will have the same behavior.
-> >
-> > Add some comments to explain this in the device-tree.
-> >
-> > Reported-by: Piotr Oniszczuk <warpme@o2.pl>
-> > Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables =
-for Tanix TX6")
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >   .../boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 18 ++++++++++++++++-=
--
-> >   1 file changed, 16 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > index be81330db14f..3e96fcb317ea 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > @@ -48,7 +48,15 @@
-> >   };
-> >
-> >   &cpu0 {
-> > -     cpu-supply =3D <&reg_vdd_cpu_gpu>;
-> > +     /*
-> > +      * Don't specify the CPU regulator, as it's a fixed
-> > +      * regulator DVFS will not work as it is intructed
-> > +      * to reach a voltage which can't be reached.
-> > +      * Not specifying a regulator will create a dummy
-> > +      * regulator allowing all OPPs.
-> > +      *
-> > +      * cpu-supply =3D <&reg_vdd_cpu_gpu>;
-> > +      */
-> >   };
-> >
-> >   &de {
-> > @@ -68,7 +76,13 @@
-> >   };
-> >
-> >   &gpu {
-> > -     mali-supply =3D <&reg_vdd_cpu_gpu>;
-> > +     /*
-> > +      * Don't specify the GPU regulator, see comment
-> > +      * above for the CPU supply.
-> > +      *
-> > +      * mali-supply =3D <&reg_vdd_cpu_gpu>;
-> > +      */
-> > +
-> >       status =3D "okay";
-> >   };
-> >
-> >
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msg=
-id/linux-sunxi/98246e5d-ebef-bcb5-f0b8-d74b3834b835%40arm.com.
+Thanks.
+Alex
