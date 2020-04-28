@@ -2,270 +2,203 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1989C83007
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ADDC83007
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFB4F206F0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:25:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V99aRM5G"
+	by mail.kernel.org (Postfix) with ESMTP id 4A770206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgD1LZ2 (ORCPT
+        id S1726564AbgD1Lah (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:25:28 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47458 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgD1LZ1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 07:25:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03SBP8aY027889;
-        Tue, 28 Apr 2020 06:25:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588073108;
-        bh=EiS/4MUYU8KqgsavRPxfRkmEd0Gp1d9200lIKcLyREA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=V99aRM5GnPxyZErsddaOboUqsr3LtAKmQTsOZn1FBvjKaA17VuSVbgnDP/8TakxjV
-         xdcCoLNg9VvSwC1S5HeI6KwcWoY5NO2HaSXTd6KPJpQuIlNCPU+Tgd0RzQ4MRqh09O
-         z/zRi/Udq9gd+Gngy8nRc+ut6er+HwqNOwbQJ8uA=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03SBP8dN023718;
-        Tue, 28 Apr 2020 06:25:08 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Apr 2020 06:25:07 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Apr 2020 06:25:07 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03SBP4XB123003;
-        Tue, 28 Apr 2020 06:25:05 -0500
-Subject: Re: [PATCH v14 2/2] i2c: core: support bus regulator controlling in
- adapter
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-i2c@vger.kernel.org>
-CC:     <tfiga@chromium.org>, <drinkcat@chromium.org>,
-        <srv_heupstream@mediatek.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-References: <20200428061813.27072-1-bibby.hsieh@mediatek.com>
- <20200428061813.27072-3-bibby.hsieh@mediatek.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <e3583893-f49d-0e78-6414-ed565099af63@ti.com>
-Date:   Tue, 28 Apr 2020 14:25:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 07:30:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbgD1Lag (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 07:30:36 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8605FC03C1A9;
+        Tue, 28 Apr 2020 04:30:36 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 49BKFj5QXHzQl8k;
+        Tue, 28 Apr 2020 13:30:33 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id Rtzl5PNe1z8p; Tue, 28 Apr 2020 13:30:27 +0200 (CEST)
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+To:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
+        Dilip Kota <eswara.kota@linux.intel.com>, broonie@kernel.org,
+        robh@kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+ <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
+From:   Hauke Mehrtens <hauke@hauke-m.de>
+Autocrypt: addr=hauke@hauke-m.de; keydata=
+ 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
+Message-ID: <262f2739-494a-a59b-f1e9-80a95ea465b1@hauke-m.de>
+Date:   Tue, 28 Apr 2020 13:30:25 +0200
 MIME-Version: 1.0
-In-Reply-To: <20200428061813.27072-3-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 983A3175F
+X-Rspamd-Score: -4.71 / 15.00 / 15.00
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 28/04/2020 09:18, Bibby Hsieh wrote:
-> Although in the most platforms, the bus power of i2c
-> are alway on, some platforms disable the i2c bus power
-> in order to meet low power request.
+On 4/28/20 1:10 PM, Daniel Schwierzeck wrote:
 > 
-> We get and enable bulk regulator in i2c adapter device.
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->   drivers/i2c/i2c-core-base.c | 82 +++++++++++++++++++++++++++++++++++++
->   include/linux/i2c.h         |  2 +
->   2 files changed, 84 insertions(+)
+> Am 24.04.20 um 12:42 schrieb Dilip Kota:
+>> Synchronize tx, rx and error interrupts by registering to the
+>> same interrupt handler. Interrupt handler will recognize and process
+>> the appropriate interrupt on the basis of interrupt status register.
+>> Also, establish synchronization between the interrupt handler and
+>> transfer operation by taking the locks and registering the interrupt
+>> handler as thread IRQ which avoids the bottom half.
 > 
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 5cc0b0ec5570..f81b42a4ed07 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -313,6 +313,7 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
->   static int i2c_device_probe(struct device *dev)
->   {
->   	struct i2c_client	*client = i2c_verify_client(dev);
-> +	struct i2c_adapter	*adap = client->adapter;
->   	struct i2c_driver	*driver;
->   	int status;
->   
-> @@ -378,6 +379,12 @@ static int i2c_device_probe(struct device *dev)
->   
->   	dev_dbg(dev, "probe\n");
->   
-> +	status = regulator_enable(adap->bus_regulator);
-> +	if (status < 0) {
-> +		dev_err(&adap->dev, "Failed to enable power regulator\n");
-> +		goto err_clear_wakeup_irq;
-> +	}
-> +
-
-Sry, but this is confusing.
-What if there is separate regulators for I2C device and bus/adapter?
-
-I2C bus is transaction based and usually I2C bus drivers ensures that i2c bus is
-in proper state to perform transaction. While I2C devices can be enable, configured and
-function without actually interacting with I2C bus unless required (irq for example).
-
-With you change any I2C device will enable and keep bus regulator on all the time it's active
-even if there is no I2C interruptions.
-
-Following the problem description it seems
-  - i2c bus driver should get regulator and ensure it's enabled for the duration of transaction(s)
-  - i2c device should get its own regulator (or the same if shared)  ensure it's enabled for
-    the period device is active.
-
-
->   	status = of_clk_set_defaults(dev->of_node, false);
->   	if (status < 0)
->   		goto err_clear_wakeup_irq;
-> @@ -414,6 +421,7 @@ static int i2c_device_probe(struct device *dev)
->   static int i2c_device_remove(struct device *dev)
->   {
->   	struct i2c_client	*client = i2c_verify_client(dev);
-> +	struct i2c_adapter      *adap = client->adapter;
->   	struct i2c_driver	*driver;
->   	int status = 0;
->   
-> @@ -427,6 +435,8 @@ static int i2c_device_remove(struct device *dev)
->   	}
->   
->   	dev_pm_domain_detach(&client->dev, true);
-> +	if (!pm_runtime_status_suspended(&client->dev))
-> +		regulator_disable(adap->bus_regulator);
->   
->   	dev_pm_clear_wake_irq(&client->dev);
->   	device_init_wakeup(&client->dev, false);
-> @@ -438,6 +448,72 @@ static int i2c_device_remove(struct device *dev)
->   	return status;
->   }
->   
-> +#ifdef CONFIG_PM_SLEEP
-> +static int i2c_resume_early(struct device *dev)
-> +{
-> +	struct i2c_client *client = i2c_verify_client(dev);
-> +	struct i2c_adapter *adap = client->adapter;
-> +	int err;
-> +
-> +	if (!pm_runtime_status_suspended(&client->dev)) {
-> +		err = regulator_enable(adap->bus_regulator);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return pm_generic_resume_early(&client->dev);
-> +}
-> +
-> +static int i2c_suspend_late(struct device *dev)
-> +{
-> +	struct i2c_client *client = i2c_verify_client(dev);
-> +	struct i2c_adapter *adap = client->adapter;
-> +	int err;
-> +
-> +	err = pm_generic_suspend_late(&client->dev);
-> +	if (err)
-> +		return err;
-> +
-> +	if (!pm_runtime_status_suspended(&client->dev))
-> +		return regulator_disable(adap->bus_regulator);
-> +
-> +	return err;
-> +}
-> +#endif
-
-Have you considered pm_runtime_force_suspend/pm_runtime_force_resume?
-
-> +
-> +#ifdef CONFIG_PM
-> +static int i2c_runtime_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client = i2c_verify_client(dev);
-> +	struct i2c_adapter *adap = client->adapter;
-> +	int err;
-> +
-> +	err = regulator_enable(adap->bus_regulator);
-> +	if (err)
-> +		return err;
-> +
-> +	return pm_generic_runtime_resume(&client->dev);
-> +}
-> +
-> +static int i2c_runtime_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client = i2c_verify_client(dev);
-> +	struct i2c_adapter *adap = client->adapter;
-> +	int err;
-> +
-> +	err = pm_generic_runtime_suspend(&client->dev);
-> +	if (err)
-> +		return err;
-> +
-> +	return regulator_disable(adap->bus_regulator);
-> +}
-> +#endif
-> +
-> +static const struct dev_pm_ops i2c_device_pm = {
-> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(i2c_suspend_late, i2c_resume_early)
-> +	SET_RUNTIME_PM_OPS(i2c_runtime_suspend, i2c_runtime_resume, NULL)
-> +};
-> +
->   static void i2c_device_shutdown(struct device *dev)
->   {
->   	struct i2c_client *client = i2c_verify_client(dev);
-> @@ -495,6 +571,7 @@ struct bus_type i2c_bus_type = {
->   	.probe		= i2c_device_probe,
->   	.remove		= i2c_device_remove,
->   	.shutdown	= i2c_device_shutdown,
-> +	.pm		= &i2c_device_pm,
->   };
->   EXPORT_SYMBOL_GPL(i2c_bus_type);
->   
-> @@ -1333,6 +1410,11 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
->   	if (res)
->   		goto out_reg;
->   
-> +	adap->bus_regulator = devm_regulator_get(&adap->dev, "bus");
-> +	if (IS_ERR(adap->bus_regulator)) {
-> +		res = PTR_ERR(adap->bus_regulator);
-> +		goto out_reg;
-> +	}
->   	dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
->   
->   	pm_runtime_no_callbacks(&adap->dev);
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index 456fc17ecb1c..bc83af0d38d1 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -15,6 +15,7 @@
->   #include <linux/device.h>	/* for struct device */
->   #include <linux/sched.h>	/* for completion */
->   #include <linux/mutex.h>
-> +#include <linux/regulator/consumer.h>
->   #include <linux/rtmutex.h>
->   #include <linux/irqdomain.h>		/* for Host Notify IRQ */
->   #include <linux/of.h>		/* for struct device_node */
-> @@ -721,6 +722,7 @@ struct i2c_adapter {
->   	const struct i2c_adapter_quirks *quirks;
->   
->   	struct irq_domain *host_notify_domain;
-> +	struct regulator *bus_regulator;
->   };
->   #define to_i2c_adapter(d) container_of(d, struct i2c_adapter, dev)
->   
+> actually there is no real bottom half. Reading or writing the FIFOs is
+> fast and is therefore be done in hard IRQ context. But as the comment
+> for lantiq_ssc_bussy_work() state, the driver needs some busy-waiting
+> after the last interrupt. I don't think it's worth to replace this with
+> threaded interrupts which add more runtime overhead and likely decrease
+> the maximum transfer speed.
 > 
+>> Fixes the wrongly populated interrupt register offsets too.
+>>
+>> Fixes: 17f84b793c01 ("spi: lantiq-ssc: add support for Lantiq SSC SPI controller")
+>> Fixes: ad2fca0721d1 ("spi: lantiq-ssc: add LTQ_ prefix to defines")
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>>  drivers/spi/spi-lantiq-ssc.c | 89 ++++++++++++++++++++++----------------------
+>>  1 file changed, 45 insertions(+), 44 deletions(-)
+>>
+>> diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
+>> index 1fd7ee53d451..b67f5925bcb0 100644
+>> --- a/drivers/spi/spi-lantiq-ssc.c
+>> +++ b/drivers/spi/spi-lantiq-ssc.c
+>> @@ -6,6 +6,7 @@
+>>  
+>>  #include <linux/kernel.h>
+>>  #include <linux/module.h>
+>> +#include <linux/mutex.h>
+>>  #include <linux/of_device.h>
+>>  #include <linux/clk.h>
+>>  #include <linux/io.h>
+>> @@ -13,7 +14,6 @@
+>>  #include <linux/interrupt.h>
+>>  #include <linux/sched.h>
+>>  #include <linux/completion.h>
+>> -#include <linux/spinlock.h>
+>>  #include <linux/err.h>
+>>  #include <linux/gpio.h>
+>>  #include <linux/pm_runtime.h>
+>> @@ -50,8 +50,8 @@
+>>  #define LTQ_SPI_RXCNT		0x84
+>>  #define LTQ_SPI_DMACON		0xec
+>>  #define LTQ_SPI_IRNEN		0xf4
+>> -#define LTQ_SPI_IRNICR		0xf8
+>> -#define LTQ_SPI_IRNCR		0xfc
+>> +#define LTQ_SPI_IRNCR		0xf8
+>> +#define LTQ_SPI_IRNICR		0xfc
+> 
+> the values are matching the datasheets for Danube and VRX200 family.
+> AFAICS the registers have been swapped for some newer SoCs like GRX330
+> or GRX550. It didn't matter until now because those registers were
+> unused by the driver. So if you want to use those registers, you have to
+> deal somehow with the register offset swap in struct lantiq_ssc_hwcfg.
 
--- 
-Best regards,
-grygorii
+Hi,
+
+The Interrupt controller found on Danube till xrx300 which is probably
+from Infineon like this SPI controller IP acknowledges the interrupts
+also inside this SPI controller IP automatically, this has to be done
+manually on the xrx500 and probably also LGM as they use a different
+interrupt controller. I prepared patches for this internally 2.5 years
+ago but did not send them upstream because of internal processes.
+
+I would suggest to only do this ack on the newer platforms starting with
+the xrx500 and not on the older.
+
+On SMP systems a lock is needed in lantiq_ssc_xmit_interrupt() to
+protect against an other thread reading from the RX buffer or writing to
+the TX buffer in parallel.
+
+@Dilip. Did you try the patches I send you one months ago on the LGM?
+
+I would be helpful to split this patch into multiple like already
+suggest to make it easier to find the bugs.
+
+Hauke
