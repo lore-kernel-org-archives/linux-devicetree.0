@@ -2,147 +2,124 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5690C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648CC83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C844A206B8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54315206A5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:03:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zXun4602"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgD1Gum (ORCPT
+        id S1726360AbgD1HDa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:50:42 -0400
-Received: from mga12.intel.com ([192.55.52.136]:2840 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgD1Gum (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:50:42 -0400
-IronPort-SDR: s9gWuiHmPfAveqOaQF77YGqMrgRQM+L2kvN6D4ZIyzZpRfks9ijMSrDNVgUEbUVdNVE4zz3OIt
- AQSf6NHWNlVg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 23:50:41 -0700
-IronPort-SDR: qBH1RyAmnBgQYi/MRH91glO2akW96oT18OTSmcxvz2OqdEf5EIj8JoKwMQc1ApE/L5eV1rb0fI
- kEAMVUGjr/Xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="293775405"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 27 Apr 2020 23:50:41 -0700
-Received: from [10.214.149.60] (vramuthx-MOBL1.gar.corp.intel.com [10.214.149.60])
-        by linux.intel.com (Postfix) with ESMTP id E6E585802C8;
-        Mon, 27 Apr 2020 23:50:36 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com, vigneshr@ti.com,
-        arnd@arndb.de, richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200424183612.4cfdbb6a@collabora.com> <20200427175127.0518c193@xps13>
- <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
- <20200428082759.25065146@collabora.com>
- <38334812-21b9-5b2c-db84-01c9eacc84d0@linux.intel.com>
- <20200428084704.5e04232a@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
-Date:   Tue, 28 Apr 2020 14:50:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 03:03:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726291AbgD1HDa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 03:03:30 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AF5FC03C1AA
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 00:03:30 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f13so23241300wrm.13
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 00:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=d80p8k51RV8Ii31H8c+Iq6vujq3CggrPsTKCRimkvi4=;
+        b=zXun4602okDGRYn8XiLEIHtsfd9v1rIwMMKeu+9hiWx2ZG/wJd3ht1CLbz/PPWSPzx
+         Xs/SGjQnIpi+0oDrczAeaVSDJD57qpno8vVy/PCokt/MlwZ/B3y4NIDOoIlZZd1ES49Z
+         SZR34DXDeT6Y1ajYv83ohSDh1wpyPD0aUWMJdHFb5hwV/mJlj9LIXKXU+uYfjkgirS6a
+         lHsOEZCEcvEebukq22aTjSB7xg1QO2hTypVt5JWWvi92tMy5J+fnTeNPaiXcv5ltXVj/
+         W+y4HIEce1zmyGtpa2sGAHF3x+Pp0HSBBzCvsR1cNLJVP94gnlyKz79YF7IjHUYNSL20
+         wS0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=d80p8k51RV8Ii31H8c+Iq6vujq3CggrPsTKCRimkvi4=;
+        b=RB9yB8NGYLKgdcyYaZm/wKJF1TSvk9Us2VSJz3IUDjQ+gmHMRNo81PhTTZDC1zj1Mb
+         ten6a8Kd7UveDVkjUxgIqD4mGxvAjS/IDMhs1QhfP92fZstmybHMMbZaTmD1w4wDmOzg
+         +3p4cOfk1BNy3P75HZN0K4gI/upuNjlW6PgaoO5F99AodTPbu71G+qMWK5bsPInFoGea
+         6MmmaJazXsObErt31Zzp9ShztUR4RWS41gHbZeqjXu7uVZfbLes2yqRCNgEfZOk5A7Ow
+         ZYnt/m7PEX9rKuPPzpfMvoA88av7d9aWUBQ8TzqkjH+gq/1AAo+ViPUMiovQgVhMuhhj
+         fFpw==
+X-Gm-Message-State: AGi0PuaL95AEsff8ACxmQu3nnkyXRah4PPqq3X5noitSQj6StXNOcKDm
+        Bbs3RkOgJqd6jGrm8Vu3cWmdPw==
+X-Google-Smtp-Source: APiQypJcL3tHBCbLlcc7UeQUAGJ2UgtgMo77ETUj1h5CMVB6neW1tCihGzh0jeWgP3NKFnYTOQn4wA==
+X-Received: by 2002:adf:f98e:: with SMTP id f14mr31210015wrr.253.1588057409075;
+        Tue, 28 Apr 2020 00:03:29 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id m8sm25497629wrx.54.2020.04.28.00.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 00:03:28 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 08:03:26 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Adrian Pop <pop.adrian61@gmail.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] arm: dt-bindings: mfd: stm32f-rcc: Add missing DSI
+ clock
+Message-ID: <20200428070326.GH3559@dell>
+References: <20200424181642.32084-1-pop.adrian61@gmail.com>
+ <20200427064910.GC3559@dell>
+ <CAP-HsdQOyWrz+Y7gR9jrNjX09NCYB1EWK7swMQDZ-v-VJLGRMw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428084704.5e04232a@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-HsdQOyWrz+Y7gR9jrNjX09NCYB1EWK7swMQDZ-v-VJLGRMw@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+On Mon, 27 Apr 2020, Adrian Pop wrote:
 
-On 28/4/2020 2:47 pm, Boris Brezillon wrote:
-> On Tue, 28 Apr 2020 14:40:58 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> On Mon, Apr 27, 2020 at 9:49 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Fri, 24 Apr 2020, Adrian Pop wrote:
+> >
+> > > Add missing clock.
+> > >
+> > > Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
+> > > ---
+> > >  include/dt-bindings/mfd/stm32f7-rcc.h | 1 +
+> > >  1 file changed, 1 insertion(+)
+> >
+> > I assume patch 2 depends on this?
 > 
->> Hi Boris,
->>
->> On 28/4/2020 2:27 pm, Boris Brezillon wrote:
->>> On Tue, 28 Apr 2020 14:17:30 +0800
->>> "Ramuthevar, Vadivel MuruganX"
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>    
->>>> Hi Miquel,
->>>>
->>>>       Thank you very much for the review comments and your time...
->>>>
->>>> On 27/4/2020 11:51 pm, Miquel Raynal wrote:
->>>>> Hi Ramuthevar,
->>>>>       
->>>>>>> +static int ebu_nand_probe(struct platform_device *pdev)
->>>>>>> +{
->>>>>>> +	struct device *dev = &pdev->dev;
->>>>>>> +	struct ebu_nand_controller *ebu_host;
->>>>>>> +	struct nand_chip *nand;
->>>>>>> +	phys_addr_t nandaddr_pa;
->>>>>>> +	struct mtd_info *mtd;
->>>>>>> +	struct resource *res;
->>>>>>> +	int ret;
->>>>>>> +	u32 cs;
->>>>>>> +
->>>>>>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
->>>>>>> +	if (!ebu_host)
->>>>>>> +		return -ENOMEM;
->>>>>>> +
->>>>>>> +	ebu_host->dev = dev;
->>>>>>> +	nand_controller_init(&ebu_host->controller);
->>>>>>> +
->>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
->>>>>>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
->>>>>>> +	if (IS_ERR(ebu_host->ebu_addr))
->>>>>>> +		return PTR_ERR(ebu_host->ebu_addr);
->>>>>>> +
->>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
->>>>>>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
->>>>>>> +	if (IS_ERR(ebu_host->nand_addr))
->>>>>>> +		return PTR_ERR(ebu_host->nand_addr);
->>>>>>> +
->>>>>>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
->>>>>>
->>>>>> CS ids should be encoded in the reg property (see [1]).
->>>>>
->>>>> Is it your choice to only support a single CS or is it actually a
->>>>> controller limitation?
->>>>
->>>> Yes , its controller limitation to support only one CS
->>>
->>> I'm pretty sure that's not true, otherwise you wouldn't have to select
->>> the CS you want to use :P.
->>
->> At a time it supports only one chip select.
+> Yes, second patch depends on this.
 > 
-> Yes, like 99% of the NAND controllers, but that doesn't mean you can't
-> support multi-CS chips. All you have to do is attach an array of
-> ebu_nand_cs to your ebu_nand_chip (as done in the atmel driver I
-> pointed to). nand_operation.cs tells you which CS (index in your
-> ebu_nand_cs array) a specific operation is targeting, and you can pick
-> the right MMIO range/reg value based on that.
-
-Agreed, sure I will add that and update next series of patches .
-
-Thanks! a lot Boris
-
-Regards
-Vadivel
+> >
+> > If so, where is it?  Why isn't it in my inbox?
+> >
 > 
+> Here it is:
+> 
+> STM32f769-disco features a 4" MIPI DSI display: add support for it.
+> 
+> Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
+> ---
+>  arch/arm/boot/dts/stm32f746.dtsi      | 34 ++++++++++++++++++
+>  arch/arm/boot/dts/stm32f769-disco.dts | 50 +++++++++++++++++++++++++++
+>  2 files changed, 84 insertions(+)
+
+When you resubmit this, please add all recipients to all patches.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
