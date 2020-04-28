@@ -2,224 +2,173 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDA2C83008
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CB8C83001
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B710206D8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D2720730
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:23:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="AjfyeV7r";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vlkFA1v4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVPckYKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgD1QV5 (ORCPT
+        id S1728139AbgD1QXs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:21:57 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:56667 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728129AbgD1QV5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 12:21:57 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 1789E45C;
-        Tue, 28 Apr 2020 12:21:56 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 28 Apr 2020 12:21:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=6RsYLmC1vyY3wSFNssKwJ2L/MUN
-        wzbvXUCGq0yMW/3U=; b=AjfyeV7rIGpZLVl5GvE0bCkf+mc0dwGPRxlqpG29RXP
-        ouTt/pVJhxfg+geVgWn6W6n3YY9tio/zN9u4pA45pPTl2DeUVPyuaKLDNT3XN/ol
-        jUTzgrFUWr0O/zmFZdICMYG0i+KnYBT8eXMlP7Ncm50/v0vMlRNNMmrGla6qEVWg
-        Q+h+m8za0MEBf90p8pILJnsdCJdShhw1sEho89xDk17IcL/4swZFPBCoL1xS+Vn3
-        8/YwhJmqoUX5ODkz7XWRs0Gd6O3v/fK+8qvhKvsu5BhwRWPYbb9SbdTceEoCO9pw
-        ThOUpyKSwwJyBW5p8Phoz4u9SO6EUlCrfIXGGIO/JHw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=6RsYLm
-        C1vyY3wSFNssKwJ2L/MUNwzbvXUCGq0yMW/3U=; b=vlkFA1v4hB66Mk/bWap3Fz
-        iSA7/Fb7EiKtNYCtrAVxeto9Ncs0UPd9e1ZT5OoEQn7aE7ArnTVjuoI+i3TQrdTQ
-        lN9ybZxsWcQGY2xFc7ecbQrq9U8wcwEEwa0uIHcQP2FeAkAxcBLzjCVOJYCStxTR
-        yFXPtZYXf+X55D8VVKdG5gXP0KJxuyCbNvOXhNA9DiyGG44QgdR8F0KLP0OwcUXU
-        IK0DXpCAJZP6Rl0FyXyGsmQuOYzAs2DMeDHbnEXCOvJ6NAMq0TC3XzlHNYwhvcvJ
-        ckGXtnenM5m8TvuJ83atIEJl84zbwxxlGFRP79GVILsegDP59e16N5RndeqzhREw
-        ==
-X-ME-Sender: <xms:IlioXp6XbuLmct2-AVgIKjv8g4d8vdOG2yYLCxcYqHcWwENwIYfGmA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugdellecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:IlioXgUG45U3Tuegxjmv-PYEE4XrD9qpPwnIvpXnyuwhWpEVcoQMjg>
-    <xmx:IlioXhRpkHvjygiMDoY4qryTDHiuPF3fHwyPd8LfUxoPgUnXASSSNQ>
-    <xmx:IlioXtcKwO1QzygUTEzUM3Vo-goPAloL_mq_0vLDekr5w_i2ve20vw>
-    <xmx:I1ioXlCKeoR77_UxDGpsKA4iHBqXA_A0iSwxZxpolfvS0BpuKs9K9n4BfdU>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 581073280063;
-        Tue, 28 Apr 2020 12:21:54 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 18:21:52 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux@endlessm.com
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-Message-ID: <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <20200427072342.5499-1-jian-hong@endlessm.com>
+        Tue, 28 Apr 2020 12:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbgD1QXr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 12:23:47 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBDA5C03C1AB;
+        Tue, 28 Apr 2020 09:23:47 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id k6so23626268iob.3;
+        Tue, 28 Apr 2020 09:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=j6RRU0nrN7yUPwoTU3WwW56lws6VJ5/MsTtHloArhl0=;
+        b=AVPckYKwTeUisgWMXpahkhhvCC0B7KCgpPE6LKFrZcDSoFrpV7e9aReBGpKH/Fomx2
+         PLRSSFlRLBDnumFZpkYSJNBW/iSoL66EK4Cbx/t/yziGMfC8r3ByxTf0S3KvMExFrzSx
+         vdKXUJHTDxbvPYE1oBg8rw9hS6mGMi8XDuL8qFWYlM2vEI7CqPGHgRHRobFo2FQk1dPC
+         ywpr8WEhqy7y5oD97LeDunmNnuC9DvGi+ZiQ5xnJtgP+8OaMiRBlE+O83DUh4XBKkvU1
+         ZQaT87Awc6BKGbQNEB4qwY81/wY/6KsXMMrB1lAh/Y3Ms521kx9LE+r7lyl1+LUz1DMF
+         pu/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=j6RRU0nrN7yUPwoTU3WwW56lws6VJ5/MsTtHloArhl0=;
+        b=RTsdgq3rGOnNjRbZAzJ2OzLOhlPE4Gkf0W+db0SLPaanL/rr90h14Gpqx89bEQEmPq
+         fvvobLua2Qo5xqpl4MFtOim5iA1NzqTpAVTDyVgfWQ7D/0QDOA7fmkvDiepdGaAGkCtU
+         iNWcHSqDbR436KOC36SilEYJBfX3nF6+23yrPcu4uuzaFpd3ODtn2dlyNxXRjtzbJlC/
+         HyxjcpQkE/vwWAfBZSGmtviczyvGpq+FkwFeWPc4737tcd0SEoE4LM3eq6MthxQ5hdhX
+         3Gva893lxQNdLFOl/ydxf871QxZYWvomiwqTHEznFPAIm9fRR1zYzczPFmwlBOrhKFYu
+         x+aQ==
+X-Gm-Message-State: AGi0PuZBSKR3x96yHvXBAcI20G/jFT23v2j6s4xUOCs9Tr6acB/JUYP3
+        m2lQHna0mE5vzAaWyCSEhrp5oZG0NoRk/kYogGk=
+X-Google-Smtp-Source: APiQypJOl6MpBa2BRYe8Hr+y09c1rJYJoKiTY9WejKqf4GN+4FJ4o0seuR6Q1T+jNayBJixEcXKBGhrTo0lIBL1OtX0=
+X-Received: by 2002:a02:a004:: with SMTP id a4mr25699613jah.18.1588091027057;
+ Tue, 28 Apr 2020 09:23:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zd4mbncwtlfa7l77"
-Content-Disposition: inline
-In-Reply-To: <20200427072342.5499-1-jian-hong@endlessm.com>
+References: <20200428142629.8950-1-peron.clem@gmail.com> <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
+In-Reply-To: <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Tue, 28 Apr 2020 18:23:35 +0200
+Message-ID: <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v2] arm64: dts: allwinner: h6: Use dummy
+ regulator for Tanix TX6
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Piotr Oniszczuk <warpme@o2.pl>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Robin,
 
---zd4mbncwtlfa7l77
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 28 Apr 2020 at 17:21, Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2020-04-28 3:26 pm, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Tanix TX6 has a fixed regulator. As DVFS is instructed to change
+> > voltage to meet OPP table, the DVFS is not working as expected.
+>
+> Hmm, isn't that really a bug in the DVFS code? I guess it's just blindly
+> propagating -EINVAL from the fixed regulators not implementing
+> set_voltage, but AFAICS it has no real excuse not to be cleverer and
+> still allow switching frequency as long as the voltage *is* high enough
+> for the given OPP. I wonder how well it works if the regulator is
+> programmable but shared with other consumers... that case probably can't
+> be hacked around in DT.
 
-Hi,
+Like you, I thought that the DVFS was clever enough to understand this
+but guess not..
 
-On Mon, Apr 27, 2020 at 03:23:42PM +0800, Jian-Hong Pan wrote:
-> Hi Maxime,
->=20
-> Thanks for your V2 patch series!  I'm testing it.
->=20
-> This patch series is applied upon mainline kernel 5.7-rc2 cleanly and bui=
-lt.
-> System can boot into console text mode, but no graphic UI.
->=20
-> Get the error in vc5_hdmi_phy_init(), and full dmesg is at [1]:
->=20
-> [    5.587543] vc4_hdmi fef00700.hdmi: Unknown register ID 46
-> [    5.587700] debugfs: Directory 'fef00700.hdmi' with parent 'vc4-hdmi' =
-already present!
-> [    5.588070] vc4_hdmi fef00700.hdmi: vc4-hdmi-hifi <-> fef00700.hdmi ma=
-pping ok
-> [    5.588076] vc4_hdmi fef00700.hdmi: ASoC: no DMI vendor name!
-> [    5.588263] vc4-drm gpu: bound fef00700.hdmi (ops vc4_hdmi_ops)
-> [    5.588299] vc4_hdmi fef05700.hdmi: Unknown register ID 46
-> [    5.588373] debugfs: Directory 'vc4-hdmi' with parent 'asoc' already p=
-resent!
-> [    5.588673] vc4_hdmi fef05700.hdmi: vc4-hdmi-hifi <-> fef05700.hdmi ma=
-pping ok
-> [    5.588677] vc4_hdmi fef05700.hdmi: ASoC: no DMI vendor name!
-> [    5.588809] vc4-drm gpu: bound fef05700.hdmi (ops vc4_hdmi_ops)
-> [    5.588854] vc4-drm gpu: bound fe806000.vec (ops vc4_vec_ops)
-> [    5.588897] vc4-drm gpu: bound fe004000.txp (ops vc4_txp_ops)
-> [    5.588934] vc4-drm gpu: bound fe400000.hvs (ops vc4_hvs_ops)
-> [    5.588990] vc4-drm gpu: bound fe206000.pixelvalve (ops vc4_crtc_ops)
-> [    5.589030] vc4-drm gpu: bound fe207000.pixelvalve (ops vc4_crtc_ops)
-> [    5.589074] vc4-drm gpu: bound fe20a000.pixelvalve (ops vc4_crtc_ops)
-> [    5.589106] vc4-drm gpu: bound fe216000.pixelvalve (ops vc4_crtc_ops)
-> [    5.589145] vc4-drm gpu: bound fec12000.pixelvalve (ops vc4_crtc_ops)
-> [    5.589294] checking generic (3e513000 6d8c00) vs hw (0 ffffffffffffff=
-ff)
-> [    5.589297] fb0: switching to vc4drmfb from simple
-> [    5.589433] Console: switching to colour dummy device 80x25
-> [    5.589481] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> [    5.589816] [drm] Initialized vc4 0.0.0 20140616 for gpu on minor 0
-> [    5.601079] ------------[ cut here ]------------
-> [    5.601095] WARNING: CPU: 2 PID: 127 at drivers/gpu/drm/vc4/vc4_hdmi_p=
-hy.c:413 vc5_hdmi_phy_init+0x7ac/0x2078
-> [    5.601097] Modules linked in:
-> [    5.601103] CPU: 2 PID: 127 Comm: kworker/2:1 Not tainted 5.7.0-rc2-00=
-091-ga181df59a930 #7
-> [    5.601105] Hardware name: Raspberry Pi 4 Model B (DT)
-> [    5.601112] Workqueue: events deferred_probe_work_func
-> [    5.601116] pstate: 20000005 (nzCv daif -PAN -UAO)
-> [    5.601119] pc : vc5_hdmi_phy_init+0x7ac/0x2078
-> [    5.601123] lr : vc4_hdmi_encoder_enable+0x1b8/0x1ac0
-> [    5.601124] sp : ffff80001217b410
-> [    5.601126] x29: ffff80001217b410 x28: ffff0000ec6370f0=20
-> [    5.601129] x27: ffff0000f650d400 x26: 000000008a500000=20
-> [    5.601132] x25: ffff8000113b4ac0 x24: 0000000000002060=20
-> [    5.601135] x23: 000000000a500000 x22: 0000000000000300=20
-> [    5.601137] x21: 0000000008d9ee20 x20: ffff0000ec535080=20
-> [    5.601140] x19: 000000010989e7c0 x18: 0000000000000000=20
-> [    5.601142] x17: 0000000000000001 x16: 0000000000005207=20
-> [    5.601145] x15: 00004932ad293c92 x14: 0000000000000137=20
-> [    5.601147] x13: ffff800010015000 x12: 0000000000000001=20
-> [    5.601150] x11: 0000000000000001 x10: 0000000000000000=20
-> [    5.601152] x9 : 0000000000000000 x8 : ffff800010015038=20
-> [    5.601154] x7 : 0000000000000001 x6 : ffff80001217b368=20
-> [    5.601157] x5 : 0000000000000000 x4 : 000000000000004c=20
-> [    5.601159] x3 : 0000000000000000 x2 : ffff8000113b4ac0=20
-> [    5.601162] x1 : ffff8000120c5f44 x0 : 00000000dc8984ff=20
-> [    5.601164] Call trace:
-> [    5.601169]  vc5_hdmi_phy_init+0x7ac/0x2078
-> [    5.601172]  vc4_hdmi_encoder_enable+0x1b8/0x1ac0
-> [    5.601176]  drm_atomic_helper_commit_modeset_enables+0x224/0x248
-> [    5.601179]  vc4_atomic_complete_commit+0x400/0x558
-> [    5.601182]  vc4_atomic_commit+0x1e0/0x200
-> [    5.601185]  drm_atomic_commit+0x4c/0x60
-> [    5.601190]  drm_client_modeset_commit_atomic.isra.0+0x17c/0x238
-> [    5.601192]  drm_client_modeset_commit_locked+0x5c/0x198
-> [    5.601195]  drm_client_modeset_commit+0x30/0x58
-> [    5.601201]  drm_fb_helper_restore_fbdev_mode_unlocked+0x78/0xe0
-> [    5.601204]  drm_fb_helper_set_par+0x30/0x68
-> [    5.601208]  fbcon_init+0x3d4/0x598
-> [    5.601212]  visual_init+0xb0/0x108
-> [    5.601214]  do_bind_con_driver+0x1d0/0x3a8
-> [    5.601217]  do_take_over_console+0x144/0x208
-> [    5.601219]  do_fbcon_takeover+0x68/0xd8
-> [    5.601222]  fbcon_fb_registered+0x100/0x118
-> [    5.601226]  register_framebuffer+0x1f4/0x338
-> [    5.601229]  __drm_fb_helper_initial_config_and_unlock+0x2f8/0x4a0
-> [    5.601232]  drm_fbdev_client_hotplug+0xd4/0x1b0
-> [    5.601235]  drm_fbdev_generic_setup+0xb0/0x130
-> [    5.601238]  vc4_drm_bind+0x184/0x1a0
-> [    5.601241]  try_to_bring_up_master+0x168/0x1c8
-> [    5.601244]  __component_add+0xa4/0x170
-> [    5.601246]  component_add+0x14/0x20
-> [    5.601248]  vc4_vec_dev_probe+0x20/0x30
-> [    5.601252]  platform_drv_probe+0x54/0xa8
-> [    5.601254]  really_probe+0xd8/0x320
-> [    5.601256]  driver_probe_device+0x58/0xf0
-> [    5.601258]  __device_attach_driver+0x84/0xc8
-> [    5.601263]  bus_for_each_drv+0x78/0xc8
-> [    5.601265]  __device_attach+0xe4/0x140
-> [    5.601267]  device_initial_probe+0x14/0x20
-> [    5.601269]  bus_probe_device+0x9c/0xa8
-> [    5.601271]  deferred_probe_work_func+0x74/0xb0
-> [    5.601276]  process_one_work+0x1bc/0x338
-> [    5.601279]  worker_thread+0x1f8/0x428
-> [    5.601282]  kthread+0x138/0x158
-> [    5.601286]  ret_from_fork+0x10/0x1c
-> [    5.601288] ---[ end trace cfba0996218c3f3d ]---
+Maybe they are some cases where you don't want to leave the voltage high an=
+d
+reduce the frequency. But I don't know such case.
 
-Thanks for testing!
+Regards,
+Clement
 
-Do you have a bit more details regarding your setup? Was it connected to an
-external display? If so, do you know the resolution it was trying to setup?
 
-Thanks!
-Maxime
 
---zd4mbncwtlfa7l77
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqhYIAAKCRDj7w1vZxhR
-xRKPAQDPuqTyOtkiFOYQkNe6rHxuKgerDYJhXggrtdvJ/1V3pQD/aJ6zCU+BYOtN
-9JJcdLQGT3Re2BKx/CD2AXd8tdVxQws=
-=KPAO
------END PGP SIGNATURE-----
-
---zd4mbncwtlfa7l77--
+>
+> Robin.
+>
+> > Avoid to introduce a new dedicated OPP Table where voltage are
+> > equals to the fixed regulator as it will only duplicate all the OPPs.
+> > Instead remove the fixed regulator so the DVFS framework will create
+> > dummy regulator and will have the same behavior.
+> >
+> > Add some comments to explain this in the device-tree.
+> >
+> > Reported-by: Piotr Oniszczuk <warpme@o2.pl>
+> > Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables =
+for Tanix TX6")
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >   .../boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 18 ++++++++++++++++-=
+-
+> >   1 file changed, 16 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/ar=
+ch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> > index be81330db14f..3e96fcb317ea 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> > @@ -48,7 +48,15 @@
+> >   };
+> >
+> >   &cpu0 {
+> > -     cpu-supply =3D <&reg_vdd_cpu_gpu>;
+> > +     /*
+> > +      * Don't specify the CPU regulator, as it's a fixed
+> > +      * regulator DVFS will not work as it is intructed
+> > +      * to reach a voltage which can't be reached.
+> > +      * Not specifying a regulator will create a dummy
+> > +      * regulator allowing all OPPs.
+> > +      *
+> > +      * cpu-supply =3D <&reg_vdd_cpu_gpu>;
+> > +      */
+> >   };
+> >
+> >   &de {
+> > @@ -68,7 +76,13 @@
+> >   };
+> >
+> >   &gpu {
+> > -     mali-supply =3D <&reg_vdd_cpu_gpu>;
+> > +     /*
+> > +      * Don't specify the GPU regulator, see comment
+> > +      * above for the CPU supply.
+> > +      *
+> > +      * mali-supply =3D <&reg_vdd_cpu_gpu>;
+> > +      */
+> > +
+> >       status =3D "okay";
+> >   };
+> >
+> >
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msg=
+id/linux-sunxi/98246e5d-ebef-bcb5-f0b8-d74b3834b835%40arm.com.
