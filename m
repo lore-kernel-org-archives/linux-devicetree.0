@@ -2,111 +2,183 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B2EC83007
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57C1C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 642FE206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:38:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588070310;
-	bh=yDonmdUzWYPcb8/jEh5I01BK7PHfuq8AcsBy6JJlYd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pwhOk8eNtAzqJtoO79zCMcxabT3Z0+AXnBMh7hBFnEjUpapbV+7WKIF61hhlg5pyD
-	 lBITXJn5A8oU0QwGzav2yYwYfblqCTNclCSNP7Xp4reyKRSjzzIYhGMV1LU6uIiDhZ
-	 Lg/+Jwtm+XhDVLk9BbkcRy1WNeA7dZJ84Yl+DxkU=
+	by mail.kernel.org (Postfix) with ESMTP id 84884206D6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:53:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G3MKD2Fk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgD1Ki3 convert rfc822-to-8bit (ORCPT
+        id S1726502AbgD1KxZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:38:29 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:44216 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgD1Ki3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 06:38:29 -0400
-Received: by mail-ej1-f66.google.com with SMTP id n4so16817321ejs.11;
-        Tue, 28 Apr 2020 03:38:28 -0700 (PDT)
+        Tue, 28 Apr 2020 06:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726481AbgD1KxZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 06:53:25 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272F2C03C1AD
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 03:53:25 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u127so2338826wmg.1
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 03:53:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WnUV2Y9lSu/VZYad7VDUsZy+uYGvDSCzE38Mfy1eUAc=;
+        b=G3MKD2FkIV0CuQgnPvbucZ++Y0nh3mtFGdUA+zTGlPIkQORteW3tBhJ2+BcZxVhlWm
+         RZ8dyV7VVAVI8muULd0jC/4GF+yIwTH3vEGrujSqd66Nh+PlWpRWPmnI+FsIMdR0X5Oq
+         Mj5fKxHWGLvd1XQyghtdljRvgPmHGSFIrltuhBDH7bG5wDKQxX5vX90+Brpisb0wF6+B
+         XYZyPiWJPk0+nlFBg1kaAiIsWY9q2FJWtx3B97HI2GzKsvENQfYN/tx2Jgj9bRCwzgzY
+         EdQwnZLP0ksDpMCTvyCUI6OwLqkqezrCPxLVngo0cjXsBYSGJ3em+SSILOSCmVPtgoUw
+         T9Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=QS4c9ls6yzOR+yRWTJD8hrerOuMZYga2B1YWCy646HU=;
-        b=KPn0OiwONCQAwz5nUHDNOtVYJUiP7T9EjuXuyU5OAT0SJr5aFbkPYGsFKQm9fFPd1D
-         SAiVyHSpoQpTafHX6qb17fXrOxhyQHc0A7rnzNGiGgEbR3PPA1vQD4FMxlbt3AgEpA5Z
-         hsrhJCTvIaXOY7UuOVuWJfdkoteTswYfZj3u57IyLUWX0epZ8N/2cw21tS8f88qpvInp
-         YbafhK1gt9aDdbn95dxcingmQ40tcw8AKZ4bdPTxz6FJrLbqEPTXnb3lKFQrihoTALsM
-         xREsri6LKRqLRMThykghGZeApI7fDVhpYy3K+B0FZMcxg+DwZWFwdTjYHiVmbBkU1/dt
-         Kjfg==
-X-Gm-Message-State: AGi0PubJQ62f/YH7OSktw42V91KPfyfsH99uR+4K21ClgExUidc5N5yR
-        LKsmlJame39289198ZfaV+Q=
-X-Google-Smtp-Source: APiQypIJTK4SUmp8jTM+oNe7+uJOVbtyCyJrubIWc/QoIsByKo+wNj3JnrX0SttughUGYKSrljqd1w==
-X-Received: by 2002:a17:906:9706:: with SMTP id k6mr24724371ejx.103.1588070307272;
-        Tue, 28 Apr 2020 03:38:27 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.237])
-        by smtp.googlemail.com with ESMTPSA id qo12sm411994ejb.14.2020.04.28.03.38.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Apr 2020 03:38:26 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:38:24 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kgene@kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] S5PV210 and Aries DTS improvements
-Message-ID: <20200428103824.GF23963@kozik-lap>
-References: <BN6PR04MB06601A5656CF70A4DCA7998BA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WnUV2Y9lSu/VZYad7VDUsZy+uYGvDSCzE38Mfy1eUAc=;
+        b=gWtxIMk+oPrVCgyM5qXhZVRbu9weBSZEsh+YOKzFomI5i/SaSoTQM5FXKI/CT9fZrk
+         UCdOK1IISOKFAEUoQAeE0Cexu47NyaEtRcVdTKQVC2Pqf5oYNJzJvP5YFT1d8IdCGyvN
+         Jhv/uTIROaZtemOwURlbW5Glc7GPv5+XsnllrWLUqhoC4HmaW61u0AN7R8toBRJRLac6
+         b4dgyXgH9TF8gduH/JctQYUFm8JBl5lro3LnY+y0c/dGNCKtNFIbb37QqfhvPE4VBVEU
+         cx2o1qyiL1jUuQw2HIajiGfP2EK2dOXPSGrqsD4cjqqkVkWlQd0A6qrx8paldUFr+Fv4
+         u5Bg==
+X-Gm-Message-State: AGi0PuYoDC/vipsqjkbNX9mMfrjTT2mjt3OidYE54qmh3HcooZQYoIG8
+        1pUs5YvHxCMxr3/phDanf/NrKw==
+X-Google-Smtp-Source: APiQypLxOaS7niNTyeL1J5W8BySC1F9G6Ov8DWGh5gDSku3WSjdGSNSyaqvwddXRwmewaUy4IaK4EQ==
+X-Received: by 2002:a1c:3b09:: with SMTP id i9mr3852493wma.19.1588071203556;
+        Tue, 28 Apr 2020 03:53:23 -0700 (PDT)
+Received: from [192.168.0.136] ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id z22sm2752862wma.20.2020.04.28.03.53.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 03:53:22 -0700 (PDT)
+Subject: Re: [PATCH V4 2/9] interconnect: Set peak requirement as twice of
+ average
+To:     Akash Asthana <akashast@codeaurora.org>, broonie@kernel.org
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Mike Tipton <mdtipton@codeaurora.org>,
+        Sean Sweeney <seansw@qti.qualcomm.com>
+References: <1586946198-13912-1-git-send-email-akashast@codeaurora.org>
+ <1586946198-13912-3-git-send-email-akashast@codeaurora.org>
+ <58b91dc1-6ce3-49b8-88c8-259be9af1dbd@linaro.org>
+ <7a79688c-3b9b-c7c1-2973-fca0c4b2c78b@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <94e7ad8d-2680-1e62-8072-703d6e220341@linaro.org>
+Date:   Tue, 28 Apr 2020 13:53:21 +0300
 MIME-Version: 1.0
+In-Reply-To: <7a79688c-3b9b-c7c1-2973-fca0c4b2c78b@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <BN6PR04MB06601A5656CF70A4DCA7998BA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 11:35:51AM -0700, Jonathan Bakker wrote:
-> This patchset makes several improvements to Aries devices which are
-> based on S5PV210.  Several pulls on GPIOs were incorrect/not specified,
-> sleep GPIO configurations have been added, and more devices have been
-> added.
-> 
-> Touching the common S5PV210 DTSI are the addition of the ADC node
-> as well as fixes to the FIMC definitions and a sleep GPIO helper
-> added.
-> 
-> The patches have been tested on both a GT-i9000 as well as an
-> SGH-T959P and both can now suspend/resume properly.
-> 
-> Jonathan Bakker (12):
->   arm: dts: s5pv210: Add helper define for sleep gpio config
->   arm: dts: s5pv210: fascinate4g: Add sleep GPIO configuration
->   arm: dts: s5pv210: galaxys: Add sleep GPIO configuration
->   arm: dts: s5pv210: aries: Set keep-power-in-suspend for SDHCI1
->   arm: dts: s5pv210: aries: Disable pulls on GPIO i2c adapters
->   arm: dts: s5pv210: aries: Add support for more devices
->   arm: dts: s5pv210: aries: Disable pull for vibrator ena GPIO
->   arm: dts: s5pv210: Add an ADC node
->   arm: dts: s5pv210: aries: Enable ADC node
->   arm: dts: s5pv210: Assign clocks to MMC devices
->   arm: dts: s5pv210: Correct FIMC definitions
->   arm: dts: s5pv210: aries: Set MAX8998 GPIO pulls
-> 
-> Paweł Chmiel (1):
->   arm: dts: s5pv210: galaxys: Add si470x fmradio
+Hi Akash,
 
-Thanks for the patches, nice work!
+On 4/28/20 12:46, Akash Asthana wrote:
+> Hi Georgi,
+> 
+> On 4/23/2020 3:01 PM, Georgi Djakov wrote:
+>> Hi Akash,
+>>
+>> On 4/15/20 13:23, Akash Asthana wrote:
+>>> Lot of ICC clients are not aware of their actual peak requirement,
+>>> most commonly they tend to guess their peak requirement as
+>>> (some factor) * avg_bw.
+>>>
+>>> Centralize random peak guess as twice of average, out into the core
+>>> to maintain consistency across the clients. Client can always
+>>> override this setting if they got a better idea.
+>> I am still not convinced that this is a good idea. If the factor is a random
+>> value, then i think that the default factor should be 1.
+>>
+>> According to your previous reply, it seems that from geni we are requesting
+>> double peak bandwidth to compensate for other clients which are not requesting
+>> bandwidth for themselves. IMO, this is a bit hacky.
+>>
+>> Instead of requesting double peak bandwidth, IIUC the correct thing to do here
+>> is to request peak_bw = avg_bw for geni. And instead of trying to compensate for
+>> other clients "stealing" bandwidth, can't we make these clients vote for their
+>> own bandwidth? Or if they really can't, this should be handled elsewhere - maybe
+>> in the interconnect platform driver we can reserve some amount of minimum
+>> bandwidth for such cases?
+> 
+> Okay, probably we can correct clients vote for their own bandwidth or reserve
+> some minimum BW from interconnect platform driver is case of any latency issue
+> observed.
 
-I commented on some of them. The other look good but I will wait with
-applying for v2. When resending everything, change the subject of each
-patch to match subsystem, so:
-	ARM: dts: s5pv210:
+Yes, this sounds like the correct thing to do.
 
-Best regards,
-Krzysztof
+> 
+> I will drop this change in next version.
+> 
+> Will it create any difference if  peak_bw = 0 instead of peak_bw = avg_bw? In my
+> understanding peak_bw <= avg_bw is no-ops, it won't impact the NOC speed.
 
+It will not have impact on the NOC speed, but it does not make much logical
+sense to have peak_bw = 0 or peak_bw < avg_bw. In the geni case, i think what
+we want to do is peak_bw = avg_bw.
+
+Thanks,
+Georgi
