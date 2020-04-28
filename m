@@ -2,107 +2,93 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B7EC83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58943C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C068F206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234932072A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:20:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cpxZ39XB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oVE56PpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgD1MRe (ORCPT
+        id S1726654AbgD1MUy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41668 "EHLO
+        Tue, 28 Apr 2020 08:20:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726746AbgD1MRd (ORCPT
+        by vger.kernel.org with ESMTP id S1726645AbgD1MUy (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:17:33 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C93CC03C1AD
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 05:17:33 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id m2so16679927lfo.6
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 05:17:33 -0700 (PDT)
+        Tue, 28 Apr 2020 08:20:54 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 630F5C03C1A9;
+        Tue, 28 Apr 2020 05:20:54 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id z25so32132220otq.13;
+        Tue, 28 Apr 2020 05:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LMRN5qxFiZK7LH7wFWLeZOcUrBLsRhKOimHQVM7fOfk=;
-        b=cpxZ39XBlCTINntejfucjY+fxwFnKaspaM3tU4nQp/hop/2uuOah5PTPJIVYhBsP0W
-         lfbrOouP0K5/qArfU93epvXV9Y0O6xB64TrG2LalkHRUXMuhtF1VOGCuunlHRaSWlCvU
-         UHkcTxvAalSafoniWBgo7ypiQQoQkfcbaM7lr8XOmc03Hs2/vYdnvaGbEYi7RwmhyLgh
-         Ix0qkhnBs+3QBU4zUqNxIMJE9AGHOeu95Yjh4jGOIRVTbFV9eWhbfrJs5DKMZu0bEYCE
-         nPaF6CiFGEo7dZEoqMb+u78l257RyVEql24fQGrFjpdihMl/nM+w9d0ScNBUeGpLfumj
-         egvQ==
+        bh=HEakP3BtxjrtzgVk40jbRNVCPopEEl2PBz5jMBYZCac=;
+        b=oVE56PpMDFxR0zO4k9lfsaLvi7hqxAlke11voP7oMZjEXpSI1birbRwawrQK9QtMSD
+         xquQX6QebCLp/DbhCYXc62xYd/CXcJ3fXZreM8uDTMozSPXYWNkpmfqLuLuzWI8zIkIQ
+         XX3d10p1u/7iCDhqpEbbs0MjczLLwvj8HkfAXzp0KNmFE3drSAhFbicpOwud2F6Fqpc4
+         oB+vScljfSnnn7++OKsyTE9zUp0V7XEMwKZq132YDCiCMH+de5hAFoB3Al6c/8412b+j
+         sSuUVLpHY8pdLjyCaYE+VzC7zzOeRf/kaFBDRfrsMR7QCDkGLq61u/tqzf7nesjOMbv2
+         6KvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LMRN5qxFiZK7LH7wFWLeZOcUrBLsRhKOimHQVM7fOfk=;
-        b=N4S3RcPwG7aXeD1mkP7MyA8OunREw84amoG6qT1dp/2TGGN92m3WFSyvHPCuyT+mG6
-         2FNaCdDDFukf8JccKNfmpGA0svXKa2SxmAUZuQITGooTQ/PtGjQmSejxhEsqKSuMQIqr
-         dkidZozTtC5ke+kr1N7/8n2jciv/TnbIEdvTEWQgC/iI9vNfcC5B9XSFb9OotU85hSax
-         U0DBQ/Bcn4RWFEl2+q3ZyiLEhGX6Q6cjWofEnmYy/SEJa9jr+buEsB1a5Uh7wlDmTQZ0
-         dDivgCkSObLm9vlRSSw2NFIQtsuJaH28K10dHhTOOhbTyV8T36YTsmTFvJB/TNYXOGWv
-         21tQ==
-X-Gm-Message-State: AGi0PuYMv67zm5apAZixFs4phB4ShPpGiuEEZHBxs2fIsJkensDmeGik
-        hDJWNz9l9b4UGOd1JIw0uEPaERqquAZVCujE4AN0hQ==
-X-Google-Smtp-Source: APiQypLWMYHDowDI3oIfEvtVytKcitjHf4lYdOHlnfwZ2JMiRfn25SLHbT7DdEte3F2EYP1mH2KagEeErbh4nPD3DbI=
-X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr19256598lfp.77.1588076251617;
- Tue, 28 Apr 2020 05:17:31 -0700 (PDT)
+        bh=HEakP3BtxjrtzgVk40jbRNVCPopEEl2PBz5jMBYZCac=;
+        b=aGpDFYe+Ct7I4oWwpi2MlYmTv/TqloTLLDp38vl3ISP5TilPD5XpiSmNfP4sETqPbs
+         /PW3iOQk9UXBnSEUL+HFE4Lb7iZj2slBmJ4Nr+VDpfpCvGZ6OCt5Q4Ek34VtgVdNRdeD
+         Rm7+aYEFZbhhxsYsg7mDWtlFRQf8647yc5NXybYAgCGaZJmcWvTRuPnFhvToAl/ii921
+         bOj9MJI5Oc9q71OpRvg4c6NNUJu+NGmdcS3AhMHx24lEgZoMSp50i+rApcJpE1ooYoks
+         vk+k5qRvVx0s6+jR4YBZHNR2vW291+in+e17lBEZKrSnUvMQ6LoOj/ZRhpyFyqaJhX4T
+         EPQA==
+X-Gm-Message-State: AGi0PuYZ9LPsJdic/BMyR7pKCYJN12ww5kzfn5DEfEYamiYxB2G0gmpn
+        lr3aDl6IGkcvMIgjyCKsN/zu4h8y3Nx9zExTlY4=
+X-Google-Smtp-Source: APiQypK5pXVXyGbHlFz3rzAt9zBWxyAstAXK+xYvkVxekeAXou+WcJ2uJpsQfGYUqBHQrNUECrJU86hNRYQ9QGL2zFU=
+X-Received: by 2002:aca:fc0a:: with SMTP id a10mr2749752oii.77.1588076453793;
+ Tue, 28 Apr 2020 05:20:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200423162548.129661-1-dianders@chromium.org> <20200423092431.v3.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
-In-Reply-To: <20200423092431.v3.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 14:17:20 +0200
-Message-ID: <CACRpkdZuMALENkGjOUuQqS1pTH2sXkj1Z59mPjOrBynnkAQdpA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] dt-bindings: display: Add hpd-gpios to
- panel-common bindings
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dave Airlie <airlied@linux.ie>,
+References: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
+ <e5f05ee3-515b-7b13-5125-b6d7a03ac031@gmail.com>
+In-Reply-To: <e5f05ee3-515b-7b13-5125-b6d7a03ac031@gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 28 Apr 2020 08:20:42 -0400
+Message-ID: <CAGngYiU_gDceVw9G7id6PmpdJt1iegoNVA3-ozkQzDFN9hUR5g@mail.gmail.com>
+Subject: Re: [Q] devicetree overlays
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 6:26 PM Douglas Anderson <dianders@chromium.org> wrote:
+Hello Frank, thank you for sharing your expertise. Much appreciated !
 
-> In the cases where there is no connector in a system there's no great
-> place to put "hpd-gpios".  As per discussion [1] the best place to put
-> it is in the panel.  Add this to the device tree bindings.
+On Mon, Apr 27, 2020 at 4:26 PM Frank Rowand <frowand.list@gmail.com> wrote:
 >
-> [1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboard.com
+> On 4/16/20 9:46 AM, Sven Van Asbroeck wrote:
+> > My situation is this: I have hardware which consists of several modules.
+> > Knowledge about the type and location of these modules is located in an
+> > on-board eeprom.
+> >
+> > So now I need to assemble a devicetree, by puzzling various 'blobs' together.
+> > This could be done in the bootloader,
 >
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+> Do this, if at all reasonably possible.
+>
+> > - is there perhaps a more canonical / idiomatic way to solve this?
+>
+> Yes, apply the overlays before booting.
