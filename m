@@ -3,100 +3,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36F2C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 17:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43D3C83001
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 18:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD69D208E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 17:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A5B206A1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 18:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="btf9HJsI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fYgGHly7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgD1RxF (ORCPT
+        id S1728536AbgD1SCn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 13:53:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
+        Tue, 28 Apr 2020 14:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728517AbgD1RxF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 13:53:05 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE9B0C03C1AC
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 10:53:04 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id d17so25742323wrg.11
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 10:53:04 -0700 (PDT)
+        with ESMTP id S1727827AbgD1SCm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 14:02:42 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2259AC03C1AB
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 11:02:42 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 18so11059930pfx.6
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 11:02:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v7ZheI6bSLrba/+brpRVrq5vYClF+WQ9iVO178jEk78=;
-        b=btf9HJsIOuNOn/IaKbfEXolv40jSRzhjuA7EQllCso1sWwBvadsB7piU0hkDwFkkRG
-         LaY0rDWvMUKkER6yps4hDEpVnL0fVqydIPLDTQo63yH6uPIfFJNB8jGZBOdwRYZGKCYL
-         BSTV9m9vj4HDIWkBSOeFIYrD3pfTLjVSy0IjdrJvAlmOlyJE4bWWR0NSzr0dptFQ90zI
-         Uz55v2Aego1u6y92cVjuPpMztMf2e6mr0bHdHBFG22uDECmKCdAtU/l7wqJSuXnGifdz
-         9vJFSjsRbToibdoDhCJXMnWg4cJknVMhLuOw2zE/PKHpaBnwqYeyJtTbE2iGgsKdy1rc
-         +WEw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=mENmQ6Pb7H8tmR1MjtMLs0ubXE4BKzkIreYYg9JTmwQ=;
+        b=fYgGHly79Oyel+aDS8shmE3wA06fO5kZLL/u3s85DS992pSDgr08Jx2wajFH7j1jHC
+         Dm1K5xERcf6FhGPMuwNcv14JeebOPQZorvUlcLz9r0RxfDLF+gRc1j1BvIQq3RNpOm6Q
+         9EMp+/yW1t/Q54ZgaBMcfsk1FEOfsZMCpkjScN0nwNDQzMFzUhf4HwlvdsjFpCVrgXEi
+         EYB+aGQalOJeufMo73XeoDc9GtUPILpD4ag+vQctucSuvpTuQySVWKSYNmE/AT+LcaHE
+         kI7bunItPbbWP55YlZJPCWyIY1A8G2+MqmrVUznPsc3Sd/HNKegH3CuGA+CTuEFt/kBt
+         Fmrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v7ZheI6bSLrba/+brpRVrq5vYClF+WQ9iVO178jEk78=;
-        b=dN5kwb0jjRrdQb2z1ML41On+s+RuCgRy/J+7k9w6xrhzRq8XwOXikXTUrhqy3ZCyPq
-         qAfMBnDrKvPzvfL42826uSMsIfDb+Q3V4W17rh1NZ6Fj5JW5qtbqw31MtOX0N20xRiRb
-         7V2+G11Q6+4h6FiWaClo7/i6iYn/Db8Xak4cbPQX7Z+RdeW4WSKWF/teZCwMzH+y8gPp
-         i03Nyq05pQjVSEpzC4kXUfM59+XRpooO6d0rg6KSMz86xpSuqzyNIEJBNxDNoDT1nfsq
-         jHpoYeBbQAkv4cOSAReKjXOTkZUTnKt0qJRXfYj6czZUkHW6/7iCTCZvRpocFmq38dis
-         KCrA==
-X-Gm-Message-State: AGi0PuZNwj8Jl4PM01K/kDOFzOS3P8tNcQnVIeAMAPbH6PwMgvez4Jar
-        caIpd4F5aVWwAHkEXdWnVYXQPA==
-X-Google-Smtp-Source: APiQypJBzvsMCtmM5SRHuXXkW8Kz57HKLHp0Lw/JQvJ56JGgP4HXd6+ek1foHwIi/20tTjW8a25S/g==
-X-Received: by 2002:adf:f784:: with SMTP id q4mr34356002wrp.102.1588096383541;
-        Tue, 28 Apr 2020 10:53:03 -0700 (PDT)
-Received: from xps7590.local ([37.120.81.28])
-        by smtp.gmail.com with ESMTPSA id k9sm27936467wrd.17.2020.04.28.10.53.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=mENmQ6Pb7H8tmR1MjtMLs0ubXE4BKzkIreYYg9JTmwQ=;
+        b=LzNFKuWkS3EfWbW0xtgfU0C8HU8Hst4jciL9gEWgYnRaKdMkCTiecZpD5b8SVvn8bN
+         w2XP35nPR8j4bhgw5CgNM60b2I+Yzq5JkeKY97DuMfgmwBgBwSeG3HzweS+MfJVbLCpp
+         5K4npDwZtMvWS7mTPfGy2O9rcMHrcxk6vspqZIBCgyVeplb61+OmOEZUh0UV8OBDAG1w
+         iY8ABJ0joLdASZdhf4x7hs+SSaePVTvlPNBJdR9MMKCApXIcVbSR4XihqLwkYTsTTqZK
+         rsvXd58vJd3+/PV/YGlWpOJ7sXEhThy9CKmrFSbbR+XfXbqeejii1J45daKhOMbDigZJ
+         Eriw==
+X-Gm-Message-State: AGi0PuYAyeoLj8V/YB16fKyW8kh0ozeGFqstULx4OEf98wj5qJ5eYE/c
+        b8dYubRKSOAVn51nhwMyAYNsTg1GyAc=
+X-Google-Smtp-Source: APiQypJTI6DwHabWRQCA/LwS+jwG4QtUCwBuv+PQUF/I35yfyK+EKVAsd6jfQyV+7Qv9CI1ziwgX/w==
+X-Received: by 2002:aa7:8593:: with SMTP id w19mr30860532pfn.97.1588096961545;
+        Tue, 28 Apr 2020 11:02:41 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h197sm16248994pfe.208.2020.04.28.11.02.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 10:53:02 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Robert Foss <robert.foss@linaro.org>
-Subject: [PATCH v5 v5 0/3] media: ov8856: Add devicetree support
-Date:   Tue, 28 Apr 2020 19:52:52 +0200
-Message-Id: <20200428175255.1608569-1-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Tue, 28 Apr 2020 11:02:40 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 11:02:38 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: simple: Add IVO M133NWF4 R0
+Message-ID: <20200428180238.GK987656@yoga>
+References: <20200420215728.1927434-1-bjorn.andersson@linaro.org>
+ <20200425175842.GA3773@ravnborg.org>
+ <CAL_JsqL6bMwrXZqvGz_H_aJi+EeoikBwKznLP2VomJ=Wn822Rg@mail.gmail.com>
+ <20200428170559.GC27234@ravnborg.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428170559.GC27234@ravnborg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds devicetree support to the ov8856 driver.
-In order to to aid debugging and enable future sensor
-modes to be supported, module revision detection is also added.
+On Tue 28 Apr 10:05 PDT 2020, Sam Ravnborg wrote:
 
+> Hi Rob.
+> 
+> On Tue, Apr 28, 2020 at 09:27:51AM -0500, Rob Herring wrote:
+> > On Sat, Apr 25, 2020 at 12:58 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > >
+> > > Hi Björn.
+> > >
+> > > On Mon, Apr 20, 2020 at 02:57:27PM -0700, Bjorn Andersson wrote:
+> > > > Define the vendor prefix for InfoVision Optoelectronics and add their
+> > > > M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel to the compatible list
+> > > > of panel-simple.
+> > > >
+> > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > >
+> > > I got OK for the vendor prefix on irc so patch is now added to
+> > > drm-misc-next.
+> > > Another time please use a dedicated patch for vendor-prefix
+> > > so it is not hidden with other stuff. This way the chance
+> > > to get the attention of the right people is better.
+> > 
+> > I should have mentioned there's basically one thing to check:
+> > alphabetical order.
+> I thought I checked that, but obviously not - hrmpf..
 
-Dongchun Zhu (1):
-  media: dt-bindings: ov8856: Document YAML bindings
+Sorry about that, I thought I did double check that before posting it...
 
-Robert Foss (2):
-  media: ov8856: Add devicetree support
-  media: ov8856: Implement sensor module revision identification
+> I will post a follow-up patch for drm-misc-next to fix it.
+> 
 
- .../devicetree/bindings/media/i2c/ov8856.yaml | 140 +++++++++++++
- MAINTAINERS                                   |   1 +
- drivers/media/i2c/ov8856.c                    | 192 ++++++++++++++++--
- 3 files changed, 320 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-
--- 
-2.25.1
-
+Thank you,
+Bjorn
