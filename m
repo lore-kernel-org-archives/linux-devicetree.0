@@ -2,81 +2,81 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BB0C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B41BC83007
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF3D206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B04F206A1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 10:58:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czz4llsh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsseRELG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgD1K4v (ORCPT
+        id S1726425AbgD1K6i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 06:56:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57082 "EHLO
+        Tue, 28 Apr 2020 06:58:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD1K4v (ORCPT
+        by vger.kernel.org with ESMTP id S1726364AbgD1K6h (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:56:51 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE53C03C1A9;
-        Tue, 28 Apr 2020 03:56:51 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u127so2349205wmg.1;
-        Tue, 28 Apr 2020 03:56:51 -0700 (PDT)
+        Tue, 28 Apr 2020 06:58:37 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E0DCC03C1A9;
+        Tue, 28 Apr 2020 03:58:37 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i10so24098229wrv.10;
+        Tue, 28 Apr 2020 03:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=cu9V92swPgMoQVrGbkOnzB0mFpeAhIxz6fT8lwhvXp4=;
-        b=czz4llshIebOCEiGJP40AlVibD04vg+/rozKAVOvpHVL8fHv6sNTWeT9mdK2nJWB0G
-         hZyQ8/g0Ei9w0xlpAB+Imk2Vh2P3AammDUKXGTD1kCIvahtiXDnowS9XYI/rgXndhhQ8
-         ka89E6IO7o9wRCrK3tQCA5VgZNByZUXQwOGFQGWBBQzg1o2RYfQ/i3Kw64eMNn1onspX
-         6uZQ3EZ8kf9koMUzgCDrt+v8qLDdMz7sQzDsCDyQ2weGGgSvePfjyX1PaMLtqRB7PdMU
-         Tm+ntr4ljBWFra5PyMx8T2f1q4CcyeagUayTh5CpJUa3pARcUmN8PXhzzRVQe+aX2RG9
-         nE6w==
+        bh=t5n1x2S+hMgzHe+DJTRE4uXUFYWCAd6cwy2zE9TXKj8=;
+        b=fsseRELGzjV3nw0OnJb8J2yMMUals+T3NpyLSCeLTidRv9zn8DMxFkKyKdD57O4CJV
+         hAjrf7r0FguwBG/jG6NK40oEyLvnCdGvp3w/n/PRiPEBrb+1UAkUyfB9O5QERqf0/6kS
+         YcuHcAAp2e1/XkofVRhC4L1NQSWDB+QbYlexgj1BRqegG4hyu3LOs0K4KXZlC/4rtdEM
+         2+NETjYYpaS91AEbjW7MiDq8hn+mmch1e5oO/pGtS7cCqEibUhYMWHeMeTpixr2KPNRS
+         jQqm8kjnGigKykRb/mi/1PWEEgTbqDpg4ly8mwn2uzlo7dPlrZnb5ev/o/Rkgovz2CrM
+         zJcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cu9V92swPgMoQVrGbkOnzB0mFpeAhIxz6fT8lwhvXp4=;
-        b=rfsJlVQc2un4dLL+h+v2r17Xl7oDTYPFulAQXY7BlnZavkg7PGtuJo+fmJyuZpi1Ua
-         MDYWkKMOrwXza1AX3AUTrSFaTwt29doLarRJWgWnKOyI+2x4gI1uF+b+p12c0Qh3I37u
-         /UfNa5ZiiMMHXV8HqHq0tQMCyvL/eo5zXPayIzwPPIFsNQNKf/NQkXFbrYINiSf4Qstv
-         7Y3tNuPkyc0k/h5BtRbVCdBjT3PkrHbszPOfhHuuQWY1FFH7wpaMo01uAn8gG23ytv6+
-         F+i03Ns6Yut9wCo+v9NhVVdez31dYkTd3QUp8/Ml3IpzF13/2pNOP3A65GpdYyeP0mkG
-         W/aQ==
-X-Gm-Message-State: AGi0PuYVKhaEZhEmSAcQm+HaZ28rvbRbWS9gfnq0xBKPIJ0BN7oaNzfD
-        IbDwd2kXd9Bft6RkIT2BNp8=
-X-Google-Smtp-Source: APiQypIqMecRY6oj6W0DN7WkgSfgWk1ppCZAwj08D4KFd8m+Q50ALtWtZk3LJiZvZUrYi+awMrgCfg==
-X-Received: by 2002:a1c:a9d3:: with SMTP id s202mr3965015wme.160.1588071410005;
-        Tue, 28 Apr 2020 03:56:50 -0700 (PDT)
+        bh=t5n1x2S+hMgzHe+DJTRE4uXUFYWCAd6cwy2zE9TXKj8=;
+        b=QEB9mLEl1tZcYrlCXzLyeCZOwlTKioEt2TNr4ExP3YJmpDdV41ZcDALqzJGZgQoNdi
+         z8Gqez1CbdsFNp+8ecy9t3CLw9IuATiPaRPFNHGu0F+fW8gds4J5dBH1eIVT9gPpdKjs
+         kUkSuyJ5nqDohjZj7GsZQYvtctyC1hTQ91j26SpBd5V1BQFEyppilOMNbvev9biID7CW
+         3NQnTvK/DtSji48KDTMVGSmreh1SyFsv5A2xPn651Ag4ly3/CUpG/u0DCbhEjVT3/plQ
+         gKOjN9BJR5NQkVC8nmKLvXljaqsWQfg3qavd7xZWlQVdDoXH3v+X8gbtWxDwvFdxXn01
+         9IEw==
+X-Gm-Message-State: AGi0PuadHD41owXFccnQQYdTFiSuFm5K2Cdk1Vk/BAWvQiPgnaFbgJq0
+        5brBiu8h5g7d1wBTSLKEqLo=
+X-Google-Smtp-Source: APiQypIgHZ4wbuHTwISD2PgDLUFcIjklJBGdOddlFw0x5NjmTtmMuFA/4Th25Tf2Ulo3BTah8l9PCw==
+X-Received: by 2002:a05:6000:4:: with SMTP id h4mr33856041wrx.386.1588071516225;
+        Tue, 28 Apr 2020 03:58:36 -0700 (PDT)
 Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
-        by smtp.gmail.com with ESMTPSA id c20sm2965920wmd.36.2020.04.28.03.56.48
+        by smtp.gmail.com with ESMTPSA id w6sm25776444wrm.86.2020.04.28.03.58.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 03:56:48 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 12:56:47 +0200
+        Tue, 28 Apr 2020 03:58:34 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 12:58:33 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Nagarjuna Kristam <nkristam@nvidia.com>
 Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 8/8] phy: tegra: xusb: Enable charger detect for
- Tegra210
-Message-ID: <20200428105647.GJ3592148@ulmo>
-References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
- <1586939108-10075-9-git-send-email-nkristam@nvidia.com>
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH V1 1/4] dt-bindings: usb: tegra-xudc: Add Tegra194 XUSB
+ controller support
+Message-ID: <20200428105833.GK3592148@ulmo>
+References: <1587022460-31988-1-git-send-email-nkristam@nvidia.com>
+ <1587022460-31988-2-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qD3brAgIG4LbUq6d"
+        protocol="application/pgp-signature"; boundary="5dNcufZ4prhark0F"
 Content-Disposition: inline
-In-Reply-To: <1586939108-10075-9-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <1587022460-31988-2-git-send-email-nkristam@nvidia.com>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -84,59 +84,40 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---qD3brAgIG4LbUq6d
+--5dNcufZ4prhark0F
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 15, 2020 at 01:55:08PM +0530, Nagarjuna Kristam wrote:
-> Tegra210 SoC supports charger detect, set corresponding soc flag.
+On Thu, Apr 16, 2020 at 01:04:17PM +0530, Nagarjuna Kristam wrote:
+> Extend the Tegra XUSB controller device tree binding with Tegra194
+> support.
 >=20
 > Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 > ---
-> V2:
->  - Patch re-based.
-> ---
->  drivers/phy/tegra/xusb-tegra210.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-t=
-egra210.c
-> index 7d84f1a..2be5201 100644
-> --- a/drivers/phy/tegra/xusb-tegra210.c
-> +++ b/drivers/phy/tegra/xusb-tegra210.c
-> @@ -2352,6 +2352,7 @@ const struct tegra_xusb_padctl_soc tegra210_xusb_pa=
-dctl_soc =3D {
->  	.supply_names =3D tegra210_xusb_padctl_supply_names,
->  	.num_supplies =3D ARRAY_SIZE(tegra210_xusb_padctl_supply_names),
->  	.need_fake_usb3_port =3D true,
-> +	.charger_detect =3D true,
->  };
->  EXPORT_SYMBOL_GPL(tegra210_xusb_padctl_soc);
-> =20
-
-Same comments as for patch 7/8, with those addressed:
+>  Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---qD3brAgIG4LbUq6d
+--5dNcufZ4prhark0F
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6oC+8ACgkQ3SOs138+
-s6GgYRAAqZ1IWFuvAMyyIhS3Tm7ZAX3mXGSz2pXgTdb72C4U/EN4fwsaGLdM/qAb
-+BFMZQL0uH8xyOJSZYERL2rI1eYlJaLM6ovkbzeuUjOpf5y9yjMATjOTpIccubhf
-a/g37osHQ0LnXiZbM4kGCLGssLF4DmwYLMEwcTrUjaptX35yHs1eXAPQDcg0K7gv
-+SvIW4PiLTGpJMlVq19BPxsAaHs57Z0n7G09e+gT4Hq24SVbxhd1beL4tqwaiWB0
-3oIyejEtyZB9zbg5Vxlhpt8LoIoqxh+J5h7BHG7o+et81Pd2j0G5JTgdvCpakC48
-jxFzdkSYBxAduQx26vC5/N88TMjILSspL/CARemnszKBJFU7r/OACAqPrkxvtVow
-EQzCB77tv5X0z0v1QErPc+E+WvSzhhuHRvidRjDwztrG7qx8uMfPPZVnGSRiCSOp
-qrNGqnKXgtbws9+LhAFlo8R2EyAZ5v7ZoymAmk9aWfVlhr+ohMp8+jWce2A3LgVs
-Hc4vEbb/3CrEDdrVGq+4zMLpzdSbIDvQVyAi4Jivv7SwfZ/XbkkCdXHeBmOzgqGk
-z86CqPXyD03zNU3SY9Rty3aWCMs0DTuTzW7AYK5TvJXmeij6wLvAwjzsmP/vhZzf
-Qh9EO4JYlAD2HuuLQraSISM3g6m5NcHMaHhrVbwH0FF8ey0kKTY=
-=+2YA
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6oDFkACgkQ3SOs138+
+s6Emhw//X5T2bBokenhft92gCDW93wpq/OSYsj6EENSnKva4cUvKJwme/xbzPGx+
+mfIOhlR/BmmOXgkCPQ7sbSkpEAxUv2hmAvh3ASZsxQL7jsqfeP1GuR2khkq1uvfb
+JiNY9XHdKFcdxsRqBCTlt2kllTqIANkLbKCUfSO7Ru1JFwAXlD5HFziIyVZh4QvD
+cARWy+t3wkDf04goNM2OsMYihAyNd8p4TMylyDx169PlBDcn4GGKlgOoxvaCQMnz
+c1Y7OmOpF4j6C2Fswbs4bJr4M1UNN+Vgvl8dG0pBYk1iLdYa1wn/kupAheR2yIBo
+0C/1t7Kj8ledBkjvBx5sd7BWcoo1RKXseCP/dElWY/JtPeyWyllQBi+o62Up76h+
+1aimXHp0L5NkmAXoQaGRrcSR9qEchdAy2JOW78569wSNuWoqN5RlXUdD93dz1PB6
+NOpKOUAyUGckAIKzc9cgGPFKIRMFqLDE6vSktJFEkrT8qOjui/9J5+OOjEPWP9Uw
+Ckyk7wzXNjDIOnoePxdl/O5aD0zENQSHkZQSXmM7hQxPbDNnO4G4hqMvtJQR9Yr3
+n4Zt0UvTKT+9ZeVUD5kPTUX8EfARr81ZyzUtOq0TvLxkSevnsm86zJhNWhZTF5XK
+1nxENTF6xhGB7OjEED5W7UsWNdRe+9htq6gDDCMAv+SNpRfrbLQ=
+=iXcs
 -----END PGP SIGNATURE-----
 
---qD3brAgIG4LbUq6d--
+--5dNcufZ4prhark0F--
