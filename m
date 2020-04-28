@@ -2,91 +2,125 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BC2C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F296EC83008
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C18C206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588084085;
-	bh=D7QNgWTGi3LFiveU1UlSuH8oqtvhgNGqKALwImoVYkY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rqU4psxjpfgNSmBxmtnlOZ0wYC9091lpoJaNdUc2oE8iRKeHgXPK/pf5336zeCs+v
-	 nuLX+dnS+x886jPJ4jXtxWPGTKtpKkNjMI+9u3S5agQfGwgvNZuGGs/j0NReqQiqFp
-	 VpIMCqsRCDgm11nz7S2U25Bk5j2EtiPP5xP8vhqI=
+	by mail.kernel.org (Postfix) with ESMTP id DAD75206C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgD1O2E (ORCPT
+        id S1727798AbgD1O3n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56326 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 10:29:43 -0400
+Received: from mga06.intel.com ([134.134.136.31]:4285 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgD1O2E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:28:04 -0400
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 029E2206E2;
-        Tue, 28 Apr 2020 14:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588084084;
-        bh=D7QNgWTGi3LFiveU1UlSuH8oqtvhgNGqKALwImoVYkY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=o29hVvvQad0SDi9yf0TpO1MvWtpwYZqpd618/5yEjDqWmjCyASAVgED8qreXsCwJ6
-         pcjomR4yyq7assm3J+isPP0SgXijqTklM/ILcQhMOnvia80RWdj+wTzAbPqTGXzcOp
-         hB1VoplClc9b9cPdQ4oqVX4wYoPzFaBl3t+jSxJY=
-Received: by mail-ot1-f50.google.com with SMTP id m18so32846836otq.9;
-        Tue, 28 Apr 2020 07:28:03 -0700 (PDT)
-X-Gm-Message-State: AGi0PubPO6F5cX1OybNPgbTqCkWWTW6O/JBomtOk+VDr6xhtAgYPRetE
-        cTx1gf3BDUQz5R9cx2xj2i758KHHVVCwf60xoQ==
-X-Google-Smtp-Source: APiQypK3X4aUyiYhPAHhaTh4SayCKXYiLxNTHCd8y/oQZhydp53nEzkfEni/GtmVYYFLz/z1zRBGLXTAo3ngLC2yGQU=
-X-Received: by 2002:a9d:1441:: with SMTP id h59mr23106980oth.192.1588084083280;
- Tue, 28 Apr 2020 07:28:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200420215728.1927434-1-bjorn.andersson@linaro.org> <20200425175842.GA3773@ravnborg.org>
-In-Reply-To: <20200425175842.GA3773@ravnborg.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 28 Apr 2020 09:27:51 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL6bMwrXZqvGz_H_aJi+EeoikBwKznLP2VomJ=Wn822Rg@mail.gmail.com>
-Message-ID: <CAL_JsqL6bMwrXZqvGz_H_aJi+EeoikBwKznLP2VomJ=Wn822Rg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: simple: Add IVO M133NWF4 R0
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        id S1727108AbgD1O3n (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:29:43 -0400
+IronPort-SDR: kOZrIelPDgOUC3aJDJW9H80ah7VC/S2GDIWbHQz354UeEUlk3/wUSs6TRvijBEJrgEMrqAkN+V
+ kbTVQZESG98A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 07:29:42 -0700
+IronPort-SDR: vGnHmY/BqlTIl3FGa5R64rDdkwKbnMHUnpT0wYGLkHb05hlF7l+pQ52NbGLIPzbFCXoyvBDAUH
+ qkiQUfkvunvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="432201423"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 28 Apr 2020 07:29:36 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jTREw-003ZVU-6Y; Tue, 28 Apr 2020 17:29:38 +0300
+Date:   Tue, 28 Apr 2020 17:29:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of
+ the child device
+Message-ID: <20200428142938.GX185537@smile.fi.intel.com>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-3-michael@walle.cc>
+ <20200428124548.GS185537@smile.fi.intel.com>
+ <3cd3705a-4f48-6a46-e869-3ee11dc17323@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3cd3705a-4f48-6a46-e869-3ee11dc17323@arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 12:58 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Bj=C3=B6rn.
->
-> On Mon, Apr 20, 2020 at 02:57:27PM -0700, Bjorn Andersson wrote:
-> > Define the vendor prefix for InfoVision Optoelectronics and add their
-> > M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel to the compatible list
-> > of panel-simple.
-> >
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-> I got OK for the vendor prefix on irc so patch is now added to
-> drm-misc-next.
-> Another time please use a dedicated patch for vendor-prefix
-> so it is not hidden with other stuff. This way the chance
-> to get the attention of the right people is better.
+On Tue, Apr 28, 2020 at 02:06:20PM +0100, Robin Murphy wrote:
+> On 2020-04-28 1:45 pm, Andy Shevchenko wrote:
+> > On Thu, Apr 23, 2020 at 07:45:29PM +0200, Michael Walle wrote:
+> > > Commit cdfee5623290 ("driver core: initialize a default DMA mask for
+> > > platform device") initialize the DMA of a platform device. But if the
+> > > parent doesn't have a dma_mask set, for example if it's an I2C device,
+> > > the dma_mask of the child platform device will be set to zero again.
+> > > Which leads to many "DMA mask not set" warnings, if the MFD cell has the
+> > > of_compatible property set.
+> > 
+> > I'm wondering why parent doesn't have it.
+> 
+> Because the parent isn't on a DMA-capable bus, and thus really shouldn't
+> have a valid DMA configuration ever.
 
-I should have mentioned there's basically one thing to check:
-alphabetical order.
+Then how come a child is DMA capable? MFD takes a physical device node as a
+parent and creates one of several children with that device as a parent. DMA
+mask is a property of the device which *does DMA*. Obviously a child is not
+correct device for that.
 
-The good news is both files got it wrong, so at least we're consistent. :)
+Where am I mistaken?
 
-Rob
+> > I remember we have explicit patches in the past for buses such as PCI and AMBA
+> > to set default DMA mask for all physical devices on the respective bus, of
+> > course they can individually override it later.
+> > 
+> > So, this seems to me a paper over the real issue (absence of default DMA mask
+> > where it's needed) and devices should explicitly define it if they disagree
+> > with default.
+> > 
+> > If I'm wrong, you really need elaborate commit message much better.
+> 
+> The problem here is that MFD children are created as platform devices
+> (regardless of what their parent is) and assigned an of_node, at which point
+> they look pretty much indistinguishable from SoC devices created by the
+> of_platform code, that *do* have to be assumed to be DMA-capable to prevent
+> ~90% of existing devicetrees from breaking.
+> 
+> Of course the real fundamental issue is the platform bus itself, but it's
+> way too late to fix that :(
+
+I don't think it's an issue, rather in model you are describing. Or I miss
+something not so obvious.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
