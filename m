@@ -2,93 +2,121 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90AAC83004
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A5AC83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04B220661
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:07:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JMxXKhjn"
+	by mail.kernel.org (Postfix) with ESMTP id 73660206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588072186;
+	bh=MGWunbA8swfXX7fdfm8HfW6mgSmyUonlAUB6TuoF+Jg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sNc1YRMriuXIJGU/2RQyQG+n890bRQS13MCWxRCZCaW8z4WBQVEIOX6Q8yRVJy0wp
+	 6F1hhvS/FGBUJvMhL8oHB9dS0kcolaEvwt6xakCIm3OmVaBbh9cTA+13lmWvAXmhPA
+	 1JTrUXqCiK1MIbmcMMz3vbHd/t93A/YFvqP+JLGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgD1LHK (ORCPT
+        id S1726450AbgD1LJq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:07:10 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47434 "EHLO mail.skyhub.de"
+        Tue, 28 Apr 2020 07:09:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726345AbgD1LHJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:07:09 -0400
-Received: from zn.tnic (p200300EC2F0EA50005F31991FCF74C40.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:a500:5f3:1991:fcf7:4c40])
+        id S1726416AbgD1LJp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:09:45 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6EB821EC0CE4;
-        Tue, 28 Apr 2020 13:07:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1588072028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6yM3ywV4SHYRhMID8a0485MgrxeuX8DEuZQLHvXZu6Q=;
-        b=JMxXKhjn18H3V9nLLHLvhBv7M38fREPnFGpmQ/rKPlrxu3FxzTLqpP8b50grNQYfWT85Cw
-        XgwLzTnKZ3tM6dRdrUvBwrJmkxNPMoIiz82Ihj/jG3OWo/eOhQ9B89fILz4RVTFYORo0RB
-        3y/So7HpASg3dOx1fp6J5wslbr2xbgg=
-Date:   Tue, 28 Apr 2020 13:06:59 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     robh+dt@kernel.org
-Cc:     Talel Shenhar <talel@amazon.com>, mchehab@kernel.org,
-        james.morse@arm.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-edac@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com,
-        ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
-        eitan@amazon.com
-Subject: Re: [PATCH v6 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-Message-ID: <20200428110659.GA11272@zn.tnic>
-References: <20200224134132.23924-1-talel@amazon.com>
- <20200224134132.23924-2-talel@amazon.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A16920661;
+        Tue, 28 Apr 2020 11:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588072185;
+        bh=MGWunbA8swfXX7fdfm8HfW6mgSmyUonlAUB6TuoF+Jg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kpOvLK49PTFx1bL0adrxIRN7QJJKw5OLlWEjnKqAtoMgznGBL9n14T49UUJOfvvYi
+         Qbrc8Ys2eY57Ye9gbLsyVdqKQ7359Jcrr3ir3j0M0nKdcKZRR9wY+kV5JfU+OdRvHv
+         cdP+quDPGAJUgLGSCgYDZPuaKs+0CPeFyk/iWV4o=
+Date:   Tue, 28 Apr 2020 12:09:42 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     Nisha Kumari <nishakumari@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org, lgirdwood@gmail.com,
+        mark.rutland@arm.com, david.brown@linaro.org,
+        LKML <linux-kernel@vger.kernel.org>, kgunda@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH 4/4] regulator: adding interrupt handling in labibb
+ regulator
+Message-ID: <20200428110942.GC5677@sirena.org.uk>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-5-git-send-email-nishakumari@codeaurora.org>
+ <20190613172738.GO5316@sirena.org.uk>
+ <CAO_48GEYAWBgzeEKx1kjjmLJ+F0chSkRs0EUC86Y2q20kyqjkA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NU0Ex4SbNnrxsi6C"
 Content-Disposition: inline
-In-Reply-To: <20200224134132.23924-2-talel@amazon.com>
+In-Reply-To: <CAO_48GEYAWBgzeEKx1kjjmLJ+F0chSkRs0EUC86Y2q20kyqjkA@mail.gmail.com>
+X-Cookie: Eschew obfuscation.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 03:41:31PM +0200, Talel Shenhar wrote:
-> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
-> 
-> Signed-off-by: Talel Shenhar <talel@amazon.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-> new file mode 100644
-> index 000000000000..20505f37c9f8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
 
-WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)
-#36: FILE: Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml:1:
-+# SPDX-License-Identifier: GPL-2.0-only
+--NU0Ex4SbNnrxsi6C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Rob, should I listen to checkpatch or ignore it?
+On Tue, Apr 28, 2020 at 10:46:52AM +0530, Sumit Semwal wrote:
+> On Thu, 13 Jun 2019 at 22:57, Mark Brown <broonie@kernel.org> wrote:
 
--- 
-Regards/Gruss,
-    Boris.
+> > > +     /*
+> > > +      * The SC(short circuit) fault would trigger PBS(Portable Batch
+> > > +      * System) to disable regulators for protection. This would
+> > > +      * cause the SC_DETECT status being cleared so that it's not
+> > > +      * able to get the SC fault status.
+> > > +      * Check if LAB/IBB regulators are enabled in the driver but
+> > > +      * disabled in hardware, this means a SC fault had happened
+> > > +      * and SCP handling is completed by PBS.
+> > > +      */
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> > Let the core worry about this, the driver should just report the problem
+> > to the core like all other devices do (and this driver doesn't...).
+
+> I (and Bjorn too) looked to find the api that allows us to do this
+> short circuit reporting and recovery in the core, but couldn't find
+> anything except REGULATOR_ERROR_OVER_CURRENT which also looks like
+> it's used only once in the code.
+
+A short circuit will generate excessive current (and detection of a
+short circuit is usually current based) so using the same notification
+should be fine.  If you're concerned about this feel free to add a
+specific notification, and add any handling you need in response to that
+notification.  You certainly shouldn't be just reenabling the regulators
+in your driver.
+
+Mostly AFAICT people are fairly happy with the autonomous response of
+the hardware to these issues, it's not like they're expected to happen
+in normal operation or be recoverable.
+
+--NU0Ex4SbNnrxsi6C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6oDvUACgkQJNaLcl1U
+h9Bw1Af/eH2Xtc+Nb+wOnsuA/ECmwpfLa7PgrSXEc4oqAFvwrzgmGgzJVdGz2ZZv
+nUDk70XTFKy0dHRIUxxeohZRJr/+lEXJOKUQx4LwHRuphGDWhbV63lAVJQJbkUbk
+QABoJ/lj4WWEOsiAmY4BQVuQcEuZxcY6deyeA6s1/Ur0EaoKfQv3I8x2VJjECBDc
+D+weiy/KgJg7OKzUtCPMufdVKwWzKoHqyW8CCEov3iozV9nJ+BoY2F3K8gGMqxEt
+5GCo0EZ/uktvqCo6UroN701E+ne4zsBysVztRE39HTzWCk7nQ0Eg1c3m6C4sL9ki
+DYnE9SroVq3mFjcEirN8Tj9azWExdA==
+=jlOR
+-----END PGP SIGNATURE-----
+
+--NU0Ex4SbNnrxsi6C--
