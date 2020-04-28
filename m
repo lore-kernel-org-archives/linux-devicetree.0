@@ -6,114 +6,184 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6EDC83007
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D15C83007
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00FDA2064A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4832064A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgD1IZV (ORCPT
+        id S1726573AbgD1I2k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726490AbgD1IZV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:25:21 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28306C03C1A9
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 01:25:21 -0700 (PDT)
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jTLYD-0005oz-3B; Tue, 28 Apr 2020 10:25:09 +0200
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jTLYA-0003sR-0V; Tue, 28 Apr 2020 10:25:06 +0200
-Date:   Tue, 28 Apr 2020 10:25:05 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Robert Foss <robert.foss@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v7 1/3] media: dt-bindings: ov8856: Document YAML bindings
-Message-ID: <20200428082505.GA22489@pengutronix.de>
-References: <20200408110816.2712841-1-robert.foss@linaro.org>
- <20200408110816.2712841-2-robert.foss@linaro.org>
- <20200415160729.GA4438@bogus>
- <20200415162110.bmorj4u4hkqohqjx@pengutronix.de>
- <CAG3jFysg34=HJ7xefuAKw4Uq6W0POm5TsJmzQku6WwkhH_j=-w@mail.gmail.com>
- <20200428075504.ovzugt2mbgan7z3k@gilmour.lan>
+        Tue, 28 Apr 2020 04:28:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:30425 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726377AbgD1I2j (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 04:28:39 -0400
+IronPort-SDR: HFVVfJdjKbZHDojKBLS98VT4iWmuwy+YSvtdt2zns8Bjc9JyLted7c84ES6ItGHSvfU5vp1uLo
+ Rq9m2iMz5Wrg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 01:28:38 -0700
+IronPort-SDR: cXF0nyAj5HPxlSisvPTOTOweP9i/MFPapWw0UV9p1jNLtkuxqInvF0mnwzyPpwM0AyPx+4SQo2
+ cUiwjg1mD0JQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
+   d="scan'208";a="282070540"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Apr 2020 01:28:36 -0700
+Received: from [10.214.149.60] (vramuthx-MOBL1.gar.corp.intel.com [10.214.149.60])
+        by linux.intel.com (Postfix) with ESMTP id 87A465804B6;
+        Tue, 28 Apr 2020 01:28:28 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
+        hauke.mehrtens@intel.com, qi-ming.wu@intel.com, vigneshr@ti.com,
+        arnd@arndb.de, richard@nod.at, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200424183612.4cfdbb6a@collabora.com> <20200427175127.0518c193@xps13>
+ <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
+ <20200428082759.25065146@collabora.com>
+ <38334812-21b9-5b2c-db84-01c9eacc84d0@linux.intel.com>
+ <20200428084704.5e04232a@collabora.com>
+ <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
+ <20200428094049.3c0d4730@xps13>
+ <3ebc42d9-f8a8-0764-ff7f-82beeb0b5bb7@linux.intel.com>
+ <20200428095459.6727fab0@xps13>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <5c086349-d17f-2ebd-1a70-005fa64e050f@linux.intel.com>
+Date:   Tue, 28 Apr 2020 16:28:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428075504.ovzugt2mbgan7z3k@gilmour.lan>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:23:30 up 66 days, 19:40, 148 users,  load average: 0.03, 0.16,
- 0.38
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200428095459.6727fab0@xps13>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-04-28 09:55, Maxime Ripard wrote:
-> On Mon, Apr 27, 2020 at 05:13:42PM +0200, Robert Foss wrote:
-> > On Wed, 15 Apr 2020 at 18:21, Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > >
-> > > On 20-04-15 11:07, Rob Herring wrote:
-> > > > On Wed, Apr 08, 2020 at 01:08:14PM +0200, Robert Foss wrote:
-> > > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+Hi Miquel,
 
-...
-
-> > > > > +  clock-names:
-> > > > > +    description:
-> > > > > +      Input clock for the sensor.
-> > > > > +    items:
-> > > > > +      - const: xvclk
-> > > > > +
-> > > > > +  assigned-clocks:
-> > > > > +    description:
-> > > > > +      Input clock for the sensor.
-> > > > > +
-> > > > > +  assigned-clock-rates:
-> > > > > +    description:
-> > > > > +      Frequency of the xvclk clock in Hertz.
-> > > >
-> > > > These 2 should have a 'maxItems: 1'
-> > >
-> > > Don't know why those properties are needed here.. IMHO this shouldn't be
-> > > part of the binding or at least it should be optional and not required.
-> > > All we need is the clocks and the clock-names property.
-> > 
-> > Thanks Marco, I'll make it optional for the next revision.
+On 28/4/2020 3:54 pm, Miquel Raynal wrote:
+> Hello,
 > 
-> Well, the whole discussion we had was about removing them entirely?
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote on Tue, 28 Apr 2020
+> 15:50:06 +0800:
+> 
+>> Hi Miquel,
+>>
+>> On 28/4/2020 3:40 pm, Miquel Raynal wrote:
+>>> Hi Vadivel MuruganX,
+>>>
+>>> "Ramuthevar, Vadivel MuruganX"
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote on Tue, 28 Apr 2020
+>>> 14:50:35 +0800:
+>>>    
+>>>> Hi Boris,
+>>>>
+>>>> On 28/4/2020 2:47 pm, Boris Brezillon wrote:
+>>>>> On Tue, 28 Apr 2020 14:40:58 +0800
+>>>>> "Ramuthevar, Vadivel MuruganX"
+>>>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>>>     >>>> Hi Boris,
+>>>>>>
+>>>>>> On 28/4/2020 2:27 pm, Boris Brezillon wrote:
+>>>>>>> On Tue, 28 Apr 2020 14:17:30 +0800
+>>>>>>> "Ramuthevar, Vadivel MuruganX"
+>>>>>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>>>>>      >>>> Hi Miquel,
+>>>>>>>>
+>>>>>>>>         Thank you very much for the review comments and your time...
+>>>>>>>>
+>>>>>>>> On 27/4/2020 11:51 pm, Miquel Raynal wrote:
+>>>>>>>>> Hi Ramuthevar,
+>>>>>>>>>         >>>>>>> +static int ebu_nand_probe(struct platform_device *pdev)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +	struct device *dev = &pdev->dev;
+>>>>>>>>>>> +	struct ebu_nand_controller *ebu_host;
+>>>>>>>>>>> +	struct nand_chip *nand;
+>>>>>>>>>>> +	phys_addr_t nandaddr_pa;
+>>>>>>>>>>> +	struct mtd_info *mtd;
+>>>>>>>>>>> +	struct resource *res;
+>>>>>>>>>>> +	int ret;
+>>>>>>>>>>> +	u32 cs;
+>>>>>>>>>>> +
+>>>>>>>>>>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+>>>>>>>>>>> +	if (!ebu_host)
+>>>>>>>>>>> +		return -ENOMEM;
+>>>>>>>>>>> +
+>>>>>>>>>>> +	ebu_host->dev = dev;
+>>>>>>>>>>> +	nand_controller_init(&ebu_host->controller);
+>>>>>>>>>>> +
+>>>>>>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+>>>>>>>>>>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>>>>>> +	if (IS_ERR(ebu_host->ebu_addr))
+>>>>>>>>>>> +		return PTR_ERR(ebu_host->ebu_addr);
+>>>>>>>>>>> +
+>>>>>>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+>>>>>>>>>>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
+>>>>>>>>>>> +	if (IS_ERR(ebu_host->nand_addr))
+>>>>>>>>>>> +		return PTR_ERR(ebu_host->nand_addr);
+>>>>>>>>>>> +
+>>>>>>>>>>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
+>>>>>>>>>>
+>>>>>>>>>> CS ids should be encoded in the reg property (see [1]).
+>>>>>>>>>
+>>>>>>>>> Is it your choice to only support a single CS or is it actually a
+>>>>>>>>> controller limitation?
+>>>>>>>>
+>>>>>>>> Yes , its controller limitation to support only one CS
+>>>>>>>
+>>>>>>> I'm pretty sure that's not true, otherwise you wouldn't have to select
+>>>>>>> the CS you want to use :P.
+>>>>>>
+>>>>>> At a time it supports only one chip select.
+>>>>>
+>>>>> Yes, like 99% of the NAND controllers, but that doesn't mean you can't
+>>>>> support multi-CS chips. All you have to do is attach an array of
+>>>>> ebu_nand_cs to your ebu_nand_chip (as done in the atmel driver I
+>>>>> pointed to). nand_operation.cs tells you which CS (index in your
+>>>>> ebu_nand_cs array) a specific operation is targeting, and you can pick
+>>>>> the right MMIO range/reg value based on that.
+>>>>
+>>>> Agreed, sure I will add that and update next series of patches .
+>>>
+>>> There are also many other places where you assume blindly that there
+>>> is only one CS. You can check the Atmel NAND controller driver as Boris
+>>> said and we will probably propose more little changes to be more
+>>> generic.
+>> since LGM EBU_NAND controller supports only one chip select at a time, so assumed like that, will change as generic way if consider like more chip select supports, Thanks!
+> 
+> What do you mean "at a time"?
 
-+1 from my side. It is part of the system integration and not part of
-this device.
+I mean it supports multi-CS, during the run time it selects one.
+Thanks!
 
-Regards,
-  Marco
-
-> Maxime
+Regards
+Vadivel
+> 
+> Do we have access to the spec or a register map? We could tell you very
+> quickly if it is worth the trouble. But I am pretty sure as well that
+> the controller supports more than 1 CS.
+> 
+>> Sure , I will do the changes as per your review comments.
+>>>
+>>> Thanks,
+>>> Miquèl
+>>>    
+> 
+> Thanks,
+> Miquèl
+> 
