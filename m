@@ -2,368 +2,117 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D58C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 19:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CC7C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 19:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE04E20730
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 19:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039AD20730
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 19:21:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="rR3xUz/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgD1TVZ (ORCPT
+        id S1728540AbgD1TVb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 15:21:25 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:33788 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbgD1TVY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 15:21:24 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id B949680441;
-        Tue, 28 Apr 2020 21:21:18 +0200 (CEST)
-Date:   Tue, 28 Apr 2020 21:21:17 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        jason@lakedaemon.net, dri-devel@lists.freedesktop.org,
-        tomi.valkeinen@ti.com, kernel@collabora.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH] dt-bindings: display: ti,tfp410.txt: convert to yaml
-Message-ID: <20200428192117.GA13894@ravnborg.org>
-References: <20200428092048.14939-1-ricardo.canuelo@collabora.com>
+        Tue, 28 Apr 2020 15:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728574AbgD1TVa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 15:21:30 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5986C03C1AC
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 12:21:29 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id g14so4952123ooa.4
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 12:21:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uXcp+uKgbSVcG6/mpY6FU5AZWFkgd0Nj9B5N1XLmhEk=;
+        b=rR3xUz/+5SrD2fxd27mqNrmdtzg9VEnGX/7Y42gse1/5fg5CIpMfqQlDKydeTY160H
+         YoAm6BggaOquf5mGuHeC2GyHJUqOAqEQyqN2Qh+8jIq1+c/5UQIt99uSomVfuWltTeIj
+         x6yFG8vaT1HQ9jTzQnCkUP6DVle6SZ9+b5dEp/eTV5dbtmn0+ujFGJxwfjMVdEOQaGTG
+         hWqnUYx45yhgsFysINSMKCc68uZNUGuXC22786JihnVtMq16B663EnlytZbn/z+tczra
+         04CwLco+uTMW5J0xmny9oCP77sR9Gdwlera7rALtNeOaFL7/b1txbVBcmLPqXRvWGh3E
+         vsAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uXcp+uKgbSVcG6/mpY6FU5AZWFkgd0Nj9B5N1XLmhEk=;
+        b=muKemQLtIXmb/RpDnsee4Nrbn7Z1WPMFkMwDh0wzNN4otpm9+HY//3fNNYKyupIGDE
+         NyRuyJRlzKw8B2L9/+GnxhvMGK2C88qzgDsZxLuvorVi/9F6Uk8UxckRLbkrhH+oxf+9
+         xFs2gUD+BmYWHq7AYylOcU4gthXIUSvQXe5Uqv56Ha/AcT62XzjFRbUl/xSRy44vtrro
+         NEUDWNi4z1Qa0mk0UQNzVIHvBXtNMkBkKxg82F5v7FMkHXsMKGH/kb4lkqJp0Isqr/N+
+         P5e71blAtcSg8kDP5Jv4K9X+zy5m/DNf2vpey59WENaNcOIFIkoERkeH0/BEC0eMY769
+         aCMA==
+X-Gm-Message-State: AGi0Pua5ceiqLJJtFQkVucr1g//JBJHiijE4T8jyeCe/fNS8ZYmyVfXW
+        hMi/H2OmZG2vwu1eoDQAKBlsTd6saA2nPSpMVyeZZOAA0TQ=
+X-Google-Smtp-Source: APiQypJpTstqKpcfAREIfkSw3AOBUiF8zoy29AApCHhbOOjmWJ5MxnfYC9IjaaUGw+zMpyWacSI5dwUCHLmUh3HjfjU=
+X-Received: by 2002:a4a:b4c1:: with SMTP id g1mr24715863ooo.58.1588101689067;
+ Tue, 28 Apr 2020 12:21:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200428092048.14939-1-ricardo.canuelo@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=8nJEP1OIZ-IA:10 a=QX4gbG5DAAAA:8 a=gEfo2CItAAAA:8 a=sozttTNsAAAA:8
-        a=e5mUnYsNAAAA:8 a=5Q1QhKhd6o2KWyfzDbIA:9 a=FI4-JCA4KLYWKuIK:21
-        a=vwSoZJe330k_mNyO:21 a=wPNLvfGTeEIA:10 a=AbAUZ8qAyYyZVLSsDulk:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=aeg5Gbbo78KNqacMgKqU:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+References: <1585341214-25285-1-git-send-email-tharvey@gateworks.com>
+ <1585341214-25285-3-git-send-email-tharvey@gateworks.com> <20200428094426.GL3559@dell>
+In-Reply-To: <20200428094426.GL3559@dell>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Tue, 28 Apr 2020 12:21:17 -0700
+Message-ID: <CAJ+vNU0UCugbM7Q7WZ1Hw-U=Je483jYGdrvS0Vq6idxtuUmz2Q@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] mfd: add Gateworks System Controller core driver
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Robert Jones <rjones@gateworks.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ricardo.
+On Tue, Apr 28, 2020 at 2:44 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+<snip>
+> > +
+> > +static int gsc_probe(struct i2c_client *client)
+> > +{
+> > +     struct device *dev = &client->dev;
+> > +     struct gsc_dev *gsc;
+> > +     int ret;
+> > +     unsigned int reg;
+> > +
+> > +     gsc = devm_kzalloc(dev, sizeof(*gsc), GFP_KERNEL);
+> > +     if (!gsc)
+> > +             return -ENOMEM;
+> > +
+> > +     gsc->dev = &client->dev;
+> > +     gsc->i2c = client;
+> > +     i2c_set_clientdata(client, gsc);
+> > +
+> > +     gsc->bus.reg_write = gsc_regmap_regwrite;
+> > +     gsc->bus.reg_read = gsc_regmap_regread;
+>
+> Why do you need to store these in ddata?
 
-Thanks for looking into this bridge binding.
-Some comments in the following.
+Lee,
 
-	Sam
+Thanks for the review!
 
-On Tue, Apr 28, 2020 at 11:20:48AM +0200, Ricardo Cañuelo wrote:
-> Convert the DT binding documentation for the TI TFP410 DPI-to-DVI
-> encoder to json-schema.
-> 
-> Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-> ---
-> Hi all,
-> 
-> I found some issues while converting this binding and I'd like to know
-> your opinions on how to tackle them.
-> 
-> 1) dtbs_check fails for arch/arm/boot/dts/dove-sbc-a510.dts
-> 
->   This board uses the TFP410 encoder but it doesn't define any ports for
->   it. I can't find any suitable remote endpoints in its description
->   either. Maybe this board description should be reworked? The current
->   driver won't handle the device if it doesn't define any ports or
->   endpoints anyway.
-> 
+I need the remap_bus* for devm_regmap_init() in the hwmon sub-module driver:
 
-It is expected that there are a few DT files that will need an update
-when they are checked more fomally.
-So post a sepearate patch to fix it - preferably before the
-conversion.
+hwmon->regmap = devm_regmap_init(dev, &gsc->bus, gsc->i2c_hwmon,
+&gsc_hwmon_regmap_config);
 
->   It also uses the 'powerdown-gpio' property instead of
->   'powerdown-gpios'. AFAICT this shouldn't be a problem from the driver
->   point of view, but the general standard in DT bindings is to use the
->   plural. This is trivial to fix.
-Use the plural form as everyone else.
+Is there something easier I'm missing?
 
-> 2) The definition of ti,deskew in the original binding seems to be
-> tailored to the current driver and the way it's defined may not be very
-> DT-friendly.
-> 
->   This parameter maps to a 3-bit field in a hardware register that takes
->   a value from 0 to 7, so the [-4, 3] range described for this would map
->   to [000, 111]: -4 -> 000, -3 -> 001, -2 -> 010, ... 3 -> 111.
-> 
->   Then, the driver parses the parameter (unsigned) and casts it to a
->   signed integer to get a number in the [-4, 3] range.
-> 
->   A vendor-specific property must have a type definition in json-schema,
->   so if I translate the original bindings semantics directly, I should
->   define ti,deskew as an int32, but this makes dt_binding_check fail if
->   the property has a negative value in the example because of the
->   internal representation of cells as unsigned integers:
-> 
->      ti,deskew:0:0: 4294967293 is greater than the maximum of 2147483647
+Thanks,
 
-Can you define it as an enum like this:
-
-	enum: [-4, -3, -2, -1, 0, 1, 2, 3]
-
-And then maybe in the descrition describe how they map to 0..7.
-The problem is that the binding is an API so we cannot just change
-the interpretation of the value 0 etc.
-
-
-> 
->   So I can think of two solutions to this:
-> 
->   a) Keep the ti,deskew property as an uint32 and document the valid
->   range ([-4, 3]) in the property description (this is what this patch
->   does currently).
-> 
->   b) Redefine this property to be closer to the datasheet description
->   (ie. unsigned integers from 0 to 7) and adapt the driver accordingly.
->   This would also let us define its range properly using minimum and
->   maximum properties for it.
-> 
->   I think (b) is the right thing to do but I want to know your
->   opinion. Besides, I don't have this hardware at hand and if I updated
->   the driver I wouldn't be able to test it.
-> 
-> Thanks.
-> 
-> Patch tested with:
-> 
-> make dt_binding_check ARCH=arm DT_SCHEMA_FILES=<.../ti,tfp410.yaml>
-> make dtbs_check ARCH=arm DT_SCHEMA_FILES=<.../ti,tfp410.yaml>
-> 
->  .../bindings/display/bridge/ti,tfp410.txt     |  66 ----------
->  .../bindings/display/bridge/ti,tfp410.yaml    | 121 ++++++++++++++++++
->  2 files changed, 121 insertions(+), 66 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt b/Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
-> deleted file mode 100644
-> index 5ff4f64ef8e8..000000000000
-> --- a/Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
-> +++ /dev/null
-> @@ -1,66 +0,0 @@
-> -TFP410 DPI to DVI encoder
-> -=========================
-> -
-> -Required properties:
-> -- compatible: "ti,tfp410"
-> -
-> -Optional properties:
-> -- powerdown-gpios: power-down gpio
-> -- reg: I2C address. If and only if present the device node should be placed
-> -  into the I2C controller node where the TFP410 I2C is connected to.
-> -- ti,deskew: data de-skew in 350ps increments, from -4 to +3, as configured
-> -  through th DK[3:1] pins. This property shall be present only if the TFP410
-> -  is not connected through I2C.
-> -
-> -Required nodes:
-> -
-> -This device has two video ports. Their connections are modeled using the OF
-> -graph bindings specified in [1]. Each port node shall have a single endpoint.
-> -
-> -- Port 0 is the DPI input port. Its endpoint subnode shall contain a
-> -  pclk-sample and bus-width property and a remote-endpoint property as specified
-> -  in [1].
-
-> -  - If pclk-sample is not defined, pclk-sample = 0 should be assumed for
-> -    backward compatibility.
-> -  - If bus-width is not defined then bus-width = 24 should be assumed for
-> -    backward compatibility.
-> -    bus-width = 24: 24 data lines are connected and single-edge mode
-> -    bus-width = 12: 12 data lines are connected and dual-edge mode
-These comments are missing in the new binding.
-
-
-> -
-> -- Port 1 is the DVI output port. Its endpoint subnode shall contain a
-> -  remote-endpoint property is specified in [1].
-> -
-> -[1] Documentation/devicetree/bindings/media/video-interfaces.txt
-> -
-> -
-> -Example
-> --------
-> -
-> -tfp410: encoder@0 {
-> -	compatible = "ti,tfp410";
-> -	powerdown-gpios = <&twl_gpio 2 GPIO_ACTIVE_LOW>;
-> -	ti,deskew = <4>;
-> -
-> -	ports {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		port@0 {
-> -			reg = <0>;
-> -
-> -			tfp410_in: endpoint@0 {
-> -				pclk-sample = <1>;
-> -				bus-width = <24>;
-> -				remote-endpoint = <&dpi_out>;
-> -			};
-> -		};
-> -
-> -		port@1 {
-> -			reg = <1>;
-> -
-> -			tfp410_out: endpoint@0 {
-> -				remote-endpoint = <&dvi_connector_in>;
-> -			};
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml b/Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml
-> new file mode 100644
-> index 000000000000..79666ee540f9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml
-> @@ -0,0 +1,121 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-You need to obtain approval to change the license to include BSD.
-The current binfing is GPL-2-0-only as it is default in the tree.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/ti,tfp410.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TFP410 DPI to DVI encoder
-> +
-> +maintainers:
-> +  - Tomi Valkeinen <tomi.valkeinen@ti.com>
-> +  - Jyri Sarha <jsarha@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: "ti,tfp410"
-No "" around the compatible name
-
-> +
-> +  reg:
-> +    description: I2C address of the device.
-> +    maxItems: 1
-> +
-> +  powerdown-gpios:
-> +    maxItems: 1
-> +
-> +  ti,deskew:
-> +    description:
-> +      Data de-skew in 350ps increments, from -4 to +3, as configured
-> +      through the DK[3:1] pins. This property shall be present only if
-> +      the TFP410 is not connected through I2C.
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-No need for the allOf: - $ref.
-Just use a plain $ref
-
-
-> +
-> +  ports:
-> +    description:
-> +      A node containing input and output port nodes with endpoint
-> +      definitions as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +    type: object
-> +
-> +    properties:
-> +      port@0:
-> +        description: DPI input port.
-> +        type: object
-> +
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +          endpoint:
-> +            type: object
-> +
-> +            properties:
-> +              pclk-sample:
-> +                description: Endpoint sampling edge.
-> +                enum:
-> +                  - 0  # Falling edge
-> +                  - 1  # Rising edge
-> +
-> +              bus-width:
-> +                description: Endpoint bus width.
-> +                enum: [ 12, 24 ]
-> +
-> +        required:
-> +          - endpoint
-> +
-> +      port@1:
-> +        description: DVI output port.
-> +        type: object
-> +
-> +        properties:
-> +          reg:
-> +            const: 1
-> +
-> +          endpoint:
-> +            type: object
-> +
-> +        required:
-> +          - endpoint
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> +  - compatible
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    tfp410: encoder {
-> +        compatible = "ti,tfp410";
-> +        powerdown-gpios = <&twl_gpio 2 GPIO_ACTIVE_LOW>;
-> +        ti,deskew = <3>;
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@0 {
-> +                reg = <0>;
-> +                tfp410_in: endpoint {
-> +                    pclk-sample = <1>;
-> +                    bus-width = <24>;
-> +                    remote-endpoint = <&dpi_out>;
-> +                };
-> +            };
-> +
-> +            port@1 {
-> +                reg = <1>;
-> +                tfp410_out: endpoint {
-> +                    remote-endpoint = <&dvi_connector_in>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.18.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Tim
