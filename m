@@ -2,137 +2,106 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1D3C83004
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879AFC83004
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0225B206E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D10A206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 11:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wbyZMmT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgD1LS6 (ORCPT
+        id S1726491AbgD1LYQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 07:18:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60568 "EHLO
+        Tue, 28 Apr 2020 07:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbgD1LSq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 07:18:46 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA452C03C1A9
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 04:18:46 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1jTOG9-0000Qb-Kt; Tue, 28 Apr 2020 13:18:41 +0200
-Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1jTOG8-0006u4-TX; Tue, 28 Apr 2020 13:18:40 +0200
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel@pengutronix.de, ceggers@arri.de,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v3 0/2] nvmem: skip nodes with compatibles other than "nvmem-cell"
-Date:   Tue, 28 Apr 2020 13:18:25 +0200
-Message-Id: <20200428111829.2215-1-a.fatoum@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
+        with ESMTP id S1726450AbgD1LYP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 07:24:15 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 498D1C03C1A9
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 04:24:15 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id l19so21043297lje.10
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 04:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dtSCC/6Zk0CAn9Haq8H1TnXYmgXgUR49no/7MjmVHFQ=;
+        b=wbyZMmT9xNXh+i0FXuT8+Zx0WQdZUgyX61MnLeN982X/SWM7j8uLKdx4JNX0goNrlW
+         XNleJW0Aumfkz+/nYc6WoQ8Mbrxe3w1WLfSNynijdPAXIoQCU3Axz5WeoIANm/zvra2V
+         ijUUTgiTMZ8y0QAkIuJ2Bp78VCRcPB15ZdTKvt9ubTDohSlkhyXFMXv4xeDA7kXorXIc
+         jgucg0wgYdFFOPB7eDr41HD8vwo4BbHTO7E1pPV6RY/Q68xD3pDZwrTL4LOvetZ3bQ51
+         zH9VJUmgfofrM3p7AOv5Jsy5qEsxI1mNerRs3/gEPO5WEqb6omAGtU1ZPiO6iCLwZeNd
+         V+ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dtSCC/6Zk0CAn9Haq8H1TnXYmgXgUR49no/7MjmVHFQ=;
+        b=kGrHOOE1ppXsQFuLhxHyzkSK+PpiP9hBodlFmUR8xmcPQAyqris8VO0/LHEFipCTQV
+         bjPp8pEHLIfVjk8g8qC6wkCfTFgtHo/e6RtZ4r0Q8ty6zvZ9rF5u7U2/3r1Cn5I9eqUy
+         HzPJwcG1WYZqlVzgZzXlPaFGqB3IUMbQJd1Xu1+guxRy/vMVjotjsGC5DCwR+cPH8gnJ
+         tESWsgflpppEBjRFo8NpY8UmPk7PTqhZNEu2gg6KrODIBXKFENoAoqK2Mvdk6GV7DW/e
+         xYmBItW3qegFwG5kuysbZLMmzbMmwms6CRU7PHIDyORG+/V94ZeQi6vyZqj7iNgSe5UI
+         3YmQ==
+X-Gm-Message-State: AGi0PuZ/pJF4xhfo9pgKMi48VhLJ1f27/PSUk3cFk+Lfu7vxXLhJeFxI
+        PVJt7hj2TNq2pN4m/JYjCz3wMzJ4BNlIO5s+q3Tf+g==
+X-Google-Smtp-Source: APiQypIAZegG6Qn5JvZ0uvEzFCZSmajX66iK5f+sKRerbAwYFi9OxxOsRKHMp8MI1JCk0ToY+5PLv4Mls7VQnu506Fk=
+X-Received: by 2002:a2e:8805:: with SMTP id x5mr18067893ljh.223.1588073053796;
+ Tue, 28 Apr 2020 04:24:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: afa@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200420134800.31604-1-benjamin.gaignard@st.com> <20200420134800.31604-2-benjamin.gaignard@st.com>
+In-Reply-To: <20200420134800.31604-2-benjamin.gaignard@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Apr 2020 13:24:01 +0200
+Message-ID: <CACRpkdatGwWyruTLC=+BUtnunvqyxnXAYDhcHqy26oeud8Bs1w@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: bus: Add firewall bindings
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The nvmem cell binding applies to all objects which match "^.*@[0-9a-f]+$",
-without taking a compatible into account. This precludes extension of e.g.
-eeprom nodes by any child nodes other than nvmem. Consider following example:
+Hi Benjamin,
 
-	eeprom@0 {
-		reg = <0 64>;
-		#address-cells = <1>;
-		#size-cells = <1>;
+On Mon, Apr 20, 2020 at 3:48 PM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
+>
+> Add schemas for firewall consumer and provider.
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-		partitions {
-			compatible = "fixed-partitions";
-			#address-cells = <1>;
-			#size-cells = <1>;
-			bits = <64 64 64>; /* to verify it's skipped */
+> +$id: http://devicetree.org/schemas/bus/stm32/firewall-consumer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common Bus Firewall consumer binding
+> +
+> +maintainers:
+> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
 
-			part@0 {
-				reg = <0x00 16>;
-			};
-		};
+This really needs a description: to tell what is going on and what
+these firewalls
+are for and how they are supposed to work.
 
-		no-cell@10 {
-			compatible = "not-nvmem-cell";
-			reg = <0x10 4>;
-			bits = <64 64 64>; /* to verify it's skipped */
-		};
+I suppose just a bit of cut'n'paste from the cover letter :D
 
-		cell-old@14 {
-			reg = <0x14 0x2>;
-		};
+Otherwise it looks good to me.
 
-		cell-new@16 {
-			compatible = "nvmem-cell";
-			reg = <0x16 4>;
-		};
-	};
-
-Without this series, the NVMEM driver interprets all direct children of eeprom@0
-as NVMEM cells and driver probe fails, because the partitions node lacks a reg
-property, e.g.:
-
-  nvmem 0-00000: nvmem: invalid reg on /eeprom@0
-
-Running dtbs_check on the snippet will skip partitions (it doesn't match above
-regex), but will flag no-cell@10 and cell-new@16 as invalid.
-
-With this series applied, the driver will skip partitions and no-cell@10,
-because they have a compatible but it's not "nvmem-cell".
-Both cell-old@14 and cell-new@16 will be interpreted as cells.
-
-Likewise, running dtbs_check on the snippet will skip partitions (compatible
-doesn't match and regex doesn't either) and no-cell@10, but accept the other two.
-
-This series resolves an existing clash between this nvmem-cell binding and
-the barebox bootloader binding that extends the fixed-partitions MTD
-binding to EEPROMs[1]. It's also a building block for getting nvmem cells and
-partitions in MTD devices to co-exist in the same device tree node[2].
-
-The changes are backwards-compatible, because, per binding, a compatible
-property in a cell node was so far invalid. More details in the commit
-messages.
-
-[1]: https://www.mail-archive.com/barebox@lists.infradead.org/msg33944.html
-[2]: https://patchwork.ozlabs.org/patch/890741/
-
-v2 -> v3:
-  - use optional compatible property to weed out nodes instead of name
-  - extend binding documentation (Srini)
-v1 -> v2:
-  - use ->full_name instead of ->name as to not break existing correct
-    cells (Christian)
-
-Cheers,
-Ahmad Fatoum (2):
-  dt-bindings: nvmem: skip nodes with compatibles other than
-    "nvmem-cell"
-  nvmem: core: skip nodes with compatibles other than "nvmem-cell"
-
- Documentation/devicetree/bindings/nvmem/nvmem.yaml | 14 +++++++++++++-
- drivers/nvmem/core.c                               |  4 ++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
--- 
-2.26.2
-
+Yours,
+Linus Walleij
