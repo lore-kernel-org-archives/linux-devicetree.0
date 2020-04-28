@@ -2,92 +2,167 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A2FC83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B359C83008
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B43206E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF40206D8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588086171;
-	bh=sg1uOWZFMrWzGD0mMUahQwkZ0PXI2hQ0hkjygQDNK5s=;
+	s=default; t=1588086580;
+	bh=L7RkvkjJajMkB/owDJd0eFmjozHvHc279EqLHLKIFXg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YnusRAYlACrwL279oouKkP0pa3ZNYuELwUY85xjBJ8rGduW0nD9b++Ez0FpbvWe54
-	 QPvDmJxhfuINLotYm7ehX4Osxup2vTt+WsKhKRSd0GZop88d7WmLNmpaPoDuebESbu
-	 JFHJ9L9XJZdwBiKGLffo9Hz78BKwEmCs2C+1ekvg=
+	b=HjubCQgWJKQneAS4OF7VbBfEoJnjXazJ6HfW7VDQldUYtTohE/po/0uMARsWWwT+d
+	 SuHdqhM5ShzGSXvJzeisdf9r6r0mddl4AEyAaFN2fbYMHzz2pm6OJ8HzJh+YpLkoQY
+	 mhs7zkRyzRKCCLjI2O7lwMf61xbMhF8q5WVdI7FM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgD1PCv (ORCPT
+        id S1727965AbgD1PJf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:02:51 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:40001 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbgD1PCv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 11:02:51 -0400
-Received: by mail-oo1-f66.google.com with SMTP id r1so4736788oog.7;
-        Tue, 28 Apr 2020 08:02:50 -0700 (PDT)
+        Tue, 28 Apr 2020 11:09:35 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45056 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbgD1PJe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 11:09:34 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e20so33149856otk.12;
+        Tue, 28 Apr 2020 08:09:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cagbOAxFCCrUsMPh8ZyjipuoHC6QvYSHfoN2T04bZkE=;
-        b=rMBFxQGoVM6N6Iao2Fb1R6wfkrik/70GGGxrd3ksldzUeM1e1kV9JIB3bOHoWDRj3z
-         +Phi3GUd6Yy5g/8eDXFdYeLpJ0qM2LQ2lG4FJ8M1hfRohxkgvhHPQXsJiyqIxVsX47lj
-         4rctQMMkcob+HRUOmGDogefOOeqxTVKamg6zzH6znwCD2767MiFJKLbGT/9zFKUyjdPA
-         GnWYHckN4pge/WXloGFmfXYspPcpedubr+HZD/NtDZ7vFaecrgFxyOwiPC0udXBZWUpp
-         Ibelu3ECoHionTtDthcSHWvPn2am+XUv6ZOnvRCPVdfQdVwg06BTMaA9cR1tysT2ehmC
-         kgOA==
-X-Gm-Message-State: AGi0Pub4LCGTClWphQ0M79/xk2sVQK191MObCpQsHg793QojOBWp6k8A
-        m6MdAAhrryljlX6rb95/Iw==
-X-Google-Smtp-Source: APiQypLFbUsEitU1zALK/1KF3a4D3Vi53WvuTSDo6YOFLWA1xNoxfsYtho5rrWk1suw6STl+w95wHQ==
-X-Received: by 2002:a4a:ba0b:: with SMTP id b11mr23625812oop.44.1588086168402;
-        Tue, 28 Apr 2020 08:02:48 -0700 (PDT)
+        bh=FEtkU4hcjYXFmjYfyqu325vicHnMHo34pYaXMraZzDM=;
+        b=MSzdK9eL6RarXRAXGxpFZCxKaYoEwEkQw0jcqso6SM5bBB+YGFogDT+2oxUgEXek3S
+         /zPjHYEAN3GVlFCwPo6/3hIK4sdzavpU28MFG4EUCHcTr1SWy/lyD6arlLr2JG5keluT
+         +SHtDS8tJLMaAOkqAyifftsDu9ucmbNguhdT1iAOq6+PC7IXMifg3B24sGMmy9QB6h/7
+         ZKqHX3Es+szWNwupVdi4MnQUvpQ68X+x+bC7MsPvj9dv9uwA1zg/JUjMXsK7beP+LqTP
+         rFSzeykw1NlbBWo+JzqZy3VupXEvpFslUC/B+QsDCiD9aOMX4n9+E6jNMfBdRrZypKfS
+         pRxA==
+X-Gm-Message-State: AGi0PuauVY2Kj6f7HHZEnjT3bqK+Bio0YZ1ZJqvKV/usmMtNjqTcUnA/
+        8O1AgfgNKZ2W7LS5RDz5BA==
+X-Google-Smtp-Source: APiQypKmYM+VdqehUo6MhirkRmkVcweA2beGuUjgMoVitv5BtZ9cDwt/Cg8BC2ldu07VXvCN5xX9Iw==
+X-Received: by 2002:a05:6830:141:: with SMTP id j1mr8997476otp.294.1588086572206;
+        Tue, 28 Apr 2020 08:09:32 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q20sm4653078ota.65.2020.04.28.08.02.46
+        by smtp.gmail.com with ESMTPSA id u9sm4102772ote.47.2020.04.28.08.09.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 08:02:46 -0700 (PDT)
-Received: (nullmailer pid 20921 invoked by uid 1000);
-        Tue, 28 Apr 2020 15:02:46 -0000
-Date:   Tue, 28 Apr 2020 10:02:46 -0500
+        Tue, 28 Apr 2020 08:09:31 -0700 (PDT)
+Received: (nullmailer pid 31119 invoked by uid 1000);
+        Tue, 28 Apr 2020 15:09:30 -0000
+Date:   Tue, 28 Apr 2020 10:09:30 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c@vger.kernel.org, tfiga@chromium.org,
-        drinkcat@chromium.org, srv_heupstream@mediatek.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: Re: [PATCH v14 1/2] dt-binding: i2c: add bus-supply property
-Message-ID: <20200428150246.GA20429@bogus>
-References: <20200428061813.27072-1-bibby.hsieh@mediatek.com>
- <20200428061813.27072-2-bibby.hsieh@mediatek.com>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: Re: [PATCH v3 2/3] dt-bindings: add Qualcomm IPQ4019 MDIO bindings
+Message-ID: <20200428150930.GA25643@bogus>
+References: <20200415150244.2737206-1-robert.marko@sartura.hr>
+ <20200415150244.2737206-2-robert.marko@sartura.hr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428061813.27072-2-bibby.hsieh@mediatek.com>
+In-Reply-To: <20200415150244.2737206-2-robert.marko@sartura.hr>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 28 Apr 2020 14:18:12 +0800, Bibby Hsieh wrote:
-> In some platforms, they disable the power-supply of i2c due
-> to power consumption reduction. This patch add bus-supply property.
+On Wed, Apr 15, 2020 at 05:02:46PM +0200, Robert Marko wrote:
+> This patch adds the binding document for the IPQ40xx MDIO driver.
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> Cc: Luka Perkov <luka.perkov@sartura.hr>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> Changes from v2 to v3:
+> * Remove status from example
 > 
+>  .../bindings/net/qcom,ipq40xx-mdio.yaml       | 61 +++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
+> new file mode 100644
+> index 000000000000..8d4542ccd38c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Dual license new bindings please:
 
-If a tag was not added on purpose, please state why and what changed.
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/qcom,ipq40xx-mdio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm IPQ40xx MDIO Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Robert Marko <robert.marko@sartura.hr>
+> +
+> +allOf:
+> +  - $ref: "mdio.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq40xx-mdio
+
+Don't use wildcards in compatible names. Should be SoC specific. If 'all 
+the same', then use a fallback to the 1st implementation.
+
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    mdio@90000 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      compatible = "qcom,ipq40xx-mdio";
+> +      reg = <0x90000 0x64>;
+> +
+> +      ethphy0: ethernet-phy@0 {
+> +        reg = <0>;
+> +      };
+> +
+> +      ethphy1: ethernet-phy@1 {
+> +        reg = <1>;
+> +      };
+> +
+> +      ethphy2: ethernet-phy@2 {
+> +        reg = <2>;
+> +      };
+> +
+> +      ethphy3: ethernet-phy@3 {
+> +        reg = <3>;
+> +      };
+> +
+> +      ethphy4: ethernet-phy@4 {
+> +        reg = <4>;
+> +      };
+> +    };
+> -- 
+> 2.26.0
+> 
