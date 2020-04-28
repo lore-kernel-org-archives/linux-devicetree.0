@@ -2,200 +2,183 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50668C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 22:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF701C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 23:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 306572083B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 22:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D6420656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 23:04:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jKDnZ33H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbgD1W6P (ORCPT
+        id S1726470AbgD1XEX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 18:58:15 -0400
-Received: from mail-dm6nam10olkn2022.outbound.protection.outlook.com ([40.92.41.22]:57792
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbgD1W6P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:58:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dH4OalpptlhlKSBkjvdbN4KZvamuU0+zjqlKIoQ2+zXwzHYaU+zo/+P1vaLoAQqJ4lgpWbB7LCTD32URDk34NheeUOla9GIzo58E4x8IKWn7zyyDGkmUHqU+xZXaCQlGghZp18BBvLxbcrccoUWUwrcYQcVl7wKdGMe+YdlXmdSebBT1uKrg0zxcb9Clowu/FJjWgxfSxJZmUNQCQlVp7RGPLvIQSxthaTMpF20zYS697LXxMJflN5JKlf6Gz9YwZlG/1T8zufMctEW3QcoLjhMv9gf1Yj1CoWkRnp/UMniFrc3XgrzJdIBqv4w0Lq9u820tDWx/bsxUsx8iqSSsQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MuaIE8TgI8eeUG5HV45zullZYlfZTfh5z+WzEAXePtY=;
- b=CIYuZMhb+xwGuItEubHM6hBQ4Y0g8275Yw/I424BkGXAsWOzZwPuA21PZM4pWz9pvU1vuG+eCiPYJEhqsryBr8WinXtqHr3QzQOUhs5IuH2u2yO52uiR8qF7t/WZup8JesmrkqcIkaoBVBFtPOyvlKPc1dLvq6Sv+soIKJssA4laP7fW2Xix3nNjqDKdNdnkWg+42+FlWhTBo5HkT7Oq0YQ2Cqdqi4aW/t8g/xaPcG36EBcn9zr/mkGiKlJEbW+7qnBr5afjwSmGo6fdL7/u9R/1h4tp1oz4O+HS6uy9lzyIsJNxT5zmkzOXzE+zE8+BNirk8cE7zpiHpJ4SgmBTyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from DM6NAM10FT053.eop-nam10.prod.protection.outlook.com
- (2a01:111:e400:7e86::45) by
- DM6NAM10HT010.eop-nam10.prod.protection.outlook.com (2a01:111:e400:7e86::83)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Tue, 28 Apr
- 2020 22:58:11 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:7e86::4f) by DM6NAM10FT053.mail.protection.outlook.com
- (2a01:111:e400:7e86::442) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15 via Frontend
- Transport; Tue, 28 Apr 2020 22:58:11 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:9DD91C560F719B6A0FD0859D0B9EB727363D20AB69F890889C2A5E39D02BC068;UpperCasedChecksum:C40B9486CA0DDFBB9B19B9961A7974577A1BE048E67E179F3A60565C4A004CED;SizeAsReceived:10167;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2937.023; Tue, 28 Apr 2020
- 22:58:11 +0000
-Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
-From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-References: <cover.1587760454.git.hns@goldelico.com>
- <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
- <NYBE9Q.YH08US7A7DC3@crapouillou.net>
- <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200427154617.GA1798@pi3>
- <BN6PR04MB06605F014024061C894AFBA4A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Message-ID: <BN6PR04MB0660044B5B1D45BE4CBCD2AAA3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Tue, 28 Apr 2020 15:58:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <BN6PR04MB06605F014024061C894AFBA4A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MWHPR1701CA0020.namprd17.prod.outlook.com
- (2603:10b6:301:14::30) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <f4d70bab-caba-8700-00aa-010384f053e2@live.ca>
+        Tue, 28 Apr 2020 19:04:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbgD1XEX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 19:04:23 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E30B2C03C1AC
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 16:04:22 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id fu13so152439pjb.5
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 16:04:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bSsy1ygM1BDs51F1GbcG8UXkEqb70z5oMMLFkPxYsgA=;
+        b=jKDnZ33HB7ZcGRyKUq6bAEk49pA5hrq+M98P3hotNW/sjDg3UVzFz2zZipYauwUi3t
+         h0GTAYzesuGLBbDhYaZxl1d5rsSYyvKnL1btTfXYa8SHa9OGIhs2B9MqQF/U+0xMDKAA
+         depD2eW08eF/lKwYQCdorJgAq97Aag4bpIVAw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bSsy1ygM1BDs51F1GbcG8UXkEqb70z5oMMLFkPxYsgA=;
+        b=LlRwoMwmSCL62VBZA0EpOMfeiS+fVxnJ6AoHqhDN5tkDVL3hkfHSSO98vvdOleUqo6
+         hzN/fkMOavKy1HvvBMztZWUDdBkjFhoREaL2vdVT05Ddae6NPe+R9foRLssuYOSig4TJ
+         CTfggO5MkY/7tzlcAhyZ0W/34A1dmUpWioeCsCTzFnXbH2/Q/h6146t/RutATxVNX9D2
+         Gkonafzp5M3oT11CelL50TF1rIflCF3MbKGdFau4VsBXnq4mV6L2uHvZx022myJJbJmb
+         KThgOcQU831n0LE7f32hbNY2MpZTTvUQYGcf5+GFBiVkprMF6JK1Au3VuS3F7nBjFQFs
+         MiKA==
+X-Gm-Message-State: AGi0PubKCOz2Xf6JVWPHaxlNjjbWGXdyXjP7qmjhEmjwTAl3T6DpxHRQ
+        EWeL5y6CrH9W7MW5Z3m8btP7rw==
+X-Google-Smtp-Source: APiQypJEdKFVlT1c+cl9kFH+eXgc50EVz7/lIRVgEziupIY9ZLK2G+50Qx9FWS7gk15l1MqknfnB4g==
+X-Received: by 2002:a17:902:dc83:: with SMTP id n3mr30555779pld.133.1588115062459;
+        Tue, 28 Apr 2020 16:04:22 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w125sm14224097pgw.22.2020.04.28.16.04.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 16:04:21 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 16:04:20 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH v3 02/17] spi: spi-geni-qcom: Use OPP API to set clk/perf
+ state
+Message-ID: <20200428230420.GJ4525@google.com>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-3-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb67:7300:9f89:4b96:de0b:cd14] (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by MWHPR1701CA0020.namprd17.prod.outlook.com (2603:10b6:301:14::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Tue, 28 Apr 2020 22:58:06 +0000
-X-Microsoft-Original-Message-ID: <f4d70bab-caba-8700-00aa-010384f053e2@live.ca>
-X-TMN:  [p5xCICxpvEcF+C5bcn3IY6/23cHHsfWLGQe5HxJm1+AAXApmKRg140W6WwoNl3IS]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 9f8a5563-8f46-468c-edd6-08d7ebc7a02f
-X-MS-TrafficTypeDiagnostic: DM6NAM10HT010:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Eu6+DJDb/VXQQhT1KQyJeLAlptyYlZo/0nlf3oPLCHod9hzxJfrhd+tN5qcfmT7gYUsFmIbDt3JXi0dg+KmPHIK812Vz864xR/+SnPw6AlAHXKmnVC2PyxrhzDKdsXp6uVVEXXcYzI/BR2TCh7kFG9zx9cgrVDX+ZlmCCZfI+UwZFroiWr7qRKhycdzA9AheuLe4DYxk+4fi2x7z/I5iBQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: jcwqMPeBOgdjmQA0oMP6IpFxptHmfDaomCReXOB2Xj68q1dz2VvhXXz4M2Uj+NaKxE86mtQV5Dl5AD7n6nMInqZuBpyZw3wu8FB380euZHZzI71vmdADajZdObPM2fFdAqbEtMkfds9ldDO3ul3irkcaxUq4cgZuIQI6qdt9B6Rq9eYvTGzJoES2/nw7P6ruYwvNsv8uD/0bs8zhdJSZ8Q==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f8a5563-8f46-468c-edd6-08d7ebc7a02f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2020 22:58:11.8237
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM10HT010
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1588080785-6812-3-git-send-email-rnayak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi all,
-
-On 2020-04-28 2:39 p.m., Jonathan Bakker wrote:
-> Hi Krzysztof,
+On Tue, Apr 28, 2020 at 07:02:50PM +0530, Rajendra Nayak wrote:
+> geni spi needs to express a perforamnce state requirement on CX
+> depending on the frequency of the clock rates. Use OPP table from
+> DT to register with OPP framework and use dev_pm_opp_set_rate() to
+> set the clk/perf state.
 > 
-> On 2020-04-27 8:46 a.m., Krzysztof Kozlowski wrote:
->> On Sun, Apr 26, 2020 at 07:57:12AM -0700, Jonathan Bakker wrote:
->>> Hi Paul,
->>>
->>> On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
->>>>
->>>>
->>>> Le ven. 24 avril 2020 à 22:34, H. Nikolaus Schaller <hns@goldelico.com> a écrit :
->>>>> From: Jonathan Bakker <xc-racer2@live.ca>
->>>>>
->>>>> All s5pv210 devices have a PowerVR SGX 540 (revision 120) attached.
->>>>>
->>>>> There is no external regulator for it so it can be enabled by default.
->>>>>
->>>>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>>> ---
->>>>>  arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
->>>>>  1 file changed, 13 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
->>>>> index 2ad642f51fd9..abbdda205c1b 100644
->>>>> --- a/arch/arm/boot/dts/s5pv210.dtsi
->>>>> +++ b/arch/arm/boot/dts/s5pv210.dtsi
->>>>> @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
->>>>>              #interrupt-cells = <1>;
->>>>>          };
->>>>>
->>>>> +        gpu: gpu@f3000000 {
->>>>> +            compatible = "samsung,s5pv210-sgx540-120";
->>
->> This should not pass the bindings check because you missed last
->> compatibles.
->>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Alok Chauhan <alokc@codeaurora.org>
+> Cc: Akash Asthana <akashast@codeaurora.org>
+> Cc: linux-spi@vger.kernel.org
+> ---
+> This patch has a dependency on the 'PATCH 01/17' in this series,
+> due to the changes in include/linux/qcom-geni-se.h
+> Its ideal if this and the previous patch gets merged via the
+> msm tree (once reviewed and ack'ed)
+> Greg has already responded he is fine with it for serial.
 > 
-> Thanks for pointing that out, I'll add it and make sure it passes the bindings check.
+>  drivers/spi/spi-geni-qcom.c | 26 +++++++++++++++++++++++---
+>  1 file changed, 23 insertions(+), 3 deletions(-)
 > 
->>>>> +            reg = <0xf3000000 0x10000>;
->>>>> +            interrupt-parent = <&vic2>;
->>>>> +            interrupts = <10>;
->>>>> +            clock-names = "core";
->>>>> +            clocks = <&clocks CLK_G3D>;
->>>>> +
->>>>> +            assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
->>>>> +            assigned-clock-rates = <0>, <66700000>;
->>>>> +            assigned-clock-parents = <&clocks MOUT_MPLL>;
->>>>
->>>> What are these clocks for, and why are they reparented / reclocked?
->>>>
->>>> Shouldn't they be passed to 'clocks' as well?
->>>>
->>>> -Paul
->>>>
->>>
->>> The G3D clock system can have multiple parents, and for stable operation
->>> it's recommended to use the MPLL clock as the parent (which in turn
->>> is actually a mux as well).  MOUT_G3D is simply the mux for CLK_G3D
->>> (SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could equally be CLK_G3D
->>> (and probably should be, for readability) as CLK_G3D is simply the gate and
->>> DOUT_G3D is the divider for it.
->>
->> Good point, it should be CLK_G3D instead of DOUT.  Can you fix this as
->> well?
-> 
-> Yep, will do.  Nikolaus, I'll send you an updated patch to include.
-> 
+> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> index c397242..51186c3 100644
+> --- a/drivers/spi/spi-geni-qcom.c
+> +++ b/drivers/spi/spi-geni-qcom.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/log2.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/qcom-geni-se.h>
+>  #include <linux/spi/spi.h>
+> @@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>  {
+>  	unsigned long sclk_freq;
+>  	unsigned int actual_hz;
+> -	struct geni_se *se = &mas->se;
+>  	int ret;
+>  
+>  	ret = geni_se_clk_freq_match(&mas->se,
+> @@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>  
+>  	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
+>  				actual_hz, sclk_freq, *clk_idx, *clk_div);
+> -	ret = clk_set_rate(se->clk, sclk_freq);
+> +	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
+>  	if (ret)
+> -		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
+> +		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
+>  	return ret;
+>  }
+>  
+> @@ -561,6 +561,17 @@ static int spi_geni_probe(struct platform_device *pdev)
+>  	mas->se.wrapper = dev_get_drvdata(dev->parent);
+>  	mas->se.base = base;
+>  	mas->se.clk = clk;
+> +	mas->se.opp_table = dev_pm_opp_set_clkname(&pdev->dev, "se");
+> +	if (IS_ERR(mas->se.opp_table))
+> +		return PTR_ERR(mas->se.opp_table);
+> +	/* OPP table is optional */
+> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
+> +	if (!ret) {
+> +		mas->se.has_opp_table = true;
+> +	} else if (ret != -ENODEV) {
+> +		dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
+> +		return ret;
+> +	}
+>  
+>  	spi->bus_num = -1;
+>  	spi->dev.of_node = dev->of_node;
+> @@ -596,6 +607,9 @@ static int spi_geni_probe(struct platform_device *pdev)
+>  spi_geni_probe_runtime_disable:
+>  	pm_runtime_disable(dev);
+>  	spi_master_put(spi);
+> +	if (mas->se.has_opp_table)
+> +		dev_pm_opp_of_remove_table(&pdev->dev);
+> +	dev_pm_opp_put_clkname(mas->se.opp_table);
+>  	return ret;
+>  }
+>  
+> @@ -604,6 +618,9 @@ static int spi_geni_remove(struct platform_device *pdev)
+>  	struct spi_master *spi = platform_get_drvdata(pdev);
+>  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+>  
+> +	if (mas->se.has_opp_table)
+> +		dev_pm_opp_of_remove_table(&pdev->dev);
+> +	dev_pm_opp_put_clkname(mas->se.opp_table);
+>  	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
+>  	spi_unregister_master(spi);
+>  
+> @@ -617,6 +634,9 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
+>  	struct spi_master *spi = dev_get_drvdata(dev);
+>  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+>  
+> +	/* Drop the performance state vote */
+> +	dev_pm_opp_set_rate(dev, 0);
+> +
+>  	return geni_se_resources_off(&mas->se);
+>  }
 
-How are assigned-clocks handled in the yaml DT schema?  When running make dtbs_check,
-I end up with messages such as
-
-arch/arm/boot/dts/s5pv210-aquila.dt.yaml: gpu@f3000000: 'assigned-clock-parents', 'assigned-clock-rates', 'assigned-clocks' do not match any of the regexes: 'pinctrl-[0-9]+'
-
-Do they need to explicitly be listed as valid entries?
-
-Thanks,
-Jonathan
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
