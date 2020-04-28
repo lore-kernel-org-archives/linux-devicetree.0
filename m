@@ -2,122 +2,107 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF60C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B7EC83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0A7206F0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C068F206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:17:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjR9IzQ8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cpxZ39XB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgD1MQe (ORCPT
+        id S1726762AbgD1MRe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
+        Tue, 28 Apr 2020 08:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726361AbgD1MQc (ORCPT
+        by vger.kernel.org with ESMTP id S1726746AbgD1MRd (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:16:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A793C03C1A9;
-        Tue, 28 Apr 2020 05:16:32 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k13so24408923wrw.7;
-        Tue, 28 Apr 2020 05:16:32 -0700 (PDT)
+        Tue, 28 Apr 2020 08:17:33 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C93CC03C1AD
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 05:17:33 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id m2so16679927lfo.6
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 05:17:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KJcceZKHt8YY/nAlytIbRqg+XVhvkXqTJQkvmynr/Jo=;
-        b=PjR9IzQ8VD3sksu/DJg+ZCI27xjQM2hp3LDGLLrBEn6lwZoi0hx0FbNn34GGPXBU0g
-         4Pyqp/f/L4WeeqIp40aL724tWTQGScWi8CBHzbhDCa6DXk9WPMrG89YTkEe2hM2eRpXX
-         XYQPpDzxx6W2PQ8VlJbvMlL499j+fGlTO9BjitN8n/U4zyLsmf2xwczWdpmdaRgmDVVB
-         DALWUIskfHDPpTFWeGfrQvjp3y9Br9LsaksIico9cRhGq3JgwHmU+UPM+7zEBYOSYH5P
-         tbmeKkMJZC/w+gw8S0W7mw4EQa1I4aUe6ln2WUkDQHsNzyfXSx2qKvpVrm9r3SsvcYvY
-         GwBA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LMRN5qxFiZK7LH7wFWLeZOcUrBLsRhKOimHQVM7fOfk=;
+        b=cpxZ39XBlCTINntejfucjY+fxwFnKaspaM3tU4nQp/hop/2uuOah5PTPJIVYhBsP0W
+         lfbrOouP0K5/qArfU93epvXV9Y0O6xB64TrG2LalkHRUXMuhtF1VOGCuunlHRaSWlCvU
+         UHkcTxvAalSafoniWBgo7ypiQQoQkfcbaM7lr8XOmc03Hs2/vYdnvaGbEYi7RwmhyLgh
+         Ix0qkhnBs+3QBU4zUqNxIMJE9AGHOeu95Yjh4jGOIRVTbFV9eWhbfrJs5DKMZu0bEYCE
+         nPaF6CiFGEo7dZEoqMb+u78l257RyVEql24fQGrFjpdihMl/nM+w9d0ScNBUeGpLfumj
+         egvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KJcceZKHt8YY/nAlytIbRqg+XVhvkXqTJQkvmynr/Jo=;
-        b=WJSzPyA6963HzxAR5jVQyknqMG1cG6TctzoOu4XWm4lth2/eTn6KqPnuV/9QQbRLIJ
-         QnMFcQMevyaSTO3PlKn9It5ULukrMCt9v90fjFlHnCY+JbaCgiu/0TzhCoyx3LUjvrnS
-         fAdUImpmKwd8bHs3UeTdE/9c3ebHEFB2xMv9BSXbLdDo9LHjBZ6e7lSWJG7pCfSZbPuB
-         e1jU/2uYFGrJr2E+zf1RtYlr1WclJtAO2XFtiG1OkGVKy/XhXke7XH9ZI9hHQHCmwAEc
-         XmiY1bTYW/hGTo3NDCi70W30QADQFJeGAC58iaI6iqpBs9KbMuBW9yhvFZy1FeynJlLp
-         KVIA==
-X-Gm-Message-State: AGi0PubD6celFiJxp4xp/ecPpK0uZ6TNYlhp039i/zEsu6Mt511Sm12/
-        qpRRHztd78Cg+bbIY517OtY=
-X-Google-Smtp-Source: APiQypInzRT5VmQThYG3hxKLRxdUsWIeHCEjdaSPbMEX3fOsSnTEiOElIJit9A8BQBrWmmHk6GooDQ==
-X-Received: by 2002:adf:e9cb:: with SMTP id l11mr32334378wrn.24.1588076191212;
-        Tue, 28 Apr 2020 05:16:31 -0700 (PDT)
-Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
-        by smtp.gmail.com with ESMTPSA id s30sm25530090wrb.67.2020.04.28.05.16.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 05:16:27 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 14:16:26 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH V1 2/4] arm64: tegra: Add xudc node for Tegra194
-Message-ID: <20200428121626.GL3592148@ulmo>
-References: <1587022460-31988-1-git-send-email-nkristam@nvidia.com>
- <1587022460-31988-3-git-send-email-nkristam@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LMRN5qxFiZK7LH7wFWLeZOcUrBLsRhKOimHQVM7fOfk=;
+        b=N4S3RcPwG7aXeD1mkP7MyA8OunREw84amoG6qT1dp/2TGGN92m3WFSyvHPCuyT+mG6
+         2FNaCdDDFukf8JccKNfmpGA0svXKa2SxmAUZuQITGooTQ/PtGjQmSejxhEsqKSuMQIqr
+         dkidZozTtC5ke+kr1N7/8n2jciv/TnbIEdvTEWQgC/iI9vNfcC5B9XSFb9OotU85hSax
+         U0DBQ/Bcn4RWFEl2+q3ZyiLEhGX6Q6cjWofEnmYy/SEJa9jr+buEsB1a5Uh7wlDmTQZ0
+         dDivgCkSObLm9vlRSSw2NFIQtsuJaH28K10dHhTOOhbTyV8T36YTsmTFvJB/TNYXOGWv
+         21tQ==
+X-Gm-Message-State: AGi0PuYMv67zm5apAZixFs4phB4ShPpGiuEEZHBxs2fIsJkensDmeGik
+        hDJWNz9l9b4UGOd1JIw0uEPaERqquAZVCujE4AN0hQ==
+X-Google-Smtp-Source: APiQypLWMYHDowDI3oIfEvtVytKcitjHf4lYdOHlnfwZ2JMiRfn25SLHbT7DdEte3F2EYP1mH2KagEeErbh4nPD3DbI=
+X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr19256598lfp.77.1588076251617;
+ Tue, 28 Apr 2020 05:17:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="m+jEI8cDoTn6Mu9E"
-Content-Disposition: inline
-In-Reply-To: <1587022460-31988-3-git-send-email-nkristam@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <20200423162548.129661-1-dianders@chromium.org> <20200423092431.v3.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
+In-Reply-To: <20200423092431.v3.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Apr 2020 14:17:20 +0200
+Message-ID: <CACRpkdZuMALENkGjOUuQqS1pTH2sXkj1Z59mPjOrBynnkAQdpA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: display: Add hpd-gpios to
+ panel-common bindings
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Apr 23, 2020 at 6:26 PM Douglas Anderson <dianders@chromium.org> wrote:
 
---m+jEI8cDoTn6Mu9E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> In the cases where there is no connector in a system there's no great
+> place to put "hpd-gpios".  As per discussion [1] the best place to put
+> it is in the panel.  Add this to the device tree bindings.
+>
+> [1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboard.com
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-On Thu, Apr 16, 2020 at 01:04:18PM +0530, Nagarjuna Kristam wrote:
-> Tegra194 has one XUSB device mode controller, which can be operated
-> HS and SS modes. Add DT entry for XUSB device mode controller
->=20
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Looks good to me, I'll pick this up into the Tegra tree.
-
-Thierry
-
---m+jEI8cDoTn6Mu9E
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6oHpcACgkQ3SOs138+
-s6F38w/8DcNjQD7ygu05FLIvH5mMzvp/ZOq1zIJxBqJ39kNj1aGgyT1wlnw0d6o7
-MfdVgIC2Z4rRXaGjGkD1UAvatjkgOUhdONYBJVM7FvoGmv/+1KRSR03ibr+EZtvy
-WfCxoj11GHauJlzuYulg+6fpnCxzhXn4RSBDSm1/12Vp3BbQvjOcdidEHCQYbDHy
-mV8ylgoNrJ/DW56wsWlMYsdoTWBuSh6S3NsC1rEzKVs31+qcp1qIhVTJegdS4KZF
-hr6QasS7SQy2z1VRkFqh+D4fRUErOWHiheJ0EPO/UQpQTnQQW3hO9IHEV3r1N3BQ
-SJV6/4pDaJuKJE1qXfu5QfqYuoD5ZR2ViWE3cEc6VNxGoRu1uGTfs+/fDi0Bz6oR
-INDmJuNXyB+KtrWWooSQMOZ5naawEDRHojCvDJUA+l/474MI6v/RxLCoj9QD9ECx
-AvbALWhpwSzUJWszB4cMBdMuDmKE23V85gDU4Md7VcwqOSelUnoauVeVNmlKwAt7
-Y4FmRC5pL7CZCnP0jHGAEexEnxQaCbMdXe3TN9eRt5RVqj0ks3MkWyJ7PIu63Bu1
-o4yZma2mkq7skiM2e9Ari8JgMBQ+EjBHtpG4kshmkJJpzbrDHH79f3w9hTw49q25
-MCSr+mpc2gnWKx1BPBJHlGSKVVHXyWNEWWFdbI4eK8dmnsVnm0s=
-=2SXp
------END PGP SIGNATURE-----
-
---m+jEI8cDoTn6Mu9E--
+Yours,
+Linus Walleij
