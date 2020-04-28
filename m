@@ -2,416 +2,129 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5922EC83008
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95046C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33D3A2051A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 790B0206A5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgD1GfJ (ORCPT
+        id S1726303AbgD1GlG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:35:09 -0400
-Received: from mx.socionext.com ([202.248.49.38]:22330 "EHLO mx.socionext.com"
+        Tue, 28 Apr 2020 02:41:06 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32587 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgD1GfI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 02:35:08 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 28 Apr 2020 15:35:04 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 55141180105;
-        Tue, 28 Apr 2020 15:35:04 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 28 Apr 2020 15:35:04 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id F1BCC1A01BB;
-        Tue, 28 Apr 2020 15:35:03 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH 3/3] dt-bindings: phy: Convert UniPhier USB3-PHY conroller to json-schema
-Date:   Tue, 28 Apr 2020 15:34:50 +0900
-Message-Id: <1588055690-13200-3-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588055690-13200-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1588055690-13200-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S1725917AbgD1GlG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 02:41:06 -0400
+IronPort-SDR: UxNeR0PHSlme5T8SXuKZmkK97RSUpoi4Xx87n9g6wXDsGR9hy3BQocu5SZpA/wyE4UUG0pOULc
+ oO4tFJaIpkwA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 23:41:05 -0700
+IronPort-SDR: wMRNgtHejWu0dVLeBGehFcIgugGTqKfEXBtRJqjkh5bZwf8DaRvztJQcam/FWcmiz8CE/28E6E
+ yUywd5ewAT7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
+   d="scan'208";a="459132646"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Apr 2020 23:41:04 -0700
+Received: from [10.214.149.60] (vramuthx-mobl1.gar.corp.intel.com [10.214.149.60])
+        by linux.intel.com (Postfix) with ESMTP id 1E6C9580BC5;
+        Mon, 27 Apr 2020 23:40:59 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
+        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
+        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
+        richard@nod.at, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200424183612.4cfdbb6a@collabora.com> <20200427175127.0518c193@xps13>
+ <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
+ <20200428082759.25065146@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <38334812-21b9-5b2c-db84-01c9eacc84d0@linux.intel.com>
+Date:   Tue, 28 Apr 2020 14:40:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200428082759.25065146@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the UniPhier USB3-PHY controller for SS/HS to DT schema format.
+Hi Boris,
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- .../phy/socionext,uniphier-usb3hs-phy.yaml         | 104 +++++++++++++++++++++
- .../phy/socionext,uniphier-usb3ss-phy.yaml         |  97 +++++++++++++++++++
- .../bindings/phy/uniphier-usb3-hsphy.txt           |  69 --------------
- .../bindings/phy/uniphier-usb3-ssphy.txt           |  58 ------------
- 4 files changed, 201 insertions(+), 127 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/socionext,uniphier-usb3hs-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/socionext,uniphier-usb3ss-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/uniphier-usb3-hsphy.txt
- delete mode 100644 Documentation/devicetree/bindings/phy/uniphier-usb3-ssphy.txt
+On 28/4/2020 2:27 pm, Boris Brezillon wrote:
+> On Tue, 28 Apr 2020 14:17:30 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> 
+>> Hi Miquel,
+>>
+>>      Thank you very much for the review comments and your time...
+>>
+>> On 27/4/2020 11:51 pm, Miquel Raynal wrote:
+>>> Hi Ramuthevar,
+>>>    
+>>>>> +static int ebu_nand_probe(struct platform_device *pdev)
+>>>>> +{
+>>>>> +	struct device *dev = &pdev->dev;
+>>>>> +	struct ebu_nand_controller *ebu_host;
+>>>>> +	struct nand_chip *nand;
+>>>>> +	phys_addr_t nandaddr_pa;
+>>>>> +	struct mtd_info *mtd;
+>>>>> +	struct resource *res;
+>>>>> +	int ret;
+>>>>> +	u32 cs;
+>>>>> +
+>>>>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+>>>>> +	if (!ebu_host)
+>>>>> +		return -ENOMEM;
+>>>>> +
+>>>>> +	ebu_host->dev = dev;
+>>>>> +	nand_controller_init(&ebu_host->controller);
+>>>>> +
+>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+>>>>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
+>>>>> +	if (IS_ERR(ebu_host->ebu_addr))
+>>>>> +		return PTR_ERR(ebu_host->ebu_addr);
+>>>>> +
+>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+>>>>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
+>>>>> +	if (IS_ERR(ebu_host->nand_addr))
+>>>>> +		return PTR_ERR(ebu_host->nand_addr);
+>>>>> +
+>>>>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
+>>>>
+>>>> CS ids should be encoded in the reg property (see [1]).
+>>>
+>>> Is it your choice to only support a single CS or is it actually a
+>>> controller limitation?
+>>
+>> Yes , its controller limitation to support only one CS
+> 
+> I'm pretty sure that's not true, otherwise you wouldn't have to select
+> the CS you want to use :P.
 
-diff --git a/Documentation/devicetree/bindings/phy/socionext,uniphier-usb3hs-phy.yaml b/Documentation/devicetree/bindings/phy/socionext,uniphier-usb3hs-phy.yaml
-new file mode 100644
-index 0000000..a92a034
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/socionext,uniphier-usb3hs-phy.yaml
-@@ -0,0 +1,104 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/socionext,uniphier-usb3hs-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Socionext UniPhier USB3 High-Speed (HS) PHY
-+
-+description: |
-+  This describes the devicetree bindings for PHY interfaces built into
-+  USB3 controller implemented on Socionext UniPhier SoCs.
-+  Although the controller includes High-Speed PHY and Super-Speed PHY,
-+  this describes about High-Speed PHY.
-+
-+maintainers:
-+  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - socionext,uniphier-pro5-usb3-hsphy
-+      - socionext,uniphier-pxs2-usb3-hsphy
-+      - socionext,uniphier-ld20-usb3-hsphy
-+      - socionext,uniphier-pxs3-usb3-hsphy
-+
-+  reg:
-+    description: PHY register region (offset and length)
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    oneOf:
-+      - const: link          # for PXs2
-+      - items:               # for PXs3
-+        - const: link
-+        - const: phy
-+
-+  resets:
-+    maxItems: 2
-+
-+  reset-names:
-+    items:
-+      - const: link
-+      - const: phy
-+
-+  vbus-supply:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: A phandle to the regulator for USB VBUS
-+
-+  nvmem-cells:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description:
-+      Phandles to nvmem cell that contains the trimming data.
-+      Available only for HS-PHY implemented on LD20 and PXs3, and
-+      if unspecified, default value is used.
-+
-+  nvmem-cell-names:
-+    items:
-+      - const: rterm
-+      - const: sel_t
-+      - const: hs_i
-+    description:
-+      Should be the following names, which correspond to each nvmem-cells.
-+      All of the 3 parameters associated with the above names are
-+      required for each port, if any one is omitted, the trimming data
-+      of the port will not be set at all.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    usb-glue@65b00000 {
-+        compatible = "socionext,uniphier-ld20-dwc3-glue", "simple-mfd";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0 0x65b00000 0x400>;
-+
-+        usb_hsphy0: hs-phy@200 {
-+            compatible = "socionext,uniphier-ld20-usb3-hsphy";
-+            reg = <0x200 0x10>;
-+            #phy-cells = <0>;
-+            clock-names = "link", "phy";
-+            clocks = <&sys_clk 14>, <&sys_clk 16>;
-+            reset-names = "link", "phy";
-+            resets = <&sys_rst 14>, <&sys_rst 16>;
-+            vbus-supply = <&usb_vbus0>;
-+            nvmem-cell-names = "rterm", "sel_t", "hs_i";
-+            nvmem-cells = <&usb_rterm0>, <&usb_sel_t0>, <&usb_hs_i0>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/socionext,uniphier-usb3ss-phy.yaml b/Documentation/devicetree/bindings/phy/socionext,uniphier-usb3ss-phy.yaml
-new file mode 100644
-index 0000000..ed67707
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/socionext,uniphier-usb3ss-phy.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/socionext,uniphier-usb3ss-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Socionext UniPhier USB3 Super-Speed (SS) PHY
-+
-+description: |
-+  This describes the devicetree bindings for PHY interfaces built into
-+  USB3 controller implemented on Socionext UniPhier SoCs.
-+  Although the controller includes High-Speed PHY and Super-Speed PHY,
-+  this describes about Super-Speed PHY.
-+
-+maintainers:
-+  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - socionext,uniphier-pro4-usb3-ssphy
-+      - socionext,uniphier-pro5-usb3-ssphy
-+      - socionext,uniphier-pxs2-usb3-ssphy
-+      - socionext,uniphier-ld20-usb3-ssphy
-+      - socionext,uniphier-pxs3-usb3-ssphy
-+
-+  reg:
-+    description: PHY register region (offset and length)
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 3
-+
-+  clock-names:
-+    oneOf:
-+      - items:             # for Pro4, Pro5
-+        - const: gio
-+        - const: link
-+      - items:             # for PXs3 with phy-ext
-+        - const: link
-+        - const: phy
-+        - const: phy-ext
-+      - items:             # for others
-+        - const: link
-+        - const: phy
-+
-+  resets:
-+    maxItems: 2
-+
-+  reset-names:
-+    oneOf:
-+      - items:              # for Pro4,Pro5
-+        - const: gio
-+        - const: link
-+      - items:              # for others
-+        - const: link
-+        - const: phy
-+
-+  vbus-supply:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: A phandle to the regulator for USB VBUS
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - vbus-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    usb-glue@65b00000 {
-+        compatible = "socionext,uniphier-ld20-dwc3-glue",
-+                     "simple-mfd";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0 0x65b00000 0x400>;
-+
-+        usb_ssphy0: ss-phy@300 {
-+            compatible = "socionext,uniphier-ld20-usb3-ssphy";
-+            reg = <0x300 0x10>;
-+            #phy-cells = <0>;
-+            clock-names = "link", "phy";
-+            clocks = <&sys_clk 14>, <&sys_clk 16>;
-+            reset-names = "link", "phy";
-+            resets = <&sys_rst 14>, <&sys_rst 16>;
-+            vbus-supply = <&usb_vbus0>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/uniphier-usb3-hsphy.txt b/Documentation/devicetree/bindings/phy/uniphier-usb3-hsphy.txt
-deleted file mode 100644
-index 093d4f0..0000000
---- a/Documentation/devicetree/bindings/phy/uniphier-usb3-hsphy.txt
-+++ /dev/null
-@@ -1,69 +0,0 @@
--Socionext UniPhier USB3 High-Speed (HS) PHY
--
--This describes the devicetree bindings for PHY interfaces built into
--USB3 controller implemented on Socionext UniPhier SoCs.
--Although the controller includes High-Speed PHY and Super-Speed PHY,
--this describes about High-Speed PHY.
--
--Required properties:
--- compatible: Should contain one of the following:
--    "socionext,uniphier-pro5-usb3-hsphy" - for Pro5 SoC
--    "socionext,uniphier-pxs2-usb3-hsphy" - for PXs2 SoC
--    "socionext,uniphier-ld20-usb3-hsphy" - for LD20 SoC
--    "socionext,uniphier-pxs3-usb3-hsphy" - for PXs3 SoC
--- reg: Specifies offset and length of the register set for the device.
--- #phy-cells: Should be 0.
--- clocks: A list of phandles to the clock gate for USB3 glue layer.
--	According to the clock-names, appropriate clocks are required.
--- clock-names: Should contain the following:
--    "gio", "link" - for Pro5 SoC
--    "phy", "phy-ext", "link" - for PXs3 SoC, "phy-ext" is optional.
--    "phy", "link" - for others
--- resets: A list of phandles to the reset control for USB3 glue layer.
--	According to the reset-names, appropriate resets are required.
--- reset-names: Should contain the following:
--    "gio", "link" - for Pro5 SoC
--    "phy", "link" - for others
--
--Optional properties:
--- vbus-supply: A phandle to the regulator for USB VBUS.
--- nvmem-cells: Phandles to nvmem cell that contains the trimming data.
--	Available only for HS-PHY implemented on LD20 and PXs3, and
--	if unspecified, default value is used.
--- nvmem-cell-names: Should be the following names, which correspond to
--	each nvmem-cells.
--	All of the 3 parameters associated with the following names are
--	required for each port, if any one is omitted, the trimming data
--	of the port will not be set at all.
--    "rterm", "sel_t", "hs_i" - Each cell name for phy parameters
--
--Refer to phy/phy-bindings.txt for the generic PHY binding properties.
--
--Example:
--
--	usb-glue@65b00000 {
--		compatible = "socionext,uniphier-ld20-dwc3-glue",
--			     "simple-mfd";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges = <0 0x65b00000 0x400>;
--
--		usb_vbus0: regulator {
--			...
--		};
--
--		usb_hsphy0: hs-phy@200 {
--			compatible = "socionext,uniphier-ld20-usb3-hsphy";
--			reg = <0x200 0x10>;
--			#phy-cells = <0>;
--			clock-names = "link", "phy";
--			clocks = <&sys_clk 14>, <&sys_clk 16>;
--			reset-names = "link", "phy";
--			resets = <&sys_rst 14>, <&sys_rst 16>;
--			vbus-supply = <&usb_vbus0>;
--			nvmem-cell-names = "rterm", "sel_t", "hs_i";
--			nvmem-cells = <&usb_rterm0>, <&usb_sel_t0>,
--				      <&usb_hs_i0>;
--		};
--		...
--	};
-diff --git a/Documentation/devicetree/bindings/phy/uniphier-usb3-ssphy.txt b/Documentation/devicetree/bindings/phy/uniphier-usb3-ssphy.txt
-deleted file mode 100644
-index 9df2bc2..0000000
---- a/Documentation/devicetree/bindings/phy/uniphier-usb3-ssphy.txt
-+++ /dev/null
-@@ -1,58 +0,0 @@
--Socionext UniPhier USB3 Super-Speed (SS) PHY
--
--This describes the devicetree bindings for PHY interfaces built into
--USB3 controller implemented on Socionext UniPhier SoCs.
--Although the controller includes High-Speed PHY and Super-Speed PHY,
--this describes about Super-Speed PHY.
--
--Required properties:
--- compatible: Should contain one of the following:
--    "socionext,uniphier-pro4-usb3-ssphy" - for Pro4 SoC
--    "socionext,uniphier-pro5-usb3-ssphy" - for Pro5 SoC
--    "socionext,uniphier-pxs2-usb3-ssphy" - for PXs2 SoC
--    "socionext,uniphier-ld20-usb3-ssphy" - for LD20 SoC
--    "socionext,uniphier-pxs3-usb3-ssphy" - for PXs3 SoC
--- reg: Specifies offset and length of the register set for the device.
--- #phy-cells: Should be 0.
--- clocks: A list of phandles to the clock gate for USB3 glue layer.
--	According to the clock-names, appropriate clocks are required.
--- clock-names:
--    "gio", "link" - for Pro4 and Pro5 SoC
--    "phy", "phy-ext", "link" - for PXs3 SoC, "phy-ext" is optional.
--    "phy", "link" - for others
--- resets: A list of phandles to the reset control for USB3 glue layer.
--	According to the reset-names, appropriate resets are required.
--- reset-names:
--    "gio", "link" - for Pro4 and Pro5 SoC
--    "phy", "link" - for others
--
--Optional properties:
--- vbus-supply: A phandle to the regulator for USB VBUS.
--
--Refer to phy/phy-bindings.txt for the generic PHY binding properties.
--
--Example:
--
--	usb-glue@65b00000 {
--		compatible = "socionext,uniphier-ld20-dwc3-glue",
--			     "simple-mfd";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges = <0 0x65b00000 0x400>;
--
--		usb_vbus0: regulator {
--			...
--		};
--
--		usb_ssphy0: ss-phy@300 {
--			compatible = "socionext,uniphier-ld20-usb3-ssphy";
--			reg = <0x300 0x10>;
--			#phy-cells = <0>;
--			clock-names = "link", "phy";
--			clocks = <&sys_clk 14>, <&sys_clk 16>;
--			reset-names = "link", "phy";
--			resets = <&sys_rst 14>, <&sys_rst 16>;
--			vbus-supply = <&usb_vbus0>;
--		};
--		...
--	};
--- 
-2.7.4
+At a time it supports only one chip select.
+Thanks!
 
+Regards
+Vadivel
+> 
