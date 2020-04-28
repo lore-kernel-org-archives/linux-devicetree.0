@@ -2,101 +2,79 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 030D9C83004
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 03:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257E3C83004
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 05:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8969206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 03:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVi818O1"
+	by mail.kernel.org (Postfix) with ESMTP id 0551C206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 05:03:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588050191;
+	bh=N1HNyStyjFiaOU+5t7xqSf2pJH8YMPv9M0ySO4tvUTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YLn12/gnfQSrAXQoPBXa6M0SSifnZG2ZGSWfQQGuraUEqH7RGLcZ1y0nVvvD242Ot
+	 fmlXNVR441q9znfuRqtb+QKQPzgKt573+l8M0mgYgni10R9va4bahCLCyX1JmAE1s2
+	 BGaWIFh8TSYL8KHcrqNtvtHYri/J+/f0qt6X+ey8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgD1DVQ (ORCPT
+        id S1726421AbgD1FDK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Apr 2020 23:21:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgD1DVQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Apr 2020 23:21:16 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFC1C03C1A9;
-        Mon, 27 Apr 2020 20:21:15 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y4so19897061ljn.7;
-        Mon, 27 Apr 2020 20:21:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x/KX6i1az01qEnInKFuUccobP96F3x7Gqm3MaoBdJ1Q=;
-        b=UVi818O1g/ys1qy9aULO5Os7hjcuazADOhDicMJbdwxPYfKJ0KXenLnaHZ/EVAjfyI
-         VhHPvEDSPICTW84/LuGvbfbcirm05QOSXCLwtWN2SrMNQruewqCFlk8HE148KcpKyzOZ
-         Wt0Mi4hWm0E+XfmCqAOJtUyBXcMwktVuTttJ5hMBEfP4TezrmrMJoB6bdRvHtvf+bYlo
-         OIQ9/Z/RjL6b3s933PBPt4fgi2gng5FzJxsPHMZ006EPAdpKDQopz1rZBIF/kzTkR1Nh
-         HIfAOv6iVSZKEqF1OKAOBSq5gDlDgiDrWO70TZzK6udJl8XQ2vpzRPZ+Pf151IF9cmNU
-         MkLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x/KX6i1az01qEnInKFuUccobP96F3x7Gqm3MaoBdJ1Q=;
-        b=MV0bMm51WaQm88A5JP1IJBCd7ztjC40sDSciqT1rbjobEbpMVM3ohwJZ5p9RAY+4N+
-         YlUk47+EFHtD0aXxlQPid7RGeVDsr6+jX+BLMfXKiMhKFzwyjkEDeCRUTj4wd4lkuVgc
-         6sxQwzC4AXAtm7AQ1qUhcBTGrP83XQsJdhmEfbsOb3HyjdHIyuGK1BaggW/NuA2V6Qy5
-         VdbTcITfV+n6kR4g3g5HDFVKAmx494Oo5YBcPbojmwzb+NI3s+WxdemxvzsSOd70H3Zm
-         fqVtt7nz6tWPjcw95fy8B2JHAYKeL42pCmPSG6ihpaTKSKzyCKDQBvaqekTRpWvgsZch
-         aAxg==
-X-Gm-Message-State: AGi0PuZ9ScIV20uDR9WNqTdwRv2GYkoLBBgd4js7BK4no1GGbyqhkoRU
-        PP+QTnlDk98eVmVmVeH4oT+RVcBscLfD5TKHtAg=
-X-Google-Smtp-Source: APiQypILa/9TL4Q9y6eHfQLCYco80j1PteU65bPrjee3cUAWC4E6yZG8jsBsMkLJqfyHL2969E9h0fnNTN/tC33+olU=
-X-Received: by 2002:a05:651c:2011:: with SMTP id s17mr15147194ljo.242.1588044074054;
- Mon, 27 Apr 2020 20:21:14 -0700 (PDT)
+        Tue, 28 Apr 2020 01:03:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbgD1FDJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 01:03:09 -0400
+Received: from localhost (unknown [106.51.110.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9279206A5;
+        Tue, 28 Apr 2020 05:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588050189;
+        bh=N1HNyStyjFiaOU+5t7xqSf2pJH8YMPv9M0ySO4tvUTs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PsN8M6WXTSo8162Ajbr9aPD49VWZsl6oWEvdH6kGQstJ7ERIVzIIeXENcZ3w3bKt/
+         tvcpIFGjuw/ge0iLM1SlSUcX3eOIeVcemQzQMIrUDif0oZI+69G0lZeaKy9QiQNnzV
+         yJWAsh99vqtdYOS2PRuBD96g72YMM1ce3PhBYD0Q=
+Date:   Tue, 28 Apr 2020 10:33:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] phy: qcom: qmp: Add SM8250 UFS PHY
+Message-ID: <20200428050305.GY56386@vkoul-mobl.Dlink>
+References: <20200415060745.740193-1-bjorn.andersson@linaro.org>
+ <20200420214958.GA23753@bogus>
 MIME-Version: 1.0
-References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
- <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
- <62b3d9fc-1cc9-ac42-69e5-1c7bdac7bd0c@infradead.org>
-In-Reply-To: <62b3d9fc-1cc9-ac42-69e5-1c7bdac7bd0c@infradead.org>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 28 Apr 2020 11:21:03 +0800
-Message-ID: <CADBw62pRRqMW2c0OASS5KbwpjENr-kVnZwXcdLom5-sHUhntXw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420214958.GA23753@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:16 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 4/27/20 8:10 PM, Baolin Wang wrote:
-> > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> > index 5a577a6734cf..e03f3fb5caed 100644
-> > --- a/drivers/mailbox/Kconfig
-> > +++ b/drivers/mailbox/Kconfig
-> > @@ -236,4 +236,12 @@ config SUN6I_MSGBOX
-> >         various Allwinner SoCs. This mailbox is used for communication
-> >         between the application CPUs and the power management coprocessor.
-> >
-> > +config SPRD_MBOX
-> > +     tristate "Spreadtrum Mailbox"
-> > +     depends on ARCH_SPRD || COMPILE_TEST
-> > +     help
-> > +       Mailbox driver implementation for the Spreadtrum platform. It is used
-> > +       to send message between application processors and MCU. Say Y here if
-> > +       you want to build the Spreatrum mailbox controller driver.
->
->                                 ^^typo^^
+On 20-04-20, 16:49, Rob Herring wrote:
+> On Tue, 14 Apr 2020 23:07:45 -0700, Bjorn Andersson wrote:
+> > The SM8250 UFS PHY can run off the same initialization sequence as
+> > SM8150, but add the compatible to allow future changes.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 5 +++++
+> >  drivers/phy/qualcomm/phy-qcom-qmp.c                    | 3 +++
+> >  2 files changed, 8 insertions(+)
+> > 
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Ah, should be 'Spreadtrum', thanks for pointing it out.
-Let's wait for Jassi's comments for this patch.
+Applied, thanks
+
 
 -- 
-Baolin Wang
+~Vinod
