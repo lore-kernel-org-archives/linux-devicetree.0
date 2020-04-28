@@ -2,152 +2,107 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31633C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527B7C83007
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F212C206B8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:18:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uqNpU6Wq"
+	by mail.kernel.org (Postfix) with ESMTP id 3164D206B8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 06:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgD1GSe (ORCPT
+        id S1726256AbgD1G2F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 02:18:34 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:5235 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726309AbgD1GSe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 02:18:34 -0400
-X-UUID: 98189c06b0334c6296e4f0e70af162da-20200428
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=i9B88KjQO7GLcaEdS1cXa6s3uODkmcCp/wkWGt2KUC4=;
-        b=uqNpU6WqRTGyV2hnawcVtNAVeUJLn2chIW17/KQ2Xvz23ww4kuXIGFNmHSp7rUNsozmrjDi3iM+a3VykxjyqQhiwHqeITrg2c0pkTQIj9yJepT1webQSMoknwMQlaQe5w4OGs+6zwlsLvuDDF60zEvSWz30+3I/0+ahO4dq3lUk=;
-X-UUID: 98189c06b0334c6296e4f0e70af162da-20200428
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 661193460; Tue, 28 Apr 2020 14:18:26 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 28 Apr 2020 14:18:24 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 28 Apr 2020 14:18:23 +0800
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-i2c@vger.kernel.org>
-CC:     <tfiga@chromium.org>, <drinkcat@chromium.org>,
-        <srv_heupstream@mediatek.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v14 2/2] i2c: core: support bus regulator controlling in adapter
-Date:   Tue, 28 Apr 2020 14:18:13 +0800
-Message-ID: <20200428061813.27072-3-bibby.hsieh@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200428061813.27072-1-bibby.hsieh@mediatek.com>
-References: <20200428061813.27072-1-bibby.hsieh@mediatek.com>
+        Tue, 28 Apr 2020 02:28:05 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45482 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgD1G2F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 02:28:05 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 35D7B2A122C;
+        Tue, 28 Apr 2020 07:28:03 +0100 (BST)
+Date:   Tue, 28 Apr 2020 08:27:59 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
+        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
+        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
+        richard@nod.at, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200428082759.25065146@collabora.com>
+In-Reply-To: <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
+References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200424183612.4cfdbb6a@collabora.com>
+        <20200427175127.0518c193@xps13>
+        <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWx0aG91Z2ggaW4gdGhlIG1vc3QgcGxhdGZvcm1zLCB0aGUgYnVzIHBvd2VyIG9mIGkyYw0KYXJl
-IGFsd2F5IG9uLCBzb21lIHBsYXRmb3JtcyBkaXNhYmxlIHRoZSBpMmMgYnVzIHBvd2VyDQppbiBv
-cmRlciB0byBtZWV0IGxvdyBwb3dlciByZXF1ZXN0Lg0KDQpXZSBnZXQgYW5kIGVuYWJsZSBidWxr
-IHJlZ3VsYXRvciBpbiBpMmMgYWRhcHRlciBkZXZpY2UuDQoNClNpZ25lZC1vZmYtYnk6IEJpYmJ5
-IEhzaWVoIDxiaWJieS5oc2llaEBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2kyYy9pMmMt
-Y29yZS1iYXNlLmMgfCA4MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQog
-aW5jbHVkZS9saW51eC9pMmMuaCAgICAgICAgIHwgIDIgKw0KIDIgZmlsZXMgY2hhbmdlZCwgODQg
-aW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvaTJjLWNvcmUtYmFzZS5j
-IGIvZHJpdmVycy9pMmMvaTJjLWNvcmUtYmFzZS5jDQppbmRleCA1Y2MwYjBlYzU1NzAuLmY4MWI0
-MmE0ZWQwNyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvaTJjL2kyYy1jb3JlLWJhc2UuYw0KKysrIGIv
-ZHJpdmVycy9pMmMvaTJjLWNvcmUtYmFzZS5jDQpAQCAtMzEzLDYgKzMxMyw3IEBAIHN0YXRpYyBp
-bnQgaTJjX3NtYnVzX2hvc3Rfbm90aWZ5X3RvX2lycShjb25zdCBzdHJ1Y3QgaTJjX2NsaWVudCAq
-Y2xpZW50KQ0KIHN0YXRpYyBpbnQgaTJjX2RldmljZV9wcm9iZShzdHJ1Y3QgZGV2aWNlICpkZXYp
-DQogew0KIAlzdHJ1Y3QgaTJjX2NsaWVudAkqY2xpZW50ID0gaTJjX3ZlcmlmeV9jbGllbnQoZGV2
-KTsNCisJc3RydWN0IGkyY19hZGFwdGVyCSphZGFwID0gY2xpZW50LT5hZGFwdGVyOw0KIAlzdHJ1
-Y3QgaTJjX2RyaXZlcgkqZHJpdmVyOw0KIAlpbnQgc3RhdHVzOw0KIA0KQEAgLTM3OCw2ICszNzks
-MTIgQEAgc3RhdGljIGludCBpMmNfZGV2aWNlX3Byb2JlKHN0cnVjdCBkZXZpY2UgKmRldikNCiAN
-CiAJZGV2X2RiZyhkZXYsICJwcm9iZVxuIik7DQogDQorCXN0YXR1cyA9IHJlZ3VsYXRvcl9lbmFi
-bGUoYWRhcC0+YnVzX3JlZ3VsYXRvcik7DQorCWlmIChzdGF0dXMgPCAwKSB7DQorCQlkZXZfZXJy
-KCZhZGFwLT5kZXYsICJGYWlsZWQgdG8gZW5hYmxlIHBvd2VyIHJlZ3VsYXRvclxuIik7DQorCQln
-b3RvIGVycl9jbGVhcl93YWtldXBfaXJxOw0KKwl9DQorDQogCXN0YXR1cyA9IG9mX2Nsa19zZXRf
-ZGVmYXVsdHMoZGV2LT5vZl9ub2RlLCBmYWxzZSk7DQogCWlmIChzdGF0dXMgPCAwKQ0KIAkJZ290
-byBlcnJfY2xlYXJfd2FrZXVwX2lycTsNCkBAIC00MTQsNiArNDIxLDcgQEAgc3RhdGljIGludCBp
-MmNfZGV2aWNlX3Byb2JlKHN0cnVjdCBkZXZpY2UgKmRldikNCiBzdGF0aWMgaW50IGkyY19kZXZp
-Y2VfcmVtb3ZlKHN0cnVjdCBkZXZpY2UgKmRldikNCiB7DQogCXN0cnVjdCBpMmNfY2xpZW50CSpj
-bGllbnQgPSBpMmNfdmVyaWZ5X2NsaWVudChkZXYpOw0KKwlzdHJ1Y3QgaTJjX2FkYXB0ZXIgICAg
-ICAqYWRhcCA9IGNsaWVudC0+YWRhcHRlcjsNCiAJc3RydWN0IGkyY19kcml2ZXIJKmRyaXZlcjsN
-CiAJaW50IHN0YXR1cyA9IDA7DQogDQpAQCAtNDI3LDYgKzQzNSw4IEBAIHN0YXRpYyBpbnQgaTJj
-X2RldmljZV9yZW1vdmUoc3RydWN0IGRldmljZSAqZGV2KQ0KIAl9DQogDQogCWRldl9wbV9kb21h
-aW5fZGV0YWNoKCZjbGllbnQtPmRldiwgdHJ1ZSk7DQorCWlmICghcG1fcnVudGltZV9zdGF0dXNf
-c3VzcGVuZGVkKCZjbGllbnQtPmRldikpDQorCQlyZWd1bGF0b3JfZGlzYWJsZShhZGFwLT5idXNf
-cmVndWxhdG9yKTsNCiANCiAJZGV2X3BtX2NsZWFyX3dha2VfaXJxKCZjbGllbnQtPmRldik7DQog
-CWRldmljZV9pbml0X3dha2V1cCgmY2xpZW50LT5kZXYsIGZhbHNlKTsNCkBAIC00MzgsNiArNDQ4
-LDcyIEBAIHN0YXRpYyBpbnQgaTJjX2RldmljZV9yZW1vdmUoc3RydWN0IGRldmljZSAqZGV2KQ0K
-IAlyZXR1cm4gc3RhdHVzOw0KIH0NCiANCisjaWZkZWYgQ09ORklHX1BNX1NMRUVQDQorc3RhdGlj
-IGludCBpMmNfcmVzdW1lX2Vhcmx5KHN0cnVjdCBkZXZpY2UgKmRldikNCit7DQorCXN0cnVjdCBp
-MmNfY2xpZW50ICpjbGllbnQgPSBpMmNfdmVyaWZ5X2NsaWVudChkZXYpOw0KKwlzdHJ1Y3QgaTJj
-X2FkYXB0ZXIgKmFkYXAgPSBjbGllbnQtPmFkYXB0ZXI7DQorCWludCBlcnI7DQorDQorCWlmICgh
-cG1fcnVudGltZV9zdGF0dXNfc3VzcGVuZGVkKCZjbGllbnQtPmRldikpIHsNCisJCWVyciA9IHJl
-Z3VsYXRvcl9lbmFibGUoYWRhcC0+YnVzX3JlZ3VsYXRvcik7DQorCQlpZiAoZXJyKQ0KKwkJCXJl
-dHVybiBlcnI7DQorCX0NCisNCisJcmV0dXJuIHBtX2dlbmVyaWNfcmVzdW1lX2Vhcmx5KCZjbGll
-bnQtPmRldik7DQorfQ0KKw0KK3N0YXRpYyBpbnQgaTJjX3N1c3BlbmRfbGF0ZShzdHJ1Y3QgZGV2
-aWNlICpkZXYpDQorew0KKwlzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gaTJjX3ZlcmlmeV9j
-bGllbnQoZGV2KTsNCisJc3RydWN0IGkyY19hZGFwdGVyICphZGFwID0gY2xpZW50LT5hZGFwdGVy
-Ow0KKwlpbnQgZXJyOw0KKw0KKwllcnIgPSBwbV9nZW5lcmljX3N1c3BlbmRfbGF0ZSgmY2xpZW50
-LT5kZXYpOw0KKwlpZiAoZXJyKQ0KKwkJcmV0dXJuIGVycjsNCisNCisJaWYgKCFwbV9ydW50aW1l
-X3N0YXR1c19zdXNwZW5kZWQoJmNsaWVudC0+ZGV2KSkNCisJCXJldHVybiByZWd1bGF0b3JfZGlz
-YWJsZShhZGFwLT5idXNfcmVndWxhdG9yKTsNCisNCisJcmV0dXJuIGVycjsNCit9DQorI2VuZGlm
-DQorDQorI2lmZGVmIENPTkZJR19QTQ0KK3N0YXRpYyBpbnQgaTJjX3J1bnRpbWVfcmVzdW1lKHN0
-cnVjdCBkZXZpY2UgKmRldikNCit7DQorCXN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSBpMmNf
-dmVyaWZ5X2NsaWVudChkZXYpOw0KKwlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXAgPSBjbGllbnQt
-PmFkYXB0ZXI7DQorCWludCBlcnI7DQorDQorCWVyciA9IHJlZ3VsYXRvcl9lbmFibGUoYWRhcC0+
-YnVzX3JlZ3VsYXRvcik7DQorCWlmIChlcnIpDQorCQlyZXR1cm4gZXJyOw0KKw0KKwlyZXR1cm4g
-cG1fZ2VuZXJpY19ydW50aW1lX3Jlc3VtZSgmY2xpZW50LT5kZXYpOw0KK30NCisNCitzdGF0aWMg
-aW50IGkyY19ydW50aW1lX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KK3sNCisJc3RydWN0
-IGkyY19jbGllbnQgKmNsaWVudCA9IGkyY192ZXJpZnlfY2xpZW50KGRldik7DQorCXN0cnVjdCBp
-MmNfYWRhcHRlciAqYWRhcCA9IGNsaWVudC0+YWRhcHRlcjsNCisJaW50IGVycjsNCisNCisJZXJy
-ID0gcG1fZ2VuZXJpY19ydW50aW1lX3N1c3BlbmQoJmNsaWVudC0+ZGV2KTsNCisJaWYgKGVycikN
-CisJCXJldHVybiBlcnI7DQorDQorCXJldHVybiByZWd1bGF0b3JfZGlzYWJsZShhZGFwLT5idXNf
-cmVndWxhdG9yKTsNCit9DQorI2VuZGlmDQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1f
-b3BzIGkyY19kZXZpY2VfcG0gPSB7DQorCVNFVF9MQVRFX1NZU1RFTV9TTEVFUF9QTV9PUFMoaTJj
-X3N1c3BlbmRfbGF0ZSwgaTJjX3Jlc3VtZV9lYXJseSkNCisJU0VUX1JVTlRJTUVfUE1fT1BTKGky
-Y19ydW50aW1lX3N1c3BlbmQsIGkyY19ydW50aW1lX3Jlc3VtZSwgTlVMTCkNCit9Ow0KKw0KIHN0
-YXRpYyB2b2lkIGkyY19kZXZpY2Vfc2h1dGRvd24oc3RydWN0IGRldmljZSAqZGV2KQ0KIHsNCiAJ
-c3RydWN0IGkyY19jbGllbnQgKmNsaWVudCA9IGkyY192ZXJpZnlfY2xpZW50KGRldik7DQpAQCAt
-NDk1LDYgKzU3MSw3IEBAIHN0cnVjdCBidXNfdHlwZSBpMmNfYnVzX3R5cGUgPSB7DQogCS5wcm9i
-ZQkJPSBpMmNfZGV2aWNlX3Byb2JlLA0KIAkucmVtb3ZlCQk9IGkyY19kZXZpY2VfcmVtb3ZlLA0K
-IAkuc2h1dGRvd24JPSBpMmNfZGV2aWNlX3NodXRkb3duLA0KKwkucG0JCT0gJmkyY19kZXZpY2Vf
-cG0sDQogfTsNCiBFWFBPUlRfU1lNQk9MX0dQTChpMmNfYnVzX3R5cGUpOw0KIA0KQEAgLTEzMzMs
-NiArMTQxMCwxMSBAQCBzdGF0aWMgaW50IGkyY19yZWdpc3Rlcl9hZGFwdGVyKHN0cnVjdCBpMmNf
-YWRhcHRlciAqYWRhcCkNCiAJaWYgKHJlcykNCiAJCWdvdG8gb3V0X3JlZzsNCiANCisJYWRhcC0+
-YnVzX3JlZ3VsYXRvciA9IGRldm1fcmVndWxhdG9yX2dldCgmYWRhcC0+ZGV2LCAiYnVzIik7DQor
-CWlmIChJU19FUlIoYWRhcC0+YnVzX3JlZ3VsYXRvcikpIHsNCisJCXJlcyA9IFBUUl9FUlIoYWRh
-cC0+YnVzX3JlZ3VsYXRvcik7DQorCQlnb3RvIG91dF9yZWc7DQorCX0NCiAJZGV2X2RiZygmYWRh
-cC0+ZGV2LCAiYWRhcHRlciBbJXNdIHJlZ2lzdGVyZWRcbiIsIGFkYXAtPm5hbWUpOw0KIA0KIAlw
-bV9ydW50aW1lX25vX2NhbGxiYWNrcygmYWRhcC0+ZGV2KTsNCmRpZmYgLS1naXQgYS9pbmNsdWRl
-L2xpbnV4L2kyYy5oIGIvaW5jbHVkZS9saW51eC9pMmMuaA0KaW5kZXggNDU2ZmMxN2VjYjFjLi5i
-YzgzYWYwZDM4ZDEgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L2kyYy5oDQorKysgYi9pbmNs
-dWRlL2xpbnV4L2kyYy5oDQpAQCAtMTUsNiArMTUsNyBAQA0KICNpbmNsdWRlIDxsaW51eC9kZXZp
-Y2UuaD4JLyogZm9yIHN0cnVjdCBkZXZpY2UgKi8NCiAjaW5jbHVkZSA8bGludXgvc2NoZWQuaD4J
-LyogZm9yIGNvbXBsZXRpb24gKi8NCiAjaW5jbHVkZSA8bGludXgvbXV0ZXguaD4NCisjaW5jbHVk
-ZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+DQogI2luY2x1ZGUgPGxpbnV4L3J0bXV0ZXgu
-aD4NCiAjaW5jbHVkZSA8bGludXgvaXJxZG9tYWluLmg+CQkvKiBmb3IgSG9zdCBOb3RpZnkgSVJR
-ICovDQogI2luY2x1ZGUgPGxpbnV4L29mLmg+CQkvKiBmb3Igc3RydWN0IGRldmljZV9ub2RlICov
-DQpAQCAtNzIxLDYgKzcyMiw3IEBAIHN0cnVjdCBpMmNfYWRhcHRlciB7DQogCWNvbnN0IHN0cnVj
-dCBpMmNfYWRhcHRlcl9xdWlya3MgKnF1aXJrczsNCiANCiAJc3RydWN0IGlycV9kb21haW4gKmhv
-c3Rfbm90aWZ5X2RvbWFpbjsNCisJc3RydWN0IHJlZ3VsYXRvciAqYnVzX3JlZ3VsYXRvcjsNCiB9
-Ow0KICNkZWZpbmUgdG9faTJjX2FkYXB0ZXIoZCkgY29udGFpbmVyX29mKGQsIHN0cnVjdCBpMmNf
-YWRhcHRlciwgZGV2KQ0KIA0KLS0gDQoyLjE4LjANCg==
+On Tue, 28 Apr 2020 14:17:30 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
+> Hi Miquel,
+> 
+>     Thank you very much for the review comments and your time...
+> 
+> On 27/4/2020 11:51 pm, Miquel Raynal wrote:
+> > Hi Ramuthevar,
+> >   
+> >>> +static int ebu_nand_probe(struct platform_device *pdev)
+> >>> +{
+> >>> +	struct device *dev = &pdev->dev;
+> >>> +	struct ebu_nand_controller *ebu_host;
+> >>> +	struct nand_chip *nand;
+> >>> +	phys_addr_t nandaddr_pa;
+> >>> +	struct mtd_info *mtd;
+> >>> +	struct resource *res;
+> >>> +	int ret;
+> >>> +	u32 cs;
+> >>> +
+> >>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+> >>> +	if (!ebu_host)
+> >>> +		return -ENOMEM;
+> >>> +
+> >>> +	ebu_host->dev = dev;
+> >>> +	nand_controller_init(&ebu_host->controller);
+> >>> +
+> >>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+> >>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
+> >>> +	if (IS_ERR(ebu_host->ebu_addr))
+> >>> +		return PTR_ERR(ebu_host->ebu_addr);
+> >>> +
+> >>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+> >>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
+> >>> +	if (IS_ERR(ebu_host->nand_addr))
+> >>> +		return PTR_ERR(ebu_host->nand_addr);
+> >>> +
+> >>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);  
+> >>
+> >> CS ids should be encoded in the reg property (see [1]).  
+> > 
+> > Is it your choice to only support a single CS or is it actually a
+> > controller limitation?  
+> 
+> Yes , its controller limitation to support only one CS
+
+I'm pretty sure that's not true, otherwise you wouldn't have to select
+the CS you want to use :P.
