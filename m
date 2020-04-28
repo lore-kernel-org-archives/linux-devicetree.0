@@ -2,177 +2,142 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12234C83001
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B8BC83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E612E206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A122A2063A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 16:45:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="u0IbH3M8"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="o/zLeawy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="plxc6RQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgD1QlM (ORCPT
+        id S1728084AbgD1Qp3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 12:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbgD1QlJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 12:41:09 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098E0C03C1AC
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 09:41:08 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id i27so33718847ota.7
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 09:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ej7TTxYPOCUjZ2CQUSr20OUxUMW8qnZz71cmcRHx9Bk=;
-        b=u0IbH3M8FSosaaIdXSzKS8Q7157jIXtA/va7tZv0+OV5NyxvG48nxfl09ZhiFGDLev
-         nhACwWVrI+K6PQdVZIQ8xRtKyFAFrHDBp+/OEZehPaXnn0V6VZPc+eyN8ihnbYPNx352
-         vV6+QMDug8mCIbbhTfQE0gOLACFscEkyp9SI8PSGhFbfaEUtUDRnlhtvrzPcbWKSutmk
-         Q1qkS/Tkr4lGf5Du9Q7Is6vR97ws0NLI3sl/jqIkKfQVaGpCdfjaCI3L8LWQ217M3pkc
-         KSBkvgKQxC4NL+5rJhcyae3FUCT5WE6Ft+yRf0ZZIjiOhzQVBS3EztA/1zOkFDI0DCkZ
-         ZKPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ej7TTxYPOCUjZ2CQUSr20OUxUMW8qnZz71cmcRHx9Bk=;
-        b=gAHSXzKD+xbd2h0BzXqxK0D1wr3toW+kjr5gHfc4tuZwDupmIzVanDpkAnk25aPTZD
-         M9aPi9Ua1vLF1VAncSoHdwKOZGc8+UKJbqYpY9LMF6XRQqRI9ElGNVouPIiUCnErlwaQ
-         iKCz8MhTUHriC+06HNjJTBcINcnyy07EpoEJxsJB6qFL59f+ghHpFwGlJOCIaPiUFNzU
-         5HEehzREPFVXX2jJp5ddGSe7y/xAGmzj+LMbjddU51cIQMB47BLTKbgr1DJN8srrp/QS
-         RDk9Bxx2pTvvIaluOluEwAjqhhtN6lkvd/GbP3k17+ODajfT0wwxpGFbqEZbHugLIHNv
-         BGqQ==
-X-Gm-Message-State: AGi0PuZoxkWxKRSFILQRYlsg/6Gp1H4WX29KidKXroV+39xL3TfXnmZt
-        oecTx5CQs5R42hqGi3xm2RgBeo8fQ4MTFkIl6FDMfA==
-X-Google-Smtp-Source: APiQypI5jgRZDess6nlH+QHGWtMVtpKyuiaNv0Q/5uAdeleBiZWLGdLeCKBv2lgWnykl6/7vKyO0iiEsfWwLlXlOqZc=
-X-Received: by 2002:a9d:7304:: with SMTP id e4mr13363952otk.243.1588092067350;
- Tue, 28 Apr 2020 09:41:07 -0700 (PDT)
+        Tue, 28 Apr 2020 12:45:29 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:46579 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728022AbgD1Qp2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 12:45:28 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id A942B5C00ED;
+        Tue, 28 Apr 2020 12:45:27 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 28 Apr 2020 12:45:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=S+DukyifHC2vsrH7Z+Bw4PDmgSK
+        o2q4QVE9pfyHeloc=; b=o/zLeawy0XQRg1eQ7+597/fdWE/olg18atu9Wo9OpAV
+        qzO2RXEsn8o6ljpJCmcHtU3aSPv8TGrdRsl3C/di7b6qEVeuxn++mSeRZJUIp8Q0
+        VuIaPoYH/IqD7GHhKdZWddRa4sVZR4nlrzdkOlVmTxn0n264NaAyWmqKlWUEKxCn
+        yh/sgs4yR53G17xdi+bSLGHGBtSeqL1knY4u70hTGH1JP4nL6yv6GM2qogkN1O8c
+        J3245jYrz9gp0GTvqjJkuTDsSgCXECue0dmOsZKFgPbXAMKTFbDlP2Tcpm76UWZj
+        gxaONyZPXsd6+I5GDkWhO84dpc9daW0yT8vfxKAVilA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=S+Duky
+        ifHC2vsrH7Z+Bw4PDmgSKo2q4QVE9pfyHeloc=; b=plxc6RQUfAVXjjOqju4TEk
+        p87bIvcNyBu/Oy2aIbCzsLzgKQbl1Joq1ZXevIR3YiEbg51CvULI62q8NcFHbpK9
+        jaMKj9+Jjmd4LGLLje5rNhbeTT/xEfGyW9CG/wa/V7N4YSRgqEFn8OGkJmypQ9N6
+        0aeYbI5LaGFw8Efc/psgzzWILoJ77Gt/ITRR7VBh/m2AC4FfcSRMjWwW70Qgry8n
+        9rQZhr8htYwKizqSiDtXu66fCRB9F+yGtpVqEhEcEZC0bPCZEcj2iCMb0QEG1PpI
+        trihGpHK0Ozvl7BDXAdP1Gm0lHDbM3k12EoCOtWaaVK3Qmmd8TBTj+vQ+rJB0C3Q
+        ==
+X-ME-Sender: <xms:pF2oXpnWDItsLSB1PqG7oa1lq9AlwFoCa-vwz5IQl3xjBQNi-BJvJA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedugddutdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:pF2oXidgBl28_W9q_r39J5Gz9hOsjAmhKRbR8RsLmONfdxOOMUALdA>
+    <xmx:pF2oXlPAhCNv08hbAdBrrxQieLsf0xwGIamgkJrrSdDdK8Wr0MNu6w>
+    <xmx:pF2oXtOIsWGSMIntahD8XJCDI99GsCuImlHHCdMry537_ogbB-v5HA>
+    <xmx:p12oXmy8Q_Vesgwl9mt6FFYzJ-tX4A6A5Ifj1l4w4eR3eW18vRMs1Q>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 125803280059;
+        Tue, 28 Apr 2020 12:45:23 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 18:45:22 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Piotr Oniszczuk <warpme@o2.pl>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v2] arm64: dts: allwinner: h6: Use
+ dummy regulator for Tanix TX6
+Message-ID: <20200428164522.p7ypca7zwocc7alq@gilmour.lan>
+References: <20200428142629.8950-1-peron.clem@gmail.com>
+ <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
+ <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200415150244.2737206-1-robert.marko@sartura.hr>
- <20200415150244.2737206-2-robert.marko@sartura.hr> <20200428150930.GA25643@bogus>
-In-Reply-To: <20200428150930.GA25643@bogus>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Tue, 28 Apr 2020 18:40:56 +0200
-Message-ID: <CA+HBbNF4S=o059AwW3UpNQ8+US1PCQ_edZM+O0m8r0ozJ5TBfw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: add Qualcomm IPQ4019 MDIO bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org, Luka Perkov <luka.perkov@sartura.hr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cbn7zzdgl2fsor3b"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 5:09 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Apr 15, 2020 at 05:02:46PM +0200, Robert Marko wrote:
-> > This patch adds the binding document for the IPQ40xx MDIO driver.
+
+--cbn7zzdgl2fsor3b
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 28, 2020 at 06:23:35PM +0200, Cl=E9ment P=E9ron wrote:
+> Hi Robin,
+>=20
+> On Tue, 28 Apr 2020 at 17:21, Robin Murphy <robin.murphy@arm.com> wrote:
 > >
-> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > Cc: Luka Perkov <luka.perkov@sartura.hr>
-> > ---
-> > Changes from v2 to v3:
-> > * Remove status from example
+> > On 2020-04-28 3:26 pm, Cl=E9ment P=E9ron wrote:
+> > > Tanix TX6 has a fixed regulator. As DVFS is instructed to change
+> > > voltage to meet OPP table, the DVFS is not working as expected.
 > >
-> >  .../bindings/net/qcom,ipq40xx-mdio.yaml       | 61 +++++++++++++++++++
-> >  1 file changed, 61 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-> > new file mode 100644
-> > index 000000000000..8d4542ccd38c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-> > @@ -0,0 +1,61 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->
-> Dual license new bindings please:
->
-> (GPL-2.0-only OR BSD-2-Clause)
-Ok, will change it in next revision.
->
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/net/qcom,ipq40xx-mdio.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm IPQ40xx MDIO Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Robert Marko <robert.marko@sartura.hr>
-> > +
-> > +allOf:
-> > +  - $ref: "mdio.yaml#"
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: qcom,ipq40xx-mdio
->
-> Don't use wildcards in compatible names. Should be SoC specific. If 'all
-> the same', then use a fallback to the 1st implementation.
-Ok, I will change it to qcom,ipq4019 then.
-The whole IPQ40xx series uses the same controller.
->
-> > +
-> > +  "#address-cells":
-> > +    const: 1
-> > +
-> > +  "#size-cells":
-> > +    const: 0
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +
-> > +examples:
-> > +  - |
-> > +    mdio@90000 {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      compatible = "qcom,ipq40xx-mdio";
-> > +      reg = <0x90000 0x64>;
-> > +
-> > +      ethphy0: ethernet-phy@0 {
-> > +        reg = <0>;
-> > +      };
-> > +
-> > +      ethphy1: ethernet-phy@1 {
-> > +        reg = <1>;
-> > +      };
-> > +
-> > +      ethphy2: ethernet-phy@2 {
-> > +        reg = <2>;
-> > +      };
-> > +
-> > +      ethphy3: ethernet-phy@3 {
-> > +        reg = <3>;
-> > +      };
-> > +
-> > +      ethphy4: ethernet-phy@4 {
-> > +        reg = <4>;
-> > +      };
-> > +    };
-> > --
-> > 2.26.0
-> >
+> > Hmm, isn't that really a bug in the DVFS code? I guess it's just blindly
+> > propagating -EINVAL from the fixed regulators not implementing
+> > set_voltage, but AFAICS it has no real excuse not to be cleverer and
+> > still allow switching frequency as long as the voltage *is* high enough
+> > for the given OPP. I wonder how well it works if the regulator is
+> > programmable but shared with other consumers... that case probably can't
+> > be hacked around in DT.
+>=20
+> Like you, I thought that the DVFS was clever enough to understand this
+> but guess not..
+>=20
+> Maybe they are some cases where you don't want to leave the voltage high =
+and
+> reduce the frequency. But I don't know such case.
+
+I assume the intent was to prevent a regulator driver to overshoot and end =
+up
+over-volting the CPU which would be pretty bad.
+
+I guess we could check that the voltage is in the range opp < actual voltag=
+e <
+max opp voltage ?
+
+Maxime
+
+--cbn7zzdgl2fsor3b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqhdogAKCRDj7w1vZxhR
+xf6IAP9w+DY1O6bT4B3lg/+eirUFYM1skafnWKyx1f2y49KdYQEA2gJSF//W+64e
+k+em/HwQHNH7fcP/zuv+U6G30n1Ocgs=
+=CEt2
+-----END PGP SIGNATURE-----
+
+--cbn7zzdgl2fsor3b--
