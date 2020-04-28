@@ -2,138 +2,140 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F049BC83008
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D53AC83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF61C206A1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46313206D6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 12:25:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvOVlnDd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FQrwhGKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgD1MZQ (ORCPT
+        id S1726684AbgD1MZz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 08:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42870 "EHLO
+        Tue, 28 Apr 2020 08:25:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726739AbgD1MZQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726620AbgD1MZz (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:25:16 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204B8C03C1A9;
-        Tue, 28 Apr 2020 05:25:16 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k13so24441096wrw.7;
-        Tue, 28 Apr 2020 05:25:15 -0700 (PDT)
+        Tue, 28 Apr 2020 08:25:55 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE68C03C1AC
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 05:25:55 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id d25so1790426lfi.11
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 05:25:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=781oNo11x931cim0fl8S1PiQGZJbX/Ze59g07/BoxgM=;
-        b=CvOVlnDd5fDcNAf95b63/H/YM7RVcHI1AsIXCZWs6gsASaiIrkBZZkrIruuBH9BLU3
-         Uo/4trUJNULx5eRudzZ4inAv9067APiAs04NPlbwXStqBqxPyIsWYRAEeiRmbqN8CW+S
-         xLnyweO/An8GSYeEecBbC4e5D2gmZpK69UoD6V/ErJB08gn+A3aeknbXlUuOm1eHCjQH
-         pys9lKHWLP369LJa+OqWrzAyX36BnkkolunQNX6Iw6E44B2ZOzJ23UPR/f5HOiB80Fgq
-         Key+z9TLf00n/nIgoUePNFEPE/gqrSx7i5Q3jw9u/jncMVw0vVpD4grN+naolCu2oqBK
-         W3+g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y3CrBoDpzGJjyKIi+DpjYHt2NK5y8m5CojptJRFb0pU=;
+        b=FQrwhGKLvaQDgj3OcQS2/tAhntXv2Kzc5Rg7N9I4UbMU7paoSFg+yWGK06VYXhk/1o
+         UwCdQZj3Rd67ss3sinoBLCJy2qr7lmIyRw7vsb68gstUo6s2Tfc5KoG7Dt5BC8e7kcs3
+         HECCE/eK6Ck9uQMuTnEx+SKE3hwkXSzz5QDl8PcB7GQe6LlgLtHpBeRXZEvuau2/jvln
+         E8cQEmyO6jGOLaD2MTc6nOrs/AJ5el8oWlAnxoCF1nEhqYdoQKWTszF3dV096mo1IRMa
+         jlxA1WJb4+Gkzm6GmWEs8cxFcyRseknKOUsSh6cTxq9cKWqEbEkr1vIRntp4Anapy6pO
+         Hgzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=781oNo11x931cim0fl8S1PiQGZJbX/Ze59g07/BoxgM=;
-        b=jeWyAfLeFhuf/iSriOsctbvKgDKMkI0WMcOoKWaqsV9AMmDFHpNC45TxnBYPPnz6bj
-         GKkrliKXjwBDHa/woX8EPh4ViTO0TEZSbfx6soHvazszJ9ZI65Jf9bdVTCvtzI60tsPm
-         K2IhKs0P4IhkotOpfef9MW4yMyiTEH78Ma9ULfdClrnwv87sced5z2q9jidIT1DQAHBQ
-         cST1zG6yA7owwKbIxGR1151tu/zv8LLrcjEJ7LjbJ33Xlr2QJ4kBOpTMPNbWz7sAWOLY
-         PeYoAH8C7UO3ggowFp4yksaMMtOlBzXvjSktiuvMaQgVQ6/1oX3rcO6hcVExR5vGCViv
-         5gtg==
-X-Gm-Message-State: AGi0PuaB1odfwnSk8ByeXaDeMg93stS2cEITISCOoyjJB0/7f/FoEZuN
-        QxTjrTJmkOu1PrLcfrQv69o=
-X-Google-Smtp-Source: APiQypLDXIxO7A0O4EZ58eEalijCyP8izHMI3fCOongyuPYiyfJfo3JND95DyqhBt4AHPgT+1LPYKQ==
-X-Received: by 2002:a5d:5304:: with SMTP id e4mr31268481wrv.87.1588076714459;
-        Tue, 28 Apr 2020 05:25:14 -0700 (PDT)
-Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
-        by smtp.gmail.com with ESMTPSA id j4sm24826680wrm.85.2020.04.28.05.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 05:25:13 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 14:25:12 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH V1 4/4] usb: gadget: tegra-xudc: add port_speed_quirk
-Message-ID: <20200428122512.GN3592148@ulmo>
-References: <1587022460-31988-1-git-send-email-nkristam@nvidia.com>
- <1587022460-31988-5-git-send-email-nkristam@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y3CrBoDpzGJjyKIi+DpjYHt2NK5y8m5CojptJRFb0pU=;
+        b=CfAiSFsvmAIM+NmgK3W0J9HxGxsky4SjjdsYljlxiwgqo2AdN7FBnx/8BsM27ejyVi
+         ycKyYTxX2TuLyTQE7xhVi4k4NI3gZflPBKglijzxCd6tKN99MNDTVhXdBTv8oQ6Y6Eqh
+         c1110UsK3v2MyWQWTopcYevZN+wgRJ+aIBI1Bk5J5qgNFMlgOSBtdAtcw0O6LCmyNb+C
+         LThypec+HiJ0FkR2XS2tlD5nZx29YsyXyG0UXZK6A/p7eUI8q/4kxAey4S/mTruLe3V7
+         n5fib/XDoHp06YisLL0j+h9VmxWKCJXFNPJdXticfQ1SCf036mlj/WuO3DEt2+be+9sk
+         VkuA==
+X-Gm-Message-State: AGi0PuZPz+SvYp6brXSvuPinkISBYTSr1NWhmAD6ZatTLDL/IkGdXVoN
+        +ofQC8mG7/hB7YWer11pDtI4k4cbtotjprROAKzzLg==
+X-Google-Smtp-Source: APiQypLPb2mAHpSsIdPNB3D7OVgcTv0eVuKODtDnL03qMl/e3W2QqNgeTth6RsbPQYrzCLTfa1qEof/jAdPKF+ud1Kg=
+X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr19280291lfp.77.1588076753555;
+ Tue, 28 Apr 2020 05:25:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NJSRbAqOy4NeGDns"
-Content-Disposition: inline
-In-Reply-To: <1587022460-31988-5-git-send-email-nkristam@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <20200423162548.129661-1-dianders@chromium.org> <20200423092431.v3.5.I72892d485088e57378a4748c86bc0f6c2494d807@changeid>
+In-Reply-To: <20200423092431.v3.5.I72892d485088e57378a4748c86bc0f6c2494d807@changeid>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Apr 2020 14:25:42 +0200
+Message-ID: <CACRpkdZkRKgRo2-pxiyoz-3W_aoR+qb+AA-4+ZaPtt2Ykecs0w@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Apr 23, 2020 at 6:26 PM Douglas Anderson <dianders@chromium.org> wrote:
 
---NJSRbAqOy4NeGDns
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The ti-sn65dsi86 MIPI DSI to eDP bridge chip has a dedicated hardware
+> HPD (Hot Plug Detect) pin on it, but it's mostly useless for eDP
+> because of excessive debouncing in hardware.  Specifically there is no
+> way to disable the debouncing and for eDP debouncing hurts you because
+> HPD is just used for knowing when the panel is ready, not for
+> detecting physical plug events.
+>
+> Currently the driver in Linux just assumes that nobody has HPD hooked
+> up.  It relies on folks setting the "no-hpd" property in the panel
+> node to specify that HPD isn't hooked up and then the panel driver
+> using this to add some worst case delays when turning on the panel.
+>
+> Apparently it's also useful to specify "no-hpd" in the bridge node so
+> that the bridge driver can make sure it's doing the right thing
+> without peeking into the panel [1].  This would be used if anyone ever
+> found it useful to implement support for the HW HPD pin on the bridge.
+> Let's add this property to the bindings.
+>
+> NOTES:
+> - This is somewhat of a backward-incompatible change.  All current
+>   known users of ti-sn65dsi86 didn't have "no-hpd" specified in the
+>   bridge node yet none of them had HPD hooked up.  This worked because
+>   the current Linux driver just assumed that HPD was never hooked up.
+>   We could make it less incompatible by saying that for this bridge
+>   it's assumed HPD isn't hooked up _unless_ a property is defined, but
+>   "no-hpd" is much more standard and it's unlikely to matter unless
+>   someone quickly goes and implements HPD in the driver.
+> - It is sensible to specify "no-hpd" at the bridge chip level and
+>   specify "hpd-gpios" at the panel level.  That would mean HPD is
+>   hooked up to some other GPIO in the system, just not the hardware
+>   HPD pin on the bridge chip.
+>
+> [1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboard.com
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-On Thu, Apr 16, 2020 at 01:04:20PM +0530, Nagarjuna Kristam wrote:
-> Add port_speed_quirk that modify below registers to limit/restore OTG
-> port speed to GEN1/GEN2.
-> SSPX_CORE_CNT56
-> SSPX_CORE_CNT57
-> SSPX_CORE_CNT65
-> SSPX_CORE_CNT66
-> SSPX_CORE_CNT67
-> SSPX_CORE_CNT72
->=20
-> The basic idea is to make SCD intentionally fail, reduce SCD timeout and
-> force device transit to TSEQ. Enable this flag to only Tegra194.
->=20
-> Based on work by WayneChang <waynec@nvidia.com>
->=20
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> ---
->  drivers/usb/gadget/udc/tegra-xudc.c | 106 ++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 106 insertions(+)
+Makes sense to me so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-You're telling readers what you're doing, but after reading the commit
-message, I have no idea why this is being done. Can you provide more
-information on why exactly is this needed? Why do we have to limit the
-OTG port speed?
+> +  no-hpd:
+> +    type: boolean
+> +    description: Set if the HPD line on the bridge isn't hooked up to anything.
 
-Thierry
+I would perhaps tag on:
+... or is otherwise unusable?
 
---NJSRbAqOy4NeGDns
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6oIKgACgkQ3SOs138+
-s6H1XRAAgIkN+EUOOO1bRRCqdItpBhUzAnXz56qxx16NpYjpIjJPHwPtCDwb2XhK
-NK6gSk93H07QtoJtWLRt74q5c/exqcYbFDpP1Zx1tnPaK9IlTi0x450TBO6cW5QC
-NDeOAyRwckbJT16Iab59ZOM6uSIW2VnB2eHHmEiq46mKPm/TQb2aE3lJMjkNskE7
-ZzW7SCNwfkJu7r8WcDq/+4jYjg+/0viQ/jd8gyZCJ+WqQu+G6qlPws2D7sVlta6Z
-PjC4lWFddArpC6W1Xvhq+I0cDJ4ActilTeIeOnSPF60T52S1Uso4cJRBn0AwGcaG
-Eoab3z2D9s1HkbvCwbteWpMnXWuscXasxKonQ71Z4ifwcQFxoXRtNLBFKrX+Zdxy
-azEmdmu/6WF5AY28LvmM36UzWvQgPcXimOE2Bb+fOUOb7jW4qtqTNbBPtSJg8zqP
-NlzMxQ5JDfxhdG7W/A9MzV31cuDjLSWCI59BGSEOcoKjN3ehapybAHxfacvpqarz
-VoEvo/KG2AykqH8Xx5DJU7eLyOHZKSTF86mHKCucU2G+7NcdMi+j8kQwhzY41rDH
-2G4Jh8ycg/HpjIdQLXebWLZh+afh2M0LxX9ShM6MJ4KrTph0hbnzf72mCHhmRzFk
-C5g1JrwbmRR+tdwsfbSUHOnK7S4J+kG65VCCuyKexREetPWzeY0=
-=KTH2
------END PGP SIGNATURE-----
-
---NJSRbAqOy4NeGDns--
+Yours,
+Linus Walleij
