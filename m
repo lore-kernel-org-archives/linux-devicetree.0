@@ -2,116 +2,120 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBC9C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEB8C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47A1E2186A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1EC206E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 15:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588087548;
+	bh=th3tqv11ZgZgj8E96bFG6ckng9nKhzjnFA3FZBoCqDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xg6tHPHEmubNlRhzJzw/WFpYYj+vsBk5B9RSeb/kGiPPGqmo7l7neJlDoAE09kKqI
+	 1BRWAUAJ6wxNoNN0c4cqFrWbJraDuEX8acJCyKCpKkmi9sDLelE3gFQXCgcOEjqd38
+	 8CzMt+i6K1nB69crZAhOnnG+jeP70w84FqHcbQOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgD1PVh (ORCPT
+        id S1728318AbgD1PZr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 11:21:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:54022 "EHLO foss.arm.com"
+        Tue, 28 Apr 2020 11:25:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728788AbgD1PVd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:21:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B23530E;
-        Tue, 28 Apr 2020 08:21:32 -0700 (PDT)
-Received: from [10.57.33.170] (unknown [10.57.33.170])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E72243F305;
-        Tue, 28 Apr 2020 08:21:30 -0700 (PDT)
-Subject: Re: [PATCH v2] arm64: dts: allwinner: h6: Use dummy regulator for
- Tanix TX6
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200428142629.8950-1-peron.clem@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
-Date:   Tue, 28 Apr 2020 16:21:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728487AbgD1PZr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:25:47 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4838206D8;
+        Tue, 28 Apr 2020 15:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588087546;
+        bh=th3tqv11ZgZgj8E96bFG6ckng9nKhzjnFA3FZBoCqDM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UlWrbndNBYw9f/3rJZ9vWhuiMI9bols+NUpDrkpb6nMDPcIB+exm9thHsajcNMv2s
+         zF8ons1G+Tu9b/RtEzHyR4oERYHCJhNFS7iYENen9Yfm5zJskPzV8YzecKgzoPwIBB
+         YihdZq8p8AkIueprECGqpetiJGVIrRNXwJ4Om4/8=
+Date:   Tue, 28 Apr 2020 16:25:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of
+ the child device
+Message-ID: <20200428152543.GI5677@sirena.org.uk>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-3-michael@walle.cc>
+ <20200428124548.GS185537@smile.fi.intel.com>
+ <3cd3705a-4f48-6a46-e869-3ee11dc17323@arm.com>
+ <20200428142938.GX185537@smile.fi.intel.com>
+ <6ccad285-7b5f-3037-d4d5-ff4d9571b612@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428142629.8950-1-peron.clem@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LYw3s/afESlflPpp"
+Content-Disposition: inline
+In-Reply-To: <6ccad285-7b5f-3037-d4d5-ff4d9571b612@arm.com>
+X-Cookie: Eschew obfuscation.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-04-28 3:26 pm, Clément Péron wrote:
-> Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-> voltage to meet OPP table, the DVFS is not working as expected.
 
-Hmm, isn't that really a bug in the DVFS code? I guess it's just blindly 
-propagating -EINVAL from the fixed regulators not implementing 
-set_voltage, but AFAICS it has no real excuse not to be cleverer and 
-still allow switching frequency as long as the voltage *is* high enough 
-for the given OPP. I wonder how well it works if the regulator is 
-programmable but shared with other consumers... that case probably can't 
-be hacked around in DT.
+--LYw3s/afESlflPpp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Robin.
+On Tue, Apr 28, 2020 at 03:49:49PM +0100, Robin Murphy wrote:
 
-> Avoid to introduce a new dedicated OPP Table where voltage are
-> equals to the fixed regulator as it will only duplicate all the OPPs.
-> Instead remove the fixed regulator so the DVFS framework will create
-> dummy regulator and will have the same behavior.
-> 
-> Add some comments to explain this in the device-tree.
-> 
-> Reported-by: Piotr Oniszczuk <warpme@o2.pl>
-> Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6")
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->   .../boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 18 ++++++++++++++++--
->   1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> index be81330db14f..3e96fcb317ea 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> @@ -48,7 +48,15 @@
->   };
->   
->   &cpu0 {
-> -	cpu-supply = <&reg_vdd_cpu_gpu>;
-> +	/*
-> +	 * Don't specify the CPU regulator, as it's a fixed
-> +	 * regulator DVFS will not work as it is intructed
-> +	 * to reach a voltage which can't be reached.
-> +	 * Not specifying a regulator will create a dummy
-> +	 * regulator allowing all OPPs.
-> +	 *
-> +	 * cpu-supply = <&reg_vdd_cpu_gpu>;
-> +	 */
->   };
->   
->   &de {
-> @@ -68,7 +76,13 @@
->   };
->   
->   &gpu {
-> -	mali-supply = <&reg_vdd_cpu_gpu>;
-> +	/*
-> +	 * Don't specify the GPU regulator, see comment
-> +	 * above for the CPU supply.
-> +	 *
-> +	 * mali-supply = <&reg_vdd_cpu_gpu>;
-> +	 */
-> +
->   	status = "okay";
->   };
->   
-> 
+> For better or worse, the platform bus is the dumping ground for random crap,
+> so we just have to deal with all the abstraction breakage that leaks out of
+> that.
+
+The reason we're using the platform bus for this is that historically
+people were creating buses which were essentially carbon copies of the
+platform bus with the name changed and it was felt that rather than
+duplicate code it was better to just use platform devices with no MMIO
+ranges defined.  If there's some assumptions about DMA for platform
+devices floating about somewhere it might be reasonable to revisit this
+and create a non-DMA variant of platform devices since there is a
+meaningful difference.
+
+--LYw3s/afESlflPpp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6oSvYACgkQJNaLcl1U
+h9Bs4Qf/RCa5JW+qq8H0nchlRU4JeR7TBiAfPi1/fksL+W8k+qMkV0/KwPSMqloA
+CaWErSXTzc1Mk3WKIT7UxNlcK1QsuUfNZnyA3JhFXAg39xjWpt2vSM7A/zY5mnOm
+ZkujuFzw0NzNuBoxG+8OaBH1Ltitu/KpgCPJgrmwT09V5WuZ5uf8b3mjnEo0reaN
+DYcUgV/u3XkUeSbMd1iljqd8bt+jHFHoFlVOVtcw+xh20cKvQ6kOzIPYlDbuz9rM
+tGPZwlyojrQeFd8YYTh1hqSzqeB6E19JgdPEi9P34gi7rIctOcI6b9PwFO9er5fW
+ov2hgkFJC60dI+z5f9j70bLBQfMw/w==
+=hzNB
+-----END PGP SIGNATURE-----
+
+--LYw3s/afESlflPpp--
