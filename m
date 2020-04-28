@@ -2,133 +2,101 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFD3C83008
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB1EC83001
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F08C9206F0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:10:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vOy6cik5"
+	by mail.kernel.org (Postfix) with ESMTP id 69BF7206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:14:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbgD1OKX (ORCPT
+        id S1727991AbgD1OOv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:10:23 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:38506 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgD1OKW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 10:10:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1588083017; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2+w+KwDzaOwV/ww7pNfZrsFBOSdK2uRoIyYyszXC2jE=;
-        b=vOy6cik5Ke533LRPLshMJ+qzIX64H6Cij9kixdoYn7wlFWU7BcpUORTgGjl00q+cPNyTHh
-        BbFCg7mLoK1rJVPcplaMCp9tjrNaBELaA/yLJ5L01LwPb6aiWQha9Riei2/T2hz8Wp0kvk
-        mMmfgtX5WwOdDWnDWKeSk5Jfz8HZyCs=
-Date:   Tue, 28 Apr 2020 16:10:05 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 2/8] dt-bindings: intc: Convert ingenic,intc.txt to YAML
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
-        =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Message-Id: <TO4I9Q.UQRWC3A2ABT52@crapouillou.net>
-In-Reply-To: <f865b39a-3e8d-a367-45b2-aa5e7412e81a@cogentembedded.com>
-References: <20200426185856.38826-1-paul@crapouillou.net>
-        <20200426185856.38826-2-paul@crapouillou.net>
-        <f865b39a-3e8d-a367-45b2-aa5e7412e81a@cogentembedded.com>
+        Tue, 28 Apr 2020 10:14:51 -0400
+Received: from mga18.intel.com ([134.134.136.126]:59849 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727988AbgD1OOu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:14:50 -0400
+IronPort-SDR: LLcMwZjGyzTvoMbcz8Yfbr/pGk8dbxhv8ppinSi76U29XoFTg5e1KAM7L0YR0Rdxa5+gj+YSlB
+ lhtU9MvoMrng==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 07:14:50 -0700
+IronPort-SDR: p91jQfLvoy5gFXMynjK2xfww/QM1aHbNBf/AbnH1flOme0Ro77zKsxpiEx5vPV17XlPHmN9jzH
+ c2rrz2y3Xkqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="459245444"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Apr 2020 07:14:46 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jTR0b-003ZOj-Uc; Tue, 28 Apr 2020 17:14:49 +0300
+Date:   Tue, 28 Apr 2020 17:14:49 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] spi: dw: Add support for Intel Keem Bay SPI
+Message-ID: <20200428141449.GV185537@smile.fi.intel.com>
+References: <20200422141142.25591-1-wan.ahmad.zainie.wan.mohamad@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422141142.25591-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sergei,
+On Wed, Apr 22, 2020 at 10:11:35PM +0800, Wan Ahmad Zainie wrote:
+> This patchset adds support for DesignWare DWC_ssi. This soft IP
+> is an AMBA version 2.0-compliant AHB slave device. Existing driver
+> already supports the older APB version.
+> 
+> Intel Keem Bay SPI controller is using this IP. This patchset is
+> tested on Keem Bay evaluation module board.
 
-Le lun. 27 avril 2020 =E0 12:11, Sergei Shtylyov=20
-<sergei.shtylyov@cogentembedded.com> a =E9crit :
-> Hello!
->=20
-> On 26.04.2020 21:58, Paul Cercueil wrote:
->=20
->> Convert the ingenic,intc.txt doc file to ingenic,intc.yaml.
->>=20
->> Some compatible strings now require a fallback, as the controller
->> generally works the same across the SoCs families.
->>=20
->> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> [...]
->> diff --git=20
->> a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.ya=
-ml=20
->> b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.ya=
-ml
->> new file mode 100644
->> index 000000000000..28b27e1a6e9d
->> --- /dev/null
->> +++=20
->> b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.ya=
-ml
->> @@ -0,0 +1,63 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id:=20
->> http://devicetree.org/schemas/interrupt-controller/ingenic,intc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Ingenic SoCs interrupt controller devicetree bindings
->> +
->> +maintainers:
->> +  - Paul Cercueil <paul@crapouillou.net>
->> +
->> +properties:
->> +  $nodename:
->> +    pattern: "^interrupt-controller@[0-9a-f]+$"
->> +
->> +  compatible:
->> +    oneOf:
->> +      - enum:
->> +        - ingenic,jz4740-intc
->> +        - ingenic,jz4760-intc
->> +        - ingenic,jz4780-intc
->> +      - items:
->> +        - enum:
->> +          - ingenic,jz4775-intc
->> +          - ingenic,jz4770-intc
->> +        - const: ingenic,jz4760-intc
->> +      - items:
->> +        - const: ingenic,x1000-intc
->> +        - const: ingenic,jz4780-intc
->> +      - items:
->> +        - const: ingenic,jz4725b-intc
->> +        - const: ingenic,jz4740-intc
->> +
->> +  "#interrupt-cells":
->> +    const: 1
->=20
->    Do double quotes work the same as the single ones?
+Rob, can we get your Ack if everything is okay, please?
 
-Yes. The only difference is that you can escape characters in double=20
-quotes.
+I have more patches coming to this driver and I would not like to delay this
+series to be applied.
 
--Paul
+> 
+> Changes since v1:
+> - Rework the third patch based on Rob's feedback.
+> 
+> 
+> Wan Ahmad Zainie (7):
+>   spi: dw: Fix typo in few registers name
+>   spi: dw: Add update_cr0() callback to update CTRLR0
+>   dt-bindings: spi: dw-apb-ssi: Convert bindings to json-schema
+>   dt-bindings: spi: dw-apb-ssi: Add compatible string for DesignWare
+>     DWC_ssi
+>   spi: dw: Add support for DesignWare DWC_ssi
+>   dt-bindings: spi: dw-apb-ssi: Add Intel Keem Bay support
+>   spi: dw: Add support for Intel Keem Bay SPI
+> 
+>  .../bindings/spi/snps,dw-apb-ssi.txt          |  41 ------
+>  .../bindings/spi/snps,dw-apb-ssi.yaml         |  72 ++++++++++
+>  drivers/spi/spi-dw-mid.c                      |   4 +
+>  drivers/spi/spi-dw-mmio.c                     |  57 +++++++-
+>  drivers/spi/spi-dw.c                          | 125 +++++++++++++-----
+>  drivers/spi/spi-dw.h                          |  25 +++-
+>  6 files changed, 243 insertions(+), 81 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> 
+> -- 
+> 2.17.1
+> 
 
->=20
-> [...]
->=20
-> MBR, Sergei
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
