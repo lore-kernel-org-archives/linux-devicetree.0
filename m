@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C99C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F4FC83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2B7206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8441206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bsFvHtQg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0C8oWWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgD1IyN (ORCPT
+        id S1726462AbgD1I4A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:54:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38008 "EHLO
+        Tue, 28 Apr 2020 04:56:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726346AbgD1IyM (ORCPT
+        by vger.kernel.org with ESMTP id S1726271AbgD1Iz7 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:54:12 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA301C03C1A9;
-        Tue, 28 Apr 2020 01:54:12 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id b18so19512326ilf.2;
-        Tue, 28 Apr 2020 01:54:12 -0700 (PDT)
+        Tue, 28 Apr 2020 04:55:59 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC2FEC03C1A9;
+        Tue, 28 Apr 2020 01:55:59 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id c18so4252610ile.5;
+        Tue, 28 Apr 2020 01:55:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=dDgulWnHGZo56l/rwtjNPISMYmw8h8PKUdGgHUf/qbQ=;
-        b=bsFvHtQgLA9U5xzZknhx5MWq1lav+iBhrlYLLy/RFrIxJCCZYXtPdiI9CYGPsOpUb4
-         PbUMU8veALBn6Ielw6gMIuf1TIhd+jknAnEWCaC+XToSiri5IjsszZMqLqnfSZxLFzgI
-         FOg+4Rn9cs6ReBn8ouy2wMpXsv0fr7I6z6ppQCOidhy3SVghFEXyjZMh2gJyeNSCpXdi
-         g/9/6GDL4+DD6aLVJr82+aCYgGlY3ewCkCeOA3qhN8HGEPrQkDAsp+xEguvzAzqjBVzr
-         48nhVLmXLA6gqeccxuLl+oSLxT6fxlwaXxMCwsZodpX/bN/8W+tkxYVFuSU0WBBIu7hn
-         WeTw==
+        bh=TD/lnuFC44QRgJpTGVlf3YDYyxHlyiyz2n23ed9C6mM=;
+        b=X0C8oWWC7HBDefztnjqwVNF6CUzQX/XKsvz0/P0Gpxoi0RAKyYdc6pLqlm3Sv5rTOc
+         36wrzvNTFC0VZMEIMnFqljO0jppeodCMx+v4ENiTI6GsS3IAOG/gkYK3ur+tQu9hpI0H
+         Llm1dng014acptPeaRWLEthJwG5SKroInUG102Tsw37ySBPxiywhJGk6ajpZEz6IvS+l
+         qaTqCJu93AB0A2gA2juzpeIyyFVvQ1RyVc9+2IaBbzDpF2G4ZO4oUWfGYp4V+wPkcO7V
+         B/JD9Gds7XvfEJZ/qqi9XGjaYOhC8gtnZffMIwTGX2G01fGDH5pEjf/OXAs0tUjTo2eT
+         yKsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dDgulWnHGZo56l/rwtjNPISMYmw8h8PKUdGgHUf/qbQ=;
-        b=ZNJeTdY6xpQDihxHXf7SHlhZaaV7stw4OLB79rM0Xf8c7xJC+LIVVw5+v14WbeOtFQ
-         RAQoyNa/kDFojwcRHEPCzaLUvfzZn4hO3giUtXz4qurJKYNqVJOXG3oKtXvnBVPVIhCx
-         lJRdr28CYPafThHSxXIC1ZH1EDc2oeUJdwczAZOEwFS3fnI8pdNl10mrk0isWC/HtCy3
-         DrO3tDzAezjEZaKw31wy39KFxbKqrQHOkhCYw45QoY3wtz8yqE2M2HV1juuTONSoC5VK
-         cWgl3cvSkQwUc00Kebrhtxli+byW2JK64bZt7C6/DgvYPPd7DPQCK6Vy0oUjZJwvFV4l
-         H9Ag==
-X-Gm-Message-State: AGi0PuY9bc+HuvV1EFeraA7ZObUQBFPQmxPI48nbijENbQILU/hoMWJ+
-        1zZ701oUSe8dbMxdqSpbvD2NOMU1t/7Rt4/zi78=
-X-Google-Smtp-Source: APiQypLjn+quin05VpI7eccg9aPBvq4rkesUHFhJvzeuZEXRWkfxI9E/S60HRrWJ9MxsyWnLP/SFJNPDcKrdHUSAbTY=
-X-Received: by 2002:a92:d151:: with SMTP id t17mr3585764ilg.35.1588064051274;
- Tue, 28 Apr 2020 01:54:11 -0700 (PDT)
+        bh=TD/lnuFC44QRgJpTGVlf3YDYyxHlyiyz2n23ed9C6mM=;
+        b=rkYyyh/cLfgM5CMAiSV9r17CycebkQPuVP2qLlgIOoE6+185zlDUNsTC0Y85BDPCN+
+         RsGHHhOHXI1tlsI1u0WbpQGOLjCmEM+/Jz86psTDjAXSZmyuG5mg1O9Lb84rUEcLh1Dm
+         XvjInlKMQY/m9qLzFRyATiXECDvOTAElm8yyIZyzPISG1ybPXdtg2GY1iZvv5YG6Uayg
+         7TA4Hx9HzNSLfvV4J8BRI0ZHa+QhZo/Iwak9mEF1+omQLruIbW0dXsx7w+Zhjo037XhC
+         CO1zKciWX4HR853GpmW3ZsblvcpEnVTVzedy62o6gyT7VMs5+WJoay6Zq5agjEchSVDY
+         ld3w==
+X-Gm-Message-State: AGi0PubeaacaBqXHQ3u4ZT+y5gqSvquePoJBEeQyi9QwMygtPheMOsg2
+        ilrNt5P2DWsaiyMPnE3VP5Ph087fy5/b7bWrD2Q=
+X-Google-Smtp-Source: APiQypI1+9N3ua5Z1bos34+qF798abCjulu/oQUQazj2tzQmHK/vdQIdGibMX1aIFSQg6JHmO/7h5kDmFG/UmZPLrC0=
+X-Received: by 2002:a05:6e02:111:: with SMTP id t17mr23768711ilm.59.1588064158991;
+ Tue, 28 Apr 2020 01:55:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200426120442.11560-1-peron.clem@gmail.com> <20200426120442.11560-5-peron.clem@gmail.com>
- <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
-In-Reply-To: <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
+References: <20200426104115.22630-1-peron.clem@gmail.com> <20200426104115.22630-4-peron.clem@gmail.com>
+ <20200428081321.ht3el26yqhsnyfm4@gilmour.lan>
+In-Reply-To: <20200428081321.ht3el26yqhsnyfm4@gilmour.lan>
 From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 28 Apr 2020 10:54:00 +0200
-Message-ID: <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
-Subject: Re: [PATCH 4/7] arm64: dts: allwinner: a64: Add HDMI audio
+Date:   Tue, 28 Apr 2020 10:55:47 +0200
+Message-ID: <CAJiuCcdVs_drs40Q6537BYfz24F7NmC6B8S5-Lt4V4ggs-FXWA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] ASoC: sun4i-i2s: Add support for H6 I2S
 To:     Maxime Ripard <maxime@cerno.tech>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -74,9 +74,8 @@ Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         devicetree <devicetree@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Marcus Cooper <codekipper@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
@@ -86,61 +85,149 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Maxime,
 
-On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wrote:
+On Tue, 28 Apr 2020 at 10:13, Maxime Ripard <maxime@cerno.tech> wrote:
 >
-> On Sun, Apr 26, 2020 at 02:04:39PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Marcus Cooper <codekipper@gmail.com>
+> Hi,
+>
+> On Sun, Apr 26, 2020 at 12:41:11PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
 > >
-> > Add a simple-soundcard to link audio between HDMI and I2S.
+> > H6 I2S is very similar to that in H3, except it supports up to 16
+> > channels.
 > >
 > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
 > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
 > > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
+> >  sound/soc/sunxi/sun4i-i2s.c | 227 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 227 insertions(+)
 > >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64=
-/boot/dts/allwinner/sun50i-a64.dtsi
-> > index e56e1e3d4b73..08ab6b5e72a5 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > @@ -102,6 +102,25 @@
-> >               status =3D "disabled";
-> >       };
+> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> > index 4198a5410bf9..a23c9f2a3f8c 100644
+> > --- a/sound/soc/sunxi/sun4i-i2s.c
+> > +++ b/sound/soc/sunxi/sun4i-i2s.c
+> > @@ -124,6 +124,21 @@
+> >  #define SUN8I_I2S_RX_CHAN_SEL_REG    0x54
+> >  #define SUN8I_I2S_RX_CHAN_MAP_REG    0x58
 > >
-> > +     hdmi_sound: hdmi-sound {
-> > +             compatible =3D "simple-audio-card";
-> > +             simple-audio-card,format =3D "i2s";
-> > +             simple-audio-card,name =3D "allwinner,hdmi";
+> > +/* Defines required for sun50i-h6 support */
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK        GENMASK(21, 20)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset)     ((offset) << 20)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_MASK               GENMASK(19, 16)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL(chan)              ((chan - 1) << 16=
+)
+> > +#define SUN50I_H6_I2S_TX_CHAN_EN_MASK                GENMASK(15, 0)
+> > +#define SUN50I_H6_I2S_TX_CHAN_EN(num_chan)   (((1 << num_chan) - 1))
+> > +
+> > +#define SUN50I_H6_I2S_TX_CHAN_MAP0_REG       0x44
+> > +#define SUN50I_H6_I2S_TX_CHAN_MAP1_REG       0x48
+> > +
+> > +#define SUN50I_H6_I2S_RX_CHAN_SEL_REG        0x64
+> > +#define SUN50I_H6_I2S_RX_CHAN_MAP0_REG       0x68
+> > +#define SUN50I_H6_I2S_RX_CHAN_MAP1_REG       0x6C
+> > +
+> >  struct sun4i_i2s;
+> >
+> >  /**
+> > @@ -469,6 +484,65 @@ static int sun8i_i2s_set_chan_cfg(const struct sun=
+4i_i2s *i2s,
+> >       return 0;
+> >  }
+> >
+> > +static int sun50i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
+> > +                                const struct snd_pcm_hw_params *params=
+)
+> > +{
+> > +     unsigned int channels =3D params_channels(params);
+> > +     unsigned int slots =3D channels;
+> > +     unsigned int lrck_period;
+> > +
+> > +     if (i2s->slots)
+> > +             slots =3D i2s->slots;
+> > +
+> > +     /* Map the channels for playback and capture */
+> > +     regmap_write(i2s->regmap, SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 0x76543=
+210);
+> > +     regmap_write(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 0x76543=
+210);
+> > +
+> > +     /* Configure the channels */
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL(channels));
+> > +     regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL(channels));
+> > +
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
+> > +                        SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM_MASK,
+> > +                        SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM(channels));
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
+> > +                        SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM_MASK,
+> > +                        SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM(channels));
+> > +
+> > +     switch (i2s->format & SND_SOC_DAIFMT_FORMAT_MASK) {
+> > +     case SND_SOC_DAIFMT_DSP_A:
+> > +     case SND_SOC_DAIFMT_DSP_B:
+> > +     case SND_SOC_DAIFMT_LEFT_J:
+> > +     case SND_SOC_DAIFMT_RIGHT_J:
+> > +             lrck_period =3D params_physical_width(params) * slots;
+> > +             break;
+> > +
+> > +     case SND_SOC_DAIFMT_I2S:
+> > +             lrck_period =3D params_physical_width(params);
+> > +             break;
+> > +
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if (i2s->slot_width)
+> > +             lrck_period =3D i2s->slot_width;
+> > +
+> > +     regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
+> > +                        SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
+> > +                        SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
+> > +
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+> > +                        SUN50I_H6_I2S_TX_CHAN_EN_MASK,
+> > +                        SUN50I_H6_I2S_TX_CHAN_EN(channels));
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+> >                              struct snd_pcm_hw_params *params,
+> >                              struct snd_soc_dai *dai)
+> > @@ -694,6 +768,108 @@ static int sun8i_i2s_set_soc_fmt(const struct sun=
+4i_i2s *i2s,
+> >       return 0;
+> >  }
+> >
+> > +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+> > +                              unsigned int fmt)
 >
-> I'm not sure what the usual card name should be like though. I would assu=
-me that
-> this should be something specific enough so that you're able to different=
-iate
-> between boards / SoC so that the userspace can choose a different configu=
-ration
-> based on it?
+> The alignment is off here
+>
+> > +{
+> > +     u32 mode, val;
+> > +     u8 offset;
+> > +
+> > +     /*
+> > +      * DAI clock polarity
+> > +      *
+> > +      * The setup for LRCK contradicts the datasheet, but under a
+> > +      * scope it's clear that the LRCK polarity is reversed
+> > +      * compared to the expected polarity on the bus.
+> > +      */
+>
+> Did you check this or has it been copy-pasted?
 
-I really don't know what we should use here,
-I just have a look at other SoC:
-rk3328: "HDMI"
-rk3399: "hdmi-sound"
-r8a774c0-cat874: "CAT874 HDMI sound"
+copy-pasted, I will check this.
 
-But maybe it's time to introduce proper name:
-What about :
-sun50i-a64-hdmi
-sun50i-h6-hdmi
-How should we handle this with h3 / h5 ?
-settings the simple-audio-card,name in each SoC dts?
-Or using sun50i-h3-hdmi as they are both identical?
-
-Regards,
+Thanks,
 Clement
 
-
 >
-> If so, it's really too generic.
->
+> Thanks!
 > Maxime
