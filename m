@@ -2,164 +2,126 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A992C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B4DC83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12E392053B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E198D2053B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 07:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="GN//1xQT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MRBAYWKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgD1Huc (ORCPT
+        id S1726291AbgD1HwC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 03:50:32 -0400
-Received: from mga07.intel.com ([134.134.136.100]:36197 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgD1Huc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 03:50:32 -0400
-IronPort-SDR: 9XVIGbg3QXDVa4PczJ5s3RBRPDgtgE/lP2MapDeKAfRRYwAOAwdsx6tIXzWhjaJ3OetdNyqu7W
- NFVCsrNFJFDg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 00:50:15 -0700
-IronPort-SDR: Awb1bZFMitFdF85kM6dXZn8cxfRuQgpSwj/DQ+BOpdnC/L1goQEp2Qap4LoAD1NZkgDzGVUWrH
- 3V9iLhcCGMGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="367419227"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Apr 2020 00:50:14 -0700
-Received: from [10.214.149.60] (vramuthx-MOBL1.gar.corp.intel.com [10.214.149.60])
-        by linux.intel.com (Postfix) with ESMTP id 7E9755807CA;
-        Tue, 28 Apr 2020 00:50:07 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com, vigneshr@ti.com,
-        arnd@arndb.de, richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200424183612.4cfdbb6a@collabora.com> <20200427175127.0518c193@xps13>
- <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
- <20200428082759.25065146@collabora.com>
- <38334812-21b9-5b2c-db84-01c9eacc84d0@linux.intel.com>
- <20200428084704.5e04232a@collabora.com>
- <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
- <20200428094049.3c0d4730@xps13>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <3ebc42d9-f8a8-0764-ff7f-82beeb0b5bb7@linux.intel.com>
-Date:   Tue, 28 Apr 2020 15:50:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 03:52:02 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:48727 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726253AbgD1HwB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 03:52:01 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7FAB65C0242;
+        Tue, 28 Apr 2020 03:52:00 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 28 Apr 2020 03:52:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=V3F6bgU0rAXVY56HsN7kHIpWzuM
+        aEzjdPUeTPKOkaG0=; b=GN//1xQTf4yXhNpbQP8Zc9xxWk2xJ56RdOw6PKZoz9o
+        +E8qbi3XzM/0l5NjjHGni9L2JYmrL71d5+SWiI/VvGkYqFQAEFCqMzAEgYMvWGCJ
+        NhoM6XnhWHQ5evKR2/xaZHPoeJF4qwHYmNNwblSeeIyJInBEX/HXnUJvV5+GDNFT
+        KjMxIqx1mDMJhHPCAclkzhoCbTfHyP7f/lj088nx0ZizFngGObQk0I54AJLv/v/k
+        YRiEGE3DjWi2iUk3hYwrOVSORWaEDtUu7BlI0OrWr3I4wDblqrQg7oEO+GPO4rAd
+        bJcog3vcMQj5jPcfRMszK10HMsDg5mEx08DRLJ0RM/g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=V3F6bg
+        U0rAXVY56HsN7kHIpWzuMaEzjdPUeTPKOkaG0=; b=MRBAYWKAjvaFWz3YsE0ku/
+        DkNYdH2W8vHcXBjxUqP6lV+gftTI7UB/s+QWKzSlGq3RKYPCPk+skGoMf+jxjugq
+        BfFKkE4o612wolzPCWp2o65mvUlrYZZ6sx6ZVXK+T4Q+CdUt1Ul0ywawrfwhhm+d
+        EvyYYEsPoLnOrnoRVEMS4zplri9bo/QguB0tcCA/U8m6SP6cZK/wBZ0HWJ6Gs9cW
+        4qpN3RyasCDP/zGEPFDic/5S4iza6HI5hSReB2L1+/E6HNVHnYwSNnDwcNRnLdc4
+        HB+t0kZUiYQxwTuQpL/2GcxSC+1fDzYShOm9ATWLZL9X3wosb/9cjRQWarRc+EKA
+        ==
+X-ME-Sender: <xms:n-CnXihsqEnrGJ6OHdfqI_LaCGXt45oS_PVy6mlP6a6yrTJhkF7hAA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedtgdduvdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:n-CnXn7wEhWJJmoj2mTVuVT6nrrfmoj7LMLFO5iVC1NnxQ9k9YiiRw>
+    <xmx:n-CnXnqqdU2Zd_WRJhmy0R8kMIBsbva2BWQZE_w2_QFHiXUR4LhUHg>
+    <xmx:n-CnXtUBXrMLAiP5tEIrcxRbmhyynOGVX28lmk21_fGKmDn9idb2AA>
+    <xmx:oOCnXoRNxVwYOm0wyWwXdWGslFkNT-bOA2RcB8C18LI9WcdK8zyvRw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 025DA3280068;
+        Tue, 28 Apr 2020 03:51:58 -0400 (EDT)
+Date:   Tue, 28 Apr 2020 09:51:56 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Piotr Oniszczuk <warpme@o2.pl>
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: Use dedicated CPU OPP table
+ for Tanix TX6
+Message-ID: <20200428075156.65okklrupingiza6@gilmour.lan>
+References: <20200426121709.1216-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428094049.3c0d4730@xps13>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hy3utu7gd5xuclrb"
+Content-Disposition: inline
+In-Reply-To: <20200426121709.1216-1-peron.clem@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Miquel,
 
-On 28/4/2020 3:40 pm, Miquel Raynal wrote:
-> Hi Vadivel MuruganX,
-> 
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote on Tue, 28 Apr 2020
-> 14:50:35 +0800:
-> 
->> Hi Boris,
->>
->> On 28/4/2020 2:47 pm, Boris Brezillon wrote:
->>> On Tue, 28 Apr 2020 14:40:58 +0800
->>> "Ramuthevar, Vadivel MuruganX"
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>    
->>>> Hi Boris,
->>>>
->>>> On 28/4/2020 2:27 pm, Boris Brezillon wrote:
->>>>> On Tue, 28 Apr 2020 14:17:30 +0800
->>>>> "Ramuthevar, Vadivel MuruganX"
->>>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>>>     >>>> Hi Miquel,
->>>>>>
->>>>>>        Thank you very much for the review comments and your time...
->>>>>>
->>>>>> On 27/4/2020 11:51 pm, Miquel Raynal wrote:
->>>>>>> Hi Ramuthevar,
->>>>>>>        >>>>>>> +static int ebu_nand_probe(struct platform_device *pdev)
->>>>>>>>> +{
->>>>>>>>> +	struct device *dev = &pdev->dev;
->>>>>>>>> +	struct ebu_nand_controller *ebu_host;
->>>>>>>>> +	struct nand_chip *nand;
->>>>>>>>> +	phys_addr_t nandaddr_pa;
->>>>>>>>> +	struct mtd_info *mtd;
->>>>>>>>> +	struct resource *res;
->>>>>>>>> +	int ret;
->>>>>>>>> +	u32 cs;
->>>>>>>>> +
->>>>>>>>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
->>>>>>>>> +	if (!ebu_host)
->>>>>>>>> +		return -ENOMEM;
->>>>>>>>> +
->>>>>>>>> +	ebu_host->dev = dev;
->>>>>>>>> +	nand_controller_init(&ebu_host->controller);
->>>>>>>>> +
->>>>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
->>>>>>>>> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
->>>>>>>>> +	if (IS_ERR(ebu_host->ebu_addr))
->>>>>>>>> +		return PTR_ERR(ebu_host->ebu_addr);
->>>>>>>>> +
->>>>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
->>>>>>>>> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
->>>>>>>>> +	if (IS_ERR(ebu_host->nand_addr))
->>>>>>>>> +		return PTR_ERR(ebu_host->nand_addr);
->>>>>>>>> +
->>>>>>>>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
->>>>>>>>
->>>>>>>> CS ids should be encoded in the reg property (see [1]).
->>>>>>>
->>>>>>> Is it your choice to only support a single CS or is it actually a
->>>>>>> controller limitation?
->>>>>>
->>>>>> Yes , its controller limitation to support only one CS
->>>>>
->>>>> I'm pretty sure that's not true, otherwise you wouldn't have to select
->>>>> the CS you want to use :P.
->>>>
->>>> At a time it supports only one chip select.
->>>
->>> Yes, like 99% of the NAND controllers, but that doesn't mean you can't
->>> support multi-CS chips. All you have to do is attach an array of
->>> ebu_nand_cs to your ebu_nand_chip (as done in the atmel driver I
->>> pointed to). nand_operation.cs tells you which CS (index in your
->>> ebu_nand_cs array) a specific operation is targeting, and you can pick
->>> the right MMIO range/reg value based on that.
->>
->> Agreed, sure I will add that and update next series of patches .
-> 
-> There are also many other places where you assume blindly that there
-> is only one CS. You can check the Atmel NAND controller driver as Boris
-> said and we will probably propose more little changes to be more
-> generic.
-since LGM EBU_NAND controller supports only one chip select at a time, 
-so assumed like that, will change as generic way if consider like more 
-chip select supports, Thanks!
+--hy3utu7gd5xuclrb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sure , I will do the changes as per your review comments.
-> 
-> Thanks,
-> Miquèl
-> 
+On Sun, Apr 26, 2020 at 02:17:09PM +0200, Cl=E9ment P=E9ron wrote:
+> Tanix TX6 has a fixed regulator. As DVFS is instructed to change
+> voltage to meet OPP table. The DVFS is not working as expected.
+>=20
+> Introduce a dedicated OPP Table where voltage are equals to
+> the fixed regulator.
+>=20
+> Reported-by: Piotr Oniszczuk <warpme@o2.pl>
+> Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables fo=
+r Tanix TX6")
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+
+I'm not really a big fan of duplicating the OPPs, since that would make an
+update of those very likely to be overlooked for that particular board (and
+since it's a board that not a lot of people have, it would be harder to not=
+ice
+too).
+
+IIRC, removing the cpu-supply property should work as well?
+
+Maxime
+
+--hy3utu7gd5xuclrb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqfgnAAKCRDj7w1vZxhR
+xcKQAQCy9iRfHhgQB0zjFFyIcVr+pNkJu/NoOpUwGHC8OFi59QD/b/ffdd2k2+Gp
+1HaeNUO40UjzCAvU3mSLTulZyrAF0Q8=
+=TWTU
+-----END PGP SIGNATURE-----
+
+--hy3utu7gd5xuclrb--
