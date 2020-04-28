@@ -2,118 +2,112 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71036C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 13:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B628C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 13:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD2E206A1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 13:14:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="u3V7ADK5"
+	by mail.kernel.org (Postfix) with ESMTP id 391E6206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 13:24:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588080253;
+	bh=MAzmc0W8BMbkDnvxtQl2oe0CfTiYNxikPTypwNDL8S4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=glqONd6RJ8hLIx3PHOQl5r+Cc7WoeOE0E/wtF55Tn6Rvr5z5Ob7JujSqCpoetMS7x
+	 PQN0PVnVaqIkJs2CzzPWmMtrekaFmk5ri/BTp4DpKAhMUfB7UWQVUIVrfsUIX5dp0P
+	 pcKKI3wLO9bCTl/GWsGS6X1Hai09ABSbj1zyjyKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgD1NOJ (ORCPT
+        id S1726798AbgD1NYM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 09:14:09 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:25272 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726764AbgD1NOJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:14:09 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SDChAB020530;
-        Tue, 28 Apr 2020 15:13:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=lacSSkWzlQgfEqOpGzNZ5KMynxTMC2Ry6JNMtvAjEgo=;
- b=u3V7ADK5t6k/7/qA6ArL15iaaSyWdIzGLKSd7sRrxzaK/T+LY5qlT5NV0+/gLJUOGcJ+
- 7wzM/WyZ7ffuuxXCDl54FjdOsCmqULKzBRmIdvdnWIb9AJEwjcS4zOi1Q2c/fNHTR1Vk
- eLojP+Ascrbi66Yb6ZYVlQaiGOg/XVAhBxWqlq6ABmTnSzUp1dok0i1CHNXNEfXg1BCv
- oRQq9HtRcKuntWPAlO2LYdxDmqtwUIKx40yqkU0pFbPJVBxfD7Ob3iIsqjztRoxDAVPC
- 9ig1xxcqZQeSYGjCnHVOTRKzvM/Tck4hvwUR8AHvMTLJmGiNmXWPuGzHsqFNRrdStTJn 3w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30n4j5v5r4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 15:13:46 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EFECD10002A;
-        Tue, 28 Apr 2020 15:13:45 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF0862B8A0A;
-        Tue, 28 Apr 2020 15:13:45 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Apr
- 2020 15:13:45 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Tue, 28 Apr 2020 15:13:45 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "Greg KH" <gregkh@linuxfoundation.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: bus: Add firewall bindings
-Thread-Topic: [PATCH 1/5] dt-bindings: bus: Add firewall bindings
-Thread-Index: AQHWFxpQ9gVgCvdMT0SVViT5CkNk0KiOT0yAgAAeqAA=
-Date:   Tue, 28 Apr 2020 13:13:45 +0000
-Message-ID: <13b16e13-690b-ad3f-a800-28c7805cbb96@st.com>
-References: <20200420134800.31604-1-benjamin.gaignard@st.com>
- <20200420134800.31604-2-benjamin.gaignard@st.com>
- <CACRpkdatGwWyruTLC=+BUtnunvqyxnXAYDhcHqy26oeud8Bs1w@mail.gmail.com>
-In-Reply-To: <CACRpkdatGwWyruTLC=+BUtnunvqyxnXAYDhcHqy26oeud8Bs1w@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.48]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4C34B4DE90D8EF4C901A2C48542A843B@st.com>
-Content-Transfer-Encoding: base64
+        Tue, 28 Apr 2020 09:24:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726827AbgD1NYM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:24:12 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C092E206D7
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 13:24:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588080251;
+        bh=MAzmc0W8BMbkDnvxtQl2oe0CfTiYNxikPTypwNDL8S4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KPYNeiwH38T00VKHYENK6pdon5p1XDRXwCIPSn6o/i/engVbnfgnkPd07oVD7rMuB
+         USWVFRlTN05TB8sS4gaDbHj6pksEh+lCVB6ldfbknrClcTESSmA7lrbjdG3EmNabES
+         RJKJjPjRAFty3fLFmJnh4ZoQZvRQiET2E2u0vlX0=
+Received: by mail-ot1-f45.google.com with SMTP id e26so32574947otr.2
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 06:24:11 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaBzs7tyXxElhE3naMWW9XY71B3miOTOdEzrkjBr6qFsGwsCh9J
+        p2ctrVDJkSEbQ8f480RRwt+E7N7n+GLPsHyIDw==
+X-Google-Smtp-Source: APiQypLPN1zIwiUl/lZdTAxejLTb/tMJFdWABheE8C8SguCoESJx3qPNaYkZoZMETESKMayNGYlN5utgW7kwPD7gTqI=
+X-Received: by 2002:aca:1904:: with SMTP id l4mr2941731oii.106.1588080251111;
+ Tue, 28 Apr 2020 06:24:11 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_09:2020-04-28,2020-04-28 signatures=0
+References: <6cdf20c3-7b74-679c-0e6f-4d385d12f9fe@xilinx.com>
+In-Reply-To: <6cdf20c3-7b74-679c-0e6f-4d385d12f9fe@xilinx.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 28 Apr 2020 08:23:59 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+ehJSK7sjqmKtWOVjr-QZ3LDB+ywCO85uF8WJ+cB=AAw@mail.gmail.com>
+Message-ID: <CAL_Jsq+ehJSK7sjqmKtWOVjr-QZ3LDB+ywCO85uF8WJ+cB=AAw@mail.gmail.com>
+Subject: Re: u-boot DT configuration node
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "u-boot@lists.denx.de" <u-boot@lists.denx.de>,
+        Tom Rini <trini@konsulko.com>,
+        Loic Poulain <loic.poulain@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCk9uIDQvMjgvMjAgMToyNCBQTSwgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gSGkgQmVuamFt
-aW4sDQo+DQo+IE9uIE1vbiwgQXByIDIwLCAyMDIwIGF0IDM6NDggUE0gQmVuamFtaW4gR2FpZ25h
-cmQNCj4gPGJlbmphbWluLmdhaWduYXJkQHN0LmNvbT4gd3JvdGU6DQo+PiBBZGQgc2NoZW1hcyBm
-b3IgZmlyZXdhbGwgY29uc3VtZXIgYW5kIHByb3ZpZGVyLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6
-IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+PiArJGlkOiBo
-dHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9idXMvc3RtMzIvZmlyZXdhbGwtY29uc3VtZXIu
-eWFtbCMNCj4+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2Nv
-cmUueWFtbCMNCj4+ICsNCj4+ICt0aXRsZTogQ29tbW9uIEJ1cyBGaXJld2FsbCBjb25zdW1lciBi
-aW5kaW5nDQo+PiArDQo+PiArbWFpbnRhaW5lcnM6DQo+PiArICAtIEJlbmphbWluIEdhaWduYXJk
-IDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+IFRoaXMgcmVhbGx5IG5lZWRzIGEgZGVzY3Jp
-cHRpb246IHRvIHRlbGwgd2hhdCBpcyBnb2luZyBvbiBhbmQgd2hhdA0KPiB0aGVzZSBmaXJld2Fs
-bHMNCj4gYXJlIGZvciBhbmQgaG93IHRoZXkgYXJlIHN1cHBvc2VkIHRvIHdvcmsuDQpIaSBMaW51
-cywNCg0KRG9lcyB0aGUgZm9sbG93aW5nIGRlc2NyaXB0aW9uIHNvdW5kIGdvb2QgZm9yIHlvdToN
-CkZpcmV3YWxsIHByb3BlcnRpZXMgcHJvdmlkZSB0aGUgcG9zc2libGUgZmlyZXdhbGwgYnVzIGNv
-bnRyb2xsZXIgDQpjb25maWd1cmF0aW9ucyBmb3IgYSBkZXZpY2UuDQpCdXMgZmlyZXdhbGwgY29u
-dHJvbGxlcnMgYXJlIHR5cGljYWxseSB1c2VkIHRvIGNvbnRyb2wgaWYgYSBoYXJkd2FyZSANCmJs
-b2NrIGNhbiBwZXJmb3JtIHJlYWQgb3Igd3JpdGUgb3BlcmF0aW9ucyBvbiBidXMuDQpUaGUgY29u
-dGVudHMgb2YgdGhlIGZpcmV3YWxsIGJ1cyBjb25maWd1cmF0aW9uIHByb3BlcnRpZXMgYXJlIGRl
-ZmluZWQgYnkgDQp0aGUgYmluZGluZyBmb3IgdGhlIGluZGl2aWR1YWwgZmlyZXdhbGwgY29udHJv
-bGxlciBkZXZpY2UuDQpUaGUgZmlyc3QgY29uZmlndXJhdGlvbiAnZmlyZXdhbGwtMCcgb3IgdGhl
-IG9uZSBuYW1lZCAnZGVmYXVsdCcgaXMgDQphcHBsaWVkIGJlZm9yZSBwcm9iaW5nIHRoZSBkZXZp
-Y2UgaXRzZWxmLg0KDQpSZWdhcmRzLA0KQmVuamFtaW4NCj4NCj4gSSBzdXBwb3NlIGp1c3QgYSBi
-aXQgb2YgY3V0J24ncGFzdGUgZnJvbSB0aGUgY292ZXIgbGV0dGVyIDpEDQo+DQo+IE90aGVyd2lz
-ZSBpdCBsb29rcyBnb29kIHRvIG1lLg0KPg0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0K
+On Wed, Apr 1, 2020 at 4:23 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> Hi Rob and others,
+>
+> for couple of years already u-boot is using config node in root DT for
+> u-boot configuration.
+>
+> Here is one example in u-boot source code.
+> https://gitlab.denx.de/u-boot/u-boot/-/blob/master/arch/arm/dts/exynos5250-spring.dts#L47
+>
+> And here is dt binding description
+> https://gitlab.denx.de/u-boot/u-boot/-/blob/master/doc/device-tree-bindings/config.txt
+>
+> I was checking dt binding specification and there no such a thing
+> described there. It means I expect this is more adhoc u-boot solution.
+> We have reached the point where could be beneficial to put some u-boot
+> specific configurations to DT.
+>
+> Actually I have done similar thing some time ago too by using chosen
+> node and add xilinx specific property there to point to eeprom.
+> https://gitlab.denx.de/u-boot/u-boot/-/blob/master/arch/arm/dts/zynqmp-zcu102-revA.dts#L39
+
+In this case, I think an alias should be used as it's more of just a
+shortcut to finding a specific node.
+
+> I think it is a time to discuss it and do it properly.
+>
+> First of all my question is where we could list SW prefixes to make sure
+> that they are listed and everybody is aware about it. We have
+> vendor-prefixes and we should have a way to record also prefixes for sw
+> projects. U-Boot is using u-boot. Xen has file in the kernel with using
+> xen prefix. At least these two should be listed.
+
+Documentation/devicetree/bindings/vendor-prefixes.yaml.
+
+> Next my question is what is the recommended way to pass sw specific
+> parameters via DT? I think using chosen node is more appropriate then
+> adhoc config node. Or is there a better way how this should be done?
+
+/chosen
+
+For vendor specific things though I would be cautious. If they are
+settings for a specific device, then they probably belong in the
+device's node. Second, are they really vendor specific? What we don't
+want is each vendor doing the same thing in slightly different ways.
+
+Rob
