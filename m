@@ -2,108 +2,133 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACC2C83008
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFD3C83008
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 518EF206C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F08C9206F0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 14:10:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vOy6cik5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgD1OIY (ORCPT
+        id S1727934AbgD1OKX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 10:08:24 -0400
-Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:47039 "EHLO
-        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727807AbgD1OIY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:08:24 -0400
-Received: from pro2.mail.ovh.net (unknown [10.108.4.3])
-        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 24867500160D;
-        Tue, 28 Apr 2020 16:08:22 +0200 (CEST)
-Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 28 Apr
- 2020 16:08:21 +0200
-Date:   Tue, 28 Apr 2020 16:06:53 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
-Message-ID: <20200428140653.GA10280@arch>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
- <20200422141135.86419-2-tomasz.duszynski@octakon.com>
- <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
- <20200424190413.GA2731@arch>
- <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
- <20200425184130.GA37271@arch>
- <CAHp75Vez8wSaYHbXmvfXUS5N+vScQqHGg055DNKrEnCunP7awA@mail.gmail.com>
- <20200428075606.GB6908@arch>
- <CAHp75VdKqVvJg7T=42w1SzKSDbfWjYKMomgQBshiMAW=_e0y_w@mail.gmail.com>
+        Tue, 28 Apr 2020 10:10:23 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38506 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727837AbgD1OKW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 10:10:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1588083017; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2+w+KwDzaOwV/ww7pNfZrsFBOSdK2uRoIyYyszXC2jE=;
+        b=vOy6cik5Ke533LRPLshMJ+qzIX64H6Cij9kixdoYn7wlFWU7BcpUORTgGjl00q+cPNyTHh
+        BbFCg7mLoK1rJVPcplaMCp9tjrNaBELaA/yLJ5L01LwPb6aiWQha9Riei2/T2hz8Wp0kvk
+        mMmfgtX5WwOdDWnDWKeSk5Jfz8HZyCs=
+Date:   Tue, 28 Apr 2020 16:10:05 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/8] dt-bindings: intc: Convert ingenic,intc.txt to YAML
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
+        =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Message-Id: <TO4I9Q.UQRWC3A2ABT52@crapouillou.net>
+In-Reply-To: <f865b39a-3e8d-a367-45b2-aa5e7412e81a@cogentembedded.com>
+References: <20200426185856.38826-1-paul@crapouillou.net>
+        <20200426185856.38826-2-paul@crapouillou.net>
+        <f865b39a-3e8d-a367-45b2-aa5e7412e81a@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdKqVvJg7T=42w1SzKSDbfWjYKMomgQBshiMAW=_e0y_w@mail.gmail.com>
-X-Originating-IP: [89.70.31.203]
-X-ClientProxiedBy: DAG1EX1.emp2.local (172.16.2.1) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 4095460913286765727
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedriedugdejvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 01:16:47PM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 28, 2020 at 10:57 AM Tomasz Duszynski
-> <tomasz.duszynski@octakon.com> wrote:
-> >
-> > On Sat, Apr 25, 2020 at 09:52:25PM +0300, Andy Shevchenko wrote:
-> > > On Sat, Apr 25, 2020 at 9:42 PM Tomasz Duszynski
-> > > <tomasz.duszynski@octakon.com> wrote:
-> > > > On Sat, Apr 25, 2020 at 02:43:35PM +0300, Andy Shevchenko wrote:
-> > > > > On Fri, Apr 24, 2020 at 10:05 PM Tomasz Duszynski
-> > > > > <tomasz.duszynski@octakon.com> wrote:
-> > > > > > On Wed, Apr 22, 2020 at 10:49:44PM +0300, Andy Shevchenko wrote:
-> > > > > > > On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
-> > > > > > > <tomasz.duszynski@octakon.com> wrote:
-> > >
-> > > ...
-> > >
-> > > > > > As for ABI that's in
-> > > > > > a separate patch.
-> > > > >
-> > > > > It's not good from bisectability point of view. If by some reason this
-> > > > > patch or documentation patch gets reverted, the other one will be
-> > > > > dangling.
-> > > > > Please, unify them.
-> > > > >
-> > > >
-> > > > Huh? Reverting core and leaving leftovers would be wrong and pointless.
-> > >
-> > > Exactly my point why it should be one patch. To secure impossibility
-> > > to do pointless reverts.
-> > >
-> >
-> > But the same applies to other driver parts like i2c or serial
-> > interfaces. I don't buy it.
->
-> They won't compile without core driver, right? Absence of the
-> documentation OTOH doesn't prevent build.
->
+Hi Sergei,
 
-Fair enough.
+Le lun. 27 avril 2020 =E0 12:11, Sergei Shtylyov=20
+<sergei.shtylyov@cogentembedded.com> a =E9crit :
+> Hello!
+>=20
+> On 26.04.2020 21:58, Paul Cercueil wrote:
+>=20
+>> Convert the ingenic,intc.txt doc file to ingenic,intc.yaml.
+>>=20
+>> Some compatible strings now require a fallback, as the controller
+>> generally works the same across the SoCs families.
+>>=20
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> [...]
+>> diff --git=20
+>> a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.ya=
+ml=20
+>> b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.ya=
+ml
+>> new file mode 100644
+>> index 000000000000..28b27e1a6e9d
+>> --- /dev/null
+>> +++=20
+>> b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.ya=
+ml
+>> @@ -0,0 +1,63 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id:=20
+>> http://devicetree.org/schemas/interrupt-controller/ingenic,intc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Ingenic SoCs interrupt controller devicetree bindings
+>> +
+>> +maintainers:
+>> +  - Paul Cercueil <paul@crapouillou.net>
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "^interrupt-controller@[0-9a-f]+$"
+>> +
+>> +  compatible:
+>> +    oneOf:
+>> +      - enum:
+>> +        - ingenic,jz4740-intc
+>> +        - ingenic,jz4760-intc
+>> +        - ingenic,jz4780-intc
+>> +      - items:
+>> +        - enum:
+>> +          - ingenic,jz4775-intc
+>> +          - ingenic,jz4770-intc
+>> +        - const: ingenic,jz4760-intc
+>> +      - items:
+>> +        - const: ingenic,x1000-intc
+>> +        - const: ingenic,jz4780-intc
+>> +      - items:
+>> +        - const: ingenic,jz4725b-intc
+>> +        - const: ingenic,jz4740-intc
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 1
+>=20
+>    Do double quotes work the same as the single ones?
 
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Yes. The only difference is that you can escape characters in double=20
+quotes.
+
+-Paul
+
+>=20
+> [...]
+>=20
+> MBR, Sergei
+
+
