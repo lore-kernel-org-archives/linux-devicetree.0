@@ -2,87 +2,116 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA82C83004
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDF8C83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2312053B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C35206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+tarnSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgD1IlM (ORCPT
+        id S1726318AbgD1Ipi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:41:12 -0400
-Received: from mga17.intel.com ([192.55.52.151]:17605 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726641AbgD1IlL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:41:11 -0400
-IronPort-SDR: S9IfuG9K+IM5N6boHKVFxrLT+k4gizAa+NQvO7fqqvoM86rt1WO4dao2MD52d5vRoNZoflRL1U
- 02YrJTN5mAjw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 01:41:11 -0700
-IronPort-SDR: i5YEEhAnHht9VuIi9juMo+L1TdxiW0t9eA9cR3mnbisgDsuV+1R4chvJ73c2NF7zlDNh0Sq4C/
- vnwJISJTtnBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="432105519"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 28 Apr 2020 01:41:11 -0700
-Received: from [10.214.149.60] (vramuthx-MOBL1.gar.corp.intel.com [10.214.149.60])
-        by linux.intel.com (Postfix) with ESMTP id 7AED45802C8;
-        Tue, 28 Apr 2020 01:41:06 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com, vigneshr@ti.com,
-        arnd@arndb.de, richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200424183612.4cfdbb6a@collabora.com> <20200427175127.0518c193@xps13>
- <cba30ccb-c190-d4d6-eab9-6083bd5d2aad@linux.intel.com>
- <20200428082759.25065146@collabora.com>
- <38334812-21b9-5b2c-db84-01c9eacc84d0@linux.intel.com>
- <20200428084704.5e04232a@collabora.com>
- <f72b5ae0-b0ac-61b8-8f64-c0e0f48afe02@linux.intel.com>
- <20200428094049.3c0d4730@xps13>
- <3ebc42d9-f8a8-0764-ff7f-82beeb0b5bb7@linux.intel.com>
- <20200428095459.6727fab0@xps13>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <e5afcd41-c8a3-0dc2-8c5d-5328b07b1058@linux.intel.com>
-Date:   Tue, 28 Apr 2020 16:41:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 28 Apr 2020 04:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726271AbgD1Ipi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 04:45:38 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB43AC03C1A9;
+        Tue, 28 Apr 2020 01:45:37 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id b18so19490805ilf.2;
+        Tue, 28 Apr 2020 01:45:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6kCsx7wAGrjx+68NCUXouJOmxNELyFgrhEYo7Fq+h8c=;
+        b=C+tarnSyrkRFmLdjp00BVNxJrJ0ECb6qa8qLWQHwCmOTyQKvszlum4fa/JNc2wjjEQ
+         +xod5yiVp1QO2KOfl2oB5irbr2SxB1lONwU9NFwP/GVoQK452rohz+Q27cDd51v5ESBr
+         o5o0Pf89nKmNRXSF5FRg83HaXgylmKkDtxIE5JZBmF3ndhcgE2JUwhNuu4shMoirplEn
+         th9NtWOdp9DrrexTI8ZYXwbrGtkpzqCV4p7DRs3dGB6awr7IqzUWq0bZzC76VzI+malR
+         o2WLy2MsCHkCTERhB23oyWJRGOPYzFah7aFeoVR6Lefrng956pbiQ24iXrswaR1gJRvn
+         xrgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6kCsx7wAGrjx+68NCUXouJOmxNELyFgrhEYo7Fq+h8c=;
+        b=Q7sQI8vKxLpp3slJo3uQZRYSC1PErSOgxrWYlZSjoYnL6gN6z4FEdp7iRebLiFfNpg
+         KH6Jo/UfXWBZIGIVouA9ftBKWBPtEuGveBVLa3WBc53Yag2/wkkknuNO80dHZSWDtTua
+         R2KhLJZkMBv1cQOMblS8bzYV6uAOklw16/41hJp5cQM1+lvl6pQ6Gsmxhmn8EQmpfxlH
+         swu5Raww9li5RaEXE15kzu1RGeYS/Lq5LqUiCCyZ8bIxqiNBiiLeKmmiFT7PDStE4KU2
+         DnZ/rhVqXRz/KQ3MIeSHWUgX3ZuDXAWTT1R7GBj5Qd6A2juv7Gx2L6SrwmGhnJzMlhBb
+         VXRg==
+X-Gm-Message-State: AGi0PuYi+hJLFylJGyZ4Oer2sP79iUP7iGgf10EfWpQTQRMTFPp3iTAC
+        jwEwc8/LbYtPHEOi9CI8+J6JyI1NjWA459YCDWA=
+X-Google-Smtp-Source: APiQypIkK7jh6sesRljWxwYK1L0SgBoutO7PcaD6mBLQhY4xPsDiYxUKbG/slHl1xbUFXGsowlIYhRXsrV13Ijtvcss=
+X-Received: by 2002:a05:6e02:111:: with SMTP id t17mr23744535ilm.59.1588063537068;
+ Tue, 28 Apr 2020 01:45:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200428095459.6727fab0@xps13>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200426121709.1216-1-peron.clem@gmail.com> <20200428075156.65okklrupingiza6@gilmour.lan>
+In-Reply-To: <20200428075156.65okklrupingiza6@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Tue, 28 Apr 2020 10:45:26 +0200
+Message-ID: <CAJiuCcdnGW+jC8NQPWaE_fSEaNfrCcLhkmy3-L-ZXQmgQdsEKw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: Use dedicated CPU OPP table
+ for Tanix TX6
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Piotr Oniszczuk <warpme@o2.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Miquel,
+Hi Maxime,
 
-On 28/4/2020 3:54 pm, Miquel Raynal wrote:
-> Do we have access to the spec or a register map? We could tell you very
-> quickly if it is worth the trouble. But I am pretty sure as well that
-> the controller supports more than 1 CS.
+On Tue, 28 Apr 2020 at 09:52, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> On Sun, Apr 26, 2020 at 02:17:09PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Tanix TX6 has a fixed regulator. As DVFS is instructed to change
+> > voltage to meet OPP table. The DVFS is not working as expected.
+> >
+> > Introduce a dedicated OPP Table where voltage are equals to
+> > the fixed regulator.
+> >
+> > Reported-by: Piotr Oniszczuk <warpme@o2.pl>
+> > Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables =
+for Tanix TX6")
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+>
+> I'm not really a big fan of duplicating the OPPs, since that would make a=
+n
+> update of those very likely to be overlooked for that particular board (a=
+nd
+> since it's a board that not a lot of people have, it would be harder to n=
+otice
+> too).
+>
+> IIRC, removing the cpu-supply property should work as well?
+Yes it would works also the OPP will provide a dummy regulator.
 
-Got it, will update the changes to support multiple CS as generic-way.
+But as it has been introduced and there is a cpu regulator in the real life=
+.
+I thought it was a bit a hack to just remove it but as you wish.
 
-Thank you!
+Regards,
+Clement
 
-Regards
-Vadivel
+
+
+>
+> Maxime
