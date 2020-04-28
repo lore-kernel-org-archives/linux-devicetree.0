@@ -2,124 +2,83 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AABEC83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404C2C83004
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 267FC206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:08:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="A97YDx9p";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="acVa4t8S"
+	by mail.kernel.org (Postfix) with ESMTP id 2686420775
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 08:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgD1IIS (ORCPT
+        id S1726523AbgD1IMB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 04:08:18 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:40111 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726180AbgD1IIS (ORCPT
+        Tue, 28 Apr 2020 04:12:01 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:44325 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726442AbgD1IMB (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 04:08:18 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 59CAC5802E9;
-        Tue, 28 Apr 2020 04:08:17 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 28 Apr 2020 04:08:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=OVZvX9ztpd3XO2zL1SITFUQ9DK5
-        Z2gkbV9MIZCnCejk=; b=A97YDx9pFcTwEC5Eor+FoCSnxhkgx3giVjOGqyiOt4A
-        atW1Qr06fsoPI+jEj/kPk6FGdXuPiyPYzMVFb3SjCeNFsGJrU82eW85D+EKC0RQp
-        WgchYwQXxdyTnWXvLpC4wxFEijEwJktaYS9bDQbPesXQW85X8qv8r3HvlathPBP/
-        3D8WaYkknpJA9Fes7VpC6PjeNU5GrhB4Ge0smn9pJf0JRbwtWmZ+zB0CtgrkLMUj
-        SttfQgzNLsBcDhMpmtlU2iTUzDx9pMobL0K8TQ8OKPRAp/NmqCq6lAiokUcdg7F2
-        /VTYVtOhNYqaFSOSMXdypJckaHsNun5UOuF3/eBhmzw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=OVZvX9
-        ztpd3XO2zL1SITFUQ9DK5Z2gkbV9MIZCnCejk=; b=acVa4t8SGRiPe0dSv6nKx3
-        EXA/Wok0esjUe11KXXPCqhUWsm9lka0dIvIZpSyBjDSRS67eirA8VYpzc5SIy09V
-        0gtKP6ttMTbze285gJ5OMGcwmkyhvwN1OzThRnRM2WsEn15Df2XSolk5plfIPYjz
-        jLu4C2en7VWEPDhyIKTk7DWRRHoTKOiYAtmJyN0hiGce7enwFXffZs4ktVDx+w2X
-        P/rSNtxGzJyhyddHV3cazH7H4NLJ651FpzAz1/0QixbATlM3PX8UBvp1ZviAzTlG
-        p/BY/pea26eN7lV8oIKKPL6XxwC5Vuo4JSVXohF+WxiZl1/lV313G5aYGoH71I9g
-        ==
-X-ME-Sender: <xms:b-SnXgWxTXvdISPFiZrB4LN6FGORQVik4Lc5WJOZl68qupLHc0ZoyA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieduucetufdoteggodetrfdotffvucfrrh
-    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhmvgcutfhi
-    phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
-    mhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:b-SnXhQpZeFTgZ5WSDqescbIPH9xvHgH_gpcvAaMx73MAKqOyZ3G9w>
-    <xmx:b-SnXoRYWIsHZ3J8cS3g9aPlS0VZfxF-hy1zb2_eQqNtfq9MBAjr8w>
-    <xmx:b-SnXpc7mmOGQoliWXn8ickLqT7sXTw6yRoe9wH2s6KiZvrL73YkgQ>
-    <xmx:ceSnXmZR4NXkjCHV49g7STZyYbdkwpdyP1Dp7IL4PDMJCzmQakF1TQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 950693280064;
-        Tue, 28 Apr 2020 04:08:15 -0400 (EDT)
-Date:   Tue, 28 Apr 2020 10:08:14 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Marcus Cooper <codekipper@gmail.com>
-Subject: Re: [PATCH v3 2/7] dt-bindings: ASoC: sun4i-i2s: Add H6 compatible
-Message-ID: <20200428080814.ohoheyzsxuz3a2vx@gilmour.lan>
-References: <20200426104115.22630-1-peron.clem@gmail.com>
- <20200426104115.22630-3-peron.clem@gmail.com>
+        Tue, 28 Apr 2020 04:12:01 -0400
+Received: from pro2.mail.ovh.net (unknown [10.108.1.145])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id BD66F4FEFD68;
+        Tue, 28 Apr 2020 10:11:59 +0200 (CEST)
+Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 28 Apr
+ 2020 10:11:59 +0200
+Date:   Tue, 28 Apr 2020 10:10:30 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <jic23@kernel.org>
+Subject: Re: [PATCH 5/6] dt-bindings: iio: scd30: add device binding file
+Message-ID: <20200428081030.GC6908@arch>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+ <20200422141135.86419-6-tomasz.duszynski@octakon.com>
+ <20200427212826.GA25672@bogus>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bzjincgmfho5il5t"
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200426104115.22630-3-peron.clem@gmail.com>
+In-Reply-To: <20200427212826.GA25672@bogus>
+X-Originating-IP: [89.70.31.203]
+X-ClientProxiedBy: DAG1EX2.emp2.local (172.16.2.2) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 16523425560079719618
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedriedugddtudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuffhomhgrihhnpehoiihlrggsshdrohhrghdpghhithhhuhgsrdgtohhmnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Apr 27, 2020 at 04:28:26PM -0500, Rob Herring wrote:
+> On Wed, 22 Apr 2020 16:11:34 +0200, Tomasz Duszynski wrote:
+> > Add SCD30 sensor binding file.
+> >
+> > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> > ---
+> >  .../iio/chemical/sensirion,scd30.yaml         | 71 +++++++++++++++++++
+> >  1 file changed, 71 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.example.dt.yaml: scd30@61: 'interrupt-parrent' does not match any of the regexes: 'pinctrl-[0-9]+'
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.example.dt.yaml: scd30: 'interrupt-parrent' does not match any of the regexes: 'pinctrl-[0-9]+'
 
---bzjincgmfho5il5t
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, a typo here.
 
-On Sun, Apr 26, 2020 at 12:41:10PM +0200, Cl=E9ment P=E9ron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
->=20
-> H6 I2S is very similar to H3, except that it supports up to 16 channels
-> and thus few registers have fields on different position.
->=20
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-
-Acked-by: Maxime Ripard <mripard@kernel.org>
-
-Thanks!
-Maxime
-
---bzjincgmfho5il5t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqfkbgAKCRDj7w1vZxhR
-xX1iAQCyxmpAiKfglOauQ1fEaSGCeuG5209yy891bHX9EQTBfQEAic7/IcGTay+I
-duX3bvjzJqt4tuc/CDhoFux4gXacJAM=
-=2Teg
------END PGP SIGNATURE-----
-
---bzjincgmfho5il5t--
+>
+> See https://patchwork.ozlabs.org/patch/1275131
+>
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+>
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+>
+> Please check and re-submit.
