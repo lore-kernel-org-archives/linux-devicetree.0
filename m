@@ -2,256 +2,116 @@ Return-Path: <SRS0=DpSr=6M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0E6C83000
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 20:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328FCC83000
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 20:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E174206D9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 20:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5E621D7B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Apr 2020 20:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d3Lktalo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrkNHj9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgD1UJm (ORCPT
+        id S1726450AbgD1UaN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 16:09:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59198 "EHLO
+        Tue, 28 Apr 2020 16:30:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726366AbgD1UJZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726286AbgD1UaN (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 16:09:25 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DAEC03C1AB
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 13:09:24 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id 19so24634801ioz.10
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 13:09:24 -0700 (PDT)
+        Tue, 28 Apr 2020 16:30:13 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE694C03C1AB;
+        Tue, 28 Apr 2020 13:30:12 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u16so197728wmc.5;
+        Tue, 28 Apr 2020 13:30:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6b8JEdc86QQaLWgUONgVk5QnyKn0OwJfe4nUlQTwps0=;
-        b=d3LktalotbLI0rJhUPptVS5m6TeC3T7IVM9AmAJQcKzSqXkCYx4sHzfZBRXBWNrhJ9
-         nChBqVreBXCMxoNCEjAdTXCR1vRzfCytEZUtf13z9oltklrIDGVULrwgUMUto7+0T9eP
-         0tAKMU6ESdpJJtGA7/8moPsY9glywvT/o6LZIGOKLkAUj+DSnUNkiSLG/haa3Vu9JQSt
-         XZT9vMf6gbkocCwqFSitNVkd2Xqvyt4YOII+8CJDtXjmcZbbo2a9JtwVOsVq9az4EJs+
-         jOBj56RrVFe/Zh/Ev3wvJuYasVOlY0KYDQx3OsfEiC5t6GDwauOkY9EpJBKZdEGwt0Gx
-         EYUQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cSI0lJVql2Godh5zstmOBUn+hBPwk2VKytQsLRGY6S8=;
+        b=rrkNHj9EW6rx2BahfISMNiMkVomM9Xt6MisdacEJOvmKVG8yocdgwK66FIId9zxmbC
+         WbOFy0Cyrm21Gk+VSqO1SixJPBoGuPBW5WTpczsg8Qy4H/vqvru8SsP0pogxssj5DZ5l
+         st7uA9aGSLzT4AbJ3VYBkKldJTat7eZhRKmk9n6jOqk4IWTKmpdHCrJtSvavf2jVWBQW
+         JPXvbZgZ/FYO2n1DX6SKFfEyhv8m6hPzD+FuiZ56KXRAY2TVoZWT0uPs7bBDVSoaP5RB
+         SoSkRwaobMVatYrGr6LYeUxxtA2fTU+wSTnhCmeBJuBUmpcR8sfVqUA6ffwSG7nuGCQK
+         CaUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6b8JEdc86QQaLWgUONgVk5QnyKn0OwJfe4nUlQTwps0=;
-        b=fZ5p8bT7Mdnc9ASzqtibQF6x6UEq+nah9smTussvhxAMVr2Amk45Z/P3g24WokquEy
-         xcGwmxf/j6gMdE1wPe1+tcNbPcf4r9cQ3LmFPFo165u1m1miLHltPca+mZaEXujsjADl
-         ilMMrBK+MVBRnsP0tNHAK5xfqqIA7549LApGX+0t25XF3K3lBX/cn5CnjN1lrXReDJF8
-         SwDvTQtneHPWDpdYySB/sX82R30PilEzB7Gxgmj0Wv8CVmbsSvvztftdG09V9gxOx2AE
-         RT0mr2DZknCLrBw0EHCzmukQ0t7Dpz4wpNjBvnxTEEgdusqxIxFgXiDcMiWz0ol49XJq
-         p2fA==
-X-Gm-Message-State: AGi0PuZwb0TFBzgm1MYLfMmQSRp+YnM+i1ZUqyohM9Uve98rxJi0D/CY
-        mj5CJFkidnSaQcgaTuoUfK2uWBzMgpcV8RoWgDOJzA==
-X-Google-Smtp-Source: APiQypIQBpPQQkAuehJj3ca3UUx0zUIWzRrOwv/RHaXCYe3333MWUVd7I0T7xj4J5l8onxqQ42VCv8lSggS7jkyeOw8=
-X-Received: by 2002:a02:b88e:: with SMTP id p14mr25945179jam.36.1588104563944;
- Tue, 28 Apr 2020 13:09:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200325201839.15896-1-s-anna@ti.com> <20200325201839.15896-4-s-anna@ti.com>
- <20200428195855.GC10552@xps15>
-In-Reply-To: <20200428195855.GC10552@xps15>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Tue, 28 Apr 2020 14:09:13 -0600
-Message-ID: <CANLsYkwgCJrDu-Y5iyG0maCVqFqDXW_0vD4Sv2e+-dwryTNaRA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] remoteproc/k3-dsp: Add support for L2RAM loading on
- C66x DSPs
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cSI0lJVql2Godh5zstmOBUn+hBPwk2VKytQsLRGY6S8=;
+        b=KkjWRhxnQL6FRDzwnc9drWcFORlEKW4nOO22Ov/WFKf1Dkv5yJB6NA4g2LM/BbPn/D
+         B5/ueDyXjxZgyd+zKNS31kon+8KYgT3ygftpIS6s4LcqG/yjGMUFzjhKOZB4ya4G9uno
+         jjdBIJJny6OlE0/vHJBATN9WnwNTmLr4rhVwVnivqmnKdizramY7rWd4O+9G8J/JgTBe
+         coI7m9BVUHppyNGLNyrBkiEjwGvXt0XAVu3O9kVvhRVy6cITHk/dXy9lP/nQ6PcBXFSm
+         y8f3IjmvC3nll2WTDCsd75zd87mkuIIsC2xgR5Ii3PamYAh7e5he9+QxgYiflLRY1opo
+         Mxuw==
+X-Gm-Message-State: AGi0PuZXK+gnY0fjkxkMDlv4PbvQxftDgpK+snXIokPibBPNkN6EYY0f
+        noeBuPiFIxCIoyNLX2iRagA=
+X-Google-Smtp-Source: APiQypKtek0DZbQSQGByss4wVXiUG3XROnJUmkprc3ttQG8iX87SZgIl6SM9qavb5oim4rNrmlC/Sg==
+X-Received: by 2002:a7b:c459:: with SMTP id l25mr6335877wmi.52.1588105811692;
+        Tue, 28 Apr 2020 13:30:11 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id 1sm4797801wmz.13.2020.04.28.13.30.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 13:30:10 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] arm64: dts: rockchip: fix defines in pd_vio node for rk3399
+Date:   Tue, 28 Apr 2020 22:30:02 +0200
+Message-Id: <20200428203003.3318-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 28 Apr 2020 at 13:58, Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
-> On Wed, Mar 25, 2020 at 03:18:39PM -0500, Suman Anna wrote:
-> > The resets for the DSP processors on K3 SoCs are managed through the
-> > Power and Sleep Controller (PSC) module. Each DSP typically has two
-> > resets - a global module reset for powering on the device, and a local
-> > reset that affects only the CPU while allowing access to the other
-> > sub-modules within the DSP processor sub-systems.
-> >
-> > The C66x DSPs have two levels of internal RAMs that can be used to
-> > boot from, and the firmware loading into these RAMs require the
-> > local reset to be asserted with the device powered on/enabled using
-> > the module reset. Enhance the K3 DSP remoteproc driver to add support
-> > for loading into the internal RAMs. The local reset is deasserted on
-> > SoC power-on-reset, so logic has to be added in probe in remoteproc
-> > mode to balance the remoteproc state-machine.
-> >
-> > Note that the local resets are a no-op on C71x cores, and the hardware
-> > does not supporting loading into its internal RAMs.
-> >
-> > Signed-off-by: Suman Anna <s-anna@ti.com>
-> > ---
-> >  drivers/remoteproc/ti_k3_dsp_remoteproc.c | 82 +++++++++++++++++++++++
-> >  1 file changed, 82 insertions(+)
-> >
-> > diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> > index fd0d84f46f90..7b712ef74611 100644
-> > --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> > +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> > @@ -175,6 +175,9 @@ static int k3_dsp_rproc_reset(struct k3_dsp_rproc *kproc)
-> >               return ret;
-> >       }
-> >
-> > +     if (kproc->data->uses_lreset)
-> > +             return ret;
-> > +
-> >       ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
-> >                                                   kproc->ti_sci_id);
-> >       if (ret) {
-> > @@ -192,6 +195,9 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
-> >       struct device *dev = kproc->dev;
-> >       int ret;
-> >
-> > +     if (kproc->data->uses_lreset)
-> > +             goto lreset;
-> > +
-> >       ret = kproc->ti_sci->ops.dev_ops.get_device(kproc->ti_sci,
-> >                                                  kproc->ti_sci_id);
-> >       if (ret) {
-> > @@ -199,6 +205,7 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
-> >               return ret;
-> >       }
-> >
-> > +lreset:
-> >       ret = reset_control_deassert(kproc->reset);
-> >       if (ret) {
-> >               dev_err(dev, "local-reset deassert failed, ret = %d\n", ret);
-> > @@ -210,6 +217,63 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
-> >       return ret;
-> >  }
-> >
-> > +/*
-> > + * The C66x DSP cores have a local reset that affects only the CPU, and a
-> > + * generic module reset that powers on the device and allows the DSP internal
-> > + * memories to be accessed while the local reset is asserted. This function is
-> > + * used to release the global reset on C66x DSPs to allow loading into the DSP
-> > + * internal RAMs. The .prepare() ops is invoked by remoteproc core before any
-> > + * firmware loading, and is followed by the .start() ops after loading to
-> > + * actually let the C66x DSP cores run. The local reset on C71x cores is a
-> > + * no-op and the global reset cannot be released on C71x cores until after
-> > + * the firmware images are loaded, so this function does nothing for C71x cores.
-> > + */
-> > +static int k3_dsp_rproc_prepare(struct rproc *rproc)
-> > +{
-> > +     struct k3_dsp_rproc *kproc = rproc->priv;
-> > +     struct device *dev = kproc->dev;
-> > +     int ret;
-> > +
-> > +     /* local reset is no-op on C71x processors */
-> > +     if (!kproc->data->uses_lreset)
-> > +             return 0;
->
-> In k3_dsp_rproc_release() the condition is "if (kproc->data->uses_lreset)" and
-> here it is the opposite, which did a good job at getting me confused.
->
-> Taking a step back, I assume c71 DSPs will have their own k3_dsp_dev_data where
-> the users_lreset flag will be false.  In that case I think it would make the
-> code easier to understand if the k3_dsp_rproc_ops was declared without the
-> .prepare and .unprepare.  In probe(), if data->uses_lreset is true then
-> k3_dsp_rproc_prepare() and k3_dsp_rproc_unprepare() are set.
->
+A test with the command below gives for example this error:
 
-I forgot... Since this is a C71 related change, was there a reason to
-lump it with the C66 set?  If not I would simply move that to the C71
-work.
+arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: pd_vio@15:
+'pd_tcpc0@RK3399_PD_TCPC0', 'pd_tcpc1@RK3399_PD_TCPC1'
+do not match any of the regexes:
+'.*-names$', '.*-supply$', '^#.*-cells$',
+'^#[a-zA-Z0-9,+\\-._]{0,63}$',
+'^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$',
+'^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$',
+'^__.*__$', 'pinctrl-[0-9]+'
 
-> I am done reviewing this set.
->
-> Thanks,
-> Mathieu
->
-> > +
-> > +     ret = kproc->ti_sci->ops.dev_ops.get_device(kproc->ti_sci,
-> > +                                                 kproc->ti_sci_id);
-> > +     if (ret)
-> > +             dev_err(dev, "module-reset deassert failed, cannot enable internal RAM loading, ret = %d\n",
-> > +                     ret);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +/*
-> > + * This function implements the .unprepare() ops and performs the complimentary
-> > + * operations to that of the .prepare() ops. The function is used to assert the
-> > + * global reset on applicable C66x cores. This completes the second portion of
-> > + * powering down the C66x DSP cores. The cores themselves are only halted in the
-> > + * .stop() callback through the local reset, and the .unprepare() ops is invoked
-> > + * by the remoteproc core after the remoteproc is stopped to balance the global
-> > + * reset.
-> > + */
-> > +static int k3_dsp_rproc_unprepare(struct rproc *rproc)
-> > +{
-> > +     struct k3_dsp_rproc *kproc = rproc->priv;
-> > +     struct device *dev = kproc->dev;
-> > +     int ret;
-> > +
-> > +     /* local reset is no-op on C71x processors */
-> > +     if (!kproc->data->uses_lreset)
-> > +             return 0;
-> > +
-> > +     ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
-> > +                                                 kproc->ti_sci_id);
-> > +     if (ret)
-> > +             dev_err(dev, "module-reset assert failed, ret = %d\n", ret);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> >  /*
-> >   * Power up the DSP remote processor.
-> >   *
-> > @@ -353,6 +417,8 @@ static void *k3_dsp_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
-> >  }
-> >
-> >  static const struct rproc_ops k3_dsp_rproc_ops = {
-> > +     .prepare        = k3_dsp_rproc_prepare,
-> > +     .unprepare      = k3_dsp_rproc_unprepare,
-> >       .start          = k3_dsp_rproc_start,
-> >       .stop           = k3_dsp_rproc_stop,
-> >       .kick           = k3_dsp_rproc_kick,
-> > @@ -644,6 +710,22 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
-> >               goto disable_clk;
-> >       }
-> >
-> > +     /*
-> > +      * ensure the DSP local reset is asserted to ensure the DSP doesn't
-> > +      * execute bogus code in .prepare() when the module reset is released.
-> > +      */
-> > +     if (data->uses_lreset) {
-> > +             ret = reset_control_status(kproc->reset);
-> > +             if (ret < 0) {
-> > +                     dev_err(dev, "failed to get reset status, status = %d\n",
-> > +                             ret);
-> > +                     goto release_mem;
-> > +             } else if (ret == 0) {
-> > +                     dev_warn(dev, "local reset is deasserted for device\n");
-> > +                     k3_dsp_rproc_reset(kproc);
-> > +             }
-> > +     }
-> > +
-> >       ret = rproc_add(rproc);
-> >       if (ret) {
-> >               dev_err(dev, "failed to add register device with remoteproc core, status = %d\n",
-> > --
-> > 2.23.0
-> >
+Fix error by replacing the wrong defines by the ones
+mentioned in 'rk3399-power.h'.
+
+make -k ARCH=arm64 dtbs_check
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 2e7164c82..37279db53 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1088,12 +1088,12 @@
+ 					pm_qos = <&qos_isp1_m0>,
+ 						 <&qos_isp1_m1>;
+ 				};
+-				pd_tcpc0@RK3399_PD_TCPC0 {
++				pd_tcpc0@RK3399_PD_TCPD0 {
+ 					reg = <RK3399_PD_TCPD0>;
+ 					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+ 						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
+ 				};
+-				pd_tcpc1@RK3399_PD_TCPC1 {
++				pd_tcpc1@RK3399_PD_TCPD1 {
+ 					reg = <RK3399_PD_TCPD1>;
+ 					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
+ 						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
+-- 
+2.11.0
+
