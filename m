@@ -2,149 +2,85 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC40C83006
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA23C83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6736F20575
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1C921775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgD2PSj (ORCPT
+        id S1726635AbgD2PWm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:18:39 -0400
-Received: from mga02.intel.com ([134.134.136.20]:6299 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbgD2PSj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:18:39 -0400
-IronPort-SDR: TN7PIAHWCZpbHBwhWHi3nY9KKZBclXWO488PNkqFZ6IE3VB+OnnVmA+Pad84RyVhh1HVeWGc7l
- b7lTVmPzX+tQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:18:38 -0700
-IronPort-SDR: L8Im9C8854t13HQozVXYhDTvYu1vq8EQ0is7FixfPmD9cMUV10VOlhf4Iqj0lH7qW6Kra/x3QW
- PYr9HkbTeUug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="303019043"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 Apr 2020 08:18:38 -0700
-Received: from [10.255.166.42] (vramuthx-mobl1.gar.corp.intel.com [10.255.166.42])
-        by linux.intel.com (Postfix) with ESMTP id 75FBF5802C8;
-        Wed, 29 Apr 2020 08:18:33 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        qi-ming.wu@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, anders.roxell@linaro.org,
-        vigneshr@ti.com, arnd@arndb.de, richard@nod.at,
-        brendanhiggins@google.com, linux-mips@vger.kernel.org,
-        robh+dt@kernel.org, miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429162249.55d38ee8@collabora.com>
- <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
- <20200429164832.6800fc70@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
-Date:   Wed, 29 Apr 2020 23:18:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200429164832.6800fc70@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 29 Apr 2020 11:22:42 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:55540 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgD2PWm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 11:22:42 -0400
+Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jToa1-0006N5-QF; Wed, 29 Apr 2020 15:24:57 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v2] ARM: dts: gw552x: add USB OTG support
+Date:   Wed, 29 Apr 2020 08:22:35 -0700
+Message-Id: <1588173755-18045-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587748215-9587-1-git-send-email-tharvey@gateworks.com>
+References: <1587748215-9587-1-git-send-email-tharvey@gateworks.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+The GW552x-B board revision adds USB OTG support.
 
-On 29/4/2020 10:48 pm, Boris Brezillon wrote:
-> On Wed, 29 Apr 2020 22:33:37 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> 
->> Hi Boris,
->>
->> On 29/4/2020 10:22 pm, Boris Brezillon wrote:
->>> On Wed, 29 Apr 2020 18:42:05 +0800
->>> "Ramuthevar, Vadivel MuruganX"
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>    
->>>> +
->>>> +#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
->>>> +#define EBU_ADDR_MASK		(5 << 4)
->>>
->>> It's still unclear what ADDR_MASK is for. Can you add a comment
->>> explaining what it does?
->>
->> Thank you Boris, keep review and giving inputs, will update.
-> 
-> Can you please explain it here before sending a new version?
+Enable the device-tree node and configure the OTG_ID pin.
 
-Memory Region Address Mask:
-Specifies the number of right-most bits in the base address that should 
-be included in the address comparison. bits positions(7:4).
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ arch/arm/boot/dts/imx6qdl-gw552x.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
->>>    
->>>> +#define EBU_ADDR_SEL_REGEN	0x1
->>>
->>>    
->>>> +
->>>> +	writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
->>>> +	       EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
->>>> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
->>>> +
->>>> +	writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
->>>> +	       ebu_host->ebu + EBU_ADDR_SEL(0));
->>>> +	writel(EBU_MEM_BASE_CS_1 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
->>>> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
->>>
->>> That's super weird. You seem to set EBU_ADDR_SEL(reg) twice. Are you
->>> sure that's needed, and are we setting EBU_ADDR_SEL(0) here?
->>
->> You are right, its weird only, but we need it, since different chip
->> select has different memory region access address.
-> 
-> Well, that doesn't make any sense, the second write to
-> EBU_ADDR_SEL(reg) overrides the first one, meaning that nand_pa is
-> actually never written to ADDR_SEL(reg).
+diff --git a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+index dc646b7..bb35971 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+@@ -258,6 +258,14 @@
+ 	status = "okay";
+ };
+ 
++&usbotg {
++	vbus-supply = <&reg_5p0v>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	disable-over-current;
++	status = "okay";
++};
++
+ &wdog1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_wdog>;
+@@ -359,6 +367,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_usbotg: usbotggrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x13059
++		>;
++	};
++
+ 	pinctrl_wdog: wdoggrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
+-- 
+2.7.4
 
-it will not overwrite the first one, since two different registers
-EBU_ADDR_SEL_0 EBU_ADDR_SEL  20H
-EBU_ADDR_SEL_1 EBU_ADDR_SEL  24H
-
-it is an internal address selection w.r.t chip select for nand physical 
-address update.
-
-
-> 
->>
->> Yes , we are setting both CS0 and CS1 memory access region, if you have
->> any concern to optimize, please suggest me, Thanks!
-> 
-> If you want to setup both CS, and the address written in EBU_ADDR_SEL(x)
-> is really related to the nand_pa address, then retrieve resources for
-> all CS ranges. 
-If it's not related, please explain what those
-> EBU_MEM_BASE_CS_X values encode.
-
-Memory Region Base Address
-FPI Bus addresses are compared to this base address in conjunction with 
-the mask control(EBU_ADDR_MASK). Driver need to program this field!
-
-Regards
-Vadivel
-
-> 
