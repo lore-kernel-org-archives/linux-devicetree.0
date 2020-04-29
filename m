@@ -2,135 +2,143 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2C1C8300B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0DEC83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E092D20B80
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6CC206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:53:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="OTk4BhDe"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="exYM4Bms"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgD2OuX (ORCPT
+        id S1726877AbgD2Oxr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:50:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727057AbgD2OuV (ORCPT
+        Wed, 29 Apr 2020 10:53:47 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:39107 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727023AbgD2Oxq (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:50:21 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89DECC03C1AE
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 07:50:21 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id e26so1913146otr.2
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 07:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qyI0SNEnQtXEbJwY1Ck/cg35XSFvpALxjDJPBXBhrnQ=;
-        b=OTk4BhDexgtYj45AbedwxqiaNtEWMz5vICEz3FjS2ASgEs8RDykY5nycZKJdyYbvnn
-         xdYRSxrMo55Daa/iS9BaQRTfDRlJL96e4tSX6UHp/duPNiog6mElo/qalSUKyuNe2+2N
-         FywOGF2rs+Lg/lbWRbixNls/EZK2awg/bnYNn07l121KiDC7cS3+PpjNLSCT4vphjz9Q
-         8+Qvo/Jpc4uxv0X7IfL1rgTr7vmGDeAVK+o2Evv+5128QbHUGYjhzwz3j8odYXtGvUjn
-         MHsz/jK4o0FM3/8LMB8RHP46ODdQNZsg6uZaFmQaGKJ55XRjyCSufzRH3kpLiEfiZ5zN
-         8GxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qyI0SNEnQtXEbJwY1Ck/cg35XSFvpALxjDJPBXBhrnQ=;
-        b=f/0cAjdJBfIrYdS7xNOezxY2K9uhjZhn2ZYk64TN+7Ao8158sirfxInXeyJVG+xSOh
-         aJ4mD7d8Z6tRvYmGgmNpahH7rSyRu9Kzqyr4PDYWc0uv4wGyniXTuNAnxigLi4Ljh8B7
-         hvlYeRyYPbmNgDrQ7RrBkdptrMbhhsDsboZf2zrzKnpMeoIYvKMl0GDCdWgULCdxUUwQ
-         06/yiQR9PSRYODG2c54PfS6FrjXv+f+2DnGVLbUawGqz/Il49h9dzt/T/7I8DV9GHHGD
-         FhBTi03+/FS4k0OlSltfyXttbr17r0NmEJXYxSAm9v/EAa/lj4OGXMEWOis1P1q5jqHv
-         SvJA==
-X-Gm-Message-State: AGi0PuY941pBns00FrYt3LIFnLq0WDaAhhJdS+F2X3h7xn0h5gLZPcwb
-        bbqQzXRoEaVZK8egdG/mF9nOSol6cTZI0iJjnLBfDA==
-X-Google-Smtp-Source: APiQypIXL8I2wEME01DT2EGMJ0/M/DnYHbWLA+pVPwZCB7X9EbvdQ5yUHo7uSB8IJZb4WwLhqG0FGhPpcw/e0s52+Ik=
-X-Received: by 2002:a9d:2f48:: with SMTP id h66mr24840284otb.252.1588171820828;
- Wed, 29 Apr 2020 07:50:20 -0700 (PDT)
+        Wed, 29 Apr 2020 10:53:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588172025; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=XfHvHIcbuPGCDxtOiJABtMbA03S3CIq/wsmr77Nkc+U=; b=exYM4BmsTxw8ZYYVQP4pYYlmctvtDeTSoh9RZBcpMP6/YzKzi/PoN2RfimCazcIG2x/Xz+Oc
+ H7jnMOK2ymzDZJydVrF9MqFqgd1830FXhOQ0HZe0imT5ZIAe4m/pkuDgFUaAoiP66Ey9vEWg
+ N1YTLa5cMT+P1PEozBmi9GGNAME=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea994f0.7ff4c7b0c2d0-smtp-out-n04;
+ Wed, 29 Apr 2020 14:53:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C7AF3C43636; Wed, 29 Apr 2020 14:53:36 +0000 (UTC)
+Received: from [10.131.182.194] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35A09C433CB;
+        Wed, 29 Apr 2020 14:53:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 35A09C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 03/17] arm64: dts: sdm845: Add OPP table for all qup
+ devices
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-4-git-send-email-rnayak@codeaurora.org>
+ <20200429000234.GK4525@google.com>
+ <fe4b60f9-8aa6-0173-a67f-2f0f8451ad85@codeaurora.org>
+Message-ID: <cc425e51-9e27-76a3-8ce6-1a751960ff7a@codeaurora.org>
+Date:   Wed, 29 Apr 2020 20:23:30 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1585341214-25285-1-git-send-email-tharvey@gateworks.com>
- <1585341214-25285-3-git-send-email-tharvey@gateworks.com> <20200428094426.GL3559@dell>
- <CAJ+vNU0UCugbM7Q7WZ1Hw-U=Je483jYGdrvS0Vq6idxtuUmz2Q@mail.gmail.com> <20200429063319.GV3559@dell>
-In-Reply-To: <20200429063319.GV3559@dell>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Wed, 29 Apr 2020 07:50:09 -0700
-Message-ID: <CAJ+vNU1e10F_g51UXgJ+o1R9zhf_1J9xHJ6SYEuZC4615QfG1w@mail.gmail.com>
-Subject: Re: [PATCH v8 2/3] mfd: add Gateworks System Controller core driver
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Robert Jones <rjones@gateworks.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <fe4b60f9-8aa6-0173-a67f-2f0f8451ad85@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:33 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Tue, 28 Apr 2020, Tim Harvey wrote:
->
-> > On Tue, Apr 28, 2020 at 2:44 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > <snip>
-> > > > +
-> > > > +static int gsc_probe(struct i2c_client *client)
-> > > > +{
-> > > > +     struct device *dev = &client->dev;
-> > > > +     struct gsc_dev *gsc;
-> > > > +     int ret;
-> > > > +     unsigned int reg;
-> > > > +
-> > > > +     gsc = devm_kzalloc(dev, sizeof(*gsc), GFP_KERNEL);
-> > > > +     if (!gsc)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     gsc->dev = &client->dev;
-> > > > +     gsc->i2c = client;
-> > > > +     i2c_set_clientdata(client, gsc);
-> > > > +
-> > > > +     gsc->bus.reg_write = gsc_regmap_regwrite;
-> > > > +     gsc->bus.reg_read = gsc_regmap_regread;
-> > >
-> > > Why do you need to store these in ddata?
-> >
-> > Lee,
-> >
-> > Thanks for the review!
-> >
-> > I need the remap_bus* for devm_regmap_init() in the hwmon sub-module driver:
-> >
-> > hwmon->regmap = devm_regmap_init(dev, &gsc->bus, gsc->i2c_hwmon,
-> > &gsc_hwmon_regmap_config);
-> >
-> > Is there something easier I'm missing?
->
-> This is an odd setup.  I haven't seen one driver registering another
-> driver's Regmap call-backs before, related or otherwise.  Normally the
-> Regmap is setup (initialised) in the parent driver and child drivers
-> just make use of it.  Here it looks like you are registering 2
-> separate Regmaps, but using the same call-backs for both, which seems
-> wrong to me.
->
 
-Lee,
+On 4/29/2020 7:45 PM, Rajendra Nayak wrote:
+> 
+> On 4/29/2020 5:32 AM, Matthias Kaehlcke wrote:
+>> Hi Rajendra,
+>>
+>> On Tue, Apr 28, 2020 at 07:02:51PM +0530, Rajendra Nayak wrote:
+>>> qup has a requirement to vote on the performance state of the CX domain
+>>> in sdm845 devices. Add OPP tables for these and also add power-domains
+>>> property for all qup instances.
+>>>
+>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+>>> ---
+>>>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 115 +++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 115 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>> index 8f926b5..36b9fb1 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>> @@ -804,6 +804,25 @@
+>>>               clock-names = "core";
+>>>           };
+>>> +        qup_opp_table: qup-opp-table {
+>>> +            compatible = "operating-points-v2";
+>>> +
+>>> +            opp-19200000 {
+>>> +                opp-hz = /bits/ 64 <19200000>;
+>>> +                required-opps = <&rpmhpd_opp_min_svs>;
+>>> +            };
+>>> +
+>>> +            opp-75000000 {
+>>> +                opp-hz = /bits/ 64 <75000000>;
+>>> +                required-opps = <&rpmhpd_opp_low_svs>;
+>>> +            };
+>>> +
+>>> +            opp-100000000 {
+>>> +                opp-hz = /bits/ 64 <100000000>;
+>>> +                required-opps = <&rpmhpd_opp_svs>;
+>>> +            };
+>>> +        };
+>>> +
+>>
+>> Judging from SDM845 (which has more OPP tables) the convention seems to be
+>> to add OPP tables to the nodes that use them, which seems reasonable and
+>> keeps them out of the device list.
+>>
+>> Unfortunately this convention isn't completely suitable for cases like this
+>> (and the DSI OPPs later in this series), where the same OPP table is used by
+>> multiple devices. A possible compromise would be to add the table to the
+>> node of the first device that uses them.
+> 
+> Sounds fair, I will do that and respin. Thanks.
 
-It is perhaps an odd setup. The hwmon sub-device is at a different i2c
-slave address than the other sub-devices. The same callbacks are used
-for reg read/write to take advantage of the retries due to the errata
-resulting in occasional NAK'd register reads.
+Looking into this some more, I see we do have..
 
-Tim
+static const struct of_device_id of_skipped_node_table[] = {
+         { .compatible = "operating-points-v2", },
+         {} /* Empty terminated list */
+};
+
+..in drivers/of/platform.c, so its not being added to the device list.
+
+And atleast in case of qup, I am having to duplicate the OPP tables once for
+each qup instance. Not to mention, having them inside the first qup device
+just makes it a little confusing to read who the OPP table belongs to.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
