@@ -2,139 +2,146 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14E5C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1E2C8300A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91C11208E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2EC21775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:46:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="IQhJtA3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgD2UYw (ORCPT
+        id S1726973AbgD2UqY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:24:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:44566 "EHLO foss.arm.com"
+        Wed, 29 Apr 2020 16:46:24 -0400
+Received: from plaes.org ([188.166.43.21]:34960 "EHLO plaes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgD2UYw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:24:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6F311063;
-        Wed, 29 Apr 2020 13:24:48 -0700 (PDT)
-Received: from [10.37.12.43] (unknown [10.37.12.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EF1A3F68F;
-        Wed, 29 Apr 2020 13:24:45 -0700 (PDT)
-Subject: Re: [PATCH] thermal: power_allocate: add upper and lower limits
-To:     Michael Kao <michael.kao@mediatek.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org,
-        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20200424071601.2636-1-michael.kao@mediatek.com>
- <accb83e0-ffbe-b6e3-6bf9-e7cc8b9fe19c@arm.com>
- <1588156776.3573.1.camel@mtksdccf07>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <03286571-c110-7f5e-a911-24f8c3e4fd42@arm.com>
-Date:   Wed, 29 Apr 2020 21:24:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726456AbgD2UqX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 16:46:23 -0400
+Received: from localhost (unknown [IPv6:2001:1530:1000:d397:940e:6b9e:3deb:3])
+        by plaes.org (Postfix) with ESMTPSA id 92F91406D2;
+        Wed, 29 Apr 2020 20:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
+        t=1588193180; bh=oXxncios4NGf2aktHiZX8FnCvunPuUkRAB5eO78zbrg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IQhJtA3O6U6JCR32OoY0yGZk+wkoR+mazjBOT2uiJTHCusppZ2YPufw/sgfbmANCu
+         UDqRAeOOmk8wz4ILHVCOJkGEH6SEsUfzdkPSadRR/GLi/ataECoiQx7PoN568Zx4nO
+         qFsPMesW6/IxRbvUMYm0cAW83f+vIjQh26akHkO17W31aaLyBgEFdk+gJwacuNMmYO
+         oAh2spSY91Fz6L7j7oENLHG56F3M+Dfp4dhOxE2+tbzQgLvWORrYsbd/DecsKwjBUy
+         5dYJe+HQQ7ZTEtx80OjzkiXYYqZsgcbCvJ3gAp4PN62a/deQhNVdx0kCUIyomm2yBd
+         frsWFybK4wQNQ==
+From:   Priit Laes <plaes@plaes.org>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc:     Priit Laes <plaes@plaes.org>
+Subject: [PATCH v2 1/6] clk: sunxi-ng: a20: Register regmap for sun7i CCU
+Date:   Wed, 29 Apr 2020 23:46:07 +0300
+Message-Id: <20200429204612.31883-2-plaes@plaes.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200429204612.31883-1-plaes@plaes.org>
+References: <20200429204612.31883-1-plaes@plaes.org>
 MIME-Version: 1.0
-In-Reply-To: <1588156776.3573.1.camel@mtksdccf07>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On sun7i, the gmac clock is handled by the dwmac-sunxi driver, but
+its configuration register is located in the CCU register range,
+requiring proper regmap setup.
 
+In order to do that, we use CLK_OF_DECLARE_DRIVER to initialize
+sun7i ccu, which clears the OF_POPULATED flag, allowing the
+platform device to probe the same resource with proper device node.
 
-On 4/29/20 11:39 AM, Michael Kao wrote:
-> On Fri, 2020-04-24 at 10:22 +0100, Lukasz Luba wrote:
->> Hi Michael,
->>
->> On 4/24/20 8:16 AM, Michael Kao wrote:
->>> The upper and lower limits of thermal throttle state in the
->>> device tree do not apply to the power_allocate governor.
->>> Add the upper and lower limits to the power_allocate governor.
->>>
->>> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
->>> ---
->>>    drivers/thermal/thermal_core.c | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
->>> index 9a321dc548c8..f6feed2265bd 100644
->>> --- a/drivers/thermal/thermal_core.c
->>> +++ b/drivers/thermal/thermal_core.c
->>> @@ -598,7 +598,7 @@ int power_actor_set_power(struct thermal_cooling_device *cdev,
->>>    	if (ret)
->>>    		return ret;
->>>    
->>> -	instance->target = state;
->>> +	instance->target = clamp_val(state, instance->lower, instance->upper);
->>>    	mutex_lock(&cdev->lock);
->>>    	cdev->updated = false;
->>>    	mutex_unlock(&cdev->lock);
->>>
->>
->> Thank you for the patch and having to look at it. I have some concerns
->> with this approach. Let's analyze it further.
->>
->> In default the cooling devices in the thermal zone which is used by IPA
->> do not have this 'lower' and 'upper' limits. They are set to
->> THERMAL_NO_LIMIT in DT to give full control to IPA over the states.
->>
->> This the function 'power_actor_set_power' actually translates granted
->> power to the state that device will run for the next period.
->> The IPA algorithm has already split the power budget.
->> Now what happen when the 'lower' value will change the state to a state
->> which consumes more power than was calculated in the IPA alg... It will
->> became unstable.
->>
->> I would rather see a change which uses these 'lower' and 'upper' limits
->> before the IPA do the calculation of the power budget. But this wasn't
->> a requirement and we assumed that IPA has full control over the cooling
->> device (which I described above with this DT THERMAL_NO_LIMIT).
->>
->> Is there a problem with your platform that it has to provide some
->> minimal performance, so you tried to introduce this clamping?
->>
->> Regards,
->> Lukasz
-> 
-> 
-> Hi Lukasz,
-> 
-> I refer to the documentation settings of the thermal device tree
-> (Documentation / devicetree / bindings / thermal / thermal.txt).
-> 
-> It shows that cooling-device is a mandatory property, so max/min cooling
-> state should be able to support in framework point of view.
-> Otherwise, the limitation should be added in binding document.
-> 
-> Different hardware mechanisms have different heat dissipation
-> capabilities.
-> Limiting the input heat source can slow down the heat accumulation and
-> temperature burst.
-> We want to reduce the accumulation of heat at high temperature by
-> limiting the minimum gear of thermal throttle.
+Signed-off-by: Priit Laes <plaes@plaes.org>
+---
+ drivers/clk/sunxi-ng/ccu-sun4i-a10.c | 60 +++++++++++++++++++++++++++-
+ 1 file changed, 59 insertions(+), 1 deletion(-)
 
-I agree that these 'lower' and 'upper' limits shouldn't be just
-ignored as is currently. This patch clamps the value at late stage,
-though.
+diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+index f32366d9336e..fbdf9ecf21b8 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
++++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+@@ -8,6 +8,8 @@
+ #include <linux/clk-provider.h>
+ #include <linux/io.h>
+ #include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
+ 
+ #include "ccu_common.h"
+ #include "ccu_reset.h"
+@@ -1478,5 +1480,61 @@ static void __init sun7i_a20_ccu_setup(struct device_node *node)
+ {
+ 	sun4i_ccu_init(node, &sun7i_a20_ccu_desc);
+ }
+-CLK_OF_DECLARE(sun7i_a20_ccu, "allwinner,sun7i-a20-ccu",
++CLK_OF_DECLARE_DRIVER(sun7i_a20_ccu, "allwinner,sun7i-a20-ccu",
+ 	       sun7i_a20_ccu_setup);
++
++/*
++ * Regmap for the GMAC driver (dwmac-sunxi) to allow access to
++ * GMAC configuration register.
++ */
++#define SUN7I_A20_GMAC_CFG_REG 0x164
++static bool sun7i_a20_ccu_regmap_accessible_reg(struct device *dev,
++						unsigned int reg)
++{
++	if (reg == SUN7I_A20_GMAC_CFG_REG)
++		return true;
++	return false;
++}
++
++static struct regmap_config sun7i_a20_ccu_regmap_config = {
++	.reg_bits	= 32,
++	.val_bits	= 32,
++	.reg_stride	= 4,
++	.max_register	= 0x1f4, /* clk_out_b */
++
++	.readable_reg	= sun7i_a20_ccu_regmap_accessible_reg,
++	.writeable_reg	= sun7i_a20_ccu_regmap_accessible_reg,
++};
++
++static int sun7i_a20_ccu_probe_regmap(struct platform_device *pdev)
++{
++	void __iomem *reg;
++	struct resource *res;
++	struct regmap *regmap;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg = devm_ioremap(&pdev->dev, res->start, resource_size(res));
++	if (IS_ERR(reg))
++		return PTR_ERR(reg);
++
++	regmap = devm_regmap_init_mmio(&pdev->dev, reg,
++				       &sun7i_a20_ccu_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	return 0;
++}
++
++static const struct of_device_id sun7i_a20_ccu_ids[] = {
++	{ .compatible = "allwinner,sun7i-a20-ccu"},
++	{ }
++};
++
++static struct platform_driver sun7i_a20_ccu_driver = {
++	.probe = sun7i_a20_ccu_probe_regmap,
++	.driver = {
++		.name = "sun7i-a20-ccu",
++		.of_match_table = sun7i_a20_ccu_ids,
++	},
++};
++builtin_platform_driver(sun7i_a20_ccu_driver);
+-- 
+2.26.2
 
-Let me have a look how it could be taken into account in the early
-stage, before the power calculation and split are done. Maybe there
-is a clean way to inject this.
-
-Regards,
-Lukasz
