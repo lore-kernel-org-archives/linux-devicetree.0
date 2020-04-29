@@ -2,64 +2,148 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8B1C8300A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F96C83007
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1E92074A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3063320731
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I02X3CZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgD2AaP (ORCPT
+        id S1726535AbgD2AjK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:30:15 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:49937 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726386AbgD2AaP (ORCPT
+        Tue, 28 Apr 2020 20:39:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726524AbgD2AjK (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:30:15 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 28 Apr 2020 17:30:13 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 28 Apr 2020 17:30:13 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 37E194C85; Tue, 28 Apr 2020 17:30:13 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
+        Tue, 28 Apr 2020 20:39:10 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B3DC035493
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:39:10 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z1so238099pfn.3
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=W7gWUUXU/Yr8aGKVFYA0eYnvhip9VKNyy91uupW34i0=;
+        b=I02X3CZM/NUHTH3RQSutmuienX62rm5LBybo8+305etL9oecXnfyo7V6fNMAb2ZqsY
+         GEnD1SVRAVPUrbKTGngrY5QzpG2TxAkPdT23TeWZ9XR+u9tUhgwZVxZ5uA8bl3iMxHRS
+         7mxQERX7ZXWTguvM+vNzEh3xLlDgjIKuwbZ8Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W7gWUUXU/Yr8aGKVFYA0eYnvhip9VKNyy91uupW34i0=;
+        b=Mfk/2/i5Td/V4e7wKdqnYTRmp1Sx8Jx1nXE0Yn5qh3CyDAJZfysdglS5usOM2z22l9
+         i7EciuQ5QXkmbnPyAAejKMuBsXo8Vpl+H15CQp0DaKCSfl7iu7ouFUtH4nFTFXQDZlji
+         arbC+f9V4+fAcDlLX+/009A159rDWWvVqNDm+Flyd6MewGyO1khFBgzmMIIghyl3rvks
+         sJ3SNf/InsF2aWnHhEKFrDQG/S+qjqpVaL4yMCmoaAeAa316YGuCxazdppZ2E/bEKGf4
+         4QFlzKZyYABekJGMwfQ1dkdFeJG9l6BHN3mTjzMVMX/m3Xt3Pxg7d4smCvMX5Bijgs3J
+         rzgQ==
+X-Gm-Message-State: AGi0PuZ0pijhJsoGzfVr3EpKTi/sqHbRgkytwOTfG0N/ZEfurZ5k2CBY
+        0e1bEQhoDmWEbFuN0MyMr2s8Wg==
+X-Google-Smtp-Source: APiQypLbPYTzp9qbzyos35G6tVPdoCiVx7N0aCXfQqih6ccSR97hGwNwigOKEqtptnE5JuFmlqObAA==
+X-Received: by 2002:a63:5717:: with SMTP id l23mr19849633pgb.217.1588120749609;
+        Tue, 28 Apr 2020 17:39:09 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id u15sm3044185pjm.47.2020.04.28.17.39.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 17:39:08 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 17:39:07 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v1 0/2] Introduce QTI I2C PMIC controller
-Date:   Tue, 28 Apr 2020 17:30:10 -0700
-Message-Id: <cover.1588115326.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v3 12/17] media: venus: core: Add support for opp
+ tables/perf voting
+Message-ID: <20200429003907.GN4525@google.com>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add devicetree bindings and code for the Qualcomm Technologies, Inc. I2C PMIC
-controller.
+On Tue, Apr 28, 2020 at 07:03:00PM +0530, Rajendra Nayak wrote:
+> Add support to add OPP tables and perf voting on the OPP powerdomain.
+> This is needed so venus votes on the corresponding performance state
+> for the OPP powerdomain along with setting the core clock rate.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> Cc: linux-media@vger.kernel.org
+> ---
+>  drivers/media/platform/qcom/venus/core.c       | 28 +++++++++++++++++++
+>  drivers/media/platform/qcom/venus/core.h       |  5 ++++
+>  drivers/media/platform/qcom/venus/pm_helpers.c | 37 +++++++++++++++++++++++---
+>  3 files changed, 66 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 194b10b9..e98fea92 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <media/videobuf2-v4l2.h>
+>  #include <media/v4l2-mem2mem.h>
+> @@ -214,6 +215,20 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (!core->pm_ops)
+>  		return -ENODEV;
+>  
+> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
+> +	if (IS_ERR(core->opp_table))
+> +		return PTR_ERR(core->opp_table);
+> +
+> +	if (core->res->opp_pmdomain) {
+> +		ret = dev_pm_opp_of_add_table(dev);
+> +		if (!ret) {
+> +			core->has_opp_table = true;
+> +		} else if (ret != -ENODEV) {
+> +			dev_err(dev, "Invalid OPP table in Device tree\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	if (core->pm_ops->core_get) {
+>  		ret = core->pm_ops->core_get(dev);
+>  		if (ret)
+> @@ -301,6 +316,9 @@ static int venus_probe(struct platform_device *pdev)
+>  err_venus_shutdown:
+>  	venus_shutdown(core);
+>  err_runtime_disable:
+> +	if (core->res->opp_pmdomain && core->has_opp_table)
 
-Guru Das Srinagesh (2):
-  dt-bindings: mfd: Document QTI I2C PMIC controller
-  mfd: Introduce QTI I2C PMIC controller
+the check for 'core->res->opp_pmdomain' is not needed, 'core->has_opp_table'
+can only be true when 'core->res->opp_pmdomain' is not NULL.
 
- .../devicetree/bindings/mfd/qcom,i2c-pmic.yaml     |  86 +++
- drivers/mfd/Kconfig                                |  11 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/qcom-i2c-pmic.c                        | 737 +++++++++++++++++++++
- 4 files changed, 835 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml
- create mode 100644 drivers/mfd/qcom-i2c-pmic.c
+> +		dev_pm_opp_of_remove_table(dev);
+> +	dev_pm_opp_put_clkname(core->opp_table);
+>  	pm_runtime_set_suspended(dev);
+>  	pm_runtime_disable(dev);
+>  	hfi_destroy(core);
+> @@ -326,6 +344,10 @@ static int venus_remove(struct platform_device *pdev)
+>  
+>  	venus_firmware_deinit(core);
+>  
+> +	if (core->res->opp_pmdomain && core->has_opp_table)
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+ditto
