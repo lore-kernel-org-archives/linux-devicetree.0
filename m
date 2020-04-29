@@ -2,128 +2,166 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B19C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 16:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF999C83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 16:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C50A2073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 16:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D50208FE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 16:38:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mc66UOQw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ayOb1vKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgD2QdM (ORCPT
+        id S1726539AbgD2Qi1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726511AbgD2QdM (ORCPT
+        Wed, 29 Apr 2020 12:38:27 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:32927 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726456AbgD2Qi0 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:33:12 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E4BC03C1AE;
-        Wed, 29 Apr 2020 09:33:12 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id c2so2888218iow.7;
-        Wed, 29 Apr 2020 09:33:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xrYwlO7xNNj9fkAP9oHGsbabPQftzUzMxzOAeS45YvA=;
-        b=Mc66UOQw3PSrCzfUt6SnAmBJoNfERd9Wgtuu4ajltmzI21Ad5iqV7T71c8OI9Ovx1v
-         UxxzA7h0TGO5GWL2VglyGBffnr0d9cScTY/ANtdLj0LwQo17VUHpUGaHhYFzDP/1b7BU
-         BfZr9vzg7bEQgtQESFGg168Xj7ZbCChxBeJCm2xCHo5xHMwqcMWh7EjbdDjwYLXpiWdZ
-         WTO4n9KOYAOMQ2e2FzTKWPrQn/hqw7ZzpvEdmn8h8jKEvVkwydzGC1PJkMhEo1I34irb
-         w4g4l2QH3Po8cb4YZCx2yMeR8mEoalay7vXdec9wI4PhU7O8tihJA0koPXKOOtxaarIq
-         JCOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xrYwlO7xNNj9fkAP9oHGsbabPQftzUzMxzOAeS45YvA=;
-        b=WdPlFEKgH2s7a07g2m9dMZ8IEkvKkFEW+dG3TWMhm+BeAD2eK//i9j2p+jtbaN3jYW
-         lRp3/b0vBL+5e0d2hssWWbnemma0dGQfSDMSd6fIua+7vlsYRIphytwW5uNrCS05O8kc
-         mUc6upGo18DAjDS1egZK3MVIcNOrBAHZGiPdrNF5n70Dl9Z3z8e0wv0rftx6vaatXpon
-         JE7vRTsms5n98zogR/5vIq+Qb1vfUedBMYembnirYf7ooVHW60FdFErmFMORmOCHWv3e
-         fpB4DHLrUeSkcpMKD9nlqWg1n31OUJhzIBvQwAQDbKQK0140B3cYPFSnP1P9Y0X2dZW8
-         fyVw==
-X-Gm-Message-State: AGi0PubTZRecdgfupUO+qJBG7xhZtMBpUtm7dQ4sWw/csCRJLnlYgv6G
-        cwmZbQu8mj2mZ6XkkdD20Yb9pLinxVHK7keUGCk=
-X-Google-Smtp-Source: APiQypKu3/he3vcgwJi5RApDarGi5QWrtRiRJCHqu6zQTJlBLBWHScAvv0k9XsP7FCPb/0GQhJgoWCNAfwSwS562ako=
-X-Received: by 2002:a05:6602:2fcd:: with SMTP id v13mr30928449iow.124.1588177991512;
- Wed, 29 Apr 2020 09:33:11 -0700 (PDT)
+        Wed, 29 Apr 2020 12:38:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588178305; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=4s/uu5d90dFDcjdFr84ftHeij5DiBpvs7D+0ACrC89Y=; b=ayOb1vKH+P5Gqd/NuAe0RG0jMkjy5C1Gw92GUTIvrj9bf++Ljy/D4yux52b4VIp2RUYWxuXF
+ sMp2+HoJrpzcdmzv4iscsdxdfE1lYg7U1I7g3X0rRq3GXdZ0umaIyw29o30jQ8fJXACQm5Wx
+ OIkltOhalSghsCGo2+MPDovhF1I=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea9ad81.7f88f590a500-smtp-out-n01;
+ Wed, 29 Apr 2020 16:38:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D243AC433BA; Wed, 29 Apr 2020 16:38:24 +0000 (UTC)
+Received: from [10.131.182.194] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37E15C432C2;
+        Wed, 29 Apr 2020 16:38:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37E15C432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 03/17] arm64: dts: sdm845: Add OPP table for all qup
+ devices
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-4-git-send-email-rnayak@codeaurora.org>
+ <20200429000234.GK4525@google.com>
+ <fe4b60f9-8aa6-0173-a67f-2f0f8451ad85@codeaurora.org>
+ <cc425e51-9e27-76a3-8ce6-1a751960ff7a@codeaurora.org>
+ <20200429161046.GR4525@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <59f6fcbd-c7c5-c51f-cbb3-c9b980d7611b@codeaurora.org>
+Date:   Wed, 29 Apr 2020 22:08:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200426104115.22630-1-peron.clem@gmail.com> <20200426104115.22630-4-peron.clem@gmail.com>
- <20200428081321.ht3el26yqhsnyfm4@gilmour.lan> <CAJiuCcdVs_drs40Q6537BYfz24F7NmC6B8S5-Lt4V4ggs-FXWA@mail.gmail.com>
- <20200429123529.y24dpy63wxq7uvkt@gilmour.lan>
-In-Reply-To: <20200429123529.y24dpy63wxq7uvkt@gilmour.lan>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Wed, 29 Apr 2020 18:33:00 +0200
-Message-ID: <CAJiuCcfXqizcq_JuXRCsqEqM2562cr1SGJ0pmy07jcJxAXojOw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] ASoC: sun4i-i2s: Add support for H6 I2S
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Marcus Cooper <codekipper@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200429161046.GR4525@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
 
-On Wed, 29 Apr 2020 at 14:35, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Tue, Apr 28, 2020 at 10:55:47AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > > > +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
-> > > > +                              unsigned int fmt)
-> > >
-> > > The alignment is off here
-> > >
-> > > > +{
-> > > > +     u32 mode, val;
-> > > > +     u8 offset;
-> > > > +
-> > > > +     /*
-> > > > +      * DAI clock polarity
-> > > > +      *
-> > > > +      * The setup for LRCK contradicts the datasheet, but under a
-> > > > +      * scope it's clear that the LRCK polarity is reversed
-> > > > +      * compared to the expected polarity on the bus.
-> > > > +      */
-> > >
-> > > Did you check this or has it been copy-pasted?
-> >
-> > copy-pasted, I will check this.
->
-> It's not going to be easy to do this if you only have a board with HDMI. =
-If you
-> can't test that easily, just remove the comment (or make it explicit that=
- you
-> copy pasted it?), no comment is better than a wrong one.
+On 4/29/2020 9:40 PM, Matthias Kaehlcke wrote:
+> On Wed, Apr 29, 2020 at 08:23:30PM +0530, Rajendra Nayak wrote:
+>>
+>> On 4/29/2020 7:45 PM, Rajendra Nayak wrote:
+>>>
+>>> On 4/29/2020 5:32 AM, Matthias Kaehlcke wrote:
+>>>> Hi Rajendra,
+>>>>
+>>>> On Tue, Apr 28, 2020 at 07:02:51PM +0530, Rajendra Nayak wrote:
+>>>>> qup has a requirement to vote on the performance state of the CX domain
+>>>>> in sdm845 devices. Add OPP tables for these and also add power-domains
+>>>>> property for all qup instances.
+>>>>>
+>>>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>>>> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+>>>>> ---
+>>>>>    arch/arm64/boot/dts/qcom/sdm845.dtsi | 115 +++++++++++++++++++++++++++++++++++
+>>>>>    1 file changed, 115 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>>>> index 8f926b5..36b9fb1 100644
+>>>>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>>>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>>>> @@ -804,6 +804,25 @@
+>>>>>                clock-names = "core";
+>>>>>            };
+>>>>> +        qup_opp_table: qup-opp-table {
+>>>>> +            compatible = "operating-points-v2";
+>>>>> +
+>>>>> +            opp-19200000 {
+>>>>> +                opp-hz = /bits/ 64 <19200000>;
+>>>>> +                required-opps = <&rpmhpd_opp_min_svs>;
+>>>>> +            };
+>>>>> +
+>>>>> +            opp-75000000 {
+>>>>> +                opp-hz = /bits/ 64 <75000000>;
+>>>>> +                required-opps = <&rpmhpd_opp_low_svs>;
+>>>>> +            };
+>>>>> +
+>>>>> +            opp-100000000 {
+>>>>> +                opp-hz = /bits/ 64 <100000000>;
+>>>>> +                required-opps = <&rpmhpd_opp_svs>;
+>>>>> +            };
+>>>>> +        };
+>>>>> +
+>>>>
+>>>> Judging from SDM845 (which has more OPP tables) the convention seems to be
+>>>> to add OPP tables to the nodes that use them, which seems reasonable and
+>>>> keeps them out of the device list.
+>>>>
+>>>> Unfortunately this convention isn't completely suitable for cases like this
+>>>> (and the DSI OPPs later in this series), where the same OPP table is used by
+>>>> multiple devices. A possible compromise would be to add the table to the
+>>>> node of the first device that uses them.
+>>>
+>>> Sounds fair, I will do that and respin. Thanks.
+>>
+>> Looking into this some more, I see we do have..
+>>
+>> static const struct of_device_id of_skipped_node_table[] = {
+>>          { .compatible = "operating-points-v2", },
+>>          {} /* Empty terminated list */
+>> };
+>>
+>> ..in drivers/of/platform.c, so its not being added to the device list.
+> 
+> sure, I didn't mean that the OPP table is added by the kernel as a device, but
+> that the table breaks with the structure of the DT of device nodes ordered by
+> address.
 
-I have talked with Marcus Cooper it may be able to test this this week-end.
-Also this can explain why we need the "
-simple-audio-card,frame-inversion;" in the device-tree.
+Ah ok, got it.
 
-If think this fix has been introduced by you, correct? Could you say
-on which SoC did you see this issue?
+> 
+>> And atleast in case of qup, I am having to duplicate the OPP tables once for
+>> each qup instance. Not to mention, having them inside the first qup device
+>> just makes it a little confusing to read who the OPP table belongs to.
+> 
+> I'm not advocating for duplicating the OPP tables. An alternative to having
+> them in the first QUP device could be to have an dedicated node with shared
+> opp tables outside of the device list, similar to thermal-zones.
 
-Thanks
-Clement
+That sounds like a good idea too.
 
->
-> Maxime
+> I tend to like consistency and the sprinkled in OPP tables break with that,
+> but ultimately it's up to Bjorn.
+
+Bjorn, any thoughts?
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
