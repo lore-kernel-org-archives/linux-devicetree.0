@@ -2,117 +2,113 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA017C83004
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC93C83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A688420BED
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:03:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYjww6TR"
+	by mail.kernel.org (Postfix) with ESMTP id 11B3E2076B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgD2WDw (ORCPT
+        id S1726775AbgD2WNW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:03:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2WDv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:03:51 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3163C03C1AE;
-        Wed, 29 Apr 2020 15:03:51 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id k133so3304123oih.12;
-        Wed, 29 Apr 2020 15:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VuIJyUBI77A7IsS+UOzXlF4URqxn4aKY6yPSfUat6bs=;
-        b=jYjww6TRFcRX3Y23g1fUDaSBixBCmtlAr7R6Tr647wYfD6+VQtLpQyI3KQy3e9YvVZ
-         GpcxE8fFEo6OWVSKuQwuHBjMY4thiSIdKoHlvitdIYxmtyZpsMeQejW1hdtDaMB4wmk0
-         F7jHmJII2Gtb6LCbj5zCojkV1FYAgJwh+xYKpP2RtNrp7FRaObjHYxH9sg/TrRzwJHs6
-         li/TE2Nx2Vs6kvMJWzIHQzUj7Egf5+H/qSp0aglmR2A/9ci3Mcn2ZBQRk2z4sNW5E2k8
-         wD3tk7bVwZl351JxP4iOxPoHCGy92KYF/3XHy2wtZdSpGhHG4SJRGO7npCeAVQIm061u
-         6Yyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VuIJyUBI77A7IsS+UOzXlF4URqxn4aKY6yPSfUat6bs=;
-        b=opHnCCv31KSe3tij6f2edWlhbQTyl5/QXOpvA6VaQwxUmOynVhmDvCHVRdvrqbY0Va
-         HRVnyRCNALvkrobdZGy00F9vCf8zX/INnGtaqejZxTVQqEvhXahhbP6E9GdtCxkyK8h6
-         Z1wOXWw3Vg0q6xqmgKXHjwB86LmpdUVOgfW6NE+i0yWpC7z4bJzhNLp5zZQ8uVl8HHIy
-         QYJoJ49KNQuJQj+7PJ0o/AHKxEGHhtoOcGrY1rghwNuDLH+p8c0BOlG1wehMqOv1S1XL
-         Db1PsfvzsCPGJxDGuZrqy3tyMTvidYxsnsUK0N4UKcH0HimbP2eZ70eT3BYGj/OiuYwO
-         9mZg==
-X-Gm-Message-State: AGi0PubxZtVmnuJIuBysxBdsg+4Iad8lmdOg6KVQqidwayxuO1WfiNre
-        Hxv12kJhmnY+9ccTxS6YU3m1UB1GU+b9S3YLGfbq/OEC
-X-Google-Smtp-Source: APiQypJ3zwVfJk2nMrXMJzcY0A34yx8sFc7iQq4Qt4G4w6K/OJdPad49V5wxoF+Zc/LWhjYb6zlkiutTqfBQpvdh7bQ=
-X-Received: by 2002:aca:b783:: with SMTP id h125mr349467oif.62.1588197830734;
- Wed, 29 Apr 2020 15:03:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200429215955.GN1551@shell.armlinux.org.uk>
-In-Reply-To: <20200429215955.GN1551@shell.armlinux.org.uk>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 29 Apr 2020 23:03:24 +0100
-Message-ID: <CA+V-a8syz--q7MCNL_5TZmnYqgc7W6nuXJOt6VJhJutuS3seKQ@mail.gmail.com>
-Subject: Re: [PATCH 04/18] ARM: debug-ll: Add support for r8a7742
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wed, 29 Apr 2020 18:13:22 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39488 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgD2WNW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 18:13:22 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id E1D992A0994
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com, twawrzynczak@chromium.org,
+        Benson Leung <bleung@chromium.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200422222242.241699-1-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <bc570981-be55-a34e-b40d-54640a1c496b@collabora.com>
+Date:   Thu, 30 Apr 2020 00:13:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200422222242.241699-1-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Prashant,
 
-Thank you for the review.
+Thank you for the patch.
 
-On Wed, Apr 29, 2020 at 11:00 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Wed, Apr 29, 2020 at 10:56:41PM +0100, Lad Prabhakar wrote:
-> > @@ -1701,6 +1709,7 @@ config DEBUG_UART_PHYS
-> >       default 0xe6e60000 if DEBUG_RCAR_GEN2_SCIF0
-> >       default 0xe6e68000 if DEBUG_RCAR_GEN2_SCIF1
-> >       default 0xe6ee0000 if DEBUG_RCAR_GEN2_SCIF4
-> > +     default 0xe6c60000 if DEBUG_RCAR_GEN2_SCIFA2
->
-> Hi,
->
-> This is ordered by address.  Please keep it so.
->
-Sure will do that.
+On 23/4/20 0:22, Prashant Malani wrote:
+> Add properties for mode, orientation and USB data role switches for
+> Type C connectors. When available, these will allow the Type C connector
+> class port driver to configure the various switches according to USB PD
+> information (like orientation, alt mode etc.) provided by the Chrome OS
+> EC controller.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 
-Cheers,
---Prabhakar
+This patch still needs a review from Rob.
 
-> Thanks.
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+> ---
+>  .../bindings/chrome/google,cros-ec-typec.yaml | 27 ++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> index 6d7396ab8bee..b5814640aa32 100644
+> --- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> @@ -21,7 +21,21 @@ properties:
+>      const: google,cros-ec-typec
+>  
+>    connector:
+> -    $ref: /schemas/connector/usb-connector.yaml#
+> +    allOf:
+> +      - $ref: /schemas/connector/usb-connector.yaml#
+> +      - type: object
+> +        properties:
+> +          mode-switch:
+> +            description: Reference to a DT node for the USB Type C Multiplexer
+> +              controlling the data lines routing for this connector.
+> +
+> +          orientation-switch:
+> +            description: Reference to a DT node for the USB Type C orientation
+> +              switch for this connector.
+> +
+> +          usb-role-switch:
+> +            description: Reference to a DT node for the USB Data role switch
+> +              for this connector.
+>  
+>  required:
+>    - compatible
+> @@ -49,6 +63,17 @@ examples:
+>              data-role = "dual";
+>              try-power-role = "source";
+>            };
+> +
+> +          connector@1 {
+> +            compatible = "usb-c-connector";
+> +            reg = <1>;
+> +            power-role = "dual";
+> +            data-role = "host";
+> +            try-power-role = "source";
+> +            mode-switch = <&typec_mux>;
+> +            orientation-switch = <&typec_orientation_switch>;
+> +            usb-role-switch = <&typec_mux>;
+> +          };
+>          };
+>        };
+>      };
+> 
