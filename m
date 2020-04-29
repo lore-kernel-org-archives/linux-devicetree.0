@@ -2,131 +2,226 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_RED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B32C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21455C83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03EA420731
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAD82083B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="iRH/fvJ6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="G7o21hjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgD2OCf (ORCPT
+        id S1727906AbgD2OIE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:02:35 -0400
-Received: from gproxy5-pub.mail.unifiedlayer.com ([67.222.38.55]:52979 "EHLO
-        gproxy5-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726861AbgD2OCf (ORCPT
+        Wed, 29 Apr 2020 10:08:04 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:30060 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726950AbgD2OIE (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:02:35 -0400
-X-Greylist: delayed 1323 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Apr 2020 10:02:34 EDT
-Received: from cmgw10.unifiedlayer.com (unknown [10.9.0.10])
-        by gproxy5.mail.unifiedlayer.com (Postfix) with ESMTP id 868121407DC
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 07:40:29 -0600 (MDT)
-Received: from md-in-79.webhostbox.net ([43.225.55.182])
-        by cmsmtp with ESMTP
-        id TmwtjFeiJxgMWTmwujyUqv; Wed, 29 Apr 2020 07:40:29 -0600
-X-Authority-Reason: nr=8
-X-Authority-Analysis: v=2.3 cv=eJQ9ckh1 c=1 sm=1 tr=0
- a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=cl8xLZFz6L8A:10:nop_rcvd_month_year
- a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
- a=VwQbUJbxAAAA:8 a=zKD5vtlRtLnuLDy9xr4A:9
- a=sfIEtMYjypgA:10:uccc_2email_address a=rsP06fVo5MYu2ilr0aT5:22
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
-        ; s=default; h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Jq/MMu6L30dsLWRddLaNxkvwFcbee6RqmoIFiQYoC14=; b=iRH/fvJ68raZFp/QLSn0oo2x7m
-        olazxcq2tM1L7Vxou2ciatH+Rkr3WHGUj3t4sYnH76n9hvgg9GwzRfNcLcYZv6fyrTb7qyFyashiw
-        SqVH4vRmOzrLL3ijVt05qNbaJ2LEBd9HFCS1Heya1ZKrJTe1kWiQahlgbiSrECCecFldSIyuM4x72
-        c7Uz87S4iv9YcNyEJSr37memTn0pEqqXM7yBm6rJNXvN6NwW5rSCHiHGCnf5XeHbLERNwxhdxoBwI
-        ca8c3WXbOHoM2H3k1U5no7Wl4sXhGnQ6a5A4Qz7cI49OeMTDnr/aQgKO7FBm64OSKgDGPJKONezfg
-        5SGP7O5g==;
-Received: from p5b3f6bb1.dip0.t-ipconnect.de ([91.63.107.177]:33262 helo=localhost.localdomain)
-        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <saravanan@linumiz.com>)
-        id 1jTmwr-0009y4-Iz; Wed, 29 Apr 2020 13:40:26 +0000
-From:   Saravanan Sekar <saravanan@linumiz.com>
-To:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, broonie@kernel.org,
-        lgirdwood@gmail.com, saravanan@linumiz.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: [PATCH v2 3/4] iio: accel: wsen-itds accel documentation
-Date:   Wed, 29 Apr 2020 15:39:42 +0200
-Message-Id: <20200429133943.18298-4-saravanan@linumiz.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200429133943.18298-1-saravanan@linumiz.com>
-References: <20200429133943.18298-1-saravanan@linumiz.com>
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - linumiz.com
-X-BWhitelist: no
-X-Source-IP: 91.63.107.177
-X-Source-L: No
-X-Exim-ID: 1jTmwr-0009y4-Iz
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: p5b3f6bb1.dip0.t-ipconnect.de (localhost.localdomain) [91.63.107.177]:33262
-X-Source-Auth: saravanan@linumiz.com
-X-Email-Count: 34
-X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
-X-Local-Domain: yes
+        Wed, 29 Apr 2020 10:08:04 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588169282; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=8d9ZLjxSR0ZlqB/VJAA5CdOOM+8E+0gW1EHYL9ahnh4=; b=G7o21hjU6YaGfSAsKQA39ZJ3y8L9eB9gieVeIFaTk/fU5pRDJVaJV0jMBKgwXcniYI+4uNfy
+ bAmZEUXJ2NMDhdJX7O/ngEDesADNzJ7IXs47xIhXWM6tghjGYAsswhQlDp4qKVwzuyVSiJqR
+ rEBXM2gWFWsuHanFgDcOt+r4n9c=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea98a41.7efd14690420-smtp-out-n02;
+ Wed, 29 Apr 2020 14:08:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E4C06C433F2; Wed, 29 Apr 2020 14:07:59 +0000 (UTC)
+Received: from [10.131.182.194] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 352B8C433CB;
+        Wed, 29 Apr 2020 14:07:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 352B8C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 05/17] drm/msm/dpu: Use OPP API to set clk/perf state
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-6-git-send-email-rnayak@codeaurora.org>
+ <CAF6AEGsEgZc=NehvFH2bRfHxcM1uR6s3sLLhk-cQPXM0SXw6Lw@mail.gmail.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <3f77e48d-a884-b1c7-133b-7b26a56e23ed@codeaurora.org>
+Date:   Wed, 29 Apr 2020 19:37:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAF6AEGsEgZc=NehvFH2bRfHxcM1uR6s3sLLhk-cQPXM0SXw6Lw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation about device operating mode and output data range
-supported according to operating mode
 
-Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
----
- .../ABI/testing/sysfs-bus-iio-wsen-itds       | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-new file mode 100644
-index 000000000000..5979f2b8aa1a
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-@@ -0,0 +1,23 @@
-+What:		/sys/bus/iio/devices/iio\:device0/in_accel_samp_freq_available
-+KernelVersion:	5.7
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Reading gives range of sample frequencies available for current operating mode
-+		after one data has generated.
-+
-+		Access: Read
-+		Valid values: represented in Hz
-+		- range [12.5, 1600] for high permormance mode
-+		- range [1.6, 200] for normal/low power mode
-+
-+What:		/sys/bus/iio/devices/iio\:device0/operating_mode
-+KernelVersion:	5.7
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Represents the device operating mode. High performance mode gives high output
-+		data rate and low noise compared to normal mode. Normal mode consumes less
-+		current.  In single shot device enters to lowpower after one data has
-+		generated.
-+
-+		Access: Read, Write
-+		Valid values: "lowpower", "normal", "high_perf", "single_shot"
+On 4/28/2020 10:02 PM, Rob Clark wrote:
+> On Tue, Apr 28, 2020 at 6:39 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>
+>> On some qualcomm platforms DPU needs to express a perforamnce state
+> 
+> s/perforamnce/performance/
+> 
+>> requirement on a power domain depennding on the clock rates.
+> 
+> s/depennding/depending/
+> 
+>> Use OPP table from DT to register with OPP framework and use
+>> dev_pm_opp_set_rate() to set the clk/perf state.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Cc: Rob Clark <robdclark@gmail.com>
+>> Cc: Sean Paul <sean@poorly.run>
+>> Cc: dri-devel@lists.freedesktop.org
+>> ---
+>>   drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c |  3 ++-
+>>   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 25 ++++++++++++++++++++++++-
+>>   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  4 ++++
+>>   3 files changed, 30 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+>> index 11f2beb..fe5717df 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+>> @@ -7,6 +7,7 @@
+>>   #include <linux/debugfs.h>
+>>   #include <linux/errno.h>
+>>   #include <linux/mutex.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/sort.h>
+>>   #include <linux/clk.h>
+>>   #include <linux/bitmap.h>
+>> @@ -239,7 +240,7 @@ static int _dpu_core_perf_set_core_clk_rate(struct dpu_kms *kms, u64 rate)
+>>                  rate = core_clk->max_rate;
+>>
+>>          core_clk->rate = rate;
+>> -       return msm_dss_clk_set_rate(core_clk, 1);
+>> +       return dev_pm_opp_set_rate(&kms->pdev->dev, core_clk->rate);
+> 
+> I think this leaves msm_dss_clk_set_rate() unused now?
+
+yup, I didn't realise, I will get rid of it when I respin.
+> 
+> Other than that,
+> 
+> Reviewed-by: Rob Clark <robdclark@chromium.org>
+
+Thanks.
+
+> 
+>>   }
+>>
+>>   static u64 _dpu_core_perf_get_core_clk_rate(struct dpu_kms *kms)
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+>> index ce19f1d..2f53bbf 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+>> @@ -10,6 +10,7 @@
+>>   #include <linux/debugfs.h>
+>>   #include <linux/dma-buf.h>
+>>   #include <linux/of_irq.h>
+>> +#include <linux/pm_opp.h>
+>>
+>>   #include <drm/drm_crtc.h>
+>>   #include <drm/drm_file.h>
+>> @@ -1033,11 +1034,23 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+>>          if (!dpu_kms)
+>>                  return -ENOMEM;
+>>
+>> +       dpu_kms->opp_table = dev_pm_opp_set_clkname(dev, "core");
+>> +       if (IS_ERR(dpu_kms->opp_table))
+>> +               return PTR_ERR(dpu_kms->opp_table);
+>> +       /* OPP table is optional */
+>> +       ret = dev_pm_opp_of_add_table(dev);
+>> +       if (!ret) {
+>> +               dpu_kms->has_opp_table = true;
+>> +       } else if (ret != -ENODEV) {
+>> +               dev_err(dev, "Invalid OPP table in Device tree\n");
+>> +               return ret;
+>> +       }
+>> +
+>>          mp = &dpu_kms->mp;
+>>          ret = msm_dss_parse_clock(pdev, mp);
+>>          if (ret) {
+>>                  DPU_ERROR("failed to parse clocks, ret=%d\n", ret);
+>> -               return ret;
+>> +               goto err;
+>>          }
+>>
+>>          platform_set_drvdata(pdev, dpu_kms);
+>> @@ -1051,6 +1064,11 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+>>
+>>          priv->kms = &dpu_kms->base;
+>>          return ret;
+>> +err:
+>> +       if (dpu_kms->has_opp_table)
+>> +               dev_pm_opp_of_remove_table(dev);
+>> +       dev_pm_opp_put_clkname(dpu_kms->opp_table);
+>> +       return ret;
+>>   }
+>>
+>>   static void dpu_unbind(struct device *dev, struct device *master, void *data)
+>> @@ -1059,6 +1077,9 @@ static void dpu_unbind(struct device *dev, struct device *master, void *data)
+>>          struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+>>          struct dss_module_power *mp = &dpu_kms->mp;
+>>
+>> +       if (dpu_kms->has_opp_table)
+>> +               dev_pm_opp_of_remove_table(dev);
+>> +       dev_pm_opp_put_clkname(dpu_kms->opp_table);
+>>          msm_dss_put_clk(mp->clk_config, mp->num_clk);
+>>          devm_kfree(&pdev->dev, mp->clk_config);
+>>          mp->num_clk = 0;
+>> @@ -1090,6 +1111,8 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+>>          struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+>>          struct dss_module_power *mp = &dpu_kms->mp;
+>>
+>> +       /* Drop the performance state vote */
+>> +       dev_pm_opp_set_rate(dev, 0);
+>>          rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
+>>          if (rc)
+>>                  DPU_ERROR("clock disable failed rc:%d\n", rc);
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+>> index 211f5de9..2a52e4e 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+>> @@ -128,6 +128,10 @@ struct dpu_kms {
+>>
+>>          struct platform_device *pdev;
+>>          bool rpm_enabled;
+>> +
+>> +       struct opp_table *opp_table;
+>> +       bool has_opp_table;
+>> +
+>>          struct dss_module_power mp;
+>>
+>>          /* reference count bandwidth requests, so we know when we can
+>> --
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+
 -- 
-2.17.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
