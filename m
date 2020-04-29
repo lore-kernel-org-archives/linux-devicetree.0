@@ -2,80 +2,74 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE04FC83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 05:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1E0C83003
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 05:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B841020757
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 05:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09BB206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 05:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgD2FhO (ORCPT
+        id S1726450AbgD2Fpe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 01:37:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:36541 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbgD2FhO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 01:37:14 -0400
-IronPort-SDR: O81g6KqpK4OdUDJLzAR+FS54OyY0Di+P6EDg5qZsqDBtbbzMHkgXk7Pie0WkgaV3UIVfT9AmwY
- Hj4/WqL4aUFA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 22:37:13 -0700
-IronPort-SDR: cNeJ/V/2f0ImcfTb/2WmKmeZ7ww37gMV6bZ5hyTMGlztWbDDgtcUkCbmuGAeOEnXWf7lQANrQV
- 9a3PUne0OTPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,330,1583222400"; 
-   d="scan'208";a="249366729"
-Received: from ramibuso-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.170])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Apr 2020 22:37:05 -0700
-Date:   Wed, 29 Apr 2020 08:37:03 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org, benoit.houyere@st.com,
-        eajames@linux.ibm.com, joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        oshri.alkoby@nuvoton.com, tmaimon77@gmail.com, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, Dan.Morav@nuvoton.com,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com
-Subject: Re: [PATCH v7 3/7] tpm: tpm_tis: Rewrite "tpm_tis_req_canceled()"
-Message-ID: <20200429053703.GF8452@linux.intel.com>
-References: <20200427124931.115697-1-amirmizi6@gmail.com>
- <20200427124931.115697-4-amirmizi6@gmail.com>
+        Wed, 29 Apr 2020 01:45:34 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:55571 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725861AbgD2Fpe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 01:45:34 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Apr 2020 11:15:32 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 29 Apr 2020 11:15:20 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id 7DEB929E2; Wed, 29 Apr 2020 11:15:19 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>, robdclark@gmail.com,
+        seanpaul@chromium.org, sean@poorly.run
+Subject: [PATCH v12 2/2] dt-bindings: documenting compatible string vendor "visionox"
+Date:   Wed, 29 Apr 2020 11:15:15 +0530
+Message-Id: <20200429054515.4976-2-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200421045508.21137-1-harigovi@codeaurora.org>
+References: <20200421045508.21137-1-harigovi@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427124931.115697-4-amirmizi6@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 03:49:27PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
-> 
-> Using this function while reading/writing data resulted in an aborted
-> operation.
-> After investigating the issue according to the TCG TPM Profile (PTP)
-> Specifications, I found that "request to cancel" should occur only if
-> TPM_STS.commandReady bit is lit.
-> Note that i couldn't find a case where the present condition
-> (in the linux kernel) is valid, so I'm removing the case for
-> "TPM_VID_WINBOND" since we have no need for it.
-> 
-> Also, the default comparison is wrong. Only cmdReady bit needs to be
-> compared instead of the full lower status register byte.
-> 
-> Fixes: 1f86605 (tpm: Fix cancellation of TPM commands (polling mode))
+Documenting compatible string vendor "visionox" in vendor-prefix yaml file.
 
-Needs to have exactly 12 hex digits of the hash.
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+---
+Changes in v11:
+	- Added compatible string in vendor-prefix yaml file
 
-/Jarkko
+Changes in v12:
+	- Fixed the string to clear dt_binding_check errors.
+
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 66a7382add95..1c86ebbeae20 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1047,6 +1047,8 @@ patternProperties:
+     description: Tronsmart
+   "^truly,.*":
+     description: Truly Semiconductors Limited
++  "^visionox,.*":
++    description: Visionox
+   "^tsd,.*":
+     description: Theobroma Systems Design und Consulting GmbH
+   "^tyan,.*":
+-- 
+2.25.1
+
