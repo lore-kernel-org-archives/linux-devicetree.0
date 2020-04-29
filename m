@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E35C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE71C83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 441422083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240952083B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:18:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="OZKi475h"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="CHODodNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgD2USI (ORCPT
+        id S1727098AbgD2URS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59648 "EHLO
+        Wed, 29 Apr 2020 16:17:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbgD2URT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 16:17:19 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4C7C03C1AE;
-        Wed, 29 Apr 2020 13:17:18 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x18so4129346wrq.2;
-        Wed, 29 Apr 2020 13:17:18 -0700 (PDT)
+        with ESMTP id S1727073AbgD2URP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 16:17:15 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07273C03C1AE;
+        Wed, 29 Apr 2020 13:17:15 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id d17so4076988wrg.11;
+        Wed, 29 Apr 2020 13:17:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=A1BsZHOKV23AL354M93nmEs0vyNnhe/u13UcIzUzcp0=;
-        b=OZKi475hcnUACJSmFsmYlgbAF4kGxaIWFbXq4bXdnUMWgxqXrCCMO8VHh4fjWGT7ya
-         wM8HUL3n4GtqtUDeKu4tu6Ufrzga6+fSjbp3wkQPiU1W07zrTVEbnaDaChkws8GiVGI7
-         XTFRPP0MS7u8E5RK6b+pa8kFbNRshT6Gig162/kYaBPHZqBc3cBDBNaV00pJnT88Fhsr
-         hIY237tXOk56Y9kc3bYCfsdW2vu1yeuqYe3ia9DfvqcPBX96k/+wtVpsxvM9V2WLcKmX
-         GvbADmNIeqPhXa1AwbE21ogk9EOsGTwS1JgrSiwNj0x6N2mF8W4u0tm16V5Izzn4igfF
-         pFPg==
+        bh=70PGPQVXxWkWt5bMu/YYfSXZfY8zmYWnV1uR/DOx3oI=;
+        b=CHODodNmsuW+chZgMSL/aU4EnarAaDIB7eXBAjMvlsonq+wuNDVGUJCixVrpFPVHv0
+         eLe7iQE0b6IVK9woGS4WRHgp1pIDNyiU/pvax4e/hFhd8Tg+XuRQDhxcWP8g+hESasfG
+         0PvoOjleMGc/VhEHapA/nrVQIz+u3cU4WKukUCaPObHXRo4oVjyNp/dma6TvvoKJBSv1
+         UHFO/dN7/7fOEoicRBiobhcCPrV9VPlDGDJ0bcuHdimr4jBLKUBuXsqV3K6RVjdpryfB
+         NHeEkJE9MD54wgSGOsu79UcZVkVL2erbRs5xdDHnHc7otZm23Z9/6PHRNiGJkv0mCM5U
+         H4jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=A1BsZHOKV23AL354M93nmEs0vyNnhe/u13UcIzUzcp0=;
-        b=dKqcVhyc4BQNOX2fOIIH2mZWS/XzcByOxyvTgiqsrfM1XNyNB1wDU7bZz/h1JLiUMU
-         P6MMMqQcHqSpF/MWbs3OxcO2wztMIPIsGesYqXnmj6W5b6ds+F3tqzhWf2W04EDrrYr8
-         rc6BibE7QC16WL5aF+zCwPPRxngg1Vllo1/1Xz3zYXvned4pZd1IImLIycddS/aI4dWd
-         DBGTI9Rtz9QEn5vQUV65bSLLNGnpBM2BzlZ3OqW2V8P8m5O1knohpHwlh/p7Aw2ziycP
-         XPJiMcrSc9fI/SJQlSolVacUbYrRIJqNxOg5HMXMUqvOYcPKr9KTUWXAoPBznxXKtIOM
-         yI8g==
-X-Gm-Message-State: AGi0Pua0hkq8HoqZvlA/xxk9B2a3m4CbKD6BF7qyxPUOrSacwmGpI4kj
-        QfFjrPRqYBx8A2NDvmAu3YM=
-X-Google-Smtp-Source: APiQypIThLRu5RnVmx97RtJ9EtKrENrzlVIOefrkcoCLnfZRVkGPPMuiLNkwIg2h6iEwqtnhdU3xgw==
-X-Received: by 2002:a5d:404a:: with SMTP id w10mr40207406wrp.397.1588191437227;
-        Wed, 29 Apr 2020 13:17:17 -0700 (PDT)
+        bh=70PGPQVXxWkWt5bMu/YYfSXZfY8zmYWnV1uR/DOx3oI=;
+        b=EPFAHS6MLHzJGwGiGGa76EZlVLh7maVpFJD2V286nrSqYiolVu/zf50ebR5TUuR2mE
+         QYcKrdhC14wjg9nf5ToiecGdPq1XdXpZ273LsDu3+fuVJOAZJ+qWptFjoKTFRwSxjjRK
+         WDobGcSvNQk+wXVBlKta+/mlSo84fN5Fm1CCYiecehWA1dQgPcZOtagARsR/3P5TfUeQ
+         PmqKt2u+lV5np4ELaipM+jdMCuDqu54CoL7SYrDSYIpajV20SnmtJRTeLZs3bbSUAh5v
+         QYdun0Yaja9yYu658ytAu/joffa2t28lFPr176HbWmwnC4gRpsL2+g0Nb+FG71Zh4dqg
+         x4WA==
+X-Gm-Message-State: AGi0PuZlqo57XW+3uYNrvsCOUc3TxJDxZgNpW2dX8nHDWSFLHB6cSS5U
+        Sm5X14TRPiIqtfqPYCCa2gA=
+X-Google-Smtp-Source: APiQypJtmwbq9B5dWA8SnCuu/BSQvt25+h0Lxx4pGLSnoOKCcBACToJY8vRY4FM4aHun8MA3Wxv0vg==
+X-Received: by 2002:adf:f343:: with SMTP id e3mr39846693wrp.51.1588191433642;
+        Wed, 29 Apr 2020 13:17:13 -0700 (PDT)
 Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id q143sm9923623wme.31.2020.04.29.13.17.14
+        by smtp.googlemail.com with ESMTPSA id q143sm9923623wme.31.2020.04.29.13.17.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 13:17:15 -0700 (PDT)
+        Wed, 29 Apr 2020 13:17:13 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
         linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
@@ -66,9 +66,9 @@ Cc:     jianxin.pan@amlogic.com, davem@davemloft.net,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH RFC v2 04/11] net: stmmac: dwmac-meson8b: Move the documentation for the TX delay
-Date:   Wed, 29 Apr 2020 22:16:37 +0200
-Message-Id: <20200429201644.1144546-5-martin.blumenstingl@googlemail.com>
+Subject: [PATCH RFC v2 02/11] dt-bindings: net: dwmac-meson: Document the "timing-adjustment" clock
+Date:   Wed, 29 Apr 2020 22:16:35 +0200
+Message-Id: <20200429201644.1144546-3-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
 References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
@@ -79,42 +79,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Move the documentation for the TX delay above the PRG_ETH0_TXDLY_MASK
-definition. Future commits will add more registers also with
-documentation above their register bit definitions. Move the existing
-comment so it will be consistent with the upcoming changes.
+The PRG_ETHERNET registers can add an RX delay in RGMII mode. This
+requires an internal re-timing circuit whose input clock is called
+"timing adjustment clock". Document this clock input so the clock can be
+enabled as needed.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/net/amlogic,meson-dwmac.yaml   | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index c9ec0cb68082..1d7526ee09dd 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -33,6 +33,10 @@
- #define PRG_ETH0_CLK_M250_SEL_SHIFT	4
- #define PRG_ETH0_CLK_M250_SEL_MASK	GENMASK(4, 4)
+diff --git a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+index 8d851f59d9f2..2bc0e8b0d25b 100644
+--- a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+@@ -40,18 +40,22 @@ allOf:
+     then:
+       properties:
+         clocks:
++          minItems: 3
++          maxItems: 4
+           items:
+             - description: GMAC main clock
+             - description: First parent clock of the internal mux
+             - description: Second parent clock of the internal mux
++            - description: The clock which drives the timing adjustment logic
  
-+/* TX clock delay in ns = "8ns / 4 * tx_dly_val" (where 8ns are exactly one
-+ * cycle of the 125MHz RGMII TX clock):
-+ * 0ns = 0x0, 2ns = 0x1, 4ns = 0x2, 6ns = 0x3
-+ */
- #define PRG_ETH0_TXDLY_MASK		GENMASK(6, 5)
+         clock-names:
+           minItems: 3
+-          maxItems: 3
++          maxItems: 4
+           items:
+             - const: stmmaceth
+             - const: clkin0
+             - const: clkin1
++            - const: timing-adjustment
  
- /* divider for the result of m250_sel */
-@@ -248,10 +252,6 @@ static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
- 	switch (dwmac->phy_mode) {
- 	case PHY_INTERFACE_MODE_RGMII:
- 	case PHY_INTERFACE_MODE_RGMII_RXID:
--		/* TX clock delay in ns = "8ns / 4 * tx_dly_val" (where
--		 * 8ns are exactly one cycle of the 125MHz RGMII TX clock):
--		 * 0ns = 0x0, 2ns = 0x1, 4ns = 0x2, 6ns = 0x3
--		 */
- 		tx_dly_val = dwmac->tx_delay_ns >> 1;
- 		/* fall through */
- 
+         amlogic,tx-delay-ns:
+           $ref: /schemas/types.yaml#definitions/uint32
+@@ -120,7 +124,7 @@ examples:
+          reg = <0xc9410000 0x10000>, <0xc8834540 0x8>;
+          interrupts = <8>;
+          interrupt-names = "macirq";
+-         clocks = <&clk_eth>, <&clkc_fclk_div2>, <&clk_mpll2>;
+-         clock-names = "stmmaceth", "clkin0", "clkin1";
++         clocks = <&clk_eth>, <&clk_fclk_div2>, <&clk_mpll2>, <&clk_fclk_div2>;
++         clock-names = "stmmaceth", "clkin0", "clkin1", "timing-adjustment";
+          phy-mode = "rgmii";
+     };
 -- 
 2.26.2
 
