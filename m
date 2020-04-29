@@ -2,230 +2,121 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAAFC83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EBDC83003
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 635EC20775
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E7D20775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mDylNO0I";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E2GG4Ytp"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="v0bP8FVP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AbdbpevH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgD2Irc (ORCPT
+        id S1726567AbgD2IsS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:47:32 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60171 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726345AbgD2Irc (ORCPT
+        Wed, 29 Apr 2020 04:48:18 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:37593 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726345AbgD2IsS (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:47:32 -0400
+        Wed, 29 Apr 2020 04:48:18 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9AB75580104;
-        Wed, 29 Apr 2020 04:47:30 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 29 Apr 2020 04:47:30 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id ABC72A2A;
+        Wed, 29 Apr 2020 04:48:16 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 29 Apr 2020 04:48:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=+x1hnvO451DFLw58Xq3iUsbF2Jz
-        alXMCx3P3fGnFW08=; b=mDylNO0ImdJQcBjcJhxqGwZ0gLH65YlOxSjvQREEP3f
-        4qGYzmConM9HkJufYMjsnhf4/U5f/nMYa7Y4bpNHEPZRGxnLHIjQiWjERglE53zA
-        oKMD/cPGAwRaPGqCJ5/SiN46qyNsjQGFSvMny9nDQB6IkO1SJfBgD9EdtiaVDZ7d
-        A/0pbA75VQ1czsx3Ud3zZ0Ct1tM7dRs5LdgkX5nrL4wlzG5WiI+zMV3YRbG6e9lU
-        EfEjiSIOEGi0F1dFrhGkZzyaX9IhNnWJBcdmGy3kakaIYmrgYV2DTu3hhEr3UJ+B
-        5cyi95cQhZgjntybSHnjxI/ELKDeyPR6wO+DmEdIyNQ==
+        :content-type:in-reply-to; s=fm2; bh=wcrdqsNcPwVtovwXtckouIEc10K
+        wvG5XzJ9jmHmMR34=; b=v0bP8FVPnComujsnhBi5tEXFAwqf6NMgtounAvPFAi3
+        VDOVQdR0rzz9K3lMc+L4TQG8rFhoAamxcdtTtiVN8lRVrdQs0FurxA7xTo/dH0O0
+        kgXFuge6ZLGyI5dsEzC24rRkIvpGFs2wa2o2PMD1Q4GvP1I+PpKdtxk+y/kNBzda
+        MsL+y8ofFxDMzpn0aJ9BCpiyQhgodRb7/iHbmRxs1NFKmTQQ1YW0W4XgDdK++6F3
+        FLUFQMb6+5LEDa5E4sBXh2S3txZRWF66gGjpb1JG91QU+LjOY14BTBFgfc8ZGZqv
+        ReeNg+6ei0U2JqzwCRbtAenPUOy4Zq56HrYubdQR1Ew==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+x1hnv
-        O451DFLw58Xq3iUsbF2JzalXMCx3P3fGnFW08=; b=E2GG4YtpPx9b335eVlOleh
-        Vf8483NTNxzjs95yfN4uRYnvVs2tiKuUvRyMMVSInBLyjh+qMlQ0dVtjSwJbsDUK
-        WQWtSA+Bwb1TRuouQ6Rb6pdXfGYF71YpiWoLMMd4B0/gUi2rfcg5JorfqN0JJssQ
-        b5NszxFBVjt1AJHxC1DJ+KMryBcTxX33yCPmx9xaU+gujbvcPTEUhLLXynjJE6yy
-        miqhu3mWUKdKBcCgKILcyM6xOfgqmO5G1ZTnt75gOcYXtIUlupWdCgLceHSTqR8Q
-        BUigUlYpBZcCXoJnGIlSKCLjDvyVjMLksV6GI/iUupM/vJJdPxnutvDdSf42SJBQ
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=wcrdqs
+        NcPwVtovwXtckouIEc10KwvG5XzJ9jmHmMR34=; b=AbdbpevHQg58Vp9/JksvML
+        JpFVc8LZovfA77OxghfwCmjKJfw9GNKxAQncq6+G58jgydC28HgNSRnjd7FgbaGS
+        FIEboQoEDMxncUwJplGy+VcQ0P3zevmmgFSoayXvSjkznnpm9Spy9MpqHeleAjMj
+        amNiBwbb7uXhSEX5aLRVAD7oMHCUkgmbRVrm7N/ZtAXnxgluzF1ue7rkwfy5zYUI
+        gxebSyAz40Fosc6/xyn2eEldByg7eoEANXpguuOhK6IV0zbt3TmIuj94MKnhlqsN
+        3D6Ry/PBj6xd8LEJzjaXUvRdz5wRP7XCTeQDXYmEk+vUoo+4p+72bXlqznjc0tVg
         ==
-X-ME-Sender: <xms:HT-pXhpN54g-6aCMfmUe-4DMD6dWLtA3usgSR6go2S5ER7rxsPhAww>
+X-ME-Sender: <xms:Tz-pXoecD_ubgJ3FLfTu_KsnOwwNurdSojjIIQ0TW8TggrsZLg8bjQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgddtkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
     ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
     fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:HT-pXrVffufAEMQkyDUZKoQp7m4gU6WDQH-928szCVw6XspkjR09Bw>
-    <xmx:HT-pXkD0RZGaxlLx-cC-xX6d0cZb-LFHZKS3nww8to01I-3FCcWuVg>
-    <xmx:HT-pXuTBDDqX0KhTqh3gFz8BYE7BbY0XahpKNhyToXMGSNRpH-Z_Jw>
-    <xmx:Ij-pXvat0UK807ynw6DTDs5CBzCYKJ5Cy3QP0hnPHBSOnNjslvCryA>
+X-ME-Proxy: <xmx:Tz-pXh1ockIj6T_SsmIrFJQjUQ00pQm7slOLEVCcBpq6rZiDOmoDNg>
+    <xmx:Tz-pXptpxUoZ6U8rhPDyQ69rumqvs_mTNaclL_sL3tSyZX8XctUJIQ>
+    <xmx:Tz-pXl8elV62J6lm6MKMuzW1pvi25wmBNz9kmyaT7RrVJqpMg0U8UQ>
+    <xmx:UD-pXnzMOUhezOMD7dDNNdz_yLo4hg5xzBtVT2bNvpSxJQW_dEnpbNS72gc>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D9FE03280066;
-        Wed, 29 Apr 2020 04:47:24 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 10:47:23 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1874A3065EE9;
+        Wed, 29 Apr 2020 04:48:15 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 10:48:13 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
-Message-ID: <20200429084723.jxybvsakniinvivt@gilmour.lan>
-References: <cover.1587760454.git.hns@goldelico.com>
- <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
- <NYBE9Q.YH08US7A7DC3@crapouillou.net>
- <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200427154617.GA1798@pi3>
- <BN6PR04MB06605F014024061C894AFBA4A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <BN6PR04MB0660044B5B1D45BE4CBCD2AAA3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v8 v5 1/3] media: dt-bindings: ov8856: Document YAML
+ bindings
+Message-ID: <20200429084813.j3pxcbzdmeywqym4@gilmour.lan>
+References: <20200428180718.1609826-1-robert.foss@linaro.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="u22eiu3zouiknukx"
+        protocol="application/pgp-signature"; boundary="zpihnrmips3hshsi"
 Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660044B5B1D45BE4CBCD2AAA3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <20200428180718.1609826-1-robert.foss@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---u22eiu3zouiknukx
-Content-Type: text/plain; charset=iso-8859-1
+--zpihnrmips3hshsi
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Tue, Apr 28, 2020 at 03:58:03PM -0700, Jonathan Bakker wrote:
-> On 2020-04-28 2:39 p.m., Jonathan Bakker wrote:
-> > On 2020-04-27 8:46 a.m., Krzysztof Kozlowski wrote:
-> >> On Sun, Apr 26, 2020 at 07:57:12AM -0700, Jonathan Bakker wrote:
-> >>> Hi Paul,
-> >>>
-> >>> On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
-> >>>>
-> >>>>
-> >>>> Le ven. 24 avril 2020 =E0 22:34, H. Nikolaus Schaller <hns@goldelico=
-=2Ecom> a =E9crit :
-> >>>>> From: Jonathan Bakker <xc-racer2@live.ca>
-> >>>>>
-> >>>>> All s5pv210 devices have a PowerVR SGX 540 (revision 120) attached.
-> >>>>>
-> >>>>> There is no external regulator for it so it can be enabled by defau=
-lt.
-> >>>>>
-> >>>>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> >>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >>>>> ---
-> >>>>> =A0arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
-> >>>>> =A01 file changed, 13 insertions(+)
-> >>>>>
-> >>>>> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5p=
-v210.dtsi
-> >>>>> index 2ad642f51fd9..abbdda205c1b 100644
-> >>>>> --- a/arch/arm/boot/dts/s5pv210.dtsi
-> >>>>> +++ b/arch/arm/boot/dts/s5pv210.dtsi
-> >>>>> @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
-> >>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 #interrupt-cells =3D <1>;
-> >>>>> =A0=A0=A0=A0=A0=A0=A0=A0 };
-> >>>>>
-> >>>>> +=A0=A0=A0=A0=A0=A0=A0 gpu: gpu@f3000000 {
-> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D "samsung,s5pv210-=
-sgx540-120";
-> >>
-> >> This should not pass the bindings check because you missed last
-> >> compatibles.
-> >>
-> >=20
-> > Thanks for pointing that out, I'll add it and make sure it passes the b=
-indings check.
-> >=20
-> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0xf3000000 0x10000>;
-> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interrupt-parent =3D <&vic2>;
-> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interrupts =3D <10>;
-> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clock-names =3D "core";
-> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clocks =3D <&clocks CLK_G3D>;
-> >>>>> +
-> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clocks =3D <&clocks MOU=
-T_G3D>, <&clocks DOUT_G3D>;
-> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-rates =3D <0>, <6=
-6700000>;
-> >>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-parents =3D <&clo=
-cks MOUT_MPLL>;
-> >>>>
-> >>>> What are these clocks for, and why are they reparented / reclocked?
-> >>>>
-> >>>> Shouldn't they be passed to 'clocks' as well?
-> >>>>
-> >>>> -Paul
-> >>>>
-> >>>
-> >>> The G3D clock system can have multiple parents, and for stable operat=
-ion
-> >>> it's recommended to use the MPLL clock as the parent (which in turn
-> >>> is actually a mux as well).  MOUT_G3D is simply the mux for CLK_G3D
-> >>> (SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could equally be=
- CLK_G3D
-> >>> (and probably should be, for readability) as CLK_G3D is simply the ga=
-te and
-> >>> DOUT_G3D is the divider for it.
-> >>
-> >> Good point, it should be CLK_G3D instead of DOUT.  Can you fix this as
-> >> well?
-> >=20
-> > Yep, will do.  Nikolaus, I'll send you an updated patch to include.
-> >=20
+On Tue, Apr 28, 2020 at 08:07:16PM +0200, Robert Foss wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 >=20
-> How are assigned-clocks handled in the yaml DT schema?  When running make=
- dtbs_check,
-> I end up with messages such as
+> This patch adds documentation of device tree in YAML schema for the
+> OV8856 CMOS image sensor.
 >=20
-> arch/arm/boot/dts/s5pv210-aquila.dt.yaml: gpu@f3000000: 'assigned-clock-p=
-arents', 'assigned-clock-rates', 'assigned-clocks' do not match any of the =
-regexes: 'pinctrl-[0-9]+'
->=20
-> Do they need to explicitly be listed as valid entries?
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
 
-If you have additionalProperties set to false, yes. But you should really
-consider not using them in the first place, since they provide no guarantee=
- on
-whether the setup you did in the DT will remain during the life of the syst=
-em.
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-I'm not sure why it's needed on that SoC in particular, but this should be =
-fixed
-in the driver itself (either the clock or the GPU driver).
-
+Thanks!
 Maxime
 
---u22eiu3zouiknukx
+--zpihnrmips3hshsi
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqk/GwAKCRDj7w1vZxhR
-xR+OAP9zSq/md3bxfVKk4er7ZI7jk8/dQzTxgBO3mo3r+wRqmwEAy6d+UHyzeb5t
-qZLq2zIdK45SI8CMqYcGeBsbBQ1iVAc=
-=VCha
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqk/TQAKCRDj7w1vZxhR
+xZpoAP42DgPROuzDTF5EuqRDWfCvMVhdg1sOirg+0fkdipMlpAD+Pb10jAPRj/tA
+6bO2fdjmT1kcv5cAiQMmOGG+H4zeMQc=
+=zN+J
 -----END PGP SIGNATURE-----
 
---u22eiu3zouiknukx--
+--zpihnrmips3hshsi--
