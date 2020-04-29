@@ -4,25 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E953C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04809C83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29F3220757
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3C120757
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgD2WWY (ORCPT
+        id S1726935AbgD2WZP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:22:24 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39582 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgD2WWY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 18:22:24 -0400
+        Wed, 29 Apr 2020 18:25:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726481AbgD2WZP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 18:25:15 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B57C03C1AE;
+        Wed, 29 Apr 2020 15:25:15 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 9877F2A0A5D
+        with ESMTPSA id 515CB2A0801
 Subject: Re: [PATCH 2/2] platform/chrome: typec: Register Type C switches
 To:     Prashant Malani <pmalani@chromium.org>,
         linux-kernel@vger.kernel.org
@@ -34,8 +38,8 @@ Cc:     heikki.krogerus@linux.intel.com, twawrzynczak@chromium.org,
 References: <20200422222242.241699-1-pmalani@chromium.org>
  <20200422222242.241699-2-pmalani@chromium.org>
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <12b56c9e-d8c7-82fa-57c8-7a33236ba188@collabora.com>
-Date:   Thu, 30 Apr 2020 00:22:19 +0200
+Message-ID: <542cfe8f-04a5-8dbb-b498-90254bb4c54e@collabora.com>
+Date:   Thu, 30 Apr 2020 00:25:10 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
@@ -50,7 +54,7 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Prashant,
 
-Thank you for your patch.
+Following my previous comments ...
 
 On 23/4/20 0:22, Prashant Malani wrote:
 > Register Type C mux and switch handles, when provided via firmware
@@ -96,30 +100,28 @@ On 23/4/20 0:22, Prashant Malani wrote:
 > +{
 > +	port->mux = fwnode_typec_mux_get(fwnode, NULL);
 > +	if (IS_ERR(port->mux)) {
-
-Should you return an error if NULL is returned (IS_ERR_OR_NULL) ? I think that
-fwnode_typec_mux_get can return NULL too.
-
-
 > +		dev_info(dev, "Mux handle not found.\n");
+
+Be quiet also here, dev_dbg at most, as you're ignoring the error anyway at the end.
+
 > +		goto mux_err;
 > +	}
 > +
 > +	port->ori_sw = fwnode_typec_switch_get(fwnode);
 > +	if (IS_ERR(port->ori_sw)) {
-
-ditto
-
 > +		dev_info(dev, "Orientation switch handle not found.\n");
+
+Same here
+
 > +		goto ori_sw_err;
 > +	}
 > +
 > +	port->role_sw = fwnode_usb_role_switch_get(fwnode);
 > +	if (IS_ERR(port->role_sw)) {
-
-ditto
-
 > +		dev_info(dev, "USB role switch handle not found.\n");
+
+And here.
+
 > +		goto role_sw_err;
 > +	}
 > +
@@ -157,11 +159,6 @@ ditto
 > +		if (ret)
 > +			dev_info(dev, "No switch control for port %d\n",
 > +				 port_num);
-
-When drivers are working, they should not spit out any messages, make
-this dev_dbg() at the most. Be quiet, please.
-
-
 >  	}
 >  
 >  	return 0;
