@@ -2,113 +2,135 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C26C83004
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2C1C8300B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55AD82073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E092D20B80
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:50:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="OTk4BhDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbgD2Osh (ORCPT
+        id S1727064AbgD2OuX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:48:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36176 "EHLO
+        Wed, 29 Apr 2020 10:50:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726348AbgD2Osh (ORCPT
+        by vger.kernel.org with ESMTP id S1727057AbgD2OuV (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:48:37 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B450C03C1AD;
-        Wed, 29 Apr 2020 07:48:37 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 632B52A224A;
-        Wed, 29 Apr 2020 15:48:35 +0100 (BST)
-Date:   Wed, 29 Apr 2020 16:48:32 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>, qi-ming.wu@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, anders.roxell@linaro.org,
-        vigneshr@ti.com, arnd@arndb.de, richard@nod.at,
-        brendanhiggins@google.com, linux-mips@vger.kernel.org,
-        robh+dt@kernel.org, miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200429164832.6800fc70@collabora.com>
-In-Reply-To: <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429162249.55d38ee8@collabora.com>
-        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 29 Apr 2020 10:50:21 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89DECC03C1AE
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 07:50:21 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id e26so1913146otr.2
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 07:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qyI0SNEnQtXEbJwY1Ck/cg35XSFvpALxjDJPBXBhrnQ=;
+        b=OTk4BhDexgtYj45AbedwxqiaNtEWMz5vICEz3FjS2ASgEs8RDykY5nycZKJdyYbvnn
+         xdYRSxrMo55Daa/iS9BaQRTfDRlJL96e4tSX6UHp/duPNiog6mElo/qalSUKyuNe2+2N
+         FywOGF2rs+Lg/lbWRbixNls/EZK2awg/bnYNn07l121KiDC7cS3+PpjNLSCT4vphjz9Q
+         8+Qvo/Jpc4uxv0X7IfL1rgTr7vmGDeAVK+o2Evv+5128QbHUGYjhzwz3j8odYXtGvUjn
+         MHsz/jK4o0FM3/8LMB8RHP46ODdQNZsg6uZaFmQaGKJ55XRjyCSufzRH3kpLiEfiZ5zN
+         8GxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qyI0SNEnQtXEbJwY1Ck/cg35XSFvpALxjDJPBXBhrnQ=;
+        b=f/0cAjdJBfIrYdS7xNOezxY2K9uhjZhn2ZYk64TN+7Ao8158sirfxInXeyJVG+xSOh
+         aJ4mD7d8Z6tRvYmGgmNpahH7rSyRu9Kzqyr4PDYWc0uv4wGyniXTuNAnxigLi4Ljh8B7
+         hvlYeRyYPbmNgDrQ7RrBkdptrMbhhsDsboZf2zrzKnpMeoIYvKMl0GDCdWgULCdxUUwQ
+         06/yiQR9PSRYODG2c54PfS6FrjXv+f+2DnGVLbUawGqz/Il49h9dzt/T/7I8DV9GHHGD
+         FhBTi03+/FS4k0OlSltfyXttbr17r0NmEJXYxSAm9v/EAa/lj4OGXMEWOis1P1q5jqHv
+         SvJA==
+X-Gm-Message-State: AGi0PuY941pBns00FrYt3LIFnLq0WDaAhhJdS+F2X3h7xn0h5gLZPcwb
+        bbqQzXRoEaVZK8egdG/mF9nOSol6cTZI0iJjnLBfDA==
+X-Google-Smtp-Source: APiQypIXL8I2wEME01DT2EGMJ0/M/DnYHbWLA+pVPwZCB7X9EbvdQ5yUHo7uSB8IJZb4WwLhqG0FGhPpcw/e0s52+Ik=
+X-Received: by 2002:a9d:2f48:: with SMTP id h66mr24840284otb.252.1588171820828;
+ Wed, 29 Apr 2020 07:50:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1585341214-25285-1-git-send-email-tharvey@gateworks.com>
+ <1585341214-25285-3-git-send-email-tharvey@gateworks.com> <20200428094426.GL3559@dell>
+ <CAJ+vNU0UCugbM7Q7WZ1Hw-U=Je483jYGdrvS0Vq6idxtuUmz2Q@mail.gmail.com> <20200429063319.GV3559@dell>
+In-Reply-To: <20200429063319.GV3559@dell>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Wed, 29 Apr 2020 07:50:09 -0700
+Message-ID: <CAJ+vNU1e10F_g51UXgJ+o1R9zhf_1J9xHJ6SYEuZC4615QfG1w@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] mfd: add Gateworks System Controller core driver
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Robert Jones <rjones@gateworks.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 29 Apr 2020 22:33:37 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+On Tue, Apr 28, 2020 at 11:33 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Tue, 28 Apr 2020, Tim Harvey wrote:
+>
+> > On Tue, Apr 28, 2020 at 2:44 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > >
+> > <snip>
+> > > > +
+> > > > +static int gsc_probe(struct i2c_client *client)
+> > > > +{
+> > > > +     struct device *dev = &client->dev;
+> > > > +     struct gsc_dev *gsc;
+> > > > +     int ret;
+> > > > +     unsigned int reg;
+> > > > +
+> > > > +     gsc = devm_kzalloc(dev, sizeof(*gsc), GFP_KERNEL);
+> > > > +     if (!gsc)
+> > > > +             return -ENOMEM;
+> > > > +
+> > > > +     gsc->dev = &client->dev;
+> > > > +     gsc->i2c = client;
+> > > > +     i2c_set_clientdata(client, gsc);
+> > > > +
+> > > > +     gsc->bus.reg_write = gsc_regmap_regwrite;
+> > > > +     gsc->bus.reg_read = gsc_regmap_regread;
+> > >
+> > > Why do you need to store these in ddata?
+> >
+> > Lee,
+> >
+> > Thanks for the review!
+> >
+> > I need the remap_bus* for devm_regmap_init() in the hwmon sub-module driver:
+> >
+> > hwmon->regmap = devm_regmap_init(dev, &gsc->bus, gsc->i2c_hwmon,
+> > &gsc_hwmon_regmap_config);
+> >
+> > Is there something easier I'm missing?
+>
+> This is an odd setup.  I haven't seen one driver registering another
+> driver's Regmap call-backs before, related or otherwise.  Normally the
+> Regmap is setup (initialised) in the parent driver and child drivers
+> just make use of it.  Here it looks like you are registering 2
+> separate Regmaps, but using the same call-backs for both, which seems
+> wrong to me.
+>
 
-> Hi Boris,
-> 
-> On 29/4/2020 10:22 pm, Boris Brezillon wrote:
-> > On Wed, 29 Apr 2020 18:42:05 +0800
-> > "Ramuthevar, Vadivel MuruganX"
-> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> >   
-> >> +
-> >> +#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
-> >> +#define EBU_ADDR_MASK		(5 << 4)  
-> > 
-> > It's still unclear what ADDR_MASK is for. Can you add a comment
-> > explaining what it does?  
-> 
-> Thank you Boris, keep review and giving inputs, will update.
+Lee,
 
-Can you please explain it here before sending a new version?
+It is perhaps an odd setup. The hwmon sub-device is at a different i2c
+slave address than the other sub-devices. The same callbacks are used
+for reg read/write to take advantage of the retries due to the errata
+resulting in occasional NAK'd register reads.
 
-> >   
-> >> +#define EBU_ADDR_SEL_REGEN	0x1  
-> > 
-> >   
-> >> +
-> >> +	writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
-> >> +	       EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
-> >> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
-> >> +
-> >> +	writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
-> >> +	       ebu_host->ebu + EBU_ADDR_SEL(0));
-> >> +	writel(EBU_MEM_BASE_CS_1 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
-> >> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));  
-> > 
-> > That's super weird. You seem to set EBU_ADDR_SEL(reg) twice. Are you
-> > sure that's needed, and are we setting EBU_ADDR_SEL(0) here?  
-> 
-> You are right, its weird only, but we need it, since different chip 
-> select has different memory region access address.
-
-Well, that doesn't make any sense, the second write to
-EBU_ADDR_SEL(reg) overrides the first one, meaning that nand_pa is
-actually never written to ADDR_SEL(reg).
-
-> 
-> Yes , we are setting both CS0 and CS1 memory access region, if you have 
-> any concern to optimize, please suggest me, Thanks!
-
-If you want to setup both CS, and the address written in EBU_ADDR_SEL(x)
-is really related to the nand_pa address, then retrieve resources for
-all CS ranges. If it's not related, please explain what those
-EBU_MEM_BASE_CS_X values encode.
+Tim
