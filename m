@@ -2,146 +2,103 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D84FC83006
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 18:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE3EC8300A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 18:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0243620757
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 18:35:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FFYaTLS0"
+	by mail.kernel.org (Postfix) with ESMTP id 681EB206C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 18:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588185816;
+	bh=uEtgYlERQwqAmdzsvUwtxwArJftqcHvrYovUv0U11AU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2XXzCGjAzOJxspql+CBhii9u3vv7RRk4E5Y/CPht+d6Vpg+Q/AKXbxS0k3WeNp4VC
+	 CfIzapsHr5hiX4+6ajAN+BkAY5PiN1ihnPZmaM+WFimnHh0waz9yY5yylfECOhVAXv
+	 rr6h5DHb6MSYdZlmrwdVVYp7JNpPx039VQFHFiMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgD2Sfp (ORCPT
+        id S1727064AbgD2Sna (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:35:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726858AbgD2Sfp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:35:45 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42E11C035495
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 11:35:45 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ms17so1104851pjb.0
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 11:35:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=08p5fj27gfIIM4xLE6VPLWHuk1iLyqebey0af2ogLu0=;
-        b=FFYaTLS0A9F0ReP7zEIjXTXSPBAQlwGMHcaVMhSuhovYiugz+6a/Jt1nQiHzV9Qqju
-         IIgYl82tPD6UusRRDbHgqmQ129i1tXYC2lP1T+7GXnCkUaOUYf1adDB6+eJ2xJgkNnQp
-         VDMicnpzkiWiEiVs7ynjv4LAK4leb5+gcAJOI=
+        Wed, 29 Apr 2020 14:43:30 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:34104 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgD2Sna (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 14:43:30 -0400
+Received: by mail-oo1-f67.google.com with SMTP id q204so671008ooq.1;
+        Wed, 29 Apr 2020 11:43:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=08p5fj27gfIIM4xLE6VPLWHuk1iLyqebey0af2ogLu0=;
-        b=HoySKYvnCpMQmWJDCMAsTww/oYF5g7reUnxPphcSDcrvuTT1q2j7e8PHpA9BZyPDKD
-         JabsA74PCTX0RyesyGVfHke9nQ4HWUfQpyLQuu+p6P/V9IqpnY6hxoSiAxGdkjiALn/T
-         7t8uEbjCfuqp1I5DbjFdAuXtdHZvOpIt8F5glqZyYdw4P1KOI8+uRYzJdTWJ8T9uFjxn
-         yadZeIpUL55fMORtBUmVrjfT42o9sOnU4TytG8bnKlP4phtL2ay3OIzn/HqqgbbdD1CC
-         Pp8zoFJ9CJXK7B92kHXihduH3nB+Da7kISOUANEs/zoeoJx3ChQSK+zFuNpFsu1BRxkc
-         7rJQ==
-X-Gm-Message-State: AGi0PubqIcIl3VKczzX17NX/kNE7yNsF+5ipJtve5DadfwtmUG0jLQqN
-        UHFRAePMBNIp5QuC93AbUvDPAA==
-X-Google-Smtp-Source: APiQypKTRutC1MlI4l1Qf7LKmUxg3tadHomjIMqKmf84o5IE8XamP56lmNdNZx1ZAkOHMQE0Jamzuw==
-X-Received: by 2002:a17:90a:3450:: with SMTP id o74mr4681969pjb.159.1588185344615;
-        Wed, 29 Apr 2020 11:35:44 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id o40sm16770pjb.18.2020.04.29.11.35.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 11:35:43 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 11:35:42 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v7 0/4] ADD interconnect support for Qualcomm DWC3 driver
-Message-ID: <20200429183542.GS4525@google.com>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yGhK3HaqbTPZiDc01w13tznQrtyKagfsL0YGpSLp9V4=;
+        b=qQS1TnGkPBE0qnsrbWzX8vMQYMpRZs8ciWUughlZSecsMBmbmT2sVt3zQAmDh/fZS6
+         uAcDCnYk1cHgJU+RLvGaeUfi5sZnDMsQQNLIsqSB7dq7tNTjeN49k9SbRABYRt53tDXk
+         AmRaURe5czs4aTuyH9TIbHiSsNYiQiOSApLeqk1D2CnJLkXjRn48+dinKnhjIbHy6lzJ
+         K5XYAx+r0iDI3bYCSm5Q/ZEYNk2bNGPmP0IH9H7RdhWI/L1nggz7XXCG7uh+aoGvSjOt
+         0MySE+2S0CgIDVZyDDml577qToO0VnvfuQFTS6w9wsoJFX9OSkdHdW+a9G6X/w27Cjlm
+         3M4g==
+X-Gm-Message-State: AGi0PuYtn+/CJHfgBKYBLIxuTOk4EfY62HTw/pFcFgSHA6cnYLL3qt6+
+        Sxid5U7/D/TMArIHgyJA7w==
+X-Google-Smtp-Source: APiQypKdzbHafmOU5qNFDG4p8xvLwoSybYIgvKvM6RuUy3zuV5g1H8Ui3VJ5dMoccojZ7oRFV1ueAQ==
+X-Received: by 2002:a4a:d0d6:: with SMTP id u22mr26838776oor.63.1588185807787;
+        Wed, 29 Apr 2020 11:43:27 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c13sm627194oos.14.2020.04.29.11.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 11:43:27 -0700 (PDT)
+Received: (nullmailer pid 14812 invoked by uid 1000);
+        Wed, 29 Apr 2020 18:43:25 -0000
+Date:   Wed, 29 Apr 2020 13:43:25 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/5] PCI: Add Loongson PCI Controller support
+Message-ID: <20200429184325.64eyiubr3badd7uc@bogus>
+References: <20200428011429.1852081-1-jiaxun.yang@flygoat.com>
+ <20200428011429.1852081-3-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <20200428011429.1852081-3-jiaxun.yang@flygoat.com>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Felipe,
+On Tue, Apr 28, 2020 at 09:14:17AM +0800, Jiaxun Yang wrote:
+> This controller can be found on Loongson-2K SoC, Loongson-3
+> systems with RS780E/LS7A PCH.
+> 
+> The RS780E part of code was previously located at
+> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
+> driver implementation.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> 
+> --
+> v2:
+> 	- Clean up according to rob's suggestions
+> 	- Claim that it can't work as a module
+> v3:
+> 	- Fix a typo
+> v4:
+> 	- More clean-ups: Drop flag check, use devfn
+> v7:
+> 	- Fix ordering according to huacai's suggestion
+> ---
+>  drivers/pci/controller/Kconfig        |  10 +
+>  drivers/pci/controller/Makefile       |   1 +
+>  drivers/pci/controller/pci-loongson.c | 251 ++++++++++++++++++++++++++
+>  3 files changed, 262 insertions(+)
+>  create mode 100644 drivers/pci/controller/pci-loongson.c
 
-all patches of this series have been reviewed and there are no outstanding
-comments, so I guess it should be ready to land?
-
-Thanks
-
-Matthias
-
-On Wed, Apr 01, 2020 at 10:45:41AM +0530, Sandeep Maheswaram wrote:
-> This path series aims to add interconnect support in
-> dwc3-qcom driver on SDM845 and SC7180 SoCs.
-> 
-> Changes from v6 -> v7
->   > [PATCH 2/4] Fixed review comments from Matthias in DWC3 driver.
->   > Other patches remain unchanged.
-> 
-> Changes from v5 -> v6
->   > [PATCH 1/4] Addressed comments from Rob.
->   > [PATCH 2/4] Fixed review comments from Matthias in DWC3 driver.
->   > [PATCH 3/4] Ignoring 80 char limit in defining interconnect paths.
->   > Added [PATCH 4/4] in this series. Adding interconnect nodes for SC7180.
->     Depends on patch https://patchwork.kernel.org/patch/11417989/.	
-> 
-> Changes from v4 -> v5
->   > [PATCH 1/3] Added the interconnect properties in yaml. This patch depends
->     on series https://patchwork.kernel.org/cover/11372641/.
->   > [PATCH 2/3] Fixed review comments from Matthias in DWC3 driver.
->   > [PATCH 3/3] Modified as per the new interconnect nodes in sdm845. Depends
->     on series https://patchwork.kernel.org/cover/11372211/. 
-> 
-> 
-> Changes from v3 -> v4
->   > Fixed review comments from Matthias
->   > [PATCH 1/3] and [PATCH 3/3] remains unchanged
-> 
-> Changes from v2 -> v3
->   > Fixed review comments from Matthias and Manu
->   > changed the functions prefix from usb_* to dwc3_qcom_*
-> 
-> Changes since V1:
->   > Comments by Georgi Djakov on "[PATCH 2/3]" addressed
->   > [PATCH 1/3] and [PATCH 3/3] remains unchanged
-> 
-> 
-> Sandeep Maheswaram (4):
->   dt-bindings: usb: qcom,dwc3: Introduce interconnect properties for
->     Qualcomm DWC3 driver
->   usb: dwc3: qcom: Add interconnect support in dwc3 driver
->   arm64: dts: qcom: sdm845: Add interconnect properties for USB
->   arm64: dts: qcom: sc7180: Add interconnect properties for USB
-> 
->  .../devicetree/bindings/usb/qcom,dwc3.yaml         |   8 ++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   4 +
->  arch/arm64/boot/dts/qcom/sdm845.dtsi               |   8 ++
->  drivers/usb/dwc3/dwc3-qcom.c                       | 128 ++++++++++++++++++++-
->  4 files changed, 146 insertions(+), 2 deletions(-)
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
