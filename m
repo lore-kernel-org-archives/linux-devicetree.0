@@ -6,61 +6,59 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36CDC83004
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CBCC8300B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B594C206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8FB21927
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgD2VG5 (ORCPT
+        id S1727086AbgD2VG5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 29 Apr 2020 17:06:57 -0400
-Received: from elvis.franken.de ([193.175.24.41]:60823 "EHLO elvis.franken.de"
+Received: from elvis.franken.de ([193.175.24.41]:60826 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgD2VG4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726511AbgD2VG4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Wed, 29 Apr 2020 17:06:56 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jTtuv-0005Q3-01; Wed, 29 Apr 2020 23:06:53 +0200
+        id 1jTtuv-0005Q3-05; Wed, 29 Apr 2020 23:06:53 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id CE78DC0355; Wed, 29 Apr 2020 23:04:16 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 23:04:16 +0200
+        id C2A46C0355; Wed, 29 Apr 2020 23:05:43 +0200 (CEST)
+Date:   Wed, 29 Apr 2020 23:05:43 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
         =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
         devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/13] MIPS: ingenic: DTS: Respect cell count of common
- properties
-Message-ID: <20200429210416.GB24583@alpha.franken.de>
+Subject: Re: [PATCH 11/13] MIPS: ingenic: CI20: enable OST, PWM drivers in
+ defconfig
+Message-ID: <20200429210543.GF24583@alpha.franken.de>
 References: <20200413152633.198301-1-paul@crapouillou.net>
- <20200413152633.198301-7-paul@crapouillou.net>
+ <20200413152633.198301-11-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200413152633.198301-7-paul@crapouillou.net>
+In-Reply-To: <20200413152633.198301-11-paul@crapouillou.net>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 05:26:27PM +0200, Paul Cercueil wrote:
-> If N fields of X cells should be provided, then that's what the
-> devicetree should represent, instead of having one single field of
-> (N*X) cells.
+On Mon, Apr 13, 2020 at 05:26:31PM +0200, Paul Cercueil wrote:
+> The OST driver provides a clocksource and sched_clock that are much more
+> accurate than the default ones.
+> 
+> The PWM driver allows to use the PWM pins on the external header of the
+> board.
 > 
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  arch/mips/boot/dts/ingenic/jz4740.dtsi | 19 +++++++++----------
->  arch/mips/boot/dts/ingenic/jz4770.dtsi | 12 +++++-------
->  arch/mips/boot/dts/ingenic/jz4780.dtsi | 24 +++++++++++-------------
->  arch/mips/boot/dts/ingenic/x1000.dtsi  |  9 ++++-----
->  4 files changed, 29 insertions(+), 35 deletions(-)
+>  arch/mips/configs/ci20_defconfig | 62 +++++++++++++++++---------------
+>  1 file changed, 34 insertions(+), 28 deletions(-)
 
-applied to mips-next. Please check if my resolution of the conflict
-in arch/mips/boot/dts/ingenic/jz4780.dtsi is correct.
+applied to mips-next.
 
 Thomas.
 
