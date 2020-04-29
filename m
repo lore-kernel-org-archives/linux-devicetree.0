@@ -2,108 +2,144 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBDBC83004
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8727DC83006
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEF22206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 668B72173E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="CDZaj6HR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PL4Mc2Ik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgD2Odn (ORCPT
+        id S1726481AbgD2OfO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:33:43 -0400
-Received: from mga07.intel.com ([134.134.136.100]:1910 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbgD2Odn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:33:43 -0400
-IronPort-SDR: a6P1m7px73NOyQK3UrTu7TEa1FwN+j9vdeKMQN5gpdMgtBfhy2S22qPLt1Sd2RJSz3j4Ds5cY6
- wAUFvLnKJN5w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 07:33:42 -0700
-IronPort-SDR: GgDxLw7T5eFCu4vUB9yydCrksnAKVNlira8kc0/Yy/F1rwk2KwAWiigEPmqzDOKtRVtUrdmN2Q
- 0tx2QchLc9Uw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="257977442"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 29 Apr 2020 07:33:42 -0700
-Received: from [10.255.166.42] (vramuthx-mobl1.gar.corp.intel.com [10.255.166.42])
-        by linux.intel.com (Postfix) with ESMTP id 8B1DE5802C8;
-        Wed, 29 Apr 2020 07:33:38 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org,
-        miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429162249.55d38ee8@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
-Date:   Wed, 29 Apr 2020 22:33:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 10:35:14 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:40931 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726348AbgD2OfN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:35:13 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 628275C0411;
+        Wed, 29 Apr 2020 10:35:12 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 29 Apr 2020 10:35:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=7NflUZehQMCLBE0ifLIpSr1EDnn
+        wo5t9jU2qH5OWXro=; b=CDZaj6HRDXELNSxfD+av0zYYHyXWhNBYgr2hxCGIHpt
+        dT3fzI/ebRdxjUpT/rZlO8aI9bUpZEpvFiOahw7TC9LDqyqLL67DTSc+npHmMQ2g
+        4NZk5cXzCu+jWESM9r+Opz71MVzSl6nNl5HteenD8LSph9D4IYV3szaZJXptCaBc
+        dTyWrrDFaklsBpUH2cdwj3Oh0KYfLXpXZFUhwi+gRQAeMBJPuBBcl2/khSD7VfSH
+        MT6+Duybnw70QV7NGC0CgR0YfkgtJ3HFOByPuLdq6NCilTfKBy1N0inuckSrm8uz
+        qKnpm2bU4dXr3iOo9R5caKDX2KFSlXjASbL/J6g6CKA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=7NflUZ
+        ehQMCLBE0ifLIpSr1EDnnwo5t9jU2qH5OWXro=; b=PL4Mc2IkiUGQRB5/B8oLzy
+        96gRWt25D+zZDgb2x75EApZrGqmVDoI1G5nKAqqwgUZkkw6GLPLAJXGy7ZGFSHDl
+        0kcm00NosuGmYV1byCAXALbHPEcJ29SrJ88mzSCE53sHDaKlcMqXFDummiJ7LpqM
+        kZ6cBLKkIGhdZJCmy5x9Sc2zfEWfYrHo3uGOf4Oao9Buph6DZMTp9km55lxFAw4C
+        0epjRLagKuco3fBK9LuWhkmM7q9V+jXc2SLdWgleS2PxKqT7D9oMVOf0KxKmN7Fy
+        JufLRuaYq4yTG8QOp2rAqAl7Rgq7SDRZV9mEpSRtACguE9QzyuhgnOwuTHmhmdJQ
+        ==
+X-ME-Sender: <xms:n5CpXk2e7JduXD774By5U3JhJuNdc2wzl3cvDlWlAvAF4LjFfnpIOQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgdejkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:n5CpXpxtmh0h0oNuQXuZjYLr9OfXIp95lirN40XuOw6EP0nE_DhmSA>
+    <xmx:n5CpXjiGyrmvqwTSgHK9gO_H8s9i07iAtbZjMN2JEDmLBgiBwJfDSQ>
+    <xmx:n5CpXowRmvipaFG-69S5rOqmg3mMuAwWNlEwdmquXLPEyIXKJ3krxg>
+    <xmx:oJCpXnfDzSC-0y1ghD9wNxK_x5nJwHD3aRMKonqmvWonG-4oknsw8g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 52C403280065;
+        Wed, 29 Apr 2020 10:35:11 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 16:35:10 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Priit Laes <plaes@plaes.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/4] clk: sunxi-ng: a10/a20: rewrite init code to a
+ platform driver
+Message-ID: <20200429143510.ksi27lok2udtmfas@gilmour.lan>
+References: <20200417221730.555954-1-plaes@plaes.org>
+ <20200417221730.555954-2-plaes@plaes.org>
+ <20200420124935.asfbgv7envb2af55@gilmour.lan>
+ <20200420203228.GA4734@plaes.org>
 MIME-Version: 1.0
-In-Reply-To: <20200429162249.55d38ee8@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zjre4utny3hlv3nb"
+Content-Disposition: inline
+In-Reply-To: <20200420203228.GA4734@plaes.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
 
-On 29/4/2020 10:22 pm, Boris Brezillon wrote:
-> On Wed, 29 Apr 2020 18:42:05 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> 
->> +
->> +#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
->> +#define EBU_ADDR_MASK		(5 << 4)
-> 
-> It's still unclear what ADDR_MASK is for. Can you add a comment
-> explaining what it does?
+--zjre4utny3hlv3nb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you Boris, keep review and giving inputs, will update.
-> 
->> +#define EBU_ADDR_SEL_REGEN	0x1
-> 
-> 
->> +
->> +	writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
->> +	       EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
->> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
->> +
->> +	writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
->> +	       ebu_host->ebu + EBU_ADDR_SEL(0));
->> +	writel(EBU_MEM_BASE_CS_1 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
->> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
-> 
-> That's super weird. You seem to set EBU_ADDR_SEL(reg) twice. Are you
-> sure that's needed, and are we setting EBU_ADDR_SEL(0) here?
+Hi,
 
-You are right, its weird only, but we need it, since different chip 
-select has different memory region access address.
+On Mon, Apr 20, 2020 at 08:32:28PM +0000, Priit Laes wrote:
+> On Mon, Apr 20, 2020 at 02:49:35PM +0200, Maxime Ripard wrote:
+> > On Sat, Apr 18, 2020 at 01:17:27AM +0300, Priit Laes wrote:
+> > > In order to register regmap for sun7i CCU, there needs to be
+> > > a device structure already bound to the CCU device node.
+> > >=20
+> > > Convert the sun4i/sun7i CCU setup to platform driver to use
+> > > it later as platform device.
+> > >=20
+> > > Signed-off-by: Priit Laes <plaes@plaes.org>
+> >=20
+> > You can't relly do that though. We have timers that need those clocks b=
+efore the
+> > device model is initialized.
+>=20
+> Ok, I'm somewhat lost now... are these the affected timers on sun7i follo=
+wing:
+> - allwinner,sun4i-a10-timer (timer@1c20c00)
+> - allwinner,sun7i-a20-hstimer (hstimer@1c60000)
 
-Yes , we are setting both CS0 and CS1 memory access region, if you have 
-any concern to optimize, please suggest me, Thanks!
+Yep
 
-Regards
-Vadivel
-> 
+> Any ideas on what approach I could actually use?
+
+I guess you could keep the CLK_OF_DECLARE registration, and then have a
+platform_driver probe and register the regmap?
+
+> Also, similar timer dependency would affect then sun6i-a31 and sun9i-a80
+> platforms too...
+
+Indeed.
+
+Maxime
+
+--zjre4utny3hlv3nb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqmQngAKCRDj7w1vZxhR
+xVUBAPsHWuYy2OQT3UljAEr+aCiI8CLm5ELTsyDmgwGv5k61AgEAvf5uXLGuI8YM
+fCSMZorTWij/bLfDbEfqowLUaGK8dQ8=
+=MvDN
+-----END PGP SIGNATURE-----
+
+--zjre4utny3hlv3nb--
