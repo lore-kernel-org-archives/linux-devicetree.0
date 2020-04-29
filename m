@@ -2,94 +2,148 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56616C83004
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 17:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9FEC83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 17:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 315BC2083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 17:03:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588179835;
-	bh=7jC9IDuFARUTSjXTY+0/VvRprFL9zCdJIskFeQ3UjIc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=ykNXvNiVuTN5v/aN7ubb/9kj9LVIvzPXO9t1qr9+ki1U/bzfElvKDR2ptaVIufrFo
-	 VsdED34N4n8ny8hCtk5ozEAT7z2IkMBUH1D61X7PVxLGcVVetTRG57n99V/AbGf6Sr
-	 Ccasm8oH74AMHNRl7iXHLPvfVBHKW8CjG/s+eLD4=
+	by mail.kernel.org (Postfix) with ESMTP id 51E00208FE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 17:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgD2RDv (ORCPT
+        id S1726524AbgD2REf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:03:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgD2RDr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:03:47 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6387920B80;
-        Wed, 29 Apr 2020 17:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588179826;
-        bh=7jC9IDuFARUTSjXTY+0/VvRprFL9zCdJIskFeQ3UjIc=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Xt40PtfYySz0xeIL+8IivMPM0lRD3l7gpSEYrvsExi31y37cjrYA4+1YQDXT+l2YA
-         tC4cTzIHqVc3UWA8EyOlUUIRGwkLmq7qTk3CZUvmKayYQMG+rumNEdZ4Hy9sqQP2Ph
-         wY20WMpsdwnL8CZdqmlMtd3GjEGTumGkgSU+ZUj0=
-Date:   Wed, 29 Apr 2020 18:03:44 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <87sghovzwb.wl-kuninori.morimoto.gx@renesas.com>
-References: <87sghovzwb.wl-kuninori.morimoto.gx@renesas.com>
-Subject: Re: [PATCH v4] ASoC: dt-bindings: simple-card: switch to yaml base Documentation
-Message-Id: <158817982434.15847.3216748804713168341.b4-ty@kernel.org>
+        Wed, 29 Apr 2020 13:04:35 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39785 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbgD2REe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 13:04:34 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 8AA9BFF804;
+        Wed, 29 Apr 2020 17:04:30 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 19:04:28 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Yifeng Zhao <yifeng.zhao@rock-chips.com>, richard@nod.at,
+        vigneshr@ti.com, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-mtd@lists.infradead.org, heiko@sntech.de,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v5 2/7] mtd: rawnand: rockchip: NFC drivers for RK3308,
+ RK3188 and others
+Message-ID: <20200429190428.33ca0523@xps13>
+In-Reply-To: <4dbe907c-a6c2-a163-0cab-234b08336b5c@gmail.com>
+References: <20200426100250.14678-1-yifeng.zhao@rock-chips.com>
+        <20200426100250.14678-3-yifeng.zhao@rock-chips.com>
+        <4dbe907c-a6c2-a163-0cab-234b08336b5c@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 01 Apr 2020 09:00:04 +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Hi Yifeng,
+
+Johan Jonker <jbx6244@gmail.com> wrote on Wed, 29 Apr 2020 17:55:56
++0200:
+
+> Hi Yifeng,
 > 
-> This patch switches from .txt base to .yaml base Document.
+> A few more comments below for now (part 2).
 > 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> On 4/26/20 12:02 PM, Yifeng Zhao wrote:
 > 
-> [...]
+> [..]
+> 
+> > +#define	THIS_NAME		"rk-nand"  
+> 
+> > +static int rk_nfc_nand_chip_init(struct device *dev, struct rk_nfc *nfc,
+> > +				 struct device_node *np)
+> > +{
+> > +	struct rk_nfc_nand_chip *nand;
+> > +	struct nand_chip *chip;
+> > +	struct mtd_info *mtd;
+> > +	int nsels;
+> > +	u32 tmp;
+> > +	int ret;
+> > +	int i;
+> > +
+> > +	if (!of_get_property(np, "reg", &nsels))
+> > +		return -ENODEV;
+> > +	nsels /= sizeof(u32);
+> > +	if (!nsels || nsels > NFC_MAX_NSELS) {
+> > +		dev_err(dev, "invalid reg property size %d\n", nsels);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	nand = devm_kzalloc(dev, sizeof(*nand) + nsels * sizeof(u8),
+> > +			    GFP_KERNEL);
+> > +	if (!nand)
+> > +		return -ENOMEM;
+> > +
+> > +	nand->nsels = nsels;
+> > +	for (i = 0; i < nsels; i++) {
+> > +		ret = of_property_read_u32_index(np, "reg", i, &tmp);
+> > +		if (ret) {
+> > +			dev_err(dev, "reg property failure : %d\n", ret);
+> > +			return ret;
+> > +		}
+> > +
+> > +		if (tmp >= NFC_MAX_NSELS) {
+> > +			dev_err(dev, "invalid CS: %u\n", tmp);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		if (test_and_set_bit(tmp, &nfc->assigned_cs)) {
+> > +			dev_err(dev, "CS %u already assigned\n", tmp);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		nand->sels[i] = tmp;
+> > +	}
+> > +
+> > +	chip = &nand->chip;
+> > +	chip->controller = &nfc->controller;
+> > +
+> > +	nand_set_flash_node(chip, np);
+> > +	nand_set_controller_data(chip, nfc);
+> > +
+> > +	chip->options |= NAND_USE_BOUNCE_BUFFER | NAND_NO_SUBPAGE_WRITE;
+> > +	chip->bbt_options = NAND_BBT_USE_FLASH | NAND_BBT_NO_OOB;
+> > +
+> > +	/* set default mode in case dt entry is missing */
+> > +	chip->ecc.mode = NAND_ECC_HW;
+> > +
+> > +	mtd = nand_to_mtd(chip);
+> > +	mtd->owner = THIS_MODULE;
+> > +	mtd->dev.parent = dev;  
+> 
+> > +	mtd->name = THIS_NAME;  
+> 
+> The 'mtd->name' shows up somewhere in file tree.
 
-Applied to
+Good catch.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+> The rk3288 has 2 nfc's. In theory 2 probes and also 2 device names, so I
+> think that we shouldn't use a fixed define for 'mtd->name'.
+> Maybe use something like this:
 
-Thanks!
+Yifeng, please use the NAND chip "label" DT property, which is parsed
+by the core automatically and will give you meaningful names for every
+chip:
 
-[1/1] ASoC: dt-bindings: simple-card: switch to yaml base Documentation
-      commit: 79149fb835d762493db6b8b545527069d592d51b
+nand_set_flash_node(chip, np);
+if (!mtd->name) {
+	dev_err(nfc->dev, "NAND label property is mandatory\n");
+	return -EINVAL;
+}
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
 
 Thanks,
-Mark
+Miquèl
