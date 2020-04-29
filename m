@@ -6,72 +6,58 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC19C83004
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 12:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CC7C83007
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 12:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B1F20B80
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 12:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE71217D8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 12:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588161916;
-	bh=BHx6Adc582HX/EI7gEWPQT8miSuzlW266b32vPCYeME=;
+	s=default; t=1588162396;
+	bh=u4q8FeVjq66c39pqaDcuSEyHVkmprJELW74mmEQTIaE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r0xxX4MkA2DNMf5wBhtNBea0hHandc7UQX8VSu4v+ikJxM8PrIXvsMBXr+TmGhd6V
-	 TAKtjR1Piu3BwPaN+C2mDVkgqpNY2nL5W8bcK8xNok1ub8qFdw5N7ScMdoh/Q6mkbl
-	 NzRrBem7Os2DbD3d+zao28BTL4mKDSvaYmNVXPhQ=
+	b=SEHra++qtgO3AtPq/YkBu3jNIc91NhaxDGWxfG4rABJu98fHe/FsCX6mV+85tBq6q
+	 OdIHNThEwavMa8t4UxtYTS1K7R1qBt34AbXnZJ5BgjBvaxyQQgYzGoBTdO76sGR17K
+	 BU7evgaNc4E1J9Ok2WB9OUdus1CJx+ZcGuwzP2yY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgD2MFP (ORCPT
+        id S1726701AbgD2MNP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42868 "EHLO mail.kernel.org"
+        Wed, 29 Apr 2020 08:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgD2MFP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:05:15 -0400
+        id S1727070AbgD2MNN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:13:13 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F8B208FE;
-        Wed, 29 Apr 2020 12:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33A292087E;
+        Wed, 29 Apr 2020 12:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588161914;
-        bh=BHx6Adc582HX/EI7gEWPQT8miSuzlW266b32vPCYeME=;
+        s=default; t=1588162392;
+        bh=u4q8FeVjq66c39pqaDcuSEyHVkmprJELW74mmEQTIaE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=StwkJngH70s5roDZrk0Vd0cSxaoWgkq9/v/SdRm0VsfveIt/PScZ4eGrr0cCqV5Yi
-         bgXyOwH5HMG8tiQL2kbbdS1mALhVuxn6iUOzJd9DzIKPw4LwXeyZ8XdAOiDFocEt5O
-         rfDMpk4aRr6mied40vjSshkkuH1tA5VSghN9ckWA=
-Date:   Wed, 29 Apr 2020 13:05:11 +0100
+        b=LkccZMaFK0HPa/lbTJpwOfhl8YJedaGt+oqHcEse9oxecOG+ePMQl8+6lXN291eQt
+         XMOEz6IrJ3WVM70u8VUu+lzZReL1NMjGZKzI6S/iVHo09sj1mB7r8KpyAoFiY7glgP
+         IM3XoNOsXV/iAUpplEFGhw3FFVTD9pPI8zvfFoQM=
+Date:   Wed, 29 Apr 2020 13:13:10 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>, Chen-Yu Tsai <wens@csie.org>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: Audio sound card name [was [PATCH 4/7] arm64:
- dts: allwinner: a64: Add HDMI audio]
-Message-ID: <20200429120511.GG4201@sirena.org.uk>
-References: <20200426120442.11560-1-peron.clem@gmail.com>
- <20200426120442.11560-5-peron.clem@gmail.com>
- <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
- <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
- <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
- <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
- <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
- <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
- <20200429081729.qa3gqtl5sof2jhem@gilmour.lan>
- <f9b701d9-0c4e-6e41-1ce8-52adf0f59a2a@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, robh@kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+Message-ID: <20200429121310.GH4201@sirena.org.uk>
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+ <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
+ <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RMedoP2+Pr6Rq0N2"
+        protocol="application/pgp-signature"; boundary="zq44+AAfm4giZpo5"
 Content-Disposition: inline
-In-Reply-To: <f9b701d9-0c4e-6e41-1ce8-52adf0f59a2a@arm.com>
+In-Reply-To: <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
 X-Cookie: I know how to do SPECIAL EFFECTS!!
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
@@ -80,66 +66,52 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---RMedoP2+Pr6Rq0N2
+--zq44+AAfm4giZpo5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Apr 29, 2020 at 11:43:06AM +0100, Robin Murphy wrote:
-> On 2020-04-29 9:17 am, Maxime Ripard wrote:
-> > On Wed, Apr 29, 2020 at 02:24:00PM +0800, Chen-Yu Tsai wrote:
+On Wed, Apr 29, 2020 at 04:20:53PM +0800, Dilip Kota wrote:
+> On 4/28/2020 7:10 PM, Daniel Schwierzeck wrote:
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+> > actually there is no real bottom half. Reading or writing the FIFOs is
+> > fast and is therefore be done in hard IRQ context. But as the comment
 
-> > If we also end up with "HDMI" as our card name, then the userspace has no way to
-> > tell anymore if it's running from an rk3328 or an allwinner SoC, or something
-> > else entirely. And therefore it cannot really configure anything to work out of
-> > the box anymore.
+> Doing FIFO r/w in threaded irqs shouldn't cause any impact on maximum
+> transfer rate i think.
 
-> OK, you're a userspace audio application - enlighten me as to what exact
-> chip you're running on here, and why you need to know:
+Have you actually tested this?  Generally adding extra latency is going
+to lead to some opportunity for the hardware to idle and the longer the
+hardware is idle the lower the throughput.
 
-> card 0: HDMI [HDA ATI HDMI]
+> Also the ISR should be quick enough, doing FIFO r/w in ISR adds up more
+> latency to ISR.
+> Handling the FIFOs r/w in threaded irq will be a better way.
 
-> or how about here?
+Consider what happens on a heavily loaded system - the threaded
+interrupt will have to be scheduled along with other tasks.
 
-> card 0: Intel [HDA Intel]
+> > for lantiq_ssc_bussy_work() state, the driver needs some busy-waiting
+> > after the last interrupt. I don't think it's worth to replace this with
+> > threaded interrupts which add more runtime overhead and likely decrease
+> > the maximum transfer speed.
 
-In the case of HDMI for embedded platforms since there is generally no
-control in the audio path it is unlikely to make a *huge* difference,
-though if there are expansion buses or multiple HDMI ports it can be
-useful to help people identify which particular HDMI port it is.  For
-other cards the names are part of userspace working out which config
-file to apply to the card so deduplication can help, and also the
-plastics tend to matter.
+> Workqueue has a higher chances of causing SPI transfers timedout.
 
-> With simple-audio-card we're talking about trivial interfaces that often
-> don't expose any controls at all, so there's unlikely to be much
-> 'configuration' for userspace to do beyond choosing which card to output to.
+because...?
 
-This is a reasonable assumption for HDMI but it is not at all a
-reasonable assumption for simple-audio-card in general - just because
-the links between the SoC and the external components are simple that
-doesn't mean that any of those components are simple, and even if the
-hardware is simple that does not mean that configuration is unimportant
-- the difference between full scale output and appropriate headphone
-volumes is for example *extremely* important.
-
---RMedoP2+Pr6Rq0N2
+--zq44+AAfm4giZpo5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6pbXcACgkQJNaLcl1U
-h9Bzugf/c28iLtVw25sffS7FxnwHu5kFpEMA6AESU/nbib3pIGkMPZg+yn69tK3S
-bdnoVTnaJl2n84nFz/STXBtafZ0xebeAN+eZu0Gd7vtygVQlVGBP0QqPBo04u2Ko
-xSfYbaycfHROmTbbL5xIoJ0XaxNOgnZd0epZRpcvNDkDZJ8YvlwoR5Ooi8C/SR9E
-xqmpX9gmh59QtZf3NS5mQ+4PIHwxw35rxIgA1P6mIFRaseuz6njlFAlpKpCfWHy8
-ZOYQ79RmdZDUSkqlOtUToBxkOrVCPHHmr5YoblVd3P3olP4ZBcmpnRuB4+QkxifA
-7T5xU5H+PZPzUMBmDu6Mtx6P+4INhA==
-=xohR
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6pb1UACgkQJNaLcl1U
+h9B5Xwf9HYTpgwJhe8Mt24YHCYdheKLib494VcuElZXJPwV8qe4CbHLu0OaMB8Nt
+eMnwvPeuQwMCZdAVlUONXcAhodLdAqnQ/vW4Pv3EmsvTsIcpdQwS9U3ECZpg3GsQ
+2/h0SN8MUv4abWuaINGq2aSzrkEo54IdDbKL2hX/EBgb3eYEbslZLADMPrj1GbUq
+XZ/+4/hZYBJGOU0GhMhEICTVLRRn3WaX7D7zsKnhYuJSBy0MawdkHcvbTbMf/5mb
+ueROU1mpDvze2eNPtzaAT/IC63tb9DCL1j3MeVc7Vfr1zbaB/AWtMr4hxjr9+6jP
+tC0FaIJds95B1JxelaCLXRuR7GA0mw==
+=/9PQ
 -----END PGP SIGNATURE-----
 
---RMedoP2+Pr6Rq0N2--
+--zq44+AAfm4giZpo5--
