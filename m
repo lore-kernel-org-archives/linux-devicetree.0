@@ -2,110 +2,162 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250C0C83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0C3C83003
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09FB6206D9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3248206D9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgD2IWi (ORCPT
+        id S1726401AbgD2IZY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:22:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:44131 "EHLO mga14.intel.com"
+        Wed, 29 Apr 2020 04:25:24 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:38178 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbgD2IWi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:22:38 -0400
-IronPort-SDR: dMiGYpRM5R3C/CcgAHoz2hsFfpTv2lrCHeVSKimyWK8bsBu4mCGhttxVKcH2oCc/xEV4c67VgW
- L3iBoL47mwlA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 01:22:38 -0700
-IronPort-SDR: F+sD5STICk/m6zujNoE9BvEABvPm9vfHA/7Vwbg/OxHjhyfuFBlI+4A+I2dBRswY9yrVoa2IZs
- NG95l8OV7VzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,330,1583222400"; 
-   d="scan'208";a="459104696"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Apr 2020 01:22:38 -0700
-Received: from [10.215.242.51] (ekotax-mobl.gar.corp.intel.com [10.215.242.51])
-        by linux.intel.com (Postfix) with ESMTP id 142FD5802C8;
-        Wed, 29 Apr 2020 01:22:34 -0700 (PDT)
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-To:     Hauke Mehrtens <hauke@hauke-m.de>,
-        Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
-        broonie@kernel.org, robh@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
- <262f2739-494a-a59b-f1e9-80a95ea465b1@hauke-m.de>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <078a68ad-b82b-81c5-2d93-bfa4b70bc5d6@linux.intel.com>
-Date:   Wed, 29 Apr 2020 16:22:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <262f2739-494a-a59b-f1e9-80a95ea465b1@hauke-m.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        id S1726366AbgD2IZY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 04:25:24 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 84CEF1A181F;
+        Wed, 29 Apr 2020 10:25:22 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 272791A030B;
+        Wed, 29 Apr 2020 10:25:20 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CE02D402DA;
+        Wed, 29 Apr 2020 16:25:16 +0800 (SGT)
+From:   Qiang Zhao <qiang.zhao@nxp.com>
+To:     shawnguo@kernel.org
+Cc:     leoyang.li@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhao Qiang <qiang.zhao@nxp.com>
+Subject: [patch v2 1/2] ls1043ardb: add qe node to ls1043ardb
+Date:   Wed, 29 Apr 2020 16:20:51 +0800
+Message-Id: <20200429082052.18519-1-qiang.zhao@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Zhao Qiang <qiang.zhao@nxp.com>
 
-On 4/28/2020 7:30 PM, Hauke Mehrtens wrote:
-> On 4/28/20 1:10 PM, Daniel Schwierzeck wrote:
->>
->> Am 24.04.20 um 12:42 schrieb Dilip Kota:
->>
-...
-> Hi,
->
-> The Interrupt controller found on Danube till xrx300 which is probably
-> from Infineon like this SPI controller IP acknowledges the interrupts
-> also inside this SPI controller IP automatically, this has to be done
-> manually on the xrx500 and probably also LGM as they use a different
-> interrupt controller. I prepared patches for this internally 2.5 years
-> ago but did not send them upstream because of internal processes.
->
-> I would suggest to only do this ack on the newer platforms starting with
-> the xrx500 and not on the older.
->
-> On SMP systems a lock is needed in lantiq_ssc_xmit_interrupt() to
-> protect against an other thread reading from the RX buffer or writing to
-> the TX buffer in parallel.
->
-> @Dilip. Did you try the patches I send you one months ago on the LGM?
-All the cases you mentioned are taken care in the patch, could you 
-please have a look once.
+Add qe node to fsl-ls1043a.dtsi and fsl-ls1043a-rdb.dts
 
-And the patch you shared internally, has done below change. By referring 
-it i have updated the offsets, mentioning offsets are wrong. But actual 
-case is vrx200 are having different offsets and xrx500, latest chipsets 
-are having different offsets. I think this could be the reason for SPI 
-transfer timeouts when you run test on vrx200 with my patches.
+Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+---
+v2:
+- add commit msg and drop a new blank line
 
--#define LTQ_SPI_IRNICR		0xf8
--#define LTQ_SPI_IRNCR		0xfc
-+#define LTQ_SPI_IRNCR		0xf8
-+#define LTQ_SPI_IRNICR		0xfc
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 16 ++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi    | 65 +++++++++++++++++++++++
+ 2 files changed, 81 insertions(+)
 
-These offsets need to be defined in SoC data structure as they are 
-different across the chipsets(which i have done in initial phase of the 
-patch which i submitted for internal review. I hope you had got a chance 
-to review it).
-
-Regards,
-Dilip
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+index 4223a23..96e87ba 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+@@ -96,6 +96,22 @@
+ 	};
+ };
+ 
++&uqe {
++	ucc_hdlc: ucc@2000 {
++		compatible = "fsl,ucc-hdlc";
++		rx-clock-name = "clk8";
++		tx-clock-name = "clk9";
++		fsl,rx-sync-clock = "rsync_pin";
++		fsl,tx-sync-clock = "tsync_pin";
++		fsl,tx-timeslot-mask = <0xfffffffe>;
++		fsl,rx-timeslot-mask = <0xfffffffe>;
++		fsl,tdm-framer-type = "e1";
++		fsl,tdm-id = <0>;
++		fsl,siram-entry-id = <0>;
++		fsl,tdm-interface;
++	};
++};
++
+ &duart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index c084c7a4..674e671 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -525,6 +525,71 @@
+ 			#interrupt-cells = <2>;
+ 		};
+ 
++		uqe: uqe@2400000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			device_type = "qe";
++			compatible = "fsl,qe", "simple-bus";
++			ranges = <0x0 0x0 0x2400000 0x40000>;
++			reg = <0x0 0x2400000 0x0 0x480>;
++			brg-frequency = <100000000>;
++			bus-frequency = <200000000>;
++			fsl,qe-num-riscs = <1>;
++			fsl,qe-num-snums = <28>;
++
++			qeic: qeic@80 {
++				compatible = "fsl,qe-ic";
++				reg = <0x80 0x80>;
++				#address-cells = <0>;
++				interrupt-controller;
++				#interrupt-cells = <1>;
++				interrupts = <0 77 0x04 0 77 0x04>;
++			};
++
++			si1: si@700 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,ls1043-qe-si",
++						"fsl,t1040-qe-si";
++				reg = <0x700 0x80>;
++			};
++
++			siram1: siram@1000 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				compatible = "fsl,ls1043-qe-siram",
++						"fsl,t1040-qe-siram";
++				reg = <0x1000 0x800>;
++			};
++
++			ucc@2000 {
++				cell-index = <1>;
++				reg = <0x2000 0x200>;
++				interrupts = <32>;
++				interrupt-parent = <&qeic>;
++			};
++
++			ucc@2200 {
++				cell-index = <3>;
++				reg = <0x2200 0x200>;
++				interrupts = <34>;
++				interrupt-parent = <&qeic>;
++			};
++
++			muram@10000 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				compatible = "fsl,qe-muram", "fsl,cpm-muram";
++				ranges = <0x0 0x10000 0x6000>;
++
++				data-only@0 {
++					compatible = "fsl,qe-muram-data",
++					"fsl,cpm-muram-data";
++					reg = <0x0 0x6000>;
++				};
++			};
++		};
++
+ 		lpuart0: serial@2950000 {
+ 			compatible = "fsl,ls1021a-lpuart";
+ 			reg = <0x0 0x2950000 0x0 0x1000>;
+-- 
+2.9.5
 
