@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C06C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A667C83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63D3B2083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587C02083B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 20:17:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ipE94I2o"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="QveB36T9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgD2URV (ORCPT
+        id S1727848AbgD2URe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:17:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59654 "EHLO
+        Wed, 29 Apr 2020 16:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbgD2URU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 16:17:20 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87F8FC03C1AE;
-        Wed, 29 Apr 2020 13:17:20 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u16so3468680wmc.5;
-        Wed, 29 Apr 2020 13:17:20 -0700 (PDT)
+        with ESMTP id S1727827AbgD2UR1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 16:17:27 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF7BC03C1AE;
+        Wed, 29 Apr 2020 13:17:26 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b11so4113938wrs.6;
+        Wed, 29 Apr 2020 13:17:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GrVPUcTD2l9oJ0HPXx8l+PhUQ6rIzd+t7iX8qFgDDUE=;
-        b=ipE94I2oDHFBOK1wvyXv2dDCEJ+N4Iszv0sQleLMdWCyHveYpujY5johVU8kihYH9g
-         Q7Mvf7UdOXUqBLc+R2xZks9rvgRzyn3pL4zurFd2YBqz9lByXmau8QYKuhkD+14Fn8tp
-         Y/WJAgqkwxSN3441r2bv9I99b/EBoORAg9bRHbxaE4zOx9OifBcXW3OEx+0aIMVDnTnv
-         bN0KuMUidxZT4TORBaoScSFlGk40WcxUfYWruGgESQ3T+72m6rtw64WqNT6vDhx6ZWCv
-         rwIWOTKtw4QElEb19488qaxyVRxaKsCI08m+4+qpQcuztJdItKanL0/Ll2+F/12ze6so
-         EmjQ==
+        bh=0knvu8zyqVx4y2NkIr8lOmrEgshGQH0lpKJi3cjk2SI=;
+        b=QveB36T9cQfiMiI9HNOdZ7yQwlct6qNuNxJikrgRPBAt+IVOZQpzYY64/wICgNjMEE
+         hGkVzt4CRM/9icHJ7hoBYLj/RfsYzQr5i9OTVlJc328Utkbe6rku9I2AZD33/SCOwxdd
+         LvBWWSfiFVZszv6UUklwzPO0/bCoZ+IboL/FMLCIRy8ZBki4UlQWoszUwRM5B2qDj2jm
+         GD/sfTOz9Xz0ZYrdPkCpPJAsR2YJHJpdfSlWFV77DeMeuV4Si8xVTszKN9Ibf+rfxVkB
+         azePNdVax5XNLpUgEktsaqVBqJBI/lsZNEq7ARgbx9DCrbLcPxpuO+wxQpjrpSq6570r
+         EwSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GrVPUcTD2l9oJ0HPXx8l+PhUQ6rIzd+t7iX8qFgDDUE=;
-        b=GtFuEpnwiA5Rqgqumt6kVi5Nic+A76H5mnVT2ljSquDahHY/pqiTx8qrQgCorEVPud
-         hUhYUqGI3a1OWf6DYwNhMFw5Mi3v8pche5yziy4EWrGzITTluOVLgXvTtDHBzdYLKOyy
-         cnz2BCZ4MOaJjoLx0YwNB20Oe8bqIDb+ZySBStXQirvTr5okIlIMG2V4s9E//b4Uo+lu
-         zmwsEpCsgQil2NzhBoo8pNOz5rI8wAkOXI740jT7cPKqLDztx4IiO6W0hhU/vK+zh9AX
-         C4StOenayZ12DGsulXAds/sPS4LJxKYIxs6kD65T5bHocqLd872IsdRXvuPdzGVvzN8X
-         WIIA==
-X-Gm-Message-State: AGi0Pub3wYIPq13FV3LbqQtuigy+ornUiC1cznf9YXJ01K0hzJ0kYqj3
-        hbS7LXoGxPwf/Gzcp+MHjok=
-X-Google-Smtp-Source: APiQypL4s/mUZ/ZYL0kEimx4vhbQ6WN12EIfKnlQOaoJRiTogeSbY1XH1KXmgf2OGXzZCm2fknw27w==
-X-Received: by 2002:a1c:6402:: with SMTP id y2mr5205603wmb.116.1588191438299;
-        Wed, 29 Apr 2020 13:17:18 -0700 (PDT)
+        bh=0knvu8zyqVx4y2NkIr8lOmrEgshGQH0lpKJi3cjk2SI=;
+        b=blpui7O3xV0YI9xVWTDf0DD6XvcrZl7doRHUWUz5ZAc1c8FUQPU12efHs2dXNrv16V
+         HQyQ1s8862wSogyQ7aKl3qXWwKfwfyFsRLrjuo/awX1FeFrDPZ3BeUETJxDLMRmNEB5l
+         zyrgx7Woko4Xbfwil3EFqZ6blmVjk1I9y73CeTgEHGadUwcnCfKoKX+TNAcAqUcnoTOM
+         gH93G5UZ8VDxLhhEbeiituCbyP3ck7qiXHl19hiEbvOJwO9VLI3SLpgpYIB9htdVnI9H
+         DPZjFJxWK9k0P/LjUXA4lDsqqC43oop+cU5hIwSkPG+ebGqzR0pK4MIAaE2IqV2bvdCY
+         3IZA==
+X-Gm-Message-State: AGi0PuYdmlAWod4F4ElRLyyAD556V8GhdIW/r9uFYTqEvOdMgSorp0tw
+        Y+OWnNhWsw3cVDItNyE4xa4=
+X-Google-Smtp-Source: APiQypI7/tFm351D0aZQ+OFBTov0tzQC4j8sVuoaGKjl8wXkEwEwydb01p0/bZVora7GdZbF0ZPmWA==
+X-Received: by 2002:adf:fe44:: with SMTP id m4mr43579867wrs.188.1588191444705;
+        Wed, 29 Apr 2020 13:17:24 -0700 (PDT)
 Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id q143sm9923623wme.31.2020.04.29.13.17.17
+        by smtp.googlemail.com with ESMTPSA id q143sm9923623wme.31.2020.04.29.13.17.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 13:17:17 -0700 (PDT)
+        Wed, 29 Apr 2020 13:17:24 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
         linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
@@ -66,9 +66,9 @@ Cc:     jianxin.pan@amlogic.com, davem@davemloft.net,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH RFC v2 05/11] net: stmmac: dwmac-meson8b: Add the PRG_ETH0_ADJ_* bits
-Date:   Wed, 29 Apr 2020 22:16:38 +0200
-Message-Id: <20200429201644.1144546-6-martin.blumenstingl@googlemail.com>
+Subject: [PATCH DO NOT MERGE v2 11/11] ARM: dts: meson: Switch existing boards with RGMII PHY to "rgmii-id"
+Date:   Wed, 29 Apr 2020 22:16:44 +0200
+Message-Id: <20200429201644.1144546-12-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
 References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
@@ -79,50 +79,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The PRG_ETH0_ADJ_* are used for applying the RGMII RX delay. The public
-datasheets only have very limited description for these registers, but
-Jianxin Pan provided more detailed documentation from an (unnamed)
-Amlogic engineer. Add the PRG_ETH0_ADJ_* bits along with the improved
-description.
+Let the PHY generate the RX and TX delay on the Odroid-C1 and MXIII
+Plus.
 
-Suggested-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Previously we did not know that these boards used an RX delay. We
+assumed that setting the TX delay on the MAC side It turns out that
+these boards also require an RX delay of 2ns (verified on Odroid-C1,
+but the u-boot code uses the same setup on both boards). Ethernet only
+worked because u-boot added this RX delay on the MAC side.
+
+The 4ns TX delay was also wrong and the result of using an unsupported
+RGMII TX clock divider setting. This has been fixed in the driver with
+commit bd6f48546b9cb7 ("net: stmmac: dwmac-meson8b: Fix the RGMII TX
+delay on Meson8b/8m2 SoCs").
+
+Switch to phy-mode "rgmii-id" to let the PHY side handle all the delays,
+(as recommended by the Ethernet maintainers anyways) to correctly
+describe the need for a 2ns RX as well as 2ns TX delay on these boards.
+This fixes the Ethernet performance on Odroid-C1 where there was a huge
+amount of packet loss when transmitting data due to the incorrect TX
+delay.
+
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm/boot/dts/meson8b-odroidc1.dts    | 3 +--
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 4 +---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index 1d7526ee09dd..70075628c58e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -48,6 +48,27 @@
- #define PRG_ETH0_INVERTED_RMII_CLK	BIT(11)
- #define PRG_ETH0_TX_AND_PHY_REF_CLK	BIT(12)
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index a2a47804fc4a..cb21ac9f517c 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -202,9 +202,8 @@ &ethmac {
+ 	pinctrl-0 = <&eth_rgmii_pins>;
+ 	pinctrl-names = "default";
  
-+/* Bypass (= 0, the signal from the GPIO input directly connects to the
-+ * internal sampling) or enable (= 1) the internal logic for RXEN and RXD[3:0]
-+ * timing tuning.
-+ */
-+#define PRG_ETH0_ADJ_ENABLE		BIT(13)
-+/* Controls whether the RXEN and RXD[3:0] signals should be aligned with the
-+ * input RX rising/falling edge and sent to the Ethernet internals. This sets
-+ * the automatically delay and skew automatically (internally).
-+ */
-+#define PRG_ETH0_ADJ_SETUP		BIT(14)
-+/* An internal counter based on the "timing-adjustment" clock. The counter is
-+ * cleared on both, the falling and rising edge of the RX_CLK. This selects the
-+ * delay (= the counter value) when to start sampling RXEN and RXD[3:0].
-+ */
-+#define PRG_ETH0_ADJ_DELAY		GENMASK(19, 15)
-+/* Adjusts the skew between each bit of RXEN and RXD[3:0]. If a signal has a
-+ * large input delay, the bit for that signal (RXEN = bit 0, RXD[3] = bit 1,
-+ * ...) can be configured to be 1 to compensate for a delay of about 1ns.
-+ */
-+#define PRG_ETH0_ADJ_SKEW		GENMASK(24, 20)
-+
- #define MUX_CLK_NUM_PARENTS		2
+-	phy-mode = "rgmii";
+ 	phy-handle = <&eth_phy>;
+-	amlogic,tx-delay-ns = <4>;
++	phy-mode = "rgmii-id";
  
- struct meson8b_dwmac;
+ 	nvmem-cells = <&ethernet_mac_address>;
+ 	nvmem-cell-names = "mac-address";
+diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+index d54477b1001c..cc498191ddd1 100644
+--- a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
++++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+@@ -69,9 +69,7 @@ &ethmac {
+ 	pinctrl-names = "default";
+ 
+ 	phy-handle = <&eth_phy0>;
+-	phy-mode = "rgmii";
+-
+-	amlogic,tx-delay-ns = <4>;
++	phy-mode = "rgmii-id";
+ 
+ 	mdio {
+ 		compatible = "snps,dwmac-mdio";
 -- 
 2.26.2
 
