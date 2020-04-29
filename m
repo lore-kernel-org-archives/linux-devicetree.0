@@ -2,156 +2,154 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8168DC83007
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 09:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8883FC83003
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDF621835
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 09:55:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KDzoDVd+"
+	by mail.kernel.org (Postfix) with ESMTP id 64AFE2070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgD2JzZ (ORCPT
+        id S1726476AbgD2KGk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:55:25 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:59103 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726345AbgD2JzY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:55:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588154123; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=3iXUY6EYpmcQbL2bjsrp6J9NTxmranLuwsV6XKvgXqY=; b=KDzoDVd+e77z84IEkU6YgpXbq9Bh54WHwsp0kdi1Qzez5INl7HtOjhcadksNLyhj2g2S+cqr
- 7lWv5E+IcAIc4bB17synA683LM+9jJ3Um/HPti8poomBGxSHkME6iGOT8WDH+nC3wmBnvzAI
- 3JgxuvziUR5GpI7FiW822MIwTvw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea94f0b.7fd361bc4ae8-smtp-out-n02;
- Wed, 29 Apr 2020 09:55:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 32DACC433BA; Wed, 29 Apr 2020 09:55:22 +0000 (UTC)
-Received: from [192.168.1.227] (unknown [49.204.176.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 07F91C433D2;
-        Wed, 29 Apr 2020 09:55:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 07F91C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
-Subject: Re: [PATCH] dt-bindings: arm-smmu: Add a new compatible string and a
- clock
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>, tdas@codeaurora.org
-References: <1588073914-15712-1-git-send-email-smasetty@codeaurora.org>
- <CAD=FV=WPG4x+TTu5-169EPObhvtPEpodzjnk2WSBCQgR434xdA@mail.gmail.com>
-From:   Sharat Masetty <smasetty@codeaurora.org>
-Message-ID: <9aece4ec-6a14-ea73-fe9c-5f097a018354@codeaurora.org>
-Date:   Wed, 29 Apr 2020 15:25:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 29 Apr 2020 06:06:40 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:51381 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD2KGj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 06:06:39 -0400
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 2ABF4200004;
+        Wed, 29 Apr 2020 10:06:33 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 12:06:32 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v2 06/12] mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS
+ for timeouts
+Message-ID: <20200429120632.7bce63e6@xps13>
+In-Reply-To: <b6b31f36-8e8f-4042-2587-0dcad82aafc5@st.com>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-7-git-send-email-christophe.kerello@st.com>
+        <20200427202212.0235d987@xps13>
+        <0e2c9a6a-aa21-7814-9af8-629de6568fab@st.com>
+        <20200429113529.5ddc3ad9@xps13>
+        <b6b31f36-8e8f-4042-2587-0dcad82aafc5@st.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=WPG4x+TTu5-169EPObhvtPEpodzjnk2WSBCQgR434xdA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Christophe,
 
-On 4/29/2020 3:57 AM, Doug Anderson wrote:
-> Hi,
->
-> On Tue, Apr 28, 2020 at 4:39 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
->> This patch adds a new compatible string for sc7180 and also an
->> additional clock listing needed to power the TBUs and the TCU.
->>
->> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 7 +++++++
->>   1 file changed, 7 insertions(+)
-> nit: mention sc7180 in subject, like:
->
-> dt-bindings: arm-smmu: Add sc7180 compatible string and mem_iface clock
->
->
->> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
->> index 6515dbe..15946ac 100644
->> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
->> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
->> @@ -28,6 +28,7 @@ properties:
->>             - enum:
->>                 - qcom,msm8996-smmu-v2
->>                 - qcom,msm8998-smmu-v2
->> +              - qcom,sc7180-smmu-v2
->>                 - qcom,sdm845-smmu-v2
->>             - const: qcom,smmu-v2
->>
->> @@ -113,16 +114,22 @@ properties:
->>         present in such cases.
->>
->>     clock-names:
->> +    minItems: 2
->> +    maxItems: 3
->>       items:
->>         - const: bus
->>         - const: iface
->> +      - const: mem_iface_clk
-> People usually frown on clock-names ending in "_clk".  Just name it "mem_iface".
->
->
->>     clocks:
->> +    minItems: 2
->> +    maxItems: 3
->>       items:
->>         - description: bus clock required for downstream bus access and for the
->>             smmu ptw
->>         - description: interface clock required to access smmu's registers
->>             through the TCU's programming interface.
->> +      - description: clock required for the SMMU TBUs and the TCU
-> Is this clock only needed for sc7180, or would it be useful if we
-> enabled certain features on existing devices?  Please document exactly
-> when someone would provide this clock and when they'd leave it off.
->
-> ...also: maybe it's obvious to those that understand IOMMUs in depth,
-> but to me I have no idea what your description means and why it's
-> different from the other two clocks.  Any way you could punch up your
-> description a little bit?
->
-> Looking at sdm845 I see that this clock seems to exist but wasn't
-> listed in the IOMMU device tree node.  Is that a mistake on sdm845?
-> ...or is it just fine because the GPU holds the clock?  Is there a
-> reason the sdm845 solution and the sc7180 solution shouldn't be the
-> same (AKA we should either add this clock to the sdm845 device tree
-> file or remove it from sc7180)?
+Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 29 Apr
+2020 11:41:44 +0200:
 
-I went and checked the downstream SDM845 device tree for GPU SMMU and I 
-do see this clock listed on there. I am no expert in SMMU either but my 
-understanding is that this clock is needed for core working of the SMMU 
-like the pagetable walks, TLB invalidations etc, whereas the other two 
-clocks are required to access SMMU register space from the host.My 
-proposal is to add this clock to SDM845 as well as a follow up effort so 
-that we can remove the Min/MaxItems properties which I do not like.
+> On 4/29/20 11:35 AM, Miquel Raynal wrote:
+> > Hi Christophe,
+> > 
+> > Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 29 Apr
+> > 2020 11:27:43 +0200:
+> >   
+> >> Hi Miquèl,
+> >>
+> >> On 4/27/20 8:22 PM, Miquel Raynal wrote:  
+> >>> Hi Christophe,
+> >>>
+> >>> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
+> >>> 2020 17:57:30 +0200:  
+> >>>    >>>> This patch removes the constant FMC2_TIMEOUT_US.  
+> >>>> FMC2_TIMEOUT_MS is set to 5 seconds and this constant is used
+> >>>> each time that we need to wait (except when the timeout value
+> >>>> is set by the framework)
+> >>>>
+> >>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> >>>> ---
+> >>>>    drivers/mtd/nand/raw/stm32_fmc2_nand.c | 11 +++++------
+> >>>>    1 file changed, 5 insertions(+), 6 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> >>>> index ab53314..f159c39 100644
+> >>>> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> >>>> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> >>>> @@ -37,8 +37,7 @@
+> >>>>    /* Max ECC buffer length */
+> >>>>    #define FMC2_MAX_ECC_BUF_LEN		(FMC2_BCHDSRS_LEN * FMC2_MAX_SG)  
+> >>>>    >> -#define FMC2_TIMEOUT_US			1000  
+> >>>> -#define FMC2_TIMEOUT_MS			1000
+> >>>> +#define FMC2_TIMEOUT_MS			5000  
+> >>>>    >>   /* Timings */  
+> >>>>    #define FMC2_THIZ			1
+> >>>> @@ -525,9 +524,9 @@ static int stm32_fmc2_ham_calculate(struct nand_chip *chip, const u8 *data,
+> >>>>    	u32 sr, heccr;
+> >>>>    	int ret;  
+> >>>>    >> -	ret = readl_relaxed_poll_timeout(fmc2->io_base + FMC2_SR,  
+> >>>> -					 sr, sr & FMC2_SR_NWRF, 10,
+> >>>> -					 FMC2_TIMEOUT_MS);
+> >>>> +	ret = readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR,
+> >>>> +						sr, sr & FMC2_SR_NWRF, 1,
+> >>>> +						1000 * FMC2_TIMEOUT_MS);  
+> >>>
+> >>> Is the _atomic suffix needed here? If yes it would deserve a separate
+> >>> patch with Fixes/Stable tags.  
+> >>>    >>  
+> >> I have currently not seen any issues. So, I will remove this modification as we will move to regmap_read_poll_timeout in patch 10.
+> >>  
+> >>>>    	if (ret) {
+> >>>>    		dev_err(fmc2->dev, "ham timeout\n");
+> >>>>    		return ret;
+> >>>> @@ -1315,7 +1314,7 @@ static int stm32_fmc2_waitrdy(struct nand_chip *chip, unsigned long timeout_ms)
+> >>>>    	/* Check if there is no pending requests to the NAND flash */
+> >>>>    	if (readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR, sr,
+> >>>>    					      sr & FMC2_SR_NWRF, 1,
+> >>>> -					      FMC2_TIMEOUT_US))
+> >>>> +					      1000 * FMC2_TIMEOUT_MS))
+> >>>>    		dev_warn(fmc2->dev, "Waitrdy timeout\n");  
+> >>>>    >>   	/* Wait tWB before R/B# signal is low */  
+> >>>
+> >>> You change the timeouts from 1ms to 5s.
+> >>>
+> >>> Maybe 5s is a little bit too much IMHO but we don't really care as this
+> >>> is a timeout. However 1ms is tight. If you are changing this value
+> >>> because it triggers error (eg. when the machine is loaded), then it is
+> >>> a fix and should appear like it.
+> >>>
+> >>> Thanks,
+> >>> Miquèl  
+> >>>    >>  
+> >> No errors currently happens.
+> >> During our stress tests, in a overloaded system, we have seen that we could be close to 1 second, even if we never met this value.
+> >> So, to be safe, I have set this timeout to 5 seconds.
+> >> As it is just a timeout value, I have not seen any side effect.
+> >> I am using the same timeout constant to avoid to have one timeout per cases.  
+> > 
+> > Something is wrong in my mind:
+> > You say you observe delays of almost up to 1 second, but the polling
+> > currently happens on 1000 us = 1ms, either you had timeouts or I
+> > misread something?
+> > 
+> > Thanks,
+> > Miquèl
+> >   
+> 
+> Hi Miquèl,
+> 
+> My fault. For this polling, we never met 1 ms.
+> The 1 second observed was on the sequencer when we read/write a page (as it the same timeout value that is used)
 
-@Jordan, do you remember why this clock was added to SDM845?
+OK I get it. So perhaps you can give these details in the commit log to
+explain why you use 5 seconds instead of one.
 
-> Thanks!
->
-> -Doug
+Thanks,
+Miquèl
