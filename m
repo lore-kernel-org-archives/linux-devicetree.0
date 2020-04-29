@@ -2,219 +2,184 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CADBC83004
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 19:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A07FC83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 19:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E335D205C9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 19:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4905A205C9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 19:19:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qcTL7rWJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kAW87UsW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgD2TLH (ORCPT
+        id S1726961AbgD2TTw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49224 "EHLO
+        Wed, 29 Apr 2020 15:19:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727042AbgD2TLG (ORCPT
+        by vger.kernel.org with ESMTP id S1726423AbgD2TTw (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:11:06 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0280BC03C1AE
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 12:11:05 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k13so3900620wrw.7
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 12:11:04 -0700 (PDT)
+        Wed, 29 Apr 2020 15:19:52 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5C9C03C1AE
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 12:19:52 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x15so1554426pfa.1
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 12:19:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
-         :mime-version;
-        bh=HwBlAhl9IzjqWMkaY5fyYm/8tsGpWsJDdfPbj+qf/cw=;
-        b=qcTL7rWJWMCsNYOvmkLnkfwL1OYQTFMr1oCDP+/LG+yoZ54Rb09KxnGDEhScoCYRWF
-         H4Q948HySr2ev6c5+yXIJk0A7XgdS9Jt3n5zOvgZKwn5N+n/aQSPjIl4Gf4r4dHVsHSg
-         RvkXVOyk5xjFz/WTsFhLoJro+kI6XofIpdZKh8fLCvAcvWp1ZRbzSB86WvgZ12nBDKN4
-         awslm7Rk+FHcP8VphplAImX5lym/fvkXDhdhz7pvJ9MLmKnFP+K3Suau4ZfAzHeXFHz1
-         iPHQ2IVMe8S4FWhMm2gEO/iyjzisibU4+dyYf1sMXI8acPoXKyG8lI9ahmeW+YAHoovv
-         VOyw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3yS3SDIAxgoI+OCUuH6+Xx3tuGso0aTCeG8T3YqniwU=;
+        b=kAW87UsWv8BfldJU8firQKssmmNKdHSJ/uH0CxVGXED+CIBf7O7HPb682q9RG2cheP
+         CqUALbpH8DNabf8/TtXUlH4a6QD4JuzFqdwO98QklnOZrLH3SkRkeapQ3l8zxB91lW+c
+         jUxygCHAQLmS7p2c6aUXvTLH2ix1MjrA8Ej/Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=HwBlAhl9IzjqWMkaY5fyYm/8tsGpWsJDdfPbj+qf/cw=;
-        b=HDwNy3dSwmdJJuHm6HTVI/l3k8vPzTOUx8cMVTUGdHSawHE15EWGc/52qZWrau0SSN
-         jBFwd5UTfuzckPcYYn7ueT2RBmCYmTA/bHWxZzfw1gGuwrofSmrttgTriX4edkRh1QnB
-         lqNBrD2CdKZfu9OEnyY0jVknQFzQTT9U5hIndsOi9xbE4V622rtxV6AjBYGk2cGRBtC2
-         SA5dBXS9WDSefWIX9djYdIK6aHFxsctfCc+0xyiejQnNOeD2y60Zc/ASGuBRVPtb4i94
-         9CyYYl0E8KeyRT9lwM1IKysPG2MdmMJLJffzz/GcAT0ip1OoDeQVkl5XpJTmSLTVLkSe
-         HTOQ==
-X-Gm-Message-State: AGi0PuZ6hLzTNZh21K79xum1Ihu4fK8NwXPKtPPBG4TOHq+smZv+eRVy
-        AZHoriAupWRV/w8fmx/TGhCwdw==
-X-Google-Smtp-Source: APiQypKJQgl13isxg5O+xfkBHxn3MAO2tiktrpReGj1EhlU4/X2r3NgW/pVCXn/XoI3DnPrTA122NQ==
-X-Received: by 2002:adf:cd84:: with SMTP id q4mr38584918wrj.320.1588187463599;
-        Wed, 29 Apr 2020 12:11:03 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id m8sm254005wrx.54.2020.04.29.12.11.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 12:11:02 -0700 (PDT)
-References: <20200415102320.4606-1-christianshewitt@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     chewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3yS3SDIAxgoI+OCUuH6+Xx3tuGso0aTCeG8T3YqniwU=;
+        b=A9z/orQj1hzKsBMf5qfISpzMkvfhOGGjT/l4zp53cu74hY59KPXcXVXjcvMqBzK8v9
+         PkeIvsW0cDbUXHa6vXN978XrDxSR8pMDSBXDi9DQxoSD7GoZPEuUAwogJ8iavB1+brIm
+         MfPAC+DL9WzQj/xAZpR0vszRCz1tdHJujnfyK0Wc/WTV4pY99t8IrEIyMHlzLPEzHMDI
+         2DemdRbacaO5oPUxRo71xk3WG/VPZh7CrfepfKvT4NU04pFiaYvN1P8Herl+rFv1pw04
+         4lZ8Kr5pt9KdbEtYRK68Cj0r9Xwj9W7vNz00uABiPgdOSEyAdQKIbmTTyzAx06iRpJLL
+         q1Lg==
+X-Gm-Message-State: AGi0PubioFQxBnfU9HWJK6bZvVKtAFRMAhpFmvd3UWaXWMdbFRDSY2wh
+        c3bvYnhfXSDb8iqKzipbpxC58g==
+X-Google-Smtp-Source: APiQypL1Gf97EDr2VlhCZCv3oqFpzbGvV9eP/VHq+9IO0hxAjTqes6LlM/GSXv+aDrJ1AbJJqROWZw==
+X-Received: by 2002:a63:495b:: with SMTP id y27mr3550206pgk.218.1588187991710;
+        Wed, 29 Apr 2020 12:19:51 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id d12sm1731525pfq.36.2020.04.29.12.19.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 12:19:50 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 12:19:49 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson: sm1-khadas-vim3l: add audio playback to vim3l
-In-reply-to: <20200415102320.4606-1-christianshewitt@gmail.com>
-Date:   Wed, 29 Apr 2020 21:11:02 +0200
-Message-ID: <1jmu6uhzuh.fsf@starbuckisacylon.baylibre.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>, robdclark@gmail.com,
+        abhinavk@codeaurora.org, nganji@codeaurora.org,
+        jsanka@codeaurora.org, aravindh@codeaurora.org,
+        hoegsberg@google.com, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: phy: qcom,qmp: Convert QMP PHY
+ bindings to yaml
+Message-ID: <20200429191949.GV4525@google.com>
+References: <1585809534-11244-1-git-send-email-sanm@codeaurora.org>
+ <1585809534-11244-2-git-send-email-sanm@codeaurora.org>
+ <158689927748.105027.5367465616284167712@swboyd.mtv.corp.google.com>
+ <20200423171436.GJ199755@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200423171436.GJ199755@google.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Sandeep,
 
-On Wed 15 Apr 2020 at 12:23, chewitt <christianshewitt@gmail.com> wrote:
+On Thu, Apr 23, 2020 at 10:14:36AM -0700, Matthias Kaehlcke wrote:
+> Hi Sandeep,
+> 
+> On Tue, Apr 14, 2020 at 02:21:17PM -0700, Stephen Boyd wrote:
+> > Quoting Sandeep Maheswaram (2020-04-01 23:38:52)
+> > > Convert QMP PHY bindings to DT schema format using json-schema.
+> > > 
+> > > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> > > ---
+> > >  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 332 +++++++++++++++++++++
+> > >  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 242 ---------------
+> > >  2 files changed, 332 insertions(+), 242 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> > > new file mode 100644
+> > > index 0000000..18a8985
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> > > @@ -0,0 +1,332 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: "http://devicetree.org/schemas/phy/qcom,qmp-phy.yaml#"
+> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > +
+> > > +title: Qualcomm QMP PHY controller
+> > > +
+> > > +maintainers:
+> > > +  - Manu Gautam <mgautam@codeaurora.org>
+> > > +
+> > > +description:
+> > > +  QMP phy controller supports physical layer functionality for a number of
+> > > +  controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - qcom,ipq8074-qmp-pcie-phy
+> > > +      - qcom,msm8996-qmp-pcie-phy
+> > > +      - qcom,msm8996-qmp-ufs-phy
+> > > +      - qcom,msm8996-qmp-usb3-phy
+> > > +      - qcom,msm8998-qmp-pcie-phy
+> > > +      - qcom,msm8998-qmp-ufs-phy
+> > > +      - qcom,msm8998-qmp-usb3-phy
+> > > +      - qcom,sdm845-qhp-pcie-phy
+> > > +      - qcom,sdm845-qmp-pcie-phy
+> > > +      - qcom,sdm845-qmp-ufs-phy
+> > > +      - qcom,sdm845-qmp-usb3-phy
+> > > +      - qcom,sdm845-qmp-usb3-uni-phy
+> > > +      - qcom,sm8150-qmp-ufs-phy
+> > > +
+> > > +  reg:
+> > > +    minItems: 1
+> > > +    items:
+> > > +      - description: Address and length of PHY's common serdes block.
+> > > +      - description: Address and length of the DP_COM control block.
+> > 
+> > This DP_COM block is only for one compatible. Is it possible to split
+> > that compatible out of this binding so we can enforce the reg property
+> > being either one or two items?
+> > 
+> > In addition, I don't quite understand how this binding is supposed to
+> > work with the DP phy that sits inside qcom,sdm845-qmp-usb3-phy and then
+> > gets muxed out on the USB pins on sdm845 and sc7180 SoCs. Can you fill
+> > me in on how we plan to share the pins between the two phys so that all
+> > the combinations of DP and USB over the type-c pins will work here? My
+> > understanding is that the pins that are controlled by this hardware
+> > block are basically a full USB type-c connector pinout[1] (except that
+> > D+/D- isn't there and the VBUS and CC lines go to the PMIC). Either way,
+> > we get the TX1/2 and RX1/2 pins to use, so we can do 4x lanes of DP or
+> > 2x lanes DP and 2x lanes of USB. There's also a type-c orientation
+> > flipper bit that can flip the DP and USB phy lanes to the correct TX/RX
+> > pins on the SoC. And then the DP phy has a lane remapper to change the
+> > logical DP lane to the physical DP lane. It's a complex piece of
+> > hardware that isn't fully represented by this binding.
+> > 
+> > [1] https://en.wikipedia.org/wiki/USB-C#/media/File:USB_Type-C_Receptacle_Pinout.svg
+> 
+> Could you please answer Stephen's questions? It would be great to move
+> forward and get support for SC7180 landed.
 
-> From: Christian Hewitt <christianshewitt@gmail.com>
->
-> Add the sound and related audio nodes to the VIM3L board.
->
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-> index dbbf29a0dbf6..b900a433ef7a 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-> @@ -8,6 +8,7 @@
->  
->  #include "meson-sm1.dtsi"
->  #include "meson-khadas-vim3.dtsi"
-> +#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
->  
->  / {
->  	compatible = "khadas,vim3l", "amlogic,sm1";
-> @@ -31,6 +32,69 @@
->  		regulator-boot-on;
->  		regulator-always-on;
->  	};
-> +
-> +	sound {
-> +		compatible = "amlogic,axg-sound-card";
-> +		model = "SM1-KHADAS-VIM3L";
-> +		audio-aux-devs = <&tdmout_b>;
-> +		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
-> +				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-> +				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-> +				"TDM_B Playback", "TDMOUT_B OUT";
-> +
-> +		assigned-clocks = <&clkc CLKID_MPLL2>,
-> +				  <&clkc CLKID_MPLL0>,
-> +				  <&clkc CLKID_MPLL1>;
-> +		assigned-clock-parents = <0>, <0>, <0>;
-> +		assigned-clock-rates = <294912000>,
-> +				       <270950400>,
-> +				       <393216000>;
-> +		status = "okay";
-> +
-> +		dai-link-0 {
-> +			sound-dai = <&frddr_a>;
-> +		};
-> +
-> +		dai-link-1 {
-> +			sound-dai = <&frddr_b>;
-> +		};
-> +
-> +		dai-link-2 {
-> +			sound-dai = <&frddr_c>;
-> +		};
-> +
-> +		/* 8ch hdmi interface */
+You posted v6, which does the split Stephen asked for, but you didn't answer
+his question about the pin sharing. Since this is an existing binding there
+is probably no reason to block it from landing, but it would still be good
+to clarify this.
 
-VIM3(L) should not use TDMOUT B or C for the HDMI interface
-* B is on the 40pin header
-* C is on the m2 connector
+Thanks
 
-A is not routed to the outside world and should prefered for this.
-
-See :
-https://lore.kernel.org/linux-amlogic/20200421141814.639480-1-jbrunet@baylibre.com/
-
-> +		dai-link-3 {
-> +			sound-dai = <&tdmif_b>;
-> +			dai-format = "i2s";
-> +			dai-tdm-slot-tx-mask-0 = <1 1>;
-> +			dai-tdm-slot-tx-mask-1 = <1 1>;
-> +			dai-tdm-slot-tx-mask-2 = <1 1>;
-> +			dai-tdm-slot-tx-mask-3 = <1 1>;
-> +			mclk-fs = <256>;
-> +
-> +			codec {
-> +				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-> +			};
-> +		};
-> +
-> +		/* hdmi glue */
-> +		dai-link-4 {
-> +			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-> +
-> +			codec {
-> +				sound-dai = <&hdmi_tx>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&arb {
-> +	status = "okay";
-> +};
-> +
-> +&clkc_audio {
-> +	status = "okay";
->  };
->  
->  &cpu0 {
-> @@ -61,6 +125,18 @@
->  	clock-latency = <50000>;
->  };
->  
-> +&frddr_a {
-> +	status = "okay";
-> +};
-> +
-> +&frddr_b {
-> +	status = "okay";
-> +};
-> +
-> +&frddr_c {
-> +	status = "okay";
-> +};
-> +
->  &pwm_AO_cd {
->  	pinctrl-0 = <&pwm_ao_d_e_pins>;
->  	pinctrl-names = "default";
-> @@ -93,3 +169,15 @@
->  	phy-names = "usb2-phy0", "usb2-phy1";
->  };
->   */
-> +
-> +&tdmif_b {
-> +	status = "okay";
-> +};
-> +
-> +&tdmout_b {
-> +	status = "okay";
-> +};
-> +
-> +&tohdmitx {
-> +	status = "okay";
-> +};
+Matthias
 
