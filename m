@@ -2,62 +2,63 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C33C83004
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 11:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2930DC83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 11:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABA9A206C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 11:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0412F2073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 11:07:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="Lm3tknJG"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="a8bAvr4t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgD2LHr (ORCPT
+        id S1726763AbgD2LHy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57838 "EHLO
+        Wed, 29 Apr 2020 07:07:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2LHq (ORCPT
+        by vger.kernel.org with ESMTP id S1726811AbgD2LHx (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:07:46 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 515E1C03C1AD
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 04:07:46 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x4so1553988wmj.1
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 04:07:46 -0700 (PDT)
+        Wed, 29 Apr 2020 07:07:53 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 427BFC035494
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 04:07:53 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d15so2015830wrx.3
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 04:07:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=j/VyKcY8b8oiztzP2PPDO3W5n2EDqYUH2AhxchTmUF0=;
-        b=Lm3tknJGHzMuoo/JoKQcKf/hq4d9/u81G9cSDkiJvcxCVQSQzcl6q9J5/V8Ycxz6F/
-         U+gDZbCQdbhZHXlkVzcz1f72M1K5qjNwzfGBcEu+IqARI2VGamUJOEbQqEifS184y/Dz
-         pV9iR1c/pHqOEFNQlK5EX+6aiGHVU9Blbm4mVDvkjn0gLp5vGRI6Tiv9OPH1WxkgAWop
-         dMgNj9r8mvXP79+eqS27Pch3gAYX40tuies6jIZH0FbzMK7g4JBcO7N40GM+MU/K5zHx
-         SlVrjBbBam5GkD1cuMa+Wr0Lr0gtsWIuZL3n+fT8ITCPpjOEM4Z5Ry7lDc9HFd7Np77Q
-         bcpg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KJmebWLDjLh8vCDBka3zVT6nvvCa+5XmuntIjuQhiRE=;
+        b=a8bAvr4tStYxSiUIDr6CBH1RpXcjAMY6BYfytKrGJMS3014kO0oblUdosbqFinyAsn
+         /y7zsjtKhwO/CCEzsfFbCbo9oamzSyyaSqYgbX9Y8pM7M6wTXDaSR7LIPlhWDD3NBQCe
+         Yx81Yuh5JvZAMajTarm3aG00aEUr3wES/l62cTslRFXyitByx+FCrtFh3mU/orHyrIis
+         N80oRdH4FhllSfLWsF3mLu5eSEiJ4QsuwCpZpM/CF6Y70ixk7UE73F7/GKxKE1nsfwYp
+         +gS+wxjIHW08Rkpppp7y4Ht3pHTK7ParjBdVZf77zGNqIi/A1VxpVpmru3bLauvJyHzy
+         2UPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=j/VyKcY8b8oiztzP2PPDO3W5n2EDqYUH2AhxchTmUF0=;
-        b=jjeRHmt6vsRVPQCTypt5T/caR5canShwHqd19qsaZUhtW8plQydMPqTeCE9THWeIgF
-         KVzyumR+1i9zKvOVgTqQEff2FEsCy2tQnalZ/WxYuUvIBxpyqaF0FFtwAoN3qLncJdI2
-         m4xaJbrfl5r1mxhfnZVQpLVSmbZN2oIYZlZXVTGfXGh3aBsCCp3wVZPDiKtWUwobjuNG
-         MENWOWozRropytlUZjOEOhAQszaYHkK7W9WnHF98GMPKogZWecAu4i4TsYGqveOkWRrI
-         EVzi8pOBux4FZv3cg8iNf2G6txJgE6oVisfMaigCSPY9HN/IqzETMaIYbcjVxjiFFD6H
-         aD1A==
-X-Gm-Message-State: AGi0PuYX9+Nc5Bfx6vJdlLI+IIHF+c62b6WFN3lFI36T3wn1PAOQ7cxo
-        27r3TuSuzJeUku8Trew7yPvdCA==
-X-Google-Smtp-Source: APiQypL5WqrsJXFEguAFnCHDsfTAN940DneFBGtmY/ARw5g4wutj/XK9n/4MOOXWknLhcLYqKfK1Wg==
-X-Received: by 2002:a7b:cd10:: with SMTP id f16mr2779712wmj.21.1588158464824;
-        Wed, 29 Apr 2020 04:07:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KJmebWLDjLh8vCDBka3zVT6nvvCa+5XmuntIjuQhiRE=;
+        b=nMxeXt8k0VbwLuaifaxF0SPxSoIk4/U+y3OPbbla/A/AzjU680dxkGkNBX9IiEXihQ
+         5whZgL08vxUSHjg/8/LdkDvXN7cM7LNAuoPYIOGg9g6mhmdDO2uPBmEUOHCWx37QxtRd
+         DzWJYsqMgg3+R3doN1Q0hkVtSyqJaU/Z5APYJU6ynsUehrW1I7CbDEU4V1oY9EITJ27p
+         Vf4p1MVwoI9LWfbea5NwjQ8nBykUhuE25u5nJ60t1ZVjPL/bhmoFRzw4hUrvq87V8c+1
+         67bFWupkjA1uUv5Ohg7lUmu4PKGH7c5Fq9B0y8xE9AS00tB99UwWr0kiShIlNIyHfe7B
+         m9lw==
+X-Gm-Message-State: AGi0PubqdkM/rrKlSALrAJDNyqKhCWsq7xVonqu9iAzB8i9mP0uut0uV
+        H1oSXjptL25iDLI9I4jeUYJ3ig==
+X-Google-Smtp-Source: APiQypIz3/hA+7TRshIH/ZVdn0UyHlwF6q8tWlAm9hqsVhDplySuS0IVFw3daGFhG17P0Yof3jG+0g==
+X-Received: by 2002:a5d:4443:: with SMTP id x3mr37857274wrr.162.1588158471948;
+        Wed, 29 Apr 2020 04:07:51 -0700 (PDT)
 Received: from localhost.localdomain ([2a0e:b107:830:0:47e5:c676:4796:5818])
-        by smtp.googlemail.com with ESMTPSA id u7sm7679963wmg.41.2020.04.29.04.07.43
+        by smtp.googlemail.com with ESMTPSA id u7sm7679963wmg.41.2020.04.29.04.07.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 04:07:44 -0700 (PDT)
+        Wed, 29 Apr 2020 04:07:51 -0700 (PDT)
 From:   Robert Marko <robert.marko@sartura.hr>
 To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
         linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
@@ -65,11 +66,15 @@ To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
         bjorn.andersson@linaro.org, robh+dt@kernel.org,
         mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org
-Cc:     Robert Marko <robert.marko@sartura.hr>
-Subject: [PATCH net-next v4 0/3] net: phy: mdio: add IPQ40xx MDIO support
-Date:   Wed, 29 Apr 2020 13:07:24 +0200
-Message-Id: <20200429110726.448625-1-robert.marko@sartura.hr>
+Cc:     Robert Marko <robert.marko@sartura.hr>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH net-next v4 3/3] ARM: dts: qcom: ipq4019: add MDIO node
+Date:   Wed, 29 Apr 2020 13:07:27 +0200
+Message-Id: <20200429110726.448625-4-robert.marko@sartura.hr>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200429110726.448625-1-robert.marko@sartura.hr>
+References: <20200429110726.448625-1-robert.marko@sartura.hr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -77,23 +82,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series provides support for the IPQ40xx built-in MDIO interface.
-Included are driver, devicetree bindings for it and devicetree node.
+This patch adds the necessary MDIO interface node
+to the Qualcomm IPQ4019 DTSI.
 
-Robert Marko (3):
-  net: phy: mdio: add IPQ4019 MDIO driver
-  dt-bindings: add Qualcomm IPQ4019 MDIO bindings
-  ARM: dts: qcom: ipq4019: add MDIO node
+Built-in QCA8337N switch is managed using it,
+and since we have a driver for it lets add it.
 
- .../bindings/net/qcom,ipq4019-mdio.yaml       |  61 +++++++
- arch/arm/boot/dts/qcom-ipq4019.dtsi           |  28 +++
- drivers/net/phy/Kconfig                       |   7 +
- drivers/net/phy/Makefile                      |   1 +
- drivers/net/phy/mdio-ipq4019.c                | 160 ++++++++++++++++++
- 5 files changed, 257 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq4019-mdio.yaml
- create mode 100644 drivers/net/phy/mdio-ipq4019.c
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+---
+Changes from v3 to v4:
+* Change compatible to IPQ4019
 
+Changes from v2 to v3:
+* Correct commit title
+
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index b4803a428340..8b72a149bc33 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -578,6 +578,34 @@ wifi1: wifi@a800000 {
+ 			status = "disabled";
+ 		};
+ 
++		mdio: mdio@90000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "qcom,ipq4019-mdio";
++			reg = <0x90000 0x64>;
++			status = "disabled";
++
++			ethphy0: ethernet-phy@0 {
++				reg = <0>;
++			};
++
++			ethphy1: ethernet-phy@1 {
++				reg = <1>;
++			};
++
++			ethphy2: ethernet-phy@2 {
++				reg = <2>;
++			};
++
++			ethphy3: ethernet-phy@3 {
++				reg = <3>;
++			};
++
++			ethphy4: ethernet-phy@4 {
++				reg = <4>;
++			};
++		};
++
+ 		usb3_ss_phy: ssphy@9a000 {
+ 			compatible = "qcom,usb-ss-ipq4019-phy";
+ 			#phy-cells = <0>;
 -- 
 2.26.2
 
