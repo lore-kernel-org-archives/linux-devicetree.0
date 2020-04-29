@@ -2,131 +2,321 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FD0C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 624DCC83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAFB520731
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32CF8206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:45:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d4DwmoXT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kBwC8zcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbgD2Amd (ORCPT
+        id S1726381AbgD2ApQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:42:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45460 "EHLO
+        Tue, 28 Apr 2020 20:45:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2Amc (ORCPT
+        by vger.kernel.org with ESMTP id S1726345AbgD2ApQ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:42:32 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523C3C03C1AE
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:42:32 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id h12so1687084pjz.1
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:42:32 -0700 (PDT)
+        Tue, 28 Apr 2020 20:45:16 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F2AC03C1AC
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:45:16 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id j1so230136vkc.2
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:45:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xst1wgRgah/fir7yJGkgxtghdkNU2fPxNqKGkIiu6i8=;
-        b=d4DwmoXTG7vYVCmWsd7KDYAZ5TqkGT9nmHYvU6SEkV1OdY74xNq1JD1fdHqX+e6KIJ
-         aFYjfHP9OKtnXTu4UXF7iPumSAIjOvUdlVEOJABd9uV6IglsSwuuxfiRHc3mJR9lDIy5
-         oax4SAS+cOzM8/xKbwp4wKM2lpMAJaGZm/fn4=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gSv5Ifa2op+fMfGu5LlO4imojcGp9XQzh/Jmiw8SHts=;
+        b=kBwC8zcBSf2IlJ3oipK32zfSZi4BAIu2UR6yoRKzt6XmBRgSFa4HUpFbeArw87KyRu
+         OejEW6P7gOao026eMAclLZ4t69Cwmb3pQtYEpL8B+PuyRQyYjhLBvURdRVyYzP4X+vw+
+         6KBcVR+0FhaGCOB9E596BifbsyM4HepsRUl8U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xst1wgRgah/fir7yJGkgxtghdkNU2fPxNqKGkIiu6i8=;
-        b=s+2J1emNONLG97wKbtBNTmBdZ9lIUewGGiClux7m6DD9+dl8UsKoci4WEV/vJqB65q
-         KNwTEb/tT87Xz+xo2j0KeQR6j3MUpfm154uwy0GILTgqVnXlq/X0ZnlO3+jwz/uyFHQ+
-         Or9kQ0ev4Pl3wow3lKuOA+HzXkgYC2RZHyTkRDsnlNHJ7f8KZaDHzZOXgLme4N7a+Lto
-         HXL+4Ftt4VqsQi3MxQpzNWXOOvJQFb8K0zUxuH573GQucG+n6YYmHRPRhEvhieoRusEw
-         L+b9+63aPKwQ5ZDvIAD5/QuPauBnamMV4hu93psqOvn7j0KWWAQUHCA4I021HMjRmVCA
-         Nm9A==
-X-Gm-Message-State: AGi0PuYAKlCoTTUfq7Ns3VkdJm6ma+iMNFZjwSvF9yKlpvoidKZ05DM4
-        K19QMrTYi3Oy+4ODsmc/4QtEhg==
-X-Google-Smtp-Source: APiQypIDidUrrIYJAhtCRCXUSNJzx8BbbpcS7yYbwl6/Benr9w1+JeCHu4mrnBrH8UmErE9eQiZFeA==
-X-Received: by 2002:a17:902:8604:: with SMTP id f4mr31539962plo.68.1588120951661;
-        Tue, 28 Apr 2020 17:42:31 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id m3sm14733412pgt.27.2020.04.28.17.42.30
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gSv5Ifa2op+fMfGu5LlO4imojcGp9XQzh/Jmiw8SHts=;
+        b=tctOmypmvE194Dvo9VOOYpDAsA+s7I1w9Y5HfoHmWP0WiOXNaSAKIlzutKVvAvnd+K
+         wBPz7P0BwN/ZQ3AptzNkVuG91866Ex79AgSvFhJUAa56aNSv7LyEYpgjY7dtTRWRp6m+
+         rbjVXxJ2+N6ud2D0niaDmlD9F3xtMU/BtPzsJrD5VpRy3wutIJACzeNIHh40/AOvas7Q
+         gYFEwd9bmp5ehVMZ83tfMOIqZEf+YvGt0h9+gqeHM9qCjjvv7n7cp2WCTTfCUVQVAHjb
+         FGLhstfq4k+huaoY6OQx9DkyyC5CBFvzFVxuiaM330qSUVBptMq5Wv6Mm2DNqRv0ntxk
+         bq3A==
+X-Gm-Message-State: AGi0PuaZ0LpvplgB1mymO9tVuQK3PORIBf6m65bjJYnX3LzHE8+L02QM
+        65Ty3eMlJC1RZPd5W5tE4jYrwO8tKII=
+X-Google-Smtp-Source: APiQypIY4ZFeIIhe2NDq+mi6p+wj/ARiGVtedsXJvnbLYVX0xWb53M6u2bXCoR//2moRquB57ELc/w==
+X-Received: by 2002:a1f:930b:: with SMTP id v11mr4361565vkd.23.1588121114791;
+        Tue, 28 Apr 2020 17:45:14 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id k26sm4311835uag.10.2020.04.28.17.45.13
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 17:42:30 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 17:42:30 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 13/17] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-Message-ID: <20200429004230.GO4525@google.com>
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-14-git-send-email-rnayak@codeaurora.org>
+        Tue, 28 Apr 2020 17:45:14 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id b5so224121vsb.1
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:45:13 -0700 (PDT)
+X-Received: by 2002:a05:6102:4d:: with SMTP id k13mr24291673vsp.198.1588121113080;
+ Tue, 28 Apr 2020 17:45:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1588080785-6812-14-git-send-email-rnayak@codeaurora.org>
+References: <20200423162548.129661-1-dianders@chromium.org>
+ <20200423092431.v3.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid> <CACRpkdYsw1uFf_PVkRwibXUtQOwvWa7jqiw6aT9AdmkLLyqisQ@mail.gmail.com>
+In-Reply-To: <CACRpkdYsw1uFf_PVkRwibXUtQOwvWa7jqiw6aT9AdmkLLyqisQ@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 28 Apr 2020 17:45:00 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VqD-dY=v23KYuTqy8aRNQJJzJ7h_UOcdEBYuK9X51MQQ@mail.gmail.com>
+Message-ID: <CAD=FV=VqD-dY=v23KYuTqy8aRNQJJzJ7h_UOcdEBYuK9X51MQQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 07:03:01PM +0530, Rajendra Nayak wrote:
-> Add the OPP tables in order to be able to vote on the performance state of
-> a power-domain.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 38 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index e6f1af1..67e3b90 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -3294,14 +3294,50 @@
->  			};
->  		};
->  
-> +		venus_opp_table: venus-opp-table {
-> +			compatible = "operating-points-v2";
-> +
-> +			opp-100000000 {
-> +				opp-hz = /bits/ 64 <100000000>;
-> +				required-opps = <&rpmhpd_opp_min_svs>;
-> +			};
-> +
-> +			opp-200000000 {
-> +				opp-hz = /bits/ 64 <200000000>;
-> +				required-opps = <&rpmhpd_opp_low_svs>;
-> +			};
-> +
-> +			opp-320000000 {
-> +				opp-hz = /bits/ 64 <320000000>;
-> +				required-opps = <&rpmhpd_opp_svs>;
-> +			};
-> +
-> +			opp-380000000 {
-> +				opp-hz = /bits/ 64 <380000000>;
-> +				required-opps = <&rpmhpd_opp_svs_l1>;
-> +			};
-> +
-> +			opp-444000000 {
-> +				opp-hz = /bits/ 64 <444000000>;
-> +				required-opps = <&rpmhpd_opp_nom>;
-> +			};
-> +
-> +			opp-533000000 {
-> +				opp-hz = /bits/ 64 <533000000>;
-> +				required-opps = <&rpmhpd_opp_turbo>;
-> +			};
-> +		};
+Hi,
 
-move OPP table inside the 'venus' node (like 'rpmhpd_opp_table',
-'gpu_opp_table' or 'gmu_opp_table').
+On Tue, Apr 28, 2020 at 5:44 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Thu, Apr 23, 2020 at 6:26 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> > The ti-sn65dsi86 MIPI DSI to eDP bridge chip has 4 pins on it that can
+> > be used as GPIOs in a system.  Each pin can be configured as input,
+> > output, or a special function for the bridge chip.  These are:
+> > - GPIO1: SUSPEND Input
+> > - GPIO2: DSIA VSYNC
+> > - GPIO3: DSIA HSYNC or VSYNC
+> > - GPIO4: PWM
+> >
+> > Let's expose these pins as GPIOs.  A few notes:
+> > - Access to ti-sn65dsi86 is via i2c so we set "can_sleep".
+> > - These pins can't be configured for IRQ.
+> > - There are no programmable pulls or other fancy features.
+> > - Keeping the bridge chip powered might be expensive.  The driver is
+> >   setup such that if all used GPIOs are only inputs we'll power the
+> >   bridge chip on just long enough to read the GPIO and then power it
+> >   off again.  Setting a GPIO as output will keep the bridge powered.
+> > - If someone releases a GPIO we'll implicitly switch it to an input so
+> >   we no longer need to keep the bridge powered for it.
+> >
+> > Because of all of the above limitations we just need to implement a
+> > bare-bones GPIO driver.  The device tree bindings already account for
+> > this device being a GPIO controller so we only need the driver changes
+> > for it.
+> >
+> > NOTE: Despite the fact that these pins are nominally muxable I don't
+> > believe it makes sense to expose them through the pinctrl interface as
+> > well as the GPIO interface.  The special functions are things that the
+> > bridge chip driver itself would care about and it can just configure
+> > the pins as needed.
+> >
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Pretty cool.
+>
+> I wonder if this chip could use the generic regmap GPIO helpers
+> that we are working on when they come around?
+> https://lore.kernel.org/linux-gpio/20200423174543.17161-11-michael@walle.cc/
+
+An important part of my patch is the handling of power management.
+Specifically:
+* If the GPIO is an input we don't need to keep the device powered,
+just power it temporarily to read the pin.
+* If the GPIO is an output we do need to keep the device powered.
+
+I suppose that could be common for other similar devices so as long as
+the generic interfaces can handle this concept we can try to use it.
+
+
+> > +#include <linux/gpio/driver.h>
+> > +#include <linux/gpio.h>
+>
+> Only <linux/gpio/driver.h> should be needed else you are doing
+> something wrong.
+
+It's because I needed GPIOF_DIR_OUT / GPIOF_DIR_IN which was
+apparently wrong.  See below.
+
+
+> > + * @gchip:        If we expose our GPIOs, this is used.
+> > + * @gchip_output: A cache of whether we've set GPIOs to output.  This
+> > + *                serves double-duty of keeping track of the direction and
+> > + *                also keeping track of whether we've incremented the
+> > + *                pm_runtime reference count for this pin, which we do
+> > + *                whenever a pin is configured as an output.
+>
+> That sounds a bit hairy but I guess it's fine.
+>
+> > + */
+> >  struct ti_sn_bridge {
+> >         struct device                   *dev;
+> >         struct regmap                   *regmap;
+> > @@ -102,6 +136,9 @@ struct ti_sn_bridge {
+> >         struct gpio_desc                *enable_gpio;
+> >         struct regulator_bulk_data      supplies[SN_REGULATOR_SUPPLY_NUM];
+> >         int                             dp_lanes;
+> > +
+> > +       struct gpio_chip                gchip;
+> > +       DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
+>
+> Do you really need a bitmap for 4 bits? Can't you just have something
+> like an u8 and check bit 0,1,2,3 ... well I suppose it has some elegance to
+> it as well but... hm.
+
+Doing so requires adding a lock to this driver to handle concurrent
+users of the different GPIOs.  I can go back and do that but I'd
+rather not.
+
+Some prior discussion:
+
+https://lore.kernel.org/r/CAD=FV=WJONhm4ukwZa2vGtozrz_SmLuTCLxVimnGba7wRPPzgQ@mail.gmail.com
+
+...if you want me to change this to a u8 + a mutex then please let me
+know, otherwise I'll assume keeping it a bitmap is fine.
+
+
+> > +static struct ti_sn_bridge *gchip_to_pdata(struct gpio_chip *chip)
+> > +{
+> > +       return container_of(chip, struct ti_sn_bridge, gchip);
+> > +}
+> > +
+> > +static int ti_sn_bridge_gpio_get_direction(struct gpio_chip *chip,
+> > +                                          unsigned int offset)
+> > +{
+> > +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
+>
+> Is there some specific reason why you don't just use
+> gpiochip_get_data()?
+
+I guess I'm used to interfaces that don't have a data pointer.  I'll
+change it to gpiochip_get_data() at your suggestion, though (I think)
+it might be slightly less efficient (a function call and a pointer
+dereference compared to a subtract operation).
+
+
+> > +       /*
+> > +        * We already have to keep track of the direction because we use
+> > +        * that to figure out whether we've powered the device.  We can
+> > +        * just return that rather than (maybe) powering up the device
+> > +        * to ask its direction.
+> > +        */
+> > +       return test_bit(offset, pdata->gchip_output) ?
+> > +               GPIOF_DIR_OUT : GPIOF_DIR_IN;
+> > +}
+>
+> Don't use these legacy defines, they are for consumers.
+> Use GPIO_LINE_DIRECTION_IN  and GPIO_LINE_DIRECTION_OUT.
+> from <linux/gpio/driver.h>
+
+That's what I get for reading the comments.  I'll change this in the
+next version.  I've also sent the following patch to help keep other
+people from falling into my trap:
+
+https://lore.kernel.org/r/20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid/
+
+
+> > +       ret = regmap_read(pdata->regmap, SN_GPIO_IO_REG, &val);
+> > +       pm_runtime_put(pdata->dev);
+> > +
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       return (val >> (SN_GPIO_INPUT_SHIFT + offset)) & 1;
+>
+> My preferred way to do this is:
+>
+> #include <linux/bits.h>
+>
+> return !!(val & BIT(SN_GPIO_INPUT_SHIFT + offset));
+
+Somehow I think of "!!" as being a bool and this function as returning
+something that's logically an int.  It really doesn't matter a whole
+lot and I'm happy to change it, so I'll change it in the next version.
+
+
+> > +static void ti_sn_bridge_gpio_set(struct gpio_chip *chip, unsigned int offset,
+> > +                                 int val)
+> > +{
+> > +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
+> > +       int ret;
+> > +
+> > +       if (!test_bit(offset, pdata->gchip_output)) {
+> > +               dev_err(pdata->dev, "Ignoring GPIO set while input\n");
+> > +               return;
+> > +       }
+> > +
+> > +       val &= 1;
+> > +       ret = regmap_update_bits(pdata->regmap, SN_GPIO_IO_REG,
+> > +                                BIT(SN_GPIO_OUTPUT_SHIFT + offset),
+> > +                                val << (SN_GPIO_OUTPUT_SHIFT + offset));
+>
+> Looks like a job for the generic helper library.
+
+I think that (for now) this comment is a no-op since the generic
+helper library isn't landed yet, right?  ...and it wouldn't handle the
+power management I need?  If I'm confused and I need to act on this
+comment, please let me know.
+
+
+> > +static int ti_sn_bridge_gpio_direction_input(struct gpio_chip *chip,
+> > +                                            unsigned int offset)
+> > +{
+> > +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
+> > +       int shift = offset * 2;
+> > +       int ret;
+> > +
+> > +       if (!test_and_clear_bit(offset, pdata->gchip_output))
+> > +               return 0;
+> > +
+> > +       ret = regmap_update_bits(pdata->regmap, SN_GPIO_CTRL_REG,
+> > +                                0x3 << shift, SN_GPIO_MUX_INPUT << shift);
+>
+> But this 0x03 does not look very generic, it's not just 1 bit but 2.
+
+Sure, I can add #define SN_GPIO_MUX_MASK 0x3.  Basically the mux is:
+
+* 0: input
+* 1: output
+* 2: special function
+
+As talked about in the patch comments, I don't define this as an
+official pinmux driver because that seems overkill.  I'll assume it's
+OK to just do the #define and use it.  If you want something more, let
+me know.
+
+
+> Overall it looks good, just the minor things above need fixing or
+> looking into.
+
+Thank you very much for the review!  I'll plan to send a new patch out
+in the next day or two with minor comments addressed and making the
+assumptions I've documented above.  If I got something wrong then
+please yell.  ...or yell after I send the next version and I'll send
+yet another version after that!  :-)
+
+-Doug
