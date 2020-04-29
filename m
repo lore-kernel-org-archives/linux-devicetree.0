@@ -5,145 +5,128 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F96C83007
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FD0C83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3063320731
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAFB520731
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I02X3CZM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d4DwmoXT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgD2AjK (ORCPT
+        id S1726274AbgD2Amd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:39:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44892 "EHLO
+        Tue, 28 Apr 2020 20:42:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726524AbgD2AjK (ORCPT
+        by vger.kernel.org with ESMTP id S1726345AbgD2Amc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:39:10 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B3DC035493
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:39:10 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z1so238099pfn.3
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:39:10 -0700 (PDT)
+        Tue, 28 Apr 2020 20:42:32 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523C3C03C1AE
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:42:32 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id h12so1687084pjz.1
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=W7gWUUXU/Yr8aGKVFYA0eYnvhip9VKNyy91uupW34i0=;
-        b=I02X3CZM/NUHTH3RQSutmuienX62rm5LBybo8+305etL9oecXnfyo7V6fNMAb2ZqsY
-         GEnD1SVRAVPUrbKTGngrY5QzpG2TxAkPdT23TeWZ9XR+u9tUhgwZVxZ5uA8bl3iMxHRS
-         7mxQERX7ZXWTguvM+vNzEh3xLlDgjIKuwbZ8Y=
+        bh=xst1wgRgah/fir7yJGkgxtghdkNU2fPxNqKGkIiu6i8=;
+        b=d4DwmoXTG7vYVCmWsd7KDYAZ5TqkGT9nmHYvU6SEkV1OdY74xNq1JD1fdHqX+e6KIJ
+         aFYjfHP9OKtnXTu4UXF7iPumSAIjOvUdlVEOJABd9uV6IglsSwuuxfiRHc3mJR9lDIy5
+         oax4SAS+cOzM8/xKbwp4wKM2lpMAJaGZm/fn4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=W7gWUUXU/Yr8aGKVFYA0eYnvhip9VKNyy91uupW34i0=;
-        b=Mfk/2/i5Td/V4e7wKdqnYTRmp1Sx8Jx1nXE0Yn5qh3CyDAJZfysdglS5usOM2z22l9
-         i7EciuQ5QXkmbnPyAAejKMuBsXo8Vpl+H15CQp0DaKCSfl7iu7ouFUtH4nFTFXQDZlji
-         arbC+f9V4+fAcDlLX+/009A159rDWWvVqNDm+Flyd6MewGyO1khFBgzmMIIghyl3rvks
-         sJ3SNf/InsF2aWnHhEKFrDQG/S+qjqpVaL4yMCmoaAeAa316YGuCxazdppZ2E/bEKGf4
-         4QFlzKZyYABekJGMwfQ1dkdFeJG9l6BHN3mTjzMVMX/m3Xt3Pxg7d4smCvMX5Bijgs3J
-         rzgQ==
-X-Gm-Message-State: AGi0PuZ0pijhJsoGzfVr3EpKTi/sqHbRgkytwOTfG0N/ZEfurZ5k2CBY
-        0e1bEQhoDmWEbFuN0MyMr2s8Wg==
-X-Google-Smtp-Source: APiQypLbPYTzp9qbzyos35G6tVPdoCiVx7N0aCXfQqih6ccSR97hGwNwigOKEqtptnE5JuFmlqObAA==
-X-Received: by 2002:a63:5717:: with SMTP id l23mr19849633pgb.217.1588120749609;
-        Tue, 28 Apr 2020 17:39:09 -0700 (PDT)
+        bh=xst1wgRgah/fir7yJGkgxtghdkNU2fPxNqKGkIiu6i8=;
+        b=s+2J1emNONLG97wKbtBNTmBdZ9lIUewGGiClux7m6DD9+dl8UsKoci4WEV/vJqB65q
+         KNwTEb/tT87Xz+xo2j0KeQR6j3MUpfm154uwy0GILTgqVnXlq/X0ZnlO3+jwz/uyFHQ+
+         Or9kQ0ev4Pl3wow3lKuOA+HzXkgYC2RZHyTkRDsnlNHJ7f8KZaDHzZOXgLme4N7a+Lto
+         HXL+4Ftt4VqsQi3MxQpzNWXOOvJQFb8K0zUxuH573GQucG+n6YYmHRPRhEvhieoRusEw
+         L+b9+63aPKwQ5ZDvIAD5/QuPauBnamMV4hu93psqOvn7j0KWWAQUHCA4I021HMjRmVCA
+         Nm9A==
+X-Gm-Message-State: AGi0PuYAKlCoTTUfq7Ns3VkdJm6ma+iMNFZjwSvF9yKlpvoidKZ05DM4
+        K19QMrTYi3Oy+4ODsmc/4QtEhg==
+X-Google-Smtp-Source: APiQypIDidUrrIYJAhtCRCXUSNJzx8BbbpcS7yYbwl6/Benr9w1+JeCHu4mrnBrH8UmErE9eQiZFeA==
+X-Received: by 2002:a17:902:8604:: with SMTP id f4mr31539962plo.68.1588120951661;
+        Tue, 28 Apr 2020 17:42:31 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id u15sm3044185pjm.47.2020.04.28.17.39.08
+        by smtp.gmail.com with ESMTPSA id m3sm14733412pgt.27.2020.04.28.17.42.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 17:39:08 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 17:39:07 -0700
+        Tue, 28 Apr 2020 17:42:30 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 17:42:30 -0700
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     Rajendra Nayak <rnayak@codeaurora.org>
 Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
         bjorn.andersson@linaro.org, agross@kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v3 12/17] media: venus: core: Add support for opp
- tables/perf voting
-Message-ID: <20200429003907.GN4525@google.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 13/17] arm64: dts: sdm845: Add OPP tables and
+ power-domains for venus
+Message-ID: <20200429004230.GO4525@google.com>
 References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-14-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <1588080785-6812-14-git-send-email-rnayak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 07:03:00PM +0530, Rajendra Nayak wrote:
-> Add support to add OPP tables and perf voting on the OPP powerdomain.
-> This is needed so venus votes on the corresponding performance state
-> for the OPP powerdomain along with setting the core clock rate.
+On Tue, Apr 28, 2020 at 07:03:01PM +0530, Rajendra Nayak wrote:
+> Add the OPP tables in order to be able to vote on the performance state of
+> a power-domain.
 > 
 > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> Cc: linux-media@vger.kernel.org
 > ---
->  drivers/media/platform/qcom/venus/core.c       | 28 +++++++++++++++++++
->  drivers/media/platform/qcom/venus/core.h       |  5 ++++
->  drivers/media/platform/qcom/venus/pm_helpers.c | 37 +++++++++++++++++++++++---
->  3 files changed, 66 insertions(+), 4 deletions(-)
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-> index 194b10b9..e98fea92 100644
-> --- a/drivers/media/platform/qcom/venus/core.c
-> +++ b/drivers/media/platform/qcom/venus/core.c
-> @@ -12,6 +12,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/pm_runtime.h>
->  #include <media/videobuf2-v4l2.h>
->  #include <media/v4l2-mem2mem.h>
-> @@ -214,6 +215,20 @@ static int venus_probe(struct platform_device *pdev)
->  	if (!core->pm_ops)
->  		return -ENODEV;
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index e6f1af1..67e3b90 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -3294,14 +3294,50 @@
+>  			};
+>  		};
 >  
-> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
-> +	if (IS_ERR(core->opp_table))
-> +		return PTR_ERR(core->opp_table);
+> +		venus_opp_table: venus-opp-table {
+> +			compatible = "operating-points-v2";
 > +
-> +	if (core->res->opp_pmdomain) {
-> +		ret = dev_pm_opp_of_add_table(dev);
-> +		if (!ret) {
-> +			core->has_opp_table = true;
-> +		} else if (ret != -ENODEV) {
-> +			dev_err(dev, "Invalid OPP table in Device tree\n");
-> +			return ret;
-> +		}
-> +	}
+> +			opp-100000000 {
+> +				opp-hz = /bits/ 64 <100000000>;
+> +				required-opps = <&rpmhpd_opp_min_svs>;
+> +			};
 > +
->  	if (core->pm_ops->core_get) {
->  		ret = core->pm_ops->core_get(dev);
->  		if (ret)
-> @@ -301,6 +316,9 @@ static int venus_probe(struct platform_device *pdev)
->  err_venus_shutdown:
->  	venus_shutdown(core);
->  err_runtime_disable:
-> +	if (core->res->opp_pmdomain && core->has_opp_table)
+> +			opp-200000000 {
+> +				opp-hz = /bits/ 64 <200000000>;
+> +				required-opps = <&rpmhpd_opp_low_svs>;
+> +			};
+> +
+> +			opp-320000000 {
+> +				opp-hz = /bits/ 64 <320000000>;
+> +				required-opps = <&rpmhpd_opp_svs>;
+> +			};
+> +
+> +			opp-380000000 {
+> +				opp-hz = /bits/ 64 <380000000>;
+> +				required-opps = <&rpmhpd_opp_svs_l1>;
+> +			};
+> +
+> +			opp-444000000 {
+> +				opp-hz = /bits/ 64 <444000000>;
+> +				required-opps = <&rpmhpd_opp_nom>;
+> +			};
+> +
+> +			opp-533000000 {
+> +				opp-hz = /bits/ 64 <533000000>;
+> +				required-opps = <&rpmhpd_opp_turbo>;
+> +			};
+> +		};
 
-the check for 'core->res->opp_pmdomain' is not needed, 'core->has_opp_table'
-can only be true when 'core->res->opp_pmdomain' is not NULL.
-
-> +		dev_pm_opp_of_remove_table(dev);
-> +	dev_pm_opp_put_clkname(core->opp_table);
->  	pm_runtime_set_suspended(dev);
->  	pm_runtime_disable(dev);
->  	hfi_destroy(core);
-> @@ -326,6 +344,10 @@ static int venus_remove(struct platform_device *pdev)
->  
->  	venus_firmware_deinit(core);
->  
-> +	if (core->res->opp_pmdomain && core->has_opp_table)
-
-ditto
+move OPP table inside the 'venus' node (like 'rpmhpd_opp_table',
+'gpu_opp_table' or 'gmu_opp_table').
