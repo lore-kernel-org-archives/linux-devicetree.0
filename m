@@ -2,103 +2,142 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D663FC83004
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 12:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12AEC83003
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 12:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABBA72186A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 12:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588163267;
-	bh=7mA/Zs8c6U9jvpH9tx9r1+1l9SOQW7B21xKBrlkGFYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XcuQiF6xgvIiHhJfPB5dAu1HkuQhLZV0hibrOl4IjJNHmNKdQTr7OGJA2J9Q5wt98
-	 g81+qidC+yflkMQvtDZ/yJftGsclpgrzCbW4HYHsSM7roGd7b7xEKIFIH+hHUrQjiG
-	 1TSDBc2LjuhmxVaPzyV7nPLZiaADQ9YhB1PbmED0=
+	by mail.kernel.org (Postfix) with ESMTP id 7EC81208FE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 12:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="lMmqBzMs";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gN+Mn29O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgD2M1r (ORCPT
+        id S1726426AbgD2Mfd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:27:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbgD2M1q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:27:46 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D92452137B;
-        Wed, 29 Apr 2020 12:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588163266;
-        bh=7mA/Zs8c6U9jvpH9tx9r1+1l9SOQW7B21xKBrlkGFYU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rPX0CuX/baQ/e5/z2OKBLvvPRDERL8D+dF//W4IlTYj/XdWT9mKzavqdkzk4D7id7
-         REuF8/3HvI6zvCDXSopete1g31JkspbRICJaUVrCQzMnTrbgks4V+DVVeIhVJBGKgD
-         0cW8oNZ/p8mypM9yN6l7BZSKUMRgEQsWRglVvDWE=
-Date:   Wed, 29 Apr 2020 13:27:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     robh@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        daniel.schwierzeck@gmail.com, hauke@hauke-m.de,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-Message-ID: <20200429122743.GI4201@sirena.org.uk>
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <20200424112505.GD5850@sirena.org.uk>
- <616a5419-add3-085e-32dc-c83d9d975725@linux.intel.com>
- <20200427134555.GC4383@sirena.org.uk>
- <43ecffb1-4786-c038-09bb-648657c0f5f3@linux.intel.com>
- <20200428100055.GB5677@sirena.org.uk>
- <68948cb1-6c78-1545-45c6-5a95465b05e2@linux.intel.com>
+        Wed, 29 Apr 2020 08:35:33 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:60277 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726864AbgD2Mfd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:35:33 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4187A5801CC;
+        Wed, 29 Apr 2020 08:35:32 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 29 Apr 2020 08:35:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=c+9mUYpBdnOaBwykChFhcenmVtw
+        9Gzvx3ldZ3YuHZDE=; b=lMmqBzMsWh43/t2YdttBouyW5iVp6dCQdZj/fOz3H1d
+        Dm/7Y0wD1t7Qhqaf1dZSlt//mf/V62NMAx9jNyzT2eA52JxeQlxbaESuOjmXbIDM
+        BB0q+8AJMOLGufrIrrDmlRP0zFfbj1x4R0k4Kd1st85gvkhoqJHdJsusVXaIjzG6
+        IbzGBzdc1gccaVlznMNMauP7u74kYSbQtubCgo1udKZT60Us4JEO7Lhb9w/O16UH
+        OUI81hYbXkI8Z10onZX2w3fDwxM2nIxHY9PWjF4WJ4lv/CBXoNatTymKStK+9lOR
+        jdc5z7er/S1wADjy2BkMXEZJxYV16xz8aoABYr+yuEA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=c+9mUY
+        pBdnOaBwykChFhcenmVtw9Gzvx3ldZ3YuHZDE=; b=gN+Mn29OayTJ50jcW1+vxJ
+        jolSrul8nF4EHDQq2CdeL9WH36K+vk5qtiVbdhUCMDz2OriGY8S9x5zpEZAQD9XY
+        zQDRhqIuXCZNSyBbwkBMSH1LfIHVctO1tYRZ7NHa6ibP1cxLoybEDi/kON/OsHHk
+        aeH0W6Sm6r14ZrVLWAOFUoaHEe4cENs+2TcKIlVsZugQy/Qi5nrbwGP3rtUcMb7t
+        f+d8mCsKWC3K1OhQnnCB9rnhNyQBLu0M3tDeeawWrGwYod8Ljxr8hXJISYzWYZZ/
+        XjZIiNIXJI1B1Oqf5kmp+Zo9o5maELICMhOe2wHq6/N8MM2Z7+d/CBW/liq1p/Qg
+        ==
+X-ME-Sender: <xms:k3SpXpGA2NsI1LpjKQpePExH66TePqj82Bu0RZA-0E16HKXSo74eiw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgdehgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:k3SpXpcp2cjteMbrV6tVzU1OAb4HfglVBI6S6pWxqvOHWoMc0hStZw>
+    <xmx:k3SpXgh6khNMHd7bQAs_djhE6464AP0f1IJNVQhCXkJvenSynyvXow>
+    <xmx:k3SpXu7kpl6cHsO55jleUPsBLuO5YGvbwOn8tMIe6nb52uf53qGFtg>
+    <xmx:lHSpXl2XuvQ7vHyGfSBrMMkN28yCT0mlxb8jK4PAnimTaNDh77iv3w>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BD9D13280066;
+        Wed, 29 Apr 2020 08:35:30 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 14:35:29 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Marcus Cooper <codekipper@gmail.com>
+Subject: Re: [PATCH v3 3/7] ASoC: sun4i-i2s: Add support for H6 I2S
+Message-ID: <20200429123529.y24dpy63wxq7uvkt@gilmour.lan>
+References: <20200426104115.22630-1-peron.clem@gmail.com>
+ <20200426104115.22630-4-peron.clem@gmail.com>
+ <20200428081321.ht3el26yqhsnyfm4@gilmour.lan>
+ <CAJiuCcdVs_drs40Q6537BYfz24F7NmC6B8S5-Lt4V4ggs-FXWA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9iyR+p8Z2cn535Lj"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xa3hju3zorbs63j6"
 Content-Disposition: inline
-In-Reply-To: <68948cb1-6c78-1545-45c6-5a95465b05e2@linux.intel.com>
-X-Cookie: I know how to do SPECIAL EFFECTS!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJiuCcdVs_drs40Q6537BYfz24F7NmC6B8S5-Lt4V4ggs-FXWA@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---9iyR+p8Z2cn535Lj
-Content-Type: text/plain; charset=us-ascii
+--xa3hju3zorbs63j6
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 29, 2020 at 03:20:21PM +0800, Dilip Kota wrote:
-> On 4/28/2020 6:00 PM, Mark Brown wrote:
+On Tue, Apr 28, 2020 at 10:55:47AM +0200, Cl=E9ment P=E9ron wrote:
+> > > +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+> > > +                              unsigned int fmt)
+> >
+> > The alignment is off here
+> >
+> > > +{
+> > > +     u32 mode, val;
+> > > +     u8 offset;
+> > > +
+> > > +     /*
+> > > +      * DAI clock polarity
+> > > +      *
+> > > +      * The setup for LRCK contradicts the datasheet, but under a
+> > > +      * scope it's clear that the LRCK polarity is reversed
+> > > +      * compared to the expected polarity on the bus.
+> > > +      */
+> >
+> > Did you check this or has it been copy-pasted?
+>=20
+> copy-pasted, I will check this.
 
-> > The change was not entirely clear, I was having trouble convincing
-> > myself that all the transformations were OK partly because I kept on
-> > finding little extra changes in there and partly because there were
-> > several things going on.  In theory it could work.
+It's not going to be easy to do this if you only have a board with HDMI. If=
+ you
+can't test that easily, just remove the comment (or make it explicit that y=
+ou
+copy pasted it?), no comment is better than a wrong one.
 
-> You want me to split this in to multiple patches?
+Maxime
 
-It needs to be clearer I think, splitting would probably help.
-
---9iyR+p8Z2cn535Lj
+--xa3hju3zorbs63j6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6pcr8ACgkQJNaLcl1U
-h9C2lwf/cJDL8NucZllG+sa3PyODhCd+PwPyu4pLzLIM6VkzittYtDhkl6KLLEGw
-Z9v0mNb/5SzCYheDtBoHnrBYGMF1tCKDNDwsNcMYPH2BpjRrnE1urK0X8bn2fZ+q
-R3hvILiFClc0PaPP+afDjUayLT6P8qEQk5CYQQV7OPXuE/a99RlKO69MUKi4Rm8i
-g4lFya3vRW/wEK8/vuBZLlFBwqL6iazg3SasB4Y2imNJuddGBtx2+6sNM6YcLQzi
-frL3rC+q+JuGDLiXGwJsmRCBb3rr4kOC0/qkGpdr1WXaoF8wyNYMGoJH9z+A/vDj
-7C7F9rEVsU4wvk0RtM5MwSfaa9GzxQ==
-=lX60
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXql0kQAKCRDj7w1vZxhR
+xUWEAP0SrqSZD58viGba5AVL4qJo+eXiSzFllUnrvAolQg9p/gEAqQDc4TVprwLF
+ugV0n3K3xZMYx6BObJM8w1vig/EXdAA=
+=J0U2
 -----END PGP SIGNATURE-----
 
---9iyR+p8Z2cn535Lj--
+--xa3hju3zorbs63j6--
