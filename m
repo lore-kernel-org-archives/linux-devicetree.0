@@ -2,79 +2,107 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B6EC83013
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C1BC83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53EE420757
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61AD220757
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgD2VyN (ORCPT
+        id S1727093AbgD2V5H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:54:13 -0400
-Received: from muru.com ([72.249.23.125]:51804 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727822AbgD2VyM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:54:12 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id AC13E81AC;
-        Wed, 29 Apr 2020 21:54:58 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Wed, 29 Apr 2020 17:57:07 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:39061 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726554AbgD2V5H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 17:57:07 -0400
+X-IronPort-AV: E=Sophos;i="5.73,333,1583161200"; 
+   d="scan'208";a="46009187"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 30 Apr 2020 06:57:05 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id D547F40ECBAC;
+        Thu, 30 Apr 2020 06:57:00 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH 02/15] dt-bindings: timer: add ti,dmtimer compatible for for system timers
-Date:   Wed, 29 Apr 2020 14:53:49 -0700
-Message-Id: <20200429215402.18125-3-tony@atomide.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200429215402.18125-1-tony@atomide.com>
-References: <20200429215402.18125-1-tony@atomide.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 00/18]  Add R8A7742/RZG1H board support
+Date:   Wed, 29 Apr 2020 22:56:37 +0100
+Message-Id: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The TI dual-mode timer can be used for both clocksource and clockevent
-system timers. We need a way to specify which dual-mode timers are
-reserved for system timers as there are multiple instances available
-that may require a board specific configuration.
+Hi All,
 
-Let's add a generic compatible "ti,dmtimer" that TIMER_OF_DECLARE can
-use as suggested by Daniel Lezcano <daniel.lezcano@linaro.org>.
+This patch set adds initial board support for R8A7742 SoC,
+enabling R8A7742 arch in defconfigs with initial dtsi.
 
-Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- Documentation/devicetree/bindings/timer/ti,timer.txt | 1 +
- 1 file changed, 1 insertion(+)
+Cheers,
+--Prabhakar
 
-diff --git a/Documentation/devicetree/bindings/timer/ti,timer.txt b/Documentation/devicetree/bindings/timer/ti,timer.txt
---- a/Documentation/devicetree/bindings/timer/ti,timer.txt
-+++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
-@@ -14,6 +14,7 @@ Required properties:
- 			ti,omap5430-timer (applicable to OMAP543x devices)
- 			ti,am335x-timer	(applicable to AM335x devices)
- 			ti,am335x-timer-1ms (applicable to AM335x devices)
-+			ti,dmtimer (applicable to system timers)
- 
- - reg:			Contains timer register address range (base address and
- 			length).
+Lad Prabhakar (18):
+  soc: renesas: Add Renesas R8A7742 config option
+  ARM: shmobile: defconfig: Enable r8a7742 SoC
+  ARM: multi_v7_defconfig: Enable r8a7742 SoC
+  ARM: debug-ll: Add support for r8a7742
+  dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
+  pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+  ARM: dts: r8a7742: Initial SoC device tree
+  dt-bindings: irqchip: renesas-irqc: Document r8a7742 bindings
+  ARM: dts: r8a7742: Add IRQC support
+  dt-bindings: rcar-dmac: Document r8a7742 support
+  ARM: dts: r8a7742: Add SYS-DMAC support
+  dt-bindings: serial: renesas,scif: Document r8a7742 bindings
+  dt-bindings: serial: renesas,scifa: Document r8a7742 bindings
+  dt-bindings: serial: renesas,scifb: Document r8a7742 bindings
+  dt-bindings: serial: renesas,hscif: Document r8a7742 bindings
+  ARM: dts: r8a7742: Add [H]SCIF{A|B} support
+  dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H) support
+  ARM: dts: r8a7742: Add GPIO support
+
+ .../devicetree/bindings/dma/renesas,rcar-dmac.txt  |   1 +
+ .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |   1 +
+ .../interrupt-controller/renesas,irqc.yaml         |   1 +
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |   1 +
+ .../devicetree/bindings/serial/renesas,hscif.yaml  |   1 +
+ .../devicetree/bindings/serial/renesas,scif.yaml   |   1 +
+ .../devicetree/bindings/serial/renesas,scifa.yaml  |   1 +
+ .../devicetree/bindings/serial/renesas,scifb.yaml  |   1 +
+ arch/arm/Kconfig.debug                             |  10 +
+ arch/arm/boot/dts/r8a7742.dtsi                     | 939 +++++++++++++++++++++
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/configs/shmobile_defconfig                |   1 +
+ drivers/pinctrl/sh-pfc/Kconfig                     |   4 +
+ drivers/pinctrl/sh-pfc/Makefile                    |   1 +
+ drivers/pinctrl/sh-pfc/core.c                      |   6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a7790.c               |  24 +
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |   1 +
+ drivers/soc/renesas/Kconfig                        |   7 +
+ 18 files changed, 1002 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7742.dtsi
+
 -- 
-2.26.2
+2.7.4
+
