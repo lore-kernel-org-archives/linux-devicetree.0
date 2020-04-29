@@ -2,85 +2,84 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA23C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9D2C83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD1C921775
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00A0206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgD2PWm (ORCPT
+        id S1726456AbgD2P3g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:22:42 -0400
-Received: from lists.gateworks.com ([108.161.130.12]:55540 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgD2PWm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 11:22:42 -0400
-Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
-        by lists.gateworks.com with esmtp (Exim 4.82)
-        (envelope-from <tharvey@gateworks.com>)
-        id 1jToa1-0006N5-QF; Wed, 29 Apr 2020 15:24:57 +0000
-From:   Tim Harvey <tharvey@gateworks.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH v2] ARM: dts: gw552x: add USB OTG support
-Date:   Wed, 29 Apr 2020 08:22:35 -0700
-Message-Id: <1588173755-18045-1-git-send-email-tharvey@gateworks.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587748215-9587-1-git-send-email-tharvey@gateworks.com>
-References: <1587748215-9587-1-git-send-email-tharvey@gateworks.com>
+        Wed, 29 Apr 2020 11:29:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:51969 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbgD2P3g (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:29:36 -0400
+IronPort-SDR: ZbHsZ18bGBlN0FU7L68dy+01UZi695KSWoDdpV/tyVtdLTRHUddhYxEWYJ+DgpxtZ5xnuRpwA7
+ o3w5WM+9kOWg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:29:35 -0700
+IronPort-SDR: wHf8dhSjYq1ovl6/KJN6kiRcTLDiQ66kPnQ15/b7VAWrefT12q7R2zmrmTVy6hxv4qabvPobuF
+ ghmfu4hGXVAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="432595853"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 29 Apr 2020 08:29:35 -0700
+Received: from [10.255.166.42] (vramuthx-mobl1.gar.corp.intel.com [10.255.166.42])
+        by linux.intel.com (Postfix) with ESMTP id B2A905802C8;
+        Wed, 29 Apr 2020 08:29:30 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        qi-ming.wu@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
+        hauke.mehrtens@intel.com, anders.roxell@linaro.org,
+        vigneshr@ti.com, arnd@arndb.de, richard@nod.at,
+        brendanhiggins@google.com, linux-mips@vger.kernel.org,
+        robh+dt@kernel.org, miquel.raynal@bootlin.com, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200429162249.55d38ee8@collabora.com>
+ <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
+ <20200429164832.6800fc70@collabora.com>
+ <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
+Message-ID: <f5961645-fe35-7ef5-05ff-c1529c5699a1@linux.intel.com>
+Date:   Wed, 29 Apr 2020 23:29:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The GW552x-B board revision adds USB OTG support.
+Hi Boris,
 
-Enable the device-tree node and configure the OTG_ID pin.
+On 29/4/2020 11:18 pm, Ramuthevar, Vadivel MuruganX wrote:
+> +    writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
+> +           EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
+> +           ebu_host->ebu + EBU_ADDR_SEL(reg));
+> +
+> +    writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
+> +           ebu_host->ebu + EBU_ADDR_SEL(0));
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
- arch/arm/boot/dts/imx6qdl-gw552x.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Good catch!, one will be removed , Thanks !
 
-diff --git a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
-index dc646b7..bb35971 100644
---- a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
-@@ -258,6 +258,14 @@
- 	status = "okay";
- };
- 
-+&usbotg {
-+	vbus-supply = <&reg_5p0v>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	disable-over-current;
-+	status = "okay";
-+};
-+
- &wdog1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_wdog>;
-@@ -359,6 +367,12 @@
- 		>;
- 	};
- 
-+	pinctrl_usbotg: usbotggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x13059
-+		>;
-+	};
-+
- 	pinctrl_wdog: wdoggrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
--- 
-2.7.4
-
+Regards
+Vadivel
