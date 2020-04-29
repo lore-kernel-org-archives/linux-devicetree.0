@@ -2,102 +2,90 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F47C8300B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 04:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945EBC83003
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 05:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2842072A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 04:45:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpfEeS4W"
+	by mail.kernel.org (Postfix) with ESMTP id 7291F206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 05:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgD2Epj (ORCPT
+        id S1726742AbgD2FLw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 00:45:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725497AbgD2Epj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 00:45:39 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BFBEC03C1AC;
-        Tue, 28 Apr 2020 21:45:39 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z1so524368pfn.3;
-        Tue, 28 Apr 2020 21:45:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Frx0+RVrpCm9DrSh7gxAlCtwmgKX8JfrCAnMDtlrdNE=;
-        b=BpfEeS4WE7I8omKbrjjEurzs0fV+ajJ0sWlfEgKCcR1dYed6MPouUTWcZwRxdoxjT7
-         ZR6J9JtrCqPc/XYOjrXZMLcicPOSkvAiqR1AUACpT/96BY9nYhZQ9En4yNnEiAL/rASo
-         SdD/dzvyMVKiijX/TFWkSRoXSf1jA/8r2uyoNH9aUreLL23rKz5oxERGtE2LQTFs9u3m
-         i2oKqXlS5KJkf911nEy68hYKHzJZqY+wUO0rU83jWoHDRLAdGfco7ud+b2vP0brhwV94
-         zWbLskLZsKwj/kJipRi9hBydqP2oyzBMurUuPEhcGuaVxufNuQ3vWIZyJ10GNnw75XYx
-         /zYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Frx0+RVrpCm9DrSh7gxAlCtwmgKX8JfrCAnMDtlrdNE=;
-        b=fQHuPjWwIIqHosq2wFaS50SvAQq3xbu8s2iJrMc+mmkBHNueVwmd2Zchw09JpL5Kp7
-         zrouPqj8jIvletUIevlU4dQkG1IQ9rW3qd52nBw5MhzcwdlZVhxHAY43dxOp8bcB/1/5
-         SDijqtKTwXHUpufjHYTgB/QfrTmVO54SQfLVZbG8TccWI2x4uqG3YroGpiH54l2qqmJM
-         R4IER0tNNv8qrOdaH8hrU2193+tuyKKQvVVHMOTEuDauiSKNNvQSEzHzB2gFCzdp5F+2
-         42Fe8UXndQ6SNyNKbDielAKLkDt/1BGrwf+o8CN7ZLrepUlO2YPoRhv5kQxOwp9A59ZQ
-         s3mQ==
-X-Gm-Message-State: AGi0PuY3a8vgk3CKyld2EmQXLVY/V3XHjMqoKPUJJ3L9IXn09gM37YW4
-        QX7nV/H8doI3PBYGY4AWAXUYcfrs
-X-Google-Smtp-Source: APiQypKs31ho4VlbCpyXSAcMqugR0nNSNbIPS2pP8dUX5rZzNEwu/xArSb1bZlNP5kYc6bhouuqs0A==
-X-Received: by 2002:a63:214a:: with SMTP id s10mr29602200pgm.98.1588135538000;
-        Tue, 28 Apr 2020 21:45:38 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z190sm14354403pgz.73.2020.04.28.21.45.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 21:45:37 -0700 (PDT)
-Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, Marek Vasut <marex@denx.de>,
-        David Jander <david@protonic.nl>, devicetree@vger.kernel.org
-References: <20200313052252.25389-1-o.rempel@pengutronix.de>
- <20200313052252.25389-2-o.rempel@pengutronix.de>
- <CAL_JsqJgwKjWnTETB1pDc+aXVYp0c-cYOE6gz_KYOn5byQOKpA@mail.gmail.com>
- <20200429043808.jdlhoeuujfxdifh7@pengutronix.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <6478a83a-895b-5cc4-0104-1900c8374d7a@gmail.com>
-Date:   Tue, 28 Apr 2020 21:45:35 -0700
+        Wed, 29 Apr 2020 01:11:52 -0400
+Received: from mga04.intel.com ([192.55.52.120]:15025 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgD2FLw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 01:11:52 -0400
+IronPort-SDR: pNb6Sc6qTXVqxx4DEKtqHRJEJiRNge1ntLR2DjTcp4x5TG+EZlTBuBLhCMFhkpKwxeArP2nyFA
+ W62zAqZEzNwA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 22:11:52 -0700
+IronPort-SDR: iynYTqi6CzjsUwo9ipu4oYhv2xW9wFSfdVNdnsmzyNXXYbJjanEjK/Ep6x4sLoFGEglmYESeV1
+ SG3CjfzqQ+mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,330,1583222400"; 
+   d="scan'208";a="294072791"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 28 Apr 2020 22:11:52 -0700
+Received: from [10.215.242.51] (ekotax-MOBL.gar.corp.intel.com [10.215.242.51])
+        by linux.intel.com (Postfix) with ESMTP id BB49458062D;
+        Tue, 28 Apr 2020 22:11:48 -0700 (PDT)
+Subject: Re: [RESEND PATCH v6 1/4] mfd: syscon: Add fwnode_to_regmap
+To:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kishon <kishon@ti.com>, DTML <devicetree@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+References: <cover.1585889042.git.eswara.kota@linux.intel.com>
+ <9c58aeb1561f28f302921d54aee75942545c4971.1585889042.git.eswara.kota@linux.intel.com>
+ <20200417093551.GH2167633@dell>
+ <d5b7eb87-7468-a1c4-bf19-d676c8e9c49d@linux.intel.com>
+ <20200428100538.GM3559@dell>
+ <CAK8P3a1DP2JNUKP7X=+oPypVZqOHrkByOr3hEXw+3mu2fP49Sw@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <a4396fb5-a6e7-8739-560d-9f1242a80773@linux.intel.com>
+Date:   Wed, 29 Apr 2020 13:11:47 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200429043808.jdlhoeuujfxdifh7@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAK8P3a1DP2JNUKP7X=+oPypVZqOHrkByOr3hEXw+3mu2fP49Sw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+On 4/28/2020 6:29 PM, Arnd Bergmann wrote:
+> On Tue, Apr 28, 2020 at 12:05 PM Lee Jones <lee.jones@linaro.org> wrote:
+>> On Tue, 21 Apr 2020, Dilip Kota wrote:
+>>> But, i feel return error for ACPI or oother, looks better because
+>>> 'device_node' has fwnode pointer. And provide description
+>>> in the header file, mentioning function is success for 'OF' and returns
+>>> error for the rest.
+>> I don't think this patch adds much to be honest.
+>>
+>> Better to just do:
+>>
+>>      device_node_get_regmap(to_of_node(fwnode), false);
+>>
+>> ... from the call site I think.
+> Agreed, or just use the of_node pointer consistently in the driver that uses
+> it and avoid the use of the fwnode interface entirely when dealing with a
+> modern driver that does not need to support board files any more.
+>
+>        Arnd
+Ok, I will do it in the driver itself and remove the fwnode_to_regmap() 
+definition.
 
-On 4/28/2020 9:38 PM, Oleksij Rempel wrote:
-> @Rob, thank you for the review.
-> 
-> @David, should I send fixes or reworked initial patches?
-
-You need to send incremental patches, once David applies the patches,
-they are part of the git history for the trees he maintains.
--- 
-Florian
+Regards,
+Dilip
