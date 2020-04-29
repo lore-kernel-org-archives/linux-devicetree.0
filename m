@@ -2,280 +2,118 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3CFC83008
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0CEC83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8302C21973
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3B82074A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eUH/mXiz"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CmfCYSMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgD2KhL (ORCPT
+        id S1726560AbgD2Kjn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgD2KhK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 06:37:10 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E73AC03C1AE
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 03:37:10 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k1so1901919wrx.4
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 03:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Uw1e05S8KatpGPOOd/irQmwNBAm1B+DP9MNoizxV2OU=;
-        b=eUH/mXizgIYj8EmR9kncyzWIwY2AwvUW1fw776agYWymjhRz0tuizHx7JCyGmz9dhE
-         NX9Zq2vwkwA1CC7+b1LXT3m1VphgWZ7nwKfnHAvSB7g3FmH4eEsdZWur+gqJcnPbXpQA
-         ISY6UFnLV56wLNznKUWVxs3A9N14NsRkpPhGndyB2iDIllyQSYJe4rrbUQ8gjSck5b3D
-         5uKjCN8g26CKB0NbMwqJf2hkwrtYDhDZqBvAiPbz/PEhvD9hbi9whM4pimqh7Xsbvb6s
-         G4iomcOiZXNL1Vc9QTGBX78RmxIZHpKT9j0ZBnL1LjrC7trCIvzI+SY5uij7BIPtSUQu
-         CFIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Uw1e05S8KatpGPOOd/irQmwNBAm1B+DP9MNoizxV2OU=;
-        b=UFJ6LUK5QO0XsVSTcj9sbbST20GS9ClbFrcXsA/M5fFDYZUihVGUKfbmvfDOWAag3P
-         vJGRBuYJuu7zZUw8lp5HH0cmnnt9FSr2MlrU20n5amE6BGE26kp8ulNdKI2tdUL8mk53
-         GVN8AGbsxYrIN9c6p+stTN3eBMbEY5NPkyVlYQTf9l6TEo4BpDRm2MtLZcEMsWsioOH1
-         yr9aRXbRJug/nlLDKH9FqBmS6Et1QHMA7yU+d6HwWlpzZ4YnaTf058QTtFJA8JY05E4G
-         5XrF6HjJaYjX10yB2dGg7O+nNAC/mYuN9169XyaQDQ/rukVl//P+4FqbRcruF1kwsqrN
-         0SJA==
-X-Gm-Message-State: AGi0PuZY0kU9BumZBABjGsY4GDxG3IPap2ceuilQwemIgLYHQ6ANnXRE
-        Nrudy0M/X6swWwlXFXYZhKJwkA==
-X-Google-Smtp-Source: APiQypIRQ2H5DPDaNrKlkpwyTjU5Mm7vVZtMl+9/1EoZpCSOImgpdBMycYdvWOJWpBFo8XvgJqioZw==
-X-Received: by 2002:adf:f34f:: with SMTP id e15mr39230195wrp.275.1588156628996;
-        Wed, 29 Apr 2020 03:37:08 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e34:ed2f:f020:d494:5741:b700:698f])
-        by smtp.gmail.com with ESMTPSA id f23sm6899576wml.4.2020.04.29.03.37.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 03:37:08 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
-Cc:     lukasz.luba@arm.com, Amit Kucheria <amit.kucheria@verdurent.com>,
+        Wed, 29 Apr 2020 06:39:43 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:39951 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726355AbgD2Kjn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 06:39:43 -0400
+X-UUID: 653c9dc151524c91b10580ef3b03cc5d-20200429
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=GttMsEeHxSRQEiWkFwaLHZKTBEqyMow0zfNFhprWC1Y=;
+        b=CmfCYSMo9Co6NOO7EqlVw5NZWDuDSk4MSEvRc9ZiZqMbH8En8VWFQHfzvRKxlarc4IBi2/tLy0JfjKeHBX8+Ny87PW1quQuQjKyjgm4jAvctNW3308aKiB/qiieaTEyKF/v5hDLxhNkKdSftg/N4ttO2jwVu48kGhsHXcaYe2Y4=;
+X-UUID: 653c9dc151524c91b10580ef3b03cc5d-20200429
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1213859366; Wed, 29 Apr 2020 18:39:38 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Apr 2020 18:39:34 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Apr 2020 18:39:34 +0800
+Message-ID: <1588156776.3573.1.camel@mtksdccf07>
+Subject: Re: [PATCH] thermal: power_allocate: add upper and lower limits
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+CC:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-pm@vger.kernel.org (open list:THERMAL),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 2/4] dt-bindings: thermal: Add the idle cooling device
-Date:   Wed, 29 Apr 2020 12:36:40 +0200
-Message-Id: <20200429103644.5492-2-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200429103644.5492-1-daniel.lezcano@linaro.org>
-References: <20200429103644.5492-1-daniel.lezcano@linaro.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>, <hsinyi@chromium.org>,
+        <linux-pm@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 29 Apr 2020 18:39:36 +0800
+In-Reply-To: <accb83e0-ffbe-b6e3-6bf9-e7cc8b9fe19c@arm.com>
+References: <20200424071601.2636-1-michael.kao@mediatek.com>
+         <accb83e0-ffbe-b6e3-6bf9-e7cc8b9fe19c@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some devices are not able to cool down by reducing their voltage /
-frequency because it could be not available or the system does not
-allow voltage scaling. In this configuration, it is not possible to
-use this strategy and the idle injection cooling device can be used
-instead.
-
-One idle cooling device is now present for the CPU as implemented by
-the combination of the idle injection framework belonging to the power
-capping framework and the thermal cooling device. The missing part is
-the DT binding providing a way to describe how the cooling device will
-work on the system.
-
-A first iteration was done by making the cooling device to point to
-the idle state. Unfortunately it does not make sense because it would
-need to duplicate the idle state description for each CPU in order to
-have a different phandle and make the thermal internal framework
-happy.
-
-It was proposed to add an cooling-cells to <3>, unfortunately the
-thermal framework is expecting a value of <2> as stated by the
-documentation and it is not possible from the cooling device generic
-code to loop this third value to the back end cooling device.
-
-Another proposal was to add a child 'thermal-idle' node as the SCMI
-does. This approach allows to have a self-contained configuration for
-the idle cooling device without colliding with the cpufreq cooling
-device which is based on the CPU node. In addition, it allows to have
-the cpufreq cooling device and the idle cooling device to co-exist
-together as shown in the example.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- - V4:
-   - Added Rob Herring reviewed-by
- - V3:
-   - Removed extra line with tab inside
- - V2:
-   - Fixed comment type
-   - Added dual license
-   - Fixed description s/begins to/should/
-   - Changed name s/duration/duration-us/
-   - Changed name s/latency/exit-latency-us/
-   - Removed types for latency / duration
-   - Fixed s/idle-thermal/thermal-idle/
----
- .../bindings/thermal/thermal-idle.yaml        | 145 ++++++++++++++++++
- 1 file changed, 145 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-
-diff --git a/Documentation/devicetree/bindings/thermal/thermal-idle.yaml b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-new file mode 100644
-index 000000000000..7a922f540934
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-@@ -0,0 +1,145 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright 2020 Linaro Ltd.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/thermal-idle.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Thermal idle cooling device binding
-+
-+maintainers:
-+  - Daniel Lezcano <daniel.lezcano@linaro.org>
-+
-+description: |
-+  The thermal idle cooling device allows the system to passively
-+  mitigate the temperature on the device by injecting idle cycles,
-+  forcing it to cool down.
-+
-+  This binding describes the thermal idle node.
-+
-+properties:
-+   $nodename:
-+     const: thermal-idle
-+     description: |
-+        A thermal-idle node describes the idle cooling device properties to
-+        cool down efficiently the attached thermal zone.
-+
-+   '#cooling-cells':
-+      const: 2
-+      description: |
-+         Must be 2, in order to specify minimum and maximum cooling state used in
-+         the cooling-maps reference. The first cell is the minimum cooling state
-+         and the second cell is the maximum cooling state requested.
-+
-+   duration-us:
-+      description: |
-+         The idle duration in microsecond the device should cool down.
-+
-+   exit-latency-us:
-+      description: |
-+         The exit latency constraint in microsecond for the injected
-+         idle state for the device. It is the latency constraint to
-+         apply when selecting an idle state from among all the present
-+         ones.
-+
-+required:
-+  - '#cooling-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/thermal/thermal.h>
-+
-+    // Example: Combining idle cooling device on big CPUs with cpufreq cooling device
-+    cpus {
-+            #address-cells = <2>;
-+            #size-cells = <0>;
-+
-+            /* ... */
-+
-+                 cpu_b0: cpu@100 {
-+                         device_type = "cpu";
-+                         compatible = "arm,cortex-a72";
-+                         reg = <0x0 0x100>;
-+                         enable-method = "psci";
-+                         capacity-dmips-mhz = <1024>;
-+                         dynamic-power-coefficient = <436>;
-+                         #cooling-cells = <2>; /* min followed by max */
-+                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-+                         thermal-idle {
-+                                 #cooling-cells = <2>;
-+                                 duration-us = <10000>;
-+                                 exit-latency-us = <500>;
-+                         };
-+                };
-+
-+                cpu_b1: cpu@101 {
-+                        device_type = "cpu";
-+                        compatible = "arm,cortex-a72";
-+                        reg = <0x0 0x101>;
-+                        enable-method = "psci";
-+                        capacity-dmips-mhz = <1024>;
-+                        dynamic-power-coefficient = <436>;
-+                        #cooling-cells = <2>; /* min followed by max */
-+                        cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-+                        thermal-idle {
-+                                #cooling-cells = <2>;
-+                                duration-us = <10000>;
-+                                exit-latency-us = <500>;
-+                        };
-+                 };
-+
-+          /* ... */
-+
-+    };
-+
-+    /* ... */
-+
-+    thermal_zones {
-+         cpu_thermal: cpu {
-+                polling-delay-passive = <100>;
-+                polling-delay = <1000>;
-+
-+                /* ... */
-+
-+                trips {
-+                        cpu_alert0: cpu_alert0 {
-+                                    temperature = <65000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                        };
-+
-+                        cpu_alert1: cpu_alert1 {
-+                                    temperature = <70000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                        };
-+
-+                        cpu_alert2: cpu_alert2 {
-+                                    temperature = <75000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                        };
-+
-+                        cpu_crit: cpu_crit {
-+                                    temperature = <95000>;
-+                                    hysteresis = <2000>;
-+                                    type = "critical";
-+                        };
-+                };
-+
-+                cooling-maps {
-+                        map0 {
-+                             trip = <&cpu_alert1>;
-+                             cooling-device = <&{/cpus/cpu@100/thermal-idle} 0 15 >,
-+                                              <&{/cpus/cpu@101/thermal-idle} 0 15>;
-+                        };
-+
-+                        map1 {
-+                             trip = <&cpu_alert2>;
-+                             cooling-device =
-+                                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+                                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+                       };
-+                };
-+          };
-+    };
--- 
-2.17.1
+T24gRnJpLCAyMDIwLTA0LTI0IGF0IDEwOjIyICswMTAwLCBMdWthc3ogTHViYSB3cm90ZToNCj4g
+SGkgTWljaGFlbCwNCj4gDQo+IE9uIDQvMjQvMjAgODoxNiBBTSwgTWljaGFlbCBLYW8gd3JvdGU6
+DQo+ID4gVGhlIHVwcGVyIGFuZCBsb3dlciBsaW1pdHMgb2YgdGhlcm1hbCB0aHJvdHRsZSBzdGF0
+ZSBpbiB0aGUNCj4gPiBkZXZpY2UgdHJlZSBkbyBub3QgYXBwbHkgdG8gdGhlIHBvd2VyX2FsbG9j
+YXRlIGdvdmVybm9yLg0KPiA+IEFkZCB0aGUgdXBwZXIgYW5kIGxvd2VyIGxpbWl0cyB0byB0aGUg
+cG93ZXJfYWxsb2NhdGUgZ292ZXJub3IuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWljaGFl
+bCBLYW8gPG1pY2hhZWwua2FvQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMv
+dGhlcm1hbC90aGVybWFsX2NvcmUuYyB8IDIgKy0NCj4gPiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L3RoZXJtYWwvdGhlcm1hbF9jb3JlLmMgYi9kcml2ZXJzL3RoZXJtYWwvdGhlcm1hbF9jb3JlLmMN
+Cj4gPiBpbmRleCA5YTMyMWRjNTQ4YzguLmY2ZmVlZDIyNjViZCAxMDA2NDQNCj4gPiAtLS0gYS9k
+cml2ZXJzL3RoZXJtYWwvdGhlcm1hbF9jb3JlLmMNCj4gPiArKysgYi9kcml2ZXJzL3RoZXJtYWwv
+dGhlcm1hbF9jb3JlLmMNCj4gPiBAQCAtNTk4LDcgKzU5OCw3IEBAIGludCBwb3dlcl9hY3Rvcl9z
+ZXRfcG93ZXIoc3RydWN0IHRoZXJtYWxfY29vbGluZ19kZXZpY2UgKmNkZXYsDQo+ID4gICAJaWYg
+KHJldCkNCj4gPiAgIAkJcmV0dXJuIHJldDsNCj4gPiAgIA0KPiA+IC0JaW5zdGFuY2UtPnRhcmdl
+dCA9IHN0YXRlOw0KPiA+ICsJaW5zdGFuY2UtPnRhcmdldCA9IGNsYW1wX3ZhbChzdGF0ZSwgaW5z
+dGFuY2UtPmxvd2VyLCBpbnN0YW5jZS0+dXBwZXIpOw0KPiA+ICAgCW11dGV4X2xvY2soJmNkZXYt
+PmxvY2spOw0KPiA+ICAgCWNkZXYtPnVwZGF0ZWQgPSBmYWxzZTsNCj4gPiAgIAltdXRleF91bmxv
+Y2soJmNkZXYtPmxvY2spOw0KPiA+IA0KPiANCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2ggYW5k
+IGhhdmluZyB0byBsb29rIGF0IGl0LiBJIGhhdmUgc29tZSBjb25jZXJucw0KPiB3aXRoIHRoaXMg
+YXBwcm9hY2guIExldCdzIGFuYWx5emUgaXQgZnVydGhlci4NCj4gDQo+IEluIGRlZmF1bHQgdGhl
+IGNvb2xpbmcgZGV2aWNlcyBpbiB0aGUgdGhlcm1hbCB6b25lIHdoaWNoIGlzIHVzZWQgYnkgSVBB
+DQo+IGRvIG5vdCBoYXZlIHRoaXMgJ2xvd2VyJyBhbmQgJ3VwcGVyJyBsaW1pdHMuIFRoZXkgYXJl
+IHNldCB0bw0KPiBUSEVSTUFMX05PX0xJTUlUIGluIERUIHRvIGdpdmUgZnVsbCBjb250cm9sIHRv
+IElQQSBvdmVyIHRoZSBzdGF0ZXMuDQo+IA0KPiBUaGlzIHRoZSBmdW5jdGlvbiAncG93ZXJfYWN0
+b3Jfc2V0X3Bvd2VyJyBhY3R1YWxseSB0cmFuc2xhdGVzIGdyYW50ZWQNCj4gcG93ZXIgdG8gdGhl
+IHN0YXRlIHRoYXQgZGV2aWNlIHdpbGwgcnVuIGZvciB0aGUgbmV4dCBwZXJpb2QuDQo+IFRoZSBJ
+UEEgYWxnb3JpdGhtIGhhcyBhbHJlYWR5IHNwbGl0IHRoZSBwb3dlciBidWRnZXQuDQo+IE5vdyB3
+aGF0IGhhcHBlbiB3aGVuIHRoZSAnbG93ZXInIHZhbHVlIHdpbGwgY2hhbmdlIHRoZSBzdGF0ZSB0
+byBhIHN0YXRlDQo+IHdoaWNoIGNvbnN1bWVzIG1vcmUgcG93ZXIgdGhhbiB3YXMgY2FsY3VsYXRl
+ZCBpbiB0aGUgSVBBIGFsZy4uLiBJdCB3aWxsDQo+IGJlY2FtZSB1bnN0YWJsZS4NCj4gDQo+IEkg
+d291bGQgcmF0aGVyIHNlZSBhIGNoYW5nZSB3aGljaCB1c2VzIHRoZXNlICdsb3dlcicgYW5kICd1
+cHBlcicgbGltaXRzDQo+IGJlZm9yZSB0aGUgSVBBIGRvIHRoZSBjYWxjdWxhdGlvbiBvZiB0aGUg
+cG93ZXIgYnVkZ2V0LiBCdXQgdGhpcyB3YXNuJ3QNCj4gYSByZXF1aXJlbWVudCBhbmQgd2UgYXNz
+dW1lZCB0aGF0IElQQSBoYXMgZnVsbCBjb250cm9sIG92ZXIgdGhlIGNvb2xpbmcNCj4gZGV2aWNl
+ICh3aGljaCBJIGRlc2NyaWJlZCBhYm92ZSB3aXRoIHRoaXMgRFQgVEhFUk1BTF9OT19MSU1JVCku
+DQo+IA0KPiBJcyB0aGVyZSBhIHByb2JsZW0gd2l0aCB5b3VyIHBsYXRmb3JtIHRoYXQgaXQgaGFz
+IHRvIHByb3ZpZGUgc29tZQ0KPiBtaW5pbWFsIHBlcmZvcm1hbmNlLCBzbyB5b3UgdHJpZWQgdG8g
+aW50cm9kdWNlIHRoaXMgY2xhbXBpbmc/DQo+IA0KPiBSZWdhcmRzLA0KPiBMdWthc3oNCg0KDQpI
+aSBMdWthc3osDQoNCkkgcmVmZXIgdG8gdGhlIGRvY3VtZW50YXRpb24gc2V0dGluZ3Mgb2YgdGhl
+IHRoZXJtYWwgZGV2aWNlIHRyZWUNCihEb2N1bWVudGF0aW9uIC8gZGV2aWNldHJlZSAvIGJpbmRp
+bmdzIC8gdGhlcm1hbCAvIHRoZXJtYWwudHh0KS4NCg0KSXQgc2hvd3MgdGhhdCBjb29saW5nLWRl
+dmljZSBpcyBhIG1hbmRhdG9yeSBwcm9wZXJ0eSwgc28gbWF4L21pbiBjb29saW5nDQpzdGF0ZSBz
+aG91bGQgYmUgYWJsZSB0byBzdXBwb3J0IGluIGZyYW1ld29yayBwb2ludCBvZiB2aWV3Lg0KT3Ro
+ZXJ3aXNlLCB0aGUgbGltaXRhdGlvbiBzaG91bGQgYmUgYWRkZWQgaW4gYmluZGluZyBkb2N1bWVu
+dC4NCg0KRGlmZmVyZW50IGhhcmR3YXJlIG1lY2hhbmlzbXMgaGF2ZSBkaWZmZXJlbnQgaGVhdCBk
+aXNzaXBhdGlvbg0KY2FwYWJpbGl0aWVzLg0KTGltaXRpbmcgdGhlIGlucHV0IGhlYXQgc291cmNl
+IGNhbiBzbG93IGRvd24gdGhlIGhlYXQgYWNjdW11bGF0aW9uIGFuZA0KdGVtcGVyYXR1cmUgYnVy
+c3QuDQpXZSB3YW50IHRvIHJlZHVjZSB0aGUgYWNjdW11bGF0aW9uIG9mIGhlYXQgYXQgaGlnaCB0
+ZW1wZXJhdHVyZSBieQ0KbGltaXRpbmcgdGhlIG1pbmltdW0gZ2VhciBvZiB0aGVybWFsIHRocm90
+dGxlLg0KDQpCZXN0IFJlZ2FyZHMsDQpNaWNoYWVsDQo=
 
