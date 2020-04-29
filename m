@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06BAC83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8141C8300B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0F0214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43F420BED
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:58:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgD2V6G (ORCPT
+        id S1727869AbgD2V6V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:58:06 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:28940 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726511AbgD2V6G (ORCPT
+        Wed, 29 Apr 2020 17:58:21 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:29405 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727082AbgD2V6U (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:58:06 -0400
+        Wed, 29 Apr 2020 17:58:20 -0400
 X-IronPort-AV: E=Sophos;i="5.73,333,1583161200"; 
-   d="scan'208";a="45795834"
+   d="scan'208";a="46009232"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 30 Apr 2020 06:58:05 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 30 Apr 2020 06:58:19 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id D71ED40ECBAC;
-        Thu, 30 Apr 2020 06:58:00 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3522F40ECBAC;
+        Thu, 30 Apr 2020 06:58:15 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -45,9 +45,9 @@ Cc:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
         linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 05/18] dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
-Date:   Wed, 29 Apr 2020 22:56:42 +0100
-Message-Id: <1588197415-13747-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 08/18] dt-bindings: irqchip: renesas-irqc: Document r8a7742 bindings
+Date:   Wed, 29 Apr 2020 22:56:45 +0100
+Message-Id: <1588197415-13747-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -56,26 +56,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document PFC support for the RZ/G1H (R8A7742) SoC.
+Document SoC specific bindings for RZ/G1H (r8a7742) SoC.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt | 1 +
+ Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-index 6eada23..b686131 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-@@ -13,6 +13,7 @@ Required Properties:
-     - "renesas,pfc-emev2": for EMEV2 (EMMA Mobile EV2) compatible pin-controller.
-     - "renesas,pfc-r8a73a4": for R8A73A4 (R-Mobile APE6) compatible pin-controller.
-     - "renesas,pfc-r8a7740": for R8A7740 (R-Mobile A1) compatible pin-controller.
-+    - "renesas,pfc-r8a7742": for R8A7742 (RZ/G1H) compatible pin-controller.
-     - "renesas,pfc-r8a7743": for R8A7743 (RZ/G1M) compatible pin-controller.
-     - "renesas,pfc-r8a7744": for R8A7744 (RZ/G1N) compatible pin-controller.
-     - "renesas,pfc-r8a7745": for R8A7745 (RZ/G1E) compatible pin-controller.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.yaml
+index ee5273b..1bd741d 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.yaml
+@@ -14,6 +14,7 @@ properties:
+     items:
+       - enum:
+           - renesas,irqc-r8a73a4        # R-Mobile APE6
++          - renesas,irqc-r8a7742        # RZ/G1H
+           - renesas,irqc-r8a7743        # RZ/G1M
+           - renesas,irqc-r8a7744        # RZ/G1N
+           - renesas,irqc-r8a7745        # RZ/G1E
 -- 
 2.7.4
 
