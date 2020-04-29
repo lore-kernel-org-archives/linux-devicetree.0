@@ -2,63 +2,65 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA222C8300C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36CDC83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 903F9214D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B594C206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgD2VG5 (ORCPT
+        id S1727093AbgD2VG5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 29 Apr 2020 17:06:57 -0400
-Received: from elvis.franken.de ([193.175.24.41]:60831 "EHLO elvis.franken.de"
+Received: from elvis.franken.de ([193.175.24.41]:60823 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbgD2VG4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726481AbgD2VG4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Wed, 29 Apr 2020 17:06:56 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jTtuv-0005Q3-04; Wed, 29 Apr 2020 23:06:53 +0200
+        id 1jTtuv-0005Q3-01; Wed, 29 Apr 2020 23:06:53 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id CACD3C0355; Wed, 29 Apr 2020 23:05:24 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 23:05:24 +0200
+        id CE78DC0355; Wed, 29 Apr 2020 23:04:16 +0200 (CEST)
+Date:   Wed, 29 Apr 2020 23:04:16 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
         =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
         devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/13] MIPS: ingenic: DTS: Update GCW0 support
-Message-ID: <20200429210524.GE24583@alpha.franken.de>
+Subject: Re: [PATCH 07/13] MIPS: ingenic: DTS: Respect cell count of common
+ properties
+Message-ID: <20200429210416.GB24583@alpha.franken.de>
 References: <20200413152633.198301-1-paul@crapouillou.net>
- <20200413152633.198301-10-paul@crapouillou.net>
+ <20200413152633.198301-7-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200413152633.198301-10-paul@crapouillou.net>
+In-Reply-To: <20200413152633.198301-7-paul@crapouillou.net>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 05:26:30PM +0200, Paul Cercueil wrote:
-> Add support for the face buttons, the ACT8600 PMUC, the LCD panel
-> with backlight, the rumble, internal/external SD readers, and other
-> things.
-> 
-> Note that the otg-phy node was dropped in the process as it was neither
-> useful nor used, and was inside a non-compliant board "bus".
+On Mon, Apr 13, 2020 at 05:26:27PM +0200, Paul Cercueil wrote:
+> If N fields of X cells should be provided, then that's what the
+> devicetree should represent, instead of having one single field of
+> (N*X) cells.
 > 
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  arch/mips/boot/dts/ingenic/gcw0.dts | 499 +++++++++++++++++++++++++++-
->  1 file changed, 484 insertions(+), 15 deletions(-)
+>  arch/mips/boot/dts/ingenic/jz4740.dtsi | 19 +++++++++----------
+>  arch/mips/boot/dts/ingenic/jz4770.dtsi | 12 +++++-------
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 24 +++++++++++-------------
+>  arch/mips/boot/dts/ingenic/x1000.dtsi  |  9 ++++-----
+>  4 files changed, 29 insertions(+), 35 deletions(-)
 
-applied to mips-next.
+applied to mips-next. Please check if my resolution of the conflict
+in arch/mips/boot/dts/ingenic/jz4780.dtsi is correct.
 
 Thomas.
 
