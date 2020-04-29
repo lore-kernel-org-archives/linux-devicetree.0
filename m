@@ -2,154 +2,134 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC46EC83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 06:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908A3C83006
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 06:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9F42076B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 06:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5702072A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 06:27:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I4vZV4PA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgD2GYQ convert rfc822-to-8bit (ORCPT
+        id S1726523AbgD2G1c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 02:24:16 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35074 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbgD2GYQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 02:24:16 -0400
-Received: by mail-lj1-f196.google.com with SMTP id g4so1373547ljl.2;
-        Tue, 28 Apr 2020 23:24:14 -0700 (PDT)
+        Wed, 29 Apr 2020 02:27:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD2G1b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 02:27:31 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D325BC08E859
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 23:27:29 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id t14so995995wrw.12
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 23:27:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wv05h1X7qRrPjYPf9y0VD7+PHwezUYitVP0Fh0igQuY=;
+        b=I4vZV4PACb5f7K2uxifM99GPqkcfyrpLc74PzSrCUF61KrqkAGgKNBFNHr+XiC1Zzr
+         XqIjNrgmZ91TIAda8FEWPq1gg3Xaa84/0qQWu5Ae3sW4csU35iEp2O/nwCWdMpbr7El6
+         eoZD/tvPP5RteAWgnhbWIY/PMqJ+ssDOZvekrrEimOB3ENhCiVutsoNIJ5zLGgynqmXb
+         8Rc5rpcdAkqbshwzs7C11AcGOjJ9hcJFu+NIFlqEadlAtAupqh+9vJ50K1QkhtgQmjWR
+         R9djt4X9WtAHl95Nhhfz3sSbWTT0MATduTJ2F9hJdP0sNOI+tsziWlYROFDtUt7Fy1Op
+         uYQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UMvE1bKhgPMPyH5g6riW7cDoy79w0qtcoyNsyUsk4iA=;
-        b=S9uxe+k/16qFQu6hjteo0ACs8fO4KSYU/oHGAoDYcxZv5L52GmXUJWwABHcMZQ3GwZ
-         rHCNVXB7OFY0GlMUPsV5cNTltEedRzihQKxacYXVZ116D1pkhsRCZr9BFWmoTqQpQslg
-         EFydtaOFaxy3g9f0yWiCA+xVglb55HEu0gVo0D7hatSGfcYZFAPmsEllv1/wz9KiE5xu
-         UktyVQVJEdlziB2L+93+5MvyxDrJNdrlyLsweH4WCXxI1Zjth/9wyC7wue3G/niqMbzy
-         oGeqQAZFtS+dDv+S40561wofb6H6SuRQrFM5zxCySdqSsZ4XkhzFeSOa4zugE6T8l4wh
-         lHBA==
-X-Gm-Message-State: AGi0Pub01OKg2xloT7E+gE6f6tH0gysnhpeA9GeVr+sFpmtbgdGKDM2N
-        +YEKu0WhtkN88NEWb9cgfybz5n1BQJEw6A==
-X-Google-Smtp-Source: APiQypIJG7mO46ZOSdxWjrbaacCFmFFl74JNW0V4rpwawaB80OvBciJ2Cr1OKKQyQUHiEtBNYc/Zjg==
-X-Received: by 2002:a2e:8087:: with SMTP id i7mr18344260ljg.99.1588141452868;
-        Tue, 28 Apr 2020 23:24:12 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id u6sm1432926ljd.68.2020.04.28.23.24.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 23:24:11 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id t11so657206lfe.4;
-        Tue, 28 Apr 2020 23:24:11 -0700 (PDT)
-X-Received: by 2002:ac2:5238:: with SMTP id i24mr5157585lfl.7.1588141451325;
- Tue, 28 Apr 2020 23:24:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200426120442.11560-1-peron.clem@gmail.com> <20200426120442.11560-5-peron.clem@gmail.com>
- <20200428080020.35qcuylwq2ylmubu@gilmour.lan> <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
- <20200428160417.6q5oab2guaumhhwi@gilmour.lan> <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
- <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
-In-Reply-To: <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 29 Apr 2020 14:24:00 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
-Message-ID: <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: Audio sound card name [was [PATCH 4/7] arm64:
- dts: allwinner: a64: Add HDMI audio]
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Marcus Cooper <codekipper@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wv05h1X7qRrPjYPf9y0VD7+PHwezUYitVP0Fh0igQuY=;
+        b=LG9OGwH+kTePGw5w1+Tuv+Lzwe3vGujTf5bdEODFhODH0xauiZf3dXYEVEgpHkXaUl
+         lTE7KaJHdpMvdXbHfKprqHjifueenBZtZwFsF7Qj1kgQnGdPONWAhxgSQ6KY+RColzdt
+         w0sLPnXYglG+oDnNYVcYCfH/BKEbViNVg3Zm3CS7Kdz6N/IkAHKoN9+4kOGhQod6yT2b
+         86E78gQbvqT1mLxpBEk4rjldBEeaYVaR9f9kii8icHZGxutFUBCkEoL1PeadOvv/tQ97
+         vI39WvkkTVUNyqLGlYdlkJ5EXKIVQ1q9QJH+7dBRosODys0wMSzO8x1vBuFr66N4Tkv4
+         L5nQ==
+X-Gm-Message-State: AGi0PubAf03GGcZ+UoE7jyq9EN1ruvtmCVtt/Jnr1RD4HfD9n/Iii+1m
+        xbs3W6/Bq5Ucs4VxN/VL00Vn3Q==
+X-Google-Smtp-Source: APiQypKTqIt46QQB2nB/SSJZXWRFVeB9A294fdRkNMgBYLOeiiFcpBnVXBSKVh/jOHoB1iCbHHyjSA==
+X-Received: by 2002:adf:f187:: with SMTP id h7mr37818290wro.331.1588141648280;
+        Tue, 28 Apr 2020 23:27:28 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id t17sm27729510wro.2.2020.04.28.23.27.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 23:27:27 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 07:27:25 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200429062725.GU3559@dell>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-6-michael@walle.cc>
+ <20200428125049.GU185537@smile.fi.intel.com>
+ <5e2d486077f9e2ce8bd9b171cf806fd9@walle.cc>
+ <20200428144958.GZ185537@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428144958.GZ185537@smile.fi.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 1:11 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-04-28 5:49 pm, Clément Péron wrote:
-> > Hi Mark, Rob,
-> >
-> > On Tue, 28 Apr 2020 at 18:04, Maxime Ripard <maxime@cerno.tech> wrote:
-> >>
-> >> On Tue, Apr 28, 2020 at 10:54:00AM +0200, Clément Péron wrote:
-> >>> Hi Maxime,
-> >>>
-> >>> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wrote:
-> >>>>
-> >>>> On Sun, Apr 26, 2020 at 02:04:39PM +0200, Clément Péron wrote:
-> >>>>> From: Marcus Cooper <codekipper@gmail.com>
-> >>>>>
-> >>>>> Add a simple-soundcard to link audio between HDMI and I2S.
-> >>>>>
-> >>>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >>>>> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> >>>>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> >>>>> ---
-> >>>>>   arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++++
-> >>>>>   1 file changed, 21 insertions(+)
-> >>>>>
-> >>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>>>> index e56e1e3d4b73..08ab6b5e72a5 100644
-> >>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>>>> @@ -102,6 +102,25 @@
-> >>>>>                status = "disabled";
-> >>>>>        };
-> >>>>>
-> >>>>> +     hdmi_sound: hdmi-sound {
-> >>>>> +             compatible = "simple-audio-card";
-> >>>>> +             simple-audio-card,format = "i2s";
-> >>>>> +             simple-audio-card,name = "allwinner,hdmi";
-> >>>>
-> >>>> I'm not sure what the usual card name should be like though. I would assume that
-> >>>> this should be something specific enough so that you're able to differentiate
-> >>>> between boards / SoC so that the userspace can choose a different configuration
-> >>>> based on it?
-> >>>
-> >>> I really don't know what we should use here,
-> >>> I just have a look at other SoC:
-> >>> rk3328: "HDMI"
-> >>> rk3399: "hdmi-sound"
-> >>> r8a774c0-cat874: "CAT874 HDMI sound"
-> >>>
-> >>> But maybe it's time to introduce proper name:
-> >>> What about :
-> >>> pat
-> >>> sun50i-h6-hdmi
-> >>
-> >> It's pretty much what we've been using for the other sound cards we have, so it
-> >> makes sense to me.
-> >
-> > I have a question regarding the simple-audio-card,name.
-> > In this patch, I would like to introduce a simple-audio-card for the
-> > Allwinner A64 HDMI.
-> >
-> > What should be the preferred name for this sound card?
-> > "sun50i-a64-hdmi" ? "allwinner, sun50i-a64-hdmi" ?
->
-> I can at least speak for RK3328, and the reasoning there was that as the
-> user looking at what `aplay -l` says, I don't give a hoot about what the
-> SoC may be called, I see two cards and I want to know, with the least
-> amount of uncertainty, which one will make the sound come out of the
-> port that's labelled "HDMI" on the box ;)
+On Tue, 28 Apr 2020, Andy Shevchenko wrote:
 
-I agree. The user really doesn't care what SoC the system uses. The only
-real requirement is to be able to tell which output the card is related
-to, i.e. is it onboard or an external DAC, is it analog or HDMI, etc..
+> On Tue, Apr 28, 2020 at 04:43:24PM +0200, Michael Walle wrote:
+> > Am 2020-04-28 14:50, schrieb Andy Shevchenko:
+> > > On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
+> > > > This patch adds core support for the board management controller found
+> > > > on the SMARC-sAL28 board. It consists of the following functions:
+> > > >  - watchdog
+> > > >  - GPIO controller
+> > > >  - PWM controller
+> > > >  - fan sensor
+> > > >  - interrupt controller
+> > > 
+> > > ...
+> > > 
+> > > >  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+> > > > 
+> > > >  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> > > > +
+> > > > +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
+> > > 
+> > > Perhaps keep an order?
+> > 
+> > I don't see any order in that makefile. Looked to me like every new
+> > file was added at the end.
+> 
+> Okay, just didn't note from above context.
 
-ChenYu
+Yes, this is historical.  I've been meaning to visit this for ~7 years!
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
