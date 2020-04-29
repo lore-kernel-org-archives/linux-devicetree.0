@@ -2,174 +2,223 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC044C83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 04:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDE7C8300C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 04:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89C3D20731
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 04:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC8420575
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 04:38:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgD2EEF (ORCPT
+        id S1726788AbgD2EiX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 00:04:05 -0400
-Received: from regular1.263xmail.com ([211.150.70.202]:52972 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgD2EEF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 00:04:05 -0400
-X-Greylist: delayed 419 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Apr 2020 00:04:02 EDT
-Received: from localhost (unknown [192.168.167.16])
-        by regular1.263xmail.com (Postfix) with ESMTP id 96279418;
-        Wed, 29 Apr 2020 11:56:54 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from hp1216 (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P19265T139854178354944S1588132613653690_;
-        Wed, 29 Apr 2020 11:56:54 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <a370703ca1a6fc4478a16f53aa2fa596>
-X-RL-SENDER: zyf@rock-chips.com
-X-SENDER: zyf@rock-chips.com
-X-LOGIN-NAME: zyf@rock-chips.com
-X-FST-TO: robh@kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-Date:   Wed, 29 Apr 2020 11:56:53 +0800
-Organization: =?utf-8?B?55Ge6Iqv5b6u55S15a2Q?=
-From:   =?utf-8?B?6LW15Luq5bOw?= <yifeng.zhao@rock-chips.com>
-To:     "Rob Herring" <robh@kernel.org>
-Cc:     "Miquel Raynal" <miquel.raynal@bootlin.com>,
-        richard <richard@nod.at>, vigneshr <vigneshr@ti.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        =?utf-8?B?SGVpa29TdMO8Ym5lcg==?= <heiko@sntech.de>,
-        linux-rockchip <linux-rockchip@lists.infradead.org>
-Subject: =?utf-8?B?UmU6IFJlOiBbUEFUQ0ggdjUgMS83XSBkdC1iaW5kaW5nczogbXRkOiBEZXNjcmliZSBSb2NrY2hpcCBSSzN4eHggTkFORA0KIGZsYXNoIGNvbnRyb2xsZXLjgJDor7fms6jmhI/vvIzpgq7ku7bnlLFyb2JoZXJyaW5nMkBnbWFpbC5jb23ku6Plj5HjgJE=?=
-References: <20200426100250.14678-1-yifeng.zhao@rock-chips.com>, 
-        <20200426100250.14678-2-yifeng.zhao@rock-chips.com>, 
-        <20200428150158.GA12189@bogus>
-X-Priority: 3
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.16.177[cn]
-Mime-Version: 1.0
-Message-ID: <2020042911541773273387@rock-chips.com>
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 29 Apr 2020 00:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726682AbgD2EiX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 00:38:23 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F065AC03C1AC
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 21:38:22 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jTeU9-00035I-0Q; Wed, 29 Apr 2020 06:38:13 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jTeU4-0006hD-J6; Wed, 29 Apr 2020 06:38:08 +0200
+Date:   Wed, 29 Apr 2020 06:38:08 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, Marek Vasut <marex@denx.de>,
+        David Jander <david@protonic.nl>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
+Message-ID: <20200429043808.jdlhoeuujfxdifh7@pengutronix.de>
+References: <20200313052252.25389-1-o.rempel@pengutronix.de>
+ <20200313052252.25389-2-o.rempel@pengutronix.de>
+ <CAL_JsqJgwKjWnTETB1pDc+aXVYp0c-cYOE6gz_KYOn5byQOKpA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u5ojtjypdq5icgiq"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJgwKjWnTETB1pDc+aXVYp0c-cYOE6gz_KYOn5byQOKpA@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 06:35:27 up 165 days, 19:54, 163 users,  load average: 0.08, 0.07,
+ 0.07
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKPlNvICdhaGInIGlzIHJlcXVpcmVkIGFuZCAnbmZjJyBpcyBvcHRpb25hbD8gVGhh
-dCdzIHdoYXQgeW91IGRlZmluZWQsIGJ1dAo+dGhhdCBzZWVtcyBiYWNrd2FyZHMuCgpGb3Igc29t
-ZSBvbGQgZGV2aWNlcywgc3VzaCBhcyBSSzMwNjYsIFJLMzE4OCwgb25seSBoYXZlIGFoYiBjbG9j
-ayhJbnRlcm5hbCBjbG9jayBhbmQgZXh0ZXJuYWwgaW8gY2xvY2spLgpGb3Igb3RoZXIgZGV2aWNl
-cywgc3VzaCBhcyBSVjExMDgsIFBYMzDvvIxSSzMyODjvvIwgbmVlZCBib3RoIGFoYiBjbG9jayhp
-bnRlcm5hbCBjbG9jaykgYW5kIG5mYyBjbG9jayhleHRlcm5hbCBpbyBjbG9jaywgY2FuIGJlIGZs
-ZXhpYmx5IGNvbmZpZ3VyZWQpLgpTbyBpdCBpcyBkaWZmaWN1bHQgdG8gZGVmaW5lIGl0IGFuZCB0
-aGUgZG9jdW1lbnQgZGVmaW5lZCBvbmx5IGNoZWNrIGFiaCBjbG9jay4KClRoYW5rc++8jApZaWZl
-bmcKCj5PbiBTdW4sIEFwciAyNiwgMjAyMCBhdCAwNjowMjo0NFBNICswODAwLCBZaWZlbmcgWmhh
-byB3cm90ZToKPj4gRG9jdW1lbnRhdGlvbiBzdXBwb3J0IGZvciBSb2NrY2hpcCBSSzN4eHggTkFO
-RCBmbGFzaCBjb250cm9sbGVycwo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBZaWZlbmcgWmhhbyA8eWlm
-ZW5nLnpoYW9Acm9jay1jaGlwcy5jb20+Cj4+IC0tLQo+Pgo+PiBDaGFuZ2VzIGluIHY1Ogo+PiAt
-IEZpeCBzb21lIHdyb25nIGRlZmluZQo+PiAtIEFkZCBib290LW1lZGl1bSBkZWZpbmUKPj4gLSBS
-ZW1vdmUgc29tZSBjb21wYXRpYmxlIGRlZmluZQo+Pgo+PiBDaGFuZ2VzIGluIHY0Ogo+PiAtIFRo
-ZSBjb21wYXRpYmxlIGRlZmluZSB3aXRoIHJreHhfbmZjCj4+IC0gQWRkIGFzc2lnbmVkLWNsb2Nr
-cwo+PiAtIEZpeCBzb21lIHdyb25nIGRlZmluZQo+Pgo+PiBDaGFuZ2VzIGluIHYzOgo+PiAtIENo
-YW5nZSB0aGUgdGl0bGUgZm9yIHRoZSBkdC1iaW5kaW5ncwo+Pgo+PiBDaGFuZ2VzIGluIHYyOiBO
-b25lCj4+Cj4+wqAgLi4uL210ZC9yb2NrY2hpcCxuYW5kLWNvbnRyb2xsZXIueWFtbMKgwqDCoMKg
-wqDCoMKgwqAgfCAxMjQgKysrKysrKysrKysrKysrKysrCj4+wqAgMSBmaWxlIGNoYW5nZWQsIDEy
-NCBpbnNlcnRpb25zKCspCj4+wqAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9tdGQvcm9ja2NoaXAsbmFuZC1jb250cm9sbGVyLnlhbWwKPj4KPj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcm9ja2No
-aXAsbmFuZC1jb250cm9sbGVyLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbXRkL3JvY2tjaGlwLG5hbmQtY29udHJvbGxlci55YW1sCj4+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0Cj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uMTIzNTRjNzlkMjc1Cj4+IC0tLSAvZGV2L251bGwK
-Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9yb2NrY2hpcCxu
-YW5kLWNvbnRyb2xsZXIueWFtbAo+PiBAQCAtMCwwICsxLDEyNCBAQAo+PiArIyBTUERYLUxpY2Vu
-c2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2UpCj4+ICslWUFNTCAx
-LjIKPj4gKy0tLQo+PiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9tdGQvcm9j
-a2NoaXAsbmFuZC1jb250cm9sbGVyLnlhbWwjCj4+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJl
-ZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKPj4gKwo+PiArdGl0bGU6IFJvY2tjaGlwIFNv
-Q3MgTkFORCBGTEFTSCBDb250cm9sbGVyIChORkMpCj4+ICsKPj4gK2FsbE9mOgo+PiArwqAgLSAk
-cmVmOiAibmFuZC1jb250cm9sbGVyLnlhbWwjIgo+PiArCj4+ICttYWludGFpbmVyczoKPj4gK8Kg
-IC0gSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPj4gKwo+PiArcHJvcGVydGllczoK
-Pj4gK8KgIGNvbXBhdGlibGU6Cj4+ICvCoMKgwqAgZW51bToKPj4gK8KgwqDCoMKgwqAgLSByb2Nr
-Y2hpcCxweDMwX25mYwo+PiArwqDCoMKgwqDCoCAtIHJvY2tjaGlwLHJrM3h4eF9uZmMKPj4gK8Kg
-wqDCoMKgwqAgLSByb2NrY2hpcCxyazMzMDhfbmZjCj4+ICvCoMKgwqDCoMKgIC0gcm9ja2NoaXAs
-cnYxMTA4X25mYwo+Cj5Vc2UgJy0nLCBub3QgJ18nLgo+Cj4+ICsKPj4gK8KgIHJlZzoKPj4gK8Kg
-wqDCoCBtaW5JdGVtczogMQo+PiArCj4+ICvCoCBpbnRlcnJ1cHRzOgo+PiArwqDCoMKgIG1pbkl0
-ZW1zOiAxCj4+ICsKPj4gK8KgIGNsb2NrczoKPj4gK8KgwqDCoCBtaW5JdGVtczogMQo+PiArwqDC
-oMKgIGl0ZW1zOgo+PiArwqDCoMKgwqDCoCAtIGRlc2NyaXB0aW9uOiBCdXMgQ2xvY2sKPj4gK8Kg
-wqDCoMKgwqAgLSBkZXNjcmlwdGlvbjogTW9kdWxlIENsb2NrCj4+ICsKPj4gK8KgIGNsb2NrLW5h
-bWVzOgo+PiArwqDCoMKgIG1pbkl0ZW1zOiAxCj4KPlNvICdhaGInIGlzIHJlcXVpcmVkIGFuZCAn
-bmZjJyBpcyBvcHRpb25hbD8gVGhhdCdzIHdoYXQgeW91IGRlZmluZWQsIGJ1dAo+dGhhdCBzZWVt
-cyBiYWNrd2FyZHMuCj4KPj4gK8KgwqDCoCBpdGVtczoKPj4gK8KgwqDCoMKgwqAgLSBjb25zdDog
-YWhiCj4+ICvCoMKgwqDCoMKgIC0gY29uc3Q6IG5mYwo+PiArCj4+ICtwYXR0ZXJuUHJvcGVydGll
-czoKPj4gK8KgICJebmFuZEBbMC0zXSQiOgo+PiArwqDCoMKgIHR5cGU6IG9iamVjdAo+PiArwqDC
-oMKgIHByb3BlcnRpZXM6Cj4+ICvCoMKgwqDCoMKgIHJlZzoKPj4gK8KgwqDCoMKgwqDCoMKgIG1p
-bmltdW06IDAKPj4gK8KgwqDCoMKgwqDCoMKgIG1heGltdW06IDMKPj4gKwo+PiArwqDCoMKgwqDC
-oCBuYW5kLWVjYy1tb2RlOgo+PiArwqDCoMKgwqDCoMKgwqAgY29uc3Q6IGh3Cj4+ICsKPj4gK8Kg
-wqDCoMKgwqAgbmFuZC1lY2Mtc3RlcC1zaXplOgo+PiArwqDCoMKgwqDCoMKgwqAgY29uc3Q6IDEw
-MjQKPj4gKwo+PiArwqDCoMKgwqDCoCBuYW5kLWVjYy1zdHJlbmd0aDoKPj4gK8KgwqDCoMKgwqDC
-oMKgIGVudW06IFsxNiwyNCw0MCw2MCw3MF0KPj4gKwo+PiArwqDCoMKgwqDCoCBuYW5kLWJ1cy13
-aWR0aDoKPj4gK8KgwqDCoMKgwqDCoMKgIGNvbnN0OiA4Cj4+ICsKPj4gK8KgwqDCoMKgwqAgbmFu
-ZC1pcy1ib290LW1lZGl1bTogdHJ1ZQo+PiArCj4+ICvCoMKgwqDCoMKgIHJvY2tjaGlwLWJvb3Qt
-YmxrczoKPgo+cm9ja2NoaXAsYm9vdC1ibGtzCj4KPj4gK8KgwqDCoMKgwqDCoMKgIG1pbmltdW06
-IDIKPj4gK8KgwqDCoMKgwqDCoMKgIGRlZmF1bHQ6IDE2Cj4+ICvCoMKgwqDCoMKgwqDCoCBhbGxP
-ZjoKPj4gK8KgwqDCoMKgwqDCoMKgIC0gJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5p
-dGlvbnMvdWludDMyCj4+ICvCoMKgwqDCoMKgwqDCoCBkZXNjcmlwdGlvbjoKPj4gK8KgwqDCoMKg
-wqDCoMKgwqDCoCBGb3IgbGVnYWN5IGRldmljZXMgd2hlcmUgdGhlIGJvb3Ryb20gY2FuIG9ubHkg
-aGFuZGxlIDE2LzI0IGJpdAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgIEJDSC9FQ0MsIGFuZCBmb3Ig
-c29tZSBvdGhlciBkZXZpY2VzIHdoZXJlIHRoZSBib290cm9tIGNhbiBzdXBwb3J0Cj4+ICvCoMKg
-wqDCoMKgwqDCoMKgwqAgNjAvNzAgYml0IEJDSC9FQ0MuCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqAg
-SW4gYWRkaXRpb24sIHdoZW4gcHJvZ3JhbW1pbmcgdGhlIGxvYWRlciwgYSBsaW5rZWQgbGlzdCBu
-ZWVkcyB0bwo+PiArwqDCoMKgwqDCoMKgwqDCoMKgIGJlIHdyaXR0ZW4gaW4gb29iIGZvciBCb290
-cm9tIHRvIHJlYWQgdGhlIGNvcnJlY3QgZGF0YSBzZXF1ZW5jZS4KPj4gK8KgwqDCoMKgwqDCoMKg
-wqDCoCBJZiBzcGVjaWZpZWQgaXQgaW5kaWNhdGVzIHRoZSBudW1iZXIgb2YgZXJhc2UgYmxvY2tz
-IGluIHVzZSBieQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgIHRoZSBib290bG9hZGVyIHRoYXQgbmVl
-ZCBhIGRpZmZlcmVudCBCQ0gvRUNDIHNldHRpbmcuCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqAgT25s
-eSB1c2VkIGluIGNvbWJpbmF0aW9uIHdpdGggJ25hbmQtaXMtYm9vdC1tZWRpdW0nLgo+PiArCj4+
-ICvCoMKgwqDCoMKgIHJvY2tjaGlwLWJvb3QtZWNjLXN0cmVuZ3RoOgo+Cj5yb2NrY2hpcCxib290
-LWVjYy1zdHJlbmd0aAo+Cj4+ICvCoMKgwqDCoMKgwqDCoCBlbnVtOiBbMTYsMjQsNDAsNjAsNzBd
-Cj4+ICvCoMKgwqDCoMKgwqDCoCBkZXNjcmlwdGlvbjoKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoCBJ
-ZiBzcGVjaWZpZWQgaXQgaW5kaWNhdGVzIHRoYXQgdXNlIGEgZGlmZmVyZW50IEJDSC9FQ0Mgc2V0
-dGluZyBmb3IKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoCBib290cm9tLgo+PiArwqDCoMKgwqDCoMKg
-wqDCoMKgIE9ubHkgdXNlZCBpbiBjb21iaW5hdGlvbiB3aXRoICduYW5kLWlzLWJvb3QtbWVkaXVt
-Jy4KPj4gKwo+PiArcmVxdWlyZWQ6Cj4+ICvCoCAtIGNvbXBhdGlibGUKPj4gK8KgIC0gcmVnCj4+
-ICvCoCAtIGludGVycnVwdHMKPj4gK8KgIC0gY2xvY2tzCj4+ICvCoCAtIGNsb2NrLW5hbWVzCj4+
-ICsKPj4gK2V4YW1wbGVzOgo+PiArwqAgLSB8Cj4+ICvCoMKgwqAgI2luY2x1ZGUgPGR0LWJpbmRp
-bmdzL2Nsb2NrL3JrMzMwOC1jcnUuaD4KPj4gK8KgwqDCoCAjaW5jbHVkZSA8ZHQtYmluZGluZ3Mv
-aW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPgo+PiArwqDCoMKgIG5mYzogbmFuZC1jb250
-cm9sbGVyQGZmNGIwMDAwIHsKPj4gK8KgwqDCoMKgwqAgY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxy
-azMzMDhfbmZjIjsKPj4gK8KgwqDCoMKgwqAgcmVnID0gPDB4MCAweGZmNGIwMDAwIDB4MCAweDQw
-MDA+Owo+PiArwqDCoMKgwqDCoCBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODEgSVJRX1RZUEVfTEVW
-RUxfSElHSD47Cj4+ICvCoMKgwqDCoMKgIGNsb2NrcyA9IDwmY3J1IEhDTEtfTkFOREM+LCA8JmNy
-dSBTQ0xLX05BTkRDPjsKPj4gK8KgwqDCoMKgwqAgY2xvY2stbmFtZXMgPSAiYWhiIiwgIm5mYyI7
-Cj4+ICvCoMKgwqDCoMKgIGFzc2lnbmVkLWNsb2NrcyA9IDwmY2xrcyBTQ0xLX05BTkRDPjsKPj4g
-K8KgwqDCoMKgwqAgYXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8MTUwMDAwMDAwPjsKPj4gKwo+PiAr
-wqDCoMKgwqDCoCBwaW5jdHJsLTAgPSA8JmZsYXNoX2FsZSAmZmxhc2hfYnVzOCAmZmxhc2hfY2xl
-ICZmbGFzaF9jc24wCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJmZs
-YXNoX3JkbiAmZmxhc2hfcmR5ICZmbGFzaF93cm4+Owo+PiArwqDCoMKgwqDCoCBwaW5jdHJsLW5h
-bWVzID0gImRlZmF1bHQiOwo+PiArCj4+ICvCoMKgwqDCoMKgICNhZGRyZXNzLWNlbGxzID0gPDE+
-Owo+PiArwqDCoMKgwqDCoCAjc2l6ZS1jZWxscyA9IDwwPjsKPj4gKwo+PiArwqDCoMKgwqDCoCBu
-YW5kQDAgewo+PiArwqDCoMKgwqDCoMKgwqAgcmVnID0gPDA+Owo+PiArwqDCoMKgwqDCoMKgwqAg
-bmFuZC1idXMtd2lkdGggPSA8OD47Cj4+ICvCoMKgwqDCoMKgwqDCoCBuYW5kLWVjYy1tb2RlID0g
-Imh3IjsKPj4gK8KgwqDCoMKgwqDCoMKgIG5hbmQtZWNjLXN0cmVuZ3RoID0gPDE2PjsKPj4gK8Kg
-wqDCoMKgwqDCoMKgIG5hbmQtZWNjLXN0ZXAtc2l6ZSA9IDwxMDI0PjsKPj4gK8KgwqDCoMKgwqDC
-oMKgIG5hbmQtaXMtYm9vdC1tZWRpdW07Cj4+ICvCoMKgwqDCoMKgwqDCoCByb2NrY2hpcC1ib290
-LWJsa3MgPSA8OD47Cj4+ICvCoMKgwqDCoMKgwqDCoCByb2NrY2hpcC1ib290LWVjYy1zdHJlbmd0
-aCA9IDwxNj47Cj4+ICvCoMKgwqDCoMKgIH07Cj4+ICvCoMKgwqAgfTsKPj4gKwo+PiArLi4uCj4+
-IC0tCj4+IDIuMTcuMQo+Pgo+Pgo+Pgo+Cj4KPg==
 
+--u5ojtjypdq5icgiq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+@Rob, thank you for the review.
 
+@David, should I send fixes or reworked initial patches?
+
+On Tue, Apr 28, 2020 at 12:30:06PM -0500, Rob Herring wrote:
+> On Fri, Mar 13, 2020 at 12:23 AM Oleksij Rempel <o.rempel@pengutronix.de>=
+ wrote:
+> >
+> > Document the NXP TJA11xx PHY bindings.
+>=20
+> Given the discussion, I'd marked this one as "changes requested"
+> expecting a new version to review the schema. And gmail decided to
+> make a new thread due to the extra 'RE:'. So it fell off my radar.
+>=20
+> This schema is fundamentally broken as there's no way to match for
+> when to apply this schema. How do we find a NXP TJA11xx PHY? I suppose
+> we can look for 'ethernet-phy' with a child node 'ethernet-phy', but
+> then that would apply to any phy like this one. This needs a
+> compatible string IMO given it is non-standard.
+>=20
+> >
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+> >  .../devicetree/bindings/net/nxp,tja11xx.yaml  | 61 +++++++++++++++++++
+> >  1 file changed, 61 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/nxp,tja11xx.y=
+aml
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/D=
+ocumentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> > new file mode 100644
+> > index 000000000000..42be0255512b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> > @@ -0,0 +1,61 @@
+> > +# SPDX-License-Identifier: GPL-2.0+
+>=20
+> Dual license new bindings:
+>=20
+> (GPL-2.0-only OR BSD-2-Clause)
+>=20
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NXP TJA11xx PHY
+> > +
+> > +maintainers:
+> > +  - Andrew Lunn <andrew@lunn.ch>
+> > +  - Florian Fainelli <f.fainelli@gmail.com>
+> > +  - Heiner Kallweit <hkallweit1@gmail.com>
+> > +
+> > +description:
+> > +  Bindings for NXP TJA11xx automotive PHYs
+>=20
+> Perhaps some information about how this phy is special.
+>=20
+> > +
+> > +allOf:
+> > +  - $ref: ethernet-phy.yaml#
+>=20
+> Not needed here as ethernet-phy.yaml already has a 'select' condition to =
+apply.
+>=20
+> > +
+> > +patternProperties:
+> > +  "^ethernet-phy@[0-9a-f]+$":
+> > +    type: object
+> > +    description: |
+> > +      Some packages have multiple PHYs. Secondary PHY should be define=
+s as
+> > +      subnode of the first (parent) PHY.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        minimum: 0
+> > +        maximum: 31
+> > +        description:
+> > +          The ID number for the child PHY. Should be +1 of parent PHY.
+> > +
+> > +    required:
+> > +      - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    mdio {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        tja1101_phy0: ethernet-phy@4 {
+> > +            reg =3D <0x4>;
+> > +        };
+> > +    };
+> > +  - |
+> > +    mdio {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        tja1102_phy0: ethernet-phy@4 {
+> > +            reg =3D <0x4>;
+>=20
+> > +            #address-cells =3D <1>;
+> > +            #size-cells =3D <0>;
+>=20
+> These aren't documented.
+>=20
+> > +
+> > +            tja1102_phy1: ethernet-phy@5 {
+> > +                reg =3D <0x5>;
+> > +            };
+> > +        };
+> > +    };
+> > --
+> > 2.25.1
+> >
+>=20
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--u5ojtjypdq5icgiq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6pBKgACgkQ4omh9DUa
+UbPdpxAAn2f/bOVYYyPeoJH51X6j3vw6VzICAMmpJEFUQapwQK9TLVY81n5d+OZm
+mkHvdK/0cpuDEpJBahmPlU38IDk7uAfgauz5JE4rVmTnqJnaMjK4tpxKtgGqaRoA
+T0ghABC89U+V1groHAPxNwTxRR3nz5sQRjWUCx6hZ5KqP7gRoOWyyNPI3Hh088d3
+0YcJVFLxMoUNxRGUcmtPCNlp5UZ/mRZYhENAXQQ+c+jEttmQKfB52C730ogZfaIZ
+E8SkpCrVzHFMu1b/aR0FBE0VkRR8NoG0nnxAUXLVfk2bEBkoIjOEn/+4XbN2Dmha
+z270yAzDJeJux9Lx34EzXhFkA6bc+1V/yAHVc3ZmDXTp/GGFiDdLBnId+Q9LmXf1
+97MNlkKxK17V8pc7exGy+5f5lX0uiwOMuRzUZGMqPdMXVHuzAnJeu1PUxAGI4B8F
+Y0cJkZtVI9a/rTUHMgvTJZUtiPV+x9ZVn0XX3nnM9T9RWzF8fpE5VZP0Odl1n5ls
+hVTQX5XZSCVsflrgaRAxTrN3taNe5sPs5tBVLhw+Uamit62bI+jiBczlg+I4MilC
+lJoMLGNUqNENcVUuUUkJ5CWw0/7E3NfkhXxFx0H+8n/a2NbMSc/ywYx4aoe3MqXD
+p/KU6QtUbHvi8Eg9vh3NlhYppQQj2U+b894d3K/LYd8A4bbMdSA=
+=JVGP
+-----END PGP SIGNATURE-----
+
+--u5ojtjypdq5icgiq--
