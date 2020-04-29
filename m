@@ -2,209 +2,187 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C745FC83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 07:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1031CC83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A04842076B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 07:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D6E20787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d/Ii+ZFl"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="b+raAYYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgD2Hvz (ORCPT
+        id S1726355AbgD2IAe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:51:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726401AbgD2Hvy (ORCPT
+        Wed, 29 Apr 2020 04:00:34 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1182 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726345AbgD2IAe (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:51:54 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1621C03C1AE
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 00:51:52 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j2so1257944wrs.9
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 00:51:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=8NAhf7wha4yR/lg0VT+G0SzgLMFOPbSrGi3bE5Wim2g=;
-        b=d/Ii+ZFlUySfg0HKB+mMYqzshV8MMo6a7kwmUKLNV8hgk8fn3z3cHLth9nNldwRD9z
-         1IFZD0sFF4nqQAvBzKU3olJoII8FqAj3/SCP1Yjs1RBg0ivZeLp1bOvrvbSP+kFF1ORS
-         Ah6do+KsqJhoVSvXy6JvXLncytXc36bD/DqPWLYUc9fqz6cL23ZzU0Gej7LGZQrfHd19
-         eCm1/i5wucHTIwEh5gp6xMRTv6AS0GhO/AKKDcNew+LMlhXBFQLHWjwjK7Nm2LcdKd9C
-         cbW+dU9cS+Jx0GrJFsfsKMRBniopka1ovM5sYL9W9vYs7yiL2DssyY+cK3lFZ3jQifCU
-         6xfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=8NAhf7wha4yR/lg0VT+G0SzgLMFOPbSrGi3bE5Wim2g=;
-        b=mT6Lr6RSaucdZcMG0ngdArH6CImBX4nIzNNklQeOYGIs+eFhAklikCAK98fhTs+ZJl
-         wOHgUYQ1D8htLPXASLt5JH5i4jZA+so+cRNKPtK3SAjYYW28C5VlQBD2j+IR+Y/g/Aik
-         qPE67J/sJ+25Y/cJXPiytUS3eILd5zG4ljLt0Mgf1z0AuNufJkd90X9LbU9qM+o/6Yj9
-         0YTOl45dY6yvGsp6gq/3S1XNrM8Azmg4X13vNcd8OyuiJoZM3oWHpjvljM+oWYUu9o7y
-         wFG9rE5y/UieTYDeeKkpPrmVP9y1rSNMQE8ZasnmsVtw5vql0q/lqEvxCND5v3SR1HoU
-         ay7g==
-X-Gm-Message-State: AGi0PuYew099pDizxI2QPRkZDnAIvs2t+HrztRHHiXxhl2QT+AvgYcSn
-        YekcC+Twb9YkyKHQpBO80ixHXg==
-X-Google-Smtp-Source: APiQypLvKWerLf6aM+oCmGHp/RU0pCRKiU8F1cNGbeTwLdfGm3WpiRrx6/fGPPua6nb5JnAaoY4lTg==
-X-Received: by 2002:a05:6000:14c:: with SMTP id r12mr36326058wrx.62.1588146711629;
-        Wed, 29 Apr 2020 00:51:51 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id q8sm6463797wmg.22.2020.04.29.00.51.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 00:51:51 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 08:51:49 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] dt-bindings: mfd: Document QTI I2C PMIC controller
-Message-ID: <20200429075149.GY3559@dell>
-References: <cover.1588115326.git.gurus@codeaurora.org>
- <0960b5d17013124d9bbdbe7f28374b3d6c9c026e.1588115326.git.gurus@codeaurora.org>
+        Wed, 29 Apr 2020 04:00:34 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T7wQu5000766;
+        Wed, 29 Apr 2020 10:00:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=nIR58CYrNLsb2w9tyqqa8vIr3YlHzztP1gjkUKLHO+U=;
+ b=b+raAYYTY8B9rAHlM/yEdUKo7u+1kx8pRk2Pq9FHcYJjuylhjEvgysi/D8kaO1I0HORG
+ CXSyxRPCy5X1zYvH35HR7Wkzhen8gUh63Kdnxl+MGBSq5prjDKGoFVewQ9de3W7uSJj9
+ MsqRQxpGg2+TJJ2tz+w7o4VQrOfvU2mc39cqUHeEy+eu4Odi8EyDUUBh6xXQ5+ptb2TG
+ Mjvr1qyruNVHYUOQEe0a2wfnGdOiNYKwPxBtM0gMKTi+oxvLFyCo5jdi0kITPmpq6s6F
+ ydzySknr1m5/5fWk0rpKsRJuJI2/vAoqWETHChe1uJJ4L3nSdcETKXPym9sKOF06TGiS 8g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30mhq64uq4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 10:00:05 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A564110002A;
+        Wed, 29 Apr 2020 10:00:04 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 84FD920663E;
+        Wed, 29 Apr 2020 10:00:04 +0200 (CEST)
+Received: from [10.211.9.35] (10.75.127.44) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Apr
+ 2020 10:00:03 +0200
+Subject: Re: [PATCH v2 04/12] mtd: rawnand: stm32_fmc2: manage all errors
+ cases at probe time
+To:     Marek Vasut <marex@denx.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+CC:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+ <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
+ <20200427194747.224a2402@xps13>
+ <40a9bac7-9ed4-b781-f2c2-2d90b4e82749@denx.de>
+ <20200427200848.722f4c56@xps13>
+ <3527f3b8-225d-6e5a-dd8a-0421d475f70b@denx.de>
+ <20200427220806.13741ec0@xps13>
+ <456b04f5-4ed7-6f3f-b0e6-9276bea09b50@denx.de>
+From:   Christophe Kerello <christophe.kerello@st.com>
+Message-ID: <506961d9-4852-c926-3446-f5e8b27e5c2e@st.com>
+Date:   Wed, 29 Apr 2020 10:00:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0960b5d17013124d9bbdbe7f28374b3d6c9c026e.1588115326.git.gurus@codeaurora.org>
+In-Reply-To: <456b04f5-4ed7-6f3f-b0e6-9276bea09b50@denx.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_02:2020-04-28,2020-04-29 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 28 Apr 2020, Guru Das Srinagesh wrote:
 
-> The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
-> multi-function PMIC devices which communicate over the I2C bus.  The
-> controller enumerates all child nodes as platform devices, and
-> instantiates a regmap interface for them to communicate over the I2C
-> bus.
-> 
-> The controller also controls interrupts for all of the children platform
-> devices.  The controller handles the summary interrupt by deciphering
-> which peripheral triggered the interrupt, and which of the peripheral
-> interrupts were triggered.  Finally, it calls the interrupt handlers for
-> each of the virtual interrupts that were registered.
-> 
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
-> Changes from v0:
-> - Fixed "FATAL ERROR: Unable to parse input tree" error thrown by `make
->   dt_binding_check`.
-> 
->  .../devicetree/bindings/mfd/qcom,i2c-pmic.yaml     | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml
-> new file mode 100644
-> index 0000000..42482af
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml
-> @@ -0,0 +1,86 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/qcom,i2c-pmic.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. I2C PMIC Interrupt Controller Platform Independent Bindings
-> +
-> +description: |
-> +  The I2C PMIC Controller is used by multi-function PMIC devices which
-> +  communicate over the I2C bus. An I2C PMIC controller node typically contains
-> +  one or more child nodes representing the device's peripherals. Each of the
-> +  peripherals typically has its own driver on the platform bus and will be
-> +  enumerated by this controller. The controller exposes a regmap to the
-> +  peripherals to communicate over the I2C bus.
-> +
-> +  The controller also controls interrupts for all of the peripherals on the
-> +  bus. The controller takes a summary interrupt, deciphers which peripheral
-> +  triggered the interrupt, and which of the peripheral's interrupts were
-> +  triggered. Finally, it calls the handlers for each of the virtual interrupts
-> +  that were registered.
-> +
-> +  This document describes the common platform independent bindings that apply
-> +  to all I2C PMIC interrupt controllers.
-> +
-> +maintainers:
-> +  - Guru Das Srinagesh <gurus@codeaurora.org>
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,i2c-pmic
-> +
-> +  reg:
-> +    description: 7-bit I2C address of the device.
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: Summary interrupt specifier.
-> +
-> +  interrupt-controller:
-> +    description: Flag indicating that this device is an interrupt controller.
-> +
-> +  "#interrupt-cells":
-> +    description: Number of cells to encode an interrupt source.
-> +
-> +  qcom,periph-map:
-> +    description: |
-> +      A contiguous list of u32 arrays where each element specifies the base
-> +      address of a single peripheral within the chip. This provides a mapping
-> +      between the summary status register bits and peripheral addresses as each
-> +      bit in the summary status register represents a peripheral.
-> +
-> +      The number of arrays should match the number of summary registers with up
-> +      to 8 elements each. Within each array, One element per bit of the summary
-> +      status register in order from the least sigificant bit to the most
-> +      significant bit.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +
-> +  pinctrl-names:
-> +    const: default
-> +
-> +  pinctrl-0:
-> +    description: phandle of the pin configuration.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    qcom,smb138x@8 {
-> +      compatible = "qcom,i2c-pmic";
-> +      reg = <0x8>;
-> +      interrupt-parent = <&tlmm_pinmux>;
-> +      interrupts = <83 0>;
-> +      interrupt-controller;
-> +      #interrupt-cells = <3>;
-> +      pinctrl-names = "default";
-> +      pinctrl-0 = <&smb_stat_active>;
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      qcom,periph-map = <0x10 0x11 0x12 0x13 0x14 0x16 0x36>;
 
-Please provide examples of this device's children.
+On 4/27/20 10:10 PM, Marek Vasut wrote:
+> On 4/27/20 10:08 PM, Miquel Raynal wrote:
+>> Hi Marek,
+>>
+>> Marek Vasut <marex@denx.de> wrote on Mon, 27 Apr 2020 21:46:44 +0200:
+>>
+>>> On 4/27/20 8:08 PM, Miquel Raynal wrote:
+>>> [...]
+>>>>>>>   	/* FMC2 init routine */
+>>>>>>>   	stm32_fmc2_init(fmc2);
+>>>>>>> @@ -1997,7 +2001,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>>>>>>>   	/* Scan to find existence of the device */
+>>>>>>>   	ret = nand_scan(chip, nand->ncs);
+>>>>>>>   	if (ret)
+>>>>>>> -		goto err_scan;
+>>>>>>> +		goto err_dma_setup;
+>>>>>>>   
+>>>>>>>   	ret = mtd_device_register(mtd, NULL, 0);
+>>>>>>>   	if (ret)
+>>>>>>> @@ -2010,7 +2014,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>>>>>>>   err_device_register:
+>>>>>>>   	nand_cleanup(chip);
+>>>>>>>   
+>>>>>>> -err_scan:
+>>>>>>> +err_dma_setup:
+>>>>>>>   	if (fmc2->dma_ecc_ch)
+>>>>>>>   		dma_release_channel(fmc2->dma_ecc_ch);
+>>>>>>>   	if (fmc2->dma_tx_ch)
+>>>>>>> @@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>>>>>>>   	sg_free_table(&fmc2->dma_data_sg);
+>>>>>>>   	sg_free_table(&fmc2->dma_ecc_sg);
+>>>>>>>   
+>>>>>>> +err_clk_disable:
+>>>>>>>   	clk_disable_unprepare(fmc2->clk);
+>>>>>>>   
+>>>>>>>   	return ret;
+>>>>>>
+>>>>>> I didn't spot it during my earlier reviews but I really prefer using
+>>>>>> labels explaining what you do than having the same name of the function
+>>>>>> which failed. This way you don't have to rework the error path when
+>>>>>> you handle an additional error.
+>>>>>>
+>>>>>> So, would you mind doing this in two steps:
+>>>>>>
+>>>>>> 1/
+>>>>>> Replace
+>>>>>>
+>>>>>>      err_scan:
+>>>>>>
+>>>>>> with, eg.
+>>>>>>
+>>>>>>      release_dma_objs:
+>>>>>
+>>>>> The ^err_ prefix in failpath labels is useful, since it's easily
+>>>>> possible to match on it with regexes ; not so much on arbitrary label name.
+>>>>
+>>>> I guess so, but is it actually useful to catch labels in a regex? (real
+>>>> question)
+>>>
+>>> I find it useful to have a unified way to find those labels, e.g.
+>>> err_because_foo:
+>>> err_because_bar:
+>>> err_last_one:
+>>> is much nicer than:
+>>> foo_failed:
+>>> bar_also_failed:
+>>> its_total_randomness:
+>>
+>> My point being, Christophe, you can use err_ as a prefix but I think
+>> it's better to use:
+>>
+>>      err_do_this_cleanup
+>>
+>> than
+>>
+>>     err_this_failed
+> 
+> That's fine either way.
 
-> +    };
-> +
-> +...
+Hi Miquel,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I will rename the label in v3:
+  - err_device_register => err_nand_cleanup
+  - err_dma_setup => err_release_dma
+  - err_clk_disable => will keep this one
+
+Regards,
+Christophe Kerello.
+
+> 
+>>>> Any way I suppose catching ":\n" is already a good approximation to
+>>>> find labels?
+>>>
+>>> Not very practical with git grep (^err.*: works nicely though)
+>>
+>> I suppose ^.*:$ would work the same ;)
+> 
+> Try and see how much other irrelevant stuff that sucks in ;-)
+> 
