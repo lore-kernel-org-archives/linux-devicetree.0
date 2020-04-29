@@ -2,79 +2,76 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3157C83009
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27986C83001
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B23A9206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8B5206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XpsPFxZa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MfYvGkg0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbgD2Atu (ORCPT
+        id S1726536AbgD2AwX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
+        Tue, 28 Apr 2020 20:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726381AbgD2Att (ORCPT
+        by vger.kernel.org with ESMTP id S1726353AbgD2AwX (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:49:49 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76AF2C03C1AD
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:49:48 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mq3so64352pjb.1
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:49:48 -0700 (PDT)
+        Tue, 28 Apr 2020 20:52:23 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 014FDC03C1AD
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:52:21 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id z6so173782plk.10
+        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:52:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Q3EtAKvEWUW0/w8OE9AzaYUShPhgEQZLo83EeVoVlc8=;
-        b=XpsPFxZaKEr5HNrwdLuHLBro4Q5ws03ekVwIfeuLisq1Awlppg8GH1tIGMYhyA3Sz7
-         4ATUAgx1MVLSFttmueMe1mlHnEbFsthxOxWIC17+NLy43GuPldaWJCd03/bFRfP+HvVP
-         x30IY/T14k/EHzusAjSy+CzGRfkwgknV2LEc4=
+        bh=rN6lzh1HO7SQ5a1mJWUzVv7pQ/WYiEXJe4nN1cTa5qQ=;
+        b=MfYvGkg0E36KkDEUNVqNoMHi4kvTBkFhVPDMvs9JK86Ojx9aJWa7Pg/QX9KT4cZo8x
+         vp+NJ3MbB39Q7sc2/bFpuOq6mR2ppSAAw8TIbfe52vt3vnOXuBJPzk+RsoyK+4jMO8Bh
+         8BWgeEw0zmhh7uvFJxmfp8wa1ARMXdqAHBMWo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Q3EtAKvEWUW0/w8OE9AzaYUShPhgEQZLo83EeVoVlc8=;
-        b=Xafphd+vDWsrrHgqL23kmqNGFkIN8i75EZjUI1r9pfxHd1kQ38Pa2dDBTUQDcXwIx7
-         RNxfKeRzMz2c1BQeQzhxkx1lOMO6Uor/LF0p8ItqqPKMnOHDuo5Tpguw27vORQK8x/7n
-         gc8uJP2rTQreZKGn0lsDqv25lVOFtUAB3EJSd0q11nmwXeYkziK/ycgeD+/kzwIE0gsS
-         xiT9mxupITN21Bq5ulE2YE3V+nTalBOJ+wQI4qZokUbKWMzxsfoXXqc5oGLVjIlS2Feo
-         LubCHXGO4HzYTWp/eCCUXF3zLiv+M5TABKzlOEo4O/BkzEA09P/le2zI93XF6mtDHxiG
-         ReVg==
-X-Gm-Message-State: AGi0PuaM8YdPUkoeDoP2huUx6ivu+8Zrm8GfqeSaLRtw1+K7uhfA1k4F
-        4pTxOGAGbL8rfrmIddTKgjmdmQ==
-X-Google-Smtp-Source: APiQypKbNcABrcklk/jOHdelRiUtXSs4G6lWcVte78/wBQee0IK+DS+s0hk+TPBBJkWfCkERI4hA4A==
-X-Received: by 2002:a17:902:7241:: with SMTP id c1mr29864763pll.113.1588121387832;
-        Tue, 28 Apr 2020 17:49:47 -0700 (PDT)
+        bh=rN6lzh1HO7SQ5a1mJWUzVv7pQ/WYiEXJe4nN1cTa5qQ=;
+        b=ArMhhAqtjbJUiwgqJhRXdxmMZovBA7FswEPSQWsiqxgyRXRy60uZ4i69x+1k7x6RVv
+         oW4xuFYtFufjwppQZFRXarHN4QJM1oSuS5orB4lZK4jMMhcFK+to2vE8qbn8aw3oj1CW
+         ye7Qpf0FmcofuYHPnS8vGW5XsHc66HpNS9E4Xhzu1GdQjLKtEgdcGeLQmLi6cV0HwNKu
+         RCmInsRPzZhmL8XqBO7BuyXSy47V4rAaFI3wVqgdfqdsJnkjTJAgAa8J3CVpbQ2KJpCU
+         yfxKcOItFVVPfy7VaRXR/EuRZJzRAbr5rwJWgGlA6j6LSdr9eAoPXXHLRF3WMZ9uX3RL
+         yjKQ==
+X-Gm-Message-State: AGi0PuYW5VPblAkkWWYQ4jXNWkdajh7SHJ4modMQf1npQ8te42kg7Rb0
+        onTpW3R11S+LVFcZfuT3ol64BxBlpyY=
+X-Google-Smtp-Source: APiQypJ3CMyOvb8iG4oSBSb6yTfenmSgIpnIcDpYDhZ0ot1VO0Sx06ThIhO9CBG26qDIlXxW/OVNJg==
+X-Received: by 2002:a17:902:690b:: with SMTP id j11mr32585184plk.145.1588121540569;
+        Tue, 28 Apr 2020 17:52:20 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id b3sm14073059pgh.75.2020.04.28.17.49.46
+        by smtp.gmail.com with ESMTPSA id o1sm3114190pjs.35.2020.04.28.17.52.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 17:49:47 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 17:49:45 -0700
+        Tue, 28 Apr 2020 17:52:20 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 17:52:19 -0700
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     Rajendra Nayak <rnayak@codeaurora.org>
 Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
         bjorn.andersson@linaro.org, agross@kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v3 15/17] spi: spi-qcom-qspi: Use OPP API to set clk/perf
- state
-Message-ID: <20200429004945.GP4525@google.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 16/17] arm64: dts: sdm845: Add qspi opps and
+ power-domains
+Message-ID: <20200429005219.GQ4525@google.com>
 References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-16-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-17-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1588080785-6812-16-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <1588080785-6812-17-git-send-email-rnayak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -82,65 +79,46 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi,
 
-On Tue, Apr 28, 2020 at 07:03:03PM +0530, Rajendra Nayak wrote:
-> QSPI needs to vote on a performance state of a power domain depending on
-> the clock rate. Add support for it by specifying the perf state/clock rate
-> as an OPP table in device tree.
+On Tue, Apr 28, 2020 at 07:03:04PM +0530, Rajendra Nayak wrote:
+> Add the power domain supporting performance state and the corresponding
+> OPP tables for the qspi device on sdm845
 > 
 > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Alok Chauhan <alokc@codeaurora.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-spi@vger.kernel.org
 > ---
->  drivers/spi/spi-qcom-qspi.c | 29 ++++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
-> index 3c4f83b..724a658 100644
-> --- a/drivers/spi/spi-qcom-qspi.c
-> +++ b/drivers/spi/spi-qcom-qspi.c
-> @@ -8,6 +8,7 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/spi/spi.h>
->  #include <linux/spi/spi-mem.h>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 67e3b90..1843123 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -3017,6 +3017,30 @@
+>  			status = "disabled";
+>  		};
 >  
-> @@ -139,6 +140,8 @@ struct qcom_qspi {
->  	struct device *dev;
->  	struct clk_bulk_data *clks;
->  	struct qspi_xfer xfer;
-> +	struct opp_table *opp_table;
-> +	bool has_opp_table;
->  	/* Lock to protect xfer and IRQ accessed registers */
->  	spinlock_t lock;
->  };
-> @@ -235,7 +238,7 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
->  		speed_hz = xfer->speed_hz;
->  
->  	/* In regular operation (SBL_EN=1) core must be 4x transfer clock */
-> -	ret = clk_set_rate(ctrl->clks[QSPI_CLK_CORE].clk, speed_hz * 4);
-> +	ret = dev_pm_opp_set_rate(ctrl->dev, speed_hz * 4);
->  	if (ret) {
->  		dev_err(ctrl->dev, "Failed to set core clk %d\n", ret);
->  		return ret;
-> @@ -481,6 +484,20 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->  	master->handle_err = qcom_qspi_handle_err;
->  	master->auto_runtime_pm = true;
->  
-> +	ctrl->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
-> +	if (IS_ERR(ctrl->opp_table)) {
-> +		ret = PTR_ERR(ctrl->opp_table);
-> +		goto exit_probe_master_put;
-> +	}
-> +	/* OPP table is optional */
-> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
-> +	if (!ret) {
-> +		ctrl->has_opp_table = true;
-> +	} else if (ret != -ENODEV) {
-> +		dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
-> +		return ret;
+> +		qspi_opp_table: qspi-opp-table {
+> +			compatible = "operating-points-v2";
+> +
+> +			opp-19200000 {
+> +				opp-hz = /bits/ 64 <19200000>;
+> +				required-opps = <&rpmhpd_opp_min_svs>;
+> +			};
+> +
+> +			opp-100000000 {
+> +				opp-hz = /bits/ 64 <100000000>;
+> +				required-opps = <&rpmhpd_opp_low_svs>;
+> +			};
+> +
+> +			opp-150000000 {
+> +				opp-hz = /bits/ 64 <150000000>;
+> +				required-opps = <&rpmhpd_opp_svs>;
+> +			};
+> +
+> +			opp-300000000 {
+> +				opp-hz = /bits/ 64 <300000000>;
+> +				required-opps = <&rpmhpd_opp_nom>;
+> +			};
+> +		};
 
-		goto exit_probe_master_put;
+move OPP table inside the 'qspi' node (like 'rpmhpd_opp_table',
+'gpu_opp_table' or 'gmu_opp_table').
