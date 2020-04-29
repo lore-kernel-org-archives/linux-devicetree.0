@@ -2,220 +2,162 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8516EC83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CC9C83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 16:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5009120775
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771422073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 16:10:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcCceDfs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E+1sReA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgD2P4B (ORCPT
+        id S1726815AbgD2QKu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:56:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgD2P4B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 11:56:01 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B6ACC03C1AD
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 08:56:01 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k13so3166919wrw.7
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 08:56:01 -0700 (PDT)
+        Wed, 29 Apr 2020 12:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726669AbgD2QKt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:10:49 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D10FC035493
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 09:10:49 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id n24so982964plp.13
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 09:10:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6SbdIQ59kmcGdHm6ojgp2EzHoqCR0BLaadGaF/oBCog=;
-        b=NcCceDfsh6sgDHZl6ErrCGTPbtJPu1JvJRXxiNVGG8LDez75AzT38KKF1LCgL9aM+f
-         HgkSxvwiWX973V8d3628Muidr+dsvtKcsiJ4aTUdWW0g/R4ORU8Vuz9AbrvJkoVWUr8u
-         jQL8l8XpBeuFWi1m5hq83MDgyLiEf7k1TkKHLMxTsCTOXqnctEDpDUYYGpgu5hTB112L
-         frji5sfqUQUx/rJfHOKtlb8oZ0YHTZoN0IkbAq1CNJji0n3ew8EhTaRV54jEC83YnwoW
-         dcMySUL2J71K0ZlOD3nSQtLDZU3gcspJv5iHXO4W02ItvsWZs4Rp8/t2S1+2EmQgaH/U
-         t9sg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=LnuTF6O3dTHufQHM9/HzI8kaM8mgrKqwmBK7x40VgOY=;
+        b=E+1sReA/rPS4Wxrucm7parVrJlgzQBxp+yDdUbgqUHMlrYdMNELOGIHVhOcJgqlnIN
+         Yn60kUWv9AaxuAMIbCj+gZ9BMzowNAPVTCkTraVat3Bb/Way5CrkVk+c0XwyeRZvzZnY
+         wFgxKpzq6evnLk7dg2tGgiTOZ7tr3x+P4kVdU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6SbdIQ59kmcGdHm6ojgp2EzHoqCR0BLaadGaF/oBCog=;
-        b=Dpht3yYB+Tm5en2eo8Bsg43tG2o06KMi89dEh1ajsoqApE71TNvbXKB091M47nlOtI
-         uj1vor87Sy/+6E8Iw7aEgmcUg2OmOkDbuYfk5zfzoZyDiyjjELrmozAVN0uDAjafTvSs
-         BMTUjim3JGh70U0C3l5dPrimKqL6MpesUzA5uAMIAVblSCo171NWN/3Myxj29p9TOUCC
-         Zgo+3yPl8+P/WtPFgs7rJ5+MEP5IovOiYflu6sTXKnJnzcYpu+be+Br0Mca+Kh7enOU3
-         BoRdH9XSCzb7+yLXQH7B5mFyz3babZ5p97ouyE4skSz5hCOTWHTrcb/dpmb/iTfdvqgP
-         g7QQ==
-X-Gm-Message-State: AGi0PuYEqwJEIwahwYYeR6ITHCUYbT/IaZg2LPkT7akbtlta11nip0i3
-        rOaXfImweHxh2owhsI35kmU=
-X-Google-Smtp-Source: APiQypIeTQJgeOACveLBv3JF4+7B9bbhTyJzFntbOd4yG43dHQDhNkjcBoFSOugsyQu7gsz6pwucBg==
-X-Received: by 2002:a5d:4748:: with SMTP id o8mr39187903wrs.422.1588175759874;
-        Wed, 29 Apr 2020 08:55:59 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id i6sm33180448wrc.82.2020.04.29.08.55.58
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=LnuTF6O3dTHufQHM9/HzI8kaM8mgrKqwmBK7x40VgOY=;
+        b=V2wxm+Rguw6golzhBYiGukvKbogVyzH3jPT0wwkU/3U2WlNoYSwOCkpREz6TeXFd5D
+         RbhpIkzcuNQTj4Q2z5WrmPRy2i+00/7Gn06bWdeOuKS5yw4QbdbOECOHCHdWXfJzLa44
+         IG0c20I04mRiJi8QZUEgNR9ks2BXtEYY55yhCbkF1Qw0rUVI8dN8kehKC0EPsmZIFDiv
+         JcxwQ2Z3gxRtVDO68reXf3VgYq3PBVbKZdhm08doNcWcgTz/1FvBmJj/nBHQ+CU6IJbN
+         q2EyF8AKoOdNTSNBc4nA/lXW6RPVD6joOnL+OW2X0f6qeq4INPvnhSAvOCwMofysjV3g
+         +3pg==
+X-Gm-Message-State: AGi0PualzG/fpMJV1vAp9qAHfdjpKduR2rHQl3du6PltijnWOMcR3yO7
+        lyWbuR4GvHGTCEHI5sOXJhz4T+NP+No=
+X-Google-Smtp-Source: APiQypIhbmZV3M+yvQy7EICR9p/bpqweCECRrfH43rHTb+hLEIUs/2b2VFvnPWm9xkrZAjbus9nyFw==
+X-Received: by 2002:a17:902:a586:: with SMTP id az6mr18257939plb.201.1588176648955;
+        Wed, 29 Apr 2020 09:10:48 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id j32sm1319886pgb.55.2020.04.29.09.10.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 08:55:59 -0700 (PDT)
-Subject: Re: [PATCH v5 2/7] mtd: rawnand: rockchip: NFC drivers for RK3308,
- RK3188 and others
-To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
-        heiko@sntech.de, linux-rockchip@lists.infradead.org
-References: <20200426100250.14678-1-yifeng.zhao@rock-chips.com>
- <20200426100250.14678-3-yifeng.zhao@rock-chips.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <4dbe907c-a6c2-a163-0cab-234b08336b5c@gmail.com>
-Date:   Wed, 29 Apr 2020 17:55:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 09:10:47 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 09:10:46 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v3 03/17] arm64: dts: sdm845: Add OPP table for all qup
+ devices
+Message-ID: <20200429161046.GR4525@google.com>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-4-git-send-email-rnayak@codeaurora.org>
+ <20200429000234.GK4525@google.com>
+ <fe4b60f9-8aa6-0173-a67f-2f0f8451ad85@codeaurora.org>
+ <cc425e51-9e27-76a3-8ce6-1a751960ff7a@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200426100250.14678-3-yifeng.zhao@rock-chips.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cc425e51-9e27-76a3-8ce6-1a751960ff7a@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Yifeng,
+On Wed, Apr 29, 2020 at 08:23:30PM +0530, Rajendra Nayak wrote:
+> 
+> On 4/29/2020 7:45 PM, Rajendra Nayak wrote:
+> > 
+> > On 4/29/2020 5:32 AM, Matthias Kaehlcke wrote:
+> > > Hi Rajendra,
+> > > 
+> > > On Tue, Apr 28, 2020 at 07:02:51PM +0530, Rajendra Nayak wrote:
+> > > > qup has a requirement to vote on the performance state of the CX domain
+> > > > in sdm845 devices. Add OPP tables for these and also add power-domains
+> > > > property for all qup instances.
+> > > > 
+> > > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > > > ---
+> > > >   arch/arm64/boot/dts/qcom/sdm845.dtsi | 115 +++++++++++++++++++++++++++++++++++
+> > > >   1 file changed, 115 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > index 8f926b5..36b9fb1 100644
+> > > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > @@ -804,6 +804,25 @@
+> > > >               clock-names = "core";
+> > > >           };
+> > > > +        qup_opp_table: qup-opp-table {
+> > > > +            compatible = "operating-points-v2";
+> > > > +
+> > > > +            opp-19200000 {
+> > > > +                opp-hz = /bits/ 64 <19200000>;
+> > > > +                required-opps = <&rpmhpd_opp_min_svs>;
+> > > > +            };
+> > > > +
+> > > > +            opp-75000000 {
+> > > > +                opp-hz = /bits/ 64 <75000000>;
+> > > > +                required-opps = <&rpmhpd_opp_low_svs>;
+> > > > +            };
+> > > > +
+> > > > +            opp-100000000 {
+> > > > +                opp-hz = /bits/ 64 <100000000>;
+> > > > +                required-opps = <&rpmhpd_opp_svs>;
+> > > > +            };
+> > > > +        };
+> > > > +
+> > > 
+> > > Judging from SDM845 (which has more OPP tables) the convention seems to be
+> > > to add OPP tables to the nodes that use them, which seems reasonable and
+> > > keeps them out of the device list.
+> > > 
+> > > Unfortunately this convention isn't completely suitable for cases like this
+> > > (and the DSI OPPs later in this series), where the same OPP table is used by
+> > > multiple devices. A possible compromise would be to add the table to the
+> > > node of the first device that uses them.
+> > 
+> > Sounds fair, I will do that and respin. Thanks.
+> 
+> Looking into this some more, I see we do have..
+> 
+> static const struct of_device_id of_skipped_node_table[] = {
+>         { .compatible = "operating-points-v2", },
+>         {} /* Empty terminated list */
+> };
+> 
+> ..in drivers/of/platform.c, so its not being added to the device list.
 
-A few more comments below for now (part 2).
+sure, I didn't mean that the OPP table is added by the kernel as a device, but
+that the table breaks with the structure of the DT of device nodes ordered by
+address.
 
-On 4/26/20 12:02 PM, Yifeng Zhao wrote:
+> And atleast in case of qup, I am having to duplicate the OPP tables once for
+> each qup instance. Not to mention, having them inside the first qup device
+> just makes it a little confusing to read who the OPP table belongs to.
 
-[..]
+I'm not advocating for duplicating the OPP tables. An alternative to having
+them in the first QUP device could be to have an dedicated node with shared
+opp tables outside of the device list, similar to thermal-zones.
 
-> +#define	THIS_NAME		"rk-nand"
-
-> +static int rk_nfc_nand_chip_init(struct device *dev, struct rk_nfc *nfc,
-> +				 struct device_node *np)
-> +{
-> +	struct rk_nfc_nand_chip *nand;
-> +	struct nand_chip *chip;
-> +	struct mtd_info *mtd;
-> +	int nsels;
-> +	u32 tmp;
-> +	int ret;
-> +	int i;
-> +
-> +	if (!of_get_property(np, "reg", &nsels))
-> +		return -ENODEV;
-> +	nsels /= sizeof(u32);
-> +	if (!nsels || nsels > NFC_MAX_NSELS) {
-> +		dev_err(dev, "invalid reg property size %d\n", nsels);
-> +		return -EINVAL;
-> +	}
-> +
-> +	nand = devm_kzalloc(dev, sizeof(*nand) + nsels * sizeof(u8),
-> +			    GFP_KERNEL);
-> +	if (!nand)
-> +		return -ENOMEM;
-> +
-> +	nand->nsels = nsels;
-> +	for (i = 0; i < nsels; i++) {
-> +		ret = of_property_read_u32_index(np, "reg", i, &tmp);
-> +		if (ret) {
-> +			dev_err(dev, "reg property failure : %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		if (tmp >= NFC_MAX_NSELS) {
-> +			dev_err(dev, "invalid CS: %u\n", tmp);
-> +			return -EINVAL;
-> +		}
-> +
-> +		if (test_and_set_bit(tmp, &nfc->assigned_cs)) {
-> +			dev_err(dev, "CS %u already assigned\n", tmp);
-> +			return -EINVAL;
-> +		}
-> +
-> +		nand->sels[i] = tmp;
-> +	}
-> +
-> +	chip = &nand->chip;
-> +	chip->controller = &nfc->controller;
-> +
-> +	nand_set_flash_node(chip, np);
-> +	nand_set_controller_data(chip, nfc);
-> +
-> +	chip->options |= NAND_USE_BOUNCE_BUFFER | NAND_NO_SUBPAGE_WRITE;
-> +	chip->bbt_options = NAND_BBT_USE_FLASH | NAND_BBT_NO_OOB;
-> +
-> +	/* set default mode in case dt entry is missing */
-> +	chip->ecc.mode = NAND_ECC_HW;
-> +
-> +	mtd = nand_to_mtd(chip);
-> +	mtd->owner = THIS_MODULE;
-> +	mtd->dev.parent = dev;
-
-> +	mtd->name = THIS_NAME;
-
-The 'mtd->name' shows up somewhere in file tree.
-The rk3288 has 2 nfc's. In theory 2 probes and also 2 device names, so I
-think that we shouldn't use a fixed define for 'mtd->name'.
-Maybe use something like this:
-
-	mtd->name = devm_kasprintf(ctrl->dev, GFP_KERNEL, "%s",
-				   dev_name(ctrl->dev));
-
-> +	mtd_set_ooblayout(mtd, &rk_nfc_ooblayout_ops);
-> +	rk_nfc_hw_init(nfc);
-> +	ret = nand_scan(chip, nsels);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (chip->options & NAND_IS_BOOT_MEDIUM) {
-> +		ret = of_property_read_u32(np, "rockchip-boot-blks", &tmp);
-> +		nand->boot_blks = ret ? 0 : tmp;
-> +
-> +		ret = of_property_read_u32(np, "rockchip-boot-ecc-strength",
-> +					   &tmp);
-> +		nand->boot_ecc = ret ? chip->ecc.strength : tmp;
-> +	}
-> +
-> +	ret = mtd_device_register(mtd, NULL, 0);
-> +	if (ret) {
-> +		dev_err(dev, "mtd parse partition error\n");
-> +		nand_release(chip);
-> +		return ret;
-> +	}
-> +
-> +	list_add_tail(&nand->node, &nfc->chips);
-> +
-> +	return 0;
-> +}
-
-[..]
-
-> +static struct platform_driver rk_nfc_driver = {
-> +	.probe  = rk_nfc_probe,
-> +	.remove = rk_nfc_remove,
-> +	.driver = {
-
-> +		.name  = THIS_NAME,
-
-		.name  = "rockchip-nfc",
-		.name  = "rockchip-nand-controller",
-
-The driver name shows up in the kernel log and is used in combination
-with 'greb'.
-This name should stay in line with all other rockchip drivers.
-
-rockchip-drm
-rockchip-rk3066-hdmi
-rockchip-pm-domain
-rockchip-u3phy
-rockchip-thermal
-
-> +		.of_match_table = rk_nfc_id_table,
-> +		.pm = &rk_nfc_pm_ops,
-> +	},
-> +};
-
-
+I tend to like consistency and the sprinkled in OPP tables break with that,
+but ultimately it's up to Bjorn.
