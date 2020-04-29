@@ -2,157 +2,167 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B63C83004
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D14C83007
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9EA120737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:27:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LO+jJ7eo"
+	by mail.kernel.org (Postfix) with ESMTP id 3C82F20731
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 00:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgD2A1I (ORCPT
+        id S1726472AbgD2AaO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:27:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726348AbgD2A1I (ORCPT
+        Tue, 28 Apr 2020 20:30:14 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:49937 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726423AbgD2AaO (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:27:08 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B12F9C03C1AC
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:27:07 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t7so170628plr.0
-        for <devicetree@vger.kernel.org>; Tue, 28 Apr 2020 17:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8iXe5UNOtvxoBr1fCjKy4YdMeYzknNiZCyX4mZulCO4=;
-        b=LO+jJ7eoH0QlVMnqSphJrRi6uT641MdDBa+ezZ3djwjt/ANTKHuDmNTGrJoKvMsFaI
-         VOyMQfVfm/7bPIVOcJM4ubLmRM6kXo85a3du+bxSRMFPCkk2KozSvLeRlGtoXs76xdN5
-         9h7Uo0QzrfbE6vovnuOGlmuNdqpcnBNQoYIaw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8iXe5UNOtvxoBr1fCjKy4YdMeYzknNiZCyX4mZulCO4=;
-        b=jPqgbW553M+DMro0KLJDKAQhoTPy3c2TqTXNlCUEIe1nSQ5SI3MJFVA6yqqLuupvXX
-         WVjMin+5Kmi6OU1AKHQPr7PufP4QzE6X2WBCpPl/mOzgMwnugqaaciOZLbPcYDaD660K
-         guS1FDWS0GALIYNC2Ke+jXpNTBR52AxdEvILc52SyRtS2V5f/trJoyNO++Py/FFYHRsS
-         b9DO31MLpXcKi4dWPyzFdkMo3ymoClC+XuZvxTanlzG2El5TfbZZHLL14SOf+8E+P1km
-         vxiKYsZPN26cRwbsjKCnFmcTSgDkQC1pVFxMcWWn3WM78xm8OZ5N8x5sNJgCnyqa+vgX
-         womg==
-X-Gm-Message-State: AGi0PuYt7ri3UBVDxHGZoZRPV6RgzrTATNPFm5j+Q1Llb56e7PupB8gg
-        J/KS2/rPMp/WrmOW7HH/CVvIbA==
-X-Google-Smtp-Source: APiQypI+6a5SfLti8h4EiDEynoeN0alrnr64lZsu+93RPaV4oHN2xZFKTrFZ1ItPdNhHeP3XmM18hQ==
-X-Received: by 2002:a17:902:8487:: with SMTP id c7mr28388208plo.251.1588120027129;
-        Tue, 28 Apr 2020 17:27:07 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id g22sm3089515pju.21.2020.04.28.17.27.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2020 17:27:06 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 17:27:05 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/17] arm64: dts: sdm845: Add DSI and MDP OPP tables
- and power-domains
-Message-ID: <20200429002705.GM4525@google.com>
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-8-git-send-email-rnayak@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1588080785-6812-8-git-send-email-rnayak@codeaurora.org>
+        Tue, 28 Apr 2020 20:30:14 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 28 Apr 2020 17:30:13 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 28 Apr 2020 17:30:13 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 45E25AD9; Tue, 28 Apr 2020 17:30:13 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     devicetree@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH v1 1/2] dt-bindings: mfd: Document QTI I2C PMIC controller
+Date:   Tue, 28 Apr 2020 17:30:11 -0700
+Message-Id: <0960b5d17013124d9bbdbe7f28374b3d6c9c026e.1588115326.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1588115326.git.gurus@codeaurora.org>
+References: <cover.1588115326.git.gurus@codeaurora.org>
+In-Reply-To: <cover.1588115326.git.gurus@codeaurora.org>
+References: <cover.1588115326.git.gurus@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 07:02:55PM +0530, Rajendra Nayak wrote:
-> Add the OPP tables for DSI and MDP based on the perf state/clk
-> requirements, and add the power-domains property to specify the
-> scalable power domain.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 59 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 36b9fb1..7a625ad 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -3309,6 +3309,59 @@
->  			#reset-cells = <1>;
->  		};
->  
-> +		mdp_opp_table: mdp-opp-table {
-> +			compatible = "operating-points-v2";
-> +
-> +			opp-19200000 {
-> +				opp-hz = /bits/ 64 <19200000>;
-> +				required-opps = <&rpmhpd_opp_min_svs>;
-> +			};
-> +
-> +			opp-171428571 {
-> +				opp-hz = /bits/ 64 <171428571>;
-> +				required-opps = <&rpmhpd_opp_low_svs>;
-> +			};
-> +
-> +			opp-344000000 {
-> +				opp-hz = /bits/ 64 <344000000>;
-> +				required-opps = <&rpmhpd_opp_svs_l1>;
-> +			};
-> +
-> +			opp-430000000 {
-> +				opp-hz = /bits/ 64 <430000000>;
-> +				required-opps = <&rpmhpd_opp_nom>;
-> +			};
-> +		};
+The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
+multi-function PMIC devices which communicate over the I2C bus.  The
+controller enumerates all child nodes as platform devices, and
+instantiates a regmap interface for them to communicate over the I2C
+bus.
 
-as commented on "[v3,03/17] arm64: dts: sdm845: Add OPP table for all qup
-devices" (https://patchwork.kernel.org/patch/11514693/) this table should
-probably be inside the 'mdp' node.
+The controller also controls interrupts for all of the children platform
+devices.  The controller handles the summary interrupt by deciphering
+which peripheral triggered the interrupt, and which of the peripheral
+interrupts were triggered.  Finally, it calls the interrupt handlers for
+each of the virtual interrupts that were registered.
 
-> +
-> +		dsi_opp_table: dsi-opp-table {
-> +			compatible = "operating-points-v2";
-> +
-> +			opp-19200000 {
-> +				opp-hz = /bits/ 64 <19200000>;
-> +				required-opps = <&rpmhpd_opp_min_svs>;
-> +			};
-> +
-> +			opp-180000000 {
-> +				opp-hz = /bits/ 64 <180000000>;
-> +				required-opps = <&rpmhpd_opp_low_svs>;
-> +			};
-> +
-> +			opp-275000000 {
-> +				opp-hz = /bits/ 64 <275000000>;
-> +				required-opps = <&rpmhpd_opp_svs>;
-> +			};
-> +
-> +			opp-328580000 {
-> +				opp-hz = /bits/ 64 <328580000>;
-> +				required-opps = <&rpmhpd_opp_svs_l1>;
-> +			};
-> +
-> +			opp-358000000 {
-> +				opp-hz = /bits/ 64 <358000000>;
-> +				required-opps = <&rpmhpd_opp_nom>;
-> +			};
-> +		};
-> +
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+---
+Changes from v0:
+- Fixed "FATAL ERROR: Unable to parse input tree" error thrown by `make
+  dt_binding_check`.
 
-depending on the outcome of the discussion mentioned above this might have
-to move into the 'dsi0' node.
+ .../devicetree/bindings/mfd/qcom,i2c-pmic.yaml     | 86 ++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml
+
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml
+new file mode 100644
+index 0000000..42482af
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/qcom,i2c-pmic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. I2C PMIC Interrupt Controller Platform Independent Bindings
++
++description: |
++  The I2C PMIC Controller is used by multi-function PMIC devices which
++  communicate over the I2C bus. An I2C PMIC controller node typically contains
++  one or more child nodes representing the device's peripherals. Each of the
++  peripherals typically has its own driver on the platform bus and will be
++  enumerated by this controller. The controller exposes a regmap to the
++  peripherals to communicate over the I2C bus.
++
++  The controller also controls interrupts for all of the peripherals on the
++  bus. The controller takes a summary interrupt, deciphers which peripheral
++  triggered the interrupt, and which of the peripheral's interrupts were
++  triggered. Finally, it calls the handlers for each of the virtual interrupts
++  that were registered.
++
++  This document describes the common platform independent bindings that apply
++  to all I2C PMIC interrupt controllers.
++
++maintainers:
++  - Guru Das Srinagesh <gurus@codeaurora.org>
++
++properties:
++  compatible:
++    const: qcom,i2c-pmic
++
++  reg:
++    description: 7-bit I2C address of the device.
++    maxItems: 1
++
++  interrupts:
++    description: Summary interrupt specifier.
++
++  interrupt-controller:
++    description: Flag indicating that this device is an interrupt controller.
++
++  "#interrupt-cells":
++    description: Number of cells to encode an interrupt source.
++
++  qcom,periph-map:
++    description: |
++      A contiguous list of u32 arrays where each element specifies the base
++      address of a single peripheral within the chip. This provides a mapping
++      between the summary status register bits and peripheral addresses as each
++      bit in the summary status register represents a peripheral.
++
++      The number of arrays should match the number of summary registers with up
++      to 8 elements each. Within each array, One element per bit of the summary
++      status register in order from the least sigificant bit to the most
++      significant bit.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++
++  pinctrl-names:
++    const: default
++
++  pinctrl-0:
++    description: phandle of the pin configuration.
++    $ref: /schemas/types.yaml#/definitions/phandle
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    qcom,smb138x@8 {
++      compatible = "qcom,i2c-pmic";
++      reg = <0x8>;
++      interrupt-parent = <&tlmm_pinmux>;
++      interrupts = <83 0>;
++      interrupt-controller;
++      #interrupt-cells = <3>;
++      pinctrl-names = "default";
++      pinctrl-0 = <&smb_stat_active>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++      qcom,periph-map = <0x10 0x11 0x12 0x13 0x14 0x16 0x36>;
++    };
++
++...
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
