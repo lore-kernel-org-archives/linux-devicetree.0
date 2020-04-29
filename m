@@ -2,187 +2,135 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5E3C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1740FC83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4F21208E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588196581;
-	bh=gVqHUNjKN4zzGuEIJy47n556tuOP9MZo3cz2lkL4JIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fvFGFTcHjR4itOwjWO6syxmKkDF8gAY18Q9Dp10OZaconl0NseQ5bVNjYgqqKR18K
-	 f4JsP1X5R/G+p2FKsNCnIgeyUguDKdZzJl5Cy+SMgo0d/smzsPzVZCu017rItHjHoe
-	 H035KBiPyZX0cy/Hi2ZA72L5ORUUpUUuKYgJ9rb0=
+	by mail.kernel.org (Postfix) with ESMTP id F01A120B1F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgD2Vm7 (ORCPT
+        id S1726961AbgD2VyH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:42:59 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42421 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbgD2Vm6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 17:42:58 -0400
-Received: by mail-oi1-f193.google.com with SMTP id i13so3256801oie.9;
-        Wed, 29 Apr 2020 14:42:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZN/QRY3OxMls9AHONLpA7W00pKe4yt6lczGLbOe3TCs=;
-        b=OHP5FA4ujpCRCDbhz0uB+PWV436h924hAc+l/c/RFiPSSn/cjAzioveog6bgAmdLLx
-         IHDLNRAnUbrNC2i7cs4nQbvbK+7sOsfgbPxeCoijUtqNo92Xed8yVNl1DDQ+3wsoLo54
-         02HzvovPYfSvExkoAvSG/MaroUr7mlckLDtoSNqR/HtLWXIJXY87jEyuRbnFYHnNHLmm
-         YGCpmrT4XR4fAGASTXUN3MSDOjpB+l2geNfAvRsAYQgjg9psAxdFFj1H2KYq6Vfi6c1Z
-         FUzB6QGx1ckBJ8Tm1LPftWcHQpctpLbzspqrhODLr3K58ckttT1PnYTwAT93eFV6jc1f
-         f6Aw==
-X-Gm-Message-State: AGi0Pub/C7SwQXyyCQUL1OL5l0T+izsX5gjIezwa6PJR+0luz6A9J2Wo
-        jafNZ3UwMywJRdzXZnzSqg==
-X-Google-Smtp-Source: APiQypKCxdqv61B1T1NpBM6xwpLAjHJI0zpy60RiRUAzF2x8pqxnzmCc+fmPja7HqOoybilLjjX3bQ==
-X-Received: by 2002:aca:4c13:: with SMTP id z19mr258695oia.79.1588196576073;
-        Wed, 29 Apr 2020 14:42:56 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j42sm766426ooi.5.2020.04.29.14.42.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 14:42:55 -0700 (PDT)
-Received: (nullmailer pid 17398 invoked by uid 1000);
-        Wed, 29 Apr 2020 21:42:54 -0000
-Date:   Wed, 29 Apr 2020 16:42:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        saravanan sekar <sravanhome@gmail.com>,
-        andy.shevchenko@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v10 1/6] dt-bindings: mfd: add document bindings for
- mp2629
-Message-ID: <20200429214254.GA9175@bogus>
-References: <20200417085003.6124-1-sravanhome@gmail.com>
- <20200417085003.6124-2-sravanhome@gmail.com>
- <20200418155308.681df38f@archlinux>
- <50ffb42e-4080-415e-dd3d-e38f7b0a6071@gmail.com>
- <20200418170619.155222fa@archlinux>
- <20200420071910.GH3737@dell>
+        Wed, 29 Apr 2020 17:54:07 -0400
+Received: from muru.com ([72.249.23.125]:51748 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbgD2VyH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 17:54:07 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id E73E4810A;
+        Wed, 29 Apr 2020 21:54:53 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Brian Hutchinson <b.hutchman@gmail.com>,
+        Graeme Smecher <gsmecher@threespeedlogic.com>,
+        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: [PATCHv2 00/15] Update omaps to use drivers/clocksource timers
+Date:   Wed, 29 Apr 2020 14:53:47 -0700
+Message-Id: <20200429215402.18125-1-tony@atomide.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420071910.GH3737@dell>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 08:19:10AM +0100, Lee Jones wrote:
-> On Sat, 18 Apr 2020, Jonathan Cameron wrote:
-> 
-> > On Sat, 18 Apr 2020 17:01:17 +0200
-> > saravanan sekar <sravanhome@gmail.com> wrote:
-> > 
-> > > Hi Jonathan,
-> > > 
-> > > On 18/04/20 4:53 pm, Jonathan Cameron wrote:
-> > > > On Fri, 17 Apr 2020 10:49:58 +0200
-> > > > Saravanan Sekar <sravanhome@gmail.com> wrote:
-> > > >  
-> > > >> Add device tree binding information for mp2629 mfd driver.
-> > > >>
-> > > >> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > >> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > >> ---
-> > > >>   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 61 +++++++++++++++++++
-> > > >>   1 file changed, 61 insertions(+)
-> > > >>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > >>
-> > > >> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > >> new file mode 100644
-> > > >> index 000000000000..b25b29259d67
-> > > >> --- /dev/null
-> > > >> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > >> @@ -0,0 +1,61 @@
-> > > >> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > >> +%YAML 1.2
-> > > >> +---
-> > > >> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-> > > >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > >> +
-> > > >> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
-> > > >> +
-> > > >> +maintainers:
-> > > >> +  - Saravanan Sekar <sravanhome@gmail.com>
-> > > >> +
-> > > >> +description: |
-> > > >> +  MP2629 is a PMIC providing battery charging and power supply for smartphones,
-> > > >> +  wireless camera and portable devices. Chip is controlled over I2C.
-> > > >> +
-> > > >> +  The battery charge management device handles battery charger controller and
-> > > >> +  ADC IIO device for battery, system voltage
-> > > >> +
-> > > >> +properties:
-> > > >> +  compatible:
-> > > >> +    const: mps,mp2629
-> > > >> +
-> > > >> +  reg:
-> > > >> +    maxItems: 1
-> > > >> +
-> > > >> +  interrupts:
-> > > >> +    maxItems: 1
-> > > >> +
-> > > >> +  interrupt-controller: true
-> > > >> +
-> > > >> +  "#interrupt-cells":
-> > > >> +    const: 2
-> > > >> +    description:
-> > > >> +      The first cell is the IRQ number, the second cell is the trigger type.
-> > > >> +
-> > > >> +required:
-> > > >> +  - compatible
-> > > >> +  - reg
-> > > >> +  - interrupts
-> > > >> +  - interrupt-controller
-> > > >> +  - "#interrupt-cells"
-> > > >> +
-> > > >> +examples:
-> > > >> +  - |
-> > > >> +    #include <dt-bindings/interrupt-controller/irq.h>
-> > > >> +    #include <dt-bindings/input/linux-event-codes.h>
-> > > >> +    i2c@7e205000 {  
-> > > > I thought the general trend for i2c devices was to leave the i2c
-> > > > part 'vague'.
-> > > >
-> > > >      i2c {
-> > > >            #address-cells = <1>;
-> > > >            #size-cells = <0>;
-> > > >           
-> > > >            pmic@4b.. etc  
-> > > I agree with you and initial patch was as like above, but Lee was 
-> > > somehow unhappy and not satisfied with
+Hi all,
 
-Jonathan is correct.
+Here's v2 series to udpate omaps to use drivers/clocksource timers for
+the 32k counter and dmtimer, and to remove the old legacy platform code.
+Please review and test.
 
-> > > 
-> > > my explanations. Please find more info on v4.
-> > 
-> > Ah. Curious.  Oh well - over to Rob for a definitive answer!
-> 
-> I haven't seen this spoken about before.  The comments were based
-> solely on my own views of, the example should provide a solid, valid,
-> potentially working block for people to use as a reference.
+I've updated the timer-ti-dm-systimer.c patch based on the comments from
+Daniel, and also updated the dts files accordingly.
 
-I agree that the part matching this schema should be. The rest is just 
-boilerplate.
+Then for merging when folks are happy with this series, Daniel if you
+can please apply the first three patches into an immutable branch it
+would be great.
 
-> Would an I2C node missing an address be a valid DTS/DTSI entry?
+Regards,
 
-i2c-gpio?
-
-Rob
+Tony
 
 
+Tony Lindgren (15):
+  clocksource/drivers/timer-ti-32k: Add support for initializing
+    directly
+  dt-bindings: timer: add ti,dmtimer compatible for for system timers
+  clocksource/drivers/timer-ti-dm: Add clockevent and clocksource
+    support
+  clk: ti: dm816: enable sysclk6_ck on init
+  bus: ti-sysc: Ignore timer12 on secure omap3
+  ARM: OMAP2+: Add omap_init_time_of()
+  ARM: dts: Configure system timers for am335x
+  ARM: dts: Configure system timers for am437x
+  ARM: dts: Configure system timers for omap4
+  ARM: dts: Configure system timers for omap5 and dra7
+  ARM: dts: Configure system timers for omap3
+  ARM: dts: Configure system timers for ti81xx
+  ARM: dts: Configure system timers for omap2
+  ARM: OMAP2+: Drop old timer code for dmtimer and 32k counter
+  bus: ti-sysc: Timers no longer need legacy quirk handling
 
+ .../devicetree/bindings/timer/ti,timer.txt    |   1 +
+ arch/arm/boot/dts/am33xx-l4.dtsi              |   6 +-
+ arch/arm/boot/dts/am33xx.dtsi                 |  24 +
+ arch/arm/boot/dts/am3517.dtsi                 |  28 +-
+ arch/arm/boot/dts/am4372.dtsi                 |  24 +
+ arch/arm/boot/dts/am437x-l4.dtsi              |   7 +-
+ arch/arm/boot/dts/dm814x.dtsi                 |  78 ++-
+ arch/arm/boot/dts/dm816x.dtsi                 |  82 ++-
+ arch/arm/boot/dts/dra7-l4.dtsi                |   7 +-
+ arch/arm/boot/dts/dra7.dtsi                   |  11 +
+ arch/arm/boot/dts/omap2.dtsi                  |  31 +-
+ arch/arm/boot/dts/omap2420.dtsi               |  69 ++-
+ arch/arm/boot/dts/omap2430.dtsi               |  69 ++-
+ arch/arm/boot/dts/omap3-beagle.dts            |  33 +
+ arch/arm/boot/dts/omap3-devkit8000.dts        |  33 +
+ arch/arm/boot/dts/omap3.dtsi                  | 135 ++++-
+ arch/arm/boot/dts/omap4-l4.dtsi               |   4 +-
+ arch/arm/boot/dts/omap4.dtsi                  |  11 +
+ arch/arm/boot/dts/omap5-l4.dtsi               |   4 +-
+ arch/arm/boot/dts/omap5.dtsi                  |  11 +
+ arch/arm/mach-omap2/Makefile                  |   4 +-
+ arch/arm/mach-omap2/board-generic.c           |  32 +-
+ arch/arm/mach-omap2/common.h                  |   7 +
+ arch/arm/mach-omap2/omap_hwmod_2420_data.c    |  20 -
+ arch/arm/mach-omap2/omap_hwmod_2430_data.c    |  19 -
+ .../omap_hwmod_2xxx_interconnect_data.c       |   8 -
+ .../mach-omap2/omap_hwmod_2xxx_ipblock_data.c |  47 --
+ .../omap_hwmod_33xx_43xx_common_data.h        |   2 -
+ .../omap_hwmod_33xx_43xx_interconnect_data.c  |   8 -
+ .../omap_hwmod_33xx_43xx_ipblock_data.c       |  62 --
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |  10 -
+ arch/arm/mach-omap2/omap_hwmod_3xxx_data.c    | 146 +----
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |  45 --
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c    |  90 ---
+ arch/arm/mach-omap2/omap_hwmod_54xx_data.c    |  89 ---
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c     | 176 ------
+ arch/arm/mach-omap2/omap_hwmod_81xx_data.c    |  74 ---
+ arch/arm/mach-omap2/omap_hwmod_common_data.h  |   3 -
+ arch/arm/mach-omap2/timer.c                   | 568 +-----------------
+ drivers/bus/ti-sysc.c                         |  25 +-
+ drivers/clk/ti/clk-816x.c                     |   1 +
+ drivers/clocksource/Makefile                  |   1 +
+ drivers/clocksource/timer-ti-32k.c            |  48 +-
+ drivers/clocksource/timer-ti-dm-systimer.c    | 511 ++++++++++++++++
+ 44 files changed, 1179 insertions(+), 1485 deletions(-)
+ create mode 100644 drivers/clocksource/timer-ti-dm-systimer.c
+
+-- 
+2.26.2
