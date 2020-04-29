@@ -2,177 +2,280 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCB2C8300A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3CFC83008
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04BC32073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8302C21973
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:37:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eUH/mXiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgD2K1Q convert rfc822-to-8bit (ORCPT
+        id S1726681AbgD2KhL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:27:16 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47875 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbgD2K1P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 06:27:15 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 91395C0002;
-        Wed, 29 Apr 2020 10:27:11 +0000 (UTC)
-Date:   Wed, 29 Apr 2020 12:27:10 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-Subject: Re: [PATCH v2 06/12] mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS
- for timeouts
-Message-ID: <20200429122710.291d54ff@xps13>
-In-Reply-To: <cf4f4d00-7cfd-d0df-3004-9fd534e62bd0@st.com>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
-        <1586966256-29548-7-git-send-email-christophe.kerello@st.com>
-        <20200427202212.0235d987@xps13>
-        <0e2c9a6a-aa21-7814-9af8-629de6568fab@st.com>
-        <20200429113529.5ddc3ad9@xps13>
-        <b6b31f36-8e8f-4042-2587-0dcad82aafc5@st.com>
-        <20200429120632.7bce63e6@xps13>
-        <cf4f4d00-7cfd-d0df-3004-9fd534e62bd0@st.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Wed, 29 Apr 2020 06:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbgD2KhK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 06:37:10 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E73AC03C1AE
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 03:37:10 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k1so1901919wrx.4
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 03:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Uw1e05S8KatpGPOOd/irQmwNBAm1B+DP9MNoizxV2OU=;
+        b=eUH/mXizgIYj8EmR9kncyzWIwY2AwvUW1fw776agYWymjhRz0tuizHx7JCyGmz9dhE
+         NX9Zq2vwkwA1CC7+b1LXT3m1VphgWZ7nwKfnHAvSB7g3FmH4eEsdZWur+gqJcnPbXpQA
+         ISY6UFnLV56wLNznKUWVxs3A9N14NsRkpPhGndyB2iDIllyQSYJe4rrbUQ8gjSck5b3D
+         5uKjCN8g26CKB0NbMwqJf2hkwrtYDhDZqBvAiPbz/PEhvD9hbi9whM4pimqh7Xsbvb6s
+         G4iomcOiZXNL1Vc9QTGBX78RmxIZHpKT9j0ZBnL1LjrC7trCIvzI+SY5uij7BIPtSUQu
+         CFIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Uw1e05S8KatpGPOOd/irQmwNBAm1B+DP9MNoizxV2OU=;
+        b=UFJ6LUK5QO0XsVSTcj9sbbST20GS9ClbFrcXsA/M5fFDYZUihVGUKfbmvfDOWAag3P
+         vJGRBuYJuu7zZUw8lp5HH0cmnnt9FSr2MlrU20n5amE6BGE26kp8ulNdKI2tdUL8mk53
+         GVN8AGbsxYrIN9c6p+stTN3eBMbEY5NPkyVlYQTf9l6TEo4BpDRm2MtLZcEMsWsioOH1
+         yr9aRXbRJug/nlLDKH9FqBmS6Et1QHMA7yU+d6HwWlpzZ4YnaTf058QTtFJA8JY05E4G
+         5XrF6HjJaYjX10yB2dGg7O+nNAC/mYuN9169XyaQDQ/rukVl//P+4FqbRcruF1kwsqrN
+         0SJA==
+X-Gm-Message-State: AGi0PuZY0kU9BumZBABjGsY4GDxG3IPap2ceuilQwemIgLYHQ6ANnXRE
+        Nrudy0M/X6swWwlXFXYZhKJwkA==
+X-Google-Smtp-Source: APiQypIRQ2H5DPDaNrKlkpwyTjU5Mm7vVZtMl+9/1EoZpCSOImgpdBMycYdvWOJWpBFo8XvgJqioZw==
+X-Received: by 2002:adf:f34f:: with SMTP id e15mr39230195wrp.275.1588156628996;
+        Wed, 29 Apr 2020 03:37:08 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:d494:5741:b700:698f])
+        by smtp.gmail.com with ESMTPSA id f23sm6899576wml.4.2020.04.29.03.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 03:37:08 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
+Cc:     lukasz.luba@arm.com, Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-pm@vger.kernel.org (open list:THERMAL),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 2/4] dt-bindings: thermal: Add the idle cooling device
+Date:   Wed, 29 Apr 2020 12:36:40 +0200
+Message-Id: <20200429103644.5492-2-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200429103644.5492-1-daniel.lezcano@linaro.org>
+References: <20200429103644.5492-1-daniel.lezcano@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Christophe,
+Some devices are not able to cool down by reducing their voltage /
+frequency because it could be not available or the system does not
+allow voltage scaling. In this configuration, it is not possible to
+use this strategy and the idle injection cooling device can be used
+instead.
 
-Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 29 Apr
-2020 12:13:18 +0200:
+One idle cooling device is now present for the CPU as implemented by
+the combination of the idle injection framework belonging to the power
+capping framework and the thermal cooling device. The missing part is
+the DT binding providing a way to describe how the cooling device will
+work on the system.
 
-> On 4/29/20 12:06 PM, Miquel Raynal wrote:
-> > Hi Christophe,
-> > 
-> > Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 29 Apr
-> > 2020 11:41:44 +0200:
-> >   
-> >> On 4/29/20 11:35 AM, Miquel Raynal wrote:  
-> >>> Hi Christophe,
-> >>>
-> >>> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 29 Apr
-> >>> 2020 11:27:43 +0200:  
-> >>>    >>>> Hi Miquèl,  
-> >>>>
-> >>>> On 4/27/20 8:22 PM, Miquel Raynal wrote:  
-> >>>>> Hi Christophe,
-> >>>>>
-> >>>>> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
-> >>>>> 2020 17:57:30 +0200:  
-> >>>>>     >>>> This patch removes the constant FMC2_TIMEOUT_US.  
-> >>>>>> FMC2_TIMEOUT_MS is set to 5 seconds and this constant is used
-> >>>>>> each time that we need to wait (except when the timeout value
-> >>>>>> is set by the framework)
-> >>>>>>
-> >>>>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >>>>>> ---
-> >>>>>>     drivers/mtd/nand/raw/stm32_fmc2_nand.c | 11 +++++------
-> >>>>>>     1 file changed, 5 insertions(+), 6 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> >>>>>> index ab53314..f159c39 100644
-> >>>>>> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> >>>>>> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> >>>>>> @@ -37,8 +37,7 @@
-> >>>>>>     /* Max ECC buffer length */
-> >>>>>>     #define FMC2_MAX_ECC_BUF_LEN		(FMC2_BCHDSRS_LEN * FMC2_MAX_SG)  
-> >>>>>>     >> -#define FMC2_TIMEOUT_US			1000  
-> >>>>>> -#define FMC2_TIMEOUT_MS			1000
-> >>>>>> +#define FMC2_TIMEOUT_MS			5000  
-> >>>>>>     >>   /* Timings */  
-> >>>>>>     #define FMC2_THIZ			1
-> >>>>>> @@ -525,9 +524,9 @@ static int stm32_fmc2_ham_calculate(struct nand_chip *chip, const u8 *data,
-> >>>>>>     	u32 sr, heccr;
-> >>>>>>     	int ret;  
-> >>>>>>     >> -	ret = readl_relaxed_poll_timeout(fmc2->io_base + FMC2_SR,  
-> >>>>>> -					 sr, sr & FMC2_SR_NWRF, 10,
-> >>>>>> -					 FMC2_TIMEOUT_MS);
-> >>>>>> +	ret = readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR,
-> >>>>>> +						sr, sr & FMC2_SR_NWRF, 1,
-> >>>>>> +						1000 * FMC2_TIMEOUT_MS);  
-> >>>>>
-> >>>>> Is the _atomic suffix needed here? If yes it would deserve a separate
-> >>>>> patch with Fixes/Stable tags.  
-> >>>>>     >>  
-> >>>> I have currently not seen any issues. So, I will remove this modification as we will move to regmap_read_poll_timeout in patch 10.  
-> >>>>   >>>>>>     	if (ret) {  
-> >>>>>>     		dev_err(fmc2->dev, "ham timeout\n");
-> >>>>>>     		return ret;
-> >>>>>> @@ -1315,7 +1314,7 @@ static int stm32_fmc2_waitrdy(struct nand_chip *chip, unsigned long timeout_ms)
-> >>>>>>     	/* Check if there is no pending requests to the NAND flash */
-> >>>>>>     	if (readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR, sr,
-> >>>>>>     					      sr & FMC2_SR_NWRF, 1,
-> >>>>>> -					      FMC2_TIMEOUT_US))
-> >>>>>> +					      1000 * FMC2_TIMEOUT_MS))
-> >>>>>>     		dev_warn(fmc2->dev, "Waitrdy timeout\n");  
-> >>>>>>     >>   	/* Wait tWB before R/B# signal is low */  
-> >>>>>
-> >>>>> You change the timeouts from 1ms to 5s.
-> >>>>>
-> >>>>> Maybe 5s is a little bit too much IMHO but we don't really care as this
-> >>>>> is a timeout. However 1ms is tight. If you are changing this value
-> >>>>> because it triggers error (eg. when the machine is loaded), then it is
-> >>>>> a fix and should appear like it.
-> >>>>>
-> >>>>> Thanks,
-> >>>>> Miquèl  
-> >>>>>     >>  
-> >>>> No errors currently happens.
-> >>>> During our stress tests, in a overloaded system, we have seen that we could be close to 1 second, even if we never met this value.
-> >>>> So, to be safe, I have set this timeout to 5 seconds.
-> >>>> As it is just a timeout value, I have not seen any side effect.
-> >>>> I am using the same timeout constant to avoid to have one timeout per cases.  
-> >>>
-> >>> Something is wrong in my mind:
-> >>> You say you observe delays of almost up to 1 second, but the polling
-> >>> currently happens on 1000 us = 1ms, either you had timeouts or I
-> >>> misread something?
-> >>>
-> >>> Thanks,
-> >>> Miquèl  
-> >>>    >>  
-> >> Hi Miquèl,
-> >>
-> >> My fault. For this polling, we never met 1 ms.
-> >> The 1 second observed was on the sequencer when we read/write a page (as it the same timeout value that is used)  
-> > 
-> > OK I get it. So perhaps you can give these details in the commit log to
-> > explain why you use 5 seconds instead of one.
-> > 
-> > Thanks,
-> > Miquèl
-> >   
-> 
-> Hi Miquèl,
-> 
-> A proposal could also be to split this patch:
->   - a first patch that is using only one timeout value.
->   - a second patch that is increasing the value to 5 seconds.
-> 
-> Regards,
-> Christophe Kerello.
+A first iteration was done by making the cooling device to point to
+the idle state. Unfortunately it does not make sense because it would
+need to duplicate the idle state description for each CPU in order to
+have a different phandle and make the thermal internal framework
+happy.
 
+It was proposed to add an cooling-cells to <3>, unfortunately the
+thermal framework is expecting a value of <2> as stated by the
+documentation and it is not possible from the cooling device generic
+code to loop this third value to the back end cooling device.
 
-Given the situation, both are fine as long as everything is clearly
-explained in the commit log :)
+Another proposal was to add a child 'thermal-idle' node as the SCMI
+does. This approach allows to have a self-contained configuration for
+the idle cooling device without colliding with the cpufreq cooling
+device which is based on the CPU node. In addition, it allows to have
+the cpufreq cooling device and the idle cooling device to co-exist
+together as shown in the example.
 
-Thanks,
-Miquèl
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ - V4:
+   - Added Rob Herring reviewed-by
+ - V3:
+   - Removed extra line with tab inside
+ - V2:
+   - Fixed comment type
+   - Added dual license
+   - Fixed description s/begins to/should/
+   - Changed name s/duration/duration-us/
+   - Changed name s/latency/exit-latency-us/
+   - Removed types for latency / duration
+   - Fixed s/idle-thermal/thermal-idle/
+---
+ .../bindings/thermal/thermal-idle.yaml        | 145 ++++++++++++++++++
+ 1 file changed, 145 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+
+diff --git a/Documentation/devicetree/bindings/thermal/thermal-idle.yaml b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+new file mode 100644
+index 000000000000..7a922f540934
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+@@ -0,0 +1,145 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2020 Linaro Ltd.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/thermal-idle.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Thermal idle cooling device binding
++
++maintainers:
++  - Daniel Lezcano <daniel.lezcano@linaro.org>
++
++description: |
++  The thermal idle cooling device allows the system to passively
++  mitigate the temperature on the device by injecting idle cycles,
++  forcing it to cool down.
++
++  This binding describes the thermal idle node.
++
++properties:
++   $nodename:
++     const: thermal-idle
++     description: |
++        A thermal-idle node describes the idle cooling device properties to
++        cool down efficiently the attached thermal zone.
++
++   '#cooling-cells':
++      const: 2
++      description: |
++         Must be 2, in order to specify minimum and maximum cooling state used in
++         the cooling-maps reference. The first cell is the minimum cooling state
++         and the second cell is the maximum cooling state requested.
++
++   duration-us:
++      description: |
++         The idle duration in microsecond the device should cool down.
++
++   exit-latency-us:
++      description: |
++         The exit latency constraint in microsecond for the injected
++         idle state for the device. It is the latency constraint to
++         apply when selecting an idle state from among all the present
++         ones.
++
++required:
++  - '#cooling-cells'
++
++examples:
++  - |
++    #include <dt-bindings/thermal/thermal.h>
++
++    // Example: Combining idle cooling device on big CPUs with cpufreq cooling device
++    cpus {
++            #address-cells = <2>;
++            #size-cells = <0>;
++
++            /* ... */
++
++                 cpu_b0: cpu@100 {
++                         device_type = "cpu";
++                         compatible = "arm,cortex-a72";
++                         reg = <0x0 0x100>;
++                         enable-method = "psci";
++                         capacity-dmips-mhz = <1024>;
++                         dynamic-power-coefficient = <436>;
++                         #cooling-cells = <2>; /* min followed by max */
++                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
++                         thermal-idle {
++                                 #cooling-cells = <2>;
++                                 duration-us = <10000>;
++                                 exit-latency-us = <500>;
++                         };
++                };
++
++                cpu_b1: cpu@101 {
++                        device_type = "cpu";
++                        compatible = "arm,cortex-a72";
++                        reg = <0x0 0x101>;
++                        enable-method = "psci";
++                        capacity-dmips-mhz = <1024>;
++                        dynamic-power-coefficient = <436>;
++                        #cooling-cells = <2>; /* min followed by max */
++                        cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
++                        thermal-idle {
++                                #cooling-cells = <2>;
++                                duration-us = <10000>;
++                                exit-latency-us = <500>;
++                        };
++                 };
++
++          /* ... */
++
++    };
++
++    /* ... */
++
++    thermal_zones {
++         cpu_thermal: cpu {
++                polling-delay-passive = <100>;
++                polling-delay = <1000>;
++
++                /* ... */
++
++                trips {
++                        cpu_alert0: cpu_alert0 {
++                                    temperature = <65000>;
++                                    hysteresis = <2000>;
++                                    type = "passive";
++                        };
++
++                        cpu_alert1: cpu_alert1 {
++                                    temperature = <70000>;
++                                    hysteresis = <2000>;
++                                    type = "passive";
++                        };
++
++                        cpu_alert2: cpu_alert2 {
++                                    temperature = <75000>;
++                                    hysteresis = <2000>;
++                                    type = "passive";
++                        };
++
++                        cpu_crit: cpu_crit {
++                                    temperature = <95000>;
++                                    hysteresis = <2000>;
++                                    type = "critical";
++                        };
++                };
++
++                cooling-maps {
++                        map0 {
++                             trip = <&cpu_alert1>;
++                             cooling-device = <&{/cpus/cpu@100/thermal-idle} 0 15 >,
++                                              <&{/cpus/cpu@101/thermal-idle} 0 15>;
++                        };
++
++                        map1 {
++                             trip = <&cpu_alert2>;
++                             cooling-device =
++                                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++                                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++                       };
++                };
++          };
++    };
+-- 
+2.17.1
+
