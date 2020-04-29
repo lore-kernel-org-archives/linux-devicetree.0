@@ -2,151 +2,170 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E1AC83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 09:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9981C83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 09:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFCF20661
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 09:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C375C2074A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 09:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejwhGHj3"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Na+Wj74z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgD2J2b (ORCPT
+        id S1726560AbgD2Jb3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:28:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbgD2J2b (ORCPT
+        Wed, 29 Apr 2020 05:31:29 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11630 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726423AbgD2Jb2 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:28:31 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B353C03C1AD
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 02:28:31 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g12so1231440wmh.3
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 02:28:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UeUVwObSkM6EFVAzScmIyMGT/gPf7YTekn6m0H+ie8w=;
-        b=ejwhGHj3Y5NZCDzmcm3w8UM0m5vKpiydbk8ev228iv3dQxNch/UX6yK/Faq6WKXXhE
-         ZfDqOa2pLA+KioOpoYsQh3NtsKUsYkMnsqN4phoKcrQabCC0GNAQJdq1s5UvDxcFjEKm
-         Bvjqf03wydSLN21yQE9QQDBGgfug50XFzNgN6SVa5uqG5KS6Zi01nfXht1Xahj7hthIQ
-         hp9F1qnFFQj4ixE7MoA/pNVnQJiez9l6ISoE8FXbzPDioNIJLn/R/Hsutn15pWbRw3Zs
-         JDr2I9casLccS7vLFpshf+um/Dd1UEGO9tFXZQOkbhPEThexvbNmnTcZAptURxMPhSku
-         ZeZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UeUVwObSkM6EFVAzScmIyMGT/gPf7YTekn6m0H+ie8w=;
-        b=mUv9ud4QLHGid8dUJlYKYCrJlXKwXAlUTEP6xBL/tzyZzuMYoD+u2500W1AVtdUf23
-         FL1GNdYP7dpC0Xw3oBGGn22NTQ3Tf5TwbyiPEyOS8LiV1NZ9cVVtPCW3Bsh4SyZukVVd
-         YQfAfZIcVfTutI1POcGstInocHwt16KHcqRjWFZ6J1LSEB48yxkZz7n1jEUBFUfokh3g
-         qABvEg4XZ4OLLefzpw7Mh6/6bGmOSK3u6k4lLaJxTYlr40g3eKd3VIwqrmor1JWLPKgv
-         M2M321E5csQsNiP2ahK7CJOSUv+yAVGzbA/CMm8ugtVWEUxoqT7aXETuZDCKXY81RAJu
-         k78w==
-X-Gm-Message-State: AGi0PubOFw+XaSWkR03kIPHnUQuZA2SOsM4MqZtPQJTWkTKef4s0aaiR
-        c2PCJSbOEveMLKpmXVfyq38=
-X-Google-Smtp-Source: APiQypKUQaJgSoMixHmfMayvIF7NPOrs0jASPDWStT/ot5oGircRfIYNDPagR39Q27smhLgHapbrAw==
-X-Received: by 2002:a05:600c:2214:: with SMTP id z20mr2363156wml.189.1588152510143;
-        Wed, 29 Apr 2020 02:28:30 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g74sm7058726wme.44.2020.04.29.02.28.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 02:28:29 -0700 (PDT)
-Subject: Re: [PATCH v5 1/7] dt-bindings: mtd: Describe Rockchip RK3xxx NAND
- flash controller
+        Wed, 29 Apr 2020 05:31:28 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T9QQA7009878;
+        Wed, 29 Apr 2020 11:31:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=DRjQYztleGVSiDwTizC2lxz1DCDBXrRlNa50jKUHHJc=;
+ b=Na+Wj74zfR2NIBXfPk/efWyfHb+B7utgS3kgr6bnLeGH3k+bB3soaIG7zA3YhDiXZP1S
+ s3gPfT4pA3WHL+dhLEEh/dVakow4UAXkG2RtytHlC3cxF12fK7ISJb1C8NkvBzcQaOoq
+ NTsNQE62FcpzG7mABhYo5lekMkFJS+sJtfZMNbdt6hdR/yM2OJe2SdPs9CldkARVdU6f
+ 5CZNnznzgnlHQjK7yuCLOw2aN1cf1LiaYX5mXAs/NdvQRsQzqG4ERNeR/4KqIFXNfbiX
+ 20+pC7ySrt7TMAdTYDkAQchy7dAnR49j0rCsxvsKwy4yuE7ltYSBeXFv8OZuGmF2eele HQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30mhq65djh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 11:31:11 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0BD1710002A;
+        Wed, 29 Apr 2020 11:31:10 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E6209207570;
+        Wed, 29 Apr 2020 11:31:09 +0200 (CEST)
+Received: from [10.211.9.35] (10.75.127.44) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Apr
+ 2020 11:31:08 +0200
+Subject: Re: [PATCH v2 07/12] mtd: rawnand: stm32_fmc2: cleanup
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Yifeng Zhao <yifeng.zhao@rock-chips.com>, richard@nod.at,
-        vigneshr@ti.com, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-mtd@lists.infradead.org, heiko@sntech.de,
-        linux-rockchip@lists.infradead.org
-References: <20200426100250.14678-1-yifeng.zhao@rock-chips.com>
- <20200426100250.14678-2-yifeng.zhao@rock-chips.com>
- <4a83e5d2-90cc-1db7-cdfd-47b7ceb4fcef@gmail.com>
- <20200429111314.5f15d72b@xps13>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <21ecb12e-43d9-581a-7d85-79b62be358e8@gmail.com>
-Date:   Wed, 29 Apr 2020 11:28:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+CC:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+ <1586966256-29548-8-git-send-email-christophe.kerello@st.com>
+ <20200427203314.798b3c4e@xps13>
+From:   Christophe Kerello <christophe.kerello@st.com>
+Message-ID: <bb4a6377-2cbd-f990-0c55-cb393292aee9@st.com>
+Date:   Wed, 29 Apr 2020 11:31:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20200429111314.5f15d72b@xps13>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200427203314.798b3c4e@xps13>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_03:2020-04-28,2020-04-29 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Miquel,
+Hi Miquèl,
 
-On 4/29/20 11:13 AM, Miquel Raynal wrote:
-> Hi Johan,
+On 4/27/20 8:33 PM, Miquel Raynal wrote:
+> Hi Christophe,
 > 
-> Johan Jonker <jbx6244@gmail.com> wrote on Wed, 29 Apr 2020 10:53:30
-> +0200:
+> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
+> 2020 17:57:31 +0200:
 > 
->> Hi Yifeng,
+>> This patch renames functions and local variables to be ready to use
+>> stm32_fmc2 structure.
 >>
->>> On Sun, Apr 26, 2020 at 06:02:44PM +0800, Yifeng Zhao wrote:  
->>>> Documentation support for Rockchip RK3xxx NAND flash controllers
->>>>
->>>> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
->>>> ---
->>>>
->>>> Changes in v5:
->>>> - Fix some wrong define
->>>> - Add boot-medium define
->>>> - Remove some compatible define
->>>>
->>>> Changes in v4:
->>>> - The compatible define with rkxx_nfc
->>>> - Add assigned-clocks
->>>> - Fix some wrong define
->>>>
->>>> Changes in v3:
->>>> - Change the title for the dt-bindings
->>>>
->>>> Changes in v2: None
->>>>
->>>>  .../mtd/rockchip,nand-controller.yaml         | 124 ++++++++++++++++++
->>>>  1 file changed, 124 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml  
->>
->> The name of this file is based on Miquel's opinion, but the
->> compatibility strings, (for which robh has given a 'reviewed by' tag) in
->> version 4 don't fit with this format.
+>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+>> ---
 > 
-> What do you mean? Is the file name restricted somehow? I just don't
-> want a compatible with just "nand" in it because this word is too vague
-> as it defines: a bus, a spec, a chip, people are also confusing it with
-> the controller and sometimes with the ECC engine too. "nfc" is okay
-> though.
+>> -static int stm32_fmc2_setup_interface(struct nand_chip *chip, int chipnr,
+>> -				      const struct nand_data_interface *conf)
+>> +static int stm32_fmc2_nfc_setup_interface(struct nand_chip *chip, int chipnr,
+>> +					  const struct nand_data_interface *cf)
+> 
+> I suppose you s/conf/cf/ because of the 80 chars boundary. In this case
+> I don't mind crossing it, I don't think it is better to rename the
+> conf parameter for this reason.
+> 
+
+Yes, you are right. I have modified it because of 80 chars boundary.
+I will keep conf in v3.
+
+>>   {
+>>   	const struct nand_sdr_timings *sdrt;
+>>   
+>> -	sdrt = nand_get_sdr_timings(conf);
+>> +	sdrt = nand_get_sdr_timings(cf);
+>>   	if (IS_ERR(sdrt))
+>>   		return PTR_ERR(sdrt);
+>>   
+>>   	if (chipnr == NAND_DATA_IFACE_CHECK_ONLY)
+>>   		return 0;
+>>   
+>> -	stm32_fmc2_calc_timings(chip, sdrt);
+>> -	stm32_fmc2_timings_init(chip);
+>> +	stm32_fmc2_nfc_calc_timings(chip, sdrt);
+>> +	stm32_fmc2_nfc_timings_init(chip);
+>>   
+>>   	return 0;
+>>   }
+>>   
+> 
+> [...]
+> 
+>>   
+>> -static struct platform_driver stm32_fmc2_driver = {
+>> -	.probe	= stm32_fmc2_probe,
+>> -	.remove	= stm32_fmc2_remove,
+>> +static struct platform_driver stm32_fmc2_nfc_driver = {
+>> +	.probe	= stm32_fmc2_nfc_probe,
+>> +	.remove	= stm32_fmc2_nfc_remove,
+>>   	.driver	= {
+>> -		.name = "stm32_fmc2_nand",
+>> -		.of_match_table = stm32_fmc2_match,
+>> -		.pm = &stm32_fmc2_pm_ops,
+>> +		.name = "stm32_fmc2_nfc",
+>> +		.of_match_table = stm32_fmc2_nfc_match,
+>> +		.pm = &stm32_fmc2_nfc_pm_ops,
+>>   	},
+>>   };
+>> -module_platform_driver(stm32_fmc2_driver);
+>> +module_platform_driver(stm32_fmc2_nfc_driver);
+>>   
+>> -MODULE_ALIAS("platform:stm32_fmc2_nand");
+>> +MODULE_ALIAS("platform:stm32_fmc2_nfc");
+>>   MODULE_AUTHOR("Christophe Kerello <christophe.kerello@st.com>");
+>> -MODULE_DESCRIPTION("STMicroelectronics STM32 FMC2 nand driver");
+>> +MODULE_DESCRIPTION("STMicroelectronics STM32 FMC2 nfc driver");
+> 
+> I would prefer: s/nfc/NFC/ here please.
+> 
+
+It will be modified in v3.
+
+Regards,
+Christophe Kerello.
+
+>>   MODULE_LICENSE("GPL v2");
+> 
+> With these two nits,
+> 
+> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > 
 > Thanks,
 > Miquèl
 > 
-
-With the review of my binding string rockchip,rk3066-hdmi robh advised
-to use the binding compatible string and add '.txt' to it for the file name.
-
-Is it OK for you to have a file name:
-  rockchip,nand-controller.yaml
-
-and a little bit different compatibility string:
-  rockchip,rk3066-nfc
-
-Kind regards,
-
-Johan
