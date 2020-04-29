@@ -2,94 +2,94 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38834C83007
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E84CC83007
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 054152076B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7122076B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="J1Foq9Oa"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SRxN1tAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgD2WAS (ORCPT
+        id S1728034AbgD2WBf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:00:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726871AbgD2WAS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:00:18 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8462CC03C1AE;
-        Wed, 29 Apr 2020 15:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SU1lWpCnN4KpLvmDuejl0gdjsgj91EnjRHLqH1AwXoM=; b=J1Foq9OaB+iP4PYEBrX39RUdo
-        tJ5tsJ8/9rST4bb7FzV62t+KI4JNsBIjYzvw8juY/7TRNXfOh+TcPTWOMCXKjTPnLyueveQNu94W0
-        OthGAP2QVE3xZbSZlzsNdFf3HsnN55X2CQlXD6mCcnMVa3Dze7EsdAVIpExgNhVHMwpCga7xLDGH7
-        +AUuXkxpeg7HIapJHUiTSVLBgWxmB/U79IUkOjT+lqInAWQ1sMQash19DdQBJNN7hX81zGwRPuo+3
-        +bx9E9ZeZQHPaMFeloKfkyhapBWC8KctXdFN7X+1Zs+gCglwkM6DGzVH+BXV7wE2XT79ZDjtCJO4u
-        rLXtBwNvA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54122)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jTukH-0001ra-Vx; Wed, 29 Apr 2020 22:59:58 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jTukF-0001SH-KI; Wed, 29 Apr 2020 22:59:55 +0100
-Date:   Wed, 29 Apr 2020 22:59:55 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 04/18] ARM: debug-ll: Add support for r8a7742
-Message-ID: <20200429215955.GN1551@shell.armlinux.org.uk>
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 29 Apr 2020 18:01:35 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6513 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgD2WBe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 18:01:34 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea9f8c20000>; Wed, 29 Apr 2020 14:59:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 Apr 2020 15:01:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 Apr 2020 15:01:33 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
+ 2020 22:01:33 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 29 Apr 2020 22:01:33 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.152]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ea9f93b0001>; Wed, 29 Apr 2020 15:01:32 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH v11 8/9] dt-bindings: reset: Add ID for Tegra210 VI reset
+Date:   Wed, 29 Apr 2020 15:00:05 -0700
+Message-ID: <1588197606-32124-9-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588197415-13747-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588197570; bh=KEZ1lHNwQNYea9tamUq6xhOd3Wa4inGS2Z794lURij8=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=SRxN1tAF8pPlJNtIV1thqZC51jZOSTXRr6Db2VCXSTLSsMPoCzLjlKzdvnf7qIDdY
+         sOB5wJ6mXSMrOk96Y/Ox+caXZdyHasYtqzsgRkbTwzSPV4UzVk1HDG2MILuCsN56xO
+         cg0e3Nslkveh7dHWLniRWRkNhsolh2h8fWcKJfOMqGfRqUNDyaXBNj3JbapK8K09z2
+         wq0onR2mwemUvSSEE4gtzz3OPJ+gGBq02R/l3ZV79QnPjU3nai8X9B0WrIvZElaE8U
+         fWCHGgfEPNLV1RkgL1JQrLRgPThnJ4w8fZt8Fmj1hOiZ4nQIfmPfm8oWzBBaSEbwpb
+         cF2hWi4AjXvtQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:56:41PM +0100, Lad Prabhakar wrote:
-> @@ -1701,6 +1709,7 @@ config DEBUG_UART_PHYS
->  	default 0xe6e60000 if DEBUG_RCAR_GEN2_SCIF0
->  	default 0xe6e68000 if DEBUG_RCAR_GEN2_SCIF1
->  	default 0xe6ee0000 if DEBUG_RCAR_GEN2_SCIF4
-> +	default 0xe6c60000 if DEBUG_RCAR_GEN2_SCIFA2
+This patch adds ID for Tegra210 VI controller reset to use with
+device tree.
 
-Hi,
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ include/dt-bindings/reset/tegra210-car.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-This is ordered by address.  Please keep it so.
-
-Thanks.
-
+diff --git a/include/dt-bindings/reset/tegra210-car.h b/include/dt-bindings/reset/tegra210-car.h
+index 9dc84ec..8755946 100644
+--- a/include/dt-bindings/reset/tegra210-car.h
++++ b/include/dt-bindings/reset/tegra210-car.h
+@@ -10,5 +10,6 @@
+ #define TEGRA210_RESET(x)		(7 * 32 + (x))
+ #define TEGRA210_RST_DFLL_DVCO		TEGRA210_RESET(0)
+ #define TEGRA210_RST_ADSP		TEGRA210_RESET(1)
++#define TEGRA210_RST_VI			20
+ 
+ #endif	/* _DT_BINDINGS_RESET_TEGRA210_CAR_H */
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+2.7.4
+
