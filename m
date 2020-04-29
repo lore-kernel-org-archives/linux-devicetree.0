@@ -2,231 +2,214 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74080C83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2401AC83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0792073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F244D2085B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 08:17:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ECJAvqak"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="keE4AtNX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RMY1ao3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgD2ICl (ORCPT
+        id S1726535AbgD2IRh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:02:41 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55132 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726175AbgD2ICl (ORCPT
+        Wed, 29 Apr 2020 04:17:37 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:59309 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726355AbgD2IRh (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:02:41 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T82Tc2000920;
-        Wed, 29 Apr 2020 10:02:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=xAKjtR7pf94l044PtIdkC1ZExxD4NPo7DesKo4PrcN0=;
- b=ECJAvqakrfmc6W3Gk6rr/m6ljTZDc5CCcVoECs20CuUENnn9eh2yq74yVHTyJ1Q08jQo
- D0yuJtLf65sJCPYqpssUQc23oDo7FUNBwGEZlJSgmYaP1movHgXD2QnIval1xsMtN7xO
- WzDamNRELBsJNjqQ6HmeRYlwTawwIBAoN//VKGqJhsTLLTMyGq6EqHPKcKlzU+Ep5x/v
- Ujo/MgmnKuVlcAP6nDS9R84FfP4zMui5+Vc14DQu/8Bzk69FREzTp7i5fPsU1o7uLe0h
- D+fqCN7H1CL29MKuYLj8xwWf4PP7NhwjPFCKQORuNK+OcPTLCnqHfcTljeZIRpctsqfL 9w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhjwvwd6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 10:02:33 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1213410002A;
-        Wed, 29 Apr 2020 10:02:31 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 003F1206653;
-        Wed, 29 Apr 2020 10:02:30 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Apr
- 2020 10:02:27 +0200
-Subject: Re: [PATCH 6/6] ARM: dts: stm32mp1: Add IoT Box board support
-To:     <mani@kernel.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200420173124.27416-1-mani@kernel.org>
- <20200420173124.27416-7-mani@kernel.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <210a98b3-feea-8faf-316c-d45e1697ea21@st.com>
-Date:   Wed, 29 Apr 2020 10:02:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 29 Apr 2020 04:17:37 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id DDA5458027F;
+        Wed, 29 Apr 2020 04:17:35 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 29 Apr 2020 04:17:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=9P7/0UPj4dCl+a9BcbVbxC2GgjY
+        drzjTRocMwAg6NXE=; b=keE4AtNXGrlJztPQMSvbYzA7Oe3i6UvofEq6umdij9u
+        Pux+ERdLZV7JTep+VMsZG5IsrOh444fgFLZl9YyywdvLKAfQyoPgjut0SQXoMkNg
+        MHGXl9b7+6Y0BoQr2g6R/VG+4/h/XDkwBMhIKyzGp+wvh/jzyjGKEi5KHohISFaw
+        zDyQU/FXhBE4V54O1LPLiylO4qSIM3zwtnp+CWayu2KXxTCe70//Ddo02l1ODMLd
+        HqMbfr3mIQjQ+R6LTUEL1OCUpwU8FHNX4HBhpxj0i6iKbtSXP/daE4QTvhnsH3Nk
+        ABybXh/saM33t73l/2NT5oiZIoMXeXOWHEW3anNfH6w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=9P7/0U
+        Pj4dCl+a9BcbVbxC2GgjYdrzjTRocMwAg6NXE=; b=RMY1ao3DHXhAEwoo64/9W/
+        Unc27nWmyVqTxWpZ5Kj/qOMTZBmTT1oygte96nP8AWbiNNARfWT1m89qqNQZvzOt
+        VhHjcjw2etl5XyHGqS5Jpf7wsUt3ib3fvRdSmGeAtbw/amfNFZochFNcB2iVOgWl
+        yRZZE4o8nQ96TECjUl9PmH6e5NTt0mXNW+OJaZlB/MR3MEWLKdE2pf9+V319E613
+        wZjfVXqBR9Czu78uTwO0tx1wPomQ8ZZFc7Crru3/nnd5aGWKVIQTfq8HRUAFkd5H
+        m1vCyW9OhIzTe4tXiNmsx4efwtSjoVDDVitG8IfFPZz7tsiCx2DZYw47D0HRtR1g
+        ==
+X-ME-Sender: <xms:HDipXu7Orb7mtmRyTUdO08HJWZCN3zjSbecqDbXTKzWsmuOfubFzag>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgddtvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:HDipXsLkdyB2sG1xAavaIw6hOxf_IdCsCrC8B5mMM8fcgKyElVBcjQ>
+    <xmx:HDipXoefFWuYxW3tciiXC1eTjQbRLfL5kjhrSjrqkKz-5sixcbKEQw>
+    <xmx:HDipXvc_-zYT7s-dvtCYusmxXd0o1fK48WiUkuXcgs1kWs5fbGGbaw>
+    <xmx:HzipXpKkrszbNmiG7DG5lVN15LJp3NBmmxbvcqPOnUAo1aQIYXxioQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2F9863280063;
+        Wed, 29 Apr 2020 04:17:32 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 10:17:29 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: Audio sound card name [was [PATCH 4/7] arm64:
+ dts: allwinner: a64: Add HDMI audio]
+Message-ID: <20200429081729.qa3gqtl5sof2jhem@gilmour.lan>
+References: <20200426120442.11560-1-peron.clem@gmail.com>
+ <20200426120442.11560-5-peron.clem@gmail.com>
+ <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
+ <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
+ <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
+ <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
+ <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
+ <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200420173124.27416-7-mani@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_02:2020-04-28,2020-04-29 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gt2wxqg5mx7iouyn"
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mani
 
-On 4/20/20 7:31 PM, mani@kernel.org wrote:
-> From: Manivannan Sadhasivam <mani@kernel.org>
-> 
-> IoT Box is an IoT gateway device based on Stinger96 board powered by
-> STM32MP1 SoC, designed and manufactured by Shiratech Solutions. This
-> device makes use of Stinger96 board by having it as a base board with
-> one additional mezzanine on top.
-> 
-> Following are the features exposed by this device in addition to the
-> Stinger96 board:
-> 
-> * WiFi/BT
-> * CCS811 VOC sensor
-> * 2x Digital microphones IM69D130
-> * 12x WS2812B LEDs
-> 
-> Following peripherals are tested and known to work:
-> 
-> * WiFi/BT
-> * CCS811
-> 
-> More information about this device can be found in Shiratech website:
-> https://www.shiratech-solutions.com/products/iot-box/
-> 
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> ---
->   arch/arm/boot/dts/Makefile                |  1 +
->   arch/arm/boot/dts/stm32mp157a-iot-box.dts | 92 +++++++++++++++++++++++
->   2 files changed, 93 insertions(+)
->   create mode 100644 arch/arm/boot/dts/stm32mp157a-iot-box.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 966b81dfffd6..455ec6eb6303 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1030,6 +1030,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
->   	stm32h743i-disco.dtb \
->   	stm32mp157a-avenger96.dtb \
->   	stm32mp157a-dk1.dtb \
-> +	stm32mp157a-iot-box.dtb \
->   	stm32mp157a-stinger96.dtb \
->   	stm32mp157c-dhcom-pdk2.dtb \
->   	stm32mp157c-dk2.dtb \
-> diff --git a/arch/arm/boot/dts/stm32mp157a-iot-box.dts b/arch/arm/boot/dts/stm32mp157a-iot-box.dts
-> new file mode 100644
-> index 000000000000..fa1c006ce531
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stm32mp157a-iot-box.dts
-> @@ -0,0 +1,92 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2020 Manivannan Sadhasivam
-> + */
-> +
-> +/dts-v1/;
-> +#include "stm32mp157a-stinger96.dtsi"
-> +
-> +/ {
-> +	model = "Shiratech STM32MP157A IoT Box";
-> +	compatible = "shiratech,stm32mp157a-iot-box", "st,stm32mp157";
-> +
-> +	wlan_pwr: regulator-wlan {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "wl-reg";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpios = <&gpiog 3 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	ccs811@5b {
-> +		compatible = "ams,ccs811";
-> +		reg = <0x5b>;
-> +		wakeup-gpios = <&gpioa 12 GPIO_ACTIVE_LOW>;
-> +		reset-gpios = <&gpioa 11 GPIO_ACTIVE_LOW>;
-> +	};
-> +};
-> +
-> +&pinctrl {
+--gt2wxqg5mx7iouyn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Currently all pinmux definition are done in stm32mp15-pinctrl.dtsi file.
-Can you move it ?
+On Wed, Apr 29, 2020 at 02:24:00PM +0800, Chen-Yu Tsai wrote:
+> On Wed, Apr 29, 2020 at 1:11 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> >
+> > On 2020-04-28 5:49 pm, Cl=E9ment P=E9ron wrote:
+> > > Hi Mark, Rob,
+> > >
+> > > On Tue, 28 Apr 2020 at 18:04, Maxime Ripard <maxime@cerno.tech> wrote:
+> > >>
+> > >> On Tue, Apr 28, 2020 at 10:54:00AM +0200, Cl=E9ment P=E9ron wrote:
+> > >>> Hi Maxime,
+> > >>>
+> > >>> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wro=
+te:
+> > >>>>
+> > >>>> On Sun, Apr 26, 2020 at 02:04:39PM +0200, Cl=E9ment P=E9ron wrote:
+> > >>>>> From: Marcus Cooper <codekipper@gmail.com>
+> > >>>>>
+> > >>>>> Add a simple-soundcard to link audio between HDMI and I2S.
+> > >>>>>
+> > >>>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > >>>>> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > >>>>> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > >>>>> ---
+> > >>>>>   arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 ++++++++++++=
++++++++
+> > >>>>>   1 file changed, 21 insertions(+)
+> > >>>>>
+> > >>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch=
+/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > >>>>> index e56e1e3d4b73..08ab6b5e72a5 100644
+> > >>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > >>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > >>>>> @@ -102,6 +102,25 @@
+> > >>>>>                status =3D "disabled";
+> > >>>>>        };
+> > >>>>>
+> > >>>>> +     hdmi_sound: hdmi-sound {
+> > >>>>> +             compatible =3D "simple-audio-card";
+> > >>>>> +             simple-audio-card,format =3D "i2s";
+> > >>>>> +             simple-audio-card,name =3D "allwinner,hdmi";
+> > >>>>
+> > >>>> I'm not sure what the usual card name should be like though. I wou=
+ld assume that
+> > >>>> this should be something specific enough so that you're able to di=
+fferentiate
+> > >>>> between boards / SoC so that the userspace can choose a different =
+configuration
+> > >>>> based on it?
+> > >>>
+> > >>> I really don't know what we should use here,
+> > >>> I just have a look at other SoC:
+> > >>> rk3328: "HDMI"
+> > >>> rk3399: "hdmi-sound"
+> > >>> r8a774c0-cat874: "CAT874 HDMI sound"
+> > >>>
+> > >>> But maybe it's time to introduce proper name:
+> > >>> What about :
+> > >>> pat
+> > >>> sun50i-h6-hdmi
+> > >>
+> > >> It's pretty much what we've been using for the other sound cards we =
+have, so it
+> > >> makes sense to me.
+> > >
+> > > I have a question regarding the simple-audio-card,name.
+> > > In this patch, I would like to introduce a simple-audio-card for the
+> > > Allwinner A64 HDMI.
+> > >
+> > > What should be the preferred name for this sound card?
+> > > "sun50i-a64-hdmi" ? "allwinner, sun50i-a64-hdmi" ?
+> >
+> > I can at least speak for RK3328, and the reasoning there was that as the
+> > user looking at what `aplay -l` says, I don't give a hoot about what the
+> > SoC may be called, I see two cards and I want to know, with the least
+> > amount of uncertainty, which one will make the sound come out of the
+> > port that's labelled "HDMI" on the box ;)
+>=20
+> I agree. The user really doesn't care what SoC the system uses. The only
+> real requirement is to be able to tell which output the card is related
+> to, i.e. is it onboard or an external DAC, is it analog or HDMI, etc..
 
-Otherwise (except commit title) it is ok for me.
+Yeah, but it's exactly the point.
 
-thanks
-alex
+If we also end up with "HDMI" as our card name, then the userspace has no w=
+ay to
+tell anymore if it's running from an rk3328 or an allwinner SoC, or somethi=
+ng
+else entirely. And therefore it cannot really configure anything to work ou=
+t of
+the box anymore.
 
-> +	/*
-> +	 * Note: The SDMMC2 pins lack external pullups on data lines. Hence,
-> +	 * we need to enable it in the SoC.
-> +	 */
-> +	sdmmc2_b4_pins_pull: sdmmc2-b4-pull {
-> +		pins1 {
-> +			pinmux = <STM32_PINMUX('B', 14, AF9)>, /* SDMMC2_D0 */
-> +				 <STM32_PINMUX('B', 15, AF9)>, /* SDMMC2_D1 */
-> +				 <STM32_PINMUX('B', 3, AF9)>, /* SDMMC2_D2 */
-> +				 <STM32_PINMUX('B', 4, AF9)>, /* SDMMC2_D3 */
-> +				 <STM32_PINMUX('G', 6, AF10)>; /* SDMMC2_CMD */
-> +			slew-rate = <1>;
-> +			bias-pull-up;
-> +		};
-> +		pins2 {
-> +			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
-> +			slew-rate = <2>;
-> +			drive-push-pull;
-> +			bias-disable;
-> +		};
-> +	};
-> +};
-> +
-> +/* WiFi */
-> +&sdmmc2 {
-> +	pinctrl-names = "default", "opendrain", "sleep";
-> +	pinctrl-0 = <&sdmmc2_b4_pins_pull>;
-> +	pinctrl-1 = <&sdmmc2_b4_od_pins_b>;
-> +	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a>;
-> +	broken-cd;
-> +	non-removable;
-> +	st,neg-edge;
-> +	bus-width = <1>;
-> +	vmmc-supply = <&wlan_pwr>;
-> +	status = "okay";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	brcmf: bcrmf@1 {
-> +		reg = <1>;
-> +		compatible = "brcm,bcm4329-fmac";
-> +	};
-> +};
-> +
-> +/* Bluetooth */
-> +&uart4 {
-> +	/* Note: HW flow control is broken, hence using custom CTS/RTS gpios */
-> +	/delete-property/st,hw-flow-ctrl;
-> +	cts-gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
-> +	rts-gpios = <&gpiob 0 GPIO_ACTIVE_LOW>;
-> +	status = "okay";
-> +
-> +	bluetooth {
-> +		shutdown-gpios = <&gpiog 2 GPIO_ACTIVE_HIGH>;
-> +		compatible = "brcm,bcm43438-bt";
-> +		max-speed = <115200>;
-> +	};
-> +};
-> 
+Maxime
+
+--gt2wxqg5mx7iouyn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqk4GQAKCRDj7w1vZxhR
+xdYuAQCSWAhkZ+elqEcbpxFkCF5lqsPWcmn8x+bXetvScA7cMgEAqsSiFvNk9/P6
+g63BaHgYF/RoI8GqAS53kmmdYLmT1gs=
+=tWdH
+-----END PGP SIGNATURE-----
+
+--gt2wxqg5mx7iouyn--
