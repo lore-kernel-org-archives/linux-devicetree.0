@@ -2,147 +2,84 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6D8C83006
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9234C83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED8B206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SQ2U365Q"
+	by mail.kernel.org (Postfix) with ESMTP id B9DA3206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 14:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgD2OVN (ORCPT
+        id S1727948AbgD2OW4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:21:13 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:26933 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726776AbgD2OVN (ORCPT
+        Wed, 29 Apr 2020 10:22:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726811AbgD2OWz (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:21:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588170072; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=JKe1JfOxr0f9z7wtEyL/EQpt0pt2j2AM74fYD+ythHI=; b=SQ2U365Q1RlzwUajExbfZXumEQOV8TdHXcrgQqZT1L8JzAzLT/pjHLjUVN2d0gjzsMSNvS5X
- +aLVMf+SByQnaeSi3nhQqXc6eO0GZJb13jIM2xa+kvlAhk3Kg51wQddJvEUb3D8VeFkO+L+k
- 7pBAXwjj1HcFj/PrZ7WJ0I1zK6M=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea98d55.7fe604e8e500-smtp-out-n05;
- Wed, 29 Apr 2020 14:21:09 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F22CEC433D2; Wed, 29 Apr 2020 14:21:08 +0000 (UTC)
-Received: from [10.131.182.194] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 29 Apr 2020 10:22:55 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99AD0C03C1AD;
+        Wed, 29 Apr 2020 07:22:55 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E48ABC433CB;
-        Wed, 29 Apr 2020 14:21:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E48ABC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v3 15/17] spi: spi-qcom-qspi: Use OPP API to set clk/perf
- state
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-16-git-send-email-rnayak@codeaurora.org>
- <20200429004945.GP4525@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <a0722696-bc66-3841-0ab1-0108b4f33d9f@codeaurora.org>
-Date:   Wed, 29 Apr 2020 19:51:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D92BE2A2054;
+        Wed, 29 Apr 2020 15:22:53 +0100 (BST)
+Date:   Wed, 29 Apr 2020 16:22:49 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
+        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
+        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
+        richard@nod.at, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org,
+        miquel.raynal@bootlin.com, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200429162249.55d38ee8@collabora.com>
+In-Reply-To: <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200429004945.GP4525@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, 29 Apr 2020 18:42:05 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-On 4/29/2020 6:19 AM, Matthias Kaehlcke wrote:
-> Hi,
-> 
-> On Tue, Apr 28, 2020 at 07:03:03PM +0530, Rajendra Nayak wrote:
->> QSPI needs to vote on a performance state of a power domain depending on
->> the clock rate. Add support for it by specifying the perf state/clock rate
->> as an OPP table in device tree.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Cc: Mark Brown <broonie@kernel.org>
->> Cc: Alok Chauhan <alokc@codeaurora.org>
->> Cc: Akash Asthana <akashast@codeaurora.org>
->> Cc: linux-spi@vger.kernel.org
->> ---
->>   drivers/spi/spi-qcom-qspi.c | 29 ++++++++++++++++++++++++++++-
->>   1 file changed, 28 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
->> index 3c4f83b..724a658 100644
->> --- a/drivers/spi/spi-qcom-qspi.c
->> +++ b/drivers/spi/spi-qcom-qspi.c
->> @@ -8,6 +8,7 @@
->>   #include <linux/of.h>
->>   #include <linux/of_platform.h>
->>   #include <linux/pm_runtime.h>
->> +#include <linux/pm_opp.h>
->>   #include <linux/spi/spi.h>
->>   #include <linux/spi/spi-mem.h>
->>   
->> @@ -139,6 +140,8 @@ struct qcom_qspi {
->>   	struct device *dev;
->>   	struct clk_bulk_data *clks;
->>   	struct qspi_xfer xfer;
->> +	struct opp_table *opp_table;
->> +	bool has_opp_table;
->>   	/* Lock to protect xfer and IRQ accessed registers */
->>   	spinlock_t lock;
->>   };
->> @@ -235,7 +238,7 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
->>   		speed_hz = xfer->speed_hz;
->>   
->>   	/* In regular operation (SBL_EN=1) core must be 4x transfer clock */
->> -	ret = clk_set_rate(ctrl->clks[QSPI_CLK_CORE].clk, speed_hz * 4);
->> +	ret = dev_pm_opp_set_rate(ctrl->dev, speed_hz * 4);
->>   	if (ret) {
->>   		dev_err(ctrl->dev, "Failed to set core clk %d\n", ret);
->>   		return ret;
->> @@ -481,6 +484,20 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->>   	master->handle_err = qcom_qspi_handle_err;
->>   	master->auto_runtime_pm = true;
->>   
->> +	ctrl->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
->> +	if (IS_ERR(ctrl->opp_table)) {
->> +		ret = PTR_ERR(ctrl->opp_table);
->> +		goto exit_probe_master_put;
->> +	}
->> +	/* OPP table is optional */
->> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
->> +	if (!ret) {
->> +		ctrl->has_opp_table = true;
->> +	} else if (ret != -ENODEV) {
->> +		dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
->> +		return ret;
-> 
-> 		goto exit_probe_master_put;
+> +
+> +#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
+> +#define EBU_ADDR_MASK		(5 << 4)
 
-thanks for catching this. will fix and respin.
+It's still unclear what ADDR_MASK is for. Can you add a comment
+explaining what it does?
+
+> +#define EBU_ADDR_SEL_REGEN	0x1
 
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> +
+> +	writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
+> +	       EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
+> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
+> +
+> +	writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
+> +	       ebu_host->ebu + EBU_ADDR_SEL(0));
+> +	writel(EBU_MEM_BASE_CS_1 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
+> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
+
+That's super weird. You seem to set EBU_ADDR_SEL(reg) twice. Are you
+sure that's needed, and are we setting EBU_ADDR_SEL(0) here?
