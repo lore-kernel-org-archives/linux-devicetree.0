@@ -2,34 +2,47 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A78C83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 11:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC19C83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 12:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00E792083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 11:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B1F20B80
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 12:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588161916;
+	bh=BHx6Adc582HX/EI7gEWPQT8miSuzlW266b32vPCYeME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r0xxX4MkA2DNMf5wBhtNBea0hHandc7UQX8VSu4v+ikJxM8PrIXvsMBXr+TmGhd6V
+	 TAKtjR1Piu3BwPaN+C2mDVkgqpNY2nL5W8bcK8xNok1ub8qFdw5N7ScMdoh/Q6mkbl
+	 NzRrBem7Os2DbD3d+zao28BTL4mKDSvaYmNVXPhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgD2L7Z (ORCPT
+        id S1726847AbgD2MFP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:59:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41294 "EHLO mx2.suse.de"
+        Wed, 29 Apr 2020 08:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbgD2L7Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:59:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 87199B167;
-        Wed, 29 Apr 2020 11:59:21 +0000 (UTC)
-Date:   Wed, 29 Apr 2020 13:59:21 +0200
-Message-ID: <s5hwo5yjyee.wl-tiwai@suse.de>
-From:   Takashi Iwai <tiwai@suse.de>
+        id S1726773AbgD2MFP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:05:15 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27F8B208FE;
+        Wed, 29 Apr 2020 12:05:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588161914;
+        bh=BHx6Adc582HX/EI7gEWPQT8miSuzlW266b32vPCYeME=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=StwkJngH70s5roDZrk0Vd0cSxaoWgkq9/v/SdRm0VsfveIt/PScZ4eGrr0cCqV5Yi
+         bgXyOwH5HMG8tiQL2kbbdS1mALhVuxn6iUOzJd9DzIKPw4LwXeyZ8XdAOiDFocEt5O
+         rfDMpk4aRr6mied40vjSshkkuH1tA5VSghN9ckWA=
+Date:   Wed, 29 Apr 2020 13:05:11 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Robin Murphy <robin.murphy@arm.com>
 Cc:     Maxime Ripard <maxime@cerno.tech>, Chen-Yu Tsai <wens@csie.org>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
         devicetree <devicetree@vger.kernel.org>,
         Linux-ALSA <alsa-devel@alsa-project.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -41,135 +54,92 @@ Cc:     Maxime Ripard <maxime@cerno.tech>, Chen-Yu Tsai <wens@csie.org>,
         Marcus Cooper <codekipper@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: Audio sound card name [was [PATCH 4/7] arm64: dts: allwinner: a64: Add HDMI audio]
-In-Reply-To: <f9b701d9-0c4e-6e41-1ce8-52adf0f59a2a@arm.com>
+Subject: Re: [linux-sunxi] Re: Audio sound card name [was [PATCH 4/7] arm64:
+ dts: allwinner: a64: Add HDMI audio]
+Message-ID: <20200429120511.GG4201@sirena.org.uk>
 References: <20200426120442.11560-1-peron.clem@gmail.com>
-        <20200426120442.11560-5-peron.clem@gmail.com>
-        <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
-        <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
-        <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
-        <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
-        <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
-        <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
-        <20200429081729.qa3gqtl5sof2jhem@gilmour.lan>
-        <f9b701d9-0c4e-6e41-1ce8-52adf0f59a2a@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
- (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+ <20200426120442.11560-5-peron.clem@gmail.com>
+ <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
+ <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
+ <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
+ <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
+ <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
+ <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
+ <20200429081729.qa3gqtl5sof2jhem@gilmour.lan>
+ <f9b701d9-0c4e-6e41-1ce8-52adf0f59a2a@arm.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RMedoP2+Pr6Rq0N2"
+Content-Disposition: inline
+In-Reply-To: <f9b701d9-0c4e-6e41-1ce8-52adf0f59a2a@arm.com>
+X-Cookie: I know how to do SPECIAL EFFECTS!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 29 Apr 2020 12:43:06 +0200,
-Robin Murphy wrote:
-> 
+
+--RMedoP2+Pr6Rq0N2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Apr 29, 2020 at 11:43:06AM +0100, Robin Murphy wrote:
 > On 2020-04-29 9:17 am, Maxime Ripard wrote:
 > > On Wed, Apr 29, 2020 at 02:24:00PM +0800, Chen-Yu Tsai wrote:
-> >> On Wed, Apr 29, 2020 at 1:11 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> >>>
-> >>> On 2020-04-28 5:49 pm, Clément Péron wrote:
-> >>>> Hi Mark, Rob,
-> >>>>
-> >>>> On Tue, 28 Apr 2020 at 18:04, Maxime Ripard <maxime@cerno.tech> wrote:
-> >>>>>
-> >>>>> On Tue, Apr 28, 2020 at 10:54:00AM +0200, Clément Péron wrote:
-> >>>>>> Hi Maxime,
-> >>>>>>
-> >>>>>> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wrote:
-> >>>>>>>
-> >>>>>>> On Sun, Apr 26, 2020 at 02:04:39PM +0200, Clément Péron wrote:
-> >>>>>>>> From: Marcus Cooper <codekipper@gmail.com>
-> >>>>>>>>
-> >>>>>>>> Add a simple-soundcard to link audio between HDMI and I2S.
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >>>>>>>> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> >>>>>>>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> >>>>>>>> ---
-> >>>>>>>>    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++++
-> >>>>>>>>    1 file changed, 21 insertions(+)
-> >>>>>>>>
-> >>>>>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>>>>>>> index e56e1e3d4b73..08ab6b5e72a5 100644
-> >>>>>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>>>>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >>>>>>>> @@ -102,6 +102,25 @@
-> >>>>>>>>                 status = "disabled";
-> >>>>>>>>         };
-> >>>>>>>>
-> >>>>>>>> +     hdmi_sound: hdmi-sound {
-> >>>>>>>> +             compatible = "simple-audio-card";
-> >>>>>>>> +             simple-audio-card,format = "i2s";
-> >>>>>>>> +             simple-audio-card,name = "allwinner,hdmi";
-> >>>>>>>
-> >>>>>>> I'm not sure what the usual card name should be like though. I would assume that
-> >>>>>>> this should be something specific enough so that you're able to differentiate
-> >>>>>>> between boards / SoC so that the userspace can choose a different configuration
-> >>>>>>> based on it?
-> >>>>>>
-> >>>>>> I really don't know what we should use here,
-> >>>>>> I just have a look at other SoC:
-> >>>>>> rk3328: "HDMI"
-> >>>>>> rk3399: "hdmi-sound"
-> >>>>>> r8a774c0-cat874: "CAT874 HDMI sound"
-> >>>>>>
-> >>>>>> But maybe it's time to introduce proper name:
-> >>>>>> What about :
-> >>>>>> pat
-> >>>>>> sun50i-h6-hdmi
-> >>>>>
-> >>>>> It's pretty much what we've been using for the other sound cards we have, so it
-> >>>>> makes sense to me.
-> >>>>
-> >>>> I have a question regarding the simple-audio-card,name.
-> >>>> In this patch, I would like to introduce a simple-audio-card for the
-> >>>> Allwinner A64 HDMI.
-> >>>>
-> >>>> What should be the preferred name for this sound card?
-> >>>> "sun50i-a64-hdmi" ? "allwinner, sun50i-a64-hdmi" ?
-> >>>
-> >>> I can at least speak for RK3328, and the reasoning there was that as the
-> >>> user looking at what `aplay -l` says, I don't give a hoot about what the
-> >>> SoC may be called, I see two cards and I want to know, with the least
-> >>> amount of uncertainty, which one will make the sound come out of the
-> >>> port that's labelled "HDMI" on the box ;)
-> >>
-> >> I agree. The user really doesn't care what SoC the system uses. The only
-> >> real requirement is to be able to tell which output the card is related
-> >> to, i.e. is it onboard or an external DAC, is it analog or HDMI, etc..
-> >
-> > Yeah, but it's exactly the point.
-> >
+
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
+
 > > If we also end up with "HDMI" as our card name, then the userspace has no way to
 > > tell anymore if it's running from an rk3328 or an allwinner SoC, or something
 > > else entirely. And therefore it cannot really configure anything to work out of
 > > the box anymore.
-> 
-> OK, you're a userspace audio application - enlighten me as to what
-> exact chip you're running on here, and why you need to know:
-> 
+
+> OK, you're a userspace audio application - enlighten me as to what exact
+> chip you're running on here, and why you need to know:
+
 > card 0: HDMI [HDA ATI HDMI]
-> 
+
 > or how about here?
-> 
+
 > card 0: Intel [HDA Intel]
 
-Heh, those are bad examples.  Although the single HD-audio driver
-supports (literally) thousands of different models and hardware
-configurations, it's more or less self-contained; i.e. it needs
-neither UCM nor exotic setups.  IOW, user-space don't need much to
-care about the difference of the hardware.  (Admittedly there are
-subtle things to be done for HD-audio, too, but PA can handle it in a
-generic way, for example.)
+In the case of HDMI for embedded platforms since there is generally no
+control in the audio path it is unlikely to make a *huge* difference,
+though if there are expansion buses or multiple HDMI ports it can be
+useful to help people identify which particular HDMI port it is.  For
+other cards the names are part of userspace working out which config
+file to apply to the card so deduplication can help, and also the
+plastics tend to matter.
 
-OTOH, in general, ASoC drivers do need the individual setups; that's
-almost unavoidable from its design perspective.  Hence, unless the
-identical configuration is needed, it'd be wiser to provide different
-driver names to identify which setup to be applied.
+> With simple-audio-card we're talking about trivial interfaces that often
+> don't expose any controls at all, so there's unlikely to be much
+> 'configuration' for userspace to do beyond choosing which card to output to.
 
+This is a reasonable assumption for HDMI but it is not at all a
+reasonable assumption for simple-audio-card in general - just because
+the links between the SoC and the external components are simple that
+doesn't mean that any of those components are simple, and even if the
+hardware is simple that does not mean that configuration is unimportant
+- the difference between full scale output and appropriate headphone
+volumes is for example *extremely* important.
 
-Takashi
+--RMedoP2+Pr6Rq0N2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6pbXcACgkQJNaLcl1U
+h9Bzugf/c28iLtVw25sffS7FxnwHu5kFpEMA6AESU/nbib3pIGkMPZg+yn69tK3S
+bdnoVTnaJl2n84nFz/STXBtafZ0xebeAN+eZu0Gd7vtygVQlVGBP0QqPBo04u2Ko
+xSfYbaycfHROmTbbL5xIoJ0XaxNOgnZd0epZRpcvNDkDZJ8YvlwoR5Ooi8C/SR9E
+xqmpX9gmh59QtZf3NS5mQ+4PIHwxw35rxIgA1P6mIFRaseuz6njlFAlpKpCfWHy8
+ZOYQ79RmdZDUSkqlOtUToBxkOrVCPHHmr5YoblVd3P3olP4ZBcmpnRuB4+QkxifA
+7T5xU5H+PZPzUMBmDu6Mtx6P+4INhA==
+=xohR
+-----END PGP SIGNATURE-----
+
+--RMedoP2+Pr6Rq0N2--
