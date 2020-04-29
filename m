@@ -2,68 +2,118 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13626C83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 03:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77442C83003
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 03:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E26C5214D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 03:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C11E206D9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 03:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588131052;
-	bh=qIWp40UBMVyqIHUX5jhv/ynDwCsy5pkdSuR+Fpjjbwg=;
+	s=default; t=1588131467;
+	bh=XbNWCnLk1VJPpYjGpv8ddyaXOVe2sfB+lNDckroYR1o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FAC77XE8rUQLBRgexaMP2dVOPBrytSoed1on3MWn5BFjYy2UfxC0ViXX8JvyFT4kA
-	 xZxTQV7Aff5oETTEgS1OkNHB/AG1z5lqdPW4u438RRoO0+ZbtMo0ZrLtbwrJytK6gS
-	 WHwlRDEWslOCXd5Ai90L1KYvUKvhCMVluBWCJs6U=
+	b=IPzvtBdjtC1sshaEW3RVKsM+EPeyDBdkYBqGt4aol2l2iVYy2dktuhJMAP+YTtUZK
+	 SUh17cTdX3VdeH/634TPOgpYdkDUtdQhGgLrhcYJv8GX5AP7c2++y8OqMiosq5yjx+
+	 slcVpFgDHjspZOUZ9IxMhfnYjXaCl1dm0/4aRs7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgD2Daw (ORCPT
+        id S1726530AbgD2Dhq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 23:30:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44220 "EHLO mail.kernel.org"
+        Tue, 28 Apr 2020 23:37:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbgD2Daw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 23:30:52 -0400
+        id S1726399AbgD2Dhq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Apr 2020 23:37:46 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB217206D8;
-        Wed, 29 Apr 2020 03:30:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B7AC206D8;
+        Wed, 29 Apr 2020 03:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588131051;
-        bh=qIWp40UBMVyqIHUX5jhv/ynDwCsy5pkdSuR+Fpjjbwg=;
+        s=default; t=1588131466;
+        bh=XbNWCnLk1VJPpYjGpv8ddyaXOVe2sfB+lNDckroYR1o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D5zHhFGfgDuf9Pm9jITNH4Hal9+bC61h6UF3QWjz18lljYzNFSz6xptM02dowbq6Z
-         4VTb+Aje2aBZfSrn+r6MQdoUYYAKdJES3uZBN5qZ4TNkgDJulngcFpgvVCR3pr+n0E
-         VMfmUfCFC02M/z7mMuV3embpanStmBa7a9hokmXg=
-Date:   Wed, 29 Apr 2020 11:30:46 +0800
+        b=E/4usoYtdF9PVQPYzt54/5009sCBniMu2IzjuKl7ts7q7qrUciiPhA6z2Dt8HaP3R
+         aU7BgKO8q3boSawQOnHhnEQLUybWYF9R1SUAYf0ZPwVGjMJ/VaU06ENJFnXDrMzSM8
+         V/GQ3k0tec/OcBL1S11qEt4X3rqgC3Ch65lEeaVk=
+Date:   Wed, 29 Apr 2020 11:37:41 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, Anson.Huang@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: freescale: imx8mp: update input_val for
- AUDIOMIX_BIT_STREAM
-Message-ID: <20200429033045.GO32592@dragon>
-References: <1587719115-28728-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH] ARM: dts: gw552x: add USB OTG support
+Message-ID: <20200429033740.GP32592@dragon>
+References: <1587748215-9587-1-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587719115-28728-1-git-send-email-shengjiu.wang@nxp.com>
+In-Reply-To: <1587748215-9587-1-git-send-email-tharvey@gateworks.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 05:05:15PM +0800, Shengjiu Wang wrote:
-> Update input_val for AUDIOMIX_BIT_STREAM according to latest RM.
+On Fri, Apr 24, 2020 at 10:10:15AM -0700, Tim Harvey wrote:
+> The GW552x-B board revision adds USB OTG support.
 > 
-> Fixes: 6d9b8d20431f ("arm64: dts: freescale: Add i.MX8MP dtsi support")
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Enable the device-tree node and configure the OTG_ID pin.
+> 
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl-gw552x.dtsi | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+> index dc646b7..133a1e3 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+> @@ -12,8 +12,6 @@
+>  		led1 = &led1;
+>  		led2 = &led2;
+>  		nand = &gpmi;
+> -		usb0 = &usbh1;
+> -		usb1 = &usbotg;
 
-Applied, thanks.
+Have some comments about this change in the commit log?
+
+Shawn
+
+>  	};
+>  
+>  	chosen {
+> @@ -258,6 +256,14 @@
+>  	status = "okay";
+>  };
+>  
+> +&usbotg {
+> +	vbus-supply = <&reg_5p0v>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg>;
+> +	disable-over-current;
+> +	status = "okay";
+> +};
+> +
+>  &wdog1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_wdog>;
+> @@ -359,6 +365,12 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_usbotg: usbotggrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x13059
+> +		>;
+> +	};
+> +
+>  	pinctrl_wdog: wdoggrp {
+>  		fsl,pins = <
+>  			MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
+> -- 
+> 2.7.4
+> 
