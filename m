@@ -2,204 +2,104 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF115C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5D0C83000
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B897C2085B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274D62074A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 15:12:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eNFuYJ9b"
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="dkPv3tWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgD2PKv (ORCPT
+        id S1726948AbgD2PMQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:10:51 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:12391 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726519AbgD2PKv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:10:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588173050; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Uj1kdH+1z3EYbeBHEefFEkAH70TKfLMeVJuy+wrtzT4=; b=eNFuYJ9bIB4pGP2I1ZJozdsOLO6RWDBXiVl92lEaA6NmDpfPRZHHm0wu+ORUODMTpH/zocPj
- pKOMlZDZS05nBhxwzS+X5ndBboB6gRF7jpjEN3Z6IWhD8UtqDWrqIFDrqEAxisYFLSMr8kZ4
- RjipNsHILHU6Im0ImCeOKjexIfo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea998f9.7f1b79ee56c0-smtp-out-n04;
- Wed, 29 Apr 2020 15:10:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A277DC433BA; Wed, 29 Apr 2020 15:10:48 +0000 (UTC)
-Received: from [10.131.182.194] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F1CE6C433CB;
-        Wed, 29 Apr 2020 15:10:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F1CE6C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v3 12/17] media: venus: core: Add support for opp
- tables/perf voting
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        linux-media@vger.kernel.org
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
- <b091dc29-d2e8-ed3f-fe1c-ae60e16d5d78@linaro.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <425a8828-be17-fe79-99f5-9e20eff51b13@codeaurora.org>
-Date:   Wed, 29 Apr 2020 20:40:42 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 11:12:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgD2PMQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 11:12:16 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17477C03C1AE
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 08:12:16 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id m13so1962145otf.6
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 08:12:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Dw9z3skpovx5U+Kokok0Gl+LhbKi7TC3S8cZHyqEUI=;
+        b=dkPv3tWoN9rA8+Bpd+XhqvQdAVTKC5limvdKzHBCx1BarPDm57/tI78fBE7uL+DU13
+         O+AdIpD3a43by+BV6dogoQY6jcRVPQzgoHMQ2/ZyLQ89a8AqDasMiHo+R7jnddEjMysW
+         weDMB8rrapD3D21eqEKS/uTdXAsIUn3UizXUdAER0MkK+RQUQbyR0rmkcFB3iXfF5JjO
+         V4aIZK19mtcUR+rO0sv76y5Tch4CtoYxls2o2TsK222FmVZ4jIxFjdOotGiM8ByBi9XE
+         /HIbF/OzTvGtilnlXBZAlg9tzAenf1Iy9nSCfhDsZztkn6+d0LG5oWPsr4xbTHLYq7Ki
+         Be1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Dw9z3skpovx5U+Kokok0Gl+LhbKi7TC3S8cZHyqEUI=;
+        b=XplACvzbKmPf2h9ODswBwLKs1+8PBQSuqMLt9bOqjF0dX/T1rQPjjUhsqO9LDpcDx7
+         XAGTJIsZQ7OZa/RnZk9ABp5u9amZtbw/IRS0pnyfzRQuv+UT0Lz6R4JDoCTxuSzYvfcF
+         pty5cJ6fyZtNJZQj4PJdH1C2K0jrVnIu4hl+1sfY0HMs7T4uFhr2EVZYbhVYPtW5dL27
+         wjAmUWU1YmIeqrn1jFeTxfkALs/qtX4Ogyq3crxtqlflCqknatJTrvMZ7F4kg5hFHIEO
+         sfsGnflD6M6d4HlsBErQVlQXi4qumDDPKg8FyBL8yU5lvlCbEP2ea8B/eEDcrIMe3fdL
+         5nhw==
+X-Gm-Message-State: AGi0PubryqY31WTi2r2wY/2GTKCTxT0C43JKm4pjhl+HlHQPfB7FUcOm
+        aRqaeH8CrSGcSC8XXC5EcrscwG+NDozkXfL7tZG1lw==
+X-Google-Smtp-Source: APiQypKIJWHbxA5JB3lkWleLMMBByUMCEMnUlnt76a3lN0G0WNuQD4Dk7h+dye5tgPuRW+q4nMRv5v6zQwQumku/iX8=
+X-Received: by 2002:a9d:7dd8:: with SMTP id k24mr26893979otn.33.1588173135382;
+ Wed, 29 Apr 2020 08:12:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b091dc29-d2e8-ed3f-fe1c-ae60e16d5d78@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1587748215-9587-1-git-send-email-tharvey@gateworks.com> <20200429033740.GP32592@dragon>
+In-Reply-To: <20200429033740.GP32592@dragon>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Wed, 29 Apr 2020 08:12:04 -0700
+Message-ID: <CAJ+vNU23EFFjxC4gATy1d1CU7GQQZ8+p+9eiQkF_r4vhR-p+ng@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: gw552x: add USB OTG support
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Stan,
+On Tue, Apr 28, 2020 at 8:37 PM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Fri, Apr 24, 2020 at 10:10:15AM -0700, Tim Harvey wrote:
+> > The GW552x-B board revision adds USB OTG support.
+> >
+> > Enable the device-tree node and configure the OTG_ID pin.
+> >
+> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> > ---
+> >  arch/arm/boot/dts/imx6qdl-gw552x.dtsi | 16 ++++++++++++++--
+> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+> > index dc646b7..133a1e3 100644
+> > --- a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+> > @@ -12,8 +12,6 @@
+> >               led1 = &led1;
+> >               led2 = &led2;
+> >               nand = &gpmi;
+> > -             usb0 = &usbh1;
+> > -             usb1 = &usbotg;
+>
+> Have some comments about this change in the commit log?
+>
 
-On 4/29/2020 8:06 PM, Stanimir Varbanov wrote:
-> Hi Rajendra,
-> 
-> Thanks for the patch!
-> 
-[]..
+Shawn,
 
->>   #include <linux/pm_runtime.h>
->>   #include <media/videobuf2-v4l2.h>
->>   #include <media/v4l2-mem2mem.h>
->> @@ -214,6 +215,20 @@ static int venus_probe(struct platform_device *pdev)
->>   	if (!core->pm_ops)
->>   		return -ENODEV;
->>   
->> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
-> 
-> Should we set opp clkname if opp_of_add_table fails? We have platforms
-> which don't have opp tables in Venus DT node. We have to be backward
-> compatible for them.
+I shouldn't have removed those... will submit a v2. Thank you for catching this!
 
-so the way its designed, you are expected to call dev_pm_opp_set_clkname()
-*before* adding any OPPs from the OPP table.
-As for backward compatibility its already handled by the OPP core now [1]
-which makes sure dev_pm_opp_set_rate() is equivalent to a clk_set_rate()
-in case of a missing OPP table.
-
->> +	if (IS_ERR(core->opp_table))
->> +		return PTR_ERR(core->opp_table);
->> +
->> +	if (core->res->opp_pmdomain) {
->> +		ret = dev_pm_opp_of_add_table(dev);
->> +		if (!ret) {
->> +			core->has_opp_table = true;
->> +		} else if (ret != -ENODEV) {
-> 
-> Is it possible dev_pm_opp_of_add_table() to return EPROBE_DEFER?
-
-Nope, it does not, I had checked.
-
->> +			dev_err(dev, "Invalid OPP table in Device tree\n");
-> 
-> ... if so, please drop dev_err.
-> 
->> +			return ret;
->> +		}
->> +	}
-[]..
-
->> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
->> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
->> @@ -9,6 +9,7 @@
->>   #include <linux/iopoll.h>
->>   #include <linux/kernel.h>
->>   #include <linux/pm_domain.h>
->> +#include <linux/pm_opp.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/types.h>
->>   #include <media/v4l2-mem2mem.h>
->> @@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
->>   
->>   static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
->>   {
->> -	struct clk *clk = core->clks[0];
->>   	int ret;
->>   
->> -	ret = clk_set_rate(clk, freq);
->> +	ret = dev_pm_opp_set_rate(core->dev, freq);
-> 
-> Is this will work for legacy platforms without OPP tables?
-
-yes, see [1] which is already merged in mainline.
-
-> 
-> Also what about the other clocks (vicodec0,1) in this function.
-
-We continue to use clk_set_rate() for those. The performance state
-is associated with only the core clk.
-
->>   	if (ret)
->>   		return ret;
->>   
->> @@ -740,13 +740,15 @@ static int venc_power_v4(struct device *dev, int on)
->>   
->>   static int vcodec_domains_get(struct device *dev)
->>   {
->> +	struct opp_table *opp_table;
->> +	struct device **opp_virt_dev;
->>   	struct venus_core *core = dev_get_drvdata(dev);
->>   	const struct venus_resources *res = core->res;
->>   	struct device *pd;
->>   	unsigned int i;
->>   
->>   	if (!res->vcodec_pmdomains_num)
->> -		return -ENODEV;
->> +		goto skip_pmdomains;
->>   
->>   	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
->>   		pd = dev_pm_domain_attach_by_name(dev,
->> @@ -763,6 +765,24 @@ static int vcodec_domains_get(struct device *dev)
->>   	if (!core->pd_dl_venus)
->>   		return -ENODEV;
->>   
->> +skip_pmdomains:
->> +	if (!res->opp_pmdomain || !core->has_opp_table)
->> +		return 0;
->> +
->> +	/* Attach the power domain for setting performance state */
->> +	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
->> +	if (IS_ERR(opp_table)) {
->> +		return PTR_ERR(opp_table);
->> +	} else if (opp_virt_dev) {
->> +		core->opp_pmdomain = *opp_virt_dev;
->> +		core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
->> +						     DL_FLAG_RPM_ACTIVE |
->> +						     DL_FLAG_PM_RUNTIME |
->> +						     DL_FLAG_STATELESS);
->> +		if (!core->opp_dl_venus)
->> +			return -ENODEV;
-> 
-> I think as you return ENODEV you have to detach opp domain here because
-> vcodec_domains_put() is not called in error path.
-
-Ok, I'll fix that up.
-
-Thanks for the review.
-
-[1] https://lkml.org/lkml/2020/4/8/413
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Tim
