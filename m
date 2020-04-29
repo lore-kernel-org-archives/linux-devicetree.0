@@ -2,95 +2,92 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB57AC83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 03:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5F8C83007
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 03:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D588206D9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 03:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588131767;
-	bh=bojJWi5XJi3ClxQXdVn2A9s6TfcUQxHlWdtAUv5I/gU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FbTMaNTov/ll41Wutqm6EZvm7wrgPcnxScNsdCwc3/7RY44PJNhAknbjckGsT80d8
-	 TKY4ngddV9TAugshiLOYTUNETQD2d++3ZUKlaW+oDcIar/BLO5nlToDsqdhEQEVx//
-	 cIvE0YVilejCYUuzTPJHje/9OpOLz3nj9kuk0dPk=
+	by mail.kernel.org (Postfix) with ESMTP id 296572076A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 03:53:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pum+Q+O5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgD2Dmq (ORCPT
+        id S1726640AbgD2DxI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Apr 2020 23:42:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgD2Dmp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Apr 2020 23:42:45 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D8EF206D8;
-        Wed, 29 Apr 2020 03:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588131765;
-        bh=bojJWi5XJi3ClxQXdVn2A9s6TfcUQxHlWdtAUv5I/gU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pSszIX2Uee13BiiD799bAITkerLbcJvPluBlKNurlmTAiUIMxUhow2p+NqX36zOsv
-         3dFAW5g/eIFAb0ylOIjedjbN9DYxOpGpCsj9ebhjdXkp++3shfLtDL0i2LA+oRqeUQ
-         gQt/afvMMwL1P624kQ8cTi5nTRiw5NE1T7Db5MD0=
-Date:   Wed, 29 Apr 2020 11:42:39 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, Anson.Huang@nxp.com, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM64: dts: freescale: imx8mm: correct VDDARM@1.6GHz
-Message-ID: <20200429034239.GR32592@dragon>
-References: <1587852408-6483-1-git-send-email-yibin.gong@nxp.com>
+        Tue, 28 Apr 2020 23:53:08 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:27427 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726548AbgD2DxI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Apr 2020 23:53:08 -0400
+X-UUID: b3b0f4c0bfa34ad5b826e995e7092c8a-20200429
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=OiZgzIWXliTigMWS4ngHmC2XsFCzxE9JvxbFZlR5Y5A=;
+        b=pum+Q+O5Zp2uxHclGYj9cXsT8SoFWIVRHAE44jy8rMaHtkwvzjTDHCVLKwZDxTSDb9/VXfQbXXqfMb/sFnS8IwTzQxOfFEMzLMCCbzxrLdhCmoEpAwYW4XAhWRMBQea5tVJnzld4V7EYuEZkaxp8o5jG722jRxyzcdvLg8/vvIA=;
+X-UUID: b3b0f4c0bfa34ad5b826e995e7092c8a-20200429
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 915013963; Wed, 29 Apr 2020 11:53:05 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Apr 2020 11:53:03 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Apr 2020 11:53:02 +0800
+Message-ID: <1588132383.16498.2.camel@mtkswgap22>
+Subject: Re: [PATCH v3 1/2] dt-bindings: dmaengine: Add MediaTek
+ Command-Queue DMA controller bindings
+From:   EastL <EastL.Lee@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Date:   Wed, 29 Apr 2020 11:53:03 +0800
+In-Reply-To: <1588125274311004.11906.seg@mailgw02.mediatek.com>
+References: <1587955977-17207-1-git-send-email-EastL.Lee@mediatek.com>
+         <1587955977-17207-2-git-send-email-EastL.Lee@mediatek.com>
+         <1588125274311004.11906.seg@mailgw02.mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587852408-6483-1-git-send-email-yibin.gong@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-SNTS-SMTP: EA5880C4AA2B61D894C249225ED43DB19CC852CE1078F1987B00AF67E97FC2DB2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 06:06:48AM +0800, Robin Gong wrote:
-> Correct VDDARM to 0.95V@1.6Ghz with datasheet.
+T24gTW9uLCAyMDIwLTA0LTI3IGF0IDE2OjMyIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gTW9uLCAyNyBBcHIgMjAyMCAxMDo1Mjo1NiArMDgwMCwgRWFzdEwgd3JvdGU6DQo+ID4gRG9j
+dW1lbnQgdGhlIGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIENvbW1hbmQtUXVldWUg
+RE1BIGNvbnRyb2xsZXINCj4gPiB3aGljaCBjb3VsZCBiZSBmb3VuZCBvbiBNVDY3NzkgU29DIG9y
+IG90aGVyIHNpbWlsYXIgTWVkaWF0ZWsgU29Dcy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBF
+YXN0TCA8RWFzdEwuTGVlQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sICAgICAgICAgfCA5OCArKysrKysrKysrKysr
+KysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5OCBpbnNlcnRpb25zKCspDQo+ID4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210
+ay1jcWRtYS55YW1sDQo+ID4gDQo+IA0KPiBNeSBib3QgZm91bmQgZXJyb3JzIHJ1bm5pbmcgJ21h
+a2UgZHRfYmluZGluZ19jaGVjaycgb24geW91ciBwYXRjaDoNCj4gDQo+IC9idWlsZHMvcm9iaGVy
+cmluZy9saW51eC1kdC1yZXZpZXcvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rt
+YS9tdGstY3FkbWEuZXhhbXBsZS5kdC55YW1sOiBkbWEtY29udHJvbGxlckAxMDIxMjAwMDogaW50
+ZXJydXB0czogW1swLCAxMzksIDhdLCBbMCwgMTQwLCA4XSwgWzAsIDE0MSwgOF1dIGlzIHRvbyBz
+aG9ydA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLmV4YW1wbGUuZHQueWFtbDogZG1hLWNv
+bnRyb2xsZXJAMTAyMTIwMDA6IHJlZzogW1swLCAyNzA2MDYzMzYsIDAsIDEyOF0sIFswLCAyNzA2
+MDY0NjQsIDAsIDEyOF0sIFswLCAyNzA2MDY1OTIsIDAsIDEyOF1dIGlzIHRvbyBzaG9ydA0KPiAN
+Cj4gU2VlIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTI3NzI5Mg0KPiANCj4g
+SWYgeW91IGFscmVhZHkgcmFuICdtYWtlIGR0X2JpbmRpbmdfY2hlY2snIGFuZCBkaWRuJ3Qgc2Vl
+IHRoZSBhYm92ZQ0KPiBlcnJvcihzKSwgdGhlbiBtYWtlIHN1cmUgZHQtc2NoZW1hIGlzIHVwIHRv
+IGRhdGU6DQo+IA0KPiBwaXAzIGluc3RhbGwgZ2l0K2h0dHBzOi8vZ2l0aHViLmNvbS9kZXZpY2V0
+cmVlLW9yZy9kdC1zY2hlbWEuZ2l0QG1hc3RlciAtLXVwZ3JhZGUNCj4gDQo+IFBsZWFzZSBjaGVj
+ayBhbmQgcmUtc3VibWl0Lg0KDQpPSywgSSdsbCBmaXggaXQgaW4gbmV4dCB2ZXJzaW9uLg0KDQo=
 
-Please add more details about the data sheet like version, download
-address, etc.
-
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-
-I know it might be hard to follow, but for historic reason, we use
-subject prefix 'ARM: dts: ...' for arm32 and 'arm64: dts: ...' for arm64
-dts patches on IMX platform.
-
-Shawn
-
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index cc7152e..a226030 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -129,7 +129,7 @@
->  
->  		opp-1600000000 {
->  			opp-hz = /bits/ 64 <1600000000>;
-> -			opp-microvolt = <900000>;
-> +			opp-microvolt = <950000>;
->  			opp-supported-hw = <0xc>, <0x7>;
->  			clock-latency-ns = <150000>;
->  			opp-suspend;
-> -- 
-> 2.7.4
-> 
