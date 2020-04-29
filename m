@@ -4,109 +4,243 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8D7C83000
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AA4C83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5320E20B1F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A97220B1F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588195838;
-	bh=x6wwUTbcTQAfxv4M0Qh7JjVjfFB25HWQLomULmrZdRM=;
+	s=default; t=1588196097;
+	bh=6gjYLt66GpfMZPhBdIj41WT05xMYArcGprhOJAj9rQw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z72ZwYg+y5WlgGlGFzVDS3NmDUPnRYgp00rzK1/2sxCgdFinhsmjTbxFj7XNX8e56
-	 NWKkes2Ih3Q0zbrGcQ7/umJQ0z/yDJm0mZF5GxJDQpj4KsbwBSraaTrwyWxcnx0/uD
-	 gxDZYchBOSIUJ+1cw6GMHLzzXsLT9qefJG0wn+f8=
+	b=ZiNmWcQfS0aNHMIKzwg0RGw6HiaeF8x0w204m/Gtg2iIyEQLqOxwr8bWgHuzJGQ7p
+	 amY7oF0ubvqo+JEcPmH41unfr99HBKsU1tRoI9hCwxq2elqCwSmIorBBbBSYjSauEn
+	 mkrsnTIezuLD1F/hozQ0gW3CeKd7brRJV/+oBjSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgD2Vai (ORCPT
+        id S1727041AbgD2Ve5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:30:38 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:47083 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbgD2Vah (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 17:30:37 -0400
-Received: by mail-oo1-f68.google.com with SMTP id x16so774479oop.13;
-        Wed, 29 Apr 2020 14:30:36 -0700 (PDT)
+        Wed, 29 Apr 2020 17:34:57 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:46150 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbgD2Ve4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 17:34:56 -0400
+Received: by mail-oo1-f65.google.com with SMTP id x16so777184oop.13;
+        Wed, 29 Apr 2020 14:34:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sNKlT+9/zIdQsL5FmjDdatJ2sdOrBvQb7gIEQfxHgsc=;
-        b=oDejzVcHBZpxMOik06C5g+oqWY+IcVQfYJY1IUI+n5ke30tUbHdDOMS5jyi/X2M10c
-         JYbyY+PbvnH1dDmw0F8PF0SkKVN5aHoLiOM/vWoRgxfkD+t7b/rl+VZHyw9ZD/IPkP0P
-         G4RtKrmC9aHGBbGyVcIWelvV9p1D4HOuV7nnW9oX2oCzxW6LrqdVCxDIIfh2h3GqJj7l
-         nBmOI+fxd9WUN7qW8JikAPifQTPp9ptz+A/Iy+woZOSFyCI20zApk7qKgmEQvwZ3Esk1
-         KRjc92czpcs60ZanWBPIiRHidVvyC3gFpMNIS6X19DeY/ywrtgEvGn3+YYyROEX2W2vM
-         PpUQ==
-X-Gm-Message-State: AGi0Pua542Hwep7Kl7tAh/8Uw8yfSlcAz1QOkKd8fVWmIB+W8vS0q16X
-        p1kpLgfISco1PVPa+4DjScVyj8Y=
-X-Google-Smtp-Source: APiQypK+APtg89af1Xjg8bKvZAVWBN2auKSMy5LvFjCDfw9Xw+dgMjfH9LB7Dui73Y7zFNedvbVvyA==
-X-Received: by 2002:a4a:e5c5:: with SMTP id r5mr88626oov.56.1588195836410;
-        Wed, 29 Apr 2020 14:30:36 -0700 (PDT)
+        bh=3wI+m3Lp4Msfhx+NZFQZQ19Jr5Ux1UxLifKvOMueVA0=;
+        b=ihOS09fb0gXUQmecNGTNcYEnD0AAax9ALpoCfJAEGV1/GpZmX9w7ofGtYSLdK2lfOZ
+         S6nJiYBOcb8VfpdpUAW8G34nnCMgwW3vYMgqvD5WrkKCX5Yemsg9lObyMJ5eA2ih3d+5
+         Nk4FR3BJi8zCf2cEr82gWFv0tKw5NGqiwIPt83k0sFAt7J+TXbkAtsLLy7s20urn65fP
+         YTBlinKFZM3Yx6mABJYwPpzh3Nhg2qndh5gnifw/4fWqCZRdr488Vm1ZwYEQs1WhlkEE
+         O6E/joJwu/yZ5dtAzFpJHUyb0mBe9BY4LZjJFmLZLvwPvyvtwywFPSQirnZAA2AIINmP
+         s9CA==
+X-Gm-Message-State: AGi0PuYv1rERRIWXtfqcZaRVhGoysDVpfaKADKOEDQgQSoMShvw6/Asw
+        WZX+L/dFPvlinf62WXKhjJUgOMU=
+X-Google-Smtp-Source: APiQypJz49rbWZlmdBvylWBwgLTfqZmjszuSuHIp91zs1eOOfCrntkS2nHsD2thdWFZSrECHIb/kgQ==
+X-Received: by 2002:a4a:b489:: with SMTP id b9mr64185ooo.71.1588196094960;
+        Wed, 29 Apr 2020 14:34:54 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t13sm684710otr.43.2020.04.29.14.30.35
+        by smtp.gmail.com with ESMTPSA id l21sm775644ooq.18.2020.04.29.14.34.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 14:30:35 -0700 (PDT)
-Received: (nullmailer pid 31939 invoked by uid 1000);
-        Wed, 29 Apr 2020 21:30:34 -0000
-Date:   Wed, 29 Apr 2020 16:30:34 -0500
+        Wed, 29 Apr 2020 14:34:54 -0700 (PDT)
+Received: (nullmailer pid 5820 invoked by uid 1000);
+        Wed, 29 Apr 2020 21:34:53 -0000
+Date:   Wed, 29 Apr 2020 16:34:53 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>
-Cc:     Min Guo <min.Guo@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: phy-mtk-tphy: add the property about
- force_vbus
-Message-ID: <20200429213034.GA29572@bogus>
-References: <1587100986-3104-1-git-send-email-macpaul.lin@mediatek.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8250 pinctrl
+ bindings
+Message-ID: <20200429213453.GA32114@bogus>
+References: <20200417061907.1226490-1-bjorn.andersson@linaro.org>
+ <20200417061907.1226490-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587100986-3104-1-git-send-email-macpaul.lin@mediatek.com>
+In-Reply-To: <20200417061907.1226490-2-bjorn.andersson@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 01:23:05PM +0800, Macpaul Lin wrote:
-> For some platforms, they don't have vbus pin connection between usb's phy
-> and mac. Hence we need to control force_vbus related registers to keep
-> hardware works normal.
-> This patch add the required bool property force_vbus.
+On Thu, Apr 16, 2020 at 11:19:06PM -0700, Bjorn Andersson wrote:
+> Add device tree binding Documentation details for Qualcomm SM8250
+> pinctrl driver.
 > 
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml | 147 ++++++++++++++++++
+>  1 file changed, 147 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> index dd75b676b71d..6b49b651becc 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> @@ -37,6 +37,9 @@ Optional properties (controller (parent) node):
->  		  calibrate
->   - mediatek,src-coef	: coefficient for slew rate calibrate, depends on
->  		  SoC process
-> + - force_vbus	: if the platform has no vbus connection between phy and mac,
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..6dc3b52f47cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
+> @@ -0,0 +1,147 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm8250-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. SM8250 TLMM block
+> +
+> +maintainers:
+> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block found in the
+> +  SM8250 platform.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sm8250-pinctrl
+> +
+> +  reg:
+> +    minItems: 3
+> +    maxItems: 3
+> +
+> +  reg-names:
+> +    items:
+> +      - const: "west"
+> +      - const: "south"
+> +      - const: "north"
+> +
+> +  interrupts:
+> +    description: Specifies the TLMM summary IRQ
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    description:
+> +      Specifies the PIN numbers and Flags, as defined in defined in
+> +      include/dt-bindings/interrupt-controller/irq.h
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description: Specifying the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +  wakeup-parent:
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  '^.*$':
+> +    if:
+> +      type: object
+> +    then:
 
-mediatek,force-vbus
+Needs a $ref to the standard properties.
 
-This is board specific? If SoC specific, you should drop and imply this 
-from the compatible string.
+Would be good to show a child node in the example too. (And try having 
+an error in a standard property type to verify you get an error).
 
-> +		  (force_vbus mode), then this property should be exist.
-> +		  Otherwise not to add this property.
->  
->  Required properties (port (child) node):
->  - reg		: address and length of the register set for the port.
+> +      properties:
+> +        pins:
+> +          description:
+> +            List of gpio pins affected by the properties specified in this
+> +            subnode.
+> +          items:
+> +            oneOf:
+> +              - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9])$"
+> +              - enum: [ sdc2_clk, sdc2_cmd, sdc2_data, ufs_reset ]
+> +          minItems: 1
+> +          maxItems: 36
+> +
+> +        function:
+> +          description:
+> +            Specify the alternative function to be configured for the specified
+> +            pins.
+> +
+> +          enum: [ aoss_cti, atest, audio_ref, cam_mclk, cci_async, cci_i2c,
+> +            cci_timer0, cci_timer1, cci_timer2, cci_timer3, cci_timer4, cri_trng,
+> +            cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
+> +            ddr_pxi2, ddr_pxi3, dp_hot, dp_lcd, gcc_gp1, gcc_gp2, gcc_gp3, gpio,
+> +            ibi_i3c, jitter_bist, lpass_slimbus, mdp_vsync, mdp_vsync0,
+> +            mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s0_data0, mi2s0_data1,
+> +            mi2s0_sck, mi2s0_ws, mi2s1_data0, mi2s1_data1, mi2s1_sck, mi2s1_ws,
+> +            mi2s2_data0, mi2s2_data1, mi2s2_sck, mi2s2_ws, pci_e0, pci_e1,
+> +            pci_e2, phase_flag, pll_bist, pll_bypassnl, pll_clk, pll_reset,
+> +            pri_mi2s, prng_rosc, qdss_cti, qdss_gpio, qspi0, qspi1, qspi2, qspi3,
+> +            qspi_clk, qspi_cs, qup0, qup1, qup10, qup11, qup12, qup13, qup14,
+> +            qup15, qup16, qup17, qup18, qup19, qup2, qup3, qup4, qup5, qup6,
+> +            qup7, qup8, qup9, qup_l4, qup_l5, qup_l6, sd_write, sdc40, sdc41,
+> +            sdc42, sdc43, sdc4_clk, sdc4_cmd, sec_mi2s, sp_cmu, tgu_ch0, tgu_ch1,
+> +            tgu_ch2, tgu_ch3, tsense_pwm1, tsense_pwm2, tsif0_clk, tsif0_data,
+> +            tsif0_en, tsif0_error, tsif0_sync, tsif1_clk, tsif1_data, tsif1_en,
+> +            tsif1_error, tsif1_sync, usb2phy_ac, usb_phy, vsense_trigger ]
+> +
+> +        drive-strength:
+> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> +          default: 2
+> +          description:
+> +            Selects the drive strength for the specified pins, in mA.
+> +
+> +        bias-pull-down: true
+> +
+> +        bias-pull-up: true
+> +
+> +        bias-disable: true
+> +
+> +        output-high: true
+> +
+> +        output-low: true
+> +
+> +      required:
+> +        - pins
+> +        - function
+> +
+> +      additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        pinctrl@1f00000 {
+> +                compatible = "qcom,sm8250-pinctrl";
+> +                reg = <0x0f100000 0x300000>,
+> +                      <0x0f500000 0x300000>,
+> +                      <0x0f900000 0x300000>;
+> +                reg-names = "west", "south", "north";
+> +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +                gpio-ranges = <&tlmm 0 0 180>;
+> +                wakeup-parent = <&pdc>;
+> +        };
 > -- 
-> 2.18.0
+> 2.24.0
+> 
