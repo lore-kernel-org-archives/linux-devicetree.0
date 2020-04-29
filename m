@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D192C8300A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717F7C8300D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE0020757
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA6820757
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 22:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OnTh7Lnf"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="il2yvtid"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgD2WCB (ORCPT
+        id S1727784AbgD2WB0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:02:01 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14834 "EHLO
+        Wed, 29 Apr 2020 18:01:26 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14821 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbgD2WB2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 18:01:28 -0400
+        with ESMTP id S1727057AbgD2WBZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 18:01:25 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea9f8f60000>; Wed, 29 Apr 2020 15:00:22 -0700
+        id <B5ea9f8f20000>; Wed, 29 Apr 2020 15:00:18 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Apr 2020 15:01:28 -0700
+  Wed, 29 Apr 2020 15:01:24 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Apr 2020 15:01:28 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
+        by hqpgpgate101.nvidia.com on Wed, 29 Apr 2020 15:01:24 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
- 2020 22:01:28 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 29 Apr 2020 22:01:28 +0000
+ 2020 22:01:24 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 29 Apr 2020 22:01:24 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.152]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ea9f9360001>; Wed, 29 Apr 2020 15:01:27 -0700
+        id <B5ea9f9330000>; Wed, 29 Apr 2020 15:01:23 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -45,9 +45,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v11 4/9] clk: tegra: Add Tegra210 CSI TPG clock gate
-Date:   Wed, 29 Apr 2020 15:00:01 -0700
-Message-ID: <1588197606-32124-5-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v11 1/9] arm64: tegra: Fix sor powergate clocks and reset
+Date:   Wed, 29 Apr 2020 14:59:58 -0700
+Message-ID: <1588197606-32124-2-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
 References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
@@ -55,55 +55,56 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588197622; bh=/06MYnopqzjyrf2N0nRAUhGBnkcd6r/kBjlHyehzo9I=;
+        t=1588197618; bh=PTc2SyRS9NP+68XdMh+c6cj6nLmKTNHZwxALx6dnzdM=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=OnTh7Lnf95pn1pC0KGnA28A2MYXevs7uvk/iXDD0/bw00Ud5gRMk9YnkptmxeRRuW
-         DmOlMgdoAE6uzgnql1AH+fm0sYBP6/SPlMyUWZuNpT2+bvprKSELYwu3Thq/z3khLC
-         sp2jcDXeBh3y1IDeHCdNY4+Opng0LFI6R1CnHy8+2R5NV4n4+NtvMfNYqcNRmQxPGm
-         gLgZs2GNjEqgbwzx8ky+f3tcGF6M3m5edeBu7b8wwh4ABcBLz6ZHrmX39VHCT8jdu/
-         AvZbMW2FcGqXz+8b18/BF116HcAatcF5ZDo6ZVZYuXFXNUsri/z5rk2q80acG+Pjjj
-         S7tmAdQpkaosw==
+        b=il2yvtidICj4a5bjnABPyAna8tUFqg6pQdx0U6lnEm6+f6ivNFYU0iowbo4AIiVeu
+         mnguu6zmllUaEFO6L5f9CmktgavMQ9dX05USsqddZWOoRdh4nL+3K6zJX9+euWNpVT
+         fi7772XvA2p9XePJwFNCY1Knv3qpYf/OZUYudBrIOTTnxwi7Uf9q4JTp2cyBrTGXFz
+         FKQoYrKuZTptr0pJ5JI3JchEOm7i5fOxOvSFUY+nnSpkbi4LMK6kBnd3XBw143ylBe
+         LQQIRaZruaOpkMbPN6XyimQNbRf2HpwkWd3rSijVUDDgoGoFJN4OzsG8iuM7BCyctd
+         jXNAWISMppWtQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra210 CSI hardware internally uses PLLD for internal test pattern
-generator logic.
+Tegra210 device tree lists csi clock and reset under SOR powergate
+node.
 
-PLLD_BASE register in CAR has a bit CSI_CLK_SOURCE to enable PLLD
-out to CSI during TPG mode.
+But Tegra210 has csicil in SOR partition and csi in VENC partition.
 
-This patch adds this CSI TPG clock gate to Tegra210 clock driver
-to allow Tegra video driver to ungate CSI TPG clock during TPG mode
-and gate during non TPG mode.
+So, this patch includes fix for sor powergate node.
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-tegra210.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index defe3b7..81a879b 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -3035,6 +3035,13 @@ static __init void tegra210_periph_clk_init(void __iomem *clk_base,
- 					     periph_clk_enb_refcnt);
- 	clks[TEGRA210_CLK_DSIB] = clk;
- 
-+	/* csi_tpg */
-+	clk = clk_register_gate(NULL, "csi_tpg", "pll_d",
-+				CLK_SET_RATE_PARENT, clk_base + PLLD_BASE,
-+				23, 0, &pll_d_lock);
-+	clk_register_clkdev(clk, "csi_tpg", NULL);
-+	clks[TEGRA210_CLK_CSI_TPG] = clk;
-+
- 	/* la */
- 	clk = tegra_clk_register_periph("la", la_parents,
- 			ARRAY_SIZE(la_parents), &tegra210_la, clk_base,
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 64c46ce..d0eff92 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -796,7 +796,9 @@
+ 			pd_sor: sor {
+ 				clocks = <&tegra_car TEGRA210_CLK_SOR0>,
+ 					 <&tegra_car TEGRA210_CLK_SOR1>,
+-					 <&tegra_car TEGRA210_CLK_CSI>,
++					 <&tegra_car TEGRA210_CLK_CILAB>,
++					 <&tegra_car TEGRA210_CLK_CILCD>,
++					 <&tegra_car TEGRA210_CLK_CILE>,
+ 					 <&tegra_car TEGRA210_CLK_DSIA>,
+ 					 <&tegra_car TEGRA210_CLK_DSIB>,
+ 					 <&tegra_car TEGRA210_CLK_DPAUX>,
+@@ -804,7 +806,6 @@
+ 					 <&tegra_car TEGRA210_CLK_MIPI_CAL>;
+ 				resets = <&tegra_car TEGRA210_CLK_SOR0>,
+ 					 <&tegra_car TEGRA210_CLK_SOR1>,
+-					 <&tegra_car TEGRA210_CLK_CSI>,
+ 					 <&tegra_car TEGRA210_CLK_DSIA>,
+ 					 <&tegra_car TEGRA210_CLK_DSIB>,
+ 					 <&tegra_car TEGRA210_CLK_DPAUX>,
 -- 
 2.7.4
 
