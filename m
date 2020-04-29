@@ -2,328 +2,177 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC77C83003
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCB2C8300A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 695102073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:20:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AI26J2ep"
+	by mail.kernel.org (Postfix) with ESMTP id 04BC32073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 10:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgD2KUO (ORCPT
+        id S1726669AbgD2K1Q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:20:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgD2KTw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 06:19:52 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683F9C03C1AD
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 03:19:50 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id s202so1327650oih.3
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 03:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ySw1JY1pUEmGxd3VKb4dOahnkparolrY7LxLxmHjsxQ=;
-        b=AI26J2eputUhny34KK4c7nSnnxIjryDf3Ty/h6zFRGVmbIF51p9Y9yQwt59mv/ekw3
-         fUFeu5YqA0HJE7xIYJ4OY1gXBAEyr+64HagBmGKGQIPtA43KxzuseSy36Amqt7p+WeUk
-         t6BolG5l0IGQiGYqyxguo63zs0hM6Pi3fmOCzNtEbYFTtl4NdYM6mjhpen4oyaFiwBdT
-         myCjJ/X7O6TYJft6csJST0r5ZUDxlw0Nq8JgO39ClHXW7LrdDJXucjjN0FBlZ2iQ3pOd
-         xtzSdc8v1GWyXhPrUxekIIswg2LVm/PLtb2/1HQAuN6BGm1r+WYBOlIYXHCkjtlw5Zen
-         XkiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ySw1JY1pUEmGxd3VKb4dOahnkparolrY7LxLxmHjsxQ=;
-        b=TQ7o4hOb3n8pwLQnABKEFwQGjqcGxfiPUOkQszQn78UEZnYtryJyLEt8gz4XwjZ062
-         k+mYesVZ8OMZMcjAMVZiJWW6f0/4vleJ0sKo9yXcUo9SII1nD01gHz4J9ke1T1hswblZ
-         M4YyWy99BUWSeeCz7XWor0s9KZDsNNNfM8ZWAl66CHAMDWyyddNWkqPTNWjb8eNpeuSz
-         2GhPXj0Dxv2vne1uXrv3J4xbwzCxS/WUiBFCS5M4neDBRtF0j6AH8BM2S9YJ25rGYuee
-         EqGoY/iYUcwWs3puZ2FzXZIngFYmdJpEH2jZiAQEUq3KqzZRWpgWuhSnAr4AOFtqx1rx
-         vG3A==
-X-Gm-Message-State: AGi0PuZkt+v0KY/IK5utjSn8Su252+hp79iX8kHb9ZrIKE5nYrIJPBEq
-        cWq5ZS9z6mtcKDAokxfkS6cXTS1b90TqodORY23ShQ==
-X-Google-Smtp-Source: APiQypKvohcP7ZVI9yC1TSomAWF3be4k8n2tkZf0ZBfetHCkCcgSQx24p/4rt/0tq616Edrtb6ONPrahLEAxtucqwl4=
-X-Received: by 2002:aca:f3d6:: with SMTP id r205mr1177033oih.26.1588155589705;
- Wed, 29 Apr 2020 03:19:49 -0700 (PDT)
+        Wed, 29 Apr 2020 06:27:16 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47875 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbgD2K1P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 06:27:15 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 91395C0002;
+        Wed, 29 Apr 2020 10:27:11 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 12:27:10 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v2 06/12] mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS
+ for timeouts
+Message-ID: <20200429122710.291d54ff@xps13>
+In-Reply-To: <cf4f4d00-7cfd-d0df-3004-9fd534e62bd0@st.com>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-7-git-send-email-christophe.kerello@st.com>
+        <20200427202212.0235d987@xps13>
+        <0e2c9a6a-aa21-7814-9af8-629de6568fab@st.com>
+        <20200429113529.5ddc3ad9@xps13>
+        <b6b31f36-8e8f-4042-2587-0dcad82aafc5@st.com>
+        <20200429120632.7bce63e6@xps13>
+        <cf4f4d00-7cfd-d0df-3004-9fd534e62bd0@st.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200428180718.1609826-1-robert.foss@linaro.org>
- <20200428180718.1609826-2-robert.foss@linaro.org> <20200429090012.vhhwatojkncjquwd@gilmour.lan>
-In-Reply-To: <20200429090012.vhhwatojkncjquwd@gilmour.lan>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Wed, 29 Apr 2020 12:19:38 +0200
-Message-ID: <CAG3jFyvcgqi_rm-Enf3gTyHowbgX6iBe3coDPu91p9EBTxS2XA@mail.gmail.com>
-Subject: Re: [PATCH v5 v5 2/3] media: ov8856: Add devicetree support
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 29 Apr 2020 at 11:00, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Tue, Apr 28, 2020 at 08:07:17PM +0200, Robert Foss wrote:
-> > Add match table, enable ov8856_probe() to support
-> > both ACPI and DT modes.
-> >
-> > ACPI and DT modes are primarily distinguished from
-> > each other by relying on devm_XXX_get_optional()
-> > will return NULL instead of a reference for the
-> > desired managed resource.
-> >
-> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > ---
-> >
-> > - Changes since v4:
-> >   * Maxime & Sakari: Switch to clock-frequency
-> >
-> > - Changes since v3:
-> >   * Remove redundant {}-brackets
-> >   * Compare xvclk_rate to 5% tolerance
-> >   * Andy: Use dev_fwnode()
-> >   * Andy: Use %pe instead of %ld + PTR_ERR()
-> >   * Andy: Invert reset_gpio logic
-> >   * Andy: Remove dev_dbg() from failing reset_gpio setup
-> >   * Andy: Use dev_err for logging for failures
-> >   * Andy: Remove dev_warn from EDEFER/regulator error path
-> >   * Andy & Sakari: Replaced GPIOD_OUT_XXX with 0/1
-> >   * Maxime & Sakari: Verify clock frequency from DT
-> >   * Sakari: Verify the 'xvclk_rate' is set correctly for ACPI/DT devices
-> >   * Sakari: Remove duplicate ov8856->dev assignment
-> >
-> > - Changes since v2:
-> >   * Added "struct device *dev" member to struct ov8856
-> >   * Andy: Switch to optional version of devm_gpiod_get
-> >   * Andy: Switch to optional version of devm_clk_get
-> >   * Fabio: Add reset sleep period
-> >   * Sakari: Unify defines for 19.2Mhz
-> >   * Sakari: Remove 24Mhz clock, since it isn't needed for supported modes
-> >   * Sakari: Replace dev_info() with dev_dbg()
-> >   * Sakari: Switch induction variable type to unsigned
-> >   * Sakari: Don't wait for reset_gpio when in ACPI mode
-> >   * Sakari: Pull reset GPIO high on power on failure
-> >   * Sakari: Add power on/off to resume/suspend
-> >   * Sakari: Fix indentation
-> >   * Sakari: Power off during ov8856_remove()
-> >   * Sakari: Don't sleep during power-on in ACPI mode
-> >   * Sakari: Switch to getting xvclk from clk_get_rate
-> >
-> > - Changes since v1:
-> >   * Andy & Sakari: Make XVCLK optional since to not break ACPI
-> >   * Fabio: Change n_shutdown_gpio name to reset_gpio
-> >   * Fabio: Invert reset_gpio due to GPIO_ACTIVE_HIGH -> GPIO_ACTIVE_LOW change
-> >   * Fabio: Remove empty line
-> >   * Fabio: Remove real error from devm_gpiod_get() failures
-> >   * Sakari: ARRAY_SIZE() directly instead of through OV8856_NUM_SUPPLIES
-> >   * Sakari: Use XVCLK rate as provided by DT
-> >
-> >  drivers/media/i2c/ov8856.c | 139 +++++++++++++++++++++++++++++++++----
-> >  1 file changed, 126 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-> > index 8655842af275..48b02b8d205f 100644
-> > --- a/drivers/media/i2c/ov8856.c
-> > +++ b/drivers/media/i2c/ov8856.c
-> > @@ -3,10 +3,13 @@
-> >
-> >  #include <asm/unaligned.h>
-> >  #include <linux/acpi.h>
-> > +#include <linux/clk.h>
-> >  #include <linux/delay.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pm_runtime.h>
-> > +#include <linux/regulator/consumer.h>
-> >  #include <media/v4l2-ctrls.h>
-> >  #include <media/v4l2-device.h>
-> >  #include <media/v4l2-fwnode.h>
-> > @@ -18,7 +21,7 @@
-> >  #define OV8856_LINK_FREQ_360MHZ              360000000ULL
-> >  #define OV8856_LINK_FREQ_180MHZ              180000000ULL
-> >  #define OV8856_SCLK                  144000000ULL
-> > -#define OV8856_MCLK                  19200000
-> > +#define OV8856_XVCLK_19_2            19200000
-> >  #define OV8856_DATA_LANES            4
-> >  #define OV8856_RGB_DEPTH             10
-> >
-> > @@ -64,6 +67,12 @@
-> >
-> >  #define to_ov8856(_sd)                       container_of(_sd, struct ov8856, sd)
-> >
-> > +static const char * const ov8856_supply_names[] = {
-> > +     "dovdd",        /* Digital I/O power */
-> > +     "avdd",         /* Analog power */
-> > +     "dvdd",         /* Digital core power */
-> > +};
-> > +
-> >  enum {
-> >       OV8856_LINK_FREQ_720MBPS,
-> >       OV8856_LINK_FREQ_360MBPS,
-> > @@ -566,6 +575,11 @@ struct ov8856 {
-> >       struct media_pad pad;
-> >       struct v4l2_ctrl_handler ctrl_handler;
-> >
-> > +     struct device           *dev;
-> > +     struct clk              *xvclk;
-> > +     struct gpio_desc        *reset_gpio;
-> > +     struct regulator_bulk_data supplies[ARRAY_SIZE(ov8856_supply_names)];
-> > +
-> >       /* V4L2 Controls */
-> >       struct v4l2_ctrl *link_freq;
-> >       struct v4l2_ctrl *pixel_rate;
-> > @@ -908,6 +922,52 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
-> >       return ret;
-> >  }
-> >
-> > +static int __ov8856_power_on(struct ov8856 *ov8856)
-> > +{
-> > +     struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> > +     int ret;
-> > +
-> > +     ret = clk_prepare_enable(ov8856->xvclk);
-> > +     if (ret < 0) {
-> > +             dev_err(&client->dev, "failed to enable xvclk\n");
-> > +             return ret;
-> > +     }
-> > +
-> > +     if (is_acpi_node(dev_fwnode(ov8856->dev)))
-> > +             return 0;
-> > +
-> > +     if (ov8856->reset_gpio) {
-> > +             gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> > +             usleep_range(1000, 2000);
-> > +     }
-> > +
-> > +     ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
-> > +                                 ov8856->supplies);
-> > +     if (ret < 0) {
-> > +             dev_err(&client->dev, "failed to enable regulators\n");
-> > +             goto disable_clk;
-> > +     }
-> > +
-> > +     gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
-> > +     usleep_range(1500, 1800);
-> > +
-> > +     return 0;
-> > +
-> > +disable_clk:
-> > +     gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> > +     clk_disable_unprepare(ov8856->xvclk);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static void __ov8856_power_off(struct ov8856 *ov8856)
-> > +{
-> > +     gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> > +     regulator_bulk_disable(ARRAY_SIZE(ov8856_supply_names),
-> > +                            ov8856->supplies);
-> > +     clk_disable_unprepare(ov8856->xvclk);
-> > +}
-> > +
-> >  static int __maybe_unused ov8856_suspend(struct device *dev)
-> >  {
-> >       struct i2c_client *client = to_i2c_client(dev);
-> > @@ -918,6 +978,7 @@ static int __maybe_unused ov8856_suspend(struct device *dev)
-> >       if (ov8856->streaming)
-> >               ov8856_stop_streaming(ov8856);
-> >
-> > +     __ov8856_power_off(ov8856);
-> >       mutex_unlock(&ov8856->mutex);
-> >
-> >       return 0;
-> > @@ -931,6 +992,8 @@ static int __maybe_unused ov8856_resume(struct device *dev)
-> >       int ret;
-> >
-> >       mutex_lock(&ov8856->mutex);
-> > +
-> > +     __ov8856_power_on(ov8856);
-> >       if (ov8856->streaming) {
-> >               ret = ov8856_start_streaming(ov8856);
-> >               if (ret) {
-> > @@ -1092,29 +1155,58 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
-> >       return 0;
-> >  }
-> >
-> > -static int ov8856_check_hwcfg(struct device *dev)
-> > +static int ov8856_get_hwcfg(struct ov8856 *ov8856)
-> >  {
-> > +     struct device *dev = ov8856->dev;
-> >       struct fwnode_handle *ep;
-> >       struct fwnode_handle *fwnode = dev_fwnode(dev);
-> >       struct v4l2_fwnode_endpoint bus_cfg = {
-> >               .bus_type = V4L2_MBUS_CSI2_DPHY
-> >       };
-> > -     u32 mclk;
-> > +     u32 xvclk_rate;
-> >       int ret;
-> >       unsigned int i, j;
-> >
-> >       if (!fwnode)
-> >               return -ENXIO;
-> >
-> > -     ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
-> > +     ret = fwnode_property_read_u32(fwnode, "clock-frequency",
-> > +             &xvclk_rate);
-> >       if (ret)
-> >               return ret;
-> >
-> > -     if (mclk != OV8856_MCLK) {
-> > -             dev_err(dev, "external clock %d is not supported", mclk);
-> > +     if (!is_acpi_node(fwnode)) {
-> > +             ov8856->xvclk = devm_clk_get(dev, "xvclk");
-> > +             if (IS_ERR(ov8856->xvclk)) {
-> > +                     dev_err(dev, "could not get xvclk clock (%pe)\n",
-> > +                                     ov8856->xvclk);
-> > +                     return PTR_ERR(ov8856->xvclk);
-> > +             }
-> > +
-> > +             clk_set_rate(ov8856->xvclk, xvclk_rate);
-> > +             xvclk_rate = clk_get_rate(ov8856->xvclk);
-> > +     }
-> > +
-> > +     /* external clock must be 19.2MHz, allow 5% tolerance */
->
-> Where is that 5% tolerance coming from? Experimentations, datasheets, something
-> that looks good enough? Either way, this should be in the comment.
+Hi Christophe,
 
-I don't have access to the full datasheet unfortunately. A 24Mhz rate
-is as far as I understand it supported and required for higher
-bandwidth count modes.
-It was suggested to me that adding a tolerance is the best practice,
-the ov5645 driver uses a 1% tolerance, which may be more appropriate.
+Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 29 Apr
+2020 12:13:18 +0200:
 
-The closest frequency to 19.2Mhz * 1.05 I'm able to generate is 24Mhz,
-which works. But unfortunately my testing platform sdm845-db845c is
-not able to generate lower frequencies than 19.2Mhz.
+> On 4/29/20 12:06 PM, Miquel Raynal wrote:
+> > Hi Christophe,
+> > 
+> > Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 29 Apr
+> > 2020 11:41:44 +0200:
+> >   
+> >> On 4/29/20 11:35 AM, Miquel Raynal wrote:  
+> >>> Hi Christophe,
+> >>>
+> >>> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 29 Apr
+> >>> 2020 11:27:43 +0200:  
+> >>>    >>>> Hi Miquèl,  
+> >>>>
+> >>>> On 4/27/20 8:22 PM, Miquel Raynal wrote:  
+> >>>>> Hi Christophe,
+> >>>>>
+> >>>>> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
+> >>>>> 2020 17:57:30 +0200:  
+> >>>>>     >>>> This patch removes the constant FMC2_TIMEOUT_US.  
+> >>>>>> FMC2_TIMEOUT_MS is set to 5 seconds and this constant is used
+> >>>>>> each time that we need to wait (except when the timeout value
+> >>>>>> is set by the framework)
+> >>>>>>
+> >>>>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> >>>>>> ---
+> >>>>>>     drivers/mtd/nand/raw/stm32_fmc2_nand.c | 11 +++++------
+> >>>>>>     1 file changed, 5 insertions(+), 6 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> >>>>>> index ab53314..f159c39 100644
+> >>>>>> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> >>>>>> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> >>>>>> @@ -37,8 +37,7 @@
+> >>>>>>     /* Max ECC buffer length */
+> >>>>>>     #define FMC2_MAX_ECC_BUF_LEN		(FMC2_BCHDSRS_LEN * FMC2_MAX_SG)  
+> >>>>>>     >> -#define FMC2_TIMEOUT_US			1000  
+> >>>>>> -#define FMC2_TIMEOUT_MS			1000
+> >>>>>> +#define FMC2_TIMEOUT_MS			5000  
+> >>>>>>     >>   /* Timings */  
+> >>>>>>     #define FMC2_THIZ			1
+> >>>>>> @@ -525,9 +524,9 @@ static int stm32_fmc2_ham_calculate(struct nand_chip *chip, const u8 *data,
+> >>>>>>     	u32 sr, heccr;
+> >>>>>>     	int ret;  
+> >>>>>>     >> -	ret = readl_relaxed_poll_timeout(fmc2->io_base + FMC2_SR,  
+> >>>>>> -					 sr, sr & FMC2_SR_NWRF, 10,
+> >>>>>> -					 FMC2_TIMEOUT_MS);
+> >>>>>> +	ret = readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR,
+> >>>>>> +						sr, sr & FMC2_SR_NWRF, 1,
+> >>>>>> +						1000 * FMC2_TIMEOUT_MS);  
+> >>>>>
+> >>>>> Is the _atomic suffix needed here? If yes it would deserve a separate
+> >>>>> patch with Fixes/Stable tags.  
+> >>>>>     >>  
+> >>>> I have currently not seen any issues. So, I will remove this modification as we will move to regmap_read_poll_timeout in patch 10.  
+> >>>>   >>>>>>     	if (ret) {  
+> >>>>>>     		dev_err(fmc2->dev, "ham timeout\n");
+> >>>>>>     		return ret;
+> >>>>>> @@ -1315,7 +1314,7 @@ static int stm32_fmc2_waitrdy(struct nand_chip *chip, unsigned long timeout_ms)
+> >>>>>>     	/* Check if there is no pending requests to the NAND flash */
+> >>>>>>     	if (readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR, sr,
+> >>>>>>     					      sr & FMC2_SR_NWRF, 1,
+> >>>>>> -					      FMC2_TIMEOUT_US))
+> >>>>>> +					      1000 * FMC2_TIMEOUT_MS))
+> >>>>>>     		dev_warn(fmc2->dev, "Waitrdy timeout\n");  
+> >>>>>>     >>   	/* Wait tWB before R/B# signal is low */  
+> >>>>>
+> >>>>> You change the timeouts from 1ms to 5s.
+> >>>>>
+> >>>>> Maybe 5s is a little bit too much IMHO but we don't really care as this
+> >>>>> is a timeout. However 1ms is tight. If you are changing this value
+> >>>>> because it triggers error (eg. when the machine is loaded), then it is
+> >>>>> a fix and should appear like it.
+> >>>>>
+> >>>>> Thanks,
+> >>>>> Miquèl  
+> >>>>>     >>  
+> >>>> No errors currently happens.
+> >>>> During our stress tests, in a overloaded system, we have seen that we could be close to 1 second, even if we never met this value.
+> >>>> So, to be safe, I have set this timeout to 5 seconds.
+> >>>> As it is just a timeout value, I have not seen any side effect.
+> >>>> I am using the same timeout constant to avoid to have one timeout per cases.  
+> >>>
+> >>> Something is wrong in my mind:
+> >>> You say you observe delays of almost up to 1 second, but the polling
+> >>> currently happens on 1000 us = 1ms, either you had timeouts or I
+> >>> misread something?
+> >>>
+> >>> Thanks,
+> >>> Miquèl  
+> >>>    >>  
+> >> Hi Miquèl,
+> >>
+> >> My fault. For this polling, we never met 1 ms.
+> >> The 1 second observed was on the sequencer when we read/write a page (as it the same timeout value that is used)  
+> > 
+> > OK I get it. So perhaps you can give these details in the commit log to
+> > explain why you use 5 seconds instead of one.
+> > 
+> > Thanks,
+> > Miquèl
+> >   
+> 
+> Hi Miquèl,
+> 
+> A proposal could also be to split this patch:
+>   - a first patch that is using only one timeout value.
+>   - a second patch that is increasing the value to 5 seconds.
+> 
+> Regards,
+> Christophe Kerello.
 
-This all adds up to a pretty unclear picture of what is supported, if
-anyone has access to the full documentation I would like to make the
-tolerances and comments reflect that.
 
->
-> Maxime
+Given the situation, both are fine as long as everything is clearly
+explained in the commit log :)
+
+Thanks,
+Miquèl
