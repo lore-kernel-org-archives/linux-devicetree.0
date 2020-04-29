@@ -2,245 +2,217 @@ Return-Path: <SRS0=VloT=6N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2198CC8300A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968F2C83004
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F062821973
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:19:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fSmKrsYV"
+	by mail.kernel.org (Postfix) with ESMTP id 7210320BED
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Apr 2020 21:26:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588195587;
+	bh=F7uD432SGEUbxp+6xK1GCD9A4BQJFB+hqOVWdvvvl60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L8r2/bxiTIFs9cdaJxAaTdbrwjPadDytmES3xgEvmOwcaAr66RiAU/b8hWWxl55og
+	 UJAUig0sRBjs3b69RMAOMLmzrLQmFo2rBMjkfaUDRCdtDhyKptpYywAZBfBItatWdA
+	 pFmeB3WqdZh63ak2Y0vDWfHVc5MwrQ0GBzBRWDnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgD2VTv (ORCPT
+        id S1727082AbgD2V01 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2VTv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:19:51 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B5ACC03C1AE;
-        Wed, 29 Apr 2020 14:19:50 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id r7so2755022edo.11;
-        Wed, 29 Apr 2020 14:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=h9tkGPetufBDIyv7Bpgp9xufFAlQJ4PqRxpqoco+qEM=;
-        b=fSmKrsYV4lX5YFbhO2FGHeMyCjA+JpDcylTDKDKfCDvKluFS4SVwl/m0vTEJyGkZaj
-         PytAthMgtSSsT6Nlcx/NJNeUAkB3L0r3tk1KiJIQ3QaMWxsJFb2vTF9TsyYgOTGKqCUM
-         YsYpOH3XEsHB64diwNGXrnCbtrquULAX0XuVsNKmXHJBZc8W15wWMvoQltjR1W8+O5q+
-         eXbME6B7paPJCtX6jcG9298sk7SK6vNVBeEzlrsFkgB2EhjB34OO9RjXgHRQ6Dnhjq1A
-         7FHZCmHj3NeXigU3ssUtzTMe/UJPdTq2lzfx1jc2fmQVwCh4T3+wUGu96KXP9vQjMYrF
-         hDlA==
+        Wed, 29 Apr 2020 17:26:27 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:33390 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbgD2V00 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 17:26:26 -0400
+Received: by mail-oo1-f67.google.com with SMTP id b17so780192ooa.0;
+        Wed, 29 Apr 2020 14:26:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=h9tkGPetufBDIyv7Bpgp9xufFAlQJ4PqRxpqoco+qEM=;
-        b=kL6OOzoYL3g5fpfNAOUO36o8L/1C7gs2HKarASjgLHK36hg3nn3Ax+qaXgq5MXOJc+
-         YzmFjWDul/0xBUumGCK7yjXO4Ej+M6ZS4MmXDBKolrEha106o7GQl7iqBjJECRYk4hJa
-         38L5JuKDNHZDxp5YFtl+IXVD0N3/GeSvzbEE2fz4tfOvn/DeKq/62JZcz9t/Eg/Mynqn
-         0lUz2rTuy3+yRyv4LfX3NsR2GtcCd4xnoR8sJxf705AVn/hCcCYawcurftJaPhzF1E2B
-         NcvbUoKRzRhut7Y3c/w5XyC1obalhK2T4R3NmWaL47sF9JdDLC4yfrpByoIX+uZX2kJV
-         X/iw==
-X-Gm-Message-State: AGi0Pubg/L1+u78a07eTPdSqQ4dxBSF2hR7WphLubM+9vAIT708KhJWA
-        Ghbn7S4qQAbXpaDWnG3+rEU=
-X-Google-Smtp-Source: APiQypKQXPo9aNdubq0r9onWQaI7ZalK21Al5xQaYP7WKwciXwITF5OL5PukhUDRh27xtNkrlA3k0w==
-X-Received: by 2002:aa7:c5d1:: with SMTP id h17mr4335986eds.109.1588195188893;
-        Wed, 29 Apr 2020 14:19:48 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain ([79.37.253.240])
-        by smtp.googlemail.com with ESMTPSA id b13sm898230eje.13.2020.04.29.14.19.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jZdQqz//+UegbVE8A4Ss6PQqpaUbK0Xf8KqifQRUIYA=;
+        b=arYRatlCEstABDNFzLh8VMvD9y1yX5+F3CdDBUfEOhpe8ZuaEq7GzZFDnYgb2oZaA2
+         8aHH54B4ehd9Rg0ydb4ypfN2HfT2gvi5viMXbeNbWc9x9lwcRl25Mi9iKpwEBDRwt69I
+         ChOI7C6SXy3IxE5mIJd6KxFEzGHgtW7OI9xAFgfX4FKZy1HXwKH0MU9dCKFK/2+GIAVh
+         75QsVL1BA+WKzYexRz3Ou3v75D+sFXoCjEPXgZVo3S5EOKXMVRMKDFnCPfem6QsDwm5H
+         fBkBzOZ/ihoPaPiGABHMM0i5immLlde6I4JE9fwat+XGWPFeyhLKG3Rw6E0wShlBasf7
+         zh6g==
+X-Gm-Message-State: AGi0PuYaITMRbtV76AQGeVZPy6SHt9lB9/lxS6SNqNrCjVN469CHcSzP
+        bNAI6Ho8ggN6Iuru2vqMRQ==
+X-Google-Smtp-Source: APiQypKwsnnuEjrK//ENA1olM+ndEcdtQnnyaYhWVWsNx0ix/MtVtneEX6PtoFrzg2X8/em70PIiow==
+X-Received: by 2002:a4a:621d:: with SMTP id x29mr59980ooc.92.1588195585576;
+        Wed, 29 Apr 2020 14:26:25 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k84sm695519oib.10.2020.04.29.14.26.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 14:19:48 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v4 2/2] devicetree: bindings: phy: Document ipq806x dwc3 qcom phy
-Date:   Wed, 29 Apr 2020 23:19:25 +0200
-Message-Id: <20200429211926.4952-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200429211926.4952-1-ansuelsmth@gmail.com>
-References: <20200429211926.4952-1-ansuelsmth@gmail.com>
+        Wed, 29 Apr 2020 14:26:24 -0700 (PDT)
+Received: (nullmailer pid 26020 invoked by uid 1000);
+        Wed, 29 Apr 2020 21:26:22 -0000
+Date:   Wed, 29 Apr 2020 16:26:22 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V3 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+ json-schema
+Message-ID: <20200429212622.GA23326@bogus>
+References: <1587084091-5941-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587084091-5941-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-inizialize and use usb on ipq806x SoC.
+On Fri, Apr 17, 2020 at 08:41:27AM +0800, Anson Huang wrote:
+> Convert the i.MX6Q clock binding to DT schema format using json-schema.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V2:
+> 	- Force 'interrupts' minItem/maxItem to 2.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
-v4:
-* Add qcom to specific bindings
-v3:
-* Use explicit reg instead of regmap
+Not necessary. maxItems is sufficient.
 
- .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 58 +++++++++++++++
- .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 73 +++++++++++++++++++
- 2 files changed, 131 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> ---
+>  .../devicetree/bindings/clock/imx6q-clock.txt      | 41 -------------
+>  .../devicetree/bindings/clock/imx6q-clock.yaml     | 67 ++++++++++++++++++++++
+>  2 files changed, 67 insertions(+), 41 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> deleted file mode 100644
+> index 13d36d4..0000000
+> --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> +++ /dev/null
+> @@ -1,41 +0,0 @@
+> -* Clock bindings for Freescale i.MX6 Quad
+> -
+> -Required properties:
+> -- compatible: Should be "fsl,imx6q-ccm"
+> -- reg: Address and length of the register set
+> -- interrupts: Should contain CCM interrupt
+> -- #clock-cells: Should be <1>
+> -
+> -Optional properties:
+> -- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
+> -  on power off.
+> -  Use this property if the SoC should be powered off by external power
+> -  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+> -  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
+> -  be using "syscon-poweroff" driver instead.
+> -- clocks: list of clock specifiers, must contain an entry for each entry
+> -          in clock-names
+> -- clock-names: valid names are "osc", "ckil", "ckih1", "anaclk1" and "anaclk2"
+> -
+> -The clock consumer should specify the desired clock by having the clock
+> -ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
+> -for the full list of i.MX6 Quad and DualLite clock IDs.
+> -
+> -Examples:
+> -
+> -#include <dt-bindings/clock/imx6qdl-clock.h>
+> -
+> -clks: ccm@20c4000 {
+> -	compatible = "fsl,imx6q-ccm";
+> -	reg = <0x020c4000 0x4000>;
+> -	interrupts = <0 87 0x04 0 88 0x04>;
+> -	#clock-cells = <1>;
+> -};
+> -
+> -uart1: serial@2020000 {
+> -	compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
+> -	reg = <0x02020000 0x4000>;
+> -	interrupts = <0 26 0x04>;
+> -	clocks = <&clks IMX6QDL_CLK_UART_IPG>, <&clks IMX6QDL_CLK_UART_SERIAL>;
+> -	clock-names = "ipg", "per";
+> -};
+> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> new file mode 100644
+> index 0000000..0daf789
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> @@ -0,0 +1,67 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/imx6q-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Clock bindings for Freescale i.MX6 Quad
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx6q-ccm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: 24m osc
+> +      - description: 32k osc
+> +      - description: ckih1 clock input
+> +      - description: anaclk1 clock input
+> +      - description: anaclk2 clock input
+> +
+> +  clock-names:
+> +    items:
+> +      - const: osc
+> +      - const: ckil
+> +      - const: ckih1
+> +      - const: anaclk1
+> +      - const: anaclk2
+> +
+> +  fsl,pmic-stby-poweroff:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: |
+> +      Use this property if the SoC should be powered off by external power
+> +      management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+> +      Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
+> +      be using "syscon-poweroff" driver instead.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - '#clock-cells'
+> +
+> +examples:
+> +  # Clock Control Module node:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    clks: clock-controller@20c4000 {
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-new file mode 100644
-index 000000000000..c019de7478e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers used in ipq806x. Each DWC3 PHY controller should have its
-+  own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq806x-usb-phy-hs
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      - "ref" Is required
-+      - "xo"	Optional external reference clock
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    hs_phy_0: phy@110f8800 {
-+      compatible = "qcom,ipq806x-usb-phy-hs";
-+      reg = <0x110f8800 0x30>;
-+      clocks = <&gcc USB30_0_UTMI_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-new file mode 100644
-index 000000000000..5d71a532d991
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers used in ipq806x. Each DWC3 PHY controller should have its
-+  own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq806x-usb-phy-ss
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      - "ref" Required.
-+      - "xo"	Optional external reference clock.
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+  qcom,rx_eq:
-+    maxItems: 1
-+    description: Override value for rx_eq.
-+    default: 4
-+
-+  qcom,tx_deamp_3_5db:
-+    maxItems: 1
-+    description: Override value for transmit preemphasis.
-+    default: 23
-+
-+  qcom,mpll:
-+    maxItems: 1
-+    description: Override value for mpll.
-+    default: 0
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    ss_phy_0: phy@110f8830 {
-+      compatible = "qcom,ipq806x-usb-phy-ss";
-+      reg = <0x110f8830 0x30>;
-+      clocks = <&gcc USB30_0_MASTER_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
--- 
-2.25.1
+Drop the label.
 
+> +        compatible = "fsl,imx6q-ccm";
+> +        reg = <0x020c4000 0x4000>;
+> +        interrupts = <0 87 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
+> +        #clock-cells = <1>;
+> +    };
+> -- 
+> 2.7.4
+> 
