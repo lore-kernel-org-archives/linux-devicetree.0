@@ -2,124 +2,123 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A83C83001
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 07:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE4FC83006
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B65382186A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 07:54:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PKeLiGXU"
+	by mail.kernel.org (Postfix) with ESMTP id B542221BE5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588234003;
+	bh=HhAmAT2/A+qPYpQdZvTmptCNczQiph9isL1WeEaN0bM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=p+3WrPfTTCiHvuses1U5QhD7A0BiBOMzOWqUamxz8qkfCb90NmN77yFUNTdcFBhPc
+	 juP/0DZ0Ym1rOBeIaLGUBT11SEEQDSCYBYdlpdxca8YHHRqvzNbILz506Fp6yo9IpV
+	 CyuBw11jnTbCBtOnGNXfzLDCJ3RWgcwjBAt/u7TU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgD3HyD (ORCPT
+        id S1726127AbgD3IGn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgD3HyA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 03:54:00 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B4E8C035495
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 00:53:59 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t16so1953211plo.7
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 00:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kG8gxxShO/ZQhCVTu79MXllzxxRhWUROOMH4XeWOBIo=;
-        b=PKeLiGXUA4odheuCOywjcjg5uNgODSCQFNSlQQE+92Z5Pz1kC2KBwFCBfGbS3B0AMG
-         SJR5F6Ltj/XdoVo8dxh/txZW1JV5a4dPakAC2FMBeH/ZcVMujxkY78e6MpI+bguLRJHK
-         0c0ZBndbA+al3r0fnuGeOKNwt8jM1ZIq3QpgiPD8Q30y54hmob/xloHvcTdgkv8rQEHO
-         fk7IP0s7X8uHp1Y219FGypcyMqJKNdCmWnvycsxQsaJEU9Q2fIoyNINRmitgO9ICPNw9
-         jOIIvDzq3Pele6Z+9pgP6Qsa0KzopjHntNX++q1A9mNLBySYNvZsn9i6ZwMEZy7zC7mB
-         0fsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kG8gxxShO/ZQhCVTu79MXllzxxRhWUROOMH4XeWOBIo=;
-        b=C4Rm8kN+KpKJr0tpptWT1JPukpk58T3wOCS+aHj+c+2Mm8+QGsISzB5mKIU6EsSAQm
-         PCvfermpG7wd09wmjhOs932pbmVxkmKWSYnjktHe7KP/x3a+W58HTDt31aI+PkwEVTyE
-         Em2hxvhZPMWC0eDPGubCqrDF5goMgnX9gixyqXrFZEq08UKZiHA8VzMYG7/A9/CCz9Te
-         GMUNUspszcNWQBBAaS7MdekEQND0CbvxYWhSf6TjILmMYAB2NBC/i7rmAVVxT1D6kcKX
-         uj57g/VzBRNXRjD35hZ6TxUpLE4v4FZpruxT1uGCUV9Q/OtRbml4oU8x2qIHNieHAOQI
-         VAgg==
-X-Gm-Message-State: AGi0PuYjnafT7fCwmqZdVK9z9grwnhtfKqFFmZn6yeioshe1jxh2LuBD
-        SXvS3riVEAcTNVZ3TQykjj3C/g==
-X-Google-Smtp-Source: APiQypKL0XTZRutxcUdK04koig/l/oiYa+fGs3Nz3+weSHu7hACweER1oNgsKvxdySh7mi63MCLnnw==
-X-Received: by 2002:a17:90a:d808:: with SMTP id a8mr1513940pjv.6.1588233238830;
-        Thu, 30 Apr 2020 00:53:58 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id l1sm1073995pjr.17.2020.04.30.00.53.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Apr 2020 00:53:58 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 13:23:56 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        Thu, 30 Apr 2020 04:06:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbgD3IGm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:06:42 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD4742186A;
+        Thu, 30 Apr 2020 08:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588234001;
+        bh=HhAmAT2/A+qPYpQdZvTmptCNczQiph9isL1WeEaN0bM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sfn8ddWur8OqKt9lcbP1xwQF3fyJR3FHROypX+VYebaQIGcnud648tmINsPhZqe4B
+         OYvNYwX2aprawfc7L2zOh4eN7vIakof39COZ8WRSgFGbp3JoBvrhd18J70P75jMp+Q
+         p7DZpkIkqCz2Lc/HhkKD3fwtoVWEn6NlnxVQdyOI=
+Received: by pali.im (Postfix)
+        id D38FCA19; Thu, 30 Apr 2020 10:06:39 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
-Message-ID: <20200430075356.rjtctfuenirvhxgn@vireshk-i7>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-7-georgi.djakov@linaro.org>
- <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
- <20200430060901.j7jjw6soo5h5xoul@vireshk-i7>
- <CAGETcx_zH_KJ7_A7Ofc2M5GfHKX_J__URJB127MSMcTeaqyzjw@mail.gmail.com>
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v4 01/12] PCI: aardvark: Train link immediately after enabling training
+Date:   Thu, 30 Apr 2020 10:06:14 +0200
+Message-Id: <20200430080625.26070-2-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430080625.26070-1-pali@kernel.org>
+References: <20200430080625.26070-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx_zH_KJ7_A7Ofc2M5GfHKX_J__URJB127MSMcTeaqyzjw@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 30-04-20, 00:35, Saravana Kannan wrote:
-> On Wed, Apr 29, 2020 at 11:09 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 24-04-20, 14:18, Saravana Kannan wrote:
-> > > My only comment is -- can we drop this patch please? I'd like to use
-> > > devfreq governors for voting on bandwidth and this will effectively
-> > > override whatever bandwidth decisions are made by the devfreq
-> > > governor.
-> >
-> > And why would that be better ? FWIW, that will have the same problem
-> > which cpufreq governors had since ages, i.e. they were not proactive
-> > and were always too late.
-> >
-> > The bw should get updated right with frequency, why shouldn't it ?
-> 
-> I didn't say the bw would be voted based on just CPUfreq. It can also
-> be based on CPU busy time and other stats. Having said that, this is
-> not just about CPUfreq. Having the bw be force changed every time a
-> device has it's OPP is changed is very inflexible. Please don't do it.
+Adding even 100ms (PCI_PM_D3COLD_WAIT) delay between enabling link
+training and starting link training causes detection issues with some
+buggy cards (such as Compex WLE900VX).
 
-So, the vote based on the requirements of cpufreq driver should come
-directly from the cpufreq side itself, but no one stops the others
-layers to aggregate the requests and then act on them. This is how it
-is done for other frameworks like clk, regulator, genpd, etc.
+Move the code which enables link training immediately before the one
+which starts link traning.
 
-You guys need to figure out who aggregates the requests from all users
-or input providers for a certain path. This was pushed into the genpd
-core in case of performance state for example.
+This fixes detection issues of Compex WLE900VX card on Turris MOX after
+cold boot.
 
+Fixes: f4c7d053d7f7 ("PCI: aardvark: Wait for endpoint to be ready...")
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/pci/controller/pci-aardvark.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 2a20b649f40c..f9955b494267 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -300,11 +300,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 	reg |= LANE_COUNT_1;
+ 	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+ 
+-	/* Enable link training */
+-	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+-	reg |= LINK_TRAINING_EN;
+-	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+-
+ 	/* Enable MSI */
+ 	reg = advk_readl(pcie, PCIE_CORE_CTRL2_REG);
+ 	reg |= PCIE_CORE_CTRL2_MSI_ENABLE;
+@@ -346,7 +341,15 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 	 */
+ 	msleep(PCI_PM_D3COLD_WAIT);
+ 
+-	/* Start link training */
++	/* Enable link training */
++	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
++	reg |= LINK_TRAINING_EN;
++	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
++
++	/*
++	 * Start link training immediately after enabling it.
++	 * This solves problems for some buggy cards.
++	 */
+ 	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+ 	reg |= PCIE_CORE_LINK_TRAINING;
+ 	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
 -- 
-viresh
+2.20.1
+
