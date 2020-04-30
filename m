@@ -2,45 +2,45 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA1FC83009
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0586C83006
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF34D21D79
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC8342186A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588234056;
-	bh=7Q6yx7BAcNGphXyMJ64Hizlmq02sPIkiGXe5IfpE7Z8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0mj23VuDFXTzapietIPhjYG7rZcW8+QAIqK8ME9wVMsa0r8a+87VdZo5Rxy9JoWup
-	 6f7zpbCafPnwcViFUC87Uw55YOsGA5/aefVhVoagFP4mwHZv3cUlMJRoiNtN5gsCFQ
-	 Z2PeFVWjZwXqsQ7xX5TafHJkZb/8XYAvIE4Bq0Qo=
+	s=default; t=1588234062;
+	bh=/yZOHoDX1nONlr6EIuWq1MLzabyhsCxyiK11zIWZqK8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=1KhrVBCAEqAUIhJd+dBJoFXPw9B3no9XoQwRKTkiM1Jn8e7dUNL2J3SUJEKZ9rr5G
+	 cfiFf5iOow4WPv1KqUwiygkOn96H0t6WUjZvP3skDCR4XZbHOqbzxe1B5NVAIb14DH
+	 INTDHjeuxwx/cGpCzqjCX24Z94nG0/YtwVmv3Sik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgD3IHa (ORCPT
+        id S1726505AbgD3IGm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:07:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50848 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 04:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgD3IGn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:06:43 -0400
+        id S1726127AbgD3IGl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:06:41 -0400
 Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7E032192A;
-        Thu, 30 Apr 2020 08:06:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3DE22073E;
+        Thu, 30 Apr 2020 08:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588234003;
-        bh=7Q6yx7BAcNGphXyMJ64Hizlmq02sPIkiGXe5IfpE7Z8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TtcL8ObD9ZShKGhTyCFi7x9xii5PxTKPG28YjJWpUDfsSnzJR2XRsB+IuWynuwZ5s
-         FVggj8KBUEpbTwrAOvO0TrscLr5TJOODGSjQ8wfYnUasQD+lssLZCNSAjD00ONAR87
-         LuwCzjE1oAbDDpLUvris+w/1Bl6QBWsByjAMKaz8=
+        s=default; t=1588234000;
+        bh=/yZOHoDX1nONlr6EIuWq1MLzabyhsCxyiK11zIWZqK8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ajtL/aqywUl5X1FHyaEFS+da9+i3QR+qOmoX2r7A8jPKoT1iMx2YUAsSzDqQuwjvh
+         NtC8kBMeHg9SqYczMGSCw0B+IepJcGHh+OKt+TLreyNgA9t9GU2wOF+4uj/jdoJ1P6
+         43753G4QnsHbYv7RTUc2ZKm8m4r/NdjLw9I0gj7E=
 Received: by pali.im (Postfix)
-        id EF9F8AC9; Thu, 30 Apr 2020 10:06:40 +0200 (CEST)
+        id 8D14C7AD; Thu, 30 Apr 2020 10:06:38 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Gregory Clement <gregory.clement@bootlin.com>,
@@ -56,12 +56,10 @@ To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Xogium <contact@xogium.me>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH v4 02/12] PCI: aardvark: Don't blindly enable ASPM L0s and don't write to read-only register
-Date:   Thu, 30 Apr 2020 10:06:15 +0200
-Message-Id: <20200430080625.26070-3-pali@kernel.org>
+Subject: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and Compex wifi cards
+Date:   Thu, 30 Apr 2020 10:06:13 +0200
+Message-Id: <20200430080625.26070-1-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430080625.26070-1-pali@kernel.org>
-References: <20200430080625.26070-1-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -70,53 +68,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Trying to change Link Status register does not have any effect as this
-is a read-only register. Trying to overwrite bits for Negotiated Link
-Width does not make sense.
+Hello,
 
-In future proper change of link width can be done via Lane Count Select
-bits in PCIe Control 0 register.
+this is the fourth version of the patch series for Armada 3720 PCIe
+controller (aardvark). It's main purpose is to fix some bugs regarding
+buggy ath10k cards, but we also found out some suspicious stuff about
+the driver and the SOC itself, which we try to address.
 
-Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
-Control register is wrong. There should be at least some detection if
-endpoint supports L0s as isn't mandatory.
+Patches are available also in my git branch pci-aardvark:
+https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
 
-Moreover ASPM Control bits in Link Control register are controlled by
-pcie/aspm.c code which sets it according to system ASPM settings,
-immediately after aardvark driver probes. So setting these bits by
-aardvark driver has no long running effect.
+Changes since v3:
+- do not change return value of of_pci_get_max_link_speed() function
+- mark zero 'max-link-speed' as invalid
+- silently use gen3 speed when 'max-link-speed' as invalid
 
-Remove code which touches ASPM L0s bits from this driver and let
-kernel's ASPM implementation to set ASPM state properly.
+Changes since v2:
+- move PCIe max-link-speed property to armada-37xx.dtsi
+- replace custom macros by standard linux/pci_regs.h macros
+- increase PERST delay to 10ms (needed for initialized Compex WLE900VX)
+- disable link training before PERST (needed for Compex WLE900VX)
+- change of_pci_get_max_link_speed() function to signal -ENOENT
+- handle errors from of_pci_get_max_link_speed() function
+- updated comments, commit titles and messages
 
-Some users are reporting issues that this code is problematic for some
-Intel wifi cards and removing it fixes them, see e.g.:
-https://bugzilla.kernel.org/show_bug.cgi?id=196339
+Changes since v1:
+- commit titles and messages were reviewed and some of them were rewritten
+- patches 1 and 5 from v1 which touch PCIe speed configuration were
+  reworked into one patch
+- patch 2 from v1 was removed, it is not needed anymore
+- patch 7 from v1 now touches the device tree of armada-3720-db
+- a patch was added that tries to enable PCIe PHY via generic-phy API
+  (if a phandle to the PHY is found in the device tree)
+- a patch describing the new PCIe node DT properties was added
+- a patch was added that moves the PHY phandle from board device trees
+  to armada-37xx.dtsi
 
-If problems with Intel wifi cards occur even after this commit, then
-pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
-for affected problematic cards.
+Marek and Pali
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- drivers/pci/controller/pci-aardvark.c | 4 ----
- 1 file changed, 4 deletions(-)
+Marek Behún (5):
+  PCI: aardvark: Improve link training
+  PCI: aardvark: Add PHY support
+  dt-bindings: PCI: aardvark: Describe new properties
+  arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
+  arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index f9955b494267..74b90940a9d4 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -356,10 +356,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 
- 	advk_pcie_wait_for_link(pcie);
- 
--	reg = PCIE_CORE_LINK_L0S_ENTRY |
--		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
--	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
--
- 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
- 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
- 		PCIE_CORE_CMD_IO_ACCESS_EN |
+Pali Rohár (7):
+  PCI: aardvark: Train link immediately after enabling training
+  PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
+    read-only register
+  PCI: of: Zero max-link-speed value is invalid
+  PCI: aardvark: Issue PERST via GPIO
+  PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
+  PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
+    macros
+  arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
+
+ .../devicetree/bindings/pci/aardvark-pci.txt  |   4 +
+ .../arm64/boot/dts/marvell/armada-3720-db.dts |   3 +
+ .../dts/marvell/armada-3720-espressobin.dtsi  |   2 +-
+ .../dts/marvell/armada-3720-turris-mox.dts    |   6 -
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   4 +-
+ drivers/pci/controller/pci-aardvark.c         | 263 +++++++++++++++---
+ drivers/pci/of.c                              |   2 +-
+ 7 files changed, 231 insertions(+), 53 deletions(-)
+
 -- 
 2.20.1
 
