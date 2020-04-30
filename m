@@ -2,123 +2,133 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9F9C4724C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33941C4724C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47841208D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B03B2082E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sOWMM3UK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JUYJmd1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgD3Qaa (ORCPT
+        id S1726792AbgD3Qcz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:30:30 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13064 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgD3Qa2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 12:30:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eaafce10000>; Thu, 30 Apr 2020 09:29:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 09:30:28 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 09:30:28 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 16:30:28 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 16:30:26 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
- <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
- <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
- <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
-Message-ID: <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
-Date:   Thu, 30 Apr 2020 09:29:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 12:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726517AbgD3Qcy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:32:54 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EEC1C035495
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 09:32:54 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id r25so111782oij.4
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 09:32:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7ZsclabnnR3wKrS78Exn79EM/lt2n7ZZyGteRGUsI8A=;
+        b=JUYJmd1MBGqCas674WTA1IWfQlE/kGTREfBIK5mpDA0GKQCWA5TWrInT5xqa+cty1P
+         1uf7jMp4ptZNe61WpozNUpn19cau+2xAsPJezxaJ/YkNvLq0Y4Ke8RMtVAAA6GGjYHiE
+         gScspZIdHjRYqpJ2Uno+FQWJL/XiblVg/Mi22ewLmBd/WxxJ9smUOoHF9lr4DrqqMmAI
+         C9OI28yxF+GzrKoTO+j1owgWEJOGkNwuwuNh8Zj6Tpvn/9KtPJiufeBqwE3ogh5pXqwf
+         6/YLrVQoTxsZzAQIfZM8oI6/JkLwFFLp8PmBtms1w/jVWbOij59zxxdfJnRIZKaW6HD3
+         p3DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7ZsclabnnR3wKrS78Exn79EM/lt2n7ZZyGteRGUsI8A=;
+        b=nbqCCbzcggedfvgUW8II+IK5WxreMBNcgDRTb9udussRZSfwpynYu9/ND5t5uCUt5s
+         Y8Dua6T1q1z2m2xpDjUVm/NVX+4TbWaU7ZvPNHcRkmD8vG8wt/3RFIZ6vRA8ucsgm9J8
+         4MGfuTpLBxzjjiQKx+grixTz9Xu2BwFvy2/WuOUfESOhMmDABYKjwLN8Tmj+ASrEXmV7
+         v2QDw845jBKHNGL6/preZ6MbuN5cRIio26ddBWPUF1LimJC2y9M33s7871q9EtT0wlr7
+         zA0FFQvjpamYeqFoWEBR4akUPEyJsrnoVBYl1SlvHglIdTZD7bi13mHg2zm3OB4YktfW
+         fpbw==
+X-Gm-Message-State: AGi0Pua0gEzZHhFmC/rhSY16BqdmGT6IuArqrATI5qTRD/WJeiYiBNGV
+        KgMhbDrFQAM8NRiaS2dJyAh/khTqwNxXjMptPeAABQ==
+X-Google-Smtp-Source: APiQypJprzA/+arNVWPUX0khphDyRoZS8i1qOaFeSW8at+OIuNhknrJDu20eedqo9Mv1KETW0rnGhGJV0oxQ/gnyTBI=
+X-Received: by 2002:aca:1c08:: with SMTP id c8mr36776oic.172.1588264373140;
+ Thu, 30 Apr 2020 09:32:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588264161; bh=2DroO8GJPT0AtZeSQK8ueROEdYIu6Ovs1ect3MjQzPE=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=sOWMM3UKIfeFYgOV3uLGzs75tw9iBGuZFODCZwKiHiL0dCOJKwlbBZuiVacayju7e
-         27d2YHXn6JgrBPa+b3Hh61DgKBgkUmucxkOTNu8c+vgIAULPzB8dey7Yw/htsnhCCi
-         sgpgv5qzEi2Xjxe45K2l7wKPHL30bR76787qy9sYYntYjM1k3MGUtvwlC2oBaqb24e
-         T3cqJ8NssY3wetqt+VdP8KOmm25bnSyqK5rGV9hT8NdshtcuZqFpdbsfHCebZ31M2P
-         +9bqvOZCh/SYfCppuNEApgaVu0DmUSJyW0MHRm1PjX133UeOdd26rXX75kPw9uNcGz
-         6VU8iQUbmqIyA==
+References: <20200424155404.10746-1-georgi.djakov@linaro.org>
+ <20200424155404.10746-7-georgi.djakov@linaro.org> <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
+ <20200430060901.j7jjw6soo5h5xoul@vireshk-i7> <CAGETcx_zH_KJ7_A7Ofc2M5GfHKX_J__URJB127MSMcTeaqyzjw@mail.gmail.com>
+ <20200430075356.rjtctfuenirvhxgn@vireshk-i7>
+In-Reply-To: <20200430075356.rjtctfuenirvhxgn@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 30 Apr 2020 09:32:17 -0700
+Message-ID: <CAGETcx-W5XjNtgjDz2Ma_miN=cUBb5LFfhzYtKRpf6iAi4bXNw@mail.gmail.com>
+Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Apr 30, 2020 at 12:54 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 30-04-20, 00:35, Saravana Kannan wrote:
+> > On Wed, Apr 29, 2020 at 11:09 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 24-04-20, 14:18, Saravana Kannan wrote:
+> > > > My only comment is -- can we drop this patch please? I'd like to use
+> > > > devfreq governors for voting on bandwidth and this will effectively
+> > > > override whatever bandwidth decisions are made by the devfreq
+> > > > governor.
+> > >
+> > > And why would that be better ? FWIW, that will have the same problem
+> > > which cpufreq governors had since ages, i.e. they were not proactive
+> > > and were always too late.
+> > >
+> > > The bw should get updated right with frequency, why shouldn't it ?
+> >
+> > I didn't say the bw would be voted based on just CPUfreq. It can also
+> > be based on CPU busy time and other stats. Having said that, this is
+> > not just about CPUfreq. Having the bw be force changed every time a
+> > device has it's OPP is changed is very inflexible. Please don't do it.
+>
+> So, the vote based on the requirements of cpufreq driver should come
+> directly from the cpufreq side itself, but no one stops the others
+> layers to aggregate the requests and then act on them. This is how it
+> is done for other frameworks like clk, regulator, genpd, etc.
 
-On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
->
-> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
->> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> +static int chan_capture_kthread_finish(void *data)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
->>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
->>>> I guess it won't be great to freeze in the middle of a capture=20
->>>> process, so:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (list_empty(&chan->done)=
-)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try=
-_to_freeze();
->>> And here should be some locking protection in order not race with the
->>> chan_capture_kthread_start because kthread_finish could freeze before
->>> kthread_start.
->> Or maybe both start / finish threads should simply be allowed to freeze
->> only when both capture and done lists are empty.
->>
->> if (list_empty(&chan->capture) &&
->> =C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&chan->done))
->> =C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
->
-> good to freeze when not in middle of the frame capture but why should=20
-> we not allow freeze in between captures?
->
-> Other drivers do allow freeze in between frame captures.
->
-> I guess we can freeze before dequeue for capture and in finish thread=20
-> we can freeze after capture done. This also don't need to check for=20
-> list_empty with freeze to allow between frame captures.
->
-Also if we add check for both lists empty, freeze is not allowed as long=20
-as streaming is going on and in case of continuous streaming freeze will=20
-never happen.
+You are missing the point. This is not about aggregation. This is
+about OPP voting for bandwidth on a path when the vote can/should be
+0.
+
+I'll give another example. Say one of the interconnect paths needs to
+be voted only when a particular use case is running. Say, the GPU
+needs to vote for bandwidth to L3 only when it's running in cache
+coherent mode. But it always needs to vote for bandwidth to DDR. With
+the way it's written now, OPP is going to force vote a non-zero
+bandwidth to L3 even when it can be zero. Wasting power for no good
+reason.
+
+Just let the drivers/device get the bandwidth values from OPP without
+forcing them to vote for the bandwidth when they don't need to. Just
+because they decide to use OPP to set their clock doesn't mean they
+should lose to ability to control their bandwidth in a more
+intelligent fashion.
+
+-Saravana
