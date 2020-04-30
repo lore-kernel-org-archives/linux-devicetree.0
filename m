@@ -2,692 +2,809 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB37C47247
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB847C4724C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D67C2082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588259474;
-	bh=kUdQe9qcBDgQnnChqV7y3p0D421H3lQ50sInmrvZ+PM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lUgtB/bfjCWx9qvFsxNsxV4s7vxdx8dA3Xijrx40vMckyvRnsN0vNNlh7PrEiH2qR
-	 u3A4iTAWehJpnxPJUR9YtBpJOTB5lCAmnFQdse5i6PwUuylMpd4VZa8zXxWnEozfTb
-	 wE9kU7rkJU5hJlW2Cb57Hlk2w40+JrTRL+I2zSj8=
+	by mail.kernel.org (Postfix) with ESMTP id 37E7B20661
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:12:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="boVhXtyL";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gPQM2KwE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgD3PLN (ORCPT
+        id S1726572AbgD3PML (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:11:13 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46272 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgD3PLN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 11:11:13 -0400
-Received: by mail-oi1-f196.google.com with SMTP id c124so1959136oib.13;
-        Thu, 30 Apr 2020 08:11:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0R3AmjtaU8yzqrZuOGWM3CfwillDw4Ncon00RNPhQ90=;
-        b=YX/3u396+DCqPPSZTuPrt7dcLY8j4O5fFhyMIBlN0MiSG3dO5kOMAxsKhZuFO74s4O
-         wFrTXEA/xfaLHibVtrfgPM19eZ9xJrlxnG3agBrzGSVsTYsYosh8Ptpi9DSeokhlm7ma
-         jjIFfOsmsmJvRWRZA6y6X0XXYIvNmfpsRp+IVygkxAyBcoN7G0LkY0+rLRaEdlNBN0/E
-         yra1OgjxGFrN1mXaxgnxsyJD3GdvxwKTsiFwX0/zykeVKH3525WfjzaGTRxQ3PO+O9VQ
-         NVl9MSyp1m26JVYCkFcJsOeWjSmRmLFH3xrPJnvFABKYIhAJRPIoMPavJI2fzn8l1rFj
-         ws9Q==
-X-Gm-Message-State: AGi0PuaumM8iZp+IbFJ/dnCvucLy+qM9o3GZx8k2fwVeGrdbzQDGScPb
-        H6BaAIZEWK2ULB0KYDziF1aKa2E=
-X-Google-Smtp-Source: APiQypIwusbS6DRitnfC7QwZNycHxV/KpvbN7198TjsMcJ+Dbk0OQUsizCNwiA29Sa4Dn6qNCFcQrA==
-X-Received: by 2002:a54:4510:: with SMTP id l16mr1975414oil.151.1588259470273;
-        Thu, 30 Apr 2020 08:11:10 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v14sm1359275ooe.10.2020.04.30.08.11.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 08:11:09 -0700 (PDT)
-Received: (nullmailer pid 9376 invoked by uid 1000);
-        Thu, 30 Apr 2020 15:11:08 -0000
-Date:   Thu, 30 Apr 2020 10:11:08 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: input: Add bindings for Azoteq IQS269A
-Message-ID: <20200430151108.GA21911@bogus>
-References: <1587340068-2818-1-git-send-email-jeff@labundy.com>
+        Thu, 30 Apr 2020 11:12:11 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:57986 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726468AbgD3PML (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:12:11 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6F6234013B;
+        Thu, 30 Apr 2020 15:12:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1588259530; bh=WuoOmaDH385Xj2kE7ORpNPqN0fS75O/XMfm/UEPWP7A=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=boVhXtyLdEJzIMwbaddQxQ7GlTJfXWAl0jsJKKWbpbAio4QA1STgOHRI3MBX9T2Wp
+         V+Y58GOWV6JIYFW07MZVpWxnylAl1cT+PTsfIwHxzddbeRMVHS/m4KtXs82OFVWbXF
+         pk43ikX7QYEP0LM+u4NVdOvIbPbWWUJgOP0nIlPy5e23V6E0csinNOUssQfpY5U/LP
+         zgGXMK63Bfqh1ZeSZmmhmGzLOp3/bDSZImJBAnm26jcY4m4h0soPrTJT8iyNAzense
+         t3VX61+Fq0TRJl3tHp1oHxPfxCYJ09xomjhJyUnFKIPLIGvWqFHQezSDeh83Dpkw4p
+         FqldVPCyh7+MA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 30C3AA0079;
+        Thu, 30 Apr 2020 15:12:01 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 30 Apr 2020 08:12:01 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Thu, 30 Apr 2020 08:12:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y3xlc2kHqE1iriB2k7sZwdnG+CIXxWsDm3ZDWf+c/B4qgpk1UHyNjHtwLnoIZJW7Xq8eTXHuQ9BqXL99E/0+riTxT+8RhHyEPsI9nA0XKgArBEHyCIIXBNNFNpw7Ohv7uVZKtYkf3HSZMCNz67tYsPMVMy5TxiugDkjtuZN6SwF73ENHq2oosBtp/yCORwlC+5vqv6okB75vXaXI0lqRfc2DLYbEU4KwqyLriPOlj+9fDAJOkhG+vT2C0LdJjdFW6o3QNPTEeIUaZXR3P5la1MTSW4jtZ9Q1BAckUUHmdrei6ms2ky/Wc1/8w447YDZHbKODEIabgDpVx9YVuTJwug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LmiZqf/G4KZuxRhUz+AFu7gKwyb2X6TmXBlNKi+PxWc=;
+ b=Z1n/TihRjZi40urInJQF1UcKEacylO/at/v7rvp9/3ZXlGtb3FBgfdcIwYgzA0Yi7/ObnEuLJndgpCSnifzHvLTf9hTCfPJ8I8i39EUiDG9Tt7hnHcLJQfoZtmZQQCnKINMFbgcUBo56tp1bvZWsnVGpU0kxaIYmd4QwfcW+yF5nBAXwhm/WyRfFAZecThiBIf+AJCt3y8xdyCQg7wLefB9Dpz0JOybv1++/+Scfzyv33KGknhD2zjWgQ9em07EL1BrGzEZTEKrGjbRg4CkrUIw3GYM2228+gAE5r36kpqyFkW48dBWj1DVnLnkd09LSNpDPznJ8gP75wGc99jukAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LmiZqf/G4KZuxRhUz+AFu7gKwyb2X6TmXBlNKi+PxWc=;
+ b=gPQM2KwEkEes22u7z+bflrijBE55pvovEU9JQ6RwjR8pSavxDRXJiECXRqySsnBVZi7Jhy5qpB+S6/cF/nY+ywtMU6VWqtengHf1q4quRk8swMrGESo6T/RF1VEfXiMPXwi2I6nKVuAt6ffO0VLrHbAwPIMPPRQJo5u01TQQ9as=
+Received: from CH2PR12MB3782.namprd12.prod.outlook.com (2603:10b6:610:23::28)
+ by CH2PR12MB3943.namprd12.prod.outlook.com (2603:10b6:610:2d::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 30 Apr
+ 2020 15:11:59 +0000
+Received: from CH2PR12MB3782.namprd12.prod.outlook.com
+ ([fe80::c8ba:1b80:f234:e1c2]) by CH2PR12MB3782.namprd12.prod.outlook.com
+ ([fe80::c8ba:1b80:f234:e1c2%2]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
+ 15:11:59 +0000
+From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+To:     Daniel Vetter <daniel@ffwll.ch>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Martyn Welch <martyn.welch@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>
+Subject: RE: [PATCH v7 4/8] drm: imx: Add i.MX 6 MIPI DSI host platform driver
+Thread-Topic: [PATCH v7 4/8] drm: imx: Add i.MX 6 MIPI DSI host platform
+ driver
+Thread-Index: AQHWF/hHmRH7W3MKo0WMruBLgG/ar6iEVNaAgApOWwCAAE2OAIACzjiAgAASMnA=
+Date:   Thu, 30 Apr 2020 15:11:59 +0000
+Message-ID: <CH2PR12MB37825DDA6314C68488FC10C8CBAA0@CH2PR12MB3782.namprd12.prod.outlook.com>
+References: <20200421161610.1501827-1-adrian.ratiu@collabora.com>
+ <20200421161610.1501827-5-adrian.ratiu@collabora.com>
+ <20200422010727.GM5983@pendragon.ideasonboard.com>
+ <20200428143030.GN3456981@phenom.ffwll.local> <87pnbrig2z.fsf@collabora.com>
+ <20200430135841.GE10381@phenom.ffwll.local>
+In-Reply-To: <20200430135841.GE10381@phenom.ffwll.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYW5nZWxvclxh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLWVkNzgzYjIyLThhZjQtMTFlYS05ZDczLWZjNzc3?=
+ =?us-ascii?Q?NGVlZGMyZVxhbWUtdGVzdFxlZDc4M2IyNC04YWY0LTExZWEtOWQ3My1mYzc3?=
+ =?us-ascii?Q?NzRlZWRjMmVib2R5LnR4dCIgc3o9IjI0MDM5IiB0PSIxMzIzMjczMzExNTkx?=
+ =?us-ascii?Q?MjM4OTUiIGg9Ii9ScDBmcHI4cXZGZnV4LyttNUZrQ0JUYzRIQT0iIGlkPSIi?=
+ =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUJRSkFB?=
+ =?us-ascii?Q?QzNwOUN2QVIvV0FSb2dtbW5DQnlCZEdpQ2FhY0lISUYwT0FBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQUNrQ0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFRQUJBQUFBSGFXeU5BQUFBQUFBQUFBQUFBQUFBSjRBQUFCbUFHa0Fi?=
+ =?us-ascii?Q?Z0JoQUc0QVl3QmxBRjhBY0FCc0FHRUFiZ0J1QUdrQWJnQm5BRjhBZHdCaEFI?=
+ =?us-ascii?Q?UUFaUUJ5QUcwQVlRQnlBR3NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
+ =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3Qm5BR1lBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
+ =?us-ascii?Q?bEFISUFjd0JmQUhNQVlRQnRBSE1BZFFCdUFHY0FYd0JqQUc4QWJnQm1BQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
+ =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFjd0Jo?=
+ =?us-ascii?Q?QUcwQWN3QjFBRzRBWndCZkFISUFaUUJ6QUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
+ =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCekFHMEFhUUJqQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
+ =?us-ascii?Q?QUFBQUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFi?=
+ =?us-ascii?Q?Z0JsQUhJQWN3QmZBSE1BZEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1B?=
+ =?us-ascii?Q?RzhBZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWRB?=
+ =?us-ascii?Q?QnpBRzBBWXdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFI?=
+ =?us-ascii?Q?a0FYd0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0IxQUcwQVl3QUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
+ =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFad0IwQUhNQVh3QndBSElBYndCa0FIVUFZd0IwQUY4?=
+ =?us-ascii?Q?QWRBQnlBR0VBYVFCdUFHa0FiZ0JuQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
+ =?us-ascii?Q?ekFHRUFiQUJsQUhNQVh3QmhBR01BWXdCdkFIVUFiZ0IwQUY4QWNBQnNBR0VB?=
+ =?us-ascii?Q?YmdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSE1BWVFCc0FHVUFjd0Jm?=
+ =?us-ascii?Q?QUhFQWRRQnZBSFFBWlFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
+ =?us-ascii?Q?QUFBQ0FBQUFBQUNlQUFBQWN3QnVBSEFBY3dCZkFHd0FhUUJqQUdVQWJnQnpB?=
+ =?us-ascii?Q?R1VBWHdCMEFHVUFjZ0J0QUY4QU1RQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFB?=
+ =?us-ascii?Q?QUJ6QUc0QWNBQnpBRjhBYkFCcEFHTUFaUUJ1QUhNQVpRQmZBSFFBWlFCeUFH?=
+ =?us-ascii?Q?MEFYd0J6QUhRQWRRQmtBR1VBYmdCMEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFIWUFad0JmQUdzQVpR?=
+ =?us-ascii?Q?QjVBSGNBYndCeUFHUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFB?=
+ =?us-ascii?Q?QUFBQUFDQUFBQUFBQT0iLz48L21ldGE+?=
+authentication-results: ffwll.ch; dkim=none (message not signed)
+ header.d=none;ffwll.ch; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [95.136.124.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 66ecbeef-8489-4c72-e4cd-08d7ed18d43c
+x-ms-traffictypediagnostic: CH2PR12MB3943:
+x-microsoft-antispam-prvs: <CH2PR12MB3943339AF2672EBA931D1B1ECBAA0@CH2PR12MB3943.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0389EDA07F
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3782.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(396003)(39860400002)(136003)(346002)(7696005)(83080400001)(9686003)(54906003)(52536014)(55016002)(110136005)(316002)(966005)(2906002)(4326008)(8676002)(71200400001)(33656002)(478600001)(76116006)(6506007)(30864003)(7416002)(86362001)(8936002)(66476007)(64756008)(5660300002)(66446008)(66946007)(66556008)(186003)(26005)(579004);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: R64OjMM7TnWG916TyYOq0rUsUwgDAVNaKn3eXqvH2RQv1+nD7j0A2/dt5Y4LfE3LRGpjUWz6/1VQgulPPT61uDIG+s0I8dYIhlSjhjYh+2xTZDR2CWUiL3M8PT9855yPcYMglFmdjc60+uWnpgYaeKYEmxRJ7MyUlKODdStYigQhrdICIhVmUk1mRTOlM/ggtBcThnqhao9BcKsQ+2O+lo7k2NPvJzoOqybEU1BNq8okdDXKXDyvmwGatAyINwABA3gturM5Yh9rnRppJ3dOncsTPNysEbRaHtLo+WvqLJfe3QgbJvjnNl/g86Ze95AIIbuKYN9PNdx77QyDBswpGShUlQ3tbmpVInt+Q7PDb9OGAPnJdOscNs28C7I2nhWzgFMqfjScnhHPmJ3awUBzXADD2t4di0E1V4EV4Rl6OXml75b9vlg6tYCo+ZfKar/P58iElKWK8RQtBEeK1k96uf0TWoO0g9B4QZzBocmekKzZj/wIGHAMjSxL6+7GSvl58b//BkhJ6YiGATrz5KzlSw==
+x-ms-exchange-antispam-messagedata: rJNrWaSgO/ShMdnbtxFNSoqRALSCsz5OUE4z46k5Pvwka4qJKACaLG01Bl9zhPHC3yOYaNAFk/8EsOCgoisLYNxIJiOUarIZdxVptpubEwOp6xjLUfZi+FYR7K8ebAxmscpXsMDWOXVfnDFp/7+PQauWHYsJz1Sc3FlXjKjTAlZbR377mHtEKJZ43UCgtV/Fsto/R8NTvACHyhRGkxtIe2eG26d0QCfdZ1QkC9AQrFQbs/3UveKx+emmhVH4TZxXDNVc2iLgl9bp4QO2FI6UYzDSGpxhahCqpOBMuI+UtRdll3aBKonk5PNE4Bm+lJACCo3HqANYZQ5GRlDuMokQ4MbUZdjBeptKtUqnYW574uzZknYg8hC+/RChNyGoC9VWOI7Cbin4sUnOxDi1Q8j7AdSdcJWmRpX0wIdAVME1JUTn3YsB0InQX1yP7pr441U5tuvps2p95tgR+YG5Ua8PxbV6sthUpGX6GeYttAyOu1fVtdLnzYpxvl8PfnN0CdqG3UNYBhE+jXeUimsDVd8BX6WCtuMk+knxIB1ZKI83/kHEMQsFxQVx+nLnkXsSq5UV//oDwSJ6YRmMoSRvJOwLCei+qmXiTA+K291wPGiM5RiVFzR4Sqx4exgTQmIMG5q9ZAQ2b8eIwMXgevonJ4uhJ27D03URLnslJCpuP/OpwWQQSbe/m598X9kZesVJYjHDvSpP/WDjafowtDJsvqNBznW3ey1L9qf7ZmyKs4T6ruLVe7YZpuKxhcip0+FeRa89hrG9AkRwA5nRjj1zKp2OYQ/bO0WQdfORUnSWOCozf0k=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587340068-2818-1-git-send-email-jeff@labundy.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66ecbeef-8489-4c72-e4cd-08d7ed18d43c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 15:11:59.0873
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GkG+4EdIi1F4QG1rHxEXz3R4nhKBd3IWsDX6tpcYWjQD+3FoObFclb9wLKQ/lrb40MDpdyithR6RkgQWtqT4Jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3943
+X-OriginatorOrg: synopsys.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 06:47:47PM -0500, Jeff LaBundy wrote:
-> This patch adds device tree bindings for the Azoteq IQS269A
-> capacitive touch controller.
-> 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> ---
->  .../devicetree/bindings/input/iqs269a.yaml         | 591 +++++++++++++++++++++
->  1 file changed, 591 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/iqs269a.yaml
+From: Daniel Vetter <daniel@ffwll.ch>
+Date: Thu, Apr 30, 2020 at 14:58:41
 
-Kind of a lot of properties compared to other devices. Why so many? That 
-said, nothing looks to be obviously something that doesn't belong in DT.
+> On Tue, Apr 28, 2020 at 10:08:04PM +0300, Adrian Ratiu wrote:
+> > Hi Daniel,
+> >=20
+> > On Tue, 28 Apr 2020, Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > On Wed, Apr 22, 2020 at 04:07:27AM +0300, Laurent Pinchart wrote:
+> > > > Hi Adrian,  On Tue, Apr 21, 2020 at 07:16:06PM +0300, Adrian Ratiu
+> > > > wrote: > This adds support for the Synopsis DesignWare MIPI DSI
+> > > > v1.01 > host controller which is embedded in i.MX 6 SoCs.   Based o=
+n
+> > > > > following patches, but updated/extended to work with existing >
+> > > > support found in the kernel:  - drm: imx: Support Synopsys >
+> > > > DesignWare MIPI DSI host controller >   Signed-off-by: Liu Ying
+> > > > <Ying.Liu@freescale.com> >  Cc: Fabio Estevam <festevam@gmail.com>
+> > > > Cc: Enric Balletbo > Serra <eballetbo@gmail.com> Reviewed-by: Emil
+> > > > Velikov > <emil.velikov@collabora.com> Tested-by: Adrian Pop >
+> > > > <pop.adrian61@gmail.com> Tested-by: Arnaud Ferraris >
+> > > > <arnaud.ferraris@collabora.com> Signed-off-by: Sjoerd Simons >
+> > > > <sjoerd.simons@collabora.com> Signed-off-by: Martyn Welch >
+> > > > <martyn.welch@collabora.com> Signed-off-by: Adrian Ratiu >
+> > > > <adrian.ratiu@collabora.com> --- Changes since v6: >   - Replaced
+> > > > custom noop encoder with the simple drm encoder >   (Enric) - Added
+> > > > CONFIG_DRM_IMX6_MIPI_DSI depends on >   CONFIG_OF (Enric) - Dropped
+> > > > imx_mipi_dsi_register() because >   now it only creates the dummy
+> > > > encoder which can easily be >   done directly in imx_dsi_bind() >
+> > > > Changes since v5: >   - Reword to remove unrelated device tree patc=
+h
+> > > > mention >   (Fabio) - Move pllref_clk enable/disable to bind/unbind
+> > > > >   (Ezequiel) - Fix freescale.com -> nxp.com email addresses >
+> > > > (Fabio) - Also added myself as module author (Fabio) - Use >
+> > > > DRM_DEV_* macros for consistency, print more error msg >  Changes
+> > > > since v4: >   - Split off driver-specific configuration of phy
+> > > > timings >   due to new upstream API.  - Move regmap infrastructure =
+>
+> > > > logic to separate commit (Ezequiel) - Move dsi v1.01 layout >
+> > > > addition to a separate commit (Ezequiel) - Minor warnings >   and
+> > > > driver name fixes >  Changes since v3: >   - Renamed platform drive=
+r
+> > > > to reflect it's i.MX6 >   only. (Fabio) >  Changes since v2: >   -
+> > > > Fixed commit tags. (Emil) >  Changes since v1: >   - Moved register
+> > > > definitions & regmap initialization into >   bridge module. Platfor=
+m
+> > > > drivers get the regmap via >   plat_data after calling the bridge
+> > > > probe. (Emil) > --- >  drivers/gpu/drm/imx/Kconfig            |   8
+> > > > + >  drivers/gpu/drm/imx/Makefile           |   1 + >
+> > > > drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c | 391 >
+> > > > +++++++++++++++++++++++++ 3 files changed, 400 insertions(+) >
+> > > > create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c >  diff
+> > > > --git a/drivers/gpu/drm/imx/Kconfig > b/drivers/gpu/drm/imx/Kconfig
+> > > > index > 207bf7409dfba..0dffc72df7922 100644 --- >
+> > > > a/drivers/gpu/drm/imx/Kconfig +++ > b/drivers/gpu/drm/imx/Kconfig @=
+@
+> > > > -39,3 +39,11 @@ config > DRM_IMX_HDMI >  	depends on DRM_IMX help
+> > > > Choose this if you want to use >  HDMI on i.MX6. > + +config
+> > > > DRM_IMX6_MIPI_DSI +	tristate "Freescale i.MX6 > DRM MIPI DSI"
+> > > > +	select DRM_DW_MIPI_DSI +	depends on > DRM_IMX +	depends on OF
+> > > > +	help +	  Choose this if you want > to use MIPI DSI on i.MX6.  dif=
+f
+> > > > --git > a/drivers/gpu/drm/imx/Makefile
+> > > > b/drivers/gpu/drm/imx/Makefile > index 21cdcc2faabc8..9a7843c593478
+> > > > 100644 --- > a/drivers/gpu/drm/imx/Makefile +++ >
+> > > > b/drivers/gpu/drm/imx/Makefile @@ -9,3 +9,4 @@ >
+> > > > obj-$(CONFIG_DRM_IMX_TVE) +=3D imx-tve.o >  obj-$(CONFIG_DRM_IMX_LD=
+B)
+> > > > +=3D imx-ldb.o >  obj-$(CONFIG_DRM_IMX_HDMI) +=3D dw_hdmi-imx.o >
+> > > > +obj-$(CONFIG_DRM_IMX6_MIPI_DSI) +=3D dw_mipi_dsi-imx6.o diff > --g=
+it
+> > > > a/drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c >
+> > > > b/drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c new file mode 100644 >
+> > > > index 0000000000000..f8a0a4fe16e21 --- /dev/null +++ >
+> > > > b/drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c @@ -0,0 +1,391 @@ > +//
+> > > > SPDX-License-Identifier: GPL-2.0+ +/* + * i.MX6 drm > driver - MIPI
+> > > > DSI Host Controller + * + * Copyright (C) > 2011-2015 Freescale
+> > > > Semiconductor, Inc.  + * Copyright (C) > 2019-2020 Collabora, Ltd.
+> > > > + */ + +#include <linux/clk.h> > +#include <linux/component.h>
+> > > > +#include <linux/mfd/syscon.h> > +#include
+> > > > <linux/mfd/syscon/imx6q-iomuxc-gpr.h> +#include > <linux/module.h>
+> > > > +#include <linux/of_device.h> +#include > <linux/regmap.h> +#includ=
+e
+> > > > <linux/videodev2.h> +#include > <drm/bridge/dw_mipi_dsi.h> +#includ=
+e
+> > > > <drm/drm_crtc_helper.h> > +#include <drm/drm_mipi_dsi.h> +#include
+> > > > <drm/drm_of.h> > +#include <drm/drm_print.h> + +#include "imx-drm.h=
+"
+> > > > + > +#define DSI_PWR_UP			0x04 +#define > RESET				0 +#define
+> > > > POWERUP > BIT(0) + +#define DSI_PHY_IF_CTRL			0x5c > +#define
+> > > > PHY_IF_CTRL_RESET		0x0 + +#define > DSI_PHY_TST_CTRL0		0x64 +#defin=
+e
+> > > > PHY_TESTCLK > BIT(1) +#define PHY_UNTESTCLK			0 +#define >
+> > > > PHY_TESTCLR			BIT(0) +#define > PHY_UNTESTCLR			0 + +#define >
+> > > > DSI_PHY_TST_CTRL1		0x68 +#define PHY_TESTEN > BIT(16) +#define
+> > > > PHY_UNTESTEN			0 +#define > PHY_TESTDOUT(n)			(((n) & 0xff) << 8) >
+> > > > +#define PHY_TESTDIN(n)			(((n) & 0xff) << > 0) + +struct
+> > > > imx_mipi_dsi { +	struct drm_encoder > encoder; +	struct device *dev=
+;
+> > > > +	struct regmap *mux_sel; + > struct dw_mipi_dsi *mipi_dsi; +	struc=
+t
+> > > > clk *pllref_clk; + > +	void __iomem *base; +	unsigned int lane_mbps=
+;
+> > > > +}; + > +struct dphy_pll_testdin_map { +	unsigned int max_mbps; + >
+> > > > u8 testdin; +}; + +/* The table is based on 27MHz DPHY pll >
+> > > > reference clock. */ +static const struct dphy_pll_testdin_map >
+> > > > dptdin_map[] =3D { +	{160, 0x04}, {180, 0x24}, {200, 0x44}, > {210,
+> > > > 0x06}, +	{240, 0x26}, {250, 0x46}, {270, 0x08}, > {300, 0x28},
+> > > > +	{330, 0x48}, {360, 0x2a}, {400, 0x4a}, > {450, 0x0c}, +	{500,
+> > > > 0x2c}, {550, 0x0e}, {600, 0x2e}, > {650, 0x10}, +	{700, 0x30}, {750=
+,
+> > > > 0x12}, {800, 0x32}, > {850, 0x14}, +	{900, 0x34}, {950, 0x54},
+> > > > {1000, 0x74} +}; > + +static inline struct imx_mipi_dsi
+> > > > *enc_to_dsi(struct > drm_encoder *enc) +{ +	return container_of(enc=
+,
+> > > > struct > imx_mipi_dsi, encoder); +} + +static void >
+> > > > imx_mipi_dsi_set_ipu_di_mux(struct imx_mipi_dsi *dsi, int > ipu_di)
+> > > > +{ +	regmap_update_bits(dsi->mux_sel, > IOMUXC_GPR3, + >
+> > > > IMX6Q_GPR3_MIPI_MUX_CTL_MASK, +			   ipu_di > <<
+> > > > IMX6Q_GPR3_MIPI_MUX_CTL_SHIFT); +} + +static bool >
+> > > > imx_mipi_dsi_encoder_mode_fixup(struct drm_encoder *encoder, >
+> > > > +					    const struct > drm_display_mode *mode, + > struct
+> > > > drm_display_mode *adj_mode) +{ +	return true; +} + > +static int
+> > > > imx_mipi_dsi_encoder_atomic_check(struct > drm_encoder *encoder, + =
+>
+> > > > struct drm_crtc_state *crtc_state, + > struct drm_connector_state
+> > > > *conn) +{ +	struct > imx_crtc_state *imx_crtc_state =3D >
+> > > > to_imx_crtc_state(crtc_state); + +	/* The following values > are
+> > > > taken from dw_hdmi_imx_atomic_check */ + >
+> > > > imx_crtc_state->bus_format =3D MEDIA_BUS_FMT_RGB888_1X24; + >
+> > > > imx_crtc_state->di_hsync_pin =3D 2; + > imx_crtc_state->di_vsync_pi=
+n =3D
+> > > > 3; + +	return 0; +}  No encoder functions please. This should be a
+> > > > bridge driver, the encoder should be created by the i.MX display
+> > > > controller driver itself. As that would require quite a bit of
+> > > > refactoring I'm OK having an encoder here for the meantime, but it
+> > > > should be a dummy one, without any operation.
+> > >=20
+> > > +1 on this, came to say the same. This seems to duplicate the dw-hdmi
+> > > design, where the code organization is a bit a mess, with some parts =
+in
+> > > drm/bridge, and some parts in each drm_device driver. Plus drm_encode=
+r
+> > > in there on top.
+> > >=20
+> > > If we want to continue with the drm_bridge abstraction for these kind=
+ of
+> > > drivers then imo we need:
+> > >=20
+> > > - to make drm_bridge the actual abstraction, no leaking back&forth
+> > > between   the bridge chip and the overall drm_device side of things.
+> > >=20
+> > > - move _all_ dw-mipi-dsi related code into drm/bridge
+> > >=20
+> > > - for the platform specific binding stuff I think drm/bridge/dw-mipi-=
+dsi
+> > > directory, which contains the main driver, plus a file each   for the
+> > > imx/stm/whatever platform bindings sounds like a   reasonable layout.
+> > >=20
+> > > If that doesn't work, then I think dw-mipi-dsi isn't really a bridge
+> > > driver with clear encapsulation, but instead should be structured as =
+a
+> > > helper library to implement a drm_encoder. And no drm_bridge.
+> > >=20
+> > > And yes the exact same problem exists with dw-hdmi. That's the reason
+> > > why I've started to look into these, it's not really a code pattern w=
+e
+> > > should repeat imo.
+> >=20
+> > The code structure you propose should be doable and I was actually thin=
+king
+> > of something like it when writing the cover letter for v8 of this serie=
+s,
+> > about how to consolidate the Synopsis DW MIPI DSI logic at the same tim=
+e
+> > while consolidating the rest of imx drivers to unify their simple encod=
+er
+> > management.
+> >=20
+> > Thank you for fleshing it out! It's very helpful :)
+> >=20
+> > BTW have you seen what I did with the bridge in v8 for the imx6 driver?=
+  [1]
+> >=20
+> > What I'd like to avoid is feature creep in this patch series which is a=
+bout
+> > adding the imx6 driver, because I think moving the logic and refactorin=
+g all
+> > the drivers is a separate issue and already this series is big and
+> > increasing.
+> >=20
+> > So would you be ok with merging the imx6 mipi dsi driver with its
+> > dw-mipi-dsi regamp rework and doing the refactoring to consolidate all =
+the
+> > bridge logic in a separate patch series which also includes moving the
+> > rockchip and stm encoder logic to a drm_bridge?
+> >=20
+> > Or would you like me to do this consolidation rework in advance just fo=
+r the
+> > new imx6 mipi-dsi driver in this series and tackle the rest of drivers =
+in a
+> > separate patch series?
+>=20
+> Yeah I think that rework is going to be a lot of work. Generally as long
+> as we have agreement about the long-term direction, then I think in-tree
+> refactoring leads to best results. So if other bridge people (I've just
+> jumped in here) agree, then we're good to go.
+>=20
+> I think best way to document the agreement is to type up a patch for
+> Documentation/gpu/todo.rst with the full plan, with some details. And the=
+n
+> get acks from bridge maintainers. I think Laurent, Sam and Boris
+> Brezillion are most active right now with shaping the drm_bridge future.
+>=20
+> Cheers, Daniel
+>=20
 
-No interdependencies between properties? If there are, use 
-'dependencies'.
+Hi Adrian,
 
-One other comment below.
+Indeed the driver is getting quite messy, if it goes ahead I=20
+would be available to help on this driver rework.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/input/iqs269a.yaml b/Documentation/devicetree/bindings/input/iqs269a.yaml
-> new file mode 100644
-> index 0000000..7f4fcdc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/iqs269a.yaml
-> @@ -0,0 +1,591 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/iqs269a.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Azoteq IQS269A Capacitive Touch Controller
-> +
-> +maintainers:
-> +  - Jeff LaBundy <jeff@labundy.com>
-> +
-> +description: |
-> +  The Azoteq IQS269A is an 8-channel capacitive touch controller that features
-> +  additional Hall-effect and inductive sensing capabilities.
-> +
-> +  Link to datasheet: https://www.azoteq.com/
-> +
-> +properties:
-> +  compatible:
-> +    const: azoteq,iqs269a
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  azoteq,hall-enable:
-> +    type: boolean
-> +    description:
-> +      Enables Hall-effect sensing on channels 6 and 7. In this case, keycodes
-> +      assigned to channel 6 are ignored and keycodes assigned to channel 7 are
-> +      interpreted as switch codes. Refer to the datasheet for requirements im-
-> +      posed on channels 6 and 7 by Hall-effect sensing.
-> +
-> +  azoteq,suspend-mode:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1, 2, 3]
-> +        default: 0
-> +    description: |
-> +      Specifies the power mode during suspend as follows:
-> +      0: Automatic (same as normal runtime, i.e. suspend/resume disabled)
-> +      1: Low power (all sensing at a reduced reporting rate)
-> +      2: Ultra-low power (channel 0 proximity sensing)
-> +      3: Halt (no sensing)
-> +
-> +  azoteq,clk-div:
-> +    type: boolean
-> +    description: Divides the device's core clock by a factor of 4.
-> +
-> +  azoteq,ulp-update:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +        maximum: 7
-> +        default: 3
-> +    description: Specifies the ultra-low-power mode update rate.
-> +
-> +  azoteq,reseed-offset:
-> +    type: boolean
-> +    description:
-> +      Applies an 8-count offset to all long-term averages upon either ATI or
-> +      reseed events.
-> +
-> +  azoteq,filt-str-lp-lta:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1, 2, 3]
-> +        default: 0
-> +    description:
-> +      Specifies the long-term average filter strength during low-power mode.
-> +
-> +  azoteq,filt-str-lp-cnt:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1, 2, 3]
-> +        default: 0
-> +    description:
-> +      Specifies the raw count filter strength during low-power mode.
-> +
-> +  azoteq,filt-str-np-lta:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1, 2, 3]
-> +        default: 0
-> +    description:
-> +      Specifies the long-term average filter strength during normal-power mode.
-> +
-> +  azoteq,filt-str-np-cnt:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1, 2, 3]
-> +        default: 0
-> +    description:
-> +      Specifies the raw count filter strength during normal-power mode.
-> +
-> +  azoteq,rate-np-ms:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
+I think that also the inclusion of a phy driver could help
+in making this driver more clear since most of the code that
+each vender has it's phy related.
 
-With a unit suffix, you can drop the type $ref.
+Thanks,
+Angelo
 
-> +      - minimum: 0
-> +        maximum: 255
-> +        default: 16
-> +    description: Specifies the report rate (in ms) during normal-power mode.
-> +
-> +  azoteq,rate-lp-ms:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +        maximum: 255
-> +        default: 160
-> +    description: Specifies the report rate (in ms) during low-power mode.
-> +
-> +  azoteq,rate-ulp-ms:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - multipleOf: 16
-> +        minimum: 0
-> +        maximum: 4080
-> +        default: 160
-> +    description: Specifies the report rate (in ms) during ultra-low-power mode.
-> +
-> +  azoteq,timeout-pwr-ms:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - multipleOf: 512
-> +        minimum: 0
-> +        maximum: 130560
-> +        default: 2560
-> +    description:
-> +      Specifies the length of time (in ms) to wait for an event during normal-
-> +      power mode before transitioning to low-power mode.
-> +
-> +  azoteq,timeout-lta-ms:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - multipleOf: 512
-> +        minimum: 0
-> +        maximum: 130560
-> +        default: 32768
-> +    description:
-> +      Specifies the length of time (in ms) to wait before resetting the long-
-> +      term average of all channels. Specify the maximum timeout to disable it
-> +      altogether.
-> +
-> +  azoteq,ati-band-disable:
-> +    type: boolean
-> +    description: Disables the ATI band check.
-> +
-> +  azoteq,ati-lp-only:
-> +    type: boolean
-> +    description: Limits automatic ATI to low-power mode.
-> +
-> +  azoteq,ati-band-tighten:
-> +    type: boolean
-> +    description: Tightens the ATI band from 1/8 to 1/16 of the desired target.
-> +
-> +  azoteq,filt-disable:
-> +    type: boolean
-> +    description: Disables all raw count filtering.
-> +
-> +  azoteq,gpio3-select:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +        maximum: 7
-> +        default: 0
-> +    description:
-> +      Selects the channel for which the GPIO3 pin represents touch state.
-> +
-> +  azoteq,dual-direction:
-> +    type: boolean
-> +    description:
-> +      Specifies that long-term averages are to freeze in the presence of either
-> +      increasing or decreasing counts, thereby permitting events to be reported
-> +      in either direction.
-> +
-> +  azoteq,tx-freq:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1, 2, 3]
-> +        default: 0
-> +    description: |
-> +      Specifies the inductive sensing excitation frequency as follows (paren-
-> +      thesized numbers represent the frequency if 'azoteq,clk-div' is present):
-> +      0: 16 MHz (4 MHz)
-> +      1: 8 MHz (2 MHz)
-> +      2: 4 MHz (1 MHz)
-> +      3: 2 MHz (500 kHz)
-> +
-> +  azoteq,global-cap-increase:
-> +    type: boolean
-> +    description: Increases the global capacitance adder from 0.5 pF to 1.5 pF.
-> +
-> +  azoteq,reseed-select:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1, 2, 3]
-> +        default: 0
-> +    description: |
-> +      Specifies the event(s) that prompt the device to reseed (i.e. reset the
-> +      long-term average) of an associated channel as follows:
-> +      0: None
-> +      1: Proximity
-> +      2: Proximity or touch
-> +      3: Proximity, touch or deep touch
-> +
-> +  azoteq,tracking-enable:
-> +    type: boolean
-> +    description:
-> +      Enables all associated channels to track their respective reference
-> +      channels.
-> +
-> +  azoteq,filt-str-slider:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1, 2, 3]
-> +        default: 1
-> +    description: Specifies the slider coordinate filter strength.
-> +
-> +patternProperties:
-> +  "^channel@[0-7]$":
-> +    type: object
-> +    description:
-> +      Represents a single sensing channel. A channel is active if defined and
-> +      inactive otherwise.
-> +
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 7
-> +        description: Index of the channel.
-> +
-> +      azoteq,reseed-disable:
-> +        type: boolean
-> +        description:
-> +          Prevents the channel from being reseeded if the long-term average
-> +          timeout (defined in 'azoteq,timeout-lta') expires.
-> +
-> +      azoteq,blocking-enable:
-> +        type: boolean
-> +        description: Specifies that the channel is a blocking channel.
-> +
-> +      azoteq,slider0-select:
-> +        type: boolean
-> +        description: Specifies that the channel participates in slider 0.
-> +
-> +      azoteq,slider1-select:
-> +        type: boolean
-> +        description: Specifies that the channel participates in slider 1.
-> +
-> +      azoteq,rx-enable:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +          - minItems: 1
-> +            maxItems: 8
-> +            items:
-> +              minimum: 0
-> +              maximum: 7
-> +        description:
-> +          Specifies the CRX pin(s) associated with the channel. By default, only
-> +          the CRX pin corresponding to the channel's index is enabled (e.g. CRX0
-> +          for channel 0).
-> +
-> +      azoteq,tx-enable:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +          - minItems: 1
-> +            maxItems: 8
-> +            items:
-> +              minimum: 0
-> +              maximum: 7
-> +            default: [0, 1, 2, 3, 4, 5, 6, 7]
-> +        description: Specifies the TX pin(s) associated with the channel.
-> +
-> +      azoteq,meas-cap-decrease:
-> +        type: boolean
-> +        description:
-> +          Decreases the internal measurement capacitance from 60 pF to 15 pF.
-> +
-> +      azoteq,rx-float-inactive:
-> +        type: boolean
-> +        description: Floats any inactive CRX pins instead of grounding them.
-> +
-> +      azoteq,local-cap-size:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [0, 1, 2]
-> +            default: 0
-> +        description: |
-> +          Specifies the capacitance to be added to the channel as follows:
-> +          0: None
-> +          1: Global adder (based on 'azoteq,global-cap-increase')
-> +          2: Global adder + 0.5 pF
-> +
-> +      azoteq,invert-enable:
-> +        type: boolean
-> +        description:
-> +          Inverts the polarity of the states reported for proximity, touch and
-> +          deep-touch events relative to their respective thresholds.
-> +
-> +      azoteq,proj-bias:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [0, 1, 2, 3]
-> +            default: 2
-> +        description: |
-> +          Specifies the bias current applied during projected-capacitance
-> +          sensing as follows:
-> +          0: 2.5 uA
-> +          1: 5 uA
-> +          2: 10 uA
-> +          3: 20 uA
-> +
-> +      azoteq,sense-mode:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [0, 1, 9, 14, 15]
-> +            default: 0
-> +        description: |
-> +          Specifies the channel's sensing mode as follows:
-> +          0:  Self capacitance
-> +          1:  Projected capacitance
-> +          9:  Self or mutual inductance
-> +          14: Hall effect
-> +          15: Temperature
-> +
-> +      azoteq,sense-freq:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [0, 1, 2, 3]
-> +            default: 1
-> +        description: |
-> +          Specifies the channel's sensing frequency as follows (parenthesized
-> +          numbers represent the frequency if 'azoteq,clk-div' is present):
-> +          0: 4 MHz (1 MHz)
-> +          1: 2 MHz (500 kHz)
-> +          2: 1 MHz (250 kHz)
-> +          3: 500 kHz (125 kHz)
-> +
-> +      azoteq,static-enable:
-> +        type: boolean
-> +        description: Enables the static front-end for the channel.
-> +
-> +      azoteq,ati-mode:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [0, 1, 2, 3]
-> +            default: 3
-> +        description: |
-> +          Specifies the channel's ATI mode as follows:
-> +          0: Disabled
-> +          1: Semi-partial
-> +          2: Partial
-> +          3: Full
-> +
-> +      azoteq,ati-base:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [75, 100, 150, 200]
-> +            default: 100
-> +        description: Specifies the channel's ATI base.
-> +
-> +      azoteq,ati-target:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - multipleOf: 32
-> +            minimum: 0
-> +            maximum: 2016
-> +            default: 512
-> +        description: Specifies the channel's ATI target.
-> +
-> +      azoteq,assoc-select:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +          - minItems: 1
-> +            maxItems: 8
-> +            items:
-> +              minimum: 0
-> +              maximum: 7
-> +        description:
-> +          Specifies the associated channels for which the channel serves as a
-> +          reference channel. By default, no channels are selected.
-> +
-> +      azoteq,assoc-weight:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - minimum: 0
-> +            maximum: 255
-> +            default: 0
-> +        description:
-> +          Specifies the channel's impact weight if it acts as an associated
-> +          channel (0 = 0% impact, 255 = 200% impact).
-> +
-> +    patternProperties:
-> +      "^event-prox(-alt)?$":
-> +        type: object
-> +        description:
-> +          Represents a proximity event reported by the channel in response to
-> +          a decrease in counts. Node names suffixed with '-alt' instead corre-
-> +          spond to an increase in counts.
-> +
-> +          By default, the long-term average tracks an increase in counts such
-> +          that only events corresponding to a decrease in counts are reported
-> +          (refer to the datasheet for more information).
-> +
-> +          Specify 'azoteq,dual-direction' to freeze the long-term average when
-> +          the counts increase or decrease such that events of either direction
-> +          can be reported. Alternatively, specify 'azoteq,invert-enable' to in-
-> +          vert the polarity of the states reported by the channel.
-> +
-> +          Complementary events (e.g. event-touch and event-touch-alt) can both
-> +          be present and specify different key or switch codes, but not differ-
-> +          ent thresholds or hysteresis (if applicable).
-> +
-> +        properties:
-> +          azoteq,thresh:
-> +            allOf:
-> +              - $ref: /schemas/types.yaml#/definitions/uint32
-> +              - minimum: 0
-> +                maximum: 255
-> +                default: 10
-> +            description: Specifies the threshold for the event.
-> +
-> +          linux,code:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            description: Numeric key or switch code associated with the event.
-> +
-> +        additionalProperties: false
-> +
-> +      "^event-touch(-alt)?$":
-> +        type: object
-> +        description: Represents a touch event reported by the channel.
-> +
-> +        properties:
-> +          azoteq,thresh:
-> +            allOf:
-> +              - $ref: /schemas/types.yaml#/definitions/uint32
-> +              - minimum: 0
-> +                maximum: 255
-> +                default: 8
-> +            description: Specifies the threshold for the event.
-> +
-> +          azoteq,hyst:
-> +            allOf:
-> +              - $ref: /schemas/types.yaml#/definitions/uint32
-> +              - minimum: 0
-> +                maximum: 15
-> +                default: 4
-> +            description: Specifies the hysteresis for the event.
-> +
-> +          linux,code:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            description: Numeric key or switch code associated with the event.
-> +
-> +        additionalProperties: false
-> +
-> +      "^event-deep(-alt)?$":
-> +        type: object
-> +        description: Represents a deep-touch event reported by the channel.
-> +
-> +        properties:
-> +          azoteq,thresh:
-> +            allOf:
-> +              - $ref: /schemas/types.yaml#/definitions/uint32
-> +              - minimum: 0
-> +                maximum: 255
-> +                default: 26
-> +            description: Specifies the threshold for the event.
-> +
-> +          azoteq,hyst:
-> +            allOf:
-> +              - $ref: /schemas/types.yaml#/definitions/uint32
-> +              - minimum: 0
-> +                maximum: 15
-> +                default: 0
-> +            description: Specifies the hysteresis for the event.
-> +
-> +          linux,code:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            description: Numeric key or switch code associated with the event.
-> +
-> +        additionalProperties: false
-> +
-> +    required:
-> +      - reg
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/input/input.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            iqs269a@44 {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +
-> +                    compatible = "azoteq,iqs269a";
-> +                    reg = <0x44>;
-> +                    interrupt-parent = <&gpio>;
-> +                    interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +                    azoteq,hall-enable;
-> +                    azoteq,suspend-mode = <2>;
-> +
-> +                    channel@0 {
-> +                            reg = <0x0>;
-> +
-> +                            event-prox {
-> +                                    linux,code = <KEY_POWER>;
-> +                            };
-> +                    };
-> +
-> +                    channel@1 {
-> +                            reg = <0x1>;
-> +                            azoteq,slider0-select;
-> +                    };
-> +
-> +                    channel@2 {
-> +                            reg = <0x2>;
-> +                            azoteq,slider0-select;
-> +                    };
-> +
-> +                    channel@3 {
-> +                            reg = <0x3>;
-> +                            azoteq,slider0-select;
-> +                    };
-> +
-> +                    channel@4 {
-> +                            reg = <0x4>;
-> +                            azoteq,slider0-select;
-> +                    };
-> +
-> +                    channel@5 {
-> +                            reg = <0x5>;
-> +                            azoteq,slider0-select;
-> +                    };
-> +
-> +                    channel@6 {
-> +                            reg = <0x6>;
-> +                            azoteq,invert-enable;
-> +                            azoteq,static-enable;
-> +                            azoteq,reseed-disable;
-> +                            azoteq,rx-enable = <0>;
-> +                            azoteq,sense-freq = <0x0>;
-> +                            azoteq,sense-mode = <0xE>;
-> +                            azoteq,ati-mode = <0x0>;
-> +                            azoteq,ati-base = <200>;
-> +                            azoteq,ati-target = <320>;
-> +                    };
-> +
-> +                    channel@7 {
-> +                            reg = <0x7>;
-> +                            azoteq,invert-enable;
-> +                            azoteq,static-enable;
-> +                            azoteq,reseed-disable;
-> +                            azoteq,rx-enable = <0>, <6>;
-> +                            azoteq,sense-freq = <0x0>;
-> +                            azoteq,sense-mode = <0xE>;
-> +                            azoteq,ati-mode = <0x3>;
-> +                            azoteq,ati-base = <200>;
-> +                            azoteq,ati-target = <320>;
-> +
-> +                            event-touch {
-> +                                    linux,code = <SW_LID>;
-> +                            };
-> +                    };
-> +            };
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
-> 
+> >=20
+> > @Laurent, do you also have suggestions how to proceed?
+> >=20
+> > [1] https://urldefense.com/v3/__https://lore.kernel.org/linux-arm-kerne=
+l/20200427081952.3536741-1-adrian.ratiu@collabora.com/__;!!A4F2R9G_pg!NhBPZ=
+GbhUKJY_mrt-2Ft_ja04W8XPqZ8P3-wntQomu30weMxgQfUEXZgnyJXUb7A$=20
+> >=20
+> > Thank you,
+> > Adrian
+> >=20
+> > >=20
+> > > Cheers, Daniel
+> > >=20
+> > > >=20
+> > > > > +
+> > > > > +static void imx_mipi_dsi_encoder_commit(struct drm_encoder *enco=
+der)
+> > > > > +{
+> > > > > +	struct imx_mipi_dsi *dsi =3D enc_to_dsi(encoder);
+> > > > > +	int mux =3D drm_of_encoder_active_port_id(dsi->dev->of_node, en=
+coder);
+> > > > > +
+> > > > > +	imx_mipi_dsi_set_ipu_di_mux(dsi, mux);
+> > > > > +}
+> > > > > +
+> > > > > +static void imx_mipi_dsi_encoder_disable(struct drm_encoder *enc=
+oder)
+> > > > > +{
+> > > > > +}
+> > > > > +
+> > > > > +static const struct drm_encoder_helper_funcs imx_mipi_dsi_encode=
+r_helpers =3D {
+> > > > > +	.mode_fixup =3D imx_mipi_dsi_encoder_mode_fixup,
+> > > > > +	.commit =3D imx_mipi_dsi_encoder_commit,
+> > > > > +	.disable =3D imx_mipi_dsi_encoder_disable,
+> > > > > +	.atomic_check =3D imx_mipi_dsi_encoder_atomic_check,
+> > > > > +};
+> > > > > +
+> > > > > +static enum drm_mode_status imx_mipi_dsi_mode_valid(void *priv_d=
+ata,
+> > > > > +					const struct drm_display_mode *mode)
+> > > > > +{
+> > > > > +	/*
+> > > > > +	 * The VID_PKT_SIZE field in the DSI_VID_PKT_CFG
+> > > > > +	 * register is 11-bit.
+> > > > > +	 */
+> > > > > +	if (mode->hdisplay > 0x7ff)
+> > > > > +		return MODE_BAD_HVALUE;
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * The V_ACTIVE_LINES field in the DSI_VTIMING_CFG
+> > > > > +	 * register is 11-bit.
+> > > > > +	 */
+> > > > > +	if (mode->vdisplay > 0x7ff)
+> > > > > +		return MODE_BAD_VVALUE;
+> > > > > +
+> > > > > +	return MODE_OK;
+> > > > > +}
+> > > > > +
+> > > > > +
+> > > > > +static unsigned int max_mbps_to_testdin(unsigned int max_mbps)
+> > > > > +{
+> > > > > +	unsigned int i;
+> > > > > +
+> > > > > +	for (i =3D 0; i < ARRAY_SIZE(dptdin_map); i++)
+> > > > > +		if (dptdin_map[i].max_mbps =3D=3D max_mbps)
+> > > > > +			return dptdin_map[i].testdin;
+> > > > > +
+> > > > > +	return -EINVAL;
+> > > > > +}
+> > > > > +
+> > > > > +static inline void dsi_write(struct imx_mipi_dsi *dsi, u32 reg, =
+u32 val)
+> > > > > +{
+> > > > > +	writel(val, dsi->base + reg);
+> > > > > +}
+> > > > > +
+> > > > > +static int imx_mipi_dsi_phy_init(void *priv_data)
+> > > > > +{
+> > > > > +	struct imx_mipi_dsi *dsi =3D priv_data;
+> > > > > +	int testdin;
+> > > > > +
+> > > > > +	testdin =3D max_mbps_to_testdin(dsi->lane_mbps);
+> > > > > +	if (testdin < 0) {
+> > > > > +		DRM_DEV_ERROR(dsi->dev,
+> > > > > +			      "failed to get testdin for %dmbps lane clock\n",
+> > > > > +			      dsi->lane_mbps);
+> > > > > +		return testdin;
+> > > > > +	}
+> > > > > +
+> > > > > +	dsi_write(dsi, DSI_PHY_IF_CTRL, PHY_IF_CTRL_RESET);
+> > > > > +	dsi_write(dsi, DSI_PWR_UP, POWERUP);
+> > > > > +
+> > > > > +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLK | PHY_UNTESTCLR=
+);
+> > > > > +	dsi_write(dsi, DSI_PHY_TST_CTRL1, PHY_TESTEN | PHY_TESTDOUT(0) =
+|
+> > > > > +		  PHY_TESTDIN(0x44));
+> > > > > +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_TESTCLK | PHY_UNTESTCLR);
+> > > > > +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLK | PHY_UNTESTCLR=
+);
+> > > > > +	dsi_write(dsi, DSI_PHY_TST_CTRL1, PHY_UNTESTEN | PHY_TESTDOUT(0=
+) |
+> > > > > +		  PHY_TESTDIN(testdin));
+> > > > > +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_TESTCLK | PHY_UNTESTCLR);
+> > > > > +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLK | PHY_UNTESTCLR=
+);
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static int imx_mipi_dsi_get_lane_mbps(void *priv_data,
+> > > > > +				      const struct drm_display_mode *mode,
+> > > > > +				      unsigned long mode_flags, u32 lanes,
+> > > > > +				      u32 format, unsigned int *lane_mbps)
+> > > > > +{
+> > > > > +	struct imx_mipi_dsi *dsi =3D priv_data;
+> > > > > +	int bpp;
+> > > > > +	unsigned int i, target_mbps, mpclk;
+> > > > > +	unsigned long pllref;
+> > > > > +
+> > > > > +	bpp =3D mipi_dsi_pixel_format_to_bpp(format);
+> > > > > +	if (bpp < 0) {
+> > > > > +		DRM_DEV_ERROR(dsi->dev, "failed to get bpp for format %d: %d\n=
+",
+> > > > > +			      format, bpp);
+> > > > > +		return bpp;
+> > > > > +	}
+> > > > > +
+> > > > > +	pllref =3D clk_get_rate(dsi->pllref_clk);
+> > > > > +	if (pllref !=3D 27000000)
+> > > > > +		DRM_WARN("DSI pllref_clk not set to 27Mhz\n");
+> > > > > +
+> > > > > +	mpclk =3D DIV_ROUND_UP(mode->clock, MSEC_PER_SEC);
+> > > > > +	if (mpclk) {
+> > > > > +		/* take 1/0.7 blanking overhead into consideration */
+> > > > > +		target_mbps =3D (mpclk * (bpp / lanes) * 10) / 7;
+> > > > > +	} else {
+> > > > > +		DRM_DEV_ERROR(dsi->dev, "use default 1Gbps DPHY pll clock\n");
+> > > > > +		target_mbps =3D 1000;
+> > > > > +	}
+> > > > > +
+> > > > > +	DRM_DEV_DEBUG(dsi->dev, "target pllref_clk frequency is %uMbps\=
+n",
+> > > > > +		      target_mbps);
+> > > > > +
+> > > > > +	for (i =3D 0; i < ARRAY_SIZE(dptdin_map); i++) {
+> > > > > +		if (target_mbps < dptdin_map[i].max_mbps) {
+> > > > > +			*lane_mbps =3D dptdin_map[i].max_mbps;
+> > > > > +			dsi->lane_mbps =3D *lane_mbps;
+> > > > > +			DRM_DEV_DEBUG(dsi->dev,
+> > > > > +				      "real pllref_clk frequency is %uMbps\n",
+> > > > > +				      *lane_mbps);
+> > > > > +			return 0;
+> > > > > +		}
+> > > > > +	}
+> > > > > +
+> > > > > +	DRM_DEV_ERROR(dsi->dev, "DPHY clock frequency %uMbps is out of =
+range\n",
+> > > > > +		      target_mbps);
+> > > > > +
+> > > > > +	return -EINVAL;
+> > > > > +}
+> > > > > +
+> > > > > +static int
+> > > > > +dw_mipi_dsi_phy_get_timing(void *priv_data, unsigned int lane_mb=
+ps,
+> > > > > +			   struct dw_mipi_dsi_dphy_timing *timing)
+> > > > > +{
+> > > > > +	timing->clk_hs2lp =3D 0x40;
+> > > > > +	timing->clk_lp2hs =3D 0x40;
+> > > > > +	timing->data_hs2lp =3D 0x40;
+> > > > > +	timing->data_lp2hs =3D 0x40;
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static const struct dw_mipi_dsi_phy_ops dw_mipi_dsi_imx6_phy_ops=
+ =3D {
+> > > > > +	.init =3D imx_mipi_dsi_phy_init,
+> > > > > +	.get_lane_mbps =3D imx_mipi_dsi_get_lane_mbps,
+> > > > > +	.get_timing =3D dw_mipi_dsi_phy_get_timing,
+> > > > > +};
+> > > > > +
+> > > > > +static struct dw_mipi_dsi_plat_data imx6q_mipi_dsi_drv_data =3D =
+{
+> > > > > +	.max_data_lanes =3D 2,
+> > > > > +	.mode_valid =3D imx_mipi_dsi_mode_valid,
+> > > > > +	.phy_ops =3D &dw_mipi_dsi_imx6_phy_ops,
+> > > > > +};
+> > > > > +
+> > > > > +static const struct of_device_id imx_dsi_dt_ids[] =3D {
+> > > > > +	{
+> > > > > +		.compatible =3D "fsl,imx6q-mipi-dsi",
+> > > > > +		.data =3D &imx6q_mipi_dsi_drv_data,
+> > > > > +	},
+> > > > > +	{ /* sentinel */ }
+> > > > > +};
+> > > > > +MODULE_DEVICE_TABLE(of, imx_dsi_dt_ids);
+> > > > > +
+> > > > > +static int imx_mipi_dsi_bind(struct device *dev, struct device *=
+master,
+> > > > > +			     void *data)
+> > > > > +{
+> > > > > +	struct imx_mipi_dsi *dsi =3D dev_get_drvdata(dev);
+> > > > > +	struct drm_device *drm =3D data;
+> > > > > +	int ret;
+> > > > > +
+> > > > > +	ret =3D clk_prepare_enable(dsi->pllref_clk);
+> > > > > +	if (ret) {
+> > > > > +		DRM_DEV_ERROR(dev, "Failed to enable pllref_clk: %d\n", ret);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	ret =3D imx_drm_create_encoder(drm, &dsi->encoder, dsi->dev->of=
+_node);
+> > > > > +	if (ret) {
+> > > > > +		DRM_DEV_ERROR(dsi->dev, "failed to create drm encoder\n");
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	drm_encoder_helper_add(&dsi->encoder, &imx_mipi_dsi_encoder_hel=
+pers);
+> > > > > +
+> > > > > +	ret =3D dw_mipi_dsi_bind(dsi->mipi_dsi, &dsi->encoder);
+> > > > > +	if (ret) {
+> > > > > +		DRM_DEV_ERROR(dev, "Failed to bind: %d\n", ret);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static void imx_mipi_dsi_unbind(struct device *dev, struct devic=
+e *master,
+> > > > > +				void *data)
+> > > > > +{
+> > > > > +	struct imx_mipi_dsi *dsi =3D dev_get_drvdata(dev);
+> > > > > +
+> > > > > +	dw_mipi_dsi_unbind(dsi->mipi_dsi);
+> > > > > +
+> > > > > +	clk_disable_unprepare(dsi->pllref_clk);
+> > > > > +}
+> > > > > +
+> > > > > +static const struct component_ops imx_mipi_dsi_ops =3D {
+> > > > > +	.bind	=3D imx_mipi_dsi_bind,
+> > > > > +	.unbind	=3D imx_mipi_dsi_unbind,
+> > > > > +};
+> > > > > +
+> > > > > +static int imx_mipi_dsi_probe(struct platform_device *pdev)
+> > > > > +{
+> > > > > +	struct device *dev =3D &pdev->dev;
+> > > > > +	const struct of_device_id *of_id =3D of_match_device(imx_dsi_dt=
+_ids, dev);
+> > > > > +	struct dw_mipi_dsi_plat_data *pdata =3D (struct dw_mipi_dsi_pla=
+t_data *) of_id->data;
+> > > > > +	struct imx_mipi_dsi *dsi;
+> > > > > +	struct resource *res;
+> > > > > +	int ret;
+> > > > > +
+> > > > > +	dsi =3D devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
+> > > > > +	if (!dsi)
+> > > > > +		return -ENOMEM;
+> > > > > +
+> > > > > +	dsi->dev =3D dev;
+> > > > > +
+> > > > > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > > > +	dsi->base =3D devm_ioremap_resource(dev, res);
+> > > > > +	if (IS_ERR(dsi->base)) {
+> > > > > +		ret =3D PTR_ERR(dsi->base);
+> > > > > +		DRM_DEV_ERROR(dev, "Unable to get dsi registers: %d\n", ret);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	dsi->pllref_clk =3D devm_clk_get(dev, "ref");
+> > > > > +	if (IS_ERR(dsi->pllref_clk)) {
+> > > > > +		ret =3D PTR_ERR(dsi->pllref_clk);
+> > > > > +		DRM_DEV_ERROR(dev, "Unable to get pllref_clk: %d\n", ret);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	dsi->mux_sel =3D syscon_regmap_lookup_by_phandle(dev->of_node, =
+"fsl,gpr");
+> > > > > +	if (IS_ERR(dsi->mux_sel)) {
+> > > > > +		ret =3D PTR_ERR(dsi->mux_sel);
+> > > > > +		DRM_DEV_ERROR(dev, "Failed to get GPR regmap: %d\n", ret);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	dev_set_drvdata(dev, dsi);
+> > > > > +
+> > > > > +	imx6q_mipi_dsi_drv_data.base =3D dsi->base;
+> > > > > +	imx6q_mipi_dsi_drv_data.priv_data =3D dsi;
+> > > > > +
+> > > > > +	dsi->mipi_dsi =3D dw_mipi_dsi_probe(pdev, pdata);
+> > > > > +	if (IS_ERR(dsi->mipi_dsi)) {
+> > > > > +		ret =3D PTR_ERR(dsi->mipi_dsi);
+> > > > > +		DRM_DEV_ERROR(dev, "Failed to probe DW DSI host: %d\n", ret);
+> > > > > +		goto err_clkdisable;
+> > > > > +	}
+> > > > > +
+> > > > > +	return component_add(&pdev->dev, &imx_mipi_dsi_ops);
+> > > > > +
+> > > > > +err_clkdisable:
+> > > > > +	clk_disable_unprepare(dsi->pllref_clk);
+> > > > > +	return ret;
+> > > > > +}
+> > > > > +
+> > > > > +static int imx_mipi_dsi_remove(struct platform_device *pdev)
+> > > > > +{
+> > > > > +	component_del(&pdev->dev, &imx_mipi_dsi_ops);
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static struct platform_driver imx_mipi_dsi_driver =3D {
+> > > > > +	.probe		=3D imx_mipi_dsi_probe,
+> > > > > +	.remove		=3D imx_mipi_dsi_remove,
+> > > > > +	.driver		=3D {
+> > > > > +		.of_match_table =3D imx_dsi_dt_ids,
+> > > > > +		.name	=3D "dw-mipi-dsi-imx6",
+> > > > > +	},
+> > > > > +};
+> > > > > +module_platform_driver(imx_mipi_dsi_driver);
+> > > > > +
+> > > > > +MODULE_DESCRIPTION("i.MX6 MIPI DSI host controller driver");
+> > > > > +MODULE_AUTHOR("Liu Ying <victor.liu@nxp.com>");
+> > > > > +MODULE_AUTHOR("Adrian Ratiu <adrian.ratiu@collabora.com>");
+> > > > > +MODULE_LICENSE("GPL");
+> > > > > -- > 2.26.0
+> > > > >
+> > > >=20
+> > > > --=20
+> > > > Regards,
+> > > >=20
+> > > > Laurent Pinchart
+> > > > _______________________________________________
+> > > > dri-devel mailing list
+> > > > dri-devel@lists.freedesktop.org
+> > > > https://urldefense.com/v3/__https://lists.freedesktop.org/mailman/l=
+istinfo/dri-devel__;!!A4F2R9G_pg!NhBPZGbhUKJY_mrt-2Ft_ja04W8XPqZ8P3-wntQomu=
+30weMxgQfUEXZgn99IbZV5$=20
+> > >=20
+> > > --=20
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > https://urldefense.com/v3/__http://blog.ffwll.ch__;!!A4F2R9G_pg!NhBPZ=
+GbhUKJY_mrt-2Ft_ja04W8XPqZ8P3-wntQomu30weMxgQfUEXZgn_FrwlWk$=20
+>=20
+> --=20
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> https://urldefense.com/v3/__http://blog.ffwll.ch__;!!A4F2R9G_pg!NhBPZGbhU=
+KJY_mrt-2Ft_ja04W8XPqZ8P3-wntQomu30weMxgQfUEXZgn_FrwlWk$=20
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://urldefense.com/v3/__https://lists.freedesktop.org/mailman/listinf=
+o/dri-devel__;!!A4F2R9G_pg!NhBPZGbhUKJY_mrt-2Ft_ja04W8XPqZ8P3-wntQomu30weMx=
+gQfUEXZgn99IbZV5$=20
+
+
