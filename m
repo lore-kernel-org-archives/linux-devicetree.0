@@ -2,63 +2,63 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B82C47260
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C61C54E4B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3509F20870
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7ADF208DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AVtmLG7x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZtUI8P3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgD3Oki (ORCPT
+        id S1728241AbgD3Okg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34306 "EHLO
+        Thu, 30 Apr 2020 10:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728238AbgD3Okh (ORCPT
+        by vger.kernel.org with ESMTP id S1727972AbgD3Okf (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:40:37 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2580C035494
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 07:40:37 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u16so2204791wmc.5
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 07:40:37 -0700 (PDT)
+        Thu, 30 Apr 2020 10:40:35 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BDC2C08E859
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 07:40:35 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f13so7185320wrm.13
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 07:40:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v8m/gvQmdEE9q+Hk6vZz26imXwSjnQ8yRBvjHzdBrII=;
-        b=AVtmLG7xYoehDlrnZavnpbAOhvBcGvD8THICXsw2+FmNJiMb6JVlWTGYe4FmG1dmI8
-         At5vrjT6MtoEzwTTzQ/y3NsrffNNLmUePhwD3TlPy1PXULk/Y1uUJsFvECAPDGCNQ7fo
-         WPg9bTKlMkc/notJMFKWvoyOjQPeX73fDxPWn0d0WwMcnOwyW751edW/3yr44yceNv+8
-         ZQ70u9G30xYPpT6uX7q7q6j5dFb0RDjmuo9I0d3VzU/CaL7ueffD2Q/3MwJgwJUt4wz9
-         WDvu7KNJaJSo6FtBHyshkNa/Aiz+MdDoA/jrjtMFAOdffIGw3K2yfTNouUR0Lyfn5K4Z
-         tUjQ==
+        bh=o9p0tsqlSzCrf847KmF0Jc5zS+3Cbp+9M5kBgXSmkSE=;
+        b=ZtUI8P3RpElTPIGqdjH/DV6kjTjOH19h5pOFvhRkzVcRtbRxANMGCNmy6mhXm5QQob
+         OAhvfcqzCO4qj+VH+3ysNL7KNAEivMcothmkRFtJj26/pev8uYCWvgXekOicKRMagS1W
+         W+elb+sxcVGzzPTKfRGNIW5lhmiZZnix+/pmV8fPycbQz3sP6DA1j9EvDQ1sDMarlbol
+         /5TO6+SDIJCjNVxavwHJvZQ0QehJWYHZx2Rvsuw1NCCFTxvOlkTIAG+f6VywAiiep6Hg
+         WLZ6+ly0VB0ezaDfEm+W7Po6Q/NUtBxDHkkiWjBcX7fAwEQzMLIBra55cOZHtCAoI3JY
+         fgJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v8m/gvQmdEE9q+Hk6vZz26imXwSjnQ8yRBvjHzdBrII=;
-        b=N8tlUCQvtJEJ9AimO6UW8l8Ep7aKFlVrE9SDV1vNx1jcdtR/Ra9HJzDV7gkqn30o1r
-         Mn8QnmRo/u5e+bl5Cu0CFMu7VPiTHA2vPkk3DF9u1gw4O6qZ7RdTY+MYENyLXyd7CcHS
-         bhzVIp7k1BpVgOFJI/3l9UBv5Za4B4tNwHwME/32HqrAL7ufmW2OD12ctzCsD42Hx7ut
-         fCyEUO9JqMtmRYmq6OnUZyI200iSSk5NRQRswiHufDLp2Sx3L/7s3u9P+9FhEZZ25Soy
-         Wuy9Fpy7MD60NIyDXYP1330x3Xq5MvmvyykhR6ff5wDTVbjZLsCfCtnZEFeuS9B7vkXi
-         e+OQ==
-X-Gm-Message-State: AGi0PubBaD2NP0zsedNb149qAybQeeM0G2qDOBf9zPmtMuag2f68ruIb
-        IIU6p8HlFlms3AuLSYrAh5O0iA==
-X-Google-Smtp-Source: APiQypKC2Ra8wot+z9FmTb6X9lIUjfF/migCT+XYOIs58HdBF3GJl8+jq+TxpZeczK0hV/dLr58P0Q==
-X-Received: by 2002:a05:600c:414b:: with SMTP id h11mr3325816wmm.9.1588257636329;
-        Thu, 30 Apr 2020 07:40:36 -0700 (PDT)
+        bh=o9p0tsqlSzCrf847KmF0Jc5zS+3Cbp+9M5kBgXSmkSE=;
+        b=o1uJ6FJ7fFXJkOUzwOIXH6jGF8jVbBOkEUC4LRyP8zPk1gkJzNELPtvzhkuOdogJb7
+         bxXQB1oYg3xv4lr9oAQXDVnJAO3rT+16wlVnG02ySo1MgWSHiqgwYgrv2cD7yliAGhYg
+         YbyjRsdCVIc8EKcHIGGoubfRlmTYdCywtIjqIM4+jQJCihr8gQZGQG1HrUlXAVBAJkd2
+         l8njhnjudF5icgmYXEPBlrnkDuQ8vrAFWn0NXXsygn/bXCPHe3g8pHbZwT3KBcn8Bdeo
+         KabrLGZme/JeLaoWbCLpRy/7zaeXjGuQ1Xd37bdB58Yk7ee2KLjzgGFWvnddv0wq4ctb
+         qBhQ==
+X-Gm-Message-State: AGi0PuYPHSn3uOrGosAALnz+8EOSRBfwFeZcJC4L8281wllx7oOzbcuD
+        8a2uNQ8ey3P3yMzJHVz9GqeqJg==
+X-Google-Smtp-Source: APiQypKsBcylUV5b7TA1Fm8amCYZw0VtaGJPx0H1kxtTCy7ARSEDLbGOkB5H2wJXISq/PY7iJO7CVg==
+X-Received: by 2002:a5d:6acc:: with SMTP id u12mr4610113wrw.198.1588257633890;
+        Thu, 30 Apr 2020 07:40:33 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id n2sm4153286wrt.33.2020.04.30.07.40.35
+        by smtp.gmail.com with ESMTPSA id n2sm4153286wrt.33.2020.04.30.07.40.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 07:40:35 -0700 (PDT)
+        Thu, 30 Apr 2020 07:40:33 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -69,11 +69,10 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
         felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
         xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v6 15/25] iommu/arm-smmu-v3: Add SVA feature checking
-Date:   Thu, 30 Apr 2020 16:34:14 +0200
-Message-Id: <20200430143424.2787566-16-jean-philippe@linaro.org>
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: [PATCH v6 13/25] iommu/arm-smmu-v3: Add support for VHE
+Date:   Thu, 30 Apr 2020 16:34:12 +0200
+Message-Id: <20200430143424.2787566-14-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200430143424.2787566-1-jean-philippe@linaro.org>
 References: <20200430143424.2787566-1-jean-philippe@linaro.org>
@@ -84,114 +83,137 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Aggregate all sanity-checks for sharing CPU page tables with the SMMU
-under a single ARM_SMMU_FEAT_SVA bit. For PCIe SVA, users also need to
-check FEAT_ATS and FEAT_PRI. For platform SVA, they will most likely have
-to check FEAT_STALLS.
+ARMv8.1 extensions added Virtualization Host Extensions (VHE), which allow
+to run a host kernel at EL2. When using normal DMA, Device and CPU address
+spaces are dissociated, and do not need to implement the same
+capabilities, so VHE hasn't been used in the SMMU until now.
 
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+With shared address spaces however, ASIDs are shared between MMU and SMMU,
+and broadcast TLB invalidations issued by a CPU are taken into account by
+the SMMU. TLB entries on both sides need to have identical exception level
+in order to be cleared with a single invalidation.
+
+When the CPU is using VHE, enable VHE in the SMMU for all STEs. Normal DMA
+mappings will need to use TLBI_EL2 commands instead of TLBI_NH, but
+shouldn't be otherwise affected by this change.
+
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 72 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ drivers/iommu/arm-smmu-v3.c | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index a562c4b243292..9b90cc57a609b 100644
+index aad49d565c592..3a70d032d4e71 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -657,6 +657,7 @@ struct arm_smmu_device {
+@@ -13,6 +13,7 @@
+ #include <linux/acpi_iort.h>
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
++#include <linux/cpufeature.h>
+ #include <linux/crash_dump.h>
+ #include <linux/delay.h>
+ #include <linux/dma-iommu.h>
+@@ -480,6 +481,8 @@ struct arm_smmu_cmdq_ent {
+ 		#define CMDQ_OP_TLBI_NH_ASID	0x11
+ 		#define CMDQ_OP_TLBI_NH_VA	0x12
+ 		#define CMDQ_OP_TLBI_EL2_ALL	0x20
++		#define CMDQ_OP_TLBI_EL2_ASID	0x21
++		#define CMDQ_OP_TLBI_EL2_VA	0x22
+ 		#define CMDQ_OP_TLBI_S12_VMALL	0x28
+ 		#define CMDQ_OP_TLBI_S2_IPA	0x2a
+ 		#define CMDQ_OP_TLBI_NSNH_ALL	0x30
+@@ -651,6 +654,7 @@ struct arm_smmu_device {
+ #define ARM_SMMU_FEAT_STALL_FORCE	(1 << 13)
+ #define ARM_SMMU_FEAT_VAX		(1 << 14)
  #define ARM_SMMU_FEAT_RANGE_INV		(1 << 15)
- #define ARM_SMMU_FEAT_E2H		(1 << 16)
- #define ARM_SMMU_FEAT_BTM		(1 << 17)
-+#define ARM_SMMU_FEAT_SVA		(1 << 18)
++#define ARM_SMMU_FEAT_E2H		(1 << 16)
  	u32				features;
  
  #define ARM_SMMU_OPT_SKIP_PREFETCH	(1 << 0)
-@@ -3925,6 +3926,74 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
- 	return 0;
- }
- 
-+static bool arm_smmu_supports_sva(struct arm_smmu_device *smmu)
-+{
-+	unsigned long reg, fld;
-+	unsigned long oas;
-+	unsigned long asid_bits;
-+
-+	u32 feat_mask = ARM_SMMU_FEAT_BTM | ARM_SMMU_FEAT_COHERENCY;
-+
-+	if ((smmu->features & feat_mask) != feat_mask)
-+		return false;
-+
-+	if (!(smmu->pgsize_bitmap & PAGE_SIZE))
-+		return false;
-+
-+	/*
-+	 * Get the smallest PA size of all CPUs (sanitized by cpufeature). We're
-+	 * not even pretending to support AArch32 here.
-+	 */
-+	reg = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
-+	fld = cpuid_feature_extract_unsigned_field(reg, ID_AA64MMFR0_PARANGE_SHIFT);
-+	switch (fld) {
-+	case 0x0:
-+		oas = 32;
+@@ -924,6 +928,8 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_NUM, ent->tlbi.num);
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_SCALE, ent->tlbi.scale);
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
++		/* Fallthrough */
++	case CMDQ_OP_TLBI_EL2_VA:
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
+ 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
+ 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_TTL, ent->tlbi.ttl);
+@@ -945,6 +951,9 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
+ 	case CMDQ_OP_TLBI_S12_VMALL:
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
+ 		break;
++	case CMDQ_OP_TLBI_EL2_ASID:
++		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
 +		break;
-+	case 0x1:
-+		oas = 36;
-+		break;
-+	case 0x2:
-+		oas = 40;
-+		break;
-+	case 0x3:
-+		oas = 42;
-+		break;
-+	case 0x4:
-+		oas = 44;
-+		break;
-+	case 0x5:
-+		oas = 48;
-+		break;
-+	case 0x6:
-+		oas = 52;
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	/* abort if MMU outputs addresses greater than what we support. */
-+	if (smmu->oas < oas)
-+		return false;
-+
-+	/* We can support bigger ASIDs than the CPU, but not smaller */
-+	fld = cpuid_feature_extract_unsigned_field(reg, ID_AA64MMFR0_ASID_SHIFT);
-+	asid_bits = fld ? 16 : 8;
-+	if (smmu->asid_bits < asid_bits)
-+		return false;
-+
-+	/*
-+	 * See max_pinned_asids in arch/arm64/mm/context.c. The following is
-+	 * generally the maximum number of bindable processes.
-+	 */
-+	if (IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0))
-+		asid_bits--;
-+	dev_dbg(smmu->dev, "%d shared contexts\n", (1 << asid_bits) -
-+		num_possible_cpus() - 2);
-+
-+	return true;
-+}
-+
- static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+ 	case CMDQ_OP_ATC_INV:
+ 		cmd[0] |= FIELD_PREP(CMDQ_0_SSV, ent->substream_valid);
+ 		cmd[0] |= FIELD_PREP(CMDQ_ATC_0_GLOBAL, ent->atc.global);
+@@ -1538,7 +1547,8 @@ static int arm_smmu_cmdq_batch_submit(struct arm_smmu_device *smmu,
+ static void arm_smmu_tlb_inv_asid(struct arm_smmu_device *smmu, u16 asid)
  {
- 	u32 reg;
-@@ -4137,6 +4206,9 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+ 	struct arm_smmu_cmdq_ent cmd = {
+-		.opcode = CMDQ_OP_TLBI_NH_ASID,
++		.opcode	= smmu->features & ARM_SMMU_FEAT_E2H ?
++			CMDQ_OP_TLBI_EL2_ASID : CMDQ_OP_TLBI_NH_ASID,
+ 		.tlbi.asid = asid,
+ 	};
  
- 	smmu->ias = max(smmu->ias, smmu->oas);
+@@ -2088,13 +2098,16 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+ 	}
  
-+	if (arm_smmu_supports_sva(smmu))
-+		smmu->features |= ARM_SMMU_FEAT_SVA;
+ 	if (s1_cfg) {
++		int strw = smmu->features & ARM_SMMU_FEAT_E2H ?
++			STRTAB_STE_1_STRW_EL2 : STRTAB_STE_1_STRW_NSEL1;
 +
- 	dev_info(smmu->dev, "ias %lu-bit, oas %lu-bit (features 0x%08x)\n",
- 		 smmu->ias, smmu->oas, smmu->features);
- 	return 0;
+ 		BUG_ON(ste_live);
+ 		dst[1] = cpu_to_le64(
+ 			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
+ 			 FIELD_PREP(STRTAB_STE_1_S1CIR, STRTAB_STE_1_S1C_CACHE_WBRA) |
+ 			 FIELD_PREP(STRTAB_STE_1_S1COR, STRTAB_STE_1_S1C_CACHE_WBRA) |
+ 			 FIELD_PREP(STRTAB_STE_1_S1CSH, ARM_SMMU_SH_ISH) |
+-			 FIELD_PREP(STRTAB_STE_1_STRW, STRTAB_STE_1_STRW_NSEL1));
++			 FIELD_PREP(STRTAB_STE_1_STRW, strw));
+ 
+ 		if (smmu->features & ARM_SMMU_FEAT_STALLS &&
+ 		   !(smmu->features & ARM_SMMU_FEAT_STALL_FORCE))
+@@ -2490,7 +2503,8 @@ static void arm_smmu_tlb_inv_range(unsigned long iova, size_t size,
+ 		return;
+ 
+ 	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
+-		cmd.opcode	= CMDQ_OP_TLBI_NH_VA;
++		cmd.opcode	= smmu->features & ARM_SMMU_FEAT_E2H ?
++				  CMDQ_OP_TLBI_EL2_VA : CMDQ_OP_TLBI_NH_VA;
+ 		cmd.tlbi.asid	= smmu_domain->s1_cfg.cd.asid;
+ 	} else {
+ 		cmd.opcode	= CMDQ_OP_TLBI_S2_IPA;
+@@ -3795,7 +3809,11 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+ 	writel_relaxed(reg, smmu->base + ARM_SMMU_CR1);
+ 
+ 	/* CR2 (random crap) */
+-	reg = CR2_PTM | CR2_RECINVSID | CR2_E2H;
++	reg = CR2_PTM | CR2_RECINVSID;
++
++	if (smmu->features & ARM_SMMU_FEAT_E2H)
++		reg |= CR2_E2H;
++
+ 	writel_relaxed(reg, smmu->base + ARM_SMMU_CR2);
+ 
+ 	/* Stream table */
+@@ -3953,8 +3971,11 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+ 	if (reg & IDR0_MSI)
+ 		smmu->features |= ARM_SMMU_FEAT_MSI;
+ 
+-	if (reg & IDR0_HYP)
++	if (reg & IDR0_HYP) {
+ 		smmu->features |= ARM_SMMU_FEAT_HYP;
++		if (cpus_have_cap(ARM64_HAS_VIRT_HOST_EXTN))
++			smmu->features |= ARM_SMMU_FEAT_E2H;
++	}
+ 
+ 	/*
+ 	 * The coherency feature as set by FW is used in preference to the ID
 -- 
 2.26.2
 
