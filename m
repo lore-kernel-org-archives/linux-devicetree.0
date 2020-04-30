@@ -2,105 +2,189 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F11C83001
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 07:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2DDC83009
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 07:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D394621973
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 07:35:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SicuVYS5"
+	by mail.kernel.org (Postfix) with ESMTP id EAD46214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 07:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgD3Hfu (ORCPT
+        id S1726412AbgD3Huh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:35:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbgD3Hfu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 03:35:50 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED61C035495
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 00:35:49 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id x10so4442033oie.1
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 00:35:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qs31g31s4Qup1BiKCc2DuRtqM2XedKFVg5N5v+BZjjw=;
-        b=SicuVYS5fp0fa/wzv+q09rX6oQxgNmClx4f49iFcA5bDwQqCogfhamiVVpkdy0QlsF
-         ae2KdpL6Mq+vPjWq/ZPYZD0ac60feHz/OOkbVGO55xwzQgCIGJ5rzD7n4sYr5kl4TlEp
-         wH2/j7ymvRCJMxLbnipbZWJ8zIBG/Tv/jUppjIaLk03n1xDbd1/77ztyxWdT7eKEPCjx
-         dQp1Sgf9DZdRh8mwUC9Bgk3OPPMmpMqiuy6smhEU/FwS1srovO5NAs/NFGak/WaGLQ4a
-         envkNnbxsbFhwALdCNKh73IEILCjujXDrRdFoWIqfr0vWIhEddXSJ1Wzw2YR0cO3KLMw
-         B0nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qs31g31s4Qup1BiKCc2DuRtqM2XedKFVg5N5v+BZjjw=;
-        b=R0RB7gyhieo5ibJzkoZrXqiWWCAUR0tk3pS8UOrzfM0CdaLqTyiZjDIo0di3x+Jnk6
-         nwtSsOi6R2kDQxWTvDAoko6w6JQD05J7A1n9MVRNH7OrLSGkyb4yWM+N0FmLwfrdLyxx
-         ui5QQXavUM45lq36htodtpS0hQcFV0uTVlonRdLsT+4glvFH70p5gzN4LMgaZ4rowhXj
-         eovM/qjHyvHFANXKwJYkF/ZvIhOSoGmhBLzXOzJ7yMRo9nOH/QXOaSLLcJwSlUx3YgbL
-         iAai7A193LMSC4f6YjOrNGegSby813++KhkheYlMksUr5jqNkoKZM4XSnnQGB0wGAhCl
-         IjXw==
-X-Gm-Message-State: AGi0PubrTXeekbfcnsPekaqyV0yud6vUPiEdvztqpSoh1xu2Z4JMqrnS
-        3JB6rn2S5zVk2aoxD8VUvv956XVR90MIQ0hvtMaBhQ==
-X-Google-Smtp-Source: APiQypJSVbEeLdKvSzeK+HnDLd495hRaTsKPEMdbd300IaB2PC5hErDtAPw/RD9fpBoG5vAHd3mduLUJ3j8aWN9Hbk4=
-X-Received: by 2002:aca:1c08:: with SMTP id c8mr827526oic.172.1588232148850;
- Thu, 30 Apr 2020 00:35:48 -0700 (PDT)
+        Thu, 30 Apr 2020 03:50:37 -0400
+Received: from mga09.intel.com ([134.134.136.24]:43971 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbgD3Huh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 03:50:37 -0400
+IronPort-SDR: ps9NXfVYePlf0ibOADvMPJ7UTwDNiwKjcPKpSfvatYRjsD9+n08HyWeyu5oWS6bGEVzW4NVRaz
+ EZYS796XkCgw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 00:50:36 -0700
+IronPort-SDR: bwERHQ8g+/+9Phkljugxc4OGg+gtyL9Qml3tgy9+bus/HWZ/3wkEhyYTBTwHOaf2wxxKxS054S
+ ybV4ETUGQTIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
+   d="scan'208";a="247110447"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 30 Apr 2020 00:50:35 -0700
+Received: from [10.215.169.74] (vramuthx-mobl1.gar.corp.intel.com [10.215.169.74])
+        by linux.intel.com (Postfix) with ESMTP id 761155805EB;
+        Thu, 30 Apr 2020 00:50:31 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     qi-ming.wu@intel.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        cheol.yong.kim@intel.com, hauke.mehrtens@intel.com,
+        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
+        richard@nod.at, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org,
+        miquel.raynal@bootlin.com, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200429162249.55d38ee8@collabora.com>
+ <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
+ <20200429164832.6800fc70@collabora.com>
+ <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
+ <20200429173107.5c6d2f55@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
+Date:   Thu, 30 Apr 2020 15:50:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-7-georgi.djakov@linaro.org> <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
- <20200430060901.j7jjw6soo5h5xoul@vireshk-i7>
-In-Reply-To: <20200430060901.j7jjw6soo5h5xoul@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 30 Apr 2020 00:35:12 -0700
-Message-ID: <CAGETcx_zH_KJ7_A7Ofc2M5GfHKX_J__URJB127MSMcTeaqyzjw@mail.gmail.com>
-Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200429173107.5c6d2f55@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:09 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 24-04-20, 14:18, Saravana Kannan wrote:
-> > My only comment is -- can we drop this patch please? I'd like to use
-> > devfreq governors for voting on bandwidth and this will effectively
-> > override whatever bandwidth decisions are made by the devfreq
-> > governor.
->
-> And why would that be better ? FWIW, that will have the same problem
-> which cpufreq governors had since ages, i.e. they were not proactive
-> and were always too late.
->
-> The bw should get updated right with frequency, why shouldn't it ?
+Hi Boris,
 
-I didn't say the bw would be voted based on just CPUfreq. It can also
-be based on CPU busy time and other stats. Having said that, this is
-not just about CPUfreq. Having the bw be force changed every time a
-device has it's OPP is changed is very inflexible. Please don't do it.
+   Thank you very much for keep reviewing the patches and more queries...
 
--Saravana
+On 29/4/2020 11:31 pm, Boris Brezillon wrote:
+> On Wed, 29 Apr 2020 23:18:31 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> 
+>> Hi Boris,
+>>
+>> On 29/4/2020 10:48 pm, Boris Brezillon wrote:
+>>> On Wed, 29 Apr 2020 22:33:37 +0800
+>>> "Ramuthevar, Vadivel MuruganX"
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>    
+>>>> Hi Boris,
+>>>>
+>>>> On 29/4/2020 10:22 pm, Boris Brezillon wrote:
+>>>>> On Wed, 29 Apr 2020 18:42:05 +0800
+>>>>> "Ramuthevar, Vadivel MuruganX"
+>>>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>>>       
+>>>>>> +
+>>>>>> +#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
+>>>>>> +#define EBU_ADDR_MASK		(5 << 4)
+>>>>>
+>>>>> It's still unclear what ADDR_MASK is for. Can you add a comment
+>>>>> explaining what it does?
+>>>>
+>>>> Thank you Boris, keep review and giving inputs, will update.
+>>>
+>>> Can you please explain it here before sending a new version?
+>>
+>> Memory Region Address Mask:
+>> Specifies the number of right-most bits in the base address that should
+>> be included in the address comparison. bits positions(7:4).
+> 
+> Okay, then the macro should be
+> 
+> #define EBU_ADDR_MASK(x)	((x) << 4)
+> 
+> And now I'd like you to explain why 5 is the right value for that field
+> (I guess that has to do with the position of the CS/ALE/CLE pins).
+
+5 : bit 26, 25, 24, 23, 22 to be included for comparison in the 
+ADDR_SELx , it compares only 5 bits.
+
+> 
+>>
+>>>>>       
+>>>>>> +#define EBU_ADDR_SEL_REGEN	0x1
+>>>>>
+>>>>>       
+>>>>>> +
+>>>>>> +	writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
+>>>>>> +	       EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
+>>>>>> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
+> 
+> You set EBU_ADDR_SEL(reg) once here...
+> 
+>>>>>> +
+>>>>>> +	writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
+>>>>>> +	       ebu_host->ebu + EBU_ADDR_SEL(0));
+>>>>>> +	writel(EBU_MEM_BASE_CS_1 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
+>>>>>> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
+> 
+> ... and a second time here. That sounds like overwriting the
+> EBU_ADDR_SEL(reg) register to me.
+> 
+>>>>>
+>>>>> That's super weird. You seem to set EBU_ADDR_SEL(reg) twice. Are you
+>>>>> sure that's needed, and are we setting EBU_ADDR_SEL(0) here?
+>>>>
+>>>> You are right, its weird only, but we need it, since different chip
+>>>> select has different memory region access address.
+>>>
+>>> Well, that doesn't make any sense, the second write to
+>>> EBU_ADDR_SEL(reg) overrides the first one, meaning that nand_pa is
+>>> actually never written to ADDR_SEL(reg).
+>>
+>> it will not overwrite the first one, since two different registers
+>> EBU_ADDR_SEL_0 EBU_ADDR_SEL  20H
+>> EBU_ADDR_SEL_1 EBU_ADDR_SEL  24H
+> 
+> See my above.
+> 
+>>
+>> it is an internal address selection w.r.t chip select for nand physical
+>> address update.
+>>
+>>
+>>>    
+>>>>
+>>>> Yes , we are setting both CS0 and CS1 memory access region, if you have
+>>>> any concern to optimize, please suggest me, Thanks!
+>>>
+>>> If you want to setup both CS, and the address written in EBU_ADDR_SEL(x)
+>>> is really related to the nand_pa address, then retrieve resources for
+>>> all CS ranges.
+>> If it's not related, please explain what those
+>>> EBU_MEM_BASE_CS_X values encode.
+>>
+>> Memory Region Base Address
+>> FPI Bus addresses are compared to this base address in conjunction with
+>> the mask control(EBU_ADDR_MASK). Driver need to program this field!
+> 
+> That's not explaining what the base address should be. Is 'nand_pa' the
+> value we should have there?
+
+The one prorgrammed in the addr_sel register is used by the HW 
+controller, it remaps to  0x174XX-> CS0 and 0x17CXX->CS1.
+The hardware itself, decodes only for 1740xx/17c0xx, other random values 
+cannot be programmed
+
+Regards
+Vadivel
+> 
