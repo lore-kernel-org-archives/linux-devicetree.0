@@ -2,119 +2,115 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0984C83006
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA64C83006
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1B4021973
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:22:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588234971;
-	bh=GnPZmnr/Ofem6uvXDZbMnuc5+odjfx382ISo2nPA2og=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZAbW3Js2VowqLE+fqgMJ3pBWocVVuYgwn5SdtkG5fBBJ6zxpg3fP9mm/qXkijkK6N
-	 okdwZGlQWOLpYgT/46+TE164XJLi6bS+L4EYGo2OyJt346HmIUV4sBgCWvz/D89g/7
-	 7DnLzGqzoO2z/L0FQ+NKLTWPznXXEGdJCWroiCGo=
+	by mail.kernel.org (Postfix) with ESMTP id BB8302073E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:25:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nlfgv/lw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgD3IWs (ORCPT
+        id S1726412AbgD3IZI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgD3IWs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:22:48 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 814A020838;
-        Thu, 30 Apr 2020 08:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588234967;
-        bh=GnPZmnr/Ofem6uvXDZbMnuc5+odjfx382ISo2nPA2og=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uh2AnTdVFUsSdIHfIkORGr321QfK0oEdiFejgkEUQ5lDxRtZwf8MOcw4JsKHMlIGz
-         8i56R/ssfr+b+as/IcpFK2aMwau3MmjF+Wy9xA80kyYMn3KXAATa+/mRQEv1ZEICdV
-         E0TunFx47hWEaxJco2lF1Czpzn+IgVVwxtzoIhi0=
-Received: by pali.im (Postfix)
-        id 931537AD; Thu, 30 Apr 2020 10:22:45 +0200 (CEST)
-Date:   Thu, 30 Apr 2020 10:22:45 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 05/12] PCI: aardvark: Issue PERST via GPIO
-Message-ID: <20200430082245.xblvb7xeamm4e336@pali>
-References: <20200430080625.26070-1-pali@kernel.org>
- <20200430080625.26070-6-pali@kernel.org>
+        Thu, 30 Apr 2020 04:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbgD3IZH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 04:25:07 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ECCDC035494
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 01:25:07 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id e26so831476wmk.5
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 01:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=X6kBmgjWNGdoNWM+7HP6Cv8RL/gtxXSH0Zcy+2SUkTg=;
+        b=nlfgv/lwGO9u4M/cSd8s6bWYEd60n1HD9hX4RDYFeI6OM5b5/NS+Th7J2Udh6Fer0k
+         DgjCL6hq1Oe0dnPWSx2KED3KQCkEicF3F5fi4lbzX9RmkUUJ87uaGgCm0d3AMzH3WoIi
+         RJCIpL5QPBeAVE+HBDQEd1DUJFUotoDiX/5diJOFhvDrFX1xaXwYusiT4xUiclcepUHk
+         DY8FIUfbfAQReWU0N0sy92dKJXOjkifLiGUuD8U3CbGdljXWWevYVVfdvlMQhO9zlirS
+         yZ9TOFMBupFXFOzWg9N3ZCMfzM2AKi3GawTxnx1UEzRPRtAHEZ2lCSj+XFa3L/GlJj1K
+         gF5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=X6kBmgjWNGdoNWM+7HP6Cv8RL/gtxXSH0Zcy+2SUkTg=;
+        b=DoU5yh/z4I0YScutTlMpDz6hm9vu0qkk+8QdAZJsTNI7XHLyFatRpDPgmoK+helnlk
+         j7z67+0aAYk24gP0usmzFolj4hqzS6s2Ad79K/aa8YsDYy5D91kmFP4mKUSRYxK29Tyu
+         qmmkAsoit/ehY19SuT7qRhzMVwD3kZ9FlzeayxZd9rtW9SK6tTCTRAfFpAbNXp5umiNn
+         JQ3sAAwbyVGyExJti5sk/OIOzMv//PIYK51wIRIbSc8SQMEe61wWFW1FQtGBvy8CLeQs
+         WULlMxK3UnOCBLpscj5zRfr/Sepo3Nw5Ra/pByT0QebC9+E9AShj991MyN3g3zhUoqg1
+         oVoA==
+X-Gm-Message-State: AGi0PuZle9E45ZocEBlesuKF5ITQ7o4N0ENwfo4yiw5MKb5525kh8IfF
+        C6VNEdHrqxO67lRGMYqmixCpoQ==
+X-Google-Smtp-Source: APiQypKS6rkdhsHbc2UUSlH3zD912MOA6ZFRvxtjDMHneZ8QIX90PvJVdV6AmPOLALep6jeYDNbP1Q==
+X-Received: by 2002:a1c:4e12:: with SMTP id g18mr1649275wmh.11.1588235106039;
+        Thu, 30 Apr 2020 01:25:06 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id u7sm12108468wmg.41.2020.04.30.01.25.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 01:25:05 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 09:25:03 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org,
+        devicetree@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+Subject: Re: [PATCH v7 0/3] Add Intel ComboPhy driver
+Message-ID: <20200430082503.GA3118@dell>
+References: <cover.1588230494.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430080625.26070-6-pali@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <cover.1588230494.git.eswara.kota@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thursday 30 April 2020 10:06:18 Pali Rohár wrote:
-> +static void advk_pcie_issue_perst(struct advk_pcie *pcie)
-> +{
-> +	u32 reg;
-> +
-> +	if (!pcie->reset_gpio)
-> +		return;
-> +
-> +	/* PERST does not work for some cards when link training is enabled */
-> +	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-> +	reg &= ~LINK_TRAINING_EN;
-> +	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-> +
-> +	/* 10ms delay is needed for some cards */
-> +	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
-> +	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-> +	usleep_range(10000, 11000);
-> +	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-> +}
+On Thu, 30 Apr 2020, Dilip Kota wrote:
 
-Just note about delay between changing GPIO reset:
+> This patch series adds Intel ComboPhy driver, respective yaml schemas
+> 
+> Changes on v7:
+>   As per System control driver maintainer's inputs remove
+>     fwnode_to_regmap() definition and use device_node_get_regmap()
+>     
+> Changes on v6:
+>   Rebase patches on the latest maintainer's branch
+>   https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
+> Dilip Kota (3):
+>   dt-bindings: phy: Add PHY_TYPE_XPCS definition
+>   dt-bindings: phy: Add YAML schemas for Intel ComboPhy
+>   phy: intel: Add driver support for ComboPhy
+> 
+>  .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
+>  drivers/phy/intel/Kconfig                          |  14 +
+>  drivers/phy/intel/Makefile                         |   1 +
+>  drivers/phy/intel/phy-intel-combo.c                | 627 +++++++++++++++++++++
+>  include/dt-bindings/phy/phy.h                      |   1 +
 
-In V2 there as only 1ms, but be figured out that it is not enough for
-WLE900VX cards when they were already initialized in u-boot.
+Why have you sent this to me?
 
-I tried to find in PCI specs if there is a defined timeout for this
-operation. I found following 3 delay definitions which could be related:
+>  5 files changed, 744 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>  create mode 100644 drivers/phy/intel/phy-intel-combo.c
+> 
 
-TPVPERL - PERST# must remain active at least this long after power becomes valid
-TPERST - When asserted, PERST# must remain asserted at least this long
-TPERSTCLK - PERST# must remain active at least this long after any supplied reference clock is stable
-
-In another spec they have defined also minimal values:
-
-TPVPERL - Power stable to PERST# inactive - Min 100 ms
-TPERST - PERST# active time - Min 100 us
-TPERSTCLK - REFCLK stable before PERST# inactive - Min 100 us
-
-After experimenting with those Compex WLE900VX cards, I know that 100us
-delay is not enough. And I'm not sure if TPVPERL is really relevant for
-this case. I understood that TPVPERL is needed when initializing power
-again. And because delaying boot by another 100ms is does not have to be
-acceptable if there is not strict reason for it, I rather decided to
-stay with just 10ms delay.
-
-If you know what is the correct timeout between changing GPIO reset,
-please let me know and in future I can fix/reimplement it.
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
