@@ -2,149 +2,81 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84464C47254
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5627C47247
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 668FE20873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8819F208C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgD3QfG (ORCPT
+        id S1726476AbgD3QnA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:35:06 -0400
-Received: from sauhun.de ([88.99.104.3]:53466 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgD3QfG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:35:06 -0400
-Received: from localhost (p5486CDDB.dip0.t-ipconnect.de [84.134.205.219])
-        by pokefinder.org (Postfix) with ESMTPSA id A47D92C08FC;
-        Thu, 30 Apr 2020 18:35:03 +0200 (CEST)
-Date:   Thu, 30 Apr 2020 18:35:03 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Alain Volmat <alain.volmat@st.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH] i2c: fix missing pm_runtime_put_sync in i2c_device_probe
-Message-ID: <20200430163503.GA15047@ninjato>
-References: <1588261401-11914-1-git-send-email-alain.volmat@st.com>
+        Thu, 30 Apr 2020 12:43:00 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:44045 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgD3QnA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 12:43:00 -0400
+X-Originating-IP: 93.29.109.196
+Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 790D61C000B;
+        Thu, 30 Apr 2020 16:42:57 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v3 0/4] media: rockchip: rga: PX30 support and YUV2YUV fix
+Date:   Thu, 30 Apr 2020 18:42:41 +0200
+Message-Id: <20200430164245.1630174-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
-Content-Disposition: inline
-In-Reply-To: <1588261401-11914-1-git-send-email-alain.volmat@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
---zYM0uCDKw75PZbzx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series adds support for the Rockchip PX30 SoC in the V4L2 M2M RGA driver.
+It also contains a fix for the YUV2YUV case that was not properly handled.
 
-On Thu, Apr 30, 2020 at 05:43:21PM +0200, Alain Volmat wrote:
-> In case of the I2C client exposes the flag I2C_CLIENT_HOST_NOTIFY,
-> pm_runtime_get_sync is called in order to always keep active the
-> adapter. However later on, pm_runtime_put_sync is never called
-> within the function in case of an error. This commit add this
-> error handling.
->=20
-> Fixes: 72bfcee11cf8 ("i2c: Prevent runtime suspend of adapter when Host N=
-otify is required")
+Changes since v2:
+- Used RK3288 compatible in PX30 dts, removed PX30 compatible from driver;
+- Added cleanup patch with format macros;
+- Added comment about CSC mode fix.
 
-Adding the patch author to CC.
+Changes since v1:
+- Rebased on media tree master (changed dt binding to yaml);
+- Removed spurious line removal.
 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
->  drivers/i2c/i2c-core-base.c | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 139aea351ffb..2e4560671183 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -338,8 +338,10 @@ static int i2c_device_probe(struct device *dev)
->  		} else if (ACPI_COMPANION(dev)) {
->  			irq =3D i2c_acpi_get_irq(client);
->  		}
-> -		if (irq =3D=3D -EPROBE_DEFER)
-> -			return irq;
-> +		if (irq =3D=3D -EPROBE_DEFER) {
-> +			status =3D irq;
-> +			goto put_sync_adapter;
-> +		}
-> =20
->  		if (irq < 0)
->  			irq =3D 0;
-> @@ -353,15 +355,19 @@ static int i2c_device_probe(struct device *dev)
->  	 */
->  	if (!driver->id_table &&
->  	    !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
-> -	    !i2c_of_match_device(dev->driver->of_match_table, client))
-> -		return -ENODEV;
-> +	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
-> +		status =3D -ENODEV;
-> +		goto put_sync_adapter;
-> +	}
-> =20
->  	if (client->flags & I2C_CLIENT_WAKE) {
->  		int wakeirq;
-> =20
->  		wakeirq =3D of_irq_get_byname(dev->of_node, "wakeup");
-> -		if (wakeirq =3D=3D -EPROBE_DEFER)
-> -			return wakeirq;
-> +		if (wakeirq =3D=3D -EPROBE_DEFER) {
-> +			status =3D wakeirq;
-> +			goto put_sync_adapter;
-> +		}
-> =20
->  		device_init_wakeup(&client->dev, true);
-> =20
-> @@ -408,6 +414,10 @@ static int i2c_device_probe(struct device *dev)
->  err_clear_wakeup_irq:
->  	dev_pm_clear_wake_irq(&client->dev);
->  	device_init_wakeup(&client->dev, false);
-> +put_sync_adapter:
-> +	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
-> +		pm_runtime_put_sync(&client->adapter->dev);
-> +
->  	return status;
->  }
-> =20
-> --=20
-> 2.17.1
->=20
+Cheers,
 
---zYM0uCDKw75PZbzx
-Content-Type: application/pgp-signature; name="signature.asc"
+Paul
 
------BEGIN PGP SIGNATURE-----
+Paul Kocialkowski (4):
+  dt-bindings: rockchip-rga: Add PX30 compatible
+  arm64: dts: rockchip: Add RGA support to the PX30
+  media: rockchip: rga: Introduce color fmt macros and refactor CSC mode
+    logic
+  media: rockchip: rga: Only set output CSC mode for RGB input
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6q/jMACgkQFA3kzBSg
-KbbwFBAAhtQzzNeB/GCaKLSF1bZD7pXmWBQHwK11H0kJO7UkmEVuRuLNCn250MMa
-AOmgf8Y27Ij/cb5xcnLfWYpf/c8EKB68QnOawPIpu7P2loT3VwEOcbn3to8yi0WU
-42ZJmWshB26DyiqaH6IWbqRNVL5t6qhPtnIbOU84pO5FExppXlB63kShSUKO2gXi
-kehrRerP6h8hZFYlz0wYSVgBpL/2B4BOydkCGlK4INoGtgIVGPwcrqP557ulqXe4
-kTlu3uCeo3aZFfzmoeui+SoXvBPA1PdHOT4HZRs6Pcw1FFOed95JyrVJxSSiKK35
-zGBOFjDTA9ZbfROzK3YHZR525uEQkceqGJHrRSpxqrM3o02sZXO/W2j359TbEHB2
-PQncp1GAXNePayRakxrd9q8MpBoFRtiRiaGPZVuF9lCof+DERo27cpnINOc4E+Te
-WnW7QRxjyDguqkDdUZEdDGJ9nX6BO+Yg1OhoBQdjZ9vvnqrYMmRZZCDYNAU13ZLi
-lzR3mLPoyJMIj2c251mWUaNrm0nHZrw2PAmrNwygyu4MTmaZGxECu725lRNajqeu
-1SuXby3l59NU+yKTze5oOhRvsjTP55mgDRVxzTbtnmZNDkE6EgKLsSvHG3PX6wAB
-YMBYlbSH6QxZ338/XA0Cvkbc4zn5vScALsa0lT6l69wtPPP6obk=
-=lXSI
------END PGP SIGNATURE-----
+ .../bindings/media/rockchip-rga.yaml          |  3 ++
+ arch/arm64/boot/dts/rockchip/px30.dtsi        | 11 +++++++
+ drivers/media/platform/rockchip/rga/rga-hw.c  | 29 ++++++++++---------
+ drivers/media/platform/rockchip/rga/rga-hw.h  |  5 ++++
+ 4 files changed, 35 insertions(+), 13 deletions(-)
 
---zYM0uCDKw75PZbzx--
+-- 
+2.26.0
+
