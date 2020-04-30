@@ -2,178 +2,164 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F180FC47257
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 21:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BFEC4724C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 21:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D99F3207DD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 21:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E4342070B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 21:12:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgD3VLI (ORCPT
+        id S1726549AbgD3VMP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:11:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:33604 "EHLO foss.arm.com"
+        Thu, 30 Apr 2020 17:12:15 -0400
+Received: from mga17.intel.com ([192.55.52.151]:55366 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbgD3VLI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:11:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7EBB31B;
-        Thu, 30 Apr 2020 14:11:07 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EBC03F68F;
-        Thu, 30 Apr 2020 14:11:06 -0700 (PDT)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <mripard@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org
-Subject: [PATCH v3 1/8] dt-bindings: clock: Convert Calxeda clock bindings to json-schema
-Date:   Thu, 30 Apr 2020 22:10:47 +0100
-Message-Id: <20200430211054.30466-2-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200430211054.30466-1-andre.przywara@arm.com>
-References: <20200430211054.30466-1-andre.przywara@arm.com>
+        id S1726394AbgD3VMO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 17:12:14 -0400
+IronPort-SDR: dfV4DXO6d/2nWIN4qfBqkpFgm3mt489hMfbAGL1WcE8PTrYKZOkSHYt1KRsHqBy4rVgD/hP635
+ EaHemQfxkFVg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 14:12:13 -0700
+IronPort-SDR: LVHsRMgJ7GdSWX064ocXY72QKgePGf1G+/dA+XVa/E+wyPTuvCryaG2DXe8fDKuW9WtKlwUhjb
+ MeYme43Pk+/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
+   d="scan'208";a="460080601"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Apr 2020 14:12:13 -0700
+Date:   Thu, 30 Apr 2020 14:18:16 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org,
+        jacob.jun.pan@linux.intel.com, "Liu, Yi L" <yi.l.liu@intel.com>
+Subject: Re: [PATCH v6 00/25] iommu: Shared Virtual Addressing for SMMUv3
+Message-ID: <20200430141816.595b758f@jacob-builder>
+In-Reply-To: <20200430143424.2787566-1-jean-philippe@linaro.org>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Calxeda clock bindings to DT schema format using json-schema.
+On Thu, 30 Apr 2020 16:33:59 +0200
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-This just covers the actual PLL and divider clock nodes. In the actual
-DTs they are somewhat unconnected (no ranges or bus compatible) children
-of the sregs node, but for the actual clock bindings this is not
-relevant.
+> Shared Virtual Addressing (SVA) allows to share process page tables
+> with devices using the IOMMU, PASIDs and I/O page faults. Add SVA
+> support to the Arm SMMUv3 driver.
+> 
+> Since v5 [1]:
+> 
+> * Added patches 1-3. Patch 1 adds a PASID field to mm_struct as
+>   discussed in [1] and [2]. This is also needed for Intel ENQCMD.
+> Patch 2 adds refcounts to IOASID and patch 3 adds a couple of helpers
+> to allocate the PASID.
+> 
+> * Dropped most of iommu-sva.c. After getting rid of io_mm following
+>   review of v5, there wasn't enough generic code left to justify the
+>   indirect branch overhead of io_mm_ops in the MMU notifiers. I ended
+> up with more glue than useful code, and couldn't find an easy way to
+> deal with domains in the SMMU driver (we keep PASID tables per domain,
+>   while x86 keeps them per device). The direct approach in patch 17 is
+>   nicer and a little easier to read. The SMMU driver only gained 160
+>   lines, while iommu-sva lost 470 lines.
+> 
+>   As a result I dropped the MMU notifier patch.
+> 
+>   Jacob, one upside of this rework is that we now free ioasids in
+>   blocking context, which might help with your addition of notifiers
+> to ioasid.c
+> 
+Thanks for the note. It does make notifier much easier, plus the
+refcount can alleviate the constraint on ordering.
 
-One oddity is that the addresses are relative to the parent node,
-without that being pronounced using a ranges property.
-But this is too late to fix now.
+I guess we don't share mmu notifier code for now :)
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
----
- .../devicetree/bindings/clock/calxeda.txt     | 17 ----
- .../devicetree/bindings/clock/calxeda.yaml    | 82 +++++++++++++++++++
- 2 files changed, 82 insertions(+), 17 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/calxeda.txt
- create mode 100644 Documentation/devicetree/bindings/clock/calxeda.yaml
+> * Simplified io-pgfault a bit, since flush() isn't called from mm exit
+>   path anymore.
+> 
+> * Fixed a bug in patch 17 (don't clear the stall bit when stall is
+>   forced).
+> 
+> You can find the latest version on https://jpbrucker.net/git/linux
+> branch sva/current, and sva/zip-devel for the Hisilicon zip
+> accelerator.
+> 
+> [1]
+> https://lore.kernel.org/linux-iommu/20200414170252.714402-1-jean-philippe@linaro.org/
+> [2]
+> https://lore.kernel.org/linux-iommu/1585596788-193989-6-git-send-email-fenghua.yu@intel.com/
+> 
+> Jean-Philippe Brucker (25):
+>   mm: Add a PASID field to mm_struct
+>   iommu/ioasid: Add ioasid references
+>   iommu/sva: Add PASID helpers
+>   iommu: Add a page fault handler
+>   iommu/iopf: Handle mm faults
+>   arm64: mm: Add asid_gen_match() helper
+>   arm64: mm: Pin down ASIDs for sharing mm with devices
+>   iommu/io-pgtable-arm: Move some definitions to a header
+>   iommu/arm-smmu-v3: Manage ASIDs with xarray
+>   arm64: cpufeature: Export symbol read_sanitised_ftr_reg()
+>   iommu/arm-smmu-v3: Share process page tables
+>   iommu/arm-smmu-v3: Seize private ASID
+>   iommu/arm-smmu-v3: Add support for VHE
+>   iommu/arm-smmu-v3: Enable broadcast TLB maintenance
+>   iommu/arm-smmu-v3: Add SVA feature checking
+>   iommu/arm-smmu-v3: Add SVA device feature
+>   iommu/arm-smmu-v3: Implement iommu_sva_bind/unbind()
+>   iommu/arm-smmu-v3: Hook up ATC invalidation to mm ops
+>   iommu/arm-smmu-v3: Add support for Hardware Translation Table Update
+>   iommu/arm-smmu-v3: Maintain a SID->device structure
+>   dt-bindings: document stall property for IOMMU masters
+>   iommu/arm-smmu-v3: Add stall support for platform devices
+>   PCI/ATS: Add PRI stubs
+>   PCI/ATS: Export PRI functions
+>   iommu/arm-smmu-v3: Add support for PRI
+> 
+>  drivers/iommu/Kconfig                         |   11 +
+>  drivers/iommu/Makefile                        |    2 +
+>  .../devicetree/bindings/iommu/iommu.txt       |   18 +
+>  arch/arm64/include/asm/mmu.h                  |    1 +
+>  arch/arm64/include/asm/mmu_context.h          |   11 +-
+>  drivers/iommu/io-pgtable-arm.h                |   30 +
+>  drivers/iommu/iommu-sva.h                     |   15 +
+>  include/linux/ioasid.h                        |   10 +-
+>  include/linux/iommu.h                         |   53 +
+>  include/linux/mm_types.h                      |    4 +
+>  include/linux/pci-ats.h                       |    8 +
+>  arch/arm64/kernel/cpufeature.c                |    1 +
+>  arch/arm64/mm/context.c                       |  103 +-
+>  drivers/iommu/arm-smmu-v3.c                   | 1554
+> +++++++++++++++-- drivers/iommu/io-pgfault.c                    |
+> 458 +++++ drivers/iommu/io-pgtable-arm.c                |   27 +-
+>  drivers/iommu/ioasid.c                        |   30 +-
+>  drivers/iommu/iommu-sva.c                     |   85 +
+>  drivers/iommu/of_iommu.c                      |    5 +-
+>  drivers/pci/ats.c                             |    4 +
+>  MAINTAINERS                                   |    3 +-
+>  21 files changed, 2275 insertions(+), 158 deletions(-)
+>  create mode 100644 drivers/iommu/io-pgtable-arm.h
+>  create mode 100644 drivers/iommu/iommu-sva.h
+>  create mode 100644 drivers/iommu/io-pgfault.c
+>  create mode 100644 drivers/iommu/iommu-sva.c
+> 
 
-diff --git a/Documentation/devicetree/bindings/clock/calxeda.txt b/Documentation/devicetree/bindings/clock/calxeda.txt
-deleted file mode 100644
-index 0a6ac1bdcda1..000000000000
---- a/Documentation/devicetree/bindings/clock/calxeda.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--Device Tree Clock bindings for Calxeda highbank platform
--
--This binding uses the common clock binding[1].
--
--[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
--
--Required properties:
--- compatible : shall be one of the following:
--	"calxeda,hb-pll-clock" - for a PLL clock
--	"calxeda,hb-a9periph-clock" - The A9 peripheral clock divided from the
--		A9 clock.
--	"calxeda,hb-a9bus-clock" - The A9 bus clock divided from the A9 clock.
--	"calxeda,hb-emmc-clock" - Divided clock for MMC/SD controller.
--- reg : shall be the control register offset from SYSREGs base for the clock.
--- clocks : shall be the input parent clock phandle for the clock. This is
--	either an oscillator or a pll output.
--- #clock-cells : from common clock binding; shall be set to 0.
-diff --git a/Documentation/devicetree/bindings/clock/calxeda.yaml b/Documentation/devicetree/bindings/clock/calxeda.yaml
-new file mode 100644
-index 000000000000..a34cbf3c9aaf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/calxeda.yaml
-@@ -0,0 +1,82 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/calxeda.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Device Tree Clock bindings for Calxeda highbank platform
-+
-+description: |
-+  This binding covers the Calxeda SoC internal peripheral and bus clocks
-+  as used by peripherals. The clocks live inside the "system register"
-+  region of the SoC, so are typically presented as children of an
-+  "hb-sregs" node.
-+
-+maintainers:
-+  - Andre Przywara <andre.przywara@arm.com>
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - calxeda,hb-pll-clock
-+      - calxeda,hb-a9periph-clock
-+      - calxeda,hb-a9bus-clock
-+      - calxeda,hb-emmc-clock
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - clocks
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    sregs@3fffc000 {
-+        compatible = "calxeda,hb-sregs";
-+        reg = <0x3fffc000 0x1000>;
-+
-+        clocks {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            osc: oscillator {
-+                #clock-cells = <0>;
-+                compatible = "fixed-clock";
-+                clock-frequency = <33333000>;
-+            };
-+
-+            ddrpll: ddrpll@108 {
-+                #clock-cells = <0>;
-+                compatible = "calxeda,hb-pll-clock";
-+                clocks = <&osc>;
-+                reg = <0x108>;
-+            };
-+
-+            a9pll: a9pll@100 {
-+                #clock-cells = <0>;
-+                compatible = "calxeda,hb-pll-clock";
-+                clocks = <&osc>;
-+                reg = <0x100>;
-+            };
-+
-+            a9periphclk: a9periphclk@104 {
-+                #clock-cells = <0>;
-+                compatible = "calxeda,hb-a9periph-clock";
-+                clocks = <&a9pll>;
-+                reg = <0x104>;
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.17.1
-
+[Jacob Pan]
