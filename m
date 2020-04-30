@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B58EC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F1BC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 067742082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42CF520870
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NlMK9W5m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuGyAmUM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgD3NnO (ORCPT
+        id S1726924AbgD3Nqm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:43:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
+        Thu, 30 Apr 2020 09:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbgD3NnO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 09:43:14 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91729C035494;
-        Thu, 30 Apr 2020 06:43:13 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id l19so6508358lje.10;
-        Thu, 30 Apr 2020 06:43:13 -0700 (PDT)
+        with ESMTP id S1726577AbgD3Nqm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 09:46:42 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 266D9C035494;
+        Thu, 30 Apr 2020 06:46:42 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id j3so6532125ljg.8;
+        Thu, 30 Apr 2020 06:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A6YpIeXRQ3oa6pHUnqjGa6cFyQysn0a0+/4OldnV7wc=;
-        b=NlMK9W5m4IrjAVP/UBA9HRX7+gBleYHX+FLGYqR8aidm2COx+iIfMluQMCW7CTLV3F
-         JFHRrUlJjgrBclgNWmLhXuRws8+pVHitwE/W1J67DLM1ZqFhSoWfBpedb47/RBpPPZX0
-         SVZws+ERwzguHh2vdhonfG0YQUCvlEqrlUbsXFcsPhDd4C5ixp8KeJnvesj82o2kEVLg
-         6wuVc/QKj0mHwxp2J2tD+MprigE4iFM3S0xA/uqYV0bsJj0tA7a1cxV/vC0z77+sTpFK
-         WhFodDLaFR5ePQ6uumzITOrPCFjHucmvUJIEHYnWi9kAK2iizMTHQrE9Kg5uAodq4gja
-         SmcQ==
+        bh=gByK1hVIoGmpbKq/K564ocm27XhEcO16Cceo/NwgrXg=;
+        b=RuGyAmUMGaCUk0BaYmZOq039/HBT1+/vOb0guZKk8HpZYto9QSJffpDhsVwkdud7Rm
+         pUUtLVEGx3P6Vg19koHRdOiI1KFd9zskQU/Ja+uRB0bRu/JUPst4nE90l05qOmTjjArs
+         ma+mjM6PQvSKUqlstS3FpFkmzG1L6ZBRtIfBONiZznrmG/uowg51AwpEkkoC9dA0RFim
+         Mu4u9bcH0crF0vtG8uebFuyanz5vV3oH3bZTW84a3K6Rcr6ILGzedjQdzK+gr2TAQTPJ
+         fyxI6R7fNjaJo5WGQFN7aTH0pdPjrrTpkZkejzKoyYvoSoKNJmcL4Sxfn2AXGua8P1Q3
+         t0oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=A6YpIeXRQ3oa6pHUnqjGa6cFyQysn0a0+/4OldnV7wc=;
-        b=omRTGxERbeN8Z4zNXQQKwbbfucV0C0ICT9jmCrRP2tyQE0K2hLqQaS1HsvkBx3BvJ3
-         56GOVudwY7Jj9XEG2NT/jb5aMNnN60yIrwadN956OykbSIjBS57NpELr3p6n/EmD7uIx
-         q6Qxh0HDGR31W5dhfLXw1QljyDI6EZ/hOP4dpGzIQeVfOS0RZYw4kqADXU2Pcn78F/8N
-         WV4EKkjPirNuWkiIVdzD9ICyOyV6SbjI1IYHKo93Y3+lv3aHUx4GAtFThFV8O/p9RNpT
-         2YhpF2dTP9yUDpCjlR7HfvFFZoRMJiFS3zA94D3gb8m4eifA5GrPhMJGYYGyb5NH0Ex8
-         hmlQ==
-X-Gm-Message-State: AGi0Pub2NdRoeqWdOqDCBfYgImD6xtXy68wL9v1zhE6TpT2turDGoIbj
-        u3NnFtjzGzfVD+PEeHXAP44PLnXZ
-X-Google-Smtp-Source: APiQypLu4E1H7UuvzOwc6X6QOCGTmpm6Y0rl0EDyrOXLiRl67uwW+l1xjxt9ugjM78meqa0X0aNI8A==
-X-Received: by 2002:a2e:9d8c:: with SMTP id c12mr2409610ljj.67.1588254191854;
-        Thu, 30 Apr 2020 06:43:11 -0700 (PDT)
+        bh=gByK1hVIoGmpbKq/K564ocm27XhEcO16Cceo/NwgrXg=;
+        b=S7HCaa8SOpugdwqQ048VH3xDUMUCJISC17H2lKVP4bZB5XH5aM5WYw4ughgp3aKDqc
+         kF7/60G43LPmiOYxLjeltIGcU5YlwPS26swQwNuTjUAAEgATHTAePcralIqpZouG+uDs
+         EyLH7VAseX6KO9cb9X2kIZuQeIWi9zs0F/Qwr8GNVDJH3h9gMI2cNKqQWmzfxC/JvRfu
+         t16CvyUjzUtF/KJB1Qzd+wFecL5RYi4quYvraEyO1X9hVziAwjCO06DlyNr6YOMjvC9O
+         03y8uhgyv7hSOVaE2Eky4XAMabnwqxqVstIOMnO5qDy7yEuuAORRNsbQsEIWUhJ+PLmh
+         oEvA==
+X-Gm-Message-State: AGi0PubAotYqeDeDv7WdeJOLSfLQBlUsyKxXZDJ0sR5HiDDvefhTc5ZR
+        6WYnrpO78/Jsx4giCgaUn9z1QJqU
+X-Google-Smtp-Source: APiQypJWUwti9EK5+POHi+IzMTQqhLMiVMThh/7KFAZyecKiVMN2XH+SR2cfskeyIJ5jXd1GhXWw/w==
+X-Received: by 2002:a2e:8296:: with SMTP id y22mr2418268ljg.254.1588254400429;
+        Thu, 30 Apr 2020 06:46:40 -0700 (PDT)
 Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id j24sm4389258ljg.60.2020.04.30.06.43.10
+        by smtp.googlemail.com with ESMTPSA id a13sm4411192ljm.25.2020.04.30.06.46.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 06:43:11 -0700 (PDT)
+        Thu, 30 Apr 2020 06:46:39 -0700 (PDT)
 Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
@@ -69,8 +69,8 @@ Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
 References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
  <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5d559a5a-ac84-f128-ccea-270974560b58@gmail.com>
-Date:   Thu, 30 Apr 2020 16:43:10 +0300
+Message-ID: <ab3db20e-ac9d-0271-802f-dfd99899fc66@gmail.com>
+Date:   Thu, 30 Apr 2020 16:46:38 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
@@ -84,31 +84,7 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 30.04.2020 01:00, Sowjanya Komatineni пишет:
-> +void tegra_channel_release_buffers(struct tegra_vi_channel *chan,
-> +				   enum vb2_buffer_state state)
-> +{
-> +	struct tegra_channel_buffer *buf, *nbuf;
-> +
-> +	spin_lock(&chan->start_lock);
-> +	list_for_each_entry_safe(buf, nbuf, &chan->capture, queue) {
-> +		vb2_buffer_done(&buf->buf.vb2_buf, state);
-> +		list_del(&buf->queue);
-> +	}
+> +/* -------------------------------------------------------------------- */
 > +
 
-I'd remove this blank line to make lock/unlock block more human-readable.
-
-> +	spin_unlock(&chan->start_lock);
-> +
-> +	spin_lock(&chan->done_lock);
-> +	list_for_each_entry_safe(buf, nbuf, &chan->done, queue) {
-> +		vb2_buffer_done(&buf->buf.vb2_buf, state);
-> +		list_del(&buf->queue);
-> +	}
-> +
-
-And thins line too.
-
-> +	spin_unlock(&chan->done_lock);
-> +}
-
+Such comments should be unnecessary.
