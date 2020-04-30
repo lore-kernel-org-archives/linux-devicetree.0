@@ -2,153 +2,130 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE299C47247
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 18:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD7BC47253
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 18:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC842082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 18:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 515DA20836
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 18:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UA1cn/0Q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dmGY2UxE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgD3SMo (ORCPT
+        id S1726545AbgD3SRz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 14:12:44 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:35398 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726318AbgD3SMn (ORCPT
+        Thu, 30 Apr 2020 14:17:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725844AbgD3SRy (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:12:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588270362; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=pPcbnLkLayy2Rm6j200c+uFP70JSkmmB+Gfck54oXYM=; b=UA1cn/0Q0PdmOPol0vVSBGhDS42z5+dkr6P5pd8Gn1jZ7ccLsHSfjFHEafZ0oe9QZhUfgiR1
- CcBcD8saRERY+ElaxryGZ60ViaIfxvteC17mHP3GtU4d0RKLYcmIpoH4shDQ3gFN1b3BegJK
- BDmMsoGHOgknnIdKWriuDZQELIQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eab1516.7f27703a0650-smtp-out-n04;
- Thu, 30 Apr 2020 18:12:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 31282C433F2; Thu, 30 Apr 2020 18:12:37 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4822C433D2;
-        Thu, 30 Apr 2020 18:12:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A4822C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 30 Apr 2020 12:12:33 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, robh@kernel.org, robin.murphy@arm.com,
-        saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH v2] dt-bindings: arm-smmu: Add sc7180 compatible string
- and mem_iface clock
-Message-ID: <20200430181233.GA21991@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, robh@kernel.org, robin.murphy@arm.com,
-        saiprakash.ranjan@codeaurora.org
-References: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org>
+        Thu, 30 Apr 2020 14:17:54 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BE4C035494
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 11:17:53 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z1so204904pfn.3
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 11:17:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4e5cFjiNfDap07a6Nfxpdl1UXdqOkxC++rr9/Mc9BPc=;
+        b=dmGY2UxEwcZyt7nI6u+U0VG13V/t96oiOFdoFGSDon+/un/GuNmXc2KuVJK2BxDNWu
+         NeZsQMDtHTLrDWONVOuXyZLiLi+5tBTDJr4eS4zxAs/ADkPYAhLYEsooIhz8My8ARUDQ
+         kwpMRGavs4TMkxiYSgnpAqyXIicxgnREO9NcYTJp4CkFwpJAjdEy9X+gMQxybJUVgCg0
+         I7uiE007yjKZ41fGk9Xw0vN7lLnB1MTDOFLH0h0TQysitJvEUWFhvUxuIbaAhgEHggen
+         YsAGCsTNyELi4I2lURjo0NNQ2WnprWWI/yi++tNaKg7ZB6BvQxBYIrtuqSBpp7uvyujV
+         a8gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4e5cFjiNfDap07a6Nfxpdl1UXdqOkxC++rr9/Mc9BPc=;
+        b=VDP1tlSiIxU1EAJWeei5gK0vKMaj5eYDQO4y+HbLr4BEVlZHdfFy8/IKzC/tb+nIot
+         3tPKPsM8OgLHt0S2jtJHDnITO8ueVICSHvFB/eUaVWtE0vs0rgTVD7MIH5ZYXZd7b3lO
+         PNks9BYKzaMjhAqBD/nZI4yyq48F5hP3VngLA7NFzNOY78fRQf7iiQ5ItFN39aYPtViZ
+         JHQD8KOKis//egnU0V7JgaedG5Es2KLI6lN89M/1uGd0kLtvFW0PWMiJsPffiihxgwHz
+         SupvBaCHhJD9Zk4Ow6mz7JPrub8lS3kqXGsmARUk+fllVbdI0hpSEJFkyiAhAJC59kEG
+         he6w==
+X-Gm-Message-State: AGi0PuYvyEy4mhW+d5gBclcCz/Ch9NJehfnJCPE+hVymc+woEZXXHZsb
+        lx41WgfA5K92EaVKUvKSm2+Nng==
+X-Google-Smtp-Source: APiQypLYMpMYYbyXzJla8VvbIOxLhP2i6vpkoVDgCiLbpmpBmrE/HRcq00kHnwAD9Tex0mJyb+jKvg==
+X-Received: by 2002:a63:6f07:: with SMTP id k7mr219742pgc.274.1588270672604;
+        Thu, 30 Apr 2020 11:17:52 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 14sm415735pfy.38.2020.04.30.11.17.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 11:17:51 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sm8250: Add TLMM pinctrl node
+Date:   Thu, 30 Apr 2020 11:17:16 -0700
+Message-Id: <20200430181716.3797842-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 09:29:47AM +0530, Sharat Masetty wrote:
-> This patch adds a new compatible string for sc7180 and also an
-> additional clock listing needed to power the TBUs and the TCU.
-> 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> ---
-> v2: Addressed review comments from Doug
-> 
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index 6515dbe..ba5dba4 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -28,6 +28,7 @@ properties:
->            - enum:
->                - qcom,msm8996-smmu-v2
->                - qcom,msm8998-smmu-v2
-> +              - qcom,sc7180-smmu-v2
->                - qcom,sdm845-smmu-v2
->            - const: qcom,smmu-v2
-> 
-> @@ -113,16 +114,23 @@ properties:
->        present in such cases.
-> 
->    clock-names:
-> +    minItems: 2
-> +    maxItems: 3
->      items:
->        - const: bus
->        - const: iface
-> +      - const: mem_iface
+Add the TLMM pinctrl node for SM8250 and reserve pins 28-31 and 40-43 on
+the MTP as firmware does not allow Linux to touch these pins.
 
-Hi Sharat -
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8250-mtp.dts |  4 ++++
+ arch/arm64/boot/dts/qcom/sm8250.dtsi    | 15 +++++++++++++++
+ 2 files changed, 19 insertions(+)
 
-I think there was a bit of confusion due to renaming between downstream and
-upstream.  Currently for the sdm845 and friends we have:
-
-  clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-     <&gcc GCC_GPU_CFG_AHB_CLK>;
-  clock-names = "bus", "iface";
-
-Confusingly these same clocks downstream are "mem_iface_clk" and "iface_clk"
-respectively.
-
-It looks like you are trying to add GCC_DDRSS_GPU_AXI_CLK as "mem_iface" which
-was formerly "mem_clk" downstream. I'm not sure if the naming change is
-intentional or you were trying to make upstream and downstream match and didn't
-realize that they were renamed.
-
-I'm not sure if we need DDRSS_GPU_AXI_CLK or not. Empirically it works without
-it for sdm845 (I don't have a sc7180 to test) but we should probably loop back
-with either the clock team or the hardware designers to be sure there isn't a
-corner case that is missing. I agree with Doug that its always best if we don't
-need to add a clock.
-
-Jordan
-> 
->    clocks:
-> +    minItems: 2
-> +    maxItems: 3
->      items:
->        - description: bus clock required for downstream bus access and for the
->            smmu ptw
->        - description: interface clock required to access smmu's registers
->            through the TCU's programming interface.
-> +      - description: clock required for the inner working of SMMU TBUs and the
-> +          TCU like the pagetable walks and the TLB flushes.
-> 
->    power-domains:
->      maxItems: 1
-> --
-> 1.9.1
-> 
-
+diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+index 2adb01ea276c..0c6b936be471 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+@@ -348,6 +348,10 @@ &qupv3_id_1 {
+ 	status = "okay";
+ };
+ 
++&tlmm {
++	gpio-reserved-ranges = <28 4>, <40 4>;
++};
++
+ &uart2 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index 7050adba7995..9867b0da9d8e 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -491,6 +491,21 @@ tcsr_mutex_regs: syscon@1f40000 {
+ 			reg = <0x0 0x01f40000 0x0 0x40000>;
+ 		};
+ 
++		tlmm: pinctrl@f100000 {
++			compatible = "qcom,sm8250-pinctrl";
++			reg = <0 0x0f100000 0 0x300000>,
++			      <0 0x0f500000 0 0x300000>,
++			      <0 0x0f900000 0 0x300000>;
++			reg-names = "west", "south", "north";
++			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			gpio-ranges = <&tlmm 0 0 180>;
++			wakeup-parent = <&pdc>;
++		};
++
+ 		timer@17c20000 {
+ 			#address-cells = <2>;
+ 			#size-cells = <2>;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.24.0
+
