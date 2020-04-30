@@ -2,92 +2,156 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1733C83000
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76365C83000
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 875C42074A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57CC3206D9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgD3O2y (ORCPT
+        id S1727068AbgD3Ock (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:28:54 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:42705 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgD3O2x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:28:53 -0400
-Received: by mail-qv1-f67.google.com with SMTP id v18so3061297qvx.9;
-        Thu, 30 Apr 2020 07:28:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vVWzBYKJUQDuVX/btoJY+6LYMrXr1RGguk9M1fRb2Gk=;
-        b=c1Eh+42PwFYobzAMNbij4wSLEGz4vv46XYNuXdkPgCmPVjYZArbDfkK/p/YMpGFZmL
-         MXShKaudt8uvF34kkiRA/Hkqv+pgBXDbLnspBQm8cJUcki1fnNujFxU0u/97UnL+e9rs
-         8JB2WRxhq8ozW5FUMUK3p5YDesuCAwUcUftH+sWfzQU2vzA15YF98HKoe5F+cmHC2nUb
-         CpeyMPE3NstsFVrH1gyeLXTKz3Ib/h0VdLb3ohIvJbKb+UmA1Ikxa0sDWYQjYGLMVUJF
-         aB6RKfDP9JaVvXsv4StGnTYqYnrbULSkr0FK4OMjzEPDSf2LMSbHm/DXEV3+xPf1nYPX
-         oJgg==
-X-Gm-Message-State: AGi0PuZvgzW2Z058tmlVsBje3plgsNacnB2ev/8A0cPPhC8zUToYbkxQ
-        7JRw6m7hLNzvXyydQX3cJlulhHJ1OY5Tcfy7Xqo=
-X-Google-Smtp-Source: APiQypJRTf/ui9dNutw4tN535a/lPdlLEOpjjfiChGE7kI685qtINjYPuVWS/8HbqUbbyS9WsJPmByFOcVrXUvlv1Rk=
-X-Received: by 2002:a0c:ec8f:: with SMTP id u15mr3355852qvo.102.1588256932282;
- Thu, 30 Apr 2020 07:28:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 16:28:40 +0200
-Message-ID: <CAMuHMdXrX-Crdgjx31LzYpGabfMcZ6GcVQuUFo64Dxd3y3orgg@mail.gmail.com>
-Subject: Re: [PATCH 17/18] dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H) support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Thu, 30 Apr 2020 10:32:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33010 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbgD3Ocj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:32:39 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A108AC035494
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 07:32:39 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jUAEo-0008MV-Bh; Thu, 30 Apr 2020 16:32:30 +0200
+Message-ID: <5e1f804c4c27927d10b2283747c1cae6606abe7c.camel@pengutronix.de>
+Subject: Re: [RFC PATCH 1/4] drm/etnaviv: Prevent IRQ triggering at probe
+ time on i.MX8MM
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Adam Ford <aford173@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Li Jun <jun.li@nxp.com>, NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 30 Apr 2020 16:32:27 +0200
+In-Reply-To: <20200430124602.14463-2-frieder.schrempf@kontron.de>
+References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
+         <20200430124602.14463-2-frieder.schrempf@kontron.de>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:59 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Renesas RZ/G1H (R8A7742) SoC GPIO blocks are identical to the R-Car Gen2
-> family. Add support for its GPIO controllers.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Hi Frieder,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Am Donnerstag, den 30.04.2020, 12:46 +0000 schrieb Schrempf Frieder:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> On i.MX8MM there is an interrupt getting triggered immediately after
+> requesting the IRQ, which leads to a stall as the handler accesses
+> the GPU registers whithout the clock being enabled.
+> 
+> Enabling the clocks briefly seems to clear the IRQ state, so we do
+> this before requesting the IRQ.
 
-Gr{oetje,eeting}s,
+This is most likely caused by improper power-up sequencing. Normally
+the GPC will trigger a hardware reset of the modules inside a power
+domain when the domain is powered on. This requires the clocks to be
+running at this point, as those resets are synchronous, so need clock
+pulses to propagate through the hardware.
 
-                        Geert
+From what I see the i.MX8MM is still missing the power domain
+controller integration, but I'm pretty confident that this problem
+should be solved in the power domain code, instead of the GPU driver.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Regards,
+Lucas
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 29 ++++++++++++++++++++-----
+> --
+>  1 file changed, 22 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> index a31eeff2b297..23877c1f150a 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> @@ -1775,13 +1775,6 @@ static int etnaviv_gpu_platform_probe(struct
+> platform_device *pdev)
+>  		return gpu->irq;
+>  	}
+>  
+> -	err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
+> -			       dev_name(gpu->dev), gpu);
+> -	if (err) {
+> -		dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq, 
+> err);
+> -		return err;
+> -	}
+> -
+>  	/* Get Clocks: */
+>  	gpu->clk_reg = devm_clk_get(&pdev->dev, "reg");
+>  	DBG("clk_reg: %p", gpu->clk_reg);
+> @@ -1805,6 +1798,28 @@ static int etnaviv_gpu_platform_probe(struct
+> platform_device *pdev)
+>  		gpu->clk_shader = NULL;
+>  	gpu->base_rate_shader = clk_get_rate(gpu->clk_shader);
+>  
+> +	/*
+> +	 * On i.MX8MM there is an interrupt getting triggered
+> immediately
+> +	 * after requesting the IRQ, which leads to a stall as the
+> handler
+> +	 * accesses the GPU registers whithout the clock being enabled.
+> +	 * Enabling the clocks briefly seems to clear the IRQ state, so
+> we do
+> +	 * this here before requesting the IRQ.
+> +	 */
+> +	err = etnaviv_gpu_clk_enable(gpu);
+> +	if (err)
+> +		return err;
+> +
+> +	err = etnaviv_gpu_clk_disable(gpu);
+> +	if (err)
+> +		return err;
+> +
+> +	err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
+> +			       dev_name(gpu->dev), gpu);
+> +	if (err) {
+> +		dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq, 
+> err);
+> +		return err;
+> +	}
+> +
+>  	/* TODO: figure out max mapped size */
+>  	dev_set_drvdata(dev, gpu);
+>  
+
