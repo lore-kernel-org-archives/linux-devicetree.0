@@ -2,85 +2,83 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFCCC47247
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2AFC4724C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E055A20873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588259541;
-	bh=YOc7T/JJogTmepE6jFRhfEQUCfqsI45Cz1kZ1rWCLSQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sxum/wTnjTUaj+Fn1WmtUa/KY+guVqB+zWKNTo3WdEN8B8W4y7WapanN9mEW775g7
-	 Al0LKwI1bSmdpSINmbM9Qs3wujHvvQBfQRXlZW6nRxpVZkiLqJJrFfVJnXb4DN+UIX
-	 BjFgsH9kXj6g6aMNDHEFE5tgV+CgC9UAzYBkSIMA=
+	by mail.kernel.org (Postfix) with ESMTP id DFF6920731
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:13:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgD3PMV (ORCPT
+        id S1726626AbgD3PNp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:12:21 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:44318 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgD3PMV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 11:12:21 -0400
-Received: by mail-oo1-f66.google.com with SMTP id p67so1348536ooa.11;
-        Thu, 30 Apr 2020 08:12:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=obpQxpSJiyFLGTkwGrLdNKbwi6uRMLRDKh8cYyDjJsI=;
-        b=tnOqxCrTJGePguJFugSrWx8GaWchdS9npWVa9TtaeGPiGjx4bxTWO3BMgCpzPAIydu
-         FQgVr3KNfFBnHiATvfI1etKhO3ul4JC5FGUPTp4+EtP5hfOCAGaRF7RIT2kSZPKxHg/j
-         hQz8pWlfCwhDBu26WinoLKoWTnBLUQC3HWq7/aVUcyOhxKUW5NgU9yAfXdLr+inoWei/
-         YXqPqFoqtYLmPFazGIVk/LNdPI/eivk8y9V/9VcgmAwg8vMUim6j/9EXWMK/GJhxgpHZ
-         uZiXASAE67cQclHCO6DYEF+Qd/dEmE4eCR/+ihzBMqFisJQ5HEvoYN1LVCc1flqqNbsm
-         D8rQ==
-X-Gm-Message-State: AGi0PubXlm0nRD6maCRlcJEn7MwO/48UAJJG5tA1SBBBZDuMrs30/Jf4
-        Ih94CEZS5fFqAz4/TjOXCA==
-X-Google-Smtp-Source: APiQypJ4BHLeZGMcwyA8O7CLgokYWdf16RFXaSVYKFjfgHJjv8YSnSyns/hrZx52G4ePwLQZAGxRzA==
-X-Received: by 2002:a4a:8253:: with SMTP id t19mr3218052oog.69.1588259538956;
-        Thu, 30 Apr 2020 08:12:18 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o10sm43210oti.52.2020.04.30.08.12.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 08:12:18 -0700 (PDT)
-Received: (nullmailer pid 11469 invoked by uid 1000);
-        Thu, 30 Apr 2020 15:12:17 -0000
-Date:   Thu, 30 Apr 2020 10:12:17 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hyunki00.koo@samsung.com
-Subject: Re: [PATCH v8 2/3] dt-bindings: serial: Add reg-io-width compatible
-Message-ID: <20200430151217.GA11429@bogus>
-References: <20200420013300.17249-1-hyunki00.koo@samsung.com>
- <CGME20200420013325epcas2p13f65e6bc8ba68f89c805704830144870@epcas2p1.samsung.com>
- <20200420013300.17249-2-hyunki00.koo@samsung.com>
+        Thu, 30 Apr 2020 11:13:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:57250 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726441AbgD3PNp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:13:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B73B4101E;
+        Thu, 30 Apr 2020 08:13:44 -0700 (PDT)
+Received: from [10.37.12.139] (unknown [10.37.12.139])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DCB23F68F;
+        Thu, 30 Apr 2020 08:13:36 -0700 (PDT)
+Subject: Re: [PATCH v6 10/25] arm64: cpufeature: Export symbol
+ read_sanitised_ftr_reg()
+To:     jean-philippe@linaro.org, iommu@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-mm@kvack.org
+Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
+        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+ <20200430143424.2787566-11-jean-philippe@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <ecec4f36-041f-0068-3863-106f9a082c62@arm.com>
+Date:   Thu, 30 Apr 2020 16:18:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420013300.17249-2-hyunki00.koo@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200430143424.2787566-11-jean-philippe@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Apr 2020 10:32:57 +0900, Hyunki Koo wrote:
-> Add a description for reg-io-width options for the samsung serial
-> UART peripheral.
+On 04/30/2020 03:34 PM, Jean-Philippe Brucker wrote:
+> The SMMUv3 driver would like to read the MMFR0 PARANGE field in order to
+> share CPU page tables with devices. Allow the driver to be built as
+> module by exporting the read_sanitized_ftr_reg() cpufeature symbol.
 > 
-> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+
 > ---
->  Documentation/devicetree/bindings/serial/samsung_uart.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>   arch/arm64/kernel/cpufeature.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 9fac745aa7bb2..5f6adbf4ae893 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -841,6 +841,7 @@ u64 read_sanitised_ftr_reg(u32 id)
+>   	BUG_ON(!regp);
+>   	return regp->sys_val;
+>   }
+> +EXPORT_SYMBOL_GPL(read_sanitised_ftr_reg);
+>   
+>   #define read_sysreg_case(r)	\
+>   	case r:		return read_sysreg_s(r)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
