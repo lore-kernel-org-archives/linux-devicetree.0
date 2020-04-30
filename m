@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47214C4724C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E7AC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1ED20873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB5D20870
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254648;
-	bh=2S1FFwLlLxdFqit01Fd6EhlCpN6yg+s+wXPuB7KRNn4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=S2GuUMz4FlQ8BlmxRu0Kf5AY8UTLyi6OfCq1O2rfsZjbsGfYffxltpL9JVAOrobhi
-	 kaz4ld8/840B6TRBt5KBvRRdpb9q+d1OEJSKC2YT6pgM+Kslxw1//DTiUqZt3DN1n/
-	 sVsUquqLXnF3PZAG7vsECx1uCepel0KUmuAHMt38=
+	s=default; t=1588254762;
+	bh=YmqlM56F2jJuRWYNTBNA8ew3wBlgerJMSnKaUx6c5AM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=M7I6WOo+LL8sErwYCI1LQtDzMuJCD1ire4YHqMGxfwy2Lcqk/WSmNb7vy6/JdTvA/
+	 JT9gJn4ac1ulbr9/KgAuWDRZQcSL0v8IViKcxKgFgqxTg4ayrr6sePI9r2QloWeffw
+	 EBYlnjJexxLZnmmTJOCFAtb8vIdedfsppsUaRI4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgD3Nuq (ORCPT
+        id S1726832AbgD3Nwl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58254 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:52:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbgD3Nuq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:50:46 -0400
+        id S1728469AbgD3Nwl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 195B920774;
-        Thu, 30 Apr 2020 13:50:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 157DA208DB;
+        Thu, 30 Apr 2020 13:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254646;
-        bh=2S1FFwLlLxdFqit01Fd6EhlCpN6yg+s+wXPuB7KRNn4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kLhbRl26lw1Z/P+DYHCiDnSDJrSETSE+1xlBtTuhMPFMUcPsUttJSyjNp4zvO3Dng
-         oY1M20VK1P5RyPWWT7970wzG6X6fMfp0Us+Op47Cc0VpDzp0ZbLPHB8bVRiVNsTA0W
-         CNqA78hjG+XazcT9ZAFg/8ilgQv9h1JDvcvYawBk=
+        s=default; t=1588254760;
+        bh=YmqlM56F2jJuRWYNTBNA8ew3wBlgerJMSnKaUx6c5AM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GO9/M7z0meQXELMnIwhSkE6DyhDe3d419tjuVACuaRCVTIYk2oQwD+OqEdQ7krjui
+         dzC0ArJHkDKgGO5gh0mlF+4TIiBAX88cmfhh2hLQeigOeIgy8vacy1H2oLomjwHupb
+         CsBw0NNBHDleRBi5fd/Xy3ClAZ9hWQ2u8sGzAJBo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 01/79] ARM: dts: OMAP3: disable RNG on N950/N9
-Date:   Thu, 30 Apr 2020 09:49:25 -0400
-Message-Id: <20200430135043.19851-1-sashal@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 19/57] ARM: dts: bcm283x: Disable dsi0 node
+Date:   Thu, 30 Apr 2020 09:51:40 -0400
+Message-Id: <20200430135218.20372-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
+References: <20200430135218.20372-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,37 +61,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit 07bdc492cff6f555538df95e9812fe72e16d154a ]
+[ Upstream commit 90444b958461a5f8fc299ece0fe17eab15cba1e1 ]
 
-Like on N900, we cannot access RNG directly on N950/N9. Mark it disabled in
-the DTS to allow kernel to boot.
+Since its inception the module was meant to be disabled by default, but
+the original commit failed to add the relevant property.
 
-Fixes: 308607e5545f ("ARM: dts: Configure omap3 rng")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and clocks")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-n950-n9.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/bcm283x.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-index a075b63f3087d..11d41e86f814d 100644
---- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-+++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-@@ -341,6 +341,11 @@
- 	status = "disabled";
- };
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 90125ce19a1b3..50c64146d4926 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -488,6 +488,7 @@
+ 					     "dsi0_ddr2",
+ 					     "dsi0_ddr";
  
-+/* RNG not directly accessible on N950/N9. */
-+&rng_target {
-+	status = "disabled";
-+};
-+
- &usb_otg_hs {
- 	interface-type = <0>;
- 	usb-phy = <&usb2_phy>;
++			status = "disabled";
+ 		};
+ 
+ 		thermal: thermal@7e212000 {
 -- 
 2.20.1
 
