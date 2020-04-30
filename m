@@ -6,98 +6,101 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3958FC83002
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 05:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEC1C83002
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 06:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 170042083B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 05:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E38422173E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 06:09:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n6k9T2eu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="byAT5GYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgD3F2Z (ORCPT
+        id S1726449AbgD3GJH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 01:28:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60844 "EHLO
+        Thu, 30 Apr 2020 02:09:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726180AbgD3F2Z (ORCPT
+        by vger.kernel.org with ESMTP id S1726358AbgD3GJG (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 01:28:25 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0C91C035494
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 22:28:24 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t7so1843703plr.0
-        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 22:28:24 -0700 (PDT)
+        Thu, 30 Apr 2020 02:09:06 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240C3C035495
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 23:09:05 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mq3so290199pjb.1
+        for <devicetree@vger.kernel.org>; Wed, 29 Apr 2020 23:09:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=55tWQMue1CeWVhCSNKBFeKjct6AhC09nUnb+2ARVFbE=;
-        b=n6k9T2euH6MbkTuaaSTLYdRko/Rvzhix+ZGxCCISN5B4ZHJzQj05CNp7caqivWUQYK
-         Tapk90HkAI2PQsYHdWw8T+2qrDxmrSOLO6W1SsOoJG8gFYZvpcRt0tHYsbVWoSSYxL5O
-         PxsXQv5rVT3XrGH/jjp2zR/vwe2ZezV4oB90IuuG6qRV4YaKn1SEW1V6BkWdWvY4ny3G
-         vHcwLuErIwNS94zgPpurzj4yt0h3a7zbren2pPsJvLTPzm4sVJa4xhjLNH3/QtVLzuJ0
-         Sz0sGFZ7UkkwHCLN2g5hwl1bgF8RBpEQDC6p+XEJEe1VEJfN4/VShbhOKofWxsLmW1vl
-         RZ1Q==
+        bh=gnoiaAuFUo4sUlvrv+0H1shPq44QtsmkGsofLniz4yU=;
+        b=byAT5GYTKMmb9dN5DO0AqZOOlkZMewiHMDiX3iF5oAJvqYbarJDnT8HiAaHb+UZOFk
+         bmEdH/HOUPRjPjpIJrvauvZsiyMivzMY6/bZJQHWR3JCAZpkxjE9fJ/lgPByDjtg4Wqp
+         /MfNGLswKIMjLShQj0qTFpiMganNPnTRkjOs/NWunKHrbNWD0rys519H3+xIxPwWmh1V
+         6C9E218KrhOJMq0fvfve5jDcZ84v1EkCmoqLcNPFjQaQAd0ZTiMEriuBnjr26/OBf1nY
+         4qIHhZ/wc62lGL5pJevZFoSh0J5Jg2Q8KOWoEAXyLEsHnH6nS5t2c8VbjLOV1WtlTtf8
+         vfqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=55tWQMue1CeWVhCSNKBFeKjct6AhC09nUnb+2ARVFbE=;
-        b=DP8tdk9ZSQClzij98Tr/dhzXVKUcSaHsCtXVuHMj+1asN67fv+4K564CTnlJuHvHQ1
-         1AU+at921F4j/v5Iff0XPudIhuztnwpWWXPAh1o1NTmiytZqaJw+nreMwc8DGCl2p1zk
-         rLRveNnLL9aFHJjR8My9p1sdn5Qlt6bRBBzegMAx8n7rjeFTp0UNBXnDAGNGLWZ1ISLg
-         kyD/TAvPUfkAgZNEjYqj4INSm586ybiaABB+HMiKqenPDinm5LTSuR6spT63ztv2mc3t
-         0HFAIGsq4o5caGkTY4fhaxW2jtJjgfi5p8PqUWklfJsIKvk5SRccwCwKZzAs+lFMj5Z7
-         munQ==
-X-Gm-Message-State: AGi0PuamJYLNLWDXS4hb5Ar5krecubQFD6ghiWrPREn3eHjWqMssNv8g
-        K6rBRonama/2WK17YaD+kTo0Eg==
-X-Google-Smtp-Source: APiQypKoeSP3spOViYGktj9mT+PvpFos0abjKj3LkQ1BzRxJsd/lNPqVNDsO4w9ZM8zsbKrRdj88wQ==
-X-Received: by 2002:a17:902:7b92:: with SMTP id w18mr1948964pll.273.1588224504269;
-        Wed, 29 Apr 2020 22:28:24 -0700 (PDT)
+        bh=gnoiaAuFUo4sUlvrv+0H1shPq44QtsmkGsofLniz4yU=;
+        b=CpbXlcfd72Bc5f1/XvRjTlYzCa7Gc0ONd9MbGx9gJshy9XxttDx/Fu/iC/9X5yYcDY
+         6798ouc6/MBvWkYX8kuWuVKGi1QZJOsTKf77o+xD7QfeOpdHWANXi+2WCedh9tNXNovS
+         ukS7M+K0fcJPkp7XyuPe5vPjkMCrQFV6sbLd7Jeh1Fh14Slm7nPdAF9/PW14WbIwD47k
+         B3x8/cNRYJuWGqwMZaQPnweM4owtL87WsTlktC2h/C5OYwtDPtmnBZsOAYO46p2WHH6U
+         gWIpoHa7Udc+DaZPcQOxGU8nN9oufQM+bdxD+ZXh34jMSm6c9CyqcrIw6d6niWbvefhW
+         J6rA==
+X-Gm-Message-State: AGi0Pubsi0wvEJmgibbjbQyiN/bX8ZEwixBSTGFTRLzNMkU4W8u/7aSS
+        bDTgeCEPjDyCyMrTpxL0jd3h/Q==
+X-Google-Smtp-Source: APiQypL5K6KJakKoCQTgtpj++245Liqa/pnUNFWRMXQInyp9Q1+LAUoIIzocBD3tizpFbPtxFCAJhA==
+X-Received: by 2002:a17:90a:68cb:: with SMTP id q11mr1200392pjj.15.1588226944531;
+        Wed, 29 Apr 2020 23:09:04 -0700 (PDT)
 Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id b140sm2500509pfb.119.2020.04.29.22.28.23
+        by smtp.gmail.com with ESMTPSA id t28sm2296509pgo.46.2020.04.29.23.09.03
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 22:28:23 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 10:58:21 +0530
+        Wed, 29 Apr 2020 23:09:03 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 11:39:01 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org,
-        nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, rjw@rjwysocki.net,
-        saravanak@google.com, sibis@codeaurora.org, rnayak@codeaurora.org,
-        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
-        jcrouse@codeaurora.org, evgreen@chromium.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/7] OPP: Add support for parsing interconnect
- bandwidth
-Message-ID: <20200430052821.thv63n4olbngjhjo@vireshk-i7>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
+Message-ID: <20200430060901.j7jjw6soo5h5xoul@vireshk-i7>
 References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-5-georgi.djakov@linaro.org>
- <20200424192025.GA4525@google.com>
+ <20200424155404.10746-7-georgi.djakov@linaro.org>
+ <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200424192025.GA4525@google.com>
+In-Reply-To: <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
 User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 24-04-20, 12:20, Matthias Kaehlcke wrote:
-> On Fri, Apr 24, 2020 at 06:54:01PM +0300, Georgi Djakov wrote:
-> > +	for (i = 0; i < num_paths; i++) {
-> > +		opp_table->paths[i] = of_icc_get_by_index(dev, i);
-> > +		if (IS_ERR(opp_table->paths[i])) {
-> > +			ret = PTR_ERR(opp_table->paths[i]);
-> > +			if (ret != -EPROBE_DEFER) {
-> > +				dev_err(dev, "%s: Unable to get path%d: %d\n",
-> > +					__func__, i, ret);
-> > +			}
-> 
-> nit: curly braces not needed
+On 24-04-20, 14:18, Saravana Kannan wrote:
+> My only comment is -- can we drop this patch please? I'd like to use
+> devfreq governors for voting on bandwidth and this will effectively
+> override whatever bandwidth decisions are made by the devfreq
+> governor.
 
-Again, braces are preferred across multi-line blocks. Please keep it.
+And why would that be better ? FWIW, that will have the same problem
+which cpufreq governors had since ages, i.e. they were not proactive
+and were always too late.
+
+The bw should get updated right with frequency, why shouldn't it ?
 
 -- 
 viresh
