@@ -2,93 +2,111 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E7AC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146E9C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB5D20870
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254762;
-	bh=YmqlM56F2jJuRWYNTBNA8ew3wBlgerJMSnKaUx6c5AM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M7I6WOo+LL8sErwYCI1LQtDzMuJCD1ire4YHqMGxfwy2Lcqk/WSmNb7vy6/JdTvA/
-	 JT9gJn4ac1ulbr9/KgAuWDRZQcSL0v8IViKcxKgFgqxTg4ayrr6sePI9r2QloWeffw
-	 EBYlnjJexxLZnmmTJOCFAtb8vIdedfsppsUaRI4A=
+	by mail.kernel.org (Postfix) with ESMTP id E973A2063A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgD3Nwl (ORCPT
+        id S1729240AbgD3N42 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:52:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728469AbgD3Nwl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:41 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 157DA208DB;
-        Thu, 30 Apr 2020 13:52:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254760;
-        bh=YmqlM56F2jJuRWYNTBNA8ew3wBlgerJMSnKaUx6c5AM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GO9/M7z0meQXELMnIwhSkE6DyhDe3d419tjuVACuaRCVTIYk2oQwD+OqEdQ7krjui
-         dzC0ArJHkDKgGO5gh0mlF+4TIiBAX88cmfhh2hLQeigOeIgy8vacy1H2oLomjwHupb
-         CsBw0NNBHDleRBi5fd/Xy3ClAZ9hWQ2u8sGzAJBo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 19/57] ARM: dts: bcm283x: Disable dsi0 node
-Date:   Thu, 30 Apr 2020 09:51:40 -0400
-Message-Id: <20200430135218.20372-19-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
-References: <20200430135218.20372-1-sashal@kernel.org>
+        Thu, 30 Apr 2020 09:56:28 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38495 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727846AbgD3N41 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 09:56:27 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r66so5275000oie.5;
+        Thu, 30 Apr 2020 06:56:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J0BdSY6aYGuZTCeF5gOrkfhmzXUO5QbPbC35o2A29hs=;
+        b=A5bRAUkVit7A9Q67nBb0D6LjEHNWr5O8oTtDn7WlefMt19SjeAW7pDUGNvL+j1D+/G
+         lOAb37JXd0umrybksFPSbudPdAe7IaruY9oxP8Lxm5zi0qLiTLAq/rPUMU/S1y+kfDKr
+         wKMnJlDctXfI169wqMlRrN6dC9+ugfrVBbE+DIMdNwpOQYItOYppG4pOu6Ge4Ik/uodF
+         YRxjLo1c1IHN2+GCQWCzv9+ajbVr95DaReI1mZx88BJH284wiCkug9He/iSDPCumrjQQ
+         7YNkFxFnB4smVZa3TstLQiLuMOs6ErlCMZSv3OOX/kdXUSoXlElQNSKiPrb+nHGHVbfO
+         oJAw==
+X-Gm-Message-State: AGi0PuaHq/SZj8kdIujY5MO1wVQ2/nMa4paWr1+pNuobNLDfBGRHASCK
+        hcqDhlgKa8cIepye7Gcgdeokf/M8qb1Ool9We/E=
+X-Google-Smtp-Source: APiQypKEYGGNvKQoS3yHrfZA1ZqB91++Kmari2arpNNAHltBPFXklTXvWPxfYoN3XHTdW9bxVOsPDs6q+I2XoirDHdk=
+X-Received: by 2002:aca:895:: with SMTP id 143mr1736708oii.153.1588254986270;
+ Thu, 30 Apr 2020 06:56:26 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Apr 2020 15:56:15 +0200
+Message-ID: <CAMuHMdVY8HOe=R82Z=ymnSiq_zUXDyZNbDYy2RwaPD9hVkkQrA@mail.gmail.com>
+Subject: Re: [PATCH 10/18] dt-bindings: rcar-dmac: Document r8a7742 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Hi Prabhakar,
 
-[ Upstream commit 90444b958461a5f8fc299ece0fe17eab15cba1e1 ]
+On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Renesas RZ/G SoC also have the R-Car gen2/3 compatible DMA controllers.
+> Document RZ/G1H (also known as R8A7742) SoC bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Since its inception the module was meant to be disabled by default, but
-the original commit failed to add the relevant property.
+Thanks for your patch!
 
-Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and clocks")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/bcm283x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+> --- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 90125ce19a1b3..50c64146d4926 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -488,6 +488,7 @@
- 					     "dsi0_ddr2",
- 					     "dsi0_ddr";
- 
-+			status = "disabled";
- 		};
- 
- 		thermal: thermal@7e212000 {
+This file has been replaced by renesas,rcar-dmac.yaml.
+
+> @@ -16,6 +16,7 @@ Required Properties:
+>
+>  - compatible: "renesas,dmac-<soctype>", "renesas,rcar-dmac" as fallback.
+>               Examples with soctypes are:
+> +               - "renesas,dmac-r8a7742" (RZ/G1H)
+>                 - "renesas,dmac-r8a7743" (RZ/G1M)
+>                 - "renesas,dmac-r8a7744" (RZ/G1N)
+>                 - "renesas,dmac-r8a7745" (RZ/G1E)
+
+For the logical change:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
