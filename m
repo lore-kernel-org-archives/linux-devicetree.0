@@ -2,189 +2,292 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CD9C8300B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 11:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E90EC8300A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 11:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D68120757
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 11:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B8A20757
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 11:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="a2jaUUuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgD3LNp (ORCPT
+        id S1725280AbgD3LNs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:13:45 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40102 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgD3LNp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:13:45 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D8D5A2007DC;
-        Thu, 30 Apr 2020 13:13:42 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C865E2007D8;
-        Thu, 30 Apr 2020 13:13:42 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id AA7D920397;
-        Thu, 30 Apr 2020 13:13:42 +0200 (CEST)
-Date:   Thu, 30 Apr 2020 14:13:42 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>,
-        Shawn Guo <shawnguo@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 01/13] mfd: Add i.MX generic mix support
-Message-ID: <20200430111342.b2fj7ko3uvffv4wg@fsr-ub1664-175>
-References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
- <1586937773-5836-2-git-send-email-abel.vesa@nxp.com>
- <20200417080747.GE2167633@dell>
- <20200422091854.rhtkcfrdptwofngs@fsr-ub1664-175>
- <AM6PR04MB4966B3527BF97918C1689A4580D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <20200424062727.GI3612@dell>
- <20200430100355.zwl7wfbq64cikqxp@fsr-ub1664-175>
- <AM6PR04MB496612839A11EA05D60DF6AE80AA0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+        Thu, 30 Apr 2020 07:13:48 -0400
+Received: from mail-eopbgr770047.outbound.protection.outlook.com ([40.107.77.47]:19474
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726859AbgD3LNq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 07:13:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M5TcMjEIlZRSZo+M++eF9dcFVbBKhNvAGy1FCxSLgdf0fcTsv7wRTgfNGffKpCVDTqzWrXxlNT/IjX32NNF8Tebg3h0fO6Fvo9bQs+FmPeTdb68HTLj0TVqKvV3lb/ZOUAw6ar6saptTcvsDTM3Hnv8Dde6+oazcs38ltyG9t7/ixX2XedIM6/WpbOwZG5CFi7BM62yC8ETCxkHeOACY+Tl7z6hbhGUGFS8q+3Ir1o9mq2C6zhk6SuC1uZ21LveTs0ed+FFAMA6dh7AiZhzu/cZaOAGjcoWkCZhwr+lTO2gatu2ouIgYb0Pj4tEgIfTNzjf2JNYCCIt8CqpQ87IyFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d3lThHtKEgSUjpN4gHcWXkg7bteGQB8rshKGKSrUJiI=;
+ b=DZrK3iZJRdO+czNxSO/K7A3lrM7uA6mRELUzkqQwGhVUy+TK8n4clWtlxIVVYzX/p2h+NK8QjIuWHh/Hj7TfP2EjYAsnx7+HB+FsWVRBXX5En/5k5MzmqWCCgpOvFO5j9aLitBXGFpz7QDTQskBv8ttu4r9bgZFDL8rluciXDq4X6ojA35qT4OBJFJzvi5eIxYS+ES7UQ14Pyuc24NVvwDmQ/G2uVz8cXK951CD/gLPfictWhE16vnnKL5GF0Qv7+ud8WaPcLkL978VwfmNLermxg84AxtsK4nohYKK9ZMu87fE4PNvigmnFIk14wfm9j3d39+CBmVFwH3zJwpHJ7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d3lThHtKEgSUjpN4gHcWXkg7bteGQB8rshKGKSrUJiI=;
+ b=a2jaUUuLXlUtECKEbLq7wpqjBwYjIQeuYhRJFg/PXsAsSW2QdkHKT1QBxEOV/tGz21VNO11x5hfdBSxLlanj1/K4zsB3Tu1MDUsKX9hNOSh+V5xCckl5Mljcs5qRy0T0AlGu3LIVHy2v43NaD7eJLlKLLOzPIgZDSwhE4Zqzdt0=
+Received: from SN4PR0501CA0045.namprd05.prod.outlook.com
+ (2603:10b6:803:41::22) by BN7PR02MB4210.namprd02.prod.outlook.com
+ (2603:10b6:406:fe::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Thu, 30 Apr
+ 2020 11:13:43 +0000
+Received: from SN1NAM02FT036.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:803:41:cafe::8b) by SN4PR0501CA0045.outlook.office365.com
+ (2603:10b6:803:41::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.14 via Frontend
+ Transport; Thu, 30 Apr 2020 11:13:43 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT036.mail.protection.outlook.com (10.152.72.149) with Microsoft SMTP
+ Server id 15.20.2937.19 via Frontend Transport; Thu, 30 Apr 2020 11:13:43
+ +0000
+Received: from [149.199.38.66] (port=48052 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jU78K-0002gF-RR; Thu, 30 Apr 2020 04:13:36 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jU78R-0004pu-1f; Thu, 30 Apr 2020 04:13:43 -0700
+Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03UBDfIh019699;
+        Thu, 30 Apr 2020 04:13:41 -0700
+Received: from [172.30.17.109]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jU78P-0004pE-08; Thu, 30 Apr 2020 04:13:41 -0700
+Subject: Re: u-boot DT configuration node
+To:     Rob Herring <robh@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "u-boot@lists.denx.de" <u-boot@lists.denx.de>,
+        Tom Rini <trini@konsulko.com>,
+        Loic Poulain <loic.poulain@linaro.org>
+References: <6cdf20c3-7b74-679c-0e6f-4d385d12f9fe@xilinx.com>
+ <CAL_Jsq+ehJSK7sjqmKtWOVjr-QZ3LDB+ywCO85uF8WJ+cB=AAw@mail.gmail.com>
+ <845e6a12-ca33-957f-debb-4a1fcec70742@xilinx.com>
+ <CAL_JsqLMDqpkyg-Q7mUfw-XH67-v068Q6e9wTq2UOoN=0-_coQ@mail.gmail.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <fefb0e66-b82e-23ec-1e81-471d590df032@xilinx.com>
+Date:   Thu, 30 Apr 2020 13:13:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAL_JsqLMDqpkyg-Q7mUfw-XH67-v068Q6e9wTq2UOoN=0-_coQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM6PR04MB496612839A11EA05D60DF6AE80AA0@AM6PR04MB4966.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(136003)(396003)(46966005)(70586007)(70206006)(53546011)(54906003)(186003)(26005)(316002)(110136005)(44832011)(4326008)(31696002)(9786002)(36756003)(31686004)(2616005)(336012)(82310400002)(8676002)(966005)(8936002)(47076004)(426003)(82740400003)(6666004)(356005)(478600001)(81166007)(83080400001)(2906002)(3480700007)(5660300002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b5196be0-bead-41ea-8add-08d7ecf78b42
+X-MS-TrafficTypeDiagnostic: BN7PR02MB4210:
+X-Microsoft-Antispam-PRVS: <BN7PR02MB4210022DBC80BB65E7B40A48C6AA0@BN7PR02MB4210.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0389EDA07F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4nsS4muJMzzeRc9pzA13sWFuj2OVpFapkLkBaMjt9WGWViMVCQKxwP3Fb9dI27+8GSlxjVL+tFx3FrsSGI5nlUA36dOfEBeCK9KpqnzfaaC7dorC82RVOTaEdF/HwtjSlecumJRb6bsS35XvFEMF5S/HGS47oB+GhTDzt7fGdjBjDpx0oP+HuBL09XRtXE25IpZAO9fumtQ5DwvqbT7jLkyuOweQNjeOGzAoQy0GJLw6JW4P5RF+CvMonppdTWN+numed6YQUoOPngyMZEnYqxbtz3aGhkdJ8mHTvjo+8uXrJH9bBz4qd29gTZyku6hj1B4dv8Ne6xzX/xs5jSiHLz8MyYZTH6jFHR3WJ4hYKNg394+OsnL9Jg6/VUKmdknTO+TrWP0A81uEGHEHnVlYC3TfPBGXESGeETBRTXGBQ/ruhS+oHJErwBZrfmJgKioPcLoLsFcpLV3cUA0bJfnfLzswSkJw+FO0g84em3XYW4umkKNpd6SlAchRTmuN60ZD78EEkYFJE/1ysnmMj0kJWH+dxXFaU32VOkBocRdd8PC/l6k8coa1R764TOjZGuMwaAi1XONCOuLyTA7HxtniDA==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 11:13:43.3605
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5196be0-bead-41ea-8add-08d7ecf78b42
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4210
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-04-30 10:22:04, Aisheng Dong wrote:
-> > From: Abel Vesa <abel.vesa@nxp.com>
-> > Sent: Thursday, April 30, 2020 6:04 PM
-> > To: Lee Jones <lee.jones@linaro.org>
-> > On 20-04-24 07:27:27, Lee Jones wrote:
-> > > On Thu, 23 Apr 2020, Aisheng Dong wrote:
-> > >
-> > > > > From: Abel Vesa <abel.vesa@nxp.com>
-> > > > > Sent: Wednesday, April 22, 2020 5:19 PM On 20-04-17 09:07:47, Lee
-> > > > > Jones wrote:
-> > > > > > On Wed, 15 Apr 2020, Abel Vesa wrote:
-> > > > > >
-> > > > > > > Some of the i.MX SoCs have a IP for interfacing the dedicated
-> > > > > > > IPs with clocks, resets and interrupts, plus some other specific control
-> > registers.
-> > > > > > > To allow the functionality to be split between drivers, this
-> > > > > > > MFD driver is added that has only two purposes: register the
-> > > > > > > devices and map the entire register addresses. Everything else
-> > > > > > > is left to the dedicated drivers that will bind to the registered devices.
-> > > > > > >
-> > > > > > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > > > > > > ---
-> > > > > > >  drivers/mfd/Kconfig   | 11 +++++++++++
-> > > > > > >  drivers/mfd/Makefile  |  1 +
-> > > > > > >  drivers/mfd/imx-mix.c | 48
-> > > > > > > ++++++++++++++++++++++++++++++++++++++++++++++++
-> > > > > > >  3 files changed, 60 insertions(+)  create mode 100644
-> > > > > > > drivers/mfd/imx-mix.c
-> > > > > >
-> > > > > > For completeness - Arnd's reply to this patch:
-> > > > > >
-> > > > >
-> > > > > I'm replying here to Arnd's reply.
-> > > > >
-> > > > > I'm trying to give here a whole picture of the entire problem
-> > > > > while the documentation for i.MX8MP is _not yet_ public.
-> > > > >
-> > > > > Historically, each IP would have its own enclosure for all the related GPRs.
-> > > > > Starting with i.MX8MP some GPRs (and some subparts) from the IP
-> > > > > were placed inside these mixes.
-> > > > >
-> > > > > Audiomix for example, has multiple SAIs, a PLL, and some reset
-> > > > > bits for EARC and some GPRs for AudioDSP. This means that i.MX8MP
-> > > > > has 7 SAIs, 1 EARC and
-> > > > > 1 AudioDSP.
-> > > > > Future platforms might have different numbers of SAIs, EARCs or
-> > AudioDSPs.
-> > > > > The PLL can't be placed in one of those SAIs and it was placed in audiomix.
-> > > > > The i.MX8MP has at least 4 of these mixes.
-> > > > >
-> > > > > Now, the commonalities between all mixes are:
-> > > > >  - have their own power domains
-> > > > >  - driven by dedicated clock slice
-> > > > >  - contain clocks and resets
-> > > > >  - some very subsystem specific GPRs
-> > > > >
-> > > > > Knowing that each mix has its own power domain, AFAICT, it needs
-> > > > > to be registered as a single device. Considering that it can have
-> > > > > clocks (audiomix has gates, muxes and plls), I believe that needs
-> > > > > a clock driver, even more so since the muxes need their parents
-> > > > > from the platform clock driver. Same principle applies to reset
-> > > > > bits. The subsystem specific GPRs can be registered as syscon
-> > > > > devices and taken care of by its counterpart IP (e.g. the AudioDSP specific
-> > regs would be taken care of by the DSP driver, if there is one).
-> > > > >
-> > > > > Now based on all of the above, by using MFD we take care of the
-> > > > > power domain control for the entire mix, plus, the MFD doesn't
-> > > > > have any kind of functionality by its own, relying on its children
-> > > > > devices that are populated based on what is in the mix MFD devicetree
-> > node.
-> > > > >
-> > > >
-> > > > How about doing like this which maybe can address Arnd's concerns?
-> > > > audiomix: audiomix@30e20000 {
-> > > >         compatible = "fsl,imx8mp-audiomix", "syscon";
-> > > >         reg = <0x30e20000 xxx>,
-> > > >               <0x30e20xxx xxx>;
-> > > >         reg-names = "audio", "reset", "...";
-> > > >         #clock-cells = <1>;
-> > > >         #reset-cells = <1>;
-> > > >         power-domains = <&audiomix_pd>; }
-> > > >
-> > > > That means we have one combo driver registering two controllers
-> > > > (clk/reset), both use the same power domain as audiomix.
-> > > > And it can be easily extended to support more services provided by
-> > > > audiomix over syscon if needed.
-> > > > Then the 'dummy' MDF driver is not needed anymore.
-> > > >
-> > > > Jones & Arnd,
-> > > > How do you think?
-> > >
-> > > Sounds okay in principle.  Anything that prevents the existence of a
-> > > dummy (a.k.a. pointless) MFD must be seen as a positive move.
-> > >
-> > 
-> > OK, I'll do it in a single driver and single dts node.
-> > 
-> > But there might be an issue with the placement of this new driver.
-> > 
-> > drivers/clk/imx/ could be an option, but the driver will use a lot of different APIs
-> > from different subsystems. Not the audiomix, but the future mixes.
+On 29. 04. 20 16:55, Rob Herring wrote:
+> On Tue, Apr 28, 2020 at 8:51 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>>
+>> On 28. 04. 20 15:23, Rob Herring wrote:
+>>> On Wed, Apr 1, 2020 at 4:23 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>>>>
+>>>> Hi Rob and others,
+>>>>
+>>>> for couple of years already u-boot is using config node in root DT for
+>>>> u-boot configuration.
+>>>>
+>>>> Here is one example in u-boot source code.
+>>>> https://gitlab.denx.de/u-boot/u-boot/-/blob/master/arch/arm/dts/exynos5250-spring.dts#L47
+>>>>
+>>>> And here is dt binding description
+>>>> https://gitlab.denx.de/u-boot/u-boot/-/blob/master/doc/device-tree-bindings/config.txt
+>>>>
+>>>> I was checking dt binding specification and there no such a thing
+>>>> described there. It means I expect this is more adhoc u-boot solution.
+>>>> We have reached the point where could be beneficial to put some u-boot
+>>>> specific configurations to DT.
+>>>>
+>>>> Actually I have done similar thing some time ago too by using chosen
+>>>> node and add xilinx specific property there to point to eeprom.
+>>>> https://gitlab.denx.de/u-boot/u-boot/-/blob/master/arch/arm/dts/zynqmp-zcu102-revA.dts#L39
+>>>
+>>> In this case, I think an alias should be used as it's more of just a
+>>> shortcut to finding a specific node.
+>>
+>> What alias name do you suggest to use?
+>> We have systems where one i2c eeprom described based board and another
+>> i2c eeprom describe bootable module. And I need to have shotcuts to both
+>> of them.
+>>
+>> dt specification doesn't list any keywords for aliases but there is
+>> generic name recommendation.
 > 
-> Maybe Stephen could comment whether it's ok to push a combo driver
-> (e.g. clk&reset&syscon) In drivers/clk/imx.
+> I do want make aliases a registered list of names.
 > 
-> From what we see, it seems already some similar combo drivers (clk&reset) there.
+>> Based on keywords it should look like this.
+>> eeprom0 = ...;
+>> eeprom1 = ...;
 > 
-> BTW, not sure if any technical block reasons to put in drivers/clk.
-> Maybe we can quickly try internally first.
-> 
+> That was my initial thought, but maybe "nvmemX" to be a bit more generic.
 
-Working on it already.
+I am fine with that. It means that multiple eeproms and order will be
+direct by alias number.
+In past I wanted to use list but aliases number is also fine.
 
-> Regards
-> Aisheng
 > 
-> > 
-> > > --
-> > > Lee Jones [李琼斯]
-> > > Linaro Services Technical Lead
-> > > Linaro.org │ Open source software for ARM SoCs Follow Linaro: Facebook
-> > > | Twitter | Blog
+> 
+>>>> I think it is a time to discuss it and do it properly.
+>>>>
+>>>> First of all my question is where we could list SW prefixes to make sure
+>>>> that they are listed and everybody is aware about it. We have
+>>>> vendor-prefixes and we should have a way to record also prefixes for sw
+>>>> projects. U-Boot is using u-boot. Xen has file in the kernel with using
+>>>> xen prefix. At least these two should be listed.
+>>>
+>>> Documentation/devicetree/bindings/vendor-prefixes.yaml.
+>>
+>> thx
+
+Sent a patch for it. Please review.
+https://lore.kernel.org/linux-devicetree/85b8dc9e6288270bbfdf55f1c156dba160293f01.1588239081.git.michal.simek@xilinx.com/
+
+
+>>>> Next my question is what is the recommended way to pass sw specific
+>>>> parameters via DT? I think using chosen node is more appropriate then
+>>>> adhoc config node. Or is there a better way how this should be done?
+>>>
+>>> /chosen
+>>>
+>>> For vendor specific things though I would be cautious. If they are
+>>> settings for a specific device, then they probably belong in the
+>>> device's node. Second, are they really vendor specific? What we don't
+>>> want is each vendor doing the same thing in slightly different ways.
+>>
+>> For u-boot specific setting like - offsets it should be generic for
+>> everybody. I was already talking to Loic that for saving u-boot
+>> variables to QSPI we should be using MTD partition map and put there
+>> maybe a flag to say that this is the location for storing them.
+> 
+> I'd standardize on the partition name.
+
+ok. Documentation/devicetree/bindings/mtd/partition.txt?
+
+I have grep u-boot repo and I see these label names
+
+"NAND.u-boot";
+"NAND.u-boot-env";
+"NAND.u-boot-env.backup1";
+"NAND.u-boot-spl-os";
+"QSPI.u-boot";
+"QSPI.u-boot-env";
+"QSPI.u-boot-env.backup1";
+"qspi-u-boot-img";
+"qspi-u-boot-spl";
+"QSPI.u-boot-spl-os";
+"u-boot
+"u-boot";
+"u-boot-2";
+"u-boot-2.backup1";
+"u-boot.backup1";
+"u-boot-env";
+"u-boot-env.backup1";
+"u-boot-spl";
+
+kernel is kind of similar
+"alt-u-boot";
+"alt-u-boot-env";
+"NAND.u-boot";
+"NAND.u-boot-env";
+"NAND.u-boot-env.backup1";
+"NAND.u-boot-spl-os";
+"QSPI.u-boot";
+"QSPI.u-boot-env";
+"QSPI.u-boot-env.backup1";
+"QSPI.u-boot-spl-os";
+"u-boot
+"u-boot";
+"u-boot.backup1";
+"u-boot-env";
+"u-boot-env2";
+"u-boot-env.backup1";
+"u-boot-environment";
+"u-boot-factory";
+"u-boot-nand";
+"u-boot-nor";
+"u-boot-spi";
+"u-boot-spl";
+
+It means it is mix of names. I think SPI cases are the most complicated
+one because you can have multiple spi devices in the system and you
+can't use the same name for registration.
+
+That's why I think that make sense to use an optional prefix as people
+are using QSPI/NAND already. But not quite sure that using QSPI is
+generic enough because you can have multiple QSPIs. Using alias name is
+also not ideal because one simple change in aliases would require
+changes in partition name/label.
+Any better suggestion?
+
+Next thing is that <memory_type><dot>u-boot.
+Label or if missing node name doesn't list dot a valid character for
+node name based on device-tree spec. It means I would consider using dot
+here as invalid.
+Some platforms are using dash instead which should be better.
+
+
+It means something like this:
+
+<identification>-u-boot : For storing U-Boot bootloader binary
+<identification>-u-boot-X : For storing X copy of U-Boot bootloader binary
+<identification>-u-boot-spl-os : For storing U-Boot SPL bootloader binary
+<identification>-u-boot-spl-os-X : For storing X copy U-Boot SPL
+bootloader binary
+
+<identification>-u-boot-env : For storing U-Boot variables
+<identification>-u-boot-env-X : For storing X copy U-Boot redundant
+varaibles
+
+<identification>- : is optional and should reflect (TODO - fill when
+above discussed).
+
+Thanks,
+Michal
