@@ -2,85 +2,95 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ECEC47257
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0273C47257
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6E1E20836
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFDE207DD
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:45:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="BByDysgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgD3Umk (ORCPT
+        id S1726616AbgD3UpI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:42:40 -0400
-Received: from mga07.intel.com ([134.134.136.100]:37583 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbgD3Umk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:42:40 -0400
-IronPort-SDR: jc3f9hQSxmtWTGFYGabgq8aogU3kmbIwgonV+5kAicTwQ+zA0LIdt7xs37MziU3kMsprGiQs1B
- uVCG7vQ0Ok8A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 13:42:39 -0700
-IronPort-SDR: M6oqOMPzyFoVqddYs7RXgFErbffJCDivKopljAfdVamHixYraY4H4gkBAqaneuwRMIgM/plR4C
- XjTmGyPtMWrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
-   d="scan'208";a="433100232"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 30 Apr 2020 13:42:39 -0700
-Date:   Thu, 30 Apr 2020 13:48:42 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, felix.kuehling@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        fenghua.yu@intel.com, hch@infradead.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v6 02/25] iommu/ioasid: Add ioasid references
-Message-ID: <20200430134842.74e596b8@jacob-builder>
-In-Reply-To: <20200430113931.0fbf7a37@jacob-builder>
-References: <20200430143424.2787566-1-jean-philippe@linaro.org>
-        <20200430143424.2787566-3-jean-philippe@linaro.org>
-        <20200430113931.0fbf7a37@jacob-builder>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 30 Apr 2020 16:45:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgD3UpH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 16:45:07 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675C5C035495
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 13:45:07 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id d25so2382032lfi.11
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 13:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:organization:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=BmSBD7h3njitpLi5QsmTDnHJWiGkucDb02pMa3UrBRI=;
+        b=BByDysgPi+X1do2xqrwAOLh0HEdR2agc0tWWki02+6dJfEOyJdv7UB5MrlBL/7Ixey
+         NfLIPqu1ByMfCl6/2xN9VH0fkOplnQDTYEpGsU7Tu+L+W+EDW1K80ELxTMUUKMOLxD99
+         GM1eUFRgDXM1iEyyoqyNVnuk2JP6x6gcm4Ow/yDgunn2DxN7Ft8DTpwRg01d3631C2oY
+         q8O4Qh8HE8XTf7DcBZiJ8la5isNoejM/gkmlSBnxwpM3LySpf8H5gUYTNPpH9WfllVHA
+         /Dpav8Z+v7kaVD2qRJ+/cL6OI02Ypflw0/gl3zqItuzkmZR79Y1vFOi6d0A2ya4V6Hij
+         kw4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=BmSBD7h3njitpLi5QsmTDnHJWiGkucDb02pMa3UrBRI=;
+        b=IcH93D+7CKngVvhOpfebA9R4G3UreUqJYqUcJv92hNKptm9BFsA4LUkOe4EKW1SfQZ
+         4RnTmutR8HsIoSchSbJrmH+TEfF3Oj53xU4oOSS7w7A5I0h4zxn/0ic2zbN6ltThvYxs
+         jv7G9whHnQm49utIYeYWLxNNMCIROGQHczeBN+PySkl4qXBk65fHZnNT1hlSiX64MMYw
+         kdhWWw0ocO9p2y8YB6hQT79sRM2Fc3UUU0LP6gYOEWtdV4lS7cXQVXrzZdf87b2A1NYW
+         n7DoCBnvO/oABvi/6ZA/OS2IsvydgpKr1XRx5jOfQ5WaOlOSkApHuQpD1eRcHZtJ39Uu
+         +EnA==
+X-Gm-Message-State: AGi0PuYE55ybAugL1UjiClL9ThCr6mMJd9R3BgMFwQmr6PokOzkKYFTY
+        +EW3jgSJi1wXJUasugRzLWPCvA==
+X-Google-Smtp-Source: APiQypI0RQNqWlNHDVtNIFy45lDwuwOyMBSNaVaz8UyZAB4gxqzn881PlNEa1qMPlbNBmRRjX79/bA==
+X-Received: by 2002:ac2:5988:: with SMTP id w8mr304392lfn.75.1588279504553;
+        Thu, 30 Apr 2020 13:45:04 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:880:89c5:86ed:91e3:4d28:af08])
+        by smtp.gmail.com with ESMTPSA id i20sm650562lfe.15.2020.04.30.13.45.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Apr 2020 13:45:03 -0700 (PDT)
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 0/2] Add Renesas RPC-IF support
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Organization: Cogent Embedded
+Message-ID: <812e6e58-d13f-3f44-5f55-22266b690c57@cogentembedded.com>
+Date:   Thu, 30 Apr 2020 23:45:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Apr 2020 11:39:31 -0700
-Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+Hello!
 
-> > -void ioasid_free(ioasid_t ioasid)
-> > +bool ioasid_free(ioasid_t ioasid)
-> >  {
-Sorry I missed this in the last reply.
+Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
+Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC
+to be accessed via the external address space read mode or the manual mode.
+The memory controller driver for RPC-IF registers either SPI or HyperFLash
+subdevice, depending on the contents of the device tree subnode; it also
+provides the abstract "back end" API that can be used by the "front end"
+SPI/MTD drivers to talk to the real hardware...
 
-I think free needs to be unconditional since there is not a good way to
-fail it.
+Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
 
-Also can we have more symmetric APIs, seems we don't have ioasid_put()
-in this patchset.
-How about?
-ioasid_alloc()
-ioasid_free(); //drop reference, mark inactive, but not reclaimed if
-		refcount is not zero.
-ioasid_get() // returns err if the ioasid is marked inactive by
-		ioasid_free()
-ioasid_put();// drop reference, reclaim if refcount is 0.
+[1/2] dt-bindings: memory: document Renesas RPC-IF bindings
+[2/2] memory: add Renesas RPC-IF driver
 
-It is similar to get/put/alloc/free pids.
-
-
+MBR, Sergei
