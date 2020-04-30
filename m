@@ -2,93 +2,84 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A346AC47247
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF1EC47254
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77C9D2063A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6285E206D9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255904;
-	bh=0wE71sPp4p2eGoQKKwXnvzrVFa+Cv7DXFFOLa6n2n6U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I4vbRKpxcWwt7/CkZrQFFJtwP5J0QpFh6wamzu+9jxz9igY1d620XwNZ4QWukOaYj
-	 Ms4ijjsTkv+T0ZINCB2vzVnprU3bhdX0KYm/xFt174gEPl9h/hzvyC5qFWEItMZ16m
-	 ZG10c85GjdybWc4ZJlrpJnCfLMFvMCOktY0bnkDs=
+	s=default; t=1588255953;
+	bh=Rpdf6PWfcZZvoRHEe+vtJ+oqdu0MiflAH85msrRC/ok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nswiIxQvFORGzl3Lh8tql9068hoK9nrj3Oweve1HB+dW3gYpBsrgvkfbk7QkowPhd
+	 u725mIAEt24TQPE/BpzbrbSOCedqpjtOobXuarxoQKHDch5YEs6elSW6dFWGKH+4am
+	 iX3SXsTd4tslEEFnPFSUkPda6KKq35xrqWtBmkJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgD3OLn (ORCPT
+        id S1728733AbgD3OMb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:11:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbgD3NvV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:21 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4349F217BA;
-        Thu, 30 Apr 2020 13:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254681;
-        bh=0wE71sPp4p2eGoQKKwXnvzrVFa+Cv7DXFFOLa6n2n6U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVn9m+T6DuysXyWYKE0psF4hYHB8ql7z5dbmtgHa5YN9gy9EsAe04B6yMeGQFqRFC
-         XjP9WV1toLyDzMNbkJN17gCrIRYAG6DJX8uWnbHAWRey3klRdXP2Jsoos799n2Iwe5
-         Sr8L4Db2BBItKZADiOwXCIsAztLZWj3Whz3OYCWs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 32/79] ARM: dts: bcm283x: Disable dsi0 node
-Date:   Thu, 30 Apr 2020 09:49:56 -0400
-Message-Id: <20200430135043.19851-32-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
-References: <20200430135043.19851-1-sashal@kernel.org>
+        Thu, 30 Apr 2020 10:12:31 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34106 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727896AbgD3OMZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:12:25 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 72so5010798otu.1;
+        Thu, 30 Apr 2020 07:12:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jH47In+vOUdDhR141TzeK3fOseWCLkJwCgk8ocB+Nqg=;
+        b=IscGFxZXX0aO1iHkQjoehlGkxvkTfbuO6zdOixA8tnulQaxnHyopnsf0ZrfH9X/L7f
+         87IioMKJbJQv49ielEQun1/WfAWf0wbcGCxMf4HVaFo1hFDFyXCBIwBxFJ2eFcA4N9/Q
+         jJE2PxoiBpSlxet920kAjA6wqlVRWbFIp56B6O0QWyBn+cObeWK5C7HkbqRp3jGMG7AO
+         wQGm6d6OCOQwbSa7zS1vnpVZjsw5qJUcG+GGFkJCf6J/Zk1gC9sd/D2F/6F+HfvRh3Em
+         je2ZhZAvmCPkUePuDbwCkb9mxWvxRuNNkbIrP/rv2sQx4iFtYi0PCnlJAuyl6JN9hQn9
+         x50Q==
+X-Gm-Message-State: AGi0Pubpbp7ruJa1nHb4//LBrDKphzOCvnnTRKK72zIrWFdIB5lBSllt
+        /Szg+8lDBbw/v4dj2Hzh3A==
+X-Google-Smtp-Source: APiQypLv7dPcYnLvOBxawDrcOT6GdPYGYLv0pv1iAj9xySMQfpV0BT9bHrPNbBvohWgFiuFxrKS3Bg==
+X-Received: by 2002:a9d:6d8e:: with SMTP id x14mr2775926otp.156.1588255944417;
+        Thu, 30 Apr 2020 07:12:24 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l11sm1359815oom.15.2020.04.30.07.12.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 07:12:23 -0700 (PDT)
+Received: (nullmailer pid 8701 invoked by uid 1000);
+        Thu, 30 Apr 2020 14:12:22 -0000
+Date:   Thu, 30 Apr 2020 09:12:22 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 03/10] dt-bindings: marvell,mmp2: Add clock id for the
+ I2S clocks
+Message-ID: <20200430141222.GA8657@bogus>
+References: <20200419172742.674717-1-lkundrak@v3.sk>
+ <20200419172742.674717-4-lkundrak@v3.sk>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419172742.674717-4-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Sun, 19 Apr 2020 19:27:35 +0200, Lubomir Rintel wrote:
+> There are two of these on a MMP2.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  include/dt-bindings/clock/marvell,mmp2.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-[ Upstream commit 90444b958461a5f8fc299ece0fe17eab15cba1e1 ]
-
-Since its inception the module was meant to be disabled by default, but
-the original commit failed to add the relevant property.
-
-Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and clocks")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/bcm283x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index e1abe8c730cef..b83a864e2e8ba 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -372,6 +372,7 @@
- 					     "dsi0_ddr2",
- 					     "dsi0_ddr";
- 
-+			status = "disabled";
- 		};
- 
- 		aux: aux@7e215000 {
--- 
-2.20.1
-
+Acked-by: Rob Herring <robh@kernel.org>
