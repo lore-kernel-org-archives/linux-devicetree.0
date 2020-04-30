@@ -2,140 +2,105 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF62BC47253
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E3EC47247
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF8F020731
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C24206D6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:58:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rKrWYm2W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yz3hOTd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgD3Pnk (ORCPT
+        id S1727860AbgD3P63 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:43:40 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5966 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726421AbgD3Pnj (ORCPT
+        Thu, 30 Apr 2020 11:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727841AbgD3P62 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:43:39 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UFcaTe000876;
-        Thu, 30 Apr 2020 17:43:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=FM5KaA1uV/WxDroCmg60tmJ6OFRkMqWZLOVG28f30so=;
- b=rKrWYm2WR11CqtjKHjOJE10wXs1SeV7guFfl2H1E7WK/HU48cgF9WUid+OZMUTZCTQ33
- Evb4j5q+28C/fj3zcCcjkn3jSAO6EZ+HVooBZGBk6naQJ21Srk4J7LIArE0ugWNAt4dj
- pUNfzi0W1FCPszx39V33ti8VqNumC4TCM7oWwMxprA6jlHoppgEmereLvfJVu+L9VYi3
- VGteWeK29cBn3hOgYypVKbxiK9rZFRmpm1RIYOvaYxCNd/p/8d6V/YXxzzzNnNjELZDJ
- 4K5eYh/iIA/OXh5Vtt5rD+MA3YLJn7buFlOyeTRnY+2ol8jH95xkGY7Q5ozGRjZnqyAN NA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhq6daug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 17:43:22 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2340510002A;
-        Thu, 30 Apr 2020 17:43:22 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 077512AAF71;
-        Thu, 30 Apr 2020 17:43:22 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 30 Apr 2020 17:43:21
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@the-dreams.de>, <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH] i2c: fix missing pm_runtime_put_sync in i2c_device_probe
-Date:   Thu, 30 Apr 2020 17:43:21 +0200
-Message-ID: <1588261401-11914-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_10:2020-04-30,2020-04-30 signatures=0
+        Thu, 30 Apr 2020 11:58:28 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE2FCC035494;
+        Thu, 30 Apr 2020 08:58:27 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u16so2527248wmc.5;
+        Thu, 30 Apr 2020 08:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=2W4UC3XoSBhMgKjDSt7PXbJ9u9A1KBNdB31+oU0yG+c=;
+        b=Yz3hOTd/manN9dw9O4HKNvHUWFTSos0gEPtogcWOuq8F1cSFeLZxtO0kPiNh6F0yR1
+         04CzvJfEV367cXG8OGTLb77uF1L4uSEq4GQvwAUyI6SA2lDeOqIhDfj0EQPTpNx17oes
+         lS36+KbbLFCACIQu9FwmmX5HF6iYcXq+95TZk6mEvG1FneYlztaSFiEvs/2AL/aXZGi3
+         yiPZz3VHgq3i6aKADg5nu1GoAb0EkgsE9b7Ak+WBQYAWaNyQNpVl/IqptSOidb+SI9ts
+         8ehsYa3IluK0/qf/CzC06jsIESMzu0W35WJVzUVWb49FETadmlo4ZlzUNgouQimTYaoF
+         8i6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=2W4UC3XoSBhMgKjDSt7PXbJ9u9A1KBNdB31+oU0yG+c=;
+        b=eenF/MoepBIv260FihIwofnmYKIx82E7aWT2iAtNA7I677cddJ6NeJrrY8VHpuuGUV
+         odzQGb/5KIBncy5Ys1kzu2+in2Vqi6ESMjrekSzeUKTnGekg7oLmzxEH28DV6jFzjeuC
+         NACYaDwE9KhlAwR9XW703Bx00+IHmvFC0vjBrdinbddkdI7l+Uj7KSRVTKVvQan9CNMK
+         s/uhBrQAxFi6ufjpor7j4CPdJ1n9OG3lTwMjj9BkJbtXv1qhw7Rcv57qelhv6+95F3nK
+         2JrdtTyzBuuO+T9x5g+RkOGiX8QaSUPay+w4QVTRN9CRFd1FE/DK4kYpv4tJR5RCjHCs
+         v9Bw==
+X-Gm-Message-State: AGi0PuaBbbQ8cKFoaGcqu8a4JaQ5WsmZxPtFKEbsha5iDqZ6RXmhT7mA
+        EdRq1X24X6HdTKMHRBeWVeU=
+X-Google-Smtp-Source: APiQypLW9lUdht60B0V46uAQDEg50o1yM+LrDwVBJ7NTeJI9GFR5bdXexAi6yXzuh68NePZ79VRUUw==
+X-Received: by 2002:a05:600c:1109:: with SMTP id b9mr3685870wma.116.1588262306502;
+        Thu, 30 Apr 2020 08:58:26 -0700 (PDT)
+Received: from localhost.localdomain (p5B3F6E9D.dip0.t-ipconnect.de. [91.63.110.157])
+        by smtp.gmail.com with ESMTPSA id w8sm265410wrs.25.2020.04.30.08.58.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 08:58:25 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v11 5/6] power: supply: mp2629: Add impedance compensation config
+Date:   Thu, 30 Apr 2020 17:58:09 +0200
+Message-Id: <20200430155810.21383-6-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200430155810.21383-1-sravanhome@gmail.com>
+References: <20200430155810.21383-1-sravanhome@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In case of the I2C client exposes the flag I2C_CLIENT_HOST_NOTIFY,
-pm_runtime_get_sync is called in order to always keep active the
-adapter. However later on, pm_runtime_put_sync is never called
-within the function in case of an error. This commit add this
-error handling.
+Allows the user to compensate the intrinsic resistance of the battery
+to accelerate the charging cycle.
 
-Fixes: 72bfcee11cf8 ("i2c: Prevent runtime suspend of adapter when Host Notify is required")
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/i2c/i2c-core-base.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ Documentation/ABI/testing/sysfs-class-power-mp2629 | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 139aea351ffb..2e4560671183 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -338,8 +338,10 @@ static int i2c_device_probe(struct device *dev)
- 		} else if (ACPI_COMPANION(dev)) {
- 			irq = i2c_acpi_get_irq(client);
- 		}
--		if (irq == -EPROBE_DEFER)
--			return irq;
-+		if (irq == -EPROBE_DEFER) {
-+			status = irq;
-+			goto put_sync_adapter;
-+		}
- 
- 		if (irq < 0)
- 			irq = 0;
-@@ -353,15 +355,19 @@ static int i2c_device_probe(struct device *dev)
- 	 */
- 	if (!driver->id_table &&
- 	    !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
--	    !i2c_of_match_device(dev->driver->of_match_table, client))
--		return -ENODEV;
-+	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
-+		status = -ENODEV;
-+		goto put_sync_adapter;
-+	}
- 
- 	if (client->flags & I2C_CLIENT_WAKE) {
- 		int wakeirq;
- 
- 		wakeirq = of_irq_get_byname(dev->of_node, "wakeup");
--		if (wakeirq == -EPROBE_DEFER)
--			return wakeirq;
-+		if (wakeirq == -EPROBE_DEFER) {
-+			status = wakeirq;
-+			goto put_sync_adapter;
-+		}
- 
- 		device_init_wakeup(&client->dev, true);
- 
-@@ -408,6 +414,10 @@ static int i2c_device_probe(struct device *dev)
- err_clear_wakeup_irq:
- 	dev_pm_clear_wake_irq(&client->dev);
- 	device_init_wakeup(&client->dev, false);
-+put_sync_adapter:
-+	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
-+		pm_runtime_put_sync(&client->adapter->dev);
+diff --git a/Documentation/ABI/testing/sysfs-class-power-mp2629 b/Documentation/ABI/testing/sysfs-class-power-mp2629
+new file mode 100644
+index 000000000000..327a07e22805
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-power-mp2629
+@@ -0,0 +1,8 @@
++What:		/sys/class/power_supply/mp2629_battery/batt_impedance_compen
++Date:		April 2020
++KernelVersion:	5.7
++Description:
++		Represents a battery impedance compensation to accelerate charging.
 +
- 	return status;
- }
- 
++                Access: Read, Write
++                Valid values: Represented in milli-ohms. Valid range is [0, 140].
 -- 
 2.17.1
 
