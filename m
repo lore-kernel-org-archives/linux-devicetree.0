@@ -2,112 +2,88 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EEEC83000
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D1EC83000
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBF16206D9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1523206D9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588256379;
+	bh=hzSSexDW86oMOkOlWRBOrrNeDAP2YNg01Nwyvsplym8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=COlqHoUHHDUklH6Xs6id49KSb+QSBZY7Tl8eQ8hNqKK9Q/tbb5R5byax6r5jYTzRG
+	 PA40K8xb0KO+Fs5lssy02qom5HZBB/cS13mpBUoAhfdOGyXqncQuZTMJkvLceTxohF
+	 1BzGAkvHLtpF1Dheh7wfsZJmj+KOrSX5vnMXD4CQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgD3OPY (ORCPT
+        id S1727085AbgD3OTj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:15:24 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:59711 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgD3OPY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:15:24 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D1D30240003;
-        Thu, 30 Apr 2020 14:15:20 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 16:15:20 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: mfd: Document the RTC present on
- MAX77620
-Message-ID: <20200430141520.GA101194@piout.net>
-References: <20200417170825.2551367-1-thierry.reding@gmail.com>
- <20200430140701.GA21776@bogus>
+        Thu, 30 Apr 2020 10:19:39 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40717 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgD3OTj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:19:39 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i27so5014958ota.7;
+        Thu, 30 Apr 2020 07:19:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DENVQBsUvtOTi5SjhKWIVkv3BHJdyUdGGFEYj8GGi+g=;
+        b=kfv5bGywgdm9yw3D9E7YrZ9sCvCrSR0FqdL0YbwAmTGGPahK6Cs2xLLuJ92+J0sff6
+         Ob72ztGjvIYPPPY2VgQakJ6N+dn8CTYax7Ynt9xK4zdQyzGDh03aztk/J9q++qPurTH7
+         c4zb19unKWQ+dhYksw0iP6iidRrG9A76qlngQ41og70JP7uVtQDSJzqqs7OBWG28oP0W
+         WW4wpyuUmxuHocqYKX1hlni1Tz3PVgXd4JPvQVc1U8FYGwaWMN+GFD+x7dLqduVs1CkW
+         4lsi8YfrLYazKLIoTB94fTBzbxNuCRlPYC4jbP/TiQzzLNYbbxh5NbMRULsfv0CR+1b0
+         jXAg==
+X-Gm-Message-State: AGi0PuYgdYMY5iO7J8atBvc3stZt9wGdarCv8feiQpnjSwM85VSS6wW1
+        A21FvEMQ4El6nBt+dQWLSgZsT8g=
+X-Google-Smtp-Source: APiQypIw6MDuh8Q2e485ee7Y7XEXFKcld99PiXzHbwdDh4z3okrKqE1I96blaiAxWEKf482ANOOEww==
+X-Received: by 2002:a9d:6e3:: with SMTP id 90mr2747810otx.261.1588256378256;
+        Thu, 30 Apr 2020 07:19:38 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l21sm1365605ooq.18.2020.04.30.07.19.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 07:19:37 -0700 (PDT)
+Received: (nullmailer pid 21255 invoked by uid 1000);
+        Thu, 30 Apr 2020 14:19:36 -0000
+Date:   Thu, 30 Apr 2020 09:19:36 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH v2 1/2] dt-bindings: serial: Move Marvell compatible
+ string to 8250 binding doc
+Message-ID: <20200430141936.GA21096@bogus>
+References: <20200419201716.679090-1-lkundrak@v3.sk>
+ <20200419201716.679090-2-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430140701.GA21776@bogus>
+In-Reply-To: <20200419201716.679090-2-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 30/04/2020 09:07:01-0500, Rob Herring wrote:
-> On Fri, Apr 17, 2020 at 07:08:23PM +0200, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> > 
-> > The RTC present on MAX77620 can be used to generate an alarm at a given
-> > time, which in turn can be used as a wakeup source for the system if it
-> > is properly wired up.
-> > 
-> > Document how to enable the RTC to act as a wakeup source.
-> > 
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > ---
-> >  .../devicetree/bindings/mfd/max77620.txt          | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
-> > index 5a642a51d58e..f05005b0993e 100644
-> > --- a/Documentation/devicetree/bindings/mfd/max77620.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-> > @@ -125,6 +125,17 @@ MAX77663 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
-> >  			control) then, GPIO1/nRST_IO goes LOW.
-> >  			this property is valid for max20024 only.
-> >  
-> > +Realtime Clock
-> > +--------------
-> > +The MAX77620 family of power management ICs contain a realtime clock block
-> > +that can be used to keep track of time even when the system is powered off.
-> > +
-> > +The realtime clock can also be programmed to trigger alerts, which can be
-> > +used to wake the system up from sleep. In order to configure the RTC to act
-> > +as a wakeup source, add an "rtc" child node and add the "wakeup-source"
-> > +property.
-> > +
-> > +
-> >  For DT binding details of different sub modules like GPIO, pincontrol,
-> >  regulator, power, please refer respective device-tree binding document
-> >  under their respective sub-system directories.
-> > @@ -159,4 +170,8 @@ max77620@3c {
-> >  			maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_SW>;
-> >  		};
-> >  	};
-> > +
-> > +	rtc {
-> > +		wakeup-source;
+On Sun, 19 Apr 2020 22:17:15 +0200, Lubomir Rintel wrote:
+> These ports are compatible with NS8250 and handled by the same driver.
+> Get rid of the extra document that fails to document the properties that
+> are actually supported.
 > 
-> Is the RTC really the only thing that could wake the system in this 
-> PMIC?
-> 
-> I don't think it's really valid to have 'wakeup-source' without 
-> 'interrupts' unless the wakeup mechanism is somehow not an interrupt. So 
-> I think this belongs in the parent node.
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  Documentation/devicetree/bindings/serial/8250.txt        | 2 ++
+>  Documentation/devicetree/bindings/serial/mrvl-serial.txt | 4 ----
+>  2 files changed, 2 insertions(+), 4 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/mrvl-serial.txt
 > 
 
-I don't think this is true because in the case of a discrete RTC, its
-interrupt pin can be connected directly to a PMIC to power up a board
-instead of being connected to the SoC. In that case we don't have an
-interrupt property but the RTC is still a wakeup source. This is the
-usual use case for wakeup-source in the RTC subsystem. Else, if there is
-an interrupt, then we assume the RTC is a wakeup source and there is no
-need to have the wakeup-source property.
+Applied, thanks.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Rob
