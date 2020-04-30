@@ -2,142 +2,159 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2749FC47254
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 17:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD69AC4724C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 17:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0768420787
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 17:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="g1cvV1Ej"
+	by mail.kernel.org (Postfix) with ESMTP id CB7C520836
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 17:46:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgD3RH6 (ORCPT
+        id S1726346AbgD3RqU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 13:07:58 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15988 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgD3RH6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 13:07:58 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eab05e10000>; Thu, 30 Apr 2020 10:07:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 10:07:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 30 Apr 2020 10:07:57 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 17:07:57 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 17:07:56 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
- <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
- <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
- <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
- <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
-Message-ID: <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
-Date:   Thu, 30 Apr 2020 10:06:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 13:46:20 -0400
+Received: from muru.com ([72.249.23.125]:52250 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgD3RqU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 13:46:20 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 89F038123;
+        Thu, 30 Apr 2020 17:47:06 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
+Date:   Thu, 30 Apr 2020 10:46:09 -0700
+Message-Id: <20200430174615.41185-1-tony@atomide.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588266465; bh=gKejJOxcNXFjey06HQS8SHBbL2xiLFZnrxw6ec+17Pc=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=g1cvV1EjFUY0/YRB8FTfjLGhfHHm+OlcpVnJmROFod9EqiERZm3dQGunHXNaaa8fl
-         DF/Dq0Ws62+JbiuUxrlVlJ+20dymwmelZotvcepsenDbGDlHIgUCe54bfLTbMJ+7/l
-         IlaPaXafAxEeyizXWpejtN4Pgi79avT6JCrLhoB5qSlKyBg0/RAhGihRt8mAD4uUl2
-         uCGe1WOGfa1iHl++TlL24Db/0YvWPtZ0muYKlKPiXBexNGMgvaCL3ZaMv6XQJZwz/H
-         7+8GgNF0zRsbMP3iroz+M5ifwNSYV/QV3aBDJt4IaKXfR69KLabjVSiHVTVZEslEEW
-         3mwCFW+ABCAAg==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi all,
 
-On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
->
-> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
->>
->> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
->>> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> +static int chan_capture_kthread_finish(void *data)
->>>>>> +{
->>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
->>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
->>>>> I guess it won't be great to freeze in the middle of a capture=20
->>>>> process, so:
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (list_empty(&chan->done=
-))
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tr=
-y_to_freeze();
->>>> And here should be some locking protection in order not race with the
->>>> chan_capture_kthread_start because kthread_finish could freeze before
->>>> kthread_start.
->>> Or maybe both start / finish threads should simply be allowed to freeze
->>> only when both capture and done lists are empty.
->>>
->>> if (list_empty(&chan->capture) &&
->>> =C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&chan->done))
->>> =C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
->>
->> good to freeze when not in middle of the frame capture but why should=20
->> we not allow freeze in between captures?
->>
->> Other drivers do allow freeze in between frame captures.
->>
->> I guess we can freeze before dequeue for capture and in finish thread=20
->> we can freeze after capture done. This also don't need to check for=20
->> list_empty with freeze to allow between frame captures.
->>
-> Also if we add check for both lists empty, freeze is not allowed as=20
-> long as streaming is going on and in case of continuous streaming=20
-> freeze will never happen.
+Here's v6 set of these patches fixed up for Johan's earlier comments.
 
-Hi Dmitry,
+Getting rid of the custom chardev interface, and making things more
+generic also simplified things quite a bit. Thanks a lot Johan :)
 
-Will update in v12 to not allow freeze in middle of a frame capture.
+This series does the following:
 
-Can you please confirm on above if you agree to allow freeze to happen=20
-in b/w frame captures?
+1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
 
-Also as most feedback has been received from you by now, appreciate if=20
-you can provide all in this v11 if you have anything else so we will not=20
-have any new changes after v12.
+2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
+   TTY ports configured in devicetree with help of n_gsm.c
 
-Thanks
+3. Allows the use of standard Linux device drivers for dedicated
+   TS 27.010 channels for devices like GNSS and ALSA found on some
+   modems for example
 
-Sowjanya
+4. Adds a serdev-ngsm consumer driver for the GNSS device found on
+   the Motorola Mapphone MDM6600 modem on devices like droid4
 
+I've placed the serdev-ngsm.c under drivers/tty/serdev as it still
+seems to make most sense with no better places available. It's no
+longer an MFD driver as it really does not need to care what channel
+specific consumer drivers might be configured. So it now just uses
+of_platform_populate() to probe whatever child nodes it might find.
+
+I'm not attached having the driver in drivers/tty/serdev. I just
+don't have any better locations in mind. So jsing Johan's earlier
+i2c example, the drivers/tty/serdev/serdev-ngsm.c driver is now a
+generic protocol and bus driver, so it's getting closer to the
+maybe the drivers/i2c/busses analogy :) Please do suggest better
+locations other than MFD and misc if you have better ideas.
+
+Now without the chardev support, the /dev/gsmtty* using apps need
+to use "U1234AT+CFUN?" format for the packets. The advantage is
+less kernel code, and we keep the existing /dev/gsmtty* interface.
+
+If we still really need the custom chardev support, that can now
+be added as needed with the channel specific consumer driver(s).
+
+My guess is that at least with the pending ofono patches, we just
+want to use the raw interface for /dev/gsmtty* interface and stop
+pretending we have a modem that is AT compatible.
+
+Regards,
+
+Tony
+
+
+Changes since v5:
+- Based on comments from Johan, moved back to using the existing
+  TS 27.010 TTYs created by n_gsm.c instaed of adding custom chardev
+  support to deal with the Motorola custom protocol
+
+- Based on comments from Johan, made the serdev-ngsm driver generic
+  with just minimal quirk handling for the Motorola modem
+
+- Dropped the Motorola custom protocol on top of TS 27.010 handling
+  from serdev-ngsm.c as this can now be easily handled by the channel
+  specific drivers as needed
+
+- Added few more helpers to n_gsm.c for serdev-ngsm.c to use
+
+- Added the channel specific GNSS driver for the Motorola modem
+
+Changes since v4:
+- Use drivers/tty/serdev/protocol directory for the driver instead of
+  drivers/mfd as discussed on the lists for v3 set of patches
+- Fix remove to call kfree only after removing device from the list
+
+Changes since v3:
+- Update list of folks in Cc, looks like I sent v3 only to Lee and lkml
+- Init privdata before motmdm_register_dlci calls gsm_serdev_register_dlci
+- Update binding based on Rob's comments for license and "allOf"
+
+Changes since v2:
+- Drop useless send_command indirection, use static motmdm_send_command
+
+Changes since v1:
+
+- Simplified usage and got rid of few pointless inline functions
+- Added consumer MFD driver, devicetree binding, and dts changes
+
+
+Tony Lindgren (6):
+  tty: n_gsm: Add support for serdev drivers
+  dt-bindings: serdev: ngsm: Add binding for serdev-ngsm
+  serdev: ngsm: Add generic serdev-ngsm driver
+  dt-bindings: gnss: Add binding for Motorola Mapphone MDM6600 GNSS
+  gnss: motmdm: Add support for Motorola Mapphone MDM6600 modem
+  ARM: dts: omap4-droid4: Configure modem for serdev-ngsm
+
+ .../devicetree/bindings/gnss/motmdm.yaml      |  29 ++
+ .../bindings/serdev/serdev-ngsm.yaml          |  64 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ .../boot/dts/motorola-mapphone-common.dtsi    |  14 +
+ drivers/gnss/Kconfig                          |   8 +
+ drivers/gnss/Makefile                         |   3 +
+ drivers/gnss/motmdm.c                         | 419 ++++++++++++++++
+ drivers/tty/n_gsm.c                           | 428 +++++++++++++++++
+ drivers/tty/serdev/Kconfig                    |  10 +
+ drivers/tty/serdev/Makefile                   |   1 +
+ drivers/tty/serdev/serdev-ngsm.c              | 449 ++++++++++++++++++
+ include/linux/serdev-gsm.h                    | 163 +++++++
+ 12 files changed, 1590 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gnss/motmdm.yaml
+ create mode 100644 Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
+ create mode 100644 drivers/gnss/motmdm.c
+ create mode 100644 drivers/tty/serdev/serdev-ngsm.c
+ create mode 100644 include/linux/serdev-gsm.h
+
+-- 
+2.26.2
