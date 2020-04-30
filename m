@@ -2,116 +2,205 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 685B2C47254
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AB5C4724C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 19:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4324B208D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C902064A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 19:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VgEzGXuH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Flnu8Aml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgD3T3W (ORCPT
+        id S1726437AbgD3Tdt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:29:22 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8943 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgD3T3V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 15:29:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eab26ce0001>; Thu, 30 Apr 2020 12:28:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 12:29:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 12:29:21 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 19:29:20 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 19:29:19 +0000
+        Thu, 30 Apr 2020 15:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgD3Tdt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 15:33:49 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EBACC035494;
+        Thu, 30 Apr 2020 12:33:48 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id z22so2061985lfd.0;
+        Thu, 30 Apr 2020 12:33:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=N21UHwUtojGFrYGUsgpMdiZpUK/5e8XahCdaTyz1hic=;
+        b=Flnu8AmltNiSqSEdZAhCz6x974hUmqtWxh2iiF2EnCS+b0uFjxFN2M8Rp1Y3Gln8PY
+         HHblTtK4rcJMbneYQ/z+L2Zq6xAbpaodd/sFjl1FSYwSxRzp4VbCuVUpWK56QsD5bO0S
+         4kcZG3uit7qXR/JemhYNh9RX2fr61HhXEgusahwTlcCJiyNayonTBnS1E+8BBRoRvB0C
+         mrOimLOoPGFJJCiMV5h+4BtW00mncQv4v51GpYEPBojASPOj/OsxD9NHfbUV6HrktXfC
+         t0V5DuXASYBTd51iPDYGNZ6B78VRTw+wiC1G8QoxviJrnWM2uiTifh17n3p5RJ6RYJmC
+         uwvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N21UHwUtojGFrYGUsgpMdiZpUK/5e8XahCdaTyz1hic=;
+        b=qIVH3+vjpnF3GhhWUuj001a6Ectrw/6S2p/5thkxxDcezhJ0xY20cvKF//H82VlrCi
+         EzO/Zhkbgim4tvew14NmVeJQdXtj3z1vzVLUJrum6zUZGF1l6GTcDWL2jQhF07IsG57P
+         5hg6PHGD5zwTUhAm72Kb5VWDrpo5LpDaxMq/nPh0zpuSQ/keLecn0BDUlI0hVh5AKI8H
+         WvosZHHUkt0qO/Xcl1hMcgCeWVRnKCgIrc8fqrlIMTwebwPYv9rIcVQBeKIf0YBtv2oz
+         eBs4T4H0tiHoNZ0sXulEnIkmRDvNI0zfgh5DXxiD9MlpojgNhPyJ/zVNUB0T7bR0fyMY
+         eQlw==
+X-Gm-Message-State: AGi0PuYXZpkO0MXQeLyCbmEViQtnvR3XMT9mX7gCLY57LgaeVpT0g7Bt
+        wVE8otVREROpWWNhVMrc3bk4rpdp
+X-Google-Smtp-Source: APiQypKcJeTLicQiy3MA/QNzKLfjDr3UefC+JvTUATlunfuuHaaXCBh6cS+f/mZY1ETyyN5p/RjqIw==
+X-Received: by 2002:a19:f70c:: with SMTP id z12mr160047lfe.78.1588275226646;
+        Thu, 30 Apr 2020 12:33:46 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id 25sm449422lft.68.2020.04.30.12.33.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 12:33:45 -0700 (PDT)
 Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
  <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <18d457dd-17cb-633e-cdec-e0abfe73b0b0@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <10286a40-ed3c-1999-68fa-7099130a2423@nvidia.com>
-Date:   Thu, 30 Apr 2020 12:27:52 -0700
+ <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+ <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
+ <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+ <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+ <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
+ <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
+ <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
+ <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
+Date:   Thu, 30 Apr 2020 22:33:44 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <18d457dd-17cb-633e-cdec-e0abfe73b0b0@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588274894; bh=+3lStLw5yssQ0AKxd+sc1j1usFslZ6/M/9XZ4GHBV9w=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=VgEzGXuHYNGSQ+lgeTnPiB/xxffHbRX9bSPslEoyb5hWTxK4OHySD9I0srZBKKBTm
-         Vep79jUMJmlAkESyVFlbqjXU0n7RN2HsDJOqdzui7G9QMu+Rw/DKjINMx/O3eA8xo6
-         FcGdfSV4vaoenWB+ItVETxBgdxBIy7i/KEX3eqoCFeyP3zJ24nLq+3WPN1nDx0U60B
-         SIEI529dw2XeiX/M1JCov7c6OPz4DKKd9FJeMVajjS8z1VexD+5y8Y09VPBAVtr6mV
-         AL4Vd9qcwTRQCW3F8VNB3sx6kiAAbz06kC6uJjFDczETj9v4/T4+MuXwjNSG+Cnsto
-         I/+RD7azUQunA==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+30.04.2020 22:09, Sowjanya Komatineni пишет:
+> 
+> On 4/30/20 11:18 AM, Sowjanya Komatineni wrote:
+>>
+>> On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
+>>>
+>>> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
+>>>>
+>>>> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
+>>>>>
+>>>>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
+>>>>>> 30.04.2020 17:02, Dmitry Osipenko пишет:
+>>>>>>> 30.04.2020 16:56, Dmitry Osipenko пишет:
+>>>>>>>> 30.04.2020 01:00, Sowjanya Komatineni пишет:
+>>>>>>>>> +static int chan_capture_kthread_finish(void *data)
+>>>>>>>>> +{
+>>>>>>>>> +    struct tegra_vi_channel *chan = data;
+>>>>>>>>> +    struct tegra_channel_buffer *buf;
+>>>>>>>>> +
+>>>>>>>>> +    set_freezable();
+>>>>>>>>> +
+>>>>>>>>> +    while (1) {
+>>>>>>>>> +        try_to_freeze();
+>>>>>>>> I guess it won't be great to freeze in the middle of a capture
+>>>>>>>> process, so:
+>>>>>>>>         if (list_empty(&chan->done))
+>>>>>>>>             try_to_freeze();
+>>>>>>> And here should be some locking protection in order not race with
+>>>>>>> the
+>>>>>>> chan_capture_kthread_start because kthread_finish could freeze
+>>>>>>> before
+>>>>>>> kthread_start.
+>>>>>> Or maybe both start / finish threads should simply be allowed to
+>>>>>> freeze
+>>>>>> only when both capture and done lists are empty.
+>>>>>>
+>>>>>> if (list_empty(&chan->capture) &&
+>>>>>>      list_empty(&chan->done))
+>>>>>>     try_to_freeze();
+>>>>>
+>>>>> good to freeze when not in middle of the frame capture but why
+>>>>> should we not allow freeze in between captures?
+>>>>>
+>>>>> Other drivers do allow freeze in between frame captures.
+>>>>>
+>>>>> I guess we can freeze before dequeue for capture and in finish
+>>>>> thread we can freeze after capture done. This also don't need to
+>>>>> check for list_empty with freeze to allow between frame captures.
+>>>>>
+>>>> Also if we add check for both lists empty, freeze is not allowed as
+>>>> long as streaming is going on and in case of continuous streaming
+>>>> freeze will never happen.
+>>>
+>> To allow freeze b/w frames (but not in middle of a frame),
+>>
+>> for capture_start thread, probably we can do unconditional
+>> try_to_freeze()
 
-On 4/30/20 6:34 AM, Dmitry Osipenko wrote:
-> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> +static int tegra_csi_init(struct host1x_client *client)
->> +{
->> +	struct tegra_csi *csi =3D host1x_client_to_csi(client);
->> +	struct tegra_video_device *vid =3D dev_get_drvdata(client->host);
->> +	int ret;
->> +
->> +	INIT_LIST_HEAD(&csi->csi_chans);
->> +
->> +	ret =3D tegra_csi_tpg_channels_alloc(csi);
->> +	if (ret < 0) {
->> +		dev_err(csi->dev,
->> +			"failed to allocate tpg channels: %d\n", ret);
->> +		goto cleanup;
->> +	}
->> +
->> +	ret =3D tegra_csi_channels_init(csi);
->> +	if (ret < 0)
->> +		goto cleanup;
->> +
->> +	vid->csi =3D csi;
->> +
->> +	return 0;
->> +
->> +cleanup:
->> +	tegra_csi_channels_cleanup(csi);
->> +	pm_runtime_put_sync(csi->dev);
-> This pm_runtime_put_sync() should be removed.
+Is it possible to use wait_event_freezable()?
 
-Sorry, I had it correct in follow-up patches and missed this to remove=20
-in v12.
+https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.txt
 
-Will double check all changes before sending v12 once all v11 feedback=20
-from you is done.
+Will the wait_event_interruptible() be woken up when system freezes?
 
->
->> +	return ret;
->> +}
+>> for capture_finish thread, at end of capture done we can do
+>> try_to_freeze() only when done list is empty
+
+This doesn't prevent situation where the done-list is empty and the
+"finish" thread freezes, in the same time the "start" thread issues new
+capture and then freezes too.
+
+1. "start" thread issues capture
+
+2. "finish" thread wakes and waits for the capture to complete
+
+3. "start" thread begins another capture, waits for FRAME_START
+
+4. system freezing activates
+
+5. "finish" thread completes the capture and freezes because done-list
+is empty
+
+6. "start" thread gets FRAME_START, issues another capture and freezes
+
+> My understanding is buffer updates/release should not happen after
+> frozen state. So we should let frame capture of outstanding buffer to
+> finish before freezing in capture_finish thread.
+> 
+> But for capture_start thread we can unconditionally freeze before
+> dequeuing next buffer for capture.
+> 
+> With this when both threads are in frozen state and no buffer
+> updates/captures will happen after frozen state.
+> 
+> I think its not required to finish streaming of all frames completely to
+> let threads to enter frozen state as streaming can be continuous as well.
+
+Yes, only freezing in the middle of IO should be avoided.
+
+https://lwn.net/Articles/705269/
+
+>>> Hi Dmitry,
+>>>
+>>> Will update in v12 to not allow freeze in middle of a frame capture.
+>>>
+>>> Can you please confirm on above if you agree to allow freeze to
+>>> happen in b/w frame captures?
+>>>
+>>> Also as most feedback has been received from you by now, appreciate
+>>> if you can provide all in this v11 if you have anything else so we
+>>> will not have any new changes after v12.
+
+I'll take another look tomorrow / during weekend and let you know.
