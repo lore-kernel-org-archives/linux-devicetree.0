@@ -2,87 +2,136 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE57C83001
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5F8C8300A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98ECF214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7815120757
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i/1K6zjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgD3IhD (ORCPT
+        id S1726794AbgD3Inn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:37:03 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44832 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgD3IhD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 04:37:03 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C95AA2A2332;
-        Thu, 30 Apr 2020 09:37:00 +0100 (BST)
-Date:   Thu, 30 Apr 2020 10:36:58 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     qi-ming.wu@intel.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        cheol.yong.kim@intel.com, hauke.mehrtens@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org,
-        miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200430103658.4b0b979e@collabora.com>
-In-Reply-To: <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429162249.55d38ee8@collabora.com>
-        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
-        <20200429164832.6800fc70@collabora.com>
-        <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
-        <20200429173107.5c6d2f55@collabora.com>
-        <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
-        <20200430102114.29b6552f@collabora.com>
-        <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 30 Apr 2020 04:43:43 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:53672 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726420AbgD3Inm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 04:43:42 -0400
+X-UUID: a647c6c69356451099f2236fc665425a-20200430
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=wmJJNzcR3k9GVE2jLM5Fa1SIp2IO4dqVkL3WED3AOeo=;
+        b=i/1K6zjNXZJi+oSRhdM8EvkjycK5IKRIg1T7ZY0DwPOjR4tamk41h6GExHbLrMGrBRzc2SrENvbF69goI6zafnOaWdiztrzBewaA7pg8kSC8aQfN7nDXF633Hkjc959YfOKr8KYTHBkOg9Pzd9GM0lS9pv5rr+6ya4DOV60YH6w=;
+X-UUID: a647c6c69356451099f2236fc665425a-20200430
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2083140545; Thu, 30 Apr 2020 16:43:25 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 30 Apr
+ 2020 16:43:22 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 30 Apr 2020 16:43:21 +0800
+Message-ID: <1588236152.8804.88.camel@mhfsdcap03>
+Subject: Re: [V4, 1/2] media: i2c: dw9768: Add DT support and MAINTAINERS
+ entry
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <mark.rutland@arm.com>, <sakari.ailus@linux.intel.com>,
+        <drinkcat@chromium.org>, <tfiga@chromium.org>,
+        <matthias.bgg@gmail.com>, <bingbu.cao@intel.com>,
+        <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
+Date:   Thu, 30 Apr 2020 16:42:32 +0800
+In-Reply-To: <20200410172527.GA24529@bogus>
+References: <20200330123634.363-1-dongchun.zhu@mediatek.com>
+         <20200330123634.363-2-dongchun.zhu@mediatek.com>
+         <20200410172527.GA24529@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: ECC204BF1CE98C25F6F81482310D100CC86CD6865F2FBC31D2991D5DB77265862000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Apr 2020 16:30:15 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+SGVsbG8gUm9iLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCk9uIEZyaSwgMjAyMC0wNC0x
+MCBhdCAxMjoyNSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIE1vbiwgTWFyIDMwLCAy
+MDIwIGF0IDA4OjM2OjMzUE0gKzA4MDAsIERvbmdjaHVuIFpodSB3cm90ZToNCj4gPiBUaGlzIHBh
+dGNoIGlzIHRvIGFkZCB0aGUgRGV2aWNldHJlZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGFuZA0K
+PiA+IE1BSU5UQUlORVJTIGVudHJ5IGZvciBkdzk3NjggYWN0dWF0b3IuDQo+ID4gDQo+ID4gU2ln
+bmVkLW9mZi1ieTogRG9uZ2NodW4gWmh1IDxkb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPg0KPiA+
+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvbWVkaWEvaTJjL2Rvbmd3b29uLGR3OTc2OC55YW1sICAg
+ICAgICB8IDYyICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgTUFJTlRBSU5FUlMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNyArKysNCj4gPiAgMiBmaWxlcyBj
+aGFuZ2VkLCA2OSBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Rvbmd3b29uLGR3OTc2OC55YW1s
+DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Rvbmd3b29uLGR3OTc2OC55YW1sDQo+ID4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi44YTM1M2RjDQo+ID4gLS0tIC9kZXYvbnVs
+bA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMv
+ZG9uZ3dvb24sZHc5NzY4LnlhbWwNCj4gPiBAQCAtMCwwICsxLDYyIEBADQo+ID4gKyMgU1BEWC1M
+aWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZSkNCj4gPiArIyBDb3B5
+cmlnaHQgKGMpIDIwMjAgTWVkaWFUZWsgSW5jLg0KPiA+ICslWUFNTCAxLjINCj4gPiArLS0tDQo+
+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvbWVkaWEvaTJjL2Rvbmd3b29u
+LGR3OTc2OC55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1z
+Y2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBEb25nd29vbiBBbmF0ZWNoIERX
+OTc2OCBWb2ljZSBDb2lsIE1vdG9yIChWQ00pIERldmljZSBUcmVlIEJpbmRpbmdzDQo+ID4gKw0K
+PiA+ICttYWludGFpbmVyczoNCj4gPiArICAtIERvbmdjaHVuIFpodSA8ZG9uZ2NodW4uemh1QG1l
+ZGlhdGVrLmNvbT4NCj4gPiArDQo+ID4gK2Rlc2NyaXB0aW9uOiB8LQ0KPiA+ICsgIFRoZSBEb25n
+d29vbiBEVzk3NjggaXMgYSBzaW5nbGUgMTAtYml0IGRpZ2l0YWwtdG8tYW5hbG9nIChEQUMpIGNv
+bnZlcnRlcg0KPiA+ICsgIHdpdGggMTAwIG1BIG91dHB1dCBjdXJyZW50IHNpbmsgY2FwYWJpbGl0
+eS4gVkNNIGN1cnJlbnQgaXMgY29udHJvbGxlZCB3aXRoDQo+ID4gKyAgYSBsaW5lYXIgbW9kZSBk
+cml2ZXIuIFRoZSBEQUMgaXMgY29udHJvbGxlZCB2aWEgYSAyLXdpcmUgKEkyQy1jb21wYXRpYmxl
+KQ0KPiA+ICsgIHNlcmlhbCBpbnRlcmZhY2UgdGhhdCBvcGVyYXRlcyBhdCBjbG9jayByYXRlcyB1
+cCB0byAxTUh6LiBUaGlzIGNoaXANCj4gPiArICBpbnRlZ3JhdGVzIEFkdmFuY2VkIEFjdHVhdG9y
+IENvbnRyb2wgKEFBQykgdGVjaG5vbG9neSBhbmQgaXMgaW50ZW5kZWQgZm9yDQo+ID4gKyAgZHJp
+dmluZyB2b2ljZSBjb2lsIGxlbnNlcyBpbiBjYW1lcmEgbW9kdWxlcy4NCj4gPiArDQo+ID4gK3By
+b3BlcnRpZXM6DQo+ID4gKyAgY29tcGF0aWJsZToNCj4gPiArICAgIGNvbnN0OiBkb25nd29vbixk
+dzk3NjgNCj4gPiArDQo+ID4gKyAgcmVnOg0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+
+ID4gKyAgdmluLXN1cHBseToNCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBEZWZp
+bml0aW9uIG9mIHRoZSByZWd1bGF0b3IgdXNlZCBhcyBJMkMgSS9PIGludGVyZmFjZSBwb3dlciBz
+dXBwbHkuDQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiANCj4gWW91IGNhbiBkcm9wIHRoaXMuICot
+c3VwcGx5IGlzIGFsd2F5cyBhIHNpbmdsZSBlbnRyeS4NCj4gDQoNCkZpeGVkIGluIG5leHQgcmVs
+ZWFzZS4NCg0KPiA+ICsNCj4gPiArICB2ZGQtc3VwcGx5Og0KPiA+ICsgICAgZGVzY3JpcHRpb246
+DQo+ID4gKyAgICAgIERlZmluaXRpb24gb2YgdGhlIHJlZ3VsYXRvciB1c2VkIGFzIFZDTSBjaGlw
+IHBvd2VyIHN1cHBseS4NCj4gPiArICAgIG1heEl0ZW1zOiAxDQo+IA0KPiBTYW1lIGhlcmUuDQo+
+IA0KDQpGaXhlZCBpbiBuZXh0IHJlbGVhc2UuDQoNCj4gPiArDQo+ID4gK3JlcXVpcmVkOg0KPiA+
+ICsgIC0gY29tcGF0aWJsZQ0KPiA+ICsgIC0gcmVnDQo+ID4gKyAgLSB2aW4tc3VwcGx5DQo+ID4g
+KyAgLSB2ZGQtc3VwcGx5DQo+ID4gKw0KPiA+ICthZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UN
+Cj4gPiArDQo+ID4gK2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+ICsgICAgaTJjMjogaTJjQDEx
+MDA5MDAwIHsNCj4gDQo+IGkyYyB7DQo+IA0KDQpGaXhlZCBpbiBuZXh0IHJlbGVhc2UuDQoNCj4g
+PiArICAgICAgICBjbG9jay1mcmVxdWVuY3kgPSA8NDAwMDAwPjsNCj4gPiArICAgICAgICAjYWRk
+cmVzcy1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiAr
+DQo+ID4gKyAgICAgICAgZHc5NzY4OiBjYW1lcmEtbGVuc0BjIHsNCj4gPiArICAgICAgICAgICAg
+Y29tcGF0aWJsZSA9ICJkb25nd29vbixkdzk3NjgiOw0KPiA+ICsgICAgICAgICAgICByZWcgPSA8
+MHgwYz47DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICB2aW4tc3VwcGx5ID0gPCZtdDYzNThfdmNh
+bWlvX3JlZz47DQo+ID4gKyAgICAgICAgICAgIHZkZC1zdXBwbHkgPSA8Jm10NjM1OF92Y2FtYTJf
+cmVnPjsNCj4gPiArICAgICAgICB9Ow0KPiA+ICsgICAgfTsNCj4gPiArDQo+ID4gKy4uLg0KPiA+
+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTDQo+ID4gaW5kZXggMzhmZTJm
+My4uNWUxMjRkMiAxMDA2NDQNCj4gPiAtLS0gYS9NQUlOVEFJTkVSUw0KPiA+ICsrKyBiL01BSU5U
+QUlORVJTDQo+ID4gQEAgLTUxMzQsNiArNTEzNCwxMyBAQCBTOglNYWludGFpbmVkDQo+ID4gIEY6
+CWRyaXZlcnMvbWVkaWEvaTJjL2R3OTcxNC5jDQo+ID4gIEY6CURvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzE0LnR4dA0KPiA+ICANCj4gPiAr
+RE9OR1dPT04gRFc5NzY4IExFTlMgVk9JQ0UgQ09JTCBEUklWRVINCj4gPiArTToJRG9uZ2NodW4g
+Wmh1IDxkb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPg0KPiA+ICtMOglsaW51eC1tZWRpYUB2Z2Vy
+Lmtlcm5lbC5vcmcNCj4gPiArUzoJTWFpbnRhaW5lZA0KPiA+ICtUOglnaXQgZ2l0Oi8vbGludXh0
+di5vcmcvbWVkaWFfdHJlZS5naXQNCj4gPiArRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL21lZGlhL2kyYy9kb25nd29vbixkdzk3NjgueWFtbA0KPiA+ICsNCj4gPiAgRE9OR1dP
+T04gRFc5ODA3IExFTlMgVk9JQ0UgQ09JTCBEUklWRVINCj4gPiAgTToJU2FrYXJpIEFpbHVzIDxz
+YWthcmkuYWlsdXNAbGludXguaW50ZWwuY29tPg0KPiA+ICBMOglsaW51eC1tZWRpYUB2Z2VyLmtl
+cm5lbC5vcmcNCj4gPiAtLSANCj4gPiAyLjkuMg0KDQo=
 
-> >>>
-> >>> And now I'd like you to explain why 5 is the right value for that field
-> >>> (I guess that has to do with the position of the CS/ALE/CLE pins).  
-> >>
-> >> 5 : bit 26, 25, 24, 23, 22 to be included for comparison in the  
-> > 
-> > That's 6 bits to me, not 5.  
-> 
-> No , 5 bits only the above case.
-
-Oops, right, sorry for the brain fart.
-
-> > 
-> > The question is, is it the same value we have in nand_pa or it is
-> > different?
-> >   
-> Different address which is 0xE1400000 NAND_BASE_PHY address.
-
-Then why didn't you tell me they didn't match when I suggested to pass
-nand_pa? So now the question is, what does this address represent? Do
-you have a reference manual I can look at to understand what this is?
