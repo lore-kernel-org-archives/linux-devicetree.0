@@ -2,157 +2,116 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FCDC4724C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5117BC4725B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6013206D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B1B2076D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5yrqIGJ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kP9ln9IF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgD3P6V (ORCPT
+        id S1726660AbgD3QGJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:58:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726420AbgD3P6V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:58:21 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B4AFC035494;
-        Thu, 30 Apr 2020 08:58:19 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x4so2466740wmj.1;
-        Thu, 30 Apr 2020 08:58:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=OPbeDM2cJ5aY40/5CUX4MHQFjKQOx8SNoJZ2e5+rWE4=;
-        b=P5yrqIGJN0HwsHhkR4vMRNhcfK9xpijRREv97x1ZAk/hVSZeoUnHqMcaPk5Mpg7k60
-         Arw2ul2YgP0P2EZqMvuMAbiWI4riPNjH5n9HqegzKqlKAK6egB88JO1LnICEhqkdhOHx
-         C7qgl/AUVidKSO2dQ231ogIMRjnM9+QEzY3U7uGMNfCF/xniyj6Ch1SjEjHbg/CLis4C
-         rbT6z5X4mWtbbSlXWzWJSUswcazMECs6EEYudahmjYbkWXf5bMYiMPOHGYmc1Sq2MDb+
-         wvNS6jzQK79PzCqvtSnyUapdCU6CUrJqSHgPZXXrZ5o3zHIwduJqjizPf7j/Ht0mL0To
-         cF6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=OPbeDM2cJ5aY40/5CUX4MHQFjKQOx8SNoJZ2e5+rWE4=;
-        b=hZzLksOz3yS8KUChr++PjlgJhSs2uhosgMVu11DOxEPNVtNOU0hOaAU86h7kvBDj6r
-         hWFwrnmly1l6oCBDfDIRjBjoqWMfL50HIuqfbUBEz3Tc6feqv3nfHU2azTP+XP5iZceW
-         UAY05zRH4HJvWA9Ib3TA03pW+3O+xivQHbXAapt6qofAQJs7XX15Qm/RO5QdHRzFyJrw
-         ojdk5LZjbya/TDVzz8/0bTY4OhqhK7kubdeTvA/4mJe3ZNRi/CQOxqsNEWPREXf/b2rR
-         nvS6LOPPU4CmmIJDb957PyKymGHXLbsstweegzfxnU+etIr+IPfAVNrWxwEPIZAkD1J2
-         0vbw==
-X-Gm-Message-State: AGi0PuaXcQsWQU86MnhIuFDKratux3gMZ03HlJuJLd1zkl7ZfFegtwGB
-        ZeFUx60a3f1kpyvNqVhiYVo=
-X-Google-Smtp-Source: APiQypJGM/yC0m96AySjSxYslDHri5PZMrYCb0FFv3elkENgHkRGkZiiD/fFkakWizNlPa+BFZW0Yw==
-X-Received: by 2002:a7b:c4c9:: with SMTP id g9mr3674853wmk.171.1588262298154;
-        Thu, 30 Apr 2020 08:58:18 -0700 (PDT)
-Received: from localhost.localdomain (p5B3F6E9D.dip0.t-ipconnect.de. [91.63.110.157])
-        by smtp.gmail.com with ESMTPSA id w8sm265410wrs.25.2020.04.30.08.58.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 08:58:17 -0700 (PDT)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
-        Saravanan Sekar <sravanhome@gmail.com>
-Subject: [PATCH v11 0/6]  Add battery charger driver support for MP2629
-Date:   Thu, 30 Apr 2020 17:58:04 +0200
-Message-Id: <20200430155810.21383-1-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Apr 2020 12:06:09 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10786 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727813AbgD3QGJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 12:06:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eaaf72c0002>; Thu, 30 Apr 2020 09:05:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Apr 2020 09:06:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 09:06:07 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 16:06:07 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 16:06:06 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+ <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
+ <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+Date:   Thu, 30 Apr 2020 09:04:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588262700; bh=eWajUdI0iXeAXeqVD5ZpEmRaSpEhM1U8KfCosqzO194=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=kP9ln9IFyG1CyD2zYD6UBRJU+3nqtrfnnZ+cS/JlbzMx3B5faTPLBdCdqyTod9yo1
+         Z0Z2LBvNwQOpWFZIlo0fsv987r878bT2zeUtFfUToRuBf1Lh/HgCJgU7bLrKBMWn3Q
+         7EPPKclFWEMjk0R/r47l9T1m3+0SRS07OY7Pci/cE1nIgNUWDe6tk+Kayl8v2RJ0Rk
+         3nt0YCCT4XfBt1BFf++ZQhEXx6KRIn9v+noVua6ZqWw5Skg8oeWfj68av04Fza1i/d
+         F7E8EIRMAtO/MowkXFoanRyv6lWSbQx/oMz+9gxgwUq+u9RKO8pXG3cOzg4ztuNvIk
+         5iYSGa7WbeIhA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-changes in v11:
- - module_remove part replaced by devm_add_action_or_reset in charger patch
- - minor review comments solved in mfd and adc patch
 
-changes in v10:
- - fixed typo, \n in dev_err
- - dt bindings Warning (unit_address_vs_reg) reported by bot
+On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
+> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> +static int chan_capture_kthread_finish(void *data)
+>>>> +{
+>>>> +	struct tegra_vi_channel *chan =3D data;
+>>>> +	struct tegra_channel_buffer *buf;
+>>>> +
+>>>> +	set_freezable();
+>>>> +
+>>>> +	while (1) {
+>>>> +		try_to_freeze();
+>>> I guess it won't be great to freeze in the middle of a capture process,=
+ so:
+>>> 		if (list_empty(&chan->done))
+>>> 			try_to_freeze();
+>> And here should be some locking protection in order not race with the
+>> chan_capture_kthread_start because kthread_finish could freeze before
+>> kthread_start.
+> Or maybe both start / finish threads should simply be allowed to freeze
+> only when both capture and done lists are empty.
+>
+> if (list_empty(&chan->capture) &&
+>      list_empty(&chan->done))
+> 	try_to_freeze();
 
-changes in v9:
- - fixed review comments in mp2629 power supply such as resource based
-   iio channel, replace workqueue by threaded irq, irq get with "_optional"
+good to freeze when not in middle of the frame capture but why should we=20
+not allow freeze in between captures?
 
-changes in v8:
- - fixed order of call in probe/remove in iio adc
- - add ABI documentation for mp2629 power supply
+Other drivers do allow freeze in between frame captures.
 
-changes in v7:
- - fixed probe/remove order, managed and unmanaged call mix use in adc.
- - Documentation dual license, i2c node with controller address
+I guess we can freeze before dequeue for capture and in finish thread we=20
+can freeze after capture done. This also don't need to check for=20
+list_empty with freeze to allow between frame captures.
 
-Overall looks good to me, FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-One question though in reply to patch 4.
-
-changes in v6:
- - removed includes types.h in mfd, of_device.h in adc.
- - fixed review comments parentheses, err check, kstrtouint
-
-changes in v5:
- - removed platfrom data stored in mfd and directly accessed mfd struct in child
- - fixed spell check and capitalization in mfd and documentation
-
-changes in v4:
- - fixed capitalization in mfg Kconfig and documentation
-
-changes in v3:
- - regmap for children passed using platform data and remove mfd driver info
-   access directly from children
-
-changes in v2:
- - removed EXPORT_SYMBOL of register set/get helper
- - regmap bit filed used, fixed other review comments
-
-This patch series add support for Battery charger control driver for Monolithic
-Power System's MP2629 chipset, includes MFD driver for ADC battery & input
-power supply measurement and battery charger control driver.
-
-Thanks,
-Saravanan
-
-Saravanan Sekar (6):
-  dt-bindings: mfd: add document bindings for mp2629
-  mfd: mp2629: Add support for mps battery charger
-  iio: adc: mp2629: Add support for mp2629 ADC driver
-  power: supply: Add support for mps mp2629 battery charger
-  power: supply: mp2629: Add impedance compensation config
-  MAINTAINERS: Add entry for mp2629 Battery Charger driver
-
- .../ABI/testing/sysfs-class-power-mp2629      |   8 +
- .../devicetree/bindings/mfd/mps,mp2629.yaml   |  62 ++
- MAINTAINERS                                   |   5 +
- drivers/iio/adc/Kconfig                       |  10 +
- drivers/iio/adc/Makefile                      |   1 +
- drivers/iio/adc/mp2629_adc.c                  | 208 ++++++
- drivers/mfd/Kconfig                           |   9 +
- drivers/mfd/Makefile                          |   2 +
- drivers/mfd/mp2629.c                          |  79 +++
- drivers/power/supply/Kconfig                  |  10 +
- drivers/power/supply/Makefile                 |   1 +
- drivers/power/supply/mp2629_charger.c         | 669 ++++++++++++++++++
- include/linux/mfd/mp2629.h                    |  26 +
- 13 files changed, 1090 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
- create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
- create mode 100644 drivers/iio/adc/mp2629_adc.c
- create mode 100644 drivers/mfd/mp2629.c
- create mode 100644 drivers/power/supply/mp2629_charger.c
- create mode 100644 include/linux/mfd/mp2629.h
-
--- 
-2.17.1
 
