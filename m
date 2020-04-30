@@ -2,149 +2,85 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC02C4724C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ECEC47257
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB1F92076D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:22:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="e0NoxIpS"
+	by mail.kernel.org (Postfix) with ESMTP id D6E1E20836
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgD3UWp (ORCPT
+        id S1727114AbgD3Umk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:22:45 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11591 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726745AbgD3UWp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 16:22:45 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eab33510003>; Thu, 30 Apr 2020 13:21:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 13:22:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 13:22:44 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 20:22:44 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 20:22:43 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <eadf3a5a-f305-4561-10e1-1b9241b9c5c2@gmail.com>
- <bfd82642-9648-96f1-737d-4b9a869d34a3@nvidia.com>
- <52b98347-4b78-f637-04f4-cc730ad336f3@nvidia.com>
- <8da0929d-4a58-75b8-381c-511ce66f8d9d@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <d9aa7cb7-cb16-9896-17c9-2d84fbaa0893@nvidia.com>
-Date:   Thu, 30 Apr 2020 13:21:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 16:42:40 -0400
+Received: from mga07.intel.com ([134.134.136.100]:37583 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726781AbgD3Umk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 16:42:40 -0400
+IronPort-SDR: jc3f9hQSxmtWTGFYGabgq8aogU3kmbIwgonV+5kAicTwQ+zA0LIdt7xs37MziU3kMsprGiQs1B
+ uVCG7vQ0Ok8A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 13:42:39 -0700
+IronPort-SDR: M6oqOMPzyFoVqddYs7RXgFErbffJCDivKopljAfdVamHixYraY4H4gkBAqaneuwRMIgM/plR4C
+ XjTmGyPtMWrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
+   d="scan'208";a="433100232"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 30 Apr 2020 13:42:39 -0700
+Date:   Thu, 30 Apr 2020 13:48:42 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 02/25] iommu/ioasid: Add ioasid references
+Message-ID: <20200430134842.74e596b8@jacob-builder>
+In-Reply-To: <20200430113931.0fbf7a37@jacob-builder>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+        <20200430143424.2787566-3-jean-philippe@linaro.org>
+        <20200430113931.0fbf7a37@jacob-builder>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <8da0929d-4a58-75b8-381c-511ce66f8d9d@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588278097; bh=4+/UTSmWZA6aF77P2/8J93AOfTND6l5qFFYe2ctxF4Q=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=e0NoxIpSz0QgI/vCC25BgCu4y5yZLE6jyMFQpqWNDabNeROYXEINBIS38hisW58mt
-         7xFe9s8UqXtWJkj59geL66IxPUXF9AJ3dUuB8N5DMQ1bd1v/VR5ZSpgcO5pP1k1E8G
-         q5dCCNhjEu3KwWtDp9EFBj5WRUXxhBeM3JhE+nWwOtpo0jXgb0pvehrDOrzziotrqc
-         L2dZIzDKVpN4Jv7l2g+c7+CGKb9MSuZeIRWtCunz8ov6PzcRDsk8gqpjBycIrGbh0R
-         iAkv9qC/0ZK2KuR4zDdXQiA9qoDR6i7NjV2rVZqrl89YIqMIarvcraMMoUhu74r5ZS
-         773zBlkpLz82w==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, 30 Apr 2020 11:39:31 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-On 4/30/20 1:21 PM, Dmitry Osipenko wrote:
-> 30.04.2020 23:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/30/20 1:08 PM, Sowjanya Komatineni wrote:
->>> On 4/30/20 1:06 PM, Dmitry Osipenko wrote:
->>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> +static int chan_capture_kthread_start(void *data)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
->>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>>>> +=C2=A0=C2=A0=C2=A0 int err =3D 0;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Source is not str=
-eaming if error is non-zero.
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * So, do not dequeu=
-e buffers on error and let the thread
->>>>> sleep
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * till kthread stop=
- signal is received.
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wait_event_interruptible(=
-chan->start_wait,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kthread_should_stop(=
-) ||
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (!list_empty(&chan->=
-capture) &&
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !err));
->>>> ...
->>>>> +static void tegra_channel_buffer_queue(struct vb2_buffer *vb)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D vb2_get_drv_pri=
-v(vb->vb2_queue);
->>>>> +=C2=A0=C2=A0=C2=A0 struct vb2_v4l2_buffer *vbuf =3D to_vb2_v4l2_buff=
-er(vb);
->>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf =3D to_tegra_cha=
-nnel_buffer(vbuf);
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 /* put buffer into the capture queue */
->>>>> +=C2=A0=C2=A0=C2=A0 spin_lock(&chan->start_lock);
->>>>> +=C2=A0=C2=A0=C2=A0 list_add_tail(&buf->queue, &chan->capture);
->>>>> +=C2=A0=C2=A0=C2=A0 spin_unlock(&chan->start_lock);
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 /* wait up kthread for capture */
->>>>> +=C2=A0=C2=A0=C2=A0 wake_up_interruptible(&chan->start_wait);
->>>>> +}
->>>> The V4L doc says that buffers could be enqueued before streaming is
->>>> started. I guess it should be a trouble here, shouldn't it?
->>>>
->>>> https://elixir.bootlin.com/linux/v5.7-rc3/source/include/media/videobu=
-f2-core.h#L379
->>>>
->>> what trouble are you referring here?
->>>
->>> I dont think so as we set min buffers needed as 2 always there will be
->>> 2 per-queued buffers.
->> typo* pre-queued buffers before streaming start
->>> But buffers from this queue will be dequeued only when ready to
->>> processes in the capture thread
-> I see now that the threads won't be running until start_streaming() is
-> invoked, should be okay then.
-ok. yes threads run only during streaming
+> > -void ioasid_free(ioasid_t ioasid)
+> > +bool ioasid_free(ioasid_t ioasid)
+> >  {
+Sorry I missed this in the last reply.
+
+I think free needs to be unconditional since there is not a good way to
+fail it.
+
+Also can we have more symmetric APIs, seems we don't have ioasid_put()
+in this patchset.
+How about?
+ioasid_alloc()
+ioasid_free(); //drop reference, mark inactive, but not reclaimed if
+		refcount is not zero.
+ioasid_get() // returns err if the ioasid is marked inactive by
+		ioasid_free()
+ioasid_put();// drop reference, reclaim if refcount is 0.
+
+It is similar to get/put/alloc/free pids.
+
+
