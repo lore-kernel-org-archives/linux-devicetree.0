@@ -2,101 +2,120 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0C8C8300B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D7BC8300C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5597E20656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A712076D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zMWYkcDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgD3NRP (ORCPT
+        id S1726841AbgD3NYq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:17:15 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45616 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbgD3NRP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 09:17:15 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e20so4803502otk.12;
-        Thu, 30 Apr 2020 06:17:15 -0700 (PDT)
+        Thu, 30 Apr 2020 09:24:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726685AbgD3NYq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:24:46 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53A15C035494
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 06:24:46 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x2so2860532pfx.7
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 06:24:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qEBt0vXjbk5Q4ltgNSW+NS8nyELrH+5nfBRUIqyA6is=;
+        b=zMWYkcDmT4hqTCH/QaWiUDvaJmDtfNpCMuXp7fMQTUjj5/ObGmnANccRMz2ukYZM4r
+         VdaGCFCp4GSIkaMxu0EK1g7XnpMRebRLE23G5Gmoli9sYmZd4qHE2ty74bnAygVOg+s8
+         BN1fmMqDugOHXQwg7GD7dzVCZSS1cBxYGlx8AiT7FZ5ZDTIbjh6qeX1+HoueSmuPkio/
+         lcX5j72CsYg5J+ZXocME3MQPHiwqNJpKR7XH6pqmok5bqA8AEsrUc/JOaSim5O6BzWfL
+         8KdtgjxwQpe+j2flqiPrfsORlb0wXFGqQsTPF5tuNhMxWuQrCZFqsFcT9ZEKtXsZM1v/
+         Tm6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TYuSc1eBkZJQojwW+mycEWGyCJ0BWkp4Uav1Yp+waH4=;
-        b=undtWtvT2mHdlVAjkAxpA6HjFxe07ox1UQKkExR4jfUjZIDVL1bVpAwaQiAPvL6zEk
-         EpZYpRm6vNziyuj6hmp5Rc5FEGdq8XEVZokGpVopJqdDFhA0O771cvfOuGrzE9D/hWn5
-         AEdK1zyOz/sYzMTBBoeAUj6sHYmNh7liv6lbbu1rRGiBwoRThxh3FTEVK++zPOLagWkr
-         SvxlnmOSiXt1rmd8ailRb3CB+3jf+A3OpIH9BUAFu7aFihk9ZMQ0iJxzyNW+zJ6ZFZiY
-         5qQh27i0hGWqE4E01QweWMIRp2ea6lKyqPoZaYeOjdFozX1AybtnSYqMsaw6liV8X27A
-         eWzQ==
-X-Gm-Message-State: AGi0PubbWhzngmYMl2/PR2e08Zu2FRwmwRf/l0wxx7Mim/Z+rmjo7vo5
-        2EtinPMk0SHObdbdV9fpNpzN8axcuAD0lTOpzxc=
-X-Google-Smtp-Source: APiQypIgBXU9BSTQiGJjGVpm37UKzZ3o3uIg7xCulwGQee8j0/6+X/C6FX1fA+tIeRv6xErPA9HMWzTT4VA6MAkCalo=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr2302946otn.107.1588252634888;
- Thu, 30 Apr 2020 06:17:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 15:17:03 +0200
-Message-ID: <CAMuHMdWNSgqfCd4ZGR4Y-9M_-nKH7nO9aNcQ9z-E97CB4E5Zbw@mail.gmail.com>
-Subject: Re: [PATCH 06/18] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qEBt0vXjbk5Q4ltgNSW+NS8nyELrH+5nfBRUIqyA6is=;
+        b=QBLYwKgbNsR/BNTcHbq49S7cx1xMtCCozDJAYm/pXQQG9+qwGUQFrgALaxLEZ39DrX
+         /8z2WEL0xAvJ6kf1JLUwtDGogR+x8a/9Q6bfT+kxQBAyBuJeiLHvtI9w9DM+KbSG/0DP
+         /oTRDTNkOnafNRv2uXNz3FTmXXjXE2+DV9+Fbx4idKT7SZg+udrRnGRNNrl1BZ931tS0
+         +buJTCY70n6Un+FdCfJE6CKxKrVLz466hDty8jfPlCdAqeojEKISYoIljOdyKDlANNEZ
+         DTbM5WriMKG9rnjN5LXkW5r3Ho0I63mUth1I2ujZBYAbiDtfv+OFzkT2fuFPW7SNe4J+
+         sm7w==
+X-Gm-Message-State: AGi0PuaMgoWZY3GhRPaW2bNWt7VP2B8LiAMrQK3k7lVG95g54IDicB0l
+        4ASLpkAwrnHqZp9i8AfGRG2cEQ==
+X-Google-Smtp-Source: APiQypLwsWQKfyfm0gdb6TRYobt1/StUc+eLmspBqFN9dK8quZw55tE3HuNkq5Cx5ZL7JpR0ypIpXw==
+X-Received: by 2002:a63:f960:: with SMTP id q32mr3102166pgk.357.1588253085753;
+        Thu, 30 Apr 2020 06:24:45 -0700 (PDT)
+Received: from devnote (NE2965lan1.rev.em-net.ne.jp. [210.141.244.193])
+        by smtp.gmail.com with ESMTPSA id u15sm1712135pjm.47.2020.04.30.06.24.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 06:24:45 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 22:24:39 +0900
+From:   Masami Hiramatsu <masami.hiramatsu@linaro.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v5 0/2] dts: uniphier: Add Akebi96 Board support
+Message-Id: <20200430222439.0ae1c4fa9572c8487fca96b6@linaro.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+Hello,
 
-Thanks for your patch!
+Here is the 5th version of the patches to add a devicetree for 
+Akebi96 board.
 
-On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790).
+This version removes redundant setting of RGMII, fixes some
+parameters for max3420-udc node and add the address to
+framebuffer node name.
 
-but lacks several automotive-specific peripherals.
-So please split the pinmux groups and functions in common and automotive
-parts.  From a quick look, for now the latter is limited to MLB
-groups/functions.
+The Akebi96 is a certified 96boards which is based on Socionext
+UniPhier LD20 SoC. Most of the part is similar to LD20 reference
+board, but there are some changes.
 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+  - MAX3421 USB-SPI chip on SPI port3 (for USB gadget port.)
+  - Simple frame buffer with 1080p fixed resolution.
+  - I2S port which is connected to aout1b instead of aout1.
+  - 3 serial ports, only serial3 has CTS/RTS.
+  - No NAND, only eMMC on the board.
+  - OP-TEE installed firmware.
 
-The rest looks good to me.
+See https://www.96boards.org/product/akebi96/ for details.
 
-Gr{oetje,eeting}s,
+Thank you,
 
-                        Geert
+---
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Masami Hiramatsu (2):
+      dt-bindings: arm: Add Akebi96 board support
+      arm64: dts: uniphier: Add support for Akebi96
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+ .../bindings/arm/socionext/uniphier.yaml           |    1 
+ arch/arm64/boot/dts/socionext/Makefile             |    1 
+ .../boot/dts/socionext/uniphier-ld20-akebi96.dts   |  189 ++++++++++++++++++++
+ 3 files changed, 191 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts
+
+--
+Masami Hiramatsu <masami.hiramatsu@linaro.org>
+
