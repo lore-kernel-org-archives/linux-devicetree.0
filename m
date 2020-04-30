@@ -2,179 +2,91 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD782C83000
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F26AC47254
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C88E82074A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189E92072A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgD3OfQ (ORCPT
+        id S1727846AbgD3Ohj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:35:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgD3OfQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:35:16 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F4EC035494
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 07:35:16 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1jUAHL-0000D2-Lw; Thu, 30 Apr 2020 16:35:07 +0200
-Message-ID: <3895f202cf5919e41a56878a62f6d5259dea12d3.camel@pengutronix.de>
-Subject: Re: [RFC PATCH 3/4] drm/etnaviv: Change order of enabling clocks to
- fix boot on i.MX8MM
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Adam Ford <aford173@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Li Jun <jun.li@nxp.com>, NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 30 Apr 2020 16:35:06 +0200
-In-Reply-To: <20200430124602.14463-4-frieder.schrempf@kontron.de>
-References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
-         <20200430124602.14463-4-frieder.schrempf@kontron.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        Thu, 30 Apr 2020 10:37:39 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:32910 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbgD3Ohi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:37:38 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 23so5919136qkf.0;
+        Thu, 30 Apr 2020 07:37:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vE3bI8i+KLba6V4Lh5f3hn0EFqTCTl7OhA34yJVC44g=;
+        b=n5IcWXrCP9svMDlwLPpp4GL3Za9ya8V4t69Ymx+DKQpzb3++UMMKE/hz1BLXOC3wu4
+         Pmug8P3ukZhmKEtya2W17eqSTNyR6OjQacTJ5wyEDCd6Q0bFEpe+WGCiSXkQrIzop6V8
+         AT570BqODOmC4kdffW1Z5LUtgTnJIANEvzERPt81hwaZi5AoNhD6fkVsueuX6jhWubc9
+         Hwwn2YOsenBosLtBKylpi7eeNF0oHgBJvl2KaCR1s6Xx69YM+VUA274GUrVcuwHizKDt
+         KwjKhoIIRyvr0fT2O3OGJ8Wexzw3fa15aPq43i1C11EsUCYHLnT21lBBJiBqE7hhed5X
+         8qlA==
+X-Gm-Message-State: AGi0PuZ/DmpB8MzKyDlgS6UyB0fKZBU7DeKj4L6sr14QRUUQVWgT6L99
+        0gM3ysQVUwCxieAw0unUO9eer601FwQStB2Q2/E=
+X-Google-Smtp-Source: APiQypL37xZXvZAZkCoF9EXedcHtgwTVhctRwzKsL1ZVVKLbbBWQgvPnJlTJbYuMAWHGev5mzNUqXta8lHehVpoaPJs=
+X-Received: by 2002:a37:44a:: with SMTP id 71mr3875551qke.114.1588257456479;
+ Thu, 30 Apr 2020 07:37:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-19-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-19-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Apr 2020 16:37:24 +0200
+Message-ID: <CAMuHMdWXaKaUkAhQFG2=AQuMZSh4jRe_Hp3L=Eyjn5af49CvOQ@mail.gmail.com>
+Subject: Re: [PATCH 18/18] ARM: dts: r8a7742: Add GPIO support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Donnerstag, den 30.04.2020, 12:46 +0000 schrieb Schrempf Frieder:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> On some i.MX8MM devices the boot hangs when enabling the GPU clocks.
-> Changing the order of clock initalization to
-> 
-> core -> shader -> bus -> reg
-> 
-> fixes the issue. This is the same order used in the imx platform code
-> of the downstream GPU driver in the NXP kernel [1]. For the sake of
-> consistency we also adjust the order of disabling the clocks to the
-> reverse.
-> 
-> [1] https://source.codeaurora.org/external/imx/linux-imx/tree/drivers/mxc/gpu-viv/hal/os/linux/kernel/platform/freescale/gc_hal_kernel_platform_imx.c?h=imx_5.4.3_2.0.0#n1538
+On Wed, Apr 29, 2020 at 11:59 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Describe GPIO blocks in the R8A7742 device tree.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-I don't see why the order of the clocks is important. Is this really a
-GPU issue? As in: does a GPU access hang when enabling the clocks in
-the wrong order? Or is this a clock driver issue with a clock access
-hanging due to an upstream clock still being disabled?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Regards,
-Lucas
+Gr{oetje,eeting}s,
 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> ---
->  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 42 +++++++++++++--------------
->  1 file changed, 21 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> index 7b138d4dd068..424b2e5951f0 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> @@ -1487,55 +1487,55 @@ static int etnaviv_gpu_clk_enable(struct etnaviv_gpu *gpu)
->  {
->  	int ret;
->  
-> -	if (gpu->clk_reg) {
-> -		ret = clk_prepare_enable(gpu->clk_reg);
-> +	if (gpu->clk_core) {
-> +		ret = clk_prepare_enable(gpu->clk_core);
->  		if (ret)
->  			return ret;
->  	}
->  
-> -	if (gpu->clk_bus) {
-> -		ret = clk_prepare_enable(gpu->clk_bus);
-> +	if (gpu->clk_shader) {
-> +		ret = clk_prepare_enable(gpu->clk_shader);
->  		if (ret)
-> -			goto disable_clk_reg;
-> +			goto disable_clk_core;
->  	}
->  
-> -	if (gpu->clk_core) {
-> -		ret = clk_prepare_enable(gpu->clk_core);
-> +	if (gpu->clk_bus) {
-> +		ret = clk_prepare_enable(gpu->clk_bus);
->  		if (ret)
-> -			goto disable_clk_bus;
-> +			goto disable_clk_shader;
->  	}
->  
-> -	if (gpu->clk_shader) {
-> -		ret = clk_prepare_enable(gpu->clk_shader);
-> +	if (gpu->clk_reg) {
-> +		ret = clk_prepare_enable(gpu->clk_reg);
->  		if (ret)
-> -			goto disable_clk_core;
-> +			goto disable_clk_bus;
->  	}
->  
->  	return 0;
->  
-> -disable_clk_core:
-> -	if (gpu->clk_core)
-> -		clk_disable_unprepare(gpu->clk_core);
->  disable_clk_bus:
->  	if (gpu->clk_bus)
->  		clk_disable_unprepare(gpu->clk_bus);
-> -disable_clk_reg:
-> -	if (gpu->clk_reg)
-> -		clk_disable_unprepare(gpu->clk_reg);
-> +disable_clk_shader:
-> +	if (gpu->clk_shader)
-> +		clk_disable_unprepare(gpu->clk_shader);
-> +disable_clk_core:
-> +	if (gpu->clk_core)
-> +		clk_disable_unprepare(gpu->clk_core);
->  
->  	return ret;
->  }
->  
->  static int etnaviv_gpu_clk_disable(struct etnaviv_gpu *gpu)
->  {
-> +	if (gpu->clk_reg)
-> +		clk_disable_unprepare(gpu->clk_reg);
-> +	if (gpu->clk_bus)
-> +		clk_disable_unprepare(gpu->clk_bus);
->  	if (gpu->clk_shader)
->  		clk_disable_unprepare(gpu->clk_shader);
->  	if (gpu->clk_core)
->  		clk_disable_unprepare(gpu->clk_core);
-> -	if (gpu->clk_bus)
-> -		clk_disable_unprepare(gpu->clk_bus);
-> -	if (gpu->clk_reg)
-> -		clk_disable_unprepare(gpu->clk_reg);
->  
->  	return 0;
->  }
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
