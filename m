@@ -2,92 +2,136 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC91BC8300C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 12:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B18C8300A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABB2C2076D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 12:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66912076D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgD3M7O (ORCPT
+        id S1726520AbgD3NBc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:59:14 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35830 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgD3M7N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 08:59:13 -0400
-Received: by mail-oi1-f195.google.com with SMTP id o7so5119493oif.2;
-        Thu, 30 Apr 2020 05:59:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lFd0mFF+Oi7oyBZIDq8g60aiuPWlTPswKEMj2mCEslc=;
-        b=m+/B/1E8mX7goQslfqFT7NI0tPHqcaNNc2db0X2K3VuU+AxgVGKvqhdPlOKJM206Zp
-         pHouhrXxUCEzQtI6ozywTptd74wJyrYFXkmDk++vr+udN2bjERPfRNJFKyVAp+PIzHtM
-         cEDkttfxrOACy/x0EqnrIKn/wLCt6mSC6LM1JVlctL66GR8/IV7Ujq01qVhI8Js+6PUu
-         iKZAOJW/zxRkbhDP9ysA8gvOc9hLttBFHvYeyGsJ44fS8yBEsovrkp5WsWvjLQWeFUNO
-         aCquvADgejtICC+p+3oDTXKBGDhOtvSmweNLcCiz9bPnMH5uBfn/nO+N2yMBjeL+fdRY
-         u+cA==
-X-Gm-Message-State: AGi0PuYnmCLzg/KBLa2K0MQ91oNcY89JuhXbWP5meHHCkiYtYNnsgNc9
-        5kOBPv1h6ipfR0L5wUKfMw+AyHndVOBtj5Z1Vfc=
-X-Google-Smtp-Source: APiQypKbIFfpHEXzOX2dxSQf2ILcVnLcCfpVuwsgYdFPltw0zUwaBesFmNJeGmcaPY8Ao/9oH4A2Zgt2d21nG0O6IDg=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr1538425oih.148.1588251552921;
- Thu, 30 Apr 2020 05:59:12 -0700 (PDT)
+        Thu, 30 Apr 2020 09:01:32 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47716 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgD3NBb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 09:01:31 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0FBF32726E2;
+        Thu, 30 Apr 2020 14:01:28 +0100 (BST)
+Date:   Thu, 30 Apr 2020 15:01:24 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        masonccyang@mxic.com.tw, anders.roxell@linaro.org, vigneshr@ti.com,
+        arnd@arndb.de, hauke.mehrtens@intel.com, richard@nod.at,
+        brendanhiggins@google.com, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org,
+        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
+        tglx@linutronix.de, qi-ming.wu@intel.com,
+        andriy.shevchenko@intel.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200430150124.7856d112@collabora.com>
+In-Reply-To: <20200430143600.27031639@collabora.com>
+References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429162249.55d38ee8@collabora.com>
+        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
+        <20200429164832.6800fc70@collabora.com>
+        <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
+        <20200429173107.5c6d2f55@collabora.com>
+        <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
+        <20200430102114.29b6552f@collabora.com>
+        <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
+        <20200430103658.4b0b979e@collabora.com>
+        <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
+        <20200430143600.27031639@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 14:59:01 +0200
-Message-ID: <CAMuHMdWm25oGgwkA-nP5oRic9Gi1fZaZEx35Egj6-5254K89Mw@mail.gmail.com>
-Subject: Re: [PATCH 03/18] ARM: multi_v7_defconfig: Enable r8a7742 SoC
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:57 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable recently added r8a7742 (RZ/G1H) SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+On Thu, 30 Apr 2020 14:36:00 +0200
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.8.
+> On Thu, 30 Apr 2020 17:07:03 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> 
+> > >>> The question is, is it the same value we have in nand_pa or it is
+> > >>> different?
+> > >>>        
+> > >> Different address which is 0xE1400000 NAND_BASE_PHY address.    
+> > > 
+> > > Then why didn't you tell me they didn't match when I suggested to pass    
+> > 
+> > sorry, because you keep asking nand_pa after that only I realized that.
+> >   
+> > > nand_pa? So now the question is, what does this address represent?    
+> > 
+> >                 EBU-MODULE
+> >   _________     _______________________
+> > |         |   |            |NAND CTRL  |
+> > | FPI BUS |==>| CS0(0x174) | 0xE100    ( 0xE14/0xE1C) NAND_PHY_BASE
+> > |_________|   |_CS1(0x17C)_|__________ |
+> > 
+> > EBU_CONRTROLLER_BASE : 0xE0F0_0000
+> > HSNAND_BASE: 0xE100_0000
+> > NAND_CS0: 0xE140_0000
+> > NAND_CS1: 0xE1C0_0000
+> > 
+> > MEM_REGION_BASE_CS0: 0x17400 (internal to ebu controller )
+> > MEM_REGION_BASE_CS1: 0x17C00
+> >   
+> 
+> Hm, I wonder if we shouldn't use a 'ranges' property to describe this
+> address translation. Something like
+> 
+> 	ebu@xxx {
+> 		ranges = <0x17400000 0xe1400000 0x1000>,
+> 			 <0x17c00000 0xe1c00000 0x1000>;
+> 		reg = <0x17400000>, <0x17c00000>;
+> 		reg-names = "cs-0", "cs-1";
+> 	}
+> 
+> The translated address (0xE1X00000) will be available in res->start,
+> and the non-translated one (0x17X00000) can be retrieved with
+> of_get_address(). All you'd have to do then would be calculate the
+> mask:
+> 
+> 	mask = (translated_address & original_address) >> 22;
+> 	num_comp_bits = fls(mask);
+> 	WARN_ON(mask != GENMASK(num_comp_bits - 1, 0));
+> 
+> Which allows you to properly set the ADDR_SEL() register without
+> relying on some hardcoded values:
+> 
+> 	writel(original_address | EBU_ADDR_SEL_REGEN |
+> 	       EBU_ADDR_COMP_BITS(num_comp_bits),
+> 	       ebu_host->ebu + EBU_ADDR_SEL(csid));
+> 
+> That's quite important if we want to merge the xway NAND driver with
+> this one.
 
-Gr{oetje,eeting}s,
+Looks like the translation is done at the FPI bus declaration level (see
+[1]). We really need to see the big picture to take a wise decision
+about the bindings. Would you mind pasting your dsti/dts files
+somewhere? It feels like the NAND controller is a sub-part of a more
+generic 'memory' controller, in which case the NAND controller should be
+declared as a child of this generic memory bus (called localbus in [1],
+but maybe EBU is more accurate).
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[1]https://github.com/xieyaxiongfly/Atheros_CSI_tool_OpenWRT_src/blob/master/target/linux/lantiq/files-4.14/arch/mips/boot/dts/vr9.dtsi#L162
