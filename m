@@ -4,89 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7476C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56EDC47253
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC9A62137B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9B42076D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255815;
-	bh=lCkkjbTRKnupktbhhwm1QNoArUgsPT25OPIGy+WhnWU=;
+	s=default; t=1588255844;
+	bh=aN/QFdkySs8u03EQh9vrb0JVJZFAh2mYagETahi8M1Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P6nkQHwm9WDIaMSpX9ZjLGrWfv2XemebUBOuguXV8/H7T1Qmu0EgYmEnNAZzryHvM
-	 dVKIyGVy+BR6ly0M2h72wKUFh9qiy3vyxaiKCs2W5rmanijVyab7psLOdX4NaDE9Ct
-	 C+I2Am0NsIjD8DZl/zq1I/XGkbLw1XPmUFenfyMA=
+	b=pSlabKG0ijJ6KF/CGzRziKRtaZSNUHSc9P6DVATmObCxS7OOtRCN5xA9SaZO5Nr0y
+	 KQd/WUmDFedwEG7tsROH57f8ydeNVgQCoN5SXgZCd0/kDuQe1HPXQIxNCONH/F1LP/
+	 DEoWzjvaEOMq0BSwqpLC3kYz2F0Dlgp12FCL1WY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgD3OKO (ORCPT
+        id S1728374AbgD3OKi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:10:14 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:45620 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgD3OKN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:10:13 -0400
-Received: by mail-oo1-f67.google.com with SMTP id 190so1297688ooa.12;
-        Thu, 30 Apr 2020 07:10:12 -0700 (PDT)
+        Thu, 30 Apr 2020 10:10:38 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41493 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgD3OKg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:10:36 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 19so5296471oiy.8;
+        Thu, 30 Apr 2020 07:10:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6aiOkcIgJAWhCqfCs33Rhe1wkSnQyKwXVAe/pUh2Rrw=;
-        b=tEabOy9KM9d7LRpLuowDfHa3grtUQXFhRb2NhOXb1jC+n25OcJI/CPHVJ2hoGBL0AV
-         bQZW/AEkMCJJJCJmbkLjqJSybjjF39nfoDb+1zec5tQY2YDd/+HUyVb1PL/mb8Vy6g1j
-         k3EFVdk01IO5HzTctxpG1qfP8Pm7Dc2uipe9q82d6X9Y4QKiPcXp77XC5ODDIE4KEAXT
-         byEjM2RxzePIllwIxe4Bk5jUIcELo27BI1dF9gwuR8D7SY0pK/5nqvf/kLmEKBInWM82
-         0X5jY3D2PEsJODv7obzXkopLojx4QLHNArVJVGf2lGAz9wzugmwebeYGTKC7bFTBlPfk
-         ZhcQ==
-X-Gm-Message-State: AGi0PubzrAtthmqGA7SayY2TyG7N3vGebiIiJPT3tEW3YuyDOG3CVyfw
-        zo/nZN/nKzfzwvMzoL0ez6hLSPE=
-X-Google-Smtp-Source: APiQypIlZrdNDKXt4h5JYSoYrTTeKI8v+e+CVvcep7L1dYna5MbvAQ/q4ekiXc5lL7JJyjUKWiE5Xg==
-X-Received: by 2002:a4a:390b:: with SMTP id m11mr2952624ooa.2.1588255811640;
-        Thu, 30 Apr 2020 07:10:11 -0700 (PDT)
+        bh=UgTzeSieOrk7bgrXOEEKGS4vqDfJdjTM5De/Mq9VpvA=;
+        b=JWOX0Ed3jmGp6wkD/eNtW0sqU5QOV1BhW3dIUgQM7c8xKxB+g6ByzsbQdwASNAuaqV
+         dKJsenliIraZEhOll/hMYfqgJDHSn/7TFjFjeRi4GlhmaUT6H2rB403f9cOj0cIiQ9KR
+         B/jEgrtmPxUqeqkUz7n8oATnC4ewSk7bgz01lmVhEWAj9MEl1INlKdUAXYjdanVBF7jU
+         TBSJeSE6dKRa95zhhozKwruww3nXXpk5eg6ZBpxvkoecZayfEm61qSzIBnV0BYk9iU8u
+         4bMoFDs8gOdMTaJvs5gyzpmNVnAF70vL8hWsfvY00FnLuAgghoruUfxfLedvYzBcAZXe
+         Q+Qw==
+X-Gm-Message-State: AGi0PuYpt07znlPgszPB9xCUpC9vutwcJ9pUj/QxenaCyXVobquNemRg
+        8Mtylh00FJROHY47QQ8CQA==
+X-Google-Smtp-Source: APiQypLd3ij132amZqmzb1pb6Pu49V28sjYMfyg7bc6xj1bapelOBMaB7UdhZBZ0xlBAKCAGhjm7Iw==
+X-Received: by 2002:aca:6546:: with SMTP id j6mr29159oiw.155.1588255835409;
+        Thu, 30 Apr 2020 07:10:35 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m16sm1304134oou.44.2020.04.30.07.10.10
+        by smtp.gmail.com with ESMTPSA id w24sm1346250oor.47.2020.04.30.07.10.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 07:10:10 -0700 (PDT)
-Received: (nullmailer pid 4677 invoked by uid 1000);
-        Thu, 30 Apr 2020 14:10:10 -0000
-Date:   Thu, 30 Apr 2020 09:10:10 -0500
+        Thu, 30 Apr 2020 07:10:34 -0700 (PDT)
+Received: (nullmailer pid 5452 invoked by uid 1000);
+        Thu, 30 Apr 2020 14:10:33 -0000
+Date:   Thu, 30 Apr 2020 09:10:33 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] of_graph: add of_graph_get_local_port()
-Message-ID: <20200430141010.GA4602@bogus>
-References: <20200418170703.1583-1-digetx@gmail.com>
- <20200418170703.1583-2-digetx@gmail.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: arm: amlogic: add support for the
+ Beelink GT-King Pro
+Message-ID: <20200430141033.GA5382@bogus>
+References: <20200419055322.16138-1-christianshewitt@gmail.com>
+ <20200419055322.16138-4-christianshewitt@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200418170703.1583-2-digetx@gmail.com>
+In-Reply-To: <20200419055322.16138-4-christianshewitt@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 18 Apr 2020 20:06:58 +0300, Dmitry Osipenko wrote:
-> In some case, like a DRM display code for example, it's useful to silently
-> check whether port node exists at all in a device-tree before proceeding
-> with parsing the graph.
+On Sun, 19 Apr 2020 05:53:21 +0000, Christian Hewitt wrote:
+> The Shenzen AZW (Beelink) GT-King Pro is based on the Amlogic W400 reference
+> board with an S922X chip.
 > 
-> This patch adds of_graph_get_local_port() which returns pointer to a local
-> port node, or NULL if graph isn't specified in a device-tree for a given
-> device node.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->  drivers/of/property.c    | 32 +++++++++++++++++++++++---------
->  include/linux/of_graph.h |  7 +++++++
->  2 files changed, 30 insertions(+), 9 deletions(-)
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
