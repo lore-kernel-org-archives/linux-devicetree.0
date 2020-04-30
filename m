@@ -2,156 +2,551 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D9AC47247
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17065C4724C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD0A20775
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="G7S/aEAw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T32wf1Yx"
+	by mail.kernel.org (Postfix) with ESMTP id 019872082E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 15:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgD3PFi (ORCPT
+        id S1726685AbgD3PHl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:05:38 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:44103 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726377AbgD3PFh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:05:37 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id CF8FC879;
-        Thu, 30 Apr 2020 11:05:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 30 Apr 2020 11:05:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=Tru7PrTS/cEk2EWUwEOeWCgUn+R
-        +ZwTSYNBWM33YLjg=; b=G7S/aEAwT1c+33nJT6fsdEVxgPaaVZxI2PD7wiBF+NE
-        sDsj9yoIQe4Bg5Zqu/32cYJ1/o9g75vS4KP+bGdYXRQFCceRiLHsjJMa4H3JXYPx
-        nMJE0/wU8/rnFD2ex84lI/Jtl6fBqL4hJbQej0O22CkiU3ABV3EsPRr4cpkQcG8E
-        txEZ1QVrFc19vK/8zrzQfhNVVWEH5Q+U4e9rDh3OyqHLtARCpuG0mF/8Tg5WY7qx
-        GduxhLWi8KsRQd7aUQtzNARLVbrCuXuytOEB+IBUSgkG4lTQ6MYJa0NcXHKTe/P2
-        AK0eR2BYJmgAuE6UFhXiNysabyDUbC7bfRNg8fo4qTQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Tru7Pr
-        TS/cEk2EWUwEOeWCgUn+R+ZwTSYNBWM33YLjg=; b=T32wf1Yx7SUErYgLK+Q0AI
-        To4RLQELHNIbU91kwfidK/p1D217384Ddxg2L+2cYf9Gc8QwhU6TmNz5OrZ8Yjqu
-        e42G5DkiwxciQCVTVmhv3Lc3eBI7NKdySbDhXrDp+nZzL3D6OL3M+tSpyO+v5eK8
-        wJtlsIxyW19v5BZNjSRUEft6hB90QfUyguiyAbZ9Drz21W28SinmWlci88C4F4X/
-        DoVZuxXaAZOSuERifUont6kLyf4DaADe74yPAnhMMkzve6ZK4IYEYem3sR+j5pxA
-        ySI1+1RynC6JkP36hkIwD34+xpgxyQfPjTm4JZzMzXvDKg1G1RXwZ23c3RyP3tUg
-        ==
-X-ME-Sender: <xms:P-mqXlJggu2Qj1_nrorI-QgX36-_oYqmih1diXjqc6YH_T7Z23bnfQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieehgdekgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:P-mqXp38E52BRc5Hv_-Yj2EeIpsRoK6ysoe7bM_7O6YV5ryJNOIc8g>
-    <xmx:P-mqXtoxudCj3bZiBYPZvyV5_vN88d_f9yunvG9v7lLCc-yIfx8VxA>
-    <xmx:P-mqXi4O_g9WBashtNSp7S6_YfSr2V5jQhtK3-PCOR8V9BZTzrh4Pw>
-    <xmx:QOmqXqlt0MmCqTlV7I5P-q5IgoxeIENuJNQkCZY8xEdpSCJEaQINiw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A4BA43280060;
-        Thu, 30 Apr 2020 11:05:35 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 17:05:34 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Priit Laes <plaes@plaes.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/4] clk: sunxi-ng: a10/a20: rewrite init code to a
- platform driver
-Message-ID: <20200430150534.kbzfb7utpc7kswlv@gilmour.lan>
-References: <20200417221730.555954-1-plaes@plaes.org>
- <20200417221730.555954-2-plaes@plaes.org>
- <20200420124935.asfbgv7envb2af55@gilmour.lan>
- <20200420203228.GA4734@plaes.org>
- <20200429143510.ksi27lok2udtmfas@gilmour.lan>
- <20200430062137.GA32281@plaes.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xtai2ger2274pycp"
-Content-Disposition: inline
-In-Reply-To: <20200430062137.GA32281@plaes.org>
+        Thu, 30 Apr 2020 11:07:41 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:57535 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbgD3PHl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 11:07:41 -0400
+Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jUAp1-0007qc-Ot; Thu, 30 Apr 2020 15:09:55 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Cc:     Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v9 2/3] mfd: add Gateworks System Controller core driver
+Date:   Thu, 30 Apr 2020 08:07:26 -0700
+Message-Id: <1588259247-15536-3-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588259247-15536-1-git-send-email-tharvey@gateworks.com>
+References: <1588259247-15536-1-git-send-email-tharvey@gateworks.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The Gateworks System Controller (GSC) is an I2C slave controller
+implemented with an MSP430 micro-controller whose firmware embeds the
+following features:
+ - I/O expander (16 GPIO's) using PCA955x protocol
+ - Real Time Clock using DS1672 protocol
+ - User EEPROM using AT24 protocol
+ - HWMON using custom protocol
+ - Interrupt controller with tamper detect, user pushbotton
+ - Watchdog controller capable of full board power-cycle
+ - Power Control capable of full board power-cycle
 
---xtai2ger2274pycp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+see http://trac.gateworks.com/wiki/gsc for more details
 
-On Thu, Apr 30, 2020 at 06:21:37AM +0000, Priit Laes wrote:
-> On Wed, Apr 29, 2020 at 04:35:10PM +0200, Maxime Ripard wrote:
-> > On Mon, Apr 20, 2020 at 08:32:28PM +0000, Priit Laes wrote:
-> > > On Mon, Apr 20, 2020 at 02:49:35PM +0200, Maxime Ripard wrote:
-> > > > On Sat, Apr 18, 2020 at 01:17:27AM +0300, Priit Laes wrote:
-> > > > > In order to register regmap for sun7i CCU, there needs to be
-> > > > > a device structure already bound to the CCU device node.
-> > > > >=20
-> > > > > Convert the sun4i/sun7i CCU setup to platform driver to use
-> > > > > it later as platform device.
-> > > > >=20
-> > > > > Signed-off-by: Priit Laes <plaes@plaes.org>
-> > > >=20
-> > > > You can't relly do that though. We have timers that need those cloc=
-ks before the
-> > > > device model is initialized.
-> > >=20
-> > > Ok, I'm somewhat lost now... are these the affected timers on sun7i f=
-ollowing:
-> > > - allwinner,sun4i-a10-timer (timer@1c20c00)
-> > > - allwinner,sun7i-a20-hstimer (hstimer@1c60000)
-> >=20
-> > Yep
-> >=20
-> > > Any ideas on what approach I could actually use?
-> >=20
-> > I guess you could keep the CLK_OF_DECLARE registration, and then have a
-> > platform_driver probe and register the regmap?
-> >=20
->=20
-> Thanks this did the trick.
->=20
-> > > Also, similar timer dependency would affect then sun6i-a31 and sun9i-=
-a80
-> > > platforms too...
->=20
-> I didn't check this before, but sun9i-a80 CCU is initialized currently via
-> platform device. Should it be converted first to clock driver (CLK_OF_DEC=
-LARE)?
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+v9:
+- rebase against 5.7-rc2
+- cleanup gsc_powerdown() by using BIT(), put_unaligned_le32(), and avoid
+  unnecessary assignments
+- rename GSC_CTRL_1 SLEEP related defines to simplify
+- add better description and sub-module info to driver description
+- whitespace changes per review
+- remove unused irq_data pointer in ddata
+- remove unnecesary i2c_set_clientdata
+- use devm_i2c_new_dummy_device to avoid need of free's
+- change regsiter definitions to enum
+- export gsc_{read,write} instead of sharing them via ddata
 
-I guess we could just remove the timer node on the A80. It has never been t=
-ested
-and never worked if the clock driver is probed through a platform device.
+v8:
+- whitespace fixes
+- describe sub-devices in Kconfig
+- add error print for invalid command
+- update copyright
+- use devm_of_platform_populate
+- use probe_new
+- move hwmon's regmap init to hwmon
 
-Maxime
+v7:
+- remove irq from private data struct
 
---xtai2ger2274pycp
-Content-Type: application/pgp-signature; name="signature.asc"
+v6:
+- remove duplicate signature and fix commit log
 
------BEGIN PGP SIGNATURE-----
+v5:
+- simplify powerdown function
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqrpPgAKCRDj7w1vZxhR
-xZyFAQCqSDmhn4yTFm8ud90F6phEUSQWgV3icAt09/kyc3T/TQEAmigbqqP2h2Ds
-T2DQvJTkIn+f7Aa8y8JYzfr9iLPhsAA=
-=Rpgl
------END PGP SIGNATURE-----
+v4:
+- remove hwmon max reg check/define
+- fix powerdown function
 
---xtai2ger2274pycp--
+v3:
+- rename gsc->gateworks-gsc
+- remove uncecessary include for linux/mfd/core.h
+- upercase I2C in comments
+- remove i2c debug
+- remove uncecessary comments
+- don't use KBUILD_MODNAME for name
+- remove unnecessary v1/v2/v3 tracking
+- unregister hwmon i2c adapter on remove
+
+v2:
+- change license comment block style
+- remove COMPILE_TEST (Randy)
+- fixed whitespace issues
+- replaced a printk with dev_err
+---
+ MAINTAINERS                 |   8 ++
+ drivers/mfd/Kconfig         |  16 +++
+ drivers/mfd/Makefile        |   1 +
+ drivers/mfd/gateworks-gsc.c | 284 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/gsc.h     |  76 ++++++++++++
+ 5 files changed, 385 insertions(+)
+ create mode 100644 drivers/mfd/gateworks-gsc.c
+ create mode 100644 include/linux/mfd/gsc.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b816a45..035dfb9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7032,6 +7032,14 @@ F:	kernel/futex.c
+ F:	tools/perf/bench/futex*
+ F:	tools/testing/selftests/futex/
+ 
++GATEWORKS SYSTEM CONTROLLER (GSC) DRIVER
++M:	Tim Harvey <tharvey@gateworks.com>
++M:	Robert Jones <rjones@gateworks.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
++F:	drivers/mfd/gateworks-gsc.c
++F:	include/linux/mfd/gsc.h
++
+ GASKET DRIVER FRAMEWORK
+ M:	Rob Springer <rspringer@google.com>
+ M:	Todd Poynor <toddpoynor@google.com>
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 0a59249..d7546cd 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -407,6 +407,22 @@ config MFD_EXYNOS_LPASS
+ 	  Select this option to enable support for Samsung Exynos Low Power
+ 	  Audio Subsystem.
+ 
++config MFD_GATEWORKS_GSC
++	tristate "Gateworks System Controller"
++	depends on (I2C && OF)
++	select MFD_CORE
++	select REGMAP_I2C
++	select REGMAP_IRQ
++	help
++	  Enable support for the Gateworks System Controller (GSC) found
++	  on Gateworks Single Board Computers supporting system system
++	  functions such as pushbutton monitor, multiple ADC's for voltage
++	  and temperature, fan controller, and watchdog monitor. This
++	  driver provides common support for accessing the device and
++	  additional drivers must be enabled in order to use the
++	  functionality of the device:
++		gsc-hwmon for ADC readings and fan controller support
++
+ config MFD_MC13XXX
+ 	tristate
+ 	depends on (SPI_MASTER || I2C)
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index f935d10..ed433ae 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
+ obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
+ obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
+ obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
++obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
+ 
+ obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
+ obj-$(CONFIG_HTC_I2CPLD)	+= htc-i2cpld.o
+diff --git a/drivers/mfd/gateworks-gsc.c b/drivers/mfd/gateworks-gsc.c
+new file mode 100644
+index 00000000..796effb
+--- /dev/null
++++ b/drivers/mfd/gateworks-gsc.c
+@@ -0,0 +1,284 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * The Gateworks System Controller (GSC) is a multi-function
++ * device designed for use in Gateworks Single Board Computers.
++ * The control interface is I2C, with an interrupt. The device supports
++ * system functions such as pushbutton monitoring, multiple ADC's for
++ * voltage and temperature, fan controller, and watchdog monitor.
++ *
++ * Copyright (C) 2020 Gateworks Corporation
++ */
++
++#include <linux/device.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/mfd/gsc.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#include <asm/unaligned.h>
++
++/*
++ * The GSC suffers from an errata where occasionally during
++ * ADC cycles the chip can NAK I2C transactions. To ensure we have reliable
++ * register access we place retries around register access.
++ */
++#define I2C_RETRIES	3
++
++int gsc_write(void *context, unsigned int reg, unsigned int val)
++{
++	struct i2c_client *client = context;
++	int retry, ret;
++
++	for (retry = 0; retry < I2C_RETRIES; retry++) {
++		ret = i2c_smbus_write_byte_data(client, reg, val);
++		/*
++		 * -EAGAIN returned when the i2c host controller is busy
++		 * -EIO returned when i2c device is busy
++		 */
++		if (ret != -EAGAIN && ret != -EIO)
++			break;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(gsc_write);
++
++int gsc_read(void *context, unsigned int reg, unsigned int *val)
++{
++	struct i2c_client *client = context;
++	int retry, ret;
++
++	for (retry = 0; retry < I2C_RETRIES; retry++) {
++		ret = i2c_smbus_read_byte_data(client, reg);
++		/*
++		 * -EAGAIN returned when the i2c host controller is busy
++		 * -EIO returned when i2c device is busy
++		 */
++		if (ret != -EAGAIN && ret != -EIO)
++			break;
++	}
++	*val = ret & 0xff;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(gsc_read);
++
++/*
++ * gsc_powerdown - API to use GSC to power down board for a specific time
++ *
++ * secs - number of seconds to remain powered off
++ */
++static int gsc_powerdown(struct gsc_dev *gsc, unsigned long secs)
++{
++	int ret;
++	unsigned char regs[4];
++
++	dev_info(&gsc->i2c->dev, "GSC powerdown for %ld seconds\n",
++		 secs);
++
++	put_unaligned_le32(secs, regs);
++	ret = regmap_bulk_write(gsc->regmap, GSC_TIME_ADD, regs, 4);
++	if (ret)
++		return ret;
++
++	ret = regmap_update_bits(gsc->regmap, GSC_CTRL_1,
++				 BIT(GSC_CTRL_1_SLEEP_ADD),
++				 BIT(GSC_CTRL_1_SLEEP_ADD));
++	if (ret)
++		return ret;
++
++	ret = regmap_update_bits(gsc->regmap, GSC_CTRL_1,
++				 BIT(GSC_CTRL_1_SLEEP_ACTIVATE) |
++				 BIT(GSC_CTRL_1_SLEEP_ENABLE),
++				 BIT(GSC_CTRL_1_SLEEP_ACTIVATE) |
++				 BIT(GSC_CTRL_1_SLEEP_ENABLE));
++
++
++	return ret;
++}
++
++static ssize_t gsc_show(struct device *dev, struct device_attribute *attr,
++			char *buf)
++{
++	struct gsc_dev *gsc = dev_get_drvdata(dev);
++	const char *name = attr->attr.name;
++	int rz = 0;
++
++	if (strcasecmp(name, "fw_version") == 0)
++		rz = sprintf(buf, "%d\n", gsc->fwver);
++	else if (strcasecmp(name, "fw_crc") == 0)
++		rz = sprintf(buf, "0x%04x\n", gsc->fwcrc);
++	else
++		dev_err(dev, "invalid command: '%s'\n", name);
++
++	return rz;
++}
++
++static ssize_t gsc_store(struct device *dev, struct device_attribute *attr,
++			 const char *buf, size_t count)
++{
++	struct gsc_dev *gsc = dev_get_drvdata(dev);
++	const char *name = attr->attr.name;
++	long value;
++
++	if (strcasecmp(name, "powerdown") == 0) {
++		if (kstrtol(buf, 0, &value) == 0)
++			gsc_powerdown(gsc, value);
++	} else {
++		dev_err(dev, "invalid command: '%s\n", name);
++	}
++
++	return count;
++}
++
++static struct device_attribute attr_fwver =
++	__ATTR(fw_version, 0440, gsc_show, NULL);
++static struct device_attribute attr_fwcrc =
++	__ATTR(fw_crc, 0440, gsc_show, NULL);
++static struct device_attribute attr_pwrdown =
++	__ATTR(powerdown, 0220, NULL, gsc_store);
++
++static struct attribute *gsc_attrs[] = {
++	&attr_fwver.attr,
++	&attr_fwcrc.attr,
++	&attr_pwrdown.attr,
++	NULL,
++};
++
++static struct attribute_group attr_group = {
++	.attrs = gsc_attrs,
++};
++
++static const struct of_device_id gsc_of_match[] = {
++	{ .compatible = "gw,gsc", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, gsc_of_match);
++
++static struct regmap_bus gsc_regmap_bus = {
++	.reg_read = gsc_read,
++	.reg_write = gsc_write,
++};
++
++static const struct regmap_config gsc_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.cache_type = REGCACHE_NONE,
++	.max_register = GSC_WP,
++};
++
++static const struct regmap_irq gsc_irqs[] = {
++	REGMAP_IRQ_REG(GSC_IRQ_PB, 0, BIT(GSC_IRQ_PB)),
++	REGMAP_IRQ_REG(GSC_IRQ_KEY_ERASED, 0, BIT(GSC_IRQ_KEY_ERASED)),
++	REGMAP_IRQ_REG(GSC_IRQ_EEPROM_WP, 0, BIT(GSC_IRQ_EEPROM_WP)),
++	REGMAP_IRQ_REG(GSC_IRQ_RESV, 0, BIT(GSC_IRQ_RESV)),
++	REGMAP_IRQ_REG(GSC_IRQ_GPIO, 0, BIT(GSC_IRQ_GPIO)),
++	REGMAP_IRQ_REG(GSC_IRQ_TAMPER, 0, BIT(GSC_IRQ_TAMPER)),
++	REGMAP_IRQ_REG(GSC_IRQ_WDT_TIMEOUT, 0, BIT(GSC_IRQ_WDT_TIMEOUT)),
++	REGMAP_IRQ_REG(GSC_IRQ_SWITCH_HOLD, 0, BIT(GSC_IRQ_SWITCH_HOLD)),
++};
++
++static const struct regmap_irq_chip gsc_irq_chip = {
++	.name = "gateworks-gsc",
++	.irqs = gsc_irqs,
++	.num_irqs = ARRAY_SIZE(gsc_irqs),
++	.num_regs = 1,
++	.status_base = GSC_IRQ_STATUS,
++	.mask_base = GSC_IRQ_ENABLE,
++	.mask_invert = true,
++	.ack_base = GSC_IRQ_STATUS,
++	.ack_invert = true,
++};
++
++static int gsc_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct gsc_dev *gsc;
++	struct regmap_irq_chip_data *irq_data;
++	int ret;
++	unsigned int reg;
++
++	gsc = devm_kzalloc(dev, sizeof(*gsc), GFP_KERNEL);
++	if (!gsc)
++		return -ENOMEM;
++
++	gsc->dev = &client->dev;
++	gsc->i2c = client;
++	i2c_set_clientdata(client, gsc);
++
++	gsc->regmap = devm_regmap_init(dev, &gsc_regmap_bus, client,
++				       &gsc_regmap_config);
++	if (IS_ERR(gsc->regmap))
++		return PTR_ERR(gsc->regmap);
++
++	if (regmap_read(gsc->regmap, GSC_FW_VER, &reg))
++		return -EIO;
++	gsc->fwver = reg;
++
++	regmap_read(gsc->regmap, GSC_FW_CRC, &reg);
++	gsc->fwcrc = reg;
++	regmap_read(gsc->regmap, GSC_FW_CRC + 1, &reg);
++	gsc->fwcrc |= reg << 8;
++
++	gsc->i2c_hwmon = devm_i2c_new_dummy_device(dev, client->adapter,
++						   GSC_HWMON);
++	if (IS_ERR(gsc->i2c_hwmon)) {
++		dev_err(dev, "Failed to allocate I2C device for HWMON\n");
++		return PTR_ERR(gsc->i2c_hwmon);
++	}
++
++	ret = devm_regmap_add_irq_chip(dev, gsc->regmap, client->irq,
++				       IRQF_ONESHOT | IRQF_SHARED |
++				       IRQF_TRIGGER_FALLING, 0,
++				       &gsc_irq_chip, &irq_data);
++	if (ret)
++		return ret;
++
++	dev_info(dev, "Gateworks System Controller v%d: fw 0x%04x\n",
++		 gsc->fwver, gsc->fwcrc);
++
++	ret = sysfs_create_group(&dev->kobj, &attr_group);
++	if (ret)
++		dev_err(dev, "failed to create sysfs attrs\n");
++
++	ret = devm_of_platform_populate(dev);
++	if (ret) {
++		sysfs_remove_group(&dev->kobj, &attr_group);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int gsc_remove(struct i2c_client *client)
++{
++	sysfs_remove_group(&client->dev.kobj, &attr_group);
++
++	return 0;
++}
++
++static const struct i2c_device_id gsc_id_table[] = {
++	{ "gsc", GSC_MISC },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, gsc_id_table);
++
++static struct i2c_driver gsc_driver = {
++	.driver = {
++		.name	= "gateworks-gsc",
++		.of_match_table = gsc_of_match,
++	},
++	.id_table	= gsc_id_table,
++	.probe_new	= gsc_probe,
++	.remove		= gsc_remove,
++};
++module_i2c_driver(gsc_driver);
++
++MODULE_AUTHOR("Tim Harvey <tharvey@gateworks.com>");
++MODULE_DESCRIPTION("I2C Core interface for GSC");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/mfd/gsc.h b/include/linux/mfd/gsc.h
+new file mode 100644
+index 00000000..6bd639c
+--- /dev/null
++++ b/include/linux/mfd/gsc.h
+@@ -0,0 +1,76 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (C) 2020 Gateworks Corporation
++ */
++#ifndef __LINUX_MFD_GSC_H_
++#define __LINUX_MFD_GSC_H_
++
++#include <linux/regmap.h>
++
++/* Device Addresses */
++#define GSC_MISC	0x20
++#define GSC_UPDATE	0x21
++#define GSC_GPIO	0x23
++#define GSC_HWMON	0x29
++#define GSC_EEPROM0	0x50
++#define GSC_EEPROM1	0x51
++#define GSC_EEPROM2	0x52
++#define GSC_EEPROM3	0x53
++#define GSC_RTC		0x68
++
++/* Register offsets */
++enum {
++	GSC_CTRL_0	= 0x00,
++	GSC_CTRL_1	= 0x01,
++	GSC_TIME	= 0x02,
++	GSC_TIME_ADD	= 0x06,
++	GSC_IRQ_STATUS	= 0x0A,
++	GSC_IRQ_ENABLE	= 0x0B,
++	GSC_FW_CRC	= 0x0C,
++	GSC_FW_VER	= 0x0E,
++	GSC_WP		= 0x0F,
++};
++
++/* Bit definitions */
++#define GSC_CTRL_0_PB_HARD_RESET	0
++#define GSC_CTRL_0_PB_CLEAR_SECURE_KEY	1
++#define GSC_CTRL_0_PB_SOFT_POWER_DOWN	2
++#define GSC_CTRL_0_PB_BOOT_ALTERNATE	3
++#define GSC_CTRL_0_PERFORM_CRC		4
++#define GSC_CTRL_0_TAMPER_DETECT	5
++#define GSC_CTRL_0_SWITCH_HOLD		6
++
++#define GSC_CTRL_1_SLEEP_ENABLE		0
++#define GSC_CTRL_1_SLEEP_ACTIVATE	1
++#define GSC_CTRL_1_SLEEP_ADD		2
++#define GSC_CTRL_1_SLEEP_NOWAKEPB	3
++#define GSC_CTRL_1_WDT_TIME		4
++#define GSC_CTRL_1_WDT_ENABLE		5
++#define GSC_CTRL_1_SWITCH_BOOT_ENABLE	6
++#define GSC_CTRL_1_SWITCH_BOOT_CLEAR	7
++
++#define GSC_IRQ_PB			0
++#define GSC_IRQ_KEY_ERASED		1
++#define GSC_IRQ_EEPROM_WP		2
++#define GSC_IRQ_RESV			3
++#define GSC_IRQ_GPIO			4
++#define GSC_IRQ_TAMPER			5
++#define GSC_IRQ_WDT_TIMEOUT		6
++#define GSC_IRQ_SWITCH_HOLD		7
++
++int gsc_read(void *context, unsigned int reg, unsigned int *val);
++int gsc_write(void *context, unsigned int reg, unsigned int val);
++
++struct gsc_dev {
++	struct device *dev;
++
++	struct i2c_client *i2c;		/* 0x20: interrupt controller, WDT */
++	struct i2c_client *i2c_hwmon;	/* 0x29: hwmon, fan controller */
++
++	struct regmap *regmap;
++
++	unsigned int fwver;
++	unsigned short fwcrc;
++};
++
++#endif /* __LINUX_MFD_GSC_H_ */
+-- 
+2.7.4
+
