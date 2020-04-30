@@ -2,167 +2,208 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F574C4724C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3B7C47247
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 351242076D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5732E20873
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 16:14:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CYltEK4l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJBIxD+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgD3QL0 (ORCPT
+        id S1726608AbgD3QOS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:11:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
+        Thu, 30 Apr 2020 12:14:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726473AbgD3QL0 (ORCPT
+        by vger.kernel.org with ESMTP id S1726486AbgD3QOR (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:11:26 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F235C035494
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 09:11:26 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id e26so5398094otr.2
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 09:11:26 -0700 (PDT)
+        Thu, 30 Apr 2020 12:14:17 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C298C035494;
+        Thu, 30 Apr 2020 09:14:17 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id i19so2042800ioh.12;
+        Thu, 30 Apr 2020 09:14:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AJJ2h/RywV36voKthnSah9RB9XIE3vlA2oANqch/TM8=;
-        b=CYltEK4lC6uNdm1mZD87iAO3gl4/SEpFxwxAVQriTh0uwE0bwfs7T4If8r4qzRFUut
-         7IdUYmj/x2ICjOeMUbaYNeSSXqPNUqJVYYXpcaRLSAFQTLmZrMjTnV1tfi0Tf3Le51BT
-         fnw4RULB5jHBAOJYEjxqmzhlwrKAtNE1V28c2UBw53QpFhPzOfTcxfXZwBGGOnA1Vwu+
-         y6nGq2YIx5qbnEoyz7wgr+bLsBZ+LdEd7DjAFR6azx2r7uylWSU37XbQ0boP7RSMx5TI
-         n/nsLqXgERcuFpp0+gG67xFFEliHMoxB1booz8Jm7sQHobePp+4cGPl9DGrIK4KJeMc6
-         slZw==
+        bh=9tMKgUNiVkUhpbJNhAr0hm95irgxD28lhjeV8PkyOXw=;
+        b=lJBIxD+U8h9JNWqczpIHYOA2edcOylANhJNLxX7tesOutIKTPAgFimaA71Q4BN3lFt
+         CGdE71ndDyan0ElbnjdpXRfFAeM3FaoZUuZy4QwOiG6H2+Ms9wxfrmq86ne2Ncxduo2s
+         o3oH8+ZOcyM+mE6+HP4hWSsipRphFTDlHJjDks7AcSYXE7geDz7xu6toAZaAdZAWGs7u
+         doCtqwvkh1wxfWlI/hclqWa5WNI/PUHzg9W1oPax2zCgrBJN8THiWO9T/BRkfG7p5sQ6
+         6byMtoOITdG3H87AkEiMJfkj6f+yvBrPZTtUnw30mdJTdGYwy75RtSWnREdZmACd4nAs
+         pzPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AJJ2h/RywV36voKthnSah9RB9XIE3vlA2oANqch/TM8=;
-        b=DDpPMseUI1TjXjaJ3S8mEhgPvMszyxM3LWYpxQ6lQ8jJhCdIgSx0aOpkCS5la5OCdl
-         rng0shcDii/viN2Y/k2B8PCswWpwKQnnoeyEz/6XOnBqBzIVihzhinr+N/3fDKn8mF9s
-         jhN67CTyFa1Wh31rUvahcGcAtfy/orWDnRr0QXimfXx6Imnwab80fkjSuUyyD/GoDKqK
-         nszSIClCsJJdRIMeRRw4xq+8WHthFj8amwirL8DnwcjEmHB7l9rIwj0TbqasAhyZGorY
-         misY/7kjNvf+0T1UW0u+tQORtggJ4T31ljG26p9yrVqDrBfRWOc1lKi9o6kL1u1KF+BN
-         y4Zw==
-X-Gm-Message-State: AGi0PuaUQNEdrer1cUpb6u35+xpCtyKJ3/QzuBpKAPvXVfpA0Ub7fZ28
-        XbzqlF/8XmsOCqNvd11GQLPZWnppqoQTCgcxjzKtNQ==
-X-Google-Smtp-Source: APiQypImvZrbPbUvob8q7lUT988oyJugoOnuZpnTvOCTRRSEV39r/EJBJ5kkKQTYtVWYsNXk8krIMSPhXpH7Dv5VP5A=
-X-Received: by 2002:a05:6830:1d7:: with SMTP id r23mr3174295ota.68.1588263085714;
- Thu, 30 Apr 2020 09:11:25 -0700 (PDT)
+        bh=9tMKgUNiVkUhpbJNhAr0hm95irgxD28lhjeV8PkyOXw=;
+        b=hE7+3GxazZ/mropwvjK/2OVLfR+5oEaXbgeEOlysbHPnWID3LO8CiuN8LHIsYOFOTy
+         JsIgFDwb3lORkSkUdSbaw6NN/KxS7Qo0okOJjbo6A3RKZQNfr5i47oEOYt29zVI55fjl
+         Dpn/tUlZKYSv/HRb7yO6YgtDLPPTZZwLDtk1AGyEXIW3F8QuWRflHiUpAn+Gd61R7bjM
+         p9P7XW4/US9Hgk8etGw8i/pC0h6Qac//YLCpJT8AtfPv4fqFLsmQ6rwB29lfxci03W8Q
+         i1jj/xON+jdtMhH5Z7mcMpVXZEmLZ5A4G8qDvLKOlEiz19p4+Exo8vby4G3zFt9IzDlH
+         zm1Q==
+X-Gm-Message-State: AGi0PuYdyVIMQFAImMCf5KF8vMWYOj9Jw3e9C2jzAFEJrRLGBkWrft/6
+        H0rAmZHtrpZLnb0CwW5WDmwoS5wD53VdOEyahIGpAml3
+X-Google-Smtp-Source: APiQypJNNe1JlSiWqNAvYCGbEyLo6QHM5ubwp0R2i0yMPOBM1qvYMgIWqO2AKVPK+ePUbVGYtX9sAhF9NavoFEScekM=
+X-Received: by 2002:a6b:5904:: with SMTP id n4mr2693593iob.142.1588263256671;
+ Thu, 30 Apr 2020 09:14:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200429162437.2025699-1-robert.foss@linaro.org>
- <20200429162437.2025699-3-robert.foss@linaro.org> <20200430093524.GB2188@pengutronix.de>
- <20200430094549.GF867@valkosipuli.retiisi.org.uk> <20200430095332.GC2188@pengutronix.de>
- <20200430095907.GG867@valkosipuli.retiisi.org.uk> <20200430101157.GD2188@pengutronix.de>
- <20200430102018.GI867@valkosipuli.retiisi.org.uk> <20200430120740.GG2188@pengutronix.de>
-In-Reply-To: <20200430120740.GG2188@pengutronix.de>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Thu, 30 Apr 2020 18:11:14 +0200
-Message-ID: <CAG3jFytP9=pL=9Qh64BKqQchs7J7E45USfirK_SnGn3NMeCdcg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] media: ov8856: Add devicetree support
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
+ <20200430124602.14463-2-frieder.schrempf@kontron.de> <5e1f804c4c27927d10b2283747c1cae6606abe7c.camel@pengutronix.de>
+ <6a5fbb8a-bf28-9c8e-53c7-7a3e5f338a2c@kontron.de>
+In-Reply-To: <6a5fbb8a-bf28-9c8e-53c7-7a3e5f338a2c@kontron.de>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Thu, 30 Apr 2020 11:14:02 -0500
+Message-ID: <CAHCN7x+sA9cGF6oqvZLKBdhRdZcxgW=U98uB81_R3iq_-Ok9=w@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/4] drm/etnaviv: Prevent IRQ triggering at probe time
+ on i.MX8MM
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
         Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Li Jun <jun.li@nxp.com>, NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Marco,
-
-On Thu, 30 Apr 2020 at 14:07, Marco Felsch <m.felsch@pengutronix.de> wrote:
+On Thu, Apr 30, 2020 at 10:31 AM Schrempf Frieder
+<frieder.schrempf@kontron.de> wrote:
 >
-> On 20-04-30 13:20, Sakari Ailus wrote:
-> > On Thu, Apr 30, 2020 at 12:11:57PM +0200, Marco Felsch wrote:
-> > > On 20-04-30 12:59, Sakari Ailus wrote:
-> > > > Hi Marco,
-> > > >
-> > > > On Thu, Apr 30, 2020 at 11:53:32AM +0200, Marco Felsch wrote:
-> > > > > Hi Sakari,
-> > > > >
-> > > > > On 20-04-30 12:45, Sakari Ailus wrote:
-> > > > > > Hi Marco,
-> > > > > >
-> > > > > > On Thu, Apr 30, 2020 at 11:35:24AM +0200, Marco Felsch wrote:
-> > >
-> > > ...
-> > >
-> > > > > > > > - if (mclk != OV8856_MCLK) {
-> > > > > > > > -         dev_err(dev, "external clock %d is not supported", mclk);
-> > > > > > > > -         return -EINVAL;
-> > > > > > > > + if (!is_acpi_node(fwnode)) {
-> > > > > > > > +         ov8856->xvclk = devm_clk_get(dev, "xvclk");
-> > > > > > > > +         if (IS_ERR(ov8856->xvclk)) {
-> > > > > > > > +                 dev_err(dev, "could not get xvclk clock (%pe)\n",
-> > > > > > > > +                                 ov8856->xvclk);
-> > > > > > > > +                 return PTR_ERR(ov8856->xvclk);
-> > > > > > > > +         }
-> > > > > > > > +
-> > > > > > > > +         clk_set_rate(ov8856->xvclk, xvclk_rate);
-> > > > > > > > +         xvclk_rate = clk_get_rate(ov8856->xvclk);
-> > > > > > > >   }
-> > > > > > >
-> > > > > > > Why do we handle the clock only in DT case? Is there a problem with the
-> > > > > > > clock handling and ACPI?
-> > > > > >
-> > > > > > Not really, it's just that ACPI does not provide an interface to the clocks
-> > > > > > as such.
-> > > > >
-> > > > > But you will get a clk by devm_clk_get()?
-> > > >
-> > > > No, because ACPI does not expose one to drivers. Effectively the entire
-> > > > power sequences are implemented in ACPI, not in the driver.
-> > > >
-> > >
-> > > Ah okay, thanks for the explanation. I'm really not into the ACPI
-> > > stuff.. So this means the __power_off / power_on should only be done if
-> > > we are using DT's?
+> Hi Lucas,
+>
+> On 30.04.20 16:32, Lucas Stach wrote:
+> > Hi Frieder,
 > >
-> > Correct. That's why it bails out early. It could be yet earlier though,
-> > without doing anything.
+> > Am Donnerstag, den 30.04.2020, 12:46 +0000 schrieb Schrempf Frieder:
+> >> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >>
+> >> On i.MX8MM there is an interrupt getting triggered immediately after
+> >> requesting the IRQ, which leads to a stall as the handler accesses
+> >> the GPU registers whithout the clock being enabled.
+> >>
+> >> Enabling the clocks briefly seems to clear the IRQ state, so we do
+> >> this before requesting the IRQ.
+> >
+> > This is most likely caused by improper power-up sequencing. Normally
+> > the GPC will trigger a hardware reset of the modules inside a power
+> > domain when the domain is powered on. This requires the clocks to be
+> > running at this point, as those resets are synchronous, so need clock
+> > pulses to propagate through the hardware.
 >
-> Yes I see. For easier and error less prone handling I would prefer:
+> Ok, I was suspecting something like that and your explanation makes
+> total sense to me.
 >
-> if (is_acpi_node())
->         return 0;
+> >
+> >  From what I see the i.MX8MM is still missing the power domain
+> > controller integration, but I'm pretty confident that this problem
+> > should be solved in the power domain code, instead of the GPU driver.
 >
-> as first instruction for __power_off/on().
+> Ok. I was hoping that GPU support could be added without power domain
+> control, but I now see that this is probably not reasonable at all.
+> So I will keep on hoping that NXP comes up with an upstreamable solution
+> for the power domain handling.
 
-__ov8856_power_on() does make a check like that, albeit only after
-having run clk_prepare_enable() which won't do anything due to
-ov8856->xvclk==NULL. So this should be fixed and be moved to after the
-ACPI check.
 
-__ov8856_power_off() has no ACPI check, but all of the calls it makes
-are going to do nothing due to v8856->reset_gpio / v8856->reset_gpio /
-ov8856->xvclk all being NULL or dummies. For the sake of clarity an
-early ACPI check+return could be added, but if clarity is the goal a
-comment would work too.
+There was a patch for upstream power-domain control from NXP a few days ago:
 
+https://patchwork.kernel.org/cover/10904511/
+
+Can these be somehow tested to see if it helps the issue with the GPU?
+
+adam
 >
-> Also I would refactor the ov8856_check_hwcfg() so the common part can be
-> used by this function and by a ov8856_parse_of() function. But thats
-> only my opinion.
-
-I'm trying to grok the above paragraph. You'd like to see something in
-the style of tc358743_probe_of()?
-
+> Thanks,
+> Frieder
 >
-> Regards,
->   Marco
+> >
+> > Regards,
+> > Lucas
+> >
+> >> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >> ---
+> >>   drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 29 ++++++++++++++++++++-----
+> >> --
+> >>   1 file changed, 22 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> >> b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> >> index a31eeff2b297..23877c1f150a 100644
+> >> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> >> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> >> @@ -1775,13 +1775,6 @@ static int etnaviv_gpu_platform_probe(struct
+> >> platform_device *pdev)
+> >>              return gpu->irq;
+> >>      }
+> >>
+> >> -    err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
+> >> -                           dev_name(gpu->dev), gpu);
+> >> -    if (err) {
+> >> -            dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq,
+> >> err);
+> >> -            return err;
+> >> -    }
+> >> -
+> >>      /* Get Clocks: */
+> >>      gpu->clk_reg = devm_clk_get(&pdev->dev, "reg");
+> >>      DBG("clk_reg: %p", gpu->clk_reg);
+> >> @@ -1805,6 +1798,28 @@ static int etnaviv_gpu_platform_probe(struct
+> >> platform_device *pdev)
+> >>              gpu->clk_shader = NULL;
+> >>      gpu->base_rate_shader = clk_get_rate(gpu->clk_shader);
+> >>
+> >> +    /*
+> >> +     * On i.MX8MM there is an interrupt getting triggered
+> >> immediately
+> >> +     * after requesting the IRQ, which leads to a stall as the
+> >> handler
+> >> +     * accesses the GPU registers whithout the clock being enabled.
+> >> +     * Enabling the clocks briefly seems to clear the IRQ state, so
+> >> we do
+> >> +     * this here before requesting the IRQ.
+> >> +     */
+> >> +    err = etnaviv_gpu_clk_enable(gpu);
+> >> +    if (err)
+> >> +            return err;
+> >> +
+> >> +    err = etnaviv_gpu_clk_disable(gpu);
+> >> +    if (err)
+> >> +            return err;
+> >> +
+> >> +    err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
+> >> +                           dev_name(gpu->dev), gpu);
+> >> +    if (err) {
+> >> +            dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq,
+> >> err);
+> >> +            return err;
+> >> +    }
+> >> +
+> >>      /* TODO: figure out max mapped size */
+> >>      dev_set_drvdata(dev, gpu);
+> >>
+> >
