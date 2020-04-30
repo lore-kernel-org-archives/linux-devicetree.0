@@ -2,93 +2,144 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92675C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C65C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69AE52082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBDA32063A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255236;
-	bh=biXchweKB4DFENIbviTTEdyqXlCdXdqu7PHwjKG0fm8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jTA3+fntiHQxQtNvBkJXz8XiGjsV3C5niNhanhIQk4i2btqVhNahwR3Wc1KCeMSyR
-	 UoVAeIucdsEJXFpEluqT1K7Zd3RMVow78c5yGdUqQxvllm+hk1pSnVOdCJ8n3r3xIW
-	 J4ss/gJsENv5M12OhjMqRWc7Zml+Ox38+klKiUuE=
+	s=default; t=1588255246;
+	bh=YlQS0JWm1kZ1bcJMVHBPFuI7i/sHKcm81FIe/NwSwj0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oO4w5OKdXwG2ur2kf6k4yETYES5MEibuM09wufV9RJ6ZUX8kgsm8YAMDmuhXtO4CX
+	 ZKzTalhmapRL2fnnvoy54CIJ+hZAtz8LeHSF7hqHl0+jvgEGlSLbFhj3eoFuxQ2S3w
+	 nrdhDu7/sqYNQbfBmW3kNXawfu/z57s1ciMnRwic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgD3NyP (ORCPT
+        id S1728108AbgD3OAp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:54:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728919AbgD3NyO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:14 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 625D82495F;
-        Thu, 30 Apr 2020 13:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254854;
-        bh=biXchweKB4DFENIbviTTEdyqXlCdXdqu7PHwjKG0fm8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2BmW5dQS6BBfvMnhg4G5ftA4lhygcgNVg5cTY3fkvSjrBQJm8FN8felJTJYkxyRxW
-         FURPP0/6cmvlP2Ec2d7jBfZwuWbjwMtxzX0G6uHEXOLSfVtppn3j/nTv2Bfj0ckTsj
-         HuU5Ep/OVswhFcRTHbvrPqVPMR5+OWFCwpJfyV/A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 10/27] ARM: dts: bcm283x: Disable dsi0 node
-Date:   Thu, 30 Apr 2020 09:53:45 -0400
-Message-Id: <20200430135402.20994-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
-References: <20200430135402.20994-1-sashal@kernel.org>
+        Thu, 30 Apr 2020 10:00:45 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35035 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729397AbgD3OAn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:00:43 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o7so5292733oif.2;
+        Thu, 30 Apr 2020 07:00:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4SqKDcgFBHx1L7Er/7o6lUHlh3wWzthDwvJZwo5hrJU=;
+        b=QyHss8qcgQyLccmUxMGK7EApLeAiW3/3iykKdJiIOU3pytBtLQreG1zD8jJ/osRaD1
+         OWi7ggHOWxUnCKRUStcWiCp3YU2h4RLn+K/afjcbEAwT0BoPDqfXOI/GqIfeC542vLS4
+         hFNDlBn2oe/4WqL9tEk8xWMn1qMxKYECNJMjIHPmKsj9l7JnLiHJ/8DEdZOPxYHctfjh
+         NW1jlrZzQJAmt5XHzD6WXnICdzRdU+XU8uCdXJju0eQgZNJGbNxRJiZjLozars3rVELi
+         Hr1qn+7431iZ5bRbzjdaZVrFoE9uROl4/S2hzHbzjllvm4lfb7veQyczd+Shv9MmnrY9
+         XTgQ==
+X-Gm-Message-State: AGi0PuaPA9FSTj3JLI/HqpvsxzbRoFDsDSrtYwsxW3pw74BYgtOH6h+F
+        UV+4l2aVqGYNdyrkKtBJlg==
+X-Google-Smtp-Source: APiQypK+NEro6nmq5Ju0kr11u0dYdZk562OwLmfEc6Rdsg37blDy9Pox4kBxZ7K1FWgojRgFDGj0HA==
+X-Received: by 2002:aca:d684:: with SMTP id n126mr1810974oig.173.1588255242401;
+        Thu, 30 Apr 2020 07:00:42 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h137sm2698oib.33.2020.04.30.07.00.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 07:00:41 -0700 (PDT)
+Received: (nullmailer pid 20979 invoked by uid 1000);
+        Thu, 30 Apr 2020 14:00:40 -0000
+Date:   Thu, 30 Apr 2020 09:00:40 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent
+ and clocksource support
+Message-ID: <20200430140040.GA8363@bogus>
+References: <20200417165519.4979-1-tony@atomide.com>
+ <20200417165519.4979-3-tony@atomide.com>
+ <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
+ <20200427143144.GQ37466@atomide.com>
+ <29f39839-b3ed-cac3-1dea-c137286320b1@linaro.org>
+ <20200427152329.GR37466@atomide.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427152329.GR37466@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Mon, Apr 27, 2020 at 08:23:29AM -0700, Tony Lindgren wrote:
+> * Daniel Lezcano <daniel.lezcano@linaro.org> [200427 15:03]:
+> > On 27/04/2020 16:31, Tony Lindgren wrote:
+> > > Hi,
+> > > 
+> > > * Daniel Lezcano <daniel.lezcano@linaro.org> [200427 09:19]:
+> > >> On 17/04/2020 18:55, Tony Lindgren wrote:
+> > >>> --- a/Documentation/devicetree/bindings/timer/ti,timer.txt
+> > >>> +++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
+> > >>> @@ -14,6 +14,8 @@ Required properties:
+> > >>>  			ti,omap5430-timer (applicable to OMAP543x devices)
+> > >>>  			ti,am335x-timer	(applicable to AM335x devices)
+> > >>>  			ti,am335x-timer-1ms (applicable to AM335x devices)
+> > >>> +			ti,dmtimer-clockevent (when used as for clockevent)
+> > >>> +			ti,dmtimer-clocksource (when used as for clocksource)
+> > >>
+> > >> Please, submit a separate patch for this.
+> > >>
+> > >> Before you resend as is, this will be nacked as clocksource / clockevent
+> > >> is not a hardware description but a Linux thing.
+> > >>
+> > >> Finding a way to characterize that from the DT is an endless discussion
+> > >> since years, so I suggest to use a single property for the timer eg
+> > >> <ti,dmtimer> and initialize the clocksource and the clockevent in the
+> > >> driver.
+> > > 
+> > > Hmm good point. We still need to specify which timer is a clocksource
+> > > and which one a clockevent somehow.
+> > > 
+> > > Maybe we could have a generic properties like the clock framework such as:
+> > > 
+> > > assigned-system-clocksource
+> > > assigned-system-clockevent
+> > 
+> > I think that will be the same problem :/
+> 
+> Seems like other SoCs have the same issue too with multiple timers
+> to configure.
+> 
+> > Is it possible to check the interrupt for the clockevent ? A timer node
+> > with the interrrupt is the clockevent, without it is a clocksource.
+> 
+> OK let's try that. So the configuration would become then:
+> 
+> compatible = "ti,dmtimer;	/* reserved for system timers */
+> /delete-property/interrupts;	/* ok so it's a clocksource */
+> /delete-property/interrupts-extended;
 
-[ Upstream commit 90444b958461a5f8fc299ece0fe17eab15cba1e1 ]
+That's not really what was meant.
 
-Since its inception the module was meant to be disabled by default, but
-the original commit failed to add the relevant property.
+Let's say you have N timers. Either every timer is exactly the same and 
+the OS can just assign them however it wants or there is some difference 
+in the h/w making certain timer better for certain functions. Describe 
+that difference. It could be clock rate, number of counter bits, always 
+on, secure mode access only, has or doesn't have output compare or input 
+capture, etc.
 
-Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and clocks")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/bcm283x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index fdb018e1278fb..9d1e1061d8af1 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -454,6 +454,7 @@
- 					     "dsi0_ddr2",
- 					     "dsi0_ddr";
- 
-+			status = "disabled";
- 		};
- 
- 		thermal: thermal@7e212000 {
--- 
-2.20.1
-
+Rob
