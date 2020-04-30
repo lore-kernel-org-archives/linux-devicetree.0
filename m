@@ -2,83 +2,102 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDC3C4724C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF98C47247
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACF72206D9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E77206D9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255956;
-	bh=bnbnGBpcSkW6SMoI1IFutrz+f0CFOtixejW6RxJUWtg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GRwb8kxIggzuuwjgOfP6sCL/A0f/Y2dk6krHl9Oq5cQbrsNCT5Ta2VYD7IiLNGkSn
-	 g5AzP2LRbbG+YZI5MYtQvjOmLtRMzwRcFghm7HSNzNuKYtwEi6mbOOEictjkhNaUdE
-	 SkEm3nmVuILjbuGI/m05x+USZZHfbdJgbWu7Lnao=
+	s=default; t=1588256001;
+	bh=2mLw8FLDMvON6Ru0EDLJPgLcxLqD12on0r+a5CvEJY0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xRbMNtzcvFLeJgQMT96hdbUP4iiJgM6FnYCg+fSqvFFGnhPmBMIE9Ug0jPPs2xosJ
+	 j0DCEgQQFZd1H0WPYq7YFz9MqlipIOtiW6OI5FbgmWvWm0LIY2mSZd3VLZhJeYoF2i
+	 fuJe5pIdGU+yOfe3m5S7TF9z9ru/hqSU+gBVhjBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgD3OMf (ORCPT
+        id S1726830AbgD3ONQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:12:35 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:46222 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728661AbgD3OMd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:12:33 -0400
-Received: by mail-oo1-f65.google.com with SMTP id x16so1301184oop.13;
-        Thu, 30 Apr 2020 07:12:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A4VjQG4GaeZwUvuLCg1gpRlRogX8RvlAHCiaM0iOEnI=;
-        b=J6lpTDRZaNPYoLUnGMDVGSzHSGs6W1QTFBT41GlWseKs3Ib6MaEo75QOwdTAPjSTwR
-         S/rTS4S/ElSSrncdFwmwWXf2t13PuNToC738fEjdt+YiqowYph6wid0fwsfxhdgaBTQw
-         P9uWpgoF6nM15WyIH1343rdarRDF4BBwG/Gv0RJzM6zgEcBtR6Ydio1XEQPGUYdwwL4h
-         wR6He6R0J1G8JFNnuog1JJCD2qEMY4z17XXyerefT2smJk3OfJ55fuysnSaK0HCXVGvy
-         zcGQ7ZtNkP1+e3SGRTbNtsQcPosHJGis9PJPuesY8dHVwfIyQXAWaSoQgYh9owu3W7yp
-         UbIw==
-X-Gm-Message-State: AGi0PuYn/u1IIzEbjy9Aza7XjzwiVg1H8hkLZPLr8+swjbpehl8LPtYM
-        2uLSJxQZHd9vWJjU5IHC194YuQ0=
-X-Google-Smtp-Source: APiQypJZZKu6q0o/sEjNsrIJ8Ue6NRQME63JkomfCMYnMIiIszUXKpZSJ2lwInTV04v8Fv8dAtRTzg==
-X-Received: by 2002:a4a:3b4a:: with SMTP id s71mr2953497oos.81.1588255952586;
-        Thu, 30 Apr 2020 07:12:32 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u9sm6726otq.54.2020.04.30.07.12.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 07:12:31 -0700 (PDT)
-Received: (nullmailer pid 9061 invoked by uid 1000);
-        Thu, 30 Apr 2020 14:12:31 -0000
-Date:   Thu, 30 Apr 2020 09:12:31 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 04/10] dt-bindings: marvell,mmp2: Add clock id for the
- Audio clock
-Message-ID: <20200430141231.GA9028@bogus>
-References: <20200419172742.674717-1-lkundrak@v3.sk>
- <20200419172742.674717-5-lkundrak@v3.sk>
+        Thu, 30 Apr 2020 10:13:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727088AbgD3Nut (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:50:49 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B717B2082E;
+        Thu, 30 Apr 2020 13:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254648;
+        bh=2mLw8FLDMvON6Ru0EDLJPgLcxLqD12on0r+a5CvEJY0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U85ZRaV6Bz3WrXAeXONYpX3hRADMsBEJfcMoAskF1LSa+d4uVWs3Kmg2md7UtjuLr
+         a+JXtlT0RDM/lPFma3Tmm4K5fXgb9SRWUIcUM4zG3hrm80DDXQSdj494+v1fAigTUK
+         tVMP2JOSD4aCjtX+M7NylwmIJdbI4UzwnKjGJwtM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 03/79] ARM: dts: bcm283x: Add cells encoding format to firmware bus
+Date:   Thu, 30 Apr 2020 09:49:27 -0400
+Message-Id: <20200430135043.19851-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
+References: <20200430135043.19851-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419172742.674717-5-lkundrak@v3.sk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 19 Apr 2020 19:27:36 +0200, Lubomir Rintel wrote:
-> This clocks the Audio block.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  include/dt-bindings/clock/marvell,mmp2.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Acked-by: Rob Herring <robh@kernel.org>
+[ Upstream commit be08d278eb09210fefbad4c9b27d7843f1c096b2 ]
+
+With the introduction of 55c7c0621078 ("ARM: dts: bcm283x: Fix vc4's
+firmware bus DMA limitations") the firmware bus has to comply with
+/soc's DMA limitations. Ultimately linking both buses to a same
+dma-ranges property. The patch (and author) missed the fact that a bus'
+#address-cells and #size-cells properties are not inherited, but set to
+a fixed value which, in this case, doesn't match /soc's. This, although
+not breaking Linux's DMA mapping functionality, generates ugly dtc
+warnings.
+
+Fix the issue by adding the correct address and size cells properties
+under the firmware bus.
+
+Fixes: 55c7c0621078 ("ARM: dts: bcm283x: Fix vc4's firmware bus DMA limitations")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Link: https://lore.kernel.org/r/20200326134413.12298-1-nsaenzjulienne@suse.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index fd2c766e0f710..f7ae5a4530b88 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -14,6 +14,9 @@
+ 	soc {
+ 		firmware: firmware {
+ 			compatible = "raspberrypi,bcm2835-firmware", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
+ 			mboxes = <&mailbox>;
+ 			dma-ranges;
+ 		};
+-- 
+2.20.1
+
