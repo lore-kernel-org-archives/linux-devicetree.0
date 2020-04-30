@@ -2,101 +2,109 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9468C8300B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 10:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E57BC8300C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 10:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 908552082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 10:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079002137B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 10:19:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IGqjm8Bu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFJz3jN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgD3KRL (ORCPT
+        id S1726309AbgD3KTW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:17:11 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29128 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726546AbgD3KRK (ORCPT
+        Thu, 30 Apr 2020 06:19:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725280AbgD3KTU (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:17:10 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UAGZUt020402;
-        Thu, 30 Apr 2020 12:16:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=qH2niGVO8C1BeTnQ7Oe306OijojtPE7/RcJ+6sOZsQU=;
- b=IGqjm8BuEM3mXncZUDSzDMP/Lmn/LDtP0RV2YIqFSJ2+t4Xq6nHLIdZ2eYQ6i4TcaoyU
- MwCQYyh9/C6g38RalXELQgxJcE4862DXCkDowpr7+KcpOYw+udM2bswNM/yRuTSNf+7m
- 6Gv1/xYDAb71WGIXYBlFHsYA6dPpTYjNANColkckebqnWLDQsaCHCfcp6FBcUMnbsIw0
- WSUcAylk6Qnl7okgyORLkZpLZo9oQfMXm6BUHMr4GJH019r/mwwJnRBbjFc51ZdLwVZP
- PAZPlVy8b6aGOIRx6JKAYc0WM5NcgxBuqGdDa9Ws6T1KGNJo8DZ9oX3Yw4nLF+Due92p Ng== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30qst09622-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 12:16:58 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 43E6910002A;
-        Thu, 30 Apr 2020 12:16:58 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3611E2B690C;
-        Thu, 30 Apr 2020 12:16:58 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr 2020 12:16:57
- +0200
-From:   Yann Gautier <yann.gautier@st.com>
-To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Yann Gautier <yann.gautier@st.com>,
-        Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH] ARM: dts: stm32: add sd-uhs properties in SD-card node for stm32mp157c-ed1
-Date:   Thu, 30 Apr 2020 12:16:49 +0200
-Message-ID: <20200430101649.29381-1-yann.gautier@st.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Apr 2020 06:19:20 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545DDC035494;
+        Thu, 30 Apr 2020 03:19:20 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 188so1209357wmc.2;
+        Thu, 30 Apr 2020 03:19:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=sbJYXBlwGOLyg45ji2Ben6BeJhkkj20b9i5FNHgQc7E=;
+        b=TFJz3jN9l51rL4sTRvaVWsNqtueSOmy0YG5dmVZvHcJy4oBNjiahe+LWXBQ0omqKGM
+         k7U8HX+i6gwboswmMM7LMM5IqcT/1ixfnPbCg01AUcEawoXsvhW+xg4wFcvwqXc43gCn
+         YIs3qJp5bEZip/9tf6qhMdsNPfeL35Mpa1g65e2pAW+fWeuDCst9JFRU/M8BgsFUinDW
+         57orgljHmHwzOmTgSVrus7Z8x+jt8+/w2xmYoJvrSoURGhlCdILwZFdpxVXbagM+kb+r
+         qUJPqKJ/EMBwrKf1/klC0EuRmjlzYmMorc7Q1VCfgjiqikXPAyLFcaqhN/744J1VABTH
+         Yr5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=sbJYXBlwGOLyg45ji2Ben6BeJhkkj20b9i5FNHgQc7E=;
+        b=eVl4mfW0dlC4oxXblQ8IiUuenVskuu06Ms6bGxi1cAGPUSBe5eW1PlRDcG0tQ43x0j
+         7txD2WPTuw++wIuAKrncABDfRpb9FkeWNkEnYtshLh5mL42PkWvkMhsy9rX6TLaywPby
+         bPt9d6O7Y8/LzQZ3vwPJD7BzpYxhPADSUCGrZxkno6eqg0KsdMlKw8gY6el9NCwAzhON
+         HRimerOkVI1XIhyp6aBHxp4FzpV/kiagfNeDL+Un2kWFnpbJcfr+C2OeG3wa5nFL+DvS
+         cBKjYYQvLtLVcKqzSJSn4ph2Cb/UET0dNf168qgGtyBhinbbkdA6nc/MwNy/T2s04e41
+         lBLg==
+X-Gm-Message-State: AGi0PuZSBVobo2mHZwWZTphV4Tcj8r3DL9M6J3L0WdxmGzZ+UmmdFnUV
+        lIHdnH233VqSvJe9Iv1uwuc=
+X-Google-Smtp-Source: APiQypIFiyR1IL2f8nMpAUjauJb0orpbTeK/JIXN9qbR7trpNDpfeWSNlZ611isWlDjsKZ6MpJqPYA==
+X-Received: by 2002:a1c:770f:: with SMTP id t15mr2141356wmi.178.1588241956107;
+        Thu, 30 Apr 2020 03:19:16 -0700 (PDT)
+Received: from [192.168.43.138] ([37.142.166.235])
+        by smtp.gmail.com with ESMTPSA id 185sm13450326wmc.32.2020.04.30.03.19.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 03:19:15 -0700 (PDT)
+Subject: Re: [PATCH v7 2/7] tpm: tpm_tis: Add verify_data_integrity handle toy
+ tpm_tis_phy_ops
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org, benoit.houyere@st.com,
+        eajames@linux.ibm.com, joel@jms.id.au, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        oshri.alkoby@nuvoton.com, tmaimon77@gmail.com, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com,
+        Christophe Ricard <christophe-h.ricard@st.com>
+References: <20200427124931.115697-1-amirmizi6@gmail.com>
+ <20200427124931.115697-3-amirmizi6@gmail.com>
+ <20200429053456.GE8452@linux.intel.com>
+From:   Amir Mizinski <amirmizi6@gmail.com>
+Message-ID: <d0eec29a-20f5-1187-f0c3-c564879d7878@gmail.com>
+Date:   Thu, 30 Apr 2020 10:19:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_06:2020-04-30,2020-04-30 signatures=0
+In-Reply-To: <20200429053456.GE8452@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The sdmmc1 peripheral is connected on SD-card on STM32MP1-ED1 board.
-Add the UHS features the controller is able to manage.
-Those features require a level shifter on the board, and the support of
-the voltage switch in driver, which is done in Linux v5.7.
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-Signed-off-by: Yann Gautier <yann.gautier@st.com>
----
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+On 2020-04-29 05:34, Jarkko Sakkinen wrote:
+> On Mon, Apr 27, 2020 at 03:49:26PM +0300, amirmizi6@gmail.com wrote:
+>> +    bool (*verify_data_integrity)(struct tpm_tis_data *data, const u8 *buf,
+>> +                      size_t len);
+>
+> Why can't the i2c driver verify this in the end of read_bytes()?
+>
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 9d2592db630c..1d7dfe97b160 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -320,6 +320,10 @@
- 	bus-width = <4>;
- 	vmmc-supply = <&vdd_sd>;
- 	vqmmc-supply = <&sd_switch>;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-ddr50;
- 	status = "okay";
- };
- 
--- 
-2.17.1
+The TPM calculates the checksum of the entire command data at the end
+of command transmission or the checksum of the entire response data at the
+end of response transmission.
+read_bytes is not necessarily called at the end of response transmission. Same for write_bytes.
+
+> /Jarkko
 
