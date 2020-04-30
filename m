@@ -2,143 +2,97 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECDDC83000
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEC6C4724C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56AA22074A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7BF20774
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mqwhmqLB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yls6c42g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgD3OXx (ORCPT
+        id S1726926AbgD3OZO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:23:53 -0400
-Received: from mail-eopbgr50072.outbound.protection.outlook.com ([40.107.5.72]:5698
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726520AbgD3OXx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:23:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iZi3X8oE5ztZI3lSJ39AcGlTfG9ZF93w1m393Adp3yGQDJVvtKMa9n+Y6bjavvWI0iPFhareXY5Qv8xYA+9leSgDNLjFWVF7SHtqJqVw1rVYRNiZfAMn9NM3qyU7AXENp0U7P0qjwQiKIU2Akd+IBWg401AjoD3xokPDvze2eAWcKjkpt548qE83KXzQp16Hm8h6qy17/6U5h15LULTgOhr19EpschHfxrhf/7yxjI043bXr1b4Gp87Sgwgg8KkE/M8GqHnu4wrFOQOqo/lLkYVKdLL+v7PR4d+sTogBl10HZSnGAU48iji64X+VxoxODe/4lRwQD/ABLXR/RSGk8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OgwA8dy0B0OjevUiIbvjBH0k35sbLfhD4qGkgFpt5ak=;
- b=GZZsiDtd84zVU3DzxnZvkCYM1AYdA+zNm6jpM6i6CHOQNz63cpHBNGOTL9fOlKLlw5JARnsOhZ2s6KJYwXuK5yHTG1vOKfHX4tNON42zLTvUsRQIlGAL0ilCdSoIhVCKvtiWhs1IGeR/et/w+3IMUxJNqlRR9oVRDqc7ztBxYVn8yC6CVSlElSDic6D5NkL+a+Y0yIeco9j+qhB4UJNrFMNeK9C2TQxk43dN2xjHjmhQNVHGLV+PFdy+iFyrtfCoBN/c0u/4Kcwi8tLqoSHWhOXc/k6DtOzgu2TT2zCSyBvIzP19nPEYumdqjDpybKtpI8P6fLCAOn6m17AuyCMi8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OgwA8dy0B0OjevUiIbvjBH0k35sbLfhD4qGkgFpt5ak=;
- b=mqwhmqLBlsMTZsFF1nKTWRPD7mjgHGDMBrZpQzwsgJMjvAm3fGNCfYW2M6CKgOG6g/9Q2N+9d3rdP8UolM9AC/Iu7n8mViydXLciSn5y0vs1mhCIjMMs5xRxYWunZD9ehsZKuNeQ5AieI0NE5DcV+3TCAefT5j/gS4zHbOYlqNE=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19) by VI1PR0401MB2464.eurprd04.prod.outlook.com
- (2603:10a6:800:56::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Thu, 30 Apr
- 2020 14:23:50 +0000
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9858:e485:aaa6:ecc8]) by VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9858:e485:aaa6:ecc8%3]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
- 14:23:49 +0000
-Subject: Re: [RFC PATCH 1/4] drm/etnaviv: Prevent IRQ triggering at probe time
- on i.MX8MM
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Adam Ford <aford173@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Li Jun <jun.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
- <20200430124602.14463-2-frieder.schrempf@kontron.de>
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-Message-ID: <5c4c994b-8868-f68c-cd0d-7f7a2530f697@nxp.com>
-Date:   Thu, 30 Apr 2020 17:23:46 +0300
+        Thu, 30 Apr 2020 10:25:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgD3OZO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:25:14 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0BDAC035494;
+        Thu, 30 Apr 2020 07:25:13 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id j14so1371441lfg.9;
+        Thu, 30 Apr 2020 07:25:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tCY9CYxU1gOzRgXfCj/hSl5kyF2mN2AlCiXAxXLnSuM=;
+        b=Yls6c42gjD6zTZpJzYY5ocdHYSZeyoSnujMd9pi8JSCHJ3DnixNK8u1NSrrQghA6w8
+         9tkHj0U6/xNjU7hJhx8h64wdiry/1JMSUI1rS4Mm7eqZh7AXgVBecNthGqNzwOb4DOaE
+         lIlIiTvDtAl+OPGwD17vAL7ZWINU10TUkLgRdmS3s1IACHN7iF6cKMPYGnz+EVz+fsAS
+         Y3NDUEKc5nmiGii7c4qhPvDTYfG+Bu2MVsm0Qw8qJnBq9C46ngDOfo/okVRzh1+OtHl+
+         x60FWuExZgACWju7/R55m1NGf8Ig87+ClD2hP8N6zTo29DsWU3piOGyPfZ6qSbIkpxRf
+         6QJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tCY9CYxU1gOzRgXfCj/hSl5kyF2mN2AlCiXAxXLnSuM=;
+        b=AmNOpei6ToD9ZUslZq0usvosFVEDuYZPrfMyzAfGmIxuxSnRnxIAiK15nKJEH7Pxqf
+         emgmSUX/dsSN8zSjimgBtkNP8mqTSYAhHKUrzU94xm0A6NpeK34N2U6vLer2tDxZ9GLF
+         tS5zLFGAbGq7o0gYtk6VGkciyRod/ajo2Za4STy6gEO3yu6ZW54GEs8kfT7LLJKD7d7M
+         ovQvNb6cNI+51gWjxwJbx5RFMFjFUT6BG5yVlSTvjGm9uSTpEegtzBrqerp7XK1W2dvS
+         5V9u3b72gvM1Uhu0V2Y0OSwNUnfNVDnuFjRgcgXfk/V3zCSiqO8CGBAgZVgdeXOBsaFU
+         l80w==
+X-Gm-Message-State: AGi0PuY7rL9dyRxLBqW0bZNJisuuC9E0XsSiXa+c0hU2BS6CwAHRnOdJ
+        sMSCxLvDGSHSuylzYWSUJZWuwZBP
+X-Google-Smtp-Source: APiQypIxKIrY61iyWN8E2p2v+gt5AUX6i+jScFYei172jZBeATJ8+md5KljdfAj8+Dhqh3p5r2H+ig==
+X-Received: by 2002:a05:6512:108a:: with SMTP id j10mr2368340lfg.38.1588256712061;
+        Thu, 30 Apr 2020 07:25:12 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id a28sm4893311lfr.4.2020.04.30.07.25.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 07:25:11 -0700 (PDT)
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <05271cd8-010d-6e09-2bb0-97519d3db3c6@gmail.com>
+Date:   Thu, 30 Apr 2020 17:25:10 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200430124602.14463-2-frieder.schrempf@kontron.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM5PR0202CA0018.eurprd02.prod.outlook.com
- (2603:10a6:203:69::28) To VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19)
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.100] (188.25.27.134) by AM5PR0202CA0018.eurprd02.prod.outlook.com (2603:10a6:203:69::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 14:23:47 +0000
-X-Originating-IP: [188.25.27.134]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8eb5b4ce-0207-4f8f-54d6-08d7ed1219b1
-X-MS-TrafficTypeDiagnostic: VI1PR0401MB2464:|VI1PR0401MB2464:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB246487BFC48985FA3C0D099FF9AA0@VI1PR0401MB2464.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(346002)(366004)(376002)(8676002)(44832011)(2616005)(31686004)(956004)(186003)(16526019)(66946007)(8936002)(478600001)(26005)(2906002)(31696002)(86362001)(66556008)(66476007)(5660300002)(4744005)(36756003)(316002)(54906003)(4326008)(16576012)(110136005)(53546011)(6636002)(6486002)(52116002)(7416002)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0IGT4uou9PK0QOiAw2oz/QgmCAU2fAxJtN4K0MV3nPTCB4thUoaxjd+9/nWT7jkdFMdBZzQaKcOLvvgEiTl/OrNcKgqfCdltR8OZsC1LfNGeXcBusj4T+yQbx8bJW/FjfMegB6IwSFgjkKH6nQTIW/clKhkWBnDXN3DurNSGj/3aMkk1oUCQMFWLQcCoQWu39vX07zf1I7SF/BCo1heCUwPN3p5z59PchWWgG7uxdiPI138G1J7KnNw1yfRr7I+dzQGE/Hn/qp1dgMa0d9IOXANIx5wS6Uas+7YglCHrIZnMHZ0chBpGJRKgNX48uqpHVOXUcafjJP30d35gKEaARU9AWx1/K7VBlRWRN0I6eDyk/2qaq0YCevc9IljV8lVi4nckLVf43r86hRya7N6Nhwoa86jyAeGXed+cPvqmYP3kQB/2KAKuEJHWvohvE0A2HhrIaBymWitPDNO9wRKp0MtuMHo6PRTZF9arE9nl+14=
-X-MS-Exchange-AntiSpam-MessageData: BnKFYfgKUpunK32IGgixQpiK+0unEmaS66p8IL/krJwB2URlml3A8p5x6EEPULqRLUifaXQFjF7xFUtNi4jVFDSiOKQ8NZcDsUeHV3AnSAKnqjiX4UFXK3cTnZvjWy3VyrZ9yuzrgpx/ed6lnGi5tVuQXx4H+MT50oPpSuaPw9092OWNTRXKYiu0M5DmrgXRCsu1y7m5zPbRd/swuglr9ofh3IHsPujLKq6oi9ykO8CdvB6WH62AqW0+xMEmLSlO7QZlapnhuD6KHAX3vrrlS/2ibOhHyu1UbD63wFLTXlPyfJQX/Tf2AkLyHdzdXRBuTBWHSMRy9J5osQiRtvlzcIf6fbHV626gt4EhAoVXW+IHNRInHZvVhXO0YCjwDOHAP5471qR2NdJDYf51GCBAMKwXQc5lPCi6QFDVt/9XpjsPsLl//fYsyWJ3Jbb8/AG2K85z11rACT7Z0Fu2iHymM/HHJsQ8yUSMaXj1IfbzRTjiGW3Dyg+8Ic1LIOHz7sgabYidxQd5N1yREu1P44D+qhtRsbuaPtlGYgBxjAwEgDWKxPg+pRbBSNPnc5u/lBSZfh/MpcKHEsbugr7Fc1/hQIN1pXAGuluIRIiLvY+sUGc93oHfTSkzonyrgbIQGv9GPsBcBjnqv1myOeeG1pedqcnzOfNlfYQQ/MJcUMLn9PhbgvKGUiv2ARkRyijYy5sUeulwrbgOhRGtGrBMZ3w8OUAuqQ1XRyyAOBTTh3ENSZgwJS/6q/Y0UHsXymvCUHrlk9svYUzl/Q0IP0lI+DLxbb9mL4eG5RIFdl0pXO1SO/Y=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8eb5b4ce-0207-4f8f-54d6-08d7ed1219b1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 14:23:49.6818
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wcWHd6PYy0VmYZCsfnZdzw21Q8K+2FLcyTr6rqqjkrEhPheo/x2R/pG7ITSzNow8LVS7/kay0B4bbBHMjN3QKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2464
+In-Reply-To: <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/30/20 3:46 PM, Schrempf Frieder wrote:
->   
-> +	/*
-> +	 * On i.MX8MM there is an interrupt getting triggered immediately
-> +	 * after requesting the IRQ, which leads to a stall as the handler
-> +	 * accesses the GPU registers whithout the clock being enabled.
-> +	 * Enabling the clocks briefly seems to clear the IRQ state, so we do
-> +	 * this here before requesting the IRQ.
-> +	 */
-> +	err = etnaviv_gpu_clk_enable(gpu);
-> +	if (err)
-> +		return err;
-> +
-> +	err = etnaviv_gpu_clk_disable(gpu);
-> +	if (err)
-> +		return err;
-> +
-> +	err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
-> +			       dev_name(gpu->dev), gpu);
-> +	if (err) {
-> +		dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq, err);
-> +		return err;
-> +	}
+30.04.2020 01:00, Sowjanya Komatineni пишет:
+> +int tegra_v4l2_nodes_setup_tpg(struct tegra_video_device *vid)
+> +{
+> +	struct tegra_vi *vi = vid->vi;
+> +	struct tegra_csi *csi = vid->csi;
+> +	struct tegra_vi_channel *vi_chan;
+> +	struct tegra_csi_channel *csi_chan;
+> +	u32 link_flags = MEDIA_LNK_FL_ENABLED;
 
-Shouldn't you disable the clk after devm_request_irq is called?
+> +	int ret = 0;
 
-
+No need to unnecessarily initialize variables. Same for all other
+similar occurrences in the code.
