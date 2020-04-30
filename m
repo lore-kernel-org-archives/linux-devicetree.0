@@ -2,127 +2,92 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9206DC47253
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C93C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 728AB2063A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255626;
-	bh=QmxpXR4dciVyyn9iyqFtKl/EzHWQ4Ni0im1DVYEIlXs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l6t1E9TvQ3x9+JyItG14TGD3b1qp46nuK+D3nvbLxS26OeTQUELdOCiVIs3dVOLYo
-	 k2Kh5YMkdY/3Q22J1DvBNO9YuBdTan2XyRhNScFNqHeuue+rP55niIGYDzL2EmQPPT
-	 K737OA/brDcauf9CRsfOITODkq3F/fvgw2rcJTBA=
+	by mail.kernel.org (Postfix) with ESMTP id DF1AE2076D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgD3OHF (ORCPT
+        id S1728388AbgD3Nw0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:07:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41977 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728945AbgD3OHE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:07:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 19so5285305oiy.8;
-        Thu, 30 Apr 2020 07:07:03 -0700 (PDT)
+        Thu, 30 Apr 2020 09:52:26 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44755 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbgD3NwZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 09:52:25 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a2so5238016oia.11;
+        Thu, 30 Apr 2020 06:52:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ypl3TMqHlEyc54S03DtZTNB+eyp6v+vQ5hgOUzmHpUg=;
-        b=SFkYlMRXJa1HQ07Vm9xq+/fUHRF/zrLe5DI+io2D0hUv09irfHHaC3/1RovhELkLl/
-         7M/FtKN16USdyv/qXLMP3gFaobhgra6wepDNXH5YSwnn3Vayon2M0rX0KLs2GZ0vi754
-         Kk9+waZK4mBk35uSo5yYfQWGn0zxsBUsjptk3KoHbsjxzS5k1QBok9S8tk/FkvAvqGjo
-         o//Gv7RHgyqWLfaV+L71c17+USRbGnfwV7QJ1yHrspRHkEIrPQdqKWh+CJl4wTldTOFz
-         oUjn1xw/5p/yS6r0cn8frVkNqxU9/9B/QjORlDM5RcqElLdX5w0tqbAnc3GxdLKBoeB3
-         hPAg==
-X-Gm-Message-State: AGi0PubHnws3Z0Lxpeu4bHQk2Nj8omKENfKHBug8zRvWa3g9ffiy7Bxt
-        1Wh+jeMjG2BeVjWOFaqKUA==
-X-Google-Smtp-Source: APiQypIP8LI9E0STiYnne0hBy5N7yLlgo3kcsx6yXCtmZ7uE9MOuR1kv9WPAh62YT3wAZ4XcJhqUuQ==
-X-Received: by 2002:aca:1709:: with SMTP id j9mr1847601oii.59.1588255622600;
-        Thu, 30 Apr 2020 07:07:02 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j42sm1327968ooi.5.2020.04.30.07.07.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 07:07:01 -0700 (PDT)
-Received: (nullmailer pid 31546 invoked by uid 1000);
-        Thu, 30 Apr 2020 14:07:01 -0000
-Date:   Thu, 30 Apr 2020 09:07:01 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: mfd: Document the RTC present on
- MAX77620
-Message-ID: <20200430140701.GA21776@bogus>
-References: <20200417170825.2551367-1-thierry.reding@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bx1vrsVZq+IbNA++2G08z1rg1sNLX2BQVibyI5UB8Yg=;
+        b=lH0pEzPedzQYe54e/QhwJ+TjQpDzCj1O4CrBLiPR7pvi31yXn/5yCrK0K4L7ZOKiYe
+         SQC53y7lwWi14j9qc/4BJRjqsSnxPjcKfutF8HQypAQoI17Hm2q23olFmon9ctEzWfMX
+         o2oZsVxgvPoAJsghyh+3HgLrnvRRrgkAqdEj1HWB/0obrjXqWtF16S7ki5Da3tzPMPrL
+         HrihePowIK95gIE07+4Ca2Is3CX23N4nICM9jcRGwc+McScSewwEUV31FWj75C8lBNOy
+         oM80wt8eVDufCffs+h4DsnjLGwbK7WohC+z/SFG/9DzzMzaIMuDvU5nGnXyJFGoXHISI
+         awmg==
+X-Gm-Message-State: AGi0Pua9r+tfpQPyDdhMnecU2jStf9HFz5xC6zrG9pvaz5U58+HQ07Um
+        1KfeyONVCncdu859280qaEASi7UFC8jqqcPw5ms=
+X-Google-Smtp-Source: APiQypJUGpqJbnxexd7dqOJmSTBNVdW9VYTDdyYVHeV3l6YnMiahGYWRXjyWK2Vresb0767EYyF1hnGyTnD1yoW3ZW8=
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr1848055oig.54.1588254742783;
+ Thu, 30 Apr 2020 06:52:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417170825.2551367-1-thierry.reding@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Apr 2020 15:52:10 +0200
+Message-ID: <CAMuHMdVTwEFeRKLaK_0_xTkaTV=vVPtu7bhZPz5_UZ++L=n8rw@mail.gmail.com>
+Subject: Re: [PATCH 08/18] dt-bindings: irqchip: renesas-irqc: Document
+ r8a7742 bindings
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 07:08:23PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> The RTC present on MAX77620 can be used to generate an alarm at a given
-> time, which in turn can be used as a wakeup source for the system if it
-> is properly wired up.
-> 
-> Document how to enable the RTC to act as a wakeup source.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  .../devicetree/bindings/mfd/max77620.txt          | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
-> index 5a642a51d58e..f05005b0993e 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77620.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-> @@ -125,6 +125,17 @@ MAX77663 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
->  			control) then, GPIO1/nRST_IO goes LOW.
->  			this property is valid for max20024 only.
->  
-> +Realtime Clock
-> +--------------
-> +The MAX77620 family of power management ICs contain a realtime clock block
-> +that can be used to keep track of time even when the system is powered off.
-> +
-> +The realtime clock can also be programmed to trigger alerts, which can be
-> +used to wake the system up from sleep. In order to configure the RTC to act
-> +as a wakeup source, add an "rtc" child node and add the "wakeup-source"
-> +property.
-> +
-> +
->  For DT binding details of different sub modules like GPIO, pincontrol,
->  regulator, power, please refer respective device-tree binding document
->  under their respective sub-system directories.
-> @@ -159,4 +170,8 @@ max77620@3c {
->  			maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_SW>;
->  		};
->  	};
-> +
-> +	rtc {
-> +		wakeup-source;
+On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document SoC specific bindings for RZ/G1H (r8a7742) SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Is the RTC really the only thing that could wake the system in this 
-PMIC?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I don't think it's really valid to have 'wakeup-source' without 
-'interrupts' unless the wakeup mechanism is somehow not an interrupt. So 
-I think this belongs in the parent node.
+Gr{oetje,eeting}s,
 
-Rob
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
