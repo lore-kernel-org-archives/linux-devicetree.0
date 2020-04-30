@@ -2,62 +2,48 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0ACC8300A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 10:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB87EC8300C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 10:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D55112137B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 10:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D641221D7A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 10:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgD3KD6 (ORCPT
+        id S1726764AbgD3KFR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:03:58 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:45320 "EHLO inva021.nxp.com"
+        Thu, 30 Apr 2020 06:05:17 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48000 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbgD3KD6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:03:58 -0400
+        id S1726413AbgD3KFP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:05:15 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A76052007C5;
-        Thu, 30 Apr 2020 12:03:55 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 436302007CC;
+        Thu, 30 Apr 2020 12:05:13 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9A43D200769;
-        Thu, 30 Apr 2020 12:03:55 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3644B2007CB;
+        Thu, 30 Apr 2020 12:05:13 +0200 (CEST)
 Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7EB4520397;
-        Thu, 30 Apr 2020 12:03:55 +0200 (CEST)
-Date:   Thu, 30 Apr 2020 13:03:55 +0300
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2124E20397;
+        Thu, 30 Apr 2020 12:05:13 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 13:05:12 +0300
 From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 01/13] mfd: Add i.MX generic mix support
-Message-ID: <20200430100355.zwl7wfbq64cikqxp@fsr-ub1664-175>
-References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
- <1586937773-5836-2-git-send-email-abel.vesa@nxp.com>
- <20200417080747.GE2167633@dell>
- <20200422091854.rhtkcfrdptwofngs@fsr-ub1664-175>
- <AM6PR04MB4966B3527BF97918C1689A4580D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <20200424062727.GI3612@dell>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V4 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+ json-schema
+Message-ID: <20200430100512.lzvuxzcardw5uwi2@fsr-ub1664-175>
+References: <1588207921-20604-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200424062727.GI3612@dell>
+In-Reply-To: <1588207921-20604-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: NeoMutt/20180622
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
@@ -65,103 +51,146 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-04-24 07:27:27, Lee Jones wrote:
-> On Thu, 23 Apr 2020, Aisheng Dong wrote:
+On 20-04-30 08:51:57, Anson Huang wrote:
+> Convert the i.MX6Q clock binding to DT schema format using json-schema.
 > 
-> > > From: Abel Vesa <abel.vesa@nxp.com>
-> > > Sent: Wednesday, April 22, 2020 5:19 PM
-> > > On 20-04-17 09:07:47, Lee Jones wrote:
-> > > > On Wed, 15 Apr 2020, Abel Vesa wrote:
-> > > >
-> > > > > Some of the i.MX SoCs have a IP for interfacing the dedicated IPs
-> > > > > with clocks, resets and interrupts, plus some other specific control registers.
-> > > > > To allow the functionality to be split between drivers, this MFD
-> > > > > driver is added that has only two purposes: register the devices and
-> > > > > map the entire register addresses. Everything else is left to the
-> > > > > dedicated drivers that will bind to the registered devices.
-> > > > >
-> > > > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > > > > ---
-> > > > >  drivers/mfd/Kconfig   | 11 +++++++++++
-> > > > >  drivers/mfd/Makefile  |  1 +
-> > > > >  drivers/mfd/imx-mix.c | 48
-> > > > > ++++++++++++++++++++++++++++++++++++++++++++++++
-> > > > >  3 files changed, 60 insertions(+)
-> > > > >  create mode 100644 drivers/mfd/imx-mix.c
-> > > >
-> > > > For completeness - Arnd's reply to this patch:
-> > > >
-> > > 
-> > > I'm replying here to Arnd's reply.
-> > > 
-> > > I'm trying to give here a whole picture of the entire problem while the
-> > > documentation for i.MX8MP is _not yet_ public.
-> > > 
-> > > Historically, each IP would have its own enclosure for all the related GPRs.
-> > > Starting with i.MX8MP some GPRs (and some subparts) from the IP were placed
-> > > inside these mixes.
-> > > 
-> > > Audiomix for example, has multiple SAIs, a PLL, and some reset bits for EARC
-> > > and some GPRs for AudioDSP. This means that i.MX8MP has 7 SAIs, 1 EARC and
-> > > 1 AudioDSP.
-> > > Future platforms might have different numbers of SAIs, EARCs or AudioDSPs.
-> > > The PLL can't be placed in one of those SAIs and it was placed in audiomix.
-> > > The i.MX8MP has at least 4 of these mixes.
-> > > 
-> > > Now, the commonalities between all mixes are:
-> > >  - have their own power domains
-> > >  - driven by dedicated clock slice
-> > >  - contain clocks and resets
-> > >  - some very subsystem specific GPRs
-> > > 
-> > > Knowing that each mix has its own power domain, AFAICT, it needs to be
-> > > registered as a single device. Considering that it can have clocks (audiomix has
-> > > gates, muxes and plls), I believe that needs a clock driver, even more so since the
-> > > muxes need their parents from the platform clock driver. Same principle applies
-> > > to reset bits. The subsystem specific GPRs can be registered as syscon devices
-> > > and taken care of by its counterpart IP (e.g. the AudioDSP specific regs would be
-> > > taken care of by the DSP driver, if there is one).
-> > > 
-> > > Now based on all of the above, by using MFD we take care of the power domain
-> > > control for the entire mix, plus, the MFD doesn't have any kind of functionality
-> > > by its own, relying on its children devices that are populated based on what is in
-> > > the mix MFD devicetree node.
-> > > 
-> > 
-> > How about doing like this which maybe can address Arnd's concerns?
-> > audiomix: audiomix@30e20000 {
-> >         compatible = "fsl,imx8mp-audiomix", "syscon";
-> >         reg = <0x30e20000 xxx>,
-> >               <0x30e20xxx xxx>;
-> >         reg-names = "audio", "reset", "...";
-> >         #clock-cells = <1>;
-> >         #reset-cells = <1>;
-> >         power-domains = <&audiomix_pd>;
-> > }
-> > 
-> > That means we have one combo driver registering two controllers (clk/reset), both use
-> > the same power domain as audiomix.
-> > And it can be easily extended to support more services provided by audiomix over syscon
-> > if needed.
-> > Then the 'dummy' MDF driver is not needed anymore.
-> > 
-> > Jones & Arnd,
-> > How do you think?
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+Great effort taking care of these. 
+
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+
+> ---
+> Changes since V3:
+> 	- update license to be with (GPL-2.0-only OR BSD-2-Clause);
+> 	- remove unnecessary minItem for interrupts;
+> 	- remove label in example.
+> ---
+>  .../devicetree/bindings/clock/imx6q-clock.txt      | 41 --------------
+>  .../devicetree/bindings/clock/imx6q-clock.yaml     | 66 ++++++++++++++++++++++
+>  2 files changed, 66 insertions(+), 41 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.yaml
 > 
-> Sounds okay in principle.  Anything that prevents the existence of a
-> dummy (a.k.a. pointless) MFD must be seen as a positive move.
-> 
-
-OK, I'll do it in a single driver and single dts node.
-
-But there might be an issue with the placement of this new driver.
-
-drivers/clk/imx/ could be an option, but the driver will use a lot
-of different APIs from different subsystems. Not the audiomix, but
-the future mixes.
-
+> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> deleted file mode 100644
+> index 13d36d4..0000000
+> --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> +++ /dev/null
+> @@ -1,41 +0,0 @@
+> -* Clock bindings for Freescale i.MX6 Quad
+> -
+> -Required properties:
+> -- compatible: Should be "fsl,imx6q-ccm"
+> -- reg: Address and length of the register set
+> -- interrupts: Should contain CCM interrupt
+> -- #clock-cells: Should be <1>
+> -
+> -Optional properties:
+> -- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
+> -  on power off.
+> -  Use this property if the SoC should be powered off by external power
+> -  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+> -  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
+> -  be using "syscon-poweroff" driver instead.
+> -- clocks: list of clock specifiers, must contain an entry for each entry
+> -          in clock-names
+> -- clock-names: valid names are "osc", "ckil", "ckih1", "anaclk1" and "anaclk2"
+> -
+> -The clock consumer should specify the desired clock by having the clock
+> -ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
+> -for the full list of i.MX6 Quad and DualLite clock IDs.
+> -
+> -Examples:
+> -
+> -#include <dt-bindings/clock/imx6qdl-clock.h>
+> -
+> -clks: ccm@20c4000 {
+> -	compatible = "fsl,imx6q-ccm";
+> -	reg = <0x020c4000 0x4000>;
+> -	interrupts = <0 87 0x04 0 88 0x04>;
+> -	#clock-cells = <1>;
+> -};
+> -
+> -uart1: serial@2020000 {
+> -	compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
+> -	reg = <0x02020000 0x4000>;
+> -	interrupts = <0 26 0x04>;
+> -	clocks = <&clks IMX6QDL_CLK_UART_IPG>, <&clks IMX6QDL_CLK_UART_SERIAL>;
+> -	clock-names = "ipg", "per";
+> -};
+> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> new file mode 100644
+> index 0000000..0dc96ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetree.org%2Fschemas%2Fclock%2Fimx6q-clock.yaml%23&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7Ca9ea8978c18a400f965d08d7eca1eec5%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637238052550722964&amp;sdata=vZmcBuigGFCbh1doAasvlXKFltD%2Fu9T4i88KWRoxck8%3D&amp;reserved=0
+> +$schema: https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7Ca9ea8978c18a400f965d08d7eca1eec5%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637238052550722964&amp;sdata=RyT292O7qdkbmKrSMXEuHCo%2Fezm98n%2FAAYpansFL3%2BY%3D&amp;reserved=0
+> +
+> +title: Clock bindings for Freescale i.MX6 Quad
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx6q-ccm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 2
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: 24m osc
+> +      - description: 32k osc
+> +      - description: ckih1 clock input
+> +      - description: anaclk1 clock input
+> +      - description: anaclk2 clock input
+> +
+> +  clock-names:
+> +    items:
+> +      - const: osc
+> +      - const: ckil
+> +      - const: ckih1
+> +      - const: anaclk1
+> +      - const: anaclk2
+> +
+> +  fsl,pmic-stby-poweroff:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: |
+> +      Use this property if the SoC should be powered off by external power
+> +      management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+> +      Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
+> +      be using "syscon-poweroff" driver instead.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - '#clock-cells'
+> +
+> +examples:
+> +  # Clock Control Module node:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    clock-controller@20c4000 {
+> +        compatible = "fsl,imx6q-ccm";
+> +        reg = <0x020c4000 0x4000>;
+> +        interrupts = <0 87 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
+> +        #clock-cells = <1>;
+> +    };
 > -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> 2.7.4
+> 
