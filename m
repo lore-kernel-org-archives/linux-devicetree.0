@@ -2,136 +2,217 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5F8C8300A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D201BC8300A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7815120757
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD2120757
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i/1K6zjN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7I7Q+7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgD3Inn (ORCPT
+        id S1726832AbgD3Ins (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:43:43 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:53672 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726420AbgD3Inm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 04:43:42 -0400
-X-UUID: a647c6c69356451099f2236fc665425a-20200430
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=wmJJNzcR3k9GVE2jLM5Fa1SIp2IO4dqVkL3WED3AOeo=;
-        b=i/1K6zjNXZJi+oSRhdM8EvkjycK5IKRIg1T7ZY0DwPOjR4tamk41h6GExHbLrMGrBRzc2SrENvbF69goI6zafnOaWdiztrzBewaA7pg8kSC8aQfN7nDXF633Hkjc959YfOKr8KYTHBkOg9Pzd9GM0lS9pv5rr+6ya4DOV60YH6w=;
-X-UUID: a647c6c69356451099f2236fc665425a-20200430
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2083140545; Thu, 30 Apr 2020 16:43:25 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 30 Apr
- 2020 16:43:22 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 30 Apr 2020 16:43:21 +0800
-Message-ID: <1588236152.8804.88.camel@mhfsdcap03>
-Subject: Re: [V4, 1/2] media: i2c: dw9768: Add DT support and MAINTAINERS
- entry
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <mark.rutland@arm.com>, <sakari.ailus@linux.intel.com>,
-        <drinkcat@chromium.org>, <tfiga@chromium.org>,
-        <matthias.bgg@gmail.com>, <bingbu.cao@intel.com>,
-        <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
-Date:   Thu, 30 Apr 2020 16:42:32 +0800
-In-Reply-To: <20200410172527.GA24529@bogus>
-References: <20200330123634.363-1-dongchun.zhu@mediatek.com>
-         <20200330123634.363-2-dongchun.zhu@mediatek.com>
-         <20200410172527.GA24529@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 30 Apr 2020 04:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726780AbgD3Inr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:43:47 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24BEC035494;
+        Thu, 30 Apr 2020 01:43:47 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id e18so1100052oot.9;
+        Thu, 30 Apr 2020 01:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RJfi8YEQRUQ7Nx9/zDtTwBKV3TKprwuNVW7KwyjiUoc=;
+        b=e7I7Q+7VKNBFCc1ou225/A0eOoID6/aWYUAFnRX/+iDZKw7DSHwIPwW1x5AgKniBbb
+         jjiRPiLT0bfCFJCEIeXzYQaLiByhMHFrojdlukrxCxJHfJvRxD2JLRwY0Kw4GcWzKgpv
+         KyJIdFjDrHQsaWD3gm7ISrflX9rpalM8JsR1CWNzYHpTtOI+KW0+JOQR8C+opcFQXjF6
+         S/c6OobDxj2DTU96pUr/bL0pQIjEijtQXxGdF8RHIG5kuPZ4fALdJeOBf6CUQYRwB8+l
+         wjZc0cjh7D9rXMdwkVPY5DweLztFSz83g67f1JnSombDq/ads5UK12j7sNeq5Hwuqqsr
+         8JFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RJfi8YEQRUQ7Nx9/zDtTwBKV3TKprwuNVW7KwyjiUoc=;
+        b=NuS8gXY6Li3+V9zsGtYMZSi0op4nTQ3hhTh3r5PBBGB4EtnQdrM3zmJpZwRGgtWmgP
+         7a/F/kxZthf//VK22wKK9N16gDDHIQPi5pckcuERksfL52liYnBTbvQP3FOYcL+nsnI/
+         4j7A3QMyJtOf7AcOIiyHhZ/da2bzjzCXKnRYCc9osLxsphTdzq/1oCj3O7uCr1161wUl
+         ZAeJDOyjFwvZZ2LavCLHOI8MfD503/hsaeVJbU3yc4XgQ+GnISlojgAWGgOoOm/JB/Gp
+         Ama9YJg43e/HB54dRwS+KUtH3PfVPDk7y3+DJaqelRt9MZREMMONI1Qgpc9cvOmdZs3Z
+         g+Zw==
+X-Gm-Message-State: AGi0PuYJDnujA47fVGTS/G9mR8GRcoY4kybaRf1h+rl5u+gXiUk0HsMa
+        C7LeYLKxRuYagRr+vT3GhHIUher0iStZtTp5XEk=
+X-Google-Smtp-Source: APiQypLSZyNqZBc6As1bQvkl0M72z9Bu+wI/WiD4xkyor99UzGV3HeSXzgXCRuS0Ua8uSVnQTYGN2BiezF0okRKwwuY=
+X-Received: by 2002:a4a:a209:: with SMTP id m9mr1879725ool.62.1588236226990;
+ Thu, 30 Apr 2020 01:43:46 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: ECC204BF1CE98C25F6F81482310D100CC86CD6865F2FBC31D2991D5DB77265862000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 30 Apr 2020 09:43:20 +0100
+Message-ID: <CA+V-a8u1rEF1DMAVkZ1=-d_MjLa_49X2Nny_VaEN0Y398GOJhw@mail.gmail.com>
+Subject: Re: [PATCH v9 0/8] Add endpoint driver for R-Car PCIe controller
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8gUm9iLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCk9uIEZyaSwgMjAyMC0wNC0x
-MCBhdCAxMjoyNSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIE1vbiwgTWFyIDMwLCAy
-MDIwIGF0IDA4OjM2OjMzUE0gKzA4MDAsIERvbmdjaHVuIFpodSB3cm90ZToNCj4gPiBUaGlzIHBh
-dGNoIGlzIHRvIGFkZCB0aGUgRGV2aWNldHJlZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGFuZA0K
-PiA+IE1BSU5UQUlORVJTIGVudHJ5IGZvciBkdzk3NjggYWN0dWF0b3IuDQo+ID4gDQo+ID4gU2ln
-bmVkLW9mZi1ieTogRG9uZ2NodW4gWmh1IDxkb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPg0KPiA+
-IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvbWVkaWEvaTJjL2Rvbmd3b29uLGR3OTc2OC55YW1sICAg
-ICAgICB8IDYyICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgTUFJTlRBSU5FUlMgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNyArKysNCj4gPiAgMiBmaWxlcyBj
-aGFuZ2VkLCA2OSBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Rvbmd3b29uLGR3OTc2OC55YW1s
-DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Rvbmd3b29uLGR3OTc2OC55YW1sDQo+ID4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi44YTM1M2RjDQo+ID4gLS0tIC9kZXYvbnVs
-bA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMv
-ZG9uZ3dvb24sZHc5NzY4LnlhbWwNCj4gPiBAQCAtMCwwICsxLDYyIEBADQo+ID4gKyMgU1BEWC1M
-aWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZSkNCj4gPiArIyBDb3B5
-cmlnaHQgKGMpIDIwMjAgTWVkaWFUZWsgSW5jLg0KPiA+ICslWUFNTCAxLjINCj4gPiArLS0tDQo+
-ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvbWVkaWEvaTJjL2Rvbmd3b29u
-LGR3OTc2OC55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1z
-Y2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBEb25nd29vbiBBbmF0ZWNoIERX
-OTc2OCBWb2ljZSBDb2lsIE1vdG9yIChWQ00pIERldmljZSBUcmVlIEJpbmRpbmdzDQo+ID4gKw0K
-PiA+ICttYWludGFpbmVyczoNCj4gPiArICAtIERvbmdjaHVuIFpodSA8ZG9uZ2NodW4uemh1QG1l
-ZGlhdGVrLmNvbT4NCj4gPiArDQo+ID4gK2Rlc2NyaXB0aW9uOiB8LQ0KPiA+ICsgIFRoZSBEb25n
-d29vbiBEVzk3NjggaXMgYSBzaW5nbGUgMTAtYml0IGRpZ2l0YWwtdG8tYW5hbG9nIChEQUMpIGNv
-bnZlcnRlcg0KPiA+ICsgIHdpdGggMTAwIG1BIG91dHB1dCBjdXJyZW50IHNpbmsgY2FwYWJpbGl0
-eS4gVkNNIGN1cnJlbnQgaXMgY29udHJvbGxlZCB3aXRoDQo+ID4gKyAgYSBsaW5lYXIgbW9kZSBk
-cml2ZXIuIFRoZSBEQUMgaXMgY29udHJvbGxlZCB2aWEgYSAyLXdpcmUgKEkyQy1jb21wYXRpYmxl
-KQ0KPiA+ICsgIHNlcmlhbCBpbnRlcmZhY2UgdGhhdCBvcGVyYXRlcyBhdCBjbG9jayByYXRlcyB1
-cCB0byAxTUh6LiBUaGlzIGNoaXANCj4gPiArICBpbnRlZ3JhdGVzIEFkdmFuY2VkIEFjdHVhdG9y
-IENvbnRyb2wgKEFBQykgdGVjaG5vbG9neSBhbmQgaXMgaW50ZW5kZWQgZm9yDQo+ID4gKyAgZHJp
-dmluZyB2b2ljZSBjb2lsIGxlbnNlcyBpbiBjYW1lcmEgbW9kdWxlcy4NCj4gPiArDQo+ID4gK3By
-b3BlcnRpZXM6DQo+ID4gKyAgY29tcGF0aWJsZToNCj4gPiArICAgIGNvbnN0OiBkb25nd29vbixk
-dzk3NjgNCj4gPiArDQo+ID4gKyAgcmVnOg0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+
-ID4gKyAgdmluLXN1cHBseToNCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBEZWZp
-bml0aW9uIG9mIHRoZSByZWd1bGF0b3IgdXNlZCBhcyBJMkMgSS9PIGludGVyZmFjZSBwb3dlciBz
-dXBwbHkuDQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiANCj4gWW91IGNhbiBkcm9wIHRoaXMuICot
-c3VwcGx5IGlzIGFsd2F5cyBhIHNpbmdsZSBlbnRyeS4NCj4gDQoNCkZpeGVkIGluIG5leHQgcmVs
-ZWFzZS4NCg0KPiA+ICsNCj4gPiArICB2ZGQtc3VwcGx5Og0KPiA+ICsgICAgZGVzY3JpcHRpb246
-DQo+ID4gKyAgICAgIERlZmluaXRpb24gb2YgdGhlIHJlZ3VsYXRvciB1c2VkIGFzIFZDTSBjaGlw
-IHBvd2VyIHN1cHBseS4NCj4gPiArICAgIG1heEl0ZW1zOiAxDQo+IA0KPiBTYW1lIGhlcmUuDQo+
-IA0KDQpGaXhlZCBpbiBuZXh0IHJlbGVhc2UuDQoNCj4gPiArDQo+ID4gK3JlcXVpcmVkOg0KPiA+
-ICsgIC0gY29tcGF0aWJsZQ0KPiA+ICsgIC0gcmVnDQo+ID4gKyAgLSB2aW4tc3VwcGx5DQo+ID4g
-KyAgLSB2ZGQtc3VwcGx5DQo+ID4gKw0KPiA+ICthZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UN
-Cj4gPiArDQo+ID4gK2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+ICsgICAgaTJjMjogaTJjQDEx
-MDA5MDAwIHsNCj4gDQo+IGkyYyB7DQo+IA0KDQpGaXhlZCBpbiBuZXh0IHJlbGVhc2UuDQoNCj4g
-PiArICAgICAgICBjbG9jay1mcmVxdWVuY3kgPSA8NDAwMDAwPjsNCj4gPiArICAgICAgICAjYWRk
-cmVzcy1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiAr
-DQo+ID4gKyAgICAgICAgZHc5NzY4OiBjYW1lcmEtbGVuc0BjIHsNCj4gPiArICAgICAgICAgICAg
-Y29tcGF0aWJsZSA9ICJkb25nd29vbixkdzk3NjgiOw0KPiA+ICsgICAgICAgICAgICByZWcgPSA8
-MHgwYz47DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICB2aW4tc3VwcGx5ID0gPCZtdDYzNThfdmNh
-bWlvX3JlZz47DQo+ID4gKyAgICAgICAgICAgIHZkZC1zdXBwbHkgPSA8Jm10NjM1OF92Y2FtYTJf
-cmVnPjsNCj4gPiArICAgICAgICB9Ow0KPiA+ICsgICAgfTsNCj4gPiArDQo+ID4gKy4uLg0KPiA+
-IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTDQo+ID4gaW5kZXggMzhmZTJm
-My4uNWUxMjRkMiAxMDA2NDQNCj4gPiAtLS0gYS9NQUlOVEFJTkVSUw0KPiA+ICsrKyBiL01BSU5U
-QUlORVJTDQo+ID4gQEAgLTUxMzQsNiArNTEzNCwxMyBAQCBTOglNYWludGFpbmVkDQo+ID4gIEY6
-CWRyaXZlcnMvbWVkaWEvaTJjL2R3OTcxNC5jDQo+ID4gIEY6CURvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzE0LnR4dA0KPiA+ICANCj4gPiAr
-RE9OR1dPT04gRFc5NzY4IExFTlMgVk9JQ0UgQ09JTCBEUklWRVINCj4gPiArTToJRG9uZ2NodW4g
-Wmh1IDxkb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPg0KPiA+ICtMOglsaW51eC1tZWRpYUB2Z2Vy
-Lmtlcm5lbC5vcmcNCj4gPiArUzoJTWFpbnRhaW5lZA0KPiA+ICtUOglnaXQgZ2l0Oi8vbGludXh0
-di5vcmcvbWVkaWFfdHJlZS5naXQNCj4gPiArRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL21lZGlhL2kyYy9kb25nd29vbixkdzk3NjgueWFtbA0KPiA+ICsNCj4gPiAgRE9OR1dP
-T04gRFc5ODA3IExFTlMgVk9JQ0UgQ09JTCBEUklWRVINCj4gPiAgTToJU2FrYXJpIEFpbHVzIDxz
-YWthcmkuYWlsdXNAbGludXguaW50ZWwuY29tPg0KPiA+ICBMOglsaW51eC1tZWRpYUB2Z2VyLmtl
-cm5lbC5vcmcNCj4gPiAtLSANCj4gPiAyLjkuMg0KDQo=
+Hi Kishon,
 
+On Thu, Apr 23, 2020 at 7:23 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Hi All,
+>
+> This patch series adds support for endpoint driver for R-Car PCIe controller on
+> R-Car/RZ-G2x SoC's, this also extends the epf framework to handle multiple windows
+> supported by the controller for mapping PCI address locally.
+>
+> Note:
+> The cadence/rockchip/designware endpoint drivers are build tested only.
+>
+> Changes for v9 (Re-spun this series as there were minimal changes requested):
+> * Rebased patches on top of v5.7.rc1
+> * Replaced mdelay(1) with usleep_range(1000, 1001) in rcar_pcie_ep_assert_intx()
+> * Added a check for max_functions read from DT to restrict with
+>   RCAR_EPC_MAX_FUNCTIONS
+> * Replaced MSICAP0_MMENUM with MSICAP0_MMESE
+> * Retry ioremap for other windows on failure in pci_epc_mem_alloc_addr()
+> * Fixed looping for number windows in pci_epc_mem_exit()
+> * Set maximum to 1 for max-functions in DT binding (I have restored the acks
+>   from  Rob and Shimoda-san)
+> * Sorted the entry in MAINTAINERS
+>
+> Changes for v8:
+> * Dropped adding R8A774C0 (0x002d) pci-id in pci_ids.h
+> * Fixed typo in commit message for patch 2/8
+> * Reworded commit message for patch 5/8 as suggested by Bjorn
+> * Split up patch to add pci_epc_mem_init() interface to add page_size argument
+>   as suggested by Bjorn.
+>
+> Changes for v7:
+> * Fixed review comments pointed by Shimoda-san
+>   1] Made DT bindings dual licensed, added Shimoda-san as maintainer and fixed
+>      the example as its built with #{address,size}-cells = <1>. I have still
+>      restored the Ack from Rob and Shimoda-san with these changes.
+>   2] Split up the patches so that they can be picked up by respective subsystem
+>      patches 1/4-9/11 are now part of this series.
+>   3] Dropped altering a comment in pci-epc.h
+>   4] Used a local variable align_size in pci_epc_mem_alloc_addr() so that size
+>      variable doesn't get overwritten in the loop.
+>   5] Replaced i-=1 with i--
+>   6] Replaced rcar with R-Car in patch subject and description.
+>   7] Set MACCTLR in init() callback
+>
+> Changes for v6:
+> 1] Rebased patches on endpoint branch of https://git.kernel.org/pub/
+>    scm/linux/kernel/git/lpieralisi/pci.git/
+> 2] Fixed review comments from Shimoda-san
+>    a] Made sure defconfig changes were in separate patch
+>    b] Created rcar_pcie_host/rcar_pcie_ep structures
+>    c] Added pci-id for R8A774C0
+>    d] Added entry in MAINTAINERS for dt-binding
+>    e] Dropped unnecessary braces
+> 3] Added support for msi.
+>
+> Changes for v5:
+> 1] Rebased patches on next branch of https://git.kernel.org/pub/scm/
+>    linux/kernel/git/helgaas/pci.git
+> 2] Fixed review comments reported by Kishon while fetching the matching
+>    window in function pci_epc_get_matching_window()
+> 3] Fixed review comments reported by Bjorn
+>    a] Split patch up first patch so that its easier to review and incremental
+>    b] Fixed typos
+> 4] Included Reviewed tag from Rob for the dt-binding patch
+> 5] Fixed issue reported by Nathan for assigning variable to itself
+>
+> Changes for v4:
+> 1] Fixed dtb_check error reported by Rob
+> 2] Fixed review comments reported by Kishon
+>    a] Dropped pci_epc_find_best_fit_window()
+>    b] Fixed initializing mem ptr in __pci_epc_mem_init()
+>    c] Dropped map_size from pci_epc_mem_window structure
+>
+> Changes for v3:
+> 1] Fixed review comments from Bjorn and Kishon.
+> 3] Converted to DT schema
+>
+> Changes for v2:
+> 1] Fixed review comments from Biju for dt-bindings to include an example
+>    for a tested platform.
+> 2] Fixed review comments from Kishon to extend the features of outbound
+>    regions in epf framework.
+> 3] Added support to parse outbound-ranges in OF.
+>
+> Lad Prabhakar (8):
+>   PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
+>   PCI: rcar: Move shareable code to a common file
+>   PCI: rcar: Fix calculating mask for PCIEPAMR register
+>   PCI: endpoint: Pass page size as argument to pci_epc_mem_init()
+>   PCI: endpoint: Add support to handle multiple base for mapping
+>     outbound memory
+Could you please do the needy for the above two patches, so that this
+can be picked up by Lorenzo.
+
+Cheers,
+--Prabhakar
+
+>   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+>     controller
+>   PCI: rcar: Add endpoint mode support
+>   MAINTAINERS: Add file patterns for rcar PCI device tree bindings
+>
+>  .../devicetree/bindings/pci/rcar-pci-ep.yaml  |   77 ++
+>  MAINTAINERS                                   |    1 +
+>  drivers/pci/controller/Kconfig                |   18 +
+>  drivers/pci/controller/Makefile               |    3 +-
+>  .../pci/controller/cadence/pcie-cadence-ep.c  |    2 +-
+>  .../pci/controller/dwc/pcie-designware-ep.c   |   16 +-
+>  drivers/pci/controller/pcie-rcar-ep.c         |  557 ++++++++
+>  drivers/pci/controller/pcie-rcar-host.c       | 1065 +++++++++++++++
+>  drivers/pci/controller/pcie-rcar.c            | 1206 +----------------
+>  drivers/pci/controller/pcie-rcar.h            |  140 ++
+>  drivers/pci/controller/pcie-rockchip-ep.c     |    2 +-
+>  drivers/pci/endpoint/pci-epc-mem.c            |  204 ++-
+>  include/linux/pci-epc.h                       |   38 +-
+>  13 files changed, 2078 insertions(+), 1251 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+>  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+>  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+>  create mode 100644 drivers/pci/controller/pcie-rcar.h
+>
+> --
+> 2.17.1
+>
