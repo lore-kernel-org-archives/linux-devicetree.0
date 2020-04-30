@@ -2,126 +2,112 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198BBC8300A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 12:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFC4C8300A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 12:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF5D2072A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 12:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85609205ED
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 12:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgD3MgF (ORCPT
+        id S1726685AbgD3MqI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:36:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726053AbgD3MgF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:36:05 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E99C035494;
-        Thu, 30 Apr 2020 05:36:05 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 101482A23DC;
-        Thu, 30 Apr 2020 13:36:03 +0100 (BST)
-Date:   Thu, 30 Apr 2020 14:36:00 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     qi-ming.wu@intel.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        cheol.yong.kim@intel.com, hauke.mehrtens@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org,
-        miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200430143600.27031639@collabora.com>
-In-Reply-To: <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429162249.55d38ee8@collabora.com>
-        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
-        <20200429164832.6800fc70@collabora.com>
-        <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
-        <20200429173107.5c6d2f55@collabora.com>
-        <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
-        <20200430102114.29b6552f@collabora.com>
-        <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
-        <20200430103658.4b0b979e@collabora.com>
-        <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 30 Apr 2020 08:46:08 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:35962 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgD3MqH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 08:46:07 -0400
+Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        by skedge04.snt-world.com (Postfix) with ESMTP id 7A03567A7D8;
+        Thu, 30 Apr 2020 14:46:04 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
+ (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 30 Apr
+ 2020 14:46:03 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1913.007; Thu, 30 Apr 2020 14:46:03 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Adam Ford <aford173@gmail.com>, Anson Huang <Anson.Huang@nxp.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "Li Jun" <jun.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        "Sascha Hauer" <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH 0/4] Add support for i.MX8MM GPUs through Etnaviv
+Thread-Topic: [RFC PATCH 0/4] Add support for i.MX8MM GPUs through Etnaviv
+Thread-Index: AQHWHu1P24EsvLcp2k6XxTQQ1PmCiA==
+Date:   Thu, 30 Apr 2020 12:46:03 +0000
+Message-ID: <20200430124602.14463-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 7A03567A7D8.AE648
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: aford173@gmail.com, anson.huang@nxp.com,
+        christian.gmeiner@gmail.com, daniel.baluta@nxp.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        etnaviv@lists.freedesktop.org, festevam@gmail.com, jun.li@nxp.com,
+        kernel@pengutronix.de, l.stach@pengutronix.de,
+        leonard.crestez@nxp.com, linux+etnaviv@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, peng.fan@nxp.com,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, shengjiu.wang@nxp.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Apr 2020 17:07:03 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-> >>> The question is, is it the same value we have in nand_pa or it is
-> >>> different?
-> >>>      
-> >> Different address which is 0xE1400000 NAND_BASE_PHY address.  
-> > 
-> > Then why didn't you tell me they didn't match when I suggested to pass  
-> 
-> sorry, because you keep asking nand_pa after that only I realized that.
-> 
-> > nand_pa? So now the question is, what does this address represent?  
-> 
->                 EBU-MODULE
->   _________     _______________________
-> |         |   |            |NAND CTRL  |
-> | FPI BUS |==>| CS0(0x174) | 0xE100    ( 0xE14/0xE1C) NAND_PHY_BASE
-> |_________|   |_CS1(0x17C)_|__________ |
-> 
-> EBU_CONRTROLLER_BASE : 0xE0F0_0000
-> HSNAND_BASE: 0xE100_0000
-> NAND_CS0: 0xE140_0000
-> NAND_CS1: 0xE1C0_0000
-> 
-> MEM_REGION_BASE_CS0: 0x17400 (internal to ebu controller )
-> MEM_REGION_BASE_CS1: 0x17C00
-> 
+This series contains patches to enable GPU support for the i.MX8MM.
+There is currently no upstream support for the display subsystem of
+the i.MX8MM, but I have a 5.4-based tree with some ported drivers for
+LCDIF, DSIM bridge, etc. (see [1]) which I used to test the GPU with
+glmark2.
 
-Hm, I wonder if we shouldn't use a 'ranges' property to describe this
-address translation. Something like
+I'm posting this as an RFC for now, as I'm not feeling confident of
+all of the changes. Especially patch 1 seems a bit like a hack. Maybe
+someone can help me understand the underlying problem and/or come up
+with a better fix.
 
-	ebu@xxx {
-		ranges = <0x17400000 0xe1400000 0x1000>,
-			 <0x17c00000 0xe1c00000 0x1000>;
-		reg = <0x17400000>, <0x17c00000>;
-		reg-names = "cs-0", "cs-1";
-	}
+[1] https://git.kontron-electronics.de/linux/linux/-/commits/v5.4-ktn
 
-The translated address (0xE1X00000) will be available in res->start,
-and the non-translated one (0x17X00000) can be retrieved with
-of_get_address(). All you'd have to do then would be calculate the
-mask:
+Frieder Schrempf (4):
+  drm/etnaviv: Prevent IRQ triggering at probe time on i.MX8MM
+  drm/etnaviv: Fix error path in etnaviv_gpu_clk_enable()
+  drm/etnaviv: Change order of enabling clocks to fix boot on i.MX8MM
+  arm64: dts: imx8mm: Add GPU nodes for 2D and 3D core using Etnaviv
 
-	mask = (translated_address & original_address) >> 22;
-	num_comp_bits = fls(mask);
-	WARN_ON(mask != GENMASK(num_comp_bits - 1, 0));
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 36 ++++++++++++
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c     | 68 ++++++++++++++---------
+ 2 files changed, 79 insertions(+), 25 deletions(-)
 
-Which allows you to properly set the ADDR_SEL() register without
-relying on some hardcoded values:
-
-	writel(original_address | EBU_ADDR_SEL_REGEN |
-	       EBU_ADDR_COMP_BITS(num_comp_bits),
-	       ebu_host->ebu + EBU_ADDR_SEL(csid));
-
-That's quite important if we want to merge the xway NAND driver with
-this one.
+-- 
+2.17.1
