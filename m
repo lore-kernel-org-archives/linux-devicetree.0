@@ -2,74 +2,79 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0273C47257
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEC2C47254
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABFDE207DD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB43208C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 20:47:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="BByDysgP"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="pt1YMpbi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgD3UpI (ORCPT
+        id S1726698AbgD3Urb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:45:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgD3UpH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 16:45:07 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675C5C035495
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 13:45:07 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id d25so2382032lfi.11
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 13:45:07 -0700 (PDT)
+        Thu, 30 Apr 2020 16:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726377AbgD3Urb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 16:47:31 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44961C035494
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 13:47:29 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id j3so783110ljg.8
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 13:47:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:organization:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=BmSBD7h3njitpLi5QsmTDnHJWiGkucDb02pMa3UrBRI=;
-        b=BByDysgPi+X1do2xqrwAOLh0HEdR2agc0tWWki02+6dJfEOyJdv7UB5MrlBL/7Ixey
-         NfLIPqu1ByMfCl6/2xN9VH0fkOplnQDTYEpGsU7Tu+L+W+EDW1K80ELxTMUUKMOLxD99
-         GM1eUFRgDXM1iEyyoqyNVnuk2JP6x6gcm4Ow/yDgunn2DxN7Ft8DTpwRg01d3631C2oY
-         q8O4Qh8HE8XTf7DcBZiJ8la5isNoejM/gkmlSBnxwpM3LySpf8H5gUYTNPpH9WfllVHA
-         /Dpav8Z+v7kaVD2qRJ+/cL6OI02Ypflw0/gl3zqItuzkmZR79Y1vFOi6d0A2ya4V6Hij
-         kw4A==
+        h=subject:from:to:cc:references:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UjhaXYLb6et/pS+z2+6lWawVjIKe1ZbJB18SGIv2Zig=;
+        b=pt1YMpbidL1Z1ozdpkX8BKrlWsJSeJ2uJkMUXSNQuVgDZkj/5an+ZHfkaziEH1iDPE
+         hjhzvWNJNpVDFu2ZQPDqBu83kb7sI1yWqGNFc/55HZkT9E9zAHFclWy9bawyYUrBeb1T
+         SMXxTcOjdRS8mMA5MOoEZnthPHvEQxZHQY+fx+Gtc7PKASP5GM41cFxI8kmwv3btzobj
+         wJ9K68W93ldv1zA0IghkSmz9iSZ+UTBeKJugdDzn3/e0WnJ8b4GrP8+1VPXXDt35PetK
+         nnF8eiCDr3vJWit5nbowIftHDRoSEbqtF+UcTOW3Ec2j+GGk5HqbZEOGrPTp50JHKUKH
+         fApQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=BmSBD7h3njitpLi5QsmTDnHJWiGkucDb02pMa3UrBRI=;
-        b=IcH93D+7CKngVvhOpfebA9R4G3UreUqJYqUcJv92hNKptm9BFsA4LUkOe4EKW1SfQZ
-         4RnTmutR8HsIoSchSbJrmH+TEfF3Oj53xU4oOSS7w7A5I0h4zxn/0ic2zbN6ltThvYxs
-         jv7G9whHnQm49utIYeYWLxNNMCIROGQHczeBN+PySkl4qXBk65fHZnNT1hlSiX64MMYw
-         kdhWWw0ocO9p2y8YB6hQT79sRM2Fc3UUU0LP6gYOEWtdV4lS7cXQVXrzZdf87b2A1NYW
-         n7DoCBnvO/oABvi/6ZA/OS2IsvydgpKr1XRx5jOfQ5WaOlOSkApHuQpD1eRcHZtJ39Uu
-         +EnA==
-X-Gm-Message-State: AGi0PuYE55ybAugL1UjiClL9ThCr6mMJd9R3BgMFwQmr6PokOzkKYFTY
-        +EW3jgSJi1wXJUasugRzLWPCvA==
-X-Google-Smtp-Source: APiQypI0RQNqWlNHDVtNIFy45lDwuwOyMBSNaVaz8UyZAB4gxqzn881PlNEa1qMPlbNBmRRjX79/bA==
-X-Received: by 2002:ac2:5988:: with SMTP id w8mr304392lfn.75.1588279504553;
-        Thu, 30 Apr 2020 13:45:04 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=UjhaXYLb6et/pS+z2+6lWawVjIKe1ZbJB18SGIv2Zig=;
+        b=OpR9P+KZ/0OSAbAuXsaXLudpWDZp2ZzVWqAy8qR4W5b5kq/4TGCPNbStb8bj/GzafW
+         K3Ofi3FEcTvAZH/nJ/MlpunexVitX+Z2criZ2UGB7zV9CoFQLLTuHhguysdO7zxppRnp
+         +tSktIsHEOZwrnv1ySfc84aDavYRHPaC7E7GtAY2dbh1ysoc71NrFCHv3hJozf7xEmgr
+         dUQULsVKscn+1gwD0H30wEiQl0NUjAO5N8UUrT3i+KK83fd4R+3dd0SfgPElvi1JcSTq
+         esRN++GKd6LgUUIa4WKZdB5EZnzkM+fKtaDF8sCa9VILGtB8iTbQ9YdkIr52TJr0h9qj
+         Me0A==
+X-Gm-Message-State: AGi0PuY3CGsyCaafTO9J+398aUuRGbumLw0LQpAnyQwlcmFaabjfSjZ5
+        0UrGRr4nAt8zaeM7NG/dRqVlkQ==
+X-Google-Smtp-Source: APiQypJCP49xxKtW5b689TlF/50skrJuIJ0JZ3e/wPMGDzIgLXa3cnRumRDSWkFcln5U2yB/3LulXw==
+X-Received: by 2002:a2e:9785:: with SMTP id y5mr416401lji.66.1588279647576;
+        Thu, 30 Apr 2020 13:47:27 -0700 (PDT)
 Received: from wasted.cogentembedded.com ([2a00:1fa0:880:89c5:86ed:91e3:4d28:af08])
-        by smtp.gmail.com with ESMTPSA id i20sm650562lfe.15.2020.04.30.13.45.03
+        by smtp.gmail.com with ESMTPSA id t8sm640060lfe.25.2020.04.30.13.47.26
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Apr 2020 13:45:03 -0700 (PDT)
+        Thu, 30 Apr 2020 13:47:26 -0700 (PDT)
+Subject: [PATCH v2 1/2] dt-bindings: memory: document Renesas RPC-IF bindings
 From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 0/2] Add Renesas RPC-IF support
 To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Cc:     Mason Yang <masonccyang@mxic.com.tw>, linux-spi@vger.kernel.org,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-mtd@lists.infradead.org
+References: <812e6e58-d13f-3f44-5f55-22266b690c57@cogentembedded.com>
 Organization: Cogent Embedded
-Message-ID: <812e6e58-d13f-3f44-5f55-22266b690c57@cogentembedded.com>
-Date:   Thu, 30 Apr 2020 23:45:02 +0300
+Message-ID: <116683d1-d402-4d7f-3357-1c8cde807076@cogentembedded.com>
+Date:   Thu, 30 Apr 2020 23:47:25 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
  Thunderbird/52.2.1
 MIME-Version: 1.0
+In-Reply-To: <812e6e58-d13f-3f44-5f55-22266b690c57@cogentembedded.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
@@ -78,19 +83,114 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+Renesas Reduced Pin Count Interface (RPC-IF) allows a SPI flash or
+HyperFlash connected to the SoC to be accessed via the external address
+space read mode or the manual mode.
 
-Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
-Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC
-to be accessed via the external address space read mode or the manual mode.
-The memory controller driver for RPC-IF registers either SPI or HyperFLash
-subdevice, depending on the contents of the device tree subnode; it also
-provides the abstract "back end" API that can be used by the "front end"
-SPI/MTD drivers to talk to the real hardware...
+Document the device tree bindings for the Renesas RPC-IF found in the R-Car
+gen3 SoCs.
 
 Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
 
-[1/2] dt-bindings: memory: document Renesas RPC-IF bindings
-[2/2] memory: add Renesas RPC-IF driver
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-MBR, Sergei
+---
+Changes in version 2:
+- rewrote the bindings in YAML.
+
+ Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml |   88 ++++++++++
+ 1 file changed, 88 insertions(+)
+
+Index: linux/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml
+===================================================================
+--- /dev/null
++++ linux/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml
+@@ -0,0 +1,88 @@
++# SPDX-License-Identifier: (GPL-2.0)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/memory-controllers/renesas,rpc-if.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas Reduced Pin Count Interface (RPC-IF)
++
++maintainers:
++  - Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
++
++description: |
++  Renesas RPC-IF allows a SPI flash or HyperFlash connected to the SoC to
++  be accessed via the external address space read mode or the manual mode.
++
++  The flash chip itself should be represented by a subnode of the RPC-IF node.
++  The flash interface is selected based on the "compatible" property of this
++  subnode:
++  - if it contains "jedec,spi-nor", then SPI is used;
++  - if it contains "cfi-flash", then HyperFlash is used.
++
++allOf:
++  - $ref: "/schemas/spi/spi-controller.yaml#"
++
++properties:
++  compatible:
++    items:
++      - enum:
++        renesas,r8a77980-rpc-if # device is a part of R8A77980 SoC
++	renesas,r8a77995-rpc-if # device is a part of R8A77995 SoC
++      - enum:
++        renesas,rcar-gen3-rpc-if # a generic R-Car gen3 device
++
++  reg:
++    items:
++       - description: RPC-IF registers
++       - description: direct mapping read mode area
++       - description: write buffer area
++
++  reg-names:
++    items:
++      - const: regs
++      - const: dirmap
++      - const: wbuf
++
++  clocks:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++patternProperties:
++  "^.*@[0-9a-f]+$":
++    type: object
++    properties:
++      compatible:
++        oneOf:
++          - const: cfi-flash
++          - const: jedec,spi-nor
++
++examples:
++  - |
++    #include <dt-bindings/clock/renesas-cpg-mssr.h>
++    #include <dt-bindings/power/r8a77995-sysc.h>
++
++    spi@ee200000 {
++      compatible = "renesas,r8a77995-rpc-if", "renesas,rcar-gen3-rpc-if";
++      reg = <0 0xee200000 0 0x200>,
++            <0 0x08000000 0 0x4000000>,
++            <0 0xee208000 0 0x100>;
++      reg-names = "regs", "dirmap", "wbuf";
++      clocks = <&cpg CPG_MOD 917>;
++      power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++      resets = <&cpg 917>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      flash@0 {
++        compatible = "jedec,spi-nor";
++        reg = <0>;
++        spi-max-frequency = <40000000>;
++        spi-tx-bus-width = <1>;
++        spi-rx-bus-width = <1>;
++      };
++    };
