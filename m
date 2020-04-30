@@ -2,319 +2,131 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE84C8300B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE3CC8300B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE102076D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:25:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SX28jIAa"
+	by mail.kernel.org (Postfix) with ESMTP id 705152074A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 13:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgD3NZT (ORCPT
+        id S1727090AbgD3NdG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:25:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50686 "EHLO
+        Thu, 30 Apr 2020 09:33:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726808AbgD3NZT (ORCPT
+        by vger.kernel.org with ESMTP id S1727088AbgD3NdG (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:25:19 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95147C035494
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 06:25:18 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id q124so2730845pgq.13
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 06:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XTBlmhkri6TiYDFterPGpataxQ1L0ZfDDr5My4ZNVYI=;
-        b=SX28jIAaSq3H+R+hHlrq1bMCxhM220Au9myWZXA9Xpb1rV+4BK89hYosNiPKWicDp0
-         lzielamSZOAD9M8bzsdNEAE3x1i2KOm79G1ZNdiGPnlP7mP8od5fhDZ39kUz7uhAUPrw
-         q4tprD6TjzTrzu0AAE9sTTVdE1FbKMnZcbKFCYiMqkDsMheIJ67G/yTbJLFKASFlK/Q6
-         BU75zdeJtlf6/VVf1Ir8ymFIo8RgdxZOVgt9gG9zmn5kfMzDyMrY1RWfZ4IHsj+6I8J3
-         kLfBgB0oiA0nn3tQBQd6x8VqO/HSRT50rDoQ1mHje8rB7AD9rQJeeLe0jvu46PgdbpCX
-         8fUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XTBlmhkri6TiYDFterPGpataxQ1L0ZfDDr5My4ZNVYI=;
-        b=HTYpr6wIsu3cQLQtBLOT72ig6BhoZLecmFT4Ro9oMKGeDqLUSaMgE/HRhNuEHg9S4j
-         EYLZJRi9neaAStX6Sj4hXA5LoepvNY2YVajCpgT5Qy2PU0QVjn92kr584ZXlm4XEGMBz
-         qyP3PxZVwPgpwelAVXpyzAk4tY+gulRw0Qlo0jcoUMdRNN3X8+1RbSB0RYQR5WCUrDAa
-         apq+4x/RTRGk3kI2eB/Gby7Nx5KgoacTzorxMYzpEiYO2tD2HWFoDcjbK4fnt5IMXbJR
-         AWjNUX4Fbz5JWknzcE4aqd2dglDeLvROLUbNccOUXUbNxnhVfnDS52g+WZARb59HpfaZ
-         ZZHg==
-X-Gm-Message-State: AGi0PubPFHxNC/PFv6jEocD1LK4emhzpWueQCMrE+m27ZYhyPhuvEio1
-        nXdkgrYFSuH1k/nbehsXhi2ZAQ==
-X-Google-Smtp-Source: APiQypKGEDLBdyzLjZFpAv8Ya3P+JqT3A0dW/8c1QsRriQxtstlVqtyvoi4fuSJvx7vrVJy6COHL8g==
-X-Received: by 2002:a63:43c7:: with SMTP id q190mr3225670pga.189.1588253117994;
-        Thu, 30 Apr 2020 06:25:17 -0700 (PDT)
-Received: from devnote (NE2965lan1.rev.em-net.ne.jp. [210.141.244.193])
-        by smtp.gmail.com with ESMTPSA id o125sm3146547pgo.74.2020.04.30.06.25.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 06:25:17 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 22:25:13 +0900
-From:   Masami Hiramatsu <masami.hiramatsu@linaro.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 2/2] arm64: dts: uniphier: Add support for Akebi96
-Message-Id: <20200430222513.0adeb8bcc8e05501b730b0b0@linaro.org>
-In-Reply-To: <158824887998.2799.1402930732677315138.stgit@localhost>
-References: <158824887998.2799.1402930732677315138.stgit@localhost>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 30 Apr 2020 09:33:06 -0400
+X-Greylist: delayed 13628 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 30 Apr 2020 06:33:05 PDT
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDF39C035494;
+        Thu, 30 Apr 2020 06:33:05 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id C2C81634C91;
+        Thu, 30 Apr 2020 16:32:57 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jU9JB-0000Re-LJ; Thu, 30 Apr 2020 16:32:57 +0300
+Date:   Thu, 30 Apr 2020 16:32:57 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Robert Foss <robert.foss@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200430133257.GM867@valkosipuli.retiisi.org.uk>
+References: <20200429162437.2025699-1-robert.foss@linaro.org>
+ <20200429162437.2025699-3-robert.foss@linaro.org>
+ <20200430093524.GB2188@pengutronix.de>
+ <20200430094549.GF867@valkosipuli.retiisi.org.uk>
+ <20200430095332.GC2188@pengutronix.de>
+ <20200430095907.GG867@valkosipuli.retiisi.org.uk>
+ <20200430101157.GD2188@pengutronix.de>
+ <20200430102018.GI867@valkosipuli.retiisi.org.uk>
+ <20200430120740.GG2188@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430120740.GG2188@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the device tree for Akebi96. Akebi96 is a 96boards certified
-development board based on UniPhir LD20.
-( https://www.96boards.org/product/akebi96/ )
+On Thu, Apr 30, 2020 at 02:07:41PM +0200, Marco Felsch wrote:
+> On 20-04-30 13:20, Sakari Ailus wrote:
+> > On Thu, Apr 30, 2020 at 12:11:57PM +0200, Marco Felsch wrote:
+> > > On 20-04-30 12:59, Sakari Ailus wrote:
+> > > > Hi Marco,
+> > > > 
+> > > > On Thu, Apr 30, 2020 at 11:53:32AM +0200, Marco Felsch wrote:
+> > > > > Hi Sakari,
+> > > > > 
+> > > > > On 20-04-30 12:45, Sakari Ailus wrote:
+> > > > > > Hi Marco,
+> > > > > > 
+> > > > > > On Thu, Apr 30, 2020 at 11:35:24AM +0200, Marco Felsch wrote:
+> > > 
+> > > ...
+> > > 
+> > > > > > > > -	if (mclk != OV8856_MCLK) {
+> > > > > > > > -		dev_err(dev, "external clock %d is not supported", mclk);
+> > > > > > > > -		return -EINVAL;
+> > > > > > > > +	if (!is_acpi_node(fwnode)) {
+> > > > > > > > +		ov8856->xvclk = devm_clk_get(dev, "xvclk");
+> > > > > > > > +		if (IS_ERR(ov8856->xvclk)) {
+> > > > > > > > +			dev_err(dev, "could not get xvclk clock (%pe)\n",
+> > > > > > > > +					ov8856->xvclk);
+> > > > > > > > +			return PTR_ERR(ov8856->xvclk);
+> > > > > > > > +		}
+> > > > > > > > +
+> > > > > > > > +		clk_set_rate(ov8856->xvclk, xvclk_rate);
+> > > > > > > > +		xvclk_rate = clk_get_rate(ov8856->xvclk);
+> > > > > > > >  	}
+> > > > > > > 
+> > > > > > > Why do we handle the clock only in DT case? Is there a problem with the
+> > > > > > > clock handling and ACPI?
+> > > > > > 
+> > > > > > Not really, it's just that ACPI does not provide an interface to the clocks
+> > > > > > as such.
+> > > > > 
+> > > > > But you will get a clk by devm_clk_get()?
+> > > > 
+> > > > No, because ACPI does not expose one to drivers. Effectively the entire
+> > > > power sequences are implemented in ACPI, not in the driver.
+> > > > 
+> > > 
+> > > Ah okay, thanks for the explanation. I'm really not into the ACPI
+> > > stuff.. So this means the __power_off / power_on should only be done if
+> > > we are using DT's?
+> > 
+> > Correct. That's why it bails out early. It could be yet earlier though,
+> > without doing anything.
+> 
+> Yes I see. For easier and error less prone handling I would prefer:
+> 
+> if (is_acpi_node())
+> 	return 0;
+> 
+> as first instruction for __power_off/on().
+> 
+> Also I would refator the ov8856_check_hwcfg() so the common part can be
+> used by this function and by a ov8856_parse_of() function. But thats
+> only my opinion.
 
-This board has;
-- MAX3421 USB-SPI chip on SPI port3 (for USB gadget port)
-- Simple frame buffer with 1080p fixed resolution.
-- I2S port which is connected to aout1b instead of aout1.
-- 3 serial ports, only serial3 has CTS/RTS.
-- No NAND, only eMMC on the board.
-- OP-TEE installed firmware.
+I guess it could be the same function, up to you.
 
-Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- Changes in v5:
-  - Remove unneeded RGMII setting from eth node.
-  - Remove unused "vbus" interrupt and add interrupt-names property
-    to max3420-udc node.
-  - Add the address to framebuffer.
- Changes in v4:
-  - Fix to remove unnecessary "aout1" from pinctrl_aout1.
----
- arch/arm64/boot/dts/socionext/Makefile             |    1 
- .../boot/dts/socionext/uniphier-ld20-akebi96.dts   |  189 ++++++++++++++++++++
- 2 files changed, 190 insertions(+)
- create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts
-
-diff --git a/arch/arm64/boot/dts/socionext/Makefile b/arch/arm64/boot/dts/socionext/Makefile
-index d45441249cb5..dda3da33614b 100644
---- a/arch/arm64/boot/dts/socionext/Makefile
-+++ b/arch/arm64/boot/dts/socionext/Makefile
-@@ -2,6 +2,7 @@
- dtb-$(CONFIG_ARCH_UNIPHIER) += \
- 	uniphier-ld11-global.dtb \
- 	uniphier-ld11-ref.dtb \
-+	uniphier-ld20-akebi96.dtb \
- 	uniphier-ld20-global.dtb \
- 	uniphier-ld20-ref.dtb \
- 	uniphier-pxs3-ref.dtb
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts b/arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts
-new file mode 100644
-index 000000000000..1b7a1284d184
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+//
-+// Device Tree Source for Akebi96 Development Board
-+//
-+// Derived from uniphier-ld20-global.dts.
-+//
-+// Copyright (C) 2015-2017 Socionext Inc.
-+// Copyright (C) 2019-2020 Linaro Ltd.
-+
-+/dts-v1/;
-+#include <dt-bindings/gpio/uniphier-gpio.h>
-+#include "uniphier-ld20.dtsi"
-+
-+/ {
-+	model = "Akebi96";
-+	compatible = "socionext,uniphier-ld20-akebi96",
-+		     "socionext,uniphier-ld20";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	aliases {
-+		serial0 = &serial0;
-+		serial1 = &serial1;
-+		serial2 = &serial2;
-+		serial3 = &serial3;
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+		i2c4 = &i2c4;
-+		i2c5 = &i2c5;
-+		spi0 = &spi0;
-+		spi1 = &spi1;
-+		spi2 = &spi2;
-+		spi3 = &spi3;
-+		ethernet0 = &eth;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0 0x80000000 0 0xc0000000>;
-+	};
-+
-+	framebuffer@c0000000 {
-+		compatible = "simple-framebuffer";
-+		reg = <0 0xc0000000 0 0x02000000>;
-+		width = <1920>;
-+		height = <1080>;
-+		stride = <7680>;
-+		format = "a8r8g8b8";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		memory@c0000000 {
-+			reg = <0 0xc0000000 0 0x02000000>;
-+			no-map;
-+		};
-+	};
-+
-+	sound {
-+		compatible = "audio-graph-card";
-+		label = "UniPhier LD20";
-+		dais = <&spdif_port0
-+			&comp_spdif_port0>;
-+	};
-+
-+	spdif-out {
-+		compatible = "linux,spdif-dit";
-+		#sound-dai-cells = <0>;
-+
-+		port@0 {
-+			spdif_tx: endpoint {
-+				remote-endpoint = <&spdif_hiecout1>;
-+			};
-+		};
-+	};
-+
-+	comp-spdif-out {
-+		compatible = "linux,spdif-dit";
-+		#sound-dai-cells = <0>;
-+
-+		port@0 {
-+			comp_spdif_tx: endpoint {
-+				remote-endpoint = <&comp_spdif_hiecout1>;
-+			};
-+		};
-+	};
-+
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
-+};
-+
-+&serial0 {
-+	/* Onboard USB-UART */
-+	status = "okay";
-+};
-+
-+&serial2 {
-+	/* LS connector UART1 */
-+	status = "okay";
-+};
-+
-+&serial3 {
-+	/* LS connector UART0 */
-+	status = "okay";
-+};
-+
-+&spdif_hiecout1 {
-+	remote-endpoint = <&spdif_tx>;
-+};
-+
-+&comp_spdif_hiecout1 {
-+	remote-endpoint = <&comp_spdif_tx>;
-+};
-+
-+&eth {
-+	status = "okay";
-+	phy-handle = <&ethphy>;
-+};
-+
-+&mdio {
-+	ethphy: ethphy@0 {
-+		reg = <0>;
-+	};
-+};
-+
-+&usb {
-+	status = "okay";
-+};
-+
-+&pcie {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	/* LS connector I2C0 */
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	/* LS connector I2C1 */
-+	status = "okay";
-+};
-+
-+&spi3 {
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	usb-over-spi@0 {
-+		compatible = "maxim,max3421-udc";
-+		reg = <0>;
-+		spi-max-frequency = <12500000>;
-+		interrupt-parent = <&gpio>;
-+		interrupt-names = "udc";
-+		interrupts = <0 2>;
-+	};
-+};
-+
-+&gpio {
-+	/* IRQs for Max3421 */
-+	xirq0 {
-+		gpio-hog;
-+		gpios = <UNIPHIER_GPIO_IRQ(0) 1>;
-+		input;
-+	};
-+	xirq10 {
-+		gpio-hog;
-+		gpios = <UNIPHIER_GPIO_IRQ(10) 1>;
-+		input;
-+	};
-+};
-+
-+&pinctrl_aout1 {
-+	groups = "aout1b";
-+};
-+
-+&pinctrl_uart3 {
-+	groups = "uart3", "uart3_ctsrts";
-+};
-
+-- 
+Sakari Ailus
