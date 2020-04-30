@@ -2,93 +2,93 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB823C4724C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66288C4724C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC4320873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255366;
-	bh=9BBncl0EzK2d/c5fAvPdKiPR4PYyEiyOZ++ZjzrzVpA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vi6n5sh/TLMWk1ovCiqD+XdZFPQpdIVBLxUe8IiGoWQWvVc+QsehmbIxtDhujmgz7
-	 t3GYkE0dkLtAtvVWIoqKM5AoVoDzg/7vqN7c6bDR9wcrNIAxZIZhocTjg8fHP9dak4
-	 b9OhxvaPjfnLFen+JD3Jub84qtQP6fLbRlLqdKrQ=
+	by mail.kernel.org (Postfix) with ESMTP id 44E892063A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbgD3Nxl (ORCPT
+        id S1729453AbgD3OC5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728763AbgD3Nxk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:40 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1726624957;
-        Thu, 30 Apr 2020 13:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254819;
-        bh=9BBncl0EzK2d/c5fAvPdKiPR4PYyEiyOZ++ZjzrzVpA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gQZW082JUMmilTGTZ+BGjOl+pEp1FtB72ncGc28UmQJGX3Yn4sAYicw4Wi6eT85C/
-         UvD+UdTZUmmNrjrHQrkmTGTAiLuHrIqCV0j4RBibm0zgjbHDGEQAsCxelt2s6FWOuE
-         YTUJvWFv29zOz06kaScEKh6rR/IkVV8DYQZZk+C8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 12/30] ARM: dts: bcm283x: Disable dsi0 node
-Date:   Thu, 30 Apr 2020 09:53:07 -0400
-Message-Id: <20200430135325.20762-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
-References: <20200430135325.20762-1-sashal@kernel.org>
+        Thu, 30 Apr 2020 10:02:57 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37029 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729452AbgD3OC4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 10:02:56 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r25so5294160oij.4;
+        Thu, 30 Apr 2020 07:02:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sJs/ccRnc3IpftOPmZxsp+U77POq5aMrgerBg7OaDG4=;
+        b=C6sAA3TNK9HOmmQw7lHiHuhS/WEUUHmBnOScvuDjny8G++cyYWIag1+p4NiPy6WG3P
+         1gYfqbxN81AFs4ooqm57N8efmbU6C9UJskl4+qcNm+HklRkKYDpSNyMRK16XY4FaT6nI
+         FPIQ6oIRn2iLIqMRQZ0T9y8QI1hKzEG5lq8ihPLaLOtUAKQW1bqFF0R0Tc+0Nv0f6DUI
+         LQ1FslT5nd60Y9kxFjpspqxTjCMYVXjkQF0MIx8DbkLMBBAwkeabPuzweix5Yc2Yauhl
+         bVxmtHXd4W8bqdEAnmAp/Z6MiTZDU/Neq2VT+trnfpURueKAjGWPktEQE5duQzhSrF4J
+         jOrA==
+X-Gm-Message-State: AGi0PuaGncbbJi8W0MI02FBWyPoL4N0Q7sglndjRU5SBp+8cw3v4Ae5y
+        rPuxthl0VD6vnyzPDm+lgKSzGFriPIymPAs7S+psr4rH
+X-Google-Smtp-Source: APiQypJ0gb+RTtB2XK9qYeGrvR6ZbhTKXtAi0sTZFb9b/YKzwx/yPxkzE6lCQbIOJJ/J3ynAVkE1ekKFQSCnJOLDnKM=
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr1887761oig.54.1588255375518;
+ Thu, 30 Apr 2020 07:02:55 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Apr 2020 16:02:44 +0200
+Message-ID: <CAMuHMdU4zynHLhxte4gHRc=G9SvcX0ghwZtFFOdN2Vp5x1=hnw@mail.gmail.com>
+Subject: Re: [PATCH 13/18] dt-bindings: serial: renesas,scifa: Document
+ r8a7742 bindings
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFA ports,
+> so document the SoC specific bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-[ Upstream commit 90444b958461a5f8fc299ece0fe17eab15cba1e1 ]
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Since its inception the module was meant to be disabled by default, but
-the original commit failed to add the relevant property.
+Gr{oetje,eeting}s,
 
-Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and clocks")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/bcm283x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+                        Geert
 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index c9322a56300dc..f9add515301fd 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -476,6 +476,7 @@
- 					     "dsi0_ddr2",
- 					     "dsi0_ddr";
- 
-+			status = "disabled";
- 		};
- 
- 		thermal: thermal@7e212000 {
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
