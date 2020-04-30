@@ -2,309 +2,108 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F937C83000
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 01:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB918C83006
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 01:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2DB20787
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 01:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588211050;
-	bh=h3P1i5qAc2wprH35H7ZGFY+sKkbP6qrHbiT2KIxb6qg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NPnu1SPmeb5QJRjcwbuvdBcvY49RLVoCdyj4XOJ4oNcIEOPHTRO4TDfWTkhZjZ4c6
-	 WFVhfbG+exvzg10v17rGC/lSivweGPoKqI8Z66LcXd39Iwjl+T6xEoVlczp0Z/TyUp
-	 T4v7TLRMCrSxiaUHenMR0eBf6SNYLFdwJ82Pl4dU=
+	by mail.kernel.org (Postfix) with ESMTP id CC00A2082E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 01:54:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vB4VPh0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgD3BoH (ORCPT
+        id S1726500AbgD3Byb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:44:07 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42707 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgD3BoG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 21:44:06 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m18so3551503otq.9;
-        Wed, 29 Apr 2020 18:44:05 -0700 (PDT)
+        Wed, 29 Apr 2020 21:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgD3Byb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Apr 2020 21:54:31 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8540C035494;
+        Wed, 29 Apr 2020 18:54:30 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id l11so3398028lfc.5;
+        Wed, 29 Apr 2020 18:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=6IdL3BAcEz7abiV3g4YHEMCO9WXnls6KQ2pdHBxgwww=;
+        b=vB4VPh0Syzb1zOX3vCVy9aTmDEvNRDG4JWKAOCurlhM2NNg1xvtsdEt8WjAiN2CVu5
+         cgIpLkOscWzQT222s35toq3cpsLZk5HaLa0INMlT8gRS74V9HQhQbrFt5Fmy1YTbmRac
+         RLG3pk6JIWjpVcTKCGBS7O13XX5GwqFVtbSthQKNPxBMNdMz5p1qTbuxmKLyXa6I7nJ8
+         fBJdvkQO79G7Li/YpzsCygEapfpxxsnMh2q6AslCabuBSQal5qqkUTAS4efcFb0Nvsni
+         I6wTJF6uCKkiuEjwF8+1wLqhXTY9A7v7poWjpgwx8y1xs1t5ZRsm/0iLhUiI5/SISr4C
+         yIaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=kFOY9LBT7oRxXs+9HBZXsCqB/74byVIkRhIK2w5gsqU=;
-        b=Ta282Fq6bv40GNFwjNn/cooxiVObXeMXzIWkei5CSqUj56uJH1TGEaPAaqYj6HrAeM
-         KLZJBH/SOQeXg67P2Z5AJK53g+G1eFW+feNGG2cXGhIPg7pZ7xy8D7b7kg5kLpw2NRg8
-         LRuQ0Eq77NI3luLmylbh7bsav1whBV94HlOILyGsX9gF1YOoIro6srSevfV9Y8E4pSt6
-         2R9uLmKeoDChbovbiLO3JB9+n/zdKnXWO9i5HecyJ4LdRfi9xsgqAyyRq7OQ7SkR8Aam
-         QarQfaq7Ywx6TcHoIYHJ0fN9HpecMDgyRqrMZ6WYm59Y6+9zABfnv/4U8sC5RDSKjvzM
-         fJEg==
-X-Gm-Message-State: AGi0PuZqmH7oJrvJm7uQQeP2aUgW3cYzq1hzucTGsh5QxHJWo0H7oUL1
-        WnQbb6kfo877OVbKjq7+SA==
-X-Google-Smtp-Source: APiQypLeXWVNTM/kAh0IfxfyEeLbDd3n3glnfR2APAbNu1iLMd8dVDVz7bMK/hmFQ5E4taHp1lRB/g==
-X-Received: by 2002:a9d:694e:: with SMTP id p14mr650572oto.237.1588211045159;
-        Wed, 29 Apr 2020 18:44:05 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s10sm846379otd.69.2020.04.29.18.44.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 18:44:04 -0700 (PDT)
-Received: (nullmailer pid 6061 invoked by uid 1000);
-        Thu, 30 Apr 2020 01:44:03 -0000
-Date:   Wed, 29 Apr 2020 20:44:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, sakari.ailus@iki.fi,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v8 3/4] dt-bindings: media: i2c: Add bindings for IMI
- RDACM2x
-Message-ID: <20200430014403.GA18465@bogus>
-References: <20200417103424.5875-1-kieran.bingham+renesas@ideasonboard.com>
- <20200417103424.5875-4-kieran.bingham+renesas@ideasonboard.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200417103424.5875-4-kieran.bingham+renesas@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=6IdL3BAcEz7abiV3g4YHEMCO9WXnls6KQ2pdHBxgwww=;
+        b=gs3NhhOmB+AR1EG9G2MpLRpUF32cSrErxbsxbZ+Bmq8xBatWEnyuFLQHcxGpzZRn51
+         Xl+UxFdSoYZN4kKMMq5Ux+YfFpj7TK7a8Q4oZxUIcGHtY8KUEv4o0Wm1ZfiHWvfbhMun
+         Pqesip0w4G2/YUOeguHU6yxi2qnW/O6+K+SymkvQKkAmfF6l5Q30eWFZY8lIYpGSVn+C
+         VEqJla7vZP4Am82w+zJ5+HVjEdhsARXXKOKEfmvjynAnSv9MuxZtAKtM8hbt2zPnYbWp
+         En1FKmzMj32x7wPQKAb/Tn8AOgKa6UK10q3HaR0mK9sP3DK6abwoBfgh25HpShurKoZC
+         OnJA==
+X-Gm-Message-State: AGi0Pua1p2t4fgR5UgaOUev+By6yOwpFYadv+4IaW54r/+nYE2dvRwmU
+        HP8Rbo9DP68unyre8KFeOT2fckE2
+X-Google-Smtp-Source: APiQypIBbHrp4/2F2tJ4OpI6yrP0A2W2YCxYGDZG8ts8NryaGS4elN+6cmeSxBdo5jMf7GZu8d1axQ==
+X-Received: by 2002:ac2:505a:: with SMTP id a26mr127711lfm.177.1588211669250;
+        Wed, 29 Apr 2020 18:54:29 -0700 (PDT)
+Received: from [172.16.20.20] ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id x24sm3215886lji.52.2020.04.29.18.54.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Apr 2020 18:54:28 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: [PATCH 0/6] arm64: dts: meson-gx: add initial playback support
+From:   Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <20200421163935.775935-1-jbrunet@baylibre.com>
+Date:   Thu, 30 Apr 2020 05:54:24 +0400
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4F65325B-9B07-4798-869E-7BA0E3E66E13@gmail.com>
+References: <20200421163935.775935-1-jbrunet@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+X-Mailer: Apple Mail (2.3445.104.14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:34:23AM +0100, Kieran Bingham wrote:
-> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> The IMI RDACM20 and IMI RDACM21 are Gigabit Multimedia Serial Link (GMSL) camera
-> capable of transmitting video and I2C control messages on a coax cable
-> physical link for automotive applications.
-> 
-> Document their device tree bindings.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> ---
-> v2:
->  - Provide imi vendor prefix
->  - Fix minor spelling
-> 
-> v3:
->  - update binding descriptions
-> 
-> v4:
->  - No change
-> 
-> v5:
->  - Specify optional third reg address for the MCU
-> 
-> v7:
->  [Jacopo]
->  - Rename to imi,rdacm2x-gmsl.yaml
->  - Exand bindings to describe RDACM21
-> ---
->  .../bindings/media/i2c/imi,rdacm2x-gmsl.yaml  | 161 ++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  2 files changed, 163 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml b/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
-> new file mode 100644
-> index 000000000000..8476e99b46b5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
-> @@ -0,0 +1,161 @@
-> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> +# Copyright (C) 2019 Renesas Electronics Corp.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/imi,rdacm2x-gmsl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title:  IMI D&D RDACM20 and RDACM21 Automotive Camera Platforms
-> +
-> +maintainers:
-> +  - Jacopo Mondi <jacopo+renesas@jmondi.org>
-> +  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> +  - Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> +
-> +description: -|
-> +  The IMI D&D RDACM20 and RDACM21 are GMSL-compatible camera designed for
-> +  automotive applications.
-> +
-> +  The RDACM20 camera module encloses a Maxim Integrated MAX9271 GMSL serializer,
-> +  coupled with an OV10635 image sensor and an embedded MCU. Both the MCU and
-> +  the image sensor are connected to the serializer local I2C bus and are
-> +  accessible by the host SoC by direct addressing.
-> +
-> +  The RDACM21 camera module encloses the same serializer, coupled with an
-> +  OV10640 image sensor and an OV490 ISP. Only the OV490 ISP is interfaced to
-> +  the serializer local I2C bus while the image sensor is not accessible from
-> +  the host SoC.
-> +
-> +  They both connect to a remote GMSL endpoint through a coaxial cable.
-> +
-> +                                                   IMI RDACM20
-> +  +---------------+                        +--------------------------------+
-> +  |      GMSL     |   <- Video Stream      |       <- Video--------\        |
-> +  |               |< === GMSL Link ====== >|MAX9271<- I2C bus-> <-->OV10635 |
-> +  | de-serializer |   <- I2C messages ->   |                   \<-->MCU     |
-> +  +---------------+                        +--------------------------------+
-> +
-> +                                                   IMI RDACM21
-> +  +---------------+                        +--------------------------------+
-> +  |      GMSL     |   <- Video Stream      |       <- Video--------\        |
-> +  |               |< === GMSL Link ====== >|MAX9271<- I2C bus-> <-->OV490   |
-> +  |               |   <- I2C messages ->   |                          |     |
-> +  | de-serializer |                        |          OV10640 <-------|     |
-> +  +---------------+                        +--------------------------------+
-> +
-> +  Both camera modules serialize video data generated by the embedded camera
-> +  sensor on the GMSL serial channel to a remote GMSL de-serializer. They also
-> +  receive and transmit I2C messages encapsulated and transmitted on the GMSL
-> +  bidirectional control channel.
-> +
-> +  All I2C traffic received on the GMSL link not directed to the serializer is
-> +  propagated on the local I2C bus to the remote device there connected. All the
-> +  I2C traffic generated on the local I2C bus not directed to the serializer is
-> +  propagated to the remote de-serializer encapsulated in the GMSL control
-> +  channel.
-> +
-> +  The RDACM20 and RDACM21 DT node should be a direct child of the GMSL
-> +  deserializer's I2C bus corresponding to the GMSL link that the camera is
-> +  attached to.
-> +
-> +properties:
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +        - enum:
 
-You can drop oneOf and items.
+> On 21 Apr 2020, at 8:39 pm, Jerome Brunet <jbrunet@baylibre.com> =
+wrote:
+>=20
+> This patchset is adding the aiu support in DT and well as basic card
+> support for the p230/q200 and libretech boards
+>=20
+> I was hoping to provide the internal codec support with this series =
+but
+> this is still blocked on the reset dt-bindings of the DAC [0].
+>=20
+> So far, things are fairly stable on these boards. I have experienced
+> a few glitches on rare occasions. I have not been able to precisely =
+found
+> out why. It seems to be linked the AIU resets and 8ch support. Maybe =
+more
+> eyes (and ears) on this will help. If things get annoying and no =
+solution
+> is found, I'll submit a change to restrict the output to i2s 2ch.
+>=20
+> [0]: =
+https://lore.kernel.org/r/20200122092526.2436421-1-jbrunet@baylibre.com
 
-> +          - imi,rdacm20
-> +          - imi,rdacm21
-> +
-> +  reg:
-> +    description: -|
-> +      I2C device addresses, the first to be assigned to the serializer, the
-> +      following ones to be assigned to the remote devices.
-> +
-> +      For RDACM20 the second entry of the property is assigned to the
-> +      OV10635 image sensor and the optional third one to the embedded MCU.
-> +
-> +      For RDACM21 the second entry is assigned to the OV490 ISP and the optional
-> +      third one ignored.
-> +
-> +    minItems: 2
-> +    maxItems: 3
-> +
-> +  port:
-> +    type: object
-> +    additionalProperties: false
-> +    description: -|
-> +      Connection to the remote GMSL endpoint are modelled using the OF graph
-> +      bindings in accordance with the video interface bindings defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +      The device node contains a single "port" child node with a single
-> +      "endpoint" sub-device.
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          remote-endpoint:
-> +            description: -|
-> +              phandle to the remote GMSL endpoint sub-node in the remote node
-> +              port.
-> +            maxItems: 1
-> +
-> +        required:
-> +          - remote-endpoint
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - port
-> +
-> +examples:
-> +  - |
-> +    i2c@e66d8000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      reg = <0 0xe66d8000 0 0x40>;
-> +
-> +      camera@31 {
-> +        compatible = "imi,rdacm20";
-> +        reg = <0x31>, <0x41>, <0x51>;
-> +
-> +        port {
-> +          rdacm20_out0: endpoint {
-> +            remote-endpoint = <&max9286_in0>;
-> +          };
-> +        };
-> +      };
-> +    };
-> +
-> +  - |
-> +    i2c@e66d8000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      reg = <0 0xe66d8000 0 0x40>;
-> +
-> +      camera@31 {
-> +        compatible = "imi,rdacm21";
-> +        reg = <0x31>, <0x41>;
-> +
-> +        port {
-> +          rdacm21_out0: endpoint {
-> +            remote-endpoint = <&max9286_in0>;
-> +          };
-> +        };
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index d3891386d671..dcbecdc58731 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -453,6 +453,8 @@ patternProperties:
->      description: Ingenieurburo Fur Ic-Technologie (I/F/I)
->    "^ilitek,.*":
->      description: ILI Technology Corporation (ILITEK)
-> +  "^imi,.*":
-> +    description: Integrated Micro-Electronics Inc.
->    "^img,.*":
+I have a reproducible way to provoke one glitch using Kodi but we can =
+talk
+about that off-list. Overall the series (and changes in [0] above) work
+well and it=E2=80=99s great to see progress.
 
-Alphabetical order...
-
-With those fixes,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
+Tested-by: Christian Hewitt <christianshewitt@gmail.com>=
