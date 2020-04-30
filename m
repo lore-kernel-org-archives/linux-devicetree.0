@@ -2,156 +2,192 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4ACC47253
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 18:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601AEC47253
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 18:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD30720836
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 18:21:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kt9s26Qo"
+	by mail.kernel.org (Postfix) with ESMTP id 4CC062082E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 18:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgD3SVh (ORCPT
+        id S1726375AbgD3Sda (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 14:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726375AbgD3SVg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:21:36 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5BFC035495
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 11:21:36 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id s11so4698631vsq.13
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 11:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=SR5cmb+TdKfA9P9unlHlcoWqQ+iFT2b4XsANwGqxz5Y=;
-        b=Kt9s26Qov6Qn68/Pe3SRmeowZf7qJWgEO/1aiZYlcrWn/63/H0Mxf0JJVVMFh+pL7n
-         K4YQd/0YimnlqtXjKhoN+B+6gQ/2W073uz2X5RxT5/69tfGQIiW/gnVrr3EHLGpP1Q86
-         2T/hEImFFlMGoRGn2f5o5tH6Ov3xB60rvdHTo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=SR5cmb+TdKfA9P9unlHlcoWqQ+iFT2b4XsANwGqxz5Y=;
-        b=rJC9Yb2Z+A7oxWCM9UljeRufq2fC0OjYAU57mspvuwhtoD5bLXBOF5P7NQDsgRUZvW
-         nAtEy8+RFCLLRD31j8m/XJj78N74/HVwcl1cW50/ZHlL6Nu5LTLMBeBDEc5HfqDtA0+q
-         qQL1Nc7BHK8JeXt6VFepduy5uEntgtoSidhTdzPTYKsQ0sRMaFKmoD5Ee0uo+GGMoMBE
-         Fe4kb+ZtNqpJYBiCNSOuTTfVs7iU7S8ldBkG/mcXddcEMhBrFMiYh1oXdOnkd0volgBK
-         z26AryhtYJAg5cD6n1eL+IVgwcM0elIUrbpgZG6LMo3DyrH5virSXfP1Z+sOLok1UFe7
-         y7Yw==
-X-Gm-Message-State: AGi0PuY1oRiOdLUHPQt/oQmN0uQ+alIu6Z2XVQdjKFSpXnvcol0kRksD
-        ZQfGM/p8+R05uTc6qBzwGAfuVuD604M=
-X-Google-Smtp-Source: APiQypLz8ge9+5KXT9eVPJaPfUm0Vef8nyvhdxj9uufrjvFSNv62gqLOsrexFQWntycq1Enqpx33+w==
-X-Received: by 2002:a67:6707:: with SMTP id b7mr147701vsc.98.1588270894411;
-        Thu, 30 Apr 2020 11:21:34 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id v23sm172483vsa.6.2020.04.30.11.21.33
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 11:21:33 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id b5so4692208vsb.1
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 11:21:33 -0700 (PDT)
-X-Received: by 2002:a67:bd07:: with SMTP id y7mr112084vsq.109.1588270892989;
- Thu, 30 Apr 2020 11:21:32 -0700 (PDT)
+        Thu, 30 Apr 2020 14:33:30 -0400
+Received: from mga05.intel.com ([192.55.52.43]:31224 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726318AbgD3Sda (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 14:33:30 -0400
+IronPort-SDR: QYeQDpDxDQ0xiIxh+VpYeWRTaw44rMHjkmjzrX7xdWZX3oSlOeS15aqIKKesVzjnBNErrioA8G
+ dpv8514pWfXw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 11:33:29 -0700
+IronPort-SDR: J48xY2cKJPAK1NVryygQbF/nagAXDIYz1I6SC3AHIW5UHcqfCG66Luu3iM/N/zRymWaoSl5F24
+ 9Hf1OxKC5PKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
+   d="scan'208";a="433056299"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 30 Apr 2020 11:33:28 -0700
+Date:   Thu, 30 Apr 2020 11:39:31 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 02/25] iommu/ioasid: Add ioasid references
+Message-ID: <20200430113931.0fbf7a37@jacob-builder>
+In-Reply-To: <20200430143424.2787566-3-jean-philippe@linaro.org>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+        <20200430143424.2787566-3-jean-philippe@linaro.org>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org> <20200430181233.GA21991@jcrouse1-lnx.qualcomm.com>
-In-Reply-To: <20200430181233.GA21991@jcrouse1-lnx.qualcomm.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 30 Apr 2020 11:21:21 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Usp5RxgXtjtgBe6jR3o=-+EXkYZuVzx_AF3=BsVu+OeA@mail.gmail.com>
-Message-ID: <CAD=FV=Usp5RxgXtjtgBe6jR3o=-+EXkYZuVzx_AF3=BsVu+OeA@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: arm-smmu: Add sc7180 compatible string
- and mem_iface clock
-To:     Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 30 Apr 2020 16:34:01 +0200
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-On Thu, Apr 30, 2020 at 11:12 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> On Thu, Apr 30, 2020 at 09:29:47AM +0530, Sharat Masetty wrote:
-> > This patch adds a new compatible string for sc7180 and also an
-> > additional clock listing needed to power the TBUs and the TCU.
-> >
-> > Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> > ---
-> > v2: Addressed review comments from Doug
-> >
-> >  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> > index 6515dbe..ba5dba4 100644
-> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> > @@ -28,6 +28,7 @@ properties:
-> >            - enum:
-> >                - qcom,msm8996-smmu-v2
-> >                - qcom,msm8998-smmu-v2
-> > +              - qcom,sc7180-smmu-v2
-> >                - qcom,sdm845-smmu-v2
-> >            - const: qcom,smmu-v2
-> >
-> > @@ -113,16 +114,23 @@ properties:
-> >        present in such cases.
-> >
-> >    clock-names:
-> > +    minItems: 2
-> > +    maxItems: 3
-> >      items:
-> >        - const: bus
-> >        - const: iface
-> > +      - const: mem_iface
->
-> Hi Sharat -
->
-> I think there was a bit of confusion due to renaming between downstream and
-> upstream.  Currently for the sdm845 and friends we have:
->
->   clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
->      <&gcc GCC_GPU_CFG_AHB_CLK>;
->   clock-names = "bus", "iface";
->
-> Confusingly these same clocks downstream are "mem_iface_clk" and "iface_clk"
-> respectively.
->
-> It looks like you are trying to add GCC_DDRSS_GPU_AXI_CLK as "mem_iface" which
-> was formerly "mem_clk" downstream. I'm not sure if the naming change is
-> intentional or you were trying to make upstream and downstream match and didn't
-> realize that they were renamed.
->
-> I'm not sure if we need DDRSS_GPU_AXI_CLK or not. Empirically it works without
-> it for sdm845 (I don't have a sc7180 to test) but we should probably loop back
-> with either the clock team or the hardware designers to be sure there isn't a
-> corner case that is missing. I agree with Doug that its always best if we don't
-> need to add a clock.
+> Let IOASID users take references to existing ioasids with
+> ioasid_get(). ioasid_free() drops a reference and only frees the
+> ioasid when its reference number is zero. It returns whether the
+> ioasid was freed.
+> 
+Looks good to me, I was planning to do the same for VT-d use. Just a
+couple of points for potential extension. I can rebase on top of this.
 
-I can confirm that on sc7180 the GPU seems to come up just fine
-without the clock being specified in the iommu node.  Definitely would
-be good to know what's broken and if nothing is broken maybe we can
-change this patch to just add the sc7180 compatible string and drop
-the clock.  I do note that the GMU already has a reference to the same
-"GCC_DDRSS_GPU_AXI_CLK" clock.
 
--Doug
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  include/linux/ioasid.h | 10 ++++++++--
+>  drivers/iommu/ioasid.c | 30 +++++++++++++++++++++++++++++-
+>  2 files changed, 37 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> index 6f000d7a0ddcd..609ba6f15b9e3 100644
+> --- a/include/linux/ioasid.h
+> +++ b/include/linux/ioasid.h
+> @@ -34,7 +34,8 @@ struct ioasid_allocator_ops {
+>  #if IS_ENABLED(CONFIG_IOASID)
+>  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t
+> max, void *private);
+> -void ioasid_free(ioasid_t ioasid);
+> +void ioasid_get(ioasid_t ioasid);
+> +bool ioasid_free(ioasid_t ioasid);
+>  void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>  		  bool (*getter)(void *));
+>  int ioasid_register_allocator(struct ioasid_allocator_ops
+> *allocator); @@ -48,10 +49,15 @@ static inline ioasid_t
+> ioasid_alloc(struct ioasid_set *set, ioasid_t min, return
+> INVALID_IOASID; }
+>  
+> -static inline void ioasid_free(ioasid_t ioasid)
+> +static inline void ioasid_get(ioasid_t ioasid)
+>  {
+>  }
+>  
+> +static inline bool ioasid_free(ioasid_t ioasid)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline void *ioasid_find(struct ioasid_set *set, ioasid_t
+> ioasid, bool (*getter)(void *))
+>  {
+> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> index 0f8dd377aada3..46511ac53e0c8 100644
+> --- a/drivers/iommu/ioasid.c
+> +++ b/drivers/iommu/ioasid.c
+> @@ -15,6 +15,7 @@ struct ioasid_data {
+>  	struct ioasid_set *set;
+>  	void *private;
+>  	struct rcu_head rcu;
+> +	refcount_t refs;
+>  };
+>  
+>  /*
+> @@ -314,6 +315,7 @@ ioasid_t ioasid_alloc(struct ioasid_set *set,
+> ioasid_t min, ioasid_t max, 
+>  	data->set = set;
+>  	data->private = private;
+> +	refcount_set(&data->refs, 1);
+>  
+>  	/*
+>  	 * Custom allocator needs allocator data to perform platform
+> specific @@ -345,12 +347,33 @@ ioasid_t ioasid_alloc(struct
+> ioasid_set *set, ioasid_t min, ioasid_t max, }
+>  EXPORT_SYMBOL_GPL(ioasid_alloc);
+>  
+> +/**
+> + * ioasid_get - obtain a reference to the IOASID
+> + */
+> +void ioasid_get(ioasid_t ioasid)
+why void? what if the ioasid is not valid.
+
+> +{
+> +	struct ioasid_data *ioasid_data;
+> +
+> +	spin_lock(&ioasid_allocator_lock);
+> +	ioasid_data = xa_load(&active_allocator->xa, ioasid);
+> +	if (ioasid_data)
+> +		refcount_inc(&ioasid_data->refs);
+> +	spin_unlock(&ioasid_allocator_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_get);
+> +
+>  /**
+>   * ioasid_free - Free an IOASID
+>   * @ioasid: the ID to remove
+> + *
+> + * Put a reference to the IOASID, free it when the number of
+> references drops to
+> + * zero.
+> + *
+> + * Return: %true if the IOASID was freed, %false otherwise.
+>   */
+> -void ioasid_free(ioasid_t ioasid)
+> +bool ioasid_free(ioasid_t ioasid)
+>  {
+> +	bool free = false;
+>  	struct ioasid_data *ioasid_data;
+>  
+>  	spin_lock(&ioasid_allocator_lock);
+> @@ -360,6 +383,10 @@ void ioasid_free(ioasid_t ioasid)
+>  		goto exit_unlock;
+>  	}
+>  
+> +	free = refcount_dec_and_test(&ioasid_data->refs);
+> +	if (!free)
+> +		goto exit_unlock;
+> +
+Just FYI, we may need to add states for the IOASID, i.g. mark the IOASID
+inactive after free. And prohibit ioasid_get() after freed. For VT-d,
+this is useful when KVM queries the IOASID.
+
+>  	active_allocator->ops->free(ioasid,
+> active_allocator->ops->pdata); /* Custom allocator needs additional
+> steps to free the xa element */ if (active_allocator->flags &
+> IOASID_ALLOCATOR_CUSTOM) { @@ -369,6 +396,7 @@ void
+> ioasid_free(ioasid_t ioasid) 
+>  exit_unlock:
+>  	spin_unlock(&ioasid_allocator_lock);
+> +	return free;
+>  }
+>  EXPORT_SYMBOL_GPL(ioasid_free);
+>  
+
+[Jacob Pan]
