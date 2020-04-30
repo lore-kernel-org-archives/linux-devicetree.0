@@ -2,63 +2,63 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D46AC47247
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98F7C54E94
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61F982051A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AC321775
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 14:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TtWZcvpy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t+4aT9+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgD3Okk (ORCPT
+        id S1728306AbgD3Okp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:40:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34312 "EHLO
+        Thu, 30 Apr 2020 10:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727972AbgD3Okj (ORCPT
+        by vger.kernel.org with ESMTP id S1728290AbgD3Okp (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:40:39 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0E0CC035494
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 07:40:38 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j1so7262786wrt.1
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 07:40:38 -0700 (PDT)
+        Thu, 30 Apr 2020 10:40:45 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D194C035495
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 07:40:45 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u16so2205502wmc.5
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 07:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2+Y465Sni3J3luu7XimUOxgL9xc/SbRMYs8QGnoYtwY=;
-        b=TtWZcvpylTP3NKbk1Qf+IfameDvqZwRMdS3q3fg9H/lGyRYGkfrFQHeCjVudgdRINK
-         Dq9MBXVYhLCootNKcVgNxJ0FpLgrlim5f8lBDkhqOHb4VlcZ0hgTMzBs9d8jFICV8fxd
-         KUaJwiZ/OQ/gYRUVE9gc/aIwRBe6IYvQieRFWK0Azug7U8btG7FcOaY/Rl26e4sAz3/Z
-         RZCe40RFC/rBtjCjoR1VIZgcnqrMnLBOx8zWFTiYXhg9MCah5cXaoQvRl2P+hicnxqoW
-         WZX2CnayKDPy2Ftc0OhUQymVBrwqr0Ejdo1y1yZof/qNkV3kOYRJQ/n9IxhuHsljv10x
-         hQdw==
+        bh=3qbDs4Y7WviMOr0GSY4nlY77EsYqapJLb3Db4qcN97M=;
+        b=t+4aT9+cYprXrpA/0QMDQLTv35ltZRsIzsJhL6WzRIlkGwHMzV+TsilZsqBdYO9os+
+         LEmbI9poZBOZzYV00yYcZ2MTRGrHanuT7mbSIOQBDmN22wolY/5LERCWxTie3xScd5i+
+         mfXPYaSrV/1gc4GJ4hkv337jnn0KZarzUW+GAESnsUgwH5AStIsuGwjPrCaZW9BXvAda
+         ze1VdbzDZPXGJXDAcZRAe+Vz+LRVXXtQ68AFPgXXtAqojny8CzAUyLGsI4qjUN9mU9b9
+         QuzOYgjkRq/kGh890dDfQT+uQE4XjhOzPT2Qd7+Ro83BK/yAfy1ITFBBF/jLhKZ5c5sA
+         0KPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2+Y465Sni3J3luu7XimUOxgL9xc/SbRMYs8QGnoYtwY=;
-        b=tcuI/NI9opgPlAvVr6ccM+iHYvSsM1OCCTdr2YjGjzDSp+cjxVNdChGw8J2PtrEm1F
-         uGJ6nSTlZHBneV9HYacmAyn2TT6hKdWRWpqcoX5ijLBlE2FxMHmHeiAV6Gt1btzdscD0
-         Ji1B5yPu2K4k6Tkp/dtCqYVmdFPrwrh9xhXhMTu2+vJMtDkptJETduFI0Lyp+neyJDpb
-         Us5Ix1jfwOnDU7zqeIx11iUfPwokZnWLvF4DI2q0plg/fWKb7c5aiR9T2PhQ+9+35cT/
-         3xPrJ/qQquSJHUc9mcuE3C8nHdQCBHZ0gW+w7d/9BziJCCbjxu7M+JNClSmy8VcSo1WU
-         d7GQ==
-X-Gm-Message-State: AGi0PuZuYPcSRc0mxZ+xgq0TTVEQ772EvcRPw/n65r58dhm9A7rnjN4f
-        65azlWJknjdyQdrNHMfYW6qiJw==
-X-Google-Smtp-Source: APiQypLNwodkDrJdjB7I+V7HVBZt0+iw9yRn6csSeR+Ms37qAdkN8Vx1hciLeFRaXiPs0nPP5OwXew==
-X-Received: by 2002:adf:8169:: with SMTP id 96mr3141118wrm.283.1588257637544;
-        Thu, 30 Apr 2020 07:40:37 -0700 (PDT)
+        bh=3qbDs4Y7WviMOr0GSY4nlY77EsYqapJLb3Db4qcN97M=;
+        b=XCMAjcjkzoOq/WkcCl1RaBdYg0yBeDvkmvOTyITRNMJ0Xwly3RG4qmb8Do3YAKiED2
+         UkxjKoh2S+JnfDVnab+NZGuqJRGkg4BkdwBvhnDphyd6u/600EcPVSjQeccWYSvOV+uW
+         HLf6b0LqSbwoi0GbtVYKrWQz3lR2V1pN7QOpfwOj9BZ1jh9GdmpC14pd5BcErfRAPTCL
+         Ac1MGeccgwAatieSGiFp0zuVo58+gN8ERKlXpwMOiwls4EkapxRN3IL1KKkyy2a65XSg
+         tyEWPSANE1+LepxHnZqspW3LYcCPyl9biXRGKBZIAHMPYz3iPBzgK6c9hhS8UeYSgc1K
+         GmDQ==
+X-Gm-Message-State: AGi0Pua6ZQHi7uRGOVl0amcm1TKm3h3MwhmTevFoFvAhdoNyRVKP1Yu1
+        5oaRPODfjNbMF6fpHhOrMSxCHQ==
+X-Google-Smtp-Source: APiQypIZMn/sX8HP3LNRMIS2Wr5t5ivHYBY9IZ/xvKKh7rTp8GxPMClKn6Q3u2r37yB03vTCOANl8Q==
+X-Received: by 2002:a7b:c44d:: with SMTP id l13mr3255113wmi.72.1588257643793;
+        Thu, 30 Apr 2020 07:40:43 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id n2sm4153286wrt.33.2020.04.30.07.40.36
+        by smtp.gmail.com with ESMTPSA id n2sm4153286wrt.33.2020.04.30.07.40.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 07:40:36 -0700 (PDT)
+        Thu, 30 Apr 2020 07:40:43 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -69,10 +69,11 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
         felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
         xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v6 16/25] iommu/arm-smmu-v3: Add SVA device feature
-Date:   Thu, 30 Apr 2020 16:34:15 +0200
-Message-Id: <20200430143424.2787566-17-jean-philippe@linaro.org>
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v6 21/25] dt-bindings: document stall property for IOMMU masters
+Date:   Thu, 30 Apr 2020 16:34:20 +0200
+Message-Id: <20200430143424.2787566-22-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200430143424.2787566-1-jean-philippe@linaro.org>
 References: <20200430143424.2787566-1-jean-philippe@linaro.org>
@@ -83,193 +84,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Implement the IOMMU device feature callbacks to support the SVA feature.
-At the moment dev_has_feat() returns false since I/O Page Faults isn't
-yet implemented.
+On ARM systems, some platform devices behind an IOMMU may support stall,
+which is the ability to recover from page faults. Let the firmware tell us
+when a device supports stall.
 
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 125 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
+ .../devicetree/bindings/iommu/iommu.txt        | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 9b90cc57a609b..c7942d0540599 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -700,6 +700,8 @@ struct arm_smmu_master {
- 	u32				*sids;
- 	unsigned int			num_sids;
- 	bool				ats_enabled;
-+	bool				sva_enabled;
-+	struct list_head		bonds;
- 	unsigned int			ssid_bits;
- };
+diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
+index 3c36334e4f942..26ba9e530f138 100644
+--- a/Documentation/devicetree/bindings/iommu/iommu.txt
++++ b/Documentation/devicetree/bindings/iommu/iommu.txt
+@@ -92,6 +92,24 @@ Optional properties:
+   tagging DMA transactions with an address space identifier. By default,
+   this is 0, which means that the device only has one address space.
  
-@@ -738,6 +740,7 @@ struct arm_smmu_option_prop {
++- dma-can-stall: When present, the master can wait for a transaction to
++  complete for an indefinite amount of time. Upon translation fault some
++  IOMMUs, instead of aborting the translation immediately, may first
++  notify the driver and keep the transaction in flight. This allows the OS
++  to inspect the fault and, for example, make physical pages resident
++  before updating the mappings and completing the transaction. Such IOMMU
++  accepts a limited number of simultaneous stalled transactions before
++  having to either put back-pressure on the master, or abort new faulting
++  transactions.
++
++  Firmware has to opt-in stalling, because most buses and masters don't
++  support it. In particular it isn't compatible with PCI, where
++  transactions have to complete before a time limit. More generally it
++  won't work in systems and masters that haven't been designed for
++  stalling. For example the OS, in order to handle a stalled transaction,
++  may attempt to retrieve pages from secondary storage in a stalled
++  domain, leading to a deadlock.
++
  
- static DEFINE_XARRAY_ALLOC1(asid_xa);
- static DEFINE_SPINLOCK(contexts_lock);
-+static DEFINE_MUTEX(arm_smmu_sva_lock);
- 
- static struct arm_smmu_option_prop arm_smmu_options[] = {
- 	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
-@@ -3003,6 +3006,19 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 	master = dev_iommu_priv_get(dev);
- 	smmu = master->smmu;
- 
-+	/*
-+	 * Checking that SVA is disabled ensures that this device isn't bound to
-+	 * any mm, and can be safely detached from its old domain. Bonds cannot
-+	 * be removed concurrently since we're holding the group mutex.
-+	 */
-+	mutex_lock(&arm_smmu_sva_lock);
-+	if (master->sva_enabled) {
-+		mutex_unlock(&arm_smmu_sva_lock);
-+		dev_err(dev, "cannot attach - SVA enabled\n");
-+		return -EBUSY;
-+	}
-+	mutex_unlock(&arm_smmu_sva_lock);
-+
- 	arm_smmu_detach_dev(master);
- 
- 	mutex_lock(&smmu_domain->init_mutex);
-@@ -3151,6 +3167,7 @@ static int arm_smmu_add_device(struct device *dev)
- 	master->smmu = smmu;
- 	master->sids = fwspec->ids;
- 	master->num_sids = fwspec->num_ids;
-+	INIT_LIST_HEAD(&master->bonds);
- 	dev_iommu_priv_set(dev, master);
- 
- 	/* Check the SIDs are in range of the SMMU and our stream table */
-@@ -3220,6 +3237,7 @@ static void arm_smmu_remove_device(struct device *dev)
- 
- 	master = dev_iommu_priv_get(dev);
- 	smmu = master->smmu;
-+	WARN_ON(master->sva_enabled);
- 	arm_smmu_detach_dev(master);
- 	iommu_group_remove_device(dev);
- 	iommu_device_unlink(&smmu->iommu, dev);
-@@ -3339,6 +3357,109 @@ static void arm_smmu_get_resv_regions(struct device *dev,
- 	iommu_dma_get_resv_regions(dev, head);
- }
- 
-+static bool arm_smmu_iopf_supported(struct arm_smmu_master *master)
-+{
-+	return false;
-+}
-+
-+static bool arm_smmu_dev_has_feature(struct device *dev,
-+				     enum iommu_dev_features feat)
-+{
-+	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
-+
-+	if (!master)
-+		return false;
-+
-+	switch (feat) {
-+	case IOMMU_DEV_FEAT_SVA:
-+		if (!(master->smmu->features & ARM_SMMU_FEAT_SVA))
-+			return false;
-+
-+		/* SSID and IOPF support are mandatory for the moment */
-+		return master->ssid_bits && arm_smmu_iopf_supported(master);
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool arm_smmu_dev_feature_enabled(struct device *dev,
-+					 enum iommu_dev_features feat)
-+{
-+	bool enabled = false;
-+	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
-+
-+	if (!master)
-+		return false;
-+
-+	switch (feat) {
-+	case IOMMU_DEV_FEAT_SVA:
-+		mutex_lock(&arm_smmu_sva_lock);
-+		enabled = master->sva_enabled;
-+		mutex_unlock(&arm_smmu_sva_lock);
-+		return enabled;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static int arm_smmu_dev_enable_sva(struct device *dev)
-+{
-+	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
-+
-+	mutex_lock(&arm_smmu_sva_lock);
-+	master->sva_enabled = true;
-+	mutex_unlock(&arm_smmu_sva_lock);
-+
-+	return 0;
-+}
-+
-+static int arm_smmu_dev_disable_sva(struct device *dev)
-+{
-+	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
-+
-+	mutex_lock(&arm_smmu_sva_lock);
-+	if (!list_empty(&master->bonds)) {
-+		dev_err(dev, "cannot disable SVA, device is bound\n");
-+		mutex_unlock(&arm_smmu_sva_lock);
-+		return -EBUSY;
-+	}
-+	master->sva_enabled = false;
-+	mutex_unlock(&arm_smmu_sva_lock);
-+
-+	return 0;
-+}
-+
-+static int arm_smmu_dev_enable_feature(struct device *dev,
-+				       enum iommu_dev_features feat)
-+{
-+	if (!arm_smmu_dev_has_feature(dev, feat))
-+		return -ENODEV;
-+
-+	if (arm_smmu_dev_feature_enabled(dev, feat))
-+		return -EBUSY;
-+
-+	switch (feat) {
-+	case IOMMU_DEV_FEAT_SVA:
-+		return arm_smmu_dev_enable_sva(dev);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int arm_smmu_dev_disable_feature(struct device *dev,
-+					enum iommu_dev_features feat)
-+{
-+	if (!arm_smmu_dev_feature_enabled(dev, feat))
-+		return -EINVAL;
-+
-+	switch (feat) {
-+	case IOMMU_DEV_FEAT_SVA:
-+		return arm_smmu_dev_disable_sva(dev);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- static struct iommu_ops arm_smmu_ops = {
- 	.capable		= arm_smmu_capable,
- 	.domain_alloc		= arm_smmu_domain_alloc,
-@@ -3357,6 +3478,10 @@ static struct iommu_ops arm_smmu_ops = {
- 	.of_xlate		= arm_smmu_of_xlate,
- 	.get_resv_regions	= arm_smmu_get_resv_regions,
- 	.put_resv_regions	= generic_iommu_put_resv_regions,
-+	.dev_has_feat		= arm_smmu_dev_has_feature,
-+	.dev_feat_enabled	= arm_smmu_dev_feature_enabled,
-+	.dev_enable_feat	= arm_smmu_dev_enable_feature,
-+	.dev_disable_feat	= arm_smmu_dev_disable_feature,
- 	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
- };
- 
+ Notes:
+ ======
 -- 
 2.26.2
 
