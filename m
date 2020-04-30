@@ -2,186 +2,206 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBC4C4725D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 19:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3363FC47247
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 19:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF04820774
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 19:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157CE20731
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 19:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ed1A4jwG"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eUHo0YmG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgD3Tq2 (ORCPT
+        id S1726437AbgD3Trn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:46:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgD3Tq1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 15:46:27 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6B9C08E859
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 12:46:26 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id h12so3887334pjz.1
-        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 12:46:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ra7mjq8W6zmgPcLiIaItAAcFCZHz/YFFi7FQSJs3dtI=;
-        b=ed1A4jwGrOn1n50TCUVoPnzef1xzoJBlgvyRW+Ov2HdLT9/mhC0E9DLA+vyQbgn7CO
-         TRqoJvyj3MaEBlQke8sv2jYdXNdRwuCVZORy1ButXS16AMSWpsvr53NeTV5lJjdF/mNq
-         mce7b144XuDxrwYF3rDvIIP3SjML0eHJg0M7w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ra7mjq8W6zmgPcLiIaItAAcFCZHz/YFFi7FQSJs3dtI=;
-        b=tpatTwF7O6CU/pJri5/8ciCFv7vXYhQlJetDT7w3BRnc9pDBNLQr+7X+kPQFjxPMlH
-         t/NACCoQaTQCbrKqVKhUrQjzUBV3FIG+LhdzFD0X2/4fj7X10xcS9L+0WOKVKfAs3ZZz
-         dbe4FLeTn9Xxpg/AaN9NtPikNjBn7I81+vsHhKw1XlawsDfcCsxrIWRtUQ6BeWqnet+h
-         YfLqt/jQDVpUO8dwz1mdxzk2RvFGqqIZyd2VOWsPSwzWWuTC5Ov/XJ64edXMHmQldh5x
-         wlr+MSgEQPI771UHFQBGuCGCGlRwNxlyXS/STJc91COAkSsH9hz2xaxEAgN+jUBOsKj4
-         EDDw==
-X-Gm-Message-State: AGi0PubBse2I/EPdgktEkbbbrNfwV5Ny/C9Toiup4Gbvdzy+5A3BTR0U
-        gM2ChicJmgH4tJ5SNXNLroUwzA==
-X-Google-Smtp-Source: APiQypI4aWGN8QYQmsWGb/tBQiOuqS/stRkAUG9VFIBD09lxji6QhItqnocfw0Mz14Wl3f+dP0NFwg==
-X-Received: by 2002:a17:902:784c:: with SMTP id e12mr586920pln.191.1588275986135;
-        Thu, 30 Apr 2020 12:46:26 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id u3sm495993pfb.105.2020.04.30.12.46.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:46:25 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, spanda@codeaurora.org
-Cc:     linux-gpio@vger.kernel.org, jonas@kwiboo.se,
-        robdclark@chromium.org, bjorn.andersson@linaro.org,
-        jeffrey.l.hugo@gmail.com, jernej.skrabec@siol.net,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for Hot Plug Detect
-Date:   Thu, 30 Apr 2020 12:46:11 -0700
-Message-Id: <20200430194617.197510-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+        Thu, 30 Apr 2020 15:47:43 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12925 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgD3Trn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 15:47:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eab2ae20001>; Thu, 30 Apr 2020 12:45:38 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Apr 2020 12:47:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 12:47:42 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 19:47:42 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 19:47:41 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+ <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
+ <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+ <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+ <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
+ <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
+ <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
+ <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
+ <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <b3238987-5e8a-32f2-7ce7-924e86bc6e9e@nvidia.com>
+Date:   Thu, 30 Apr 2020 12:46:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588275938; bh=LFtJPl2MR0AiX6258PUQppdEd8eLbOAvI5VJBjgGH9g=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=eUHo0YmGx9MVTjHCuaf0rRHK356SAAoY7t2g7NlB5sRu0G58FMNaweMLmuxhWq1a8
+         7j30zDua+ErzaQQYE7y4fgrbbXCzzeq3XXjOtZ7SRSzN81ZctWiWNKX0yCOjfRcmJh
+         FwVH/uFGFRWw2JZB+rIqFTDd+Ga01nJZz0LbsjIw/AnMxVqQ+E3u9heYElVMe6qupL
+         mLXDMf6FmQpxSUMm4HD+qJ/KxWy7u+YXc4H66TzZtHcS/HKn3KlikWEUd9yQGF6bJC
+         NZ/x4JZXdPP5mguxapxvrNj48L3QdJI3RsZ6Qh3Rew6tC9FfQj+KxNd50nQjnDPx4v
+         lRfC1wQfkjWiQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-As talked about in commit c2bfc223882d ("drm/bridge: ti-sn65dsi86:
-Remove the mystery delay"), the normal HPD pin on ti-sn65dsi86 is
-kinda useless, at least for embedded DisplayPort (eDP).  However,
-despite the fact that the actual HPD pin on the bridge is mostly
-useless for eDP, the concept of HPD for eDP still makes sense.  It
-allows us to optimize out a hardcoded delay that many panels need if
-HPD isn't hooked up.  Panel timing diagrams show HPD as one of the
-events to measure timing from and we have to assume the worst case if
-we can't actually read HPD.
+On 4/30/20 12:33 PM, Dmitry Osipenko wrote:
+> 30.04.2020 22:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/30/20 11:18 AM, Sowjanya Komatineni wrote:
+>>> On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
+>>>> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
+>>>>> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
+>>>>>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
+>>>>>>> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>>>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>>>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+>>>>>>>>>> +static int chan_capture_kthread_finish(void *data)
+>>>>>>>>>> +{
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
+>>>>>>>>>> +
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
+>>>>>>>>>> +
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
+>>>>>>>>> I guess it won't be great to freeze in the middle of a capture
+>>>>>>>>> process, so:
+>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (list_empty(&chan-=
+>done))
+>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 try_to_freeze();
+>>>>>>>> And here should be some locking protection in order not race with
+>>>>>>>> the
+>>>>>>>> chan_capture_kthread_start because kthread_finish could freeze
+>>>>>>>> before
+>>>>>>>> kthread_start.
+>>>>>>> Or maybe both start / finish threads should simply be allowed to
+>>>>>>> freeze
+>>>>>>> only when both capture and done lists are empty.
+>>>>>>>
+>>>>>>> if (list_empty(&chan->capture) &&
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&chan->done))
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
+>>>>>> good to freeze when not in middle of the frame capture but why
+>>>>>> should we not allow freeze in between captures?
+>>>>>>
+>>>>>> Other drivers do allow freeze in between frame captures.
+>>>>>>
+>>>>>> I guess we can freeze before dequeue for capture and in finish
+>>>>>> thread we can freeze after capture done. This also don't need to
+>>>>>> check for list_empty with freeze to allow between frame captures.
+>>>>>>
+>>>>> Also if we add check for both lists empty, freeze is not allowed as
+>>>>> long as streaming is going on and in case of continuous streaming
+>>>>> freeze will never happen.
+>>> To allow freeze b/w frames (but not in middle of a frame),
+>>>
+>>> for capture_start thread, probably we can do unconditional
+>>> try_to_freeze()
+> Is it possible to use wait_event_freezable()?
+>
+> https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.txt
+>
+> Will the wait_event_interruptible() be woken up when system freezes?
 
-One way to use HPD for eDP without using the mostly useless HPD pin on
-ti-sn65dsi86 is to route the panel's HPD somewhere else in the system,
-like to a GPIO.  This works great because eDP panels aren't physically
-hotplugged.  That means the debouncing logic that caused us problems
-wasn't really needed and a raw GPIO works great.
+Based on wait_event_freezable implementation, looks like it similar to=20
+wait_event_interruptible + try_to_free() as it does freezable_schedule=20
+unlike schedule with wait_event_interruptible.
 
-As per the above, a smart board designer would realize the value of
-HPD and choose to route it to a GPIO somewhere on the board to avoid
-the silly sn65dsi86 debouncing.  While said "smart designer" could
-theoretically route HPD anywhere on the board, a really smart designer
-would realize that there are several GPIOs on the bridge itself that
-are nearly useless for anything but this purpose and route HPD to one
-of those.
+So using this for capture_start may be ok to allow freeze before start=20
+of frame. But can't use for capture_finish as this is same as=20
+wait_event_interruptible followed by unconditional try_to_freeze.
 
-This series of patches is intended to allow the scenario described
-above.
+>
+>>> for capture_finish thread, at end of capture done we can do
+>>> try_to_freeze() only when done list is empty
+> This doesn't prevent situation where the done-list is empty and the
+> "finish" thread freezes, in the same time the "start" thread issues new
+> capture and then freezes too.
+>
+> 1. "start" thread issues capture
+>
+> 2. "finish" thread wakes and waits for the capture to complete
+>
+> 3. "start" thread begins another capture, waits for FRAME_START
+>
+> 4. system freezing activates
+>
+> 5. "finish" thread completes the capture and freezes because done-list
+> is empty
+>
+> 6. "start" thread gets FRAME_START, issues another capture and freezes
 
-This patch has been tested on a board that is not yet mainline.  On
-the hardware I have:
-- Panel spec says HPD could take up to 200 ms to come up, so without
-  HPD hooked up we need to delay 200 ms.
-- On my board the panel is powered by the same rail as the
-  touchscreen.  By chance of probe order the touchscreen comes up
-  first.  This means by the time we check HPD in ti_sn_bridge_enable()
-  it's already up.  Thus we can use the panel on 200 ms earlier.
-- If I measure HPD on this pane it comes up ~56 ms after the panel is
-  powered.  This means I can save 144 ms of delay.
+This will not happen as we allow double buffering done list will not be=20
+empty till stream stop happens
 
-Side effects (though not main goals) of this series are:
-- ti-sn65dsi86 GPIOs are now exported in Linux.
-- ti-sn65dsi86 bindings are converted to yaml.
-- Common panel bindings now have "hpd-gpios" listed.
-- The simple-panel driver in Linux can delay in prepare based on
-  "hpd-gpios"
-- ti-sn65dsi86 bindings (and current user) now specifies "no-hpd"
-  if HPD isn't hooked up.
+There will always be 1 outstanding frame in done list
 
-Changes in v4:
-- Don't include gpio.h
-- Use gpiochip_get_data() instead of container_of() to get data.
-- GPIOF_DIR_XXX => GPIO_LINE_DIRECTION_XXX
-- Use Linus W's favorite syntax to read a bit from a bitfield.
-- Define and use SN_GPIO_MUX_MASK.
-- Add a comment about why we use a bitmap for gchip_output.
-- Tacked on "or is otherwise unusable." to description.
-
-Changes in v3:
-- Becaue => Because
-- Add a kernel-doc to our pdata to clarify double-duty of gchip_output.
-- More comments about how powering off affects us (get_dir, dir_input).
-- Cleanup tail of ti_sn_setup_gpio_controller() to avoid one "return".
-- Use a bitmap rather than rolling my own.
-- Remind how gpio_get_optional() works in the commit message.
-- useful implement => useful to implement
-
-Changes in v2:
-- ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
-- ("dt-bindings: display: Add hpd-gpios to panel-common...") new for v2
-- ("simple...hpd-gpios") is 1/2 of replacement for ("Allow...bridge GPIOs")
-- specification => specifier.
-- power up => power.
-- Added back missing suspend-gpios.
-- data-lanes and lane-polarities are are the right place now.
-- endpoints don't need to be patternProperties.
-- Specified more details for data-lanes and lane-polarities.
-- Added old example back in, fixing bugs in it.
-- Example i2c bus is just called "i2c", not "i2c1" now.
-- ("dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd") new for v2.
-- ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
-
-Douglas Anderson (6):
-  drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
-  dt-bindings: display: Add hpd-gpios to panel-common bindings
-  drm/panel-simple: Support hpd-gpios for delaying prepare()
-  dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml
-  dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd
-  arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza
-
- .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
- .../bindings/display/bridge/ti,sn65dsi86.yaml | 287 ++++++++++++++++++
- .../bindings/display/panel/panel-common.yaml  |   6 +
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |   2 +
- drivers/gpu/drm/bridge/ti-sn65dsi86.c         | 195 ++++++++++++
- drivers/gpu/drm/panel/panel-simple.c          |  53 ++++
- 6 files changed, 543 insertions(+), 87 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-
--- 
-2.26.2.526.g744177e7f7-goog
-
+>> My understanding is buffer updates/release should not happen after
+>> frozen state. So we should let frame capture of outstanding buffer to
+>> finish before freezing in capture_finish thread.
+>>
+>> But for capture_start thread we can unconditionally freeze before
+>> dequeuing next buffer for capture.
+>>
+>> With this when both threads are in frozen state and no buffer
+>> updates/captures will happen after frozen state.
+>>
+>> I think its not required to finish streaming of all frames completely to
+>> let threads to enter frozen state as streaming can be continuous as well=
+.
+> Yes, only freezing in the middle of IO should be avoided.
+>
+> https://lwn.net/Articles/705269/
+>
+>>>> Hi Dmitry,
+>>>>
+>>>> Will update in v12 to not allow freeze in middle of a frame capture.
+>>>>
+>>>> Can you please confirm on above if you agree to allow freeze to
+>>>> happen in b/w frame captures?
+>>>>
+>>>> Also as most feedback has been received from you by now, appreciate
+>>>> if you can provide all in this v11 if you have anything else so we
+>>>> will not have any new changes after v12.
+> I'll take another look tomorrow / during weekend and let you know.
