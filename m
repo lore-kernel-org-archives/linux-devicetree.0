@@ -2,202 +2,109 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717D1C83003
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 03:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724C9C83001
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 04:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 562582083B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 03:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D4CA2073E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 04:00:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rrqXwBJv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgD3DFp (ORCPT
+        id S1726395AbgD3EAK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:05:45 -0400
-Received: from mx.socionext.com ([202.248.49.38]:42028 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgD3DFp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:05:45 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 30 Apr 2020 12:05:43 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 24CE360057;
-        Thu, 30 Apr 2020 12:05:44 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 30 Apr 2020 12:05:44 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id E16371A12AD;
-        Thu, 30 Apr 2020 12:05:43 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2] dt-bindings: thermal: Convert UniPhier thermal monitor to json-schema
-Date:   Thu, 30 Apr 2020 12:05:34 +0900
-Message-Id: <1588215934-13252-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 30 Apr 2020 00:00:10 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:58813 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726394AbgD3EAK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 00:00:10 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588219209; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=h4kCJNETn7m8Ad7wR1nijxpoOjZhXlKIL1/i8b1sVbg=; b=rrqXwBJvDIijschYUKJr9fL6THeehog8PxYLGpLz0EtIUKE4a6A17IAB/WKgtWVS2X7EdcUY
+ lOqDpiUTduxFbWlxB5aO69E4iUU0+fEZcYLRk4Mdlaz+Wiadj0pcEX87Zn0NRow7VXC2tbL+
+ Uc7BBn7i42Elv8myjMixRxMVqwE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eaa4d44.7f3fcc4e6d18-smtp-out-n03;
+ Thu, 30 Apr 2020 04:00:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3C370C43637; Thu, 30 Apr 2020 04:00:03 +0000 (UTC)
+Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B895DC433D2;
+        Thu, 30 Apr 2020 03:59:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B895DC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, robh@kernel.org, robin.murphy@arm.com,
+        saiprakash.ranjan@codeaurora.org, jcrouse@codeaurora.org,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH v2] dt-bindings: arm-smmu: Add sc7180 compatible string and mem_iface clock
+Date:   Thu, 30 Apr 2020 09:29:47 +0530
+Message-Id: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the UniPhier thermal monitor binding to DT schema format.
+This patch adds a new compatible string for sc7180 and also an
+additional clock listing needed to power the TBUs and the TCU.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 ---
+v2: Addressed review comments from Doug
 
-Changes since v1:
-- Add maxItems to "socionext,tmod-calibration" property
-- Fix indents in examples
+ Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-.../thermal/socionext,uniphier-thermal.yaml        | 59 ++++++++++++++++++++
- .../bindings/thermal/uniphier-thermal.txt          | 65 ----------------------
- 2 files changed, 59 insertions(+), 65 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
- delete mode 100644 Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+index 6515dbe..ba5dba4 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+@@ -28,6 +28,7 @@ properties:
+           - enum:
+               - qcom,msm8996-smmu-v2
+               - qcom,msm8998-smmu-v2
++              - qcom,sc7180-smmu-v2
+               - qcom,sdm845-smmu-v2
+           - const: qcom,smmu-v2
 
-diff --git a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-new file mode 100644
-index 0000000..bb9594b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/socionext,uniphier-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Socionext UniPhier thermal monitor
-+
-+description: |
-+  This describes the devicetree bindings for thermal monitor supported by
-+  PVT(Process, Voltage and Temperature) monitoring unit implemented on
-+  Socionext UniPhier SoCs.
-+
-+maintainers:
-+  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - socionext,uniphier-pxs2-thermal
-+      - socionext,uniphier-ld20-thermal
-+      - socionext,uniphier-pxs3-thermal
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 0
-+
-+  socionext,tmod-calibration:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - maxItems: 2
-+    description:
-+      A pair of calibrated values referred from PVT, in case that the values
-+      aren't set on SoC, like a reference board.
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - "#thermal-sensor-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    // The UniPhier thermal should be a subnode of a "syscon" compatible node.
-+
-+    sysctrl@61840000 {
-+        compatible = "socionext,uniphier-ld20-sysctrl",
-+                     "simple-mfd", "syscon";
-+        reg = <0x61840000 0x10000>;
-+
-+        pvtctl: thermal {
-+            compatible = "socionext,uniphier-ld20-thermal";
-+            interrupts = <0 3 1>;
-+            #thermal-sensor-cells = <0>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt b/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
-deleted file mode 100644
-index ceb92a9..0000000
---- a/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
-+++ /dev/null
-@@ -1,65 +0,0 @@
--* UniPhier Thermal bindings
--
--This describes the devicetree bindings for thermal monitor supported by
--PVT(Process, Voltage and Temperature) monitoring unit implemented on Socionext
--UniPhier SoCs.
--
--Required properties:
--- compatible :
--  - "socionext,uniphier-pxs2-thermal" : For UniPhier PXs2 SoC
--  - "socionext,uniphier-ld20-thermal" : For UniPhier LD20 SoC
--  - "socionext,uniphier-pxs3-thermal" : For UniPhier PXs3 SoC
--- interrupts : IRQ for the temperature alarm
--- #thermal-sensor-cells : Should be 0. See ./thermal.txt for details.
--
--Optional properties:
--- socionext,tmod-calibration: A pair of calibrated values referred from PVT,
--                              in case that the values aren't set on SoC,
--                              like a reference board.
--
--Example:
--
--	sysctrl@61840000 {
--		compatible = "socionext,uniphier-ld20-sysctrl",
--			     "simple-mfd", "syscon";
--		reg = <0x61840000 0x10000>;
--		...
--		pvtctl: pvtctl {
--			compatible = "socionext,uniphier-ld20-thermal";
--			interrupts = <0 3 1>;
--			#thermal-sensor-cells = <0>;
--		};
--		...
--	};
--
--	thermal-zones {
--		cpu_thermal {
--			polling-delay-passive = <250>;	/* 250ms */
--			polling-delay = <1000>;		/* 1000ms */
--			thermal-sensors = <&pvtctl>;
--
--			trips {
--				cpu_crit: cpu_crit {
--					temperature = <110000>;	/* 110C */
--					hysteresis = <2000>;
--					type = "critical";
--				};
--				cpu_alert: cpu_alert {
--					temperature = <100000>;	/* 100C */
--					hysteresis = <2000>;
--					type = "passive";
--				};
--			};
--
--			cooling-maps {
--				map0 {
--					trip = <&cpu_alert>;
--					cooling-device = <&cpu0 (-1) (-1)>;
--				};
--				map1 {
--					trip = <&cpu_alert>;
--					cooling-device = <&cpu2 (-1) (-1)>;
--				};
--			};
--		};
--	};
--- 
-2.7.4
+@@ -113,16 +114,23 @@ properties:
+       present in such cases.
 
+   clock-names:
++    minItems: 2
++    maxItems: 3
+     items:
+       - const: bus
+       - const: iface
++      - const: mem_iface
+
+   clocks:
++    minItems: 2
++    maxItems: 3
+     items:
+       - description: bus clock required for downstream bus access and for the
+           smmu ptw
+       - description: interface clock required to access smmu's registers
+           through the TCU's programming interface.
++      - description: clock required for the inner working of SMMU TBUs and the
++          TCU like the pagetable walks and the TLB flushes.
+
+   power-domains:
+     maxItems: 1
+--
+1.9.1
