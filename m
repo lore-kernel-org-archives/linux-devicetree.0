@@ -2,176 +2,189 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FF9C8300C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 11:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CD9C8300B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 11:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5924220757
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 11:13:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgzgbEMK"
+	by mail.kernel.org (Postfix) with ESMTP id 5D68120757
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 11:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgD3LNZ (ORCPT
+        id S1727094AbgD3LNp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:13:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726859AbgD3LNY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:13:24 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 169C2C035494;
-        Thu, 30 Apr 2020 04:13:24 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id z6so1430435wml.2;
-        Thu, 30 Apr 2020 04:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RS2ptxmKb3ffwIAhZDMnM3dCIs8tmDEdZCAAPTqFzQ8=;
-        b=AgzgbEMK6+aKNgiOZiysWCU6EqSN2elrC1IeYQXw0odG0nE4azgH8H0VACwvDnmHBa
-         lcpl6wPLJhxj53n6WvjjPLCiwhMTIrLaYUSp5mSlF6k/lPDqezdVF+iD8hNXIamf6K5x
-         SQZbj2Y5TW/MKPBj0UayPQhUxal95AQoy3aRdM9T0vSxvH9IMOJCXq0IKXYEQViijCJu
-         0V3gXuVmEwD4LXDO9i/lCFhNeHtAVMKb3Lie/lzLNWPA2ssso/aoRySFQPURJC4akC1/
-         yXRezRLxN28Omi+d5Zs/diohxEgrUEJ7r1liFIE5YMwkkPQUNel/yw9QxAjlp4qPxPkl
-         OpXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RS2ptxmKb3ffwIAhZDMnM3dCIs8tmDEdZCAAPTqFzQ8=;
-        b=PDONxUdhkKhVU/CfIAOH7etlz2a3ho4Wfrrsgf/ee2s3jLt+MntqRQc0ByNkfJmrfg
-         cpz+6F8mKE7oCH3XgztNLS4SXO9EAPFxQFOGFS8xzLcvK4zLZJ7br1aEqSIcJKjMdfWB
-         qcM/Vp8Pe8cKANSO/4R8YGwqFD7+lh9wCLiMoFQ0RWVa44/DgqPi6gzHNruk8bow8zZo
-         vimQzSRomnq1I5qMX30Y4ap8RBRYl8KMtqfcVoK+a7f10c+9gPwjx8+F040KELP8DxS8
-         BxuJrhk/q6qnxpC5TlOMHITS0DWoXX0h6afy/TEweKBizxtHQOl2RstOiG1hPL392P95
-         7eog==
-X-Gm-Message-State: AGi0PuY47oiRhjoyu0t/PsVNTlSEjgNCJ7C4OwseOJEk3RCo3h6tnzNx
-        Fq+8KCpu2GUj/zcAWPsydUGlWmEzCpA=
-X-Google-Smtp-Source: APiQypKXabAjkpVY+Mjud3bW9BWxhyAI6286nwgKoPv2myht9oSa4TPcgv1aMjvPJTMOBoAaLqI+kQ==
-X-Received: by 2002:a1c:ba56:: with SMTP id k83mr2380898wmf.1.1588245199485;
-        Thu, 30 Apr 2020 04:13:19 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id 74sm3727077wrk.30.2020.04.30.04.13.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 04:13:19 -0700 (PDT)
-From:   Al Cooper <alcooperx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v6 1/4] dt-bindings: Add Broadcom STB USB support
-Date:   Thu, 30 Apr 2020 07:12:55 -0400
-Message-Id: <20200430111258.6091-2-alcooperx@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200430111258.6091-1-alcooperx@gmail.com>
-References: <20200430111258.6091-1-alcooperx@gmail.com>
+        Thu, 30 Apr 2020 07:13:45 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:40102 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgD3LNp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 07:13:45 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D8D5A2007DC;
+        Thu, 30 Apr 2020 13:13:42 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C865E2007D8;
+        Thu, 30 Apr 2020 13:13:42 +0200 (CEST)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id AA7D920397;
+        Thu, 30 Apr 2020 13:13:42 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 14:13:42 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Aisheng Dong <aisheng.dong@nxp.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>,
+        Shawn Guo <shawnguo@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 01/13] mfd: Add i.MX generic mix support
+Message-ID: <20200430111342.b2fj7ko3uvffv4wg@fsr-ub1664-175>
+References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
+ <1586937773-5836-2-git-send-email-abel.vesa@nxp.com>
+ <20200417080747.GE2167633@dell>
+ <20200422091854.rhtkcfrdptwofngs@fsr-ub1664-175>
+ <AM6PR04MB4966B3527BF97918C1689A4580D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <20200424062727.GI3612@dell>
+ <20200430100355.zwl7wfbq64cikqxp@fsr-ub1664-175>
+ <AM6PR04MB496612839A11EA05D60DF6AE80AA0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM6PR04MB496612839A11EA05D60DF6AE80AA0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
+On 20-04-30 10:22:04, Aisheng Dong wrote:
+> > From: Abel Vesa <abel.vesa@nxp.com>
+> > Sent: Thursday, April 30, 2020 6:04 PM
+> > To: Lee Jones <lee.jones@linaro.org>
+> > On 20-04-24 07:27:27, Lee Jones wrote:
+> > > On Thu, 23 Apr 2020, Aisheng Dong wrote:
+> > >
+> > > > > From: Abel Vesa <abel.vesa@nxp.com>
+> > > > > Sent: Wednesday, April 22, 2020 5:19 PM On 20-04-17 09:07:47, Lee
+> > > > > Jones wrote:
+> > > > > > On Wed, 15 Apr 2020, Abel Vesa wrote:
+> > > > > >
+> > > > > > > Some of the i.MX SoCs have a IP for interfacing the dedicated
+> > > > > > > IPs with clocks, resets and interrupts, plus some other specific control
+> > registers.
+> > > > > > > To allow the functionality to be split between drivers, this
+> > > > > > > MFD driver is added that has only two purposes: register the
+> > > > > > > devices and map the entire register addresses. Everything else
+> > > > > > > is left to the dedicated drivers that will bind to the registered devices.
+> > > > > > >
+> > > > > > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > > > > > > ---
+> > > > > > >  drivers/mfd/Kconfig   | 11 +++++++++++
+> > > > > > >  drivers/mfd/Makefile  |  1 +
+> > > > > > >  drivers/mfd/imx-mix.c | 48
+> > > > > > > ++++++++++++++++++++++++++++++++++++++++++++++++
+> > > > > > >  3 files changed, 60 insertions(+)  create mode 100644
+> > > > > > > drivers/mfd/imx-mix.c
+> > > > > >
+> > > > > > For completeness - Arnd's reply to this patch:
+> > > > > >
+> > > > >
+> > > > > I'm replying here to Arnd's reply.
+> > > > >
+> > > > > I'm trying to give here a whole picture of the entire problem
+> > > > > while the documentation for i.MX8MP is _not yet_ public.
+> > > > >
+> > > > > Historically, each IP would have its own enclosure for all the related GPRs.
+> > > > > Starting with i.MX8MP some GPRs (and some subparts) from the IP
+> > > > > were placed inside these mixes.
+> > > > >
+> > > > > Audiomix for example, has multiple SAIs, a PLL, and some reset
+> > > > > bits for EARC and some GPRs for AudioDSP. This means that i.MX8MP
+> > > > > has 7 SAIs, 1 EARC and
+> > > > > 1 AudioDSP.
+> > > > > Future platforms might have different numbers of SAIs, EARCs or
+> > AudioDSPs.
+> > > > > The PLL can't be placed in one of those SAIs and it was placed in audiomix.
+> > > > > The i.MX8MP has at least 4 of these mixes.
+> > > > >
+> > > > > Now, the commonalities between all mixes are:
+> > > > >  - have their own power domains
+> > > > >  - driven by dedicated clock slice
+> > > > >  - contain clocks and resets
+> > > > >  - some very subsystem specific GPRs
+> > > > >
+> > > > > Knowing that each mix has its own power domain, AFAICT, it needs
+> > > > > to be registered as a single device. Considering that it can have
+> > > > > clocks (audiomix has gates, muxes and plls), I believe that needs
+> > > > > a clock driver, even more so since the muxes need their parents
+> > > > > from the platform clock driver. Same principle applies to reset
+> > > > > bits. The subsystem specific GPRs can be registered as syscon
+> > > > > devices and taken care of by its counterpart IP (e.g. the AudioDSP specific
+> > regs would be taken care of by the DSP driver, if there is one).
+> > > > >
+> > > > > Now based on all of the above, by using MFD we take care of the
+> > > > > power domain control for the entire mix, plus, the MFD doesn't
+> > > > > have any kind of functionality by its own, relying on its children
+> > > > > devices that are populated based on what is in the mix MFD devicetree
+> > node.
+> > > > >
+> > > >
+> > > > How about doing like this which maybe can address Arnd's concerns?
+> > > > audiomix: audiomix@30e20000 {
+> > > >         compatible = "fsl,imx8mp-audiomix", "syscon";
+> > > >         reg = <0x30e20000 xxx>,
+> > > >               <0x30e20xxx xxx>;
+> > > >         reg-names = "audio", "reset", "...";
+> > > >         #clock-cells = <1>;
+> > > >         #reset-cells = <1>;
+> > > >         power-domains = <&audiomix_pd>; }
+> > > >
+> > > > That means we have one combo driver registering two controllers
+> > > > (clk/reset), both use the same power domain as audiomix.
+> > > > And it can be easily extended to support more services provided by
+> > > > audiomix over syscon if needed.
+> > > > Then the 'dummy' MDF driver is not needed anymore.
+> > > >
+> > > > Jones & Arnd,
+> > > > How do you think?
+> > >
+> > > Sounds okay in principle.  Anything that prevents the existence of a
+> > > dummy (a.k.a. pointless) MFD must be seen as a positive move.
+> > >
+> > 
+> > OK, I'll do it in a single driver and single dts node.
+> > 
+> > But there might be an issue with the placement of this new driver.
+> > 
+> > drivers/clk/imx/ could be an option, but the driver will use a lot of different APIs
+> > from different subsystems. Not the audiomix, but the future mixes.
+> 
+> Maybe Stephen could comment whether it's ok to push a combo driver
+> (e.g. clk&reset&syscon) In drivers/clk/imx.
+> 
+> From what we see, it seems already some similar combo drivers (clk&reset) there.
+> 
+> BTW, not sure if any technical block reasons to put in drivers/clk.
+> Maybe we can quickly try internally first.
+> 
 
-NOTE: The OHCI driver is not included because it uses the generic
-      platform driver.
+Working on it already.
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/usb/brcm,bcm7445-ehci.yaml       | 59 +++++++++++++++++++
- .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
- 2 files changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-
-diff --git a/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-new file mode 100644
-index 000000000000..2a9acf2b5a64
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/brcm,bcm7445-ehci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom STB USB EHCI Controller Device Tree Bindings
-+
-+allOf:
-+  - $ref: "usb-hcd.yaml"
-+
-+maintainers:
-+  - Al Cooper <alcooperx@gmail.com>
-+
-+properties:
-+  compatible:
-+    const: brcm,bcm7445-ehci
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description: Clock specifier for the EHCI clock
-+
-+  clock-names:
-+    const: sw_usb
-+
-+  phys:
-+    maxItems: 1
-+
-+  phy-names:
-+    const: usbphy
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - phys
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    usb@f0b00300 {
-+        compatible = "brcm,bcm7445-ehci";
-+        reg = <0xf0b00300 0xa8>;
-+        interrupts = <0x0 0x5a 0x0>;
-+        phys = <&usbphy_0 0x0>;
-+        phy-names = "usbphy";
-+        clocks = <&usb20>;
-+        clock-names = "sw_usb";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index dc025f126d71..23e89d798b1b 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -24,6 +24,7 @@ Required properties:
-       device
-     - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 or RZ/G2 compatible
-       device
-+    - "brcm,bcm7445-xhci" for Broadcom STB SoCs with XHCI
-     - "xhci-platform" (deprecated)
- 
-     When compatible with the generic version, nodes must list the
--- 
-2.17.1
-
+> Regards
+> Aisheng
+> 
+> > 
+> > > --
+> > > Lee Jones [李琼斯]
+> > > Linaro Services Technical Lead
+> > > Linaro.org │ Open source software for ARM SoCs Follow Linaro: Facebook
+> > > | Twitter | Blog
