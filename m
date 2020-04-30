@@ -2,155 +2,93 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739D8C8300D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 12:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF1DC8300B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 12:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1B02078D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 12:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88BF2074A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 12:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgD3MqW convert rfc822-to-8bit (ORCPT
+        id S1726858AbgD3M6G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:46:22 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:54856 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbgD3MqV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 08:46:21 -0400
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
-        by skedge03.snt-world.com (Postfix) with ESMTP id C054A67A902;
-        Thu, 30 Apr 2020 14:46:17 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 30 Apr
- 2020 14:46:17 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.007; Thu, 30 Apr 2020 14:46:17 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Adam Ford <aford173@gmail.com>, Anson Huang <Anson.Huang@nxp.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "Li Jun" <jun.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        "Sascha Hauer" <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 4/4] arm64: dts: imx8mm: Add GPU nodes for 2D and 3D core
- using Etnaviv
-Thread-Topic: [RFC PATCH 4/4] arm64: dts: imx8mm: Add GPU nodes for 2D and 3D
- core using Etnaviv
-Thread-Index: AQHWHu1XU8cnqZiR7kmt3VxL/7fb7Q==
-Date:   Thu, 30 Apr 2020 12:46:17 +0000
-Message-ID: <20200430124602.14463-5-frieder.schrempf@kontron.de>
-References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20200430124602.14463-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Thu, 30 Apr 2020 08:58:06 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34004 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgD3M6G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Apr 2020 08:58:06 -0400
+Received: by mail-oi1-f194.google.com with SMTP id x10so5124393oie.1;
+        Thu, 30 Apr 2020 05:58:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f06O0cFyNEo5gvdIcg9Ddsp0/DFy3D1D3kCWuQbyuVo=;
+        b=gr2qjHMiU5xPcitYfVMFtXs4f9Pgv9gTTVab4u3LKNAJOh+xw8wqSoI+S1grCCQX8J
+         DDaqiWX5lhk9GQ6DnfU4ui410l2o9DWtSud4kRuPdi2W2dbxPi+7CEeTQMdBFGQuKIZ0
+         4/Xr3bhCL0sEAZf+PYpdywW++tWUBayNxUk4IKhsqFJ+Dw6Tu0Ivl/hDmNGLYMEs7qZP
+         8tJBBDh7jZ/rsyRg9RXDbyWwynTFUSt67UwkP71OXw0cyOHpMwupjB2fB+dPd6Lq/i/I
+         nU02fPSyZvR9eYzaAqUyOvOWOe49oAX4puHD7eC2RDMFqGPi9J/gwREcjFkBKMudtNT9
+         hcSQ==
+X-Gm-Message-State: AGi0PuZoT+A/oTBy+5GA7fiqYKgNQGVLO4lMgYnayVpkGF6Iw0kIfSbr
+        0IxlUSa4Y/5R6uq3srYA0Bm+LtSFZI+Rso6llxw=
+X-Google-Smtp-Source: APiQypJ96idTKZgifmCnQ6wUrxkX/7Ep3RkgKRx5bDPk1I41cxrwHGqHte5K9ORdTBr3+oxbhTyMJGSH5dmCUBLUFsQ=
+X-Received: by 2002:aca:895:: with SMTP id 143mr1527059oii.153.1588251485338;
+ Thu, 30 Apr 2020 05:58:05 -0700 (PDT)
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: C054A67A902.A0242
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: aford173@gmail.com, anson.huang@nxp.com,
-        christian.gmeiner@gmail.com, daniel.baluta@nxp.com,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        etnaviv@lists.freedesktop.org, festevam@gmail.com, jun.li@nxp.com,
-        kernel@pengutronix.de, l.stach@pengutronix.de,
-        leonard.crestez@nxp.com, linux+etnaviv@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, peng.fan@nxp.com,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, shengjiu.wang@nxp.com
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Apr 2020 14:57:54 +0200
+Message-ID: <CAMuHMdWEo9h7HxePSDXbzVvqfdCsUUgmZ3rvuYjA2g-kqJWYWw@mail.gmail.com>
+Subject: Re: [PATCH 01/18] soc: renesas: Add Renesas R8A7742 config option
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On Wed, Apr 29, 2020 at 11:57 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add configuration option for the RZ/G1H (R8A77420) SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-According to the documents, the i.MX8M-Mini features a GC320 and a
-GCNanoUltra GPU core. Etnaviv detects them as:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.8.
 
-	etnaviv-gpu 38000000.gpu: model: GC600, revision: 4653
-	etnaviv-gpu 38008000.gpu: model: GC520, revision: 5341
+Gr{oetje,eeting}s,
 
-This seems to work fine more or less without any changes to the HWDB,
-which still might be needed in the future to correct some features,
-etc.
+                        Geert
 
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 36 +++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index cc7152ecedd9..1dd0a6e849d3 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -937,6 +937,42 @@
- 			status = "disabled";
- 		};
- 
-+		gpu_3d: gpu@38000000 {
-+			compatible = "vivante,gc";
-+			reg = <0x38000000 0x8000>;
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk IMX8MM_CLK_GPU_AHB>,
-+				 <&clk IMX8MM_CLK_GPU_BUS_ROOT>,
-+				 <&clk IMX8MM_CLK_GPU3D_ROOT>;
-+			clock-names = "reg", "bus", "core";
-+			assigned-clocks = <&clk IMX8MM_CLK_GPU3D_SRC>,
-+					<&clk IMX8MM_CLK_GPU_AXI>,
-+					<&clk IMX8MM_CLK_GPU_AHB>,
-+					<&clk IMX8MM_GPU_PLL_OUT>;
-+			assigned-clock-parents = <&clk IMX8MM_GPU_PLL_OUT>,
-+					<&clk IMX8MM_SYS_PLL1_800M>,
-+					<&clk IMX8MM_SYS_PLL1_800M>;
-+			assigned-clock-rates = <0>, <0>,<400000000>,<1000000000>;
-+		};
-+
-+		gpu_2d: gpu@38008000 {
-+			compatible = "vivante,gc";
-+			reg = <0x38008000 0x8000>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk IMX8MM_CLK_GPU_AHB>,
-+				 <&clk IMX8MM_CLK_GPU_BUS_ROOT>,
-+				 <&clk IMX8MM_CLK_GPU2D_ROOT>;
-+			clock-names = "reg", "bus", "core";
-+			assigned-clocks = <&clk IMX8MM_CLK_GPU2D_SRC>,
-+					<&clk IMX8MM_CLK_GPU_AXI>,
-+					<&clk IMX8MM_CLK_GPU_AHB>,
-+					<&clk IMX8MM_GPU_PLL_OUT>;
-+			assigned-clock-parents = <&clk IMX8MM_GPU_PLL_OUT>,
-+					<&clk IMX8MM_SYS_PLL1_800M>,
-+					<&clk IMX8MM_SYS_PLL1_800M>;
-+			assigned-clock-rates = <0>, <0>,<400000000>,<1000000000>;
-+		};
-+
- 		gic: interrupt-controller@38800000 {
- 			compatible = "arm,gic-v3";
- 			reg = <0x38800000 0x10000>, /* GIC Dist */
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
