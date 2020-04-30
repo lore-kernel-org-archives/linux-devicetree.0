@@ -2,256 +2,422 @@ Return-Path: <SRS0=mzwU=6O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6B8C8300A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 09:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BE5C8300C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 09:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42D8B20838
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 09:34:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="WzPlYb+P"
+	by mail.kernel.org (Postfix) with ESMTP id D66C3214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Apr 2020 09:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgD3JeW (ORCPT
+        id S1726745AbgD3Jfi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:34:22 -0400
-Received: from mail-eopbgr680091.outbound.protection.outlook.com ([40.107.68.91]:31823
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726378AbgD3JeW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:34:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yv48D2RPMos9+PSCVr6CF7wyVR0qHzHwYfB4VAcBIEnvItIeTjjCoKDkQIaTN4/0SG8w0DJaRi6iSfseQ2hVEODRqNvwO9H/f4/b8n0WRdVIaOk/vnBs0hfWf2CkLyYGpqrfk9fX8INPpGhF0l8lK5K7mogqq5GtXqK3PcR/olTw4KXllZaR5eGZlprc4jJZF7UQah4f8E8htatJWfqjwKzfEfAzTgztpSA4J321GvMtVFcjpLIFUTqRtB5yrFdy6mhxdPJe5Zty7NkSvDhfWFuP5ijljMYQHIlD8d9qG2HQFj6JxNQoFiuwfaLeh0fsuJZNMkBbuUd4AK2fGqzztA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IKfIEdu/ETiUcQSFoBgQ0ZBuWnP+aHJiER9Wtx7nuKw=;
- b=j/rFCnivhIm6qQeiJEqkq8BIdXi4baEAr8Mr/kDxMPzgJljcr8hTRWiXSapeya83JzGEe49x8YqXlI2d5L8TZWjQ2HszGOoXsq2ZX5WYN4IUKzYAqKHtlOOYzQ0XKpeJENiZadDWPZwms6I3LOG15wkwcsnvl8HSs5ruoCQ/SXVK3X5yzm18jPKfomAWh/8So/jk8KcSl4AJ2wbH90VXkQ3xucGMf9i/hwKg+SCVCToYR2MP48YuDZMzJh4ggA915ZC9QLNXnGVp5myUa3FIjRZfUMlNOAZqKiNpEag5Mq3d9NHVy+JRjM0unm5eqaPBC76+AXP0UrZoaNTuGcc6vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IKfIEdu/ETiUcQSFoBgQ0ZBuWnP+aHJiER9Wtx7nuKw=;
- b=WzPlYb+PHg4SSa1qNIKe9AFvipSGmLFq2IqbtQggnxFHaAbCn60FXWypvtBIkvTVfqoQtmpC/7LUx12j3X+Z1Pg63OfdmcYVG39qo6pjMAjtqygRBMUpuhjCFhRWwd48cavomyZXDjinsvz6YkJoMR953fY2x3KeXKqMofZE0Cc=
-Authentication-Results: analogixsemi.com; dkim=none (message not signed)
- header.d=none;analogixsemi.com; dmarc=none action=none
- header.from=analogixsemi.com;
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
- by BY5PR04MB6625.namprd04.prod.outlook.com (2603:10b6:a03:219::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Thu, 30 Apr
- 2020 09:34:19 +0000
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
- 09:34:19 +0000
-Date:   Thu, 30 Apr 2020 17:34:11 +0800
-From:   Xin Ji <xji@analogixsemi.com>
-To:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: [PATCH v9 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter binding
-Message-ID: <a5d43ffb0250468050be5b9271567fadd0fe4e1c.1588236052.git.xji@analogixsemi.com>
-References: <cover.1588236052.git.xji@analogixsemi.com>
+        Thu, 30 Apr 2020 05:35:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726701AbgD3Jff (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Apr 2020 05:35:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D5BC035495
+        for <devicetree@vger.kernel.org>; Thu, 30 Apr 2020 02:35:35 -0700 (PDT)
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jU5bM-0002wp-0n; Thu, 30 Apr 2020 11:35:28 +0200
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jU5bI-0004mR-EL; Thu, 30 Apr 2020 11:35:24 +0200
+Date:   Thu, 30 Apr 2020 11:35:24 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200430093524.GB2188@pengutronix.de>
+References: <20200429162437.2025699-1-robert.foss@linaro.org>
+ <20200429162437.2025699-3-robert.foss@linaro.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1588236052.git.xji@analogixsemi.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HK0PR01CA0072.apcprd01.prod.exchangelabs.com
- (2603:1096:203:a6::36) To BY5PR04MB6739.namprd04.prod.outlook.com
- (2603:10b6:a03:229::8)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xin-VirtualBox (114.247.245.254) by HK0PR01CA0072.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::36) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2958.19 via Frontend Transport; Thu, 30 Apr 2020 09:34:18 +0000
-X-Originating-IP: [114.247.245.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b8a688bc-b1eb-4ee8-cf75-08d7ece9a80b
-X-MS-TrafficTypeDiagnostic: BY5PR04MB6625:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR04MB662546FACF9FCC94CE235AD0C7AA0@BY5PR04MB6625.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:989;
-X-Forefront-PRVS: 0389EDA07F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: C4HLLqlQ1zq/Aj/W7L/7tGOgIBudhFup8oseJqrIROXLIhU2AEKvYCor5YGvTLqqcoK7kB5zYgkZwsRCB4bDHqWKKKIJDyK85GS+Es7CzIU5dfAMda5NRpzEi8Czr0naGinGSbtTW27bUcXItFY8J8MGX/Ehr063NEwubW9+mjldzvqEkAY3izcVm/n0Ev5iaCle+mtD30XAGbD4q3zVh82+4YANrIuSU5CFp0ZYWz/dpYn5hbXzAkRjBlTmWVEmo9CKw/9QGazmHuc0WzQzeQrGXkTc5PRuV7uctgb4k/qRy04/GVfNPmpReOZGoyXv1zXTrMS4IpmVNcx9bEJjr+PQQ2+JeMEhR1SS+rHzyY5guL4C48z2dM0MSgS9IKaN2kJEoYt0WOHBY9tT7FLd1StoTrlO3AqzdghryvjI8DvChg0SvbDGaf/QnkRLGi2BOF28ZGLayYXw48wIVQQTBchRWgCp8j6kc/V6bG1HLUR57ebmPhsnGvMuTISNteWHgR8v5Ft5H/RWuYeVUmBl/g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39840400004)(366004)(346002)(376002)(136003)(107886003)(4326008)(8936002)(36756003)(66556008)(8676002)(110136005)(6486002)(54906003)(66476007)(66946007)(2906002)(7416002)(26005)(86362001)(956004)(52116002)(6496006)(6666004)(478600001)(316002)(186003)(16526019)(2616005)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 9afGMUc2GxirtZb/itjlNnBRcOr5zGJ0X1+tTaU9yRkGobF5hG2BpIK8AfstHZeBVvzXCIqs3Jpe0J51ZeWO1lAuJl8Ld/zsa4bYbqc63WKfvXyNahm1ltrGW9URakyp5etJhyDoSpM8LgZqewqIBOR+Zq5w/JyoHM/iMkPVVvx+R8xpUW8lrrUK1brC3TFY+WF0PkV5SGMNp6uKmtZ7VBfHsSL5Kp5uczKDMrHVzgmsxReU9YMTnLbE1ijZLkUHfJ+Q5nw8GWHw19IqeQLukz+/mcVt0977/8AlfgJOZDjHrysFZZG5ppLkMfzhiqzmzZEQ6si5L6gFmlMe3DgzHRtkDs8sSdkQ2xGthw165TaGCKl2boucD2pVi9g4NKl1+59AG6/IOt57LYW+mmB6ApDM+LCsEiFuf8HyJ0DwF2UYAJX+PFIgPxySfBT/Dq0TFxdmxDNK5+lORxDQpqOvRg85ScbyVqFjl15Rza+n+l5DBP16SFqzolIwQDqb7SIyAl9bCcdKTtbj24Svgs3XeBS2mR6O7LHyAVpAADXR5Go+D1oSTJtOaTN0JE6WC70HyZplpHaiV0T6cFCt1Ma0pgrhB9l1EViDzjqgm+NvGVEkLGqnqPJqnnejlz2U9LsrXX4vl1Di1hj64Xh1F09M/2gIvM/gU/Fk5eE5uh9XtibOq8XDrvEV26ugHU53U3KGR9yC8IjkE3+efzcK4t2DhuowwXgUOdIO+QSXvDDdx0YWsYxmp/QHsoewb7cCZDZKxw+VxCtQ2TvGJ1hBMBytX2EcbZoefITevDD+zSuaum+jo3XOJHMWQGPcthY+uMTA
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8a688bc-b1eb-4ee8-cf75-08d7ece9a80b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 09:34:18.9435
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rcZjYjM1sS/9A5A6EORmTEuwOUuqI9T8fsm1nFSjwf9naCQ71UXV5XFvnXqhSlqZ8mTO0Onfr+nnao2T1PeGeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6625
+In-Reply-To: <20200429162437.2025699-3-robert.foss@linaro.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:11:18 up 68 days, 20:28, 150 users,  load average: 0.84, 1.00,
+ 0.67
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
-for portable device. It converts MIPI to DisplayPort 1.3 4K.
+Hi Robert,
 
-You can add support to your board with binding.
+thnakf for the patch but pls keep in mind to do one thing per patch.
+IMHO this patch do a lot more. Anyway below are my comment :)
 
-Example:
-	anx7625_bridge: encoder@58 {
-		compatible = "analogix,anx7625";
-		reg = <0x58>;
-		status = "okay";
-		enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
-		reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
-		#address-cells = <1>;
-		#size-cells = <0>;
+On 20-04-29 18:24, Robert Foss wrote:
+> Add match table, enable ov8856_probe() to support
+> both ACPI and DT modes.
 
-		ports {
-			#address-cells = <1>;
-			#size-cells = <0>;
+You are also adding the support for reset-gpios and regualtors. IMHO the
+commit message don't belong to the changes you made anymore.
 
-			mipi2dp_bridge_in: port@0 {
-				reg = <0>;
-				anx7625_in: endpoint {
-					remote-endpoint = <&mipi_dsi>;
-				};
-			};
+> ACPI and DT modes are primarily distinguished from
+> each other by relying on devm_XXX_get_optional()
+> will return NULL instead of a reference for the
+> desired managed resource.
+> 
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+> 
+> - Changes since v5:
+>   * Maxime & Sakari: Replaced clock tolerance check with warning
+> 
+> - Changes since v4:
+>   * Maxime & Sakari: Switch to clock-frequency
+> 
+> - Changes since v3:
+>   * Remove redundant {}-brackets
+>   * Compare xvclk_rate to 5% tolerance
+>   * Andy: Use dev_fwnode()
+>   * Andy: Use %pe instead of %ld + PTR_ERR()
+>   * Andy: Invert reset_gpio logic
+>   * Andy: Remove dev_dbg() from failing reset_gpio setup
+>   * Andy: Use dev_err for logging for failures
+>   * Andy: Remove dev_warn from EDEFER/regulator error path
+>   * Andy & Sakari: Replaced GPIOD_OUT_XXX with 0/1
+>   * Maxime & Sakari: Verify clock frequency from DT
+>   * Sakari: Verify the 'xvclk_rate' is set correctly for ACPI/DT devices
+>   * Sakari: Remove duplicate ov8856->dev assignment
+> 
+> - Changes since v2:
+>   * Added "struct device *dev" member to struct ov8856
+>   * Andy: Switch to optional version of devm_gpiod_get
+>   * Andy: Switch to optional version of devm_clk_get
+>   * Fabio: Add reset sleep period
+>   * Sakari: Unify defines for 19.2Mhz
+>   * Sakari: Remove 24Mhz clock, since it isn't needed for supported modes
+>   * Sakari: Replace dev_info() with dev_dbg()
+>   * Sakari: Switch induction variable type to unsigned
+>   * Sakari: Don't wait for reset_gpio when in ACPI mode
+>   * Sakari: Pull reset GPIO high on power on failure
+>   * Sakari: Add power on/off to resume/suspend
+>   * Sakari: Fix indentation
+>   * Sakari: Power off during ov8856_remove()
+>   * Sakari: Don't sleep during power-on in ACPI mode
+>   * Sakari: Switch to getting xvclk from clk_get_rate
+> 
+> - Changes since v1:
+>   * Andy & Sakari: Make XVCLK optional since to not break ACPI
+>   * Fabio: Change n_shutdown_gpio name to reset_gpio
+>   * Fabio: Invert reset_gpio due to GPIO_ACTIVE_HIGH -> GPIO_ACTIVE_LOW change
+>   * Fabio: Remove empty line
+>   * Fabio: Remove real error from devm_gpiod_get() failures
+>   * Sakari: ARRAY_SIZE() directly instead of through OV8856_NUM_SUPPLIES
+>   * Sakari: Use XVCLK rate as provided by DT
+> 
+>  drivers/media/i2c/ov8856.c | 137 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 123 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
+> index 8655842af275..4749dc74d5ad 100644
+> --- a/drivers/media/i2c/ov8856.c
+> +++ b/drivers/media/i2c/ov8856.c
+> @@ -3,10 +3,13 @@
+>  
+>  #include <asm/unaligned.h>
+>  #include <linux/acpi.h>
+> +#include <linux/clk.h>
+>  #include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-fwnode.h>
+> @@ -18,7 +21,7 @@
+>  #define OV8856_LINK_FREQ_360MHZ		360000000ULL
+>  #define OV8856_LINK_FREQ_180MHZ		180000000ULL
+>  #define OV8856_SCLK			144000000ULL
+> -#define OV8856_MCLK			19200000
+> +#define OV8856_XVCLK_19_2		19200000
+>  #define OV8856_DATA_LANES		4
+>  #define OV8856_RGB_DEPTH		10
+>  
+> @@ -64,6 +67,12 @@
+>  
+>  #define to_ov8856(_sd)			container_of(_sd, struct ov8856, sd)
+>  
+> +static const char * const ov8856_supply_names[] = {
+> +	"dovdd",	/* Digital I/O power */
+> +	"avdd",		/* Analog power */
+> +	"dvdd",		/* Digital core power */
+> +};
+> +
+>  enum {
+>  	OV8856_LINK_FREQ_720MBPS,
+>  	OV8856_LINK_FREQ_360MBPS,
+> @@ -566,6 +575,11 @@ struct ov8856 {
+>  	struct media_pad pad;
+>  	struct v4l2_ctrl_handler ctrl_handler;
+>  
+> +	struct device		*dev;
+> +	struct clk		*xvclk;
+> +	struct gpio_desc	*reset_gpio;
+> +	struct regulator_bulk_data supplies[ARRAY_SIZE(ov8856_supply_names)];
+> +
+>  	/* V4L2 Controls */
+>  	struct v4l2_ctrl *link_freq;
+>  	struct v4l2_ctrl *pixel_rate;
+> @@ -908,6 +922,52 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
+>  	return ret;
+>  }
+>  
+> +static int __ov8856_power_on(struct ov8856 *ov8856)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(ov8856->xvclk);
 
-			mipi2dp_bridge_out: port@1 {
-				reg = <1>;
-				anx7625_out: endpoint {
-					remote-endpoint = <&panel_in>;
-				};
-			};
-		};
-	};
+You're request the clk only in DT case or do I miss something? If so you
+have to check if the clk is available.
 
-Signed-off-by: Xin Ji <xji@analogixsemi.com>
----
- .../bindings/display/bridge/analogix,anx7625.yaml  | 97 ++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "failed to enable xvclk\n");
+> +		return ret;
+> +	}
+> +
+> +	if (is_acpi_node(dev_fwnode(ov8856->dev)))
+> +		return 0;
+> +
+> +	if (ov8856->reset_gpio) {
+> +		gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
+> +		usleep_range(1000, 2000);
+> +	}
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
+> +				    ov8856->supplies);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "failed to enable regulators\n");
+> +		goto disable_clk;
+> +	}
+> +
+> +	gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
-new file mode 100644
-index 0000000..c2c50b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Analogix Semiconductor, Inc.
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/display/bridge/analogix,anx7625.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
-+
-+maintainers:
-+  - Xin Ji <xji@analogixsemi.com>
-+
-+description: |
-+  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
-+  designed for portable devices.
-+
-+properties:
-+  "#address-cells": true
-+  "#size-cells": true
-+
-+  compatible:
-+    items:
-+      - const: analogix,anx7625
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: used for interrupt pin B8.
-+    maxItems: 1
-+
-+  enable-gpios:
-+    description: used for power on chip control, POWER_EN pin D2.
-+    maxItems: 1
-+
-+  reset-gpios:
-+    description: used for reset chip control, RESET_N pin B7.
-+    maxItems: 1
-+
-+  ports:
-+    type: object
-+
-+    properties:
-+      port@0:
-+        type: object
-+        description:
-+          Video port for MIPI DSI input.
-+
-+      port@1:
-+        type: object
-+        description:
-+          Video port for panel or connector.
-+
-+    required:
-+        - port@0
-+        - port@1
-+
-+required:
-+  - "#address-cells"
-+  - "#size-cells"
-+  - compatible
-+  - reg
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    anx7625_bridge: encoder@58 {
-+        compatible = "analogix,anx7625";
-+        reg = <0x58>;
-+        enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
-+        reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            mipi2dp_bridge_in: port@0 {
-+                reg = <0>;
-+                anx7625_in: endpoint {
-+                    remote-endpoint = <&mipi_dsi>;
-+                };
-+            };
-+
-+            mipi2dp_bridge_out: port@1 {
-+                reg = <1>;
-+                anx7625_out: endpoint {
-+                    remote-endpoint = <&panel_in>;
-+                };
-+            };
-+        };
-+    };
--- 
-2.7.4
+You need to check the existance of the gpio here too.
 
+> +	usleep_range(1500, 1800);
+> +
+> +	return 0;
+> +
+> +disable_clk:
+> +	gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
+
+And here.. pls check the whole patch.
+
+> +	clk_disable_unprepare(ov8856->xvclk);
+> +
+> +	return ret;
+> +}
+> +
+> +static void __ov8856_power_off(struct ov8856 *ov8856)
+> +{
+> +	gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
+> +	regulator_bulk_disable(ARRAY_SIZE(ov8856_supply_names),
+> +			       ov8856->supplies);
+> +	clk_disable_unprepare(ov8856->xvclk);
+
+Clk is only availabel in DT use-case.
+
+> +}
+> +
+>  static int __maybe_unused ov8856_suspend(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+> @@ -918,6 +978,7 @@ static int __maybe_unused ov8856_suspend(struct device *dev)
+>  	if (ov8856->streaming)
+>  		ov8856_stop_streaming(ov8856);
+>  
+> +	__ov8856_power_off(ov8856);
+>  	mutex_unlock(&ov8856->mutex);
+>  
+>  	return 0;
+> @@ -931,6 +992,8 @@ static int __maybe_unused ov8856_resume(struct device *dev)
+>  	int ret;
+>  
+>  	mutex_lock(&ov8856->mutex);
+> +
+> +	__ov8856_power_on(ov8856);
+>  	if (ov8856->streaming) {
+>  		ret = ov8856_start_streaming(ov8856);
+>  		if (ret) {
+> @@ -1092,29 +1155,54 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
+>  	return 0;
+>  }
+>  
+> -static int ov8856_check_hwcfg(struct device *dev)
+> +static int ov8856_get_hwcfg(struct ov8856 *ov8856)
+>  {
+> +	struct device *dev = ov8856->dev;
+>  	struct fwnode_handle *ep;
+>  	struct fwnode_handle *fwnode = dev_fwnode(dev);
+>  	struct v4l2_fwnode_endpoint bus_cfg = {
+>  		.bus_type = V4L2_MBUS_CSI2_DPHY
+>  	};
+> -	u32 mclk;
+> +	u32 xvclk_rate;
+>  	int ret;
+>  	unsigned int i, j;
+>  
+>  	if (!fwnode)
+>  		return -ENXIO;
+>  
+> -	ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
+> +	ret = fwnode_property_read_u32(fwnode, "clock-frequency",
+> +		&xvclk_rate);
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (mclk != OV8856_MCLK) {
+> -		dev_err(dev, "external clock %d is not supported", mclk);
+> -		return -EINVAL;
+> +	if (!is_acpi_node(fwnode)) {
+> +		ov8856->xvclk = devm_clk_get(dev, "xvclk");
+> +		if (IS_ERR(ov8856->xvclk)) {
+> +			dev_err(dev, "could not get xvclk clock (%pe)\n",
+> +					ov8856->xvclk);
+> +			return PTR_ERR(ov8856->xvclk);
+> +		}
+> +
+> +		clk_set_rate(ov8856->xvclk, xvclk_rate);
+> +		xvclk_rate = clk_get_rate(ov8856->xvclk);
+>  	}
+
+Why do we handle the clock only in DT case? Is there a problem with the
+clock handling and ACPI?
+
+> +	if (xvclk_rate != OV8856_XVCLK_19_2)
+> +		dev_warn(dev, "external clock rate %d is unsupported", xvclk_rate);
+> +
+> +	ov8856->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> +		GPIOD_OUT_LOW);
+
+Pls align this.
+
+Regards,
+  Marco
+
+> +	if (IS_ERR(ov8856->reset_gpio))
+> +		return PTR_ERR(ov8856->reset_gpio);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ov8856_supply_names); i++)
+> +		ov8856->supplies[i].supply = ov8856_supply_names[i];
+> +
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov8856_supply_names),
+> +				      ov8856->supplies);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
+>  	if (!ep)
+>  		return -ENXIO;
+> @@ -1169,6 +1257,8 @@ static int ov8856_remove(struct i2c_client *client)
+>  	pm_runtime_disable(&client->dev);
+>  	mutex_destroy(&ov8856->mutex);
+>  
+> +	__ov8856_power_off(ov8856);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1177,22 +1267,31 @@ static int ov8856_probe(struct i2c_client *client)
+>  	struct ov8856 *ov8856;
+>  	int ret;
+>  
+> -	ret = ov8856_check_hwcfg(&client->dev);
+> +	ov8856 = devm_kzalloc(&client->dev, sizeof(*ov8856), GFP_KERNEL);
+> +	if (!ov8856)
+> +		return -ENOMEM;
+> +
+> +	ov8856->dev = &client->dev;
+> +
+> +	ret = ov8856_get_hwcfg(ov8856);
+>  	if (ret) {
+> -		dev_err(&client->dev, "failed to check HW configuration: %d",
+> +		dev_err(&client->dev, "failed to get HW configuration: %d",
+>  			ret);
+>  		return ret;
+>  	}
+>  
+> -	ov8856 = devm_kzalloc(&client->dev, sizeof(*ov8856), GFP_KERNEL);
+> -	if (!ov8856)
+> -		return -ENOMEM;
+> -
+>  	v4l2_i2c_subdev_init(&ov8856->sd, client, &ov8856_subdev_ops);
+> +
+> +	ret = __ov8856_power_on(ov8856);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to power on\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = ov8856_identify_module(ov8856);
+>  	if (ret) {
+>  		dev_err(&client->dev, "failed to find sensor: %d", ret);
+> -		return ret;
+> +		goto probe_power_off;
+>  	}
+>  
+>  	mutex_init(&ov8856->mutex);
+> @@ -1238,6 +1337,9 @@ static int ov8856_probe(struct i2c_client *client)
+>  	v4l2_ctrl_handler_free(ov8856->sd.ctrl_handler);
+>  	mutex_destroy(&ov8856->mutex);
+>  
+> +probe_power_off:
+> +	__ov8856_power_off(ov8856);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -1254,11 +1356,18 @@ static const struct acpi_device_id ov8856_acpi_ids[] = {
+>  MODULE_DEVICE_TABLE(acpi, ov8856_acpi_ids);
+>  #endif
+>  
+> +static const struct of_device_id ov8856_of_match[] = {
+> +	{ .compatible = "ovti,ov8856" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ov8856_of_match);
+> +
+>  static struct i2c_driver ov8856_i2c_driver = {
+>  	.driver = {
+>  		.name = "ov8856",
+>  		.pm = &ov8856_pm_ops,
+>  		.acpi_match_table = ACPI_PTR(ov8856_acpi_ids),
+> +		.of_match_table = ov8856_of_match,
+>  	},
+>  	.probe_new = ov8856_probe,
+>  	.remove = ov8856_remove,
+> -- 
+> 2.25.1
+> 
