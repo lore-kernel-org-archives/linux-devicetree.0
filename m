@@ -2,189 +2,150 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21D2C4724C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 16:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B8EC4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 17:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C774E2173E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 16:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7D522137B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 17:07:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588352859;
+	bh=HSlpgB4cakLv+R39qkkcQgmHk+36wQXD52MTboqytnI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=0z5Uu/RRCTrVAcKSX/GVLdssBNLtTikdHU56BgA0C8GjyeR5usNLKOuRMQaJheiFd
+	 a+7zSDbqlot3Kj/qkU7O4Zx7yvhPjhPxPQGx8ptL3xigzJYmqiyMmiuyxCMStOlDv9
+	 w+l3q5WO2lWgNBCiTfu1fd3dN8HlYGMWolh2JJTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729623AbgEAQ6d (ORCPT
+        id S1729634AbgEARHj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 12:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729161AbgEAQ6d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 12:58:33 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4353C061A0E;
-        Fri,  1 May 2020 09:58:32 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 4D3052A2F73
-Received: by earth.universe (Postfix, from userid 1000)
-        id 78B953C08C7; Fri,  1 May 2020 18:58:29 +0200 (CEST)
-Date:   Fri, 1 May 2020 18:58:29 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: power: Convert power_supply text to yaml
-Message-ID: <20200501165829.2y2soxprt6naemki@earth.universe>
-References: <20200430151841.17453-1-dmurphy@ti.com>
+        Fri, 1 May 2020 13:07:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728970AbgEARHj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 May 2020 13:07:39 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5556D20857;
+        Fri,  1 May 2020 17:07:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588352858;
+        bh=HSlpgB4cakLv+R39qkkcQgmHk+36wQXD52MTboqytnI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ww3GKHKclFIad96d/VkKC5pcHDUX9mlZA/ugl1W8spvvK1ZRKC7QiXCR6Iav6eWOM
+         nCcZZck/KLqWZrW4Jl/VJvcz8ZO098W5/l9hamC6nM8+vd0keDlYWDFUpPsPMWXmmH
+         JroqMRfDrYaTKmu534yvn7pX0J6MMbeEBfW/L+Ck=
+Date:   Fri, 1 May 2020 12:07:36 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/11] Multiple fixes in PCIe qcom driver
+Message-ID: <20200501170736.GA115107@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="55spgyagwzo6onjh"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430151841.17453-1-dmurphy@ti.com>
+In-Reply-To: <20200430220619.3169-1-ansuelsmth@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, May 01, 2020 at 12:06:07AM +0200, Ansuel Smith wrote:
+> This contains multiple fix for PCIe qcom driver.
+> Some optional reset and clocks were missing.
+> Fix a problem with no PARF programming that cause kernel lock on load.
+> Add support to force gen 1 speed if needed. (due to hardware limitation)
+> Add ipq8064 rev 2 support that use a different tx termination offset.
+> 
+> v3:
+> * Fix check reported by checkpatch --strict
+> * Rename force_gen1 to gen
+> * Fix spelling error
+> * Better describe qcom_clear_and_set_dword
+> * Make PARF deemph and equalization configurable
+> 
+> v2:
+> * Drop iATU programming (already done in pcie init)
+> * Use max-link-speed instead of force-gen1 custom definition
+> * Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+> * Introduce a new variant for different revision of ipq8064
+> 
+> Abhishek Sahu (1):
+>   PCI: qcom: change duplicate PCI reset to phy reset
+> 
+> Ansuel Smith (8):
+>   PCI: qcom: add missing ipq806x clocks in PCIe driver
 
---55spgyagwzo6onjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+s/in PCIe driver// (obvious from context)
 
-Hi,
+>   devicetree: bindings: pci: add missing clks to qcom,pcie
+>   PCI: qcom: add missing reset for ipq806x
+>   devicetree: bindings: pci: add ext reset to qcom,pcie
 
-On Thu, Apr 30, 2020 at 10:18:41AM -0500, Dan Murphy wrote:
-> Convert the power_supply.txt to power-supply.yaml.
-> This conversion entailed fixing up the binding to being yaml and dt
-> checker compliant.
+s/to qcom,pcie// (obvious from context after updating as below)
 
-Looks mostly good to me, thanks for taking care of it.
+>   PCI: qcom: introduce qcom_clear_and_set_dword
+>   PCI: qcom: add support for defining some PARF params
+>   devicetree: bindings: pci: document PARF params bindings
+>   devicetree: bindings: pci: add ipq8064 rev 2 variant to qcom,pcie
 
-> Added a note in the power_supply.txt to reference the power-supply.yaml
+s/to qcom,pcie// (obvious from context after updating as below)
 
-Yes, we should keep the file until all bindings referencing the file
-have been converted to YAML.
+> Sham Muthayyan (2):
+>   PCI: qcom: add ipq8064 rev2 variant and set tx term offset
+>   PCI: qcom: add Force GEN1 support
 
-> CC: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../bindings/power/supply/power-supply.yaml   | 40 +++++++++++++++++++
->  .../bindings/power/supply/power_supply.txt    | 25 +-----------
->  2 files changed, 42 insertions(+), 23 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/power-=
-supply.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/power-supply.=
-yaml b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
-> new file mode 100644
-> index 000000000000..cfbc79833ed8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/supply/power_supply.yaml#"
+Hi Ansuel, if you post this again, would you mind adjusting your
+subject lines to match the history, e.g.,
 
-This should be power-supply instead of power_supply, which is also
-reported by dtb_binding_check on my system :)
+  $ git log --oneline drivers/pci/controller/dwc/pcie-qcom.c
+  604f3956524a PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+  ed8cc3b1fc84 PCI: qcom: Add support for SDM845 PCIe controller
+  64adde31c8e9 PCI: qcom: Ensure that PERST is asserted for at least 100 ms
+  ...
 
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Power Supply Core Support
-> +
-> +maintainers:
-> +  - Sebastian Reichel <sre@kernel.org>
-> +
-> +properties:
-> +  power-supplies:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description:
-> +      This property is added to a supply in order to list the devices wh=
-ich
-> +      supply it power, referenced by their phandles.
-> +
-> +examples:
-> +  - |
-> +    power {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      usb_charger:power@e {
-> +        compatible =3D "some,usb-charger";
-> +        reg =3D <0xe>;
-> +      };
-> +
-> +      ac_charger:power@c {
+  $ git log --oneline Documentation/devicetree/bindings/pci/qcom,pcie.txt
+  5d28bee7c91e dt-bindings: PCI: qcom: Add support for SDM845 PCIe
+  29a50257a9d6 dt-bindings: PCI: qcom: Add QCS404 to the binding
 
-^^^ while at it, let's also fix this up and use
-charger instead of power (for both entries).
+(Capitalize first word, follow "dt-bindings: PCI: qcom" example).
 
-> +        compatible =3D "some,ac-charger";
-> +        reg =3D <0xc>;
-> +      };
-> +
-> +      battery:battery@b {
-> +        compatible =3D "some,battery";
-> +        reg =3D <0xb>;
-> +        power-supplies =3D <&usb_charger>, <&ac_charger>;
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/power/supply/power_supply.=
-txt b/Documentation/devicetree/bindings/power/supply/power_supply.txt
-> index 8391bfa0edac..d9693e054509 100644
-> --- a/Documentation/devicetree/bindings/power/supply/power_supply.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/power_supply.txt
-> @@ -1,23 +1,2 @@
-> -Power Supply Core Support
-> -
-> -Optional Properties:
-> - - power-supplies : This property is added to a supply in order to list =
-the
-> -   devices which supply it power, referenced by their phandles.
-> -
-> -Example:
-> -
-> -	usb-charger: power@e {
-> -		compatible =3D "some,usb-charger";
-> -		...
-> -	};
-> -
-> -	ac-charger: power@c {
-> -		compatible =3D "some,ac-charger";
-> -		...
-> -	};
-> -
-> -	battery@b {
-> -		compatible =3D "some,battery";
-> -		...
-> -		power-supplies =3D <&usb-charger>, <&ac-charger>;
-> -	};
-> +This binding has been converted to yaml please see power-supply.yaml in =
-this
-> +directory.
-> --=20
+Some of the commit logs also have random-length short lines.  Please
+wrap them to use the entire ~75 column width and add blank lines
+between paragraphs.
+
+Add ("..") on the Fixes: lines.  See git log for common practice.  I
+use this alias to make them:
+
+  $ type gsr
+  gsr is aliased to `git --no-pager show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
+  $ gsr 82a823833f4e
+  82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+
+Some of the logs use "SoC", some use "soc".  I prefer "SoC" because
+"soc" really isn't an English word.
+
+You don't need to post a new version just for these tweaks, but maybe
+make them in your local copy so if you do post a v4 for some other
+reason, they'll be included.
+
+>  .../devicetree/bindings/pci/qcom,pcie.txt     |  51 +++-
+>  drivers/pci/controller/dwc/pcie-qcom.c        | 241 ++++++++++++------
+>  2 files changed, 211 insertions(+), 81 deletions(-)
+> 
+> -- 
 > 2.25.1
->=20
-
---55spgyagwzo6onjh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6sVTAACgkQ2O7X88g7
-+pqlKg/+Il5cAdRXQRVHI1WT7/ey6SRvhvTcnmqzGwxY8hWP0hlPjJetHXytDRiD
-tYeDQHpwxhHaJ4rQz9k9bc0QcZZaMWTC5Y1awpJ+PNMMWKkI1EYrQ2fjeW7D24oh
-74gfWACAJNAVIQUsEVlZXyiLNQ5pvx/7xMVVPfkZivfgXpxJ4Tpj/wnoYy5sDefL
-o2KO0fuBLM+DWkaa5+SiJyc5DpRh8T0lLJOb4/ZgG8O11lNI3jgUJK9YRllxd2PT
-cHeoqzE5ZmCPxV4bBMzyXBnJYnSGGRnB9HoyPpMNU1sBTr6XSCJtAHr5JxXjW6ff
-X6kSLB171uFW5oEMOQr5eVMzvs9nm+TyoxShlWVz8DAUlDfX8l7FQOl840b4O34q
-e3xUobqoJZ9zcTBAWe5NXd9ZVTIRHWkICW/CnLtzYf8TG3OIxklLty1e9v1f5upl
-ekpdBW48LTHCGoWGr2+zaA3TS3U+Z+OzoOj/0dIDcqmmKxCJhsF9eWgZVi4tTJqU
-94IdY3MeusxfSHzim7p8UkYCEYZUYvo8IvIPbjBN4beu3/faAAWoYnVCkX7a2h7W
-ZsvGCRmCfC5pKUZ7ucBuhqbwfkY0abySsI7Dti1+RzLSx4wJwOuy3nd/GmMBQjzh
-y7I4nzq2TL++ljd/TaIqseiyzUq/JpDNyhLAl/f1mn/Xk9MU2Dc=
-=oymK
------END PGP SIGNATURE-----
-
---55spgyagwzo6onjh--
+> 
