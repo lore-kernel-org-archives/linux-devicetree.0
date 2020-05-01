@@ -2,94 +2,62 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D6FC47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AE3C47254
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D35582166E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9404A208DB
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbgEAWGl (ORCPT
+        id S1726318AbgEAWVc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 18:06:41 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37590 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAWGl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 18:06:41 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 680671C020C; Sat,  2 May 2020 00:06:39 +0200 (CEST)
-Date:   Sat, 2 May 2020 00:06:37 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Pavel Machek <pavel@denx.de>, Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200501220637.GA19818@amd>
-References: <20200430174615.41185-1-tony@atomide.com>
- <20200430222605.GA10922@duo.ucw.cz>
- <20200501145252.GC37466@atomide.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
-Content-Disposition: inline
-In-Reply-To: <20200501145252.GC37466@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Fri, 1 May 2020 18:21:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAWVc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 18:21:32 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D953C061A0C;
+        Fri,  1 May 2020 15:21:32 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AF92B14EFC4E4;
+        Fri,  1 May 2020 15:21:30 -0700 (PDT)
+Date:   Fri, 01 May 2020 15:21:30 -0700 (PDT)
+Message-Id: <20200501.152130.2290341369746144284.davem@davemloft.net>
+To:     hayashi.kunihiko@socionext.com
+Cc:     robh+dt@kernel.org, yamada.masahiro@socionext.com,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] dt-bindings: net: Convert UniPhier AVE4 controller
+ to json-schema
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 01 May 2020 15:21:31 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Date: Tue, 28 Apr 2020 15:31:22 +0900
 
---0F1p//8PRICkK4MW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Convert the UniPhier AVE4 controller binding to DT schema format.
+> This changes phy-handle property to required.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-On Fri 2020-05-01 07:52:52, Tony Lindgren wrote:
-> * Pavel Machek <pavel@denx.de> [200430 22:27]:
-> >=20
-> > > My guess is that at least with the pending ofono patches, we just
-> > > want to use the raw interface for /dev/gsmtty* interface and stop
-> > > pretending we have a modem that is AT compatible.
-> >=20
-> > I tried to get it to work... it was not fun and I did not get far.
->=20
-> OK. Yeah it's now 2020 and still dealing with serial port stuff :)
+DT folks, is it ok if I take this into net-next or do you folks want to
+take it instead?
 
-Yeah, and scary thing is... it is 2020 and serial port is _still_
-complex and hard to understand and debug :-).
-
-> OK :) I still need to update the ALSA related patches on top
-> of this $subject series.
-
-Let me know when you have these.
-
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---0F1p//8PRICkK4MW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl6snWwACgkQMOfwapXb+vIzIgCgh+kpNi03IGiu3qZaCkJjxrwn
-ZugAnRiL9aPdP7Z2i/pEXCljELO8idBA
-=2YyH
------END PGP SIGNATURE-----
-
---0F1p//8PRICkK4MW--
+Thanks.
