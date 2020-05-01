@@ -2,115 +2,86 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07BDC35280
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1949C47258
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEBC22184D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:52:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UOVd+AsA"
+	by mail.kernel.org (Postfix) with ESMTP id 7FF1E216FD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgEAUwW (ORCPT
+        id S1726435AbgEAUxU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 16:52:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35528 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgEAUwW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 16:52:22 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041KqGqB072046;
-        Fri, 1 May 2020 15:52:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588366336;
-        bh=G0LrEdkVkiWRft5NWAGfdDX9uXu9hqB1LoI/z2eu9Kg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=UOVd+AsAqu54ama0yvT6gp3B7jwV7s6GiFUTVGHJN121rj9y9wAil7wJVRUhTzGay
-         V76AKMglR3A1ON35kEKcJYJdcpbFvmP0JTULKfzir4MpUI2id5jLl7O7rYOHks/UhR
-         QkR885+tjIfs2w4MO5O/uUyFBQHX3h/uAM0i/MB8=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 041KqGhv091976
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 May 2020 15:52:16 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 1 May
- 2020 15:50:46 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 1 May 2020 15:50:46 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041Kojml026584;
-        Fri, 1 May 2020 15:50:46 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>, <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 5/7] arm64: dts: ti: k3-am65-main: add main navss cpts node
-Date:   Fri, 1 May 2020 23:50:09 +0300
-Message-ID: <20200501205011.14899-6-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200501205011.14899-1-grygorii.strashko@ti.com>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
+        Fri, 1 May 2020 16:53:20 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:58712 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgEAUxU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 16:53:20 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id BF18D1C020C; Fri,  1 May 2020 22:53:18 +0200 (CEST)
+Date:   Fri, 1 May 2020 22:53:18 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 6/6] ARM: dts: omap4-droid4: Configure modem for
+ serdev-ngsm
+Message-ID: <20200501205318.GH6043@duo.ucw.cz>
+References: <20200430174615.41185-1-tony@atomide.com>
+ <20200430174615.41185-7-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="9sSKoi6Rw660DLir"
+Content-Disposition: inline
+In-Reply-To: <20200430174615.41185-7-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT node for Main NAVSS CPTS module.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+--9sSKoi6Rw660DLir
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 6fbb0f2f1d92..3450006260a6 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -583,6 +583,28 @@
- 						<0x5>; /* RX_CHAN */
- 			ti,sci-rm-range-rflow = <0x6>; /* GP RFLOW */
- 		};
-+
-+		cpts@310d0000 {
-+			compatible = "ti,am65-cpts";
-+			reg = <0x0 0x310d0000 0x0 0x400>;
-+			reg-names = "cpts";
-+			clocks = <&main_cpts_mux>;
-+			clock-names = "cpts";
-+			interrupts-extended = <&intr_main_navss 163 0>;
-+			interrupt-names = "cpts";
-+			ti,cpts-periodic-outputs = <6>;
-+			ti,cpts-ext-ts-inputs = <8>;
-+
-+			main_cpts_mux: refclk-mux {
-+				#clock-cells = <0>;
-+				clocks = <&k3_clks 118 5>, <&k3_clks 118 11>,
-+					<&k3_clks 118 6>, <&k3_clks 118 3>,
-+					<&k3_clks 118 8>, <&k3_clks 118 14>,
-+					<&k3_clks 120 3>, <&k3_clks 121 3>;
-+				assigned-clocks = <&main_cpts_mux>;
-+				assigned-clock-parents = <&k3_clks 118 5>;
-+			};
-+		};
- 	};
- 
- 	main_gpio0:  main_gpio0@600000 {
--- 
-2.17.1
+On Thu 2020-04-30 10:46:15, Tony Lindgren wrote:
+> Let's enable the TS 27.010 /dev/gsmmux* interfaces via Linux n_gsm that
+> can be used for voice calls and SMS with commands using a custom Motorola
+> format.
+>=20
+> And let's also enable the kernel GNSS driver via serdev-ngsm that uses a
+> dedicated TS 27.010 channel.
+>=20
+> Note that voice call audio mixer is not supported yet.
+>=20
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--9sSKoi6Rw660DLir
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqyMPgAKCRAw5/Bqldv6
+8qoRAJ9XBGCn30K6iNApi0jst74YNd76XQCglCkMyqQcOwEfx4JuRZ1mYhOAndQ=
+=k4vN
+-----END PGP SIGNATURE-----
+
+--9sSKoi6Rw660DLir--
