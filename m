@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8743C47258
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD5C47258
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFA722166E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4112166E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:46:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mQEbCFSG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FoPvLdc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgEAVqt (ORCPT
+        id S1726307AbgEAVqz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 17:46:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
+        Fri, 1 May 2020 17:46:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgEAVqf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 17:46:35 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E387DC09B041
-        for <devicetree@vger.kernel.org>; Fri,  1 May 2020 14:46:33 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id 71so9044200qtc.12
-        for <devicetree@vger.kernel.org>; Fri, 01 May 2020 14:46:33 -0700 (PDT)
+        with ESMTP id S1726396AbgEAVqc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 17:46:32 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38666C061A0C
+        for <devicetree@vger.kernel.org>; Fri,  1 May 2020 14:46:32 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id g16so5093328qtp.11
+        for <devicetree@vger.kernel.org>; Fri, 01 May 2020 14:46:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8gxTSUogDwuGLJulsmZ9RxF75CEfaqEdykWJgqsyHRs=;
-        b=mQEbCFSG03FogeRAqzrIa13/XN1kbi5D36jDNukOmTu+o7J6EmE3NP2IKE+WPGx+0g
-         bTQmHp2wZhUHtfw2mINbOZ1dZYOCazzFF1BI1FmmISZnM1ZJVMGCr0YXGbxU+nbjrVcE
-         Qc5JwRo+yzKNBcg3vXMQEDn43yD0Z8OmqhX+t9E+VnurbZkiQdUGEZlgiKufJdQ/lxYb
-         pKOvZ2bRvzzpHN1THbRMkZT3Wjfl59tHqNdw1mzlge1OzLMLkNmNJXMnt1xXSXAJ4DLy
-         WYVofSHGHa1VvXWqdZAsGvPMP+fF1nKqH/QdoGNbdQr7BzPjnf4cRtZ1OlClxyootJEf
-         rpUg==
+        bh=7feKFMGg4GPGIWvo5qLBoNVV6FQKy+Rod2p/i6GH6LU=;
+        b=FoPvLdc2DRWZKrxVhNrrfD3gQQjINc9Mx91B7hF9oRDGkECJOhZGg7mYlYiBi/CxUm
+         X38TPhcbJBAj8tQa2226QjwoC1B162RMPg5rynuh8S++MSmP773m1KhmhobndysMJIgI
+         KGyefw2SGNpvrw9JCpJNU/zmsC03yAb8P3rkaQNRxh7L04EXPfMmFkmZ3dymoJrUTqWT
+         zB0e0o/abeN90jQqred927YOzTWIzK2UZv2UXmaOHAaA1I1v9UGe4Lv5Q2w1yezH/WtT
+         m56b47X/FOX4j63jA0IDHzc7CDKBPO+W2+7YCCEP0fX9gnYi11qfe5vIOkdtBRJo21W6
+         Vd4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8gxTSUogDwuGLJulsmZ9RxF75CEfaqEdykWJgqsyHRs=;
-        b=h4Vs5wAIPEkfLtrlsXdiO8N+WE+IA2kGnz3vnB9uUoGsldr1DWu53PcZLl3yV3Hbah
-         v3HtTRU2vMAB5AvUCxc7IdHXt5P+X0PffWSXJWquD9r/KCUsT6tWgKygdT3mrRBgJkUO
-         lIGSBcr1Kd1exhCU+9bBpxiv+SYO1JBWmq9U7tDUd/adsSPUmQNOcbkyKTBOK15q7mL3
-         ycymP26ltriOE05N2VprpDCHOLiF1T2VYNPvlCyJHNk8G9KEvCuZIet+NjoCak307Vlo
-         guK4JNZM5izTxXFoTnrnqwPQJPbRNZIVG0GfVf42Gv49lZbsGfC8bG8ecQAmddZQr7NX
-         M68Q==
-X-Gm-Message-State: AGi0PuYR5WZCGXeYESZe3rJB3QypEchVERpQ7oYgre9aCNvS1ATCHYoi
-        uavqvL9rnSg9mf4o94ITHo8rew==
-X-Google-Smtp-Source: APiQypIIqwtR3OM/3zGi5DIPfwsyDFHMqqlj+kjboPAogLyhmOkseCui/dghUIqb4bkEfE9iB3tLOg==
-X-Received: by 2002:ac8:46d0:: with SMTP id h16mr6146683qto.242.1588369593085;
-        Fri, 01 May 2020 14:46:33 -0700 (PDT)
+        bh=7feKFMGg4GPGIWvo5qLBoNVV6FQKy+Rod2p/i6GH6LU=;
+        b=h1wcr+TxuL5JuRHt7pIoKodIMtjaaHDSjciYamWeOWlME7ojs3DKe0raXqBNz99gHN
+         ew+L/iDNaz0U3w3j+i0tcyosnG8uUgcCdTQlIkm9XUU4IlGX1YCeJps+UPU6KbJdbdZ+
+         RTBhFsSzxJKtqqg9NX8aKAT3JcS44AF4JMYS5MDaQXq4M1Dt9+WyJPQnZiDI8FhR32II
+         XIww7VFs70HxKNSX3kodHYA15hnK25rssE4NOvhdJe8JAhMrZW1SDe028QjagY3o7MGv
+         061cjUKgJ2Go1S/FVfF9r+RK+ih3DwcgCjha1bG/9QUvhzxLdjeK1HLx4+2FlsDebH3r
+         6FAA==
+X-Gm-Message-State: AGi0PuZ/HBPoLIWf0krrGLRBiiSHwOFtwG9Fs+CVdccbHAJ1uD2iCyTJ
+        vhPxGeJ/6aBoQXHNnav40FIsgi1qk3E=
+X-Google-Smtp-Source: APiQypKFhQRa4VjEaoeR/o7gsskZE9XQbrTzrYQKw9zJNHa0WlH2UqhRXODOpcTtlPjqQZ1JgKGprg==
+X-Received: by 2002:ac8:4818:: with SMTP id g24mr5998881qtq.377.1588369591468;
+        Fri, 01 May 2020 14:46:31 -0700 (PDT)
 Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id z18sm3470982qti.47.2020.05.01.14.46.31
+        by smtp.gmail.com with ESMTPSA id z18sm3470982qti.47.2020.05.01.14.46.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 14:46:32 -0700 (PDT)
+        Fri, 01 May 2020 14:46:31 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net
 Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
@@ -65,9 +65,9 @@ Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
         agross@kernel.org, robh+dt@kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH net-next 2/4] net: ipa: redefine struct ipa_mem_data
-Date:   Fri,  1 May 2020 16:46:23 -0500
-Message-Id: <20200501214625.31539-3-elder@linaro.org>
+Subject: [PATCH net-next 1/4] arm64: dts: sdm845: add IPA iommus property
+Date:   Fri,  1 May 2020 16:46:22 -0500
+Message-Id: <20200501214625.31539-2-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200501214625.31539-1-elder@linaro.org>
 References: <20200501214625.31539-1-elder@linaro.org>
@@ -78,197 +78,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The ipa_mem_data structure type was never actually used.  Instead,
-the IPA memory regions were defined using the ipa_mem structure.
-
-Redefine struct ipa_mem_data so it encapsulates the array of IPA-local
-memory region descriptors along with the count of entries in that
-array.  Pass just an ipa_mem structure pointer to ipa_mem_init().
-
-Rename the ipa_mem_data[] array ipa_mem_local_data[] to emphasize
-that the memory regions it defines are IPA-local memory.
+Add an "iommus" property to the IPA node in "sdm845.dtsi".  It is
+required because there are two regions of memory the IPA accesses
+through an SMMU.  The next few patches define and map those regions.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_data-sc7180.c | 10 +++++++---
- drivers/net/ipa/ipa_data-sdm845.c | 10 +++++++---
- drivers/net/ipa/ipa_data.h        | 13 +++++--------
- drivers/net/ipa/ipa_main.c        |  2 +-
- drivers/net/ipa/ipa_mem.c         |  9 +++++----
- drivers/net/ipa/ipa_mem.h         |  3 ++-
- 6 files changed, 27 insertions(+), 20 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ipa/ipa_data-sc7180.c b/drivers/net/ipa/ipa_data-sc7180.c
-index 042b5fc3c135..f97e7e4e61c1 100644
---- a/drivers/net/ipa/ipa_data-sc7180.c
-+++ b/drivers/net/ipa/ipa_data-sc7180.c
-@@ -193,7 +193,7 @@ static const struct ipa_resource_data ipa_resource_data = {
- };
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 8f926b5234d4..de6bb86c4968 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1761,6 +1761,8 @@
  
- /* IPA-resident memory region configuration for the SC7180 SoC. */
--static const struct ipa_mem ipa_mem_data[] = {
-+static const struct ipa_mem ipa_mem_local_data[] = {
- 	[IPA_MEM_UC_SHARED] = {
- 		.offset		= 0x0000,
- 		.size		= 0x0080,
-@@ -296,12 +296,16 @@ static const struct ipa_mem ipa_mem_data[] = {
- 	},
- };
- 
-+static struct ipa_mem_data ipa_mem_data = {
-+	.local_count	= ARRAY_SIZE(ipa_mem_local_data),
-+	.local		= ipa_mem_local_data,
-+};
+ 		ipa: ipa@1e40000 {
+ 			compatible = "qcom,sdm845-ipa";
 +
- /* Configuration data for the SC7180 SoC. */
- const struct ipa_data ipa_data_sc7180 = {
- 	.version	= IPA_VERSION_4_2,
- 	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
- 	.endpoint_data	= ipa_gsi_endpoint_data,
- 	.resource_data	= &ipa_resource_data,
--	.mem_count	= ARRAY_SIZE(ipa_mem_data),
--	.mem_data	= ipa_mem_data,
-+	.mem_data	= &ipa_mem_data,
- };
-diff --git a/drivers/net/ipa/ipa_data-sdm845.c b/drivers/net/ipa/ipa_data-sdm845.c
-index 0d9c36e1e806..c55507e94559 100644
---- a/drivers/net/ipa/ipa_data-sdm845.c
-+++ b/drivers/net/ipa/ipa_data-sdm845.c
-@@ -235,7 +235,7 @@ static const struct ipa_resource_data ipa_resource_data = {
- };
- 
- /* IPA-resident memory region configuration for the SDM845 SoC. */
--static const struct ipa_mem ipa_mem_data[] = {
-+static const struct ipa_mem ipa_mem_local_data[] = {
- 	[IPA_MEM_UC_SHARED] = {
- 		.offset		= 0x0000,
- 		.size		= 0x0080,
-@@ -318,12 +318,16 @@ static const struct ipa_mem ipa_mem_data[] = {
- 	},
- };
- 
-+static struct ipa_mem_data ipa_mem_data = {
-+	.local_count	= ARRAY_SIZE(ipa_mem_local_data),
-+	.local		= ipa_mem_local_data,
-+};
-+
- /* Configuration data for the SDM845 SoC. */
- const struct ipa_data ipa_data_sdm845 = {
- 	.version	= IPA_VERSION_3_5_1,
- 	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
- 	.endpoint_data	= ipa_gsi_endpoint_data,
- 	.resource_data	= &ipa_resource_data,
--	.mem_count	= ARRAY_SIZE(ipa_mem_data),
--	.mem_data	= ipa_mem_data,
-+	.mem_data	= &ipa_mem_data,
- };
-diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
-index 7110de2de817..51d8e5a6f23a 100644
---- a/drivers/net/ipa/ipa_data.h
-+++ b/drivers/net/ipa/ipa_data.h
-@@ -246,14 +246,12 @@ struct ipa_resource_data {
- 
- /**
-  * struct ipa_mem - IPA-local memory region description
-- * @offset:		offset in IPA memory space to base of the region
-- * @size:		size in bytes base of the region
-- * @canary_count:	number of 32-bit "canary" values that precede region
-+ * @local_count:	number of regions defined in the local[] array
-+ * @local:		array of IPA-local memory region descriptors
-  */
- struct ipa_mem_data {
--	u32 offset;
--	u16 size;
--	u16 canary_count;
-+	u32 local_count;
-+	const struct ipa_mem *local;
- };
- 
- /**
-@@ -270,8 +268,7 @@ struct ipa_data {
- 	u32 endpoint_count;	/* # entries in endpoint_data[] */
- 	const struct ipa_gsi_endpoint_data *endpoint_data;
- 	const struct ipa_resource_data *resource_data;
--	u32 mem_count;		/* # entries in mem_data[] */
--	const struct ipa_mem *mem_data;
-+	const struct ipa_mem_data *mem_data;
- };
- 
- extern const struct ipa_data ipa_data_sdm845;
-diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
-index 28998dcce3d2..9295a9122e8e 100644
---- a/drivers/net/ipa/ipa_main.c
-+++ b/drivers/net/ipa/ipa_main.c
-@@ -778,7 +778,7 @@ static int ipa_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_kfree_ipa;
- 
--	ret = ipa_mem_init(ipa, data->mem_count, data->mem_data);
-+	ret = ipa_mem_init(ipa, data->mem_data);
- 	if (ret)
- 		goto err_reg_exit;
- 
-diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
-index 42d2c29d9f0c..fb4de2a12796 100644
---- a/drivers/net/ipa/ipa_mem.c
-+++ b/drivers/net/ipa/ipa_mem.c
-@@ -12,6 +12,7 @@
- 
- #include "ipa.h"
- #include "ipa_reg.h"
-+#include "ipa_data.h"
- #include "ipa_cmd.h"
- #include "ipa_mem.h"
- #include "ipa_data.h"
-@@ -266,15 +267,15 @@ int ipa_mem_zero_modem(struct ipa *ipa)
- }
- 
- /* Perform memory region-related initialization */
--int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
-+int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data)
- {
- 	struct device *dev = &ipa->pdev->dev;
- 	struct resource *res;
- 	int ret;
- 
--	if (count > IPA_MEM_COUNT) {
-+	if (mem_data->local_count > IPA_MEM_COUNT) {
- 		dev_err(dev, "to many memory regions (%u > %u)\n",
--			count, IPA_MEM_COUNT);
-+			mem_data->local_count, IPA_MEM_COUNT);
- 		return -EINVAL;
- 	}
- 
-@@ -302,7 +303,7 @@ int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
- 	ipa->mem_size = resource_size(res);
- 
- 	/* The ipa->mem[] array is indexed by enum ipa_mem_id values */
--	ipa->mem = mem;
-+	ipa->mem = mem_data->local;
- 
- 	return 0;
- }
-diff --git a/drivers/net/ipa/ipa_mem.h b/drivers/net/ipa/ipa_mem.h
-index 065cb499ebe5..f99180f84f0d 100644
---- a/drivers/net/ipa/ipa_mem.h
-+++ b/drivers/net/ipa/ipa_mem.h
-@@ -7,6 +7,7 @@
- #define _IPA_MEM_H_
- 
- struct ipa;
-+struct ipa_mem_data;
- 
- /**
-  * DOC: IPA Local Memory
-@@ -84,7 +85,7 @@ void ipa_mem_teardown(struct ipa *ipa);
- 
- int ipa_mem_zero_modem(struct ipa *ipa);
- 
--int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem);
-+int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data);
- void ipa_mem_exit(struct ipa *ipa);
- 
- #endif /* _IPA_MEM_H_ */
++			iommus = <&apps_smmu 0x720 0x3>;
+ 			reg = <0 0x1e40000 0 0x7000>,
+ 			      <0 0x1e47000 0 0x2000>,
+ 			      <0 0x1e04000 0 0x2c000>;
 -- 
 2.20.1
 
