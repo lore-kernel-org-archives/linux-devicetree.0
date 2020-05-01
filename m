@@ -2,118 +2,130 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84CEC35280
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09412C47254
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC80208DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588368943;
-	bh=eiBa5lb9f1X6eXJkHTMOoxS6e/4+tIwVweqAWNnkT7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a9mPPpI9iLYxwHRhguvL1v6CmeIRN5K2dbbwWVTh/N/kGM3bfcqPpnNIAKgBBPUav
-	 p70NDSPf0RvDyr2ephdj3MoK8UdnEhBbRUxKMkVSJcOyBUjqVk1OJB8m9bonQGHL/9
-	 pNYN0AfyEstP1SF5p0hBebOZoYjeYAz1EZxf2TRA=
+	by mail.kernel.org (Postfix) with ESMTP id DB353216FD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:45:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xwWgPvau"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgEAVfn (ORCPT
+        id S1726692AbgEAVpH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 17:35:43 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40302 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAVfm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 17:35:42 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i27so3664416ota.7;
-        Fri, 01 May 2020 14:35:42 -0700 (PDT)
+        Fri, 1 May 2020 17:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgEAVpG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 17:45:06 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FDB3C061A0E
+        for <devicetree@vger.kernel.org>; Fri,  1 May 2020 14:45:06 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id v18so5422643qvx.9
+        for <devicetree@vger.kernel.org>; Fri, 01 May 2020 14:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hmchGPRatpHGz7FXodcq0SJqPYC5mC9nnx68TlaFw4w=;
+        b=xwWgPvauD6ppamEvtNf9ufZFJSbi1n2KGMzoE1syqLec3fCNoSjft7GT/6N59WPd0O
+         M7sPxOR6NTHeuv6QCZb5HHY2UDi1TvOcGjKwZAwXjScQfnYjJ5OiXvgna3D02FM8arMH
+         qqA/bxLsQ9/sPLat9/rX78cKaqJCwivNFeSOuIGysl7LilmEsX4rCD3XyIvEaU+B1Snd
+         qEov4+C7hfmK5E5w10OSx56H87NYvnpUpC8ewjFFitGFVeIeegoXktpsyFmPMJ+SDzdd
+         nrO90BisFqJX2sH34XILdpb9qWapOLZ+0BOOKnRNzHY0Qk9f7PvedtPA6sKDfun4HRLX
+         cyVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L7Pjlj+bds8pkUkLj6i4yY9snS8jpLg7qkPY4JTHgEQ=;
-        b=GEECfWiyicKbw05rfUnN7ZaIMVhlK72Lt8GLny5jfw2EPLNmr+8yyKDxCJwekdGyyb
-         kAR9S4sHWsLmvyy1sTjNtx0OhVWZeev/4EkF1iN71n60Ovcai42kcgSQ7d075ZoP2hzS
-         iGRNIRIv0UUPtc/+21S4VOsoJb80UoDBpFDC7QLtVdQeYTjF+tFq/gSSVzm7ThBMC1kF
-         The8M1qljArYzBmNuV/OtR0w1eDs6QtwF/iZviwgjvC1wk0eDAVQtuCdX2kW8LEEBY/P
-         77s6ZFeHMI/DGy/LJ2iW7iFiffXA7JJzuyD7609FJQSMAHnPUVhHIFWTXPNzURrbu2SG
-         PEzA==
-X-Gm-Message-State: AGi0PuYse/GE+tbQxD0WKgoD0ItLes8WYbriQIep6y/y+emq1+StwZYX
-        TF+51y4vtFR43xydm3rY2m0vKOQ=
-X-Google-Smtp-Source: APiQypIcS4ZldtIHDn1qsuo/ZwhYHO44SNWEmJ0QrB++gTcgGWj4b0A/SY9x+Mc7/f+BhQfvihMVFA==
-X-Received: by 2002:a9d:107:: with SMTP id 7mr5574092otu.48.1588368941638;
-        Fri, 01 May 2020 14:35:41 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a7sm1110562otr.15.2020.05.01.14.35.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hmchGPRatpHGz7FXodcq0SJqPYC5mC9nnx68TlaFw4w=;
+        b=HVRJefodyxI3LSt0xmfrGR3BF/nhcO9ahyJB2nafT5at/TeqgBuMM86SmMSR7VZM9A
+         /XaS+BGTrgA14aiKxtK6ROGewROJ9snosCqD+TasuUJ+P+xhk7ZNQIQRrT0G1lz+gMJh
+         +VTo2/cwY1gDTasvLzDyG0BSKzqEBztBxOejDIXQOOAY09Mfi37YjJRCnYLV+v4ECyuH
+         FdRmWXoINP0xjhcoZ4H0mz35HVKLuG35sOfZ/hGD/QkDW1ephrc5CD8ILPTmZtaJeJcB
+         xgsEVQKV7zbEIks5XRHwRd9yzbfKDsFNog1SaXWmKqe/JzLCqPJo593CD7hEEbFFfWGk
+         FxBQ==
+X-Gm-Message-State: AGi0PubDka1BpUxfxT0tfDLZF3LNP7IqraFM9rtzQ75WZ3Xo61nMsenl
+        pBOsc93La8idemAFyh4pINht9A==
+X-Google-Smtp-Source: APiQypIuAa6x+i0csPOWBkj82VsqurAxBOnw3UAt3938Ebx2ta9aLDycZjFVpTUNGLKa+OXLdVUAgQ==
+X-Received: by 2002:a0c:e786:: with SMTP id x6mr6237094qvn.11.1588369505083;
+        Fri, 01 May 2020 14:45:05 -0700 (PDT)
+Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id l12sm3587374qke.89.2020.05.01.14.45.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 14:35:41 -0700 (PDT)
-Received: (nullmailer pid 16259 invoked by uid 1000);
-        Fri, 01 May 2020 21:35:40 -0000
-Date:   Fri, 1 May 2020 16:35:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Subject: Re: [PATCH v5 2/3] Add the bindings for the bq25150 and bq25155
- 500mA charging ICs from Texas Instruments.
-Message-ID: <20200501213540.GA15569@bogus>
-References: <20200501175118.26226-1-dmurphy@ti.com>
- <20200501175118.26226-3-dmurphy@ti.com>
+        Fri, 01 May 2020 14:45:04 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, davem@davemloft.net,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: net: add IPA iommus property
+Date:   Fri,  1 May 2020 16:45:00 -0500
+Message-Id: <20200501214500.31433-1-elder@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501175118.26226-3-dmurphy@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 1 May 2020 12:51:17 -0500, Dan Murphy wrote:
-> From: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-> 
-> Description:
-> The BQ2515X family of devices are highly integrated battery management
-> ICs that integrate the most common functions for wearbale devices
-> namely a charger, an output voltage rail, ADC for battery and system
-> monitoring, and a push-button controller.
-> 
-> Datasheets:
-> http://www.ti.com/lit/ds/symlink/bq25150.pdf
-> http://www.ti.com/lit/ds/symlink/bq25155.pdf
-> 
-> CC: Rob Herring <robh@kernel.org>
-> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-> ---
->  .../bindings/power/supply/bq2515x.yaml        | 99 +++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-> 
+The IPA accesses "IMEM" and main system memory through an SMMU, so
+its DT node requires an iommus property to define range of stream IDs
+it uses.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Signed-off-by: Alex Elder <elder@linaro.org>
+---
+ Documentation/devicetree/bindings/net/qcom,ipa.yaml | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Documentation/devicetree/bindings/power/supply/bq2515x.yaml:  while scanning a block scalar
-  in "<unicode string>", line 81, column 5
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 96, column 1
-Documentation/devicetree/bindings/Makefile:11: recipe for target 'Documentation/devicetree/bindings/power/supply/bq2515x.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/power/supply/bq2515x.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2515x.yaml: ignoring, error parsing file
-warning: no schema found in file: Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2515x.yaml: ignoring, error parsing file
-warning: no schema found in file: Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+index 140f15245654..7b749fc04c32 100644
+--- a/Documentation/devicetree/bindings/net/qcom,ipa.yaml
++++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+@@ -20,7 +20,10 @@ description:
+   The GSI is an integral part of the IPA, but it is logically isolated
+   and has a distinct interrupt and a separately-defined address space.
+ 
+-  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.
++  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.  See
++  iommu/iommu.txt and iommu/arm,smmu.yaml for more information about SMMU
++  bindings.
++
+ 
+   - |
+     --------             ---------
+@@ -54,6 +57,9 @@ properties:
+       - const: ipa-shared
+       - const: gsi
+ 
++  iommus:
++    maxItems: 1
++
+   clocks:
+     maxItems: 1
+ 
+@@ -126,6 +132,7 @@ properties:
+ 
+ required:
+   - compatible
++  - iommus
+   - reg
+   - clocks
+   - interrupts
+@@ -164,6 +171,7 @@ examples:
+                 modem-init;
+                 modem-remoteproc = <&mss_pil>;
+ 
++                iommus = <&apps_smmu 0x720 0x3>;
+                 reg = <0 0x1e40000 0 0x7000>,
+                         <0 0x1e47000 0 0x2000>,
+                         <0 0x1e04000 0 0x2c000>;
+-- 
+2.20.1
 
-See https://patchwork.ozlabs.org/patch/1281414
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
