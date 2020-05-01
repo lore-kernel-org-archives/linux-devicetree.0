@@ -4,123 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912A0C4724C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2B2C4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7707524953
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D93C24953
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbgEAPyV (ORCPT
+        id S1729885AbgEAPyo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 11:54:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:43100 "EHLO foss.arm.com"
+        Fri, 1 May 2020 11:54:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:43118 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgEAPyV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 11:54:21 -0400
+        id S1728495AbgEAPyo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 May 2020 11:54:44 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECF6630E;
-        Fri,  1 May 2020 08:54:20 -0700 (PDT)
-Received: from [10.57.39.240] (unknown [10.57.39.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 778A63F68F;
-        Fri,  1 May 2020 08:54:19 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
- <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
-Date:   Fri, 1 May 2020 16:54:17 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C65430E;
+        Fri,  1 May 2020 08:54:43 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E9FD3F68F;
+        Fri,  1 May 2020 08:54:42 -0700 (PDT)
+Date:   Fri, 1 May 2020 16:54:40 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pci: rcar: add r8a77961 support
+Message-ID: <20200501155440.GE7398@e121166-lin.cambridge.arm.com>
+References: <1586511020-31833-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586511020-31833-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
-> [+Robin - to check on dma-ranges intepretation]
+On Fri, Apr 10, 2020 at 06:30:20PM +0900, Yoshihiro Shimoda wrote:
+> Add support for r8a77961 (R-Car M3-W+).
 > 
-> I would need RobH and Robin to review this.
+> To avoid confusion between R-Car M3-W (R8A77960) and R-Car M3-W+
+> (R8A77961), this patch also updates the comment of
+> "renesas,pcie-r8a7796".
 > 
-> Also, An ACK from Tom is required - for the whole series.
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+
+Applied to pci/rcar, thanks.
+
+Lorenzo
+
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> index 12702c8..1041c44a 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> @@ -11,7 +11,8 @@ compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
+>  	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
+>  	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
+>  	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
+> -	    "renesas,pcie-r8a7796" for the R8A7796 SoC;
+> +	    "renesas,pcie-r8a7796" for the R8A77960 SoC;
+> +	    "renesas,pcie-r8a77961" for the R8A77961 SoC;
+>  	    "renesas,pcie-r8a77980" for the R8A77980 SoC;
+>  	    "renesas,pcie-r8a77990" for the R8A77990 SoC;
+>  	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 or
+> -- 
+> 2.7.4
 > 
-> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
->> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->> property to configure the number of bits passed through from PCIe
->> address to internal address in Inbound Address Translation register.
->>
->> However standard PCI dt-binding already defines "dma-ranges" to
->> describe the address range accessible by PCIe controller. Parse
->> "dma-ranges" property to configure the number of bits passed
->> through from PCIe address to internal address in Inbound Address
->> Translation register.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>   drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->>   1 file changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 9b1c3966414b..60f912a657b9 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>   	struct device *dev = rc->pcie.dev;
->>   	struct platform_device *pdev = to_platform_device(dev);
->>   	struct device_node *np = dev->of_node;
->> +	struct of_pci_range_parser parser;
->>   	struct pci_host_bridge *bridge;
->>   	struct list_head resources;
->> +	struct of_pci_range range;
->>   	struct cdns_pcie *pcie;
->>   	struct resource *res;
->>   	int ret;
->> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>   	rc->max_regions = 32;
->>   	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
->>   
->> -	rc->no_bar_nbits = 32;
->> -	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
->> +	if (!of_pci_dma_range_parser_init(&parser, np))
->> +		if (of_pci_range_parser_one(&parser, &range))
->> +			rc->no_bar_nbits = ilog2(range.size);
-
-You probably want "range.pci_addr + range.size" here just in case the 
-bottom of the window is ever non-zero. Is there definitely only ever a 
-single inbound window to consider?
-
-I believe that pci_parse_request_of_pci_ranges() could do the actual 
-parsing for you, but I suppose plumbing that in plus processing the 
-resulting dma_ranges resource probably ends up a bit messier than the 
-concise open-coding here.
-
-Robin.
-
->> +
->> +	if (!rc->no_bar_nbits) {
->> +		rc->no_bar_nbits = 32;
->> +		of_property_read_u32(np, "cdns,no-bar-match-nbits",
->> +				     &rc->no_bar_nbits);
->> +	}
->>   
->>   	rc->vendor_id = 0xffff;
->>   	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
->> -- 
->> 2.17.1
->>
