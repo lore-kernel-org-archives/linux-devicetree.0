@@ -2,133 +2,84 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687EEC47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 09:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B38C4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 09:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 498532070B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 09:23:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="cVcH5151"
+	by mail.kernel.org (Postfix) with ESMTP id 10C7821924
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 09:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgEAJX3 (ORCPT
+        id S1728373AbgEAJgv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 05:23:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728236AbgEAJX3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 05:23:29 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A28C035495;
-        Fri,  1 May 2020 02:23:29 -0700 (PDT)
-Received: from localhost.localdomain (unknown [103.125.232.133])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 1AF1320EE0;
-        Fri,  1 May 2020 09:23:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1588325009; bh=UBb6voEXnZVtEz2ml1YRi2CB/X7gUz26bvIQSCyUKX0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cVcH5151IpXgmLyWu6QFGlBwg0ezQBRp9ZvbKk+2q5PATvtVH7/Emjkggq8BofAEq
-         i1BdRI6FiUEDkLiD2i0upX1YX6ntnr1A2Ex7UmlcOGXkSPHL5IqlbQkHIseE6jzN85
-         9srlwFtwZAKPyYj8z6R2Z0KxAW61q4e+UnS+oujtUlROOmD8bZJhEd9LPzpv0KgDfU
-         jpHLqvd+ho5Hp7w43ZloKom2m2tf6ZoloTzkbBQG5V87YlZWLWsRBqBMtSrezNCmW8
-         yyN0O0llkZHSxoab/6kHoKr3wAxYkT1ondl53JpTg/dTc1UL1HsVGwRvqAvSucwJFa
-         BTTuxoF78y+dw==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     maz@kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH v3 6/6] dt-bindings: interrupt-controller: Add Loongson PCH MSI
-Date:   Fri,  1 May 2020 17:21:37 +0800
-Message-Id: <20200501092139.2988670-6-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200501092139.2988670-1-jiaxun.yang@flygoat.com>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
- <20200501092139.2988670-1-jiaxun.yang@flygoat.com>
+        Fri, 1 May 2020 05:36:51 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38230 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728325AbgEAJgv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 05:36:51 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r66so2258850oie.5;
+        Fri, 01 May 2020 02:36:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QNmi3J1oG0BHibSA3NPDSx73IEYskXDbHrY+NDqOrXs=;
+        b=eoVf6yLCx9y8Lf+B7eEm42qZML0z239NzMFbgb77i+m6CuQR2CmmBdWCi6ZSkc+e+d
+         Mt75qrEXlL7l0N2ZKgAemyMgZCws/abm1KU1v3zmYce1aslWW3ou8eNkrevlSfj5yjyl
+         6avDxgCpQhkdyhvjz4Z0+QkZAb8i89pCsLo/60PZVMEig4gp/Xgg8J4fbfNHTjM/Lr/d
+         mYdgCt0FFgyDx87YjEujXCPIowpXNRfiMt9F2ahO4sa+vQVD1igdBpnlNsQAabmcTGMb
+         cieI1y7tb6dil1bhBKBx7Jrb6fZnoBVUKR155c2frJTBJrS2Mz7ZGlQS3prjQZHBXxgA
+         4U7g==
+X-Gm-Message-State: AGi0PuaAnPacnDTtEBnCGZPMrTn/j0nj3aGJyjaCtPdnXdEuCAei+pbx
+        wJGcP9q6ojXlK+l51TYhA7/oK3jiNeDvnHFM/ms=
+X-Google-Smtp-Source: APiQypIxuQX0hYIBKT5wCQqTw8uzBxU4StAmBh2v/MqxavCTiCkalP8HD2pDbGBi6s2kyN5W4y2cYwdW/AXBft42Weo=
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr2464791oig.54.1588325810218;
+ Fri, 01 May 2020 02:36:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <812e6e58-d13f-3f44-5f55-22266b690c57@cogentembedded.com>
+In-Reply-To: <812e6e58-d13f-3f44-5f55-22266b690c57@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 1 May 2020 11:36:38 +0200
+Message-ID: <CAMuHMdU5zcmBuWKVxEhF1G1uYHS0iVKUtuWURX68meppMKWHeA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add Renesas RPC-IF support
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add binding for Loongson PCH MSI controller.
+CC marex, linux-renesas-soc
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../loongson,pch-msi.yaml                     | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
-new file mode 100644
-index 000000000000..513ed1933035
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,pch-msi.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Loongson PCH MSI Controller
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+description: |
-+  This interrupt controller is found in the Loongson LS7A family of PCH for
-+  transforming interrupts from PCIe MSI into HyperTransport vectorized
-+  interrupts.
-+
-+properties:
-+  compatible:
-+    const: loongson,pch-msi-1.0
-+
-+  reg:
-+    maxItems: 1
-+
-+  loongson,msi-base-vec:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value of the base of parent HyperTransport vector allocated
-+      to PCH MSI.
-+
-+  loongson,msi-num-vecs:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value of the number of parent HyperTransport vectors allocated
-+      to PCH MSI.
-+
-+  msi-controller: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - msi-controller
-+  - loongson,msi-base-vec
-+  - loongson,msi-num-vecs
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    msi: msi-controller@2ff00000 {
-+      compatible = "loongson,pch-msi-1.0";
-+      reg = <0x2ff00000 0x4>;
-+      msi-controller;
-+      loongson,msi-base-vec = <64>;
-+      loongson,msi-num-vecs = <64>;
-+      interrupt-parent = <&htvec>;
-+    };
-+...
--- 
-2.26.0.rc2
-
+On Thu, Apr 30, 2020 at 10:45 PM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
+> Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC
+> to be accessed via the external address space read mode or the manual mode.
+> The memory controller driver for RPC-IF registers either SPI or HyperFLash
+> subdevice, depending on the contents of the device tree subnode; it also
+> provides the abstract "back end" API that can be used by the "front end"
+> SPI/MTD drivers to talk to the real hardware...
+>
+> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
+>
+> [1/2] dt-bindings: memory: document Renesas RPC-IF bindings
+> [2/2] memory: add Renesas RPC-IF driver
+>
+> MBR, Sergei
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
