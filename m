@@ -2,62 +2,100 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AE3C47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C60B5C47254
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9404A208DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07F52166E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:33:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jq/oBJJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgEAWVc (ORCPT
+        id S1727060AbgEAWdD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 18:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49630 "EHLO
+        Fri, 1 May 2020 18:33:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAWVc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 18:21:32 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D953C061A0C;
-        Fri,  1 May 2020 15:21:32 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AF92B14EFC4E4;
-        Fri,  1 May 2020 15:21:30 -0700 (PDT)
-Date:   Fri, 01 May 2020 15:21:30 -0700 (PDT)
-Message-Id: <20200501.152130.2290341369746144284.davem@davemloft.net>
-To:     hayashi.kunihiko@socionext.com
-Cc:     robh+dt@kernel.org, yamada.masahiro@socionext.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] dt-bindings: net: Convert UniPhier AVE4 controller
- to json-schema
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 01 May 2020 15:21:31 -0700 (PDT)
+        with ESMTP id S1726495AbgEAWdC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 18:33:02 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A58C061A0C;
+        Fri,  1 May 2020 15:33:02 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x18so13419401wrq.2;
+        Fri, 01 May 2020 15:33:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vseR8e8pFXD2+crzI5eV2VcW4ikr4KpriEQgDBp2Nkk=;
+        b=Jq/oBJJQjyVTpBQJaSRiwighOTctLBm/QkEyfvefS14WeNspzApxcFj6R6ZsB0KW4r
+         WrOBh9RWCkW0SiUc1qjuaQOF6Gg/bNHp8+ySsxOg6EKao3UhvNa3Ogzo+bW+142P9R/l
+         WjZKs6xG1yTNikKP63ePyoE91h/MuFm/7emy1WOf7Q5L5eRReC4Gv6NiIzb6IL1cTFAb
+         t6qmDID14xHAOQZLPafY0EcJnH1c4NeLs8c2npMq5JsOpLTW5A4636NKy4RzqCPkvmDu
+         4D+4I0riPUWU6eI1fvdkwMpVzHZN1BFlVDDDYWLH83nv1+xUEhHG3oNRxI+pH9pCNjcu
+         lBzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vseR8e8pFXD2+crzI5eV2VcW4ikr4KpriEQgDBp2Nkk=;
+        b=mk7aeIcv3R2rLa2988AxNj9C7iHtyGV/fbw5nLUo5y9LZUlzB+h4il99Cf82bozrpl
+         2c7MkBAgz9xiQgr5lrb6lQcDi/gNLU/Of0Lnih6yphqq6YXWJZd655/7+dX/A9g8+Ybv
+         rSvpLysxUhI3Eg4D28sEufDN1NF2/BunA31N7EyJCpVFnMmS/M6c8+QgUkaR10XM+IK+
+         H4c/ur9nYQKuxL28iBOsGBsCwe6lF5are5C+/OZvofdecx4ieZvn+DIT/KH/s95OToex
+         EcMdHaJZo5o9Y98cUusrBqAzyavORkzTpXrmRymQM59O/dRynXoFfG2GO6ovKqGcYGsZ
+         C09Q==
+X-Gm-Message-State: AGi0PuaXMxP9fgMlS2RtqXTffa2YJKIL5aAMLkKtdzKnFeXTrj0HF4x/
+        uyYNF0BgsyLxoMIYCKkQJGQ=
+X-Google-Smtp-Source: APiQypIqMshsvJKMdUEEJbNpBmLhC7igH7VDViy70/OfNgOXhRkvkU26tBFopkIkz/SG9QwB7PV9Jw==
+X-Received: by 2002:a05:6000:1242:: with SMTP id j2mr6081582wrx.274.1588372381333;
+        Fri, 01 May 2020 15:33:01 -0700 (PDT)
+Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
+        by smtp.googlemail.com with ESMTPSA id n9sm6237750wrx.61.2020.05.01.15.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 15:33:00 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [v2 PATCH 0/4] Add SMD RPM support for MSM8936
+Date:   Sat,  2 May 2020 00:32:28 +0200
+Message-Id: <20200501223232.275800-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Date: Tue, 28 Apr 2020 15:31:22 +0900
+changes since v1:
+- added a forgotten patch that adds the compat string to the driver
 
-> Convert the UniPhier AVE4 controller binding to DT schema format.
-> This changes phy-handle property to required.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Konrad Dybcio (1):
+  drivers: soc: Add MSM8936 SMD RPM compatible
 
-DT folks, is it ok if I take this into net-next or do you folks want to
-take it instead?
+Vincent Knecht (3):
+  clk: qcom: smd: Add support for MSM8936 rpm clocks
+  dt-bindings: clock: rpmcc: Document MSM8936 compatible
+  dt-bindings: soc: qcom: Document MSM8936 SMD RPM compatible
 
-Thanks.
+ .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+ .../bindings/soc/qcom/qcom,smd-rpm.txt        |  1 +
+ drivers/clk/qcom/clk-smd-rpm.c                | 50 +++++++++++++++++++
+ drivers/soc/qcom/smd-rpm.c                    |  1 +
+ 4 files changed, 53 insertions(+)
+
+-- 
+2.26.1
+
