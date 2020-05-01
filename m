@@ -2,1984 +2,327 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FCBC47257
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 17:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0740C47259
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 17:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3668D20857
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 17:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94BE22166E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 17:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="dllTv7TX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ImQZRdwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgEARKY (ORCPT
+        id S1729372AbgEARhS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 13:10:24 -0400
-Received: from mail-eopbgr680062.outbound.protection.outlook.com ([40.107.68.62]:59424
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729046AbgEARKX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 13:10:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RolxhnXpNaQUNOfgbpkQWI2bk9RQJQRr0zzSuKE8sT36h7yAwyseFk/jJ1Xjl6SEJzNELL7AVPfUOHhLDyJwnd90RZAzBnQagOThXIXAiXYwap3hNSM4uXsz0VORRXB2zc8rQbZauq/OAZeD7F0huzqA2v+6p7PHyzNK6Sum/Y2DgcTLl9Xpe2FiZ7H2KBLIlToSJ2MWZedajWBpMd2npS3epq7j2cl9lDfzz/4tYt8Nk3EjrehM1LpVz6egHYow7osIe4rzroWDVLzDb//LjRVIXOFwWwDdhsz4ovaaU3w4lbA7up/FEKGUL+9l2AEgDzxN934balKXi+iD2VWxGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O6a9aGdH7LcPCt35lp28xzuTgMYwjkpPmASTi+bf2lU=;
- b=aSjB/o1tMUyRfTLRiobfDjVP0VDneWgEzxE60nlhuBar/O1wAsV+CnoqYEvDWVlicy3PcRQI6VOsvFBhsBn0G1r58XP5ul+p+RAMI6STbOZKvjU4dR3MinVqh5YVeGTnA9MMWXCK5kpQe3afDCPrA/isKbb/Bd3+HZPvwUPv/GH8Zf8XjY3uCPTAZgfaehncWppib0QuolNbtrexg4jHxGmmxx7mfSBI3TJAplQO2gz6DUTseyLYzWe9+IyF8t8CjnnzO8BC9tZJbmPVwgvIPxUWETfruAhcCQlPcR1dy8wpkHddew1TqIQw882LpuRCQN19H7wmMRZA9wyTQgvztA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
- dkim=pass header.d=labundy.com; arc=none
+        Fri, 1 May 2020 13:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730258AbgEARhQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 13:37:16 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F66BC08E859
+        for <devicetree@vger.kernel.org>; Fri,  1 May 2020 10:37:16 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id v4so10233599wme.1
+        for <devicetree@vger.kernel.org>; Fri, 01 May 2020 10:37:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O6a9aGdH7LcPCt35lp28xzuTgMYwjkpPmASTi+bf2lU=;
- b=dllTv7TXuACfa65GIwhLEn0l2t0gV6xXY33W9eM/RkZRc6Sr6Sb6+g4/a9kYsWBXzTjEqKqK16SrEBhu7jYV1fMJHlF7AuHNqjz7xoRMiY/rsjPCJGcNlnJXd6jxWyiR0/HHP9Wm20LHNquvhdKqjqFj901PrIpg751Ib1UQdh0=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=labundy.com;
-Received: from SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
- by SN6PR08MB4431.namprd08.prod.outlook.com (2603:10b6:805:36::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Fri, 1 May
- 2020 17:10:10 +0000
-Received: from SN6PR08MB5517.namprd08.prod.outlook.com
- ([fe80::d1f2:9197:cd6:4823]) by SN6PR08MB5517.namprd08.prod.outlook.com
- ([fe80::d1f2:9197:cd6:4823%7]) with mapi id 15.20.2937.023; Fri, 1 May 2020
- 17:10:10 +0000
-From:   Jeff LaBundy <jeff@labundy.com>
-To:     dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeff LaBundy <jeff@labundy.com>
-Subject: [PATCH v2 2/2] input: misc: Add support for Azoteq IQS269A
-Date:   Fri,  1 May 2020 12:09:42 -0500
-Message-Id: <1588352982-5117-2-git-send-email-jeff@labundy.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588352982-5117-1-git-send-email-jeff@labundy.com>
-References: <1588352982-5117-1-git-send-email-jeff@labundy.com>
-Content-Type: text/plain
-X-ClientProxiedBy: DM3PR12CA0053.namprd12.prod.outlook.com
- (2603:10b6:0:56::21) To SN6PR08MB5517.namprd08.prod.outlook.com
- (2603:10b6:805:fb::32)
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ufxfpcTyMlazNounw3wNzyToYB3UJEzHIn7ulrOGXXU=;
+        b=ImQZRdwOETOF5qY/+pyGGb3LTEQ9xFaAZ+Oh5wq1sxFysc+UZ2KddbKYoqax8Vjr7z
+         sgvIxkJ+RJgkAZAdTUleV59iJQCJJZSUkKcIN4hgrw7bXJWPsZUfnyvu9Bq4xvrlqXV0
+         Wf+83lgasQstrjoJbaTCr0HQGjf3+NCZof2RQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ufxfpcTyMlazNounw3wNzyToYB3UJEzHIn7ulrOGXXU=;
+        b=rAAyn5aU4BRtkHZR+aIyGZCyeuqpsQ/5y/HomGeh4IA5OR5Fkw1Lj28OjOCt0q2Fnu
+         C13RgY8YjFqDp+sHWHRJ05DZiG6R6yj4RG7Cpv3Jox46JNpbtZ/F2mbA6nJZ0REz5s7F
+         r10kxMl3SqnIlBNOtmdfmJsV5jslvuPBQpxSH3zwU7VZ9cdeXzDEqE1zmJQ+8B0qS8Oh
+         VzZDM/tejT3FQqsz4UUCZyQuTURjHqLOfLgCNy0H/paQv8LSuoAV4apVkXyksj7Jg0BG
+         5TYyIYHkzqvIzhbrSWtrJKV6LeHu260HopiFOFKuUG3480dbOA+LjQxsZlz/hrEGO8+P
+         mQ6A==
+X-Gm-Message-State: AGi0PuZR81VCbE0+Yj/GlkkX+kH+uMUMW0JD7ps3F/HbZDczumQ0ex82
+        1SYJrBzeUyoYznYqt2kkJsIg9g==
+X-Google-Smtp-Source: APiQypJyniRJmeRLwjfWdIyj8PkcBx1aKguknLdjRpeiffgQiJ+m2FGrMs2k7mIaQ49bHNdCnwosXA==
+X-Received: by 2002:a7b:cdfa:: with SMTP id p26mr569906wmj.186.1588354634845;
+        Fri, 01 May 2020 10:37:14 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id d5sm5373095wrp.44.2020.05.01.10.37.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 10:37:14 -0700 (PDT)
+Date:   Fri, 1 May 2020 17:37:12 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v7 11/11] media: platform: Add jpeg dec/enc feature
+Message-ID: <20200501173712.GB218308@chromium.org>
+References: <20200303123446.20095-1-xia.jiang@mediatek.com>
+ <20200303123446.20095-12-xia.jiang@mediatek.com>
+ <20200306112337.GA163286@chromium.org>
+ <1587009795.24163.87.camel@mhfsdcap03>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (136.49.227.119) by DM3PR12CA0053.namprd12.prod.outlook.com (2603:10b6:0:56::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2958.27 via Frontend Transport; Fri, 1 May 2020 17:10:09 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [136.49.227.119]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3c536c33-3c9b-4cdb-ac40-08d7edf2811b
-X-MS-TrafficTypeDiagnostic: SN6PR08MB4431:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR08MB44315E073A738B4F269E0A94D3AB0@SN6PR08MB4431.namprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:486;
-X-Forefront-PRVS: 0390DB4BDA
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FqcX2IsNbs0stbUqSzZu/vOQfoqSfZVgG8Y0OH3M3mhnimNijULYBed6XqPeJq9Evia0avdOlZwOPuaU03jI+j1gJs3ULIvz4VRLh3PvWfmItCmCU+X7Ud64iKiA4PybAhPcnR68Du7Ow0mvVDZBcHEnjVj/Up4da83AwVfSYPMqXI/9xLtNrFr6PIb3RzUfO5rRKhN7nVTkQRwpYA3Td365n7+qF2HCBbmCnDUcOQkF/MajrPBg60CWY6r/PCUG052W92Gw0WVe3arTImx1MrUby+Q04VbghB4+lbX1VloI3RKxWsBGA3h6ks1soTizVb5tbnT7l5ktcKpmGy98pSkFVZItrd3EvQZG03fobQlUnRyzBIWE4cvBnvKbd+2zOBA7sFJXhq2jE7nr6CEPTV7dXFmB/gbK3o+d+r95Dlbno4m21g0TuVJdFhfPdYynigl5+jQuaJVArBNxdL+MVqbGTHY+tQJb5d0wA9dzlgsJ2TGKSEnu6PPSB/myaBih
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR08MB5517.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(376002)(136003)(346002)(366004)(39830400003)(107886003)(4326008)(6486002)(30864003)(956004)(2616005)(5660300002)(316002)(6666004)(36756003)(66476007)(66556008)(66946007)(508600001)(6512007)(86362001)(69590400007)(16526019)(52116002)(2906002)(6506007)(8936002)(186003)(8676002)(26005)(579004)(559001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: D/4W8PHAPCeNT0wo3/hvwB9479HogH8qZePz471xC4xkepn3jmY/Ny2gjIkVY64XfW21JK3wuOLZovEJnsFTPK212NnbTecIOwXjgq1hAzJyhFhygqHnKOP6a79sV9h67GzcMC6C0etRhimjXzHOYeAa3D2WrJ/5kUUOI96zCrC2A+aMkIm+UTBxe0xEDDKm6iWPphcY4hTvyWjIOPwP1aAkUYYvh6i1fTEsFl3cAqRDnds6TAD0TmAc03kjn3E9rkUEl0neKZvIRL3Fpnd7WRAz65T1nLtcRxqSKcCqyDwV7LFOkMLg+Rss7gnN8s5P9IplZfToTZ3dz3lJMlghTov3HMge3fZjL62Rbvig7rUCjugyQfXYqmXSy3QlTGlPeMwrvq+QBpDdO48hyzRC7SxnGlb1hkz2U5JPgmV5e+2blAx/sveH1EFAGAFnnvI2NRlygRDXSIgQfauTj46hMTDsm09tuJUEDJ2NSWAs5dy3NJWwWSjAPttSEt6kjN29vKnFdrZmcCYbWWukFweQFdc8yets2vQKRWiyu0j7We6enq1+5zaF2O1Yh4372AUoHgnY4enZRezR2KtWrGN8ot8DpQIQe2NFCmNuazjAP5c4+2WN1LBmlwfQOmQm8z0R3Y1n+uc8xxpBvlAqaBF3CaoJk8hrB3BgZWrBiEbiLSfwFjclkTqbMTKjh6GvLmYtzQioG8RMFMNzh8WJGKirm3LbLP65hTyTRh71do0gI2ORXildlfLzZsrmGzxPCSeEQ0RqYMW1y9x0jZph/OPq6VE+jgP5gnQWhWqnlsGyEQE=
-X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c536c33-3c9b-4cdb-ac40-08d7edf2811b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 17:10:10.3085
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VDCCeqVVjD/crml5GzkKVU+dcC5/ROawrd6/czWL3og5u9RHoWYaOU70eFr3wOuc0UgITNxN/vahG0h5llaOlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB4431
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587009795.24163.87.camel@mhfsdcap03>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support for the Azoteq IQS269A capacitive touch
-controller.
+Hi Xia,
 
-Signed-off-by: Jeff LaBundy <jeff@labundy.com>
----
-Changes in v2:
-  - None
+On Thu, Apr 16, 2020 at 12:03:15PM +0800, Xia Jiang wrote:
+> On Fri, 2020-03-06 at 20:23 +0900, Tomasz Figa wrote:
+> > Hi Xia,
+> > 
+> > On Tue, Mar 03, 2020 at 08:34:46PM +0800, Xia Jiang wrote:
+> > > Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jpeg
+> > > decode and encode have great similarities with function operation.
+> > 
+> > Thank you for the patch. Please see my comments inline.
+> 
+> Dear Tomasz,
+> 
+> Thank you for your reply. I have followed your advice and submited v8
+> version patch.
+> 
+> Please check my reply below.
+[snip]
+> > 
+> > >  
+> > > -	switch (s->target) {
+> > > -	case V4L2_SEL_TGT_COMPOSE:
+> > > -		s->r.left = 0;
+> > > -		s->r.top = 0;
+> > > -		ctx->out_q.w = s->r.width;
+> > > -		ctx->out_q.h = s->r.height;
+> > > -		break;
+> > > -	default:
+> > > -		return -EINVAL;
+> > > +		switch (s->target) {
+> > > +		case V4L2_SEL_TGT_CROP:
+> > > +			s->r.left = 0;
+> > > +			s->r.top = 0;
+> > > +			ctx->out_q.w = s->r.width;
+> > > +			ctx->out_q.h = s->r.height;
+> > 
+> > What happens if the userspace provides a value bigger than current format?
+> we need get the min value of userspace value and current value,changed
+> it like this:
+> ctx->out_q.w = min(s->r.width, ctx->out_q.w);
+> ctx->out_q.h = min(s->r.height,ctx->out_q.h);
 
- drivers/input/misc/Kconfig   |   10 +
- drivers/input/misc/Makefile  |    1 +
- drivers/input/misc/iqs269a.c | 1833 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1844 insertions(+)
- create mode 100644 drivers/input/misc/iqs269a.c
+Since ctx->out_q is modified by this function, wouldn't that cause
+problems if S_SELECTION was called two times, first with a smaller
+rectangle and then with a bigger one? We should store the active crop
+and format separately and use the latter for min().
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 293e55f..17bd9fa 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -728,6 +728,16 @@ config INPUT_IMS_PCU
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called ims_pcu.
+[snip]
+> > >  
+> > >  	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
+> > >  		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
+> > > @@ -772,6 +1011,45 @@ static int mtk_jpeg_set_dec_dst(struct mtk_jpeg_ctx *ctx,
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static void mtk_jpeg_set_enc_dst(struct mtk_jpeg_ctx *ctx, void __iomem *base,
+> > > +				 struct vb2_buffer *dst_buf,
+> > > +				 struct mtk_jpeg_enc_bs *bs)
+> > > +{
+> > > +	bs->dma_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
+> > > +	bs->dma_addr_offset = ctx->enable_exif ? MTK_JPEG_DEFAULT_EXIF_SIZE : 0;
+> > 
+> > Could you explain what is the meaning of the dma_addr_offset and where the
+> > default EXIF size comes from? Also, how is the encoder output affected by
+> > the enable_exif flag?
+> If enabled the exif mode, the real output will be filled at the locaiton
+> of dst_addr+ dma_addr_offset(exif size).The dma_addr_offset will be
+> filled by the application.
+> The default exif size is setted as constant value 64k according to the
+> spec.(Exif metadata are restricted in size to 64kB in JPEG images
+> because according to the specification this information must be
+> contained within a signed JPEG APP1 segment)
 
-+config INPUT_IQS269A
-+	tristate "Azoteq IQS269A capacitive touch controller"
-+	select REGMAP_I2C
-+	help
-+	  Say Y to enable support for the Azoteq IQS269A capacitive
-+	  touch controller.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called iqs269a.
-+
- config INPUT_CMA3000
- 	tristate "VTI CMA3000 Tri-axis accelerometer"
- 	help
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index 1db1815..fc100de 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
- obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
- obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
- obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
-+obj-$(CONFIG_INPUT_IQS269A)		+= iqs269a.o
- obj-$(CONFIG_INPUT_IXP4XX_BEEPER)	+= ixp4xx-beeper.o
- obj-$(CONFIG_INPUT_KEYSPAN_REMOTE)	+= keyspan_remote.o
- obj-$(CONFIG_INPUT_KXTJ9)		+= kxtj9.o
-diff --git a/drivers/input/misc/iqs269a.c b/drivers/input/misc/iqs269a.c
-new file mode 100644
-index 0000000..6699eb1
---- /dev/null
-+++ b/drivers/input/misc/iqs269a.c
-@@ -0,0 +1,1833 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Azoteq IQS269A Capacitive Touch Controller
-+ *
-+ * Copyright (C) 2020 Jeff LaBundy <jeff@labundy.com>
-+ *
-+ * This driver registers up to 3 input devices: one representing capacitive or
-+ * inductive keys as well as Hall-effect switches, and one for each of the two
-+ * axial sliders presented by the device.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of_device.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#define IQS269_VER_INFO				0x00
-+#define IQS269_VER_INFO_PROD_NUM		0x4F
-+
-+#define IQS269_SYS_FLAGS			0x02
-+#define IQS269_SYS_FLAGS_SHOW_RESET		BIT(15)
-+#define IQS269_SYS_FLAGS_PWR_MODE_MASK		GENMASK(12, 11)
-+#define IQS269_SYS_FLAGS_PWR_MODE_SHIFT		11
-+#define IQS269_SYS_FLAGS_IN_ATI			BIT(10)
-+
-+#define IQS269_CHx_COUNTS			0x08
-+
-+#define IQS269_SLIDER_X				0x30
-+
-+#define IQS269_CAL_DATA_A			0x35
-+#define IQS269_CAL_DATA_A_HALL_BIN_L_MASK	GENMASK(15, 12)
-+#define IQS269_CAL_DATA_A_HALL_BIN_L_SHIFT	12
-+#define IQS269_CAL_DATA_A_HALL_BIN_R_MASK	GENMASK(11, 8)
-+#define IQS269_CAL_DATA_A_HALL_BIN_R_SHIFT	8
-+
-+#define IQS269_SYS_SETTINGS			0x80
-+#define IQS269_SYS_SETTINGS_CLK_DIV		BIT(15)
-+#define IQS269_SYS_SETTINGS_ULP_AUTO		BIT(14)
-+#define IQS269_SYS_SETTINGS_DIS_AUTO		BIT(13)
-+#define IQS269_SYS_SETTINGS_PWR_MODE_MASK	GENMASK(12, 11)
-+#define IQS269_SYS_SETTINGS_PWR_MODE_SHIFT	11
-+#define IQS269_SYS_SETTINGS_PWR_MODE_MAX	3
-+#define IQS269_SYS_SETTINGS_ULP_UPDATE_MASK	GENMASK(10, 8)
-+#define IQS269_SYS_SETTINGS_ULP_UPDATE_SHIFT	8
-+#define IQS269_SYS_SETTINGS_ULP_UPDATE_MAX	7
-+#define IQS269_SYS_SETTINGS_RESEED_OFFSET	BIT(6)
-+#define IQS269_SYS_SETTINGS_EVENT_MODE		BIT(5)
-+#define IQS269_SYS_SETTINGS_EVENT_MODE_LP	BIT(4)
-+#define IQS269_SYS_SETTINGS_REDO_ATI		BIT(2)
-+#define IQS269_SYS_SETTINGS_ACK_RESET		BIT(0)
-+
-+#define IQS269_FILT_STR_LP_LTA_MASK		GENMASK(7, 6)
-+#define IQS269_FILT_STR_LP_LTA_SHIFT		6
-+#define IQS269_FILT_STR_LP_CNT_MASK		GENMASK(5, 4)
-+#define IQS269_FILT_STR_LP_CNT_SHIFT		4
-+#define IQS269_FILT_STR_NP_LTA_MASK		GENMASK(3, 2)
-+#define IQS269_FILT_STR_NP_LTA_SHIFT		2
-+#define IQS269_FILT_STR_NP_CNT_MASK		GENMASK(1, 0)
-+#define IQS269_FILT_STR_MAX			3
-+
-+#define IQS269_EVENT_MASK_SYS			BIT(6)
-+#define IQS269_EVENT_MASK_DEEP			BIT(2)
-+#define IQS269_EVENT_MASK_TOUCH			BIT(1)
-+#define IQS269_EVENT_MASK_PROX			BIT(0)
-+
-+#define IQS269_RATE_NP_MS_MAX			255
-+#define IQS269_RATE_LP_MS_MAX			255
-+#define IQS269_RATE_ULP_MS_MAX			4080
-+#define IQS269_TIMEOUT_PWR_MS_MAX		130560
-+#define IQS269_TIMEOUT_LTA_MS_MAX		130560
-+
-+#define IQS269_MISC_A_ATI_BAND_DISABLE		BIT(15)
-+#define IQS269_MISC_A_ATI_LP_ONLY		BIT(14)
-+#define IQS269_MISC_A_ATI_BAND_TIGHTEN		BIT(13)
-+#define IQS269_MISC_A_FILT_DISABLE		BIT(12)
-+#define IQS269_MISC_A_GPIO3_SELECT_MASK		GENMASK(10, 8)
-+#define IQS269_MISC_A_GPIO3_SELECT_SHIFT	8
-+#define IQS269_MISC_A_DUAL_DIR			BIT(6)
-+#define IQS269_MISC_A_TX_FREQ_MASK		GENMASK(5, 4)
-+#define IQS269_MISC_A_TX_FREQ_SHIFT		4
-+#define IQS269_MISC_A_TX_FREQ_MAX		3
-+#define IQS269_MISC_A_GLOBAL_CAP_SIZE		BIT(0)
-+
-+#define IQS269_MISC_B_RESEED_UI_SEL_MASK	GENMASK(7, 6)
-+#define IQS269_MISC_B_RESEED_UI_SEL_SHIFT	6
-+#define IQS269_MISC_B_RESEED_UI_SEL_MAX		3
-+#define IQS269_MISC_B_TRACKING_UI_ENABLE	BIT(4)
-+#define IQS269_MISC_B_FILT_STR_SLIDER		GENMASK(1, 0)
-+
-+#define IQS269_CHx_SETTINGS			0x8C
-+
-+#define IQS269_CHx_ENG_A_MEAS_CAP_SIZE		BIT(15)
-+#define IQS269_CHx_ENG_A_RX_GND_INACTIVE	BIT(13)
-+#define IQS269_CHx_ENG_A_LOCAL_CAP_SIZE		BIT(12)
-+#define IQS269_CHx_ENG_A_ATI_MODE_MASK		GENMASK(9, 8)
-+#define IQS269_CHx_ENG_A_ATI_MODE_SHIFT		8
-+#define IQS269_CHx_ENG_A_ATI_MODE_MAX		3
-+#define IQS269_CHx_ENG_A_INV_LOGIC		BIT(7)
-+#define IQS269_CHx_ENG_A_PROJ_BIAS_MASK		GENMASK(6, 5)
-+#define IQS269_CHx_ENG_A_PROJ_BIAS_SHIFT	5
-+#define IQS269_CHx_ENG_A_PROJ_BIAS_MAX		3
-+#define IQS269_CHx_ENG_A_SENSE_MODE_MASK	GENMASK(3, 0)
-+#define IQS269_CHx_ENG_A_SENSE_MODE_MAX		15
-+
-+#define IQS269_CHx_ENG_B_LOCAL_CAP_ENABLE	BIT(13)
-+#define IQS269_CHx_ENG_B_SENSE_FREQ_MASK	GENMASK(10, 9)
-+#define IQS269_CHx_ENG_B_SENSE_FREQ_SHIFT	9
-+#define IQS269_CHx_ENG_B_SENSE_FREQ_MAX		3
-+#define IQS269_CHx_ENG_B_STATIC_ENABLE		BIT(8)
-+#define IQS269_CHx_ENG_B_ATI_BASE_MASK		GENMASK(7, 6)
-+#define IQS269_CHx_ENG_B_ATI_BASE_75		0x00
-+#define IQS269_CHx_ENG_B_ATI_BASE_100		0x40
-+#define IQS269_CHx_ENG_B_ATI_BASE_150		0x80
-+#define IQS269_CHx_ENG_B_ATI_BASE_200		0xC0
-+#define IQS269_CHx_ENG_B_ATI_TARGET_MASK	GENMASK(5, 0)
-+#define IQS269_CHx_ENG_B_ATI_TARGET_MAX		2016
-+
-+#define IQS269_CHx_WEIGHT_MAX			255
-+#define IQS269_CHx_THRESH_MAX			255
-+#define IQS269_CHx_HYST_DEEP_MASK		GENMASK(7, 4)
-+#define IQS269_CHx_HYST_DEEP_SHIFT		4
-+#define IQS269_CHx_HYST_TOUCH_MASK		GENMASK(3, 0)
-+#define IQS269_CHx_HYST_MAX			15
-+
-+#define IQS269_CHx_HALL_INACTIVE		6
-+#define IQS269_CHx_HALL_ACTIVE			7
-+
-+#define IQS269_HALL_PAD_R			BIT(0)
-+#define IQS269_HALL_PAD_L			BIT(1)
-+#define IQS269_HALL_PAD_INV			BIT(6)
-+
-+#define IQS269_HALL_UI				0xF5
-+#define IQS269_HALL_UI_ENABLE			BIT(15)
-+
-+#define IQS269_MAX_REG				0xFF
-+
-+#define IQS269_NUM_CH				8
-+#define IQS269_NUM_SL				2
-+
-+#define IQS269_ATI_POLL_SLEEP_US		(iqs269->delay_mult * 10000)
-+#define IQS269_ATI_POLL_TIMEOUT_US		(iqs269->delay_mult * 500000)
-+#define IQS269_ATI_STABLE_DELAY_MS		(iqs269->delay_mult * 150)
-+
-+#define IQS269_PWR_MODE_POLL_SLEEP_US		IQS269_ATI_POLL_SLEEP_US
-+#define IQS269_PWR_MODE_POLL_TIMEOUT_US		IQS269_ATI_POLL_TIMEOUT_US
-+
-+#define iqs269_irq_wait()			usleep_range(100, 150)
-+
-+enum iqs269_local_cap_size {
-+	IQS269_LOCAL_CAP_SIZE_0,
-+	IQS269_LOCAL_CAP_SIZE_GLOBAL_ONLY,
-+	IQS269_LOCAL_CAP_SIZE_GLOBAL_0pF5,
-+};
-+
-+enum iqs269_st_offs {
-+	IQS269_ST_OFFS_PROX,
-+	IQS269_ST_OFFS_DIR,
-+	IQS269_ST_OFFS_TOUCH,
-+	IQS269_ST_OFFS_DEEP,
-+};
-+
-+enum iqs269_th_offs {
-+	IQS269_TH_OFFS_PROX,
-+	IQS269_TH_OFFS_TOUCH,
-+	IQS269_TH_OFFS_DEEP,
-+};
-+
-+enum iqs269_event_id {
-+	IQS269_EVENT_PROX_DN,
-+	IQS269_EVENT_PROX_UP,
-+	IQS269_EVENT_TOUCH_DN,
-+	IQS269_EVENT_TOUCH_UP,
-+	IQS269_EVENT_DEEP_DN,
-+	IQS269_EVENT_DEEP_UP,
-+};
-+
-+struct iqs269_switch_desc {
-+	unsigned int code;
-+	bool enabled;
-+};
-+
-+struct iqs269_event_desc {
-+	const char *name;
-+	enum iqs269_st_offs st_offs;
-+	enum iqs269_th_offs th_offs;
-+	bool dir_up;
-+	u8 mask;
-+};
-+
-+static const struct iqs269_event_desc iqs269_events[] = {
-+	[IQS269_EVENT_PROX_DN] = {
-+		.name = "event-prox",
-+		.st_offs = IQS269_ST_OFFS_PROX,
-+		.th_offs = IQS269_TH_OFFS_PROX,
-+		.mask = IQS269_EVENT_MASK_PROX,
-+	},
-+	[IQS269_EVENT_PROX_UP] = {
-+		.name = "event-prox-alt",
-+		.st_offs = IQS269_ST_OFFS_PROX,
-+		.th_offs = IQS269_TH_OFFS_PROX,
-+		.dir_up = true,
-+		.mask = IQS269_EVENT_MASK_PROX,
-+	},
-+	[IQS269_EVENT_TOUCH_DN] = {
-+		.name = "event-touch",
-+		.st_offs = IQS269_ST_OFFS_TOUCH,
-+		.th_offs = IQS269_TH_OFFS_TOUCH,
-+		.mask = IQS269_EVENT_MASK_TOUCH,
-+	},
-+	[IQS269_EVENT_TOUCH_UP] = {
-+		.name = "event-touch-alt",
-+		.st_offs = IQS269_ST_OFFS_TOUCH,
-+		.th_offs = IQS269_TH_OFFS_TOUCH,
-+		.dir_up = true,
-+		.mask = IQS269_EVENT_MASK_TOUCH,
-+	},
-+	[IQS269_EVENT_DEEP_DN] = {
-+		.name = "event-deep",
-+		.st_offs = IQS269_ST_OFFS_DEEP,
-+		.th_offs = IQS269_TH_OFFS_DEEP,
-+		.mask = IQS269_EVENT_MASK_DEEP,
-+	},
-+	[IQS269_EVENT_DEEP_UP] = {
-+		.name = "event-deep-alt",
-+		.st_offs = IQS269_ST_OFFS_DEEP,
-+		.th_offs = IQS269_TH_OFFS_DEEP,
-+		.dir_up = true,
-+		.mask = IQS269_EVENT_MASK_DEEP,
-+	},
-+};
-+
-+struct iqs269_ver_info {
-+	u8 prod_num;
-+	u8 sw_num;
-+	u8 hw_num;
-+	u8 padding;
-+} __packed;
-+
-+struct iqs269_sys_reg {
-+	__be16 general;
-+	u8 active;
-+	u8 filter;
-+	u8 reseed;
-+	u8 event_mask;
-+	u8 rate_np;
-+	u8 rate_lp;
-+	u8 rate_ulp;
-+	u8 timeout_pwr;
-+	u8 timeout_rdy;
-+	u8 timeout_lta;
-+	__be16 misc_a;
-+	__be16 misc_b;
-+	u8 blocking;
-+	u8 padding;
-+	u8 slider_select[IQS269_NUM_SL];
-+	u8 timeout_tap;
-+	u8 timeout_swipe;
-+	u8 thresh_swipe;
-+	u8 redo_ati;
-+} __packed;
-+
-+struct iqs269_ch_reg {
-+	u8 rx_enable;
-+	u8 tx_enable;
-+	__be16 engine_a;
-+	__be16 engine_b;
-+	__be16 ati_comp;
-+	u8 thresh[3];
-+	u8 hyst;
-+	u8 assoc_select;
-+	u8 assoc_weight;
-+} __packed;
-+
-+struct iqs269_flags {
-+	__be16 system;
-+	u8 gesture;
-+	u8 padding;
-+	u8 states[4];
-+} __packed;
-+
-+struct iqs269_private {
-+	struct i2c_client *client;
-+	struct regmap *regmap;
-+	struct mutex lock;
-+	struct iqs269_switch_desc switches[ARRAY_SIZE(iqs269_events)];
-+	struct iqs269_ch_reg ch_reg[IQS269_NUM_CH];
-+	struct iqs269_sys_reg sys_reg;
-+	struct input_dev *keypad;
-+	struct input_dev *slider[IQS269_NUM_SL];
-+	unsigned int keycode[ARRAY_SIZE(iqs269_events) * IQS269_NUM_CH];
-+	unsigned int suspend_mode;
-+	unsigned int delay_mult;
-+	unsigned int ch_num;
-+	bool hall_enable;
-+	bool ati_current;
-+};
-+
-+static int iqs269_ati_mode_set(struct iqs269_private *iqs269,
-+			       unsigned int ch_num, unsigned int mode)
-+{
-+	u16 engine_a;
-+
-+	if (ch_num >= IQS269_NUM_CH)
-+		return -EINVAL;
-+
-+	if (mode > IQS269_CHx_ENG_A_ATI_MODE_MAX)
-+		return -EINVAL;
-+
-+	mutex_lock(&iqs269->lock);
-+
-+	engine_a = be16_to_cpu(iqs269->ch_reg[ch_num].engine_a);
-+
-+	engine_a &= ~IQS269_CHx_ENG_A_ATI_MODE_MASK;
-+	engine_a |= (mode << IQS269_CHx_ENG_A_ATI_MODE_SHIFT);
-+
-+	iqs269->ch_reg[ch_num].engine_a = cpu_to_be16(engine_a);
-+	iqs269->ati_current = false;
-+
-+	mutex_unlock(&iqs269->lock);
-+
-+	return 0;
-+}
-+
-+static int iqs269_ati_mode_get(struct iqs269_private *iqs269,
-+			       unsigned int ch_num, unsigned int *mode)
-+{
-+	u16 engine_a;
-+
-+	if (ch_num >= IQS269_NUM_CH)
-+		return -EINVAL;
-+
-+	mutex_lock(&iqs269->lock);
-+	engine_a = be16_to_cpu(iqs269->ch_reg[ch_num].engine_a);
-+	mutex_unlock(&iqs269->lock);
-+
-+	engine_a &= IQS269_CHx_ENG_A_ATI_MODE_MASK;
-+	*mode = (engine_a >> IQS269_CHx_ENG_A_ATI_MODE_SHIFT);
-+
-+	return 0;
-+}
-+
-+static int iqs269_ati_base_set(struct iqs269_private *iqs269,
-+			       unsigned int ch_num, unsigned int base)
-+{
-+	u16 engine_b;
-+
-+	if (ch_num >= IQS269_NUM_CH)
-+		return -EINVAL;
-+
-+	switch (base) {
-+	case 75:
-+		base = IQS269_CHx_ENG_B_ATI_BASE_75;
-+		break;
-+
-+	case 100:
-+		base = IQS269_CHx_ENG_B_ATI_BASE_100;
-+		break;
-+
-+	case 150:
-+		base = IQS269_CHx_ENG_B_ATI_BASE_150;
-+		break;
-+
-+	case 200:
-+		base = IQS269_CHx_ENG_B_ATI_BASE_200;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	mutex_lock(&iqs269->lock);
-+
-+	engine_b = be16_to_cpu(iqs269->ch_reg[ch_num].engine_b);
-+
-+	engine_b &= ~IQS269_CHx_ENG_B_ATI_BASE_MASK;
-+	engine_b |= base;
-+
-+	iqs269->ch_reg[ch_num].engine_b = cpu_to_be16(engine_b);
-+	iqs269->ati_current = false;
-+
-+	mutex_unlock(&iqs269->lock);
-+
-+	return 0;
-+}
-+
-+static int iqs269_ati_base_get(struct iqs269_private *iqs269,
-+			       unsigned int ch_num, unsigned int *base)
-+{
-+	u16 engine_b;
-+
-+	if (ch_num >= IQS269_NUM_CH)
-+		return -EINVAL;
-+
-+	mutex_lock(&iqs269->lock);
-+	engine_b = be16_to_cpu(iqs269->ch_reg[ch_num].engine_b);
-+	mutex_unlock(&iqs269->lock);
-+
-+	switch (engine_b & IQS269_CHx_ENG_B_ATI_BASE_MASK) {
-+	case IQS269_CHx_ENG_B_ATI_BASE_75:
-+		*base = 75;
-+		return 0;
-+
-+	case IQS269_CHx_ENG_B_ATI_BASE_100:
-+		*base = 100;
-+		return 0;
-+
-+	case IQS269_CHx_ENG_B_ATI_BASE_150:
-+		*base = 150;
-+		return 0;
-+
-+	case IQS269_CHx_ENG_B_ATI_BASE_200:
-+		*base = 200;
-+		return 0;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int iqs269_ati_target_set(struct iqs269_private *iqs269,
-+				 unsigned int ch_num, unsigned int target)
-+{
-+	u16 engine_b;
-+
-+	if (ch_num >= IQS269_NUM_CH)
-+		return -EINVAL;
-+
-+	if (target > IQS269_CHx_ENG_B_ATI_TARGET_MAX)
-+		return -EINVAL;
-+
-+	mutex_lock(&iqs269->lock);
-+
-+	engine_b = be16_to_cpu(iqs269->ch_reg[ch_num].engine_b);
-+
-+	engine_b &= ~IQS269_CHx_ENG_B_ATI_TARGET_MASK;
-+	engine_b |= target / 32;
-+
-+	iqs269->ch_reg[ch_num].engine_b = cpu_to_be16(engine_b);
-+	iqs269->ati_current = false;
-+
-+	mutex_unlock(&iqs269->lock);
-+
-+	return 0;
-+}
-+
-+static int iqs269_ati_target_get(struct iqs269_private *iqs269,
-+				 unsigned int ch_num, unsigned int *target)
-+{
-+	u16 engine_b;
-+
-+	if (ch_num >= IQS269_NUM_CH)
-+		return -EINVAL;
-+
-+	mutex_lock(&iqs269->lock);
-+	engine_b = be16_to_cpu(iqs269->ch_reg[ch_num].engine_b);
-+	mutex_unlock(&iqs269->lock);
-+
-+	*target = (engine_b & IQS269_CHx_ENG_B_ATI_TARGET_MASK) * 32;
-+
-+	return 0;
-+}
-+
-+static int iqs269_parse_mask(const struct fwnode_handle *fwnode,
-+			     const char *propname, u8 *mask)
-+{
-+	unsigned int val[IQS269_NUM_CH];
-+	int count, error, i;
-+
-+	count = fwnode_property_count_u32(fwnode, propname);
-+	if (count < 0)
-+		return 0;
-+
-+	if (count > IQS269_NUM_CH)
-+		return -EINVAL;
-+
-+	error = fwnode_property_read_u32_array(fwnode, propname, val, count);
-+	if (error)
-+		return error;
-+
-+	*mask = 0;
-+
-+	for (i = 0; i < count; i++) {
-+		if (val[i] >= IQS269_NUM_CH)
-+			return -EINVAL;
-+
-+		*mask |= BIT(val[i]);
-+	}
-+
-+	return 0;
-+}
-+
-+static int iqs269_parse_chan(struct iqs269_private *iqs269,
-+			     const struct fwnode_handle *ch_node)
-+{
-+	struct i2c_client *client = iqs269->client;
-+	struct fwnode_handle *ev_node;
-+	struct iqs269_ch_reg *ch_reg;
-+	u16 engine_a, engine_b;
-+	unsigned int reg, val;
-+	int error, i;
-+
-+	error = fwnode_property_read_u32(ch_node, "reg", &reg);
-+	if (error) {
-+		dev_err(&client->dev, "Failed to read channel number: %d\n",
-+			error);
-+		return error;
-+	} else if (reg >= IQS269_NUM_CH) {
-+		dev_err(&client->dev, "Invalid channel number: %u\n", reg);
-+		return -EINVAL;
-+	}
-+
-+	iqs269->sys_reg.active |= BIT(reg);
-+	if (!fwnode_property_present(ch_node, "azoteq,reseed-disable"))
-+		iqs269->sys_reg.reseed |= BIT(reg);
-+
-+	if (fwnode_property_present(ch_node, "azoteq,blocking-enable"))
-+		iqs269->sys_reg.blocking |= BIT(reg);
-+
-+	if (fwnode_property_present(ch_node, "azoteq,slider0-select"))
-+		iqs269->sys_reg.slider_select[0] |= BIT(reg);
-+
-+	if (fwnode_property_present(ch_node, "azoteq,slider1-select"))
-+		iqs269->sys_reg.slider_select[1] |= BIT(reg);
-+
-+	ch_reg = &iqs269->ch_reg[reg];
-+
-+	error = regmap_raw_read(iqs269->regmap,
-+				IQS269_CHx_SETTINGS + reg * sizeof(*ch_reg) / 2,
-+				ch_reg, sizeof(*ch_reg));
-+	if (error)
-+		return error;
-+
-+	error = iqs269_parse_mask(ch_node, "azoteq,rx-enable",
-+				  &ch_reg->rx_enable);
-+	if (error) {
-+		dev_err(&client->dev, "Invalid channel %u RX enable mask: %d\n",
-+			reg, error);
-+		return error;
-+	}
-+
-+	error = iqs269_parse_mask(ch_node, "azoteq,tx-enable",
-+				  &ch_reg->tx_enable);
-+	if (error) {
-+		dev_err(&client->dev, "Invalid channel %u TX enable mask: %d\n",
-+			reg, error);
-+		return error;
-+	}
-+
-+	engine_a = be16_to_cpu(ch_reg->engine_a);
-+	engine_b = be16_to_cpu(ch_reg->engine_b);
-+
-+	engine_a |= IQS269_CHx_ENG_A_MEAS_CAP_SIZE;
-+	if (fwnode_property_present(ch_node, "azoteq,meas-cap-decrease"))
-+		engine_a &= ~IQS269_CHx_ENG_A_MEAS_CAP_SIZE;
-+
-+	engine_a |= IQS269_CHx_ENG_A_RX_GND_INACTIVE;
-+	if (fwnode_property_present(ch_node, "azoteq,rx-float-inactive"))
-+		engine_a &= ~IQS269_CHx_ENG_A_RX_GND_INACTIVE;
-+
-+	engine_a &= ~IQS269_CHx_ENG_A_LOCAL_CAP_SIZE;
-+	engine_b &= ~IQS269_CHx_ENG_B_LOCAL_CAP_ENABLE;
-+	if (!fwnode_property_read_u32(ch_node, "azoteq,local-cap-size", &val)) {
-+		switch (val) {
-+		case IQS269_LOCAL_CAP_SIZE_0:
-+			break;
-+
-+		case IQS269_LOCAL_CAP_SIZE_GLOBAL_0pF5:
-+			engine_a |= IQS269_CHx_ENG_A_LOCAL_CAP_SIZE;
-+
-+			/* fall through */
-+
-+		case IQS269_LOCAL_CAP_SIZE_GLOBAL_ONLY:
-+			engine_b |= IQS269_CHx_ENG_B_LOCAL_CAP_ENABLE;
-+			break;
-+
-+		default:
-+			dev_err(&client->dev,
-+				"Invalid channel %u local cap. size: %u\n", reg,
-+				val);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	engine_a &= ~IQS269_CHx_ENG_A_INV_LOGIC;
-+	if (fwnode_property_present(ch_node, "azoteq,invert-enable"))
-+		engine_a |= IQS269_CHx_ENG_A_INV_LOGIC;
-+
-+	if (!fwnode_property_read_u32(ch_node, "azoteq,proj-bias", &val)) {
-+		if (val > IQS269_CHx_ENG_A_PROJ_BIAS_MAX) {
-+			dev_err(&client->dev,
-+				"Invalid channel %u bias current: %u\n", reg,
-+				val);
-+			return -EINVAL;
-+		}
-+
-+		engine_a &= ~IQS269_CHx_ENG_A_PROJ_BIAS_MASK;
-+		engine_a |= (val << IQS269_CHx_ENG_A_PROJ_BIAS_SHIFT);
-+	}
-+
-+	if (!fwnode_property_read_u32(ch_node, "azoteq,sense-mode", &val)) {
-+		if (val > IQS269_CHx_ENG_A_SENSE_MODE_MAX) {
-+			dev_err(&client->dev,
-+				"Invalid channel %u sensing mode: %u\n", reg,
-+				val);
-+			return -EINVAL;
-+		}
-+
-+		engine_a &= ~IQS269_CHx_ENG_A_SENSE_MODE_MASK;
-+		engine_a |= val;
-+	}
-+
-+	if (!fwnode_property_read_u32(ch_node, "azoteq,sense-freq", &val)) {
-+		if (val > IQS269_CHx_ENG_B_SENSE_FREQ_MAX) {
-+			dev_err(&client->dev,
-+				"Invalid channel %u sensing frequency: %u\n",
-+				reg, val);
-+			return -EINVAL;
-+		}
-+
-+		engine_b &= ~IQS269_CHx_ENG_B_SENSE_FREQ_MASK;
-+		engine_b |= (val << IQS269_CHx_ENG_B_SENSE_FREQ_SHIFT);
-+	}
-+
-+	engine_b &= ~IQS269_CHx_ENG_B_STATIC_ENABLE;
-+	if (fwnode_property_present(ch_node, "azoteq,static-enable"))
-+		engine_b |= IQS269_CHx_ENG_B_STATIC_ENABLE;
-+
-+	ch_reg->engine_a = cpu_to_be16(engine_a);
-+	ch_reg->engine_b = cpu_to_be16(engine_b);
-+
-+	if (!fwnode_property_read_u32(ch_node, "azoteq,ati-mode", &val)) {
-+		error = iqs269_ati_mode_set(iqs269, reg, val);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"Invalid channel %u ATI mode: %u\n", reg, val);
-+			return error;
-+		}
-+	}
-+
-+	if (!fwnode_property_read_u32(ch_node, "azoteq,ati-base", &val)) {
-+		error = iqs269_ati_base_set(iqs269, reg, val);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"Invalid channel %u ATI base: %u\n", reg, val);
-+			return error;
-+		}
-+	}
-+
-+	if (!fwnode_property_read_u32(ch_node, "azoteq,ati-target", &val)) {
-+		error = iqs269_ati_target_set(iqs269, reg, val);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"Invalid channel %u ATI target: %u\n", reg,
-+				val);
-+			return error;
-+		}
-+	}
-+
-+	error = iqs269_parse_mask(ch_node, "azoteq,assoc-select",
-+				  &ch_reg->assoc_select);
-+	if (error) {
-+		dev_err(&client->dev, "Invalid channel %u association: %d\n",
-+			reg, error);
-+		return error;
-+	}
-+
-+	if (!fwnode_property_read_u32(ch_node, "azoteq,assoc-weight", &val)) {
-+		if (val > IQS269_CHx_WEIGHT_MAX) {
-+			dev_err(&client->dev,
-+				"Invalid channel %u associated weight: %u\n",
-+				reg, val);
-+			return -EINVAL;
-+		}
-+
-+		ch_reg->assoc_weight = val;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(iqs269_events); i++) {
-+		ev_node = fwnode_get_named_child_node(ch_node,
-+						      iqs269_events[i].name);
-+		if (!ev_node)
-+			continue;
-+
-+		if (!fwnode_property_read_u32(ev_node, "azoteq,thresh", &val)) {
-+			if (val > IQS269_CHx_THRESH_MAX) {
-+				dev_err(&client->dev,
-+					"Invalid channel %u threshold: %u\n",
-+					reg, val);
-+				return -EINVAL;
-+			}
-+
-+			ch_reg->thresh[iqs269_events[i].th_offs] = val;
-+		}
-+
-+		if (!fwnode_property_read_u32(ev_node, "azoteq,hyst", &val)) {
-+			u8 *hyst = &ch_reg->hyst;
-+
-+			if (val > IQS269_CHx_HYST_MAX) {
-+				dev_err(&client->dev,
-+					"Invalid channel %u hysteresis: %u\n",
-+					reg, val);
-+				return -EINVAL;
-+			}
-+
-+			if (i == IQS269_EVENT_DEEP_DN ||
-+			    i == IQS269_EVENT_DEEP_UP) {
-+				*hyst &= ~IQS269_CHx_HYST_DEEP_MASK;
-+				*hyst |= (val << IQS269_CHx_HYST_DEEP_SHIFT);
-+			} else if (i == IQS269_EVENT_TOUCH_DN ||
-+				   i == IQS269_EVENT_TOUCH_UP) {
-+				*hyst &= ~IQS269_CHx_HYST_TOUCH_MASK;
-+				*hyst |= val;
-+			}
-+		}
-+
-+		if (fwnode_property_read_u32(ev_node, "linux,code", &val))
-+			continue;
-+
-+		switch (reg) {
-+		case IQS269_CHx_HALL_ACTIVE:
-+			if (iqs269->hall_enable) {
-+				iqs269->switches[i].code = val;
-+				iqs269->switches[i].enabled = true;
-+			}
-+
-+			/* fall through */
-+
-+		case IQS269_CHx_HALL_INACTIVE:
-+			if (iqs269->hall_enable)
-+				break;
-+
-+			/* fall through */
-+
-+		default:
-+			iqs269->keycode[i * IQS269_NUM_CH + reg] = val;
-+		}
-+
-+		iqs269->sys_reg.event_mask &= ~iqs269_events[i].mask;
-+	}
-+
-+	return 0;
-+}
-+
-+static int iqs269_parse_prop(struct iqs269_private *iqs269)
-+{
-+	struct iqs269_sys_reg *sys_reg = &iqs269->sys_reg;
-+	struct i2c_client *client = iqs269->client;
-+	struct fwnode_handle *ch_node;
-+	u16 general, misc_a, misc_b;
-+	unsigned int val;
-+	int error;
-+
-+	iqs269->hall_enable = device_property_present(&client->dev,
-+						      "azoteq,hall-enable");
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,suspend-mode",
-+				      &val)) {
-+		if (val > IQS269_SYS_SETTINGS_PWR_MODE_MAX) {
-+			dev_err(&client->dev, "Invalid suspend mode: %u\n",
-+				val);
-+			return -EINVAL;
-+		}
-+
-+		iqs269->suspend_mode = val;
-+	}
-+
-+	error = regmap_raw_read(iqs269->regmap, IQS269_SYS_SETTINGS, sys_reg,
-+				sizeof(*sys_reg));
-+	if (error)
-+		return error;
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,filt-str-lp-lta",
-+				      &val)) {
-+		if (val > IQS269_FILT_STR_MAX) {
-+			dev_err(&client->dev, "Invalid filter strength: %u\n",
-+				val);
-+			return -EINVAL;
-+		}
-+
-+		sys_reg->filter &= ~IQS269_FILT_STR_LP_LTA_MASK;
-+		sys_reg->filter |= (val << IQS269_FILT_STR_LP_LTA_SHIFT);
-+	}
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,filt-str-lp-cnt",
-+				      &val)) {
-+		if (val > IQS269_FILT_STR_MAX) {
-+			dev_err(&client->dev, "Invalid filter strength: %u\n",
-+				val);
-+			return -EINVAL;
-+		}
-+
-+		sys_reg->filter &= ~IQS269_FILT_STR_LP_CNT_MASK;
-+		sys_reg->filter |= (val << IQS269_FILT_STR_LP_CNT_SHIFT);
-+	}
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,filt-str-np-lta",
-+				      &val)) {
-+		if (val > IQS269_FILT_STR_MAX) {
-+			dev_err(&client->dev, "Invalid filter strength: %u\n",
-+				val);
-+			return -EINVAL;
-+		}
-+
-+		sys_reg->filter &= ~IQS269_FILT_STR_NP_LTA_MASK;
-+		sys_reg->filter |= (val << IQS269_FILT_STR_NP_LTA_SHIFT);
-+	}
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,filt-str-np-cnt",
-+				      &val)) {
-+		if (val > IQS269_FILT_STR_MAX) {
-+			dev_err(&client->dev, "Invalid filter strength: %u\n",
-+				val);
-+			return -EINVAL;
-+		}
-+
-+		sys_reg->filter &= ~IQS269_FILT_STR_NP_CNT_MASK;
-+		sys_reg->filter |= val;
-+	}
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,rate-np-ms",
-+				      &val)) {
-+		if (val > IQS269_RATE_NP_MS_MAX) {
-+			dev_err(&client->dev, "Invalid report rate: %u\n", val);
-+			return -EINVAL;
-+		}
-+
-+		sys_reg->rate_np = val;
-+	}
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,rate-lp-ms",
-+				      &val)) {
-+		if (val > IQS269_RATE_LP_MS_MAX) {
-+			dev_err(&client->dev, "Invalid report rate: %u\n", val);
-+			return -EINVAL;
-+		}
-+
-+		sys_reg->rate_lp = val;
-+	}
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,rate-ulp-ms",
-+				      &val)) {
-+		if (val > IQS269_RATE_ULP_MS_MAX) {
-+			dev_err(&client->dev, "Invalid report rate: %u\n", val);
-+			return -EINVAL;
-+		}
-+
-+		sys_reg->rate_ulp = val / 16;
-+	}
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,timeout-pwr-ms",
-+				      &val)) {
-+		if (val > IQS269_TIMEOUT_PWR_MS_MAX) {
-+			dev_err(&client->dev, "Invalid timeout: %u\n", val);
-+			return -EINVAL;
-+		}
-+
-+		sys_reg->timeout_pwr = val / 512;
-+	}
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,timeout-lta-ms",
-+				      &val)) {
-+		if (val > IQS269_TIMEOUT_LTA_MS_MAX) {
-+			dev_err(&client->dev, "Invalid timeout: %u\n", val);
-+			return -EINVAL;
-+		}
-+
-+		sys_reg->timeout_lta = val / 512;
-+	}
-+
-+	misc_a = be16_to_cpu(sys_reg->misc_a);
-+	misc_b = be16_to_cpu(sys_reg->misc_b);
-+
-+	misc_a &= ~IQS269_MISC_A_ATI_BAND_DISABLE;
-+	if (device_property_present(&client->dev, "azoteq,ati-band-disable"))
-+		misc_a |= IQS269_MISC_A_ATI_BAND_DISABLE;
-+
-+	misc_a &= ~IQS269_MISC_A_ATI_LP_ONLY;
-+	if (device_property_present(&client->dev, "azoteq,ati-lp-only"))
-+		misc_a |= IQS269_MISC_A_ATI_LP_ONLY;
-+
-+	misc_a &= ~IQS269_MISC_A_ATI_BAND_TIGHTEN;
-+	if (device_property_present(&client->dev, "azoteq,ati-band-tighten"))
-+		misc_a |= IQS269_MISC_A_ATI_BAND_TIGHTEN;
-+
-+	misc_a &= ~IQS269_MISC_A_FILT_DISABLE;
-+	if (device_property_present(&client->dev, "azoteq,filt-disable"))
-+		misc_a |= IQS269_MISC_A_FILT_DISABLE;
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,gpio3-select",
-+				      &val)) {
-+		if (val >= IQS269_NUM_CH) {
-+			dev_err(&client->dev, "Invalid GPIO3 selection: %u\n",
-+				val);
-+			return -EINVAL;
-+		}
-+
-+		misc_a &= ~IQS269_MISC_A_GPIO3_SELECT_MASK;
-+		misc_a |= (val << IQS269_MISC_A_GPIO3_SELECT_SHIFT);
-+	}
-+
-+	misc_a &= ~IQS269_MISC_A_DUAL_DIR;
-+	if (device_property_present(&client->dev, "azoteq,dual-direction"))
-+		misc_a |= IQS269_MISC_A_DUAL_DIR;
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,tx-freq", &val)) {
-+		if (val > IQS269_MISC_A_TX_FREQ_MAX) {
-+			dev_err(&client->dev,
-+				"Invalid excitation frequency: %u\n", val);
-+			return -EINVAL;
-+		}
-+
-+		misc_a &= ~IQS269_MISC_A_TX_FREQ_MASK;
-+		misc_a |= (val << IQS269_MISC_A_TX_FREQ_SHIFT);
-+	}
-+
-+	misc_a &= ~IQS269_MISC_A_GLOBAL_CAP_SIZE;
-+	if (device_property_present(&client->dev, "azoteq,global-cap-increase"))
-+		misc_a |= IQS269_MISC_A_GLOBAL_CAP_SIZE;
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,reseed-select",
-+				      &val)) {
-+		if (val > IQS269_MISC_B_RESEED_UI_SEL_MAX) {
-+			dev_err(&client->dev, "Invalid reseed selection: %u\n",
-+				val);
-+			return -EINVAL;
-+		}
-+
-+		misc_b &= ~IQS269_MISC_B_RESEED_UI_SEL_MASK;
-+		misc_b |= (val << IQS269_MISC_B_RESEED_UI_SEL_SHIFT);
-+	}
-+
-+	misc_b &= ~IQS269_MISC_B_TRACKING_UI_ENABLE;
-+	if (device_property_present(&client->dev, "azoteq,tracking-enable"))
-+		misc_b |= IQS269_MISC_B_TRACKING_UI_ENABLE;
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,filt-str-slider",
-+				      &val)) {
-+		if (val > IQS269_FILT_STR_MAX) {
-+			dev_err(&client->dev, "Invalid filter strength: %u\n",
-+				val);
-+			return -EINVAL;
-+		}
-+
-+		misc_b &= ~IQS269_MISC_B_FILT_STR_SLIDER;
-+		misc_b |= val;
-+	}
-+
-+	sys_reg->misc_a = cpu_to_be16(misc_a);
-+	sys_reg->misc_b = cpu_to_be16(misc_b);
-+
-+	sys_reg->active = 0;
-+	sys_reg->reseed = 0;
-+
-+	sys_reg->blocking = 0;
-+
-+	sys_reg->slider_select[0] = 0;
-+	sys_reg->slider_select[1] = 0;
-+
-+	sys_reg->event_mask = ~((u8)IQS269_EVENT_MASK_SYS);
-+
-+	device_for_each_child_node(&client->dev, ch_node) {
-+		error = iqs269_parse_chan(iqs269, ch_node);
-+		if (error) {
-+			fwnode_handle_put(ch_node);
-+			return error;
-+		}
-+	}
-+
-+	/*
-+	 * Volunteer all active channels to participate in ATI when REDO-ATI is
-+	 * manually triggered.
-+	 */
-+	sys_reg->redo_ati = sys_reg->active;
-+
-+	general = be16_to_cpu(sys_reg->general);
-+
-+	if (device_property_present(&client->dev, "azoteq,clk-div")) {
-+		general |= IQS269_SYS_SETTINGS_CLK_DIV;
-+		iqs269->delay_mult = 4;
-+	} else {
-+		general &= ~IQS269_SYS_SETTINGS_CLK_DIV;
-+		iqs269->delay_mult = 1;
-+	}
-+
-+	/*
-+	 * Configure the device to automatically switch between normal and low-
-+	 * power modes as a function of sensing activity. Ultra-low-power mode,
-+	 * if enabled, is reserved for suspend.
-+	 */
-+	general &= ~IQS269_SYS_SETTINGS_ULP_AUTO;
-+	general &= ~IQS269_SYS_SETTINGS_DIS_AUTO;
-+	general &= ~IQS269_SYS_SETTINGS_PWR_MODE_MASK;
-+
-+	if (!device_property_read_u32(&client->dev, "azoteq,ulp-update",
-+				      &val)) {
-+		if (val > IQS269_SYS_SETTINGS_ULP_UPDATE_MAX) {
-+			dev_err(&client->dev, "Invalid update rate: %u\n", val);
-+			return -EINVAL;
-+		}
-+
-+		general &= ~IQS269_SYS_SETTINGS_ULP_UPDATE_MASK;
-+		general |= (val << IQS269_SYS_SETTINGS_ULP_UPDATE_SHIFT);
-+	}
-+
-+	general &= ~IQS269_SYS_SETTINGS_RESEED_OFFSET;
-+	if (device_property_present(&client->dev, "azoteq,reseed-offset"))
-+		general |= IQS269_SYS_SETTINGS_RESEED_OFFSET;
-+
-+	general |= IQS269_SYS_SETTINGS_EVENT_MODE;
-+
-+	/*
-+	 * As per the datasheet, enable streaming during normal-power mode if
-+	 * either slider is in use. In that case, the device returns to event
-+	 * mode during low-power mode.
-+	 */
-+	if (sys_reg->slider_select[0] || sys_reg->slider_select[1])
-+		general |= IQS269_SYS_SETTINGS_EVENT_MODE_LP;
-+
-+	general |= IQS269_SYS_SETTINGS_REDO_ATI;
-+	general |= IQS269_SYS_SETTINGS_ACK_RESET;
-+
-+	sys_reg->general = cpu_to_be16(general);
-+
-+	return 0;
-+}
-+
-+static int iqs269_dev_init(struct iqs269_private *iqs269)
-+{
-+	struct iqs269_sys_reg *sys_reg = &iqs269->sys_reg;
-+	struct iqs269_ch_reg *ch_reg;
-+	unsigned int val;
-+	int error, i;
-+
-+	mutex_lock(&iqs269->lock);
-+
-+	error = regmap_update_bits(iqs269->regmap, IQS269_HALL_UI,
-+				   IQS269_HALL_UI_ENABLE,
-+				   iqs269->hall_enable ? ~0 : 0);
-+	if (error)
-+		goto err_mutex;
-+
-+	for (i = 0; i < IQS269_NUM_CH; i++) {
-+		if (!(sys_reg->active & BIT(i)))
-+			continue;
-+
-+		ch_reg = &iqs269->ch_reg[i];
-+
-+		error = regmap_raw_write(iqs269->regmap,
-+					 IQS269_CHx_SETTINGS + i *
-+					 sizeof(*ch_reg) / 2, ch_reg,
-+					 sizeof(*ch_reg));
-+		if (error)
-+			goto err_mutex;
-+	}
-+
-+	/*
-+	 * The REDO-ATI and ATI channel selection fields must be written in the
-+	 * same block write, so every field between registers 0x80 through 0x8B
-+	 * (inclusive) must be written as well.
-+	 */
-+	error = regmap_raw_write(iqs269->regmap, IQS269_SYS_SETTINGS, sys_reg,
-+				 sizeof(*sys_reg));
-+	if (error)
-+		goto err_mutex;
-+
-+	error = regmap_read_poll_timeout(iqs269->regmap, IQS269_SYS_FLAGS, val,
-+					!(val & IQS269_SYS_FLAGS_IN_ATI),
-+					 IQS269_ATI_POLL_SLEEP_US,
-+					 IQS269_ATI_POLL_TIMEOUT_US);
-+	if (error)
-+		goto err_mutex;
-+
-+	msleep(IQS269_ATI_STABLE_DELAY_MS);
-+	iqs269->ati_current = true;
-+
-+err_mutex:
-+	mutex_unlock(&iqs269->lock);
-+
-+	return error;
-+}
-+
-+static int iqs269_input_init(struct iqs269_private *iqs269)
-+{
-+	struct i2c_client *client = iqs269->client;
-+	struct iqs269_flags flags;
-+	unsigned int sw_code, keycode;
-+	int error, i, j;
-+	u8 dir_mask, state;
-+
-+	iqs269->keypad = devm_input_allocate_device(&client->dev);
-+	if (!iqs269->keypad)
-+		return -ENOMEM;
-+
-+	iqs269->keypad->keycodemax = ARRAY_SIZE(iqs269->keycode);
-+	iqs269->keypad->keycode = iqs269->keycode;
-+	iqs269->keypad->keycodesize = sizeof(*iqs269->keycode);
-+
-+	iqs269->keypad->name = "iqs269a_keypad";
-+	iqs269->keypad->id.bustype = BUS_I2C;
-+
-+	if (iqs269->hall_enable) {
-+		error = regmap_raw_read(iqs269->regmap, IQS269_SYS_FLAGS,
-+					&flags, sizeof(flags));
-+		if (error) {
-+			dev_err(&client->dev,
-+				"Failed to read initial status: %d\n", error);
-+			return error;
-+		}
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(iqs269_events); i++) {
-+		dir_mask = flags.states[IQS269_ST_OFFS_DIR];
-+		if (!iqs269_events[i].dir_up)
-+			dir_mask = ~dir_mask;
-+
-+		state = flags.states[iqs269_events[i].st_offs] & dir_mask;
-+
-+		sw_code = iqs269->switches[i].code;
-+
-+		for (j = 0; j < IQS269_NUM_CH; j++) {
-+			keycode = iqs269->keycode[i * IQS269_NUM_CH + j];
-+
-+			/*
-+			 * Hall-effect sensing repurposes a pair of dedicated
-+			 * channels, only one of which reports events.
-+			 */
-+			switch (j) {
-+			case IQS269_CHx_HALL_ACTIVE:
-+				if (iqs269->hall_enable &&
-+				    iqs269->switches[i].enabled) {
-+					input_set_capability(iqs269->keypad,
-+							     EV_SW, sw_code);
-+					input_report_switch(iqs269->keypad,
-+							    sw_code,
-+							    state & BIT(j));
-+				}
-+
-+				/* fall through */
-+
-+			case IQS269_CHx_HALL_INACTIVE:
-+				if (iqs269->hall_enable)
-+					continue;
-+
-+				/* fall through */
-+
-+			default:
-+				if (keycode != KEY_RESERVED)
-+					input_set_capability(iqs269->keypad,
-+							     EV_KEY, keycode);
-+			}
-+		}
-+	}
-+
-+	input_sync(iqs269->keypad);
-+
-+	error = input_register_device(iqs269->keypad);
-+	if (error) {
-+		dev_err(&client->dev, "Failed to register keypad: %d\n", error);
-+		return error;
-+	}
-+
-+	for (i = 0; i < IQS269_NUM_SL; i++) {
-+		if (!iqs269->sys_reg.slider_select[i])
-+			continue;
-+
-+		iqs269->slider[i] = devm_input_allocate_device(&client->dev);
-+		if (!iqs269->slider[i])
-+			return -ENOMEM;
-+
-+		iqs269->slider[i]->name = i ? "iqs269a_slider_1"
-+					    : "iqs269a_slider_0";
-+		iqs269->slider[i]->id.bustype = BUS_I2C;
-+
-+		input_set_capability(iqs269->slider[i], EV_KEY, BTN_TOUCH);
-+		input_set_abs_params(iqs269->slider[i], ABS_X, 0, 255, 0, 0);
-+
-+		error = input_register_device(iqs269->slider[i]);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"Failed to register slider %d: %d\n", i, error);
-+			return error;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int iqs269_report(struct iqs269_private *iqs269)
-+{
-+	struct i2c_client *client = iqs269->client;
-+	struct iqs269_flags flags;
-+	unsigned int sw_code, keycode;
-+	int error, i, j;
-+	u8 slider_x[IQS269_NUM_SL];
-+	u8 dir_mask, state;
-+
-+	error = regmap_raw_read(iqs269->regmap, IQS269_SYS_FLAGS, &flags,
-+				sizeof(flags));
-+	if (error) {
-+		dev_err(&client->dev, "Failed to read device status: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	/*
-+	 * The device resets itself if its own watchdog bites, which can happen
-+	 * in the event of an I2C communication error. In this case, the device
-+	 * asserts a SHOW_RESET interrupt and all registers must be restored.
-+	 */
-+	if (be16_to_cpu(flags.system) & IQS269_SYS_FLAGS_SHOW_RESET) {
-+		dev_err(&client->dev, "Unexpected device reset\n");
-+
-+		error = iqs269_dev_init(iqs269);
-+		if (error)
-+			dev_err(&client->dev,
-+				"Failed to re-initialize device: %d\n", error);
-+
-+		return error;
-+	}
-+
-+	error = regmap_raw_read(iqs269->regmap, IQS269_SLIDER_X, slider_x,
-+				sizeof(slider_x));
-+	if (error) {
-+		dev_err(&client->dev, "Failed to read slider position: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	for (i = 0; i < IQS269_NUM_SL; i++) {
-+		if (!iqs269->sys_reg.slider_select[i])
-+			continue;
-+
-+		/*
-+		 * Report BTN_TOUCH if any channel that participates in the
-+		 * slider is in a state of touch.
-+		 */
-+		if (flags.states[IQS269_ST_OFFS_TOUCH] &
-+		    iqs269->sys_reg.slider_select[i]) {
-+			input_report_key(iqs269->slider[i], BTN_TOUCH, 1);
-+			input_report_abs(iqs269->slider[i], ABS_X, slider_x[i]);
-+		} else {
-+			input_report_key(iqs269->slider[i], BTN_TOUCH, 0);
-+		}
-+
-+		input_sync(iqs269->slider[i]);
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(iqs269_events); i++) {
-+		dir_mask = flags.states[IQS269_ST_OFFS_DIR];
-+		if (!iqs269_events[i].dir_up)
-+			dir_mask = ~dir_mask;
-+
-+		state = flags.states[iqs269_events[i].st_offs] & dir_mask;
-+
-+		sw_code = iqs269->switches[i].code;
-+
-+		for (j = 0; j < IQS269_NUM_CH; j++) {
-+			keycode = iqs269->keycode[i * IQS269_NUM_CH + j];
-+
-+			switch (j) {
-+			case IQS269_CHx_HALL_ACTIVE:
-+				if (iqs269->hall_enable &&
-+				    iqs269->switches[i].enabled)
-+					input_report_switch(iqs269->keypad,
-+							    sw_code,
-+							    state & BIT(j));
-+
-+				/* fall through */
-+
-+			case IQS269_CHx_HALL_INACTIVE:
-+				if (iqs269->hall_enable)
-+					continue;
-+
-+				/* fall through */
-+
-+			default:
-+				input_report_key(iqs269->keypad, keycode,
-+						 state & BIT(j));
-+			}
-+		}
-+	}
-+
-+	input_sync(iqs269->keypad);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t iqs269_irq(int irq, void *context)
-+{
-+	struct iqs269_private *iqs269 = context;
-+
-+	if (iqs269_report(iqs269))
-+		return IRQ_NONE;
-+
-+	/*
-+	 * The device does not deassert its interrupt (RDY) pin until shortly
-+	 * after receiving an I2C stop condition; the following delay ensures
-+	 * the interrupt handler does not return before this time.
-+	 */
-+	iqs269_irq_wait();
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static ssize_t counts_show(struct device *dev,
-+			   struct device_attribute *attr, char *buf)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	struct i2c_client *client = iqs269->client;
-+	__le16 counts;
-+	int error;
-+
-+	if (!iqs269->ati_current || iqs269->hall_enable)
-+		return -EPERM;
-+
-+	/*
-+	 * Unsolicited I2C communication prompts the device to assert its RDY
-+	 * pin, so disable the interrupt line until the operation is finished
-+	 * and RDY has been deasserted.
-+	 */
-+	disable_irq(client->irq);
-+
-+	error = regmap_raw_read(iqs269->regmap,
-+				IQS269_CHx_COUNTS + iqs269->ch_num * 2,
-+				&counts, sizeof(counts));
-+
-+	iqs269_irq_wait();
-+	enable_irq(client->irq);
-+
-+	if (error)
-+		return error;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", le16_to_cpu(counts));
-+}
-+
-+static ssize_t hall_bin_show(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	struct i2c_client *client = iqs269->client;
-+	unsigned int val;
-+	int error;
-+
-+	disable_irq(client->irq);
-+
-+	error = regmap_read(iqs269->regmap, IQS269_CAL_DATA_A, &val);
-+
-+	iqs269_irq_wait();
-+	enable_irq(client->irq);
-+
-+	if (error)
-+		return error;
-+
-+	switch (iqs269->ch_reg[IQS269_CHx_HALL_ACTIVE].rx_enable &
-+		iqs269->ch_reg[IQS269_CHx_HALL_INACTIVE].rx_enable) {
-+	case IQS269_HALL_PAD_R:
-+		val &= IQS269_CAL_DATA_A_HALL_BIN_R_MASK;
-+		val >>= IQS269_CAL_DATA_A_HALL_BIN_R_SHIFT;
-+		break;
-+
-+	case IQS269_HALL_PAD_L:
-+		val &= IQS269_CAL_DATA_A_HALL_BIN_L_MASK;
-+		val >>= IQS269_CAL_DATA_A_HALL_BIN_L_SHIFT;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", val);
-+}
-+
-+static ssize_t hall_enable_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", iqs269->hall_enable);
-+}
-+
-+static ssize_t hall_enable_store(struct device *dev,
-+				 struct device_attribute *attr, const char *buf,
-+				 size_t count)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	unsigned int val;
-+	int error;
-+
-+	error = kstrtouint(buf, 10, &val);
-+	if (error)
-+		return error;
-+
-+	mutex_lock(&iqs269->lock);
-+
-+	iqs269->hall_enable = val;
-+	iqs269->ati_current = false;
-+
-+	mutex_unlock(&iqs269->lock);
-+
-+	return count;
-+}
-+
-+static ssize_t ch_number_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", iqs269->ch_num);
-+}
-+
-+static ssize_t ch_number_store(struct device *dev,
-+			       struct device_attribute *attr, const char *buf,
-+			       size_t count)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	unsigned int val;
-+	int error;
-+
-+	error = kstrtouint(buf, 10, &val);
-+	if (error)
-+		return error;
-+
-+	if (val >= IQS269_NUM_CH)
-+		return -EINVAL;
-+
-+	iqs269->ch_num = val;
-+
-+	return count;
-+}
-+
-+static ssize_t rx_enable_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n",
-+			 iqs269->ch_reg[iqs269->ch_num].rx_enable);
-+}
-+
-+static ssize_t rx_enable_store(struct device *dev,
-+			       struct device_attribute *attr, const char *buf,
-+			       size_t count)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	unsigned int val;
-+	int error;
-+
-+	error = kstrtouint(buf, 10, &val);
-+	if (error)
-+		return error;
-+
-+	if (val > 0xFF)
-+		return -EINVAL;
-+
-+	mutex_lock(&iqs269->lock);
-+
-+	iqs269->ch_reg[iqs269->ch_num].rx_enable = val;
-+	iqs269->ati_current = false;
-+
-+	mutex_unlock(&iqs269->lock);
-+
-+	return count;
-+}
-+
-+static ssize_t ati_mode_show(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	unsigned int val;
-+	int error;
-+
-+	error = iqs269_ati_mode_get(iqs269, iqs269->ch_num, &val);
-+	if (error)
-+		return error;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", val);
-+}
-+
-+static ssize_t ati_mode_store(struct device *dev,
-+			      struct device_attribute *attr, const char *buf,
-+			      size_t count)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	unsigned int val;
-+	int error;
-+
-+	error = kstrtouint(buf, 10, &val);
-+	if (error)
-+		return error;
-+
-+	error = iqs269_ati_mode_set(iqs269, iqs269->ch_num, val);
-+	if (error)
-+		return error;
-+
-+	return count;
-+}
-+
-+static ssize_t ati_base_show(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	unsigned int val;
-+	int error;
-+
-+	error = iqs269_ati_base_get(iqs269, iqs269->ch_num, &val);
-+	if (error)
-+		return error;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", val);
-+}
-+
-+static ssize_t ati_base_store(struct device *dev,
-+			      struct device_attribute *attr, const char *buf,
-+			      size_t count)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	unsigned int val;
-+	int error;
-+
-+	error = kstrtouint(buf, 10, &val);
-+	if (error)
-+		return error;
-+
-+	error = iqs269_ati_base_set(iqs269, iqs269->ch_num, val);
-+	if (error)
-+		return error;
-+
-+	return count;
-+}
-+
-+static ssize_t ati_target_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	unsigned int val;
-+	int error;
-+
-+	error = iqs269_ati_target_get(iqs269, iqs269->ch_num, &val);
-+	if (error)
-+		return error;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", val);
-+}
-+
-+static ssize_t ati_target_store(struct device *dev,
-+				struct device_attribute *attr, const char *buf,
-+				size_t count)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	unsigned int val;
-+	int error;
-+
-+	error = kstrtouint(buf, 10, &val);
-+	if (error)
-+		return error;
-+
-+	error = iqs269_ati_target_set(iqs269, iqs269->ch_num, val);
-+	if (error)
-+		return error;
-+
-+	return count;
-+}
-+
-+static ssize_t ati_trigger_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", iqs269->ati_current);
-+}
-+
-+static ssize_t ati_trigger_store(struct device *dev,
-+				 struct device_attribute *attr, const char *buf,
-+				 size_t count)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	struct i2c_client *client = iqs269->client;
-+	unsigned int val;
-+	int error;
-+
-+	error = kstrtouint(buf, 10, &val);
-+	if (error)
-+		return error;
-+
-+	if (!val)
-+		return count;
-+
-+	disable_irq(client->irq);
-+
-+	error = iqs269_dev_init(iqs269);
-+
-+	iqs269_irq_wait();
-+	enable_irq(client->irq);
-+
-+	if (error)
-+		return error;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RO(counts);
-+static DEVICE_ATTR_RO(hall_bin);
-+static DEVICE_ATTR_RW(hall_enable);
-+static DEVICE_ATTR_RW(ch_number);
-+static DEVICE_ATTR_RW(rx_enable);
-+static DEVICE_ATTR_RW(ati_mode);
-+static DEVICE_ATTR_RW(ati_base);
-+static DEVICE_ATTR_RW(ati_target);
-+static DEVICE_ATTR_RW(ati_trigger);
-+
-+static struct attribute *iqs269_attrs[] = {
-+	&dev_attr_counts.attr,
-+	&dev_attr_hall_bin.attr,
-+	&dev_attr_hall_enable.attr,
-+	&dev_attr_ch_number.attr,
-+	&dev_attr_rx_enable.attr,
-+	&dev_attr_ati_mode.attr,
-+	&dev_attr_ati_base.attr,
-+	&dev_attr_ati_target.attr,
-+	&dev_attr_ati_trigger.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group iqs269_attr_group = {
-+	.attrs = iqs269_attrs,
-+};
-+
-+static const struct regmap_config iqs269_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 16,
-+	.max_register = IQS269_MAX_REG,
-+};
-+
-+static int iqs269_probe(struct i2c_client *client)
-+{
-+	struct iqs269_ver_info ver_info;
-+	struct iqs269_private *iqs269;
-+	int error;
-+
-+	iqs269 = devm_kzalloc(&client->dev, sizeof(*iqs269), GFP_KERNEL);
-+	if (!iqs269)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, iqs269);
-+	iqs269->client = client;
-+
-+	iqs269->regmap = devm_regmap_init_i2c(client, &iqs269_regmap_config);
-+	if (IS_ERR(iqs269->regmap)) {
-+		error = PTR_ERR(iqs269->regmap);
-+		dev_err(&client->dev, "Failed to initialize register map: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	mutex_init(&iqs269->lock);
-+
-+	error = regmap_raw_read(iqs269->regmap, IQS269_VER_INFO, &ver_info,
-+				sizeof(ver_info));
-+	if (error)
-+		return error;
-+
-+	if (ver_info.prod_num != IQS269_VER_INFO_PROD_NUM) {
-+		dev_err(&client->dev, "Unrecognized product number: 0x%02X\n",
-+			ver_info.prod_num);
-+		return -EINVAL;
-+	}
-+
-+	error = iqs269_parse_prop(iqs269);
-+	if (error)
-+		return error;
-+
-+	error = iqs269_dev_init(iqs269);
-+	if (error) {
-+		dev_err(&client->dev, "Failed to initialize device: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	error = iqs269_input_init(iqs269);
-+	if (error)
-+		return error;
-+
-+	error = devm_request_threaded_irq(&client->dev, client->irq,
-+					  NULL, iqs269_irq, IRQF_ONESHOT,
-+					  client->name, iqs269);
-+	if (error) {
-+		dev_err(&client->dev, "Failed to request IRQ: %d\n", error);
-+		return error;
-+	}
-+
-+	error = devm_device_add_group(&client->dev, &iqs269_attr_group);
-+	if (error)
-+		dev_err(&client->dev, "Failed to add attributes: %d\n", error);
-+
-+	return error;
-+}
-+
-+static int __maybe_unused iqs269_suspend(struct device *dev)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	struct i2c_client *client = iqs269->client;
-+	unsigned int val;
-+	int error;
-+
-+	if (!iqs269->suspend_mode)
-+		return 0;
-+
-+	disable_irq(client->irq);
-+
-+	/*
-+	 * Automatic power mode switching must be disabled before the device is
-+	 * forced into any particular power mode. In this case, the device will
-+	 * transition into normal-power mode.
-+	 */
-+	error = regmap_update_bits(iqs269->regmap, IQS269_SYS_SETTINGS,
-+				   IQS269_SYS_SETTINGS_DIS_AUTO, ~0);
-+	if (error)
-+		goto err_irq;
-+
-+	/*
-+	 * The following check ensures the device has completed its transition
-+	 * into normal-power mode before a manual mode switch is performed.
-+	 */
-+	error = regmap_read_poll_timeout(iqs269->regmap, IQS269_SYS_FLAGS, val,
-+					!(val & IQS269_SYS_FLAGS_PWR_MODE_MASK),
-+					 IQS269_PWR_MODE_POLL_SLEEP_US,
-+					 IQS269_PWR_MODE_POLL_TIMEOUT_US);
-+	if (error)
-+		goto err_irq;
-+
-+	error = regmap_update_bits(iqs269->regmap, IQS269_SYS_SETTINGS,
-+				   IQS269_SYS_SETTINGS_PWR_MODE_MASK,
-+				   iqs269->suspend_mode <<
-+				   IQS269_SYS_SETTINGS_PWR_MODE_SHIFT);
-+	if (error)
-+		goto err_irq;
-+
-+	/*
-+	 * This last check ensures the device has completed its transition into
-+	 * the desired power mode to prevent any spurious interrupts from being
-+	 * triggered after iqs269_suspend has already returned.
-+	 */
-+	error = regmap_read_poll_timeout(iqs269->regmap, IQS269_SYS_FLAGS, val,
-+					 (val & IQS269_SYS_FLAGS_PWR_MODE_MASK)
-+					 == (iqs269->suspend_mode <<
-+					     IQS269_SYS_FLAGS_PWR_MODE_SHIFT),
-+					 IQS269_PWR_MODE_POLL_SLEEP_US,
-+					 IQS269_PWR_MODE_POLL_TIMEOUT_US);
-+
-+err_irq:
-+	iqs269_irq_wait();
-+	enable_irq(client->irq);
-+
-+	return error;
-+}
-+
-+static int __maybe_unused iqs269_resume(struct device *dev)
-+{
-+	struct iqs269_private *iqs269 = dev_get_drvdata(dev);
-+	struct i2c_client *client = iqs269->client;
-+	unsigned int val;
-+	int error;
-+
-+	if (!iqs269->suspend_mode)
-+		return 0;
-+
-+	disable_irq(client->irq);
-+
-+	error = regmap_update_bits(iqs269->regmap, IQS269_SYS_SETTINGS,
-+				   IQS269_SYS_SETTINGS_PWR_MODE_MASK, 0);
-+	if (error)
-+		goto err_irq;
-+
-+	/*
-+	 * This check ensures the device has returned to normal-power mode
-+	 * before automatic power mode switching is re-enabled.
-+	 */
-+	error = regmap_read_poll_timeout(iqs269->regmap, IQS269_SYS_FLAGS, val,
-+					!(val & IQS269_SYS_FLAGS_PWR_MODE_MASK),
-+					 IQS269_PWR_MODE_POLL_SLEEP_US,
-+					 IQS269_PWR_MODE_POLL_TIMEOUT_US);
-+	if (error)
-+		goto err_irq;
-+
-+	error = regmap_update_bits(iqs269->regmap, IQS269_SYS_SETTINGS,
-+				   IQS269_SYS_SETTINGS_DIS_AUTO, 0);
-+	if (error)
-+		goto err_irq;
-+
-+	/*
-+	 * This step reports any events that may have been "swallowed" as a
-+	 * result of polling PWR_MODE (which automatically acknowledges any
-+	 * pending interrupts).
-+	 */
-+	error = iqs269_report(iqs269);
-+
-+err_irq:
-+	iqs269_irq_wait();
-+	enable_irq(client->irq);
-+
-+	return error;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(iqs269_pm, iqs269_suspend, iqs269_resume);
-+
-+static const struct of_device_id iqs269_of_match[] = {
-+	{ .compatible = "azoteq,iqs269a" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, iqs269_of_match);
-+
-+static struct i2c_driver iqs269_i2c_driver = {
-+	.driver = {
-+		.name = "iqs269a",
-+		.of_match_table = iqs269_of_match,
-+		.pm = &iqs269_pm,
-+	},
-+	.probe_new = iqs269_probe,
-+};
-+module_i2c_driver(iqs269_i2c_driver);
-+
-+MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
-+MODULE_DESCRIPTION("Azoteq IQS269A Capacitive Touch Controller");
-+MODULE_LICENSE("GPL");
---
-2.7.4
+Okay, thanks. Then it sounds like MTK_JPEG_MAX_EXIF_SIZE could be a more
+appropriate name.
 
+[snip]
+> > > +}
+> > > +
+> > >  static void mtk_jpeg_device_run(void *priv)
+> > >  {
+> > >  	struct mtk_jpeg_ctx *ctx = priv;
+> > > @@ -782,6 +1060,8 @@ static void mtk_jpeg_device_run(void *priv)
+> > >  	struct mtk_jpeg_src_buf *jpeg_src_buf;
+> > >  	struct mtk_jpeg_bs bs;
+> > >  	struct mtk_jpeg_fb fb;
+> > > +	struct mtk_jpeg_enc_bs enc_bs;
+> > > +	struct mtk_jpeg_enc_fb enc_fb;
+> > >  	int i;
+> > >  
+> > >  	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> > > @@ -792,30 +1072,47 @@ static void mtk_jpeg_device_run(void *priv)
+> > >  		for (i = 0; i < dst_buf->vb2_buf.num_planes; i++)
+> > >  			vb2_set_plane_payload(&dst_buf->vb2_buf, i, 0);
+> > >  		buf_state = VB2_BUF_STATE_DONE;
+> > 
+> > About existing code, but we may want to explain this.
+> > What is this last frame handling above for?
+> if the user gives us a empty buffer(means it is the last frame),the
+> driver will not encode and done the buffer to the user.
+>
+
+An empty buffer is not a valid way of signaling a last frame in V4L2. In
+general, I'm not sure there is such a thing in JPEG, because all frames
+are separate from each other and we always expect 1 input buffer and 1
+output buffer for one frame. We might want to remove the special
+handling in a follow up patch.
+
+> > > -		goto dec_end;
+> > > +		goto device_run_end;
+> > >  	}
+> > >  
+> > > -	if (mtk_jpeg_check_resolution_change(ctx, &jpeg_src_buf->dec_param)) {
+> > > -		mtk_jpeg_queue_src_chg_event(ctx);
+> > > -		ctx->state = MTK_JPEG_SOURCE_CHANGE;
+> > > -		v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+> > > -		return;
+> > > -	}
+> > > +	if (jpeg->mode == MTK_JPEG_ENC) {
+> > > +		spin_lock_irqsave(&jpeg->hw_lock, flags);
+> > > +		mtk_jpeg_enc_reset(jpeg->reg_base);
+> > 
+> > Why do we need to reset every frame?
+> We do this operation is to ensure that all registers are cleared.
+> It's safer from the hardware point of view.
+
+Wouldn't this only waste power? If we reset the hardware after powering
+up, the only registers that could change would be changed by the driver
+itself. The driver should program all registers properly when starting
+next frame anyway, so such a reset shouldn't be necessary.
+
+> > 
+> > > +
+> > > +		mtk_jpeg_set_enc_dst(ctx, jpeg->reg_base, &dst_buf->vb2_buf,
+> > > +				     &enc_bs);
+> > > +		mtk_jpeg_set_enc_src(ctx, jpeg->reg_base, &src_buf->vb2_buf,
+> > > +				     &enc_fb);
+> > > +		mtk_jpeg_enc_set_ctrl_cfg(jpeg->reg_base, ctx->enable_exif,
+> > > +					  ctx->enc_quality,
+> > > +					  ctx->restart_interval);
+> > > +
+> > > +		mtk_jpeg_enc_start(jpeg->reg_base);
+> > > +	} else {
+> > > +		if (mtk_jpeg_check_resolution_change
+> > > +			(ctx, &jpeg_src_buf->dec_param)) {
+> > > +			mtk_jpeg_queue_src_chg_event(ctx);
+> > > +			ctx->state = MTK_JPEG_SOURCE_CHANGE;
+> > > +			v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+> > 
+> > This is a bit strange. Resolution change should be signaled when the
+> > hardware attempted to decode a frame and detected a different resolution
+> > than current. It shouldn't be necessary for the userspace to queue a pair
+> > of buffers to signal it, as with the current code.
+> If the the resolution is bigger than current, the current buffer will
+> not be enough for the changed resolution.Shouldn't it tell the userspace
+> to queue new buffer and stream on again?
+
+The V4L2 decode flow is as follows:
+ - application configures and starts only the OUTPUT queue,
+ - application queues an OUTPUT buffer with a frame worth of bitstream,
+ - decoder parses the bitstream headers, detects CAPTURE format and
+   signals the source change event,
+ - application reads CAPTURE format and configures and starts the
+   CAPTURE queue,
+ - application queues a CAPTURE buffer,
+ - decoder decodes the image to the queued buffer.
+
+In case of subsequent (dynamic) resolution change:
+ - application queues an OUTPUT buffer and a CAPTURE buffer,
+ - decoder parses the bitstream, notices resolution change, updates
+   CAPTURE format and signals the source change event, refusing to
+   continue the decoding until the application acknowledges it,
+ - application either reallocates its CAPTURE buffers or confirms that
+   the existing buffers are fine and acknowledges resolution change,
+ - decoding continues.
+
+For more details, please check the interface specification:
+https://www.kernel.org/doc/html/latest/media/uapi/v4l/dev-decoder.html
+
+[snip]
+> > > -	ret = video_register_device(jpeg->dec_vdev, VFL_TYPE_GRABBER, 3);
+> > > +	ret = video_register_device(jpeg->vfd_jpeg, VFL_TYPE_GRABBER, -1);
+> > 
+> > FYI the type changed to VFL_TYPE_VIDEO recently.
+> I changed VFL_TYPE_GRABBER to VFL_TYPE_VIDEO,but builded fail.
+
+What kernel version are you building with?
+
+> > >  	if (ret) {
+> > >  		v4l2_err(&jpeg->v4l2_dev, "Failed to register video device\n");
+> > > -		goto err_dec_vdev_register;
+> > > +		goto err_vfd_jpeg_register;
+> > >  	}
+> > >  
+> > > -	video_set_drvdata(jpeg->dec_vdev, jpeg);
+> > > +	video_set_drvdata(jpeg->vfd_jpeg, jpeg);
+> > >  	v4l2_info(&jpeg->v4l2_dev,
+> > > -		  "decoder device registered as /dev/video%d (%d,%d)\n",
+> > > -		  jpeg->dec_vdev->num, VIDEO_MAJOR, jpeg->dec_vdev->minor);
+> > > +		  "jpeg device %d registered as /dev/video%d (%d,%d)\n",
+> > 
+> > Here it would be actually useful to special case the encoder and decoder,
+> > because it would be easier for the user to know which device is which.
+> > 
+
+Just making sure this wasn't overlooked.
+
+[snip]
+> > > +
+> > > +void mtk_jpeg_enc_reset(void __iomem *base)
+> > > +{
+> > > +	writel(0x00, base + JPEG_ENC_RSTB);
+> > > +	writel(JPEG_ENC_RESET_BIT, base + JPEG_ENC_RSTB);
+> > > +	writel(0x00, base + JPEG_ENC_CODEC_SEL);
+> > > +}
+> > > +
+> > > +u32 mtk_jpeg_enc_get_int_status(void __iomem *base)
+> > > +{
+> > > +	u32 ret;
+> > > +
+> > > +	ret = readl(base + JPEG_ENC_INT_STS) &
+> > > +		    JPEG_ENC_INT_STATUS_MASK_ALLIRQ;
+> > > +	if (ret)
+> > > +		writel(0, base + JPEG_ENC_INT_STS);
+> > > +
+> > > +	return ret;
+> > > +}
+> > 
+> > Does it make sense to have a function for what is essentially just 2 lines?
+> > Also, the name is misleading, as the function not only gets but also
+> > clears.
+> Make all hw register setting in mtk_jpeg_enc_hw.c is one part of current
+> architecture.
+> I have changed the function name to
+> mtk_jpeg_enc_get_and_clear_int_status.
+
+As I mentioned before, this driver needs a big clean up and that's why I
+suggested starting over with a new one for the JPEG encoder part. Since
+we decided to extend this one in the end, would you be able to improve
+this aspect as well? Thanks.
+
+Best regards,
+Tomasz
