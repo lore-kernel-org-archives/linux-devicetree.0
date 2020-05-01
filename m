@@ -2,99 +2,140 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23481C47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 07:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185FFC47256
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 07:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E80F32173E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 07:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0F121924
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 07:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jaB3BsED"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uSMKBOO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgEAH20 (ORCPT
+        id S1728297AbgEAHj6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 03:28:26 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1347 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgEAH20 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 03:28:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eabcf8d0000>; Fri, 01 May 2020 00:28:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 01 May 2020 00:28:25 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 01 May 2020 00:28:25 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 May
- 2020 07:28:25 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 1 May 2020 07:28:25 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.26.73.165]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5eabcf980000>; Fri, 01 May 2020 00:28:25 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Peter Robinson <pbrobinson@redhat.com>,
-        Jon Hunter <jonathanh@nvidia.com>, <stable@vger.kernel.org>
-Subject: [PATCH] arm64: tegra: Fix ethernet phy-mode for Jetson Xavier
-Date:   Fri, 1 May 2020 08:27:56 +0100
-Message-ID: <20200501072756.25348-1-jonathanh@nvidia.com>
+        Fri, 1 May 2020 03:39:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbgEAHj6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 03:39:58 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5833C035494
+        for <devicetree@vger.kernel.org>; Fri,  1 May 2020 00:39:56 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x15so1294520pfa.1
+        for <devicetree@vger.kernel.org>; Fri, 01 May 2020 00:39:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=7dbuQPhIsTcQHi6Sc8OBXbUFsIKd1Ghgu7yJHTjcrBA=;
+        b=uSMKBOO6QIs4uLVfahwgnBUw2gO5QWpFhQb6F1MFxTptPMF+Z0o/WwC6bov2PX1B+z
+         GpMi0QLlCm5bjeCQb1Ib4KAhIABJItLI42QmCZQZGMtFoAd5BloKynNn9kQq3/e29zu2
+         9IyjzXDmbfN8mJesTXXH8vGo6U5pKfc97OK3wq90VHEBym+PgXw/vn++YmU/npiUaTr5
+         EKndS27RG5ykIcMNfuIjRBSN+x85vpHDVdCcNP20vltiVGnPnJOhrLIPCacJWk+nw8H5
+         h/1ZfEiY9PDJtMZv9WMs5aKqGIRak+Cy8hyL1nVn2z4TqrdRTnPu7SgigutOZnbMfMx7
+         2gGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7dbuQPhIsTcQHi6Sc8OBXbUFsIKd1Ghgu7yJHTjcrBA=;
+        b=DbrtYOg6D0iHvVaPjRcOGUiMBBX+6ztEryg1FPeJF6JTNo1UG+lAIMtur4/pFNz64a
+         Add5ZfT2oAT3dlbpgIO68a5k4En9pnrTkIWI0x2QwOw17cfRNXHOlkTBF/05wOvKTPL4
+         59Dl8PxNlnw+rIWHfbsLUZAHGI/8GDkNxo4Zne9yi7ru4UM3yeMIqpVFkH+zjREwkmHb
+         5aJPp7i65dP3Ce2nWy9XjJ9Vy6sEkm8jTSxTQeTAzDEDB3ReLf5PGM3scKa1+lrkf16l
+         iWnj47EWChJgn/St6ipLc8tNe02envEgEjRMD2781JqzZYfzdD3PAKSuHQdo5v0FHVom
+         xI6g==
+X-Gm-Message-State: AGi0Pua9Y9lrJe2IYpQRiVv2CbfqmNIKxCrJvJgd5FoewYd3Yk3IhPJz
+        d42dI2vysB/X3Bhgxw/0EKdHEA==
+X-Google-Smtp-Source: APiQypJ4tRvRarVqfbdjkqTxsXvJvyOp8AuLCGCLRECI0h2PDJqsBBZbjfCR605Pbtspben2FOegvQ==
+X-Received: by 2002:a62:7bcf:: with SMTP id w198mr2002566pfc.226.1588318796201;
+        Fri, 01 May 2020 00:39:56 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id w12sm1557841pfq.133.2020.05.01.00.39.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 00:39:55 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org
+Subject: [RFC][PATCH 0/4] Support non-default CMA regions to the dmabuf heaps interface
+Date:   Fri,  1 May 2020 07:39:45 +0000
+Message-Id: <20200501073949.120396-1-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
-MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588318093; bh=d+dYuOUYYG3jFlbXdN72xXUr16sgw2ePdUeUPoMzbSo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=jaB3BsEDf3Fc0WN6kwJrPRalITORiFw8jh6J6ICTotAIsVMyxupddkxZxvK2bpOpK
-         dw771EHWsja2buZgJ1YGA4ZmleyqFnlXDrl/r6f/yyEoBYvTDJEBlggHz1zyZ2cCSe
-         AemmvCRR7KOLMYq9AUpQSVz5u8zuQVezob0pIQjVZRZ1FxjXbiDILaI5mFrAnRzpg9
-         IxzEPnPtX6nAMz/IM5oCiUpUCSRwSLtIQtyvQMeOgCbeINMsGMg3AuPYxohlF1QqkZ
-         fRZWpiuhT4RclVX+ga7roOMUpumX0hmQPA61LmkPwdd373pOsGjBOPZWwZ9GCoq1mT
-         EXSJdwyKZLJvQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The 'phy-mode' property is currently defined as 'rgmii' for Jetson
-Xavier. This indicates that the RGMII RX and TX delays are set by the
-MAC and the internal delays set by the PHY are not used.
+This is a much belated second stab at allowing non-default CMA
+regions to be exposed via the dmabuf heaps interface.
 
-If the Marvell PHY driver is enabled, such that it is used and not the
-generic PHY, ethernet failures are seen (DHCP is failing to obtain an
-IP address) and this is caused because the Marvell PHY driver is
-disabling the internal RX and TX delays. For Jetson Xavier the internal
-PHY RX and TX delay should be used and so fix this by setting the
-'phy-mode' to 'rgmii-id' and not 'rgmii'.
+Previous attempt was here:
+ https://lore.kernel.org/lkml/20191025225009.50305-2-john.stultz@linaro.org/T/
 
-Cc: stable@vger.kernel.org
+This pass tried to take Rob's earlier suggestion to use a flag
+property.
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Feedback would be greatly welcome!
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-index 623f7d7d216b..8e3136dfdd62 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-@@ -33,7 +33,7 @@
- 
- 			phy-reset-gpios = <&gpio TEGRA194_MAIN_GPIO(G, 5) GPIO_ACTIVE_LOW>;
- 			phy-handle = <&phy>;
--			phy-mode = "rgmii";
-+			phy-mode = "rgmii-id";
- 
- 			mdio {
- 				#address-cells = <1>;
+thanks
+-john
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: "Andrew F. Davis" <afd@ti.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Liam Mark <lmark@codeaurora.org>
+Cc: Pratik Patel <pratikp@codeaurora.org>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Brian Starkey <Brian.Starkey@arm.com>
+Cc: Chenbo Feng <fengc@google.com>
+Cc: Alistair Strachan <astrachan@google.com>
+Cc: Sandeep Patil <sspatil@google.com>
+Cc: Hridya Valsaraju <hridya@google.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: devicetree@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-mm@kvack.org
+
+John Stultz (4):
+  devicetree: bindings: Add linux,cma-heap tag for reserved memory
+  mm: cma: Add dma_heap flag to cma structure
+  dma-buf: cma_heap: Extend logic to export CMA regions tagged with
+    "linux,cma-heap"
+  example: dts: hi3660-hikey960: Add dts entries to test cma heap
+    binding
+
+ .../reserved-memory/reserved-memory.txt        |  3 +++
+ .../boot/dts/hisilicon/hi3660-hikey960.dts     |  7 +++++++
+ drivers/dma-buf/heaps/cma_heap.c               | 18 +++++++++---------
+ include/linux/cma.h                            |  3 +++
+ kernel/dma/contiguous.c                        |  3 +++
+ mm/cma.c                                       | 11 +++++++++++
+ mm/cma.h                                       |  1 +
+ 7 files changed, 37 insertions(+), 9 deletions(-)
+
 -- 
 2.17.1
 
