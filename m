@@ -2,176 +2,218 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACC1C35280
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 19:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3397C35280
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3CE205C9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 19:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D253B20787
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588363634;
+	bh=2uziUSHJmNqySrfaFlykT76ZKo5dSuMGro2/1PoILRs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J7TX9Nm6WnjyMu+XUHaiAIRhzBQXlBjpsiofGmWS5cvJqwIpNRsXGRhrPfBfG2n8i
+	 grP6z10TgMrTeeptQPSE9YAmK3FlZ4DcipU1jy2rNJy0Pm/e6RVEX9Aif2fKrWwc2R
+	 NYajyDdDRCjiMSVs6RAEC4psz0f2uUKr22CLptGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgEATnd (ORCPT
+        id S1727774AbgEAUHO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 15:43:33 -0400
-Received: from mail-oln040092011109.outbound.protection.outlook.com ([40.92.11.109]:6976
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726377AbgEATnd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 15:43:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EF8/jKLXSW5oG6jNL1H/7p2NOv6QBmBPF7VaqCBhzqS4YKdb4t9AZ8P9yS6U3u/5QxB2BKuaF/2mJUabWJKQ7bX53uNclkfkCJogZAXL1/doxcfaUweO7JA/ZoyLFP2SQDfeNQ81HIxTp/LeA5e8t+z/mTJadoq4uZAXHRDsI18XicXLtuYhbJqj+MLMmb/K/igTOKyR70kPl2fOzUYhPvPBN7mb8NLKdlBCnjm96Y6Q8JnfKZV6VNIcO03yiPVFMvtPFlELxpnWBPRCapEPBMn1u4zxXLO283nICavZEUgLZG8WQrcKboym5dW3Pm9QpVv8/JsFBeFdnyrJQZb73w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zH/TJZbNKmzhtbk6sZZ2JUGew5jvBXVJ255lY6T+NU8=;
- b=L7lfd8Naphkflaiy7NnRrPc0c2h6iJ2ddkhoEbhFYR9CkzR9il6FxsWWKjCjJnjqHfe17Ve69qWZCNunee5bNK7G/hecHaAEPOtf5oqmDjfLtSMwSAo/JhrqtgZfwKY0c2GFVphy/fPYPKuIF3DHO3grvM6IQbEU95hdG+aMcA6jNENPf/bEq6vLPY06muzqyKSs8JKBhUSeG0DwYigvIuoEbRkbsoEmIFwLgPanNPB/6o9B3K27qsS2r80meoTFL1QF97LKkNxJf8w9v1QYslyU4Z9VXt/KdRalp9DW1ux+UUFjIoAVsxemRXuyCj0G/fhOx0T0LPuqJMFdXcjyzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from BN3NAM04FT054.eop-NAM04.prod.protection.outlook.com
- (10.152.92.59) by BN3NAM04HT237.eop-NAM04.prod.protection.outlook.com
- (10.152.93.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Fri, 1 May
- 2020 19:43:30 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:7e4e::4e) by BN3NAM04FT054.mail.protection.outlook.com
- (2a01:111:e400:7e4e::281) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15 via Frontend
- Transport; Fri, 1 May 2020 19:43:30 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:4C3C78BA7B24904F3141361325C0E94504C034693C60E9507E5FCBB25CBA21A9;UpperCasedChecksum:1F9B4BC42460895D13257AFF6BC56E043FD38E7B777AF1C981B68449DA8E9F82;SizeAsReceived:9337;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2958.027; Fri, 1 May 2020
- 19:43:30 +0000
-Subject: Re: [PATCH 06/13] arm: dts: s5pv210: aries: Add support for more
- devices
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     kgene@kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-References: <20200426183604.28494-1-xc-racer2@live.ca>
- <BN6PR04MB0660563639D091548BFCCFF2A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200428102026.GB23963@kozik-lap>
- <BN6PR04MB0660776A38353DBDF0E2E3F9A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200501133100.GB5154@kozik-lap>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660515AC7EEF023734A3B40A3AB0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Fri, 1 May 2020 12:43:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200501133100.GB5154@kozik-lap>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR2001CA0013.namprd20.prod.outlook.com
- (2603:10b6:301:15::23) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <7d8d2b14-b4cf-906d-12a3-a31357981e39@live.ca>
+        Fri, 1 May 2020 16:07:14 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35147 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgEAUHN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 16:07:13 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o7so762968oif.2;
+        Fri, 01 May 2020 13:07:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OZmL6pHrV2p1Bxgz7svMOgmRRS5pUlroNV1WaQOUaxQ=;
+        b=TqaDUxvN7jdrlMbeeDthdMVRQpzt9OWMSbELaGlMGv6KQOU1KKH/0ji6H3eVg0s48j
+         Rc12LZP5SbFjjLKuXCTeOmcDTLaCIP9A5a7lsTwgGKrNCbvNqTkb/LjbJNd8b67/gUND
+         8LAErhoBfAPgXA9umUXJMzvLKAhFa1++wMQ9MgjhVtnM+NCPq4qou8Qps1uxdZRNERyv
+         4DhuZZZcvwoyz20MEZBXVnnROZyH602ZE7gt2UineZD6pOB85Fuc7VLpKc8/XepYhL1P
+         TptiFhKOHfz7cC4JQ1mgabbGqoJP+XWb1dtRfZU5fORlgQ7kZtGLLJRI8sQvCIKDDtIA
+         dRTA==
+X-Gm-Message-State: AGi0PuY5iEK78XQWh6bMwq/nRn/49LfkXvmrqnjSyDtFurxBYHTFp0/P
+        HDDjJEDTJaCTFRstkqSafQ==
+X-Google-Smtp-Source: APiQypLUn2+MduxPj4oNeoQvxlzltP4rKeE6pd1r2NWqUGvaeJ2zkquejlimjcK5+QvQvNQFomWbBw==
+X-Received: by 2002:aca:4a45:: with SMTP id x66mr970859oia.48.1588363632490;
+        Fri, 01 May 2020 13:07:12 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a27sm1077844oos.37.2020.05.01.13.06.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 13:07:05 -0700 (PDT)
+Received: (nullmailer pid 7973 invoked by uid 1000);
+        Fri, 01 May 2020 20:06:52 -0000
+Date:   Fri, 1 May 2020 15:06:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: dt-bindings: ak4613: switch to yaml base
+ Documentation
+Message-ID: <20200501200652.GA13287@bogus>
+References: <87imhtv2mh.wl-kuninori.morimoto.gx@renesas.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR2001CA0013.namprd20.prod.outlook.com (2603:10b6:301:15::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 19:43:29 +0000
-X-Microsoft-Original-Message-ID: <7d8d2b14-b4cf-906d-12a3-a31357981e39@live.ca>
-X-TMN:  [XQB1P+NURnOaok6vULUuxYx08LeLf9hPR7YaTTrUJzCCbFhX7MUTlssKspFccpFQ]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: a629765e-bad3-471c-ec6c-08d7ee07eced
-X-MS-TrafficTypeDiagnostic: BN3NAM04HT237:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: c6kMjwMYEgyG8a4fbJ00QDtxoVOGpCJ2OZWSfxBQ397bpzDxzkYp2WqmVRyUuNQTuS5ShRpxcJOmnaGF+naDhxet0eqJObHb38ZJ56/JpBLvvjg+CPj4a8OtG3qw9jnZKqip2C2+As/AX8AxU3Ch5EAwctKNSjG/HzXMVyVNrWz4BSdXXLzkg0oTKVeUMCdDTzGd4I6vMqKlbuYWEVuPXQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: uOKRFay/5axZZYVMU+A2xuoChtHJzImB5hap/NeUt7+AUt58MiAk/I+nEiMCprzX6snktXZghLoRLVa9XNcyqCZLD4ef4VkPmfnFGbUE9BdY34r7T3mxNCaVmvY9TLcKjgcP8X0cUSQn9kqqys5ylmscof52+eRgd0O9MClVPq7cY5qJYE9nRy1sFI2xvTpsfQKnBGHofelk98QcsG9WwQ==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a629765e-bad3-471c-ec6c-08d7ee07eced
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 19:43:30.8379
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3NAM04HT237
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imhtv2mh.wl-kuninori.morimoto.gx@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-
-On 2020-05-01 6:31 a.m., Krzysztof Kozlowski wrote:
->>
->> Well, it may not be in the bindings, but the driver definitely requires it :) See drivers/mfd/wm8994-core.c
->>
->> What's the best way of dealing with this situation?
+On Tue, Apr 21, 2020 at 02:17:43PM +0900, Kuninori Morimoto wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > 
-> I'll send a patch fixing the bindings. However don't you miss the
-> AVDD1-supply in such case? Driver should report error.
+> This patch switches from .txt base to .yaml base Document.
 > 
-
-Thanks for sending the patch.
-
-AVDD1 and DCVDD are provided internally, via drivers/regulator/wm8994.c and are enabled
-by wlf,ldo1ena and wlf,ldo2ena pins.  It's a bit messy, but that's how it's done.
-
->>
->>>> +			CPVDD-supply = <&buck3_reg>;
->>>> +			SPKVDD1-supply = <&buck3_reg>;
->>>> +			SPKVDD2-supply = <&buck3_reg>;
->>>> +
->>>> +			wlf,gpio-cfg = <0xa101 0x8100 0x0100 0x0100 0x8100
->>>> +					0xa101 0x0100 0x8100 0x0100 0x0100
->>>> +					0x0100>;
->>>> +
->>>> +			wlf,ldo1ena = <&gpf3 4 GPIO_ACTIVE_HIGH>;
->>>> +			wlf,ldo2ena = <&gpf3 4 GPIO_ACTIVE_HIGH>;
->>>> +
->>>> +			wlf,lineout1-se;
->>>> +			wlf,lineout2-se;
->>>> +
->>>> +			assigned-clocks = <&clocks MOUT_CLKOUT>;
->>>> +			assigned-clock-rates = <0>;
->>>> +			assigned-clock-parents = <&xusbxti>;
->>>> +
->>>> +			pinctrl-names = "default";
->>>> +			pinctrl-0 = <&codec_ldo>;
->>>> +		};
->>>> +	};
->>>> +
->>>> +	i2c_accel: i2c-gpio-1 {
->>>> +		compatible = "i2c-gpio";
->>>> +		sda-gpios = <&gpj3 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->>>> +		scl-gpios = <&gpj3 7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->>>> +		i2c-gpio,delay-us = <2>;
->>>> +		#address-cells = <1>;
->>>> +		#size-cells = <0>;
->>>> +
->>>> +		pinctrl-names = "default";
->>>> +		pinctrl-0 = <&accel_i2c_pins>;
->>>> +
->>>> +		/* bma023 accelerometer, no mainline binding */
->>>
->>> status disabled ... unless you need it for user-space I2C tools?
->>>
->>
->> Nope, but wanted to add them all in due to adding the si4709 in galaxys.  I was having
->> issues with accidentally overwriting previously named nodes (ie having i2c-gpio-0 in
->> both the common dtsi and the device specific dts) so I wanted to get the numbers
->> nailed down.
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> ---
+>  .../devicetree/bindings/sound/ak4613.txt      | 27 --------
+>  .../devicetree/bindings/sound/ak4613.yaml     | 65 +++++++++++++++++++
+>  2 files changed, 65 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/ak4613.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/ak4613.yaml
 > 
-> So add them with status disabled. This will document the HW without
-> enabling empty I2C GPIO bus.
+> diff --git a/Documentation/devicetree/bindings/sound/ak4613.txt b/Documentation/devicetree/bindings/sound/ak4613.txt
+> deleted file mode 100644
+> index 49a2e74fd9cb..000000000000
+> --- a/Documentation/devicetree/bindings/sound/ak4613.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -AK4613 I2C transmitter
+> -
+> -This device supports I2C mode only.
+> -
+> -Required properties:
+> -
+> -- compatible : "asahi-kasei,ak4613"
+> -- reg : The chip select number on the I2C bus
+> -
+> -Optional properties:
+> -- asahi-kasei,in1-single-end	: Boolean. Indicate input / output pins are single-ended.
+> -- asahi-kasei,in2-single-end	  rather than differential.
+> -- asahi-kasei,out1-single-end
+> -- asahi-kasei,out2-single-end
+> -- asahi-kasei,out3-single-end
+> -- asahi-kasei,out4-single-end
+> -- asahi-kasei,out5-single-end
+> -- asahi-kasei,out6-single-end
+> -
+> -Example:
+> -
+> -&i2c {
+> -	ak4613: ak4613@10 {
+> -		compatible = "asahi-kasei,ak4613";
+> -		reg = <0x10>;
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/ak4613.yaml b/Documentation/devicetree/bindings/sound/ak4613.yaml
+> new file mode 100644
+> index 000000000000..b5929239505e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/ak4613.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/ak4613.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: AK4613 I2C transmitter Device Tree Bindings
+> +
+> +maintainers:
+> +  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: asahi-kasei,ak4613
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  "#sound-dai-cells":
+> +    const: 0
+> +
+> +  # for OF-graph
+> +  port:
+> +    $ref: "audio-graph-card.yaml#definitions/port"
+> +  ports:
+> +    $ref: "audio-graph-card.yaml#definitions/ports"
 
-Sounds good, will do.
+There was no indication any of this applied on the old binding.
 
+I'd rather not get into these arbitrary custom definitions. I think the 
+above file probably needs to be split between the card and codec 
+schemas. Then in each codec you have just:
+
+allOf:
+  - $ref: audio-codec.yaml#
+
+A codec binding should work whether the codec is part of a simple-card 
+or graph-card.
+
+> +
+> +# use patternProperties to avoid naming "xxx,yyy" issue
+
+What's the issue other than you need a 'description'?
+
+We need to fix it rather than find holes in the meta-schema.
+
+> +patternProperties:
+> +  "^asahi-kasei,in1-single-end$":
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +  "^asahi-kasei,in2-single-end$":
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +  "^asahi-kasei,out1-single-end$":
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +  "^asahi-kasei,out2-single-end$":
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +  "^asahi-kasei,out3-single-end$":
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +  "^asahi-kasei,out4-single-end$":
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +  "^asahi-kasei,out5-single-end$":
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +  "^asahi-kasei,out6-single-end$":
+> +    $ref: /schemas/types.yaml#/definitions/flag
+
+Though you could make these an actual pattern: in[1-2] and out[1-6]
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        ak4613: ak4613@10 {
+
+audio-codec@10
+
+> +            compatible = "asahi-kasei,ak4613";
+> +            reg = <0x10>;
+> +        };
+> +    };
+> -- 
+> 2.17.1
 > 
-> Best regards,
-> Krzysztof
-> 
-
-
-Thanks,
-Jonathan
