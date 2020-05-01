@@ -2,96 +2,138 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FFFC4724C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 08:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05E7C47254
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 08:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68BC321924
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 08:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9FDD2184D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 08:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgEAIVS (ORCPT
+        id S1728452AbgEAIVO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 04:21:18 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:33806 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728334AbgEAIVO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 04:21:14 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 780AD1C020C; Fri,  1 May 2020 10:21:12 +0200 (CEST)
-Date:   Fri, 1 May 2020 10:21:11 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200501082111.GA7501@amd>
-References: <20200430174615.41185-1-tony@atomide.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Content-Disposition: inline
-In-Reply-To: <20200430174615.41185-1-tony@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Fri, 1 May 2020 04:21:14 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:49920 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728277AbgEAIVJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 May 2020 04:21:09 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A67F5200B30;
+        Fri,  1 May 2020 10:21:06 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6C932200B47;
+        Fri,  1 May 2020 10:21:01 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B2D69402DE;
+        Fri,  1 May 2020 16:20:54 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] ASoC: fsl_esai: Add support for imx8qm
+Date:   Fri,  1 May 2020 16:12:05 +0800
+Message-Id: <a933bafd2d6a60a69f840d9d4b613337efcf2816.1588320656.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1588320655.git.shengjiu.wang@nxp.com>
+References: <cover.1588320655.git.shengjiu.wang@nxp.com>
+In-Reply-To: <cover.1588320655.git.shengjiu.wang@nxp.com>
+References: <cover.1588320655.git.shengjiu.wang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The difference for esai on imx8qm is that DMA device is EDMA.
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+EDMA requires the period size to be multiple of maxburst. Otherwise
+the remaining bytes are not transferred and thus noise is produced.
 
-Hi!
+We can handle this issue by adding a constraint on
+SNDRV_PCM_HW_PARAM_PERIOD_SIZE to be multiple of tx/rx maxburst value.
 
-> Now without the chardev support, the /dev/gsmtty* using apps need
-> to use "U1234AT+CFUN?" format for the packets. The advantage is
-> less kernel code, and we keep the existing /dev/gsmtty* interface.
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/fsl_esai.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Actually... yes, this works. But no, this is not "existing" tty
-interface.
+diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+index bac65ba7fbad..61b5c0bde788 100644
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -26,10 +26,12 @@
+  *
+  * @imx: for imx platform
+  * @reset_at_xrun: flags for enable reset operaton
++ * @use_edma: edma is used.
+  */
+ struct fsl_esai_soc_data {
+ 	bool imx;
+ 	bool reset_at_xrun;
++	bool use_edma;
+ };
+ 
+ /**
+@@ -88,16 +90,25 @@ struct fsl_esai {
+ static struct fsl_esai_soc_data fsl_esai_vf610 = {
+ 	.imx = false,
+ 	.reset_at_xrun = true,
++	.use_edma = false,
+ };
+ 
+ static struct fsl_esai_soc_data fsl_esai_imx35 = {
+ 	.imx = true,
+ 	.reset_at_xrun = true,
++	.use_edma = false,
+ };
+ 
+ static struct fsl_esai_soc_data fsl_esai_imx6ull = {
+ 	.imx = true,
+ 	.reset_at_xrun = false,
++	.use_edma = false,
++};
++
++static struct fsl_esai_soc_data fsl_esai_imx8qm = {
++	.imx = true,
++	.reset_at_xrun = false,
++	.use_edma = true,
+ };
+ 
+ static irqreturn_t esai_isr(int irq, void *devid)
+@@ -513,6 +524,7 @@ static int fsl_esai_startup(struct snd_pcm_substream *substream,
+ 			    struct snd_soc_dai *dai)
+ {
+ 	struct fsl_esai *esai_priv = snd_soc_dai_get_drvdata(dai);
++	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 
+ 	if (!dai->active) {
+ 		/* Set synchronous mode */
+@@ -527,6 +539,12 @@ static int fsl_esai_startup(struct snd_pcm_substream *substream,
+ 				   ESAI_xCCR_xDC_MASK, ESAI_xCCR_xDC(2));
+ 	}
+ 
++	if (esai_priv->soc->use_edma)
++		snd_pcm_hw_constraint_step(substream->runtime, 0,
++					   SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
++					   tx ? esai_priv->dma_params_tx.maxburst :
++					   esai_priv->dma_params_rx.maxburst);
++
+ 	return 0;
+ 
+ }
+@@ -1094,6 +1112,7 @@ static const struct of_device_id fsl_esai_dt_ids[] = {
+ 	{ .compatible = "fsl,imx35-esai", .data = &fsl_esai_imx35 },
+ 	{ .compatible = "fsl,vf610-esai", .data = &fsl_esai_vf610 },
+ 	{ .compatible = "fsl,imx6ull-esai", .data = &fsl_esai_imx6ull },
++	{ .compatible = "fsl,imx8qm-esai", .data = &fsl_esai_imx8qm },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, fsl_esai_dt_ids);
+-- 
+2.21.0
 
-ttys work per character, and this interface definitely does not... it
-is "packet" based, write() syscalls need exactly right lengths. You
-can't just open minicom, and type "U1234...". You can't paste it,
-either (I tried). tty controls like start/stop bits and baud rate are
-useless here. CR/LF conversions are unwanted/dangerous because it is
-confusing hard to debug if you get them wrong.
-
-Now, I don't see reason why this could not be made to work, and it may
-be more important to have something in mainline and work with that. So
-if you can make this into -next, I'll not complain too loudly. But it
-is... still wrong and I liked motmdm* more :-).
-
-Best regards,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl6r2/cACgkQMOfwapXb+vJWVQCgmZWp4uW4WcDVtKcZ64vezhLQ
-cwAAn2QiA0rySRtYXW2XeiPwWH7txj3y
-=CjiR
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
