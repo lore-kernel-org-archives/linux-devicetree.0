@@ -2,80 +2,107 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32842C4724C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A45C4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 035C720857
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:44:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="g9Y63QfC"
+	by mail.kernel.org (Postfix) with ESMTP id 305612137B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:48:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588348097;
+	bh=sBnS1EAfBQE4efMp26hhUr4f8wzrVS3x6YefMaqZz78=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bPRgOoSn6f8VufwU5i4Ewa1iMj9OfrdQo1/E+faYNmvH4sxUW3w1arvl3xzbSsu8L
+	 wgNHLxqBRWiZ00rmkzQkR3T2qmHfPufW9JF2B5rsLaGRMu8P0XYLQBP5lqx0/hgxTu
+	 DZ5J+NBgapY3rytUzXfUIZ1cK30guq7tuyYHD9uI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgEAPoz (ORCPT
+        id S1729856AbgEAPsQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 11:44:55 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:36546 "EHLO vps0.lunn.ch"
+        Fri, 1 May 2020 11:48:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgEAPoz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 11:44:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=zq53wD1ebttWy9Fs+bAkUBp+KMkAbk1gvP4L0POpNiA=; b=g9Y63QfCt8YuvaP45/GWgzLNj8
-        no//b6ULwxrn4pBY9MHOk89RSiunJY/l98hVSjVfsLNrIuLgM/KQfMzLn1fYX+lQW0qRLzMOvy1Ta
-        lFnR3/T4p7PWi6B/VbYak39g5tqWm4oIXxzQB5PjCtHV+QNLsdO/I3HQoav+YkAlNQd4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jUXqK-000YMy-7n; Fri, 01 May 2020 17:44:48 +0200
-Date:   Fri, 1 May 2020 17:44:48 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        jianxin.pan@amlogic.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC v2 08/11] net: stmmac: dwmac-meson8b: add support for
- the RX delay configuration
-Message-ID: <20200501154448.GH128733@lunn.ch>
-References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
- <20200429201644.1144546-9-martin.blumenstingl@googlemail.com>
+        id S1728495AbgEAPsQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 May 2020 11:48:16 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F4E52137B;
+        Fri,  1 May 2020 15:48:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588348095;
+        bh=sBnS1EAfBQE4efMp26hhUr4f8wzrVS3x6YefMaqZz78=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DOPwEHGEjZEqnMfaWUQKHWkEMEd+Tmn4mT/4fCOCQuSLDpdqM5LvI/prO07lQVkNY
+         9djefE/1vYJ58NdJdo9JImILf5z5Eu9mrGb48pPQtkIdIBgtEO3yfRBTLD3QcMvqCj
+         PoC7eZ1+mBwZI7qhAbq6/geugvC9ZrxiCaHFzlyM=
+Received: by mail-ot1-f46.google.com with SMTP id e20so2836675otk.12;
+        Fri, 01 May 2020 08:48:15 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua3/uYObqY7xaHAPZCufel+aPB+M5Do3JoFjocssHbXGnroP0Uh
+        CfdEASWcBNtXGOjl9PyLAGb+lbsdP1gDokcs7Q==
+X-Google-Smtp-Source: APiQypLSuc1ficUgLIosueT06J05P8GWHscTEPVhw4ZK+6CAG+77HGOr9d8WOB+9XJU4M5RRsaeSpyrJ9RGJ98tkcT8=
+X-Received: by 2002:a9d:1441:: with SMTP id h59mr4125612oth.192.1588348094755;
+ Fri, 01 May 2020 08:48:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429201644.1144546-9-martin.blumenstingl@googlemail.com>
+References: <20200501142831.35174-1-james.quinlan@broadcom.com> <20200501142831.35174-4-james.quinlan@broadcom.com>
+In-Reply-To: <20200501142831.35174-4-james.quinlan@broadcom.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 1 May 2020 10:48:02 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKjRYXbtDVRnR6POfKtLBHULn=VGHSe2KFj1PTWSbA57g@mail.gmail.com>
+Message-ID: <CAL_JsqKjRYXbtDVRnR6POfKtLBHULn=VGHSe2KFj1PTWSbA57g@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] dt-bindings: PCI: brcmstb: New prop 'aspm-no-l0s'
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> +	if (rx_dly_config & PRG_ETH0_ADJ_ENABLE) {
-> +		/* The timing adjustment logic is driven by a separate clock */
-> +		ret = meson8b_devm_clk_prepare_enable(dwmac,
-> +						      dwmac->timing_adj_clk);
-> +		if (ret) {
-> +			dev_err(dwmac->dev,
-> +				"Failed to enable the timing-adjustment clock\n");
-> +			return ret;
-> +		}
-> +	}
+On Fri, May 1, 2020 at 9:29 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+>
+> From: Jim Quinlan <jquinlan@broadcom.com>
+>
+> For various reasons, one may want to disable the ASPM L0s
+> capability.
+>
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> ---
+>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 77d3e81a437b..084e4cf68b95 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -56,6 +56,10 @@ properties:
+>      description: Indicates usage of spread-spectrum clocking.
+>      type: boolean
+>
+> +  aspm-no-l0s:
+> +    description: Disables ASPM L0s capability.
+> +    type: boolean
 
-Hi Martin
+Copied from rockchip-pcie-host.txt? Let's make this a standard
+property. It should be documented here[1].
 
-It is a while since i used the clk API. I thought the get_optional()
-call returned a NULL pointer if the clock does not exist.
-clk_prepare_enable() passed a NULL pointer is a NOP, but it also does
-not return an error. So if the clock does not exist, you won't get
-this error, the code keeps going, configures the hardware, but it does
-not work.
+Then this doc just needs 'aspm-no-l0s: true' to indicate you are using it.
 
-I think you need to check dwmac->timing_adj_clk != NULL here, and
-error out if DT has properties which require it.
+Rob
 
-      Andrew
+[1] https://github.com/devicetree-org/dt-schema/blob/master/schemas/pci/pci-bus.yaml
