@@ -2,134 +2,119 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9358C47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9964C47256
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6BA621835
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896A921775
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588367970;
-	bh=kr9vNjlo/JFn1BM7x1NypZ80ZRkkFHqd8pV3Z4G98lA=;
+	s=default; t=1588367989;
+	bh=99VRWuaD4NTtEUNDzgMo4f5NBvBit49I2uEOHT1KoiI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f0xLSZryth/19JFob2odFf2bNe8urGgi1/UMmQf4TFYM9IzZm9qrDfwKIVuMeoHCU
-	 qTHRysShAn1hM6BnezZzzlP7LxYG/9kHrwZGybBL+crJgzQT1DfN/ZJVncJ+D/8dc/
-	 h0LdHkoEcOhqncP6pvhpgJTe3YeYqEyv1HyIjLqk=
+	b=egVV0vEuvoS5GvPGF/TCmzRbKUkqcpEPPh8fWkaCwwqua4BKvq+BS3ImWzgn3CT/t
+	 3jsMbXyc/pUJiAcWaD0aeEwju1YhgWONVZRZl2lz2boVKitO2AY/WFQjnz4OoFld44
+	 jmcAONl5qQn/5QTlgK4XU4+zhaeodoz0fn3I4oQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgEAVT1 (ORCPT
+        id S1726554AbgEAVTt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 17:19:27 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38837 "EHLO
+        Fri, 1 May 2020 17:19:49 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34813 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAVT0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 17:19:26 -0400
-Received: by mail-oi1-f194.google.com with SMTP id r66so913344oie.5;
-        Fri, 01 May 2020 14:19:26 -0700 (PDT)
+        with ESMTP id S1726045AbgEAVTs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 17:19:48 -0400
+Received: by mail-oi1-f194.google.com with SMTP id x10so935064oie.1;
+        Fri, 01 May 2020 14:19:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jj4D32rdAES+cgO6FKoAP2CT6fMwIDdMNHoTKo0+8Lk=;
-        b=Z90d664sGc83VZKz8HjAZv1HJWkK0dJjAeVZMHN6N3DEqmSRNXBt9E5IlC3RMImv7g
-         Ps8OapDudqwt8sa5W/CEj9oZ/8HSx9p/757NxVlaYqNNZnjmyW3bWPDQA/ESlly3LZfz
-         DBgqojLciMdibiONvNVW6NmlYGxdaqTftQtszdQU3rZ/Sxk5ckmEx78be0/NXy5NZbH9
-         /7vZIl5O0f6moYTuaJs5/ix0ealX/0skyOXt9/+nL/GH0GdXCwMeeE1AnOOWAdgZPHcN
-         dLL80PcfAzxKB4Y7Kzb+Epa1PAeuZZn61wEwyRtQvnkHr245iip4Ta03eou8rxkBMvqx
-         knew==
-X-Gm-Message-State: AGi0PuZ55nPvVN5kDd/arMzhh25KZ0Wn9xxuXhsadickXr0YwOLkj+Cx
-        dAXbDuGs2m/oz0ByonYHDw==
-X-Google-Smtp-Source: APiQypIXivSBT2nsxuhVNY46WEmi1eojgcxHInHjaqkl2sBu8RqSX6qkRxz94QmIS/CqfLVJIXnqUg==
-X-Received: by 2002:aca:c50f:: with SMTP id v15mr1230004oif.115.1588367965592;
-        Fri, 01 May 2020 14:19:25 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:content-language
+         :user-agent;
+        bh=crzBmsIsSrF0UoLH+UgR+Of2XRbChFVf5iuJUQuRNxo=;
+        b=lW8fkphGMQ69a5LS+tZtsC51TzmXNJ3PR+usexkdsTfH8xHxVAsprUlJPGQQQZEMWh
+         LaiFw/5jopSjT+f639Isi2x5HE+256GHALJYAR5fs3lykr4sBOuwLeu0r8/jX7OEqVN0
+         SPMF2cr4QKYDXswP+ukgE8unxmncy+r4/dVNflc1c5zcqRHZ50DwjXQsE//RnsLK2M81
+         pRV83kiaaKIc4jZINhCYKV0r8wV+6N3adv552BraWGLlS/Vvr2s8EehWR+gX8kQV/mox
+         8+sM4XU5+ZY1f2i4/DZGxS2mGFzsxDRdwxC26o11V5R7+3MwA8kcM5q/0HAUDHS8SaiT
+         H6Ig==
+X-Gm-Message-State: AGi0PuZ0lFTn9PgorqvuVDBjf+kzTIZTwG2UwdBXyU1I1XuUtPIJTky9
+        adrMiyBjlbmj1upp927sDw==
+X-Google-Smtp-Source: APiQypJyxKTCOC0q+T2e+uyYjq0smnGrUDFPHMmNnjCSHqy03XQsqFpyN9Wp7gNlZ9Mv+SorNjjJFA==
+X-Received: by 2002:aca:b8c5:: with SMTP id i188mr1187592oif.2.1588367986405;
+        Fri, 01 May 2020 14:19:46 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a93sm1128819otc.12.2020.05.01.14.19.24
+        by smtp.gmail.com with ESMTPSA id z75sm260692oia.22.2020.05.01.14.19.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 14:19:25 -0700 (PDT)
-Received: (nullmailer pid 14891 invoked by uid 1000);
-        Fri, 01 May 2020 21:19:24 -0000
-Date:   Fri, 1 May 2020 16:19:24 -0500
+        Fri, 01 May 2020 14:19:45 -0700 (PDT)
+Received: (nullmailer pid 15593 invoked by uid 1000);
+        Fri, 01 May 2020 21:19:45 -0000
+Date:   Fri, 1 May 2020 16:19:45 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 4/6] dt-bindings: gnss: Add binding for Motorola Mapphone
- MDM6600 GNSS
-Message-ID: <20200501211924.GB6222@bogus>
-References: <20200430174615.41185-1-tony@atomide.com>
- <20200430174615.41185-5-tony@atomide.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
+        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: memory: document Renesas RPC-IF
+ bindings
+Message-ID: <20200501211945.GA15294@bogus>
+References: <812e6e58-d13f-3f44-5f55-22266b690c57@cogentembedded.com>
+ <116683d1-d402-4d7f-3357-1c8cde807076@cogentembedded.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430174615.41185-5-tony@atomide.com>
+In-Reply-To: <116683d1-d402-4d7f-3357-1c8cde807076@cogentembedded.com>
+Content-Language: en-MW
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:46:13AM -0700, Tony Lindgren wrote:
-> Add a binding document for Motorola Mapphone MDM6600 GNSS driver that
-> can be used with phones such as droid4.
+On Thu, 30 Apr 2020 23:47:25 +0300, Sergei Shtylyov wrote:
+> Renesas Reduced Pin Count Interface (RPC-IF) allows a SPI flash or
+> HyperFlash connected to the SoC to be accessed via the external address
+> space read mode or the manual mode.
 > 
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Document the device tree bindings for the Renesas RPC-IF found in the R-Car
+> gen3 SoCs.
+> 
+> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
 > ---
->  .../devicetree/bindings/gnss/motmdm.yaml      | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gnss/motmdm.yaml
+> Changes in version 2:
+> - rewrote the bindings in YAML.
 > 
-> diff --git a/Documentation/devicetree/bindings/gnss/motmdm.yaml b/Documentation/devicetree/bindings/gnss/motmdm.yaml
-> new file mode 100644
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gnss/motmdm.yaml
-> @@ -0,0 +1,29 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gnss/motmdm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Motorola Mapphone MDM6600 GNSS binding
-> +
-> +maintainers:
-> +  - Tony Lindgren <tony@atomide.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: motorola,mapphone-mdm6600-gnss
-> +
-> +  reg:
-> +    items:
-> +      description: TS 27.010 channel the GNSS device is using
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    gnss@4 {
+>  Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml |   88 ++++++++++
+>  1 file changed, 88 insertions(+)
+> 
 
-This is a child of what's in patch 2? I think I'd just combine this 
-schema into it.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Or you can leave it, but better to have complete examples (which will 
-help fix what my bot reports). Examples have a default 
-#address/size-cells of 1.
+Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml:  while scanning a simple key
+  in "<unicode string>", line 29, column 9
+could not find expected ':'
+  in "<unicode string>", line 30, column 1
+Documentation/devicetree/bindings/Makefile:11: recipe for target 'Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml: ignoring, error parsing file
+warning: no schema found in file: Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml: ignoring, error parsing file
+warning: no schema found in file: Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-> +      compatible = "motorola,mapphone-mdm6600-gnss";
-> +      reg = <4>;
-> +    };
-> -- 
-> 2.26.2
+See https://patchwork.ozlabs.org/patch/1280942
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
