@@ -2,160 +2,132 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF215C47253
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 11:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2139DC4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 11:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B47612166E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 11:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04DB20836
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 11:40:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=stwcx.xyz header.i=@stwcx.xyz header.b="U8JPy01F";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rWKq35sr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgEALIz (ORCPT
+        id S1728646AbgEALky (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 07:08:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:38750 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbgEALIy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 07:08:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBF4A30E;
-        Fri,  1 May 2020 04:08:53 -0700 (PDT)
-Received: from [10.57.39.240] (unknown [10.57.39.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7C0A3F73D;
-        Fri,  1 May 2020 04:08:50 -0700 (PDT)
-Subject: Re: [RFC][PATCH 3/4] dma-buf: cma_heap: Extend logic to export CMA
- regions tagged with "linux,cma-heap"
-To:     Brian Starkey <brian.starkey@arm.com>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Fri, 1 May 2020 07:40:54 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:55501 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728575AbgEALkx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 07:40:53 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 7401A702;
+        Fri,  1 May 2020 07:40:52 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Fri, 01 May 2020 07:40:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=Sb3goio2fiGntHYbz+m2AsCFkNQ
+        rFG+Kg4TJuY9VPSk=; b=U8JPy01FEaCgmL0/x3Wq6/hHhS3ABZ9Ze/zBRZ21P/D
+        eApxU4+pXkv9R/OYMs7iYojHqJXSmRxCAq/D4DZ1H2j15x7dG9lxDFfIhXErm6R6
+        JMwbJP9pR1yvU6ZPG1dWNOfPTySU68jj0v4JGXX2SLrsY5No9go8Z6ix57E0Ss+H
+        4oRr+8XvY+SB2/tiIObU3Fa9+WiAc8gb8EPUyeoRD73KJp+Q7SUXDZW7U/SPRSK+
+        r1atLU5zpmCTLfaAhqOJEz+jIr8u6vKwq1b2UUtsMdzsQU/Wg49HMpJ3sYtBLCUq
+        WskJGp8jlpK52s/9vT9MgCRtCLHt2yjjGo9UMChSxXg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Sb3goi
+        o2fiGntHYbz+m2AsCFkNQrFG+Kg4TJuY9VPSk=; b=rWKq35srI3fHGJXnJg7ToM
+        gz/1MfC2xoaLKwSlcoHy0VTRxE3sTpppHIPxXUIjSbKwoi9L3ZUsCc9WwBKlE133
+        2w2lyN3EzEMn/ajuvdC8ZKBOzsCJ2U30SxdsHBV+Ytt8MWWURhPEV4FjpP8ttYQo
+        PSZs+AP6/21pPMnjjMFfk1f1A8CWm9s7DyK+eXVIqTYfHepCmNkHziKXQU689jZA
+        OJczTLIw1557vDOzJav57ZYhaYMHf+Dk7f4ww88/CSMoWOQ9e9R5LlmH41ikUeB/
+        HCnTCjhC5havGJz1/yvVot0TUJ5l5nbtVFHh/lAP9/PitkJGJuoZjEC2mGFgo6zQ
+        ==
+X-ME-Sender: <xms:wQqsXhH-jhFVf4-4_6mcgDu94tNfRt_S4UZwJlvk9BhK-8-7MFKdCQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieejgdegudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdefhedmnecujfgurhepfffhvffukfhfgggtuggjsehgtderredttddv
+    necuhfhrohhmpefrrghtrhhitghkucghihhllhhirghmshcuoehprghtrhhitghksehsth
+    iftgigrdighiiiqeenucggtffrrghtthgvrhhnpeegheehfeffgeekveehtdfhgfduhfeg
+    fefgtdehhfektdelffevkefgueffhedtieenucfkphepjeeirddvhedtrdekgedrvdefie
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprght
+    rhhitghksehsthiftgigrdighiii
+X-ME-Proxy: <xmx:wQqsXgkmkfTAS42UxYD2Zpr15FMTaDn8g_JBwQOm-SFrLb2RXoSXOA>
+    <xmx:wQqsXonjbQUZkEH46KBo1deDxN6Wo-C37USh7n8DkXZgXDyjWPa2NA>
+    <xmx:wQqsXtUWIuUa3A2zcdUx5JYnCfH-ExAABPBoR4cmnddYvMi1t3rZEg>
+    <xmx:xAqsXik-JS_8sIz5rPEFXTYf3vw7Mw1lhQLqJI48GgV5y4gxfsb0hA>
+Received: from localhost (76-250-84-236.lightspeed.austtx.sbcglobal.net [76.250.84.236])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C9B693065F66;
+        Fri,  1 May 2020 07:40:48 -0400 (EDT)
+Date:   Fri, 1 May 2020 06:40:47 -0500
+From:   Patrick Williams <patrick@stwcx.xyz>
+To:     Alexander Filippov <a.filippov@yadro.com>
+Cc:     linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
         Rob Herring <robh+dt@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, nd@arm.com
-References: <20200501073949.120396-1-john.stultz@linaro.org>
- <20200501073949.120396-4-john.stultz@linaro.org>
- <20200501102143.xcckvsfecumbei3c@DESKTOP-E1NTVVP.localdomain>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <47e7eded-7240-887a-39e1-97c55bf752e7@arm.com>
-Date:   Fri, 1 May 2020 12:08:48 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Andrew Geissler <geissonator@yahoo.com>
+Subject: Re: [PATCH v7] ARM: DTS: Aspeed: Add YADRO Nicole BMC
+Message-ID: <20200501114047.GC5268@heinlein.lan.stwcx.xyz>
+References: <20200429113711.13183-1-a.filippov@yadro.com>
 MIME-Version: 1.0
-In-Reply-To: <20200501102143.xcckvsfecumbei3c@DESKTOP-E1NTVVP.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="UFHRwCdBEJvubb2X"
+Content-Disposition: inline
+In-Reply-To: <20200429113711.13183-1-a.filippov@yadro.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-01 11:21 am, Brian Starkey wrote:
-> Hi John,
-> 
-> On Fri, May 01, 2020 at 07:39:48AM +0000, John Stultz wrote:
->> This patch reworks the cma_heap initialization so that
->> we expose both the default CMA region and any CMA regions
->> tagged with "linux,cma-heap" in the device-tree.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Sumit Semwal <sumit.semwal@linaro.org>
->> Cc: "Andrew F. Davis" <afd@ti.com>
->> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
->> Cc: Liam Mark <lmark@codeaurora.org>
->> Cc: Pratik Patel <pratikp@codeaurora.org>
->> Cc: Laura Abbott <labbott@redhat.com>
->> Cc: Brian Starkey <Brian.Starkey@arm.com>
->> Cc: Chenbo Feng <fengc@google.com>
->> Cc: Alistair Strachan <astrachan@google.com>
->> Cc: Sandeep Patil <sspatil@google.com>
->> Cc: Hridya Valsaraju <hridya@google.com>
->> Cc: Christoph Hellwig <hch@lst.de>
->> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
->> Cc: Robin Murphy <robin.murphy@arm.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: devicetree@vger.kernel.org
->> Cc: dri-devel@lists.freedesktop.org
->> Cc: linux-mm@kvack.org
->> Signed-off-by: John Stultz <john.stultz@linaro.org>
->> ---
->>   drivers/dma-buf/heaps/cma_heap.c | 18 +++++++++---------
->>   1 file changed, 9 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
->> index 626cf7fd033a..dd154e2db101 100644
->> --- a/drivers/dma-buf/heaps/cma_heap.c
->> +++ b/drivers/dma-buf/heaps/cma_heap.c
->> @@ -141,6 +141,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
->>   {
->>   	struct cma_heap *cma_heap;
->>   	struct dma_heap_export_info exp_info;
->> +	struct cma *default_cma = dev_get_cma_area(NULL);
->> +
->> +	/* We only add the default heap and explicitly tagged heaps */
->> +	if (cma != default_cma && !cma_dma_heap_enabled(cma))
->> +		return 0;
-> 
-> Thinking about the pl111 thread[1], I'm wondering if we should also
-> let drivers call this directly to expose their CMA pools, even if they
-> aren't tagged for dma-heaps in DT. But perhaps that's too close to
-> policy.
 
-That sounds much like what my first thoughts were - apologies if I'm 
-wildly off-base here, but as far as I understand:
+--UFHRwCdBEJvubb2X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Device drivers know whether they have their own "memory-region" or not.
-- Device drivers already have to do *something* to participate in dma-buf.
-- Device drivers know best how they make use of both the above.
-- Therefore couldn't it be left to drivers to choose whether to register 
-their CMA regions as heaps, without having to mess with DT at all?
+On Wed, Apr 29, 2020 at 02:37:11PM +0300, Alexander Filippov wrote:
+> Nicole is an OpenPower machine with an Aspeed 2500 BMC SoC manufactured
+> by YADRO.
+>=20
+> Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+> ---
+>  arch/arm/boot/dts/Makefile                  |   1 +
+>  arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts | 326 ++++++++++++++++++++
+>  2 files changed, 327 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
+>=20
 
-Robin.
+Reviewed-by: Patrick Williams <patrick@stwcx.xyz>
 
-> 
-> Cheers,
-> -Brian
-> 
-> [1] https://lists.freedesktop.org/archives/dri-devel/2020-April/264358.html
-> 
->>   
->>   	cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
->>   	if (!cma_heap)
->> @@ -162,16 +167,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
->>   	return 0;
->>   }
->>   
->> -static int add_default_cma_heap(void)
->> +static int cma_heaps_init(void)
->>   {
->> -	struct cma *default_cma = dev_get_cma_area(NULL);
->> -	int ret = 0;
->> -
->> -	if (default_cma)
->> -		ret = __add_cma_heap(default_cma, NULL);
->> -
->> -	return ret;
->> +	cma_for_each_area(__add_cma_heap, NULL);
->> +	return 0;
->>   }
->> -module_init(add_default_cma_heap);
->> +module_init(cma_heaps_init);
->>   MODULE_DESCRIPTION("DMA-BUF CMA Heap");
->>   MODULE_LICENSE("GPL v2");
->> -- 
->> 2.17.1
->>
+--=20
+Patrick Williams
+
+--UFHRwCdBEJvubb2X
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAl6sCr0ACgkQqwNHzC0A
+wRkYyQ/+Ia0bM1fVefwj8qDw02722tG9QTWwgkAr/0ln2lYPm6WeBmhNWiQlcq73
+siHVSVZmAIxGeqAj/fo0WRA6XgemmlMNylICZj2JMlJs/RaqfdzkzMxjXDPF3jir
+kniXIA/naEnakX9e9IyzP1zeEHUeCfIBD8YdWhBXSaz8yTXw6fV4gFDCXGqjSOhc
+HSlVA3Tj9B0810DoMdGGRXU1Y90Q6H5xdZ7gdROvuZDa04jusuqFDZ9LDw47OIDp
+W+0zEW2eqhwFLp6QSDZXhBDOiB1kHdc2tEMfW0uzzqpT2JoBoGzc6PMrjPCBaIrP
+Aj23HE8zM1uuMzFZCCQ2vPUxxSroAxdhN2H1/8Cc9ekvGiAHX5e73g2hT8DOXIJD
+TLkkn9nVnKra0P+N0JhQQKXDRnSGGdoc0tsIlq7AMi6lsjzPIoV4tRqeGYZgGSBC
+henTkYrFFsmjTVnh9mTq0UdXDVZscW3oWnrK3tuzphX+tFJxlRo8QgrTLVBU52cj
+k5AL7gk/FuK+y0zYd3weLXRAEzU8u0OFDROQLsEb6jJH+2GqIcz7qPm4XkjPENDa
+5rkOxMovA+01t13eShDsWJ7vCLQPbGpDtwj7nnFtWo/uZ+pU7eqNnxVFH7iyMo4P
+obUf/pikY7qzZSVgYmi52h2c8pRRdgExNa67EOcP/SPr59zXlKQ=
+=cOmO
+-----END PGP SIGNATURE-----
+
+--UFHRwCdBEJvubb2X--
