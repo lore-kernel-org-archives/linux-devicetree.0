@@ -2,97 +2,135 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAC1C4724C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B0CC47256
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0B9C206D6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:02:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="olcDTUG5"
+	by mail.kernel.org (Postfix) with ESMTP id 0340520757
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbgEAOCA (ORCPT
+        id S1729010AbgEAOLo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 10:02:00 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:37228 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729529AbgEAOB7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 10:01:59 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 041DvKvJ019635;
-        Fri, 1 May 2020 08:58:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=JzGqBIQszLu//+K3RgyjRVgYmCjC0eyp591kUihnjjw=;
- b=olcDTUG5L43shFMXwWoSRFqQCJ6rf1+sS+6IfQRtknWZEMgse4JyCVol2dlyaQO1dIv3
- RQULtVHb2mFr206A4+M5+MSZboaPSOn9ZUfJbCzr9QwLSdwQ5iRx5kZM+rBXEiHzNgFp
- 8+Z5hugcGI4IqKPTkTm87Q5ZSMmDLVsdDxtzofu1+7H/02MFrvjasK/iQrXOedjyeMsi
- g8el1KSP2qOywMzH5jghwuTGMECa+5WGZTli4q+e4p/Hdg3zFpJWgmB1RfBfYaZ6CjKL
- lnmF2xi/prlkvUACK0OOKRyi05H13n/3ynoD/vqIWskgGdGB6/m18LskVeX9xSPiZcwJ Tw== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 30r7eg91ky-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 01 May 2020 08:58:54 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 1 May 2020
- 14:58:51 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Fri, 1 May 2020 14:58:51 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id CD583448;
-        Fri,  1 May 2020 13:58:51 +0000 (UTC)
-Date:   Fri, 1 May 2020 13:58:51 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jonathan Bakker <xc-racer2@live.ca>
-Subject: Re: [PATCH] dt-bindings: sound: wm8994: Correct required supplies
- based on actual implementaion
-Message-ID: <20200501135851.GP44490@ediswmail.ad.cirrus.com>
-References: <20200501133534.6706-1-krzk@kernel.org>
+        Fri, 1 May 2020 10:11:44 -0400
+Received: from muru.com ([72.249.23.125]:52456 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728840AbgEAOLn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 May 2020 10:11:43 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 83262810E;
+        Fri,  1 May 2020 14:12:29 +0000 (UTC)
+Date:   Fri, 1 May 2020 07:11:38 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent
+ and clocksource support
+Message-ID: <20200501141138.GA37466@atomide.com>
+References: <20200417165519.4979-1-tony@atomide.com>
+ <20200417165519.4979-3-tony@atomide.com>
+ <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
+ <20200427143144.GQ37466@atomide.com>
+ <29f39839-b3ed-cac3-1dea-c137286320b1@linaro.org>
+ <20200427152329.GR37466@atomide.com>
+ <20200430140040.GA8363@bogus>
+ <20200430153119.GX37466@atomide.com>
+ <CAL_Jsq+Xqv0JByAK-tYj8aHDhuB5rYrn0NXQxkm97j0P1zqGPg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501133534.6706-1-krzk@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 clxscore=1011 suspectscore=0
- impostorscore=0 spamscore=0 malwarescore=0 mlxlogscore=757 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005010109
+In-Reply-To: <CAL_Jsq+Xqv0JByAK-tYj8aHDhuB5rYrn0NXQxkm97j0P1zqGPg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:35:34PM +0200, Krzysztof Kozlowski wrote:
-> The required supplies in bindings were actually not matching
-> implementation making the bindings incorrect and misleading.  The Linux
-> kernel driver requires all supplies to be present.  Also for wlf,wm8994
-> uses just DBVDD-supply instead of DBVDDn-supply (n: <1,3>).
+* Rob Herring <robh@kernel.org> [200501 13:19]:
+> On Thu, Apr 30, 2020 at 10:31 AM Tony Lindgren <tony@atomide.com> wrote:
+> > Hmm. Trying to detect this automatically will get messy. For example,
+> > we have few omap3 boards with the following options that also need to
+> > consider if the separate 32KiHz counter is available:
+> >
+> > 1. The best case scenario
+> >
+> > ti,omap-counter32k clocksource
+> > ti,sysc-omap2-timer ti,timer-alwon clockevent (timer1)
+> >
+> > 2. Boards relying on internal clock with unusable 32k counter
+> >
+> > ti,sysc-omap2-timer ti,timer-alwon clocksource (timer12)
+> > ti,sysc-omap2-timer clockevent (typically gpt2)
+> >
+> > In the second case, the 32k counter is unusable, and timer1
+> > is unusable with the external 32k always on clock. But timer1
+> > can be used with the system clock just fine for other purposes.
+> > So ideally we would not tag timer1 as disabled :)
 > 
-> Reported-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
+> I'm perfectly fine with a 'broken 32k clk' type property.
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+OK. Maybe "unreliable-oscillator" type property or something like
+that. Or maybe "shrodingers-cat-oscillator" :)
 
-Thanks,
-Charles
+> Though I think the compatibility story is not good changing DT for
+> stuff needed to boot and needed early in boot. It's one thing to break
+> something not required to get a system booted.
+
+For the boards with the 32k clock issue the system boots but
+is unreliable. I'm not sure how long a 32k clock based timer would
+have to be monitored with another system clock based timer to
+detect it.. I recall the issues start popping up with PM and
+that much later and the system clock may not even be active..
+
+Anyways, the issue is related to how the board is wired, so a
+property for it makes sense here.
+
+> > For the second case, we could remove ti,timer-alwon property
+> > for timer1, and tag the 32k counter as disabled as the source
+> > clock is unreliable. Then somewhere in the code we would need
+> > to check if ti,omap-counter32k is availabe, then check if
+> > timer1 is always-on, then use timer12 if not a secure device
+> > like n900.
+> 
+> IIRC, there's some OMAP timer properties for secure vs. non-secure.
+> (It's not the first time we've had this discussion on TI timers.)
+
+Yes.
+
+> > If the board wants to use the system clock as the source for
+> > a higher resolution with assigned-clock-parents, then we'd need
+> > to ignore the always-on property and not use the 32k counter as
+> > the clocksource. Basically to somehow figure out that a higher
+> > resolution configuration is preferred over a
+> > low-power configuration.
+> 
+> That could be something you want to pick at run-time.
+
+OK
+
+> > So what's your take on just adding the generic properties for
+> > assigned-system-clocksource and clockevent?
+> 
+> I'm tired of discussing this for 10 years...
+
+Well luckly most system have basic timers integrated nowadays
+rather than each SoC vendor doing their own timers :)
+
+Regards,
+
+Tony
