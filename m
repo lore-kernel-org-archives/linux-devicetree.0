@@ -2,91 +2,108 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64150C47256
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99A7C47257
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9A024953
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:29:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="nTt6H5Ga"
+	by mail.kernel.org (Postfix) with ESMTP id B7B4720857
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgEAO3B (ORCPT
+        id S1730155AbgEAOq6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 10:29:01 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:46990 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728847AbgEAO3B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 10:29:01 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id EAFED30C03A;
-        Fri,  1 May 2020 07:28:47 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com EAFED30C03A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1588343328;
-        bh=rPYr+LF7pS8SyrSELzQjIjwMYDFHNwszBVewRgxsgnk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nTt6H5GaLjXRQr6QSlEQ42BQwZ9Xbp1YDRx1g+04Sju7pH/2uEDPYUUgkQUtREwsq
-         P/xml6jwpuTtN9q6lqtL+UTxq/x1JKug0JpXHMbf8aV9D7QIUGWVK6/dXhjyJizD55
-         OSz6XEJYvnAQiyCSL3DlZ/b31Ij7RzA1UWsDgmmk=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id B8D9814008B;
-        Fri,  1 May 2020 07:28:57 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE), Bjorn Helgaas <bhelgaas@google.com>,
+        Fri, 1 May 2020 10:46:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:41952 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729175AbgEAOqt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 May 2020 10:46:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C94F31FB;
+        Fri,  1 May 2020 07:46:48 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 895353F68F;
+        Fri,  1 May 2020 07:46:47 -0700 (PDT)
+Date:   Fri, 1 May 2020 15:46:45 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 3/4] dt-bindings: PCI: brcmstb: New prop 'aspm-no-l0s'
-Date:   Fri,  1 May 2020 10:28:29 -0400
-Message-Id: <20200501142831.35174-4-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200501142831.35174-1-james.quinlan@broadcom.com>
-References: <20200501142831.35174-1-james.quinlan@broadcom.com>
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robin.murphy@arm.com
+Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+Message-ID: <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-3-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417114322.31111-3-kishon@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+[+Robin - to check on dma-ranges intepretation]
 
-For various reasons, one may want to disable the ASPM L0s
-capability.
+I would need RobH and Robin to review this.
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
----
- Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+Also, An ACK from Tom is required - for the whole series.
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index 77d3e81a437b..084e4cf68b95 100644
---- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -56,6 +56,10 @@ properties:
-     description: Indicates usage of spread-spectrum clocking.
-     type: boolean
- 
-+  aspm-no-l0s:
-+    description: Disables ASPM L0s capability.
-+    type: boolean
-+
- required:
-   - reg
-   - dma-ranges
--- 
-2.17.1
-
+On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
+> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+> property to configure the number of bits passed through from PCIe
+> address to internal address in Inbound Address Translation register.
+> 
+> However standard PCI dt-binding already defines "dma-ranges" to
+> describe the address range accessible by PCIe controller. Parse
+> "dma-ranges" property to configure the number of bits passed
+> through from PCIe address to internal address in Inbound Address
+> Translation register.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 9b1c3966414b..60f912a657b9 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	struct device *dev = rc->pcie.dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct device_node *np = dev->of_node;
+> +	struct of_pci_range_parser parser;
+>  	struct pci_host_bridge *bridge;
+>  	struct list_head resources;
+> +	struct of_pci_range range;
+>  	struct cdns_pcie *pcie;
+>  	struct resource *res;
+>  	int ret;
+> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	rc->max_regions = 32;
+>  	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
+>  
+> -	rc->no_bar_nbits = 32;
+> -	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+> +	if (!of_pci_dma_range_parser_init(&parser, np))
+> +		if (of_pci_range_parser_one(&parser, &range))
+> +			rc->no_bar_nbits = ilog2(range.size);
+> +
+> +	if (!rc->no_bar_nbits) {
+> +		rc->no_bar_nbits = 32;
+> +		of_property_read_u32(np, "cdns,no-bar-match-nbits",
+> +				     &rc->no_bar_nbits);
+> +	}
+>  
+>  	rc->vendor_id = 0xffff;
+>  	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
+> -- 
+> 2.17.1
+> 
