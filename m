@@ -2,96 +2,189 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7D8C47253
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 16:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21D2C4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 16:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6F124954
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 16:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588351535;
-	bh=EdzADl1dqA/pSkvOdRE6yygS79Beu2SuHzIiA/XyE98=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Z4A126HPk3rlc5REyIDwTMFYptrRa4qxlNg43haqxVLB4TntwwjBHwRNY3XU56DEb
-	 oBLqY9b25VMG3F8BIMeuhvSUfhV4gsraxomoABSz8KU0Z3iYWvD3ERJfsHKON/138F
-	 X5EIlKSt6C0cTmqm0Hl4ltewRbqB3kfBHaM2KnDA=
+	by mail.kernel.org (Postfix) with ESMTP id C774E2173E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 16:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgEAQpf (ORCPT
+        id S1729623AbgEAQ6d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 12:45:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728896AbgEAQpe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 12:45:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00FC2206D6;
-        Fri,  1 May 2020 16:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588351534;
-        bh=EdzADl1dqA/pSkvOdRE6yygS79Beu2SuHzIiA/XyE98=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Nnmg1qfU3BIKXxQRAWlhBw57anIewhP1elOY9tKzrynlch8MVQ6C4JjAJswbP8FpD
-         4IFQbjUETCKvIfzRPwlTiFD7MAorYdnDmWITtaxipWcnivHjNQrfanN++mx6mI9leU
-         NsHB6H7HNjiC4CxW+4Deee+Dm/qre+7HYczgX0po=
-Date:   Fri, 01 May 2020 17:45:31 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        patches@opensource.cirrus.com
-In-Reply-To: <20200501133534.6706-1-krzk@kernel.org>
-References: <20200501133534.6706-1-krzk@kernel.org>
-Subject: Re: [PATCH] dt-bindings: sound: wm8994: Correct required supplies based on actual implementaion
-Message-Id: <158835153189.13173.5201387267459150176.b4-ty@kernel.org>
+        Fri, 1 May 2020 12:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729161AbgEAQ6d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 12:58:33 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4353C061A0E;
+        Fri,  1 May 2020 09:58:32 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 4D3052A2F73
+Received: by earth.universe (Postfix, from userid 1000)
+        id 78B953C08C7; Fri,  1 May 2020 18:58:29 +0200 (CEST)
+Date:   Fri, 1 May 2020 18:58:29 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: power: Convert power_supply text to yaml
+Message-ID: <20200501165829.2y2soxprt6naemki@earth.universe>
+References: <20200430151841.17453-1-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="55spgyagwzo6onjh"
+Content-Disposition: inline
+In-Reply-To: <20200430151841.17453-1-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 1 May 2020 15:35:34 +0200, Krzysztof Kozlowski wrote:
-> The required supplies in bindings were actually not matching
-> implementation making the bindings incorrect and misleading.  The Linux
-> kernel driver requires all supplies to be present.  Also for wlf,wm8994
-> uses just DBVDD-supply instead of DBVDDn-supply (n: <1,3>).
-> 
-> Reported-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> [...]
 
-Applied to
+--55spgyagwzo6onjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+Hi,
 
-Thanks!
+On Thu, Apr 30, 2020 at 10:18:41AM -0500, Dan Murphy wrote:
+> Convert the power_supply.txt to power-supply.yaml.
+> This conversion entailed fixing up the binding to being yaml and dt
+> checker compliant.
 
-[1/1] dt-bindings: sound: wm8994: Correct required supplies based on actual implementaion
-      commit: 8c149b7d75e53be47648742f40fc90d9fc6fa63a
+Looks mostly good to me, thanks for taking care of it.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+> Added a note in the power_supply.txt to reference the power-supply.yaml
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Yes, we should keep the file until all bindings referencing the file
+have been converted to YAML.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> CC: Rob Herring <robh@kernel.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../bindings/power/supply/power-supply.yaml   | 40 +++++++++++++++++++
+>  .../bindings/power/supply/power_supply.txt    | 25 +-----------
+>  2 files changed, 42 insertions(+), 23 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/power-=
+supply.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/power-supply.=
+yaml b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
+> new file mode 100644
+> index 000000000000..cfbc79833ed8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/power/supply/power_supply.yaml#"
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+This should be power-supply instead of power_supply, which is also
+reported by dtb_binding_check on my system :)
 
-Thanks,
-Mark
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Power Supply Core Support
+> +
+> +maintainers:
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +properties:
+> +  power-supplies:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description:
+> +      This property is added to a supply in order to list the devices wh=
+ich
+> +      supply it power, referenced by their phandles.
+> +
+> +examples:
+> +  - |
+> +    power {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      usb_charger:power@e {
+> +        compatible =3D "some,usb-charger";
+> +        reg =3D <0xe>;
+> +      };
+> +
+> +      ac_charger:power@c {
+
+^^^ while at it, let's also fix this up and use
+charger instead of power (for both entries).
+
+> +        compatible =3D "some,ac-charger";
+> +        reg =3D <0xc>;
+> +      };
+> +
+> +      battery:battery@b {
+> +        compatible =3D "some,battery";
+> +        reg =3D <0xb>;
+> +        power-supplies =3D <&usb_charger>, <&ac_charger>;
+> +      };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/power/supply/power_supply.=
+txt b/Documentation/devicetree/bindings/power/supply/power_supply.txt
+> index 8391bfa0edac..d9693e054509 100644
+> --- a/Documentation/devicetree/bindings/power/supply/power_supply.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/power_supply.txt
+> @@ -1,23 +1,2 @@
+> -Power Supply Core Support
+> -
+> -Optional Properties:
+> - - power-supplies : This property is added to a supply in order to list =
+the
+> -   devices which supply it power, referenced by their phandles.
+> -
+> -Example:
+> -
+> -	usb-charger: power@e {
+> -		compatible =3D "some,usb-charger";
+> -		...
+> -	};
+> -
+> -	ac-charger: power@c {
+> -		compatible =3D "some,ac-charger";
+> -		...
+> -	};
+> -
+> -	battery@b {
+> -		compatible =3D "some,battery";
+> -		...
+> -		power-supplies =3D <&usb-charger>, <&ac-charger>;
+> -	};
+> +This binding has been converted to yaml please see power-supply.yaml in =
+this
+> +directory.
+> --=20
+> 2.25.1
+>=20
+
+--55spgyagwzo6onjh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6sVTAACgkQ2O7X88g7
++pqlKg/+Il5cAdRXQRVHI1WT7/ey6SRvhvTcnmqzGwxY8hWP0hlPjJetHXytDRiD
+tYeDQHpwxhHaJ4rQz9k9bc0QcZZaMWTC5Y1awpJ+PNMMWKkI1EYrQ2fjeW7D24oh
+74gfWACAJNAVIQUsEVlZXyiLNQ5pvx/7xMVVPfkZivfgXpxJ4Tpj/wnoYy5sDefL
+o2KO0fuBLM+DWkaa5+SiJyc5DpRh8T0lLJOb4/ZgG8O11lNI3jgUJK9YRllxd2PT
+cHeoqzE5ZmCPxV4bBMzyXBnJYnSGGRnB9HoyPpMNU1sBTr6XSCJtAHr5JxXjW6ff
+X6kSLB171uFW5oEMOQr5eVMzvs9nm+TyoxShlWVz8DAUlDfX8l7FQOl840b4O34q
+e3xUobqoJZ9zcTBAWe5NXd9ZVTIRHWkICW/CnLtzYf8TG3OIxklLty1e9v1f5upl
+ekpdBW48LTHCGoWGr2+zaA3TS3U+Z+OzoOj/0dIDcqmmKxCJhsF9eWgZVi4tTJqU
+94IdY3MeusxfSHzim7p8UkYCEYZUYvo8IvIPbjBN4beu3/faAAWoYnVCkX7a2h7W
+ZsvGCRmCfC5pKUZ7ucBuhqbwfkY0abySsI7Dti1+RzLSx4wJwOuy3nd/GmMBQjzh
+y7I4nzq2TL++ljd/TaIqseiyzUq/JpDNyhLAl/f1mn/Xk9MU2Dc=
+=oymK
+-----END PGP SIGNATURE-----
+
+--55spgyagwzo6onjh--
