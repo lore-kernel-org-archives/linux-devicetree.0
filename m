@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0016DC47256
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 23:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BDCC47258
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 23:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE4F421835
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 23:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F216E21835
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 23:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgEAXvj (ORCPT
+        id S1728078AbgEAXvz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 19:51:39 -0400
-Received: from mail-bn8nam12olkn2037.outbound.protection.outlook.com ([40.92.21.37]:23264
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        Fri, 1 May 2020 19:51:55 -0400
+Received: from mail-dm6nam12olkn2022.outbound.protection.outlook.com ([40.92.22.22]:56160
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727963AbgEAXvh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 19:51:37 -0400
+        id S1727963AbgEAXvn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 May 2020 19:51:43 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U6FN3plVO23Pc4Nzj+miOWWZfWSeMQX6kc9/oBpngCkuiu+DkJS5abYHbK1unB8ILLdGAzZKVpUZejHdPCtwgHOY4ab2lVagsJK54/U/Xbd14K3dbpA7kGWxQa/Tv1GbfJ2Kfs/pCWJCfhQSzyiA62/UHF4tO6w5/Kmu9IuMLAYHRSHsPeWzblmIbiX5DrIlDpjCn53qOATdMNP/IKz8dShhkG7k+kKrXLw3rPZRfv6Q+pY/dHFotTQc3IYxX06maQpVxO/Pe6FvHP/xo+dfpdOz893d7KbzG0hiCTSOwuxwWNim1LfxDrmjuPuEEGyT5eWM+tjrbGH6D8/32JJrdQ==
+ b=ciS1YIFugGx1qIUtnhugOatGoeNjxEIJmvzcSR+oDVUbHgmKODMesngg7M+3nVZ096ihOUtcNF7RsBbF+ZfrwzeU6nylHKKS/0ptSLkAAYRlitYjr+VdqUywBXqjAe0wd6PD89t3cITIkmrR2HJqQuB1QkXgbFN7IY1JLhIrdlBMgAWNlr7P7GucUHUCH32JCFWtKZiRfOvne5Zsj6f/NemVhToSBrZLpYmbS3EoQOG1NRFwXn/hpzG/mZ5CPVChdeXEiz14AYBSbpchcvJyBiff+eBpwxKNucdqMVaxhgtxnBmkMFhOr+MEGkFYwlLo08XHNysnHtLjk/LvmSrM1Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aLYemwaEBXuCw81LNrqkz3hZdJmEbWyisRQ0BSVUp3g=;
- b=YtwPDMbUA+UAdFJfaXaI65gB1d+c4VJS/pdjRFYUN4nXP5Kfe58r5PVkT4cumUtj3o3U5GphOr/W0EguTcLrZqPDEqLoyur/kPNqKozIfM6IbP/Ffnnd9ogMy1ch5YV6c0zfoyHGEEITVxMx8TFFdA+p2bidi/BUefBeK+ofIzg1t+4/SkUAZosUlWKZs2QcDplrgTGrSJ5mW/mIhCmCk8TIGEcvBgHAfgIYQinJkeCb6UIiahbzbu6DPLldfeNAJKn6OjnMAgc0zKyRRWySz6eYFwgiiA4BRx4jKYrhw33skDQVLxll/ASHo5I+Zr80jkqi5Aj9uW2/6PI0nrAfgg==
+ bh=P5O1LOzz2sPZQKkPD2FEZaAIqrK1URX6n2USXrOZGY4=;
+ b=MY1Btq/5Ka/dhqJLd2bPu7ygE+vrT3bVzTeK5LQ8i1uvNcRK6YqMtfEtcgUOfEwMj9HOQuqhbhxx0QiaPigcJeHtdrdT0v6jElS99k62HN2y8tjlKUDeJpLCey45zI4V+KTK8Em5qQs36zcgOYnggBM2QB2WTZCaq8zsBVIffsFR6FJ9VWQY80ShGUyWXrD52xbJvZ5pSBs79p12izbaUHAqc3jGepQin6a6fmD975VnmONBy8j8FYAmisRqPaYC4HJEj/DVQHl/e8WDmrxcso1XnfXS6gHGqO3onPjBBwPDcZLqt68S+c+hJ/kZaHcErzKhEgfx2w8iJfLooOjfTw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
  header.d=live.ca; arc=none
 Received: from DM6NAM12FT056.eop-nam12.prod.protection.outlook.com
- (2a01:111:e400:fc64::4b) by
- DM6NAM12HT076.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc64::378)
+ (2a01:111:e400:fc64::4d) by
+ DM6NAM12HT118.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc64::126)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.12; Fri, 1 May
- 2020 23:51:35 +0000
+ 2020 23:51:41 +0000
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  (2a01:111:e400:fc64::46) by DM6NAM12FT056.mail.protection.outlook.com
  (2a01:111:e400:fc64::460) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.12 via Frontend
- Transport; Fri, 1 May 2020 23:51:35 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:034CAD3B5D64B008501C37F0046CAD80F9E1ECFE110D49C5935567E379B7AC56;UpperCasedChecksum:8B0120337EDC16162D9427B209D6F0EC6CEE581929211931145DBEEE85DE5295;SizeAsReceived:7853;Count:50
+ Transport; Fri, 1 May 2020 23:51:41 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:500BD4FFDDA152933E5711F27EDDA5554E11B0EFC217C2C5FA8EF22AFA9B37A2;UpperCasedChecksum:376F5A11BF33F2485363DB9171BA7F4E04697A33EF32E87F25E6AA8627C9E564;SizeAsReceived:7853;Count:50
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2958.027; Fri, 1 May 2020
- 23:51:35 +0000
+ 23:51:41 +0000
 From:   Jonathan Bakker <xc-racer2@live.ca>
 To:     kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH v2 14/18] ARM: dts: s5pv210: Enable ADC on aries boards
-Date:   Fri,  1 May 2020 16:50:15 -0700
-Message-ID: <BN6PR04MB0660E7785BAE8D0F44F6CE57A3AB0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Subject: [PATCH v2 18/18] ARM: dts: s5pv210: Correct gpi gpio node name
+Date:   Fri,  1 May 2020 16:50:19 -0700
+Message-ID: <BN6PR04MB06608BAC9303ECB0F6118AE3A3AB0@BN6PR04MB0660.namprd04.prod.outlook.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200501235019.24022-1-xc-racer2@live.ca>
 References: <20200426183604.28494-1-xc-racer2@live.ca>
@@ -65,74 +65,59 @@ Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MWHPR17CA0058.namprd17.prod.outlook.com
  (2603:10b6:300:93::20) To BN6PR04MB0660.namprd04.prod.outlook.com
  (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200501235019.24022-15-xc-racer2@live.ca>
+X-Microsoft-Original-Message-ID: <20200501235019.24022-19-xc-racer2@live.ca>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR17CA0058.namprd17.prod.outlook.com (2603:10b6:300:93::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 23:51:33 +0000
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR17CA0058.namprd17.prod.outlook.com (2603:10b6:300:93::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 23:51:39 +0000
 X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200501235019.24022-15-xc-racer2@live.ca>
-X-TMN:  [HhvsrbqmRVjdm4jRYAFXKAiJJQ8B3wEOJUZcWEhqnbr8Ld75TURUw9/GC/GirMfT]
+X-Microsoft-Original-Message-ID: <20200501235019.24022-19-xc-racer2@live.ca>
+X-TMN:  [0ZkQ7nAcwNP61UKo6jm5CT6RYSlM87jxE50gKlmG/iNiAVPEIlo/p2aAykdGkuxA]
 X-MS-PublicTrafficType: Email
 X-IncomingHeaderCount: 50
 X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 7a9d2150-12d8-4be5-c2e3-08d7ee2a9487
-X-MS-TrafficTypeDiagnostic: DM6NAM12HT076:
+X-MS-Office365-Filtering-Correlation-Id: 45c080d4-55e4-471f-7ec0-08d7ee2a983a
+X-MS-TrafficTypeDiagnostic: DM6NAM12HT118:
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9tvEpkKrP/D80qSAbz7FkbNpHGT04bYgAaUY+zN2r5y7QVqHA8AW2ZBCwyJup/v5oX5EhRPBsFo7VgY4ZJhySn7trcYNo0jX460u2QwqIYZFFD+9ff8RhA9TptQrqB7j1MWiDU0UWng90qC2P/x1eiQODKjPZWAEtXU/CUmgNuQhA/mH5TxmFS/oz6z2beCcPjovkMTwfOaxRqYfY1i5mQ==
+X-Microsoft-Antispam-Message-Info: JepEKslIU/Pr/uwfG2+Y0K/uV9au7rZl+8ShLP7x0rdEdbVKiDnj1hYWWVOE76srjlFlIfKFzUaX5TDTD/zFAOjUS42FxqbYMclrVbz2fNwRYa154VEz9OjI999YCM1zbbqJLqjY6sXQiVE28Iy4MaXzkFzi5sdXVCTtyopAe56zc3sYoOkqLQN8OPcIXt79fT/hYoigJyjsZNR2YsQkIg==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: pm4V3/V4Ml0LrF8mo5GZH5Rfcq5zYRnUBhLSWF9JqelyqqUyXfanKKtDwH4NCee32UiMxSw1Mf90vz2ii/nYlHLc1CSOkxRlS2zH2T0tftWngqKxINijn68SHiV4FGDPQiG8f+jpBKOf0Okdm4aWrsgXGFr55a0xnVt9r0by1jOK247qHNPB+W9Ufjp7hfCql7zrRVU/xinIkuqiiHMWew==
+X-MS-Exchange-AntiSpam-MessageData: XQuTixmKn6b9MsRaBkt/+ezCRX3fnvFFTqeUwoKzBMasII7EW0kVOBjuksND2SeTj2J5ErRigCcnxRKMgLK1X1zo60EBpDzuEZtZgMMkNrVNsP7Jron9hiCoYkkBsmzACHQ1YI5jpQoY6QszecM8pb20o6gM4V/Q9eiAjqJeKFVExoqr+pSPrEdStDsuPrjWYlalEF7mizBq3x+88ySUAQ==
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a9d2150-12d8-4be5-c2e3-08d7ee2a9487
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 23:51:34.9774
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45c080d4-55e4-471f-7ec0-08d7ee2a983a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 23:51:41.1629
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM12HT076
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM12HT118
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On aries boards, the ADC is used for things such as jack detection
-and battery temperature monitoring.  It is connected to ldo4 of max8998,
-so only enable that regulator when we are actually using the ADC.
+The node name was gpgi, but the pinctrl driver was registering the pins
+as just gpi and the "samsung,pins" i2s0 pinctrl entries refer to gpi.
+The public s5pc110 datasheet also refers to these pins as just gpi,
+so let's make sure everything is in sync and rename the node to gpi.
 
 Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-
 ---
-Changes from v1
-- Replace removed regulator-off-in-suspend
----
- arch/arm/boot/dts/s5pv210-aries.dtsi | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/s5pv210-pinctrl.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5pv210-aries.dtsi
-index 945259aa5d55..9f4694d71203 100644
---- a/arch/arm/boot/dts/s5pv210-aries.dtsi
-+++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
-@@ -195,7 +195,6 @@
- 					regulator-name = "VADC_3.3V";
- 					regulator-min-microvolt = <3300000>;
- 					regulator-max-microvolt = <3300000>;
--					regulator-always-on;
- 
- 					regulator-state-mem {
- 						regulator-off-in-suspend;
-@@ -539,6 +538,12 @@
+diff --git a/arch/arm/boot/dts/s5pv210-pinctrl.dtsi b/arch/arm/boot/dts/s5pv210-pinctrl.dtsi
+index 609f323d0805..5e8b66281f01 100644
+--- a/arch/arm/boot/dts/s5pv210-pinctrl.dtsi
++++ b/arch/arm/boot/dts/s5pv210-pinctrl.dtsi
+@@ -202,7 +202,7 @@
+ 		#interrupt-cells = <2>;
  	};
- };
  
-+&adc {
-+	vdd-supply = <&ldo4_reg>;
-+
-+	status = "okay";
-+};
-+
- &fimd {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&lcd_clk &lcd_data24>;
+-	gpgi: gpgi {
++	gpi: gpi {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 	};
 -- 
 2.20.1
 
