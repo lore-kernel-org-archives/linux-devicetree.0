@@ -2,97 +2,86 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F050C35280
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC01CC4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3624321775
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588364047;
-	bh=TevFkjb5rNexzQ+5edWV1jKKHFVOqDomhs7zDWXFj/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OA+LXYs5++5XMotX4mTIX2W++IgUfn4aiLXbzLWvf5EJJIkFVDU7jsQotfsiun23f
-	 uyw2WATQU+n+ov6qBVaAxZxIj2ZSWv1QW46fitYp24f3dqWsp6/pzqYHSd8H+QlZhv
-	 A9C2b0aXKvm42BeI4OkX8BjchoLxedptRQf1Ndd8=
+	by mail.kernel.org (Postfix) with ESMTP id A379221775
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726045AbgEAUOG (ORCPT
+        id S1726503AbgEAUTI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 16:14:06 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33810 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgEAUOG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 16:14:06 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 72so3524749otu.1;
-        Fri, 01 May 2020 13:14:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2xG6LfTRRj7zxxC5OOjRbiExVAKfImflfttUoxbE6Wk=;
-        b=E6A04inRYx8OfDNO0GjxnjC2PKh3Zq54wZ1FBdpvpec+0380jrtgCyBhZxocPbRbYF
-         cc/hFmOss6Ylv/TeM8DV095zf2yGoom6lxi6GgAcFB16oU05O27p8jdaisB2qeetGVOp
-         uMlS7Zuc4f/QU15TlVYOLY9Ifj98T4BmjCOYOraMXyES/iJTdiIU2XMlN8BzbqMuc5cE
-         nkbc80J4o76gYC7YwFKZ/G4oa7q+HrEXaqbTbHZ47X+YhTy6S3/zWc3AG6B2mWRHMA7N
-         KFTPondo1pV8bM6+DJ5v/W3NGdL1MBP+u7jEXVnvtvTAsv5bAedypqV2vd7cawwSv19F
-         Qp6g==
-X-Gm-Message-State: AGi0PuafzeL+DpN0HFLeJOTpVMjcbsQicrwhP9hf1gk7CgGM6DCdtiyD
-        sePtHs8SSO2S4u04EJGu4g==
-X-Google-Smtp-Source: APiQypK5652+F+YPF+Qn5GQulTJDVC1+CGSNJ8JQC4ySwrNbIYJVtWlnY9BlUtvjDv0XE2FcIET1+g==
-X-Received: by 2002:a9d:6e3:: with SMTP id 90mr5124784otx.261.1588364044458;
-        Fri, 01 May 2020 13:14:04 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d61sm1065978otb.58.2020.05.01.13.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 13:14:03 -0700 (PDT)
-Received: (nullmailer pid 26942 invoked by uid 1000);
-        Fri, 01 May 2020 20:14:02 -0000
-Date:   Fri, 1 May 2020 15:14:02 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: dt-bindings: audio-graph-card: switch to yaml base
- Documentation
-Message-ID: <20200501201402.GA8603@bogus>
-References: <87ftcxv2lk.wl-kuninori.morimoto.gx@renesas.com>
+        Fri, 1 May 2020 16:19:08 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:55654 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAUTI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 16:19:08 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 17F191C020C; Fri,  1 May 2020 22:19:06 +0200 (CEST)
+Date:   Fri, 1 May 2020 22:19:05 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200501201905.GA6043@duo.ucw.cz>
+References: <20200430174615.41185-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
 Content-Disposition: inline
-In-Reply-To: <87ftcxv2lk.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <20200430174615.41185-1-tony@atomide.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 02:18:15PM +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> 
-> This patch switches from .txt base to .yaml base Document.
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
->  .../bindings/sound/audio-graph-card.txt       | 337 --------------
->  .../bindings/sound/audio-graph-card.yaml      | 416 ++++++++++++++++++
->  2 files changed, 416 insertions(+), 337 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/audio-graph-card.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/audio-graph-card.yaml
 
-This needs to be a series, so they are applied together and don't break 
-the tools if only the ak4613 patch is applied.
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As mentioned in the other patch, I think this needs to be broken up to 
-multiple schemas and avoid definitions.
+Hi!
 
-I'd really like to see either simple-card deprecated to use the 
-graph-card or drop the 'simple-card,' prefix to align the property 
-names.
+> My guess is that at least with the pending ofono patches, we just
+> want to use the raw interface for /dev/gsmtty* interface and stop
+> pretending we have a modem that is AT compatible.
 
-Rob
+Ok, so I got ofono back to work. ... I believe. It was not that
+bad. SMS send/receive and outgoing call start/hangup worked at some
+point (I did not play with mixers).
+
+To github.com:pavelmachek/ofono.git
+   61d3d727..195760e9  mux-v1.29-1 -> mux-v1.29-1
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqyEOQAKCRAw5/Bqldv6
+8nWNAJ0YiT+Sq5AwuqS5PaFbK/cp13xE4QCgjMG4ORPk+/2ETGiFGpu8yuhiF2o=
+=r4yx
+-----END PGP SIGNATURE-----
+
+--7AUc2qLy4jB3hD7Z--
