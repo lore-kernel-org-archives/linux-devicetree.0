@@ -2,83 +2,71 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB26C47257
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3263C4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A23F20857
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4982166E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:08:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="J9lEStWm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgEAOw4 (ORCPT
+        id S1728919AbgEAPIT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 10:52:56 -0400
-Received: from muru.com ([72.249.23.125]:52510 "EHLO muru.com"
+        Fri, 1 May 2020 11:08:19 -0400
+Received: from mail.nic.cz ([217.31.204.67]:45474 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728737AbgEAOw4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 10:52:56 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id B3F02810E;
-        Fri,  1 May 2020 14:53:43 +0000 (UTC)
-Date:   Fri, 1 May 2020 07:52:52 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@denx.de>, Stephen Boyd <swboyd@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200501145252.GC37466@atomide.com>
-References: <20200430174615.41185-1-tony@atomide.com>
- <20200430222605.GA10922@duo.ucw.cz>
+        id S1728856AbgEAPIS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 May 2020 11:08:18 -0400
+Received: from localhost (unknown [172.20.6.135])
+        by mail.nic.cz (Postfix) with ESMTPSA id 1B4C1141D39;
+        Fri,  1 May 2020 17:08:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1588345697; bh=AJGu5j0JJ2utVwFgN8azGwXWZDhEn++6PU5ffpqhxWY=;
+        h=Date:From:To;
+        b=J9lEStWmsEqIjzpliY570gSQ2TVCPhq7hMCGgaphMBoF4jkIoZznm1D9eOd/Sn49C
+         mLZqk2bLcq4aVCYE5MNU8yF0qrcLofyaHKpogpCoYtvevlljcOGG7cgFCL/xO2RIqf
+         ZINHLJ+m3t7P/CJ+1wR9hgAqlb2WEL9BA2nYG4EQ=
+Date:   Fri, 1 May 2020 17:08:16 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Pavel Modilaynen <pavel.modilaynen@axis.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dtc: Use better check for libyaml
+Message-ID: <20200501170816.2f95a2ad@nic.cz>
+In-Reply-To: <CAK7LNARhK08CcDNij25PR0_r2A27Qx+psQp50_AgDJijexDAiA@mail.gmail.com>
+References: <20200501015147.32391-1-marek.behun@nic.cz>
+        <CAK7LNARhK08CcDNij25PR0_r2A27Qx+psQp50_AgDJijexDAiA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430222605.GA10922@duo.ucw.cz>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel@denx.de> [200430 22:27]:
+On Fri, 1 May 2020 14:27:57 +0900
+Masahiro Yamada <masahiroy@kernel.org> wrote:
+
+> Is it possible to fix the .pc file instead?
 > 
-> > My guess is that at least with the pending ofono patches, we just
-> > want to use the raw interface for /dev/gsmtty* interface and stop
-> > pretending we have a modem that is AT compatible.
-> 
-> I tried to get it to work... it was not fun and I did not get far.
+> This is ugly, and I do not know what is the
+> point of pkg-config if it cannot detect the pkg correctly.
 
-OK. Yeah it's now 2020 and still dealing with serial port stuff :)
+I know this is ugly, though no more than some code in
+scripts/Makefile.build.
 
-> I pushed my results...
-> 
-> user@devuan:/my/ofono$ git push
-> Counting objects: 10, done.
-> Delta compression using up to 2 threads.
-> Compressing objects: 100% (10/10), done.
-> Writing objects: 100% (10/10), 1.17 KiB | 0 bytes/s, done.
-> Total 10 (delta 8), reused 0 (delta 0)
-> remote: Resolving deltas: 100% (8/8), completed with 8 local objects.
-> To github.com:pavelmachek/ofono.git
->    fd34ca20..9042014b  mux-v1.29-1 -> mux-v1.29-1
+What do you mean fixing the pc file?
+When the header is not present because libyaml-dev is not installed,
+but the library is present, then pkg-config just reports that the
+package exists, when asking with --exists, right?
 
-OK :) I still need to update the ALSA related patches on top
-of this $subject series.
+Marek
 
-Also what I've noticed is that modprobe n_gsm debug=0xff hex output is
-currently broken since commit 091cb0994edd ("lib/hexdump: make
-print_hex_dump_bytes() a nop on !DEBUG builds"). Reverting the commit
-fixes it.
-
-Stephen, any ideas what should be changed to fix it?
-
-Regards,
-
-Tony
