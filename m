@@ -2,172 +2,96 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BE3C47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 08:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FFFC4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 08:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C061220731
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 08:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BC321924
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 08:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgEAIVI (ORCPT
+        id S1728472AbgEAIVS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 04:21:08 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:33698 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728431AbgEAIVH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 04:21:07 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 524791A0B36;
-        Fri,  1 May 2020 10:21:05 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D409C1A0B65;
-        Fri,  1 May 2020 10:20:59 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7DC67402BE;
-        Fri,  1 May 2020 16:20:53 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] ASoC: fsl_esai: introduce SoC specific data
-Date:   Fri,  1 May 2020 16:12:04 +0800
-Message-Id: <27af074e47bf2b81e2dce67ea66a9f7301dfcb07.1588320656.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1588320655.git.shengjiu.wang@nxp.com>
-References: <cover.1588320655.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1588320655.git.shengjiu.wang@nxp.com>
-References: <cover.1588320655.git.shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 1 May 2020 04:21:18 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:33806 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728334AbgEAIVO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 04:21:14 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 780AD1C020C; Fri,  1 May 2020 10:21:12 +0200 (CEST)
+Date:   Fri, 1 May 2020 10:21:11 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200501082111.GA7501@amd>
+References: <20200430174615.41185-1-tony@atomide.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
+Content-Disposition: inline
+In-Reply-To: <20200430174615.41185-1-tony@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Introduce a SoC specific data structure which contains the
-differences between the different SoCs.
-This makes it easier to support more differences without having
-to introduce a new if/else each time.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_esai.c | 46 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 37 insertions(+), 9 deletions(-)
+--J/dobhs11T7y2rNN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
-index 84290be778f0..bac65ba7fbad 100644
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -21,6 +21,17 @@
- 				SNDRV_PCM_FMTBIT_S20_3LE | \
- 				SNDRV_PCM_FMTBIT_S24_LE)
- 
-+/**
-+ * fsl_esai_soc_data: soc specific data
-+ *
-+ * @imx: for imx platform
-+ * @reset_at_xrun: flags for enable reset operaton
-+ */
-+struct fsl_esai_soc_data {
-+	bool imx;
-+	bool reset_at_xrun;
-+};
-+
- /**
-  * fsl_esai: ESAI private data
-  *
-@@ -33,6 +44,7 @@
-  * @fsysclk: system clock source to derive HCK, SCK and FS
-  * @spbaclk: SPBA clock (optional, depending on SoC design)
-  * @task: tasklet to handle the reset operation
-+ * @soc: soc specific data
-  * @lock: spin lock between hw_reset() and trigger()
-  * @fifo_depth: depth of tx/rx FIFO
-  * @slot_width: width of each DAI slot
-@@ -44,7 +56,6 @@
-  * @sck_div: if using PSR/PM dividers for SCKx clock
-  * @slave_mode: if fully using DAI slave mode
-  * @synchronous: if using tx/rx synchronous mode
-- * @reset_at_xrun: flags for enable reset operaton
-  * @name: driver name
-  */
- struct fsl_esai {
-@@ -57,6 +68,7 @@ struct fsl_esai {
- 	struct clk *fsysclk;
- 	struct clk *spbaclk;
- 	struct tasklet_struct task;
-+	const struct fsl_esai_soc_data *soc;
- 	spinlock_t lock; /* Protect hw_reset and trigger */
- 	u32 fifo_depth;
- 	u32 slot_width;
-@@ -70,10 +82,24 @@ struct fsl_esai {
- 	bool sck_div[2];
- 	bool slave_mode;
- 	bool synchronous;
--	bool reset_at_xrun;
- 	char name[32];
- };
- 
-+static struct fsl_esai_soc_data fsl_esai_vf610 = {
-+	.imx = false,
-+	.reset_at_xrun = true,
-+};
-+
-+static struct fsl_esai_soc_data fsl_esai_imx35 = {
-+	.imx = true,
-+	.reset_at_xrun = true,
-+};
-+
-+static struct fsl_esai_soc_data fsl_esai_imx6ull = {
-+	.imx = true,
-+	.reset_at_xrun = false,
-+};
-+
- static irqreturn_t esai_isr(int irq, void *devid)
- {
- 	struct fsl_esai *esai_priv = (struct fsl_esai *)devid;
-@@ -85,7 +111,7 @@ static irqreturn_t esai_isr(int irq, void *devid)
- 	regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
- 
- 	if ((saisr & (ESAI_SAISR_TUE | ESAI_SAISR_ROE)) &&
--	    esai_priv->reset_at_xrun) {
-+	    esai_priv->soc->reset_at_xrun) {
- 		dev_dbg(&pdev->dev, "reset module for xrun\n");
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
- 				   ESAI_xCR_xEIE_MASK, 0);
-@@ -936,9 +962,11 @@ static int fsl_esai_probe(struct platform_device *pdev)
- 	esai_priv->pdev = pdev;
- 	snprintf(esai_priv->name, sizeof(esai_priv->name), "%pOFn", np);
- 
--	if (of_device_is_compatible(np, "fsl,vf610-esai") ||
--	    of_device_is_compatible(np, "fsl,imx35-esai"))
--		esai_priv->reset_at_xrun = true;
-+	esai_priv->soc = of_device_get_match_data(&pdev->dev);
-+	if (!esai_priv->soc) {
-+		dev_err(&pdev->dev, "failed to get soc data\n");
-+		return -ENODEV;
-+	}
- 
- 	/* Get the addresses and IRQ */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -1063,9 +1091,9 @@ static int fsl_esai_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id fsl_esai_dt_ids[] = {
--	{ .compatible = "fsl,imx35-esai", },
--	{ .compatible = "fsl,vf610-esai", },
--	{ .compatible = "fsl,imx6ull-esai", },
-+	{ .compatible = "fsl,imx35-esai", .data = &fsl_esai_imx35 },
-+	{ .compatible = "fsl,vf610-esai", .data = &fsl_esai_vf610 },
-+	{ .compatible = "fsl,imx6ull-esai", .data = &fsl_esai_imx6ull },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, fsl_esai_dt_ids);
--- 
-2.21.0
+Hi!
 
+> Now without the chardev support, the /dev/gsmtty* using apps need
+> to use "U1234AT+CFUN?" format for the packets. The advantage is
+> less kernel code, and we keep the existing /dev/gsmtty* interface.
+
+Actually... yes, this works. But no, this is not "existing" tty
+interface.
+
+ttys work per character, and this interface definitely does not... it
+is "packet" based, write() syscalls need exactly right lengths. You
+can't just open minicom, and type "U1234...". You can't paste it,
+either (I tried). tty controls like start/stop bits and baud rate are
+useless here. CR/LF conversions are unwanted/dangerous because it is
+confusing hard to debug if you get them wrong.
+
+Now, I don't see reason why this could not be made to work, and it may
+be more important to have something in mainline and work with that. So
+if you can make this into -next, I'll not complain too loudly. But it
+is... still wrong and I liked motmdm* more :-).
+
+Best regards,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--J/dobhs11T7y2rNN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl6r2/cACgkQMOfwapXb+vJWVQCgmZWp4uW4WcDVtKcZ64vezhLQ
+cwAAn2QiA0rySRtYXW2XeiPwWH7txj3y
+=CjiR
+-----END PGP SIGNATURE-----
+
+--J/dobhs11T7y2rNN--
