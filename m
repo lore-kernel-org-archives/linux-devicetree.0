@@ -2,128 +2,99 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F52BC4724C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 05:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23481C47254
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 07:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4F6208D5
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 05:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588311486;
-	bh=L/eFwF+Vi6NOnoXGyVyImgK/ug//vfMHXUZj1AeKl0k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GsP37qJ8o3EqgOdgKyyhbytpcHgUJ2g8Al4+bwJJvvHxUSS4JqA1dUMsd5wE4UE66
-	 WNPdXLsQWZB2LU+PHj4eDa8yhEFssg4LEoZOMNxzMp27ffdidX41DHyq86V7Wo5k27
-	 WQGKjRrb8cRyQJgcix+94Ln4d4rL7Qlrf70wmfNk=
+	by mail.kernel.org (Postfix) with ESMTP id E80F32173E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 07:28:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jaB3BsED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgEAFiF (ORCPT
+        id S1728277AbgEAH20 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 01:38:05 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:59735 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgEAFiF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 01:38:05 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 0415bh42007654;
-        Fri, 1 May 2020 14:37:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0415bh42007654
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588311464;
-        bh=qhr8O6PNoNTMDkn08RG5IuDq9QyyKdwASkM9IiK29Mc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PdCcHp2Yo1NVWUnq26ARCkLFPxUY2eNdoYuXaSyAv4Wdnbv03sd3DCPsfJH5GF6V1
-         jE4nB/ku9cgRJrBg9MKukdWexf3kAdIpesS2dOxpmptUitWoZ2eWRd1GXMvaNq2gIk
-         F14ZdaNHi7AFNx6abvoD8UYYiCKLwDtcLLmQvVITnLjrvNr1oH4ryHCS50SKj6bIJ2
-         ZPLgIO7ZcCatdlqocr1Jr82ph9vAL/v3Pkb/15DZ7M5MghPr4ZEiGQLmhPZMONiDLV
-         7RS5dnVjsf8JGFipG6xJrtPHhaViKsgcu8MvcVL+EsAReGDdAzJNK7qw+RrmchrqoU
-         ZTkTwPEoKCt4A==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id a5so5747865vsm.7;
-        Thu, 30 Apr 2020 22:37:44 -0700 (PDT)
-X-Gm-Message-State: AGi0PubTVgjFeEMY2aVIoSxMi9LMDUznu0W3A3f6eT71SRXqTo+pzI8Y
-        JZvgjIt9o/unfGsyi2W7VpOTeWoq4J7+xxGFXTQ=
-X-Google-Smtp-Source: APiQypKXK70jwAGWQSCtSzA9rTjzc0A/nYOZPkXPg6+35qSxP5FaNSPhDTVqn0obnAejsYXllF7zxfARGRYkmL4TSJk=
-X-Received: by 2002:a67:6e07:: with SMTP id j7mr2055106vsc.181.1588311463175;
- Thu, 30 Apr 2020 22:37:43 -0700 (PDT)
+        Fri, 1 May 2020 03:28:26 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1347 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgEAH20 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 03:28:26 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eabcf8d0000>; Fri, 01 May 2020 00:28:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 01 May 2020 00:28:25 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 01 May 2020 00:28:25 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 May
+ 2020 07:28:25 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 1 May 2020 07:28:25 +0000
+Received: from moonraker.nvidia.com (Not Verified[10.26.73.165]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5eabcf980000>; Fri, 01 May 2020 00:28:25 -0700
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        Peter Robinson <pbrobinson@redhat.com>,
+        Jon Hunter <jonathanh@nvidia.com>, <stable@vger.kernel.org>
+Subject: [PATCH] arm64: tegra: Fix ethernet phy-mode for Jetson Xavier
+Date:   Fri, 1 May 2020 08:27:56 +0100
+Message-ID: <20200501072756.25348-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20200427141251.154129-1-masahiroy@kernel.org>
-In-Reply-To: <20200427141251.154129-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 1 May 2020 14:37:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQq6Z4Czf56EF02oA1JnFvrv=hwnPraxkfP+80hLQuqCw@mail.gmail.com>
-Message-ID: <CAK7LNAQq6Z4Czf56EF02oA1JnFvrv=hwnPraxkfP+80hLQuqCw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: determine the output format of DTC by the target suffix
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588318093; bh=d+dYuOUYYG3jFlbXdN72xXUr16sgw2ePdUeUPoMzbSo=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=jaB3BsEDf3Fc0WN6kwJrPRalITORiFw8jh6J6ICTotAIsVMyxupddkxZxvK2bpOpK
+         dw771EHWsja2buZgJ1YGA4ZmleyqFnlXDrl/r6f/yyEoBYvTDJEBlggHz1zyZ2cCSe
+         AemmvCRR7KOLMYq9AUpQSVz5u8zuQVezob0pIQjVZRZ1FxjXbiDILaI5mFrAnRzpg9
+         IxzEPnPtX6nAMz/IM5oCiUpUCSRwSLtIQtyvQMeOgCbeINMsGMg3AuPYxohlF1QqkZ
+         fRZWpiuhT4RclVX+ga7roOMUpumX0hmQPA61LmkPwdd373pOsGjBOPZWwZ9GCoq1mT
+         EXSJdwyKZLJvQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 11:13 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> cmd_dtc takes the additional parameter $(2) to select the target
-> format, dtb or yaml. This makes things complicated when it is used
-> with cmd_and_fixdep and if_changed_rule. I actually stumbled on this.
-> See commit 3d4b2238684a ("kbuild: fix DT binding schema rule again to
-> avoid needless rebuilds").
->
-> Extract the suffix part of the target instead of passing the parameter.
-> Fortunately, this works for both $(obj)/%.dtb and $(obj)/%.dt.yaml .
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+The 'phy-mode' property is currently defined as 'rgmii' for Jetson
+Xavier. This indicates that the RGMII RX and TX delays are set by the
+MAC and the internal delays set by the PHY are not used.
 
+If the Marvell PHY driver is enabled, such that it is used and not the
+generic PHY, ethernet failures are seen (DHCP is failing to obtain an
+IP address) and this is caused because the Marvell PHY driver is
+disabling the internal RX and TX delays. For Jetson Xavier the internal
+PHY RX and TX delay should be used and so fix this by setting the
+'phy-mode' to 'rgmii-id' and not 'rgmii'.
 
+Cc: stable@vger.kernel.org
 
-Applied to linux-kbuild.
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-> ---
->
->  scripts/Makefile.lib | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 12f6a331a8f3..cd52a8c6428f 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -287,13 +287,13 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
->  quiet_cmd_dtc = DTC     $@
->  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
->         $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-> -       $(DTC) -O $(2) -o $@ -b 0 \
-> +       $(DTC) -O $(patsubst .%,%,$(suffix $@)) -o $@ -b 0 \
->                 $(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
->                 -d $(depfile).dtc.tmp $(dtc-tmp) ; \
->         cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
->
->  $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
-> -       $(call if_changed_dep,dtc,dtb)
-> +       $(call if_changed_dep,dtc)
->
->  DT_CHECKER ?= dt-validate
->  DT_BINDING_DIR := Documentation/devicetree/bindings
-> @@ -304,7 +304,7 @@ quiet_cmd_dtb_check =       CHECK   $@
->        cmd_dtb_check =  $(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@
->
->  define rule_dtc
-> -       $(call cmd_and_fixdep,dtc,yaml)
-> +       $(call cmd_and_fixdep,dtc)
->         $(call cmd,dtb_check)
->  endef
->
-> --
-> 2.25.1
->
-
-
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+index 623f7d7d216b..8e3136dfdd62 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+@@ -33,7 +33,7 @@
+ 
+ 			phy-reset-gpios = <&gpio TEGRA194_MAIN_GPIO(G, 5) GPIO_ACTIVE_LOW>;
+ 			phy-handle = <&phy>;
+-			phy-mode = "rgmii";
++			phy-mode = "rgmii-id";
+ 
+ 			mdio {
+ 				#address-cells = <1>;
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
