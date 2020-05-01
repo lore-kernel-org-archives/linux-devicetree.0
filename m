@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3D3C47253
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2195DC4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8130216FD
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10A12137B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 15:29:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="P6PpYSUI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZqncxFdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgEAP3D (ORCPT
+        id S1729122AbgEAP3z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 11:29:03 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:36426 "EHLO vps0.lunn.ch"
+        Fri, 1 May 2020 11:29:55 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:36448 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbgEAP3D (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 11:29:03 -0400
+        id S1728812AbgEAP3z (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 May 2020 11:29:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=g87l+dQPat6RISHmb/M+c0r+YR6nZMVGy4jXDg/BT5Y=; b=P6PpYSUIF0qaq/BE82nIHPuExZ
-        oz4MO4IxBlfZiIOqksQmOxpu61b4C1+2I9DCYthnN+6zEx14OUppsEropI5s74zCRnfYEqUsP5XbV
-        oZuRUQWXYdXom6Ft2YPceKMwcxm4Rf5SFFjmPuumyDsRCaBf5YHANqEk24vp4hUy/Aak=;
+        bh=0oFnvmjDPVBMOQrnKCtF1VSBYWpdcWGbY1ugeUjkCs0=; b=ZqncxFdWqbRuDkB4HOmtEjSR6D
+        rRHaLpAOMIlNMmOYMWOBWBYlrQCFBgpdRwiZahZZkQ2XwCg6kizZiDRLGxISbUo/bRKYa2fLsL4+t
+        7K5mZ/UMaLO+hEA08YH+8MnZGOK1cSfcLbm4/bRchTxDV1rHijO2JKDFc8PAiTEherfU=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
         (envelope-from <andrew@lunn.ch>)
-        id 1jUXay-000YD8-Cv; Fri, 01 May 2020 17:28:56 +0200
-Date:   Fri, 1 May 2020 17:28:56 +0200
+        id 1jUXbo-000YEH-9Z; Fri, 01 May 2020 17:29:48 +0200
+Date:   Fri, 1 May 2020 17:29:48 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
@@ -41,24 +41,25 @@ Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
         jianxin.pan@amlogic.com, davem@davemloft.net,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC v2 03/11] net: stmmac: dwmac-meson8b: use FIELD_PREP
- instead of open-coding it
-Message-ID: <20200501152856.GC128733@lunn.ch>
+Subject: Re: [PATCH RFC v2 04/11] net: stmmac: dwmac-meson8b: Move the
+ documentation for the TX delay
+Message-ID: <20200501152948.GD128733@lunn.ch>
 References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
- <20200429201644.1144546-4-martin.blumenstingl@googlemail.com>
+ <20200429201644.1144546-5-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429201644.1144546-4-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200429201644.1144546-5-martin.blumenstingl@googlemail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:16:36PM +0200, Martin Blumenstingl wrote:
-> Use FIELD_PREP() to shift a value to the correct offset based on a
-> bitmask instead of open-coding the logic.
-> No functional changes.
+On Wed, Apr 29, 2020 at 10:16:37PM +0200, Martin Blumenstingl wrote:
+> Move the documentation for the TX delay above the PRG_ETH0_TXDLY_MASK
+> definition. Future commits will add more registers also with
+> documentation above their register bit definitions. Move the existing
+> comment so it will be consistent with the upcoming changes.
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
