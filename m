@@ -2,117 +2,128 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391B7C47256
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8862CC47254
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18517208DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588368552;
-	bh=3oDArjU1QkmBF43rxZOW0LZd2ubCFBF1m+k2EVebbqA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VcoXk4QHeywY3crziz88/Y9eYFpdiTeg4HxsbjCrypfzzDgr6spPRimggiL2WQb+I
-	 zeHXZalGMMqUWFwvbS2w3yRvE9URm4soivEZ3y7VMJ5YY0N3wVdB7tHBRJ2NvzdmOl
-	 gbAp/PmBiyHZE7giaZR7dXp/IrqwDkv0NmHIcLZI=
+	by mail.kernel.org (Postfix) with ESMTP id 629A3216FD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 21:30:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rePtkf+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgEAV3L (ORCPT
+        id S1726401AbgEAVaC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 17:29:11 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34907 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAV3L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 17:29:11 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o7so954754oif.2;
-        Fri, 01 May 2020 14:29:10 -0700 (PDT)
+        Fri, 1 May 2020 17:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgEAVaB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 17:30:01 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61539C061A0C;
+        Fri,  1 May 2020 14:30:01 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id d16so8276149edv.8;
+        Fri, 01 May 2020 14:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k4vhp0VlA+4eKJJcpzlGuSTcol2cbO4w29cWTar5YXw=;
+        b=rePtkf+jPvelgNBY44aw3nYMFa5z7pgcs5SldQ92lZp43pUqhAGeePfH2odr3ADJDA
+         QcZ2cYJvsG8/zzDg8bG5QqCa5nIgYZUXusJKm70zAXfwDKs2VRWUnGzmiCKrgFLSp4md
+         AxGc42MrTZwXh0z5npeuKdDg/q0hsILpewPYO3tmaGmP4e5ZTaTMubB/inuhUXp3f5Lv
+         mGpNnEBsRoH8SFO5PuH61qp73o+idjmg7CjB9UnzjvHyMRcpu/uBjAQeWhU3OQmQEDx1
+         3fjjnP3++pQIv+Bh+qPKNRhTiU2fnq4OoNZugrikgH7RDm4xhW75IKYDqC6XT3Kl1Q0q
+         wojQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=LBBWTdBW4SlINNSKfNA/Lf6s5jnXmeXqJqpJNBD6jx4=;
-        b=Rh1g00ekoo2lwVm6bYrkf0O+RWFXqQa5ndkF7oIpuQEe/HoCO23qzYIXfGhGUwNosf
-         GgHlOSu52l0eKGYKV/LlcYP+hVj1+t8YAfwXTHzWS0/8MC6IX6JRWBFJlM4Ftp1JHBm4
-         2kSYcFxbdQAlkBfCGlGSDVNV+lB/cxTpZIUcQVaVlyIuFRSf0D1ZV2DrW5uaxTXR5XxM
-         Hhvk5+jBwHHV99UgPlTm/UTaddGbd97XbrfEjhp0IWb+jf7AhFWjSSavpQ7ktFMGcJPV
-         eP7A3YTVEzN1zYBjc+pQ5eUdnQZM2RKG6DlcWjH/pQ81RAta1Y2UMSQfi8kNPgAchDS3
-         aIYQ==
-X-Gm-Message-State: AGi0PuZxHBhK/am3LhJketCzSwEDjgy+5ZAr7tWsK4h7JCUc3TZD6X4C
-        xWLuaSzrM2DzeAi11grmgA==
-X-Google-Smtp-Source: APiQypLTFGkG8jvmXy1Gqej2BQVTujE0O7c4+0cWJa3hNguybt0s2XFLDAb8MJP0qi4Q7MBgeu8C/w==
-X-Received: by 2002:aca:4d53:: with SMTP id a80mr1221713oib.134.1588368548797;
-        Fri, 01 May 2020 14:29:08 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u82sm265429oia.35.2020.05.01.14.29.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 14:29:07 -0700 (PDT)
-Received: (nullmailer pid 32518 invoked by uid 1000);
-        Fri, 01 May 2020 21:29:06 -0000
-Date:   Fri, 1 May 2020 16:29:06 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     "Sa, Nuno" <Nuno.Sa@analog.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: iio: adi,ltc2983: Add missing quotes on
- dependencies
-Message-ID: <20200501212906.GA31617@bogus>
-References: <20200423150523.23984-1-robh@kernel.org>
- <CY4PR03MB33502FFA293BB3F068A488B299D00@CY4PR03MB3350.namprd03.prod.outlook.com>
- <20200425181052.1588a862@archlinux>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k4vhp0VlA+4eKJJcpzlGuSTcol2cbO4w29cWTar5YXw=;
+        b=TYqSIqpO+++2+yv9Brf1Xig7lrldCGX/c3OUUsZ/aDK0zPxn3eJ+baBF7O8P8XVh3K
+         Dg3vDFhPyI6DDNyGm8J4tKMO3hs0hKpXCYBGmrB1QUmudwBnbvEDejbAqVfI3tUKe9et
+         ryhDqLg4raoIBvxjnUYQrxrbzZP4uA9g3SZ3mz55wTl7UzJzZjQ84xC0A0kCGW1kH4DL
+         KLeBK+xYoNGovvfZvoElV+qDH2WLMtPXsAXwqQG4h64MVOPUu5NUZS2kGJxpozilRAqI
+         ATnDTmx+tzvuZuzcK5IWla3bSj/ev1HYwJ3Uyw6FO+lriL9aYfZRkqNSjLoZ6tYljkIK
+         jImA==
+X-Gm-Message-State: AGi0PuZBFor+iJpQehAsCka0xIkBghAHDm/Pi554bveyEmNHMw75k4y1
+        FugXACmswaawpophHKTQH4Qem4r+6D/UoqUt/gU=
+X-Google-Smtp-Source: APiQypJtLZZnIVsTjvuuhCzWaXfXP7wpnGa9G6PIdiNusehMFzCx8SssWzyKYi0NZLrZBEfGDbSYqPU6qlS+yngIqY4=
+X-Received: by 2002:aa7:dcc3:: with SMTP id w3mr5012926edu.231.1588368599999;
+ Fri, 01 May 2020 14:29:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200425181052.1588a862@archlinux>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200501204825.146424-1-konradybcio@gmail.com> <20200501210038.GB26726@ravnborg.org>
+In-Reply-To: <20200501210038.GB26726@ravnborg.org>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Fri, 1 May 2020 23:29:24 +0200
+Message-ID: <CAMS8qEXLAoY9mA5iEA8hqhpejwvDQj1CC_E6QFh3+qgrEWb6cA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Add support for TM5P5 NT35596 video mode panel
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     skrzynka@konradybcio.pl, Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 06:10:52PM +0100, Jonathan Cameron wrote:
-> On Fri, 24 Apr 2020 07:26:46 +0000
-> "Sa, Nuno" <Nuno.Sa@analog.com> wrote:
-> 
-> > > From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org>
-> > > On Behalf Of Rob Herring
-> > > Sent: Donnerstag, 23. April 2020 17:05
-> > > To: devicetree@vger.kernel.org
-> > > Cc: Sa, Nuno <Nuno.Sa@analog.com>; Jonathan Cameron
-> > > <jic23@kernel.org>; Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter
-> > > Clausen <lars@metafoo.de>; Peter Meerwald-Stadler
-> > > <pmeerw@pmeerw.net>; linux-iio@vger.kernel.org
-> > > Subject: [PATCH] dt-bindings: iio: adi,ltc2983: Add missing quotes on
-> > > dependencies
-> > > 
-> > > With the bracketed list form, any strings with commas have to be quoted
-> > > or they are separated.
-> > > 
-> > > Fixes: 3986a14870cb ("dt-bindings: iio: Add ltc2983 documentation")
-> > > Cc: "Nuno Sá" <nuno.sa@analog.com>
-> > > Cc: Jonathan Cameron <jic23@kernel.org>
-> > > Cc: Hartmut Knaack <knaack.h@gmx.de>
-> > > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > > Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> > > Cc: linux-iio@vger.kernel.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---  
-> > 
-> > Acked-by: Nuno Sá <nuno.sa@analog.com>
-> > 
-> 
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> Rob, Do you want to pick this one up via your tree?
+Very strange.. I just fetched drm-misc-next and had no issues building...
 
-Yes, I did.
+Thanks for your initial thoughts!
 
-Rob
+pt., 1 maj 2020 o 23:00 Sam Ravnborg <sam@ravnborg.org> napisa=C5=82(a):
+>
+> Hi Konrad.
+>
+> On Fri, May 01, 2020 at 10:48:21PM +0200, Konrad Dybcio wrote:
+> > I am aware of the fact that this is probably not the correct
+> > naming of this panel, yet I am unable to retrieve any additional
+> > information about it, as it is used in a smartphone to which no
+> > schematics are released.
+> >
+> > The driver has been generated with the help of
+> > linux-mdss-dsi-panel-driver-generator [1] and works perfectly
+> > on a Asus Zenfone 2 Laser Z00T smartphone, including brighness
+> > control and switching on/off.
+> >
+> > [1] https://github.com/msm8916-mainline/linux-mdss-dsi-panel-driver-gen=
+erator
+>
+> Panle driver looks good.
+> Will take a closer look tomorrow.
+>
+> Any chance you can work on the TODO in the driver so we can have that
+> resolved before we apply it?
+>
+> Also for a v2 it would be perfect if you could work on top of
+> drm-misc-next.
+> There is at least one small fix needed to build that I spotted.
+>
+> But wait until I get back on the driver patch before submitting a v2.
+>
+>         Sam
+>
+> >
+> > Konrad Dybcio (2):
+> >   drivers: drm: panel: Add TM5P5 NT35596 panel driver
+> >   dt-bindings: display: Document TM5P5 NT35596 panel compatible
+> >
+> >  .../bindings/display/panel/tm5p5,nt35596.txt  |   7 +
+> >  drivers/gpu/drm/panel/Kconfig                 |   9 +
+> >  drivers/gpu/drm/panel/Makefile                |   1 +
+> >  drivers/gpu/drm/panel/panel-tm5p5-nt35596.c   | 366 ++++++++++++++++++
+> >  4 files changed, 383 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/panel/tm5=
+p5,nt35596.txt
+> >  create mode 100644 drivers/gpu/drm/panel/panel-tm5p5-nt35596.c
+> >
+> > --
+> > 2.26.1
