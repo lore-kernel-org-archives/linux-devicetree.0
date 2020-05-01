@@ -2,217 +2,119 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4413C35280
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F43C35280
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED0E21835
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:35:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tlrjk1dH"
+	by mail.kernel.org (Postfix) with ESMTP id D1FB4208DB
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 20:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgEAUfj (ORCPT
+        id S1726272AbgEAUoa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 16:35:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgEAUfi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 16:35:38 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36867C061A0C;
-        Fri,  1 May 2020 13:35:38 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k1so12903528wrx.4;
-        Fri, 01 May 2020 13:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4CV2/aVsWZ0J7YHV9S4W9vWVSAHIz1DaEhX17Sy8Wz4=;
-        b=Tlrjk1dH8to4PfLXys+3mHm6CjCbaZV/J43dAGlgcHkGXSi1KQpbWvo1YvteX9WKrn
-         Xf4daL6/ODr0zMKAzvwDmT24kpaD6rP4lHHuVZ97MrHjSKkvq2cZJTGkBIt2KGZBJMkg
-         SZELEIm75FMbnpwhZCgPeRRH8bg8pI3oSbgax5bjUiLJ6500qgkKdfIQZNpEvNsocwRT
-         TavhlFdn3namQI7yJLI2zvdYbHBYoU+m80ZSYZOaBXd5Zj3smpwI+TS9qosuSDUmztG0
-         HM9TqSK4ipAOtfxDzTmHhPnhtpnOPKZsamcKqKlEMI3Mj6pPlNEWBW4wxNjqJ+GBgNPi
-         fkbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4CV2/aVsWZ0J7YHV9S4W9vWVSAHIz1DaEhX17Sy8Wz4=;
-        b=KBOof0Y9v/Ud6s/jqQTMyoD4yFkMBXQ/qCgfJqXBBaUBF4vkhEq/1b+ShgNZk2lYoy
-         8xCZte+u4gI3FlnM50vEGsOHU/H1c2bI+BMJrZTYRgrhY1cUrlBfsodbp+FN6VxkO/aV
-         XHDPIFZyIwLcJpQQuLyllv46WE36pUfkQg7vsRJcAeskh2l4WTTSr0zywld7GWjuEnDq
-         FfhJErcC5Not1nwA23tom9FSqXfT8CYhOQBGNzP/N8u2K0/QC3wxyzoxilEY3B7q0d61
-         RSZogZfwc3qAx3vROspBd1octrl1nidoPP87YvXPmOnpcacBhfFQNu6rCnfDBb9DeiSd
-         Pm4g==
-X-Gm-Message-State: AGi0PuZTEB/ZG3KL9ihaHqfcFWkUD0luChwFxZptco24wfWzV47xzWBj
-        fyESPAkt843tWhEpjUMod+g=
-X-Google-Smtp-Source: APiQypKs56QSSRikbo8kH00yOgGcPJYKeqjXs3piSV6FSIJYIeDDQcn6iPsk7GoyRUrMCNPKoX69gw==
-X-Received: by 2002:adf:9d8d:: with SMTP id p13mr5689847wre.17.1588365336726;
-        Fri, 01 May 2020 13:35:36 -0700 (PDT)
-Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
-        by smtp.googlemail.com with ESMTPSA id s12sm1021981wmc.7.2020.05.01.13.35.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 13:35:36 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: media: Document MSM8939 Venus
-Date:   Fri,  1 May 2020 22:35:03 +0200
-Message-Id: <20200501203505.144362-3-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200501203505.144362-1-konradybcio@gmail.com>
-References: <20200501203505.144362-1-konradybcio@gmail.com>
+        Fri, 1 May 2020 16:44:30 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:58026 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAUo3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 16:44:29 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id A7B421C020C; Fri,  1 May 2020 22:44:27 +0200 (CEST)
+Date:   Fri, 1 May 2020 22:44:26 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 3/6] serdev: ngsm: Add generic serdev-ngsm driver
+Message-ID: <20200501204426.GE6043@duo.ucw.cz>
+References: <20200430174615.41185-1-tony@atomide.com>
+ <20200430174615.41185-4-tony@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="XuV1QlJbYrcVoo+x"
+Content-Disposition: inline
+In-Reply-To: <20200430174615.41185-4-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- .../bindings/media/qcom,msm8939-venus.yaml    | 119 ++++++++++++++++++
- 1 file changed, 119 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml b/Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
-new file mode 100644
-index 0000000000000..8cc0002d10163
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
-@@ -0,0 +1,119 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/media/qcom,msm8939-venus.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Qualcomm Venus video encode and decode accelerators
-+
-+maintainers:
-+  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
-+
-+description: |
-+  The Venus IP is a video encode and decode accelerator present
-+  on Qualcomm platforms
-+
-+properties:
-+  compatible:
-+    const: qcom,msm8939-venus
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 3
-+
-+  clock-names:
-+    items:
-+      - const: core
-+      - const: iface
-+      - const: bus
-+
-+  iommus:
-+    maxItems: 1
-+
-+  memory-region:
-+    maxItems: 1
-+
-+  video-decoder:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: "venus-decoder"
-+
-+    required:
-+      - compatible
-+
-+    additionalProperties: false
-+
-+  video-encoder:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: "venus-encoder"
-+
-+    required:
-+      - compatible
-+
-+    additionalProperties: false
-+
-+  video-firmware:
-+    type: object
-+
-+    description: |
-+      Firmware subnode is needed when the platform does not
-+      have TrustZone.
-+
-+    properties:
-+      iommus:
-+        maxItems: 1
-+
-+    required:
-+      - iommus
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - power-domains
-+  - clocks
-+  - clock-names
-+  - iommus
-+  - memory-region
-+  - video-decoder
-+  - video-encoder
-+
-+examples:
-+  - |
-+        #include <dt-bindings/interrupt-controller/arm-gic.h>
-+        #include <dt-bindings/clock/qcom,gcc-msm8939.h>
-+
-+        video-codec@1d00000 {
-+                compatible = "qcom,msm8939-venus";
-+                reg = <0x01d00000 0xff000>;
-+                interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+                clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
-+                        <&gcc GCC_VENUS0_AHB_CLK>,
-+                        <&gcc GCC_VENUS0_AXI_CLK>;
-+                clock-names = "core", "iface", "bus";
-+                power-domains = <&gcc VENUS_GDSC>;
-+                iommus = <&apps_iommu 5>;
-+                memory-region = <&venus_mem>;
-+
-+                video-decoder {
-+                        compatible = "venus-decoder";
-+                };
-+
-+                video-encoder {
-+                        compatible = "venus-encoder";
-+                };
-+        };
--- 
-2.26.1
+--XuV1QlJbYrcVoo+x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
+
+> We can have a generic serdev-ngsm driver bring up the TS 27.010 line
+> discipline on the selected serial ports based on device tree data.
+>=20
+> And we can now do standard Linux device driver for the dedicated
+> TS 27.010 channels for devices like GNSS and ALSA found on modems.
+
+
+> +++ b/drivers/tty/serdev/Kconfig
+> @@ -22,4 +22,14 @@ config SERIAL_DEV_CTRL_TTYPORT
+>  	depends on SERIAL_DEV_BUS !=3D m
+>  	default y
+> =20
+> +config SERIAL_DEV_N_GSM
+> +	tristate "Serial device TS 27.010 support"
+> +	help
+> +	  Select this if you want to use the TS 27.010 with a serial port with
+> +	  devices such as modems and GNSS devices.
+> +
+> +	  If unsure, say N.
+> +	depends on N_GSM
+> +	depends on SERIAL_DEV_CTRL_TTYPORT
+
+Normally, depends go after "tristate" and before "help" text. I did
+not realize this is valid code.
+
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+
+> +/*
+> + * Configure SoC 8250 device for 700 ms autosuspend delay, Values around=
+ 600 ms
+> + * and shorter cause spurious wake-up events at least on droid 4. Also k=
+eep the
+
+droid->Droid?
+
+> +static const struct serdev_ngsm_cfg motmdm_cfg =3D {
+> +	.gsm =3D &adaption1,
+> +	.init_retry_quirk =3D true,
+> +	.needs_usb_phy =3D true,
+> +	.aggressive_pm =3D true,
+
+Umm. These are unsigned int:1, not bools, so =3D 1 would be expected
+here.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--XuV1QlJbYrcVoo+x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqyKKgAKCRAw5/Bqldv6
+8txjAJwJqTaTuqG5Df56zqF3mOwZR010dQCfTuwd4x9yo8cT/TgAEsR2HsAJpIE=
+=3ue9
+-----END PGP SIGNATURE-----
+
+--XuV1QlJbYrcVoo+x--
