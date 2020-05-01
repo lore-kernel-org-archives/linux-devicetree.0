@@ -2,87 +2,82 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516C4C4724C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5828BC4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B82D20757
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D492208C3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:28:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="N8cR5SfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgEAOUZ (ORCPT
+        id S1729168AbgEAO2v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 10:20:25 -0400
-Received: from muru.com ([72.249.23.125]:52482 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728839AbgEAOUZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 10:20:25 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 3BFC4810E;
-        Fri,  1 May 2020 14:21:10 +0000 (UTC)
-Date:   Fri, 1 May 2020 07:20:18 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200501142018.GB37466@atomide.com>
-References: <20200430174615.41185-1-tony@atomide.com>
- <20200501082111.GA7501@amd>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501082111.GA7501@amd>
+        Fri, 1 May 2020 10:28:51 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:46894 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729050AbgEAO2v (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 10:28:51 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 5514530C046;
+        Fri,  1 May 2020 07:28:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 5514530C046
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1588343318;
+        bh=B0RTfqVPs2WXX8d2voJyNu01vjv3akzX5dBoypICIos=;
+        h=From:To:Cc:Subject:Date:From;
+        b=N8cR5SfTMqR8j82pUoWuhkg2ZN4o2y9y8vimR1bn92JHHpKGzrisNleWBdqJ08Gyv
+         euE49TzHw1kv8ZpQgKsiZxPsDkqZvGWfb0VWHkj1/GJLgzJGGNr0DiTr18zNRsZdpz
+         xJI1+XVDEShNT2Etlx1s+ONRYmdFI4UhMZtHf/B4=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 22338140069;
+        Fri,  1 May 2020 07:28:48 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     james.quinlan@broadcom.com
+Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Jeremy Linton <jeremy.linton@arm.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list),
+        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
+        ENDPOINT DRIVERS),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 0/4] PCI: brcmstb: Some minor fixes/features
+Date:   Fri,  1 May 2020 10:28:26 -0400
+Message-Id: <20200501142831.35174-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel@denx.de> [200501 08:22]:
-> Hi!
-> 
-> > Now without the chardev support, the /dev/gsmtty* using apps need
-> > to use "U1234AT+CFUN?" format for the packets. The advantage is
-> > less kernel code, and we keep the existing /dev/gsmtty* interface.
-> 
-> Actually... yes, this works. But no, this is not "existing" tty
-> interface.
-> 
-> ttys work per character, and this interface definitely does not... it
-> is "packet" based, write() syscalls need exactly right lengths. You
-> can't just open minicom, and type "U1234...". You can't paste it,
-> either (I tried). tty controls like start/stop bits and baud rate are
-> useless here. CR/LF conversions are unwanted/dangerous because it is
-> confusing hard to debug if you get them wrong.
+v2 -- Dropped commit concerning CRS.
+   -- Chanded new prop 'brcm,aspm-en-l0s' to 'aspm-no-l0s'.
+   -- Capitalize first letter in commit subject line; spelling.
 
-Yes.. That's what n_gsm spins up.
+v1 -- original
 
-> Now, I don't see reason why this could not be made to work, and it may
-> be more important to have something in mainline and work with that. So
-> if you can make this into -next, I'll not complain too loudly. But it
-> is... still wrong and I liked motmdm* more :-).
+Jim Quinlan (4):
+  PCI: brcmstb: Don't clk_put() a managed clock
+  PCI: brcmstb: Fix window register offset from 4 to 8
+  dt-bindings: PCI: brcmstb: New prop 'aspm-no-l0s'
+  PCI: brcmstb: Disable L0s component of ASPM if requested
 
-Yes.. There are issues too with the motmdm* char dev interface too.
+ .../bindings/pci/brcm,stb-pcie.yaml           |  4 ++++
+ drivers/pci/controller/pcie-brcmstb.c         | 19 +++++++++++++++----
+ 2 files changed, 19 insertions(+), 4 deletions(-)
 
-I don't think it would work as is for devices with network interfaces
-on some channel, and continuation packets could need more handling
-possibly.
-
-But let's try to get the basics sorted out first and use the "raw"
-gsmtty* interface. More stuff can always be added later as needed.
-
-Regards,
-
-Tony
-
-
+-- 
+2.17.1
 
