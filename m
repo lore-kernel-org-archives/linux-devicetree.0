@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F82FC47256
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D58DC47256
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E441B2166E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152BF216FD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPZtx49p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tOd6B5X1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgEAWdG (ORCPT
+        id S1727850AbgEAWdL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 18:33:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51454 "EHLO
+        Fri, 1 May 2020 18:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgEAWdG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 18:33:06 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82096C061A0C;
-        Fri,  1 May 2020 15:33:05 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id g13so13381240wrb.8;
-        Fri, 01 May 2020 15:33:05 -0700 (PDT)
+        with ESMTP id S1726495AbgEAWdL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 18:33:11 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACDA7C061A0C;
+        Fri,  1 May 2020 15:33:10 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id y24so1511090wma.4;
+        Fri, 01 May 2020 15:33:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=s46Pums7160hDMRHz4lcI0wKlc3rbqTgaKkrnlbOBuA=;
-        b=aPZtx49puuwMGWWts50qZOBKnnID+5lgpn6sq2AgFMKTTC45PqhyJ0nbiXMI2YiCIY
-         o8b9N8grpKwMDDP5R58ZUpShctT4P82yPm/sD2/6xSHGuaOGh21nwxayaGrPVgMVfDw8
-         SvQHDPwU7RanE+yawsFE3zaPiv6YRgZVW6KsmhDpU/ae7xvmfEUnT5+t/tT3L1WKzySo
-         GKF8Q3ethbEqlrXXjLr6n3iOy32n36IRSZ3otE1W/mwP8tWG36AEZhj/z0yqab4FpzPM
-         mGm+tEvErmi/C8VkvRzt73MoLUZqbcn6FlTin20j5vMDOd2ueMVcGkrWGzSNnwi9suB/
-         MdlA==
+        bh=fBthR+wcgy5COJ5PuVoR09sM6kl0TIToFzQT9ikob/U=;
+        b=tOd6B5X13HcktO7B7Ld4JWKAtzvF+dXMuh1WobqrolReNSF+HLsuDYZrQb3SpvrB0C
+         5Y6MSs1UphSPajyxFO2yXAp05Y4CBarbpmQrwZWdkhRnQVuF7UcqRwQUseLOyf9IYlk9
+         r67gY8FpInacPNQtT1a0td3P66/b3/whG++q3NP3xnWHAGH1QmRof8ShqaSGw2lDG3t+
+         +yrUczsUu7kxOGEQYwsY2S//Z8iCLnqQQPEiiBE49z1/jTWfL4oS2RZbm9+qIbBrsIB9
+         vIhBypzlUcku7I3/LyfFRYIEMkEuFfQWcy4Ewxd5zAIKPA+7itSWIyV95tw1NLhP4ZQc
+         /+Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=s46Pums7160hDMRHz4lcI0wKlc3rbqTgaKkrnlbOBuA=;
-        b=Y37jvP3brb49WbqymYNbADOJZfunmCr67Vn2aI7nAVu3XbvR8vKfFc+dtIeHAjd7up
-         mVfpJZ8Wv31SCFRbe9yNitvJbFY8wh/VRpTOLsSaZQE7E7TtCR9ok68uxK26wx+C1xBI
-         dgjxYMIWMdTELu9F9Fb5ob5ZlVpnRYqfk+bNLTvYjYcIK5eyijSg3R09uxjpTo+xfki7
-         y60leYrufBOuF05UciuEvX1V017Bc5c6XOZrijWppIG5FxjXhGteAg8FrqsWs0PM8vTZ
-         wxRuzdQlCODCS9yqZots/EJr1jwEV3r9aLy0TC5vmyGVFccwLorW1TOh5HokvfSHGTig
-         /fRg==
-X-Gm-Message-State: AGi0PuZS1QJyxlcelzcMY336ZIDjXRSAyAqEhLtXgcsYD9LjtZujXuNm
-        z9gk46AIjF1lEsYHy9Outj8KEtBBkd2B3g==
-X-Google-Smtp-Source: APiQypL4MaiMlQFcX9hzI+6tDUAdmeO0Oqxm4mym8TPaG8C9vTmyMTxfwmWWIgCm81egi4OLCMeukA==
-X-Received: by 2002:a5d:6188:: with SMTP id j8mr6043745wru.119.1588372384298;
-        Fri, 01 May 2020 15:33:04 -0700 (PDT)
+        bh=fBthR+wcgy5COJ5PuVoR09sM6kl0TIToFzQT9ikob/U=;
+        b=X7LeE3X/LDjqOf/SBOqb26Gs12pF6PbmZIivvE6aKUcWeVyrO9kdmW6531qlM73gfi
+         y9isE/TA9UqPfqR3kzQV1szpxZmd1Q6fBLdMzTFpYKtwx5f8EKMMfYUzkJOvQ9Rl0MxV
+         v291UGJBC9n95ovL7ovaYQ0Py//gN/WcB0Yww5q16GNqLR1b1oLO5tBS6bKEt5NL8EnT
+         sIn00EReD7NxVzrExQ0dCwwSmEh1ZyrnsiluOkFHbT5R58l/S1GS6/jbQ8lTKDkmBeHw
+         oEjoX80QWmXp0fNjJCDpqOXUusXv2pT2Wy22PZkGS5Dl9caxgBPLyk7rxLEJYPDUuGCH
+         0yTg==
+X-Gm-Message-State: AGi0PuYM2XLIAeNrjVVDoCgi2V2FmPk1LyMW1RATerhdTFsqg9gyQXrd
+        1kAwDm0mcIJwjzxJP07J478=
+X-Google-Smtp-Source: APiQypLT6iW7K5lInGD3jltH2jhsah0Dpdx0iyUzmqxecKPKybRGbX3wnZ1koKIChkYe2KJNx7oUCA==
+X-Received: by 2002:a1c:9d84:: with SMTP id g126mr1500453wme.184.1588372389414;
+        Fri, 01 May 2020 15:33:09 -0700 (PDT)
 Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
-        by smtp.googlemail.com with ESMTPSA id n9sm6237750wrx.61.2020.05.01.15.33.03
+        by smtp.googlemail.com with ESMTPSA id n9sm6237750wrx.61.2020.05.01.15.33.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 15:33:03 -0700 (PDT)
+        Fri, 01 May 2020 15:33:08 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Andy Gross <agross@kernel.org>,
@@ -67,11 +67,10 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vincent Knecht <vincent.knecht@mailoo.org>
-Subject: [PATCH 1/4] clk: qcom: smd: Add support for MSM8936 rpm clocks
-Date:   Sat,  2 May 2020 00:32:29 +0200
-Message-Id: <20200501223232.275800-2-konradybcio@gmail.com>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] drivers: soc: Add MSM8936 SMD RPM compatible
+Date:   Sat,  2 May 2020 00:32:31 +0200
+Message-Id: <20200501223232.275800-4-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200501223232.275800-1-konradybcio@gmail.com>
 References: <20200501223232.275800-1-konradybcio@gmail.com>
@@ -83,81 +82,23 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vincent Knecht <vincent.knecht@mailoo.org>
-
-Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- drivers/clk/qcom/clk-smd-rpm.c | 50 ++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ drivers/soc/qcom/smd-rpm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
-index 52f63ad787ba9..4ac80d8ac6c25 100644
---- a/drivers/clk/qcom/clk-smd-rpm.c
-+++ b/drivers/clk/qcom/clk-smd-rpm.c
-@@ -452,6 +452,55 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8916 = {
- 	.num_clks = ARRAY_SIZE(msm8916_clks),
- };
- 
-+/* msm8936 */
-+DEFINE_CLK_SMD_RPM(msm8936, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8936, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
-+DEFINE_CLK_SMD_RPM(msm8936, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8936, sysmmnoc_clk, sysmmnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
-+DEFINE_CLK_SMD_RPM_QDSS(msm8936, qdss_clk, qdss_a_clk, QCOM_SMD_RPM_MISC_CLK, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, bb_clk1, bb_clk1_a, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, bb_clk2, bb_clk2_a, 2);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, rf_clk1, rf_clk1_a, 4);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, rf_clk2, rf_clk2_a, 5);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, bb_clk1_pin, bb_clk1_a_pin, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, bb_clk2_pin, bb_clk2_a_pin, 2);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, rf_clk1_pin, rf_clk1_a_pin, 4);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, rf_clk2_pin, rf_clk2_a_pin, 5);
-+
-+static struct clk_smd_rpm *msm8936_clks[] = {
-+		[RPM_SMD_PCNOC_CLK]		     = &msm8936_pcnoc_clk,
-+		[RPM_SMD_PCNOC_A_CLK]		   = &msm8936_pcnoc_a_clk,
-+		[RPM_SMD_SNOC_CLK]		      = &msm8936_snoc_clk,
-+		[RPM_SMD_SNOC_A_CLK]		    = &msm8936_snoc_a_clk,
-+		[RPM_SMD_BIMC_CLK]		      = &msm8936_bimc_clk,
-+		[RPM_SMD_BIMC_A_CLK]		    = &msm8936_bimc_a_clk,
-+		[RPM_SMD_SYSMMNOC_CLK]		  = &msm8936_sysmmnoc_clk,
-+		[RPM_SMD_SYSMMNOC_A_CLK]		= &msm8936_sysmmnoc_a_clk,
-+		[RPM_SMD_QDSS_CLK]		      = &msm8936_qdss_clk,
-+		[RPM_SMD_QDSS_A_CLK]		    = &msm8936_qdss_a_clk,
-+		[RPM_SMD_BB_CLK1]		       = &msm8936_bb_clk1,
-+		[RPM_SMD_BB_CLK1_A]		     = &msm8936_bb_clk1_a,
-+		[RPM_SMD_BB_CLK2]		       = &msm8936_bb_clk2,
-+		[RPM_SMD_BB_CLK2_A]		     = &msm8936_bb_clk2_a,
-+		[RPM_SMD_RF_CLK1]		       = &msm8936_rf_clk1,
-+		[RPM_SMD_RF_CLK1_A]		     = &msm8936_rf_clk1_a,
-+		[RPM_SMD_RF_CLK2]		       = &msm8936_rf_clk2,
-+		[RPM_SMD_RF_CLK2_A]		     = &msm8936_rf_clk2_a,
-+		[RPM_SMD_BB_CLK1_PIN]		   = &msm8936_bb_clk1_pin,
-+		[RPM_SMD_BB_CLK1_A_PIN]		 = &msm8936_bb_clk1_a_pin,
-+		[RPM_SMD_BB_CLK2_PIN]		   = &msm8936_bb_clk2_pin,
-+		[RPM_SMD_BB_CLK2_A_PIN]		 = &msm8936_bb_clk2_a_pin,
-+		[RPM_SMD_RF_CLK1_PIN]		   = &msm8936_rf_clk1_pin,
-+		[RPM_SMD_RF_CLK1_A_PIN]		 = &msm8936_rf_clk1_a_pin,
-+		[RPM_SMD_RF_CLK2_PIN]		   = &msm8936_rf_clk2_pin,
-+		[RPM_SMD_RF_CLK2_A_PIN]		 = &msm8936_rf_clk2_a_pin,
-+};
-+
-+static const struct rpm_smd_clk_desc rpm_clk_msm8936 = {
-+		.clks = msm8936_clks,
-+		.num_clks = ARRAY_SIZE(msm8936_clks),
-+};
-+
- /* msm8974 */
- DEFINE_CLK_SMD_RPM(msm8974, pnoc_clk, pnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
- DEFINE_CLK_SMD_RPM(msm8974, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
-@@ -768,6 +817,7 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8998 = {
- 
- static const struct of_device_id rpm_smd_clk_match_table[] = {
- 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
-+	{ .compatible = "qcom,rpmcc-msm8936", .data = &rpm_clk_msm8936 },
- 	{ .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
- 	{ .compatible = "qcom,rpmcc-msm8976", .data = &rpm_clk_msm8976 },
- 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
+diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
+index 005dd30c58faf..8f290c67cb473 100644
+--- a/drivers/soc/qcom/smd-rpm.c
++++ b/drivers/soc/qcom/smd-rpm.c
+@@ -231,6 +231,7 @@ static void qcom_smd_rpm_remove(struct rpmsg_device *rpdev)
+ static const struct of_device_id qcom_smd_rpm_of_match[] = {
+ 	{ .compatible = "qcom,rpm-apq8084" },
+ 	{ .compatible = "qcom,rpm-msm8916" },
++	{ .compatible = "qcom,rpm-msm8936" },
+ 	{ .compatible = "qcom,rpm-msm8974" },
+ 	{ .compatible = "qcom,rpm-msm8976" },
+ 	{ .compatible = "qcom,rpm-msm8996" },
 -- 
 2.26.1
 
