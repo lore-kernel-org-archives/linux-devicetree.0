@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A7AC47259
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9277BC4725B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50D032166E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D872166E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 22:33:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FH3toebp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8YxeKow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgEAWdP (ORCPT
+        id S1727804AbgEAWdJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 18:33:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51480 "EHLO
+        Fri, 1 May 2020 18:33:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgEAWdN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 18:33:13 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52231C061A0E;
-        Fri,  1 May 2020 15:33:13 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x18so13419974wrq.2;
-        Fri, 01 May 2020 15:33:13 -0700 (PDT)
+        with ESMTP id S1726495AbgEAWdI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 18:33:08 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A613C061A0C;
+        Fri,  1 May 2020 15:33:07 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id x18so13419673wrq.2;
+        Fri, 01 May 2020 15:33:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=l1iUiHlCX8vszl1pLIMm9oBcP0m3wLHIgAhR3pi1/gc=;
-        b=FH3toebpbf24518LoXwizU5siw7UX9ZFwKGT403KZIQm2SvyJ7yhnbuCTH+b9Cdiby
-         BVrCXsCnUg8FaC7EbSKQ5BHRfSdOv8ir1KMGfWAf8obOX0+YuusFIzRpV/+szPHmoh4g
-         5Aa0pYbgJ/nWOrgJ51XRQ4afVtNUEfHi/XIAsnwigwa98Ih5RXfGJNUXv/gUT+Xc0Qot
-         wWdyNNA7bioMvVMBJsrt1Q0aJxJWNiggmb6c4AysLnLEBSuaqi2egQegOqwP5VeR1W9X
-         QyOtagSG06RUGlqDqsyOw39Cmd0wvfFNULupiApQOzG4mzvxZ+4bFGW7f+isnJ5cAdzb
-         cflQ==
+        bh=PpsHhU0SIZ/znnjv1B1lxEbVrbiH03IPfJBbSjteEyU=;
+        b=W8YxeKowqSJ/ecn9+U19e5QY0n3C+lmV8b7B8oO7LE65F6HG+2T5irzmzl78yYXu24
+         hxInpZYqHAmvL1CH9tZelNq/jIoBuRgi7ZCapSnIzTkpYY4N4ZnhXTn9g5VW4jxUlK38
+         TTD7ePgqXSHPmWiA4jiSCMqP35ADc/S7q3ZcCkAkVyThYd5axY0cnJHKkmuzJ+brV74u
+         /PeKLs2OMVJiwW3l/kC/9VFAga0F3I5RpGRVy2yyCudDGrBkaOAq0SPXpDl3kb91qjVv
+         eYbwTxLn+8CRr7QxdKn0D52Eqojz84StFkUN5bKYBrMPeLguignOaci9fQoBdeLl+GKC
+         Uiaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=l1iUiHlCX8vszl1pLIMm9oBcP0m3wLHIgAhR3pi1/gc=;
-        b=L+7wqiobhFJWWoHfT3gP8Ijh3KTP79seXP3hO030taA4yJJ0KUJuG9d2Ntazvmj1wa
-         akLghKGXJa0gAKojtoPgL4+3DEtuHfABV5RT4GwcHc0DabvAxgip59qmARZhWP+r6w9d
-         IfGzzoWBrton5lmFv/THv4BXuVevp4g3LiZ7p3LHH2eqgncUiXOVS1sIg/WuNBY0ZnoS
-         LEW2b2gSxG48sXrlXMWtezbjRJh4ILbkLLU5RUw5F+P3qJzD0VJ7kTOYsuH77bHeOIxK
-         Xm3waGUxZXopd8s11zyWZmwQoPi3hqSAUrq4KNiQxgozzSr2QZ67eElxqyFPHBclCnfJ
-         Ne6w==
-X-Gm-Message-State: AGi0PuZrlp0Pkbeeg4C8rnIbJlAg9jqDnozZeev0DiN5ErxXVQh/+KC8
-        7BskMmRlWAXIRGRGBQGG5uE=
-X-Google-Smtp-Source: APiQypISQnXBlkEKKggPdILRkZOQxcjW44onLqbEjhVTrQWmpR/UBmzyUGw5aatNiTX+ohW4DBSw9w==
-X-Received: by 2002:a5d:4905:: with SMTP id x5mr6995455wrq.158.1588372392144;
-        Fri, 01 May 2020 15:33:12 -0700 (PDT)
+        bh=PpsHhU0SIZ/znnjv1B1lxEbVrbiH03IPfJBbSjteEyU=;
+        b=BqUIZEzqyQbfcEbWLGh7zq9B747Ez+UfzhvDG7PK9nMTht4Wy1LErfwukcjicwo489
+         hp5dE4a8zimMrfTpKeCBHWsu0pVMqrP14UACQwwGUL2lJOxTuqYpcEOkoSrsC3Z2W+u1
+         ncCEtUkLW8Dh++Rz6xYFMiuRypf6gBXtE6beAH2Yw3qhcmuCiIIXUCnKZBtRehsu3wKM
+         EtWiF/cXTQGN9hiCzfkX21eiOkNPpgmrGL9UDYOTIZTNmA7J8svxNDATgQLvX7OLu9Ht
+         ghQrwin7Lxv7Xleyz1a/g3Ah3q2wDJzVFXHM8tXZh3Tv+VLu+4bYjy1EXr58qGBft6ik
+         l90A==
+X-Gm-Message-State: AGi0PuaNI809Ob0kO0ewswXHk7TYSVoXcI8MIF9uhPC6OgqoTxjZGWv/
+        0NzWhp8uAj9/f0fM6kxcHqg=
+X-Google-Smtp-Source: APiQypKTiMZxHf2OaMphivwaa00Ln7MHIyM+IQfTraGLdmpsY1CAA/180QQKI/uDm3JxIUdwLPZqQg==
+X-Received: by 2002:adf:9f11:: with SMTP id l17mr6339741wrf.202.1588372386412;
+        Fri, 01 May 2020 15:33:06 -0700 (PDT)
 Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
-        by smtp.googlemail.com with ESMTPSA id n9sm6237750wrx.61.2020.05.01.15.33.10
+        by smtp.googlemail.com with ESMTPSA id n9sm6237750wrx.61.2020.05.01.15.33.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 15:33:11 -0700 (PDT)
+        Fri, 01 May 2020 15:33:06 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Andy Gross <agross@kernel.org>,
@@ -69,9 +69,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Vincent Knecht <vincent.knecht@mailoo.org>
-Subject: [PATCH 4/4] dt-bindings: soc: qcom: Document MSM8936 SMD RPM compatible
-Date:   Sat,  2 May 2020 00:32:32 +0200
-Message-Id: <20200501223232.275800-5-konradybcio@gmail.com>
+Subject: [PATCH 2/4] dt-bindings: clock: rpmcc: Document MSM8936 compatible
+Date:   Sat,  2 May 2020 00:32:30 +0200
+Message-Id: <20200501223232.275800-3-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200501223232.275800-1-konradybcio@gmail.com>
 References: <20200501223232.275800-1-konradybcio@gmail.com>
@@ -87,21 +87,21 @@ From: Vincent Knecht <vincent.knecht@mailoo.org>
 
 Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
 ---
- Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
+ Documentation/devicetree/bindings/clock/qcom,rpmcc.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-index 616fddcd09fd8..55f8abd845a7e 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-@@ -21,6 +21,7 @@ resources.
- 	Definition: must be one of:
- 		    "qcom,rpm-apq8084"
- 		    "qcom,rpm-msm8916"
-+		    "qcom,rpm-msm8936"
- 		    "qcom,rpm-msm8974"
- 		    "qcom,rpm-msm8976"
- 		    "qcom,rpm-msm8998"
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+index 90a1349bc7135..51d1ef62c7450 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+@@ -13,6 +13,7 @@ Required properties :
+ 			"qcom,rpmcc-msm8660", "qcom,rpmcc"
+ 			"qcom,rpmcc-apq8060", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8916", "qcom,rpmcc"
++			"qcom,rpmcc-msm8936", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8976", "qcom,rpmcc"
+ 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
 -- 
 2.26.1
 
