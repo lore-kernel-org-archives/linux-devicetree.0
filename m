@@ -2,108 +2,118 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99A7C47257
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107C0C4724C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7B4720857
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E233620857
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 14:49:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="W3eBxkRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbgEAOq6 (ORCPT
+        id S1730556AbgEAOtP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 10:46:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:41952 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729175AbgEAOqt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 May 2020 10:46:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C94F31FB;
-        Fri,  1 May 2020 07:46:48 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 895353F68F;
-        Fri,  1 May 2020 07:46:47 -0700 (PDT)
-Date:   Fri, 1 May 2020 15:46:45 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robin.murphy@arm.com
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-Message-ID: <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
+        Fri, 1 May 2020 10:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729114AbgEAOtO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 10:49:14 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56563C061A0C;
+        Fri,  1 May 2020 07:49:14 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id x1so7637246ejd.8;
+        Fri, 01 May 2020 07:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fxPFkW3QxOmRfYj2h3nMtAxuro0T/xEXMFbcE0LTrVU=;
+        b=W3eBxkRVCUkRmVjaeZxdY0eWXI1WeV14Y3GZ6cGG6qX2rTNYODG/BhL8vEpRBcwaX8
+         5zyBVQI+Panp/tiEK/dymKhhil24IaILyAaTbA3+8a3McJf9tacA3Zc7rwjq5i0wWM3R
+         kNZhVSx8yndKHndGwo7LMgJt+4oODm4bGQ7Xu4rUIJQYPUR40Ev/Jg4FjzSM5/gEV5+x
+         oQPS5n4+5GFiF2LMJceZVHlRYcpEj/Q9OldY0p8kPupcGJLxLMkoKGeFEXfmjNy1T8g+
+         5HfzjwGCytspb5OaBLFNKMcAUGG9Oz5jmvrc5BifLpcq/oGghD/DAsv+kcGzitsc9hJ8
+         702w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fxPFkW3QxOmRfYj2h3nMtAxuro0T/xEXMFbcE0LTrVU=;
+        b=PNu1Nk0KoaPPBBdpL15G3DrF3oKx7knlcPdqKvJrROP4L3RoNZyItdDd9YPp/r0I2D
+         7j6jMW/llYz4qfhYl6SqUQulWD87ryJzWhYyMxqDiH+mB9t05ZGAvXsGHDP7q/+G1Kjm
+         urWA5bAGtKuHEg0SP629ogsnJcHmAFO6BvZ1lVBD2lsE2leAof1If7Twk+ez+sEj46Fd
+         Y1BvXOvZGDL6RAPM6FiaPbwkdhGwFtKtMnke6T2bBxlRgb7GC8HS1YRedYc0WTM0wiA7
+         ni7pgnKYvHLulHca7oL1IsWPATHTjzbQ5Kt7aKJ7YG2SfMJtXeHfwl2AYNDQCNr+GWZr
+         h31w==
+X-Gm-Message-State: AGi0PuaZq3OMGmiFun309hY8LSRPsgeHOyrB3vX53DEDXJMspXgWGBZP
+        rF6Zz035nYW23sydtvQaDrBXffl6oGnG/spslyQ=
+X-Google-Smtp-Source: APiQypI+1+VQOUh4IFgtlgbygkJrSop4NKMEXZUd+7VOMUopczAN+iZLGHuyibbdAMVPCjuSWytmI5hAyJGDHqrKplU=
+X-Received: by 2002:a17:906:4048:: with SMTP id y8mr3549075ejj.258.1588344553010;
+ Fri, 01 May 2020 07:49:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417114322.31111-3-kishon@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com> <20200429212933.GA76972@lunn.ch>
+In-Reply-To: <20200429212933.GA76972@lunn.ch>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 1 May 2020 16:49:02 +0200
+Message-ID: <CAFBinCDAz48BKjvLHOmuHk6nME+vpCueFW14UWP1b8Ae_D1j5w@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 00/11] dwmac-meson8b Ethernet RX delay configuration
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        jianxin.pan@amlogic.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[+Robin - to check on dma-ranges intepretation]
+Hi Andrew,
 
-I would need RobH and Robin to review this.
+On Wed, Apr 29, 2020 at 11:29 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > - Khadas VIM2 seems to have the RX delay built into the PCB trace
+> >   length. When I enable the RX delay on the PHY or MAC I can't get any
+> >   data through. I expect that we will have the same situation on all
+> >   GXBB, GXM, AXG, G12A, G12B and SM1 boards
+>
+> Hi Martin
+>
+> Can you actually see this on the PCB? The other possibility is that
+> the bootloader is configuring something, which is not getting
+> overridden when linux starts up.
+at least it doesn't jump straight into my eye.
+I checked in u-boot and Linux, and for both the RX delay is disabled
+in the PHY as well as in the MAC.
 
-Also, An ACK from Tom is required - for the whole series.
+The schematics of the Khadas VIM2 also show the the RX delay in the
+PHY is turned off by pin-strapping, see page 7 on the right: [0]
+It's the same for the Khadas VIM3 schematics, also on page 7: [1]
+There are also high resolution images of the Khadas VIM3 online so you
+can look at it yourself (I couldn't find any for the Khadas VIM2 which
+is what I have): [2]
 
-On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
-> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
-> property to configure the number of bits passed through from PCIe
-> address to internal address in Inbound Address Translation register.
-> 
-> However standard PCI dt-binding already defines "dma-ranges" to
-> describe the address range accessible by PCIe controller. Parse
-> "dma-ranges" property to configure the number of bits passed
-> through from PCIe address to internal address in Inbound Address
-> Translation register.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 9b1c3966414b..60f912a657b9 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	struct device *dev = rc->pcie.dev;
->  	struct platform_device *pdev = to_platform_device(dev);
->  	struct device_node *np = dev->of_node;
-> +	struct of_pci_range_parser parser;
->  	struct pci_host_bridge *bridge;
->  	struct list_head resources;
-> +	struct of_pci_range range;
->  	struct cdns_pcie *pcie;
->  	struct resource *res;
->  	int ret;
-> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	rc->max_regions = 32;
->  	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
->  
-> -	rc->no_bar_nbits = 32;
-> -	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
-> +	if (!of_pci_dma_range_parser_init(&parser, np))
-> +		if (of_pci_range_parser_one(&parser, &range))
-> +			rc->no_bar_nbits = ilog2(range.size);
-> +
-> +	if (!rc->no_bar_nbits) {
-> +		rc->no_bar_nbits = 32;
-> +		of_property_read_u32(np, "cdns,no-bar-match-nbits",
-> +				     &rc->no_bar_nbits);
-> +	}
->  
->  	rc->vendor_id = 0xffff;
->  	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
-> -- 
-> 2.17.1
-> 
+I agree that we need to get an answer to the RX delay question on the
+arm64 SoCs.
+If there's no way to find out from the existing resources then I can
+contact Khadas and ask them about the PCB trace length on VIM2, VIM3
+and VIM3L (these are the ones with RGMII PHYs).
+
+For the older SoCs the RX delay has to be provided by either the MAC
+or the PHY and right now we're not configuring it.
+We cannot simply enable the RX delay at the PHY level because the
+bootloader enables it in the MAC (so we have to turn it off there).
+So it would be great if you could still review this series.
+
+
+Martin
+
+
+[0] https://dl.khadas.com/Hardware/VIM2/Schematic/VIM2_V12_Sch.pdf
+[1] https://dl.khadas.com/Hardware/VIM3/Schematic/VIM3_V12_Sch.pdf
+[2] https://forum.khadas.com/t/khadas-vim3-is-launching-on-24-june/4103
