@@ -2,306 +2,156 @@ Return-Path: <SRS0=mas4=6P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E033AC47253
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 18:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7F7C47253
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 18:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB532173E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 18:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E8D921974
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 May 2020 18:40:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dXYWCe/p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i4V/eLGR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730416AbgEASQK (ORCPT
+        id S1730082AbgEASk2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 May 2020 14:16:10 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:44940 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730353AbgEASQH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 14:16:07 -0400
-Received: from prsriva-linux.hsd1.wa.comcast.net (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0F06220B71CC;
-        Fri,  1 May 2020 11:16:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0F06220B71CC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1588356965;
-        bh=9BrQRipJ8L0+PR7w+BHorvxfJzUA9j4XBGTJLVfj2wo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dXYWCe/pEjs7Fi+XnQMu+RMkIpt/9h3MnBgm7Q2+VEwBZbdx6sDVTTyAjkCdiPNUA
-         YuT/NVpsY75qZMUOKFCTlbiON1R7yy/eMQl1CVsrBmjDY6z8QT95kPpOKND+zuw90X
-         6PhjVOiroY80SgIAOZcHNthBRtuqmz04guUW5w3g=
-From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
-To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     nramas@linux.microsoft.com, prsriva@linux.microsoft.com,
-        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: [RFC][PATCH 2/2] Add support for ima buffer pass using reserved memory arm64
-Date:   Fri,  1 May 2020 11:15:52 -0700
-Message-Id: <20200501181552.1184827-3-prsriva@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200501181552.1184827-1-prsriva@linux.microsoft.com>
-References: <20200501181552.1184827-1-prsriva@linux.microsoft.com>
+        Fri, 1 May 2020 14:40:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729990AbgEASk2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 May 2020 14:40:28 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78430C061A0E
+        for <devicetree@vger.kernel.org>; Fri,  1 May 2020 11:40:28 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id z25so3233266otq.13
+        for <devicetree@vger.kernel.org>; Fri, 01 May 2020 11:40:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K/pyc9ZSgvlCPxWaLAF7Dj+DR/uYkULUKmz0lI2apjM=;
+        b=i4V/eLGRRDB/t5gS34y6x6FmiullhpKMPXQe+E4ih2swc8cRlFluseSUU+ZBlGBsVx
+         61I7Slgf9kEu2+57x9aRxp2pbshiXeln7PzqLgZ8StlqgrETFcszmRQc2uLXVEMteQ6K
+         WsYkV5FgsGL/gaiLMtLVGEpi+XxrbCiGTar5uBAafBCi4QpOfA9Ni7juUOMrqIhbSw7o
+         dZS3eNr/bYB9rwBwJ2jIOGXujjaVcW3kUbQSmah72Fi3rxxcPKtEKdeb09cydPN0RUkH
+         fI/cGT05sjeH8Cg+EjNafozZoyY1nh057jxvYMba1UKDryTI5OjZu/ptlgnjY6feBp+0
+         805A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K/pyc9ZSgvlCPxWaLAF7Dj+DR/uYkULUKmz0lI2apjM=;
+        b=hqavPbX8qKK0jxcMrMt1cdHP3CiaDmnLsIkhfW8qKq3NPsnbgWzOccjUv3ZXEjS8uv
+         kaW08v94YScPGGrfK4QgmB5p91N7irthKd2vBwkINkOg7FFtv80AZ2a789AowB3eHELe
+         q4xtazU+v28fJdLLPYLJuFAjb2GcykpnSHD68q5cITB/CzlBOEJ0iGBXy38GWpUaliFX
+         RBjGqK0/CAsCvUHdC6KrRMN/lvZRGzKh6kj7uJ0B71Y/Yqu7dUtaeKFfw0D87ZX+yPqw
+         yuMbnB9yuOOln2qBzH1qK4VB1VgXTxS9dtjfVzIBObJQm9XtarYDEutWuDjQ4hL3OuWE
+         AHsw==
+X-Gm-Message-State: AGi0PuZzSoEuTPGyhyjyLmglaNpoiycSVeSd8A5Z1WbxeC6fKvdjfqn9
+        SgrMSGe9tnyqFxqvmMMFM/id+SPLfIRXUfV0ogWojg==
+X-Google-Smtp-Source: APiQypL4ruHab7XImHLBHWXSGsuiDyI+02igUD+AFcOYMG/0olXknNi2MzN7TA4/gZzBZl34o0E6oBDOCG/6nNaBtVo=
+X-Received: by 2002:a05:6830:1589:: with SMTP id i9mr4941206otr.102.1588358427674;
+ Fri, 01 May 2020 11:40:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200501073949.120396-1-john.stultz@linaro.org>
+ <20200501073949.120396-2-john.stultz@linaro.org> <20200501104216.4f226c2a7bzval5o@DESKTOP-E1NTVVP.localdomain>
+In-Reply-To: <20200501104216.4f226c2a7bzval5o@DESKTOP-E1NTVVP.localdomain>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 1 May 2020 11:40:16 -0700
+Message-ID: <CALAqxLVScV1j-zxw=cwpE0+eDoaubchXx6SJgu=1Zvh8HnE-Tg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/4] devicetree: bindings: Add linux,cma-heap tag for
+ reserved memory
+To:     Brian Starkey <brian.starkey@arm.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-mm <linux-mm@kvack.org>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
- Add support for ima buffer pass using reserved memory for
- arm64 kexec. Update the arch sepcific code path in kexec file load to store
- the ima buffer in the reserved memory. The same reserved memory is read on
- kexec or cold boot.
+On Fri, May 1, 2020 at 3:42 AM Brian Starkey <brian.starkey@arm.com> wrote:
+>
+> Hi,
+>
+> On Fri, May 01, 2020 at 07:39:46AM +0000, John Stultz wrote:
+> > This patch adds a linux,cma-heap property for CMA reserved memory
+> > regions, which will be used to allow the region to be exposed via
+> > the DMA-BUF Heaps interface
+> >
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> > Cc: "Andrew F. Davis" <afd@ti.com>
+> > Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> > Cc: Liam Mark <lmark@codeaurora.org>
+> > Cc: Pratik Patel <pratikp@codeaurora.org>
+> > Cc: Laura Abbott <labbott@redhat.com>
+> > Cc: Brian Starkey <Brian.Starkey@arm.com>
+> > Cc: Chenbo Feng <fengc@google.com>
+> > Cc: Alistair Strachan <astrachan@google.com>
+> > Cc: Sandeep Patil <sspatil@google.com>
+> > Cc: Hridya Valsaraju <hridya@google.com>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Cc: Robin Murphy <robin.murphy@arm.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: linux-mm@kvack.org
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> >  .../devicetree/bindings/reserved-memory/reserved-memory.txt    | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > index bac4afa3b197..e97b6a4c3bc0 100644
+> > --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > @@ -68,6 +68,9 @@ Linux implementation note:
+> >  - If a "linux,cma-default" property is present, then Linux will use the
+> >    region for the default pool of the contiguous memory allocator.
+> >
+> > +- If a "linux,cma-heap" property is present, then Linux will expose the
+> > +  the CMA region via the DMA-BUF Heaps interface.
+> > +
+>
+> Would it be useful or even possible to give some indication of what
+> the heap will end up being called? I'm afraid I don't remember what if
+> any conclusions came out of previous discussions on UAPI for heap
+> enumeration.
 
-Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
----
- arch/arm64/Kconfig                     |  1 +
- arch/arm64/include/asm/ima.h           | 22 +++++++++
- arch/arm64/include/asm/kexec.h         |  5 ++
- arch/arm64/kernel/Makefile             |  1 +
- arch/arm64/kernel/ima_kexec.c          | 64 ++++++++++++++++++++++++++
- arch/arm64/kernel/machine_kexec_file.c |  1 +
- arch/powerpc/include/asm/ima.h         |  3 +-
- arch/powerpc/kexec/ima.c               | 14 +++++-
- security/integrity/ima/ima_kexec.c     | 15 ++++--
- 9 files changed, 119 insertions(+), 7 deletions(-)
- create mode 100644 arch/arm64/include/asm/ima.h
- create mode 100644 arch/arm64/kernel/ima_kexec.c
+So the name we expose is the CMA name itself. So with dt it will be
+the name of the reserved memory node that the flag property is added
+to.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 40fb05d96c60..bc9e1a91686b 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1069,6 +1069,7 @@ config KEXEC
- config KEXEC_FILE
- 	bool "kexec file based system call"
- 	select KEXEC_CORE
-+	select HAVE_IMA_KEXEC
- 	help
- 	  This is new version of kexec system call. This system call is
- 	  file based and takes file descriptors as system call argument
-diff --git a/arch/arm64/include/asm/ima.h b/arch/arm64/include/asm/ima.h
-new file mode 100644
-index 000000000000..58033b427e59
---- /dev/null
-+++ b/arch/arm64/include/asm/ima.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_ARM64_IMA_H
-+#define _ASM_ARM64_IMA_H
-+
-+struct kimage;
-+
-+int is_ima_memory_reserved(void);
-+int ima_get_kexec_buffer(void **addr, size_t *size);
-+int ima_free_kexec_buffer(void);
-+
-+#ifdef CONFIG_IMA_KEXEC
-+int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-+			      void *buffer, size_t size);
-+
-+#else
-+int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-+			      void *buffer, size_t size)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_IMA_KEXEC */
-+#endif /* _ASM_ARM64_IMA_H */
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index d24b527e8c00..2bd19ccb6c43 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -100,6 +100,11 @@ struct kimage_arch {
- 	void *elf_headers;
- 	unsigned long elf_headers_mem;
- 	unsigned long elf_headers_sz;
-+
-+#ifdef CONFIG_IMA_KEXEC
-+	phys_addr_t ima_buffer_addr;
-+	size_t ima_buffer_size;
-+#endif
- };
- 
- extern const struct kexec_file_ops kexec_image_ops;
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 4e5b8ee31442..cd3cb7690d51 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -55,6 +55,7 @@ obj-$(CONFIG_RANDOMIZE_BASE)		+= kaslr.o
- obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
- obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
- 					   cpu-reset.o
-+obj-$(CONFIG_HAVE_IMA_KEXEC)		+= ima_kexec.o
- obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o
- obj-$(CONFIG_ARM64_RELOC_TEST)		+= arm64-reloc-test.o
- arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
-diff --git a/arch/arm64/kernel/ima_kexec.c b/arch/arm64/kernel/ima_kexec.c
-new file mode 100644
-index 000000000000..ff5649333c7c
---- /dev/null
-+++ b/arch/arm64/kernel/ima_kexec.c
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Microsoft Corporation.
-+ *
-+ * Authors:
-+ * Prakhar Srivastava <prsriva@linux.microsoft.com>
-+ */
-+
-+#include <linux/kexec.h>
-+#include <linux/of.h>
-+
-+
-+/**
-+ * is_ima_memory_reserved - check if memory is reserved via device
-+ *			    tree.
-+ *	Return: negative or zero when memory is not reserved.
-+ *	positive number on success.
-+ *
-+ */
-+int is_ima_memory_reserved(void)
-+{
-+	return of_is_ima_memory_reserved();
-+}
-+
-+/**
-+ * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-+ * @addr:	On successful return, set to point to the buffer contents.
-+ * @size:	On successful return, set to the buffer size.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int ima_get_kexec_buffer(void **addr, size_t *size)
-+{
-+	return of_get_ima_buffer(addr, size);
-+}
-+
-+/**
-+ * ima_free_kexec_buffer - free memory used by the IMA buffer
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int ima_free_kexec_buffer(void)
-+{
-+	return of_remove_ima_buffer();
-+}
-+
-+#ifdef CONFIG_IMA_KEXEC
-+/**
-+ * arch_ima_add_kexec_buffer - do arch-specific steps to add the IMA
-+ *	measurement log.
-+ * @image: - pointer to the kimage, to store the address and size of the
-+ *	IMA measurement log.
-+ * @load_addr: - the address where the IMA measurement log is stored.
-+ * @size - size of the IMA measurement log.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-+			      void *buffer, size_t size)
-+{
-+	of_ima_write_buffer(buffer, size);
-+	return 0;
-+}
-+#endif /* CONFIG_IMA_KEXEC */
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index b40c3b0def92..8dc25511142d 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -22,6 +22,7 @@
- #include <linux/types.h>
- #include <linux/vmalloc.h>
- #include <asm/byteorder.h>
-+#include <asm/ima.h>
- 
- /* relevant device tree properties */
- #define FDT_PROP_KEXEC_ELFHDR	"linux,elfcorehdr"
-diff --git a/arch/powerpc/include/asm/ima.h b/arch/powerpc/include/asm/ima.h
-index ead488cf3981..a8febc620b42 100644
---- a/arch/powerpc/include/asm/ima.h
-+++ b/arch/powerpc/include/asm/ima.h
-@@ -4,6 +4,7 @@
- 
- struct kimage;
- 
-+int is_ima_memory_reserved(void);
- int ima_get_kexec_buffer(void **addr, size_t *size);
- int ima_free_kexec_buffer(void);
- 
-@@ -15,7 +16,7 @@ static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
- 
- #ifdef CONFIG_IMA_KEXEC
- int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
--			      size_t size);
-+			      void *buffer, size_t size);
- 
- int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node);
- #else
-diff --git a/arch/powerpc/kexec/ima.c b/arch/powerpc/kexec/ima.c
-index 720e50e490b6..3823539d4e07 100644
---- a/arch/powerpc/kexec/ima.c
-+++ b/arch/powerpc/kexec/ima.c
-@@ -46,6 +46,18 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
- 	return 0;
- }
- 
-+/**
-+ * is_ima_memory_reserved - check if memory is reserved via device
-+ *			    tree.
-+ *	Return: negative or zero when memory is not reserved.
-+ *	positive number on success.
-+ *
-+ */
-+int is_ima_memory_reserved(void)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- /**
-  * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-  * @addr:	On successful return, set to point to the buffer contents.
-@@ -137,7 +149,7 @@ void remove_ima_buffer(void *fdt, int chosen_node)
-  * Return: 0 on success, negative errno on error.
-  */
- int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
--			      size_t size)
-+			      void *buffer, size_t size)
- {
- 	image->arch.ima_buffer_addr = load_addr;
- 	image->arch.ima_buffer_size = size;
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index 121de3e04af2..3749472c7e18 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -116,13 +116,18 @@ void ima_add_kexec_buffer(struct kimage *image)
- 	kbuf.buffer = kexec_buffer;
- 	kbuf.bufsz = kexec_buffer_size;
- 	kbuf.memsz = kexec_segment_size;
--	ret = kexec_add_buffer(&kbuf);
--	if (ret) {
--		pr_err("Error passing over kexec measurement buffer.\n");
--		return;
-+
-+	if (!is_ima_memory_reserved()) {
-+
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret) {
-+			pr_err("Error passing over kexec measurement buffer.\n");
-+			return;
-+		}
- 	}
- 
--	ret = arch_ima_add_kexec_buffer(image, kbuf.mem, kexec_segment_size);
-+	ret = arch_ima_add_kexec_buffer(image, kbuf.mem, kexec_buffer,
-+					kexec_segment_size);
- 	if (ret) {
- 		pr_err("Error passing over kexec measurement buffer.\n");
- 		return;
--- 
-2.25.1
+> I suppose CMA names haven't been relevant to userspace before, but
+> they perhaps would be with this change.
+>
+> Alternatively, leaving it effectively undefined doesn't tie us down,
+> and something like links in sysfs can be added as a richer API in the
+> future.
 
+Hrm. Mind expanding on what you're thinking here?
+
+thanks
+-john
