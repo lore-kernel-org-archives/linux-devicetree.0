@@ -2,99 +2,223 @@ Return-Path: <SRS0=YnW7=6Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F60C47256
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 17:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16FEC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 17:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0D4E2075B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 17:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55FB20775
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 17:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588441216;
-	bh=Z7RtQ13oPBc5GqTHRowhpIGOBMFLG2ZBoIC2QTCYUPA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=z5v5pc4Sr6W0TPkdpvhtXhb8j5TD3n8OQYlCW4/Cc6dxvVfDrBeWlQs6QUDfPGw/K
-	 F/VdU/ULbi34KA5r7h0i7/euka5jZ1FvMCOMjB5CfvL8VK/mOSxcRLlEHA5yE6IuAj
-	 /tc5WpozFJGRowzit/Wb4b6hr3atqQ6EVIp8CaNo=
+	s=default; t=1588442258;
+	bh=mTuWCZAa2eGiBuWewJoSG7xCGCFn67pzWVcKgwM5pu8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gXOI3rpB/wW91T+CXVooziFJi0qD4X2aG/KsHiBOHnUANg8bpG65MRKXgeVPpGzZ7
+	 VwhwKdWQq+S31W3Q0bX93HeCHJhVZOIdpYBf52/nh60rkaLH6fZ5nxXIzoq06sE4hO
+	 Uh3B0bLpY2FiGiD69CxmATg4nnaFj61I2G2ba/qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgEBRkQ (ORCPT
+        id S1727983AbgEBR5i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 May 2020 13:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbgEBRkP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 2 May 2020 13:40:15 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0A3E206F0;
-        Sat,  2 May 2020 17:40:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588441215;
-        bh=Z7RtQ13oPBc5GqTHRowhpIGOBMFLG2ZBoIC2QTCYUPA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WJQ5kYLJNus+47H/0vBh9nojTvN+giQgeEtY902zTExwZsRWB50zVQfT0tzmutyt3
-         y26lm5IqjPtkerr6pgn6iFFQN6PMlVJmfELnOs6Uhju+k7OVzjco9pbO2gTyDBQ6vT
-         BJfLpAJqPVEPynoudKndyFPIo7gJAf9X+vcZx240=
-Date:   Sat, 2 May 2020 18:40:10 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
-Message-ID: <20200502184010.134eb8b5@archlinux>
-In-Reply-To: <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
-        <20200413082445.17324-6-nuno.sa@analog.com>
-        <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 2 May 2020 13:57:38 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:51202 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgEBR5h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 May 2020 13:57:37 -0400
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 042HvJ33003029
+        for <devicetree@vger.kernel.org>; Sun, 3 May 2020 02:57:19 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 042HvJ33003029
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588442240;
+        bh=z5Quhr9h5cgi3WU7T9t6VC7H4V9c6k9XrytbSp1zItw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=H4Iqg81cFuNYfmBlBP+G4/pOlD4E9IRFcboA1J9tjOnH+PJSECYpd98/kZyuFoObf
+         Qu/onxN1K4ZQxGHAWuc03utmxF2+ToPS7vkgBkRjquLAUIQBDfRfOmRSz6UIhBfm37
+         9mpgikggaSiAsgH+YoblVeipZIbRc71gpjmsZ9ardXopfZAiKS85MSyzJ7FKjnKm/7
+         Jp4h6rt8QA43mw1lAqCkLmSxHoZ0ckMBqckPY9c8KAje0XGwFDS/boEoex13b/5S0d
+         yNHdYq+atTgbu+lZSTr0wQmUgIWwRHA9X2eqrU/zVNoVSkPuZI1mjjNDG2/NKFeYR3
+         XE3q+oaHbuQSg==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id 10so3525223vkr.7
+        for <devicetree@vger.kernel.org>; Sat, 02 May 2020 10:57:19 -0700 (PDT)
+X-Gm-Message-State: AGi0PuauaaaidI8ekVCq8j23XIGJubvkvKOEnhQztzKN/K3fP7uAp/vh
+        jMzAScgWLuVHH4C0+pC2o8fC4MOae5xlds1/xpM=
+X-Google-Smtp-Source: APiQypKYomKVcO4OH0pwqpuHcrwy9KnP3Q7rDIxM8ngj0npthNn5/wueWOrkFUHAATW5oU3Mx8fued+olOvIhf2k/dY=
+X-Received: by 2002:a1f:2a13:: with SMTP id q19mr6215391vkq.73.1588442238317;
+ Sat, 02 May 2020 10:57:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200501015147.32391-1-marek.behun@nic.cz> <CAK7LNARhK08CcDNij25PR0_r2A27Qx+psQp50_AgDJijexDAiA@mail.gmail.com>
+ <20200501170816.2f95a2ad@nic.cz>
+In-Reply-To: <20200501170816.2f95a2ad@nic.cz>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 3 May 2020 02:56:42 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARo7tErhQzxsOktwrrBcu+W5Wz4VqadrcyiTRHeL6-F4w@mail.gmail.com>
+Message-ID: <CAK7LNARo7tErhQzxsOktwrrBcu+W5Wz4VqadrcyiTRHeL6-F4w@mail.gmail.com>
+Subject: Re: [PATCH] dtc: Use better check for libyaml
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Pavel Modilaynen <pavel.modilaynen@axis.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 27 Apr 2020 20:06:07 +0200
-Lars-Peter Clausen <lars@metafoo.de> wrote:
+On Sat, May 2, 2020 at 12:08 AM Marek Behun <marek.behun@nic.cz> wrote:
+>
+> On Fri, 1 May 2020 14:27:57 +0900
+> Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> > Is it possible to fix the .pc file instead?
+> >
+> > This is ugly, and I do not know what is the
+> > point of pkg-config if it cannot detect the pkg correctly.
+>
+> I know this is ugly, though no more than some code in
+> scripts/Makefile.build.
 
-> On 4/13/20 10:24 AM, Nuno S=C3=A1 wrote:
-> > [...]
-> > +static irqreturn_t adis16475_trigger_handler(int irq, void *p)
-> > +{
-> > [...]
-> > +	__be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
-> > [...]
-> > +
-> > +	iio_push_to_buffers_with_timestamp(indio_dev, data, pf->timestamp); =
-=20
->=20
-> If the timestamp is enabled the IIO core might insert padding between=20
-> the data channels and the timestamp. If that happens this will disclose=20
-> kernel stack memory to userspace.
->=20
-> This needs either a memset(data, 0x00, sizeof(data)) or maybe put data=20
-> into the state struct and kzalloc it.
 
-Good spot. Could simply do __be16 data[ADI..] =3D {0}; rather than explicit
-memset, but some form of zeroization is needed.
+You missed to see the cost of parsing the Makefile.
 
-I've fixed up the applied patch with the above approach.
 
-Thanks,
+scripts/dtc/Makefile is parsed every time
+you run 'make'.
 
-Jonathan
+Even if you have nothing to recompile,
+it builds the tiny program in background.
 
->=20
-> - Lars
->=20
+This happens for 'make mrproper' too.
 
+
+>
+> What do you mean fixing the pc file?
+
+
+Maybe, file a bug report to your distribution
+if the pc file is strangely installed?
+
+
+> When the header is not present because libyaml-dev is not installed,
+> but the library is present, then pkg-config just reports that the
+> package exists, when asking with --exists, right?
+
+
+So, on your system, yaml-0.1.pc exists even
+if libyaml-dev is not installed.
+In which situation does this happen?
+
+
+The concept of pkg-config is to help
+to build software that depends on other packages.
+
+Obviously, pkg-config should take care of the headers
+because pkg-config supports --cflags option.
+
+
+It is weird to install the .pc file
+when it is not possible to build the software
+that depends on it.
+
+In other words, the .pc file should be installed
+by the dev package together with the headers,
+libraries, and any other components needed to
+compile the software that depends on it.
+
+
+At least, this is true for Ubuntu.
+
+
+The non-dev package installs only runtime libraries.
+
+The dev package installs the .pc file and
+all the components needed to build the program.
+
+
+
+$ apt-file list libyaml-0-2
+libyaml-0-2: /usr/lib/x86_64-linux-gnu/libyaml-0.so.2
+libyaml-0-2: /usr/lib/x86_64-linux-gnu/libyaml-0.so.2.0.5
+libyaml-0-2: /usr/share/doc/libyaml-0-2/changelog.Debian.gz
+libyaml-0-2: /usr/share/doc/libyaml-0-2/copyright
+
+
+$ apt-file list libyaml-dev
+libyaml-dev: /usr/include/yaml.h
+libyaml-dev: /usr/lib/x86_64-linux-gnu/libyaml.a
+libyaml-dev: /usr/lib/x86_64-linux-gnu/libyaml.so
+libyaml-dev: /usr/lib/x86_64-linux-gnu/pkgconfig/yaml-0.1.pc
+libyaml-dev: /usr/share/doc/libyaml-dev/changelog.Debian.gz
+libyaml-dev: /usr/share/doc/libyaml-dev/copyright
+
+
+
+'make menuconfig' checks the ncurses dev package.
+
+The same for libncurses5 vs libncurses5-dev.
+
+
+$ apt-file list libncurses5
+libncurses5: /lib/x86_64-linux-gnu/libncurses.so.5
+libncurses5: /lib/x86_64-linux-gnu/libncurses.so.5.9
+libncurses5: /usr/lib/x86_64-linux-gnu/libform.so.5
+libncurses5: /usr/lib/x86_64-linux-gnu/libform.so.5.9
+libncurses5: /usr/lib/x86_64-linux-gnu/libmenu.so.5
+libncurses5: /usr/lib/x86_64-linux-gnu/libmenu.so.5.9
+libncurses5: /usr/lib/x86_64-linux-gnu/libpanel.so.5
+libncurses5: /usr/lib/x86_64-linux-gnu/libpanel.so.5.9
+
+
+$ apt-file list libncurses5-dev
+libncurses5-dev: /usr/bin/ncurses5-config
+libncurses5-dev: /usr/include/curses.h
+libncurses5-dev: /usr/include/cursesapp.h
+libncurses5-dev: /usr/include/cursesf.h
+libncurses5-dev: /usr/include/cursesm.h
+libncurses5-dev: /usr/include/cursesp.h
+libncurses5-dev: /usr/include/cursesw.h
+libncurses5-dev: /usr/include/cursslk.h
+libncurses5-dev: /usr/include/eti.h
+libncurses5-dev: /usr/include/etip.h
+libncurses5-dev: /usr/include/form.h
+libncurses5-dev: /usr/include/menu.h
+libncurses5-dev: /usr/include/nc_tparm.h
+libncurses5-dev: /usr/include/ncurses.h
+libncurses5-dev: /usr/include/ncurses_dll.h
+libncurses5-dev: /usr/include/panel.h
+libncurses5-dev: /usr/include/term.h
+libncurses5-dev: /usr/include/term_entry.h
+libncurses5-dev: /usr/include/termcap.h
+libncurses5-dev: /usr/include/tic.h
+libncurses5-dev: /usr/include/unctrl.h
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libcurses.a
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libcurses.so
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libform.a
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libform.so
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libmenu.a
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libmenu.so
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libncurses++.a
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libncurses.a
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libncurses.so
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libpanel.a
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/libpanel.so
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/pkgconfig/form.pc
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/pkgconfig/menu.pc
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/pkgconfig/ncurses++.pc
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/pkgconfig/ncurses.pc
+libncurses5-dev: /usr/lib/x86_64-linux-gnu/pkgconfig/panel.pc
+libncurses5-dev: /usr/share/doc/libncurses5-dev
+libncurses5-dev: /usr/share/man/man1/ncurses5-config.1.gz
+
+
+
+>
+> Marek
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
