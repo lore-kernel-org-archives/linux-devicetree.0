@@ -2,178 +2,156 @@ Return-Path: <SRS0=YnW7=6Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32D1C47247
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 22:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A33C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 22:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB1B42137B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 22:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B398F208DB
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 22:47:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aPojyaqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgEBWZm (ORCPT
+        id S1728572AbgEBWr0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 May 2020 18:25:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43910 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728530AbgEBWZm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 May 2020 18:25:42 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 5BC3D26127B
-Received: by earth.universe (Postfix, from userid 1000)
-        id 512973C08C7; Sun,  3 May 2020 00:25:38 +0200 (CEST)
-Date:   Sun, 3 May 2020 00:25:38 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: power: Convert power_supply text to yaml
-Message-ID: <20200502222538.4picedksvh5pvvnr@earth.universe>
-References: <20200501172913.23537-1-dmurphy@ti.com>
+        Sat, 2 May 2020 18:47:26 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6750 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728545AbgEBWr0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 May 2020 18:47:26 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eadf8710000>; Sat, 02 May 2020 15:47:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 02 May 2020 15:47:25 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 02 May 2020 15:47:25 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 May
+ 2020 22:47:25 +0000
+Received: from [10.2.165.119] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 May 2020
+ 22:47:24 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
+ <9aa64f21-7b23-7228-b5eb-d2ff092682ad@nvidia.com>
+ <668cc4a0-2c81-0d87-b801-9fbf64e19137@nvidia.com>
+ <bf3f654e-b8f8-d560-fc5e-03d73cb7eab0@nvidia.com>
+ <525e481b-9137-6fdd-bbf9-3779a5704e6b@nvidia.com>
+ <fe7ebad6-0368-b1f0-4f58-648baa5e3f79@nvidia.com>
+ <4f095181-2338-3b71-316c-f8bbfc7865cc@nvidia.com>
+ <50e872bb-913a-7b47-3264-af6b1cedb0e2@nvidia.com>
+ <e17a8a49-be53-465d-f64c-3f4c77391d98@nvidia.com>
+ <da5154b4-85f9-3e56-a440-f75debaec3a8@nvidia.com>
+ <cbb047ae-97dc-8b9a-a5ba-8e2a5dab3771@nvidia.com>
+ <6ae2d00d-7955-d12b-5b56-955ef72ece26@nvidia.com>
+ <f9073b28-f1f1-636c-be53-764fb0a531a1@gmail.com>
+ <1767e50f-efb7-5e89-22f6-0917821b660d@nvidia.com>
+ <235a4cd4-4d4a-04b8-6c65-43a4dba48a0b@nvidia.com>
+ <f8103170-7879-8597-3e3c-da9a3b6a40b3@nvidia.com>
+ <5d847770-dad9-8f18-67b5-c1ba79084957@nvidia.com>
+ <4abf30e0-fed9-ba39-ae38-350789bce99d@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <b5f6a4e0-6e97-05ae-f034-b84fc5a1129a@nvidia.com>
+Date:   Sat, 2 May 2020 15:46:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="g67rzxqxnnbyq5ce"
-Content-Disposition: inline
-In-Reply-To: <20200501172913.23537-1-dmurphy@ti.com>
+In-Reply-To: <4abf30e0-fed9-ba39-ae38-350789bce99d@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588459633; bh=CBnFL7uPNS5WM1c2jb/jKo6GeM5vonJcVOmwBiIyxHY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=aPojyaqaxt+7L2ozKSgR37xcCVX+2zTA1ccSwHPPcrfxHXwMchhOeiKGHmU1VT+PW
+         RWOO7wXM3IaMcrWVsjwaFCANTlt3YHnmVrFDiwESt7UVmxnh69qYgiNqPiDDCmNK6C
+         UilidCJ/KEFgQHtgke6ft/Frh0q6J2t0j6xFj6Ohbc3W7fuA+rphqUkhPGOuLfAWVJ
+         STp+DGQKXP3283i/tOzXv0K7mDp5YGkbdnrxGFKLo/S50ycWPU6OMfkdRLvJNUfv+v
+         3sGgaBscrx6iaGYs/XWHMWJxusIDGJiK4d4b8A+RoFA+R87LLGKnFTWmrAEn7AfR8P
+         xosrKYoXCjT1Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---g67rzxqxnnbyq5ce
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 5/2/20 1:48 PM, Dmitry Osipenko wrote:
+> 02.05.2020 19:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> Also stop stream ioctl request happens during suspend where both threads
+>> will be stopped properly. done thread stop happens only after finishing
+>> all outstanding buffers.
+> Do you mean that V4L core takes care of stopping the streami on suspend
+> and re-starting it on resume from suspend?
+>
+>> Stop stream request happens from streaming applications so even without
+>> driver suspend/resume implementation currently, streaming will be
+>> stopped prior to system=C2=A0 suspend where both threads will be stopped
+>> properly (after finishing out standing buffers) and will be resumed by
+>> application on system resume
+> All userspace is frozen on suspend. System suspension is transparent for
+> userspace applications. I'm not sure what you're meaning here.
+>
+>> Also tested suspending while streaming with this unconditional freeze, I
+>> don't see any issue as application stops stream where v4l_streamoff gets
+>> executed during suspend and on resume streaming starts where
+>> v4l_streamon happens.
+>>
+>> So, I don't see any issue with existing implementation of unconditional
+>> freeze.
+> I don't understand why freezing is needed at all if V4L core takes care
+> of stopping the stream on suspend, what is the point? If there is no
+> real point, then let's make threads non-freezable and done with that.
 
-Hi,
+video device fops unlocked_ioctl is set to video_ioctl2() in vi driver.
 
-On Fri, May 01, 2020 at 12:29:13PM -0500, Dan Murphy wrote:
-> Convert the power_supply.txt to power-supply.yaml.
-> This conversion entailed fixing up the binding to being yaml and dt
-> checker compliant.
->=20
-> Added a note in the power_supply.txt to reference the power-supply.yaml
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
+video device fops unlocked_ioctl gets executed with stream off cmd=20
+during suspend and stream on cmd during resume which eventually calls=20
+v4l_streamoff and v4l_streamon during system suspend/resume.
 
-Thanks, queued.
+My understanding to have freezable threads is during system suspend user=20
+space applications are frozen prior to kernel freeze and during suspend=20
+when opened video character device node gets closed these ioctl gets=20
+invoked and stream off during suspend and stream on during resume=20
+happens. So probably we still need to use freezable threads to sync with=20
+user space application when frozen before really entering suspend.
 
--- Sebastian
+Will wait for Thierry/Hans comment to correct if my above understanding=20
+is wrong and help clarify if we need freezable threads at all in this=20
+case...
 
->  .../bindings/power/supply/power-supply.yaml   | 40 +++++++++++++++++++
->  .../bindings/power/supply/power_supply.txt    | 25 +-----------
->  2 files changed, 42 insertions(+), 23 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/power-=
-supply.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/power-supply.=
-yaml b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
-> new file mode 100644
-> index 000000000000..3bb02bb3a2d8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/supply/power-supply.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Power Supply Core Support
-> +
-> +maintainers:
-> +  - Sebastian Reichel <sre@kernel.org>
-> +
-> +properties:
-> +  power-supplies:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description:
-> +      This property is added to a supply in order to list the devices wh=
-ich
-> +      supply it power, referenced by their phandles.
-> +
-> +examples:
-> +  - |
-> +    power {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      usb_charger:charger@e {
-> +        compatible =3D "some,usb-charger";
-> +        reg =3D <0xe>;
-> +      };
-> +
-> +      ac_charger:charger@c {
-> +        compatible =3D "some,ac-charger";
-> +        reg =3D <0xc>;
-> +      };
-> +
-> +      battery:battery@b {
-> +        compatible =3D "some,battery";
-> +        reg =3D <0xb>;
-> +        power-supplies =3D <&usb_charger>, <&ac_charger>;
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/power/supply/power_supply.=
-txt b/Documentation/devicetree/bindings/power/supply/power_supply.txt
-> index 8391bfa0edac..d9693e054509 100644
-> --- a/Documentation/devicetree/bindings/power/supply/power_supply.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/power_supply.txt
-> @@ -1,23 +1,2 @@
-> -Power Supply Core Support
-> -
-> -Optional Properties:
-> - - power-supplies : This property is added to a supply in order to list =
-the
-> -   devices which supply it power, referenced by their phandles.
-> -
-> -Example:
-> -
-> -	usb-charger: power@e {
-> -		compatible =3D "some,usb-charger";
-> -		...
-> -	};
-> -
-> -	ac-charger: power@c {
-> -		compatible =3D "some,ac-charger";
-> -		...
-> -	};
-> -
-> -	battery@b {
-> -		compatible =3D "some,battery";
-> -		...
-> -		power-supplies =3D <&usb-charger>, <&ac-charger>;
-> -	};
-> +This binding has been converted to yaml please see power-supply.yaml in =
-this
-> +directory.
-> --=20
-> 2.25.1
->=20
+Note: I see other drivers using freezable threads for capture drivers.
 
---g67rzxqxnnbyq5ce
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Assuming we use freezable threads, I was saying we don't need=20
+conditional try_to_freeze() like you pointed because even if finish=20
+thread freeze happens prior to frame capture initiated by start thread,=20
+vi hardware will still continue to update this single ongoing buffer and=20
+will finish max within 200ms and actually there is no direct processing=20
+of this done by finish thread itself except that it returns buffers back=20
+when done and in this case it returns back when unfreeze/wake up happens.
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6t82IACgkQ2O7X88g7
-+poYNg//bzYxRkCjCt7ev8FZ3vQSMwknF0RzNN1TzDYgzIGo0OVAVY5qrQs5ZoW0
-OGn1QNdnGknhIVFio2RrqDhcVzC3icY4KiBjT8t8m6TE9uR0hLmUreFOjYMGs1/2
-RJBpt//tcABEsKEKDJClR6MC0r/2mrhbWh7OTghkFBOO28udl0Nz9KIDRtIyUIVP
-E435QPs1OKGEJGqPOeDiKHyhbBk/Hwo2xrpsJl81pl9nl4YmvrZqkJYAyvzgBjFk
-1UoFZYRqwvIZDgc25cKJeQotIoit5Q3edPVlFgdqd9VScgCVFFHWCTDnGcvWuHJA
-3aw9HaNLDnTGmP0/pKwoNIZ3PJsM4rRUnwKsI8p+8ERlw/HvYaqP7t7u3snC5Bmo
-mzqlfEcjk9DL4eqmrdtIHqsImGO2yD41qAksZZG/gZ88IK3pVzjsMKhZfSEoTa0O
-5pa38ohIkIMlo3LSWfjBI803JDbElMnq/dpVUFQ7JyHhFLawc1iQS2Y6WdhhV8im
-sdzAxik8FOw204d6V7Ijy7EReIH+aAajba9BPHgXtYmxm44tjgq7eHBXb0xRCvQW
-gLhc+fSMVsiifx92gM/xrvamAs+GEEW7nDAXsG4GLDWn8Fc+Bxd5CRHmnEoIeMqM
-J9vNQUkXj9OHV/Xa1hGDT3mF7DjX4lNoG9tKOjC2lWPLhS2KrEE=
-=RCwM
------END PGP SIGNATURE-----
+So, I don't see any issue of unconditional try_to_freeze() even with=20
+freezable threads.
 
---g67rzxqxnnbyq5ce--
+Thanks
+
+Sowjanya
+
+
