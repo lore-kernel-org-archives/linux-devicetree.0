@@ -2,101 +2,84 @@ Return-Path: <SRS0=YnW7=6Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020B1C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 18:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFD4C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 18:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAEE920787
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 18:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E268E206F0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 18:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="HxSLmT8E"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="C/6EcW8y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgEBSBp (ORCPT
+        id S1728161AbgEBSQZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 May 2020 14:01:45 -0400
-Received: from www381.your-server.de ([78.46.137.84]:52370 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727988AbgEBSBp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 May 2020 14:01:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8I+Hn7E68vFWn4rc9egcH+6P7fyOrFPXVwlizaUW9w0=; b=HxSLmT8E53oyA/H3tqK3kSB8KR
-        6R3pw0nrMUvR9bXNoNEpxjlNP9zZ6EZmqY8v0xgjG1gSBbDln4Vq03i8x+lh+22Ju8PwyzbBzRVbM
-        6odq4EHPDmJ6IeCat0aycYmgX3uMNLvCYEopG6RMDxbFtABs70gRZmdkRHUKkyS5O+z+jT+uVTaMm
-        d+Cssg/S4mmtV88XnddYz2bOuvRHSq1wzZQmJCVZTlGeggq5wZlAI9qkpSWqiGj1tDd4D/7hpD0K1
-        8cWaxLZrVltoTRxJLZJb0hdqnYDr650cubsFstNNmt/4M+VhDYunnPkXVGN6CF+Q35xZ29gdqj6W0
-        9nakBupA==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jUwSJ-0007OK-W0; Sat, 02 May 2020 20:01:40 +0200
-Received: from [82.135.65.122] (helo=[192.168.178.20])
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jUwSJ-000Wod-MA; Sat, 02 May 2020 20:01:39 +0200
-Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     =?UTF-8?Q?Nuno_S=c3=a1?= <nuno.sa@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
- <20200413082445.17324-6-nuno.sa@analog.com>
- <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
- <20200502184010.134eb8b5@archlinux>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
-Date:   Sat, 2 May 2020 20:01:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 2 May 2020 14:16:25 -0400
+Received: from mail.nic.cz ([217.31.204.67]:50222 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727988AbgEBSQZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 2 May 2020 14:16:25 -0400
+Received: from localhost (unknown [172.20.6.135])
+        by mail.nic.cz (Postfix) with ESMTPSA id 6751213F811;
+        Sat,  2 May 2020 20:16:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1588443383; bh=JM0Qs6OyssLEEYd4o0Yhaj4I5fcibR1+ViasOiTSu/E=;
+        h=Date:From:To;
+        b=C/6EcW8yGk68wqRFvSvTUY3WsbvmHVnRVQv2DWI29CseTQ2lABYqkLjMvyN6kxdnK
+         7LiH5sP49tGgIhqWGLrHFWjJcq6xLJPIUSXIbarT1DTi3ZB5plMDRr3/+JwE4KNzDf
+         2qDS3/TIi639fb52sTylAKROiBVle3UfcAucwIgQ=
+Date:   Sat, 2 May 2020 20:16:21 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Pavel Modilaynen <pavel.modilaynen@axis.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dtc: Use better check for libyaml
+Message-ID: <20200502201621.2b93dda4@nic.cz>
+In-Reply-To: <CAK7LNARo7tErhQzxsOktwrrBcu+W5Wz4VqadrcyiTRHeL6-F4w@mail.gmail.com>
+References: <20200501015147.32391-1-marek.behun@nic.cz>
+        <CAK7LNARhK08CcDNij25PR0_r2A27Qx+psQp50_AgDJijexDAiA@mail.gmail.com>
+        <20200501170816.2f95a2ad@nic.cz>
+        <CAK7LNARo7tErhQzxsOktwrrBcu+W5Wz4VqadrcyiTRHeL6-F4w@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200502184010.134eb8b5@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25800/Sat May  2 14:08:18 2020)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/2/20 7:40 PM, Jonathan Cameron wrote:
-> On Mon, 27 Apr 2020 20:06:07 +0200
-> Lars-Peter Clausen <lars@metafoo.de> wrote:
+On Sun, 3 May 2020 02:56:42 +0900
+Masahiro Yamada <masahiroy@kernel.org> wrote:
+
+> You missed to see the cost of parsing the Makefile.
+> 
+> 
+> scripts/dtc/Makefile is parsed every time
+> you run 'make'.
+> 
+> Even if you have nothing to recompile,
+> it builds the tiny program in background.
+> 
+> This happens for 'make mrproper' too.
+
+I missed this point by a large margin indeed.
+
+> Maybe, file a bug report to your distribution
+> if the pc file is strangely installed?
 >
->> On 4/13/20 10:24 AM, Nuno Sá wrote:
->>> [...]
->>> +static irqreturn_t adis16475_trigger_handler(int irq, void *p)
->>> +{
->>> [...]
->>> +	__be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
->>> [...]
->>> +
->>> +	iio_push_to_buffers_with_timestamp(indio_dev, data, pf->timestamp);
->> If the timestamp is enabled the IIO core might insert padding between
->> the data channels and the timestamp. If that happens this will disclose
->> kernel stack memory to userspace.
->>
->> This needs either a memset(data, 0x00, sizeof(data)) or maybe put data
->> into the state struct and kzalloc it.
-> Good spot. Could simply do __be16 data[ADI..] = {0}; rather than explicit
-> memset, but some form of zeroization is needed.
->
-> I've fixed up the applied patch with the above approach.
-There is actually another issue. The stack data is not necessarily 
-aligned to 64 bit, which causes issues if we try to put the 64-bit 
-timestamp in it. I think data should really be in the state struct.
+> ...
+
+Very well, thank you for elaborating on that. Sorry this took your time.
+
+Now that I know this, wouldn't it make more sense to decide
+whether to build yamltree.c or not in config stage, eg. in a Kconfig
+file? Because now it seems that pkg-config is being run everytime we run
+make. I understand that it is much cheaper than gcc, but either way...
+
+Marek
