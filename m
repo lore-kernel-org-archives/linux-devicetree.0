@@ -2,129 +2,178 @@ Return-Path: <SRS0=YnW7=6Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF4BC47258
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 20:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32D1C47247
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 22:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63DC62071C
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 20:48:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewx0eis3"
+	by mail.kernel.org (Postfix) with ESMTP id AB1B42137B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 22:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgEBUsr (ORCPT
+        id S1728532AbgEBWZm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 May 2020 16:48:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728472AbgEBUsr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 May 2020 16:48:47 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C146C061A0C;
-        Sat,  2 May 2020 13:48:46 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id g4so5869996ljl.2;
-        Sat, 02 May 2020 13:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7s/4VcNmw1wJVQ1beU53IUkohldspgncL00MxHfRDtc=;
-        b=ewx0eis3GDwHmOvVENFcmg9kjEyLj36dLMtAzUTSqHgUB+5HxuvcNVZ/egsYw85Khe
-         yNQzEaUOnQlHNTdB9izwQqQE8UAIsvMU+LwNaCln1kjHR9CxmooE5Dsec/eIEEdhftsy
-         qXi235uE3IwSIFP8iLYNwf9xgqSPv1Nvvjrz7PYpGu69m05S7/5ISTl0E5quQ11MDq2m
-         Yxd5H+IKx0XRAxdc5clTC0y+ZnyaBeK71wuy01yklRNvsN8xUePNSjaF76bR0/tfq8q9
-         9crj4zy4VPswdthr+08b1QZquKkRkB4PZ4TgSNuCpMAqi+vbFg1WEQ+AfFE2PI2ddUzk
-         YilQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7s/4VcNmw1wJVQ1beU53IUkohldspgncL00MxHfRDtc=;
-        b=HOhEDqYoUu3uKufILGLqss7q6EZucAog7DPyBBEOy7cUMgEy8FohhBHx+4bRxp1HgT
-         eC7ojM/mO9f/d4/pgG/cZeaoFjxXMi1BoZN5VlNOYEDohN7NYDamangMBp1VP0aB+4Ct
-         qhLGGn2sesU4GKQ7t6UHKBFkJm+1tB4gkDfC/D8kaSgjuXP+ic9659Z71u6mGci10m5t
-         fMvKdtdypdb9LhLXTDQySjXW1AbAx/V7t8DVfBb0RCMwOiQsAQ4GMlt/Ynk9DrQPS5Q0
-         CS0u8ZHXzKTIRsV/yQDs+eK84DQaM0+fBFMmhTvvrFB7RRZnTs8ApbxOH5nQFYc9oslI
-         A1+w==
-X-Gm-Message-State: AGi0PuZrMlN+Tnt7iBuhQT6yiYSK3NzE+W0ZMu+8VLNtO2rHDpGiJHmF
-        BS94qMZLTqH832XwnuVa88N7Pvqy
-X-Google-Smtp-Source: APiQypJoM7fRjqmtoWZmB620LDMpi4Oh+ILfKnuEtXzQJUokAIqy6LiWN/mkJpdrkGv6B6qPA3Fh6A==
-X-Received: by 2002:a05:651c:107a:: with SMTP id y26mr6065337ljm.80.1588452524597;
-        Sat, 02 May 2020 13:48:44 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id q125sm4572080ljb.34.2020.05.02.13.48.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 May 2020 13:48:43 -0700 (PDT)
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <668d9b65-9590-cc97-41c3-2c1a5cfbbe61@nvidia.com>
- <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
- <9aa64f21-7b23-7228-b5eb-d2ff092682ad@nvidia.com>
- <668cc4a0-2c81-0d87-b801-9fbf64e19137@nvidia.com>
- <bf3f654e-b8f8-d560-fc5e-03d73cb7eab0@nvidia.com>
- <525e481b-9137-6fdd-bbf9-3779a5704e6b@nvidia.com>
- <fe7ebad6-0368-b1f0-4f58-648baa5e3f79@nvidia.com>
- <4f095181-2338-3b71-316c-f8bbfc7865cc@nvidia.com>
- <50e872bb-913a-7b47-3264-af6b1cedb0e2@nvidia.com>
- <e17a8a49-be53-465d-f64c-3f4c77391d98@nvidia.com>
- <da5154b4-85f9-3e56-a440-f75debaec3a8@nvidia.com>
- <cbb047ae-97dc-8b9a-a5ba-8e2a5dab3771@nvidia.com>
- <6ae2d00d-7955-d12b-5b56-955ef72ece26@nvidia.com>
- <f9073b28-f1f1-636c-be53-764fb0a531a1@gmail.com>
- <1767e50f-efb7-5e89-22f6-0917821b660d@nvidia.com>
- <235a4cd4-4d4a-04b8-6c65-43a4dba48a0b@nvidia.com>
- <f8103170-7879-8597-3e3c-da9a3b6a40b3@nvidia.com>
- <5d847770-dad9-8f18-67b5-c1ba79084957@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4abf30e0-fed9-ba39-ae38-350789bce99d@gmail.com>
-Date:   Sat, 2 May 2020 23:48:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 2 May 2020 18:25:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43910 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728530AbgEBWZm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 May 2020 18:25:42 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 5BC3D26127B
+Received: by earth.universe (Postfix, from userid 1000)
+        id 512973C08C7; Sun,  3 May 2020 00:25:38 +0200 (CEST)
+Date:   Sun, 3 May 2020 00:25:38 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: power: Convert power_supply text to yaml
+Message-ID: <20200502222538.4picedksvh5pvvnr@earth.universe>
+References: <20200501172913.23537-1-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <5d847770-dad9-8f18-67b5-c1ba79084957@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="g67rzxqxnnbyq5ce"
+Content-Disposition: inline
+In-Reply-To: <20200501172913.23537-1-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-02.05.2020 19:55, Sowjanya Komatineni пишет:
-> Also stop stream ioctl request happens during suspend where both threads
-> will be stopped properly. done thread stop happens only after finishing
-> all outstanding buffers.
 
-Do you mean that V4L core takes care of stopping the streami on suspend
-and re-starting it on resume from suspend?
+--g67rzxqxnnbyq5ce
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Stop stream request happens from streaming applications so even without
-> driver suspend/resume implementation currently, streaming will be
-> stopped prior to system  suspend where both threads will be stopped
-> properly (after finishing out standing buffers) and will be resumed by
-> application on system resume
+Hi,
 
-All userspace is frozen on suspend. System suspension is transparent for
-userspace applications. I'm not sure what you're meaning here.
+On Fri, May 01, 2020 at 12:29:13PM -0500, Dan Murphy wrote:
+> Convert the power_supply.txt to power-supply.yaml.
+> This conversion entailed fixing up the binding to being yaml and dt
+> checker compliant.
+>=20
+> Added a note in the power_supply.txt to reference the power-supply.yaml
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
 
-> Also tested suspending while streaming with this unconditional freeze, I
-> don't see any issue as application stops stream where v4l_streamoff gets
-> executed during suspend and on resume streaming starts where
-> v4l_streamon happens.
-> 
-> So, I don't see any issue with existing implementation of unconditional
-> freeze.
+Thanks, queued.
 
-I don't understand why freezing is needed at all if V4L core takes care
-of stopping the stream on suspend, what is the point? If there is no
-real point, then let's make threads non-freezable and done with that.
+-- Sebastian
+
+>  .../bindings/power/supply/power-supply.yaml   | 40 +++++++++++++++++++
+>  .../bindings/power/supply/power_supply.txt    | 25 +-----------
+>  2 files changed, 42 insertions(+), 23 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/power-=
+supply.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/power-supply.=
+yaml b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
+> new file mode 100644
+> index 000000000000..3bb02bb3a2d8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/power/supply/power-supply.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Power Supply Core Support
+> +
+> +maintainers:
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +properties:
+> +  power-supplies:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description:
+> +      This property is added to a supply in order to list the devices wh=
+ich
+> +      supply it power, referenced by their phandles.
+> +
+> +examples:
+> +  - |
+> +    power {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      usb_charger:charger@e {
+> +        compatible =3D "some,usb-charger";
+> +        reg =3D <0xe>;
+> +      };
+> +
+> +      ac_charger:charger@c {
+> +        compatible =3D "some,ac-charger";
+> +        reg =3D <0xc>;
+> +      };
+> +
+> +      battery:battery@b {
+> +        compatible =3D "some,battery";
+> +        reg =3D <0xb>;
+> +        power-supplies =3D <&usb_charger>, <&ac_charger>;
+> +      };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/power/supply/power_supply.=
+txt b/Documentation/devicetree/bindings/power/supply/power_supply.txt
+> index 8391bfa0edac..d9693e054509 100644
+> --- a/Documentation/devicetree/bindings/power/supply/power_supply.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/power_supply.txt
+> @@ -1,23 +1,2 @@
+> -Power Supply Core Support
+> -
+> -Optional Properties:
+> - - power-supplies : This property is added to a supply in order to list =
+the
+> -   devices which supply it power, referenced by their phandles.
+> -
+> -Example:
+> -
+> -	usb-charger: power@e {
+> -		compatible =3D "some,usb-charger";
+> -		...
+> -	};
+> -
+> -	ac-charger: power@c {
+> -		compatible =3D "some,ac-charger";
+> -		...
+> -	};
+> -
+> -	battery@b {
+> -		compatible =3D "some,battery";
+> -		...
+> -		power-supplies =3D <&usb-charger>, <&ac-charger>;
+> -	};
+> +This binding has been converted to yaml please see power-supply.yaml in =
+this
+> +directory.
+> --=20
+> 2.25.1
+>=20
+
+--g67rzxqxnnbyq5ce
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6t82IACgkQ2O7X88g7
++poYNg//bzYxRkCjCt7ev8FZ3vQSMwknF0RzNN1TzDYgzIGo0OVAVY5qrQs5ZoW0
+OGn1QNdnGknhIVFio2RrqDhcVzC3icY4KiBjT8t8m6TE9uR0hLmUreFOjYMGs1/2
+RJBpt//tcABEsKEKDJClR6MC0r/2mrhbWh7OTghkFBOO28udl0Nz9KIDRtIyUIVP
+E435QPs1OKGEJGqPOeDiKHyhbBk/Hwo2xrpsJl81pl9nl4YmvrZqkJYAyvzgBjFk
+1UoFZYRqwvIZDgc25cKJeQotIoit5Q3edPVlFgdqd9VScgCVFFHWCTDnGcvWuHJA
+3aw9HaNLDnTGmP0/pKwoNIZ3PJsM4rRUnwKsI8p+8ERlw/HvYaqP7t7u3snC5Bmo
+mzqlfEcjk9DL4eqmrdtIHqsImGO2yD41qAksZZG/gZ88IK3pVzjsMKhZfSEoTa0O
+5pa38ohIkIMlo3LSWfjBI803JDbElMnq/dpVUFQ7JyHhFLawc1iQS2Y6WdhhV8im
+sdzAxik8FOw204d6V7Ijy7EReIH+aAajba9BPHgXtYmxm44tjgq7eHBXb0xRCvQW
+gLhc+fSMVsiifx92gM/xrvamAs+GEEW7nDAXsG4GLDWn8Fc+Bxd5CRHmnEoIeMqM
+J9vNQUkXj9OHV/Xa1hGDT3mF7DjX4lNoG9tKOjC2lWPLhS2KrEE=
+=RCwM
+-----END PGP SIGNATURE-----
+
+--g67rzxqxnnbyq5ce--
