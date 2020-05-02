@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A55FC47257
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 11:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D30AC4725A
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 11:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 665A22137B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 11:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E0AA21835
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 11:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Qg8zpCQ1"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="d5CPJSeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgEBLsg (ORCPT
+        id S1727867AbgEBLsg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sat, 2 May 2020 07:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33424 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727863AbgEBLsf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 May 2020 07:48:35 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B243CC061A0F;
-        Sat,  2 May 2020 04:48:34 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id g13so14953936wrb.8;
-        Sat, 02 May 2020 04:48:34 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1727862AbgEBLse (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 May 2020 07:48:34 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90189C061A0C;
+        Sat,  2 May 2020 04:48:32 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f13so14930990wrm.13;
+        Sat, 02 May 2020 04:48:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=n8Y8vyWaKjvq+2hEsWpjb9Kq65ykf9NzPsAFh4Ba51Q=;
-        b=Qg8zpCQ1u60k5Adv5X4albNsxBd5cOJphyEaRw668QCuIQAcUO80mitHI84Wf+ezHu
-         DCSUe4xWXO32INPx76D/UA3aaZXV+ZirOTfKbTwEuXsrVLwcaogx1MVqZCzOQTNuoGXm
-         UJcGDkbipMc5NqcrzYpoJvCGS+c4HAOL6UhNNlq/jfpwMr10ukz+mVBfs5LsW83clJw7
-         ZWocN0itCyqLfmUwCTZpHIJ79A80gIXZC/89GUaEHC//JvImGNYmlpI+UpgPvb9yvnzP
-         8yO6fn9Tn06ISbl9VtWDLMx+yUK5ea3u5g9DuY1+BcnbLiyuGp4mc0QjNlOb1d2Ehza9
-         fbsg==
+        bh=QpUpEujYS3y0hvmmOxoZ9pqLQStnivHijsveQ/+4bak=;
+        b=d5CPJSeE3aFq5WtPqTb6wdqcCX9i7DU8YSqB5iEs959ykns7HVLaeyVkCO4mSqi6sE
+         OZ04VLxDQuI9fe5s+73mLcQcR868KB+YDPc1ShQ718L5udF+JjVW6cbW367ebyNMWUYS
+         Z4igW0VfMt28CEGrL25xRyA4DOYzgy4+pzRex1PkQ/s1IeAPgFF28VGNE3iZHiY5oSqM
+         n3L9A2+Sjy87ran5QaMgfcj01DX9AvROhEro0r48FyaZBwR0hvjtdktjIHtdZQjr6Qsg
+         nxz9DM4ot2CMpLSjy936cdLI9D2vWpfkPp/811I2uM7zLce764dCbHkgRGD+I2hw+9qD
+         7XGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=n8Y8vyWaKjvq+2hEsWpjb9Kq65ykf9NzPsAFh4Ba51Q=;
-        b=BEHGH8kcGSSvqZXJWnR/MXc2PuTj3gDsllqYMT8EKiN9S0xFYF5vpuXXt9ZOavGpg7
-         UX5c8ChwrJ5/XVS8RhtvejmAOMlzfsUdLgD5bF7qiFWkNdy0blMUjohDT9u8xWs5oViW
-         l/pq640K1bU0xX/lTKjvo7ooMm3KBVz0k5/HJo6BXscjh2GS5RMiooezxOwlcKl3+QPb
-         M8ximSqrb7m5VgjJ5AaT4xk+8lB5gcFlymhBfzZyyBcJ5KuWQm187ufZjKsZd50C8ctj
-         qkpAxNPfXEK79uwUAcHNQlQVLu1ZbV7fqqwvyWUPUhlGsNYuqSP63rJEWify6e6ZJ6tx
-         HHDg==
-X-Gm-Message-State: AGi0PuYaFGcE44r6/uKSS9dV0hFdof83Ar6XB7iDRPYvsgUJ02+yzKOH
-        JxSSAzVuiA9NESJOgPkG/VWFjY9WFo4=
-X-Google-Smtp-Source: APiQypJEGjjn2WBJ7BnD+n22PPH7FqjwGuI1I7UOjHzYKUERFtnsyH7o9OB5m4xWhzPPveuM14uX1g==
-X-Received: by 2002:adf:e8c4:: with SMTP id k4mr8656076wrn.209.1588420113272;
-        Sat, 02 May 2020 04:48:33 -0700 (PDT)
+        bh=QpUpEujYS3y0hvmmOxoZ9pqLQStnivHijsveQ/+4bak=;
+        b=WnHIkvXKlR0JFcytpeP9+XHgGNYQ0sPC96HkSMiJkDx2tBhsdE+S3+9Q8nAgH5VxbY
+         fCsf/dbpmlJutM2w1iy8lIkapi5pEVWCGa5fXXsxVunK3zDXZMVczSslabckD0f0NkOw
+         bSbRpeK3EwuAgJAfCBvKIUE+1kg5kWDCw8XJM65lkbv/TvH0pKiyDrSWJsbU6YXzkCya
+         8S5xupVDhs1pgplOckZuc5Lw8vSnPEoqD5peytPaw+f8voUla4koR6xeAyMik5fm6rxP
+         v0eNV4ln/AQEt9s4BEhmnSmhyhG51UHJ+HIQVDwCP3yr2pPj0wQz1y9/MKsb7qQff3nQ
+         /v/g==
+X-Gm-Message-State: AGi0PuZgjyN8vx4bSycMuM21h2yaLwrWth1dtsLxDAW5pgMijLz26Xue
+        M3CPZLEuunFUlcZPFtjcCz4=
+X-Google-Smtp-Source: APiQypLFmVcYXXF7loumlfnuG3OukAXkPJPXAtWSaBqPWtktFqwqCJZzKf9WGy/aDZCb8D/T/7kbeA==
+X-Received: by 2002:adf:9564:: with SMTP id 91mr9301488wrs.246.1588420111297;
+        Sat, 02 May 2020 04:48:31 -0700 (PDT)
 Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id s17sm3801599wmc.48.2020.05.02.04.48.32
+        by smtp.googlemail.com with ESMTPSA id s17sm3801599wmc.48.2020.05.02.04.48.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 04:48:32 -0700 (PDT)
+        Sat, 02 May 2020 04:48:30 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     kishon@ti.com, robh+dt@kernel.org, vkoul@kernel.org,
         devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
 Cc:     narmstrong@baylibre.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, hexdump0815@googlemail.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 6/6] phy: amlogic: meson8b-usb2: Add a compatible string for Meson8m2
-Date:   Sat,  2 May 2020 13:47:52 +0200
-Message-Id: <20200502114752.1048500-7-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 4/6] phy: amlogic: meson8b-usb2: Don't set REG_ADP_BC_ACA_ENABLE on Meson8
+Date:   Sat,  2 May 2020 13:47:50 +0200
+Message-Id: <20200502114752.1048500-5-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com>
 References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com>
@@ -78,52 +78,108 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The 3.10 vendor kernel sets the ACA_ENABLE bit on Meson8b, Meson8m2 and
-GXBB, but not on Meson8. Add a compatible string for Meson8m2 which also
-sets that bit.
-While here, also update the Kconfig text and MODULE_DESCRIPTION.
+Skip setting REG_ADP_BC_ACA_ENABLE on Meson8 SoCs and polling for the
+REG_ADP_BC_ACA_PIN_FLOAT bit. The vendor also skips this part on Meson8
+SoCs.
+This fixes initialization of the host-only USB PHY on Meson8 which would
+otherwise fail with "USB ID detect failed!".
 
+Fixes: 4a3449d1a0a10c ("phy: meson8b-usb2: add support for the USB PHY on Meson8 SoCs")
+Reported-by: hexdump <hexdump0815@googlemail.com>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/phy/amlogic/Kconfig            | 2 +-
- drivers/phy/amlogic/phy-meson8b-usb2.c | 6 +++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/phy/amlogic/phy-meson8b-usb2.c | 48 ++++++++++++++++++++------
+ 1 file changed, 38 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-index 3495b23af797..5ec53874d1ea 100644
---- a/drivers/phy/amlogic/Kconfig
-+++ b/drivers/phy/amlogic/Kconfig
-@@ -3,7 +3,7 @@
- # Phy drivers for Amlogic platforms
- #
- config PHY_MESON8B_USB2
--	tristate "Meson8, Meson8b and GXBB USB2 PHY driver"
-+	tristate "Meson8, Meson8b, Meson8m2 and GXBB USB2 PHY driver"
- 	default ARCH_MESON
- 	depends on OF && (ARCH_MESON || COMPILE_TEST)
- 	depends on USB_SUPPORT
 diff --git a/drivers/phy/amlogic/phy-meson8b-usb2.c b/drivers/phy/amlogic/phy-meson8b-usb2.c
-index 436dfa1a8a04..03c061dd5f0d 100644
+index 86824cc21f11..7236b8885f07 100644
 --- a/drivers/phy/amlogic/phy-meson8b-usb2.c
 +++ b/drivers/phy/amlogic/phy-meson8b-usb2.c
-@@ -302,6 +302,10 @@ static const struct of_device_id phy_meson8b_usb2_of_match[] = {
- 		.compatible = "amlogic,meson8b-usb2-phy",
- 		.data = &phy_meson8b_usb2_match_data
- 	},
+@@ -10,6 +10,7 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+ #include <linux/phy/phy.h>
+@@ -105,12 +106,17 @@
+ #define RESET_COMPLETE_TIME				500
+ #define ACA_ENABLE_COMPLETE_TIME			50
+ 
++struct phy_meson8b_usb2_match_data {
++	bool			host_enable_aca;
++};
++
+ struct phy_meson8b_usb2_priv {
+-	struct regmap		*regmap;
+-	enum usb_dr_mode	dr_mode;
+-	struct clk		*clk_usb_general;
+-	struct clk		*clk_usb;
+-	struct reset_control	*reset;
++	struct regmap					*regmap;
++	enum usb_dr_mode				dr_mode;
++	struct clk					*clk_usb_general;
++	struct clk					*clk_usb;
++	struct reset_control				*reset;
++	const struct phy_meson8b_usb2_match_data	*match;
+ };
+ 
+ static const struct regmap_config phy_meson8b_usb2_regmap_conf = {
+@@ -166,7 +172,8 @@ static int phy_meson8b_usb2_power_on(struct phy *phy)
+ 	regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_SOF_TOGGLE_OUT,
+ 			   REG_CTRL_SOF_TOGGLE_OUT);
+ 
+-	if (priv->dr_mode == USB_DR_MODE_HOST) {
++	if (priv->dr_mode == USB_DR_MODE_HOST &&
++	    priv->match->host_enable_aca) {
+ 		regmap_update_bits(priv->regmap, REG_ADP_BC,
+ 				   REG_ADP_BC_ACA_ENABLE,
+ 				   REG_ADP_BC_ACA_ENABLE);
+@@ -216,6 +223,10 @@ static int phy_meson8b_usb2_probe(struct platform_device *pdev)
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
++	priv->match = device_get_match_data(&pdev->dev);
++	if (!priv->match)
++		return -ENODEV;
++
+ 	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+ 					     &phy_meson8b_usb2_regmap_conf);
+ 	if (IS_ERR(priv->regmap))
+@@ -254,11 +265,28 @@ static int phy_meson8b_usb2_probe(struct platform_device *pdev)
+ 	return PTR_ERR_OR_ZERO(phy_provider);
+ }
+ 
++static const struct phy_meson8b_usb2_match_data phy_meson8_usb2_match_data = {
++	.host_enable_aca = false,
++};
++
++static const struct phy_meson8b_usb2_match_data phy_meson8b_usb2_match_data = {
++	.host_enable_aca = true,
++};
++
+ static const struct of_device_id phy_meson8b_usb2_of_match[] = {
+-	{ .compatible = "amlogic,meson8-usb2-phy", },
+-	{ .compatible = "amlogic,meson8b-usb2-phy", },
+-	{ .compatible = "amlogic,meson-gxbb-usb2-phy", },
+-	{ },
 +	{
-+		.compatible = "amlogic,meson8m2-usb2-phy",
++		.compatible = "amlogic,meson8-usb2-phy",
++		.data = &phy_meson8_usb2_match_data
++	},
++	{
++		.compatible = "amlogic,meson8b-usb2-phy",
 +		.data = &phy_meson8b_usb2_match_data
 +	},
- 	{
- 		.compatible = "amlogic,meson-gxbb-usb2-phy",
- 		.data = &phy_meson8b_usb2_match_data
-@@ -320,5 +324,5 @@ static struct platform_driver phy_meson8b_usb2_driver = {
- module_platform_driver(phy_meson8b_usb2_driver);
++	{
++		.compatible = "amlogic,meson-gxbb-usb2-phy",
++		.data = &phy_meson8b_usb2_match_data
++	},
++	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, phy_meson8b_usb2_of_match);
  
- MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl@googlemail.com>");
--MODULE_DESCRIPTION("Meson8, Meson8b and GXBB USB2 PHY driver");
-+MODULE_DESCRIPTION("Meson8, Meson8b, Meson8m2 and GXBB USB2 PHY driver");
- MODULE_LICENSE("GPL");
 -- 
 2.26.2
 
