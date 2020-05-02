@@ -2,253 +2,299 @@ Return-Path: <SRS0=YnW7=6Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CA3C47257
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 14:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A110BC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 15:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D13124953
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 14:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745C3206F0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 May 2020 15:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="UCdHrOwx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WnNt4r+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgEBOgG (ORCPT
+        id S1728172AbgEBPQv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 May 2020 10:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59374 "EHLO
+        Sat, 2 May 2020 11:16:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728119AbgEBOgC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 May 2020 10:36:02 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158FFC061A0C
-        for <devicetree@vger.kernel.org>; Sat,  2 May 2020 07:36:02 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id g16so6263697qtp.11
-        for <devicetree@vger.kernel.org>; Sat, 02 May 2020 07:36:02 -0700 (PDT)
+        with ESMTP id S1728163AbgEBPQu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 May 2020 11:16:50 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3331C061A0C;
+        Sat,  2 May 2020 08:16:48 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f11so5361540ljp.1;
+        Sat, 02 May 2020 08:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=tS4CD4lLqQwNWggAUgWdbgKJBvMgP+ZDf9qioLLaULg=;
-        b=UCdHrOwxgnQ/ZKXvrynXg5kpln7v/q/w8O9ltJUwN+RtIupksnhtm3BAi80N2yCbQk
-         kl4TyTrTDpSkRprw9fUqIe0intd+f0O33swuCHFu08hZgzvUdaPD8+T+uJd0u/74+cfu
-         y/6PiHJEbyVXh1TLLt5Hg04gntr3xHhQGapFpPCbCSEF/2vd4JkCeQ1VVxhs5a+Pewpx
-         4q85VvYiD5/SqPFyTYcHo6EEYatOGZS4hLat1vAfTlDpHU8GQNbyy4W5qD46q1n6ZGW5
-         oh0/JcKPcjZQ9NaFmB1J8m9i9r1KZoQA0+2I8u4yLZd6mKFLBCxhjOIsFEdxfBMhM7xX
-         tWTg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Gx0Is5+F4FiiACKex8epswIclEUCgzGlDdmsu44R9Ts=;
+        b=WnNt4r+R8/umeNLEcst79H/Ils9choOMCTryjQF/BJo1cnv0fbBrBFcYa5BobGLMAR
+         6lNRMIPSC0V2+wwoKVWD9Bnuwkgpl4NWnQeLVLotGRQhQUnf6NWndSh7KTUc5gLtgI0/
+         bKJc6njY5UsZbVrmhyS9PjcIbWnMX7rxpPH3jnsTwX10dt58Mv66H+Dq4zB8Eooqa1aV
+         v55TVyXRuBLGdWoUCoqV0zcDs2OT6mHMCHnx6tOv2fwK0GXJb0VfHHpTBnD2E+TI2oVk
+         +KzvDkt0bxczZMv2CE7Zkxz4Z051AIOWrUeWp4F8LgccoNEpRqMumdDTmD0J8OOzQ8Y3
+         pCsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tS4CD4lLqQwNWggAUgWdbgKJBvMgP+ZDf9qioLLaULg=;
-        b=e8wHVbE52DGBzkOUPHK3+wvofgx+ynIIMZq1I7QTbG+fQS9+47Zg1AvGozqaryPy09
-         TQlrq37HpFHyOryogViktatx15XNlLcUiLFKhQEGe5vHPUWnoQUpq+e8fqXa3fk7lp6z
-         rnNygJs0wFVBON27TQuy+GWfSGeEImWBkhq+LktnImEjmPszej7nxdk4rciCTr6m2rOT
-         5AC2ZjdSX4/rvOnYrQiqumD9ndFj8FAeva0lF3yOdT6l6kxmvLFxnZJ/oWoD/pvfphcB
-         I0uMdSziXYLL6lu+qDby5658v2gfY+wSO8o1VnO4GS2O5jFcGdwrXILowA3wXlahhSfZ
-         gjTw==
-X-Gm-Message-State: AGi0Pub17FhCOKHJMkevgPJe1XhoRfDQXkbdKcpJvuSeIqLdJZODh/l6
-        dwNryqLiQ0/VJQYPh+loVJbn2A==
-X-Google-Smtp-Source: APiQypKeMh+UyDnLdEtSjoaLXEd1zuDRVwsSaEfNZHWelDhP68Hto6shhtXefNhY8QnyQ/NVxSbz9A==
-X-Received: by 2002:ac8:6c57:: with SMTP id z23mr8938101qtu.359.1588430161236;
-        Sat, 02 May 2020 07:36:01 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id d23sm5156894qkj.26.2020.05.02.07.36.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 07:36:00 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v1 2/3] pstore/ram: allow to dump kmesg during regular reboot
-Date:   Sat,  2 May 2020 10:35:54 -0400
-Message-Id: <20200502143555.543636-3-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200502143555.543636-1-pasha.tatashin@soleen.com>
-References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Gx0Is5+F4FiiACKex8epswIclEUCgzGlDdmsu44R9Ts=;
+        b=L0xRiZZVAiq9NsrfLSJ67WJEUOAZOlxS9IHZYvsGOJrZzVZiPZ9jAumSYGV/z6Gp0A
+         A6xUtm0Fk3W91W0CZKlDt3QQ4Qoe+zRCdzdfe1bpqxgNdQz7WZOkHOgI3w2YnvuuQjuL
+         AbUfY2Oe9JKmtS8V/UoUrTJF1ygtt39wca7Ihwqk4WL0FpZE+ec0a7Sb0gwjiQMyJ5Vo
+         tpAvdHalZx8wi04RpyqGt4jl/yBM8/rrz5CBCvZ456bnUPcGGq7MDtaVERbqUqnRnV+A
+         M35wk25RXxAgEC548pFg5FweOkp2T39JbALEt5q6Upj9c6TMijNb7V3vshqkJ+60liad
+         K+9w==
+X-Gm-Message-State: AGi0PubBibmhCd6SqPnB1O1XI1U7GwrjEWckCl2x4GhXzzdvRZicF8y+
+        ilvKWTzsd92oz1pgF98DRHt2M2Wv
+X-Google-Smtp-Source: APiQypL9ApnElSz/U5f/02s2TZkR00EZDvqCa4/qW9iy3WiMejVjfpJZF2y/UQQpmSDmYaO1UBj1Vg==
+X-Received: by 2002:a2e:593:: with SMTP id 141mr5060908ljf.271.1588432607004;
+        Sat, 02 May 2020 08:16:47 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id r2sm4102245ljm.8.2020.05.02.08.16.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 May 2020 08:16:46 -0700 (PDT)
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
+ <b3238987-5e8a-32f2-7ce7-924e86bc6e9e@nvidia.com>
+ <298187f6-2425-4813-1ae1-f256c179623e@nvidia.com>
+ <9c942bc9-703e-3bbb-eeab-f37e69dc1ded@nvidia.com>
+ <b72b9d5c-7d02-1b58-20f7-30f94e230d58@gmail.com>
+ <668d9b65-9590-cc97-41c3-2c1a5cfbbe61@nvidia.com>
+ <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
+ <9aa64f21-7b23-7228-b5eb-d2ff092682ad@nvidia.com>
+ <668cc4a0-2c81-0d87-b801-9fbf64e19137@nvidia.com>
+ <bf3f654e-b8f8-d560-fc5e-03d73cb7eab0@nvidia.com>
+ <525e481b-9137-6fdd-bbf9-3779a5704e6b@nvidia.com>
+ <fe7ebad6-0368-b1f0-4f58-648baa5e3f79@nvidia.com>
+ <4f095181-2338-3b71-316c-f8bbfc7865cc@nvidia.com>
+ <50e872bb-913a-7b47-3264-af6b1cedb0e2@nvidia.com>
+ <e17a8a49-be53-465d-f64c-3f4c77391d98@nvidia.com>
+ <da5154b4-85f9-3e56-a440-f75debaec3a8@nvidia.com>
+ <cbb047ae-97dc-8b9a-a5ba-8e2a5dab3771@nvidia.com>
+ <6ae2d00d-7955-d12b-5b56-955ef72ece26@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f9073b28-f1f1-636c-be53-764fb0a531a1@gmail.com>
+Date:   Sat, 2 May 2020 18:16:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <6ae2d00d-7955-d12b-5b56-955ef72ece26@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently, ramoops is capable to collect dmesg buffer only during
-panic and oops events. However, it is desirable to optionally allow
-collecting dmesg buffers during other events as well: reboot, kexec,
-emergency reboot etc.
+02.05.2020 06:55, Sowjanya Komatineni пишет:
+> 
+> On 5/1/20 8:39 PM, Sowjanya Komatineni wrote:
+>>
+>>
+>> On 5/1/20 2:05 PM, Sowjanya Komatineni wrote:
+>>>
+>>>
+>>> On 5/1/20 1:58 PM, Sowjanya Komatineni wrote:
+>>>>
+>>>>
+>>>> On 5/1/20 1:44 PM, Sowjanya Komatineni wrote:
+>>>>>
+>>>>>
+>>>>> On 5/1/20 11:03 AM, Sowjanya Komatineni wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 4/30/20 4:33 PM, Sowjanya Komatineni wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> On 4/30/20 4:14 PM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>> And in this case synchronization between start/finish
+>>>>>>>>>>>>>> threads should be
+>>>>>>>>>>>>>> needed in regards to freezing.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Was thinking to have counter to track outstanding frame
+>>>>>>>>>>>>> w.r.t single shot issue b/w start and finish and allow to
+>>>>>>>>>>>>> freeze only when no outstanding frames in process.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> This will make sure freeze will not happen when any buffers
+>>>>>>>>>>>>> are in progress
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Note that this could be a wrong assumption, I'm not
+>>>>>>>>>>>>>> closely familiar
+>>>>>>>>>>>>>> with how freezer works.
+>>>>>>>>>>>>
+>>>>>>>>>>>> kthread_start can unconditionally allow try_to_freeze before
+>>>>>>>>>>>> start of frame capture
+>>>>>>>>>>>>
+>>>>>>>>>>>> We can compute captures inflight w.r.t single shot issued
+>>>>>>>>>>>> during capture start and finished frames by kthread_finish
+>>>>>>>>>>>> and allow kthread_finish to freeze only when captures
+>>>>>>>>>>>> inflight is 0.
+>>>>>>>>>>>>
+>>>>>>>>>>>> This allows freeze to happen b/w frames but not in middle of
+>>>>>>>>>>>> frame
+>>>>>>>>> will have caps inflight check in v12 to allow freeze finish
+>>>>>>>>> thread only when no captures are in progress
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> try_to_freeze() returns thread frozen state and looks like we
+>>>>>>>> can use this in kthread finish to allow finish thread to freeze
+>>>>>>>> only when kthread_start is already frozen and no buffers in
+>>>>>>>> progress/initiated for capture.
+>>>>>>>>
+>>>>>>> chan->capture_frozen holds frozen state returned from
+>>>>>>> try_to_freeze() in start kthread
+>>>>>>>
+>>>>>>> chan->capture_reqs increments after every single shot issued.
+>>>>>>>
+>>>>>>>
+>>>>>>> static int chan_capture_kthread_finish(void *data)
+>>>>>>>
+>>>>>>> {
+>>>>>>>     struct tegra_vi_channel *chan = data;
+>>>>>>>     struct tegra_channel_buffer *buf;
+>>>>>>>     int caps_inflight;
+>>>>>>>
+>>>>>>>     set_freezable();
+>>>>>>>
+>>>>>>>     while (1) {
+>>>>>>>         wait_event_interruptible(chan->done_wait,
+>>>>>>>                      !list_empty(&chan->done) ||
+>>>>>>>                      kthread_should_stop());
+>>>>>>>
+>>>>>>>         /* dequeue buffers and finish capture */
+>>>>>>>         buf = dequeue_buf_done(chan);
+>>>>>>>         while (buf) {
+>>>>>>>             tegra_channel_capture_done(chan, buf);
+>>>>>>>             buf = dequeue_buf_done(chan);
+>>>>>>>         }
+>>>>>>>
+>>>>>>>         if (kthread_should_stop())
+>>>>>>>             break;
+>>>>>>>
+>>>>>>>         caps_inflight = chan->capture_reqs - chan->sequence;
+>>>>>>>         if (chan->capture_frozen && !caps_inflight)
+>>>>>>>             try_to_freeze();
+>>>>>>>     }
+>>>>>>>
+>>>>>>>     return 0;
+>>>>>>> }
+>>>>>>
+>>>>>>
+>>>>>> Freezing happens prior to suspend() during suspend entry and when
+>>>>>> we implement suspend/resume during suspend we stop streaming where
+>>>>>> we stop threads anyway.
+>>>>>>
+>>>>>> So, was thinking why we need these threads freezable here?
+>>>>>>
+>>>>>>
+>>>>> Hi Dmitry,
+>>>>>
+>>>>> Did some testing and below are latest observation and fix I tested.
+>>>>>
+>>>>> wait_event_interruptible() uses schedule() which blocks the freezer.
+>>>>> When I do suspend while keeping streaming active in background, I
+>>>>> see freezing of these threads fail and call trace shows __schedule
+>>>>> -> __switch_to from these kthreads.
+>>>>>
+>>>>> wait_event_freezable() uses freezable_schedule() which should not
+>>>>> block the freezer but we can't use this here as we need conditional
+>>>>> try_to_freeze().
+>>>>>
+>>>>>
+>>>>> So, doing below sequence works where we set PF_FREEZER_SKIP flag
+>>>>> thru freezer_not_count() before wait_event which calls schedule()
+>>>>> and remove PF_FREEZER_SKIP after schedule allows try_to_freeze to
+>>>>> work and also conditional try_to_freeze below prevents freezing
+>>>>> thread in middle of capture.
+>>>>>
+>>>>> while (1) {
+>>>>>     freezer_not_count()
+>>>>>     wait_event_interruptible()
+>>>>>     freezer_count()
+>>>>>     ...
+>>>>>     ...
+>>>>>     if (chan->capture_frozen && !caps_inflight)
+>>>>>         try_to_freeze()
+>>>>> }
+>>>>>
+>>>>> Please comment if you agree with above sequence. Will include this
+>>>>> in v12.
+>>>>>
+>>> sorry, freezer_count() does try_to_freeze after clearing skip flag.
+>>> So, dont think we can use this as we need conditional try_to_freeze.
+>>> Please ignore above sequence.
+>>>>>
+>>>> Or probably we can take closer look on this later when we add
+>>>> suspend/resume support as it need more testing as well.
+>>>>
+>>>> As this is initial series which has TPG only I think we shouldn't
+>>>> get blocked on this now. Series-2 and 3 will be for sensor support
+>>>> and on next series when we add suspend/resume will look into this.
+>>>>
+>>>>
+>> When freeze activity starts and in case if finish thread freezes prior
+>> to start thread issuing capture, its the VI hardware writes data to
+>> the allocated buffer address.
+>>
+>> finish thread just checks for the event from the hardware and we don't
+>> handle/process directly on memory in this driver.
+>>
+>> So even we freeze done thread when single shot is issued frame buffer
+>> gets updated.
+>>
+>> In case if capture thread is frozen there will not buffers queued to
+>> process by finish thread. So, this will not be an issue.
+>>
+>> So, probably we don't need to do conditional try_to_freeze and what we
+>> have should work good in this corner case.
+>>
+> I still need to change wait_event_interruptible() to
+> wait_event_freezable() but no need to synchronize finish thread freeze
+> with start thread as even on issuing capture start its vi hardware that
+> does frame buffer update and finish thread just checks for mw_ack event
+> and returns buffer to application.
 
-While, a similar functionality is provided by pstore console it is not the
-same. Often, console message level is reduced in production due to baud
-rate limitation of serial consoles.  Having a noisy console reduces the
-boot performance.
+The problem we are primarily trying to avoid is to have suspending being
+done in the middle of IO.
 
-Thus, if the shutdown dmesg buffer is needed to study the shutdown
-performance, it is currently not possible to do so with console as by
-increasing the console output the shutdown time substantially increases
-as well.
+IIUC, even if system will be suspended in the middle of VI IO, it won't
+be fatal. In worst case the buffer capture should fail on resume from
+suspend. Could you please try to simulate this potential issue and see
+what result will be on suspending in the middle of VI IO?
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- fs/pstore/platform.c       |  6 ++++--
- fs/pstore/ram.c            | 38 +++++++++++++++++++++++++++-----------
- include/linux/pstore.h     |  1 +
- include/linux/pstore_ram.h |  1 +
- 4 files changed, 33 insertions(+), 13 deletions(-)
+We don't want to suspend system / stop streaming in the middle of IO, so
+this problem of a proper threads tear-down still exists. It should
+become easier to resolve the problem in a case of a proper suspending
+callback because the "start" thread could be turned down at any time, so
+it should be easier to maintain a proper tear-down order when threads
+are fully controlled by the driver, i.e. the "start" thread goes down
+first and the "finish" is second, blocking until the capture is completed.
 
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 408277ee3cdb..d0393799fe6c 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -476,8 +476,10 @@ static struct kmsg_dumper pstore_dumper = {
- /*
-  * Register with kmsg_dump to save last part of console log on panic.
-  */
--static void pstore_register_kmsg(void)
-+static void pstore_register_kmsg(int dmesg_all)
- {
-+	if (dmesg_all)
-+		pstore_dumper.max_reason = KMSG_DUMP_MAX;
- 	kmsg_dump_register(&pstore_dumper);
- }
- 
-@@ -603,7 +605,7 @@ int pstore_register(struct pstore_info *psi)
- 		pstore_get_records(0);
- 
- 	if (psi->flags & PSTORE_FLAGS_DMESG)
--		pstore_register_kmsg();
-+		pstore_register_kmsg(psi->flags & PSTORE_FLAGS_DMESG_ALL);
- 	if (psi->flags & PSTORE_FLAGS_CONSOLE)
- 		pstore_register_console();
- 	if (psi->flags & PSTORE_FLAGS_FTRACE)
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 795622190c01..9d2d1b299225 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -62,6 +62,12 @@ module_param(dump_oops, int, 0600);
- MODULE_PARM_DESC(dump_oops,
- 		"set to 1 to dump oopses, 0 to only dump panics (default 1)");
- 
-+static int dump_all;
-+module_param(dump_all, int, 0600);
-+MODULE_PARM_DESC(dump_all,
-+		 "set to 1 to record all kernel kmesg dump events (default 0) "
-+		 "otherwise only panics and oops are recorded");
-+
- static int ramoops_ecc;
- module_param_named(ecc, ramoops_ecc, int, 0600);
- MODULE_PARM_DESC(ramoops_ecc,
-@@ -82,6 +88,7 @@ struct ramoops_context {
- 	size_t ftrace_size;
- 	size_t pmsg_size;
- 	int dump_oops;
-+	int dump_all;
- 	u32 flags;
- 	struct persistent_ram_ecc_info ecc_info;
- 	unsigned int max_dump_cnt;
-@@ -381,17 +388,19 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
- 	if (record->type != PSTORE_TYPE_DMESG)
- 		return -EINVAL;
- 
--	/*
--	 * Out of the various dmesg dump types, ramoops is currently designed
--	 * to only store crash logs, rather than storing general kernel logs.
--	 */
--	if (record->reason != KMSG_DUMP_OOPS &&
--	    record->reason != KMSG_DUMP_PANIC)
--		return -EINVAL;
-+	if (!cxt->dump_all) {
-+		/*
-+		 * By default only store crash logs, rather than storing general
-+		 * kernel logs.
-+		 */
-+		if (record->reason != KMSG_DUMP_OOPS &&
-+		    record->reason != KMSG_DUMP_PANIC)
-+			return -EINVAL;
- 
--	/* Skip Oopes when configured to do so. */
--	if (record->reason == KMSG_DUMP_OOPS && !cxt->dump_oops)
--		return -EINVAL;
-+		/* Skip Oopes when configured to do so. */
-+		if (record->reason == KMSG_DUMP_OOPS && !cxt->dump_oops)
-+			return -EINVAL;
-+	}
- 
- 	/*
- 	 * Explicitly only take the first part of any new crash.
-@@ -688,6 +697,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
- 	pdata->mem_address = res->start;
- 	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
- 	pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
-+	pdata->dump_all = of_property_read_bool(of_node, "dump-all");
- 
- #define parse_size(name, field) {					\
- 		ret = ramoops_parse_dt_size(pdev, name, &value);	\
-@@ -786,6 +796,7 @@ static int ramoops_probe(struct platform_device *pdev)
- 	cxt->ftrace_size = pdata->ftrace_size;
- 	cxt->pmsg_size = pdata->pmsg_size;
- 	cxt->dump_oops = pdata->dump_oops;
-+	cxt->dump_all = pdata->dump_all;
- 	cxt->flags = pdata->flags;
- 	cxt->ecc_info = pdata->ecc_info;
- 
-@@ -828,8 +839,11 @@ static int ramoops_probe(struct platform_device *pdev)
- 	 * the single region size is how to check.
- 	 */
- 	cxt->pstore.flags = 0;
--	if (cxt->max_dump_cnt)
-+	if (cxt->max_dump_cnt) {
- 		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
-+		if (cxt->dump_all)
-+			cxt->pstore.flags |= PSTORE_FLAGS_DMESG_ALL;
-+	}
- 	if (cxt->console_size)
- 		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
- 	if (cxt->max_ftrace_cnt)
-@@ -866,6 +880,7 @@ static int ramoops_probe(struct platform_device *pdev)
- 	mem_address = pdata->mem_address;
- 	record_size = pdata->record_size;
- 	dump_oops = pdata->dump_oops;
-+	dump_all = pdata->dump_all;
- 	ramoops_console_size = pdata->console_size;
- 	ramoops_pmsg_size = pdata->pmsg_size;
- 	ramoops_ftrace_size = pdata->ftrace_size;
-@@ -949,6 +964,7 @@ static void __init ramoops_register_dummy(void)
- 	pdata.ftrace_size = ramoops_ftrace_size;
- 	pdata.pmsg_size = ramoops_pmsg_size;
- 	pdata.dump_oops = dump_oops;
-+	pdata.dump_all = dump_all;
- 	pdata.flags = RAMOOPS_FLAG_FTRACE_PER_CPU;
- 
- 	/*
-diff --git a/include/linux/pstore.h b/include/linux/pstore.h
-index e779441e6d26..32092c2d7224 100644
---- a/include/linux/pstore.h
-+++ b/include/linux/pstore.h
-@@ -195,6 +195,7 @@ struct pstore_info {
- #define PSTORE_FLAGS_CONSOLE	BIT(1)
- #define PSTORE_FLAGS_FTRACE	BIT(2)
- #define PSTORE_FLAGS_PMSG	BIT(3)
-+#define PSTORE_FLAGS_DMESG_ALL	BIT(4)
- 
- extern int pstore_register(struct pstore_info *);
- extern void pstore_unregister(struct pstore_info *);
-diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
-index 9cb9b9067298..f23c29cbd205 100644
---- a/include/linux/pstore_ram.h
-+++ b/include/linux/pstore_ram.h
-@@ -134,6 +134,7 @@ struct ramoops_platform_data {
- 	unsigned long	ftrace_size;
- 	unsigned long	pmsg_size;
- 	int		dump_oops;
-+	int		dump_all;
- 	u32		flags;
- 	struct persistent_ram_ecc_info ecc_info;
- };
--- 
-2.25.1
+I think yours suggestion about dropping the freezing from the threads
+for now and returning back to it later on (once a proper suspend/resume
+support will be added) sounds reasonable.
 
+But if you'd want to keep the freezing, then the easy solution could be
+like that:
+
+  1. "start" thread could freeze at any time
+  2. "finish" thread could freeze only when the "start" thread is frozen
+and capture isn't in-progress. Use frozen(kthread_start_capture) to
+check the freezing state.
+
+https://elixir.bootlin.com/linux/v5.7-rc3/source/include/linux/freezer.h#L25
