@@ -2,122 +2,88 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12884C47247
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08A9C47247
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E35F1207DD
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50F0207DD
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="HhhKdvWP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbgECPBs (ORCPT
+        id S1728649AbgECPVN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 11:01:48 -0400
-Received: from muru.com ([72.249.23.125]:52668 "EHLO muru.com"
+        Sun, 3 May 2020 11:21:13 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:35642 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbgECPBs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 May 2020 11:01:48 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 5955480BF;
-        Sun,  3 May 2020 15:02:34 +0000 (UTC)
-Date:   Sun, 3 May 2020 08:01:43 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for
- Imagination GPUs
-Message-ID: <20200503150143.GG37466@atomide.com>
-References: <cover.1587760454.git.hns@goldelico.com>
- <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com>
- <NMCE9Q.LWG45P20NBVJ@crapouillou.net>
- <28138EC0-0FA5-4F97-B528-3442BF087C7A@goldelico.com>
- <TEAR9Q.6HI5DFRO5U0I3@crapouillou.net>
- <3D8B59D6-83E3-4FE6-9C99-E2E5616A8139@goldelico.com>
- <8EER9Q.C206SXNSICP7@crapouillou.net>
+        id S1728526AbgECPVM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 May 2020 11:21:12 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FV7V1X1KzGj;
+        Sun,  3 May 2020 17:21:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1588519270; bh=9+54rd/b9MFSvGJ5H7aKdvK4EyDceTpr1Ul1xvO7tH8=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=HhhKdvWPt8ojeOojYUmj4BOYsBqW+vWR/x9jk4+hE0l7fLPYtUAgk+l7T1i+ybTvR
+         d5iz0uMsTJpfWEvCXaJOsr9N6OkJwCCHXK/gSrkxOOYFDWg8+ynCbyW9LCxxCPJ9Jc
+         lttnWQxa0Nwlp9cupfyTJVgZZaFtLJ4+oXgguVXjliNSqOV8uUz6v/AQMVkh94DI2+
+         j1q8mz2QCGsl676C54+sfZB1PMKpY4XQ0gmrIQyoGI52eHLP6WDwsIseRyOsSBe3+x
+         SHYmnjQ0UDyMtNVz9inyMSqyjR7rVM/6YdPTaCsRF6y4vZOF7Xp1eEaWoMroxellQR
+         BS3NXdreBXsDg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 03 May 2020 17:21:10 +0200
+Message-Id: <1b3c0d2b01c56cfc073f9ff4961f077098edbe67.1588517058.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2 01/11] power: bq25890: remove redundant I2C bus check
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8EER9Q.C206SXNSICP7@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Paul Cercueil <paul@crapouillou.net> [200503 14:19]:
-> You have a new SoC with a SGX, and you only need to enable one clock to get
-> it to work. So you create a devicetree node which receives only one clock.
-> 
-> Turns out, that the bootloader was enabling the other 3 clocks, and since
-> the last release, it doesn't anymore. You're left with having to support a
-> broken devicetree.
-> 
-> That's the kind of problem that can be easily avoided by enforcing the
-> number of clocks that have to be provided.
+regmap initialization will check I2C adapter functionality.
+Remove redundant check in the driver.
 
-The number of clocks depends on how it's wired for the SoC.
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/power/supply/bq25890_charger.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-On omaps, there's are no controls for additinoal SGX clocks. Sure some
-of the clocks may be routed to multple places internally by the wrapper
-module. But we have no control over that.
+diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
+index aebd1253dbc9..c642519ef7b2 100644
+--- a/drivers/power/supply/bq25890_charger.c
++++ b/drivers/power/supply/bq25890_charger.c
+@@ -881,17 +881,11 @@ static int bq25890_fw_probe(struct bq25890_device *bq)
+ static int bq25890_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
+-	struct i2c_adapter *adapter = client->adapter;
+ 	struct device *dev = &client->dev;
+ 	struct bq25890_device *bq;
+ 	int ret;
+ 	int i;
+ 
+-	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
+-		dev_err(dev, "No support for SMBUS_BYTE_DATA\n");
+-		return -ENODEV;
+-	}
+-
+ 	bq = devm_kzalloc(dev, sizeof(*bq), GFP_KERNEL);
+ 	if (!bq)
+ 		return -ENOMEM;
+-- 
+2.20.1
 
-If we wanted to specify just the "fck" clock on omaps, then we can
-do it with something like this:
-
-allOf:
-  - if:
-    properites:
-      compatible:
-        enum:
-	  - "ti,omap4-sgx544-112"
-	  - "ti,omap5-sgx544-116"
-	  - "ti,dra7-sgx544-116"
-    then:
-      properties:
-        clocks:
-	  minItems: 1
-	  maxItems: 1
-
-        clock-names:
-	  const: fck
-
-    required:
-      - clocks
-      - clock-names
-
-There's no need for the SGX driver to toggle the "fck" here, it's
-all done by PM runtime alreaedy so we would be just tweaking
-the usage count for it. But hey, showing the clock rate might
-be nice. Or maybe we want to at some point scale it, so no problem
-specifying it.
-
-For omap3, we should then specify "fck" and "ick". On omap4 and
-later, there's no separate control over the "ick".
-
-Then for the other SoCs, you can specify whatever clocks you need
-there.
-
-Regards,
-
-Tony
