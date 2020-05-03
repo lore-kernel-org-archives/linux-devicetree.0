@@ -2,206 +2,74 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964FBC47257
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 09:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3937AC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 09:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7523B2075B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 09:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="VHIymDBu"
+	by mail.kernel.org (Postfix) with ESMTP id 1C92B20721
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 09:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgECJko (ORCPT
+        id S1727813AbgECJly (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 05:40:44 -0400
-Received: from www381.your-server.de ([78.46.137.84]:59928 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgECJkn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 05:40:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=PmIwGfeNx10nR9VQdjdugrCf7Ma4J5m4gGNNnzDznG4=; b=VHIymDBuILYNtd/YJ1QistliZx
-        Pw0HMeUtaQiMGk1gZMs2cy6NJL0wpIUhZNQubAmnaDbk8BztijpZ5KrzUUtITDQw84IwDUaCkweho
-        5nQInVtb9z88rBgpH9GPO4nCFX/40kzWp9of52UKQrxwglQXIjeJVH43mFObfQ3iVou+DHWdJvP13
-        EF6HT7ZR/lAlueAGthEeXnlN6vVnzHCCYWvdNRQ172GYiL0cog3k9oBEQ68GiEVslT6zldlBcHUSH
-        F9YbzGDkuvv731ZXJBodc68A2Rontxyh90XS+LeXMNywe/z9gazO4W4TVuj41wnFHpyT9B9jF2plF
-        RV8lpVXg==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jVAfr-0000ol-O4; Sun, 03 May 2020 11:12:35 +0200
-Received: from [82.135.70.217] (helo=[192.168.178.20])
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jVAfr-000Qxw-Bg; Sun, 03 May 2020 11:12:35 +0200
-Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
-From:   Lars-Peter Clausen <lars@metafoo.de>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        =?UTF-8?Q?Nuno_S=c3=a1?= <noname.nuno@gmail.com>
-Cc:     =?UTF-8?Q?Nuno_S=c3=a1?= <nuno.sa@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
- <20200413082445.17324-6-nuno.sa@analog.com>
- <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
- <20200502184010.134eb8b5@archlinux>
- <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
- <df0f04296fafccfcf18b08b213bae20ff69c2384.camel@gmail.com>
- <20200503094751.633feda1@archlinux>
- <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
-Message-ID: <b7289aca-f393-faca-f512-a952a77c1e68@metafoo.de>
-Date:   Sun, 3 May 2020 11:12:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 3 May 2020 05:41:54 -0400
+Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:27755 "EHLO
+        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbgECJly (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 05:41:54 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Sun, 03 May 2020 05:41:53 EDT
+IronPort-SDR: Pge1fcSvg0qkgP47NgKQJB8roQFytD/NafQUADzmlYq+3W31lqiwkYbzV2pImx/XWbKQH95Pe/
+ i/zUSuegvEvYTO30nADvhjFze+MCp5i91N3c2PobJ2Le8Hb5q3SoSyPuIbSKUefBjYclPsr/kg
+ r6spinh5XjKEnEssIjCiOkGoyzhfxegPoWccUXkQbrwUr0GcU+D8PrMynLbgCtjHdaUZb5HDpG
+ Z39ii8JAV66Mv2lrmfAbB+GtT6UqP3RwpFMBI6RF4BVMcwowwgO/UGCdPsCGPlYjfoS0g/5DG1
+ bYw=
+X-IronPort-AV: E=Sophos;i="5.73,347,1583186400"; 
+   d="scan'208";a="278321437"
+From:   =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
+        <vesa.jaaskelainen@vaisala.com>
+To:     devicetree@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
+        <vesa.jaaskelainen@vaisala.com>
+Subject: [PATCH] dt-bindings: vendor-prefixes: Add Vaisala
+Date:   Sun,  3 May 2020 12:33:55 +0300
+Message-Id: <20200503093355.46964-1-vesa.jaaskelainen@vaisala.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25800/Sat May  2 14:08:18 2020)
+X-OriginalArrivalTime: 03 May 2020 09:34:41.0851 (UTC) FILETIME=[129D28B0:01D6212E]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/3/20 11:07 AM, Lars-Peter Clausen wrote:
-> On 5/3/20 10:47 AM, Jonathan Cameron wrote:
->> On Sat, 02 May 2020 21:52:18 +0200
->> Nuno Sá <noname.nuno@gmail.com> wrote:
->>
->>> On Sat, 2020-05-02 at 20:01 +0200, Lars-Peter Clausen wrote:
->>>> On 5/2/20 7:40 PM, Jonathan Cameron wrote:
->>>>> On Mon, 27 Apr 2020 20:06:07 +0200
->>>>> Lars-Peter Clausen <lars@metafoo.de> wrote:
->>>>>> On 4/13/20 10:24 AM, Nuno Sá wrote:
->>>>>>> [...]
->>>>>>> +static irqreturn_t adis16475_trigger_handler(int irq, void *p)
->>>>>>> +{
->>>>>>> [...]
->>>>>>> +    __be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
->>>>>>> [...]
->>>>>>> +
->>>>>>> +    iio_push_to_buffers_with_timestamp(indio_dev, data, pf-
->>>>>>>> timestamp);
->>>>>> If the timestamp is enabled the IIO core might insert padding
->>>>>> between
->>>>>> the data channels and the timestamp. If that happens this will
->>>>>> disclose
->>>>>> kernel stack memory to userspace.
->>>>>>
->>>>>> This needs either a memset(data, 0x00, sizeof(data)) or maybe put
->>>>>> data
->>>>>> into the state struct and kzalloc it.
->>>>> Good spot. Could simply do __be16 data[ADI..] = {0}; rather than
->>>>> explicit
->>>>> memset, but some form of zeroization is needed.
->>>>>
->>>>> I've fixed up the applied patch with the above approach.
->>>> There is actually another issue. The stack data is not necessarily
->>>> aligned to 64 bit, which causes issues if we try to put the 64-bit
->>> Oh, this is actually more problematic. Yes, since we have an array of
->>> u16, that is not guaranteed to be 64bit aligned. Doing a quick search
->>> of `iio_push_to_buffers_with_timestamp()` users and I could quickly
->>> find 4/5 drivers with the same problem. I guess the API should clearly
->>> state that `data` needs to be __at least__ 64 bits aligned (maybe a
->>> future patch). Or we could even check the address and guarantee that it
->>> is properly aligned before continuing (though Im guessing this will
->>> break a lot of users...)
->>>> timestamp in it. I think data should really be in the state struct.
->>> Yes, with a proper __aligned(8) attribute... Or couldn't we just use
->>> __aligned(8) on the stack variable?
->> Forcing alignment on the stack isn't terribly reliable, which is why
->> we never do that for dma safe buffers.
->>
->> Probably better to just move it to the state structure.
->> I'll fix it up to do that. Please sanity check what will shortly
->> be in the testing branch.
->>
->> The moment Lars mentioned this I groaned. As you've noted a few other
->> drivers have the same problem + the ABI doesn't clearly state
->> or check this.
->>
->> We should certainly fix all the drivers that suffer this problem
->> first then we can think about adding a runtime check.
->
-> It looks like it is actually quite a few drivers, maybe we should 
-> switch to put_unaligned(). We probably got lucky in most cases and the 
-> buffer is naturally aligned to 64 bit.
->
-> But the reason I noticed this is because I ran into the issue in the 
-> wild where the timestamp ended up at the wrong offset in the buffer, 
-> so it does happen.
->
-> The following semantic patch finds affected drivers.
->
-> @@
-> type T;
-> identifier buf;
-> expression N;
-> expression ts;
-> expression indio_dev;
-> @@
-> *T buf[N];
-> ...
-> *iio_push_to_buffers_with_timestamp(indio_dev, buf, ts)
->
-> Matched files:
->
-> --- drivers/iio/health/afe4403.c
-> --- drivers/iio/health/afe4404.c
-> --- drivers/iio/gyro/mpu3050-core.c
-> --- drivers/iio/gyro/itg3200_buffer.c
-> --- drivers/iio/chemical/ccs811.c
-> --- drivers/iio/chemical/sps30.c
-> --- drivers/iio/chemical/pms7003.c
-> --- drivers/iio/proximity/isl29501.c
-> --- drivers/iio/proximity/mb1232.c
-> --- drivers/iio/accel/kxsd9.c
-> --- drivers/iio/accel/mma8452.c
-> --- drivers/iio/accel/bmc150-accel-core.c
-> --- drivers/iio/accel/mma7455_core.c
-> --- drivers/iio/adc/ti-adc081c.c
-> --- drivers/iio/adc/ti-adc084s021.c
-> --- drivers/iio/adc/ti-ads1015.c
-> --- drivers/iio/adc/ti-ads124s08.c
-> --- drivers/iio/adc/ina2xx-adc.c
-> --- drivers/iio/adc/ti-ads8688.c
-> --- drivers/iio/adc/ti-adc0832.c
-> --- drivers/iio/adc/ti-adc12138.c
-> --- drivers/iio/adc/max1118.c
-> --- drivers/iio/adc/ad_sigma_delta.c
-> --- drivers/iio/light/si1145.c
-> --- drivers/iio/light/vcnl4035.c
-> --- drivers/iio/light/max44000.c
-> --- drivers/iio/light/rpr0521.c
-> --- drivers/iio/light/st_uvis25_core.c
-> --- drivers/iio/light/ltr501.c
-> --- drivers/iio/magnetometer/ak8974.c
-> --- drivers/iio/magnetometer/mag3110.c
-> --- drivers/iio/magnetometer/ak8975.c
-> --- drivers/iio/humidity/hdc100x.c
-> --- drivers/iio/humidity/hts221_buffer.c
-> --- drivers/iio/imu/bmi160/bmi160_core.c
-> --- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> --- drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-> --- drivers/iio/pressure/ms5611_core.c
-> --- drivers/iio/pressure/mpl3115.c
->
-Most of these drivers also seem to have the issue that they leak stack 
-memory. Only 11 of them clear the buffer.
+Vaisala Oyj is a company based in Finland and also has subsidiaries in other
+countries. Vaisala develops, manufactures and markets innovative products and
+services for environmental and industrial measurement.
+
+https://www.vaisala.com/
+
+Signed-off-by: Vesa Jääskeläinen <vesa.jaaskelainen@vaisala.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d3891386d671..579391c41079 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1065,6 +1065,8 @@ patternProperties:
+     description: Aigo Digital Technology Co., Ltd.
+   "^v3,.*":
+     description: V3 Semiconductor
++  "^vaisala,.*":
++    description: Vaisala
+   "^vamrs,.*":
+     description: Vamrs Ltd.
+   "^variscite,.*":
+-- 
+2.17.1
 
