@@ -2,124 +2,76 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EB1C47247
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FDAC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80AF32496B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="JjeuhiGZ"
+	by mail.kernel.org (Postfix) with ESMTP id E839520836
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgECPVS (ORCPT
+        id S1728750AbgECPVa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 11:21:18 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:3830 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbgECPVR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 May 2020 11:21:17 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FV7Z24nPzyJ;
-        Sun,  3 May 2020 17:21:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588519274; bh=D5lHcvsWUfCazaZCIpXQUO49elvu1ZjF+jgG6AivSgU=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=JjeuhiGZ7NFgr9As58a6U4F4hzSsBzWRrMaF9Vu61kXE2h0olxRKmekFeSoAgbnSz
-         0kcFOR4dFjy2TNs0shK9HoNrtDgb9prjPNncw0Yh1CaWC1R/n0y9hYweJkcl1z/oUr
-         hnOHVyczSA8R9kivedUeqgX9uVMw0QjxZVi1rjiqPS6PwZMSS68k3mC0p+Ya6Wy1uK
-         Y8A2R0lBcSTVM/XvOXY7gGp7GkW68XHMGAdX9sZSSGZz/O00GK8Y97V5G8PLWp3ndJ
-         EboElt6gsQqeu+kPIByKDHjP0wmiAf7NlCwYsGPz7YSjAulv4+zMOlpt4UtNpAwEtJ
-         4zvskGCUeeQ9Q==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 03 May 2020 17:21:14 +0200
-Message-Id: <75c3b4fe55ba0059c7f7ed6f224c116ee98623ff.1588517058.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 10/11] power: bq25890: support IBAT compensation
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
+        Sun, 3 May 2020 11:21:30 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:29357 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728345AbgECPV3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 11:21:29 -0400
+X-IronPort-AV: E=Sophos;i="5.73,347,1583161200"; 
+   d="scan'208";a="46006153"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 04 May 2020 00:21:27 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 15C184007F56;
+        Mon,  4 May 2020 00:21:24 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Simon Horman <horms+renesas@verge.net.au>
+Cc:     Lad Prabhakar <prabhakar.csengg@gmail.com>, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2] dt-bindings: net: renesas,ether: Sort compatible string in increasing number of the SoC
+Date:   Sun,  3 May 2020 16:21:19 +0100
+Message-Id: <1588519279-13364-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add configuration for compensation of IBAT measuring resistor in series
-with the battery.
+Sort the items in the compatible string list in increasing number of SoC.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/power/supply/bq25890_charger.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ Changes for v2:
+ * Included renesas,ether in subject instead of sh_eth.
+ * Included Reviewed-by tags.
 
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index 87c5832e23d3..9d1ba3bd0bea 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -83,6 +83,8 @@ struct bq25890_init_data {
- 	u8 boostf;	/* boost frequency		*/
- 	u8 ilim_en;	/* enable ILIM pin		*/
- 	u8 treg;	/* thermal regulation threshold */
-+	u8 rbatcomp;	/* IBAT sense resistor value    */
-+	u8 vclamp;	/* IBAT compensation voltage limit */
- };
- 
- struct bq25890_state {
-@@ -258,6 +260,8 @@ enum bq25890_table_ids {
- 	TBL_VREG,
- 	TBL_BOOSTV,
- 	TBL_SYSVMIN,
-+	TBL_VBATCOMP,
-+	TBL_RBATCOMP,
- 
- 	/* lookup tables */
- 	TBL_TREG,
-@@ -299,6 +303,8 @@ static const union {
- 	[TBL_VREG] =	{ .rt = {3840000, 4608000, 16000} },	 /* uV */
- 	[TBL_BOOSTV] =	{ .rt = {4550000, 5510000, 64000} },	 /* uV */
- 	[TBL_SYSVMIN] = { .rt = {3000000, 3700000, 100000} },	 /* uV */
-+	[TBL_VBATCOMP] ={ .rt = {0,        224000, 32000} },	 /* uV */
-+	[TBL_RBATCOMP] ={ .rt = {0,        140000, 20000} },	 /* uOhm */
- 
- 	/* lookup tables */
- 	[TBL_TREG] =	{ .lt = {bq25890_treg_tbl, BQ25890_TREG_TBL_SIZE} },
-@@ -650,7 +656,9 @@ static int bq25890_hw_init(struct bq25890_device *bq)
- 		{F_BOOSTI,	 bq->init_data.boosti},
- 		{F_BOOSTF,	 bq->init_data.boostf},
- 		{F_EN_ILIM,	 bq->init_data.ilim_en},
--		{F_TREG,	 bq->init_data.treg}
-+		{F_TREG,	 bq->init_data.treg},
-+		{F_BATCMP,	 bq->init_data.rbatcomp},
-+		{F_VCLAMP,	 bq->init_data.vclamp},
- 	};
- 
- 	ret = bq25890_chip_reset(bq);
-@@ -861,11 +869,14 @@ static int bq25890_fw_read_u32_props(struct bq25890_device *bq)
- 		{"ti,boost-max-current", false, TBL_BOOSTI, &init->boosti},
- 
- 		/* optional properties */
--		{"ti,thermal-regulation-threshold", true, TBL_TREG, &init->treg}
-+		{"ti,thermal-regulation-threshold", true, TBL_TREG, &init->treg},
-+		{"ti,ibatcomp-resistance", true, TBL_RBATCOMP, &init->rbatcomp},
-+		{"ti,ibatcomp-clamp-voltage", true, TBL_VBATCOMP, &init->vclamp},
- 	};
- 
- 	/* initialize data for optional properties */
- 	init->treg = 3; /* 120 degrees Celsius */
-+	init->rbatcomp = init->vclamp = 0; /* IBAT compensation disabled */
- 
- 	for (i = 0; i < ARRAY_SIZE(props); i++) {
- 		ret = device_property_read_u32(bq->dev, props[i].name,
+ Documentation/devicetree/bindings/net/renesas,ether.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/renesas,ether.yaml b/Documentation/devicetree/bindings/net/renesas,ether.yaml
+index 2eaa879..005a3ae 100644
+--- a/Documentation/devicetree/bindings/net/renesas,ether.yaml
++++ b/Documentation/devicetree/bindings/net/renesas,ether.yaml
+@@ -29,8 +29,8 @@ properties:
+               - renesas,rcar-gen1-ether  # a generic R-Car Gen1 device
+       - items:
+           - enum:
+-              - renesas,ether-r8a7745    # device is a part of R8A7745 SoC
+               - renesas,ether-r8a7743    # device is a part of R8A7743 SoC
++              - renesas,ether-r8a7745    # device is a part of R8A7745 SoC
+               - renesas,ether-r8a7790    # device is a part of R8A7790 SoC
+               - renesas,ether-r8a7791    # device is a part of R8A7791 SoC
+               - renesas,ether-r8a7793    # device is a part of R8A7793 SoC
 -- 
-2.20.1
+2.7.4
 
