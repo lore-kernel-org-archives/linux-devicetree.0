@@ -2,124 +2,113 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721A6C47247
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 14:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71556C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 14:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515F12075B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 14:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46841206F0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 14:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="wE8SaUDx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxvGAhT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgECOVn (ORCPT
+        id S1728625AbgECOuC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 10:21:43 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:55622 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbgECOVm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 10:21:42 -0400
+        Sun, 3 May 2020 10:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728002AbgECOuC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 10:50:02 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46A8EC061A0E;
+        Sun,  3 May 2020 07:50:02 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id y26so9699304ioj.2;
+        Sun, 03 May 2020 07:50:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588515702; x=1620051702;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=ZxYVmPuuA2zr6UpwhDSq7R3lJgKncnOeJeAf3v7KJHY=;
-  b=wE8SaUDxh7OZ9NmBlvoY57LRaoKZ9rA0UvifVjUVL4/wqXveJGy3JpSn
-   ++/xpRr9zVwquxE1SFq6qb49OMWlkvTLxj9I3ouUyROFA/GZ/UsUvCRkF
-   EFIcJVvXjWX9L2xp7QGvantYxpqMsRNLB6UlhbvegLfpzHQHJzCxgiU3F
-   E=;
-IronPort-SDR: 7qyAQDUnU+bcCnQFJvC2pIBx8dUR+S2UUtK7lgyQLm9YPKIfPF7m9JI3fBitvnA4A8Gd2obW0w
- G83Qk/vzbktA==
-X-IronPort-AV: E=Sophos;i="5.73,347,1583193600"; 
-   d="scan'208";a="28326231"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 03 May 2020 14:21:28 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 1F696A25FD;
-        Sun,  3 May 2020 14:21:23 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sun, 3 May 2020 14:21:22 +0000
-Received: from [10.95.73.94] (10.43.161.34) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 3 May
- 2020 14:21:13 +0000
-Subject: Re: [PATCH v6 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-To:     Borislav Petkov <bp@alien8.de>, <robh+dt@kernel.org>
-CC:     <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
-        <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <linux-edac@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
-        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <eitan@amazon.com>
-References: <20200224134132.23924-1-talel@amazon.com>
- <20200224134132.23924-2-talel@amazon.com> <20200428110659.GA11272@zn.tnic>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <0b34f059-5abb-2e30-ec6e-6052efc91d91@amazon.com>
-Date:   Sun, 3 May 2020 17:21:08 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B1Ggi2tOtn6fWjPzvZwzQsgJOov1/FsKi8Om8sDMRcA=;
+        b=HxvGAhT9OTNgDUFLYzZZRcoKMfhGjPBshUnyOSIlMXSNcv9h4/Oz/o13+7VqT8UxVr
+         GLfT479WXZaLdb87jHp9szW1ydM+olqSwgfBXwJ/1wmNMXmE0eBqXLRAO4FvulgdYqmW
+         OqykNoHblX1DfvOOlq1bWLPODvfKm6n0lvVq5BSgvedpNbZ5xaGzPHcNW/2sEUN26Mtt
+         vGNHfaV62vuJTeeqDlXRNnLOMKS0dsoNIiO4FxiI6Uy+y5A6x/8Hx5JZWzTdryi0MqLC
+         6EEGCwRbLB1XNl4ntFaKq2KatDVLf0NPst2/NeJErdUgW4GqlCVe6u01dG5Jh5Xxt0yp
+         GcuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B1Ggi2tOtn6fWjPzvZwzQsgJOov1/FsKi8Om8sDMRcA=;
+        b=OxTpmYXZ14wAdNvgouYEeAovjxiFzFgTq4j3/IhxLwCn5ZOwn39iu0V8san0d+SJ0I
+         5M3ZUzWCqheCC1NUg9jryjoYnTk5H46t8QqwNguLRAZ6Vn8FNK+Xccxg2LdKm+lPl8YQ
+         n37A3B1msmmHEgiLd7MPgPDAr6MfwqGGW6YYkIn72d6DlvYQazYhwWM5GbViqmHZjVo5
+         TTlSKRPU3UHMbRF3yKBDAtZdnGkV5LirccpVyrYDFpwR4/PHsGEEiMJNV5deQtQxN1Eu
+         8I3ag8BoGBO0fkl03X6ONYlfj/AnhcQGywv8bY7dpfrg9lC1ELh7R+ttx/bAnYv/Bs6C
+         Zq+Q==
+X-Gm-Message-State: AGi0PuaOLfALvoE0LXnwLtJrTtBrvaW8AFqNfsLx6xMA/yVKsCGs5NYp
+        meUjvB1arUeEtu3u3llZZEpN8EShuU6nMRbplbQ=
+X-Google-Smtp-Source: APiQypLbcKgX3zhmAur79Vn+sc0A1kneTzi/1Vo1IHxvDZMcqShXBChBJ4soO8y6+dAipoLOjkTP4D38bcG/hwiWprc=
+X-Received: by 2002:a6b:dd16:: with SMTP id f22mr11782741ioc.178.1588517401325;
+ Sun, 03 May 2020 07:50:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200428110659.GA11272@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.43.161.34]
-X-ClientProxiedBy: EX13D11UWC004.ant.amazon.com (10.43.162.101) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+References: <20200430124602.14463-1-frieder.schrempf@kontron.de> <20200430124602.14463-5-frieder.schrempf@kontron.de>
+In-Reply-To: <20200430124602.14463-5-frieder.schrempf@kontron.de>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Sun, 3 May 2020 09:49:50 -0500
+Message-ID: <CAHCN7xJ=srZxygtG6hW_+us=qH1heY-k=EosavYH9tDk-KG0Bw@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/4] arm64: dts: imx8mm: Add GPU nodes for 2D and 3D
+ core using Etnaviv
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Anson Huang <Anson.Huang@nxp.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Li Jun <jun.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 4/28/2020 2:06 PM, Borislav Petkov wrote:
-> On Mon, Feb 24, 2020 at 03:41:31PM +0200, Talel Shenhar wrote:
->> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
->>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->>   .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
->>   1 file changed, 52 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->> new file mode 100644
->> index 000000000000..20505f37c9f8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->> @@ -0,0 +1,52 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
-> WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)
-> #36: FILE: Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml:1:
-> +# SPDX-License-Identifier: GPL-2.0-only
+On Thu, Apr 30, 2020 at 7:46 AM Schrempf Frieder
+<frieder.schrempf@kontron.de> wrote:
 >
-> Hi Rob, should I listen to checkpatch or ignore it?
-
-Thank you Boris for the review,
-
-I now see this recent  addition in checkpatch - 
-https://lore.kernel.org/lkml/20200309215153.38824-1-lkundrak@v3.sk/
-
-Will add that license as part of v7.
-
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
 >
-> --
-> Regards/Gruss,
->      Boris.
+> According to the documents, the i.MX8M-Mini features a GC320 and a
+> GCNanoUltra GPU core. Etnaviv detects them as:
 >
-> https://people.kernel.org/tglx/notes-about-netiquette
+>         etnaviv-gpu 38000000.gpu: model: GC600, revision: 4653
+>         etnaviv-gpu 38008000.gpu: model: GC520, revision: 5341
+>
+> This seems to work fine more or less without any changes to the HWDB,
+> which still might be needed in the future to correct some features,
+> etc.
+>
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> ---
+Since not everyone uses the 3D or 2D, would it make sense to mark them
+as disabled by default and let people who need the 3D and 2D enable
+them at their respective board files?
 
+adam
 
-Thanks,
-
-Talel.
-
+> 2.17.1
