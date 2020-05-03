@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91711C4724C
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 21:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8873C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 21:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 691BD20757
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 21:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC012071C
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 21:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgECVrn (ORCPT
+        id S1729318AbgECVrv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 17:47:43 -0400
+        Sun, 3 May 2020 17:47:51 -0400
 Received: from relmlor1.renesas.com ([210.160.252.171]:12329 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729287AbgECVrn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 17:47:43 -0400
+        by vger.kernel.org with ESMTP id S1729313AbgECVru (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 17:47:50 -0400
 X-IronPort-AV: E=Sophos;i="5.73,349,1583161200"; 
-   d="scan'208";a="46232113"
+   d="scan'208";a="46232126"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 04 May 2020 06:47:41 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 04 May 2020 06:47:49 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0A6E84006DF9;
-        Mon,  4 May 2020 06:47:37 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C56914006DF9;
+        Mon,  4 May 2020 06:47:45 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -40,9 +40,9 @@ Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-serial@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 08/10] dt-bindings: arm: Document iW-RainboW-G21D-Qseven-RZG1H board
-Date:   Sun,  3 May 2020 22:46:52 +0100
-Message-Id: <1588542414-14826-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 10/10] ARM: dts: r8a7742-iwg21d-q7: Add support for iWave G21D-Q7 board based on RZ/G1H
+Date:   Sun,  3 May 2020 22:46:54 +0100
+Message-Id: <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -51,33 +51,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the iW-RainboW-G21D-Qseven-RZG1H device tree bindings,
-listing it as a supported board.
+Add support for iWave RainboW-G21D-Qseven board based on RZ/G1H.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/arm/renesas.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/Makefile              |  1 +
+ arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 37 +++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/renesas.yaml b/Documentation/devicetree/bindings/arm/renesas.yaml
-index 8e85e1c72fc4..b7d2e921150a 100644
---- a/Documentation/devicetree/bindings/arm/renesas.yaml
-+++ b/Documentation/devicetree/bindings/arm/renesas.yaml
-@@ -59,6 +59,13 @@ properties:
-               - iwave,g21m
-           - const: renesas,r8a7742
- 
-+      - items:
-+          - enum:
-+              # iWave Systems RZ/G1H Qseven Development Platform (iW-RainboW-G21D-Qseven)
-+              - iwave,g21d
-+          - const: iwave,g21m
-+          - const: renesas,r8a7742
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e8dd99201397..ed3376cce638 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -917,6 +917,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
+ 	r7s9210-rza2mevb.dtb \
+ 	r8a73a4-ape6evm.dtb \
+ 	r8a7740-armadillo800eva.dtb \
++	r8a7742-iwg21d-q7.dtb \
+ 	r8a7743-iwg20d-q7.dtb \
+ 	r8a7743-iwg20d-q7-dbcm-ca.dtb \
+ 	r8a7743-sk-rzg1m.dtb \
+diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+new file mode 100644
+index 000000000000..1f5c35c66d91
+--- /dev/null
++++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the iWave-RZ/G1H Qseven board
++ *
++ * Copyright (C) 2020 Renesas Electronics Corp.
++ */
 +
-       - description: RZ/G1M (R8A77430)
-         items:
-           - enum:
++/dts-v1/;
++#include "r8a7742-iwg21m.dtsi"
++
++/ {
++	model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
++	compatible = "iwave,g21d", "iwave,g21m", "renesas,r8a7742";
++
++	aliases {
++		serial2 = &scifa2;
++	};
++
++	chosen {
++		bootargs = "ignore_loglevel root=/dev/mmcblk0p1 rw rootwait";
++		stdout-path = "serial2:115200n8";
++	};
++};
++
++&pfc {
++	scifa2_pins: scifa2 {
++		groups = "scifa2_data_c";
++		function = "scifa2";
++	};
++};
++
++&scifa2 {
++	pinctrl-0 = <&scifa2_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
 -- 
 2.17.1
 
