@@ -2,258 +2,136 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0D5C47257
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 17:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED19C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 19:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F68C206F0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 17:55:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LrRglC6E"
+	by mail.kernel.org (Postfix) with ESMTP id 353F32075E
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 19:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgECRzL (ORCPT
+        id S1728982AbgECTzb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 13:55:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727112AbgECRzL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 13:55:11 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9C1C061A0E;
-        Sun,  3 May 2020 10:55:10 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k1so18183936wrx.4;
-        Sun, 03 May 2020 10:55:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=eI40m2dbkMq75XJPcjn2SYxgJHs1f4gBLHf7s82v0r8=;
-        b=LrRglC6EM5LkA9rqAfw3kv8eIhLT+FL+yOomQF8p4AIiYidrwjYM8WA8VzjHaM1T1s
-         rSrokMPm2DSKL79xfw1Z2b144Y8LwXLQKAwoaqXjcFbeMDpJG8N2oa+LT5jF7lyuAgZS
-         ZaVCd0m6SisI3Vpmvu9dqcTTFky31fAEcpAYeMtfBnRUdL6c0i16pC0H6STYjY1dV/mC
-         OfEpD/aIUOfI2v4uxHx4E3WJGu28YhcxgP88Xgki8TZL4T849LAqRca7mUk4nrwgPI//
-         D8Y2yQUq/uQCNYA5dJy6KI7YmJhgOt+cofVNeEOD3ZwLnBOsQ7qYaVTFCtdSwy7xaL6s
-         /OdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=eI40m2dbkMq75XJPcjn2SYxgJHs1f4gBLHf7s82v0r8=;
-        b=mYCwVj2Eu/5ECOec/UHaKCr/bWHj40awjrFDDkowZr93AGi3+zgP+FaXiKbz/yIdlf
-         NmaUVbd0h1jWAuusYhgqsvTRoz1Ha76RyNAALuQQfk3t/73YLqBI2B5E0YzrMWTcU4rQ
-         LnSIn5J9QHlXMvchOrOwdFCfww6aeB7Em4UawEl9BEXkoVEDy+63XnxR2RatShSd78F+
-         fsFK5YaLosevFtlsXwc5sS6OcWzlz9QJLsIL/aFinrlwI1x04EQwy421sjOVqyHmHRbT
-         YuSaqhkKlA6IB4849WcrcSAEa4aSdrMlpF26BOg9Tjvi7GajjGlhTT6nkCR4xmiyDDkE
-         Q6aA==
-X-Gm-Message-State: AGi0PuaZThgYelIdoacbDV6nW1XFGWP82OMCPyfViVHqXTlFbtQp9FDC
-        XGlNmYdQTRAVM5Bh+roSyqs=
-X-Google-Smtp-Source: APiQypKu6w+sDo2F13RP8Jmf29B7r/5DZk4emtcvrvGIU6aGYcqt7zi7EFmPIH2cPBbiSyNuYmN05A==
-X-Received: by 2002:adf:8401:: with SMTP id 1mr15488421wrf.241.1588528509340;
-        Sun, 03 May 2020 10:55:09 -0700 (PDT)
-Received: from nunojsa-N551JK ([2001:a61:2488:b501:889a:1d04:1d51:f2d0])
-        by smtp.googlemail.com with ESMTPSA id j13sm14589830wro.51.2020.05.03.10.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 10:55:08 -0700 (PDT)
-Message-ID: <a7ae81309768ac86413a7350d5735f4a1781be97.camel@gmail.com>
-Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
-From:   Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Date:   Sun, 03 May 2020 19:55:07 +0200
-In-Reply-To: <20200503181959.369161a4@archlinux>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
-         <20200413082445.17324-6-nuno.sa@analog.com>
-         <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
-         <20200502184010.134eb8b5@archlinux>
-         <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
-         <df0f04296fafccfcf18b08b213bae20ff69c2384.camel@gmail.com>
-         <20200503094751.633feda1@archlinux>
-         <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
-         <231ac29f177774eeb32b0ed907516173af0f97eb.camel@gmail.com>
-         <20200503122926.1fcc73fa@archlinux> <20200503181959.369161a4@archlinux>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
+        Sun, 3 May 2020 15:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728207AbgECTzb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 15:55:31 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A05C061A0E;
+        Sun,  3 May 2020 12:55:31 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 29EE12A010B
+Received: by earth.universe (Postfix, from userid 1000)
+        id D7CF73C08C7; Sun,  3 May 2020 21:55:26 +0200 (CEST)
+Date:   Sun, 3 May 2020 21:55:26 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 02/11] power: bq25890: simplify chip name property
+ getter
+Message-ID: <20200503195526.p24qf6gt4ejl2nvp@earth.universe>
+References: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+ <e623178ff9592e041089a40a7593b5a5770df4f3.1588517058.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hwyrnsyqigfvx4b5"
+Content-Disposition: inline
+In-Reply-To: <e623178ff9592e041089a40a7593b5a5770df4f3.1588517058.git.mirq-linux@rere.qmqm.pl>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 2020-05-03 at 18:19 +0100, Jonathan Cameron wrote:
-> On Sun, 3 May 2020 12:29:26 +0100
-> Jonathan Cameron <jic23@kernel.org> wrote:
-> 
-> > On Sun, 03 May 2020 13:07:01 +0200
-> > Nuno Sá <noname.nuno@gmail.com> wrote:
-> > 
-> > > On Sun, 2020-05-03 at 11:07 +0200, Lars-Peter Clausen wrote:  
-> > > > On 5/3/20 10:47 AM, Jonathan Cameron wrote:    
-> > > > > On Sat, 02 May 2020 21:52:18 +0200
-> > > > > Nuno Sá <noname.nuno@gmail.com> wrote:
-> > > > >     
-> > > > > > On Sat, 2020-05-02 at 20:01 +0200, Lars-Peter Clausen
-> > > > > > wrote:    
-> > > > > > > On 5/2/20 7:40 PM, Jonathan Cameron wrote:    
-> > > > > > > > On Mon, 27 Apr 2020 20:06:07 +0200
-> > > > > > > > Lars-Peter Clausen <lars@metafoo.de> wrote:
-> > > > > > > >        
-> > > > > > > > > On 4/13/20 10:24 AM, Nuno Sá wrote:    
-> > > > > > > > > > [...]
-> > > > > > > > > > +static irqreturn_t adis16475_trigger_handler(int
-> > > > > > > > > > irq,
-> > > > > > > > > > void *p)
-> > > > > > > > > > +{
-> > > > > > > > > > [...]
-> > > > > > > > > > +	__be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
-> > > > > > > > > > [...]
-> > > > > > > > > > +
-> > > > > > > > > > +	iio_push_to_buffers_with_timestamp(indio_dev,
-> > > > > > > > > > data, pf-    
-> > > > > > > > > > > timestamp);    
-> > > > > > > > > If the timestamp is enabled the IIO core might insert
-> > > > > > > > > padding
-> > > > > > > > > between
-> > > > > > > > > the data channels and the timestamp. If that happens
-> > > > > > > > > this
-> > > > > > > > > will
-> > > > > > > > > disclose
-> > > > > > > > > kernel stack memory to userspace.
-> > > > > > > > > 
-> > > > > > > > > This needs either a memset(data, 0x00, sizeof(data))
-> > > > > > > > > or
-> > > > > > > > > maybe put
-> > > > > > > > > data
-> > > > > > > > > into the state struct and kzalloc it.    
-> > > > > > > > Good spot. Could simply do __be16 data[ADI..] = {0};
-> > > > > > > > rather
-> > > > > > > > than
-> > > > > > > > explicit
-> > > > > > > > memset, but some form of zeroization is needed.
-> > > > > > > > 
-> > > > > > > > I've fixed up the applied patch with the above
-> > > > > > > > approach.    
-> > > > > > > There is actually another issue. The stack data is not
-> > > > > > > necessarily
-> > > > > > > aligned to 64 bit, which causes issues if we try to put
-> > > > > > > the 64-
-> > > > > > > bit    
-> > > > > > Oh, this is actually more problematic. Yes, since we have
-> > > > > > an
-> > > > > > array of
-> > > > > > u16, that is not guaranteed to be 64bit aligned. Doing a
-> > > > > > quick
-> > > > > > search
-> > > > > > of `iio_push_to_buffers_with_timestamp()` users and I could
-> > > > > > quickly
-> > > > > > find 4/5 drivers with the same problem. I guess the API
-> > > > > > should
-> > > > > > clearly
-> > > > > > state that `data` needs to be __at least__ 64 bits aligned
-> > > > > > (maybe
-> > > > > > a
-> > > > > > future patch). Or we could even check the address and
-> > > > > > guarantee
-> > > > > > that it
-> > > > > > is properly aligned before continuing (though Im guessing
-> > > > > > this
-> > > > > > will
-> > > > > > break a lot of users...)    
-> > > > > > > timestamp in it. I think data should really be in the
-> > > > > > > state
-> > > > > > > struct.    
-> > > > > > Yes, with a proper __aligned(8) attribute... Or couldn't we
-> > > > > > just
-> > > > > > use
-> > > > > > __aligned(8) on the stack variable?    
-> > > > > Forcing alignment on the stack isn't terribly reliable, which
-> > > > > is
-> > > > > why
-> > > > > we never do that for dma safe buffers.
-> > > > > 
-> > > > > Probably better to just move it to the state structure.
-> > > > > I'll fix it up to do that. Please sanity check what will
-> > > > > shortly
-> > > > > be in the testing branch.
-> > > > > 
-> > > > > The moment Lars mentioned this I groaned. As you've noted a
-> > > > > few
-> > > > > other
-> > > > > drivers have the same problem + the ABI doesn't clearly state
-> > > > > or check this.
-> > > > > 
-> > > > > We should certainly fix all the drivers that suffer this
-> > > > > problem
-> > > > > first then we can think about adding a runtime check.    
-> > > > 
-> > > > It looks like it is actually quite a few drivers, maybe we
-> > > > should
-> > > > switch     
-> > > 
-> > > Yeps, not surprised...
-> > >   
-> > > > to put_unaligned(). We probably got lucky in most cases and the
-> > > > buffer    
-> > > 
-> > > This would keep us from having to fix all the users (just need to
-> > > fix
-> > > the memory leakage you mention on the next email) to use a
-> > > properly
-> > > aligned buffer. And later on, if we want, we can always add an
-> > > `aligned` variant of `iio_push_to_buffers_with_timestamp()` were
-> > > we
-> > > check for alignment...  
-> > 
-> > I'd rather scrub the existing set to fix this.  The reason being
-> > to make the point they were broken.  Fixing up with an unaligned
-> > write in the core is not 'obvious' to people looking at whether
-> > to pick up patches for individual drivers.
-> > 
-> > Unlikely to be too much extra over making sure we don't leak kernel
-> > data.   If we move them to the iio_priv structure we will avoid
-> > that
-> > anyway due to that being kzalloc ed in the first place.  We may
-> > leak previous timestamps or read values, but we don't care about
-> > that.
-> > 
-> > It's been there a while, so no 'super hurry' to fix these up but
-> > we should do it over next few months.
-> 
-> It's also worth noticing that there is some care needed.
-> Some devices don't need to zero because there is no padding.
-> Some devices are using the core demux, so the timestamp is always
-> in the same place, hence can be nicely refactored to an explicit
-> structure, either on the stack or heap.
-> 
-> Anyhow, from the first few I looked at I suspect they are all going
-> to have slightly different optimal solutions.
-> 
-> Take a look at the kxsd9 patch I'll send in a minute.  For that one
-> I think the cleanest thing is to leave the variable on the stack
-> but use an explicit structure to ensure the alignment is correct.
 
-Agreed. In those cases where there is no padding for the timestamp we
-can leave the variable on the stack (we can even think about adding an helper macro to declare this kind of construct :D). For the other's we can make use of iio_priv being kzalloc at probe so that we don't leak kernel data...
+--hwyrnsyqigfvx4b5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Nuno Sá
-> 
-> 
-> Jonathan
-> 
-> > Jonathan
-> > 
-> > > - Nuno Sá
-> > >   
+Hi,
 
+On Sun, May 03, 2020 at 05:21:10PM +0200, Micha=C5=82 Miros=C5=82aw wrote:
+> Driver rejects unknown chips early in the probe(), so when
+> bq25890_power_supply_get_property() is made reachable, bq->chip_version
+> will already be set to correct value - there is no need to check
+> it again.
+>=20
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> ---
+
+Thanks, queued.
+
+-- Sebastian
+
+>  drivers/power/supply/bq25890_charger.c | 19 ++++++++-----------
+>  1 file changed, 8 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/suppl=
+y/bq25890_charger.c
+> index c642519ef7b2..f9f29edadddc 100644
+> --- a/drivers/power/supply/bq25890_charger.c
+> +++ b/drivers/power/supply/bq25890_charger.c
+> @@ -32,6 +32,13 @@ enum bq25890_chip_version {
+>  	BQ25896,
+>  };
+> =20
+> +static const char *const bq25890_chip_name[] =3D {
+> +	"BQ25890",
+> +	"BQ25892",
+> +	"BQ25895",
+> +	"BQ25896",
+> +};
+> +
+>  enum bq25890_fields {
+>  	F_EN_HIZ, F_EN_ILIM, F_IILIM,				     /* Reg00 */
+>  	F_BHOT, F_BCOLD, F_VINDPM_OFS,				     /* Reg01 */
+> @@ -400,17 +407,7 @@ static int bq25890_power_supply_get_property(struct =
+power_supply *psy,
+>  		break;
+> =20
+>  	case POWER_SUPPLY_PROP_MODEL_NAME:
+> -		if (bq->chip_version =3D=3D BQ25890)
+> -			val->strval =3D "BQ25890";
+> -		else if (bq->chip_version =3D=3D BQ25892)
+> -			val->strval =3D "BQ25892";
+> -		else if (bq->chip_version =3D=3D BQ25895)
+> -			val->strval =3D "BQ25895";
+> -		else if (bq->chip_version =3D=3D BQ25896)
+> -			val->strval =3D "BQ25896";
+> -		else
+> -			val->strval =3D "UNKNOWN";
+> -
+> +		val->strval =3D bq25890_chip_name[bq->chip_version];
+>  		break;
+> =20
+>  	case POWER_SUPPLY_PROP_ONLINE:
+> --=20
+> 2.20.1
+>=20
+
+--hwyrnsyqigfvx4b5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6vIacACgkQ2O7X88g7
++po69Q//caWeqFN2/MC3PAg2BH4Yw9wxpWmN2ZorEV4WcZbOQEX9TMSZKrBidKjb
+rnTMke9BrMC95bUUQSAf8fDOlvyDzEiGwd4qD0jyjfs22qg2yEnWjSlDcIauCaJb
+vmetFeKdSflAm0YxJ7XoWhLgH3ZQLx5Tjgx+L3xunQKPkzvw1cYj5nIL8ai0QtZS
+qfjD+ze6nXk5uXf7HVlhh2ISV6+N8oJnI2Q65Y3SlCHuffrVg/Xkj7MB17RZjbB4
+RGbjHfjMp1RVJmtiuwd3BH9+StJH3OGut6Jb2vOZ1icpaCHyCQXxHNoYmJVX02/F
+t0hVjlleOWy47kQdwRj0uk5YE8XfPLAdmI7Hyc4NX/lhS0RvKUGRG/0vS76qZqDJ
+2Pebz8CAn1Ub9SnfNv2sHAfrylEgm4jm24l/CgU/EqyCGnm9XzWRDjh5D0k2Xfo9
+ifp7rjxKT5JH7AHamRywdpd4G83gTe8BHBv/YKItlL9rYq3qwY0dUM2E/OGz8RV5
+ORuF2cX4aWb9bpRkYRTgyryb4h5qCrJrJHmy0OQiVIHpch9qio+U9hWpPSW7bwxD
+/KFUB4Ff8VeZArzHM9lJd6YaQJa4HVmiVkCpXg+DXurFc4DiLV1BbQTTyr1MdNnr
+PvLyir9ow/v/mgDMWpD/RFgVGHU6/pDQnwHnlSE7L/g3+zBethI=
+=BZOz
+-----END PGP SIGNATURE-----
+
+--hwyrnsyqigfvx4b5--
