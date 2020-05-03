@@ -2,88 +2,83 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08A9C47247
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01553C47256
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A50F0207DD
+	by mail.kernel.org (Postfix) with ESMTP id CD1AD20836
 	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="HhhKdvWP"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="lnIMfb03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgECPVN (ORCPT
+        id S1728686AbgECPVN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sun, 3 May 2020 11:21:13 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:35642 "EHLO rere.qmqm.pl"
+Received: from rere.qmqm.pl ([91.227.64.183]:13571 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728526AbgECPVM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1727832AbgECPVM (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Sun, 3 May 2020 11:21:12 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FV7V1X1KzGj;
-        Sun,  3 May 2020 17:21:10 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FV7T5jmtzBc;
+        Sun,  3 May 2020 17:21:09 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588519270; bh=9+54rd/b9MFSvGJ5H7aKdvK4EyDceTpr1Ul1xvO7tH8=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=HhhKdvWPt8ojeOojYUmj4BOYsBqW+vWR/x9jk4+hE0l7fLPYtUAgk+l7T1i+ybTvR
-         d5iz0uMsTJpfWEvCXaJOsr9N6OkJwCCHXK/gSrkxOOYFDWg8+ynCbyW9LCxxCPJ9Jc
-         lttnWQxa0Nwlp9cupfyTJVgZZaFtLJ4+oXgguVXjliNSqOV8uUz6v/AQMVkh94DI2+
-         j1q8mz2QCGsl676C54+sfZB1PMKpY4XQ0gmrIQyoGI52eHLP6WDwsIseRyOsSBe3+x
-         SHYmnjQ0UDyMtNVz9inyMSqyjR7rVM/6YdPTaCsRF6y4vZOF7Xp1eEaWoMroxellQR
-         BS3NXdreBXsDg==
+        t=1588519270; bh=UjY8PzZ2ebkIWEK1WXKg4E1K2ulg0fn/7pKxOYcFaq8=;
+        h=Date:From:Subject:To:Cc:From;
+        b=lnIMfb03/Wy1nUudkFAxx0UXiVrRejRZY1depI/z9gcIwMCXPkFr7AX1FhTbV1qlw
+         BJE/FgcpU0fc44DlsO+eWGL/pQDZ/q802TTd9V6eMq1e59mlPRHyM8LkyeJ+eaERA4
+         HBjRZKhbuhCfOsBtyJasb9/3rc0HkA/iF4whzxAcW7U6esgPx2dRMlf0i8rQ9VA7X8
+         c0wq0k2N7g/b442BkjtzzlZzSaPspWjOQw0rbEKpzBY8jXl68Gu00Y8LT7Bb19X9zi
+         awzR0+jmkApiNJlAo3zXIcXiNQ2cf/p10+EU9YUBf0sc8VoE0VwDyLt9aU3UKiS8vE
+         lWs0ITADTQAMw==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 03 May 2020 17:21:10 +0200
-Message-Id: <1b3c0d2b01c56cfc073f9ff4961f077098edbe67.1588517058.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+Date:   Sun, 03 May 2020 17:21:07 +0200
+Message-Id: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 01/11] power: bq25890: remove redundant I2C bus check
+Subject: [PATCH v2 00/11] power: supply: bq25890: fix and extend
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
+To:     Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-regmap initialization will check I2C adapter functionality.
-Remove redundant check in the driver.
+This series consists of a set of fixes and enchancements to bq25890
+driver. This is tested on a board using bq25896 as battery controller.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/power/supply/bq25890_charger.c | 6 ------
- 1 file changed, 6 deletions(-)
+Patches 1-3 are cleans up the code a bit, 4-6 fix property value
+reading, 7-9 add more information to be read from the chip, 10-11 add
+IBAT compensation support.
 
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index aebd1253dbc9..c642519ef7b2 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -881,17 +881,11 @@ static int bq25890_fw_probe(struct bq25890_device *bq)
- static int bq25890_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
--	struct i2c_adapter *adapter = client->adapter;
- 	struct device *dev = &client->dev;
- 	struct bq25890_device *bq;
- 	int ret;
- 	int i;
- 
--	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
--		dev_err(dev, "No support for SMBUS_BYTE_DATA\n");
--		return -ENODEV;
--	}
--
- 	bq = devm_kzalloc(dev, sizeof(*bq), GFP_KERNEL);
- 	if (!bq)
- 		return -ENOMEM;
+v2 removes VBUS and VSYS additions (they need more intrusive changes
+to properly fit into power supply class ABI) and adds binding
+description to IBAT compensation devicetree properties.
+
+Michał Mirosław (11):
+  power: bq25890: remove redundant I2C bus check
+  power: bq25890: simplify chip name property getter
+  power: bq25890: make property table const
+  power: bq25890: protect view of the chip's state
+  power: bq25890: fix ADC mode configuration
+  power: bq25890: update state on property read
+  power: bq25890: implement CHARGE_TYPE property
+  power: bq25890: implement PRECHARGE_CURRENT property
+  power: bq25890: implement INPUT_CURRENT_LIMIT property
+  power: bq25890: support IBAT compensation
+  power: bq25890: document IBAT compensation DT properties
+
+ .../bindings/power/supply/bq25890.txt         |   4 +
+ drivers/power/supply/bq25890_charger.c        | 190 ++++++++++--------
+ 2 files changed, 113 insertions(+), 81 deletions(-)
+
 -- 
 2.20.1
 
