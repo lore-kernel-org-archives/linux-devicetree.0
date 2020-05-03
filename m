@@ -2,303 +2,186 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE35EC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 10:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3265C47247
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 11:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB5C2071C
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 10:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B2621582
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 11:07:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yc6lZmun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgECKz3 (ORCPT
+        id S1728194AbgECLHF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 06:55:29 -0400
-Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:36653 "EHLO
-        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728205AbgECKz2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 06:55:28 -0400
-Received: from pro2.mail.ovh.net (unknown [10.108.16.246])
-        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 9EDD45092F0B;
-        Sun,  3 May 2020 12:55:24 +0200 (CEST)
-Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sun, 3 May 2020
- 12:55:24 +0200
-Date:   Sun, 3 May 2020 12:53:51 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
-Message-ID: <20200503105351.GA2712@arch>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
- <20200422141135.86419-2-tomasz.duszynski@octakon.com>
- <20200425195534.2ac91fe6@archlinux>
- <20200428075101.GA6908@arch>
- <20200502173738.66dbc888@archlinux>
+        Sun, 3 May 2020 07:07:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728091AbgECLHE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 07:07:04 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED43C061A0C;
+        Sun,  3 May 2020 04:07:04 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 188so5104844wmc.2;
+        Sun, 03 May 2020 04:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=y/4hWziwDnaxg9hhzGgE5S9GBZDVzlmvn0sV1JGAgC0=;
+        b=Yc6lZmun484/Vh18s4UEd3mb+9ybI0vTPF/1PYX0nM3favhynC9Ap6bHBtiNP3dmoH
+         5GTfWDVuOlrAPy9eugO/LpeNbJMtxNz//a0oNshxpOWP/AxaRuSNrE3CxXbmADa9FQOB
+         5G1HoB+vySxKWgFXyQgjTOCUhft/+YobVx0BvFn5eOVH4BgAmbYoJG+Oqb0tt17WM/o4
+         ARVcPxqzNdsbfmr9jBcnbzvevFkiEsg28AZqMCvTftfi5aVw54AJVjsmeRC3gYuUVccY
+         1lUlPAK+wZm8WixEeeyV+Hp1WgpQZxQGZootYcB56aT/eV1b2XV78w7DnExHWz2UgMS4
+         6McA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=y/4hWziwDnaxg9hhzGgE5S9GBZDVzlmvn0sV1JGAgC0=;
+        b=ehN+dhMace9V0xIR1MrXFf8S15JJSSv9yCJ9P1gRlUrgYfbnp7BH+ZbHO6jGR6l5WX
+         09N3hCaKyKSzQ5pJEpBPWD9W0b6gj/9x0g3Z5h1WscjKgVwultwch6mb54GS+gLpZr7m
+         ck9hCSHPp1AX47ZbroMPjZGsqXzIdcZotIt3EROM6OdC3VwWwPXShxmlBE8tcC8pdHPc
+         qkFNKdf0YednZyuYpUHn0awjMnWQullCG5wF7faliVry7/1ql3NIWfpNs8cvWl+9JTXc
+         imm0Cp94hM+65bm76+heY6uWUicXYWSWYaR80hd0GsOr0kamPP0ykWi97zVy2IVgbIwt
+         AfLQ==
+X-Gm-Message-State: AGi0PuakZ9Hjsv1Iep0qui5hiTPI98LdIPsJtcLIvSCNPHC0Kxyf/ZHf
+        b7mAlk74D9MudUjuW3jzoW8=
+X-Google-Smtp-Source: APiQypIWM7gdS/ZICziZreWOFl1o5XNNZKwzCXPOOYRzWotODc6JHXHZCsafLcNYf3iVY0/etM9oKg==
+X-Received: by 2002:a1c:3c87:: with SMTP id j129mr8702472wma.157.1588504022896;
+        Sun, 03 May 2020 04:07:02 -0700 (PDT)
+Received: from nunojsa-N551JK ([2001:a61:2488:b501:889a:1d04:1d51:f2d0])
+        by smtp.googlemail.com with ESMTPSA id o3sm13292409wru.68.2020.05.03.04.07.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2020 04:07:02 -0700 (PDT)
+Message-ID: <231ac29f177774eeb32b0ed907516173af0f97eb.camel@gmail.com>
+Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
+From:   Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Date:   Sun, 03 May 2020 13:07:01 +0200
+In-Reply-To: <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
+References: <20200413082445.17324-1-nuno.sa@analog.com>
+         <20200413082445.17324-6-nuno.sa@analog.com>
+         <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
+         <20200502184010.134eb8b5@archlinux>
+         <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
+         <df0f04296fafccfcf18b08b213bae20ff69c2384.camel@gmail.com>
+         <20200503094751.633feda1@archlinux>
+         <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200502173738.66dbc888@archlinux>
-X-Originating-IP: [89.70.31.203]
-X-ClientProxiedBy: DAG2EX2.emp2.local (172.16.2.12) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 11753269131200519250
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrjedvgdefgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhepfffhvffukfhfgggtuggjihesthdtredttddtjeenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtheevtefhffduteejfedtkeeuheejgeejvdetfffgveekffefgeffueeghefgjeenucfkpheptddrtddrtddrtddpkeelrdejtddrfedurddvtdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtoheprhhosghhodgutheskhgvrhhnvghlrdhorhhg
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 02, 2020 at 05:37:38PM +0100, Jonathan Cameron wrote:
-> On Tue, 28 Apr 2020 09:51:01 +0200
-> Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
->
-> > On Sat, Apr 25, 2020 at 07:55:34PM +0100, Jonathan Cameron wrote:
-> > > On Wed, 22 Apr 2020 16:11:30 +0200
-> > > Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
-> > >
-> > > > Add Sensirion SCD30 carbon dioxide core driver.
-> > > >
-> > > > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> > > Hi Tomasz
-> > >
-> > > As you've probably guessed the big questions are around the custom ABI.
-> > >
-> > > Few other things inline.
-> > >
-> > > Jonathan
-> > >
-> ...
->
-> > > > +static int scd30_read_meas(struct scd30_state *state)
-> > > > +{
-> > > > +	int i, ret;
-> > > > +
-> > > > +	ret = scd30_command(state, CMD_READ_MEAS, 0, (char *)state->meas,
-> > > > +			    sizeof(state->meas));
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	for (i = 0; i < ARRAY_SIZE(state->meas); i++)
-> > > > +		state->meas[i] = scd30_float_to_fp(state->meas[i]);
-> > >
-> > > We have previously discussed proving direct floating point channel types
-> > > for the rare devices that actually provide floating point data in
-> > > a standard format.
-> > >
-> > > I'm happy to revisit that if you would like to.
-> > >
-> >
-> > Thanks for reminding me :).
-> >
-> > In that case I admit that some float helper in iio would be a good thing to
-> > have. Especially that there will be at least 2 sensors using it.
-> >
-> > I'd work on that after this driver makes it into the tree.
-> >
-> > How does it sound?
->
-> The problem is that, if we do it in that order we have ABI for this
-> device that we should really maintain.  We can probably get away
-> with changing it on the basis the channel type is self describing anyway
-> but it's not ideal.
->
-> So probably fine but not best practice...
->
+On Sun, 2020-05-03 at 11:07 +0200, Lars-Peter Clausen wrote:
+> On 5/3/20 10:47 AM, Jonathan Cameron wrote:
+> > On Sat, 02 May 2020 21:52:18 +0200
+> > Nuno Sá <noname.nuno@gmail.com> wrote:
+> > 
+> > > On Sat, 2020-05-02 at 20:01 +0200, Lars-Peter Clausen wrote:
+> > > > On 5/2/20 7:40 PM, Jonathan Cameron wrote:
+> > > > > On Mon, 27 Apr 2020 20:06:07 +0200
+> > > > > Lars-Peter Clausen <lars@metafoo.de> wrote:
+> > > > >    
+> > > > > > On 4/13/20 10:24 AM, Nuno Sá wrote:
+> > > > > > > [...]
+> > > > > > > +static irqreturn_t adis16475_trigger_handler(int irq,
+> > > > > > > void *p)
+> > > > > > > +{
+> > > > > > > [...]
+> > > > > > > +	__be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
+> > > > > > > [...]
+> > > > > > > +
+> > > > > > > +	iio_push_to_buffers_with_timestamp(indio_dev, data, pf-
+> > > > > > > > timestamp);
+> > > > > > If the timestamp is enabled the IIO core might insert
+> > > > > > padding
+> > > > > > between
+> > > > > > the data channels and the timestamp. If that happens this
+> > > > > > will
+> > > > > > disclose
+> > > > > > kernel stack memory to userspace.
+> > > > > > 
+> > > > > > This needs either a memset(data, 0x00, sizeof(data)) or
+> > > > > > maybe put
+> > > > > > data
+> > > > > > into the state struct and kzalloc it.
+> > > > > Good spot. Could simply do __be16 data[ADI..] = {0}; rather
+> > > > > than
+> > > > > explicit
+> > > > > memset, but some form of zeroization is needed.
+> > > > > 
+> > > > > I've fixed up the applied patch with the above approach.
+> > > > There is actually another issue. The stack data is not
+> > > > necessarily
+> > > > aligned to 64 bit, which causes issues if we try to put the 64-
+> > > > bit
+> > > Oh, this is actually more problematic. Yes, since we have an
+> > > array of
+> > > u16, that is not guaranteed to be 64bit aligned. Doing a quick
+> > > search
+> > > of `iio_push_to_buffers_with_timestamp()` users and I could
+> > > quickly
+> > > find 4/5 drivers with the same problem. I guess the API should
+> > > clearly
+> > > state that `data` needs to be __at least__ 64 bits aligned (maybe
+> > > a
+> > > future patch). Or we could even check the address and guarantee
+> > > that it
+> > > is properly aligned before continuing (though Im guessing this
+> > > will
+> > > break a lot of users...)
+> > > > timestamp in it. I think data should really be in the state
+> > > > struct.
+> > > Yes, with a proper __aligned(8) attribute... Or couldn't we just
+> > > use
+> > > __aligned(8) on the stack variable?
+> > Forcing alignment on the stack isn't terribly reliable, which is
+> > why
+> > we never do that for dma safe buffers.
+> > 
+> > Probably better to just move it to the state structure.
+> > I'll fix it up to do that. Please sanity check what will shortly
+> > be in the testing branch.
+> > 
+> > The moment Lars mentioned this I groaned. As you've noted a few
+> > other
+> > drivers have the same problem + the ABI doesn't clearly state
+> > or check this.
+> > 
+> > We should certainly fix all the drivers that suffer this problem
+> > first then we can think about adding a runtime check.
+> 
+> It looks like it is actually quite a few drivers, maybe we should
+> switch 
 
-While I generally agree I can also easily imagine inclusion delay caused
-by that change. I need to give some more though to this.
+Yeps, not surprised...
 
-> >
-> > > > +
-> > > > +	/*
-> > > > +	 * Accuracy within calibrated operating range is
-> > > > +	 * +-(30ppm + 3% measurement) so fractional part does
-> > > > +	 * not add real value. Moreover, ppm is an integer.
-> > > > +	 */
-> > > > +	state->meas[CONC] /= 100;
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int scd30_wait_meas_irq(struct scd30_state *state)
-> > > > +{
-> > > > +	int ret, timeout = msecs_to_jiffies(state->meas_interval * 1250);
-> > > > +
-> > > > +	reinit_completion(&state->meas_ready);
-> > > > +	enable_irq(state->irq);
-> > >
-> > > So this is just 'grab the next one'?
-> > >
-> >
-> > Yes, grab the fresh one. Moreover enabling interrupts only when necessary can
-> > limit pointless buss traffic. Reason being irq is acknowledged by reading data
-> > from sensor.
-> >
->
-> As mentioned below, it seems to me that we should really be starting this
-> device only when we want a reading.  Hence any interrupt (subject to possible
-> races) should be valid.  Hence we would not be enabling and disabling the
-> interrupt controller mask on this line.
->
+> to put_unaligned(). We probably got lucky in most cases and the
+> buffer
 
-While it's okay for triggered mode that isn't so ideal for polled mode
-because of extra time needed by sensor to actually spin up.
+This would keep us from having to fix all the users (just need to fix
+the memory leakage you mention on the next email) to use a properly
+aligned buffer. And later on, if we want, we can always add an
+`aligned` variant of `iio_push_to_buffers_with_timestamp()` were we
+check for alignment...
 
-You start measuring and expect new data to arrive within 2 seconds
-(given 0.5Hz sampling frequency is set) but they can actually show
-up within 8 secs. Not very reliable so to say.
+- Nuno Sá
 
-Thus I think sticking to continuous sampling is preferred here.
-
->
-> > > > +static int scd30_setup_trigger(struct iio_dev *indio_dev)
-> > > > +{
-> > > > +	struct scd30_state *state = iio_priv(indio_dev);
-> > > > +	struct device *dev = indio_dev->dev.parent;
-> > > > +	struct iio_trigger *trig;
-> > > > +	int ret;
-> > > > +
-> > > > +	trig = devm_iio_trigger_alloc(dev, "%s-dev%d", indio_dev->name,
-> > > > +				      indio_dev->id);
-> > > > +	if (!trig) {
-> > > > +		dev_err(dev, "failed to allocate trigger\n");
-> > > > +		return -ENOMEM;
-> > > > +	}
-> > > > +
-> > > > +	trig->dev.parent = dev;
-> > > > +	trig->ops = &scd30_trigger_ops;
-> > > > +	iio_trigger_set_drvdata(trig, indio_dev);
-> > > > +
-> > > > +	ret = devm_iio_trigger_register(dev, trig);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	indio_dev->trig = iio_trigger_get(trig);
-> > > > +
-> > > > +	ret = devm_request_threaded_irq(dev, state->irq, scd30_irq_handler,
-> > > > +					scd30_irq_thread_handler,
-> > > > +					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-> > > > +					indio_dev->name, indio_dev);
-> > > > +	if (ret)
-> > > > +		dev_err(dev, "failed to request irq\n");
-> > >
-> > > I'm guessing this is a device without any means to disable the interrupt
-> > > being generated?  In which case are you safe against a race before you
-> > > disable here?
-> > >
-> >
-> > IRQs can be actually disabled by telling device to stop taking measurements.
-> > There is dedicated command for that. If irq fires off before being disabled
-> > nothing bad should happen as everything necessary is in place already.
->
-> Hmm. I wonder if we'd be better off starting it on demand - or only when running
-> with it as a data ready trigger. That would make the the polled read a case
-> of starting the sampling for one sample rather than just 'picking' one from
-> the stream of actual samples.
->
-> >
-> > Another thing is that without disabling interrupt here we would get warning
-> > about unbalanced irq whilst enabling trigger.
-> >
-> > > > +
-> > > > +	disable_irq(state->irq);
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
-> > > > +		int (*command)(struct scd30_state *state, enum scd30_cmd cmd,
-> > > > +			       u16 arg, char *rsp, int size))
-> > > > +{
-> > > > +	static const unsigned long scd30_scan_masks[] = { 0x07, 0x00 };
-> > > > +	struct scd30_state *state;
-> > > > +	struct iio_dev *indio_dev;
-> > > > +	int ret;
-> > > > +	u16 val;
-> > > > +
-> > > > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
-> > > > +	if (!indio_dev)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	dev_set_drvdata(dev, indio_dev);
-> > > > +
-> > > > +	state = iio_priv(indio_dev);
-> > > > +	state->dev = dev;
-> > > > +	state->priv = priv;
-> > > > +	state->irq = irq;
-> > > > +	state->pressure_comp = SCD30_PRESSURE_COMP_DEFAULT;
-> > > > +	state->meas_interval = SCD30_MEAS_INTERVAL_DEFAULT;
-> > > > +	state->command = command;
-> > > > +	mutex_init(&state->lock);
-> > > > +	init_completion(&state->meas_ready);
-> > > > +
-> > > > +	indio_dev->dev.parent = dev;
-> > > > +	indio_dev->info = &scd30_info;
-> > > > +	indio_dev->name = name;
-> > > > +	indio_dev->channels = scd30_channels;
-> > > > +	indio_dev->num_channels = ARRAY_SIZE(scd30_channels);
-> > > > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > > > +	indio_dev->available_scan_masks = scd30_scan_masks;
-> > > > +
-> > > > +	state->vdd = devm_regulator_get(dev, "vdd");
-> > > > +	if (IS_ERR(state->vdd)) {
-> > >
-> > > This is very noisy if we have deferred probing going on.
-> > > Either explicitly check for that case or just don't bother
-> > > with an error message in this path.
-> > >
-> >
-> > Okay.
-> >
-> > > > +		dev_err(dev, "failed to get vdd regulator\n");
-> > > > +		return PTR_ERR(state->vdd);
-> > > > +	}
-> > > > +
-> > > > +	ret = regulator_enable(state->vdd);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "failed to enable vdd regulator\n");
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	ret = devm_add_action_or_reset(dev, scd30_exit, state);
-> > > > +	if (ret)
-> > >
-> > > This should match exactly against the item above it. Whilst stop
-> > > measurement may be safe from here on, it is not easy to review
-> > > unless we can clearly see where the equivalent start is.
-> > >
-> >
-> > Well, naming might be confusing. The thing is that sensor after being
-> > powered up reverts itself to the much the same state it left.
-> >
-> > If we have real regulator then scd30_exit would disable regulator and
-> > that's it. But, in case of a dummy one and sensor starting in
-> > continuous mode we waste power for no real reason (for example 19mA
-> > at 0.5Hz).
-> >
-> > So it's explanation for doing 2 things inside early on but not excuse
-> > for unintuitive naming.
->
-> I'd rather see two devm_add_action_or_reset calls one handling the regulator
-> and one handling the register write.  Then it will be clear what each
-> one is doing and that there are no possible races.  Basically it lets
-> a reviewer not bother thinking which is always good :)
->
-
-Fair enough.
-
-> >
-> > > > +		return ret;
-> > > > +
-> > > > +	ret = scd30_reset(state);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "failed to reset device: %d\n", ret);
-> > > > +		return ret;
-> > > > +	}
