@@ -2,188 +2,105 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BD0C47247
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 11:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFF7C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 11:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84B3121582
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 11:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588505372;
-	bh=FQttIa5o4LJNeKCJYz02ZNqlOPy0raKQ3nz8vv4pvx0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0ea8KMDcckdyC/WW/JEUBFgxYvPlZkzEj3RwImXOs3ETPTIDqUGR75PRr2scR+RCg
-	 mKUCDJFOZ9jB6lUIjXAGycT3TdcQo0Sfy4eStKCMWnrprJ2UTRFbiUMEUeL6umlQEP
-	 9S/E2j4lzNyYITqKMCtuRP4Z0uKhJrsZSpxMYU2I=
+	by mail.kernel.org (Postfix) with ESMTP id 097FB205ED
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 11:42:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/VeyKDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgECL3b (ORCPT
+        id S1727794AbgECLmr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 07:29:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbgECL3b (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 May 2020 07:29:31 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12CE320721;
-        Sun,  3 May 2020 11:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588505370;
-        bh=FQttIa5o4LJNeKCJYz02ZNqlOPy0raKQ3nz8vv4pvx0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ET0DTWFujgvTKZzWUMjAq0fT2f/TasVXqg2DSqTNkElHEAWTZFliX7Ux3QN6j0bz4
-         uus9t2drpPyVxAvn128p+rxpSL3aS9UrTGbaATuawmh5tYSpqLsD4w9vfHnDkZUrK6
-         P4kOgLzAtmJ7ENzP/NICjXg1xWsboCkBv15gxJIk=
-Date:   Sun, 3 May 2020 12:29:26 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
-Message-ID: <20200503122926.1fcc73fa@archlinux>
-In-Reply-To: <231ac29f177774eeb32b0ed907516173af0f97eb.camel@gmail.com>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
-        <20200413082445.17324-6-nuno.sa@analog.com>
-        <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
-        <20200502184010.134eb8b5@archlinux>
-        <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
-        <df0f04296fafccfcf18b08b213bae20ff69c2384.camel@gmail.com>
-        <20200503094751.633feda1@archlinux>
-        <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
-        <231ac29f177774eeb32b0ed907516173af0f97eb.camel@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 3 May 2020 07:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727023AbgECLmr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 07:42:47 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3AD5C061A0C;
+        Sun,  3 May 2020 04:42:45 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id z2so9378273iol.11;
+        Sun, 03 May 2020 04:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CswbDbzRoY7hOaMpKGQ7lTgkmEKRA2Ia8858GzcpRyQ=;
+        b=B/VeyKDZ4SLuIY7xHuxpXOzOskfvZKU+A5FK81ESN3wNpQDFeg5YMMn10lN8K1HlzU
+         ucNQI44nZ0RuaN9V467tsqNfMHZxbuNPptiUAsaVg3KYYzH75VV4unRSTt+NsACNb4lc
+         dmcvbKyaOxB31ly2JwulyTgFbdifyHm56KvXnfOHErfj5UVE7YK2+skEdePVFu+BR44B
+         uhVpDPvmnRDtBvfnAqrbUU5KLt9w1767QhJPPXsDn7tZknjhE++fAPu4TrDilwXBU/d1
+         P2CRaRavJOqCiQE5DwlZs5i9VhlFSnNBdt72/1BGc2EAlaYKKm0a8lAz8UeYwOT07Ide
+         HpOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CswbDbzRoY7hOaMpKGQ7lTgkmEKRA2Ia8858GzcpRyQ=;
+        b=K/uw8rUY+N83SIkT07MPONYaQwtZBj+85zUdcQdEsRI5L2awo8bjdfDfzwdh7hB6cW
+         hXmW88s3Gq2nmnGPOXbXkUZmxsb6esBR1j9M7VSNZRyL2XUboQ8LM4S2HX/jpj/yHXcO
+         pKqJp8IkjDpbGWZ3D51RQ7vQMhuFYJ3FlLNFxaka6VHCYwLl8IbT+Rdxswyb1+08FRtf
+         zJNVgM+0FHXm1xWNGZhumc+9XBsg5I1ICeG6+gNihofRPuXCwGavFAEcp2Nrw5Gbeumr
+         jdAiibmx7HrkKo9RP3LJmnPSZox/BdZGRpbC8vPcny3HqhzutUEhh2kOz8vjcuZ2Kn/b
+         FQhQ==
+X-Gm-Message-State: AGi0PuZr9BtjY1vHab9rxEH8uicuFjXCNx3jmv0hJm3goQsEL/upDYIp
+        fPZtshDjHp6sn7cFY3KwArtqOAvRMWKu13OJpnc=
+X-Google-Smtp-Source: APiQypK7bQYFFm90yVaM++6A1mWUH1dHV3MQb0qbIp+ohH4OaxgHO6pX+nd1tdial7Rn5XJUxQbfqsSdn1DrT9htlVU=
+X-Received: by 2002:a02:3f44:: with SMTP id c4mr10593844jaf.144.1588506164909;
+ Sun, 03 May 2020 04:42:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20200426104115.22630-1-peron.clem@gmail.com> <20200426104115.22630-7-peron.clem@gmail.com>
+ <CAGb2v66TFzpEmzdqxmjqGvVONkPEhaDMHNA4tRUvrX_Mg8w=tA@mail.gmail.com>
+In-Reply-To: <CAGb2v66TFzpEmzdqxmjqGvVONkPEhaDMHNA4tRUvrX_Mg8w=tA@mail.gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Sun, 3 May 2020 13:42:33 +0200
+Message-ID: <CAJiuCcfpk=9E2dQnE+QeZrDHG7EqCBWqbEbnpBvhn-uvWuRV2w@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] ASoC: sun4i-i2s: Adjust regmap settings
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Marcus Cooper <codekipper@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 03 May 2020 13:07:01 +0200
-Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+Hi,
 
-> On Sun, 2020-05-03 at 11:07 +0200, Lars-Peter Clausen wrote:
-> > On 5/3/20 10:47 AM, Jonathan Cameron wrote: =20
-> > > On Sat, 02 May 2020 21:52:18 +0200
-> > > Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
-> > >  =20
-> > > > On Sat, 2020-05-02 at 20:01 +0200, Lars-Peter Clausen wrote: =20
-> > > > > On 5/2/20 7:40 PM, Jonathan Cameron wrote: =20
-> > > > > > On Mon, 27 Apr 2020 20:06:07 +0200
-> > > > > > Lars-Peter Clausen <lars@metafoo.de> wrote:
-> > > > > >     =20
-> > > > > > > On 4/13/20 10:24 AM, Nuno S=C3=A1 wrote: =20
-> > > > > > > > [...]
-> > > > > > > > +static irqreturn_t adis16475_trigger_handler(int irq,
-> > > > > > > > void *p)
-> > > > > > > > +{
-> > > > > > > > [...]
-> > > > > > > > +	__be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
-> > > > > > > > [...]
-> > > > > > > > +
-> > > > > > > > +	iio_push_to_buffers_with_timestamp(indio_dev, data, pf- =
-=20
-> > > > > > > > > timestamp); =20
-> > > > > > > If the timestamp is enabled the IIO core might insert
-> > > > > > > padding
-> > > > > > > between
-> > > > > > > the data channels and the timestamp. If that happens this
-> > > > > > > will
-> > > > > > > disclose
-> > > > > > > kernel stack memory to userspace.
-> > > > > > >=20
-> > > > > > > This needs either a memset(data, 0x00, sizeof(data)) or
-> > > > > > > maybe put
-> > > > > > > data
-> > > > > > > into the state struct and kzalloc it. =20
-> > > > > > Good spot. Could simply do __be16 data[ADI..] =3D {0}; rather
-> > > > > > than
-> > > > > > explicit
-> > > > > > memset, but some form of zeroization is needed.
-> > > > > >=20
-> > > > > > I've fixed up the applied patch with the above approach. =20
-> > > > > There is actually another issue. The stack data is not
-> > > > > necessarily
-> > > > > aligned to 64 bit, which causes issues if we try to put the 64-
-> > > > > bit =20
-> > > > Oh, this is actually more problematic. Yes, since we have an
-> > > > array of
-> > > > u16, that is not guaranteed to be 64bit aligned. Doing a quick
-> > > > search
-> > > > of `iio_push_to_buffers_with_timestamp()` users and I could
-> > > > quickly
-> > > > find 4/5 drivers with the same problem. I guess the API should
-> > > > clearly
-> > > > state that `data` needs to be __at least__ 64 bits aligned (maybe
-> > > > a
-> > > > future patch). Or we could even check the address and guarantee
-> > > > that it
-> > > > is properly aligned before continuing (though Im guessing this
-> > > > will
-> > > > break a lot of users...) =20
-> > > > > timestamp in it. I think data should really be in the state
-> > > > > struct. =20
-> > > > Yes, with a proper __aligned(8) attribute... Or couldn't we just
-> > > > use
-> > > > __aligned(8) on the stack variable? =20
-> > > Forcing alignment on the stack isn't terribly reliable, which is
-> > > why
-> > > we never do that for dma safe buffers.
-> > >=20
-> > > Probably better to just move it to the state structure.
-> > > I'll fix it up to do that. Please sanity check what will shortly
-> > > be in the testing branch.
-> > >=20
-> > > The moment Lars mentioned this I groaned. As you've noted a few
-> > > other
-> > > drivers have the same problem + the ABI doesn't clearly state
-> > > or check this.
-> > >=20
-> > > We should certainly fix all the drivers that suffer this problem
-> > > first then we can think about adding a runtime check. =20
-> >=20
-> > It looks like it is actually quite a few drivers, maybe we should
-> > switch  =20
->=20
-> Yeps, not surprised...
->=20
-> > to put_unaligned(). We probably got lucky in most cases and the
-> > buffer =20
->=20
-> This would keep us from having to fix all the users (just need to fix
-> the memory leakage you mention on the next email) to use a properly
-> aligned buffer. And later on, if we want, we can always add an
-> `aligned` variant of `iio_push_to_buffers_with_timestamp()` were we
-> check for alignment...
+On Mon, 27 Apr 2020 at 13:03, Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Sun, Apr 26, 2020 at 6:41 PM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
+.com> wrote:
+> >
+> > From: Marcus Cooper <codekipper@gmail.com>
+> >
+> > Bypass the regmap cache when flushing or reading the i2s FIFOs.
+> >
+> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
 
-I'd rather scrub the existing set to fix this.  The reason being
-to make the point they were broken.  Fixing up with an unaligned
-write in the core is not 'obvious' to people looking at whether
-to pick up patches for individual drivers.
+The  SUN4I_I2S_FIFO_CTRL_REG is also missing.
+As some bits can self-clear by themselves.
 
-Unlikely to be too much extra over making sure we don't leak kernel
-data.   If we move them to the iio_priv structure we will avoid that
-anyway due to that being kzalloc ed in the first place.  We may
-leak previous timestamps or read values, but we don't care about that.
+I will fix this in v4.
 
-It's been there a while, so no 'super hurry' to fix these up but
-we should do it over next few months.
-
-Jonathan
-
->=20
-> - Nuno S=C3=A1
->=20
-
+Regards,
+Clement
