@@ -2,76 +2,89 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FDAC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91A8C47258
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E839520836
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A4420836
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:21:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="iJkQy5Wj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgECPVa (ORCPT
+        id S1728746AbgECPVQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 11:21:30 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:29357 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728345AbgECPV3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 11:21:29 -0400
-X-IronPort-AV: E=Sophos;i="5.73,347,1583161200"; 
-   d="scan'208";a="46006153"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 04 May 2020 00:21:27 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 15C184007F56;
-        Mon,  4 May 2020 00:21:24 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Simon Horman <horms+renesas@verge.net.au>
-Cc:     Lad Prabhakar <prabhakar.csengg@gmail.com>, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2] dt-bindings: net: renesas,ether: Sort compatible string in increasing number of the SoC
-Date:   Sun,  3 May 2020 16:21:19 +0100
-Message-Id: <1588519279-13364-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 3 May 2020 11:21:16 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:34101 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728699AbgECPVP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 May 2020 11:21:15 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FV7X31HqzfV;
+        Sun,  3 May 2020 17:21:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1588519272; bh=X6di/kZ9JXtfx1MiBhjtRiHxgwlcVR2sOcyLvmd+Kuk=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=iJkQy5WjomYB9rOwyo93wOUgoSQnHTuwg9EeOBxUThjQ3uVn45QuVMor/q2XrucnT
+         TrQuLdTHTLC5nIO1NkMou8t48udmThxM3KQSz877MrKCBOKTZdLA4tj8+fGTFF2JFq
+         b17jmceveqZZT03PfPz2xYNvvQJiIY5S8JaMrZLSeDKXVip31hiNiDJftB63LsqebX
+         GCh2hNtKEWTYeP8jPsbJ7pCAkqFMd45MzY7bH5MpSkADff0N9UfKOFp5PJIfQ2QBrK
+         NN28r18PEa/iCOxy7/0+pbHebZ36O62qFaeJN3EqWlTu4dHU9DnYXBO1tjDQTyHrXy
+         As/FvQxWBabQQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 03 May 2020 17:21:12 +0200
+Message-Id: <5c8e8f4c5a7fc2cecb62342f9a964f69f3fde7ae.1588517058.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2 06/11] power: bq25890: update state on property read
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sort the items in the compatible string list in increasing number of SoC.
+Edge interrupts from the charger may be lost or stuck in fault mode
+since probe(). Check if something changed everytime userspace wants
+some data.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- Changes for v2:
- * Included renesas,ether in subject instead of sh_eth.
- * Included Reviewed-by tags.
+ drivers/power/supply/bq25890_charger.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- Documentation/devicetree/bindings/net/renesas,ether.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/net/renesas,ether.yaml b/Documentation/devicetree/bindings/net/renesas,ether.yaml
-index 2eaa879..005a3ae 100644
---- a/Documentation/devicetree/bindings/net/renesas,ether.yaml
-+++ b/Documentation/devicetree/bindings/net/renesas,ether.yaml
-@@ -29,8 +29,8 @@ properties:
-               - renesas,rcar-gen1-ether  # a generic R-Car Gen1 device
-       - items:
-           - enum:
--              - renesas,ether-r8a7745    # device is a part of R8A7745 SoC
-               - renesas,ether-r8a7743    # device is a part of R8A7743 SoC
-+              - renesas,ether-r8a7745    # device is a part of R8A7745 SoC
-               - renesas,ether-r8a7790    # device is a part of R8A7790 SoC
-               - renesas,ether-r8a7791    # device is a part of R8A7791 SoC
-               - renesas,ether-r8a7793    # device is a part of R8A7793 SoC
+diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
+index 3b02fa80aedd..e4368d01396a 100644
+--- a/drivers/power/supply/bq25890_charger.c
++++ b/drivers/power/supply/bq25890_charger.c
+@@ -389,6 +389,8 @@ static bool bq25890_is_adc_property(enum power_supply_property psp)
+ 	}
+ }
+ 
++static irqreturn_t __bq25890_handle_irq(struct bq25890_device *bq);
++
+ static int bq25890_power_supply_get_property(struct power_supply *psy,
+ 					     enum power_supply_property psp,
+ 					     union power_supply_propval *val)
+@@ -399,6 +401,8 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
+ 	int ret;
+ 
+ 	mutex_lock(&bq->lock);
++	/* update state in case we lost an interrupt */
++	__bq25890_handle_irq(bq);
+ 	state = bq->state;
+ 	do_adc_conv = !state.online && bq25890_is_adc_property(psp);
+ 	if (do_adc_conv)
 -- 
-2.7.4
+2.20.1
 
