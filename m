@@ -2,78 +2,108 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5A0C47247
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DF6C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2282920836
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:22:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Kp1cDprU"
+	by mail.kernel.org (Postfix) with ESMTP id 8C9B520836
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 15:42:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588520549;
+	bh=0CnMSeTOMkqPLyIXlkMMbKd1x1o/uhBytgUHSI2Q8IM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=K8BPbUxQiQzwvQdTkWdm263t2JwVv40TtBLZZy3rW28DXImTGjajmUi7cX9D43/lU
+	 w10lZhZuOFDToT1T/LOqpgAQDHWDdxumflIE0AFHyZp+4tNiYgjcKtCJyUm55P1AUr
+	 6cPY++bifkBfedd4STSSDbB0bVOTixzM8PpQxZhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgECPVw (ORCPT
+        id S1728768AbgECPm3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 11:21:52 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:43713 "EHLO rere.qmqm.pl"
+        Sun, 3 May 2020 11:42:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbgECPVN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 May 2020 11:21:13 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FV7W0x0HzKc;
-        Sun,  3 May 2020 17:21:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588519271; bh=aHxtsC8N7E1pudNhXZCf8OSOZbxQCCFh3AVsjrqFoGw=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=Kp1cDprUo9JxAqyaSmhflDRfLxph2C3xK63hbVGONN3KhsQTD4zKJ81Y6S51mJMil
-         lj4fQzOr3ss2zY18IrsUtBSoh/h1X/qCPNcMiwa5kiXtzW+2CQPvnkweDxpt8rSKxS
-         O0xerEJigOeHJpFZQY0TEeAe49eVwD0PZ4cfE9IQk+JFDbIUwH6E55kvAc9l2f9W1t
-         QoOR6WbNjWpsdINW/JNUNZXi/0T0EYIIPBQiYTqF/Cq5Ck8Jdv820cPI+ag/iXCiJh
-         GO8/HV1LY7AdF8Ftwyr7fpa4f6RqzPedsD/gt9nPdvEpAZrgWiTgN8r+RzqUwGH6/Z
-         wydbTYZkX+asA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 03 May 2020 17:21:10 +0200
-Message-Id: <ef2a17d5eced06f0e16b12169387b162433937d7.1588517058.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 03/11] power: bq25890: make property table const
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
+        id S1728716AbgECPm2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 May 2020 11:42:28 -0400
+Received: from localhost.localdomain (unknown [157.51.190.160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7612220757;
+        Sun,  3 May 2020 15:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588520548;
+        bh=0CnMSeTOMkqPLyIXlkMMbKd1x1o/uhBytgUHSI2Q8IM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IULHFamipQH5bSodpv0GV3Nx9+FVZaxVXUfnbSU21fv2/JywgTGME+8mLNzI126jP
+         oPCbHEba/noEgcFuYPnbljJjxzF/zy7wYT/X4EgfHUHzUMBE6IFUvzRPg1pcd2XoQk
+         Z7E5fpcjD+GlJFhjRB92VRRgkAVutW4AZGCddY9M=
+From:   mani@kernel.org
+To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com
+Cc:     devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <mani@kernel.org>
+Subject: [PATCH v2 0/6] Add Stinger96 and IoT Box board support
+Date:   Sun,  3 May 2020 21:12:09 +0530
+Message-Id: <20200503154215.23654-1-mani@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Property list should not change, so mark it const.
+From: Manivannan Sadhasivam <mani@kernel.org>
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/power/supply/bq25890_charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hello,
 
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index f9f29edadddc..c4a69fd69f34 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -668,7 +668,7 @@ static int bq25890_hw_init(struct bq25890_device *bq)
- 	return 0;
- }
- 
--static enum power_supply_property bq25890_power_supply_props[] = {
-+static const enum power_supply_property bq25890_power_supply_props[] = {
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- 	POWER_SUPPLY_PROP_MODEL_NAME,
- 	POWER_SUPPLY_PROP_STATUS,
+This series adds Stinger96 and IoT Box board support. These boards are
+based on STM32MP157A SoC, designed and manufactured by Shiratech solutions.
+
+The Stinger96 is a base board (96Boards IoT Extended edition) while IoT Box
+adds one mezzanine on top of it and sold as a gateway device.
+
+This series depends on below patchsets already submitted and gone through
+reviews:
+
+[PATCH v3 0/3] Add Reset and Wakeup support for CCS811
+[PATCH v3 0/2] Add CTS/RTS gpio support to STM32 UART
+
+More information about these boards can be found in below links:
+
+https://www.shiratech-solutions.com/products/stinger96/
+https://www.shiratech-solutions.com/products/iot-box/
+
+Thanks,
+Mani
+
+Changes in v2:
+
+* Used "stm32" prefix for all DT commits
+* Dropped custom sdmmc2 pinctrl node since existing node itself has pullup
+  enabled and works fine.
+
+Manivannan Sadhasivam (6):
+  dt-bindings: Add vendor prefix for Shiratech Solutions
+  ARM: dts: stm32: Add missing pinctrl entries for STM32MP15
+  dt-bindings: arm: stm32: Document Stinger96 compatible
+  ARM: dts: stm32: Add Stinger96 board support
+  dt-bindings: arm: stm32: Document IoT Box compatible
+  ARM: dts: stm32: Add IoT Box board support
+
+ .../devicetree/bindings/arm/stm32/stm32.yaml  |   2 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      |  64 ++++
+ arch/arm/boot/dts/stm32mp157a-iot-box.dts     |  68 ++++
+ arch/arm/boot/dts/stm32mp157a-stinger96.dts   |  12 +
+ arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  | 342 ++++++++++++++++++
+ 7 files changed, 492 insertions(+)
+ create mode 100644 arch/arm/boot/dts/stm32mp157a-iot-box.dts
+ create mode 100644 arch/arm/boot/dts/stm32mp157a-stinger96.dts
+ create mode 100644 arch/arm/boot/dts/stm32mp157a-stinger96.dtsi
+
 -- 
-2.20.1
+2.17.1
 
