@@ -2,125 +2,258 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CD8C47257
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 17:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0D5C47257
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 17:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1A5206F0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 17:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F68C206F0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 17:55:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LrRglC6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgECRWh (ORCPT
+        id S1728394AbgECRzL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 13:22:37 -0400
-Received: from mail-co1nam11olkn2082.outbound.protection.outlook.com ([40.92.18.82]:50144
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728972AbgECRWg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 May 2020 13:22:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dllw1WswjjvpbavJLzMPokIMuNh0VZuCbXGj1cmaFXf18worAbfYSDYGvT0kPNOhP/Yd4T7hRRkscH6ZX5mTouCRJrof/Jxmhy0oDyGm1IO/QD7uQ3TRKlGP92zFd/7/Dku+LIiyKQF2FMCUgPUJlTzVe1pfSJhTM8Q/uHOGye4cXQ2sAVjxz6Wd+zkp6F+3SZBBBscky/xlOs7K5WvY0CDJYMyWTltCufYVqPgjWitpmiuyLpCpsDLmA+XA4EU7wUUoU3FitiAUqWy3JLhLQ4T25dsSSs08/IhuxHdATf4UMIjEDS5Zyqm7CybBlZzyrgyGzQxws/CAnTokYRfSPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1CwtF6yiqmMqpX0VvocSY1c7abRgjEMhLeX9M4FKKjM=;
- b=UpSDpkv2fe5ufCrHUVL0Hf2QKDbSb/tmZ8nxO2GmS7J0kSgJri1UArqQe2wj1J9or4ZCcY+N6RmalrN8PtYYf1CsZdTT4k3y5xPCJSkTcIGOHedD/zLkSeBW3bPhnV8K8luRznURxlsUXFIT1e0pA76AjCjKgkt34yvhwVE/BWgZ2dAFw9YB71lUH2orgYuws1cKrhtJKHoWU0A/BuIj99OBkevqrN4duTwogSVS6KDzMMM4TF6YLTFwEwukllw6h/eT90nzuu9d4nNc9p9QWH33mCtDxk4PbDQ9SbeSb1zqAbplyULSgmkEAzclGku5YlojSFFL26tOYj6k5r42lQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from BN8NAM11FT054.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:fc4b::4f) by
- BN8NAM11HT127.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4b::227)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Sun, 3 May
- 2020 17:22:34 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc4b::42) by BN8NAM11FT054.mail.protection.outlook.com
- (2a01:111:e400:fc4b::358) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
- Transport; Sun, 3 May 2020 17:22:34 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:AF6AA87CDE98DBE31D0ED6C021AA15DFC57E9B9BB3602DE9C2EA63B55C66342C;UpperCasedChecksum:C12BE145610A5E5D5CC53EC0F7F6455E2913F2206759C36D1FB97D875BB561D8;SizeAsReceived:8016;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2958.029; Sun, 3 May 2020
- 17:22:33 +0000
-From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, linus.walleij@linaro.org,
+        Sun, 3 May 2020 13:55:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727112AbgECRzL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 13:55:11 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9C1C061A0E;
+        Sun,  3 May 2020 10:55:10 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k1so18183936wrx.4;
+        Sun, 03 May 2020 10:55:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=eI40m2dbkMq75XJPcjn2SYxgJHs1f4gBLHf7s82v0r8=;
+        b=LrRglC6EM5LkA9rqAfw3kv8eIhLT+FL+yOomQF8p4AIiYidrwjYM8WA8VzjHaM1T1s
+         rSrokMPm2DSKL79xfw1Z2b144Y8LwXLQKAwoaqXjcFbeMDpJG8N2oa+LT5jF7lyuAgZS
+         ZaVCd0m6SisI3Vpmvu9dqcTTFky31fAEcpAYeMtfBnRUdL6c0i16pC0H6STYjY1dV/mC
+         OfEpD/aIUOfI2v4uxHx4E3WJGu28YhcxgP88Xgki8TZL4T849LAqRca7mUk4nrwgPI//
+         D8Y2yQUq/uQCNYA5dJy6KI7YmJhgOt+cofVNeEOD3ZwLnBOsQ7qYaVTFCtdSwy7xaL6s
+         /OdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=eI40m2dbkMq75XJPcjn2SYxgJHs1f4gBLHf7s82v0r8=;
+        b=mYCwVj2Eu/5ECOec/UHaKCr/bWHj40awjrFDDkowZr93AGi3+zgP+FaXiKbz/yIdlf
+         NmaUVbd0h1jWAuusYhgqsvTRoz1Ha76RyNAALuQQfk3t/73YLqBI2B5E0YzrMWTcU4rQ
+         LnSIn5J9QHlXMvchOrOwdFCfww6aeB7Em4UawEl9BEXkoVEDy+63XnxR2RatShSd78F+
+         fsFK5YaLosevFtlsXwc5sS6OcWzlz9QJLsIL/aFinrlwI1x04EQwy421sjOVqyHmHRbT
+         YuSaqhkKlA6IB4849WcrcSAEa4aSdrMlpF26BOg9Tjvi7GajjGlhTT6nkCR4xmiyDDkE
+         Q6aA==
+X-Gm-Message-State: AGi0PuaZThgYelIdoacbDV6nW1XFGWP82OMCPyfViVHqXTlFbtQp9FDC
+        XGlNmYdQTRAVM5Bh+roSyqs=
+X-Google-Smtp-Source: APiQypKu6w+sDo2F13RP8Jmf29B7r/5DZk4emtcvrvGIU6aGYcqt7zi7EFmPIH2cPBbiSyNuYmN05A==
+X-Received: by 2002:adf:8401:: with SMTP id 1mr15488421wrf.241.1588528509340;
+        Sun, 03 May 2020 10:55:09 -0700 (PDT)
+Received: from nunojsa-N551JK ([2001:a61:2488:b501:889a:1d04:1d51:f2d0])
+        by smtp.googlemail.com with ESMTPSA id j13sm14589830wro.51.2020.05.03.10.55.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2020 10:55:08 -0700 (PDT)
+Message-ID: <a7ae81309768ac86413a7350d5735f4a1781be97.camel@gmail.com>
+Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
+From:   Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
         linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, linux-input@vger.kernel.org
-Cc:     Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH 2/5] input: misc: bma150: Conditionally disable bma023 support
-Date:   Sun,  3 May 2020 10:22:03 -0700
-Message-ID: <BN6PR04MB0660B420EFA83668BBF4F315A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200503172206.13782-1-xc-racer2@live.ca>
-References: <20200503172206.13782-1-xc-racer2@live.ca>
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MWHPR14CA0047.namprd14.prod.outlook.com
- (2603:10b6:300:12b::33) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200503172206.13782-3-xc-racer2@live.ca>
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Date:   Sun, 03 May 2020 19:55:07 +0200
+In-Reply-To: <20200503181959.369161a4@archlinux>
+References: <20200413082445.17324-1-nuno.sa@analog.com>
+         <20200413082445.17324-6-nuno.sa@analog.com>
+         <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
+         <20200502184010.134eb8b5@archlinux>
+         <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
+         <df0f04296fafccfcf18b08b213bae20ff69c2384.camel@gmail.com>
+         <20200503094751.633feda1@archlinux>
+         <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
+         <231ac29f177774eeb32b0ed907516173af0f97eb.camel@gmail.com>
+         <20200503122926.1fcc73fa@archlinux> <20200503181959.369161a4@archlinux>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR14CA0047.namprd14.prod.outlook.com (2603:10b6:300:12b::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Sun, 3 May 2020 17:22:31 +0000
-X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200503172206.13782-3-xc-racer2@live.ca>
-X-TMN:  [TMGz84Okmwm9LuUwfInmLInOyR8fQWzABHdnweiK0zDrBbzd+hDGW4HjnR+lS/4y]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: f9949e8e-d872-40c5-5dbc-08d7ef869102
-X-MS-TrafficTypeDiagnostic: BN8NAM11HT127:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4VxYjZYTQ1oZd2ZNkAi9DNgTp+q+9Fj3k6zeF15Hkr/8119AU0d/NMBTuWd0qv3DMQr04bfBmP1bcfw9N+V2kaUOKagW8GFKW4PyF/adoID1wIv/eBxXiRkhsaKmwcPKTeKlDwqsVGzyiFZbCitavE/IzD32SqCHvOrOBE2Q7O9PzCKFUnSsqgfH7gNrm08RLE8URHOLmixaC2ozktwgrw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: BqwGL9yShmYtTBpxsd3twwlATT9KUhnY9jCJczVcxUBxqCEe9oDrAJWu16gTxsPaLjq7LWdXRaaEvar+C1zQFs/NTheWWTv1RD6YZM/mUrTYWcNp1wwwmR+zP2oFrgV8WnSwVsM1qQSI/E9zBDaJfzg6GRQXX9cteOEuf0NfHKbFVKHjyDCmrXWsoQk6tlzVY/GREvfwKJ/revhrvxEdow==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9949e8e-d872-40c5-5dbc-08d7ef869102
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2020 17:22:33.8479
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM11HT127
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The bma180 IIO driver has been extended for support for bma023.
-However, this could cause conflicts with this driver.  Since some
-setups may depend upon the evdev setup, disable support in this
-driver for the bma023 only when the IIO driver is being built.
+On Sun, 2020-05-03 at 18:19 +0100, Jonathan Cameron wrote:
+> On Sun, 3 May 2020 12:29:26 +0100
+> Jonathan Cameron <jic23@kernel.org> wrote:
+> 
+> > On Sun, 03 May 2020 13:07:01 +0200
+> > Nuno Sá <noname.nuno@gmail.com> wrote:
+> > 
+> > > On Sun, 2020-05-03 at 11:07 +0200, Lars-Peter Clausen wrote:  
+> > > > On 5/3/20 10:47 AM, Jonathan Cameron wrote:    
+> > > > > On Sat, 02 May 2020 21:52:18 +0200
+> > > > > Nuno Sá <noname.nuno@gmail.com> wrote:
+> > > > >     
+> > > > > > On Sat, 2020-05-02 at 20:01 +0200, Lars-Peter Clausen
+> > > > > > wrote:    
+> > > > > > > On 5/2/20 7:40 PM, Jonathan Cameron wrote:    
+> > > > > > > > On Mon, 27 Apr 2020 20:06:07 +0200
+> > > > > > > > Lars-Peter Clausen <lars@metafoo.de> wrote:
+> > > > > > > >        
+> > > > > > > > > On 4/13/20 10:24 AM, Nuno Sá wrote:    
+> > > > > > > > > > [...]
+> > > > > > > > > > +static irqreturn_t adis16475_trigger_handler(int
+> > > > > > > > > > irq,
+> > > > > > > > > > void *p)
+> > > > > > > > > > +{
+> > > > > > > > > > [...]
+> > > > > > > > > > +	__be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
+> > > > > > > > > > [...]
+> > > > > > > > > > +
+> > > > > > > > > > +	iio_push_to_buffers_with_timestamp(indio_dev,
+> > > > > > > > > > data, pf-    
+> > > > > > > > > > > timestamp);    
+> > > > > > > > > If the timestamp is enabled the IIO core might insert
+> > > > > > > > > padding
+> > > > > > > > > between
+> > > > > > > > > the data channels and the timestamp. If that happens
+> > > > > > > > > this
+> > > > > > > > > will
+> > > > > > > > > disclose
+> > > > > > > > > kernel stack memory to userspace.
+> > > > > > > > > 
+> > > > > > > > > This needs either a memset(data, 0x00, sizeof(data))
+> > > > > > > > > or
+> > > > > > > > > maybe put
+> > > > > > > > > data
+> > > > > > > > > into the state struct and kzalloc it.    
+> > > > > > > > Good spot. Could simply do __be16 data[ADI..] = {0};
+> > > > > > > > rather
+> > > > > > > > than
+> > > > > > > > explicit
+> > > > > > > > memset, but some form of zeroization is needed.
+> > > > > > > > 
+> > > > > > > > I've fixed up the applied patch with the above
+> > > > > > > > approach.    
+> > > > > > > There is actually another issue. The stack data is not
+> > > > > > > necessarily
+> > > > > > > aligned to 64 bit, which causes issues if we try to put
+> > > > > > > the 64-
+> > > > > > > bit    
+> > > > > > Oh, this is actually more problematic. Yes, since we have
+> > > > > > an
+> > > > > > array of
+> > > > > > u16, that is not guaranteed to be 64bit aligned. Doing a
+> > > > > > quick
+> > > > > > search
+> > > > > > of `iio_push_to_buffers_with_timestamp()` users and I could
+> > > > > > quickly
+> > > > > > find 4/5 drivers with the same problem. I guess the API
+> > > > > > should
+> > > > > > clearly
+> > > > > > state that `data` needs to be __at least__ 64 bits aligned
+> > > > > > (maybe
+> > > > > > a
+> > > > > > future patch). Or we could even check the address and
+> > > > > > guarantee
+> > > > > > that it
+> > > > > > is properly aligned before continuing (though Im guessing
+> > > > > > this
+> > > > > > will
+> > > > > > break a lot of users...)    
+> > > > > > > timestamp in it. I think data should really be in the
+> > > > > > > state
+> > > > > > > struct.    
+> > > > > > Yes, with a proper __aligned(8) attribute... Or couldn't we
+> > > > > > just
+> > > > > > use
+> > > > > > __aligned(8) on the stack variable?    
+> > > > > Forcing alignment on the stack isn't terribly reliable, which
+> > > > > is
+> > > > > why
+> > > > > we never do that for dma safe buffers.
+> > > > > 
+> > > > > Probably better to just move it to the state structure.
+> > > > > I'll fix it up to do that. Please sanity check what will
+> > > > > shortly
+> > > > > be in the testing branch.
+> > > > > 
+> > > > > The moment Lars mentioned this I groaned. As you've noted a
+> > > > > few
+> > > > > other
+> > > > > drivers have the same problem + the ABI doesn't clearly state
+> > > > > or check this.
+> > > > > 
+> > > > > We should certainly fix all the drivers that suffer this
+> > > > > problem
+> > > > > first then we can think about adding a runtime check.    
+> > > > 
+> > > > It looks like it is actually quite a few drivers, maybe we
+> > > > should
+> > > > switch     
+> > > 
+> > > Yeps, not surprised...
+> > >   
+> > > > to put_unaligned(). We probably got lucky in most cases and the
+> > > > buffer    
+> > > 
+> > > This would keep us from having to fix all the users (just need to
+> > > fix
+> > > the memory leakage you mention on the next email) to use a
+> > > properly
+> > > aligned buffer. And later on, if we want, we can always add an
+> > > `aligned` variant of `iio_push_to_buffers_with_timestamp()` were
+> > > we
+> > > check for alignment...  
+> > 
+> > I'd rather scrub the existing set to fix this.  The reason being
+> > to make the point they were broken.  Fixing up with an unaligned
+> > write in the core is not 'obvious' to people looking at whether
+> > to pick up patches for individual drivers.
+> > 
+> > Unlikely to be too much extra over making sure we don't leak kernel
+> > data.   If we move them to the iio_priv structure we will avoid
+> > that
+> > anyway due to that being kzalloc ed in the first place.  We may
+> > leak previous timestamps or read values, but we don't care about
+> > that.
+> > 
+> > It's been there a while, so no 'super hurry' to fix these up but
+> > we should do it over next few months.
+> 
+> It's also worth noticing that there is some care needed.
+> Some devices don't need to zero because there is no padding.
+> Some devices are using the core demux, so the timestamp is always
+> in the same place, hence can be nicely refactored to an explicit
+> structure, either on the stack or heap.
+> 
+> Anyhow, from the first few I looked at I suspect they are all going
+> to have slightly different optimal solutions.
+> 
+> Take a look at the kxsd9 patch I'll send in a minute.  For that one
+> I think the cleanest thing is to leave the variable on the stack
+> but use an explicit structure to ensure the alignment is correct.
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
----
- drivers/input/misc/bma150.c | 3 +++
- 1 file changed, 3 insertions(+)
+Agreed. In those cases where there is no padding for the timestamp we
+can leave the variable on the stack (we can even think about adding an helper macro to declare this kind of construct :D). For the other's we can make use of iio_priv being kzalloc at probe so that we don't leak kernel data...
 
-diff --git a/drivers/input/misc/bma150.c b/drivers/input/misc/bma150.c
-index a9d984da95f3..5d3f8b05b316 100644
---- a/drivers/input/misc/bma150.c
-+++ b/drivers/input/misc/bma150.c
-@@ -541,7 +541,10 @@ static UNIVERSAL_DEV_PM_OPS(bma150_pm, bma150_suspend, bma150_resume, NULL);
- static const struct i2c_device_id bma150_id[] = {
- 	{ "bma150", 0 },
- 	{ "smb380", 0 },
-+	/* Prefer the IIO-based driver for bma023 if enabled */
-+#if !IS_ENABLED(CONFIG_BMA180)
- 	{ "bma023", 0 },
-+#endif
- 	{ }
- };
- 
--- 
-2.20.1
+- Nuno Sá
+> 
+> 
+> Jonathan
+> 
+> > Jonathan
+> > 
+> > > - Nuno Sá
+> > >   
 
