@@ -2,351 +2,212 @@ Return-Path: <SRS0=S3xR=6R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FECFC47258
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 17:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F877C47256
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 17:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5085D206EB
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 17:19:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="aVDtSn6E"
+	by mail.kernel.org (Postfix) with ESMTP id 700812078C
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 May 2020 17:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588526406;
+	bh=pDottKMNnrqLrwSAt7oXmpd18av3ewiA/EaQNbK61kc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uWu/b0e2/mHQ65SQi4H4cnDZq9xqXz0szv6NQhkG6rb41rYnOqaG3kKx109rpIDc9
+	 4Za08XR6f6rSiERMyYjX7eWnFQ7NeAb5kX5wiQHAn3UzrTuIBW4VSN5t8b9+b6vwrR
+	 MRN+AsNARYCgHrUKmymizJ3R7q7qYy/v6tyRaLYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgECRTb (ORCPT
+        id S1728996AbgECRUF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 13:19:31 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:29332 "EHLO rere.qmqm.pl"
+        Sun, 3 May 2020 13:20:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728875AbgECRT2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 May 2020 13:19:28 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FXly1fpfzKc;
-        Sun,  3 May 2020 19:19:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588526366; bh=qeW+XwbS7bi3+mwVfBZUNSvc/cz03Zs7dROJVcXWe4I=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=aVDtSn6EKppQR09TqxsLQR1dl0/BEGdrW+z/cfDhTANElamT102Vn6Y3xZOGaGPGM
-         r+h9nZ92JAMHvtc1JJddUXp5aMVsK9eU8iwXXp/8US9dbohDZzehZppheMD0k/mXXs
-         X6UrV8RI/cnTR2wRKMEGVcw9k56B6XPGdgQed8jzIa5BDn9mvnLxtpOd5O7iifQNU+
-         IGDeEPPWd6dgOTBQ7tpYCAwc2ffeJkuCahp6Gb1LpgqTdda5JViQh+fvnZmvDybFPz
-         929IXn2iZ700IU/PoKJTN0U1c1MWd+XPeLiopoxhRFRAYxUt8IZt1ZllxiFtXJqRn/
-         KQLpF6klbnzvQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 03 May 2020 19:19:26 +0200
-Message-Id: <ae0c612ce6bc53ea726ddcb25eb36bca78055e33.1588526049.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1588526049.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1588526049.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v4 3/3] clk: at91: allow setting all PMC clock parents via DT
+        id S1728859AbgECRUF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 May 2020 13:20:05 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 760E3206A5;
+        Sun,  3 May 2020 17:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588526404;
+        bh=pDottKMNnrqLrwSAt7oXmpd18av3ewiA/EaQNbK61kc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qdZtVGFrRb3ohgknISGb/OAjSB2B0GbvURwANQ85KskwRZxYYLCBtTfsk6cJzq/RM
+         +Tp5LxtZfyDOLo/WacXYrs7JOLqLGiQRNqTeHGiTnxy8LWiJpO7fw2NMs/iinyu/kb
+         AqVFxDfMhh5LQwvUKGqOL1uVAEmzSw0GrVQ5ARn4=
+Date:   Sun, 3 May 2020 18:19:58 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
+Message-ID: <20200503181959.369161a4@archlinux>
+In-Reply-To: <20200503122926.1fcc73fa@archlinux>
+References: <20200413082445.17324-1-nuno.sa@analog.com>
+        <20200413082445.17324-6-nuno.sa@analog.com>
+        <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
+        <20200502184010.134eb8b5@archlinux>
+        <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
+        <df0f04296fafccfcf18b08b213bae20ff69c2384.camel@gmail.com>
+        <20200503094751.633feda1@archlinux>
+        <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
+        <231ac29f177774eeb32b0ed907516173af0f97eb.camel@gmail.com>
+        <20200503122926.1fcc73fa@archlinux>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We need to have clocks accessible via phandle to select them
-as peripheral clock parent using assigned-clock-parents in DT.
-Add support for PLLACK/PLLBCK/AUDIOPLLCK clocks where available.
+On Sun, 3 May 2020 12:29:26 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
-v2: rebase to clk/clk-at91 branch
-v3: no changes
-v4: extend to whole family
----
- drivers/clk/at91/at91rm9200.c    | 6 +++++-
- drivers/clk/at91/at91sam9260.c   | 6 +++++-
- drivers/clk/at91/at91sam9g45.c   | 4 +++-
- drivers/clk/at91/at91sam9n12.c   | 6 +++++-
- drivers/clk/at91/at91sam9rl.c    | 4 +++-
- drivers/clk/at91/at91sam9x5.c    | 4 +++-
- drivers/clk/at91/sam9x60.c       | 4 +++-
- drivers/clk/at91/sama5d2.c       | 6 +++++-
- drivers/clk/at91/sama5d3.c       | 4 +++-
- drivers/clk/at91/sama5d4.c       | 4 +++-
- include/dt-bindings/clock/at91.h | 3 +++
- 11 files changed, 41 insertions(+), 10 deletions(-)
+> On Sun, 03 May 2020 13:07:01 +0200
+> Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+>=20
+> > On Sun, 2020-05-03 at 11:07 +0200, Lars-Peter Clausen wrote: =20
+> > > On 5/3/20 10:47 AM, Jonathan Cameron wrote:   =20
+> > > > On Sat, 02 May 2020 21:52:18 +0200
+> > > > Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+> > > >    =20
+> > > > > On Sat, 2020-05-02 at 20:01 +0200, Lars-Peter Clausen wrote:   =20
+> > > > > > On 5/2/20 7:40 PM, Jonathan Cameron wrote:   =20
+> > > > > > > On Mon, 27 Apr 2020 20:06:07 +0200
+> > > > > > > Lars-Peter Clausen <lars@metafoo.de> wrote:
+> > > > > > >       =20
+> > > > > > > > On 4/13/20 10:24 AM, Nuno S=C3=A1 wrote:   =20
+> > > > > > > > > [...]
+> > > > > > > > > +static irqreturn_t adis16475_trigger_handler(int irq,
+> > > > > > > > > void *p)
+> > > > > > > > > +{
+> > > > > > > > > [...]
+> > > > > > > > > +	__be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
+> > > > > > > > > [...]
+> > > > > > > > > +
+> > > > > > > > > +	iio_push_to_buffers_with_timestamp(indio_dev, data, pf-=
+   =20
+> > > > > > > > > > timestamp);   =20
+> > > > > > > > If the timestamp is enabled the IIO core might insert
+> > > > > > > > padding
+> > > > > > > > between
+> > > > > > > > the data channels and the timestamp. If that happens this
+> > > > > > > > will
+> > > > > > > > disclose
+> > > > > > > > kernel stack memory to userspace.
+> > > > > > > >=20
+> > > > > > > > This needs either a memset(data, 0x00, sizeof(data)) or
+> > > > > > > > maybe put
+> > > > > > > > data
+> > > > > > > > into the state struct and kzalloc it.   =20
+> > > > > > > Good spot. Could simply do __be16 data[ADI..] =3D {0}; rather
+> > > > > > > than
+> > > > > > > explicit
+> > > > > > > memset, but some form of zeroization is needed.
+> > > > > > >=20
+> > > > > > > I've fixed up the applied patch with the above approach.   =20
+> > > > > > There is actually another issue. The stack data is not
+> > > > > > necessarily
+> > > > > > aligned to 64 bit, which causes issues if we try to put the 64-
+> > > > > > bit   =20
+> > > > > Oh, this is actually more problematic. Yes, since we have an
+> > > > > array of
+> > > > > u16, that is not guaranteed to be 64bit aligned. Doing a quick
+> > > > > search
+> > > > > of `iio_push_to_buffers_with_timestamp()` users and I could
+> > > > > quickly
+> > > > > find 4/5 drivers with the same problem. I guess the API should
+> > > > > clearly
+> > > > > state that `data` needs to be __at least__ 64 bits aligned (maybe
+> > > > > a
+> > > > > future patch). Or we could even check the address and guarantee
+> > > > > that it
+> > > > > is properly aligned before continuing (though Im guessing this
+> > > > > will
+> > > > > break a lot of users...)   =20
+> > > > > > timestamp in it. I think data should really be in the state
+> > > > > > struct.   =20
+> > > > > Yes, with a proper __aligned(8) attribute... Or couldn't we just
+> > > > > use
+> > > > > __aligned(8) on the stack variable?   =20
+> > > > Forcing alignment on the stack isn't terribly reliable, which is
+> > > > why
+> > > > we never do that for dma safe buffers.
+> > > >=20
+> > > > Probably better to just move it to the state structure.
+> > > > I'll fix it up to do that. Please sanity check what will shortly
+> > > > be in the testing branch.
+> > > >=20
+> > > > The moment Lars mentioned this I groaned. As you've noted a few
+> > > > other
+> > > > drivers have the same problem + the ABI doesn't clearly state
+> > > > or check this.
+> > > >=20
+> > > > We should certainly fix all the drivers that suffer this problem
+> > > > first then we can think about adding a runtime check.   =20
+> > >=20
+> > > It looks like it is actually quite a few drivers, maybe we should
+> > > switch    =20
+> >=20
+> > Yeps, not surprised...
+> >  =20
+> > > to put_unaligned(). We probably got lucky in most cases and the
+> > > buffer   =20
+> >=20
+> > This would keep us from having to fix all the users (just need to fix
+> > the memory leakage you mention on the next email) to use a properly
+> > aligned buffer. And later on, if we want, we can always add an
+> > `aligned` variant of `iio_push_to_buffers_with_timestamp()` were we
+> > check for alignment... =20
+>=20
+> I'd rather scrub the existing set to fix this.  The reason being
+> to make the point they were broken.  Fixing up with an unaligned
+> write in the core is not 'obvious' to people looking at whether
+> to pick up patches for individual drivers.
+>=20
+> Unlikely to be too much extra over making sure we don't leak kernel
+> data.   If we move them to the iio_priv structure we will avoid that
+> anyway due to that being kzalloc ed in the first place.  We may
+> leak previous timestamps or read values, but we don't care about that.
+>=20
+> It's been there a while, so no 'super hurry' to fix these up but
+> we should do it over next few months.
 
-diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
-index 8da88e9a95d8..38bdb4981315 100644
---- a/drivers/clk/at91/at91rm9200.c
-+++ b/drivers/clk/at91/at91rm9200.c
-@@ -98,7 +98,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91rm9200_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
- 					    nck(at91rm9200_systemck),
- 					    nck(at91rm9200_periphck), 0, 4);
- 	if (!at91rm9200_pmc)
-@@ -123,12 +123,16 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91rm9200_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
- 				   &at91rm9200_pll_layout,
- 				   &rm9200_pll_characteristics);
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91rm9200_pmc->chws[PMC_PLLBCK] = hw;
-+
- 	parent_names[0] = slowxtal_name;
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "pllack";
-diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-index 7e5ff252fffc..6d0723aa8b13 100644
---- a/drivers/clk/at91/at91sam9260.c
-+++ b/drivers/clk/at91/at91sam9260.c
-@@ -352,7 +352,7 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91sam9260_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9260_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
- 					    ndck(data->sck, data->num_sck),
- 					    ndck(data->pck, data->num_pck),
- 					    0, data->num_progck);
-@@ -399,12 +399,16 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9260_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
- 				   data->pllb_layout,
- 				   data->pllb_characteristics);
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9260_pmc->chws[PMC_PLLBCK] = hw;
-+
- 	parent_names[0] = slck_name;
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "pllack";
-diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-index 5d18eb04c218..9873b583c260 100644
---- a/drivers/clk/at91/at91sam9g45.c
-+++ b/drivers/clk/at91/at91sam9g45.c
-@@ -115,7 +115,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91sam9g45_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9g45_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					    nck(at91sam9g45_systemck),
- 					    nck(at91sam9g45_periphck), 0, 2);
- 	if (!at91sam9g45_pmc)
-@@ -143,6 +143,8 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9g45_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
-diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-index 3a2564c2f724..630dc5d87171 100644
---- a/drivers/clk/at91/at91sam9n12.c
-+++ b/drivers/clk/at91/at91sam9n12.c
-@@ -128,7 +128,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91sam9n12_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9n12_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
- 					   nck(at91sam9n12_systemck), 31, 0, 2);
- 	if (!at91sam9n12_pmc)
- 		return;
-@@ -162,11 +162,15 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9n12_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
- 				   &at91rm9200_pll_layout, &pllb_characteristics);
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9n12_pmc->chws[PMC_PLLBCK] = hw;
-+
- 	parent_names[0] = slck_name;
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "plladivck";
-diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-index bcf07f6a0e0e..0d1cc44b056f 100644
---- a/drivers/clk/at91/at91sam9rl.c
-+++ b/drivers/clk/at91/at91sam9rl.c
-@@ -87,7 +87,7 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91sam9rl_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9rl_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					   nck(at91sam9rl_systemck),
- 					   nck(at91sam9rl_periphck), 0, 2);
- 	if (!at91sam9rl_pmc)
-@@ -105,6 +105,8 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9rl_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
-diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-index f13756b407e2..0ce3da080287 100644
---- a/drivers/clk/at91/at91sam9x5.c
-+++ b/drivers/clk/at91/at91sam9x5.c
-@@ -150,7 +150,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91sam9x5_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9x5_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					   nck(at91sam9x5_systemck), 31, 0, 2);
- 	if (!at91sam9x5_pmc)
- 		return;
-@@ -184,6 +184,8 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9x5_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
-diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-index db14e0427c7f..3e20aa68259f 100644
---- a/drivers/clk/at91/sam9x60.c
-+++ b/drivers/clk/at91/sam9x60.c
-@@ -182,7 +182,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	sam9x60_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	sam9x60_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					nck(sam9x60_systemck),
- 					nck(sam9x60_periphck),
- 					nck(sam9x60_gck), 8);
-@@ -214,6 +214,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sam9x60_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = sam9x60_clk_register_pll(regmap, &pmc_pll_lock, "upllck",
- 				      "main_osc", 1, &upll_characteristics);
- 	if (IS_ERR(hw))
-diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-index ae5e83cadb3d..b3fa2291ccd8 100644
---- a/drivers/clk/at91/sama5d2.c
-+++ b/drivers/clk/at91/sama5d2.c
-@@ -166,7 +166,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	sama5d2_pmc = pmc_data_allocate(PMC_I2S1_MUX + 1,
-+	sama5d2_pmc = pmc_data_allocate(PMC_AUDIOPLLCK + 1,
- 					nck(sama5d2_systemck),
- 					nck(sama5d2_periph32ck),
- 					nck(sama5d2_gck), 3);
-@@ -202,6 +202,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sama5d2_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_audio_pll_frac(regmap, "audiopll_fracck",
- 					      "mainck");
- 	if (IS_ERR(hw))
-@@ -217,6 +219,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sama5d2_pmc->chws[PMC_AUDIOPLLCK] = hw;
-+
- 	regmap_sfr = syscon_regmap_lookup_by_compatible("atmel,sama5d2-sfr");
- 	if (IS_ERR(regmap_sfr))
- 		regmap_sfr = NULL;
-diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
-index 507eef6797f1..eef7cf964600 100644
---- a/drivers/clk/at91/sama5d3.c
-+++ b/drivers/clk/at91/sama5d3.c
-@@ -125,7 +125,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	sama5d3_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	sama5d3_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					nck(sama5d3_systemck),
- 					nck(sama5d3_periphck), 0, 3);
- 	if (!sama5d3_pmc)
-@@ -158,6 +158,8 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sama5d2_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
-diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-index 80692902b4e4..3c3f83870456 100644
---- a/drivers/clk/at91/sama5d4.c
-+++ b/drivers/clk/at91/sama5d4.c
-@@ -140,7 +140,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 + 1,
-+	sama5d4_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					nck(sama5d4_systemck),
- 					nck(sama5d4_periph32ck), 0, 3);
- 	if (!sama5d4_pmc)
-@@ -173,6 +173,8 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sama5d2_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
-diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
-index c3f4aa6a2d29..adcf608b41fa 100644
---- a/include/dt-bindings/clock/at91.h
-+++ b/include/dt-bindings/clock/at91.h
-@@ -21,6 +21,9 @@
- #define PMC_MCK2		4
- #define PMC_I2S0_MUX		5
- #define PMC_I2S1_MUX		6
-+#define PMC_PLLACK		7
-+#define PMC_PLLBCK		8
-+#define PMC_AUDIOPLLCK		8		/* SAMA5D2-only, no PLLB there */
- 
- #ifndef AT91_PMC_MOSCS
- #define AT91_PMC_MOSCS		0		/* MOSCS Flag */
--- 
-2.20.1
+It's also worth noticing that there is some care needed.
+Some devices don't need to zero because there is no padding.
+Some devices are using the core demux, so the timestamp is always
+in the same place, hence can be nicely refactored to an explicit
+structure, either on the stack or heap.
+
+Anyhow, from the first few I looked at I suspect they are all going
+to have slightly different optimal solutions.
+
+Take a look at the kxsd9 patch I'll send in a minute.  For that one
+I think the cleanest thing is to leave the variable on the stack
+but use an explicit structure to ensure the alignment is correct.
+
+I'll look to do a few of these at a time over the next few weeks
+as each one needs fairly careful review.
+
+Jonathan
+
+>=20
+> Jonathan
+>=20
+> >=20
+> > - Nuno S=C3=A1
+> >  =20
+>=20
 
