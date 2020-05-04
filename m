@@ -2,65 +2,48 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9DEC47257
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2192C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C38920721
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A11B2068E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgEDR2Y (ORCPT
+        id S1729597AbgEDRb6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 13:28:24 -0400
-Received: from smtprelay0098.hostedemail.com ([216.40.44.98]:45014 "EHLO
+        Mon, 4 May 2020 13:31:58 -0400
+Received: from smtprelay0141.hostedemail.com ([216.40.44.141]:58446 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729597AbgEDR2Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 13:28:24 -0400
+        by vger.kernel.org with ESMTP id S1729386AbgEDRb6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 13:31:58 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 9A50019B29;
-        Mon,  4 May 2020 17:28:22 +0000 (UTC)
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 9EFCC180A55F0;
+        Mon,  4 May 2020 17:31:56 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: edge64_2b6e02f508642
-X-Filterd-Recvd-Size: 2313
+X-HE-Tag: twig62_4aee47edd0d24
+X-Filterd-Recvd-Size: 1976
 Received: from XPS-9350.home (unknown [47.151.136.130])
         (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  4 May 2020 17:28:18 +0000 (UTC)
-Message-ID: <be112d4580b3dcd648fca7c23c09f5f13b31e435.camel@perches.com>
-Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  4 May 2020 17:31:54 +0000 (UTC)
+Message-ID: <28790ee42242ecc0b0050943a27f569dd1aeec16.camel@perches.com>
+Subject: Re: [PATCH 1/6] dt-bindings: phy: meson8b-usb2: Convert to
+ json-schema
 From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jyri Sarha <jsarha@ti.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
-Date:   Mon, 04 May 2020 10:28:17 -0700
-In-Reply-To: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
-References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+To:     hex dump <hexdump0815@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     kishon@ti.com, robh+dt@kernel.org, vkoul@kernel.org,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        narmstrong@baylibre.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 04 May 2020 10:31:53 -0700
+In-Reply-To: <CAKTihDVy6oSuQe4eP87hWO17tBu3=XZ-PM41YOqLVOtXJ8+YeQ@mail.gmail.com>
+References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com>
+         <20200502114752.1048500-2-martin.blumenstingl@googlemail.com>
+         <CAKTihDVy6oSuQe4eP87hWO17tBu3=XZ-PM41YOqLVOtXJ8+YeQ@mail.gmail.com>
 Content-Type: text/plain; charset="ISO-8859-1"
 User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
@@ -70,17 +53,24 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2020-05-04 at 11:30 +0200, Mauro Carvalho Chehab wrote:
-> There are some new broken doc links due to yaml renames
-> at DT. Developers should really run:
+On Mon, 2020-05-04 at 12:55 +0200, hex dump wrote:
+> On Sat, May 2, 2020 at 1:48 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> > Now that we have the DT validation in place, let's convert the device
+> > tree bindings for the Amlogic Meson8, Meson8b, Meson8m2 and GXBB USB2
+> > PHY over to a YAML schema.
+> > 
+> > While here, also add the fallback compatible string
+> > "amlogic,meson-gxbb-usb2-phy" which is already used in
+> > arch/arm/boot/dts/meson{,8,8b}.dtsi.
+> > 
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > 
-> 	./scripts/documentation-file-ref-check
-> 
-> in order to solve those issues while submitting patches.
-> This tool can even fix most of the issues with:
-> 
-> 	./scripts/documentation-file-ref-check --fix
+> Tested-by: hexdump <hexdump0815@googlemail.com>
 
-Thanks Mauro.
+Is the kernel now accepting "Tested-by" lines from robots?
+
+If hexdump0815@googlemail.com is not a robot, can you please use
+your full legal name instead?
 
 
