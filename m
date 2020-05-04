@@ -2,155 +2,198 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF0CC47257
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBE2C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFA5420705
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBAD220705
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sVKlAInB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SjHLuiCK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgEDTkK (ORCPT
+        id S1726770AbgEDTnS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 15:40:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44440 "EHLO
+        Mon, 4 May 2020 15:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgEDTkJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 15:40:09 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A893FC061A0E;
-        Mon,  4 May 2020 12:40:07 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id k1so470151wro.12;
-        Mon, 04 May 2020 12:40:07 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1726111AbgEDTnR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 15:43:17 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F51C061A0E;
+        Mon,  4 May 2020 12:43:17 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id m5so244355ilj.10;
+        Mon, 04 May 2020 12:43:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hEW76UZB/sZtEFwmy764PGyYDv4AC7eZ6iGbT8XBec0=;
-        b=sVKlAInB9QaiGr8TxrDwVwGVUTMk3Z2sanuBv38O6D7p5wDtfW4OTPur0/IqpcUlFU
-         k2HH34g5fWr6DkHSmByla0c2aSeqrAJ3pjufHlf4EhwUZFb26j4GM7c4K9vIc1sWEKv3
-         ru1D26JuI3qPR9ITDCBTxONyYXPeKHCagzRRoKl95IYfpopUPoKm0lc6UC2eX3RtgWsK
-         /NG29twXUdSZ7qQobLBM6MRFaOdoKV5s2llvFFFe2fulgMYe5E/FXpK6nDTSLSDylxgs
-         FlDk/TpcItC2FWJ18TEsMfi0kUh+L8tIXYr/QLtZOmRbM1mVzMLq19Ru2tJLheZffZNv
-         RVZQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hToGumS7+rYCBAzwPejy/9G9W5aA7qrCKK0guqtnFic=;
+        b=SjHLuiCKKUrEzDejZi1OKuJXwdceb+8LNelIll16QEO5qNEjAPQAAsvUxeDszeDR/N
+         85+LZzWTsXE8zTa4pkn2s41g8hVSUlTYqbPn3WiM/h785rym9Jxa2Zugy26zWHlmEEWH
+         8bmLR8SahzhouwKRk/8mEVPY/9kafpSmS4nBCBPYAeq63JDA3MLxr0THEWQF0//zgRAJ
+         d9KQvHnphi+qyo79q9vQ71zi3ww8qqR+RX0+7KIGTtVAoQMsujxB3B/hGBkRaCXQv8EN
+         dfcj7gPxu1CcV/uTPSRRS9jkJMxmYHLOwtV1mvVJUxBRDBA0qPtMAI3R+/sa18yiSjZm
+         mqZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hEW76UZB/sZtEFwmy764PGyYDv4AC7eZ6iGbT8XBec0=;
-        b=JALM/kr7s8tWsGAe3Qni1+RWB9A+pyEI4O8ILmDf6oEQrSj/fhkOOkzGlJq89TNnKk
-         FvrCfBj/EW+fYfE1/wmBGXyLDzPmXCt5GV7j6VWrpRE+NlJI/qPjCjnrsZQwXVOTb2ZX
-         tvnCCKJ+jd38IuC5BDRVDoxIaHZ/twZHJjreZnz8WQfMel1u1ioLXJer+smsO12MSWW/
-         6QoK4HSdN8VgcfEXK/phMxCn4JuwQLJN85U3X9o523isHKvaRhPyWCo+hqkAT6WTS6+/
-         jJO+vpeZHf47T+WA9FHY5jzKAz5aNLDulRL4zKvsieGUrV/c+bS+bOvPxV8SVdD9DMdj
-         AjFw==
-X-Gm-Message-State: AGi0PubbUw05AbvOWLcJkK/NGfOA9uDtPEFU2P1ixSB/5GU4v/qLXHZM
-        y6bmGnx3RMudtgFdMNePh9k=
-X-Google-Smtp-Source: APiQypIW3ogpPeWwO8fPmBAkiTyDt7oumahho6djwlkn0Hrgx03BjpfCvOGxXwqYYxpGHyc3gI9yOw==
-X-Received: by 2002:a5d:628e:: with SMTP id k14mr1011368wru.390.1588621206417;
-        Mon, 04 May 2020 12:40:06 -0700 (PDT)
-Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
-        by smtp.googlemail.com with ESMTPSA id p7sm20631312wrf.31.2020.05.04.12.40.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 12:40:06 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [v2 PATCH 2/2] dt-bindings: display: Document ASUS Z00T TM5P5 NT35596 panel compatible
-Date:   Mon,  4 May 2020 21:38:14 +0200
-Message-Id: <20200504193816.126299-3-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200504193816.126299-1-konradybcio@gmail.com>
-References: <20200504193816.126299-1-konradybcio@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hToGumS7+rYCBAzwPejy/9G9W5aA7qrCKK0guqtnFic=;
+        b=iKzvLXalnZDh6irMm9eXjLre+IJ/Dbkiwun1q6gxMtTiCcfEx+Bg6e/8NvXxq5cR4+
+         cH4QhuYgneMSrYVouMczgRmOEnyGPx1fgU/eIJxA/ZS+zbQ5jGfMyi0XdsctatzTPOQj
+         r4xku399T3n+HakQ4jmNxFvCD2K1BGblUcVVKy77qnvBairXoY9kmlTnyUuDrK5HBw9I
+         IbYrdOs0LIA6EjPKW4/jGar/ceQW0B5COlk2H/MVwXU6GpE7N/252DeLj6paNpLkWjco
+         A0qEPN81yvjpLtl63YqVS29lD0e/5wv8N8FxL1gvxIRmYSa69XHUoOj2eeroHW1uqc/L
+         J3zA==
+X-Gm-Message-State: AGi0PuZ9pNYvdtukYYSrXh/TAUU0exmrW/tdfBKVgw8RdWL/90aWXYuQ
+        TW4wFa7RUOgn1xDwD2t55ckLBL1nYQGBxhkp/Oo=
+X-Google-Smtp-Source: APiQypJrGXhhqW08yoaeDnDtx/i0JRfzWEst7LvKzsZZk7VobrfRGOVAQHzOHOnx7KngiHH3GuCSo8vUVjpnh9WKeuw=
+X-Received: by 2002:a92:3a48:: with SMTP id h69mr55241ila.150.1588621396983;
+ Mon, 04 May 2020 12:43:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200426104115.22630-1-peron.clem@gmail.com> <20200426104115.22630-4-peron.clem@gmail.com>
+ <20200428081321.ht3el26yqhsnyfm4@gilmour.lan> <CAJiuCcdVs_drs40Q6537BYfz24F7NmC6B8S5-Lt4V4ggs-FXWA@mail.gmail.com>
+ <20200429123529.y24dpy63wxq7uvkt@gilmour.lan> <CAJiuCcfXqizcq_JuXRCsqEqM2562cr1SGJ0pmy07jcJxAXojOw@mail.gmail.com>
+ <20200430084600.samghw4zxb5zdbez@gilmour.lan> <CAJiuCcf_LHrJ6QdZgH8HyN6TRiT+GiD+t4UggFCrz-VwVHXV6w@mail.gmail.com>
+ <20200504120942.lnrxnnmykqnvw3fb@gilmour.lan>
+In-Reply-To: <20200504120942.lnrxnnmykqnvw3fb@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 4 May 2020 21:43:05 +0200
+Message-ID: <CAJiuCceF340FiLvyeXNZtvqftQMAmk=MtFDLT_9696ix+eH1Yw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] ASoC: sun4i-i2s: Add support for H6 I2S
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Marcus Cooper <codekipper@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- .../display/panel/asus,z00t-tm5p5-n35596.yaml | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml
+Hi Maxime,
 
-diff --git a/Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml b/Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml
-new file mode 100644
-index 0000000000000..aa8940e493eb1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/tm5p5,nt35596.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ASUS Z00T TM5P5 NT35596 5.5" 1080×1920 LCD Panel
-+
-+maintainers:
-+  - Konrad Dybcio <konradybcio@gmail.com>
-+
-+description: |+
-+  This panel seems to only be found in the Asus Z00T
-+  smartphone and we have no straightforward way of
-+  actually getting the correct model number,
-+  as no schematics are released publicly.
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: asus,z00t-tm5p5-n35596
-+  reg: true
-+  reset-gpios: true
-+  vdd-supply:
-+     description: core voltage supply
-+  vddio-supply:
-+     description: vddio supply
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdd-supply
-+  - vddio-supply
-+  - reset-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    dsi {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            panel@0 {
-+                    reg = <0>;
-+
-+                    compatible = "asus,z00t-tm5p5-n35596";
-+
-+                    vdd-supply = <&pm8916_l8>;
-+                    vddio-supply = <&pm8916_l6>;
-+                    reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-+            };
-+    };
--- 
-2.26.1
+On Mon, 4 May 2020 at 14:09, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi Clement,
+>
+> On Thu, Apr 30, 2020 at 04:00:14PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > On Thu, 30 Apr 2020 at 10:46, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > On Wed, Apr 29, 2020 at 06:33:00PM +0200, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > On Wed, 29 Apr 2020 at 14:35, Maxime Ripard <maxime@cerno.tech> wro=
+te:
+> > > > >
+> > > > > On Tue, Apr 28, 2020 at 10:55:47AM +0200, Cl=C3=A9ment P=C3=A9ron=
+ wrote:
+> > > > > > > > +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *=
+i2s,
+> > > > > > > > +                              unsigned int fmt)
+> > > > > > >
+> > > > > > > The alignment is off here
+> > > > > > >
+> > > > > > > > +{
+> > > > > > > > +     u32 mode, val;
+> > > > > > > > +     u8 offset;
+> > > > > > > > +
+> > > > > > > > +     /*
+> > > > > > > > +      * DAI clock polarity
+> > > > > > > > +      *
+> > > > > > > > +      * The setup for LRCK contradicts the datasheet, but =
+under a
+> > > > > > > > +      * scope it's clear that the LRCK polarity is reverse=
+d
+> > > > > > > > +      * compared to the expected polarity on the bus.
+> > > > > > > > +      */
+> > > > > > >
+> > > > > > > Did you check this or has it been copy-pasted?
+> > > > > >
+> > > > > > copy-pasted, I will check this.
+> > > > >
+> > > > > It's not going to be easy to do this if you only have a board wit=
+h HDMI. If you
+> > > > > can't test that easily, just remove the comment (or make it expli=
+cit that you
+> > > > > copy pasted it?), no comment is better than a wrong one.
+> > > >
+> > > > I have talked with Marcus Cooper it may be able to test this this w=
+eek-end.
+> > > > Also this can explain why we need the "
+> > > > simple-audio-card,frame-inversion;" in the device-tree.
+> > > >
+> > > > If think this fix has been introduced by you, correct? Could you sa=
+y
+> > > > on which SoC did you see this issue?
+> > >
+> > > This was seen on an H3
+> >
+> > Just two more questions:
+> > - Did you observe this issue on both TDM and I2S mode?
+> > - On which DAI node?
+>
+> This is fairly fuzzy now and I don't remember if I tested it in I2S. Let'=
+s
+> assume I didn't. And similarly, I'm not sure what the exact controller wa=
+s, but
+> it was one of the regular controllers (so not either connected to the cod=
+ec or
+> the HDMI, one that goes out of the SoC).
+>
+> We had pretty much the same issue on the A33 in I2S for the codec though:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/sound/soc/sunxi/sun8i-codec.c?id=3D18c1bf35c1c09bca05cf70bc984a4764e0b0372=
+b
+>
+> I didn't think of it that way then, but it might very well have been the =
+i2s
+> controller suffering the same issue.
+>
+> > Since recent change in sun4i-i2s.c, we had to introduce the
+> > "simple-audio-card,frame-inversion" in LibreElec tree.
+>
+> Do you have a link to that commit ? I couldn't find anything on libreelec=
+'s
+> github repo.
 
+These commits:
+https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Allwinner/de=
+vices/A64/patches/linux/04-Add-frame-inversion-to-correct-multi-channel-aud=
+io.patch
+https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Allwinner/de=
+vices/H3/patches/linux/17-Add-frame-inversion-to-correct-multi-channel-audi=
+o.patch
+https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Allwinner/de=
+vices/H6/patches/linux/16-Add-frame-inversion-to-correct-multi-channel-audi=
+o.patch
+
+>
+> > H3 boards are quite common in LibreElec community so I think:
+> >  - This fix is only needed in TDM mode
+> >  - Or this fix is not required for the HDMI DAI node (HDMI DAI is a
+> > little bit different compare to other DAI but I think the first guess
+> > is more likely)
+>
+> Given what we know about the A33, I'd be inclined to say the latter. I'd =
+don't
+> have the tools to check anymore, but if you have even a cheap logical ana=
+lyzer,
+> i2s being pretty slow you can definitely see it.
+
+Me neither but maybe Marcus will be able to check this.
+Thanks for all these informations.
+
+>
+> Maxime
