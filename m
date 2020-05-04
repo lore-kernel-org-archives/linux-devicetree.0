@@ -2,121 +2,109 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F717C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 01:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F83C47257
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 01:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCD7206EB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 01:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588555337;
-	bh=O8kCrFICDJ5/5RiUO9wpxKz/8P1JpoNA+6W2FZAb49g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CD8SpRCa/Er7fNZsvZhi6B0zogmHO4giBnLjrKmkwCNLaY2cnLUBC+utotE0/uAN3
-	 NEoBOWTLZPZJyr4LM3zqtp3MOUW3u9+vP8aBBU6L5maFimu/gf6WLTEm3mrTZ2DM7e
-	 I1GMcGelYQrqNx3+/SZLxsfQsMYVb3CeUMPWBB68=
+	by mail.kernel.org (Postfix) with ESMTP id 457822073B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 01:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mxItMKtR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726433AbgEDBWR (ORCPT
+        id S1726419AbgEDBdO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 21:22:17 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:18066 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgEDBWQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 21:22:16 -0400
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 0441LxNM016166
-        for <devicetree@vger.kernel.org>; Mon, 4 May 2020 10:21:59 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 0441LxNM016166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588555319;
-        bh=w6du8zRDwlzzQ3j9xUVVgBtnqj2wcYyHezkuilzoEsA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hmagM2HfWU0iXThMS4jPCgHR7fz2y/v70dZSAdLj4gw44O4S0+BukmW7Bje2Px6ak
-         H+MKBETlRY/cdGPH2dJFH6SS7H4EyLdQkJQheNXJka83qClXgfcr53RNGclX8KcTgf
-         K4OhY1lQNBFuOdrKqAxJiW5kl6yrWZlu0FJYUbgpk+oQGWoyeX3jpVsuiKZ+xf3jDR
-         RWYcrpL0MnN24bV8tJ8jaI0SLiThFoS1/8/XY+6uyKLGHN3u0ho25ZUAoqI0ErizpB
-         d4VME0hfYeIU9F5irQTDMTAArbYUy+fCg8e+rprZsUTax8/Q8JPjelfKPZ3u1y9bmN
-         RbeBHbsxkjGVg==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id y10so5990471uao.8
-        for <devicetree@vger.kernel.org>; Sun, 03 May 2020 18:21:59 -0700 (PDT)
-X-Gm-Message-State: AGi0PubyaXZ+RQivKrS0lpPCsGv20QQCK0X+iOtPRQ7YLCu21fhSprYF
-        +gLGpDdHEeVhZq0foGBa5lq7ScPivCzB3GQY2eo=
-X-Google-Smtp-Source: APiQypLjKkik/oU0uaF0Sa5oHB/Eq0P7Lq/E4EF2AFVTKCbqfJYAJshSIaa81QHlR9nLAp2HvozgBfKSCEqho6ugbp8=
-X-Received: by 2002:ab0:cd:: with SMTP id 71mr9187041uaj.109.1588555318441;
- Sun, 03 May 2020 18:21:58 -0700 (PDT)
+        Sun, 3 May 2020 21:33:14 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:58868 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgEDBdO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 21:33:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1588555991; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=s3kVnM/pt0oggUIsiHNmQoFutX1dSCYY6TB3Lm6oLFE=;
+        b=mxItMKtRyij5x/wPWOz13FGJPQjbal6rSoJWpgE2O0yRMR788cFDS8oY/lU7J32gz/QGX9
+        wZTwogoNRBP8FYfj7KyPbrYAqfdVnWIPCIzTR9T3oCM4x5478uCuGUeYjZPuPKUYltHhOe
+        hRlxtN57Okse4d6QbeTj8le1efh8CVs=
+Date:   Mon, 04 May 2020 03:32:58 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RFC v3 2/8] drm: ingenic-drm: add MODULE_DEVICE_TABLE
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Kees Cook <keescook@chromium.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        mips-creator-ci20-dev@googlegroups.com
+Message-Id: <YM9S9Q.3YCM1LVLIS2O3@crapouillou.net>
+In-Reply-To: <02c8f35fde969fd852a62740b4fa8a01c53b79ef.1585503354.git.hns@goldelico.com>
+References: <cover.1585503354.git.hns@goldelico.com>
+        <02c8f35fde969fd852a62740b4fa8a01c53b79ef.1585503354.git.hns@goldelico.com>
 MIME-Version: 1.0
-References: <20200430222439.0ae1c4fa9572c8487fca96b6@linaro.org>
-In-Reply-To: <20200430222439.0ae1c4fa9572c8487fca96b6@linaro.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 4 May 2020 10:21:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS7U-SxEhsdfAr=ioOP0DGksTWhW1hDVA4AN8a6YG-t-w@mail.gmail.com>
-Message-ID: <CAK7LNAS7U-SxEhsdfAr=ioOP0DGksTWhW1hDVA4AN8a6YG-t-w@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] dts: uniphier: Add Akebi96 Board support
-To:     Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:24 PM Masami Hiramatsu
-<masami.hiramatsu@linaro.org> wrote:
->
-> Hello,
->
-> Here is the 5th version of the patches to add a devicetree for
-> Akebi96 board.
->
-> This version removes redundant setting of RGMII, fixes some
-> parameters for max3420-udc node and add the address to
-> framebuffer node name.
->
-> The Akebi96 is a certified 96boards which is based on Socionext
-> UniPhier LD20 SoC. Most of the part is similar to LD20 reference
-> board, but there are some changes.
->
->   - MAX3421 USB-SPI chip on SPI port3 (for USB gadget port.)
->   - Simple frame buffer with 1080p fixed resolution.
->   - I2S port which is connected to aout1b instead of aout1.
->   - 3 serial ports, only serial3 has CTS/RTS.
->   - No NAND, only eMMC on the board.
->   - OP-TEE installed firmware.
->
-> See https://www.96boards.org/product/akebi96/ for details.
->
-> Thank you,
->
+Hi Nikolaus,
+
+
+Le dim. 29 mars 2020 =E0 19:35, H. Nikolaus Schaller <hns@goldelico.com>=20
+a =E9crit :
+> so that the driver can load by matching the device tree
+> if compiled as module.
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+Please add:
+
+Cc: stable@vger.kernel.org # v5.3+
+Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
+
+And re-send this patch alone, then I can merge it ASAP.
+
+Cheers,
+-Paul
+
 > ---
-
-Both applied.
-
-
-
-> Masami Hiramatsu (2):
->       dt-bindings: arm: Add Akebi96 board support
->       arm64: dts: uniphier: Add support for Akebi96
->
->
->  .../bindings/arm/socionext/uniphier.yaml           |    1
->  arch/arm64/boot/dts/socionext/Makefile             |    1
->  .../boot/dts/socionext/uniphier-ld20-akebi96.dts   |  189 ++++++++++++++++++++
->  3 files changed, 191 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts
->
+>  drivers/gpu/drm/ingenic/ingenic-drm.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
+> b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> index 6d47ef7b148c..bcba2f024842 100644
+> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> @@ -843,6 +843,7 @@ static const struct of_device_id=20
+> ingenic_drm_of_match[] =3D {
+>  	{ .compatible =3D "ingenic,jz4770-lcd", .data =3D &jz4770_soc_info },
+>  	{ /* sentinel */ },
+>  };
+> +MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
+>=20
+>  static struct platform_driver ingenic_drm_driver =3D {
+>  	.driver =3D {
 > --
-> Masami Hiramatsu <masami.hiramatsu@linaro.org>
->
+> 2.25.1
+>=20
 
 
--- 
-Best Regards
-Masahiro Yamada
