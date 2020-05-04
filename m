@@ -2,109 +2,116 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F83C47257
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 01:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB4DC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 01:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 457822073B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 01:33:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mxItMKtR"
+	by mail.kernel.org (Postfix) with ESMTP id 4AE77206E6
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 01:35:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588556151;
+	bh=6QNsRipM6sMiQLp4Nrx1GDPocIQ2SNMCghZKmrGxthU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2lD3GL8LZFyjM0LEIRI/52ETGoW4xszz+1Y92j36qIPiOvxemhGsMvQOO9nf0rnPR
+	 Gi1ugKgFELOugWxN2KSVC0rJsjnQ4bnuNzPINic6k/I+gXCrbx3FdGPSHKw58PJ59m
+	 iICs/vNOWFtRKD96y922j0u8lznku81phtbvvwaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgEDBdO (ORCPT
+        id S1727032AbgEDBfu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 21:33:14 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:58868 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbgEDBdO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 21:33:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1588555991; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s3kVnM/pt0oggUIsiHNmQoFutX1dSCYY6TB3Lm6oLFE=;
-        b=mxItMKtRyij5x/wPWOz13FGJPQjbal6rSoJWpgE2O0yRMR788cFDS8oY/lU7J32gz/QGX9
-        wZTwogoNRBP8FYfj7KyPbrYAqfdVnWIPCIzTR9T3oCM4x5478uCuGUeYjZPuPKUYltHhOe
-        hRlxtN57Okse4d6QbeTj8le1efh8CVs=
-Date:   Mon, 04 May 2020 03:32:58 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [RFC v3 2/8] drm: ingenic-drm: add MODULE_DEVICE_TABLE
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Kees Cook <keescook@chromium.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        mips-creator-ci20-dev@googlegroups.com
-Message-Id: <YM9S9Q.3YCM1LVLIS2O3@crapouillou.net>
-In-Reply-To: <02c8f35fde969fd852a62740b4fa8a01c53b79ef.1585503354.git.hns@goldelico.com>
-References: <cover.1585503354.git.hns@goldelico.com>
-        <02c8f35fde969fd852a62740b4fa8a01c53b79ef.1585503354.git.hns@goldelico.com>
+        Sun, 3 May 2020 21:35:50 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:30256 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgEDBfu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 21:35:50 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 0441ZORC010767
+        for <devicetree@vger.kernel.org>; Mon, 4 May 2020 10:35:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 0441ZORC010767
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588556124;
+        bh=DRkC1bJ0TkEaWLS3KyDJw8Cx1kzwiHdb1l+o/felGvI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oz3bel1XLpb4VlBTN7I4ICO3DE7odUkFbgK2ibUAQQeUov1mAY6Vha5+4+UWuXhc3
+         N2DPzeCF+jtcHfoaMNjzOX32loAxadq0rnDaAP43Z9Ud57HTGhGAxmu8LD5DzPXVxh
+         u0DC/I5cbqcNoPIPZC6LZuRpj/XLL/Oy+3b/8LmjAmDcgacWH7OPbwHzkwp1zze9HO
+         x8llLVkqKMAkWvNLOg9XcXkhiAVwCZuEWgkoGw7WCGo3IWrPFBZrL6AQLpNMXjvlCE
+         K+MaLTz/I1bK11t3It9sRSkn14rl+N++BKhlqIgMqcoGmnMIm1RiAgLPxgC1fk67iV
+         rYcmFQgtYFEDg==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id u12so7192230vsq.0
+        for <devicetree@vger.kernel.org>; Sun, 03 May 2020 18:35:24 -0700 (PDT)
+X-Gm-Message-State: AGi0Pubpu3/w73x/c6kKtllAaVsk+IW+q8NZkBBoE/Lphn2mNUgj1Ouk
+        EN0e8FDtbcdYMGIHzuar5dMcp/u0S1jSpjUirYQ=
+X-Google-Smtp-Source: APiQypLT53uey5JdzAYN6Vjy9qaj3XgS8IoCGnlBWwZ/GqwK7P7LQ3bxlDbZXZOVVdPBnQjqIYYHoVP/LimU2RuBNmw=
+X-Received: by 2002:a67:e94d:: with SMTP id p13mr10051129vso.215.1588556123275;
+ Sun, 03 May 2020 18:35:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20200501015147.32391-1-marek.behun@nic.cz> <CAK7LNARhK08CcDNij25PR0_r2A27Qx+psQp50_AgDJijexDAiA@mail.gmail.com>
+ <20200501170816.2f95a2ad@nic.cz> <CAK7LNARo7tErhQzxsOktwrrBcu+W5Wz4VqadrcyiTRHeL6-F4w@mail.gmail.com>
+ <20200502201621.2b93dda4@nic.cz>
+In-Reply-To: <20200502201621.2b93dda4@nic.cz>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 4 May 2020 10:34:47 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASKKAGAub5-2XRyig9fpwYq3MHV-a0eY0F_-o+ajtJo+Q@mail.gmail.com>
+Message-ID: <CAK7LNASKKAGAub5-2XRyig9fpwYq3MHV-a0eY0F_-o+ajtJo+Q@mail.gmail.com>
+Subject: Re: [PATCH] dtc: Use better check for libyaml
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Pavel Modilaynen <pavel.modilaynen@axis.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nikolaus,
+On Sun, May 3, 2020 at 3:16 AM Marek Behun <marek.behun@nic.cz> wrote:
+>
+> On Sun, 3 May 2020 02:56:42 +0900
+> Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> > You missed to see the cost of parsing the Makefile.
+> >
+> >
+> > scripts/dtc/Makefile is parsed every time
+> > you run 'make'.
+> >
+> > Even if you have nothing to recompile,
+> > it builds the tiny program in background.
+> >
+> > This happens for 'make mrproper' too.
+>
+> I missed this point by a large margin indeed.
+>
+> > Maybe, file a bug report to your distribution
+> > if the pc file is strangely installed?
+> >
+> > ...
+>
+> Very well, thank you for elaborating on that. Sorry this took your time.
+
+No problem.
+
+> Now that I know this, wouldn't it make more sense to decide
+> whether to build yamltree.c or not in config stage, eg. in a Kconfig
+> file? Because now it seems that pkg-config is being run everytime we run
+> make. I understand that it is much cheaper than gcc, but either way...
 
 
-Le dim. 29 mars 2020 =E0 19:35, H. Nikolaus Schaller <hns@goldelico.com>=20
-a =E9crit :
-> so that the driver can load by matching the device tree
-> if compiled as module.
->=20
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-
-Please add:
-
-Cc: stable@vger.kernel.org # v5.3+
-Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
-
-And re-send this patch alone, then I can merge it ASAP.
-
-Cheers,
--Paul
-
-> ---
->  drivers/gpu/drm/ingenic/ingenic-drm.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
-> b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> index 6d47ef7b148c..bcba2f024842 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> @@ -843,6 +843,7 @@ static const struct of_device_id=20
-> ingenic_drm_of_match[] =3D {
->  	{ .compatible =3D "ingenic,jz4770-lcd", .data =3D &jz4770_soc_info },
->  	{ /* sentinel */ },
->  };
-> +MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
->=20
->  static struct platform_driver ingenic_drm_driver =3D {
->  	.driver =3D {
-> --
-> 2.25.1
->=20
+'make dt_binding_check' does not even require the .config
 
 
+I do not like to run pkg-config while parsing Makefile.
+Another solution is to build two dtc variants,
+with/without yaml.
+
+> Marek
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
