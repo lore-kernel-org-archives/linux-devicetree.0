@@ -2,225 +2,224 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7C1C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 06:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE21C47257
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 07:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C382520721
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 06:36:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="w0XGA768"
+	by mail.kernel.org (Postfix) with ESMTP id 39C842078E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 07:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgEDGgB (ORCPT
+        id S1726625AbgEDHIa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 02:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgEDGgA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 02:36:00 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055FDC061A10
-        for <devicetree@vger.kernel.org>; Sun,  3 May 2020 23:35:58 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id h30so10443804vsr.5
-        for <devicetree@vger.kernel.org>; Sun, 03 May 2020 23:35:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5sFJYLc/0VUdiszQsskqwyzqT4X+yBo4BGoRsgAELP8=;
-        b=w0XGA768oHIzv2ggftjQOGlT6jWI8cD7B/hFDXHnLiHdftXRdssuj+DM4uSXaAgTpI
-         5eIRxvoNBR8MEvD36bWKlbPvLEDKwUaPPeTE7oEtxH9uWFLOVHeWFq9iaT09woZiUbxX
-         gOw+c2Ar5IMdSlobe97mK788mPLoWO8d9s6FwRa9XSNKkaRWZPOiFPcNlRH4P5Zdjafm
-         qqbpoJ9LX9jm5/aYTAShd4JXVlfZ46AZyX9VBNiDjTcx4j/wrfDuGnaXfnRPVoM8nMbm
-         Kx+ofGOiNwHx2Q+ryv2D60qNRiv1rSS4a/IsD/R9d37W89kor/isaYMqwaQurXpzcBKe
-         Jl+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5sFJYLc/0VUdiszQsskqwyzqT4X+yBo4BGoRsgAELP8=;
-        b=GtRJANGLZt7q1XEJq0vXQRRkK98X+YjOx6bV2sQTAMlNaZXQJeSMMMWMxWsZcUreh/
-         AE8d3iT3FR3TauRMtqKCe9SEcn7m89B81yLJZ5ZcoLvIQp+wWjasqWdSmqv2gZD/H2o1
-         WhT32MbZBRcYb64aOBfcN88oK61ctZHwc0O0QVhOcrHiKKkuYlhWykgi7/LmViiWtBXz
-         xN5y9EZEWjc1H2RhPj3bwL+BCKTc9LW88fs0z7bcVPabMPXQLvxAnlRH+Rh5orN+wFvB
-         7PdjMbsVrkwWeFv9Iz38+/WyQrbmIva4hv+qJmFkOpZWnp3+rfu8sNGLo5iaoISKSP4e
-         7UGg==
-X-Gm-Message-State: AGi0PubEIDZPXsCMxNt0t60C01T2bQ0oywi2ljeQrDwABV0izeFyYgdG
-        PGPwaC9JCzdyVkmUeIhR911/KBK8kJKyrw9TcvBM3Q==
-X-Google-Smtp-Source: APiQypKTJI0Xlt9dGE+0uJMLYsCNcQkeRzkxYMbdYpJXByDZ7vhKcQaxHvTj/nEv+e1qF1f+EkvX1YRc9YSoLnOdaBo=
-X-Received: by 2002:a67:bd07:: with SMTP id y7mr11154865vsq.109.1588574157839;
- Sun, 03 May 2020 23:35:57 -0700 (PDT)
+        Mon, 4 May 2020 03:08:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53672 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgEDHIa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 03:08:30 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BB7F32A0DA5;
+        Mon,  4 May 2020 08:08:27 +0100 (BST)
+Date:   Mon, 4 May 2020 09:08:24 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de
+Cc:     cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        masonccyang@mxic.com.tw, anders.roxell@linaro.org, vigneshr@ti.com,
+        arnd@arndb.de, hauke.mehrtens@intel.com, richard@nod.at,
+        brendanhiggins@google.com, linux-mips@vger.kernel.org,
+        robh+dt@kernel.org, linux-mtd@lists.infradead.org,
+        miquel.raynal@bootlin.com, qi-ming.wu@intel.com,
+        andriy.shevchenko@intel.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200504090824.1eb16b78@collabora.com>
+In-Reply-To: <df7c1952-bc9b-bad7-bf31-d09707a0829e@linux.intel.com>
+References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429162249.55d38ee8@collabora.com>
+        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
+        <20200429164832.6800fc70@collabora.com>
+        <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
+        <20200429173107.5c6d2f55@collabora.com>
+        <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
+        <20200430102114.29b6552f@collabora.com>
+        <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
+        <20200430103658.4b0b979e@collabora.com>
+        <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
+        <20200430143600.27031639@collabora.com>
+        <20200430150124.7856d112@collabora.com>
+        <df7c1952-bc9b-bad7-bf31-d09707a0829e@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <20200427072342.5499-1-jian-hong@endlessm.com> <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
-In-Reply-To: <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Mon, 4 May 2020 14:35:08 +0800
-Message-ID: <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B44=E6=9C=8829=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8812:21=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi,
->
-> On Mon, Apr 27, 2020 at 03:23:42PM +0800, Jian-Hong Pan wrote:
-> > Hi Maxime,
-> >
-> > Thanks for your V2 patch series!  I'm testing it.
-> >
-> > This patch series is applied upon mainline kernel 5.7-rc2 cleanly and b=
-uilt.
-> > System can boot into console text mode, but no graphic UI.
-> >
-> > Get the error in vc5_hdmi_phy_init(), and full dmesg is at [1]:
-> >
-> > [    5.587543] vc4_hdmi fef00700.hdmi: Unknown register ID 46
-> > [    5.587700] debugfs: Directory 'fef00700.hdmi' with parent 'vc4-hdmi=
-' already present!
-> > [    5.588070] vc4_hdmi fef00700.hdmi: vc4-hdmi-hifi <-> fef00700.hdmi =
-mapping ok
-> > [    5.588076] vc4_hdmi fef00700.hdmi: ASoC: no DMI vendor name!
-> > [    5.588263] vc4-drm gpu: bound fef00700.hdmi (ops vc4_hdmi_ops)
-> > [    5.588299] vc4_hdmi fef05700.hdmi: Unknown register ID 46
-> > [    5.588373] debugfs: Directory 'vc4-hdmi' with parent 'asoc' already=
- present!
-> > [    5.588673] vc4_hdmi fef05700.hdmi: vc4-hdmi-hifi <-> fef05700.hdmi =
-mapping ok
-> > [    5.588677] vc4_hdmi fef05700.hdmi: ASoC: no DMI vendor name!
-> > [    5.588809] vc4-drm gpu: bound fef05700.hdmi (ops vc4_hdmi_ops)
-> > [    5.588854] vc4-drm gpu: bound fe806000.vec (ops vc4_vec_ops)
-> > [    5.588897] vc4-drm gpu: bound fe004000.txp (ops vc4_txp_ops)
-> > [    5.588934] vc4-drm gpu: bound fe400000.hvs (ops vc4_hvs_ops)
-> > [    5.588990] vc4-drm gpu: bound fe206000.pixelvalve (ops vc4_crtc_ops=
-)
-> > [    5.589030] vc4-drm gpu: bound fe207000.pixelvalve (ops vc4_crtc_ops=
-)
-> > [    5.589074] vc4-drm gpu: bound fe20a000.pixelvalve (ops vc4_crtc_ops=
-)
-> > [    5.589106] vc4-drm gpu: bound fe216000.pixelvalve (ops vc4_crtc_ops=
-)
-> > [    5.589145] vc4-drm gpu: bound fec12000.pixelvalve (ops vc4_crtc_ops=
-)
-> > [    5.589294] checking generic (3e513000 6d8c00) vs hw (0 ffffffffffff=
-ffff)
-> > [    5.589297] fb0: switching to vc4drmfb from simple
-> > [    5.589433] Console: switching to colour dummy device 80x25
-> > [    5.589481] [drm] Supports vblank timestamp caching Rev 2 (21.10.201=
-3).
-> > [    5.589816] [drm] Initialized vc4 0.0.0 20140616 for gpu on minor 0
-> > [    5.601079] ------------[ cut here ]------------
-> > [    5.601095] WARNING: CPU: 2 PID: 127 at drivers/gpu/drm/vc4/vc4_hdmi=
-_phy.c:413 vc5_hdmi_phy_init+0x7ac/0x2078
-> > [    5.601097] Modules linked in:
-> > [    5.601103] CPU: 2 PID: 127 Comm: kworker/2:1 Not tainted 5.7.0-rc2-=
-00091-ga181df59a930 #7
-> > [    5.601105] Hardware name: Raspberry Pi 4 Model B (DT)
-> > [    5.601112] Workqueue: events deferred_probe_work_func
-> > [    5.601116] pstate: 20000005 (nzCv daif -PAN -UAO)
-> > [    5.601119] pc : vc5_hdmi_phy_init+0x7ac/0x2078
-> > [    5.601123] lr : vc4_hdmi_encoder_enable+0x1b8/0x1ac0
-> > [    5.601124] sp : ffff80001217b410
-> > [    5.601126] x29: ffff80001217b410 x28: ffff0000ec6370f0
-> > [    5.601129] x27: ffff0000f650d400 x26: 000000008a500000
-> > [    5.601132] x25: ffff8000113b4ac0 x24: 0000000000002060
-> > [    5.601135] x23: 000000000a500000 x22: 0000000000000300
-> > [    5.601137] x21: 0000000008d9ee20 x20: ffff0000ec535080
-> > [    5.601140] x19: 000000010989e7c0 x18: 0000000000000000
-> > [    5.601142] x17: 0000000000000001 x16: 0000000000005207
-> > [    5.601145] x15: 00004932ad293c92 x14: 0000000000000137
-> > [    5.601147] x13: ffff800010015000 x12: 0000000000000001
-> > [    5.601150] x11: 0000000000000001 x10: 0000000000000000
-> > [    5.601152] x9 : 0000000000000000 x8 : ffff800010015038
-> > [    5.601154] x7 : 0000000000000001 x6 : ffff80001217b368
-> > [    5.601157] x5 : 0000000000000000 x4 : 000000000000004c
-> > [    5.601159] x3 : 0000000000000000 x2 : ffff8000113b4ac0
-> > [    5.601162] x1 : ffff8000120c5f44 x0 : 00000000dc8984ff
-> > [    5.601164] Call trace:
-> > [    5.601169]  vc5_hdmi_phy_init+0x7ac/0x2078
-> > [    5.601172]  vc4_hdmi_encoder_enable+0x1b8/0x1ac0
-> > [    5.601176]  drm_atomic_helper_commit_modeset_enables+0x224/0x248
-> > [    5.601179]  vc4_atomic_complete_commit+0x400/0x558
-> > [    5.601182]  vc4_atomic_commit+0x1e0/0x200
-> > [    5.601185]  drm_atomic_commit+0x4c/0x60
-> > [    5.601190]  drm_client_modeset_commit_atomic.isra.0+0x17c/0x238
-> > [    5.601192]  drm_client_modeset_commit_locked+0x5c/0x198
-> > [    5.601195]  drm_client_modeset_commit+0x30/0x58
-> > [    5.601201]  drm_fb_helper_restore_fbdev_mode_unlocked+0x78/0xe0
-> > [    5.601204]  drm_fb_helper_set_par+0x30/0x68
-> > [    5.601208]  fbcon_init+0x3d4/0x598
-> > [    5.601212]  visual_init+0xb0/0x108
-> > [    5.601214]  do_bind_con_driver+0x1d0/0x3a8
-> > [    5.601217]  do_take_over_console+0x144/0x208
-> > [    5.601219]  do_fbcon_takeover+0x68/0xd8
-> > [    5.601222]  fbcon_fb_registered+0x100/0x118
-> > [    5.601226]  register_framebuffer+0x1f4/0x338
-> > [    5.601229]  __drm_fb_helper_initial_config_and_unlock+0x2f8/0x4a0
-> > [    5.601232]  drm_fbdev_client_hotplug+0xd4/0x1b0
-> > [    5.601235]  drm_fbdev_generic_setup+0xb0/0x130
-> > [    5.601238]  vc4_drm_bind+0x184/0x1a0
-> > [    5.601241]  try_to_bring_up_master+0x168/0x1c8
-> > [    5.601244]  __component_add+0xa4/0x170
-> > [    5.601246]  component_add+0x14/0x20
-> > [    5.601248]  vc4_vec_dev_probe+0x20/0x30
-> > [    5.601252]  platform_drv_probe+0x54/0xa8
-> > [    5.601254]  really_probe+0xd8/0x320
-> > [    5.601256]  driver_probe_device+0x58/0xf0
-> > [    5.601258]  __device_attach_driver+0x84/0xc8
-> > [    5.601263]  bus_for_each_drv+0x78/0xc8
-> > [    5.601265]  __device_attach+0xe4/0x140
-> > [    5.601267]  device_initial_probe+0x14/0x20
-> > [    5.601269]  bus_probe_device+0x9c/0xa8
-> > [    5.601271]  deferred_probe_work_func+0x74/0xb0
-> > [    5.601276]  process_one_work+0x1bc/0x338
-> > [    5.601279]  worker_thread+0x1f8/0x428
-> > [    5.601282]  kthread+0x138/0x158
-> > [    5.601286]  ret_from_fork+0x10/0x1c
-> > [    5.601288] ---[ end trace cfba0996218c3f3d ]---
->
-> Thanks for testing!
->
-> Do you have a bit more details regarding your setup? Was it connected to =
-an
-> external display?
+On Mon, 4 May 2020 10:02:35 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-Yes, the HDMI cable is connected to HDMI0 port on RPi 4.
+> Hi Boris,
+> 
+> On 30/4/2020 9:01 pm, Boris Brezillon wrote:
+> > On Thu, 30 Apr 2020 14:36:00 +0200
+> > Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> >   
+> >> On Thu, 30 Apr 2020 17:07:03 +0800
+> >> "Ramuthevar, Vadivel MuruganX"
+> >> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >>  
+> >>>>>> The question is, is it the same value we have in nand_pa or it is
+> >>>>>> different?
+> >>>>>>           
+> >>>>> Different address which is 0xE1400000 NAND_BASE_PHY address.  
+> >>>>
+> >>>> Then why didn't you tell me they didn't match when I suggested to pass  
+> >>>
+> >>> sorry, because you keep asking nand_pa after that only I realized that.
+> >>>      
+> >>>> nand_pa? So now the question is, what does this address represent?  
+> >>>
+> >>>                  EBU-MODULE
+> >>>    _________     _______________________
+> >>> |         |   |            |NAND CTRL  |
+> >>> | FPI BUS |==>| CS0(0x174) | 0xE100    ( 0xE14/0xE1C) NAND_PHY_BASE
+> >>> |_________|   |_CS1(0x17C)_|__________ |
+> >>>
+> >>> EBU_CONRTROLLER_BASE : 0xE0F0_0000
+> >>> HSNAND_BASE: 0xE100_0000
+> >>> NAND_CS0: 0xE140_0000
+> >>> NAND_CS1: 0xE1C0_0000
+> >>>
+> >>> MEM_REGION_BASE_CS0: 0x17400 (internal to ebu controller )
+> >>> MEM_REGION_BASE_CS1: 0x17C00
+> >>>      
+> >>
+> >> Hm, I wonder if we shouldn't use a 'ranges' property to describe this
+> >> address translation. Something like
+> >>
+> >> 	ebu@xxx {
+> >> 		ranges = <0x17400000 0xe1400000 0x1000>,
+> >> 			 <0x17c00000 0xe1c00000 0x1000>;
+> >> 		reg = <0x17400000>, <0x17c00000>;
+> >> 		reg-names = "cs-0", "cs-1";
+> >> 	}
+> >>
+> >> The translated address (0xE1X00000) will be available in res->start,
+> >> and the non-translated one (0x17X00000) can be retrieved with
+> >> of_get_address(). All you'd have to do then would be calculate the
+> >> mask:
+> >>
+> >> 	mask = (translated_address & original_address) >> 22;
+> >> 	num_comp_bits = fls(mask);
+> >> 	WARN_ON(mask != GENMASK(num_comp_bits - 1, 0));
+> >>
+> >> Which allows you to properly set the ADDR_SEL() register without
+> >> relying on some hardcoded values:
+> >>
+> >> 	writel(original_address | EBU_ADDR_SEL_REGEN |
+> >> 	       EBU_ADDR_COMP_BITS(num_comp_bits),
+> >> 	       ebu_host->ebu + EBU_ADDR_SEL(csid));
+> >>
+> >> That's quite important if we want to merge the xway NAND driver with
+> >> this one.  
+> > 
+> > Looks like the translation is done at the FPI bus declaration level (see
+> > [1]). We really need to see the big picture to take a wise decision
+> > about the bindings. Would you mind pasting your dsti/dts files
+> > somewhere? It feels like the NAND controller is a sub-part of a more
+> > generic 'memory' controller, in which case the NAND controller should be
+> > declared as a child of this generic memory bus (called localbus in [1],
+> > but maybe EBU is more accurate).
+> > 
+> > [1]https://github.com/xieyaxiongfly/Atheros_CSI_tool_OpenWRT_src/blob/master/target/linux/lantiq/files-4.14/arch/mips/boot/dts/vr9.dtsi#L162  
+> 
+> 
+>   ebu_nand: ebu_nand@e0f00000 {
+>                   compatible = "intel,lgm-ebu-nand";
+>                   reg = <0xe0f00000 0x100
+>                   0xe1000000 0x300
+>                   0xe1400000 0x80000
+>                   0xe1c00000 0x10000>;
+>                   reg-names = "ebunand", "hsnand", "nand_cs0", nand_cs1";
+>                   dmas = <&dma0 8>, <&dma0 9>;
+>                   dma-names = "ebu_rx", "ebu_tx";
+>                   clocks =  <&cgu0 LGM_GCLK_EBU>;
+>           };
+> 
+> 
+> 	 &ebu_nand {
+> 	         status = "disabled";
+> 	        nand,cs = <1>;
+> 	        nand-ecc-mode = "hw";
+> 	        pinctrl-names = "default";
+> 	        pinctrl-0 = <&ebu_nand_base &ebu_cs1>;
+> 	};
+> 
+> >   
 
-> If so, do you know the resolution it was trying to setup?
+Ok. If I understand the SoC topology correctly it should actually be
+something like that:
 
-According to the log, I think it is 1920x1080:
-Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-HDMI-1 connected
-Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-HDMI-2 disconnected
-Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-Composite-1 disconnected
-Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Using
-exact sizes for initial modes
-Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-HDMI-1 using initial mode 1920x1080 +0+0
+{
+	...
+	fpi@xxxxx {
+		compatible = "intel,lgm-fpi", "simple-bus";
 
-https://gist.github.com/starnight/45e1468bfa0426a54d2fb4a9269cfb94
+		/* You might have other ranges to define here */
+		ranges = <0x16000000 0xe0000000 0x1000000>;
 
-Regards,
-Jian-Hong Pan
+		...
+
+		ebu@xxxx {
+			compatible = "intel,lgm-ebu", "simple-bus";
+			ranges;
+			pinctrl-names = "default";
+			pinctrl-0 = <&ebu_nand_base &ebu_cs1>;
+
+			/*
+			 * Add your PCI and NOR controller definitions
+			 * here.
+			 */
+			...
+			
+			nand-controller@16f00000 {
+				compatible = "intel,lgm-ebu-nand-controller";
+				reg = <0x16f00000 0x100>,
+				      <0x17000000 0x300>,
+				      <0x17400000 0x80000>,
+				      <0x17c00000 0x10000>;
+				reg-names = "ebunand", "hsnand",
+					     "cs0", cs1";
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				/*
+				 * I'm not sure if those belong here: if the
+				 * DMA channels and clocks are shared by all
+				 * controllers attached to the EBU they should
+				 * be moved to the EBU node.
+				 */
+				dmas = <&dma0 8>, <&dma0 9>;
+				dma-names = "rx", "tx";
+				clocks =  <&cgu0 LGM_GCLK_EBU>;
+
+				nand@1 {
+					reg = <1>;
+					nand-ecc-mode = "hw";
+				}
+			}
+		}
+	}
+}
