@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CDBC4725E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22411C47261
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A77D2073B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DD82073E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:04:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgEDNEi (ORCPT
+        id S1726351AbgEDNEj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 09:04:38 -0400
+        Mon, 4 May 2020 09:04:39 -0400
 Received: from mga05.intel.com ([192.55.52.43]:6156 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbgEDNEi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1727786AbgEDNEi (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 4 May 2020 09:04:38 -0400
-IronPort-SDR: 9rXoPjuLN1pirf030DlFsV3RcnxKwXCtmSb5dITtI93Z/nKo4dCY9H6PkUng0Jb5b//oH55OdK
- yPd7sahNKTTg==
+IronPort-SDR: TtgTezEb+9qlct/nP85McwfOWYvFH3Q/w2KHVDGDq1JmtPPqesCPu1/809U8bwyPZs+oALqqXC
+ aSKFKqpTTx7Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 06:04:02 -0700
-IronPort-SDR: HlYQI4d3Q8q7OdfVV3iIJ2JeSyclQtt/4vyTH8Iwk/J50QfcLrVo/wOAykWwwjDd3l9xxMr4Wx
- X9C9gm3isK0Q==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 06:04:07 -0700
+IronPort-SDR: qjVVk1GkjHMk7o5oMemIbw0p9D5QWhRIUugE3sBTzk2uBoZ1cf84sdUkUq5AX/UqHZoLSBivUY
+ p7+NRvnehHUg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
-   d="scan'208";a="249169134"
+   d="scan'208";a="249169155"
 Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
-  by fmsmga007.fm.intel.com with ESMTP; 04 May 2020 06:04:00 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 04 May 2020 06:04:04 -0700
 From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
 To:     broonie@kernel.org, robh+dt@kernel.org
 Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
         andriy.shevchenko@linux.intel.com,
         wan.ahmad.zainie.wan.mohamad@intel.com
-Subject: [PATCH v4 5/7] spi: dw: Add support for Intel Keem Bay SPI
-Date:   Mon,  4 May 2020 21:02:44 +0800
-Message-Id: <20200504130246.5135-6-wan.ahmad.zainie.wan.mohamad@intel.com>
+Subject: [PATCH v4 7/7] dt-bindings: spi: dw-apb-ssi: Convert bindings to json-schema
+Date:   Mon,  4 May 2020 21:02:46 +0800
+Message-Id: <20200504130246.5135-8-wan.ahmad.zainie.wan.mohamad@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200504130246.5135-1-wan.ahmad.zainie.wan.mohamad@intel.com>
 References: <20200504130246.5135-1-wan.ahmad.zainie.wan.mohamad@intel.com>
@@ -48,67 +48,144 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for Intel Keem Bay SPI controller, which uses DesignWare
-DWC_ssi core. Bit 31 of CTRLR0 register is added for Keem Bay, to
-configure the device as a master or as a slave serial peripheral.
+Convert the Synopsis DesignWare dw-apb-ssi binding to DT schema format
+using json-schema.
 
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/spi/spi-dw-mmio.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ .../bindings/spi/snps,dw-apb-ssi.txt          | 42 -----------
+ .../bindings/spi/snps,dw-apb-ssi.yaml         | 72 +++++++++++++++++++
+ 2 files changed, 72 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
 
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index 1df6f3deee2c..abd3bb5e52db 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -44,6 +44,13 @@ struct dw_spi_mmio {
- #define MSCC_SPI_MST_SW_MODE_SW_PIN_CTRL_MODE	BIT(13)
- #define MSCC_SPI_MST_SW_MODE_SW_SPI_CS(x)	(x << 5)
- 
-+/*
-+ * For Keem Bay, CTRLR0[31] is used to select controller mode.
-+ * 0: SSI is slave
-+ * 1: SSI is master
-+ */
-+#define KEEMBAY_CTRLR0_SSIC_IS_MST		BIT(31)
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+deleted file mode 100644
+index 7a4702edf896..000000000000
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
+-
+-Required properties:
+-- compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
+-  "jaguar2", or "amazon,alpine-dw-apb-ssi", or "snps,dwc-ssi-1.01a" or
+-  "intel,keembay-ssi"
+-- reg : The register base for the controller. For "mscc,<soc>-spi", a second
+-  register set is required (named ICPU_CFG:SPI_MST)
+-- interrupts : One interrupt, used by the controller.
+-- #address-cells : <1>, as required by generic SPI binding.
+-- #size-cells : <0>, also as required by generic SPI binding.
+-- clocks : phandles for the clocks, see the description of clock-names below.
+-   The phandle for the "ssi_clk" is required. The phandle for the "pclk" clock
+-   is optional. If a single clock is specified but no clock-name, it is the
+-   "ssi_clk" clock. If both clocks are listed, the "ssi_clk" must be first.
+-
+-Optional properties:
+-- clock-names : Contains the names of the clocks:
+-    "ssi_clk", for the core clock used to generate the external SPI clock.
+-    "pclk", the interface clock, required for register access. If a clock domain
+-     used to enable this clock then it should be named "pclk_clkdomain".
+-- cs-gpios : Specifies the gpio pins to be used for chipselects.
+-- num-cs : The number of chipselects. If omitted, this will default to 4.
+-- reg-io-width : The I/O register width (in bytes) implemented by this
+-  device.  Supported values are 2 or 4 (the default).
+-
+-Child nodes as per the generic SPI binding.
+-
+-Example:
+-
+-	spi@fff00000 {
+-		compatible = "snps,dw-apb-ssi";
+-		reg = <0xfff00000 0x1000>;
+-		interrupts = <0 154 4>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		clocks = <&spi_m_clk>;
+-		num-cs = <2>;
+-		cs-gpios = <&gpio0 13 0>,
+-			   <&gpio0 14 0>;
+-	};
+-
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+new file mode 100644
+index 000000000000..edc1e6fb9993
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/spi/snps,dw-apb-ssi.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- struct dw_spi_mscc {
- 	struct regmap       *syscon;
- 	void __iomem        *spi_mst;
-@@ -155,6 +162,24 @@ static int dw_spi_dwc_ssi_init(struct platform_device *pdev,
- 	return 0;
- }
- 
-+static u32 dw_spi_update_cr0_keembay(struct spi_controller *master,
-+				     struct spi_device *spi,
-+				     struct spi_transfer *transfer)
-+{
-+	u32 cr0 = dw_spi_update_cr0_v1_01a(master, spi, transfer);
++title: Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface
 +
-+	return cr0 | KEEMBAY_CTRLR0_SSIC_IS_MST;
-+}
++maintainers:
++  - Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
 +
-+static int dw_spi_keembay_init(struct platform_device *pdev,
-+			       struct dw_spi_mmio *dwsmmio)
-+{
-+	/* Register hook to configure CTRLR0 */
-+	dwsmmio->dws.update_cr0 = dw_spi_update_cr0_keembay;
++allOf:
++  - $ref: "spi-controller.yaml#"
 +
-+	return 0;
-+}
++properties:
++  compatible:
++    enum:
++      - mscc,ocelot-spi
++      - mscc,jaguar2-spi
++      - amazon,alpine-dw-apb-ssi
++      - snps,dw-apb-ssi
++      - snps,dwc-ssi-1.01a
++      - intel,keembay-ssi
 +
- static int dw_spi_mmio_probe(struct platform_device *pdev)
- {
- 	int (*init_func)(struct platform_device *pdev,
-@@ -254,6 +279,7 @@ static const struct of_device_id dw_spi_mmio_of_match[] = {
- 	{ .compatible = "amazon,alpine-dw-apb-ssi", .data = dw_spi_alpine_init},
- 	{ .compatible = "renesas,rzn1-spi", .data = dw_spi_dw_apb_init},
- 	{ .compatible = "snps,dwc-ssi-1.01a", .data = dw_spi_dwc_ssi_init},
-+	{ .compatible = "intel,keembay-ssi", .data = dw_spi_keembay_init},
- 	{ /* end of table */}
- };
- MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
++  reg:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: The register base for the controller.
++      - description: For "mscc,<soc>-spi", a second register set is required.
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: The core clock used to generate the external SPI clock.
++      - description: The interface clock required for register access.
++
++  clock-names:
++    items:
++      - const: ssi_clk
++      - const: pclk
++
++  reg-io-width:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [ 2, 4 ]
++      - default: 4
++    description: The I/O register width (in bytes) implemented by this device.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++examples:
++  - |
++    spi@fff00000 {
++          compatible = "snps,dw-apb-ssi";
++          reg = <0xfff00000 0x1000>;
++          interrupts = <0 154 4>;
++          #address-cells = <1>;
++          #size-cells = <0>;
++          clocks = <&spi_m_clk>;
++          num-cs = <2>;
++          cs-gpios = <&gpio0 13 0>,
++                     <&gpio0 14 0>;
++    };
 -- 
 2.17.1
 
