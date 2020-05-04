@@ -2,144 +2,132 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760E5C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 09:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A167CC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 09:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50C28206D9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 09:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B2220735
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 09:55:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Lbf9qoq4"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="D6aHVIcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgEDJil (ORCPT
+        id S1728003AbgEDJzf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 05:38:41 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58410 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728254AbgEDJil (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 05:38:41 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0449cUal125935;
-        Mon, 4 May 2020 04:38:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588585110;
-        bh=+cbr2QlNAaibYB5T0a54zsT/SDvBAOzBQ5jH0LGi8Y0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Lbf9qoq4Jk0OowNS2ngnfusqKPqnL9Obkrk7KFF+xBVDdk2RtsXgK1uTsdo6hYGkW
-         g41z1b0+4k5UB4N2R92yGWGzY2lp9X948/d8cJqg3kad2k9HSiWHIWrjHEXZOMutKu
-         2Y+HVo0bqqKuzpzYm6Cqx/xGuoZ/hGsTY2aTv0jM=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0449cTdd116394;
-        Mon, 4 May 2020 04:38:29 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 04:38:29 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 04:38:29 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0449cPB8118676;
-        Mon, 4 May 2020 04:38:26 -0500
-Subject: Re: [PATCH 1/5] dt-bindings: soc: ti: add binding for k3 platforms
- chipid module
-To:     Dave Gerlach <d-gerlach@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200423180545.13707-1-grygorii.strashko@ti.com>
- <20200423180545.13707-2-grygorii.strashko@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <0c677af8-5a5a-8b34-0670-c63f9dfe7f2f@ti.com>
-Date:   Mon, 4 May 2020 12:38:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 05:55:35 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:25940 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726666AbgEDJze (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 05:55:34 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0449nnq2007402;
+        Mon, 4 May 2020 04:55:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=Fm1J7g/JRIbmU3EdCnEXz28Wj6sWvMfBWuouoriZhx0=;
+ b=D6aHVIcRnxg/gacD02wMrSQ1LbAbatxUoQkkkO94RqfxyFf+M1VIAR4h4S5yaRTl9qA7
+ 3R5RW/EXj2uRZYNpP6tsdpxxIlqR9nWt+5qdykByHZPT/kpivCwywbuT0Ku3uPLZ+ZR+
+ Whq/4MUU6I9AGooiNfECPq7YsCF6HpzII0UmBb5A1D/Kwdg1wu8s/nroIc2iUwdgilPz
+ kiynTQ9beBF497OqoeIBh7wov7FtruhSvtkH+6OvR4vd25fHIca2LkC4ZA8FbHbwFd7G
+ Ey4p25vkTop2ufbmAmlhkxHaWWKImzZuSsAauXaLm5iIWQDApuIyZyf3csHaen3eXDbQ 1A== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 30s69330km-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 04 May 2020 04:55:10 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 4 May 2020
+ 10:55:08 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Mon, 4 May 2020 10:55:08 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 08A97448;
+        Mon,  4 May 2020 09:55:08 +0000 (UTC)
+Date:   Mon, 4 May 2020 09:55:08 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <lee.jones@linaro.org>, <broonie@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <jdelvare@suse.com>,
+        <linux@roeck-us.net>, <linus.walleij@linaro.org>,
+        <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH 6/6] mfd: lochnagar: Move binding over to dtschema
+Message-ID: <20200504095508.GQ44490@ediswmail.ad.cirrus.com>
+References: <20200427102812.23251-1-ckeepax@opensource.cirrus.com>
+ <20200427102812.23251-6-ckeepax@opensource.cirrus.com>
+ <20200427103614.GM44490@ediswmail.ad.cirrus.com>
+ <20200501204721.GA24163@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20200423180545.13707-2-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200501204721.GA24163@bogus>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 phishscore=0 bulkscore=0 malwarescore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040083
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 23/04/2020 21:05, Grygorii Strashko wrote:
-> Add DT binding for Texas Instruments K3 Multicore SoC platforms chipid
-> module which is represented by CTRLMMR_xxx_JTAGID register and contains
-> information about SoC id and revision.
+On Fri, May 01, 2020 at 03:47:21PM -0500, Rob Herring wrote:
+> On Mon, Apr 27, 2020 at 10:36:14AM +0000, Charles Keepax wrote:
+> > On Mon, Apr 27, 2020 at 11:28:12AM +0100, Charles Keepax wrote:
+> > > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > > ---
+> > > +            lochnagar-pinctrl {
+> > > +                compatible = "cirrus,lochnagar-pinctrl";
+> > > +
+> > > +                gpio-controller;
+> > > +                #gpio-cells = <2>;
+> > > +                gpio-ranges = <&lochnagar 0 0 LOCHNAGAR2_PIN_NUM_GPIOS>;
+> > > +
+> > > +                pinctrl-names = "default";
+> > > +                pinctrl-0 = <&pinsettings>;
+> > 
+> > This seems to cause the following error:
+> > 
+> > Documentation/devicetree/bindings/mfd/cirrus,lochnagar.example.dt.yaml:
+> > lochnagar@22: lochnagar-pinctrl:pin-settings:phandle: [[4]] is not of type 'object'
+> > 
+> > I think the schema is correct and the problem is one of tooling,
+> > I have been poking at it for a while but can't seem to find a way
+> > to silence this one. Any advice would be greatly appreciated.
 > 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
->   .../bindings/soc/ti/k3-socinfo.yaml           | 40 +++++++++++++++++++
->   1 file changed, 40 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+> The problem is the "^.*$" patterns to match child node names also match 
+> properties like 'phandle'. Ideally, you'd have some pattern to match on 
+> for the node names.
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml b/Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
-> new file mode 100644
-> index 000000000000..a1a8423b2e2e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/ti/k3-socinfo.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Texas Instruments K3 Multicore SoC platforms chipid module
-> +
-> +maintainers:
-> +  - Tero Kristo <t-kristo@ti.com>
-> +  - Nishanth Menon <nm@ti.com>
-> +
-> +description: |
-> +  Texas Instruments (ARM64) K3 Multicore SoC platforms chipid module is
-> +  represented by CTRLMMR_xxx_JTAGID register which contains information about
-> +  SoC id and revision.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^chipid@[0-9a-f]+$"
-> +
-> +  compatible:
-> +    items:
-> +      - const: ti,am654-chipid
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    chipid@43000014 {
-> +        compatible = "ti,am654-chipid";
-> +        reg = <0x43000014 0x4>;
-> +    };
+> There is work-around doing:
+> 
+> "^.*$":
+>   if:
+>     type: object
+>   then:
+>     properties:
+>       ...
 > 
 
-Do you have any comments here?
+I believe I did try this and run into some other problems.
 
--- 
-Best regards,
-grygorii
+> But I much prefer to see node names updated. '-pins$' is a common 
+> pattern.
+> 
+
+I have no problem requiring a pins suffix on the sub-nodes. Will
+add that and send a new version, fixing up your other comments as
+well. Thank you for your suggestions and review.
+
+Thanks,
+Charles
