@@ -3,139 +3,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA00C4725B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E6C47254
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B749E206D9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23896208DB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgEDNBi (ORCPT
+        id S1726509AbgEDNEf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 09:01:38 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40080 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgEDNBi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 09:01:38 -0400
-Received: by mail-ot1-f67.google.com with SMTP id i27so8726990ota.7;
-        Mon, 04 May 2020 06:01:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r8zKT+xBy6Gq3229RJb69rkd2OBVlAkNbEfst/RgefA=;
-        b=KfF12E/IZIihS4TWketVaJZ7kTbDFIldK6a/1jpvdh4GHmUsihU+D3ODdQH0PuAQQd
-         scHwckLZYiyx54FCqqATx1Fy51yHJnxYn+IU9nNAaNeJaQDDXJr8PGA93FWAzEb0gLcG
-         CIS6aAhX4n2XJZihF/EvhdUEQz8tv4jSSBPj/U/Pj+9qnJ4yvC/31siAf5xtoSqbfa4R
-         /aoqCqoqIVm6tMgz53gBSI1Bnlx9Cn3Rn9pnU7azUe75AEmAGeq72rZ8eDWTCNOexF8K
-         cU9+/wMY7f5iEteK3AliLGfmXjTXLL2DKMyi5AcSi2l0xPOhfSmo1yVOBEjwJqG1TGb8
-         9LiA==
-X-Gm-Message-State: AGi0PuZADTvlFFCaDRnf2lNGM+RWmJAlMod3N9b63lENUYvBLfhXGecY
-        dRCVRR0mLfYZM2WDF/rBd9GeiC/lNZVGU92GTV7E72TH
-X-Google-Smtp-Source: APiQypJP/gXg+0E7M667GPtseOWpTQreTWWvphkLLyjHkVYI3HGEFPTzknIou3giyAvzYzckPosD7dJMqX44H6jCAfM=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr13691328otm.145.1588597296834;
- Mon, 04 May 2020 06:01:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 15:01:25 +0200
-Message-ID: <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H
- Qseven SOM
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 4 May 2020 09:04:35 -0400
+Received: from mga05.intel.com ([192.55.52.43]:6156 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726351AbgEDNEf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 09:04:35 -0400
+IronPort-SDR: P3Ag4SCcv/w9wWphseukUI90fYpM9AlcJaMigI75FwbHReO0R9oajzcTNwdXDKJFYsZg3IIbJe
+ Bk/hVZlLnLNw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 06:03:53 -0700
+IronPort-SDR: SqD2jz1g8H7tjohWBdR0QpBITFwTOHGpD/CEL0sBgoMTJEB90XKm3m+kCEEdUa+vRyK2apcgge
+ gp5Ol4ersm+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
+   d="scan'208";a="249169049"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by fmsmga007.fm.intel.com with ESMTP; 04 May 2020 06:03:51 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     broonie@kernel.org, robh+dt@kernel.org
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [PATCH v4 0/7] spi: dw: Add support for Intel Keem Bay SPI
+Date:   Mon,  4 May 2020 21:02:39 +0800
+Message-Id: <20200504130246.5135-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+This patchset adds support for DesignWare DWC_ssi. This soft IP
+is an AMBA version 2.0-compliant AHB slave device. Existing driver
+already supports the older APB version.
 
-On Sun, May 3, 2020 at 11:48 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support for iWave RZ/G1H Qseven System On Module.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Intel Keem Bay SPI controller is using this IP. This patchset is
+tested on Keem Bay evaluation module board.
 
-Thanks for your patch!
+Changes since v3:
+- DT changes for feature addition is done on snps,dw-apb-ssi.txt.
+- And then convert the updated snps,dw-apb-ssi.txt to DT schema format.
 
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
-> @@ -0,0 +1,53 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the iWave RZ/G1H Qseven SOM
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +#include "r8a7742.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +       compatible = "iwave,g21m", "renesas,r8a7742";
-> +
-> +       memory@40000000 {
-> +               device_type = "memory";
-> +               reg = <0 0x40000000 0 0x40000000>;
-> +       };
-> +
-> +       memory@200000000 {
-> +               device_type = "memory";
-> +               reg = <2 0x00000000 0 0x20000000>;
+Changes since v2:
+- Rebased to v5.7-rc4.
+- Change the order of the patches i.e. dt-bindings patches go last.
 
-According to the schematics, the second bank is also 1 GiB, so the
-reg length should be 0x40000000.
+Changes since v1:
+- Rework the third patch based on Rob's feedback.
 
-> +       };
+Wan Ahmad Zainie (7):
+  spi: dw: Fix typo in few registers name
+  spi: dw: Add update_cr0() callback to update CTRLR0
+  spi: dw: Add support for DesignWare DWC_ssi
+  dt-bindings: spi: dw-apb-ssi: Add compatible string for DesignWare
+    DWC_ssi
+  spi: dw: Add support for Intel Keem Bay SPI
+  dt-bindings: spi: dw-apb-ssi: Add Intel Keem Bay support
+  dt-bindings: spi: dw-apb-ssi: Convert bindings to json-schema
 
-> +&pfc {
-> +       mmc1_pins: mmc1 {
-> +               groups = "mmc1_data4", "mmc1_ctrl";
-> +               function = "mmc1";
-> +       };
-> +};
-> +
-> +&mmcif1 {
-> +       pinctrl-0 = <&mmc1_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       vmmc-supply = <&reg_3p3v>;
-> +       bus-width = <4>;
-> +       non-removable;
-> +       status = "okay";
-> +};
-
-The eMMC has an 8-bit data path.  Is there any specific reason you use
-bus-width = <4>, and the "mmc1_data4" pin group?
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ .../bindings/spi/snps,dw-apb-ssi.txt          |  41 ------
+ .../bindings/spi/snps,dw-apb-ssi.yaml         |  72 ++++++++++
+ drivers/spi/spi-dw-mid.c                      |   4 +
+ drivers/spi/spi-dw-mmio.c                     |  57 +++++++-
+ drivers/spi/spi-dw.c                          | 125 +++++++++++++-----
+ drivers/spi/spi-dw.h                          |  25 +++-
+ 6 files changed, 243 insertions(+), 81 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
