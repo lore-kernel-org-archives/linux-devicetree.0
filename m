@@ -2,99 +2,90 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1123C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0931BC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1C98206B8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56F720705
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="ZGEyPwV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730264AbgEDR4e (ORCPT
+        id S1730571AbgEDR4m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 13:56:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56372 "EHLO
+        Mon, 4 May 2020 13:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729386AbgEDR4e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 13:56:34 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A21C061A0E
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 10:56:33 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jVfJy-0004nF-Rx; Mon, 04 May 2020 19:56:02 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jVfJp-0002rR-TC; Mon, 04 May 2020 19:55:53 +0200
-Date:   Mon, 4 May 2020 19:55:53 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        alsa-devel@alsa-project.org,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, Jyri Sarha <jsarha@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Sandy Huang <hjc@rock-chips.com>, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
-Message-ID: <20200504175553.jdm7a7aabloevxba@pengutronix.de>
-References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
- <20200504174522.GA3383@ravnborg.org>
+        by vger.kernel.org with ESMTP id S1729386AbgEDR4m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 13:56:42 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82083C061A0E
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 10:56:41 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id re23so14706146ejb.4
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 10:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RjIlcnq4yiC6vV5MYzey8j0IMoFyjTKlaFO0D+bQg24=;
+        b=ZGEyPwV03UkmAUrht9/IhvuD1CmRcikPe5XRtd0QZjb6wKtnzvCsvnSu+MS+y0s0Hk
+         z1HUVem0q596xf/xLXiL+6/UR8QQTZBqjWw2gONtaZd2BXEBQqeqovU6O7bheFuu4GCi
+         KxIpqERDZluuFq4GZjuuaEykRni7NJfk88Vc7yMqUe8CrGvk7Gu7xHcVdteGOmCv4dWL
+         eMWILgwESOkvC8pLu2xalTHSzD21cw51yXWPNmaHBeGUvL+2MPeJhiEFr5uNGN1nII4a
+         1JKwBTVD1jV+acMUwVAMfjXEPViCk7JRXleFI2rrsmnOY65xKNg4+K1bIWNxoPYfW44f
+         dOlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RjIlcnq4yiC6vV5MYzey8j0IMoFyjTKlaFO0D+bQg24=;
+        b=ZJ0/q+k82cdxIRqppryD+dQRN5PMQ4IKeah6QaMYYibHlcp0neDzerg6o6dAoa0SD7
+         3wka6JNc5jsMCccuHlwsoXgTiXfwHKWMrkZkUv/LSbR5wadd8SXsnX5/M3XhTCIjb5ju
+         TKBVCIgZJcC2sun7cqYVme35OVXfzAJexOXyfkRBKC1HDMvOMsN2XVKlVJl49MCOuo7f
+         VOiEeaABSrPvLGb5hu51JeIPGuo13lVGrPJ97KZeaBCl/O5lxVUwiPz9Ci6q471N+UVg
+         jCuX9NcLru5nuRJ5GQBQhys/ec2A3Gi1f83O5GytR9317uklxG8wMCwnyIyYRtbNNmce
+         2QeQ==
+X-Gm-Message-State: AGi0PuYzQWpp4kNey/770gl+i4meopucJ5oXohmrD40fd9IoRG+Ip5YM
+        9JGBJnegKL+S3pjstaUrFcnZcjfy37AXv+JOg86NWQ==
+X-Google-Smtp-Source: APiQypJulmPEpxcWX1jyXL8BWDiI54NDVxDpnmYWCjC6BTiL2RZDj0Ms+5KHcenqxHDwS47TFsCwyara8rfJrVk9c7U=
+X-Received: by 2002:a17:906:49c7:: with SMTP id w7mr16307878ejv.29.1588615000212;
+ Mon, 04 May 2020 10:56:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200504174522.GA3383@ravnborg.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <20200502143555.543636-2-pasha.tatashin@soleen.com> <20200504131500.5f6c8860@gandalf.local.home>
+In-Reply-To: <20200504131500.5f6c8860@gandalf.local.home>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 4 May 2020 13:56:04 -0400
+Message-ID: <CA+CK2bBeBC1T_Bc2gskk90bJogOdg-RK1DHf4odsDj-ck_efyQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] printk: honor the max_reason field in kmsg_dumper
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Kees Cook <keescook@chromium.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
+> Hmm, I didn't realize that enums were allowed to have duplicates. That can
+> usually screw up logic. I would recommend making that a define afterward.
+>
+> #define KMSG_DUMP_MAX KMSG_DUMP_POWEROFF
+>
+> As is done in other locations of the kernel.
+>
 
-On Mon, May 04, 2020 at 07:45:22PM +0200, Sam Ravnborg wrote:
-> On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
-> > There are some new broken doc links due to yaml renames
-> > at DT. Developers should really run:
-> > 
-> > 	./scripts/documentation-file-ref-check
-> > 
-> > in order to solve those issues while submitting patches.
-> Would love if some bot could do this for me on any patches that creates
-> .yaml files or so.
-> I know I will forget this and it can be automated.
-> If I get a bot mail that my patch would broke a link I would
-> have it fixed before it hits any tree.
+Hi Steve,
 
-What about adding a check to check_patch?
+Sure, I will change it to define.
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Thank you,
+Pasha
