@@ -2,353 +2,329 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB020C47257
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1786EC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5252073E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FA62496F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgEDUGY (ORCPT
+        id S1726338AbgEDULv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 16:06:24 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35319 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgEDUGX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:06:23 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 5622DFF808;
-        Mon,  4 May 2020 20:06:19 +0000 (UTC)
-Date:   Mon, 4 May 2020 22:06:18 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        Mon, 4 May 2020 16:11:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgEDULv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:11:51 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37919C061A0E
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 13:11:51 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jVhR6-0002Pb-1u; Mon, 04 May 2020 22:11:32 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jVhR5-0007po-DD; Mon, 04 May 2020 22:11:31 +0200
+Date:   Mon, 4 May 2020 22:11:31 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     treding@nvidia.com, robh+dt@kernel.org, jonathanh@nvidia.com,
+        bbasu@nvidia.com, ldewangan@nvidia.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] clk: at91: allow setting all PMC clock parents
- via DT
-Message-ID: <20200504200618.GJ34497@piout.net>
-References: <cover.1588622158.git.mirq-linux@rere.qmqm.pl>
- <74a5cd94fb7fb0058d905d83f192a4cc85fa6b5b.1588622158.git.mirq-linux@rere.qmqm.pl>
+Subject: Re: [PATCH V2] pwm: tegra: dynamic clk freq configuration by PWM
+ driver
+Message-ID: <20200504201131.l5ofxem3owrl5siv@pengutronix.de>
+References: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <74a5cd94fb7fb0058d905d83f192a4cc85fa6b5b.1588622158.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-Your v5 and my review on v4 just crossed. My comment still holds
+On Mon, Apr 20, 2020 at 09:24:03PM +0530, Sandipan Patra wrote:
+> Added support for dynamic clock freq configuration in pwm kernel driver.
+> Earlier the pwm driver used to cache boot time clock rate by pwm clock
+> parent during probe. Hence dynamically changing pwm frequency was not
+> possible for all the possible ranges. With this change, dynamic calculation
+> is enabled and it is able to set the requested period from sysfs knob
+> provided the value is supported by clock source.
+> 
+> Changes mainly have 2 parts:
+>   - T186 and later chips [1]
+>   - T210 and prior chips [2]
+> 
+> For [1] - Changes implemented to set pwm period dynamically and
+>           also checks added to allow only if requested period(ns) is
+>           below or equals to higher range.
+> 
+> For [2] - Only checks if the requested period(ns) is below or equals
+>           to higher range defined by max clock limit. The limitation
+>           in T210 or prior chips are due to the reason of having only
+>           one pwm-controller supporting multiple channels. But later
+>           chips have multiple pwm controller instances each having
+> 	  single channel support.
+> 
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> ---
+> V2:
+> 1. Min period_ns calculation is moved to probe.
+> 2. Added descriptioins for PWM register bits and regarding behaviour
+>    of the controller when new configuration is applied or pwm is disabled.
+> 3. Setting period with possible value when supplied period is below limit.
+> 4. Corrected the earlier code comment:
+>    plus 1 instead of minus 1 during pwm calculation
+> 
+>  drivers/pwm/pwm-tegra.c | 110 +++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 94 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> index d26ed8f..7a36325 100644
+> --- a/drivers/pwm/pwm-tegra.c
+> +++ b/drivers/pwm/pwm-tegra.c
+> @@ -4,8 +4,39 @@
+>   *
+>   * Tegra pulse-width-modulation controller driver
+>   *
+> - * Copyright (c) 2010, NVIDIA Corporation.
+> - * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.de>
+> + * Copyright (c) 2010-2020, NVIDIA Corporation.
+> + *
+> + * Overview of Tegra Pulse Width Modulator Register:
+> + * 1. 13-bit: Frequency division (SCALE)
+> + * 2. 8-bit : Puls division (DUTY)
+> + * 3. 1-bit : Enable bit
+> + *
+> + * The PWM clock frequency is divided by 256 before subdividing it based
+> + * on the programmable frequency division value to generate the required
+> + * frequency for PWM output. The maximum output frequency that can be
+> + * achieved is (max rate of source clock) / 256.
+> + * i.e. if source clock rate is 408 MHz, maximum output frequency cab be:
 
-On 04/05/2020 21:58:44+0200, Michał Mirosław wrote:
-> We need to have clocks accessible via phandle to select them
-> as peripheral clock parent using assigned-clock-parents in DT.
-> Add support for PLLACK/PLLBCK/AUDIOPLLCK clocks where available.
-> 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
-> v2: rebase to clk/clk-at91 branch
-> v3: no changes
-> v4: extend to whole family
-> v5: fix copy-and-paste bugs for SAMA5D3/4
-> ---
->  drivers/clk/at91/at91rm9200.c    | 6 +++++-
->  drivers/clk/at91/at91sam9260.c   | 6 +++++-
->  drivers/clk/at91/at91sam9g45.c   | 4 +++-
->  drivers/clk/at91/at91sam9n12.c   | 6 +++++-
->  drivers/clk/at91/at91sam9rl.c    | 4 +++-
->  drivers/clk/at91/at91sam9x5.c    | 4 +++-
->  drivers/clk/at91/sam9x60.c       | 4 +++-
->  drivers/clk/at91/sama5d2.c       | 6 +++++-
->  drivers/clk/at91/sama5d3.c       | 4 +++-
->  drivers/clk/at91/sama5d4.c       | 4 +++-
->  include/dt-bindings/clock/at91.h | 3 +++
->  11 files changed, 41 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
-> index 8da88e9a95d8..38bdb4981315 100644
-> --- a/drivers/clk/at91/at91rm9200.c
-> +++ b/drivers/clk/at91/at91rm9200.c
-> @@ -98,7 +98,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
+s/i.e./e.g./, s/cab/can/
+
+> + * 408 MHz/256 = 1.6 MHz.
+> + * This 1.6 MHz frequency can further be divided using SCALE value in PWM.
+> + *
+> + * PWM pulse width: 8 bits are usable [23:16] for varying pulse width.
+> + * To achieve 100% duty cycle, program Bit [24] of this register to
+> + * 1’b1. In which case the other bits [23:16] are set to don't care.
+> + *
+> + * Limitations and known facts:
+
+Please use "Limitations:" here to make this easier greppable.
+
+> + * -	When PWM is disabled, the output is driven to 0.
+
+0 or inactive?
+
+> + * -	It does not allow the current PWM period to complete and
+> + *	stops abruptly.
+> + *
+> + * -	If the register is reconfigured while pwm is running,
+
+s/pwm/PWM/
+
+> + *	It does not let the currently running period to complete.
+
+s/It/it/; s/let/complete/; s/ to complete//
+
+> + *
+> + * -	Pulse width of the pwm can never be out of bound.
+
+I don't understand that one.
+
+> + *	It's taken care at HW and SW
+> + * -	If the user input duty is below limit, then driver sets it to
+> + *	minimum possible value.
+
+that is 0? Do you mean "input period"? If so, better refuse the request.
+
+> + * -	If anything else goes wrong for setting duty or period,
+> + *	-EINVAL is returned.
+
+I wouldn't state this, too trivial. Instead the following are
+interesting:
+
+ - The driver doesn't implement the right rounding rules
+ - The driver needs updating to the atomic API
+
+>   */
 >  
-> -	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91rm9200_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
->  					    nck(at91rm9200_systemck),
->  					    nck(at91rm9200_periphck), 0, 4);
->  	if (!at91rm9200_pmc)
-> @@ -123,12 +123,16 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
+>  #include <linux/clk.h>
+> @@ -41,6 +72,7 @@ struct tegra_pwm_chip {
+>  	struct reset_control*rst;
 >  
-> +	at91rm9200_pmc->chws[PMC_PLLACK] = hw;
+>  	unsigned long clk_rate;
+> +	unsigned long min_period_ns;
+>  
+>  	void __iomem *regs;
+>  
+> @@ -67,8 +99,9 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			    int duty_ns, int period_ns)
+>  {
+>  	struct tegra_pwm_chip *pc = to_tegra_pwm_chip(chip);
+> -	unsigned long long c = duty_ns, hz;
+> -	unsigned long rate;
+> +	unsigned long long p_width = duty_ns, period_hz;
+> +	unsigned long rate, required_clk_rate;
+> +	unsigned long pfm; /* Frequency divider */
+>  	u32 val = 0;
+>  	int err;
+>  
+> @@ -77,37 +110,77 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	 * per (1 << PWM_DUTY_WIDTH) cycles and make sure to round to the
+>  	 * nearest integer during division.
+>  	 */
+> -	c *= (1 << PWM_DUTY_WIDTH);
+> -	c = DIV_ROUND_CLOSEST_ULL(c, period_ns);
+> +	p_width *= (1 << PWM_DUTY_WIDTH);
+> +	p_width = DIV_ROUND_CLOSEST_ULL(p_width, period_ns);
+>  
+> -	val = (u32)c << PWM_DUTY_SHIFT;
+> +	val = (u32)p_width << PWM_DUTY_SHIFT;
 > +
->  	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
->  				   &at91rm9200_pll_layout,
->  				   &rm9200_pll_characteristics);
->  	if (IS_ERR(hw))
->  		goto err_free;
+> +	/*
+> +	 *  Period in nano second has to be <= highest allowed period
+> +	 *  based on max clock rate of the pwm controller.
+> +	 *
+> +	 *  higher limit = max clock limit >> PWM_DUTY_WIDTH
+> +	 *  lower limit = min clock limit >> PWM_DUTY_WIDTH >> PWM_SCALE_WIDTH
+> +	 */
+> +	if (period_ns < pc->min_period_ns) {
+> +		period_ns = pc->min_period_ns;
+> +		pr_warn("Period is adjusted to allowed value (%d ns)\n",
+> +				period_ns);
+
+That pr_warn is a bad idea as it spams the kernel log when the
+configuration is changed frequently. Wouldn't it be easier to calculate
+the frequency that is needed to achieve period_ns and check that against
+max_frequency?
+
+> +	}
 >  
-> +	at91rm9200_pmc->chws[PMC_PLLBCK] = hw;
+>  	/*
+>  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
+>  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
+>  	 */
+> -	rate = pc->clk_rate >> PWM_DUTY_WIDTH;
+> +	if (pc->soc->num_channels == 1) {
+
+required_clk_rate could be defined here, which is better as it narrows
+its scope.
+
+> +		/*
+> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
+> +		 * with the hieghest applicable rate that the controller can
+
+s/hieghest/highest/
+
+> +		 * provide. Any further lower value can be derived by setting
+> +		 * PFM bits[0:12].
+> +		 * Higher mark is taken since BPMP has round-up mechanism
+> +		 * implemented.
+
+I don't understand the part with the round-up mechanism.
+
+> +		 */
+> +		required_clk_rate =
+> +			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
 > +
->  	parent_names[0] = slowxtal_name;
->  	parent_names[1] = "mainck";
->  	parent_names[2] = "pllack";
-> diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-> index 7e5ff252fffc..6d0723aa8b13 100644
-> --- a/drivers/clk/at91/at91sam9260.c
-> +++ b/drivers/clk/at91/at91sam9260.c
-> @@ -352,7 +352,7 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	at91sam9260_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91sam9260_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
->  					    ndck(data->sck, data->num_sck),
->  					    ndck(data->pck, data->num_pck),
->  					    0, data->num_progck);
-> @@ -399,12 +399,16 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9260_pmc->chws[PMC_PLLACK] = hw;
+> +		err = clk_set_rate(pc->clk, required_clk_rate);
+> +		if (err < 0)
+> +			return -EINVAL;
+
+What happens if clk_set_rate configures a higher rate than requested?
+
 > +
->  	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
->  				   data->pllb_layout,
->  				   data->pllb_characteristics);
->  	if (IS_ERR(hw))
->  		goto err_free;
+> +		rate = clk_get_rate(pc->clk) >> PWM_DUTY_WIDTH;
+> +	} else {
+> +		/*
+> +		 * This is the case for SoCs who support multiple channels:
+
+s/who/that/
+
+> +		 *
+> +		 * clk_set_rate() can not be called again in config because
+> +		 * T210 or any prior chip supports one pwm-controller and
+> +		 * multiple channels. Hence in this case cached clock rate
+> +		 * will be considered which was stored during probe.
+> +		 */
+> +		rate = pc->clk_rate >> PWM_DUTY_WIDTH;
+> +	}
 >  
-> +	at91sam9260_pmc->chws[PMC_PLLBCK] = hw;
+>  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
+> -	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+> -	rate = DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz);
+> +	period_hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+> +	pfm = DIV_ROUND_CLOSEST_ULL(100ULL * rate, period_hz);
+>  
+>  	/*
+>  	 * Since the actual PWM divider is the register's frequency divider
+> -	 * field minus 1, we need to decrement to get the correct value to
+> +	 * field plus 1, we need to decrement to get the correct value to
+>  	 * write to the register.
+>  	 */
+> -	if (rate > 0)
+> -		rate--;
+> +	if (pfm > 0)
+> +		pfm--;
+>  
+>  	/*
+> -	 * Make sure that the rate will fit in the register's frequency
+> +	 * Make sure that pfm will fit in the register's frequency
+>  	 * divider field.
+>  	 */
+> -	if (rate >> PWM_SCALE_WIDTH)
+> +	if (pfm >> PWM_SCALE_WIDTH)
+>  		return -EINVAL;
+>  
+> -	val |= rate << PWM_SCALE_SHIFT;
+> +	val |= pfm << PWM_SCALE_SHIFT;
+>  
+>  	/*
+>  	 * If the PWM channel is disabled, make sure to turn on the clock
+> @@ -205,6 +278,10 @@ static int tegra_pwm_probe(struct platform_device *pdev)
+>  	 */
+>  	pwm->clk_rate = clk_get_rate(pwm->clk);
+>  
+> +	/* Set minimum limit of PWM period for the IP */
+> +	pwm->min_period_ns =
+> +	    (NSEC_PER_SEC / (pwm->soc->max_frequency >> PWM_DUTY_WIDTH)) + 1;
+
+With my suggestion above, you can drop the min_period_ns field.
+
 > +
->  	parent_names[0] = slck_name;
->  	parent_names[1] = "mainck";
->  	parent_names[2] = "pllack";
-> diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-> index 5d18eb04c218..9873b583c260 100644
-> --- a/drivers/clk/at91/at91sam9g45.c
-> +++ b/drivers/clk/at91/at91sam9g45.c
-> @@ -115,7 +115,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
+>  	pwm->rst = devm_reset_control_get_exclusive(&pdev->dev, "pwm");
+>  	if (IS_ERR(pwm->rst)) {
+>  		ret = PTR_ERR(pwm->rst);
+> @@ -313,4 +390,5 @@ module_platform_driver(tegra_pwm_driver);
 >  
-> -	at91sam9g45_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91sam9g45_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					    nck(at91sam9g45_systemck),
->  					    nck(at91sam9g45_periphck), 0, 2);
->  	if (!at91sam9g45_pmc)
-> @@ -143,6 +143,8 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9g45_pmc->chws[PMC_PLLACK] = hw;
-> +
->  	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
->  	if (IS_ERR(hw))
->  		goto err_free;
-> diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-> index 3a2564c2f724..630dc5d87171 100644
-> --- a/drivers/clk/at91/at91sam9n12.c
-> +++ b/drivers/clk/at91/at91sam9n12.c
-> @@ -128,7 +128,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	at91sam9n12_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91sam9n12_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
->  					   nck(at91sam9n12_systemck), 31, 0, 2);
->  	if (!at91sam9n12_pmc)
->  		return;
-> @@ -162,11 +162,15 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9n12_pmc->chws[PMC_PLLACK] = hw;
-> +
->  	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
->  				   &at91rm9200_pll_layout, &pllb_characteristics);
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9n12_pmc->chws[PMC_PLLBCK] = hw;
-> +
->  	parent_names[0] = slck_name;
->  	parent_names[1] = "mainck";
->  	parent_names[2] = "plladivck";
-> diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-> index bcf07f6a0e0e..0d1cc44b056f 100644
-> --- a/drivers/clk/at91/at91sam9rl.c
-> +++ b/drivers/clk/at91/at91sam9rl.c
-> @@ -87,7 +87,7 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	at91sam9rl_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91sam9rl_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					   nck(at91sam9rl_systemck),
->  					   nck(at91sam9rl_periphck), 0, 2);
->  	if (!at91sam9rl_pmc)
-> @@ -105,6 +105,8 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9rl_pmc->chws[PMC_PLLACK] = hw;
-> +
->  	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
->  	if (IS_ERR(hw))
->  		goto err_free;
-> diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-> index f13756b407e2..0ce3da080287 100644
-> --- a/drivers/clk/at91/at91sam9x5.c
-> +++ b/drivers/clk/at91/at91sam9x5.c
-> @@ -150,7 +150,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	at91sam9x5_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91sam9x5_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					   nck(at91sam9x5_systemck), 31, 0, 2);
->  	if (!at91sam9x5_pmc)
->  		return;
-> @@ -184,6 +184,8 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9x5_pmc->chws[PMC_PLLACK] = hw;
-> +
->  	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
->  	if (IS_ERR(hw))
->  		goto err_free;
-> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-> index db14e0427c7f..3e20aa68259f 100644
-> --- a/drivers/clk/at91/sam9x60.c
-> +++ b/drivers/clk/at91/sam9x60.c
-> @@ -182,7 +182,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	sam9x60_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	sam9x60_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					nck(sam9x60_systemck),
->  					nck(sam9x60_periphck),
->  					nck(sam9x60_gck), 8);
-> @@ -214,6 +214,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	sam9x60_pmc->chws[PMC_PLLACK] = hw;
-> +
->  	hw = sam9x60_clk_register_pll(regmap, &pmc_pll_lock, "upllck",
->  				      "main_osc", 1, &upll_characteristics);
->  	if (IS_ERR(hw))
-> diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-> index ae5e83cadb3d..b3fa2291ccd8 100644
-> --- a/drivers/clk/at91/sama5d2.c
-> +++ b/drivers/clk/at91/sama5d2.c
-> @@ -166,7 +166,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	sama5d2_pmc = pmc_data_allocate(PMC_I2S1_MUX + 1,
-> +	sama5d2_pmc = pmc_data_allocate(PMC_AUDIOPLLCK + 1,
->  					nck(sama5d2_systemck),
->  					nck(sama5d2_periph32ck),
->  					nck(sama5d2_gck), 3);
-> @@ -202,6 +202,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	sama5d2_pmc->chws[PMC_PLLACK] = hw;
-> +
->  	hw = at91_clk_register_audio_pll_frac(regmap, "audiopll_fracck",
->  					      "mainck");
->  	if (IS_ERR(hw))
-> @@ -217,6 +219,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	sama5d2_pmc->chws[PMC_AUDIOPLLCK] = hw;
-> +
->  	regmap_sfr = syscon_regmap_lookup_by_compatible("atmel,sama5d2-sfr");
->  	if (IS_ERR(regmap_sfr))
->  		regmap_sfr = NULL;
-> diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
-> index 507eef6797f1..5e4e44dd4c37 100644
-> --- a/drivers/clk/at91/sama5d3.c
-> +++ b/drivers/clk/at91/sama5d3.c
-> @@ -125,7 +125,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	sama5d3_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	sama5d3_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					nck(sama5d3_systemck),
->  					nck(sama5d3_periphck), 0, 3);
->  	if (!sama5d3_pmc)
-> @@ -158,6 +158,8 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	sama5d3_pmc->chws[PMC_PLLACK] = hw;
-> +
->  	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
->  	if (IS_ERR(hw))
->  		goto err_free;
-> diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-> index 80692902b4e4..662ff5fa6e98 100644
-> --- a/drivers/clk/at91/sama5d4.c
-> +++ b/drivers/clk/at91/sama5d4.c
-> @@ -140,7 +140,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 + 1,
-> +	sama5d4_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					nck(sama5d4_systemck),
->  					nck(sama5d4_periph32ck), 0, 3);
->  	if (!sama5d4_pmc)
-> @@ -173,6 +173,8 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	sama5d4_pmc->chws[PMC_PLLACK] = hw;
-> +
->  	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
->  	if (IS_ERR(hw))
->  		goto err_free;
-> diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
-> index c3f4aa6a2d29..adcf608b41fa 100644
-> --- a/include/dt-bindings/clock/at91.h
-> +++ b/include/dt-bindings/clock/at91.h
-> @@ -21,6 +21,9 @@
->  #define PMC_MCK2		4
->  #define PMC_I2S0_MUX		5
->  #define PMC_I2S1_MUX		6
-> +#define PMC_PLLACK		7
-> +#define PMC_PLLBCK		8
-> +#define PMC_AUDIOPLLCK		8		/* SAMA5D2-only, no PLLB there */
->  
->  #ifndef AT91_PMC_MOSCS
->  #define AT91_PMC_MOSCS		0		/* MOSCS Flag */
-> -- 
-> 2.20.1
-> 
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("NVIDIA Corporation");
+> +MODULE_AUTHOR("Sandipan Patra <spatra@nvidia.com>");
+>  MODULE_ALIAS("platform:tegra-pwm");
+
+Best regards
+Uwe
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
