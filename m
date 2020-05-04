@@ -2,92 +2,178 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A73C47257
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 12:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418DDC47247
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 12:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D51320752
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 12:26:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588595178;
-	bh=+loy7BvFNdSB1sfj+Wzdxe+1Q9MQi5pjwen9TPc06GI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fgvw3xAvIYZm2e2oc9Pu9muGpU2epHeFXS3/97W7sMgJ6TqhveFpcmYD5/fSymCD1
-	 EYeigSwK46EfFwxcWIR0uZEexx7lyQ5iZj+xHX2uTtLAMj8u2Tgae83cs9yQxyZzuT
-	 CvlTWKWVhKc0kWZDSkUP2OqV/gGYAnyALWOY03jo=
+	by mail.kernel.org (Postfix) with ESMTP id 19A5220752
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 12:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="mXiBIoZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgEDM0R (ORCPT
+        id S1727863AbgEDM1p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 08:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45494 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 08:27:45 -0400
+Received: from vps.xff.cz ([195.181.215.36]:43168 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbgEDM0R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 08:26:17 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE2ED2073B;
-        Mon,  4 May 2020 12:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588595177;
-        bh=+loy7BvFNdSB1sfj+Wzdxe+1Q9MQi5pjwen9TPc06GI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=06yZhSQq3epAEx9mGeMma8wTIJpLMSKN9edsr7d1tGmNMf9YI2B4m6mUs//g4s/6o
-         iNiIdVAQsixQBnF6M1hq4Km9+Xz8I+8MY7iGDKb+ykNGUDpiu3w7luZud8rQmQuMaG
-         9qLJY1tTM4s3fmhAH1dDtShVybvQ6aJTFoq+PHu4=
-Date:   Mon, 4 May 2020 13:26:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     robh+dt@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@linux.intel.com
-Subject: Re: [PATCH v3 5/7] dt-bindings: spi: dw-apb-ssi: Convert bindings to
- json-schema
-Message-ID: <20200504122614.GE5491@sirena.org.uk>
-References: <20200504121151.1085-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200504121151.1085-6-wan.ahmad.zainie.wan.mohamad@intel.com>
+        id S1726445AbgEDM1p (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 08:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1588595263; bh=cx1Wq/7T8zSIWAw0CJ2Ua2ok9FxZ6uruVV53kd6Dou4=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=mXiBIoZOCJxM3zaUrAN4zaH8dozS+wugPfYFvbDlIjp3zLG4XBLIyhhJz4rhHADEo
+         VMr3vz52gep9H+nxz8AUrjIzyhWGN0/C51/3xjztVvV4foOiBsNM2nyYx4a31Y6OaJ
+         dxr++0U8NgHVCpCXO3Tr5TQuIaT1nm4zsgsosEmw=
+Date:   Mon, 4 May 2020 14:27:42 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Piotr Oniszczuk <warpme@o2.pl>
+Subject: Re: [linux-sunxi] [PATCH v2] arm64: dts: allwinner: h6: Use dummy
+ regulator for Tanix TX6
+Message-ID: <20200504122742.er2jd67bvrn2rfgp@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Piotr Oniszczuk <warpme@o2.pl>
+References: <20200428142629.8950-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WBsA/oQW3eTA3LlM"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200504121151.1085-6-wan.ahmad.zainie.wan.mohamad@intel.com>
-X-Cookie: My life is a patio of fun!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428142629.8950-1-peron.clem@gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Clément,
 
---WBsA/oQW3eTA3LlM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Apr 28, 2020 at 04:26:29PM +0200, Clément Péron wrote:
+> Tanix TX6 has a fixed regulator. As DVFS is instructed to change
+> voltage to meet OPP table, the DVFS is not working as expected.
+> 
+> Avoid to introduce a new dedicated OPP Table where voltage are
+> equals to the fixed regulator as it will only duplicate all the OPPs.
+> Instead remove the fixed regulator so the DVFS framework will create
+> dummy regulator and will have the same behavior.
+> 
+> Add some comments to explain this in the device-tree.
+> 
+> Reported-by: Piotr Oniszczuk <warpme@o2.pl>
+> Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6")
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  .../boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> index be81330db14f..3e96fcb317ea 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> @@ -48,7 +48,15 @@
+>  };
+>  
+>  &cpu0 {
+> -	cpu-supply = <&reg_vdd_cpu_gpu>;
+> +	/*
+> +	 * Don't specify the CPU regulator, as it's a fixed
+> +	 * regulator DVFS will not work as it is intructed
+> +	 * to reach a voltage which can't be reached.
+> +	 * Not specifying a regulator will create a dummy
+> +	 * regulator allowing all OPPs.
+> +	 *
+> +	 * cpu-supply = <&reg_vdd_cpu_gpu>;
+> +	 */
 
-On Mon, May 04, 2020 at 08:11:49PM +0800, Wan Ahmad Zainie wrote:
-> Convert the Synopsis DesignWare dw-apb-ssi binding to DT schema format
-> using json-schema.
+reg_vdd_cpu_gpu has 
 
-The point with reordering everything was to make this the very last
-patch in the series after all the new stuff so that adding the new
-features and their DT bindings is not held up by the conversion.
-Reordering the series alone doesn't really help with this issue, the
-DT changes for the feature additions need reworking.
+    regulator-min-microvolt = <1135000>;
+    regulator-max-microvolt = <1135000>;
 
---WBsA/oQW3eTA3LlM
-Content-Type: application/pgp-signature; name="signature.asc"
+top OPP is:
 
------BEGIN PGP SIGNATURE-----
+    opp@1800000000 {
+            clock-latency-ns = <244144>; /* 8 32k periods */
+            opp-hz = /bits/ 64 <1800000000>;
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6wCeUACgkQJNaLcl1U
-h9CoAwf/dnVroxV9iRYzPtHEsFbIJHUs2Edp6U7TiwATW+bqlrfIHF2cabrAIfgm
-dxS+M4ipV7PNjQs8zAUXvMghFmuBInD80sCSaObliHCzbyJoEH+y6nwezzIG5GfL
-qZkfeD7vwP/iavhyPvryzWwEzR7y1f+uRYJx2RJJLnZvNY8OnKYIpS9wmRC/8wHb
-sjl5uURlN+YNBQJrCSfD2jwejVSy82U9KPitKsNAojX9mTWKrxJxR38D28xBXM6K
-lqTQKIOvaPkhww/p0O4fbyW4TJy09iDVOuaNndih7qo563fNUYlup21fLkHOYG7r
-sGinQaAaYoqRXt8pKdfGzesbkHqEyA==
-=f7MT
------END PGP SIGNATURE-----
+            opp-microvolt-speed0 = <1160000>;
+            opp-microvolt-speed1 = <1100000>;
+            opp-microvolt-speed2 = <1100000>;
+    };
 
---WBsA/oQW3eTA3LlM--
+So I guess ignoring the voltage and not disabling this OPP may or may not work
+based on SoC bin.
+
+On Orange Pi One, there's a regulator that supports two voltages (that can't
+support all the listed OPPs for H3), and cpufreq-dt can deal with that
+automagically, if you specify OPP voltages via a tripplet of [prefered min max].
+Kernell will log this in dmesg on boot:
+
+[    0.672440] core: _opp_supported_by_regulators: OPP minuV: 1320000 maxuV: 1320000, not supported by regulator
+[    0.672454] cpu cpu0: _opp_add: OPP not supported by regulators (1104000000)
+[    0.672523] core: _opp_supported_by_regulators: OPP minuV: 1320000 maxuV: 1320000, not supported by regulator
+[    0.672530] cpu cpu0: _opp_add: OPP not supported by regulators (1200000000)
+[    0.672621] core: _opp_supported_by_regulators: OPP minuV: 1340000 maxuV: 1340000, not supported by regulator
+[    0.672628] cpu cpu0: _opp_add: OPP not supported by regulators (1296000000)
+[    0.672712] core: _opp_supported_by_regulators: OPP minuV: 1400000 maxuV: 1400000, not supported by regulator
+[    0.672719] cpu cpu0: _opp_add: OPP not supported by regulators (1368000000)
+
+And the list of available OPPs will be reduced at runtime to a supportable
+set by the CPU regulator.
+
+If you look at:
+
+  https://megous.com/git/linux/commit/?h=ths-5.7&id=d231770195913cf543c0cf9539deee2ecec06680
+
+you'll see a bunch of OPPs for H3 that are specified as a range. So
+for example if you want 480MHz, and your regulator can't produce
+1.04V exactly, cpufreq will set the voltage to something supportable
+in the range.
+
+I think the proper fix is to fix the OPP table for H6, so that it uses
+voltage ranges for each OPP and not a single fixed voltage, to support
+boards that don't have the standard PMIC that goes with H6.
+
+regards,
+	o.
+
+>  };
+>  
+>  &de {
+> @@ -68,7 +76,13 @@
+>  };
+>  
+>  &gpu {
+> -	mali-supply = <&reg_vdd_cpu_gpu>;
+> +	/*
+> +	 * Don't specify the GPU regulator, see comment
+> +	 * above for the CPU supply.
+> +	 *
+> +	 * mali-supply = <&reg_vdd_cpu_gpu>;
+> +	 */
+> +
+>  	status = "okay";
+>  };
+>  
+> -- 
+> 2.20.1
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200428142629.8950-1-peron.clem%40gmail.com.
