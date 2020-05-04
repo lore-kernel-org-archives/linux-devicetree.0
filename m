@@ -2,135 +2,100 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B5EC3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDA9C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 653F620661
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:48:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="RA1GqZgt"
+	by mail.kernel.org (Postfix) with ESMTP id DBE41206B9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588618350;
+	bh=3Ha52XgoS8/4Yl319juPJCrmPW0Ttr1geD7MdSO8LIE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gZAS/TDvKEzU9SHphLdd+pqDNSV8hAre8/h7BFTtJLfZj7dJRODlaDtEa9QZlm2QX
+	 ZXrGXKqVEdgVTGQD7cFEaQh+GmwmFOg2d2pkvrm6c3wIGdcVPHXnG0rw3ePyPRONQI
+	 HuMqwkCLQAF8oFIdiVkyRWO1NM9aOaCFZ5/IK/JU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgEDSsg (ORCPT
+        id S1726531AbgEDSwa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 14:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727910AbgEDSsg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 14:48:36 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11820C061A0F
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 11:48:36 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id q8so14851414eja.2
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 11:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cCEQjPC67dYv3CnpnkDC1IHcr6icFNy3P67sHSsxZbo=;
-        b=RA1GqZgt6de20O5DgFDhzog+4Vz6PCSt6pEItZTtW0YoMo1m04eFXsB8Bxf2P1nJ+E
-         tOiKLb3fMQBpCYyXw3pRHpDstbl/derppS+XwXA8+HXH8pviNjmvBla+L9PNmOQKe5eH
-         6qXJPKcm19f24lGr1GgYLSZjBJuvk/R56e52+pkUi/BbDmOyi67ji7PNoxCBUcZrsKlN
-         lA7M9eQVaRaQMbyJTgS0ngUxnp0pvD6bfAc2Y3Wf5fKKWfTUWHhG2VIEGm6yCQ1Qr3Sf
-         jIT6Qbg4OY7WC7dOOFTO9IdizEtHn51qhCn8Gk5ltPr7sgTug743SRhN/k9eXszAoDhw
-         OS+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cCEQjPC67dYv3CnpnkDC1IHcr6icFNy3P67sHSsxZbo=;
-        b=CSUlj1TR4deCDKDSmsYn4B/khlvFO13mJBkJCeawEomCr3q4pEOOteap2zM3n5WmII
-         5SWNlKe7DCDkXp598F3gdIRbQYcob/DwYsVJVVOhW8j1avLXibaGjhbOxhia0bAtCdJT
-         v5+0OumbsGZyVBmjI2Xd2FRBGIyFkX3vYTdn7w1HSyQkctyK73KDB3yYURaJCs6XdKWU
-         FnG4KlM7mOxnuWMo78Kmqw2bVThoeMemj6Hq8Yx5xBINR3/t/XzvAZPe6NzO272D2VAm
-         CL0Si/xdI2NGLiDXGLLN/nSJpKYobayCo17TCG/g4Jmlk/7blI3wru+r2P4p8b/l5yHv
-         I7FA==
-X-Gm-Message-State: AGi0PuaJ4WlBlBSBM2607G9ho+aEb5DhmgirMq4+ffQ0x5u3lfugzpb0
-        7WNSPPUhDBCU0gSlGy0r6Si6w2pDSXKQpF1yURh3XA==
-X-Google-Smtp-Source: APiQypJYjHte4f1KJhlfkkExpm93glok0kGNLcxIMMpKeSKVxgfUOTNgRMC5iZWALcfVT1/9Q5QBJG6IJaQUDhN9vEI=
-X-Received: by 2002:a17:906:37d0:: with SMTP id o16mr15393604ejc.368.1588618101626;
- Mon, 04 May 2020 11:48:21 -0700 (PDT)
+        Mon, 4 May 2020 14:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbgEDSwa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 14:52:30 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 100102073E;
+        Mon,  4 May 2020 18:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588618349;
+        bh=3Ha52XgoS8/4Yl319juPJCrmPW0Ttr1geD7MdSO8LIE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XLSwU/Qf0ogTE0CtscTX5f6VBjWOx2GHPz/nrM/uaXYsnFyVNJw0uS9yz3IMupLFL
+         eXG7oip5dn0LiQh4mKbZWQqMuMvlaVGB+BOoanqiAbtmBln2dKsPuUJf3EqcfBAurl
+         tiXyeUeav9GizHRf/XhQXTUC5s7YkFuEPh0UKaa8=
+Received: by mail-oi1-f181.google.com with SMTP id o7so7617825oif.2;
+        Mon, 04 May 2020 11:52:29 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZEKizU2SRSTj+8FXU9CcQa5dPWfEwSHt0h3RvfgkuogELP45As
+        cmqaIqVIJAQmx60ss9F3zBvNTfn8rVY9bmnt/w==
+X-Google-Smtp-Source: APiQypLERbCjXmAD9kScXWp+0jLyUa/wK6ffbmYWXz4/VHjupVQvQVBEQSBvA5Wg6mUwQJ+1TlFFTO/AGTkgyn+G/pE=
+X-Received: by 2002:aca:1904:: with SMTP id l4mr10035883oii.106.1588618348223;
+ Mon, 04 May 2020 11:52:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200502143555.543636-1-pasha.tatashin@soleen.com> <202005041112.F3C8117F67@keescook>
-In-Reply-To: <202005041112.F3C8117F67@keescook>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Mon, 4 May 2020 14:47:45 -0400
-Message-ID: <CA+CK2bBDzbXdH23aDxqGzMoxPppNcVmitrYJ00tJqympMBVJOg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] allow ramoops to collect all kmesg_dump events
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
-        ccross@android.com, Tony Luck <tony.luck@intel.com>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <20200504175859.22606-1-elder@linaro.org> <20200504175859.22606-2-elder@linaro.org>
+In-Reply-To: <20200504175859.22606-2-elder@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 4 May 2020 13:52:15 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLY2iuJHXEEx41eEVPgkwmHbngOB53sFgF1e079uLOOqQ@mail.gmail.com>
+Message-ID: <CAL_JsqLY2iuJHXEEx41eEVPgkwmHbngOB53sFgF1e079uLOOqQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 1/4] dt-bindings: net: add IPA iommus property
+To:     Alex Elder <elder@linaro.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Evan Green <evgreen@chromium.org>, subashab@codeaurora.org,
+        cpratapa@codeaurora.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > # reboot -f
-> >
-> > After VM is back:
-> >
-> > # mount -t pstore pstore /mnt
-> > # head /mnt/dmesg-ramoops-0
-> > Restart#1 Part1
+On Mon, May 4, 2020 at 12:59 PM Alex Elder <elder@linaro.org> wrote:
 >
-> Is there a reason that using ramoops.console_size isn't sufficient for
-> this?
+> The IPA accesses "IMEM" and main system memory through an SMMU, so
+> its DT node requires an iommus property to define range of stream IDs
+> it uses.
+>
+> Signed-off-by: Alex Elder <elder@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/net/qcom,ipa.yaml | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+> index 140f15245654..7b749fc04c32 100644
+> --- a/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+> @@ -20,7 +20,10 @@ description:
+>    The GSI is an integral part of the IPA, but it is logically isolated
+>    and has a distinct interrupt and a separately-defined address space.
+>
+> -  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.
+> +  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.  See
+> +  iommu/iommu.txt and iommu/arm,smmu.yaml for more information about SMMU
+> +  bindings.
 
-Unfortunately, the console option is not working for us (Microsoft),
-we have an embedded device with a serial console, and the baud rate
-reduces the reboot performance, so we must keep the console quiet. We
-also want to be able collect full shutdown logs from the field that
-are collected during kexec based updates.
+I'd drop this. We don't need every binding to reference back to common
+bindings. And in theory, this binding is unrelated to the Arm SMMU.
+Any IOMMU could be used.
 
->
-> I'm not strictly opposed to making these changes, but traditionally the
-> granularity of dmesg output has been pretty easily "all or crashes"
-> instead of a range within.
+With that,
 
-As of now, ramoops  allows collecting dmesg only for oops and panic,
-but not for all types of events.
-
-Thank you,
-Pasha
-
-On Mon, May 4, 2020 at 2:14 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Sat, May 02, 2020 at 10:35:52AM -0400, Pavel Tatashin wrote:
-> > Currently, ramoops is capable to collect dmesg buffer only during
-> > panic and oops events. However, it is desirable for shutdown performance
-> > analysis reasons to optionally allow collecting dmesg buffers during other
-> > events as well: reboot, kexec, emergency reboot etc.
-> >
-> > How to quickly test:
-> >
-> > virtme-run --mods=auto --kdir --mods=auto --kdir . \
-> >       -a memmap=1G$8G -a ramoops.mem_address=0x200000000 \
-> >       -a ramoops.mem_size=0x100000 -a ramoops.record_size=32768 \
-> >       -a ramoops.dump_all=1 -a quiet --qemu-opts -m 8G
-> > ..
-> > # reboot -f
-> >
-> > After VM is back:
-> >
-> > # mount -t pstore pstore /mnt
-> > # head /mnt/dmesg-ramoops-0
-> > Restart#1 Part1
->
-> Is there a reason that using ramoops.console_size isn't sufficient for
-> this?
->
-> I'm not strictly opposed to making these changes, but traditionally the
-> granularity of dmesg output has been pretty easily "all or crashes"
-> instead of a range within.
->
-> --
-> Kees Cook
+Reviewed-by: Rob Herring <robh@kernel.org>
