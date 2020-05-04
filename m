@@ -2,100 +2,61 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDA9C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE95C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBE41206B9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588618350;
-	bh=3Ha52XgoS8/4Yl319juPJCrmPW0Ttr1geD7MdSO8LIE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gZAS/TDvKEzU9SHphLdd+pqDNSV8hAre8/h7BFTtJLfZj7dJRODlaDtEa9QZlm2QX
-	 ZXrGXKqVEdgVTGQD7cFEaQh+GmwmFOg2d2pkvrm6c3wIGdcVPHXnG0rw3ePyPRONQI
-	 HuMqwkCLQAF8oFIdiVkyRWO1NM9aOaCFZ5/IK/JU=
+	by mail.kernel.org (Postfix) with ESMTP id 8426520721
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgEDSwa (ORCPT
+        id S1726491AbgEDTC0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 14:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbgEDSwa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 14:52:30 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 100102073E;
-        Mon,  4 May 2020 18:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588618349;
-        bh=3Ha52XgoS8/4Yl319juPJCrmPW0Ttr1geD7MdSO8LIE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XLSwU/Qf0ogTE0CtscTX5f6VBjWOx2GHPz/nrM/uaXYsnFyVNJw0uS9yz3IMupLFL
-         eXG7oip5dn0LiQh4mKbZWQqMuMvlaVGB+BOoanqiAbtmBln2dKsPuUJf3EqcfBAurl
-         tiXyeUeav9GizHRf/XhQXTUC5s7YkFuEPh0UKaa8=
-Received: by mail-oi1-f181.google.com with SMTP id o7so7617825oif.2;
-        Mon, 04 May 2020 11:52:29 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZEKizU2SRSTj+8FXU9CcQa5dPWfEwSHt0h3RvfgkuogELP45As
-        cmqaIqVIJAQmx60ss9F3zBvNTfn8rVY9bmnt/w==
-X-Google-Smtp-Source: APiQypLERbCjXmAD9kScXWp+0jLyUa/wK6ffbmYWXz4/VHjupVQvQVBEQSBvA5Wg6mUwQJ+1TlFFTO/AGTkgyn+G/pE=
-X-Received: by 2002:aca:1904:: with SMTP id l4mr10035883oii.106.1588618348223;
- Mon, 04 May 2020 11:52:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200504175859.22606-1-elder@linaro.org> <20200504175859.22606-2-elder@linaro.org>
-In-Reply-To: <20200504175859.22606-2-elder@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 4 May 2020 13:52:15 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLY2iuJHXEEx41eEVPgkwmHbngOB53sFgF1e079uLOOqQ@mail.gmail.com>
-Message-ID: <CAL_JsqLY2iuJHXEEx41eEVPgkwmHbngOB53sFgF1e079uLOOqQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 1/4] dt-bindings: net: add IPA iommus property
-To:     Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Evan Green <evgreen@chromium.org>, subashab@codeaurora.org,
-        cpratapa@codeaurora.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 4 May 2020 15:02:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726441AbgEDTC0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 15:02:26 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227C1C061A0E;
+        Mon,  4 May 2020 12:02:26 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 592D311F5F61A;
+        Mon,  4 May 2020 12:02:25 -0700 (PDT)
+Date:   Mon, 04 May 2020 12:02:24 -0700 (PDT)
+Message-Id: <20200504.120224.600801033778032707.davem@davemloft.net>
+To:     grygorii.strashko@ti.com
+Cc:     richardcochran@gmail.com, m-karicheri2@ti.com, robh+dt@kernel.org,
+        t-kristo@ti.com, lokeshvutla@ti.com, netdev@vger.kernel.org,
+        nsekhar@ti.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        nm@ti.com
+Subject: Re: [PATCH net-next 0/7] net: ethernet: ti: k3: introduce common
+ platform time sync driver - cpts
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200501205011.14899-1-grygorii.strashko@ti.com>
+References: <20200501205011.14899-1-grygorii.strashko@ti.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 04 May 2020 12:02:25 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 4, 2020 at 12:59 PM Alex Elder <elder@linaro.org> wrote:
->
-> The IPA accesses "IMEM" and main system memory through an SMMU, so
-> its DT node requires an iommus property to define range of stream IDs
-> it uses.
->
-> Signed-off-by: Alex Elder <elder@linaro.org>
-> ---
->  Documentation/devicetree/bindings/net/qcom,ipa.yaml | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-> index 140f15245654..7b749fc04c32 100644
-> --- a/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-> @@ -20,7 +20,10 @@ description:
->    The GSI is an integral part of the IPA, but it is logically isolated
->    and has a distinct interrupt and a separately-defined address space.
->
-> -  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.
-> +  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.  See
-> +  iommu/iommu.txt and iommu/arm,smmu.yaml for more information about SMMU
-> +  bindings.
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Date: Fri, 1 May 2020 23:50:04 +0300
 
-I'd drop this. We don't need every binding to reference back to common
-bindings. And in theory, this binding is unrelated to the Arm SMMU.
-Any IOMMU could be used.
+> This series introduced support for significantly upgraded TI A65x/J721E Common
+> platform time sync (CPTS) modules which are part of AM65xx Time Synchronization
+> Architecture [1].
+ ...
 
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Series applied, thank you.
