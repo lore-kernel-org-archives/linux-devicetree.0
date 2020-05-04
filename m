@@ -2,101 +2,320 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4B0C47258
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB09C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E450205ED
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766892068E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qp+j86uJ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ILUbPqhU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgEDUbg (ORCPT
+        id S1727839AbgEDUim (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 16:31:36 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:27100 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728103AbgEDUbf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:31:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588624295; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=cqJaYZazg1/VMjB0ocaT64qt21+ld4ZwVZIyw06JsVs=;
- b=qp+j86uJ4J3He6BwD5Vc2M7Ob+cClVLNygMKnz0p0yoEqJt+d4a4dIcy6HQSZT+dxHYfBl8z
- ifMnJAwumi5Ju9m6oLaJJ/84adMwxmuLqNuXZRPHZGPttBVXGdkqmyl2Nt7O8TZf86pxoXyw
- 2kRQ1gMJSWJySbx+t44+BWGV6iU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb07b9f.7efd131cc3b0-smtp-out-n02;
- Mon, 04 May 2020 20:31:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5DE86C43637; Mon,  4 May 2020 20:31:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D4CDC433D2;
-        Mon,  4 May 2020 20:31:25 +0000 (UTC)
+        Mon, 4 May 2020 16:38:42 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:34904 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbgEDUil (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:38:41 -0400
+Received: from prsriva-linux.hsd1.wa.comcast.net (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 558D420B71B7;
+        Mon,  4 May 2020 13:38:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 558D420B71B7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1588624719;
+        bh=C+sd6G4UJ2+JexgAlN+GBQQZCYjDYuFZwBIY4qNTUnY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ILUbPqhUzBG5u0MGXSuDFN5LE1ejSw53zTKdYmcIaCJmbyfVQAR2NQ0Jf0TT1kqC/
+         Mtkd2aQiWmcQzckF5k4es0KNH1L4I5jyS8VvRMyX83eGsWH2qeo3rhXX+p0P+FhcYP
+         R6Q0qF8zHvMOcMU/IwwyQh5EuFdcBONAopknPSJs=
+From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, robh+dt@kernel.org,
+        frowand.list@gmail.com, zohar@linux.ibm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, vincenzo.frascino@arm.com,
+        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
+        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
+        tao.li@vivo.com, christophe.leroy@c-s.fr,
+        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
+        prsriva@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        balajib@linux.microsoft.com
+Subject: [RFC][PATCH 1/2] Add a layer of abstraction to use the memory reserved by device tree for ima buffer pass.
+Date:   Mon,  4 May 2020 13:38:28 -0700
+Message-Id: <20200504203829.6330-2-prsriva@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200504203829.6330-1-prsriva@linux.microsoft.com>
+References: <20200504203829.6330-1-prsriva@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 May 2020 02:01:25 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
-        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
-        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
-        evgreen@chromium.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/7] dt-bindings: opp: Introduce opp-peak-kBps and
- opp-avg-kBps bindings
-In-Reply-To: <20200424155404.10746-2-georgi.djakov@linaro.org>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-2-georgi.djakov@linaro.org>
-Message-ID: <187f2f21e6ca55a9ab26a026f01dd893@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-04-24 21:23, Georgi Djakov wrote:
-> From: Saravana Kannan <saravanak@google.com>
-> 
-> Interconnects often quantify their performance points in terms of
-> bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) 
-> to
-> allow specifying Bandwidth OPP tables in DT.
-> 
-> opp-peak-kBps is a required property that replaces opp-hz for Bandwidth 
-> OPP
-> tables.
-> 
-> opp-avg-kBps is an optional property that can be used in Bandwidth OPP
-> tables.
-> 
+Introduce a device tree layer for to read and store ima buffer
+from the reserved memory section of a device tree.
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+---
+ drivers/of/Kconfig  |   6 ++
+ drivers/of/Makefile |   1 +
+ drivers/of/of_ima.c | 165 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h  |  34 +++++++++
+ 4 files changed, 206 insertions(+)
+ create mode 100644 drivers/of/of_ima.c
 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v7:
-> * I have dropped Rob's Reviewed-by, because of the minor change below:
-> * In order to store the bandwidth values for multiple paths, the
-> opp-peak-kBps and opp-avg-kBps are now defined as arrays of integers,
-> instead of just integers.
-> * Improved wording (Viresh)
-...
-
-
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index d91618641be6..edb3c39740fb 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -107,4 +107,10 @@ config OF_DMA_DEFAULT_COHERENT
+ 	# arches should select this if DMA is coherent by default for OF devices
+ 	bool
+ 
++config OF_IMA
++	def_bool y
++	help
++	  IMA related wrapper functions to add/remove ima measurement logs during
++	  kexec_file_load call.
++
+ endif # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index 663a4af0cccd..b4caf083df4e 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -14,5 +14,6 @@ obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+ obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+ obj-$(CONFIG_OF_OVERLAY) += overlay.o
+ obj-$(CONFIG_OF_NUMA) += of_numa.o
++obj-$(CONFIG_OF_IMA) += of_ima.o
+ 
+ obj-$(CONFIG_OF_UNITTEST) += unittest-data/
+diff --git a/drivers/of/of_ima.c b/drivers/of/of_ima.c
+new file mode 100644
+index 000000000000..131f68d81e2e
+--- /dev/null
++++ b/drivers/of/of_ima.c
+@@ -0,0 +1,165 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 Microsoft Corporation.
++ */
++
++#include <linux/slab.h>
++#include <linux/kexec.h>
++#include <linux/of.h>
++#include <linux/memblock.h>
++#include <linux/libfdt.h>
++#include <linux/of_address.h>
++
++static bool dtb_status_enabled;
++static struct resource mem_res;
++static void *vaddr;
++
++
++/**
++ * of_is_ima_memory_reserved - check if memory is reserved via device
++ *							tree.
++ *	Return: zero when memory is not reserved.
++ *			positive number on success.
++ *
++ */
++int of_is_ima_memory_reserved(void)
++{
++	return dtb_status_enabled;
++}
++
++/**
++ * of_ima_write_buffer - Write the ima buffer into the reserved memory.
++ *
++ * ima_buffer - buffer starting address.
++ * ima_buffer_size - size of segment.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int of_ima_write_buffer(void *ima_buffer, size_t ima_buffer_size)
++{
++	void *addr;
++
++	if (!dtb_status_enabled)
++		return -EOPNOTSUPP;
++
++	vaddr = memremap(mem_res.start, resource_size(&mem_res), MEMREMAP_WB);
++	pr_info("Mapped reserved memory, vaddr: 0x%0llX, paddr: 0x%0llX\n , size : %lld",
++	(u64)vaddr, mem_res.start, resource_size(&mem_res));
++
++	if (vaddr) {
++		memcpy(vaddr, &ima_buffer_size, sizeof(size_t));
++		addr =  vaddr + sizeof(size_t);
++		memcpy(addr, ima_buffer, ima_buffer_size);
++		memunmap(vaddr);
++		vaddr = NULL;
++	}
++
++	return 0;
++}
++
++/**
++ * of_remove_ima_buffer - Write 0(Zero length buffer to read)to the
++ *                        size location of the buffer.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int of_remove_ima_buffer(void)
++{
++	size_t empty_buffer_size = 0;
++
++	if (!dtb_status_enabled)
++		return -ENOTSUPP;
++
++	if (vaddr) {
++		memcpy(vaddr, &empty_buffer_size, sizeof(size_t));
++		memunmap(vaddr);
++		vaddr = NULL;
++	}
++
++	return 0;
++}
++
++/**
++ * of_ima_get_size_allocated - Get the usable buffer size thats allocated in
++ *                             the device-tree.
++ *
++ * Return: 0 on unavailable node, size of the memory block - (size_t)
++ */
++size_t of_ima_get_size_allocated(void)
++{
++	size_t size = 0;
++
++	if (!dtb_status_enabled)
++		return size;
++
++	size = resource_size(&mem_res) - sizeof(size_t);
++	return size;
++}
++
++/**
++ * of_get_ima_buffer - Get IMA buffer address.
++ *
++ * @addr:       On successful return, set to point to the buffer contents.
++ * @size:       On successful return, set to the buffer size.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int of_get_ima_buffer(void **addr, size_t *size)
++{
++	if (!dtb_status_enabled)
++		return -ENOTSUPP;
++
++	vaddr = memremap(mem_res.start, resource_size(&mem_res), MEMREMAP_WB);
++	pr_info("Mapped reserved memory, vaddr: 0x%0llX, paddr: 0x%0llX,\n allocated size : %lld, ima_buffer_size: %ld ",
++	(u64)vaddr, mem_res.start, resource_size(&mem_res), *(size_t *)vaddr);
++
++	*size = *(size_t *)vaddr;
++	*addr = vaddr + sizeof(size_t);
++	return 0;
++}
++
++static const struct of_device_id ima_buffer_pass_ids[] = {
++	{
++		.compatible = "linux,ima_buffer_pass",
++	},
++	{}
++};
++
++static const struct of_device_id ima_buffer_pass_match[] = {
++	{
++		.name = "ima_buffer_pass",
++	},
++};
++MODULE_DEVICE_TABLE(of, ima_buffer_pass_match);
++
++static int __init ima_buffer_pass_init(void)
++{
++	int ret = 0;
++	struct device_node *memnp;
++	struct device_node *ima_buffer_pass_node;
++
++	ima_buffer_pass_node = of_find_matching_node(NULL, ima_buffer_pass_ids);
++	if (!ima_buffer_pass_node)
++		return -ENOENT;
++
++	memnp = of_parse_phandle(ima_buffer_pass_node, "memory-region", 0);
++	if (!memnp)
++		return -ENXIO;
++
++	ret = of_address_to_resource(memnp, 0, &mem_res);
++	if (ret < 0)
++		return -ENOENT;
++
++	of_node_put(memnp);
++	dtb_status_enabled = true;
++
++	return ret;
++}
++
++static void __exit ima_buffer_pass_exit(void)
++{
++	pr_info("trying to exit the ima driver\n");
++}
++
++module_init(ima_buffer_pass_init);
++module_exit(ima_buffer_pass_exit);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index c669c0a4732f..85ce2f24024f 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1485,4 +1485,38 @@ static inline int of_overlay_notifier_unregister(struct notifier_block *nb)
+ 
+ #endif
+ 
++#ifdef CONFIG_OF_IMA
++int of_is_ima_memory_reserved(void);
++int of_remove_ima_buffer(void);
++int of_get_ima_buffer(void **addr, size_t *size);
++size_t of_ima_get_size_allocated(void);
++int of_ima_write_buffer(void *ima_buffer,
++		size_t ima_buffer_size);
++#else
++static inline int of_is_ima_memory_reserved(void)
++{
++	return -ENOTSUPP;
++};
++static inline int of_remove_ima_buffer(void)
++{
++	return -ENOTSUPP;
++};
++
++static inline int of_get_ima_buffer(void **addr, size_t *size)
++{
++	return -ENOTSUPP;
++};
++
++static inline size_t of_ima_get_size_allocated(void)
++{
++	return 0;
++};
++
++static inline int of_ima_write_buffer(void *ima_buffer,
++				      size_t ima_buffer_size)
++{
++	return -ENOTSUPP;
++};
++#endif
++
+ #endif /* _LINUX_OF_H */
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.25.1
+
