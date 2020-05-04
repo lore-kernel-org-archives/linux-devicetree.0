@@ -2,243 +2,233 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903A3C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3875CC4724C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9262068E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A9620721
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:26:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l+g0cdu5"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XAlwCmH4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgEDRRU (ORCPT
+        id S1730153AbgEDR0i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 13:17:20 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51780 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729714AbgEDRRT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 13:17:19 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044HHHJp086798;
-        Mon, 4 May 2020 12:17:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588612637;
-        bh=5HkS3LXYDb7FAZsgCE8f3t5PScofPnie5Sj76ZrQ+os=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=l+g0cdu5ta2o3KZhui48hM+F5oqQrJm4EBMoSrRoN1+phRW9Fa+qz8L3cSi/IKH2V
-         /pqMHGZEZu8QLp+2lbUNCOknFn0oIpveovFuoOnQMVJbMppFuFBdMZcD1N1I6xXEfx
-         FGX1n0DtQ6aj+wHn0I75BwJIOBafyvPvYbunfKgk=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044HHH8i005817;
-        Mon, 4 May 2020 12:17:17 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 12:17:17 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 12:17:17 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044HHHLP050906;
-        Mon, 4 May 2020 12:17:17 -0500
-Subject: Re: [PATCH] dt-bindings: power: Convert bq27xxx dt to yaml
-To:     "Andrew F. Davis" <afd@ti.com>, <sre@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-References: <20200504164156.21469-1-dmurphy@ti.com>
- <1ddf643b-c54e-0a60-ee14-8ea137f2bfc9@ti.com>
- <5a7220c7-6c0b-6997-f773-e4b1133d628b@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <1bd44e87-dc61-f38d-63ad-9a783b36569c@ti.com>
-Date:   Mon, 4 May 2020 12:08:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Mon, 4 May 2020 13:26:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729896AbgEDR0i (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 13:26:38 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11A05C061A0E
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 10:26:38 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id e6so173063pjt.4
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 10:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5bWwbHTGljCtRb2v4FMINcuy14H7s7eCSRthMfBkCAw=;
+        b=XAlwCmH4HBaImEpu9Ay6Lnos34G9TFAH5Pb70ZO5pGTtFJ8LHcEx9fUfzuX4kPgy7w
+         /br4h9rc6MpUd4g5jk6cqoBT3CJuSiSWCfXBnNC8Ac2fXDmqV97lHUetcH57v2uVvmxc
+         iLuwh+bcnU2DlXvFE+HBm+7Iv8JIwKB4SN4dk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5bWwbHTGljCtRb2v4FMINcuy14H7s7eCSRthMfBkCAw=;
+        b=bqspCzygcTX6BwqWEZas9RtgpFSS+zWVGYS1RdWJlGIO9BHuUeHeiukNhBMMG7hmBS
+         8WGRbj4Ddt1LNWaRt0FUK050mERcW2sSksSZq6picUFtBqzlbwpaBD8zkuD5/RpVrSzT
+         Wf/2Ge+sp+9+pq8SYAWD+iDJL1ZMvDLmR/IDtK5wE9lcFqjIiqH3M7aylAcaKrmGX+aV
+         4S6yE+A/B2zy2w+R6i+SLFq6GHJQrv0V9frmABtQbqKknR8enCczvn0r6n1DyFhlcqsD
+         Nn7UZ1s1ETobudrK1ZAIOzT1cBsdG92FDsyxUQEUNUm7A2q3B/x78TSH6AKPZfbwGkcs
+         tyiQ==
+X-Gm-Message-State: AGi0PuYX5ZYz1ERhu01X4BAoUFX91KsnnMEAWeSISbaf+xbnDooC0E4g
+        QgptC9Ub1qvcalMGrfGRvFocCA==
+X-Google-Smtp-Source: APiQypI2k1rITHWPougNpuY886eWLdTD5Ibc6IOiWSieEi9yviNfnF5qQG3E6I0D4ExCEB+JSvCqZA==
+X-Received: by 2002:a17:902:c213:: with SMTP id 19mr275393pll.172.1588613197315;
+        Mon, 04 May 2020 10:26:37 -0700 (PDT)
+Received: from [10.230.182.181] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id o68sm9235067pfb.206.2020.05.04.10.26.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 10:26:36 -0700 (PDT)
+Subject: Re: Proper DT bindings for Broadcom's DMU node
+To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivek Unune <npcomplete13@gmail.com>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+References: <7da2db8f-66d0-24ec-d3eb-84247b383a06@gmail.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <c19df021-c56e-9088-f595-04b9c7c22b54@broadcom.com>
+Date:   Mon, 4 May 2020 10:26:44 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <5a7220c7-6c0b-6997-f773-e4b1133d628b@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <7da2db8f-66d0-24ec-d3eb-84247b383a06@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Andrew
+Hi Rafal,
 
-On 5/4/20 12:08 PM, Andrew F. Davis wrote:
-> On 5/4/20 12:44 PM, Dan Murphy wrote:
->> Adding Andrew in manually.
->>
->> On 5/4/20 11:41 AM, Dan Murphy wrote:
->>> Convert the bq27xxx.txt to yaml format
->>>
->>> CC: Pali Rohár <pali@kernel.org>
->>> CC: Andrew F. Davis" <afd@ti.com>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>    .../bindings/power/supply/bq27xxx.txt         | 56 -----------
->>>    .../bindings/power/supply/bq27xxx.yaml        | 95 +++++++++++++++++++
->>>    2 files changed, 95 insertions(+), 56 deletions(-)
->>>    delete mode 100644
->>> Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->>>    create mode 100644
->>> Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->>> b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->>> deleted file mode 100644
->>> index 4fa8e08df2b6..000000000000
->>> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->>> +++ /dev/null
->>> @@ -1,56 +0,0 @@
->>> -TI BQ27XXX fuel gauge family
->>> -
->>> -Required properties:
->>> -- compatible: contains one of the following:
->>> - * "ti,bq27200" - BQ27200
->>> - * "ti,bq27210" - BQ27210
->>> - * "ti,bq27500" - deprecated, use revision specific property below
->>> - * "ti,bq27510" - deprecated, use revision specific property below
->>> - * "ti,bq27520" - deprecated, use revision specific property below
->>> - * "ti,bq27500-1" - BQ27500/1
->>> - * "ti,bq27510g1" - BQ27510-g1
->>> - * "ti,bq27510g2" - BQ27510-g2
->>> - * "ti,bq27510g3" - BQ27510-g3
->>> - * "ti,bq27520g1" - BQ27520-g1
->>> - * "ti,bq27520g2" - BQ27520-g2
->>> - * "ti,bq27520g3" - BQ27520-g3
->>> - * "ti,bq27520g4" - BQ27520-g4
->>> - * "ti,bq27521" - BQ27521
->>> - * "ti,bq27530" - BQ27530
->>> - * "ti,bq27531" - BQ27531
->>> - * "ti,bq27541" - BQ27541
->>> - * "ti,bq27542" - BQ27542
->>> - * "ti,bq27546" - BQ27546
->>> - * "ti,bq27742" - BQ27742
->>> - * "ti,bq27545" - BQ27545
->>> - * "ti,bq27411" - BQ27411
->>> - * "ti,bq27421" - BQ27421
->>> - * "ti,bq27425" - BQ27425
->>> - * "ti,bq27426" - BQ27426
->>> - * "ti,bq27441" - BQ27441
->>> - * "ti,bq27621" - BQ27621
->>> -- reg: integer, I2C address of the fuel gauge.
->>> -
->>> -Optional properties:
->>> -- monitored-battery: phandle of battery characteristics node
->>> -    The fuel gauge uses the following battery properties:
->>> -    + energy-full-design-microwatt-hours
->>> -    + charge-full-design-microamp-hours
->>> -    + voltage-min-design-microvolt
->>> -  Both or neither of the *-full-design-*-hours properties must be set.
->>> -  See Documentation/devicetree/bindings/power/supply/battery.txt
->>> -
->>> -Example:
->>> -
->>> -    bat: battery {
->>> -        compatible = "simple-battery";
->>> -        voltage-min-design-microvolt = <3200000>;
->>> -        energy-full-design-microwatt-hours = <5290000>;
->>> -        charge-full-design-microamp-hours = <1430000>;
->>> -    };
->>> -
->>> -    bq27510g3: fuel-gauge@55 {
->>> -        compatible = "ti,bq27510g3";
->>> -        reg = <0x55>;
->>> -        monitored-battery = <&bat>;
->>> -    };
->>> diff --git
->>> a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->>> b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->>> new file mode 100644
->>> index 000000000000..6c53ee849004
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->>> @@ -0,0 +1,95 @@
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +# Copyright (C) 2020 Texas Instruments Incorporated
->>> +%YAML 1.2
->>> +---
->>> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
->>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->>> +
->>> +title: TI BQ27XXX fuel gauge family
->>> +
->>> +maintainers:
->>> +  - Pali Rohár <pali@kernel.org>
->>> +  - Andrew F. Davis" <afd@ti.com>
->
-> Extra " at end of name.
->
-Ack
+On 5/4/2020 8:24 AM, Rafał Miłecki wrote:
+> Hi,
+> 
+> I need some help with designing proper bindings for Broadcom's DMU
+> block. We already have it partially covered but it's inconsistent, some
+> cleanups were rejected and so I want to redesign it as it should be.
+> 
+> DMU ("Device Management Unit") is a block that can be found on Broadcom
+> iProc / Northstar devices. On Northstar it's mapped at:
+> ranges = <0x1800c000 0x1000>
+> 
+> It contains:
+> 1. Few random registers, some of them shared by various hardware
+>    blocks (and possibly hard to abstract?)
+> 2. At least one sub-block with even more random registers
+> 
+> Some of known DMU registers are:
+> reg = <0x100 0x14>    CRU LCPLL control0
+> reg = <0x140 0x24>    CRU GENPLL
+> reg = <0x164 0x04>    CRU_USB2_CONTROL
+> reg = <0x180 0x04>    CRU_CLKSET_KEY
+> reg = <0x184 0x04>    CRU_RESET
+> reg = <0x1c0 0x24>    pinctrl
+> reg = <0x2a0 0x04>    CRU_STRAPS_CTRL
+> reg = <0x2c0 0x04>    PVTMON control0
+> (Broadcom never released a proper documentation)
+> 
+> 
+> As you can see there are a few CRU registers (depending on a source it's
+> a "Clock and Reset Unit" or "Central Resource Unit"). It's said to be
+> separated block and was described by Scott (from Broadcom) as: "unit
+> with a lot of random registers to perform various operations".
+> 
+> As I said, there are also some shared registers:
+> 
+> CRU_CLKSET_KEY is accessed by:
+> 1. USB 2.0 PHY driver for (un)locking DMU PLL settings
+> 2. GMAC for changing 2.66G line rate to 2Gbps
+> 
+> CRU_STRAPS_CTRL needs to be accessed by:
+> 1. USB 3.0 PHY driver for PHY connected to MDIO
+> 2. PCIE driver for PHY connected to MDIO
+> 
+> 
+> My initial idea was to have something like:
+> 
+> dmu@1800c000 {
+>     compatible = "simple-bus";
+>     ranges = <0 0x1800c000 0x1000>;
+>     #address-cells = <1>;
+>     #size-cells = <1>;
+> 
+>     cru@100 {
+>         compatible = "simple-bus";
+>         reg = <0x100 0x1a4>;
+> 
+>         lcpll { ... };
+>         genpll { ... };
+>         reset { ... };
+>     };
+> };
+> 
+> but Rob noticed that "simple-bus" requires everything in DMU to have
+> sub-nodes [0] [1].
+> 
+> 
+> I thought it can be solved by using compatible = "syscon", "simple-mfd"
+> and I even got one patch for that accepted [2] [3] (pinctrl). It seems
+> it slipped through and was possibly a mistake. Another similar patch was
+> rejected [4] [5] (bcm-ns-usb2-phy).
+> 
+> What I tried to achieve was something like this:
+> 
+> dmu@1800c000 {
+>     compatible = "simple-bus";
+>     ranges = <0 0x1800c000 0x1000>;
+>     #address-cells = <1>;
+>     #size-cells = <1>;
+> 
+>     cru: syscon@100 {
+>         compatible = "syscon", "simple-mfd";
+>         reg = <0x100 0x1a4>;
+>         ranges;
+>         #address-cells = <1>;
+>         #size-cells = <1>;
+> 
+>         lcpll0@0 {
+>             #clock-cells = <1>;
+>             compatible = "brcm,nsp-lcpll0";
+>             reg = <0x0 0x14>;
+>         };
+> 
+>         genpll@40 {
+>             #clock-cells = <1>;
+>             compatible = "brcm,nsp-genpll";
+>             reg = <0x40 0x24>;
+>         };
+> 
+>         pin-controller@c0 {
+>             compatible = "brcm,bcm4708-pinmux";
+>             reg = <0xc0 0x24>;
+>             reg-names = "cru_gpio_control";
+>         };
+> 
+>         thermal@1c0 {
+>             compatible = "brcm,ns-thermal";
+>             reg = <0x1c0 0x10>;
+>             #thermal-sensor-cells = <0>;
+>         };
+>     };
+> };
+> 
+> cru-reset@??? {
+>     compatible = "brcm,ns-cru-reset";
+>     syscon-cru = <&cru>; /* CRU_RESET */
+>     #reset-cells = <1>;
+> };
+> 
+> usb2-phy@??? {
+>     compatible = "brcm,ns-usb2-phy";
+>     syscon-cru = <&cru>; /* CRU_CLKSET_KEY */
+>     #phy-cells = <0>;
+> };
+> 
+> (apparently it wasn't a good idea)
+> 
+> So my question is: how to properly handle this? I'm not sure what's the
+> proper "compatible" string to use. Is my idea of:
+> 1. Using sub-node for registers explicitly used by one driver
+> 2. Using syscon for shared registers
+> OK?
 
+The above two proposed scheme from you to handle CRU in NS makes sense
+to me and they also model the ASIC architecture correctly.
 
->>> +  - Sebastian Reichel <sre@kernel.org>
->>> +
->>> +description: |
->>> +  Support various Texas Instruments fuel gauge devices that share
->>> similar
->>> +  register maps and power supply properties
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - ti,bq27200 - BQ27200
->>> +      - ti,bq27210 - BQ27210
->>> +      - ti,bq27500 - deprecated, use revision specific property below
->>> +      - ti,bq27510 - deprecated, use revision specific property below
->>> +      - ti,bq27520 - deprecated, use revision specific property below
->>> +      - ti,bq27500-1 - BQ27500/1
->>> +      - ti,bq27510g1 - BQ27510-g1
->>> +      - ti,bq27510g2 - BQ27510-g2
->>> +      - ti,bq27510g3 - BQ27510-g3
->>> +      - ti,bq27520g1 - BQ27520-g1
->>> +      - ti,bq27520g2 - BQ27520-g2
->>> +      - ti,bq27520g3 - BQ27520-g3
->>> +      - ti,bq27520g4 - BQ27520-g4
->>> +      - ti,bq27521 - BQ27521
->>> +      - ti,bq27530 - BQ27530
->>> +      - ti,bq27531 - BQ27531
->>> +      - ti,bq27541 - BQ27541
->>> +      - ti,bq27542 - BQ27542
->>> +      - ti,bq27546 - BQ27546
->>> +      - ti,bq27742 - BQ27742
->>> +      - ti,bq27545 - BQ27545
->>> +      - ti,bq27411 - BQ27411
->>> +      - ti,bq27421 - BQ27421
->>> +      - ti,bq27425 - BQ27425
->>> +      - ti,bq27426 - BQ27426
->>> +      - ti,bq27441 - BQ27441
->>> +      - ti,bq27621 - BQ27621
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +    description: integer, I2C address of the fuel gauge.
->>> +
->>> +  monitored-battery:
->>> +    description: phandle of battery characteristics node
->>> +
->>> +  energy-full-design-microwatt-hours:
->>> +    description: |
->>> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
->>> +      If this property is set then charge-full-design-microamp-hours
->>> must be
->>> +      set as well.
->
-> These are properties of the battery node and should be described in
-> their binding, they are not part of the fuel gauge node here.
+Thanks,
 
-OK.  I will add the explanation back from the original text file that 
-these are used by the fuel gauge from the battery node.
+Ray
 
-Dan
-
-
+> 
+> 
+> [0] https://www.spinics.net/lists/arm-kernel/msg682838.html
+> [1]
+> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20181015093013.31651-1-zajec5@gmail.com/
+> 
+> [2] https://spinics.net/lists/linux-gpio/msg35285.html
+> [3] https://patchwork.kernel.org/patch/10735931/
+> [4] https://lkml.org/lkml/2019/1/15/913
+> [5]
+> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20190108123907.19816-1-zajec5@gmail.com/
+> 
