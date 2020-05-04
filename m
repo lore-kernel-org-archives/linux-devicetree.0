@@ -2,108 +2,130 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5048CC47257
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 15:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE75C47258
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 16:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB0A20705
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 15:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD817206A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 16:06:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jXirWH8I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dw8xcNvj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbgEDPz2 (ORCPT
+        id S1728873AbgEDQGx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 11:55:28 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14053 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729529AbgEDPz2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 11:55:28 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb03a700000>; Mon, 04 May 2020 08:53:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 04 May 2020 08:55:28 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 04 May 2020 08:55:28 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May
- 2020 15:55:28 +0000
-Received: from [10.2.165.119] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May 2020
- 15:55:26 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
- <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
- <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
- <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
- <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
- <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
- <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
- <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
- <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
- <960d2715-a717-0cc3-df19-ff78dc426535@nvidia.com>
- <23520fa4-4d8f-b083-0ad3-b249339ee032@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <d74df9cd-f256-f215-ae78-3c31d6754641@nvidia.com>
-Date:   Mon, 4 May 2020 08:56:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 12:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgEDQGx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 12:06:53 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73B69C061A0E
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 09:06:51 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id y24so79765wma.4
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 09:06:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bp4AZOmEDFlGnUKxwTpEGrX9Ywb+/ercU9RXG60YpkA=;
+        b=Dw8xcNvj2qmOKxxn59CPRrnhgYrQ5x4sBPM8qK0pmcxzWd1aH/YyCVxlXW3TIWT8Fw
+         tx++cxMdi9+OTPqOJQ0MUb+cNtf6m3SYTI32z98924olcf+4nnXYi+IsldgCldMoIM07
+         4h4F+MxzAqq6y91AHErfmlevgojJiWj+WryxD4tS6DchG+1L3m2rsTys97s7V6H+LEdC
+         LCsZJU4jP6ekqf6cSccjS9Se5DU1Jiz5dlTN66yFFKaWMHEZyAdh3cs63tmpeqdXo7uR
+         T2cb+IBgx5aIR71N/OxSIdsY99sFfZqoNjBPUH6CNGyQrSLxrlGkp1kmGkSQF8YKLWZh
+         DMTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bp4AZOmEDFlGnUKxwTpEGrX9Ywb+/ercU9RXG60YpkA=;
+        b=qwatQzvC6hwS9oIzbxU4CScU2udwOoS+262VRGN+ZZuPHg8Tyl3+Qvc9Lhht1TANS/
+         aCktGf0U1/HqfSL9auh8im2Zv/9rlHo4odJrhlxj6Cd29HO/+jdCnUAv3TMscNg/j6Ra
+         GnoPsMAcUt2yeKrLTIkXQJZm13YVjLZ9p1QdRbBH/hS01V2vwoJsLdeGr7zje9LBtGLV
+         97NAZEazpWR6riaOjCkaGH6kPbnsiwWIZ4DlfTXrI2ZsYzLdcmtm/M9HOpFlv731UJ6O
+         FWI/iR9p9etvO59a6yj09oPAys6/bRjbH7KET97yvrinQ69NDN+iwo8YHMp1T5VO7BeO
+         0s8A==
+X-Gm-Message-State: AGi0PuZ5/s11e++6yriFz+bes7MT6OQuNdbJsiu8ssqrXfIN3zRZuqQs
+        gOoJyyKdZ0Qr7OZlr74D1GiG/Q==
+X-Google-Smtp-Source: APiQypKPyLr9D3x5aJJfh1E5/6u+cb8JP6Qo0I2a/ao2kDBpvQii1AZTwUzgtbi+yEe+qplCF2lrWg==
+X-Received: by 2002:a1c:3182:: with SMTP id x124mr16738870wmx.54.1588608410123;
+        Mon, 04 May 2020 09:06:50 -0700 (PDT)
+Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id b66sm15224708wmh.12.2020.05.04.09.06.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 09:06:48 -0700 (PDT)
+Date:   Mon, 4 May 2020 18:06:39 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, fenghua.yu@intel.com, kevin.tian@intel.com,
+        jgg@ziepe.ca, catalin.marinas@arm.com, robin.murphy@arm.com,
+        zhangfei.gao@linaro.org, felix.kuehling@amd.com, will@kernel.org,
+        christian.koenig@amd.com
+Subject: Re: [PATCH v6 17/25] iommu/arm-smmu-v3: Implement
+ iommu_sva_bind/unbind()
+Message-ID: <20200504160639.GD170104@myrica>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+ <20200430143424.2787566-18-jean-philippe@linaro.org>
+ <20200501121552.GA6012@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <23520fa4-4d8f-b083-0ad3-b249339ee032@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588607600; bh=inT5Kwq5fLKQOMa7wX4038NLS0luRlAH5Jiof0DA9jw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=jXirWH8Ithxt07Hyz/8Cmz31T68tCIVi9k49c/ozfC3zmP7y60GKQgYnKMuvzXvNV
-         BMUTO6oZwPJSPgd9hg2FPOpnkNrolhsqUrRtbn150JF3Y4ousGcE+uOSPJjLYNBC+V
-         9sm3xil/bKykE5B7YGtFyawSxHB73sNmcD79DiCCGRWL33XIEgd0WWn06Zp6NTUg9c
-         OBT0ErCkyVfZM/theiVM/fytmWZ5jy5wDiPxOCfMcj3BjbHIiwVTZnvOM+JwzIlSOv
-         In5tYm2v85ZAH/YUvBz2IdT26IMMlbIH783KHOTLlu4tUgXgr91l3ym7QLsJERHDgb
-         DDF1eRtrYPMCA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501121552.GA6012@infradead.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, May 01, 2020 at 05:15:52AM -0700, Christoph Hellwig wrote:
+> > @@ -432,6 +432,7 @@ config ARM_SMMU_V3
+> >  	tristate "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
+> >  	depends on ARM64
+> >  	select IOMMU_API
+> > +	select IOMMU_SVA
+> >  	select IOMMU_IO_PGTABLE_LPAE
+> >  	select GENERIC_MSI_IRQ_DOMAIN
+> 
+> Doesn't this need to select MMU_NOTIFIER now?
 
-On 5/4/20 8:53 AM, Dmitry Osipenko wrote:
-> 04.05.2020 17:53, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/30/20 12:33 PM, Dmitry Osipenko wrote:
->>>>>> Hi Dmitry,
->>>>>>
->>>>>> Will update in v12 to not allow freeze in middle of a frame capture.
->>>>>>
->>>>>> Can you please confirm on above if you agree to allow freeze to
->>>>>> happen in b/w frame captures?
->>>>>>
->>>>>> Also as most feedback has been received from you by now, appreciate
->>>>>> if you can provide all in this v11 if you have anything else so we
->>>>>> will not have any new changes after v12.
->>> I'll take another look tomorrow / during weekend and let you know.
->> Hi Dmitry,
->>
->> Will send v12 if there is no more feedback. Please let me know.
-> Hello Sowjanya,
->
-> I don't have any more comments to add, looking forward to v12.
-Thanks Dmitry
+Yes, will fix
+
+> > +	struct mmu_notifier_ops		mn_ops;
+> 
+> Note: not a pointer.
+> 
+> > +	/* If bind() was already called for this (dev, mm) pair, reuse it. */
+> > +	list_for_each_entry(bond, &master->bonds, list) {
+> > +		if (bond->mm == mm) {
+> > +			refcount_inc(&bond->refs);
+> > +			return &bond->sva;
+> > +		}
+> > +	}
+> > +
+> > +	mn = mmu_notifier_get(&smmu_domain->mn_ops, mm);
+> > +	if (IS_ERR(mn))
+> > +		return ERR_CAST(mn);
+> 
+> Which seems to be to avoid mmu_notifier_get reusing notifiers registered
+> by other arm_smmu_master instance right?
+
+Yes, although I'm registering a single mmu notifier per (domain, mm) pair,
+not (master, mm), because the SMMU driver keeps one set of PASID tables
+per IOMMU domain.
+
+> Either you could just use plain old mmu_notifier_register to avoid
+> the reuse.  Or we could enhance the mmu_notifier_get to pass a private
+> oaque instance ID pointer, which is checked in addition to the ops,
+> and you could probably kill off the bonds list and lookup.
+
+Going back to mmu_notifier_register() seems better for now. I don't want
+to change the core APIs just for this driver, because it's likely to
+change again when more hardware starts appearing and we optimize it.
+
+Thanks,
+Jean
+
