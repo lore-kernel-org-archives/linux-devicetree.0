@@ -2,139 +2,217 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43807C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 15:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C00C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 15:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 270EE2054F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 15:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C92320735
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 15:24:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6NWcErA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgEDPU7 (ORCPT
+        id S1727967AbgEDPYc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 11:20:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:65017 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbgEDPU7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 11:20:59 -0400
-IronPort-SDR: +pz4vvpzKslHP5KDw38Y9OyB8eRHj2A39JwaN4t3cozLB1F62sha+i2tyxS7SPCJENMLwAHvEs
- 048ayvfbTQTg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 08:20:59 -0700
-IronPort-SDR: DhyAxpzPRY/Tebzamw5nV/OXd83VAZRNIf4QKSKn9BLW4Q4E1kjVLjHW+nXqmurbxOZK0rot2h
- utpob8xZoQVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
-   d="scan'208";a="460700180"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga005.fm.intel.com with ESMTP; 04 May 2020 08:20:58 -0700
-Date:   Mon, 4 May 2020 08:27:03 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, felix.kuehling@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        fenghua.yu@intel.com, hch@infradead.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v6 02/25] iommu/ioasid: Add ioasid references
-Message-ID: <20200504082703.2ecc03c1@jacob-builder>
-In-Reply-To: <20200504142548.GB170104@myrica>
-References: <20200430143424.2787566-1-jean-philippe@linaro.org>
-        <20200430143424.2787566-3-jean-philippe@linaro.org>
-        <20200430113931.0fbf7a37@jacob-builder>
-        <20200504142548.GB170104@myrica>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 4 May 2020 11:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726908AbgEDPYb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 11:24:31 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BBCDC061A0E
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 08:24:31 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id t11so10090044lfe.4
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 08:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=hiSySpURjELapjWkVuG5B+GMLNHdKW6iA+VycBG7Dso=;
+        b=M6NWcErASTGsS5i10MWRd8/FRtBRWF5M41kIQ7Xypy9ecoAIyABYN8EdVTuvjteXP0
+         nx11431qR1Ohzjx0MQgzsNcC+0swcaOftAktjXxVzXnrJl/sn/Qjq2tQBvwvSUQ50NvI
+         VEBVzUPKIBGZ+pbCt1g2GwePYAwFFO383oHnGdosPTxGEMAxKNJbIvssgSiRRaGCeAhU
+         dydDfjDCGwpM8qfGgVpFJJOD12XQukEdcSR4BcKa7IjkBiagIiVZQ29G/+SlqsjAQ8Xz
+         ozuGm4cJWkY2frADjRPib3clmwYKVSiYD5ZN9jxZRLR1T/u88aEXUP2b/gC/r9ZiK0jp
+         5xyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=hiSySpURjELapjWkVuG5B+GMLNHdKW6iA+VycBG7Dso=;
+        b=hdLEO5Q7cSWXAJEmjXrZnM4OXe7CdDnWbCTWm61RgIN0CXSkGXFDHJKTfG1b/JVWP+
+         +/lkxdf86Aa0G++TBR5Xz/INJwgK/9hTTquUhX8tcmW8vkppOjygd5JMQyJbP/fa8VD2
+         WPe30vhRnryFsIixjt/r/YtRhEX2s83VFU8HKurSjXGQE6fXImf/ZsGuMfj/npuzTS/q
+         U1OtAPZh3LekqyEvqypvmEUrf9dh2fltX02l9jw4dXQyusAcU8BtnvGahuEr81JCqi6o
+         OJmy0tqNiuL6g1tZtMCTQCLY4ERhKF0ENsU0OTSjVR/1LSli0Bj8U/+2Zv78jKzPxrhq
+         O5iA==
+X-Gm-Message-State: AGi0PuYTfFLFeeTmNwh9euZfuiE1o2HyHxX5LCA90XpjLvax11mdNbUi
+        TAbyf3rEyd6loGIFTzdyqHw=
+X-Google-Smtp-Source: APiQypKXi1u7L6aALLYofQe1fOadySmoHHzbC9gxqFfcwOBf3tl7ZIl3EHjNbNaLD9VVh2ECSpMzyQ==
+X-Received: by 2002:ac2:5de5:: with SMTP id z5mr6769209lfq.68.1588605869706;
+        Mon, 04 May 2020 08:24:29 -0700 (PDT)
+Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.googlemail.com with ESMTPSA id y21sm8466552ljg.66.2020.05.04.08.24.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 08:24:29 -0700 (PDT)
+To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivek Unune <npcomplete13@gmail.com>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Proper DT bindings for Broadcom's DMU node
+Message-ID: <7da2db8f-66d0-24ec-d3eb-84247b383a06@gmail.com>
+Date:   Mon, 4 May 2020 17:24:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 4 May 2020 16:25:48 +0200
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+Hi,
 
-> On Thu, Apr 30, 2020 at 11:39:31AM -0700, Jacob Pan wrote:
-> > > +/**
-> > > + * ioasid_get - obtain a reference to the IOASID
-> > > + */
-> > > +void ioasid_get(ioasid_t ioasid)  
-> > why void? what if the ioasid is not valid.  
-> 
-> My intended use was for the caller to get an additional reference when
-> they're already holding one. So this should always succeed and I'd
-> prefer a WARN_ON if the ioasid isn't valid rather than returning an
-> error. But if you intend to add a state to ioasids between dropping
-> refcount and free, then a return value makes sense.
-> 
-Yes, a WARN_ON will do. No need for return value for now.
+I need some help with designing proper bindings for Broadcom's DMU
+block. We already have it partially covered but it's inconsistent, some
+cleanups were rejected and so I want to redesign it as it should be.
 
-> Thanks,
-> Jean
-> 
-> >   
-> > > +{
-> > > +	struct ioasid_data *ioasid_data;
-> > > +
-> > > +	spin_lock(&ioasid_allocator_lock);
-> > > +	ioasid_data = xa_load(&active_allocator->xa, ioasid);
-> > > +	if (ioasid_data)
-> > > +		refcount_inc(&ioasid_data->refs);
-> > > +	spin_unlock(&ioasid_allocator_lock);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(ioasid_get);
-> > > +
-> > >  /**
-> > >   * ioasid_free - Free an IOASID
-> > >   * @ioasid: the ID to remove
-> > > + *
-> > > + * Put a reference to the IOASID, free it when the number of
-> > > references drops to
-> > > + * zero.
-> > > + *
-> > > + * Return: %true if the IOASID was freed, %false otherwise.
-> > >   */
-> > > -void ioasid_free(ioasid_t ioasid)
-> > > +bool ioasid_free(ioasid_t ioasid)
-> > >  {
-> > > +	bool free = false;
-> > >  	struct ioasid_data *ioasid_data;
-> > >  
-> > >  	spin_lock(&ioasid_allocator_lock);
-> > > @@ -360,6 +383,10 @@ void ioasid_free(ioasid_t ioasid)
-> > >  		goto exit_unlock;
-> > >  	}
-> > >  
-> > > +	free = refcount_dec_and_test(&ioasid_data->refs);
-> > > +	if (!free)
-> > > +		goto exit_unlock;
-> > > +  
-> > Just FYI, we may need to add states for the IOASID, i.g. mark the
-> > IOASID inactive after free. And prohibit ioasid_get() after freed.
-> > For VT-d, this is useful when KVM queries the IOASID.
-> >   
-> > >  	active_allocator->ops->free(ioasid,
-> > > active_allocator->ops->pdata); /* Custom allocator needs
-> > > additional steps to free the xa element */ if
-> > > (active_allocator->flags & IOASID_ALLOCATOR_CUSTOM) { @@ -369,6
-> > > +396,7 @@ void ioasid_free(ioasid_t ioasid) 
-> > >  exit_unlock:
-> > >  	spin_unlock(&ioasid_allocator_lock);
-> > > +	return free;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(ioasid_free);
-> > >    
-> > 
-> > [Jacob Pan]  
+DMU ("Device Management Unit") is a block that can be found on Broadcom
+iProc / Northstar devices. On Northstar it's mapped at:
+ranges = <0x1800c000 0x1000>
 
-[Jacob Pan]
+It contains:
+1. Few random registers, some of them shared by various hardware
+    blocks (and possibly hard to abstract?)
+2. At least one sub-block with even more random registers
+
+Some of known DMU registers are:
+reg = <0x100 0x14>	CRU LCPLL control0
+reg = <0x140 0x24>	CRU GENPLL
+reg = <0x164 0x04>	CRU_USB2_CONTROL
+reg = <0x180 0x04>	CRU_CLKSET_KEY
+reg = <0x184 0x04>	CRU_RESET
+reg = <0x1c0 0x24>	pinctrl
+reg = <0x2a0 0x04>	CRU_STRAPS_CTRL
+reg = <0x2c0 0x04>	PVTMON control0
+(Broadcom never released a proper documentation)
+
+
+As you can see there are a few CRU registers (depending on a source it's
+a "Clock and Reset Unit" or "Central Resource Unit"). It's said to be
+separated block and was described by Scott (from Broadcom) as: "unit
+with a lot of random registers to perform various operations".
+
+As I said, there are also some shared registers:
+
+CRU_CLKSET_KEY is accessed by:
+1. USB 2.0 PHY driver for (un)locking DMU PLL settings
+2. GMAC for changing 2.66G line rate to 2Gbps
+
+CRU_STRAPS_CTRL needs to be accessed by:
+1. USB 3.0 PHY driver for PHY connected to MDIO
+2. PCIE driver for PHY connected to MDIO
+
+
+My initial idea was to have something like:
+
+dmu@1800c000 {
+	compatible = "simple-bus";
+	ranges = <0 0x1800c000 0x1000>;
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	cru@100 {
+		compatible = "simple-bus";
+		reg = <0x100 0x1a4>;
+
+		lcpll { ... };
+		genpll { ... };
+		reset { ... };
+	};
+};
+
+but Rob noticed that "simple-bus" requires everything in DMU to have
+sub-nodes [0] [1].
+
+
+I thought it can be solved by using compatible = "syscon", "simple-mfd"
+and I even got one patch for that accepted [2] [3] (pinctrl). It seems
+it slipped through and was possibly a mistake. Another similar patch was
+rejected [4] [5] (bcm-ns-usb2-phy).
+
+What I tried to achieve was something like this:
+
+dmu@1800c000 {
+	compatible = "simple-bus";
+	ranges = <0 0x1800c000 0x1000>;
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	cru: syscon@100 {
+		compatible = "syscon", "simple-mfd";
+		reg = <0x100 0x1a4>;
+		ranges;
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		lcpll0@0 {
+			#clock-cells = <1>;
+			compatible = "brcm,nsp-lcpll0";
+			reg = <0x0 0x14>;
+		};
+
+		genpll@40 {
+			#clock-cells = <1>;
+			compatible = "brcm,nsp-genpll";
+			reg = <0x40 0x24>;
+		};
+
+		pin-controller@c0 {
+			compatible = "brcm,bcm4708-pinmux";
+			reg = <0xc0 0x24>;
+			reg-names = "cru_gpio_control";
+		};
+
+		thermal@1c0 {
+			compatible = "brcm,ns-thermal";
+			reg = <0x1c0 0x10>;
+			#thermal-sensor-cells = <0>;
+		};
+	};
+};
+
+cru-reset@??? {
+	compatible = "brcm,ns-cru-reset";
+	syscon-cru = <&cru>; /* CRU_RESET */
+	#reset-cells = <1>;
+};
+
+usb2-phy@??? {
+	compatible = "brcm,ns-usb2-phy";
+	syscon-cru = <&cru>; /* CRU_CLKSET_KEY */
+	#phy-cells = <0>;
+};
+
+(apparently it wasn't a good idea)
+
+So my question is: how to properly handle this? I'm not sure what's the
+proper "compatible" string to use. Is my idea of:
+1. Using sub-node for registers explicitly used by one driver
+2. Using syscon for shared registers
+OK?
+
+
+[0] https://www.spinics.net/lists/arm-kernel/msg682838.html
+[1] https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20181015093013.31651-1-zajec5@gmail.com/
+[2] https://spinics.net/lists/linux-gpio/msg35285.html
+[3] https://patchwork.kernel.org/patch/10735931/
+[4] https://lkml.org/lkml/2019/1/15/913
+[5] https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20190108123907.19816-1-zajec5@gmail.com/
