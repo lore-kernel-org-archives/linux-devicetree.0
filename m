@@ -2,203 +2,81 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169D3C47259
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13073C47247
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF0B9206B8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E629720721
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbgEDK2x (ORCPT
+        id S1727991AbgEDKmw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 06:28:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39690 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbgEDK2w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 06:28:52 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m13so8434948otf.6;
-        Mon, 04 May 2020 03:28:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IKv7KTVNCY3qf6SaspevLCl67DbFuwIyzQmXuV5CMJc=;
-        b=I0AYMI1tSLGPGJ99UCVJrMv9onRfDM/2HEphRDWFaK6THqZqtqFRiQKKFbafIwoUE4
-         ceb1aUiWmmnrllmswH6FWB3i/vxU66US9M8eg7wYgwM/r7I4RScB6zqwOBu+LSVGZ7bY
-         PQly7oB8hF4HLCrjx1xWCfRKA6iCC0u9iqqDDpO9LF4twwHwfGS8S70/mp6upU9jrVtn
-         GpkFIWMUcyTxQNKdzEJ+4eCtCCocEaWDZbqjyD1Ik4f3cgtmpdsQDyy3/INhPIir8RB9
-         G55HyGfgsbRoSYzaWgwljDLDYP8qomIAJdtT+9VlHvKiYRsDAoN9TxENRWA/fmLt+yz1
-         f2sw==
-X-Gm-Message-State: AGi0PuYTZo6wguH+j+reyR1uo+jvFiHeIxi5I/yS7mqoieMwxSZTKY/w
-        E3FtBsD7RWvPLp/axkvlezE3RFFhppvY43fzUk0=
-X-Google-Smtp-Source: APiQypJ8AcvgPl+s7QGZB7Ujkmmo3ahQcK1m2igoHJ4xdGevo7ZCWpn/ZrzgicKDMl5r59Zg5PLowTSrcLvug8HlKd4=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr13728187otw.250.1588588131266;
- Mon, 04 May 2020 03:28:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588542414-14826-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 12:28:39 +0200
-Message-ID: <CAMuHMdW=njc2Vvu+7WHgikWOMtWCWTMmxeYLWLP0Z1TyStiaFg@mail.gmail.com>
-Subject: Re: [PATCH v2 06/10] ARM: dts: r8a7742: Initial SoC device tree
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Mon, 4 May 2020 06:42:52 -0400
+Received: from mga18.intel.com ([134.134.136.126]:54863 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726445AbgEDKmw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 06:42:52 -0400
+IronPort-SDR: z8OwaJ5Z97ZaM1Mi6CMaX4YoWtZSnXJehwkguRm0EfJlBC77z28ZsHFH/F8JMXqauNWmJ+cXeO
+ D6X3m9GpuBmw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 03:42:50 -0700
+IronPort-SDR: YsyTN3XujNe4EH/d4h27FxTbwofavGyfETEfLF0Cea+JivViR5D1mUUgsVIGHKiPMZLpRnvBv9
+ 2aH3IIZDn2EA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
+   d="scan'208";a="248182608"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 04 May 2020 03:42:48 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jVYYl-004bJY-VT; Mon, 04 May 2020 13:42:51 +0300
+Date:   Mon, 4 May 2020 13:42:51 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] spi: dw: Add support for Intel Keem Bay SPI
+Message-ID: <20200504104251.GC185537@smile.fi.intel.com>
+References: <20200422141142.25591-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200428141449.GV185537@smile.fi.intel.com>
+ <20200428180720.GO5677@sirena.org.uk>
+ <CAHp75Vf6OenGTz3Pvg9QQVEygK71E5j-2W-s+0G6dh=QDDfR2Q@mail.gmail.com>
+ <20200429101611.GF4201@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429101611.GF4201@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+On Wed, Apr 29, 2020 at 11:16:11AM +0100, Mark Brown wrote:
+> On Wed, Apr 29, 2020 at 01:14:48AM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 28, 2020 at 9:08 PM Mark Brown <broonie@kernel.org> wrote:
+> 
+> > > If there are problems with the DT binding conversion
+> 
+> > We don't know (yet) if there is any problem, that's why I'm asking Rob
+> > to have a look.
+> 
+> Yes, what I am saying is that in the event there are problems the
+> conversion should be split out and done separately.
 
-On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> The initial R8A7742 SoC device tree including CPU[0-8], PMU, PFC,
-> CPG, RST, SYSC, ICRAM[0-2], SCIFA2, MMC1, DMAC[0-1], GIC, PRR, timer
-> and the required clock descriptions.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r8a7742.dtsi
-
-> +               icram2: sram@e6300000 {
-> +                       compatible = "mmio-sram";
-> +                       reg = <0 0xe6300000 0 0x40000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges = <0 0 0xe6300000 0x40000>;
-> +               };
-> +
-> +               scifa2: serial@e6c60000 {
-> +                       compatible = "renesas,scifa-r8a7742",
-> +                                    "renesas,rcar-gen2-scifa", "renesas,scifa";
-> +                       reg = <0 0xe6c60000 0 0x40>;
-> +                       interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 202>;
-> +                       clock-names = "fck";
-> +                       dmas = <&dmac0 0x27>, <&dmac0 0x28>,
-> +                              <&dmac1 0x27>, <&dmac1 0x28>;
-> +                       dma-names = "tx", "rx", "tx", "rx";
-> +                       power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-> +                       resets = <&cpg 202>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               mmcif1: mmc@ee220000 {
-> +                       compatible = "renesas,mmcif-r8a7742",
-> +                                    "renesas,sh-mmcif";
-> +                       reg = <0 0xee220000 0 0x80>;
-> +                       interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 305>;
-> +                       dmas = <&dmac0 0xe1>, <&dmac0 0xe2>,
-> +                              <&dmac1 0xe1>, <&dmac1 0xe2>;
-> +                       dma-names = "tx", "rx", "tx", "rx";
-> +                       power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-> +                       resets = <&cpg 305>;
-> +                       reg-io-width = <4>;
-> +                       status = "disabled";
-> +                       max-frequency = <97500000>;
-> +               };
-> +
-> +               dmac0: dma-controller@e6700000 {
-> +                       compatible = "renesas,dmac-r8a7742",
-> +                                    "renesas,rcar-dmac";
-> +                       reg = <0 0xe6700000 0 0x20000>;
-> +                       interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "error",
-> +                                         "ch0", "ch1", "ch2", "ch3",
-> +                                         "ch4", "ch5", "ch6", "ch7",
-> +                                         "ch8", "ch9", "ch10", "ch11",
-> +                                         "ch12", "ch13", "ch14";
-> +                       clocks = <&cpg CPG_MOD 219>;
-> +                       clock-names = "fck";
-> +                       power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-> +                       resets = <&cpg 219>;
-> +                       #dma-cells = <1>;
-> +                       dma-channels = <15>;
-> +               };
-> +
-> +               dmac1: dma-controller@e6720000 {
-> +                       compatible = "renesas,dmac-r8a7742",
-> +                                    "renesas,rcar-dmac";
-> +                       reg = <0 0xe6720000 0 0x20000>;
-> +                       interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "error",
-> +                                         "ch0", "ch1", "ch2", "ch3",
-> +                                         "ch4", "ch5", "ch6", "ch7",
-> +                                         "ch8", "ch9", "ch10", "ch11",
-> +                                         "ch12", "ch13", "ch14";
-> +                       clocks = <&cpg CPG_MOD 218>;
-> +                       clock-names = "fck";
-> +                       power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-> +                       resets = <&cpg 218>;
-> +                       #dma-cells = <1>;
-> +                       dma-channels = <15>;
-> +               };
-
-To preserve sort order, the DMAC nodes should be moved up.
-No need to resend, will fix up while applying.
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.8.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Wan, please rebase the series in order that conversion patch goes last.
+Thanks!
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
