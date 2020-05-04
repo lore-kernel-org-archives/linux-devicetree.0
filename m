@@ -2,197 +2,129 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04627C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 22:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02663C47254
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 22:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC48B2078C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 22:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D8920735
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 22:36:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="eDpXtSDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgEDWNg (ORCPT
+        id S1728141AbgEDWgJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 18:13:36 -0400
-Received: from mail-bn8nam11olkn2047.outbound.protection.outlook.com ([40.92.20.47]:17633
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728202AbgEDWNf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 18:13:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aZriF2GZk2BlwHCcwHeKv40eCG51RJChU6NoAnMob0wYXUdH0gGdiuHCv02PK2l2E2ZCPq8JkRAhJ1z3EK9JZK1f98W1sJURvzZKle/YjnZ+7ennvXvd8LR2rzCa+ak1foSBliiZmsfG4kPKz0pU5/6UxXspJer36IUgmlQXQ8hGxSqUDYqDd6pv/zusbvNkUBeCaaYgupepKsS/yEwV3mV9l6wQQX2C1yPSBLAryvugpHIxL/Ddr4r8laTsEnEFzcvEnkL06zTHtYc/9acAo32U06aL9s7VMZLcZ8qbR2/imRWoan5mnS61SLShvtQKW5IA1OAzPtBar/ba8XovJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0SrpbefCRfEjV8iCNrMUH8buPaWQxavRgC+FU0Fe/0U=;
- b=d1b/p/6Ta90hYUUHd421gI6BHzQ/u09/th1xOrKMZO8omNy6Uzox8+ivw9sn93uqajGnmQFhthMR1dKx5Ebcr740RLZ17AKKp9mo8kCVE8odGDp1tgdhmQMZU2LY8X2yOcJDhlZfEGwwp+mGBbte8UT/oxW5i+n+oRIFkgzVBWpE8ZV+fFKWlziXZI5HZ9HNWVXUEzHU2WoIxNOeWObNBab1k3HGek+cOOEPPvDMk7BFwbmr3yaKsTdai6j7tN6lu9eORGH52I7Z8zquN0O0+LkS10vTAe7qzoVK70PGtyBtmsUIG1VyUDmp1pCadOp7uIlclBFb3VAHn1czQndoXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from BN8NAM11FT010.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:fc4b::40) by
- BN8NAM11HT024.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4b::194)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Mon, 4 May
- 2020 22:13:31 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc4b::4d) by BN8NAM11FT010.mail.protection.outlook.com
- (2a01:111:e400:fc4b::309) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
- Transport; Mon, 4 May 2020 22:13:31 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:C4ED0778683EEC4312A8066D6998C8158858CDF1521D03DE303DEF954BE741C4;UpperCasedChecksum:B36B717E36E5C63444A31DF994CA95C786BD1BDC40255040C3BC9BAC164B2B47;SizeAsReceived:7758;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2958.029; Mon, 4 May 2020
- 22:13:31 +0000
-From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH 3/3] power: supply: max17040: Set rcomp value
-Date:   Mon,  4 May 2020 15:13:00 -0700
-Message-ID: <BN6PR04MB066057B881DEFC0C48208589A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200504221300.3153-1-xc-racer2@live.ca>
-References: <20200504221300.3153-1-xc-racer2@live.ca>
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MWHPR2201CA0053.namprd22.prod.outlook.com
- (2603:10b6:301:16::27) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200504221300.3153-4-xc-racer2@live.ca>
+        Mon, 4 May 2020 18:36:09 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:30039 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbgEDWgJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 18:36:09 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49GHks2CQ0z8r;
+        Tue,  5 May 2020 00:36:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1588631766; bh=r9Ra0YsTNI47z6MEyzSs2RXlk4X+BQLFr0esPWmvCXg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eDpXtSDzNBSoyYdFn2P0bsWoUvPEC9Um/JcPWFcXE0GRu5RqGFbwQ3WVQCIvasKj/
+         ezBtzKnZHmBd4lbrfJp0Iy8KuEWGqxK67p2cywxnPWQFSyUK/cQwvrI6zPlCPqLFrX
+         nf5HbWEGPa8+5u6gbVOo0duiz+GqulhBTx6zSG3HpEyQoVEZr7dqi1XSCnW4MrgZF1
+         i2y92nuXpIpcfsBqLJg9iBbKW1t8iNacBP2ILye/1C7wsCrHrmzbPPWFfDlui0iQWP
+         UHPObRQevE9wXlMf8WjCsBtYCxqKEsrxNTTjaHm2X0HVQaTmnQM+jIsuyxFH8MufYs
+         7X1mcVCx41/sQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Tue, 5 May 2020 00:36:04 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/3] clk: at91: allow setting PCKx parent via DT
+Message-ID: <20200504223604.GA16549@qmqm.qmqm.pl>
+References: <cover.1588623391.git.mirq-linux@rere.qmqm.pl>
+ <fd853126e9971b9ef9bdcfe469ed3146a0cad92b.1588623391.git.mirq-linux@rere.qmqm.pl>
+ <20200504204447.GL34497@piout.net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR2201CA0053.namprd22.prod.outlook.com (2603:10b6:301:16::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Mon, 4 May 2020 22:13:30 +0000
-X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200504221300.3153-4-xc-racer2@live.ca>
-X-TMN:  [KPXs7hi3OI0qzQkXUSboa9ggWN8isMFJInOlAPO9Hda/k0eObCDUSvcNS1hPkGEV]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: e86124e9-0d75-4e3b-c0c9-08d7f078611f
-X-MS-TrafficTypeDiagnostic: BN8NAM11HT024:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7l7qdfru6v/RME/CFdETyKAW4IqQ2vacxmFVLHGjhA4NT9U5fZKMqijA1lO/a0PpHtpaHVvYTYfGnRVAifvT1aAmxgbSGxbc95y//DGTAlXlptiGpHF69O8OdrVILbIxIvhYvIx9lhO4SKnasVsRd/CmwjiLLD0IhIjhquQ8ItOAwjFLJO7hXJ4hVsOKjcoT+6MLdipzc+m2lcnPTJ4JytYa4UtZ4JXyCSO3O1NEEZjUiV4WvCAhEY9HfVDJDqUg
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: QZ0qL2uX4cnkVDH1EgjDNfnZ+YpdIXGSsuH1u6anzpQ2MdIqVccvzbiwVtZ5XszSsr5kkUHE/+ix9ckMxZD1Yhann1K81V6X8e0GmjXkwB31lOkGDzGxiOxSem03Zclgm4joa9kzgv2Jk8o8EvhkTNfj5k2QyenoH9Ny0YhrpVgLnTOXAMMOQA6kWuLNBmP7SxdHrpA2uq5tDJIsaQvfMg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e86124e9-0d75-4e3b-c0c9-08d7f078611f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2020 22:13:31.5605
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM11HT024
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200504204447.GL34497@piout.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-According to the datasheet (1), the rcomp parameter can
-vary based on the typical operating temperature and the
-battery chemistry.  If provided, make sure we set it after
-we reset the chip on boot.
+On Mon, May 04, 2020 at 10:44:47PM +0200, Alexandre Belloni wrote:
+> On 04/05/2020 22:19:17+0200, Micha³ Miros³aw wrote:
+> > This exposes PROGx clocks for use in assigned-clocks DeviceTree property
+> > for selecting PCKx parent clock.
+> > 
+> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+> > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > ---
+> > v2: rebase and update to clk/clk-at91 branch
+> > v3: rebase
+> > v4: no changes
+> > v5: no changes
+> > v6: no changes
+> > ---
+> >  drivers/clk/at91/at91rm9200.c    |  6 ++++--
+> >  drivers/clk/at91/at91sam9260.c   |  5 ++++-
+> >  drivers/clk/at91/at91sam9g45.c   |  6 ++++--
+> >  drivers/clk/at91/at91sam9n12.c   |  6 ++++--
+> >  drivers/clk/at91/at91sam9rl.c    |  4 +++-
+> >  drivers/clk/at91/at91sam9x5.c    |  4 +++-
+> >  drivers/clk/at91/pmc.c           | 12 ++++++++++--
+> >  drivers/clk/at91/pmc.h           |  5 ++++-
+> >  drivers/clk/at91/sam9x60.c       |  4 +++-
+> >  drivers/clk/at91/sama5d2.c       |  4 +++-
+> >  drivers/clk/at91/sama5d3.c       |  6 ++++--
+> >  drivers/clk/at91/sama5d4.c       |  4 +++-
+> >  include/dt-bindings/clock/at91.h |  1 +
+> >  13 files changed, 50 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
+> > index c44a431b6c97..8da88e9a95d8 100644
+> > --- a/drivers/clk/at91/at91rm9200.c
+> > +++ b/drivers/clk/at91/at91rm9200.c
+> > @@ -100,7 +100,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+> >  
+> >  	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
+> >  					    nck(at91rm9200_systemck),
+> > -					    nck(at91rm9200_periphck), 0);
+> > +					    nck(at91rm9200_periphck), 0, 4);
+> >  	if (!at91rm9200_pmc)
+> >  		return;
+> >  
+> > @@ -159,6 +159,8 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+> >  						    &at91rm9200_programmable_layout);
+> >  		if (IS_ERR(hw))
+> >  			goto err_free;
+> > +
+> > +		at91rm9200_pmc->pchws[i] = hw;
+> >  	}
+> >  
+> >  	for (i = 0; i < ARRAY_SIZE(at91rm9200_systemck); i++) {
+> > @@ -187,7 +189,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+> >  	return;
+> >  
+> >  err_free:
+> > -	pmc_data_free(at91rm9200_pmc);
+> > +	kfree(at91rm9200_pmc);
+> 
+> I missed that in the previous review but shouldn't that change be part
+> of the previous patch for bisectability ?
 
-1) https://datasheets.maximintegrated.com/en/ds/MAX17040-MAX17041.pdf
+I was sure I already pushed all of them to the first patch...
+Fixed in v7.
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
----
- drivers/power/supply/max17040_battery.c | 33 +++++++++++++++++++++----
- 1 file changed, 28 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 48aa44665e2f..f66e2fdc0a8a 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -10,6 +10,7 @@
- #include <linux/init.h>
- #include <linux/platform_device.h>
- #include <linux/mutex.h>
-+#include <linux/property.h>
- #include <linux/err.h>
- #include <linux/i2c.h>
- #include <linux/delay.h>
-@@ -31,6 +32,8 @@
- 
- #define MAX17040_ATHD_MASK		0xFFC0
- #define MAX17040_ATHD_DEFAULT_POWER_UP	4
-+#define MAX17040_RCOMP_MASK		0xFF
-+#define MAX17040_RCOMP_DEFAULT_POWER_UP	0x97
- 
- struct max17040_chip {
- 	struct i2c_client		*client;
-@@ -48,6 +51,8 @@ struct max17040_chip {
- 	int status;
- 	/* Low alert threshold from 32% to 1% of the State of Charge */
- 	u32 low_soc_alert;
-+	/* Optimization for specific chemistries */
-+	u8 rcomp_value;
- };
- 
- static int max17040_get_property(struct power_supply *psy,
-@@ -119,6 +124,20 @@ static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
- 	return ret;
- }
- 
-+static int max17040_set_rcomp(struct i2c_client *client, u32 val)
-+{
-+	int ret;
-+	u16 data;
-+
-+	data = max17040_read_reg(client, MAX17040_RCOMP);
-+	/* clear the rcomp val and set MSb 8 bits */
-+	data &= MAX17040_RCOMP_MASK;
-+	data |= val << 8;
-+	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
-+
-+	return ret;
-+}
-+
- static void max17040_get_vcell(struct i2c_client *client)
- {
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
-@@ -190,8 +209,14 @@ static int max17040_get_of_data(struct max17040_chip *chip)
- 				 "maxim,alert-low-soc-level",
- 				 &chip->low_soc_alert);
- 
--	if (chip->low_soc_alert <= 0 || chip->low_soc_alert >= 33)
-+	if (chip->low_soc_alert <= 0 || chip->low_soc_alert >= 33) {
-+		dev_err(&client->dev,
-+			"failed: low SOC alert OF data out of bounds\n");
- 		return -EINVAL;
-+	}
-+
-+	chip->rcomp_value = MAX17040_RCOMP_DEFAULT_POWER_UP;
-+	device_property_read_u8(dev, "maxim,rcomp-value", &chip->rcomp_value);
- 
- 	return 0;
- }
-@@ -289,11 +314,8 @@ static int max17040_probe(struct i2c_client *client,
- 	chip->client = client;
- 	chip->pdata = client->dev.platform_data;
- 	ret = max17040_get_of_data(chip);
--	if (ret) {
--		dev_err(&client->dev,
--			"failed: low SOC alert OF data out of bounds\n");
-+	if (ret)
- 		return ret;
--	}
- 
- 	i2c_set_clientdata(client, chip);
- 	psy_cfg.drv_data = chip;
-@@ -307,6 +329,7 @@ static int max17040_probe(struct i2c_client *client,
- 
- 	max17040_reset(client);
- 	max17040_get_version(client);
-+	max17040_set_rcomp(client, chip->rcomp_value);
- 
- 	/* check interrupt */
- 	if (client->irq && of_device_is_compatible(client->dev.of_node,
--- 
-2.20.1
-
+Best Regards
+Micha³ Miros³aw
