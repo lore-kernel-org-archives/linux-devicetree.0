@@ -2,143 +2,85 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE75C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1031EC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 040D22073B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D457B206A5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:55:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="AgVSNtd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgEDKyg (ORCPT
+        id S1728007AbgEDKz0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 06:54:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:41690 "EHLO foss.arm.com"
+        Mon, 4 May 2020 06:55:26 -0400
+Received: from ozlabs.org ([203.11.71.1]:34869 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbgEDKy2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 06:54:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 651541FB;
-        Mon,  4 May 2020 03:54:27 -0700 (PDT)
-Received: from [10.57.39.240] (unknown [10.57.39.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0209B3F71F;
-        Mon,  4 May 2020 03:54:25 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1727098AbgEDKz0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 06:55:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49G0BM4Mxtz9sSW;
+        Mon,  4 May 2020 20:55:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1588589724;
+        bh=VOZJ+41zv/uZ/NKVIx1QgglexMhIon3i+ZhlW+HFNpE=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=AgVSNtd0EKpHhqfVc4Qj1yCW1CRAJqnOrCkYbhWJemSwhGz1lczFqdOXMEOaN+Q2l
+         orQzsYvlKHQL/k4nRIyf5tisa4q8BsWSNng5IOXVl/dktxlYCr5S9q7O1LDyAo09Rg
+         FAyAlgcyiibMSATur+LOPYkj3RhMKfazyhfQJe4kcZFW2lKNFWGHTYCyn2krXDC14m
+         /4xrj2GKdLx9wyuEhf6thS+6EwPRk09x924ORpYI4BJUB08slSf2u1crkPTisDCttt
+         sFy3XbxWSFZfqqFkUEDwQ3pAGAvvjJuPJVFAq3881KuvjuYpzCEcGh53+W/+jaYhto
+         i/IyxTIcKnvgA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     kernel@pengutronix.de, Wolfram Sang <wsa@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
- <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
- <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
- <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
-Date:   Mon, 4 May 2020 11:54:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc/5200: update contact email
+In-Reply-To: <20200502142642.18979-1-wsa@kernel.org>
+References: <20200502142642.18979-1-wsa@kernel.org>
+Date:   Mon, 04 May 2020 20:55:41 +1000
+Message-ID: <877dxsdl5e.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
-> Hi Robin,
-> 
-> On 5/1/2020 9:24 PM, Robin Murphy wrote:
->> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
->>> [+Robin - to check on dma-ranges intepretation]
->>>
->>> I would need RobH and Robin to review this.
->>>
->>> Also, An ACK from Tom is required - for the whole series.
->>>
->>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
->>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->>>> property to configure the number of bits passed through from PCIe
->>>> address to internal address in Inbound Address Translation register.
->>>>
->>>> However standard PCI dt-binding already defines "dma-ranges" to
->>>> describe the address range accessible by PCIe controller. Parse
->>>> "dma-ranges" property to configure the number of bits passed
->>>> through from PCIe address to internal address in Inbound Address
->>>> Translation register.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> index 9b1c3966414b..60f912a657b9 100644
->>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>        struct device *dev = rc->pcie.dev;
->>>>        struct platform_device *pdev = to_platform_device(dev);
->>>>        struct device_node *np = dev->of_node;
->>>> +    struct of_pci_range_parser parser;
->>>>        struct pci_host_bridge *bridge;
->>>>        struct list_head resources;
->>>> +    struct of_pci_range range;
->>>>        struct cdns_pcie *pcie;
->>>>        struct resource *res;
->>>>        int ret;
->>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>        rc->max_regions = 32;
->>>>        of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
->>>>    -    rc->no_bar_nbits = 32;
->>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
->>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
->>>> +        if (of_pci_range_parser_one(&parser, &range))
->>>> +            rc->no_bar_nbits = ilog2(range.size);
->>
->> You probably want "range.pci_addr + range.size" here just in case the bottom of
->> the window is ever non-zero. Is there definitely only ever a single inbound
->> window to consider?
-> 
-> Cadence IP has 3 inbound address translation registers, however we use only 1
-> inbound address translation register to map the entire 32 bit or 64 bit address
-> region.
+Wolfram Sang <wsa@kernel.org> writes:
+> My 'pengutronix' address is defunct for years. Merge the entries and use
+> the proper contact address.
 
-OK, if anything that further strengthens the argument for deprecating a 
-single "number of bits" property in favour of ranges that accurately 
-describe the window(s). However it also suggests that other users in 
-future might have some expectation that specifying "dma-ranges" with up 
-to 3 entries should work to allow a more restrictive inbound 
-configuration. Thus it would be desirable to make the code a little more 
-robust here - even if we don't support multiple windows straight off, it 
-would still be better to implement it in a way that can be cleanly 
-extended later, and at least say something if more ranges are specified 
-rather than just silently ignoring them.
+Is there any point adding the new address? It's just likely to bit-rot
+one day too.
 
->> I believe that pci_parse_request_of_pci_ranges() could do the actual parsing
->> for you, but I suppose plumbing that in plus processing the resulting
->> dma_ranges resource probably ends up a bit messier than the concise open-coding
->> here.
-> 
-> right, pci_parse_request_of_pci_ranges() parses "ranges" property and is used
-> for outbound configuration, whereas here we parse "dma-ranges" property and is
-> used for inbound configuration.
+I figure the git history is a better source for more up-to-date emails.
 
-If you give it a valid third argument it *also* parses "dma-ranges" into 
-a list of inbound regions. This is already used by various other drivers 
-for equivalent inbound window setup, which is what I was hinting at 
-before, but given the extensibility argument above I'm now going to 
-actively suggest following that pattern for consistency.
+cheers
 
-Robin.
+> diff --git a/arch/powerpc/boot/dts/pcm032.dts b/arch/powerpc/boot/dts/pcm032.dts
+> index c259c6b3ac5a..780e13d99e7b 100644
+> --- a/arch/powerpc/boot/dts/pcm032.dts
+> +++ b/arch/powerpc/boot/dts/pcm032.dts
+> @@ -3,9 +3,7 @@
+>   * phyCORE-MPC5200B-IO (pcm032) board Device Tree Source
+>   *
+>   * Copyright (C) 2006-2009 Pengutronix
+> - * Sascha Hauer <s.hauer@pengutronix.de>
+> - * Juergen Beisert <j.beisert@pengutronix.de>
+> - * Wolfram Sang <w.sang@pengutronix.de>
+> + * Sascha Hauer, Juergen Beisert, Wolfram Sang <kernel@pengutronix.de>
+>   */
+>  
+>  /include/ "mpc5200b.dtsi"
+> -- 
+> 2.20.1
