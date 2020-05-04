@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61D1C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 11:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB5BC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 11:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB930206B8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 11:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1990020752
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 11:01:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMqEVASM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Er757pB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgEDLA1 (ORCPT
+        id S1727098AbgEDLBW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 07:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47678 "EHLO
+        Mon, 4 May 2020 07:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726797AbgEDLA0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 07:00:26 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF44C061A0E;
-        Mon,  4 May 2020 04:00:26 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x4so7929448wmj.1;
-        Mon, 04 May 2020 04:00:26 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1726756AbgEDLBW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 07:01:22 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1044BC061A0E;
+        Mon,  4 May 2020 04:01:22 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e16so15255200wra.7;
+        Mon, 04 May 2020 04:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=j78pwgAoPIBXpzCPQa9obI1dS/AtoekTWfi/Z9wgTpE=;
-        b=FMqEVASMwd4jsKWMbAfOMx/EXRykuKYV/52Xl+u4cPeVIB+mJWcN7ENXhsbR7M4YJc
-         INi2krmc920kV+fanUnf0LILJH2Vmh/gmmgk4A7BXBQAfzTu+Zm58kFeDWvGGfM5dAHJ
-         7R9XZXqsajrXS7/zCRbwZQGQrHHzAvouV68ESanU82QXWL2QQyIVUeA7sdBOosriWGXE
-         SRtWN7QSzU6D579adzQtB5mdv/NeBhdlq+ZidnENn7rHNGyscMVcKK0DoRAVJBDpCrq+
-         XeKGgCNTrGfGaVKG9C1tN6Isl3gKQkdvJTBKgL6n9rwYTdKQ7ijEgpd+WTIW3CmHcxI0
-         y8GA==
+        bh=8gYfSI9LTcswBBqFfe7141haPYxExZ3uMFkC1/HLr8o=;
+        b=Er757pB4csDycjVcXCmOh++3Va7lgE/d3hS1HwCih97sW3prXSMjWizDZgcytRdk2r
+         cgapq+RDFM+tDupAohhSg8ByjenyW/Q8Yws4pugfIcFlefT+6Q6R9EE+E3rh13EpzY/3
+         P9y278S5lJGhcqYVZ2Rhc9+/RtR2avv6UH8d7mMtlJ9vTSumQRNNIq32eJdJV/CSLTa7
+         4zQdDdXqyYMte+9YaWiE3+o0kzV7xQ/mDLO+6+B/kyZFUY3Uvb/zsy9VuGafoWwvHFjd
+         iBmCjFCKvfe/8/gFjPRDDFJZkZ0EQJoyw6jlKn4KPWkr9Ky5yIEriacriuQ89w37U+hw
+         WpFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=j78pwgAoPIBXpzCPQa9obI1dS/AtoekTWfi/Z9wgTpE=;
-        b=F0tVNgwmMKkgeK20DeZNOdAFkQzzQAmgXm48HJzqjGVNSrnOiADofDpUNCLmsGejGd
-         sxr1o/xzTO4f6I1n2JTF6AZM3ufZioKrmKk3BeUaGzQAc+e1cg0FAChCR79svzxIQ3k4
-         BcDhAsZsXKNgdstpusyBDULzXSYNzxS2LFoyFHMjyVQbeDRzjGVgiTKZqFLnxhqQEOjH
-         y95sPc+++wX+RKkhLV3/atrdihce6SdFyhpo4OScho8Fzx+jWJbrKg3WqOBV+kEb5pwL
-         u1wQe9/XloSGOdygzrWb/aP/ebqJWoF0FmSa5bbeSWOE56bEkbl0XTzkigxXfodhmbf8
-         O1Ow==
-X-Gm-Message-State: AGi0Pub1b3iNNBqsjfaTe3afORtCW/j1S+SAMcwNjxwcpzBo+ZkuzWAj
-        zpeMmfjbAEBKWBXqfJ/B2V8/I5ceeibZeyAK03M=
-X-Google-Smtp-Source: APiQypLU0iLwcBk2HNdVaMBVWBe/1k0yjxd5T16MVENu1G8k0t+p0w9Rby7rjQjjzKlds5iHe4qWJXWBe1wvpqtxMAg=
-X-Received: by 2002:a05:600c:c9:: with SMTP id u9mr13753067wmm.15.1588590025222;
- Mon, 04 May 2020 04:00:25 -0700 (PDT)
+        bh=8gYfSI9LTcswBBqFfe7141haPYxExZ3uMFkC1/HLr8o=;
+        b=HLg8W5LPD0yJTEpb1U/edBIejliCKIsNnJcqKrGETgpxTuDAOxsd89xps6Uf4ha+aW
+         /VitwshK+s14orjm560mysjnZZl+1SMHW29RwBIfgNJXjv4fDh14A4KWpQb21RYsrBKz
+         ydsT4xSqh+7i8P2CYsO/JOIsOduvYFzoPVqcm3l/CaWzge1xYzyml9reLfVOpLLbgR9n
+         b1Q0+EQ85QIlM9PmJGeJhmMS8lm6J/Z6R2OY+qQvRB4QhQcTgOQVuMiGIMYwtIJ1zPF/
+         19cQtewSsMdOtnZNTHLMFyXgqSaSqMIYt8vHbqVER82k7BXH0vZBab88eImAJByQxW+H
+         bftw==
+X-Gm-Message-State: AGi0PuZ1P0F+sehGoV+Wu6QBYA+Evs9SDL47QjGl0bqPY3VAz8WfSdjP
+        jfsOUsc9AXkb+vYZt7iNsD21tkGz3uLTQwEn41l6jub1EXI=
+X-Google-Smtp-Source: APiQypJbvlr1zD1X04CH2mq6hBepmWIB7EJ18lS67KkLbsAn42ZYeKKB8H4UVnOmZIuoTF5rZku2E4lnkGqfkgB+hCc=
+X-Received: by 2002:adf:f641:: with SMTP id x1mr18421592wrp.151.1588590080839;
+ Mon, 04 May 2020 04:01:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com> <20200502114752.1048500-6-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20200502114752.1048500-6-martin.blumenstingl@googlemail.com>
+References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com> <20200502114752.1048500-7-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200502114752.1048500-7-martin.blumenstingl@googlemail.com>
 From:   hex dump <hexdump0815@gmail.com>
-Date:   Mon, 4 May 2020 13:00:10 +0200
-Message-ID: <CAKTihDXSmqzBxndCRncpBRdqKCtrujpzWUJ_-3k7JvXpNKSQKQ@mail.gmail.com>
-Subject: Re: [PATCH 5/6] phy: amlogic: meson8b-usb2: unset the IDDQ bit during
- PHY power-on
+Date:   Mon, 4 May 2020 13:01:06 +0200
+Message-ID: <CAKTihDXu2ZC3p-5w41-jZQ0x9kbcPnVyuwB5zgE3sDA6n3SiaQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] phy: amlogic: meson8b-usb2: Add a compatible string
+ for Meson8m2
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc:     kishon@ti.com, robh+dt@kernel.org, vkoul@kernel.org,
         devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
@@ -76,91 +76,55 @@ X-Mailing-List: devicetree@vger.kernel.org
 On Sat, May 2, 2020 at 1:48 PM Martin Blumenstingl
 <martin.blumenstingl@googlemail.com> wrote:
 >
-> The vendor driver unsets the set_iddig bit during power-on as well and
-> sets it when suspending the PHY. I did not notice this in the vendor
-> driver first, because it's part of the dwc_otg driver there (instead of
-> their PHY code). While here, also add all other REG_DBG_UART register
-> bit definitions.
+> The 3.10 vendor kernel sets the ACA_ENABLE bit on Meson8b, Meson8m2 and
+> GXBB, but not on Meson8. Add a compatible string for Meson8m2 which also
+> sets that bit.
+> While here, also update the Kconfig text and MODULE_DESCRIPTION.
 >
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
 Tested-by: hexdump <hexdump0815@googlemail.com>
 
 > ---
->  drivers/phy/amlogic/phy-meson8b-usb2.c | 44 +++++++++++++++++++-------
->  1 file changed, 32 insertions(+), 12 deletions(-)
+>  drivers/phy/amlogic/Kconfig            | 2 +-
+>  drivers/phy/amlogic/phy-meson8b-usb2.c | 6 +++++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
 >
+> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+> index 3495b23af797..5ec53874d1ea 100644
+> --- a/drivers/phy/amlogic/Kconfig
+> +++ b/drivers/phy/amlogic/Kconfig
+> @@ -3,7 +3,7 @@
+>  # Phy drivers for Amlogic platforms
+>  #
+>  config PHY_MESON8B_USB2
+> -       tristate "Meson8, Meson8b and GXBB USB2 PHY driver"
+> +       tristate "Meson8, Meson8b, Meson8m2 and GXBB USB2 PHY driver"
+>         default ARCH_MESON
+>         depends on OF && (ARCH_MESON || COMPILE_TEST)
+>         depends on USB_SUPPORT
 > diff --git a/drivers/phy/amlogic/phy-meson8b-usb2.c b/drivers/phy/amlogic/phy-meson8b-usb2.c
-> index 7236b8885f07..436dfa1a8a04 100644
+> index 436dfa1a8a04..03c061dd5f0d 100644
 > --- a/drivers/phy/amlogic/phy-meson8b-usb2.c
 > +++ b/drivers/phy/amlogic/phy-meson8b-usb2.c
-> @@ -78,6 +78,17 @@
->         #define REG_ADP_BC_ACA_PIN_FLOAT                BIT(26)
+> @@ -302,6 +302,10 @@ static const struct of_device_id phy_meson8b_usb2_of_match[] = {
+>                 .compatible = "amlogic,meson8b-usb2-phy",
+>                 .data = &phy_meson8b_usb2_match_data
+>         },
+> +       {
+> +               .compatible = "amlogic,meson8m2-usb2-phy",
+> +               .data = &phy_meson8b_usb2_match_data
+> +       },
+>         {
+>                 .compatible = "amlogic,meson-gxbb-usb2-phy",
+>                 .data = &phy_meson8b_usb2_match_data
+> @@ -320,5 +324,5 @@ static struct platform_driver phy_meson8b_usb2_driver = {
+>  module_platform_driver(phy_meson8b_usb2_driver);
 >
->  #define REG_DBG_UART                                   0x10
-> +       #define REG_DBG_UART_BYPASS_SEL                 BIT(0)
-> +       #define REG_DBG_UART_BYPASS_DM_EN               BIT(1)
-> +       #define REG_DBG_UART_BYPASS_DP_EN               BIT(2)
-> +       #define REG_DBG_UART_BYPASS_DM_DATA             BIT(3)
-> +       #define REG_DBG_UART_BYPASS_DP_DATA             BIT(4)
-> +       #define REG_DBG_UART_FSV_MINUS                  BIT(5)
-> +       #define REG_DBG_UART_FSV_PLUS                   BIT(6)
-> +       #define REG_DBG_UART_FSV_BURN_IN_TEST           BIT(7)
-> +       #define REG_DBG_UART_LOOPBACK_EN_B              BIT(8)
-> +       #define REG_DBG_UART_SET_IDDQ                   BIT(9)
-> +       #define REG_DBG_UART_ATE_RESET                  BIT(10)
->
->  #define REG_TEST                                       0x14
->         #define REG_TEST_DATA_IN_MASK                   GENMASK(3, 0)
-> @@ -172,20 +183,24 @@ static int phy_meson8b_usb2_power_on(struct phy *phy)
->         regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_SOF_TOGGLE_OUT,
->                            REG_CTRL_SOF_TOGGLE_OUT);
->
-> -       if (priv->dr_mode == USB_DR_MODE_HOST &&
-> -           priv->match->host_enable_aca) {
-> -               regmap_update_bits(priv->regmap, REG_ADP_BC,
-> -                                  REG_ADP_BC_ACA_ENABLE,
-> -                                  REG_ADP_BC_ACA_ENABLE);
-> +       if (priv->dr_mode == USB_DR_MODE_HOST) {
-> +               regmap_update_bits(priv->regmap, REG_DBG_UART,
-> +                                  REG_DBG_UART_SET_IDDQ, 0);
->
-> -               udelay(ACA_ENABLE_COMPLETE_TIME);
-> +               if (priv->match->host_enable_aca) {
-> +                       regmap_update_bits(priv->regmap, REG_ADP_BC,
-> +                                          REG_ADP_BC_ACA_ENABLE,
-> +                                          REG_ADP_BC_ACA_ENABLE);
->
-> -               regmap_read(priv->regmap, REG_ADP_BC, &reg);
-> -               if (reg & REG_ADP_BC_ACA_PIN_FLOAT) {
-> -                       dev_warn(&phy->dev, "USB ID detect failed!\n");
-> -                       clk_disable_unprepare(priv->clk_usb);
-> -                       clk_disable_unprepare(priv->clk_usb_general);
-> -                       return -EINVAL;
-> +                       udelay(ACA_ENABLE_COMPLETE_TIME);
-> +
-> +                       regmap_read(priv->regmap, REG_ADP_BC, &reg);
-> +                       if (reg & REG_ADP_BC_ACA_PIN_FLOAT) {
-> +                               dev_warn(&phy->dev, "USB ID detect failed!\n");
-> +                               clk_disable_unprepare(priv->clk_usb);
-> +                               clk_disable_unprepare(priv->clk_usb_general);
-> +                               return -EINVAL;
-> +                       }
->                 }
->         }
->
-> @@ -196,6 +211,11 @@ static int phy_meson8b_usb2_power_off(struct phy *phy)
->  {
->         struct phy_meson8b_usb2_priv *priv = phy_get_drvdata(phy);
->
-> +       if (priv->dr_mode == USB_DR_MODE_HOST)
-> +               regmap_update_bits(priv->regmap, REG_DBG_UART,
-> +                                  REG_DBG_UART_SET_IDDQ,
-> +                                  REG_DBG_UART_SET_IDDQ);
-> +
->         clk_disable_unprepare(priv->clk_usb);
->         clk_disable_unprepare(priv->clk_usb_general);
->
+>  MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl@googlemail.com>");
+> -MODULE_DESCRIPTION("Meson8, Meson8b and GXBB USB2 PHY driver");
+> +MODULE_DESCRIPTION("Meson8, Meson8b, Meson8m2 and GXBB USB2 PHY driver");
+>  MODULE_LICENSE("GPL");
 > --
 > 2.26.2
 >
