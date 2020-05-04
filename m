@@ -2,217 +2,201 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C00C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 15:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609F0C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 15:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C92320735
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 15:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A9D2073B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 15:48:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6NWcErA"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="n2AewZD5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbgEDPYc (ORCPT
+        id S1728873AbgEDPsV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 11:24:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726908AbgEDPYb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 11:24:31 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BBCDC061A0E
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 08:24:31 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id t11so10090044lfe.4
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 08:24:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=hiSySpURjELapjWkVuG5B+GMLNHdKW6iA+VycBG7Dso=;
-        b=M6NWcErASTGsS5i10MWRd8/FRtBRWF5M41kIQ7Xypy9ecoAIyABYN8EdVTuvjteXP0
-         nx11431qR1Ohzjx0MQgzsNcC+0swcaOftAktjXxVzXnrJl/sn/Qjq2tQBvwvSUQ50NvI
-         VEBVzUPKIBGZ+pbCt1g2GwePYAwFFO383oHnGdosPTxGEMAxKNJbIvssgSiRRaGCeAhU
-         dydDfjDCGwpM8qfGgVpFJJOD12XQukEdcSR4BcKa7IjkBiagIiVZQ29G/+SlqsjAQ8Xz
-         ozuGm4cJWkY2frADjRPib3clmwYKVSiYD5ZN9jxZRLR1T/u88aEXUP2b/gC/r9ZiK0jp
-         5xyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=hiSySpURjELapjWkVuG5B+GMLNHdKW6iA+VycBG7Dso=;
-        b=hdLEO5Q7cSWXAJEmjXrZnM4OXe7CdDnWbCTWm61RgIN0CXSkGXFDHJKTfG1b/JVWP+
-         +/lkxdf86Aa0G++TBR5Xz/INJwgK/9hTTquUhX8tcmW8vkppOjygd5JMQyJbP/fa8VD2
-         WPe30vhRnryFsIixjt/r/YtRhEX2s83VFU8HKurSjXGQE6fXImf/ZsGuMfj/npuzTS/q
-         U1OtAPZh3LekqyEvqypvmEUrf9dh2fltX02l9jw4dXQyusAcU8BtnvGahuEr81JCqi6o
-         OJmy0tqNiuL6g1tZtMCTQCLY4ERhKF0ENsU0OTSjVR/1LSli0Bj8U/+2Zv78jKzPxrhq
-         O5iA==
-X-Gm-Message-State: AGi0PuYTfFLFeeTmNwh9euZfuiE1o2HyHxX5LCA90XpjLvax11mdNbUi
-        TAbyf3rEyd6loGIFTzdyqHw=
-X-Google-Smtp-Source: APiQypKXi1u7L6aALLYofQe1fOadySmoHHzbC9gxqFfcwOBf3tl7ZIl3EHjNbNaLD9VVh2ECSpMzyQ==
-X-Received: by 2002:ac2:5de5:: with SMTP id z5mr6769209lfq.68.1588605869706;
-        Mon, 04 May 2020 08:24:29 -0700 (PDT)
-Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.googlemail.com with ESMTPSA id y21sm8466552ljg.66.2020.05.04.08.24.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 08:24:29 -0700 (PDT)
-To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vivek Unune <npcomplete13@gmail.com>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Proper DT bindings for Broadcom's DMU node
-Message-ID: <7da2db8f-66d0-24ec-d3eb-84247b383a06@gmail.com>
-Date:   Mon, 4 May 2020 17:24:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 11:48:21 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:32702 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725941AbgEDPsV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 11:48:21 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044FfANr013282;
+        Mon, 4 May 2020 10:47:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=PODMain02222019;
+ bh=1Ggk2BIJytvJuALTrGUMfblqMAMj1YflKy4YfvgqcPQ=;
+ b=n2AewZD5Wc4WhZ69UF17/fCenMKW3D6g6UCJ4ugMiVvDTusTHGBsmyQkMTjGkIlMpnbB
+ +tpQmM7/ff8hS5MSB5rVKGdleqJn9oXPxMN/FOQ4ffaaGUR/GnKZjnFrATfH5tD/z0TY
+ minvOisL/n8+U5U5khZR0HegEdfNSyeN7trnVUUzEFlCuL75AFAcx97uMlI0s8vaMavd
+ OLplRL14UGSMj/J32lTQgmstKyCXrCTlZB2MPjie8W7jBJzRPt9nyBOTm6IACi4dOZ88
+ pnhCpFptVQ0ts7F8mHGCTAexIjkapNXEor5O9hfbknAk9ce9us6m5hPdWElRHUrHrNNV rQ== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 30s59pkefj-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 04 May 2020 10:47:59 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 4 May 2020
+ 16:47:57 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Mon, 4 May 2020 16:47:57 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2FA282C8;
+        Mon,  4 May 2020 15:47:57 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <jdelvare@suse.com>,
+        <linux@roeck-us.net>, <linus.walleij@linaro.org>
+CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: [PATCH v2 2/5] ASoC: lochnagar: Move binding over to dtschema
+Date:   Mon, 4 May 2020 16:47:54 +0100
+Message-ID: <20200504154757.17519-2-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
+References: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
+ clxscore=1015 phishscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ mlxlogscore=999 suspectscore=0 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040126
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
 
-I need some help with designing proper bindings for Broadcom's DMU
-block. We already have it partially covered but it's inconsistent, some
-cleanups were rejected and so I want to redesign it as it should be.
+Changes since v1:
+ - Moved sub-node into MFD file leaving just the properties in here
+ - Removed contains on the compatible
+ - Removed some pointless descriptions
 
-DMU ("Device Management Unit") is a block that can be found on Broadcom
-iProc / Northstar devices. On Northstar it's mapped at:
-ranges = <0x1800c000 0x1000>
+Thanks,
+Charles
 
-It contains:
-1. Few random registers, some of them shared by various hardware
-    blocks (and possibly hard to abstract?)
-2. At least one sub-block with even more random registers
+ .../devicetree/bindings/sound/cirrus,lochnagar.txt | 39 ----------------
+ .../bindings/sound/cirrus,lochnagar.yaml           | 52 ++++++++++++++++++++++
+ 2 files changed, 52 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
 
-Some of known DMU registers are:
-reg = <0x100 0x14>	CRU LCPLL control0
-reg = <0x140 0x24>	CRU GENPLL
-reg = <0x164 0x04>	CRU_USB2_CONTROL
-reg = <0x180 0x04>	CRU_CLKSET_KEY
-reg = <0x184 0x04>	CRU_RESET
-reg = <0x1c0 0x24>	pinctrl
-reg = <0x2a0 0x04>	CRU_STRAPS_CTRL
-reg = <0x2c0 0x04>	PVTMON control0
-(Broadcom never released a proper documentation)
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+deleted file mode 100644
+index 41ae2699f07a9..0000000000000
+--- a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
++++ /dev/null
+@@ -1,39 +0,0 @@
+-Cirrus Logic Lochnagar Audio Development Board
+-
+-Lochnagar is an evaluation and development board for Cirrus Logic
+-Smart CODEC and Amp devices. It allows the connection of most Cirrus
+-Logic devices on mini-cards, as well as allowing connection of
+-various application processor systems to provide a full evaluation
+-platform.  Audio system topology, clocking and power can all be
+-controlled through the Lochnagar, allowing the device under test
+-to be used in a variety of possible use cases.
+-
+-This binding document describes the binding for the audio portion
+-of the driver.
+-
+-This binding must be part of the Lochnagar MFD binding:
+-  [4] ../mfd/cirrus,lochnagar.txt
+-
+-Required properties:
+-
+-  - compatible : One of the following strings:
+-                 "cirrus,lochnagar2-soundcard"
+-
+-  - #sound-dai-cells : Must be set to 1.
+-
+-  - clocks : Contains an entry for each entry in clock-names.
+-  - clock-names : Must include the following clocks:
+-      "mclk" Master clock source for the sound card, should normally
+-      be set to LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar
+-      clock driver.
+-
+-Example:
+-
+-lochnagar-sc {
+-	compatible = "cirrus,lochnagar2-soundcard";
+-
+-	#sound-dai-cells = <1>;
+-
+-	clocks = <&lochnagar_clk LOCHNAGAR_SOUNDCARD_MCLK>;
+-	clock-names = "mclk";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+new file mode 100644
+index 0000000000000..cea612d3d4a7d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/cirrus,lochnagar.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cirrus Logic Lochnagar Audio Development Board
++
++maintainers:
++  - patches@opensource.cirrus.com
++
++description: |
++  Lochnagar is an evaluation and development board for Cirrus Logic
++  Smart CODEC and Amp devices. It allows the connection of most Cirrus
++  Logic devices on mini-cards, as well as allowing connection of various
++  application processor systems to provide a full evaluation platform.
++  Audio system topology, clocking and power can all be controlled through
++  the Lochnagar, allowing the device under test to be used in a variety of
++  possible use cases.
++
++  This binding document describes the binding for the audio portion of the
++  driver.
++
++  This binding must be part of the Lochnagar MFD binding:
++    [1] ../mfd/cirrus,lochnagar.yaml
++
++properties:
++  compatible:
++    enum:
++      - cirrus,lochnagar2-soundcard
++
++  '#sound-dai-cells':
++    description:
++      The first cell indicating the audio interface.
++    const: 1
++
++  clocks:
++    description:
++      Master clock source for the sound card, should normally be set to
++      LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar clock driver.
++    maxItems: 1
++
++  clock-names:
++    const: mclk
++
++required:
++  - compatible
++  - '#sound-dai-cells'
++  - clocks
++  - clock-names
++
++additionalProperties: false
+-- 
+2.11.0
 
-
-As you can see there are a few CRU registers (depending on a source it's
-a "Clock and Reset Unit" or "Central Resource Unit"). It's said to be
-separated block and was described by Scott (from Broadcom) as: "unit
-with a lot of random registers to perform various operations".
-
-As I said, there are also some shared registers:
-
-CRU_CLKSET_KEY is accessed by:
-1. USB 2.0 PHY driver for (un)locking DMU PLL settings
-2. GMAC for changing 2.66G line rate to 2Gbps
-
-CRU_STRAPS_CTRL needs to be accessed by:
-1. USB 3.0 PHY driver for PHY connected to MDIO
-2. PCIE driver for PHY connected to MDIO
-
-
-My initial idea was to have something like:
-
-dmu@1800c000 {
-	compatible = "simple-bus";
-	ranges = <0 0x1800c000 0x1000>;
-	#address-cells = <1>;
-	#size-cells = <1>;
-
-	cru@100 {
-		compatible = "simple-bus";
-		reg = <0x100 0x1a4>;
-
-		lcpll { ... };
-		genpll { ... };
-		reset { ... };
-	};
-};
-
-but Rob noticed that "simple-bus" requires everything in DMU to have
-sub-nodes [0] [1].
-
-
-I thought it can be solved by using compatible = "syscon", "simple-mfd"
-and I even got one patch for that accepted [2] [3] (pinctrl). It seems
-it slipped through and was possibly a mistake. Another similar patch was
-rejected [4] [5] (bcm-ns-usb2-phy).
-
-What I tried to achieve was something like this:
-
-dmu@1800c000 {
-	compatible = "simple-bus";
-	ranges = <0 0x1800c000 0x1000>;
-	#address-cells = <1>;
-	#size-cells = <1>;
-
-	cru: syscon@100 {
-		compatible = "syscon", "simple-mfd";
-		reg = <0x100 0x1a4>;
-		ranges;
-		#address-cells = <1>;
-		#size-cells = <1>;
-
-		lcpll0@0 {
-			#clock-cells = <1>;
-			compatible = "brcm,nsp-lcpll0";
-			reg = <0x0 0x14>;
-		};
-
-		genpll@40 {
-			#clock-cells = <1>;
-			compatible = "brcm,nsp-genpll";
-			reg = <0x40 0x24>;
-		};
-
-		pin-controller@c0 {
-			compatible = "brcm,bcm4708-pinmux";
-			reg = <0xc0 0x24>;
-			reg-names = "cru_gpio_control";
-		};
-
-		thermal@1c0 {
-			compatible = "brcm,ns-thermal";
-			reg = <0x1c0 0x10>;
-			#thermal-sensor-cells = <0>;
-		};
-	};
-};
-
-cru-reset@??? {
-	compatible = "brcm,ns-cru-reset";
-	syscon-cru = <&cru>; /* CRU_RESET */
-	#reset-cells = <1>;
-};
-
-usb2-phy@??? {
-	compatible = "brcm,ns-usb2-phy";
-	syscon-cru = <&cru>; /* CRU_CLKSET_KEY */
-	#phy-cells = <0>;
-};
-
-(apparently it wasn't a good idea)
-
-So my question is: how to properly handle this? I'm not sure what's the
-proper "compatible" string to use. Is my idea of:
-1. Using sub-node for registers explicitly used by one driver
-2. Using syscon for shared registers
-OK?
-
-
-[0] https://www.spinics.net/lists/arm-kernel/msg682838.html
-[1] https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20181015093013.31651-1-zajec5@gmail.com/
-[2] https://spinics.net/lists/linux-gpio/msg35285.html
-[3] https://patchwork.kernel.org/patch/10735931/
-[4] https://lkml.org/lkml/2019/1/15/913
-[5] https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20190108123907.19816-1-zajec5@gmail.com/
