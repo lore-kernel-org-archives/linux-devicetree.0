@@ -2,122 +2,144 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE18C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 09:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760E5C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 09:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E489F206D9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 09:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C28206D9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 09:38:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Lbf9qoq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEDJch (ORCPT
+        id S1728360AbgEDJil (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 05:32:37 -0400
-Received: from mga14.intel.com ([192.55.52.115]:37572 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726625AbgEDJch (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 05:32:37 -0400
-IronPort-SDR: UO6hnEJI0jgCptRStUSRHFswz44PU36PtuzA1j/MOVO/Wf3vyXKXm8t2407133kv/lcB/weKCB
- iwOybFQPdl7Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 02:32:36 -0700
-IronPort-SDR: gogS56CzkeTAhj4gf/NBkhnc2YLR41DiO9IoL86fVUfYgn0W5qOamzEYizWTABiIY9+PgZGvOB
- 3L2qC5eQ8GNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
-   d="scan'208";a="406421994"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 04 May 2020 02:32:36 -0700
-Received: from [10.215.163.15] (ekotax-mobl.gar.corp.intel.com [10.215.163.15])
-        by linux.intel.com (Postfix) with ESMTP id 6BD5B580613;
-        Mon,  4 May 2020 02:32:33 -0700 (PDT)
-Subject: Re: [PATCH v7 3/3] phy: intel: Add driver support for ComboPhy
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, lee.jones@linaro.org, arnd@arndb.de,
-        robh@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com
-References: <cover.1588230494.git.eswara.kota@linux.intel.com>
- <af8a7d7025990d22f6062953247cf80e64c6fd2f.1588230494.git.eswara.kota@linux.intel.com>
- <20200504072923.GN1375924@vkoul-mobl>
- <f12e76ac-e0fd-4afa-e1cd-2b90f175adfd@linux.intel.com>
- <20200504092034.GS1375924@vkoul-mobl>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <0de7ba47-bc98-9267-46b4-230a86151c2d@linux.intel.com>
-Date:   Mon, 4 May 2020 17:32:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Mon, 4 May 2020 05:38:41 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58410 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728254AbgEDJil (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 05:38:41 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0449cUal125935;
+        Mon, 4 May 2020 04:38:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588585110;
+        bh=+cbr2QlNAaibYB5T0a54zsT/SDvBAOzBQ5jH0LGi8Y0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Lbf9qoq4Jk0OowNS2ngnfusqKPqnL9Obkrk7KFF+xBVDdk2RtsXgK1uTsdo6hYGkW
+         g41z1b0+4k5UB4N2R92yGWGzY2lp9X948/d8cJqg3kad2k9HSiWHIWrjHEXZOMutKu
+         2Y+HVo0bqqKuzpzYm6Cqx/xGuoZ/hGsTY2aTv0jM=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0449cTdd116394;
+        Mon, 4 May 2020 04:38:29 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
+ 2020 04:38:29 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 4 May 2020 04:38:29 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0449cPB8118676;
+        Mon, 4 May 2020 04:38:26 -0500
+Subject: Re: [PATCH 1/5] dt-bindings: soc: ti: add binding for k3 platforms
+ chipid module
+To:     Dave Gerlach <d-gerlach@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200423180545.13707-1-grygorii.strashko@ti.com>
+ <20200423180545.13707-2-grygorii.strashko@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <0c677af8-5a5a-8b34-0670-c63f9dfe7f2f@ti.com>
+Date:   Mon, 4 May 2020 12:38:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200504092034.GS1375924@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200423180545.13707-2-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
-On 5/4/2020 5:20 PM, Vinod Koul wrote:
-> On 04-05-20, 16:26, Dilip Kota wrote:
->> On 5/4/2020 3:29 PM, Vinod Koul wrote:
->>> On 30-04-20, 15:15, Dilip Kota wrote:
->>>
->>>> +					  u32 mask, u32 val)
->>>> +{
->>>> +	u32 reg_val;
->>>> +
->>>> +	reg_val = readl(base + reg);
->>>> +	reg_val &= ~mask;
->>>> +	reg_val |= FIELD_PREP(mask, val);
->>>> +	writel(reg_val, base + reg);
->>> bypassing regmap here... why?
->> It is not regmap address, one of the below two addresses are passed to this
->> function.
-> okay, perhaps add a comment somewhere that regmap is not used for this
-> base?
-I dont see a need of adding a comment, describing don't do regmap here.
->
->> struct intel_combo_phy {
->> ...
->>          void __iomem            *app_base;
->>          void __iomem            *cr_base;
->> ...
->> }
->
->>>> +static int intel_cbphy_calibrate(struct phy *phy)
->>>> +{
->>>> +	struct intel_cbphy_iphy *iphy = phy_get_drvdata(phy);
->>>> +	struct intel_combo_phy *cbphy = iphy->parent;
->>>> +	void __iomem *cr_base = cbphy->cr_base;
->>>> +	int val, ret, id;
->>>> +
->>>> +	if (cbphy->phy_mode != PHY_XPCS_MODE)
->>>> +		return 0;
->>>> +
->>>> +	id = PHY_ID(iphy);
->>>> +
->>>> +	/* trigger auto RX adaptation */
->>>> +	combo_phy_w32_off_mask(cr_base, CR_ADDR(PCS_XF_ATE_OVRD_IN_2, id),
->>>> +			       ADAPT_REQ_MSK, 3);
->>>> +	/* Wait RX adaptation to finish */
->>>> +	ret = readl_poll_timeout(cr_base + CR_ADDR(PCS_XF_RX_ADAPT_ACK, id),
->>>> +				 val, val & RX_ADAPT_ACK_BIT, 10, 5000);
->>>> +	if (ret)
->>>> +		dev_err(cbphy->dev, "RX Adaptation failed!\n");
->>> you want to continue her and not return error?
->> Next step is stopping the Adaptation, it should be done in both error and
->> success case.
-> Again documenting this helps, pls add some comments on this behaviour
-Comments are already in place, mentioning Start and Stop of Rx 
-Adaptation. And Stop is being is done as Start is triggered, so not 
-needed to mention error and success.
+On 23/04/2020 21:05, Grygorii Strashko wrote:
+> Add DT binding for Texas Instruments K3 Multicore SoC platforms chipid
+> module which is represented by CTRLMMR_xxx_JTAGID register and contains
+> information about SoC id and revision.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>   .../bindings/soc/ti/k3-socinfo.yaml           | 40 +++++++++++++++++++
+>   1 file changed, 40 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml b/Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+> new file mode 100644
+> index 000000000000..a1a8423b2e2e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/ti/k3-socinfo.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments K3 Multicore SoC platforms chipid module
+> +
+> +maintainers:
+> +  - Tero Kristo <t-kristo@ti.com>
+> +  - Nishanth Menon <nm@ti.com>
+> +
+> +description: |
+> +  Texas Instruments (ARM64) K3 Multicore SoC platforms chipid module is
+> +  represented by CTRLMMR_xxx_JTAGID register which contains information about
+> +  SoC id and revision.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^chipid@[0-9a-f]+$"
+> +
+> +  compatible:
+> +    items:
+> +      - const: ti,am654-chipid
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    chipid@43000014 {
+> +        compatible = "ti,am654-chipid";
+> +        reg = <0x43000014 0x4>;
+> +    };
+> 
 
-Regards,
-Dilip
->
+Do you have any comments here?
+
+-- 
+Best regards,
+grygorii
