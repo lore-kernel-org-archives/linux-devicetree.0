@@ -2,425 +2,94 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D372DC47247
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 21:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E290C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 21:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0A2320707
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 21:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 632F62073E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 21:39:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="V7OuOwnp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AynCMGGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgEDVDy (ORCPT
+        id S1726419AbgEDVjn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 17:03:54 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:38279 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726825AbgEDVDy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 17:03:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588626233; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=cnpTVGsk5cKEizkJnxpynIZXwfS02A3yLTeMRtpkXuk=;
- b=V7OuOwnpTKa2qskD9k3nFifZpPGKBmw4+u+LbCBPNZOkb7E8+h25P7QiQmNzPe4sMMJgzFYE
- jOtQzw9CkeuoVz+kJfLJsLX6bNnVmibzZDkFPAQXm9mvUnW1PDYcmnhaV2gLnXsEx5NzZvHL
- rqBggYhayazqcpJ556FSRsZdOss=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb08325.7f1840757a78-smtp-out-n05;
- Mon, 04 May 2020 21:03:33 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AF80EC43637; Mon,  4 May 2020 21:03:33 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14BD4C433CB;
-        Mon,  4 May 2020 21:03:32 +0000 (UTC)
+        Mon, 4 May 2020 17:39:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726338AbgEDVjm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 17:39:42 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2435C061A0E;
+        Mon,  4 May 2020 14:39:42 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id v2so312759plp.9;
+        Mon, 04 May 2020 14:39:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dnKlsTHwnnFXazn7zzxGnzLza7yEGHj+jI4fWn0tS74=;
+        b=AynCMGGq0W5VEIeiqAdRi99uVamrPcFWpeWEkJSSFpofFC9z+cTdg2BqY7IQs4bIPZ
+         GSqk0NDj1De6v3E6B8hD69oAQTlbDvt1Lx9cjx93XUcfEwcebbSsgHRMtF4qhLb0jzZX
+         itI0Q8Kr1odj5D/nJN/BpvPDndUDGVSMkPUzjR5fkCIsZ0cHYIyF0GBIi0buzkkIVTYX
+         vyMUc8KMOGVroi9h+Rt1Zocd5gnzZOxcPjMnShu3prz33cm7yAKqGlvhXPLfJHUQyMp3
+         L/RalKi4lfErm0MP9laMKgQi1WBfOL73oLxLBoIMe2Umoj52vUyX7Fb2Vn9QenyLud+5
+         JzTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dnKlsTHwnnFXazn7zzxGnzLza7yEGHj+jI4fWn0tS74=;
+        b=iV3tvBC1dV3jeoNR/aGEjrtX1IfcrmutBIRHbyiK4h676Qi7geqNU4IGGQ7/Rk81xc
+         oUAHpzsNTVl3hWV1Xjd6q40acDqCI0LOA/kPofODUss+vw5dkXNBIOX+djzhrlDFNkz+
+         tK3RQ0AkKv/npFSYG9O6/SqxUZFmPfoxolT0fCnPAnM+55Q1b9HpJu1txbdkjEuUjQHf
+         2yaVzdQQ4L9s2dAaPmWIo9KWnBg5MuNvTxpTChgbixhQgp1MFf83KAoaXXv7sEBiJhg6
+         mkqlmh/jvVCJcknZwib+v89uQ84qWtduEUAWEefWiBeXqh0JmFpaAZfRPM0wymEZm5P2
+         r6WA==
+X-Gm-Message-State: AGi0PublvgyIwp1syPYhSCTmgHVbtw+G88uLFET6PPKGPC4h4Z5JNUQq
+        KbU/iyGExz+3hyrumy5MBkg=
+X-Google-Smtp-Source: APiQypJ0HAeQTPu2DzaLtYV63srcvAmn2r4FeBJuSk32vuYutJBixLjLmYsfLjkggFKUUIZHiN62KQ==
+X-Received: by 2002:a17:90b:3017:: with SMTP id hg23mr171014pjb.150.1588628381874;
+        Mon, 04 May 2020 14:39:41 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id a12sm44947pfr.28.2020.05.04.14.39.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 May 2020 14:39:41 -0700 (PDT)
+Date:   Mon, 4 May 2020 14:39:05 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] ASoC: fsl_esai: introduce SoC specific data
+Message-ID: <20200504213905.GA21292@Asurada-Nvidia>
+References: <cover.1588320655.git.shengjiu.wang@nxp.com>
+ <27af074e47bf2b81e2dce67ea66a9f7301dfcb07.1588320656.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 May 2020 02:33:32 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
-        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
-        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
-        evgreen@chromium.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v7 4/7] OPP: Add support for parsing interconnect
- bandwidth
-In-Reply-To: <20200424155404.10746-5-georgi.djakov@linaro.org>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-5-georgi.djakov@linaro.org>
-Message-ID: <1c49953a26f40aa01c034f2829e15d1b@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <27af074e47bf2b81e2dce67ea66a9f7301dfcb07.1588320656.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Georgi,
+On Fri, May 01, 2020 at 04:12:04PM +0800, Shengjiu Wang wrote:
+> Introduce a SoC specific data structure which contains the
+> differences between the different SoCs.
+> This makes it easier to support more differences without having
+> to introduce a new if/else each time.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Apart from the Matthias's comments
-ran into a few issues during testing.
+Though the 2nd patch is having comments to address, this one
+looks fine to me and should be able to merge as long as Mark
+is okay with this too:
 
-On 2020-04-24 21:24, Georgi Djakov wrote:
-> The OPP bindings now support bandwidth values, so add support to parse 
-> it
-> from device tree and store it into the new dev_pm_opp_icc_bw struct, 
-> which
-> is part of the dev_pm_opp.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v7:
-> * Addressed some review comments from Viresh and Sibi.
-> * Various other changes.
-> 
-> v2:
-> https://lore.kernel.org/linux-arm-msm/20190423132823.7915-4-georgi.djakov@linaro.org/
-> 
->  drivers/opp/Kconfig    |   1 +
->  drivers/opp/core.c     |  16 +++++-
->  drivers/opp/of.c       | 119 ++++++++++++++++++++++++++++++++++++++++-
->  drivers/opp/opp.h      |   9 ++++
->  include/linux/pm_opp.h |  12 +++++
->  5 files changed, 153 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/opp/Kconfig b/drivers/opp/Kconfig
-> index 35dfc7e80f92..230d2b84436c 100644
-> --- a/drivers/opp/Kconfig
-> +++ b/drivers/opp/Kconfig
-> @@ -2,6 +2,7 @@
->  config PM_OPP
->  	bool
->  	select SRCU
-> +	depends on INTERCONNECT || !INTERCONNECT
->  	---help---
->  	  SOCs have a standard set of tuples consisting of frequency and
->  	  voltage pairs that the device will support per voltage domain. This
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index c9c1bbe6ae27..8e86811eb7b2 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -985,6 +985,12 @@ static struct opp_table
-> *_allocate_opp_table(struct device *dev, int index)
->  				ret);
->  	}
-> 
-> +	/* Find interconnect path(s) for the device */
-> +	ret = _of_find_paths(opp_table, dev);
-> +	if (ret)
-> +		dev_dbg(dev, "%s: Error finding interconnect paths: %d\n",
-> +			__func__, ret);
-> +
->  	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
->  	INIT_LIST_HEAD(&opp_table->opp_list);
->  	kref_init(&opp_table->kref);
-> @@ -1229,19 +1235,22 @@ 
-> EXPORT_SYMBOL_GPL(dev_pm_opp_remove_all_dynamic);
->  struct dev_pm_opp *_opp_allocate(struct opp_table *table)
->  {
->  	struct dev_pm_opp *opp;
-> -	int count, supply_size;
-> +	int count, supply_size, icc_size;
-> 
->  	/* Allocate space for at least one supply */
->  	count = table->regulator_count > 0 ? table->regulator_count : 1;
->  	supply_size = sizeof(*opp->supplies) * count;
-> +	icc_size = sizeof(*opp->bandwidth) * table->path_count;
-> 
->  	/* allocate new OPP node and supplies structures */
-> -	opp = kzalloc(sizeof(*opp) + supply_size, GFP_KERNEL);
-> +	opp = kzalloc(sizeof(*opp) + supply_size + icc_size, GFP_KERNEL);
-> +
->  	if (!opp)
->  		return NULL;
-> 
->  	/* Put the supplies at the end of the OPP structure as an empty array 
-> */
->  	opp->supplies = (struct dev_pm_opp_supply *)(opp + 1);
-> +	opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp->supplies + 1);
->  	INIT_LIST_HEAD(&opp->node);
-> 
->  	return opp;
-> @@ -1276,6 +1285,9 @@ int _opp_compare_key(struct dev_pm_opp *opp1,
-> struct dev_pm_opp *opp2)
->  {
->  	if (opp1->rate != opp2->rate)
->  		return opp1->rate < opp2->rate ? -1 : 1;
-> +	if (opp1->bandwidth && opp2->bandwidth &&
-> +	    opp1->bandwidth[0].peak != opp2->bandwidth[0].peak)
-> +		return opp1->bandwidth[0].peak < opp2->bandwidth[0].peak ? -1 : 1;
->  	if (opp1->level != opp2->level)
->  		return opp1->level < opp2->level ? -1 : 1;
->  	return 0;
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index e33169c7e045..978e445b0cdb 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -332,6 +332,59 @@ static int _of_opp_alloc_required_opps(struct
-> opp_table *opp_table,
->  	return ret;
->  }
-> 
-> +int _of_find_paths(struct opp_table *opp_table, struct device *dev)
-> +{
-> +	struct device_node *np;
-> +	int ret, i, count, num_paths;
-> +
-> +	np = of_node_get(dev->of_node);
-> +	if (!np)
-> +		return 0;
-> +
-> +	count = of_count_phandle_with_args(np, "interconnects",
-> +					   "#interconnect-cells");
-> +	of_node_put(np);
-> +	if (count < 0)
-> +		return 0;
-> +
-> +	/* two phandles when #interconnect-cells = <1> */
-> +	if (count % 2) {
-> +		dev_err(dev, "%s: Invalid interconnects values\n",
-> +			__func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	num_paths = count / 2;
-> +	opp_table->paths = kcalloc(num_paths, sizeof(*opp_table->paths),
-> +				   GFP_KERNEL);
-> +	if (!opp_table->paths)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < num_paths; i++) {
-> +		opp_table->paths[i] = of_icc_get_by_index(dev, i);
-
-now that icc_get is part of the
-opp core framework shouldn't we
-do a put on table remove as well?
-
-> +		if (IS_ERR(opp_table->paths[i])) {
-> +			ret = PTR_ERR(opp_table->paths[i]);
-> +			if (ret != -EPROBE_DEFER) {
-> +				dev_err(dev, "%s: Unable to get path%d: %d\n",
-> +					__func__, i, ret);
-> +			}
-> +			goto err;
-> +		}
-> +	}
-> +	opp_table->path_count = num_paths;
-> +
-> +	return 0;
-> +
-> +err:
-> +	while (i--)
-> +		icc_put(opp_table->paths[i]);
-> +
-> +	kfree(opp_table->paths);
-> +	opp_table->paths = NULL;
-> +
-> +	return ret;
-> +}
-> +
->  static bool _opp_is_supported(struct device *dev, struct opp_table 
-> *opp_table,
->  			      struct device_node *np)
->  {
-> @@ -524,8 +577,11 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
->  static int _read_opp_key(struct dev_pm_opp *new_opp, struct 
-> device_node *np,
->  			 bool *rate_not_available)
->  {
-> +	struct property *peak, *avg;
-> +	u32 *peak_bw, *avg_bw;
->  	u64 rate;
-> -	int ret;
-> +	int ret, i, count;
-> +	bool found = false;
-> 
->  	ret = of_property_read_u64(np, "opp-hz", &rate);
->  	if (!ret) {
-> @@ -535,10 +591,69 @@ static int _read_opp_key(struct dev_pm_opp
-> *new_opp, struct device_node *np,
->  		 * bit guaranteed in clk API.
->  		 */
->  		new_opp->rate = (unsigned long)rate;
-> +		found = true;
->  	}
->  	*rate_not_available = !!ret;
-> 
-> -	of_property_read_u32(np, "opp-level", &new_opp->level);
-> +	peak = of_find_property(np, "opp-peak-kBps", NULL);
-> +	if (peak) {
-> +		/*
-> +		 * Bandwidth consists of peak and average (optional) values:
-> +		 * opp-peak-kBps = <path1_value path2_value>;
-> +		 * opp-avg-kBps = <path1_value path2_value>;
-> +		 */
-> +		count = peak->length / sizeof(u32);
-> +		peak_bw = kmalloc_array(count, sizeof(*peak_bw), GFP_KERNEL);
-> +		if (!peak_bw)
-> +			return -ENOMEM;
-> +
-> +		ret = of_property_read_u32_array(np, "opp-peak-kBps", peak_bw,
-> +						 count);
-> +		if (ret) {
-> +			pr_err("%s: Error parsing opp-peak-kBps: %d\n",
-> +			       __func__, ret);
-> +			goto free_peak_bw;
-> +		}
-> +
-> +		for (i = 0; i < count; i++)
-> +			new_opp->bandwidth[i].peak = kBps_to_icc(peak_bw[i]);
-> +
-> +		found = true;
-> +	}
-> +
-> +	avg = of_find_property(np, "opp-avg-kBps", NULL);
-> +	if (peak && avg) {
-> +		count = avg->length / sizeof(u32);
-> +		avg_bw = kmalloc_array(count, sizeof(*avg_bw), GFP_KERNEL);
-> +		if (!avg_bw) {
-> +			ret = -ENOMEM;
-> +			goto free_peak_bw;
-> +		}
-> +
-> +		ret = of_property_read_u32_array(np, "opp-avg-kBps", avg_bw,
-> +						 count);
-> +		if (ret) {
-> +			pr_err("%s: Error parsing opp-avg-kBps: %d\n",
-> +			       __func__, ret);
-> +			goto free_avg_bw;
-> +		}
-> +
-> +		for (i = 0; i < count; i++)
-> +			new_opp->bandwidth[i].avg = kBps_to_icc(avg_bw[i]);
-> +	}
-> +
-> +	if (of_property_read_u32(np, "opp-level", &new_opp->level))
-
-of_property_read_u32 returns 0 on
-success so should use logical not
-instead ^^
-
-> +		found = true;
-> +
-> +	if (found)
-> +		return 0;
-> +
-> +	return ret;
-> +
-> +free_avg_bw:
-> +	kfree(avg_bw);
-> +free_peak_bw:
-> +	kfree(peak_bw);
-> 
->  	return ret;
->  }
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index bcadb1e328a4..2e0113360297 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -12,6 +12,7 @@
->  #define __DRIVER_OPP_H__
-> 
->  #include <linux/device.h>
-> +#include <linux/interconnect.h>
->  #include <linux/kernel.h>
->  #include <linux/kref.h>
->  #include <linux/list.h>
-> @@ -59,6 +60,7 @@ extern struct list_head opp_tables;
->   * @rate:	Frequency in hertz
->   * @level:	Performance level
->   * @supplies:	Power supplies voltage/current values
-> + * @bandwidth:	Interconnect bandwidth values
->   * @clock_latency_ns: Latency (in nanoseconds) of switching to this 
-> OPP's
->   *		frequency from any other OPP's frequency.
->   * @required_opps: List of OPPs that are required by this OPP.
-> @@ -81,6 +83,7 @@ struct dev_pm_opp {
->  	unsigned int level;
-> 
->  	struct dev_pm_opp_supply *supplies;
-> +	struct dev_pm_opp_icc_bw *bandwidth;
-> 
->  	unsigned long clock_latency_ns;
-> 
-> @@ -146,6 +149,8 @@ enum opp_table_access {
->   * @regulator_count: Number of power supply regulators. Its value can 
-> be -1
->   * (uninitialized), 0 (no opp-microvolt property) or > 0 (has 
-> opp-microvolt
->   * property).
-> + * @paths: Interconnect path handles
-> + * @path_count: Number of interconnect paths
->   * @genpd_performance_state: Device's power domain support performance 
-> state.
->   * @is_genpd: Marks if the OPP table belongs to a genpd.
->   * @set_opp: Platform specific set_opp callback
-> @@ -189,6 +194,8 @@ struct opp_table {
->  	struct clk *clk;
->  	struct regulator **regulators;
->  	int regulator_count;
-> +	struct icc_path **paths;
-> +	unsigned int path_count;
->  	bool genpd_performance_state;
->  	bool is_genpd;
-> 
-> @@ -224,12 +231,14 @@ void _of_clear_opp_table(struct opp_table 
-> *opp_table);
->  struct opp_table *_managed_opp(struct device *dev, int index);
->  void _of_opp_free_required_opps(struct opp_table *opp_table,
->  				struct dev_pm_opp *opp);
-> +int _of_find_paths(struct opp_table *opp_table, struct device *dev);
->  #else
->  static inline void _of_init_opp_table(struct opp_table *opp_table,
-> struct device *dev, int index) {}
->  static inline void _of_clear_opp_table(struct opp_table *opp_table) {}
->  static inline struct opp_table *_managed_opp(struct device *dev, int
-> index) { return NULL; }
->  static inline void _of_opp_free_required_opps(struct opp_table 
-> *opp_table,
->  					      struct dev_pm_opp *opp) {}
-> +static inline int _of_find_paths(struct opp_table *opp_table, struct
-> device *dev) { return 0; }
->  #endif
-> 
->  #ifdef CONFIG_DEBUG_FS
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index 747861816f4f..cfceb0290401 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -41,6 +41,18 @@ struct dev_pm_opp_supply {
->  	unsigned long u_amp;
->  };
-> 
-> +/**
-> + * struct dev_pm_opp_icc_bw - Interconnect bandwidth values
-> + * @avg:	Average bandwidth corresponding to this OPP (in icc units)
-> + * @peak:	Peak bandwidth corresponding to this OPP (in icc units)
-> + *
-> + * This structure stores the bandwidth values for a single 
-> interconnect path.
-> + */
-> +struct dev_pm_opp_icc_bw {
-> +	u32 avg;
-> +	u32 peak;
-> +};
-> +
->  /**
->   * struct dev_pm_opp_info - OPP freq/voltage/current values
->   * @rate:	Target clk rate in hz
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
