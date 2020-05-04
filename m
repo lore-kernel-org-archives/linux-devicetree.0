@@ -2,225 +2,217 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EC3C4724C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 08:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E73C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 08:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F64E206D7
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 08:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A14F2215A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 08:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgEDI3Q (ORCPT
+        id S1728248AbgEDIoV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 04:29:16 -0400
-Received: from mga06.intel.com ([134.134.136.31]:46019 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728354AbgEDI3Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 04:29:16 -0400
-IronPort-SDR: RdV91FaB0/RgDTHNiqz0AAX7G71rWV9QHpA8CQ6xyrUG7+15yVQDXxYj3hQ30A0tggU5iiwP3p
- RDHuNFPDHU9g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 01:29:15 -0700
-IronPort-SDR: dbfHMXKA49/zFv6/sWpDJdQCXUw03pAVMvltBQWfAYxQ6jOqukhPxd4oFYA5HzLweYSdgxRnPz
- hjvqGZy37IKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
-   d="scan'208";a="295436191"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by orsmga008.jf.intel.com with ESMTP; 04 May 2020 01:29:12 -0700
-From:   Joyce Ooi <joyce.ooi@intel.com>
-To:     Thor Thayer <thor.thayer@linux.intel.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@intel.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCHv2 10/10] net: eth: altera: update devicetree bindings documentation
-Date:   Mon,  4 May 2020 16:25:58 +0800
-Message-Id: <20200504082558.112627-11-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
-In-Reply-To: <20200504082558.112627-1-joyce.ooi@intel.com>
-References: <20200504082558.112627-1-joyce.ooi@intel.com>
+        Mon, 4 May 2020 04:44:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728240AbgEDIoV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 04:44:21 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59CFC061A0F
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 01:44:20 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jVWhx-0004Ba-Uo; Mon, 04 May 2020 10:44:13 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jVWhw-00061L-O0; Mon, 04 May 2020 10:44:12 +0200
+Date:   Mon, 4 May 2020 10:44:12 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH] dt-bindings: net: nxp,tja11xx: add compatible support
+Message-ID: <20200504084412.juhnxip7lg2d3ct5@pengutronix.de>
+References: <20200504082617.11326-1-o.rempel@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pe24nsds5j3wiypj"
+Content-Disposition: inline
+In-Reply-To: <20200504082617.11326-1-o.rempel@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:26:30 up 170 days, 23:45, 184 users,  load average: 0.17, 0.11,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Dalon Westergreen <dalon.westergreen@intel.com>
 
-Update devicetree bindings documentation to include msgdma
-prefetcher and ptp bindings.
+--pe24nsds5j3wiypj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
----
-v2: no change
----
- .../devicetree/bindings/net/altera_tse.txt         | 103 +++++++++++++++++----
- 1 file changed, 84 insertions(+), 19 deletions(-)
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
-index 0b7d4d3758ea..2f2d12603907 100644
---- a/Documentation/devicetree/bindings/net/altera_tse.txt
-+++ b/Documentation/devicetree/bindings/net/altera_tse.txt
-@@ -2,53 +2,86 @@
- 
- Required properties:
- - compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
--		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
-+		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE,
-+		and "altr,tse-msgdma-2.0" for MSGDMA with prefetcher based
-+		implementations.
- 		ALTR is supported for legacy device trees, but is deprecated.
- 		altr should be used for all new designs.
- - reg: Address and length of the register set for the device. It contains
-   the information of registers in the same order as described by reg-names
- - reg-names: Should contain the reg names
--  "control_port": MAC configuration space region
--  "tx_csr":       xDMA Tx dispatcher control and status space region
--  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
--  "rx_csr" :      xDMA Rx dispatcher control and status space region
--  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
--  "rx_resp":      MSGDMA Rx dispatcher response space region
--  "s1":		  SGDMA descriptor memory
- - interrupts: Should contain the TSE interrupts and it's mode.
- - interrupt-names: Should contain the interrupt names
--  "rx_irq":       xDMA Rx dispatcher interrupt
--  "tx_irq":       xDMA Tx dispatcher interrupt
-+  "rx_irq":       DMA Rx dispatcher interrupt
-+  "tx_irq":       DMA Tx dispatcher interrupt
- - rx-fifo-depth: MAC receive FIFO buffer depth in bytes
- - tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
- - phy-mode: See ethernet.txt in the same directory.
- - phy-handle: See ethernet.txt in the same directory.
- - phy-addr: See ethernet.txt in the same directory. A configuration should
- 		include phy-handle or phy-addr.
--- altr,has-supplementary-unicast:
--		If present, TSE supports additional unicast addresses.
--		Otherwise additional unicast addresses are not supported.
--- altr,has-hash-multicast-filter:
--		If present, TSE supports a hash based multicast filter.
--		Otherwise, hash-based multicast filtering is not supported.
--
- - mdio device tree subnode: When the TSE has a phy connected to its local
- 		mdio, there must be device tree subnode with the following
- 		required properties:
--
- 	- compatible: Must be "altr,tse-mdio".
- 	- #address-cells: Must be <1>.
- 	- #size-cells: Must be <0>.
- 
- 	For each phy on the mdio bus, there must be a node with the following
- 	fields:
--
- 	- reg: phy id used to communicate to phy.
- 	- device_type: Must be "ethernet-phy".
- 
- The MAC address will be determined using the optional properties defined in
- ethernet.txt.
- 
-+- altr,has-supplementary-unicast:
-+		If present, TSE supports additional unicast addresses.
-+		Otherwise additional unicast addresses are not supported.
-+- altr,has-hash-multicast-filter:
-+		If present, TSE supports a hash based multicast filter.
-+		Otherwise, hash-based multicast filtering is not supported.
-+- altr,has-ptp:
-+		If present, TSE supports 1588 timestamping.  Currently only
-+		supported with the msgdma prefetcher.
-+- altr,tx-poll-cnt:
-+		Optional cycle count for Tx prefetcher to poll descriptor
-+		list.  If not present, defaults to 128, which at 125MHz is
-+		roughly 1usec. Only for "altr,tse-msgdma-2.0".
-+- altr,rx-poll-cnt:
-+		Optional cycle count for Tx prefetcher to poll descriptor
-+		list.  If not present, defaults to 128, which at 125MHz is
-+		roughly 1usec. Only for "altr,tse-msgdma-2.0".
-+
-+Required registers by compatibility string:
-+ - "altr,tse-1.0"
-+	"control_port": MAC configuration space region
-+	"tx_csr":       DMA Tx dispatcher control and status space region
-+	"rx_csr" :      DMA Rx dispatcher control and status space region
-+	"s1":		DMA descriptor memory
-+
-+ - "altr,tse-msgdma-1.0"
-+	"control_port": MAC configuration space region
-+	"tx_csr":       DMA Tx dispatcher control and status space region
-+	"tx_desc":      DMA Tx dispatcher descriptor space region
-+	"rx_csr" :      DMA Rx dispatcher control and status space region
-+	"rx_desc":      DMA Rx dispatcher descriptor space region
-+	"rx_resp":      DMA Rx dispatcher response space region
-+
-+ - "altr,tse-msgdma-2.0"
-+	"control_port": MAC configuration space region
-+	"tx_csr":       DMA Tx dispatcher control and status space region
-+	"tx_pref":      DMA Tx prefetcher configuration space region
-+	"rx_csr" :      DMA Rx dispatcher control and status space region
-+	"rx_pref":      DMA Rx prefetcher configuration space region
-+	"tod_ctrl":     Time of Day Control register only required when
-+			timestamping support is enabled.  Timestamping is
-+			only supported with the msgdma-2.0 implementation.
-+
-+Optional properties:
-+- local-mac-address: See ethernet.txt in the same directory.
-+- max-frame-size: See ethernet.txt in the same directory.
-+
- Example:
- 
- 	tse_sub_0_eth_tse_0: ethernet@1,00000000 {
-@@ -86,6 +119,11 @@ Example:
- 				device_type = "ethernet-phy";
- 			};
- 
-+			phy2: ethernet-phy@2 {
-+				reg = <0x2>;
-+				device_type = "ethernet-phy";
-+			};
-+
- 		};
- 	};
- 
-@@ -111,3 +149,30 @@ Example:
- 		altr,has-hash-multicast-filter;
- 		phy-handle = <&phy1>;
- 	};
-+
-+
-+	tse_sub_2_eth_tse_0: ethernet@1,00002000 {
-+		compatible = "altr,tse-msgdma-2.0";
-+		reg = 	<0x00000001 0x00002000 0x00000400>,
-+			<0x00000001 0x00002400 0x00000020>,
-+			<0x00000001 0x00002420 0x00000020>,
-+			<0x00000001 0x00002440 0x00000020>,
-+			<0x00000001 0x00002460 0x00000020>,
-+			<0x00000001 0x00002480 0x00000040>;
-+		reg-names = "control_port", "rx_csr", "rx_pref","tx_csr", "tx_pref", "tod_ctrl";
-+		interrupt-parent = <&hps_0_arm_gic_0>;
-+		interrupts = <0 45 4>, <0 44 4>;
-+		interrupt-names = "rx_irq", "tx_irq";
-+		rx-fifo-depth = <2048>;
-+		tx-fifo-depth = <2048>;
-+		address-bits = <48>;
-+		max-frame-size = <1500>;
-+		local-mac-address = [ 00 00 00 00 00 00 ];
-+		phy-mode = "sgmii";
-+		altr,has-supplementary-unicast;
-+		altr,has-hash-multicast-filter;
-+		altr,has-ptp;
-+		altr,tx-poll-cnt = <128>;
-+		altr,rx-poll-cnt = <32>;
-+		phy-handle = <&phy2>;
-+	};
--- 
-2.13.0
+here is first attempt to rework this binding. So far I have following
+questions and/or issues:
+- currently this PHY is identified by ID, not by compatible. Should it
+  be probed by compatible?
+  Theoretically I can use:
+  	compatible =3D "nxp,tja1102", "ethernet-phy-ieee802.3-c22";
 
+  But till now this was used only for nodes with not clear support state
+  and seems to be not a welcome solution (at least till now).
+
+- matching by node name patter seems to trigger warning by different
+  (not related) bindings. What is a best practice to avoid it?
+
+Regards,
+Oleksij
+
+On Mon, May 04, 2020 at 10:26:17AM +0200, Oleksij Rempel wrote:
+> ... and correct SPDX-License-Identifier.
+>=20
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  .../devicetree/bindings/net/nxp,tja11xx.yaml  | 51 ++++++++++++-------
+>  1 file changed, 32 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Doc=
+umentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> index 42be0255512b3..e4ae8257f3258 100644
+> --- a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> @@ -1,4 +1,4 @@
+> -# SPDX-License-Identifier: GPL-2.0+
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+>  $id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> @@ -14,25 +14,36 @@ maintainers:
+>  description:
+>    Bindings for NXP TJA11xx automotive PHYs
+> =20
+> -allOf:
+> -  - $ref: ethernet-phy.yaml#
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +        - enum:
+> +          - nxp,tja1102
+> +        - const: ethernet-phy-ieee802.3-c22
+> =20
+> -patternProperties:
+> -  "^ethernet-phy@[0-9a-f]+$":
+> -    type: object
+> -    description: |
+> -      Some packages have multiple PHYs. Secondary PHY should be defines =
+as
+> -      subnode of the first (parent) PHY.
+> +  $nodename:
+> +    pattern: "^ethernet-phy(@[a-f0-9]+)?$"
+> =20
+> -    properties:
+> -      reg:
+> -        minimum: 0
+> -        maximum: 31
+> -        description:
+> -          The ID number for the child PHY. Should be +1 of parent PHY.
+> +  reg:
+> +    minimum: 0
+> +    maximum: 31
+> +    description:
+> +      The ID number for the child PHY. Should be +1 of parent PHY.
+> =20
+> -    required:
+> -      - reg
+> +  '#address-cells':
+> +    description: number of address cells for the MDIO bus
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    description: number of size cells on the MDIO bus
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#address-cells'
+> +  - '#size-cells'
+> =20
+>  examples:
+>    - |
+> @@ -40,8 +51,9 @@ examples:
+>          #address-cells =3D <1>;
+>          #size-cells =3D <0>;
+> =20
+> -        tja1101_phy0: ethernet-phy@4 {
+> -            reg =3D <0x4>;
+> +        tja1101_phy0: ethernet-phy@1 {
+> +            compatible =3D "nxp,tja1101", "ethernet-phy-ieee802.3-c22";
+> +            reg =3D <0x1>;
+>          };
+>      };
+>    - |
+> @@ -50,6 +62,7 @@ examples:
+>          #size-cells =3D <0>;
+> =20
+>          tja1102_phy0: ethernet-phy@4 {
+> +            compatible =3D "nxp,tja1102", "ethernet-phy-ieee802.3-c22";
+>              reg =3D <0x4>;
+>              #address-cells =3D <1>;
+>              #size-cells =3D <0>;
+> --=20
+> 2.26.2
+>=20
+>=20
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--pe24nsds5j3wiypj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6v1dgACgkQ4omh9DUa
+UbN3bhAAmwBlKUxD8sJbC2KWRGhMPoF1krEfvmCTUqG4Dr9yrhzztnMi2j+GIhmY
+JuDcR538mLieGd8iDo0BheWOShryiArR2ze4mvQxAxYYJRqGGFS3oDtBkzDA46hR
+LUWfcBE/7VyCI1dNu9vhn8K1GRtqFM4vffihDeoVxwNrSCUPViWabsuF31OZRhYo
+mlwRfRuz8UWj8juPwAtsRy4v5hr1cemfA3DLuN7pnvpgMpFv4bWGP9BcYI/ZVVtn
+YYFLsw6uuAwC5jcnz7TzQbyPEo68axNvI77n4nKld6SKFjjBQWMsrtxbBtcAYCAL
+DOykrEFJe9Mdpz8jutAfo8x6ddVj56Z6EIzsZkiG0Ajvlwurj3pGsdJZX/X8vx0B
+WHX2zekiaBxSefDNqeWj84O3bzgbPo0B/lt2Jd3C/jomgn1UPyEBulc/rrQsKNMg
+jUs6n9EGyNhuZMg2Q619W0fZ+I12B3GlnRUNCCP1IzGPoBed5KTmYR253pvapDG9
+rK2yR9esM1Yo1HAC/oz8omxqVqJLlNNoLu2i1Qzj/MJglUd/bYGijQHtb3Z75HRM
+oEnJdOqZuZKzZ8F/uWDGLdq9a6C10JJVetQEyXSK29IEM2x+DDyIY8j/lNszSKL6
+2bRYu3qC6p5MauuGaKw9AeRlhVUk5fphLX0UBDBFhAQsx3OLE6s=
+=2IeE
+-----END PGP SIGNATURE-----
+
+--pe24nsds5j3wiypj--
