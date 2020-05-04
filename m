@@ -2,115 +2,113 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6951CC3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806E4C47258
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 441412073E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF8D2078C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="KwE4E4Nh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oEEqvNl7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mdj8ICMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEDNYH (ORCPT
+        id S1728357AbgEDNbN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 09:24:07 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:35895 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726404AbgEDNYG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 09:24:06 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id B5B375C00EF;
-        Mon,  4 May 2020 09:24:04 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Mon, 04 May 2020 09:24:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=DJbaaOuR+6YHYaJHgAZbaqepInhtEO+
-        O3opNfcdNHMk=; b=KwE4E4NhpTz3bFlHAfJsiyBVoDjPGT6iphiVk2YB+0MFae/
-        bAHjfF9EpBYQou+5B6CoQKJU7i6dfZXQQqb33O6toyISkuQh6lKCBLNa6fEEoyb2
-        x1XHQwVA6nn5Qu+u5BYbivJ2IBbZRMn5mRuBRFXMspWPkWJTzhOgjIcXvnYK4YLT
-        YwKAcN514atSqpqir0N07vj+4NpaudOkIChi6cQfiv6xJnoOvEcUyTz+CzC8Vcxf
-        bymRkPa2Vzjoq8Lv87W8lBPJUolowqd8G+y0AJLqtqh1/mRjS33om2nli4cTEt24
-        YN4OuvhpVcUwjF5w6EHzfIMWchCxynRkoeuRclQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DJbaaO
-        uR+6YHYaJHgAZbaqepInhtEO+O3opNfcdNHMk=; b=oEEqvNl7bv9sucTj20Y/R/
-        PaNZ9cTflvHMhRC5eFH7Okx/LTmLkDRmLDbVvfBEZrcuix6kO7zjsMzOo5Af7u8o
-        PEieVA0QT/uT/0M2eC6CG2wApyoZIFdphGo3/wYsFxg+Awxfj5SrCJIcXDT0Ja8j
-        K/rP1RSYN5uZQtdxorw3t6SqFCBZC0dnbGCKHckkszG4ukXK4dihYxZ2rk1HIe8c
-        mXXhWqQDZq8jAuFJGBEAm9XFgGjJz668ImK/jUL3WnZubKFfchkE+wfdvpm/ijXT
-        mJTXXo6UJ4wcmPY8RVf1krfjnAeJ0KoWIFT3KzvcJjUC5KF4kNiayq+BkJMQG2MQ
-        ==
-X-ME-Sender: <xms:ahewXruF53BQnNhnb2cWtIa8oqZvGEkI5R66wbqsp9C3WOXP_1izYA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeggdehiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtffrrg
-    htthgvrhhnpeehhfefkefgkeduveehffehieehudejfeejveejfedugfefuedtuedvhefh
-    veeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grnhgurhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:ahewXoLCwJMrgaFGB-q6aGgla5a-oVChd3b2MalmrAMdUmmutEHN9Q>
-    <xmx:ahewXpf2878l6Q3sK8698xAr2nhmL4zmoH0EKFHkY8XM3kYzS9do2g>
-    <xmx:ahewXrLvyf0C32mc8Vaw6JEueOa1RGQqOC1bwfwbQOZJZjyWCG5sxg>
-    <xmx:dBewXm0j82CQmSxvcOLkLoxITE2jVaVa7PY6vbAOqaFGWi3EMJ9SIA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 72E8FE010B; Mon,  4 May 2020 09:23:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.0-dev0-351-g9981f4f-fmstable-20200421v1
-Mime-Version: 1.0
-Message-Id: <0ca41514-d664-41e6-9f0c-0d948db3e9ad@www.fastmail.com>
-In-Reply-To: <CACPK8XezSFzCeQN4tkvcmjOHEAgrRGYBiBzRymaazpv8Lh-gTQ@mail.gmail.com>
-References: <20200424135303.20952-1-a.filippov@yadro.com>
- <CACPK8XcP3V=8fAUfNvRFqPU9G38dGR43Kpp=Uxm=P_AjrMnzBQ@mail.gmail.com>
- <c1de0c90-d486-4855-bb26-0f3cc416b05d@www.fastmail.com>
- <CACPK8XezSFzCeQN4tkvcmjOHEAgrRGYBiBzRymaazpv8Lh-gTQ@mail.gmail.com>
-Date:   Mon, 04 May 2020 22:53:34 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Joel Stanley" <joel@jms.id.au>
-Cc:     "Alexander A. Filippov" <a.filippov@yadro.com>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Mon, 4 May 2020 09:31:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726404AbgEDNbM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 09:31:12 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2903C061A0E;
+        Mon,  4 May 2020 06:31:12 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id b10so1071145vsh.1;
+        Mon, 04 May 2020 06:31:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CKVu8p9mULpUJV26UBlO0ZNVdeoAZyl4GvIcj32jLfc=;
+        b=Mdj8ICMvEINKyngRw0C56nn/l70As9jUYBHBkF7cB5XPbu+mS0V+QXTSGwZ9vlwKq/
+         lkS7FbUhHKFI1QZLjxbDEtVDHihnWopja1AsKIp/YiO6vlZuHplAaKzMuaf5NSWarM2f
+         KE6OzrRJue09kKbucJDol8hpl92GUJw5LCudHtr2vwmQhIff8Z7LW3KuKoGvJ/9c8lUU
+         DobuZ7uqytasqL9HeMiFXjeogYQTH2QtTtcOfKk05IDThTnqhz0uwt8isZ9nrz4Vg/S7
+         1m6i83pXMaNaZW/a0QUdFo3Fo/YLOU2tkt1jq1akV8fUi/jwrnk8jfSWaUZs/RdsCMzo
+         yFbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CKVu8p9mULpUJV26UBlO0ZNVdeoAZyl4GvIcj32jLfc=;
+        b=Zn2XbajQ5oftqxqmjQA08UZAfmg4RTReRUFnOF7vP/fjjGfa3UWINluS7k3JCIpjaP
+         34nrVara1mzrZnJdPI9+qGcB/OMuLiR8DartFDnUd/BOKZuYXHlmOMhavW5pC4QrZLFt
+         3fvqTlTxhVMmqEPGVgx8IV6Gruro1A4PMzXf96LtdAc9nmZ+IevP1r0YjspK/fQDrLlW
+         9aQlagMeSeSZwYUlOAYfE9OYI3h0JgxmAsiuycWkeACK52Ep3fACyvKbrHSTEhMJsxvx
+         7n5TervmDPX47LGIO2yuglEXqDvaRpVkTeB30U530mmwC1c18VSgSstOGjKi/CDuV21p
+         CZ0g==
+X-Gm-Message-State: AGi0PuZDLV0lQ0LWCiVieBj41Ee86CqC1vnCYLvXRpcVeEA39w6vI/FV
+        t9Zk4VXiIKjEqnEzCg+DTbeFV13vmAJmGQqteYY=
+X-Google-Smtp-Source: APiQypJrs2cq7AvRRR2YZKwloVT46aVj/YrXmcbh7EbV/r3x3vAWHo4cobHouut4syrWSDqbQsPB2Tivz++SgHG/97k=
+X-Received: by 2002:a67:c482:: with SMTP id d2mr12058478vsk.37.1588599071846;
+ Mon, 04 May 2020 06:31:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200430192746.1866325-1-paul.kocialkowski@bootlin.com> <20200430192746.1866325-3-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20200430192746.1866325-3-paul.kocialkowski@bootlin.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Mon, 4 May 2020 14:28:47 +0100
+Message-ID: <CACvgo51mRse3su4exyTqXYJRPPc0VqaX9+tRyKUuBPtm5Q+6XQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] drm: Add support for the LogiCVC display controller
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
         devicetree <devicetree@vger.kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>
-Subject: Re: [PATCH v5] ARM: DTS: Aspeed: Add YADRO Nicole BMC
-Content-Type: text/plain
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Paul,
+
+Just had a casual quick look for custom KMS properties, since new
+drivers made that mistake in the past.
+Thanks for not including any o/
+
+I made a couple of trivial suggestions - if you agree, feel free to
+keep them as follow-up patches.
+
+On Thu, 30 Apr 2020 at 20:28, Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+
+> +int logicvc_of_property_parse_u32(struct device_node *of_node,
+> +                                 const char *name, u32 *target)
+> +{
+> +       struct logicvc_of_property *property;
+> +       const char *string;
+> +       u32 value;
+> +       int ret;
+> +
+> +       property = logicvc_of_property_lookup(name);
+> +       if (!property)
+> +               return -EINVAL;
+> +
+One could have the logicvc_of_properties[] entries indexed with the
+logicvc_of_property_parse_{u32,bool} caller, using that instead of the
+name string.
+
+Aside: I suspect the array (as most other arrays in this patch) should
+be annotated const, correct?
 
 
-On Mon, 4 May 2020, at 22:14, Joel Stanley wrote:
-> On Mon, 4 May 2020 at 11:04, Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> >
-> >
-> > On Mon, 27 Apr 2020, at 20:41, Joel Stanley wrote:
-> > > On Fri, 24 Apr 2020 at 13:53, Alexander Filippov <a.filippov@yadro.com> wrote:
-> > > >
-> > > > Nicole is an OpenPower machine with an Aspeed 2500 BMC SoC manufactured
-> > > > by YADRO.
-> > > >
-> > > > Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
-> > >
-> > > This looks good to me.
-> > >
-> > > Andrew, do you have any comments before I merge?
-> >
-> > Not other than muxing all the ADC lines to enable just one seems a bit strange,
-> > but Alexander mentioned previously that the rest were simply grounded so it's
-> > not going to cause any problems in practice.
-> 
-> Thanks. Can you say the magic words for patchwork to pick up?
->
+> +       if (property->range[0] || property->range[1])
+> +               if (value < property->range[0] || value > property->range[1])
+Combine the two ifs?
 
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
+-Emil
