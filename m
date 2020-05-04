@@ -6,57 +6,88 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE95C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C0EC47257
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8426520721
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2668206B8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgEDTC0 (ORCPT
+        id S1727903AbgEDTEJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 15:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726441AbgEDTC0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 15:02:26 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227C1C061A0E;
-        Mon,  4 May 2020 12:02:26 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 592D311F5F61A;
-        Mon,  4 May 2020 12:02:25 -0700 (PDT)
-Date:   Mon, 04 May 2020 12:02:24 -0700 (PDT)
-Message-Id: <20200504.120224.600801033778032707.davem@davemloft.net>
-To:     grygorii.strashko@ti.com
-Cc:     richardcochran@gmail.com, m-karicheri2@ti.com, robh+dt@kernel.org,
-        t-kristo@ti.com, lokeshvutla@ti.com, netdev@vger.kernel.org,
-        nsekhar@ti.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        nm@ti.com
-Subject: Re: [PATCH net-next 0/7] net: ethernet: ti: k3: introduce common
- platform time sync driver - cpts
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200501205011.14899-1-grygorii.strashko@ti.com>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 04 May 2020 12:02:25 -0700 (PDT)
+        Mon, 4 May 2020 15:04:09 -0400
+Received: from smtprelay0193.hostedemail.com ([216.40.44.193]:45406 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727866AbgEDTEJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 15:04:09 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 90A1018022F46;
+        Mon,  4 May 2020 19:04:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: scarf42_6021543c5600
+X-Filterd-Recvd-Size: 2806
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  4 May 2020 19:04:01 +0000 (UTC)
+Message-ID: <7af4a2979fb5c060af769a996d3e5917b4d265d0.camel@perches.com>
+Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
+From:   Joe Perches <joe@perches.com>
+To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Sam Ravnborg <sam@ravnborg.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        alsa-devel@alsa-project.org,
+        Olivier Moysan <olivier.moysan@st.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, Jyri Sarha <jsarha@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Sandy Huang <hjc@rock-chips.com>, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Date:   Mon, 04 May 2020 12:04:00 -0700
+In-Reply-To: <20200504175553.jdm7a7aabloevxba@pengutronix.de>
+References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+         <20200504174522.GA3383@ravnborg.org>
+         <20200504175553.jdm7a7aabloevxba@pengutronix.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Fri, 1 May 2020 23:50:04 +0300
+On Mon, 2020-05-04 at 19:55 +0200, Uwe Kleine-König wrote:
+> Hi Sam,
+> 
+> On Mon, May 04, 2020 at 07:45:22PM +0200, Sam Ravnborg wrote:
+> > On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
+> > > There are some new broken doc links due to yaml renames
+> > > at DT. Developers should really run:
+> > > 
+> > > 	./scripts/documentation-file-ref-check
+> > > 
+> > > in order to solve those issues while submitting patches.
+> > Would love if some bot could do this for me on any patches that creates
+> > .yaml files or so.
+> > I know I will forget this and it can be automated.
+> > If I get a bot mail that my patch would broke a link I would
+> > have it fixed before it hits any tree.
+> 
+> What about adding a check to check_patch?
 
-> This series introduced support for significantly upgraded TI A65x/J721E Common
-> platform time sync (CPTS) modules which are part of AM65xx Time Synchronization
-> Architecture [1].
- ...
+There's already a checkpatch warning when a patch renames
+a file without a MAINTAINERS update.
 
-Series applied, thank you.
