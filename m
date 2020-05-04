@@ -2,98 +2,155 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1695C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C180C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8474520707
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097D320707
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:01:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="PQLxh8Bx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2SSEBYc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgEDUBa (ORCPT
+        id S1726111AbgEDUBY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 16:01:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47804 "EHLO
+        Mon, 4 May 2020 16:01:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728045AbgEDUB3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:01:29 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC77C061A0F
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 13:01:28 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id r16so14711776edw.5
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 13:01:28 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1726816AbgEDUBW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:01:22 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57D11C061A0E;
+        Mon,  4 May 2020 13:01:21 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id e26so834026wmk.5;
+        Mon, 04 May 2020 13:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a3/e8Z9+7dUAsUY2FABXXWSYilV/IhKWhqiAxe7AB0w=;
-        b=PQLxh8BxfRVNbGhoMqQ+SidqGRLgyNwgg8AMxdhr+hQzfTeHVr36B+yHinyk4RO/N4
-         Y6or3TT0f0D5Fk2htAjerP0VkNsQmuf+6kdiRqGxrmqzFx4LeKaq2tJJyV4BLREtMGXz
-         OYg6bJ8gAXk19xxFW/6JajQ6o5OgEmm+BlSXGcHzftgStQevaAhOKN4SIQzOWZsmtA2M
-         sHN7uXi6oTRnaDA0P8KsZ+qN+PRH+Bz2jlGhskWtqMnQT4Akn2iBxP70/9YiOy2/UExj
-         h7tIFeuI5HvEEkvt4yCaBpVupn252Kup6VLqULCGJqBRmjdtUTAeOXz58YCUjCCiXISr
-         3d3g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hEW76UZB/sZtEFwmy764PGyYDv4AC7eZ6iGbT8XBec0=;
+        b=J2SSEBYc/WoxujpQAS2W/xAgYPgfa8Gz1OkN083PUPlkb0CDiWh627fuYKmGJ5bc3w
+         +QdwvO/51msDiu0IfKR4ndHu9IiwtIq7teOW3p5tSI2WbuWKna2mJl1fQlKjz17ZZmF3
+         THlGeaChnbRvKAI7Q8QqOe6ae4HYWTSDS/PMA0S89z+aAX1yR+AlkEIij2kCtLSV0z42
+         7opNx8ys/Zhqc8h2pQ/n5P++unPQUydbBgHCFSlkqrrWrToPlELa4up+xC9Jgofwi+3b
+         Wnh8BmjFnMX4xlKwfTVxFbivZJAElzBraWM8WSSaZ9orVoqqUuWa4Z2KjFoJFVf53DKf
+         tveA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a3/e8Z9+7dUAsUY2FABXXWSYilV/IhKWhqiAxe7AB0w=;
-        b=XDGosIfJLdYBldj+LpeHNNnJZ1V+VlY48uqtZybjpw2DLzONXrFsAx/T0xuB2FCA+P
-         T23vSz4azwqdjUGBw468qVk3wbl6WPSJIN1HYNNs3JrHxoc/6aEa1Aw0sy5UeaU2vBd9
-         E7QMvcO9lTsMwzEdf3kRu9pyYJOJzcnCkBzAJ7psU7R1t6JrvnLLOJHxL/dtpEluqLIU
-         cOywpgip/6OmZFmD9/yW2Kx0GbhUmE41B8JHuU+t2BS3V1J+Qu96Jp7Iae9Bd9mShpl0
-         m19zYQHIWsX09QRnaA+iiR32Zh8eu7a6VoQKXiN5fFAL+HAmV0nEr3aaRvZFIGfAYyut
-         nZqA==
-X-Gm-Message-State: AGi0Pua1MCqd+dqGT+bo9Is5um8fayYb+sWaGADM6xCXJQo0el6ALRhw
-        lv+KXoRnPGl9OwIx4HgEjL2C0Q5ueJFpnHeQzXBg+g==
-X-Google-Smtp-Source: APiQypJuGrmkU0XtajGtCW6+tnsEvDAvqoXPAkujg8EqXPfFARkabTI9PH5qgtjx1yu+XzN1nobAPxrfByxFFM1kmdk=
-X-Received: by 2002:a05:6402:356:: with SMTP id r22mr17037164edw.3.1588622487633;
- Mon, 04 May 2020 13:01:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hEW76UZB/sZtEFwmy764PGyYDv4AC7eZ6iGbT8XBec0=;
+        b=Or6aPO58je+Oofwl1UqUeyOqfOCpjHs+HZrX5EhMyi2N+NB3EKSqfWHVy7H0uszH/N
+         Mh8F09rc6E/nwxvmJsr3WLD1ze4zWhdlRP8J+rWcGxjrN4hSI/Z08sJvxMNVOt1jEJSq
+         9gzGvotXg8IYLKucdORibwwfgaqW88K4+Ne07sxunjsfGzhoKyOccnyqNCl8ljnD21un
+         vAIfTRr0HKrJ8douCvbvgkkka/IqxmxCrsL/i4TqRe+I5HL5TbLpbFiiOT+uXcx/rwqS
+         zPI8ECwq7tSpgRZq/yXpnNLiClFOi2WsJkZ/38MwNhu/mif3AOm3FO1e/mfXn682GxRz
+         VQ1A==
+X-Gm-Message-State: AGi0PuabzQJMb6TSc2GvMFcKqqOc0xj5TLFIXGbnUr3BSDd4n5GamxpD
+        rZ2YjwAIHnkmu/E4f+SJfTc=
+X-Google-Smtp-Source: APiQypLcSw0pOqEp8W828P4UsPw9yMNrnI+r6qNGKRZbiBZZ1S7x++V+QiE1tOHTdDZ2VFwHokZlbA==
+X-Received: by 2002:a1c:2d0e:: with SMTP id t14mr16607050wmt.153.1588622479996;
+        Mon, 04 May 2020 13:01:19 -0700 (PDT)
+Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
+        by smtp.googlemail.com with ESMTPSA id s17sm739252wmc.48.2020.05.04.13.01.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 13:01:19 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [v3 PATCH 2/2] dt-bindings: display: Document ASUS Z00T TM5P5 NT35596 panel compatible
+Date:   Mon,  4 May 2020 22:01:00 +0200
+Message-Id: <20200504200102.129195-3-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200504200102.129195-1-konradybcio@gmail.com>
+References: <20200504200102.129195-1-konradybcio@gmail.com>
 MIME-Version: 1.0
-References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
- <202005041112.F3C8117F67@keescook> <CA+CK2bBDzbXdH23aDxqGzMoxPppNcVmitrYJ00tJqympMBVJOg@mail.gmail.com>
- <202005041211.040A1C65C8@keescook> <CA+CK2bAJgKR+=Tby91gU-ZKy29Juv_oJinCTFAWRaKiiro2vkg@mail.gmail.com>
- <202005041230.806B1581D@keescook>
-In-Reply-To: <202005041230.806B1581D@keescook>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Mon, 4 May 2020 16:00:51 -0400
-Message-ID: <CA+CK2bBFQYnFWeDxegR+7rz2nepbK-upqBnRjLgO9JH7oUJoQw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] allow ramoops to collect all kmesg_dump events
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
-        ccross@android.com, Tony Luck <tony.luck@intel.com>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > pstore /mnt/console-ramoops-0 outputs only messages below the console
-> > loglevel, and our console loglevel is set to 3 due to slowness of
-> > serial console. Which means only errors and worse types of messages
-> > are recorded. AFAIK, there is no way to have different log levels for
-> > different consoles.
->
-> Ah-ha! Okay, thanks. Please include this rationale in the v2 changelog.
-> That makes perfect sense; I just didn't see it and maybe others will
-> need the same clarity too. Thanks!
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ .../display/panel/asus,z00t-tm5p5-n35596.yaml | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml
 
-I will add this explanation to v2.
+diff --git a/Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml b/Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml
+new file mode 100644
+index 0000000000000..aa8940e493eb1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/tm5p5,nt35596.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ASUS Z00T TM5P5 NT35596 5.5" 1080×1920 LCD Panel
++
++maintainers:
++  - Konrad Dybcio <konradybcio@gmail.com>
++
++description: |+
++  This panel seems to only be found in the Asus Z00T
++  smartphone and we have no straightforward way of
++  actually getting the correct model number,
++  as no schematics are released publicly.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: asus,z00t-tm5p5-n35596
++  reg: true
++  reset-gpios: true
++  vdd-supply:
++     description: core voltage supply
++  vddio-supply:
++     description: vddio supply
++
++required:
++  - compatible
++  - reg
++  - vdd-supply
++  - vddio-supply
++  - reset-gpios
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            panel@0 {
++                    reg = <0>;
++
++                    compatible = "asus,z00t-tm5p5-n35596";
++
++                    vdd-supply = <&pm8916_l8>;
++                    vddio-supply = <&pm8916_l6>;
++                    reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
++            };
++    };
+-- 
+2.26.1
 
-Thank you,
-Pasha
-
->
-> -Kees
->
-> --
-> Kees Cook
