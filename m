@@ -2,114 +2,98 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFA5C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 07:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687E7C4724C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 07:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB7D20746
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 07:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4518321582
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 07:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rc7VQyjW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PRMxKoWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgEDHoX (ORCPT
+        id S1728081AbgEDHvx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 03:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727088AbgEDHoX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 03:44:23 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE05C061A0E;
-        Mon,  4 May 2020 00:44:21 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f11so8712066ljp.1;
-        Mon, 04 May 2020 00:44:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e4Prdlmnh5uMplVy6wvzEHluFiUsOf4wHXUycuzMInI=;
-        b=rc7VQyjWHiU8q8qd53Z+gt23a2bhQs1Im6BnZyZBhVh5XJ6EL6dKzE0iatghW6oR0H
-         GL9eYKW6E7wbVT1gk9tepA8LjwnLXAcv+SyREN2WF6uyqARF0upWipHGR44MIPXI3tT/
-         mC01pyqegP/i+P24L1gtiPXRDUY9PRP2p68Nb79PKEkKH2FoU5Eymqqwr38LstdpGTea
-         KnOXiCfrxgYoURdxxy3lnKGl2x3v2lAnAtT/n/ON2L+UsmdX48dNiAmgiwDjljQHlFKL
-         gLnETiVHjve/Ud4pkfvKYZ3gQy+oiTX8KFtF6ipQcDDlKuboY0l3Ay0Iq55aUi2YKhT3
-         +KAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e4Prdlmnh5uMplVy6wvzEHluFiUsOf4wHXUycuzMInI=;
-        b=U6eK5sh2SJWR3r3+sTXiTveVOcSruTCsGfzwqfPi4XwsDXL9298kDs49WG1Rcy3jOE
-         bZj43S0F2wVm558nfuqGjCuunPsjOyXAyW0inrgJlA78ns9udUBJ2ziyYAxw8XKYHFtC
-         f749s+B1IHs/1yJA7jQ1WZ24foE8t0SaUC/2AX/hqcnpxjS3l5JUU2Gbo53pJmjqPgyc
-         Qn6YwitwCe026eStLO5QjtA9VIoYDw4GVt3QX3q6TUu5SG2y56hfbSj1PC8FASF3KXV5
-         0G+gp9Zk6G18R40IqiDxLD1ICV3D3QDrheKI6efieWrzUHt5Tx3regX5quXid3DH1hoK
-         CBDg==
-X-Gm-Message-State: AGi0PubOfSz82sLpR9rJ0V+SNTM9NFxGBUGfXm9Jmxu5HtRNiOiUwWZb
-        fzMl1abpggZhkDTeRNhuzV9RY8K/
-X-Google-Smtp-Source: APiQypJ8wNAZdGO/6Y4ZZsGPSt3WVOBD64UxuHEzeznj10Lv1Ffj/SWws8iZ49zH7gwc43OFr4X0OQ==
-X-Received: by 2002:a2e:5813:: with SMTP id m19mr9144139ljb.230.1588578259413;
-        Mon, 04 May 2020 00:44:19 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id y21sm7535417ljg.66.2020.05.04.00.44.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 00:44:18 -0700 (PDT)
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f1cbb602-163e-a539-aaa5-c7e947a8945b@gmail.com>
-Date:   Mon, 4 May 2020 10:44:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Mon, 4 May 2020 03:51:53 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:20866 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726889AbgEDHvx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 03:51:53 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588578712; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Gm+ck2cB95VAaRfiAV1AhlwdbM3i0yfSnXxwhtbbaZE=; b=PRMxKoWT7MJhMmJCpqxHCiQ+Gz6BhFh9ud6EkKL8oqBpWpZXOdpFaiEUt9kWiyVi8FhWDI/Q
+ TrYSHfD5L5rOMm5ZXkqR/elCdLdyctldAr/9ebNuRUeozRIL7rJhdpEJ3mevOJCkSkPaVqDb
+ t34vkEKN0qt5I6MEotJAK9w9Jwk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eafc987.7f4fa18ee9d0-smtp-out-n05;
+ Mon, 04 May 2020 07:51:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8F5DAC432C2; Mon,  4 May 2020 07:51:34 +0000 (UTC)
+Received: from [10.110.9.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AE2CC433CB;
+        Mon,  4 May 2020 07:51:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AE2CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v6 0/5] Add SS/HS-USB changes for Qualcomm SM8150 chipset
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
+ <20200504071502.GM1375924@vkoul-mobl>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <655be70d-918b-7a59-8a6d-48d542226486@codeaurora.org>
+Date:   Mon, 4 May 2020 00:51:32 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20200504071502.GM1375924@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-30.04.2020 01:00, Sowjanya Komatineni пишет:
-> +/*
-> + * VI channel input data type enum.
-> + * These data type enum value gets programmed into corresponding Tegra VI
-> + * channel register bits.
-> + */
-> +enum tegra_image_dt {
-> +	TEGRA_IMAGE_DT_YUV420_8 = 24,
-> +	TEGRA_IMAGE_DT_YUV420_10,
-> +
-> +	TEGRA_IMAGE_DT_YUV420CSPS_8 = 28,
-> +	TEGRA_IMAGE_DT_YUV420CSPS_10,
-> +	TEGRA_IMAGE_DT_YUV422_8,
-> +	TEGRA_IMAGE_DT_YUV422_10,
-> +	TEGRA_IMAGE_DT_RGB444,
-> +	TEGRA_IMAGE_DT_RGB555,
-> +	TEGRA_IMAGE_DT_RGB565,
-> +	TEGRA_IMAGE_DT_RGB666,
-> +	TEGRA_IMAGE_DT_RGB888,
-> +
-> +	TEGRA_IMAGE_DT_RAW6 = 40,
-> +	TEGRA_IMAGE_DT_RAW7,
-> +	TEGRA_IMAGE_DT_RAW8,
-> +	TEGRA_IMAGE_DT_RAW10,
-> +	TEGRA_IMAGE_DT_RAW12,
-> +	TEGRA_IMAGE_DT_RAW14,
-> +};
 
-Are these format IDs common to all Tegra SoCs or they unique to T210?
+
+On 5/4/2020 12:15 AM, Vinod Koul wrote:
+> Hi Wesley,
+> 
+> On 09-04-20, 15:52, Wesley Cheng wrote:
+>> This series adds support for the Synopsis 7nm HSPHY USB driver being
+>> used in QCOM chipsets.  The HSPHY register map differs compared to 
+>> other PHY revisions.  In addition, modifications and updates are done
+>> to the QMP driver to add new registers/offsets, and to update the
+>> initialization sequence for enabling the SSUSB path on SM8150.
+> 
+> This fails to apply for me, Can you please rebase on
+> git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git next and
+> send.
+> 
+> Also, I saw checkpatch --strict complain about "Alignment should match
+> open parenthesis" please check and fix while not sacrificing readablity.
+> 
+> Thanks
+> 
+
+Hi Vinod,
+
+Got it!  Will rebase and fix warnings, and resend a patch revision
+tomorrow.  Thanks again.
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
