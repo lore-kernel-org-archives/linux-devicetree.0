@@ -2,100 +2,132 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA64C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3269CC47258
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 21:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1CA206A4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F789206A5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 21:01:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BH6C4XzZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AJLldmur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgEDU6U (ORCPT
+        id S1727995AbgEDVBn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 16:58:20 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:60331 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726419AbgEDU6T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:58:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588625899; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=iRA1j0cpPzrrwMyfFTKlyVe7b5cyvyMgcrcJqrCEUlE=;
- b=BH6C4XzZl4pQMM6uM+cSaPyfrqw0iuA38iBGB7+Jz+9VFE637AvNCP/eqzdfMXFhRqLGvbOP
- N60TlvMhgJgBZypyEiLBjIhezKUZqis7/4TyqetycrJ0+iEnYCv1TR3fEn89G+ZOELzc0Xsd
- 7CNX+sL5SLuLXjLYcksNTuq+Bro=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb081de.7f7d590c1810-smtp-out-n01;
- Mon, 04 May 2020 20:58:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E8EB4C433D2; Mon,  4 May 2020 20:58:04 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3CF22C433CB;
-        Mon,  4 May 2020 20:58:04 +0000 (UTC)
+        Mon, 4 May 2020 17:01:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgEDVBn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 17:01:43 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9708FC061A0F
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 14:01:41 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id p67so34026ooa.11
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 14:01:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C4pnmV0c/dm6Nv8LiySYrkrUFrQxVYIQ8/fCCGBj3ME=;
+        b=AJLldmurbaUk/dT5pTvnHr95+OCQHt8f2LcbXyVAtrwxSiXNAzm/jbddivJGTssLQK
+         1CopvPy2PBNrN2MIEP9sJyGs9DhZd7NSglwd3cUDtonBbYbNf6Cx9fs1i2T+K3MshLnr
+         fO9qR2ggQeHF3HcC8d+KrQw5iAdjwrhmmT0evp7/yK4mblrSLMKtc8lmeFNVod55ZDF6
+         pjmsMyEwp2j1uxlQi9F+zAc82hDhVdiOEZ33hyLBFnsvigf1y/3sFQLEUV942RU27/ut
+         Y2ps/n2H8WX8Y5opXM7774yj2JltOgc2e5KX6oy/67ZHDS5uj/pY3ifn37hO8btg1gtq
+         vZIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C4pnmV0c/dm6Nv8LiySYrkrUFrQxVYIQ8/fCCGBj3ME=;
+        b=Zti7H140GXmJWkZaAshT4L73nq9GmZS/eCIEe+FbZegNeaxoTj8xyhhJVywDX9y78H
+         SA2DYRyaVSsLNKTEMI9jnwpzmJAC9Xct0iaD4cQfb/nVpl7U5gPUiTYVWDpYbzgYhlwx
+         R08oGiln8QsRwtcayrvcPw8CKcA4zAKIefXzhGpchasPiGXv8HEmYvKbNeH2nKXsKvHu
+         n5e7Y9onSDQYI7ei8/3FqGM+RvgwxMnsmjDU33o/Bsr0yvAk1Zy1Y3Sk80KVD0p1ezUQ
+         Q2EDgXoDjggAD5jawOm++JlNaAbEqX07azDcC6cYYkRgxvGfr6U699fYK3pz22Dxs5js
+         30yg==
+X-Gm-Message-State: AGi0PuYkmqXk6lwJdK7LZ/R/TDqRZaYB/svrrGKCBkYnFsBaPZjVpwbw
+        Y4BAjIxhKlfEhPHWYGFvrDpOgE3vk8lTGxaHXAJBjg==
+X-Google-Smtp-Source: APiQypK8oYJDyP3ObhEIT9SEbws2SoO9/BbsHEmShslZHU9S0WEjfLstz3778FPKfSFcRZWKchUAR+aJlvTfZ7Y/mZo=
+X-Received: by 2002:a4a:ca9a:: with SMTP id x26mr194777ooq.84.1588626098771;
+ Mon, 04 May 2020 14:01:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 May 2020 02:28:04 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
-        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
-        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
-        evgreen@chromium.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v7 3/7] interconnect: Add of_icc_get_by_index() helper
- function
-In-Reply-To: <20200424155404.10746-4-georgi.djakov@linaro.org>
 References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-4-georgi.djakov@linaro.org>
-Message-ID: <446a62e63e387de9c687631738f4af4c@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+ <20200424155404.10746-7-georgi.djakov@linaro.org> <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
+ <20200430060901.j7jjw6soo5h5xoul@vireshk-i7> <CAGETcx_zH_KJ7_A7Ofc2M5GfHKX_J__URJB127MSMcTeaqyzjw@mail.gmail.com>
+ <20200430075356.rjtctfuenirvhxgn@vireshk-i7> <CAGETcx-W5XjNtgjDz2Ma_miN=cUBb5LFfhzYtKRpf6iAi4bXNw@mail.gmail.com>
+ <20200504050017.nsd7fp7gtxxwt3d7@vireshk-i7>
+In-Reply-To: <20200504050017.nsd7fp7gtxxwt3d7@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 4 May 2020 14:01:02 -0700
+Message-ID: <CAGETcx_3ZrTigJ+CxJFA+N1xZaG9Vg6m0egew+kb-h4jSMsk2Q@mail.gmail.com>
+Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-04-24 21:24, Georgi Djakov wrote:
-> This is the same as the traditional of_icc_get() function, but the
-> difference is that it takes index as an argument, instead of name.
-> 
+On Sun, May 3, 2020 at 10:00 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 30-04-20, 09:32, Saravana Kannan wrote:
+> > You are missing the point. This is not about aggregation. This is
+> > about OPP voting for bandwidth on a path when the vote can/should be
+> > 0.
+> >
+> > I'll give another example. Say one of the interconnect paths needs to
+> > be voted only when a particular use case is running. Say, the GPU
+> > needs to vote for bandwidth to L3 only when it's running in cache
+> > coherent mode. But it always needs to vote for bandwidth to DDR. With
+> > the way it's written now, OPP is going to force vote a non-zero
+> > bandwidth to L3 even when it can be zero. Wasting power for no good
+> > reason.
+> >
+> > Just let the drivers/device get the bandwidth values from OPP without
+> > forcing them to vote for the bandwidth when they don't need to. Just
+> > because they decide to use OPP to set their clock doesn't mean they
+> > should lose to ability to control their bandwidth in a more
+> > intelligent fashion.
+>
+> They shouldn't use opp_set_rate() in such a scenario. Why should they?
+>
+> opp_set_rate() was introduced to take care of only the simple cases
+> and the complex ones are left for the drivers to handle. For example,
+> they take care of programming multiple regulators (in case of TI), as
+> OPP core can't know the order in which regulators need to be
+> programmed. But for the simple cases, opp core can program everything
+> the way it is presented in DT.
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Fair enough. But don't "voltage corner" based devices NEED to use OPP
+framework to set their frequencies?
 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v7:
-> * Addressed review comments from Sibi.
-> * Re-based patch.
-> 
-> v2: 
-> https://lore.kernel.org/r/20190423132823.7915-3-georgi.djakov@linaro.org
-> 
->  drivers/interconnect/core.c  | 68 +++++++++++++++++++++++++++---------
->  include/linux/interconnect.h |  6 ++++
->  2 files changed, 58 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index 2c6515e3ecf1..648237f4de49 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -351,9 +351,9 @@ static struct icc_node
-...
+Because, if voltage corners are only handled through OPP framework,
+then any device that uses voltage corners doesn't get to pick and
+choose when to vote for what path. Also, maybe a one liner helper
+function to enable BW voting using OPP framework by default might be
+another option. Something like:
+dev_pm_opp_enable_bw_voting(struct device *dev)?
 
+If devices with voltage corners can still do their own
+frequency/voltage corner control without having to use OPP framework,
+then I agree with your point above.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+-Saravana
