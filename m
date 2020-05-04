@@ -2,95 +2,158 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA58C47247
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA97C47247
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAC842075B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E9C20721
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgEDKPx (ORCPT
+        id S1726531AbgEDKUs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 06:15:53 -0400
-Received: from mga14.intel.com ([192.55.52.115]:39941 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbgEDKPx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 06:15:53 -0400
-IronPort-SDR: zac0n6+mH4OGwqJlyJPhQ8YUboM1GZLbOwg4U5I+xGCy8OfgwLujC5hTbHqPAywYMUP6V/BMIf
- XiwcgJm7sOzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 03:15:52 -0700
-IronPort-SDR: kWzOexmE9gA9GHIa+C/aOVrhX7sZAgooMMGkA7wWet4plCES6C0LHJKpk/ebmQ5jghUQWYWDmf
- qla8KiukKhPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
-   d="scan'208";a="277483002"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 04 May 2020 03:15:51 -0700
-Received: from [10.215.163.15] (ekotax-mobl.gar.corp.intel.com [10.215.163.15])
-        by linux.intel.com (Postfix) with ESMTP id 2E749580609;
-        Mon,  4 May 2020 03:15:48 -0700 (PDT)
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, robh@kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
- <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
- <20200429121310.GH4201@sirena.org.uk>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <28f6511e-fe85-a834-1652-fd70def9ca88@linux.intel.com>
-Date:   Mon, 4 May 2020 18:15:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 06:20:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36177 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbgEDKUs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 06:20:48 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t3so4583219otp.3;
+        Mon, 04 May 2020 03:20:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aGRMnuTg/l5w0maHVGEcneYHQFdFGNPfiCYfIWkTR0o=;
+        b=JDi7a1+k4nDIQ2X2u7vfsWkL8tk/b85acH4ZTdmB1bwLUQNKhJfb//dPxIPNcgljhm
+         jOTigMo6x1Q5lEAD7ZYe8RvzVrD5gxmJVBT4HdxH2/GfjjOO7pdK2W7nxiSzaQy+FBN2
+         9npqFZe7t5nM4HsGGHyGb34zmXkN85egcixHyEtHSk4vnOEzAJEIjB5ZA9rYCijfGoGo
+         pfCHnTdi3gJZxDk64F0uW4fDZj0N9Zta0SjT0bzkKV4R817Fi21w0QWPWcqkYL4TSTlI
+         kJpuJQMc1HxwzuxCWoqjdKKwZ8ClEVc5HnnBnau4oEK2ZzAbDhuLvPLvVirzCvpn7Mz0
+         IQQw==
+X-Gm-Message-State: AGi0PubxR6DnC7gYGJtUCTCQGM/dXeVBj5JslidJOUZvwO/hrIYM7yr4
+        W23D8Z4SZGcHzxnb43AZySrW7wmi/hgiPJwwuWE=
+X-Google-Smtp-Source: APiQypKI/tnpEasz9c6NjgVI5Zv53OBORTXWD6v5yxAV42kvA/cHTjT9UpDrC7tAkI9k8UoXntXphLbQKxc99tQWof8=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr12887666otn.107.1588587644541;
+ Mon, 04 May 2020 03:20:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200429121310.GH4201@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 May 2020 12:20:33 +0200
+Message-ID: <CAMuHMdXruqw2pb3pfXNfxNgtc24FmVA376DLBQgubEYSGO7LSA@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Prabhakar,
 
-On 4/29/2020 8:13 PM, Mark Brown wrote:
-> On Wed, Apr 29, 2020 at 04:20:53PM +0800, Dilip Kota wrote:
->> On 4/28/2020 7:10 PM, Daniel Schwierzeck wrote:
->>> actually there is no real bottom half. Reading or writing the FIFOs is
->>> fast and is therefore be done in hard IRQ context. But as the comment
->> Doing FIFO r/w in threaded irqs shouldn't cause any impact on maximum
->> transfer rate i think.
-> Have you actually tested this?  Generally adding extra latency is going
-> to lead to some opportunity for the hardware to idle and the longer the
-> hardware is idle the lower the throughput.
->
->> Also the ISR should be quick enough, doing FIFO r/w in ISR adds up more
->> latency to ISR.
->> Handling the FIFOs r/w in threaded irq will be a better way.
-> Consider what happens on a heavily loaded system - the threaded
-> interrupt will have to be scheduled along with other tasks.
->
->>> for lantiq_ssc_bussy_work() state, the driver needs some busy-waiting
->>> after the last interrupt. I don't think it's worth to replace this with
->>> threaded interrupts which add more runtime overhead and likely decrease
->>> the maximum transfer speed.
->> Workqueue has a higher chances of causing SPI transfers timedout.
-> because...?
-I just tried to get the history of removing workqueue in SPI driver, on 
-GRX500 (earlier chipset of LGM) the SPI transfers got timedout with 
-workqueues during regression testing. Once changed to threaded IRQs 
-transfers are working successfully.
+Thanks for the update!
 
-Regards,
-Dilip
+On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790),
+> however it doesn't have several automotive specific peripherals. Add
+> a r8a7790 specific pin groups/functions along with common pin
+
+s/a r8a7790/automotive/?
+
+> groups/functions for supporting both r8a7790 and r8a7742 SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+
+> --- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+
+> @@ -5736,6 +5750,7 @@ static const struct sh_pfc_soc_operations r8a7790_pinmux_ops = {
+>         .pin_to_pocctrl = r8a7790_pin_to_pocctrl,
+>  };
+>
+> +#ifdef CONFIG_PINCTRL_PFC_R8A7790
+>  const struct sh_pfc_soc_info r8a7790_pinmux_info = {
+>         .name = "r8a77900_pfc",
+>         .ops = &r8a7790_pinmux_ops,
+> @@ -5745,13 +5760,38 @@ const struct sh_pfc_soc_info r8a7790_pinmux_info = {
+>
+>         .pins = pinmux_pins,
+>         .nr_pins = ARRAY_SIZE(pinmux_pins),
+> -       .groups = pinmux_groups,
+> -       .nr_groups = ARRAY_SIZE(pinmux_groups),
+> -       .functions = pinmux_functions,
+> -       .nr_functions = ARRAY_SIZE(pinmux_functions),
+> +       .groups = pinmux_groups.common,
+> +       .nr_groups = ARRAY_SIZE(pinmux_groups.common) +
+> +               ARRAY_SIZE(pinmux_groups.automotive),
+> +       .functions = pinmux_functions.common,
+> +       .nr_functions = ARRAY_SIZE(pinmux_functions.common) +
+> +               ARRAY_SIZE(pinmux_functions.automotive),
+> +
+> +       .cfg_regs = pinmux_config_regs,
+> +
+> +       .pinmux_data = pinmux_data,
+> +       .pinmux_data_size = ARRAY_SIZE(pinmux_data),
+> +};
+> +#endif
+> +
+> +#ifdef CONFIG_PINCTRL_PFC_R8A7742
+> +const struct sh_pfc_soc_info r8a7742_pinmux_info = {
+> +       .name = "r8a77420_pfc",
+> +       .ops = &r8a7790_pinmux_ops,
+> +       .unlock_reg = 0xe6060000, /* PMMR */
+> +
+> +       .function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
+> +
+> +       .pins = pinmux_pins,
+> +       .nr_pins = ARRAY_SIZE(pinmux_pins),
+> +       .groups = pinmux_groups.common,
+> +       .nr_groups = ARRAY_SIZE(pinmux_groups.common),
+> +       .functions = pinmux_functions.common,
+> +       .nr_functions = ARRAY_SIZE(pinmux_functions.common),
+>
+>         .cfg_regs = pinmux_config_regs,
+>
+>         .pinmux_data = pinmux_data,
+>         .pinmux_data_size = ARRAY_SIZE(pinmux_data),
+>  };
+> +#endif
+
+The r8a7742 section should be inserted before the r8a7790 section,
+to preserve sort order.
+
+No need to resend, will fix up while applying.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in sh-pfc-for-v5.8.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
