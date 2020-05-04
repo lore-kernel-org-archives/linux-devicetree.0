@@ -2,272 +2,140 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECDBC47257
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B33C47258
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1DE20752
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:08:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AP45xlSH"
+	by mail.kernel.org (Postfix) with ESMTP id 430D72068E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 17:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730041AbgEDRIg (ORCPT
+        id S1730605AbgEDRPE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 13:08:36 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49576 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730045AbgEDRIe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 13:08:34 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044H8VUI107102;
-        Mon, 4 May 2020 12:08:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588612111;
-        bh=fTHJjpx4bupRTL5L94b8QMWCLvInZLnMjDmw2sCBOcM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=AP45xlSH5Y7vCVLvkwH24FWU8yaVnHXwtWr6+Nlik5lbDrgRdyECaiMVYYC8aNxTj
-         Hk4lbUOjFZyYLnoKFxoYqr5K0qu00+YUf8m+xN+tJFaIBfDXsePjGopxer+cVJf4Jn
-         +qZR8v3rQxLC/AMPU1UqanH83Pp4ge87yBPVB0Sg=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 044H8VMF038732
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 May 2020 12:08:31 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 12:08:31 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 12:08:30 -0500
-Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044H8Uch026598;
-        Mon, 4 May 2020 12:08:30 -0500
-Subject: Re: [PATCH] dt-bindings: power: Convert bq27xxx dt to yaml
-To:     Dan Murphy <dmurphy@ti.com>, <sre@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-References: <20200504164156.21469-1-dmurphy@ti.com>
- <1ddf643b-c54e-0a60-ee14-8ea137f2bfc9@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <5a7220c7-6c0b-6997-f773-e4b1133d628b@ti.com>
-Date:   Mon, 4 May 2020 13:08:30 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 13:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730333AbgEDRPE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 13:15:04 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28F902068E;
+        Mon,  4 May 2020 17:15:02 +0000 (UTC)
+Date:   Mon, 4 May 2020 13:15:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
+        pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
+        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] printk: honor the max_reason field in
+ kmsg_dumper
+Message-ID: <20200504131500.5f6c8860@gandalf.local.home>
+In-Reply-To: <20200502143555.543636-2-pasha.tatashin@soleen.com>
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+        <20200502143555.543636-2-pasha.tatashin@soleen.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1ddf643b-c54e-0a60-ee14-8ea137f2bfc9@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/4/20 12:44 PM, Dan Murphy wrote:
-> Adding Andrew in manually.
+On Sat,  2 May 2020 10:35:53 -0400
+Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
+
+> kmsg_dump() allows to dump kmesg buffer for various system events: oops,
+> panic, reboot, etc. It provides an interface to register a callback call
+> for clients, and in that callback interface there is a field "max_reason"
+> which gets ignored unless always_kmsg_dump is passed as kernel parameter.
 > 
-> On 5/4/20 11:41 AM, Dan Murphy wrote:
->> Convert the bq27xxx.txt to yaml format
->>
->> CC: Pali Rohár <pali@kernel.org>
->> CC: Andrew F. Davis" <afd@ti.com>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../bindings/power/supply/bq27xxx.txt         | 56 -----------
->>   .../bindings/power/supply/bq27xxx.yaml        | 95 +++++++++++++++++++
->>   2 files changed, 95 insertions(+), 56 deletions(-)
->>   delete mode 100644
->> Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->>   create mode 100644
->> Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->>
->> diff --git
->> a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->> b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->> deleted file mode 100644
->> index 4fa8e08df2b6..000000000000
->> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->> +++ /dev/null
->> @@ -1,56 +0,0 @@
->> -TI BQ27XXX fuel gauge family
->> -
->> -Required properties:
->> -- compatible: contains one of the following:
->> - * "ti,bq27200" - BQ27200
->> - * "ti,bq27210" - BQ27210
->> - * "ti,bq27500" - deprecated, use revision specific property below
->> - * "ti,bq27510" - deprecated, use revision specific property below
->> - * "ti,bq27520" - deprecated, use revision specific property below
->> - * "ti,bq27500-1" - BQ27500/1
->> - * "ti,bq27510g1" - BQ27510-g1
->> - * "ti,bq27510g2" - BQ27510-g2
->> - * "ti,bq27510g3" - BQ27510-g3
->> - * "ti,bq27520g1" - BQ27520-g1
->> - * "ti,bq27520g2" - BQ27520-g2
->> - * "ti,bq27520g3" - BQ27520-g3
->> - * "ti,bq27520g4" - BQ27520-g4
->> - * "ti,bq27521" - BQ27521
->> - * "ti,bq27530" - BQ27530
->> - * "ti,bq27531" - BQ27531
->> - * "ti,bq27541" - BQ27541
->> - * "ti,bq27542" - BQ27542
->> - * "ti,bq27546" - BQ27546
->> - * "ti,bq27742" - BQ27742
->> - * "ti,bq27545" - BQ27545
->> - * "ti,bq27411" - BQ27411
->> - * "ti,bq27421" - BQ27421
->> - * "ti,bq27425" - BQ27425
->> - * "ti,bq27426" - BQ27426
->> - * "ti,bq27441" - BQ27441
->> - * "ti,bq27621" - BQ27621
->> -- reg: integer, I2C address of the fuel gauge.
->> -
->> -Optional properties:
->> -- monitored-battery: phandle of battery characteristics node
->> -    The fuel gauge uses the following battery properties:
->> -    + energy-full-design-microwatt-hours
->> -    + charge-full-design-microamp-hours
->> -    + voltage-min-design-microvolt
->> -  Both or neither of the *-full-design-*-hours properties must be set.
->> -  See Documentation/devicetree/bindings/power/supply/battery.txt
->> -
->> -Example:
->> -
->> -    bat: battery {
->> -        compatible = "simple-battery";
->> -        voltage-min-design-microvolt = <3200000>;
->> -        energy-full-design-microwatt-hours = <5290000>;
->> -        charge-full-design-microamp-hours = <1430000>;
->> -    };
->> -
->> -    bq27510g3: fuel-gauge@55 {
->> -        compatible = "ti,bq27510g3";
->> -        reg = <0x55>;
->> -        monitored-battery = <&bat>;
->> -    };
->> diff --git
->> a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->> b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->> new file mode 100644
->> index 000000000000..6c53ee849004
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->> @@ -0,0 +1,95 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Copyright (C) 2020 Texas Instruments Incorporated
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: TI BQ27XXX fuel gauge family
->> +
->> +maintainers:
->> +  - Pali Rohár <pali@kernel.org>
->> +  - Andrew F. Davis" <afd@ti.com>
+> Allow clients to decide max_reason, and keep the current behavior when
+> max_reason is not set.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  include/linux/kmsg_dump.h |  1 +
+>  kernel/printk/printk.c    | 16 +++++++++-------
+>  2 files changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
+> index 2e7a1e032c71..c0d703b7ce38 100644
+> --- a/include/linux/kmsg_dump.h
+> +++ b/include/linux/kmsg_dump.h
+> @@ -28,6 +28,7 @@ enum kmsg_dump_reason {
+>  	KMSG_DUMP_RESTART,
+>  	KMSG_DUMP_HALT,
+>  	KMSG_DUMP_POWEROFF,
+> +	KMSG_DUMP_MAX = KMSG_DUMP_POWEROFF
+
+Hmm, I didn't realize that enums were allowed to have duplicates. That can
+usually screw up logic. I would recommend making that a define afterward.
+
+#define KMSG_DUMP_MAX KMSG_DUMP_POWEROFF
+
+As is done in other locations of the kernel.
 
 
-Extra " at end of name.
+The rest looks fine to me.
 
+-- Steve
 
->> +  - Sebastian Reichel <sre@kernel.org>
->> +
->> +description: |
->> +  Support various Texas Instruments fuel gauge devices that share
->> similar
->> +  register maps and power supply properties
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ti,bq27200 - BQ27200
->> +      - ti,bq27210 - BQ27210
->> +      - ti,bq27500 - deprecated, use revision specific property below
->> +      - ti,bq27510 - deprecated, use revision specific property below
->> +      - ti,bq27520 - deprecated, use revision specific property below
->> +      - ti,bq27500-1 - BQ27500/1
->> +      - ti,bq27510g1 - BQ27510-g1
->> +      - ti,bq27510g2 - BQ27510-g2
->> +      - ti,bq27510g3 - BQ27510-g3
->> +      - ti,bq27520g1 - BQ27520-g1
->> +      - ti,bq27520g2 - BQ27520-g2
->> +      - ti,bq27520g3 - BQ27520-g3
->> +      - ti,bq27520g4 - BQ27520-g4
->> +      - ti,bq27521 - BQ27521
->> +      - ti,bq27530 - BQ27530
->> +      - ti,bq27531 - BQ27531
->> +      - ti,bq27541 - BQ27541
->> +      - ti,bq27542 - BQ27542
->> +      - ti,bq27546 - BQ27546
->> +      - ti,bq27742 - BQ27742
->> +      - ti,bq27545 - BQ27545
->> +      - ti,bq27411 - BQ27411
->> +      - ti,bq27421 - BQ27421
->> +      - ti,bq27425 - BQ27425
->> +      - ti,bq27426 - BQ27426
->> +      - ti,bq27441 - BQ27441
->> +      - ti,bq27621 - BQ27621
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description: integer, I2C address of the fuel gauge.
->> +
->> +  monitored-battery:
->> +    description: phandle of battery characteristics node
->> +
->> +  energy-full-design-microwatt-hours:
->> +    description: |
->> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
->> +      If this property is set then charge-full-design-microamp-hours
->> must be
->> +      set as well.
+>  };
+>  
+>  /**
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 9a9b6156270b..04c1e9a9b139 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -3085,6 +3085,8 @@ EXPORT_SYMBOL(printk_timed_ratelimit);
+>  
+>  static DEFINE_SPINLOCK(dump_list_lock);
+>  static LIST_HEAD(dump_list);
+> +static bool always_kmsg_dump;
+> +module_param_named(always_kmsg_dump, always_kmsg_dump, bool, S_IRUGO | S_IWUSR);
+>  
+>  /**
+>   * kmsg_dump_register - register a kernel log dumper.
+> @@ -3106,6 +3108,12 @@ int kmsg_dump_register(struct kmsg_dumper *dumper)
+>  	spin_lock_irqsave(&dump_list_lock, flags);
+>  	/* Don't allow registering multiple times */
+>  	if (!dumper->registered) {
+> +		if (!dumper->max_reason) {
+> +			if (always_kmsg_dump)
+> +				dumper->max_reason = KMSG_DUMP_MAX;
+> +			else
+> +				dumper->max_reason = KMSG_DUMP_OOPS;
+> +		}
+>  		dumper->registered = 1;
+>  		list_add_tail_rcu(&dumper->list, &dump_list);
+>  		err = 0;
+> @@ -3141,9 +3149,6 @@ int kmsg_dump_unregister(struct kmsg_dumper *dumper)
+>  }
+>  EXPORT_SYMBOL_GPL(kmsg_dump_unregister);
+>  
+> -static bool always_kmsg_dump;
+> -module_param_named(always_kmsg_dump, always_kmsg_dump, bool, S_IRUGO | S_IWUSR);
+> -
+>  /**
+>   * kmsg_dump - dump kernel log to kernel message dumpers.
+>   * @reason: the reason (oops, panic etc) for dumping
+> @@ -3157,12 +3162,9 @@ void kmsg_dump(enum kmsg_dump_reason reason)
+>  	struct kmsg_dumper *dumper;
+>  	unsigned long flags;
+>  
+> -	if ((reason > KMSG_DUMP_OOPS) && !always_kmsg_dump)
+> -		return;
+> -
+>  	rcu_read_lock();
+>  	list_for_each_entry_rcu(dumper, &dump_list, list) {
+> -		if (dumper->max_reason && reason > dumper->max_reason)
+> +		if (reason > dumper->max_reason)
+>  			continue;
+>  
+>  		/* initialize iterator with data about the stored records */
 
-
-These are properties of the battery node and should be described in
-their binding, they are not part of the fuel gauge node here.
-
-Andrew
-
-
->> +
->> +  charge-full-design-microamp-hours:
->> +    description: |
->> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
->> +      If this property is set then energy-full-design-microwatt-hours
->> must be
->> +      set as well.
->> +
->> +  voltage-min-design-microvolt:
->> +    description: |
->> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    i2c0 {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +      bat: battery {
->> +        compatible = "simple-battery";
->> +        voltage-min-design-microvolt = <3200000>;
->> +        energy-full-design-microwatt-hours = <5290000>;
->> +        charge-full-design-microamp-hours = <1430000>;
->> +      };
->> +
->> +      bq27510g3: fuel-gauge@55 {
->> +        compatible = "ti,bq27510g3";
->> +        reg = <0x55>;
->> +        monitored-battery = <&bat>;
->> +      };
->> +    };
