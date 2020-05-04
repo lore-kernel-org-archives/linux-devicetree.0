@@ -2,73 +2,89 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB39C47260
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF10AC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1C320757
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B972073E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgEDNEj (ORCPT
+        id S1726660AbgEDNKJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 09:04:39 -0400
-Received: from mga05.intel.com ([192.55.52.43]:6159 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726660AbgEDNEj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 09:04:39 -0400
-IronPort-SDR: 6QGzARkDtTETT1rxyRnOd3iZK5tUBgQr3mAA43T9qRicEavLSWD5jF3AgUuLqMibGJ8AwkF1tV
- YkKvkNcdYu3Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 06:04:04 -0700
-IronPort-SDR: Jp3+BuxZTFbOqwkr1LxJ9advre9i//UJItPnZzX3Q1xd9vc72gHqCdYMaI/3gyiLcSAAg/POtG
- 3iOKid0EXJPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
-   d="scan'208";a="249169148"
-Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
-  by fmsmga007.fm.intel.com with ESMTP; 04 May 2020 06:04:02 -0700
-From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-To:     broonie@kernel.org, robh+dt@kernel.org
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com,
-        wan.ahmad.zainie.wan.mohamad@intel.com
-Subject: [PATCH v4 6/7] dt-bindings: spi: dw-apb-ssi: Add Intel Keem Bay support
-Date:   Mon,  4 May 2020 21:02:45 +0800
-Message-Id: <20200504130246.5135-7-wan.ahmad.zainie.wan.mohamad@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200504130246.5135-1-wan.ahmad.zainie.wan.mohamad@intel.com>
-References: <20200504130246.5135-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+        Mon, 4 May 2020 09:10:09 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:36566 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgEDNKJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 09:10:09 -0400
+Received: by mail-oo1-f66.google.com with SMTP id x17so2363554ooa.3;
+        Mon, 04 May 2020 06:10:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m45ix2jo0oJBT4CyJlzZkH39XD04I9G5DajC3f1FfT8=;
+        b=SI1kRq9X/TdIMm/Z+OhHQPnD/LRDj1xsaD/GCYLbeDLYJ3IehlkY6XnTZbixGPf4qI
+         32uykv5mK6k+iKfozRPMDmaGjReEOtlsZZh5aw7/gPhBLPmc1PEo3SuxUAb1Vl4fVGVc
+         bXZT/tDfup0DaLMoVOYiFy9+5ur2KRC5JYO5tpV1plm4JFli3sCZfG6yWivzhH+cbVUR
+         usbqrH/wM3NBGJkkIqyM6aSj6SfJ5fdT5zc7e2LkYUnVVhephzHLCYfADuDHn6Up7b12
+         ZgTMWfQMss8UFBFJ/B0y3VluxtZ7oBsbsm2tF+AA8pO6moEyMsKVULncIqgkhEX4ulo9
+         o9cA==
+X-Gm-Message-State: AGi0PubTfCqTbiMt7eoI83EpBU1+AWu1K03/5ozacr5sSasDaB0iymqf
+        p4/S1jeVliZ56cstgMerU07Pirrj3vwvMxFtG8o=
+X-Google-Smtp-Source: APiQypLpzZE2IvYXqH6gz6imKGnp8FyeyBLm3+HacZ75gaAc1r2MHwwKq/DQyIzoTSsqIBSxXXNNqHjyLyhzp3T+hPc=
+X-Received: by 2002:a4a:e8db:: with SMTP id h27mr14970818ooe.40.1588597807924;
+ Mon, 04 May 2020 06:10:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 May 2020 15:09:56 +0200
+Message-ID: <CAMuHMdVa63kgKtb616vsjis1qmwsPoye-wDUe6YcXf6Lc=CjBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] ARM: dts: r8a7742-iwg21d-q7: Add support for
+ iWave G21D-Q7 board based on RZ/G1H
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document Intel Keem Bay SPI controller DT bindings.
+On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for iWave RainboW-G21D-Qseven board based on RZ/G1H.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
----
- Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-index 2ead46b633ea..7a4702edf896 100644
---- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-@@ -2,7 +2,8 @@ Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
- 
- Required properties:
- - compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
--  "jaguar2", or "amazon,alpine-dw-apb-ssi", or "snps,dwc-ssi-1.01a"
-+  "jaguar2", or "amazon,alpine-dw-apb-ssi", or "snps,dwc-ssi-1.01a" or
-+  "intel,keembay-ssi"
- - reg : The register base for the controller. For "mscc,<soc>-spi", a second
-   register set is required (named ICPU_CFG:SPI_MST)
- - interrupts : One interrupt, used by the controller.
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
