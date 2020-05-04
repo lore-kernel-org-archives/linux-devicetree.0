@@ -2,149 +2,244 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B467C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 08:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C347C4724C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 08:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5801F206D7
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 08:52:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TNRnNkT9"
+	by mail.kernel.org (Postfix) with ESMTP id 83007206E6
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 08:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgEDIwo (ORCPT
+        id S1726797AbgEDI6g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 04:52:44 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59540 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgEDIwo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 04:52:44 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0448qbRg096817;
-        Mon, 4 May 2020 03:52:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588582357;
-        bh=oLNWH+X1hs3YnhUrSb8y01crQB5nXm4tFtkF+k5FD4A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TNRnNkT9hx70ILqFW/Q7mk9b2zIIubTuhpnHg7oChBKB6JrodiPD96P54cRiqLSUE
-         gPYnzX2Xshh63zGJWQNXqM3H3B0jVK4jcI+vC5IEiov/yewuoj/wEIU+EQoaxBejqI
-         5ERCtICIgMrEdTFnUsu6h8jC8mdIefkBq39C+Z+0=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0448qa3W047269;
-        Mon, 4 May 2020 03:52:36 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 03:52:36 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 03:52:36 -0500
-Received: from [10.250.150.106] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0448qVrN036997;
-        Mon, 4 May 2020 03:52:32 -0500
-Subject: Re: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device
- ID property from DT
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-5-kishon@ti.com>
- <20200501151131.GC7398@e121166-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <47cc8236-4bec-244d-4ab3-cda8eb37d4bf@ti.com>
-Date:   Mon, 4 May 2020 14:22:30 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 04:58:36 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54840 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgEDI6f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 04:58:35 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 784152A0E99;
+        Mon,  4 May 2020 09:58:32 +0100 (BST)
+Date:   Mon, 4 May 2020 10:58:28 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     tglx@linutronix.de, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        masonccyang@mxic.com.tw, anders.roxell@linaro.org, vigneshr@ti.com,
+        arnd@arndb.de, hauke.mehrtens@intel.com, richard@nod.at,
+        brendanhiggins@google.com, linux-mips@vger.kernel.org,
+        robh+dt@kernel.org, linux-mtd@lists.infradead.org,
+        miquel.raynal@bootlin.com, qi-ming.wu@intel.com,
+        andriy.shevchenko@intel.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200504105828.72aaf7b8@collabora.com>
+In-Reply-To: <db023399-8b4d-c75c-30c8-b35e38e2e5f8@linux.intel.com>
+References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429162249.55d38ee8@collabora.com>
+        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
+        <20200429164832.6800fc70@collabora.com>
+        <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
+        <20200429173107.5c6d2f55@collabora.com>
+        <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
+        <20200430102114.29b6552f@collabora.com>
+        <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
+        <20200430103658.4b0b979e@collabora.com>
+        <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
+        <20200430143600.27031639@collabora.com>
+        <20200430150124.7856d112@collabora.com>
+        <df7c1952-bc9b-bad7-bf31-d09707a0829e@linux.intel.com>
+        <20200504090824.1eb16b78@collabora.com>
+        <854521ed-b0f9-0f0f-2cd7-5ad11b2d059a@linux.intel.com>
+        <20200504091755.0d0e73aa@collabora.com>
+        <db023399-8b4d-c75c-30c8-b35e38e2e5f8@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200501151131.GC7398@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+On Mon, 4 May 2020 16:50:08 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-On 5/1/2020 8:41 PM, Lorenzo Pieralisi wrote:
-> On Fri, Apr 17, 2020 at 05:13:22PM +0530, Kishon Vijay Abraham I wrote:
->> The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
->> defines both Vendor ID and Device ID to be 32-bits. Fix
->> pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
->> properties from device tree.
->>
->> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
->>  drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
->>  2 files changed, 4 insertions(+), 4 deletions(-)
+> Hi Boris,
 > 
-> I don't see how you would use a 32-bit value for a 16-bit register so
-> certainly the struct cdns_pcie_rc fields size is questionable anyway.
+> On 4/5/2020 3:17 pm, Boris Brezillon wrote:
+> > On Mon, 4 May 2020 15:15:08 +0800
+> > "Ramuthevar, Vadivel MuruganX"
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >   
+> >> Hi Boris,
+> >>
+> >>     Thank you very much for the prompt review and suggestions...
+> >>
+> >> On 4/5/2020 3:08 pm, Boris Brezillon wrote:  
+> >>> On Mon, 4 May 2020 10:02:35 +0800
+> >>> "Ramuthevar, Vadivel MuruganX"
+> >>> <vadivel.muruganx.ramuthevar@linux.intel.com>  wrote:
+> >>>      
+> >>>> Hi Boris,
+> >>>>
+> >>>> On 30/4/2020 9:01 pm, Boris Brezillon wrote:  
+> >>>>> On Thu, 30 Apr 2020 14:36:00 +0200
+> >>>>> Boris Brezillon<boris.brezillon@collabora.com>  wrote:
+> >>>>>         
+> >>>>>> On Thu, 30 Apr 2020 17:07:03 +0800
+> >>>>>> "Ramuthevar, Vadivel MuruganX"
+> >>>>>> <vadivel.muruganx.ramuthevar@linux.intel.com>  wrote:
+> >>>>>>        
+> >>>>>>>>>> The question is, is it the same value we have in nand_pa or it is
+> >>>>>>>>>> different?
+> >>>>>>>>>>                 
+> >>>>>>>>> Different address which is 0xE1400000 NAND_BASE_PHY address.  
+> >>>>>>>> Then why didn't you tell me they didn't match when I suggested to pass  
+> >>>>>>> sorry, because you keep asking nand_pa after that only I realized that.
+> >>>>>>>            
+> >>>>>>>> nand_pa? So now the question is, what does this address represent?  
+> >>>>>>>                    EBU-MODULE
+> >>>>>>>      _________     _______________________
+> >>>>>>> |         |   |            |NAND CTRL  |
+> >>>>>>> | FPI BUS |==>| CS0(0x174) | 0xE100    ( 0xE14/0xE1C) NAND_PHY_BASE
+> >>>>>>> |_________|   |_CS1(0x17C)_|__________ |
+> >>>>>>>
+> >>>>>>> EBU_CONRTROLLER_BASE : 0xE0F0_0000
+> >>>>>>> HSNAND_BASE: 0xE100_0000
+> >>>>>>> NAND_CS0: 0xE140_0000
+> >>>>>>> NAND_CS1: 0xE1C0_0000
+> >>>>>>>
+> >>>>>>> MEM_REGION_BASE_CS0: 0x17400 (internal to ebu controller )
+> >>>>>>> MEM_REGION_BASE_CS1: 0x17C00
+> >>>>>>>            
+> >>>>>> Hm, I wonder if we shouldn't use a 'ranges' property to describe this
+> >>>>>> address translation. Something like
+> >>>>>>
+> >>>>>> 	ebu@xxx {
+> >>>>>> 		ranges = <0x17400000 0xe1400000 0x1000>,
+> >>>>>> 			 <0x17c00000 0xe1c00000 0x1000>;
+> >>>>>> 		reg = <0x17400000>, <0x17c00000>;
+> >>>>>> 		reg-names = "cs-0", "cs-1";
+> >>>>>> 	}
+> >>>>>>
+> >>>>>> The translated address (0xE1X00000) will be available in res->start,
+> >>>>>> and the non-translated one (0x17X00000) can be retrieved with
+> >>>>>> of_get_address(). All you'd have to do then would be calculate the
+> >>>>>> mask:
+> >>>>>>
+> >>>>>> 	mask = (translated_address & original_address) >> 22;
+> >>>>>> 	num_comp_bits = fls(mask);
+> >>>>>> 	WARN_ON(mask != GENMASK(num_comp_bits - 1, 0));
+> >>>>>>
+> >>>>>> Which allows you to properly set the ADDR_SEL() register without
+> >>>>>> relying on some hardcoded values:
+> >>>>>>
+> >>>>>> 	writel(original_address | EBU_ADDR_SEL_REGEN |
+> >>>>>> 	       EBU_ADDR_COMP_BITS(num_comp_bits),
+> >>>>>> 	       ebu_host->ebu + EBU_ADDR_SEL(csid));
+> >>>>>>
+> >>>>>> That's quite important if we want to merge the xway NAND driver with
+> >>>>>> this one.  
+> >>>>> Looks like the translation is done at the FPI bus declaration level (see
+> >>>>> [1]). We really need to see the big picture to take a wise decision
+> >>>>> about the bindings. Would you mind pasting your dsti/dts files
+> >>>>> somewhere? It feels like the NAND controller is a sub-part of a more
+> >>>>> generic 'memory' controller, in which case the NAND controller should be
+> >>>>> declared as a child of this generic memory bus (called localbus in [1],
+> >>>>> but maybe EBU is more accurate).
+> >>>>>
+> >>>>> [1]https://github.com/xieyaxiongfly/Atheros_CSI_tool_OpenWRT_src/blob/master/target/linux/lantiq/files-4.14/arch/mips/boot/dts/vr9.dtsi#L162  
+> >>>>
+> >>>>     ebu_nand: ebu_nand@e0f00000 {
+> >>>>                     compatible = "intel,lgm-ebu-nand";
+> >>>>                     reg = <0xe0f00000 0x100
+> >>>>                     0xe1000000 0x300
+> >>>>                     0xe1400000 0x80000
+> >>>>                     0xe1c00000 0x10000>;
+> >>>>                     reg-names = "ebunand", "hsnand", "nand_cs0", nand_cs1";
+> >>>>                     dmas = <&dma0 8>, <&dma0 9>;
+> >>>>                     dma-names = "ebu_rx", "ebu_tx";
+> >>>>                     clocks =  <&cgu0 LGM_GCLK_EBU>;
+> >>>>             };
+> >>>>
+> >>>>
+> >>>> 	 &ebu_nand {
+> >>>> 	         status = "disabled";
+> >>>> 	        nand,cs = <1>;
+> >>>> 	        nand-ecc-mode = "hw";
+> >>>> 	        pinctrl-names = "default";
+> >>>> 	        pinctrl-0 = <&ebu_nand_base &ebu_cs1>;
+> >>>> 	};
+> >>>>     
+> >>>>>         
+> >>> Ok. If I understand the SoC topology correctly it should actually be
+> >>> something like that:
+> >>>
+> >>> {
+> >>> 	...
+> >>> 	fpi@xxxxx {
+> >>> 		compatible = "intel,lgm-fpi", "simple-bus";
+> >>>
+> >>> 		/* You might have other ranges to define here */
+> >>> 		ranges = <0x16000000 0xe0000000 0x1000000>;
+> >>>
+> >>> 		...  
+> >>
+> >> Sorry, we do not have fpi tree node in our dts/dtsi file instead we have
+> >> the below one.. , that also not included the major peripherals
+> >> controllers node.
+> >>           /* Special part from CPU core */
+> >>           core: core {
+> >>                   compatible = "intel,core", "simple-bus";
+> >>                   #address-cells = <1>;
+> >>                   #size-cells = <1>;
+> >>                   ranges;
+> >>
+> >>                   ioapic1: interrupt-controller@fec00000 {
+> >>                           #interrupt-cells = <2>;
+> >>                           #address-cells = <0>;
+> >>                           compatible = "intel,ce4100-ioapic";
+> >>                           interrupt-controller;
+> >>                           reg = <0xfec00000 0x1000>;
+> >>                           nr_entries = <256>;
+> >>                   };
+> >>
+> >>                   hpet: timer@fed00000 {
+> >>                           compatible = "intel,ce4100-hpet";
+> >>                           reg = <0xfed00000 0x400>;
+> >>                   };
+> >>
+> >>                   lapic0: interrupt-controller@fee00000 {
+> >>                           compatible = "intel,ce4100-lapic";
+> >>                           reg = <0xfee00000 0x1000>;
+> >>                           no_pic_mode;
+> >>                   };
+> >>           };
+> >>
+> >> other than this, rest all in independent node .  
+> > 
+> > But you do have an FPI bus, right? If this is the case it should be
+> > represented.  
 > 
-> I *assume* you are referring to 4.1.2.1 and the property list
-> encoded as "encode-int".
+> Yes, FPI bus is slave to core which connects all the peripherals.
 > 
-> I would like to get RobH's opinion on this - I don't know myself
-> whether the PCI OF bindings you added are still relevant and how
-> they should be interpreted.
+>   Or is the "intel,core" bus actually the FPI bus that you
+> > named differently?  
+> 
+> FPI slave bus connects to core bus by OCP bridge, so here it is named 
+> FPI bus, but SW perspective didn't have root tree which has all 
+> sub-nodes, as of now each peripheral has its own node.
 
-This change was made due to RobH's comment below [1]
-
-[1] ->
-https://lore.kernel.org/r/CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com/
-
-Thanks
-Kishon
-
-> 
-> Thanks
-> Lorenzo
-> 
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 8f72967f298f..31e67c9c88cf 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -229,10 +229,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>  	}
->>  
->>  	rc->vendor_id = 0xffff;
->> -	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
->> +	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
->>  
->>  	rc->device_id = 0xffff;
->> -	of_property_read_u16(np, "device-id", &rc->device_id);
->> +	of_property_read_u32(np, "device-id", &rc->device_id);
->>  
->>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
->>  	pcie->reg_base = devm_ioremap_resource(dev, res);
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
->> index 6bd89a21bb1c..df14ad002fe9 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence.h
->> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
->> @@ -262,8 +262,8 @@ struct cdns_pcie_rc {
->>  	struct resource		*bus_range;
->>  	void __iomem		*cfg_base;
->>  	u32			no_bar_nbits;
->> -	u16			vendor_id;
->> -	u16			device_id;
->> +	u32			vendor_id;
->> +	u32			device_id;
->>  };
->>  
->>  /**
->> -- 
->> 2.17.1
->>
+Duh, not sure that's a good idea to hide that, especially since you
+have to describe the address translation that happens when crossing the
+FPI bus (the ranges thing I mentioned previously).
