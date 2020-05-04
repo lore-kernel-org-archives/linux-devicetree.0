@@ -2,176 +2,163 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156A8C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 12:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC721C47254
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 12:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCD0C206D9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 12:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA487206B9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 12:58:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O6K6BJbu"
+	dkim=pass (1024-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="XQrQ+2K0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbgEDMxY (ORCPT
+        id S1726891AbgEDM6x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 08:53:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48754 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgEDMxX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 08:53:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044CrDiR101787;
-        Mon, 4 May 2020 07:53:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588596793;
-        bh=egWsxDaoDfltWcOEQkby+ChR38lWf3kFvTkLIhVfDqM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=O6K6BJbuShLOF85rq7SiZpAyTsijWz3jZnRZH3Qi6xm0/+5FsErBaqZg8NouMWfAP
-         PP4CR/VEFYXi687Pl3LgHg8RYsXXOJGrZhJDbOyMXgvtJ28hQpdOxGxzAdvk7a6NYV
-         S3n2B1pY3K162gyvMADHWP9VhxzaOmKAEAYpJfm4=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044CrD2e126233;
-        Mon, 4 May 2020 07:53:13 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 07:53:12 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 07:53:12 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044Cr9rS066968;
-        Mon, 4 May 2020 07:53:10 -0500
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
- <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
- <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
- <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
- <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <cf9c2dcc-57e8-cfa0-e3b4-55ff5113341f@ti.com>
-Date:   Mon, 4 May 2020 18:23:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 4 May 2020 08:58:53 -0400
+Received: from mail-eopbgr60040.outbound.protection.outlook.com ([40.107.6.40]:62523
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726796AbgEDM6w (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 08:58:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=akGPjmMl5LkEV2Q/zH5Nh3SxesSuJN1gZLOEiTM04ueg6HTAShRRoG/j/gengug2STO5NdkhYBgT2eoVWRWCYYpVbUvgdd+1sCTDfZwAMIXO739WycnhOplgd69EyDxVOo4Kv/p5Gt6+OF/6EuGc9Zy4L4bmz3Rn7QGejxuK6pU1S9y3Qa8P5AWYyJuLOkn8W/bG+/4Oqwu1G4SJfl6SsiSdM/e/2iY9bNH+tmiomNRsOBIlVcYNiXe0WfigMICV1mJUfCpiIvq8oEzjjr0LiX4GfDDMkukC3bv3iiNv1OKtbhmgaKRQc5VnVPkoyswhcUBILJGfXmXd1POkJRL/cg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aiwF0qMP3FMNLm9skR2NsH55fIdWBNn20IkfGW83JKo=;
+ b=R+tJ2/6owm2cLHqLF/NkYNezpGfUnraty2nnGdRNV3xG9n8VeSHgdrfK4Xabnc0qEe1+IjBi2xYn0AfZyE3zLe75ILQYqY1A+odJ9c28J7EZQds/j4xtfGhicDSvpCytxNajMWvzOmmAw/10cMvIy/T/reCSkMVi3NhnC0zkXbLCgGHLEuCVCjfWdfF9NrLlV+UdqxrmjGlva9r2RMDKso4R0odB8eh4FA3xmUGtdQ1ZDT1lDlogP9a4JS12I6kcpbnfQmHCzXZBUeqOpGfo5lgTnCMGTHQTVHgzIYk6X2rhisISZBJPlAd0f6sDnhh80BD91oMcnnoo8Qg7dlTJVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vaisala.com; dmarc=pass action=none header.from=vaisala.com;
+ dkim=pass header.d=vaisala.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aiwF0qMP3FMNLm9skR2NsH55fIdWBNn20IkfGW83JKo=;
+ b=XQrQ+2K0LAIiJRL3oCRsNGJ1Tsozn/Nfyj1GicqnDBmarKxF00TIJEyffT6Hr/CtuT2qivP7RqsNW6D2ASI+u/6ukYg2zKrekTK5PLzOmBlWa1UkXc49DfdN0/X/n+8RdFxg33OFF6yLfEIssfYD0WgnLqReyk6jtS20MLPKgi0=
+Received: from AM0PR06MB5185.eurprd06.prod.outlook.com (2603:10a6:208:107::25)
+ by AM0PR06MB4420.eurprd06.prod.outlook.com (2603:10a6:208:bf::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.29; Mon, 4 May
+ 2020 12:58:48 +0000
+Received: from AM0PR06MB5185.eurprd06.prod.outlook.com
+ ([fe80::3c0c:c6e8:c7b6:cabd]) by AM0PR06MB5185.eurprd06.prod.outlook.com
+ ([fe80::3c0c:c6e8:c7b6:cabd%5]) with mapi id 15.20.2958.029; Mon, 4 May 2020
+ 12:58:48 +0000
+From:   Laine Jaakko EXT <ext-jaakko.laine@vaisala.com>
+To:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>
+CC:     Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH] i2c: xiic: Support disabling multi-master in DT
+Thread-Topic: [PATCH] i2c: xiic: Support disabling multi-master in DT
+Thread-Index: AQHV5mNyTIn2+pYf+Eu7yiopaV9KGKhOcmGAgAAnv5CAFgB+gIAA/BRAgAA+l4CAMnEssA==
+Date:   Mon, 4 May 2020 12:58:48 +0000
+Message-ID: <AM0PR06MB51857F4CDC7AE643CE160F9ED4A60@AM0PR06MB5185.eurprd06.prod.outlook.com>
+References: <20200218135627.24739-1-ext-jaakko.laine@vaisala.com>
+ <CAKfKVtFf+VpinkOGsBFZ2-_PKvx-C1L7G7_uhY2RCvV5dy6L_w@mail.gmail.com>
+ <AM0PR06MB5185E501349E06428093B62FD4F70@AM0PR06MB5185.eurprd06.prod.outlook.com>
+ <20200401143254.GA2409@ninjato>
+ <AM0PR06MB5185F8F51316FCD5213F0ABED4C60@AM0PR06MB5185.eurprd06.prod.outlook.com>
+ <20200402092813.GA986@ninjato>
+In-Reply-To: <20200402092813.GA986@ninjato>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Enabled=True;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_SiteId=6d7393e0-41f5-4c2e-9b12-4c2be5da5c57;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Owner=ext-jaakko.laine@vaisala.com;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_SetDate=2020-05-04T12:58:46.5802889Z;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Name=Restricted;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_ActionId=0b51210f-13d4-484d-b397-ffb4db30a687;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Extended_MSFT_Method=Automatic;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Enabled=True;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_SiteId=6d7393e0-41f5-4c2e-9b12-4c2be5da5c57;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Owner=ext-jaakko.laine@vaisala.com;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_SetDate=2020-05-04T12:58:46.5802889Z;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Name=No Label;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_ActionId=0b51210f-13d4-484d-b397-ffb4db30a687;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Parent=d5842b46-9b7a-431a-b662-8cc44ff92a4e;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Extended_MSFT_Method=Automatic
+authentication-results: the-dreams.de; dkim=none (message not signed)
+ header.d=none;the-dreams.de; dmarc=none action=none header.from=vaisala.com;
+x-originating-ip: [193.143.230.131]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c0c1f6e8-367b-4d21-211c-08d7f02ae313
+x-ms-traffictypediagnostic: AM0PR06MB4420:
+x-microsoft-antispam-prvs: <AM0PR06MB4420116136803AF9DF460032D4A60@AM0PR06MB4420.eurprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 03932714EB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UwY4aY3CVZmLXsQB+Z7qdQ0HPL33BoUlIfIVu2HZDUY2CsPFbCHSFtqQjY/DbXuYU/3Qe8ssG116f/roNnbkQg5VodkHfOvBsi5WVcD93BXXWZYH8ZS+NkOmzGPU1txrJzcNClx3GfgRqUTOljwqxFeqAu6/gyNkg/LGkUqzZ9+WI6vKMJjunmyqMSi0LZYYJfHJvzDejRzedMiqTJ0Obgcc1RcBkamms90jyrTdKNUPE87ubydSOBDYpqTOXqX+VuL8s2euNEHACSwsyeo7ivAcigYD8fjDrIrGZQiU4QzhWLy0ZMPlR0XIxEuPz4Xf3K4KzG6T1hDo+4XvHB5REpbllQgMHYehpR/gCMwSpMtezW2k+5FUmmggXAVVreqqHyRIxGRfSOb4kET3TDRjFFmC8zYP7nOBhYXlh+8EwLUV2dhz8Mj4JeTGUsWeb/WK
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR06MB5185.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(396003)(376002)(346002)(39850400004)(8936002)(54906003)(478600001)(52536014)(110136005)(66946007)(8676002)(76116006)(7696005)(5660300002)(4326008)(33656002)(6506007)(2906002)(55016002)(86362001)(316002)(186003)(66446008)(71200400001)(26005)(64756008)(66556008)(9686003)(66476007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: TH35eitRUBoXgoVYzUwlXVNj1b/CVh9yG9vLZ6I/6YTMbLcTYfV4iEWfoSFBK3hZxysCGPWaygd+ZMAaC/kWRQS9gBwVt+BhC856o8WIDYfFYbuIU86Zp7eUD4BC6Z5AJtOwo2f0QXgjxnYR3J759IPx3hNt8PZbAL1apb7pHvAdfu57OWpqvEOQEUl0gclmlSUV49JGIZvGgZrckTZ0Rmm2nmjUSrYitmH0eN5LUeflEFFqTNQRPTAOq2TS7Ai8J8DBHHPFNMubv3BD4DITWToJ6QdqvAaByQuBrKvhVydbIug8ZHD3jCYhhyDzW2NCwWB6LmMDD8wn4Zbrm4IB1g5n3Rd4WSimsWJtNsmJUxZaT2qqHr6eVe82f4HUE7DoMlfAq0W1OQbAVtkABTBYPPjwE+cVevYYHY9KauiLty5oWZU82gsp1MkdH95gynrY95lF2oL2FmiptGY1X34LlrXtpjV/3zY/fvYlUK/A9antrhoUPF6X9PaYJ5mnLef3oNotK9B6UoTVoNmlnH3wSQGRr4dyAlEW0O+R3lP0o/jBoMQKfM0gFmcbTMilz348sDxE8G4ut25CQTrgM9nnuci+9OcGyNd3HIdgRf9/Mov+5g5ZEgXluXKtE7OsonojLnEoYCvWYCaiepEINh3kIIHEoPPQkDUletRC8Ay2k59Aoum2PNMRnwFYEuC43MYlXULOaKByXRGunmcXs3DMOA3ajC0kdRwEXw7MRkKplPq5riyNGah8qgsnFicdTMxpG+GvaN0ZYPA2xTxukVHVURQKxai6C1NPVsMMjuUijrO+oge/lCRoNWKarOzlYh40
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vaisala.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0c1f6e8-367b-4d21-211c-08d7f02ae313
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 May 2020 12:58:48.3579
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MAEFxY0aKp+i3zjdKcHi6Ma2bJINAq2JvNURwBam/Z/JRWRTwb4Q9Ly0E4JWDY27ZczYRCryB98pBOIZG9UtfFAjfl2hz4QsLSCL6w3Y+iA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR06MB4420
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robin,
+> > How would both bindings existing simultaneously be interpreted? Maybe
+> > both existing simultaneously should be considered as an invalid
+> > configuration, so that it would be enough to just check the one you
+> > need? The other option would be to treat both existing similarly to
+> > neither existing, which would require the driver to always check both
+> > if checking one.
+>
+> I am clearly for saying that this is an illegal combination. I'd hope
+> this can be expressed in a YAML binding. Yet, my research didn't give me
+> an answer. Adding Rob and DT list to CC. Question is:
+>
+> Can we check if the boolean bindings "multi-master" and "single-master"
+> are not applied at the same time? Any other combination is okay, i.e.
+> just one of them or none of them.
 
-On 5/4/2020 4:24 PM, Robin Murphy wrote:
-> On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
->> Hi Robin,
->>
->> On 5/1/2020 9:24 PM, Robin Murphy wrote:
->>> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
->>>> [+Robin - to check on dma-ranges intepretation]
->>>>
->>>> I would need RobH and Robin to review this.
->>>>
->>>> Also, An ACK from Tom is required - for the whole series.
->>>>
->>>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
->>>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->>>>> property to configure the number of bits passed through from PCIe
->>>>> address to internal address in Inbound Address Translation register.
->>>>>
->>>>> However standard PCI dt-binding already defines "dma-ranges" to
->>>>> describe the address range accessible by PCIe controller. Parse
->>>>> "dma-ranges" property to configure the number of bits passed
->>>>> through from PCIe address to internal address in Inbound Address
->>>>> Translation register.
->>>>>
->>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>> ---
->>>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->>>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>> index 9b1c3966414b..60f912a657b9 100644
->>>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>>        struct device *dev = rc->pcie.dev;
->>>>>        struct platform_device *pdev = to_platform_device(dev);
->>>>>        struct device_node *np = dev->of_node;
->>>>> +    struct of_pci_range_parser parser;
->>>>>        struct pci_host_bridge *bridge;
->>>>>        struct list_head resources;
->>>>> +    struct of_pci_range range;
->>>>>        struct cdns_pcie *pcie;
->>>>>        struct resource *res;
->>>>>        int ret;
->>>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>>        rc->max_regions = 32;
->>>>>        of_property_read_u32(np, "cdns,max-outbound-regions",
->>>>> &rc->max_regions);
->>>>>    -    rc->no_bar_nbits = 32;
->>>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
->>>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
->>>>> +        if (of_pci_range_parser_one(&parser, &range))
->>>>> +            rc->no_bar_nbits = ilog2(range.size);
->>>
->>> You probably want "range.pci_addr + range.size" here just in case the bottom of
->>> the window is ever non-zero. Is there definitely only ever a single inbound
->>> window to consider?
->>
->> Cadence IP has 3 inbound address translation registers, however we use only 1
->> inbound address translation register to map the entire 32 bit or 64 bit address
->> region.
-> 
-> OK, if anything that further strengthens the argument for deprecating a single
-> "number of bits" property in favour of ranges that accurately describe the
-> window(s). However it also suggests that other users in future might have some
-> expectation that specifying "dma-ranges" with up to 3 entries should work to
-> allow a more restrictive inbound configuration. Thus it would be desirable to
-> make the code a little more robust here - even if we don't support multiple
-> windows straight off, it would still be better to implement it in a way that
-> can be cleanly extended later, and at least say something if more ranges are
-> specified rather than just silently ignoring them.
+It seems we have not had any replies by now, but it would be nice to get th=
+is thing moving forward,
+even though we have this current version of patch already applied and worki=
+ng in our kernel branch
+and are not therefore really in hurry in that regard.
 
-I looked at this further in the Cadence user doc. The three inbound ATU entries
-are for BAR0, BAR1 in RC configuration space and the third one is for NO MATCH
-BAR when there is no matching found in RC BARs. Right now we always configure
-the NO MATCH BAR. Would it be possible describe at BAR granularity in dma-ranges?
-> 
->>> I believe that pci_parse_request_of_pci_ranges() could do the actual parsing
->>> for you, but I suppose plumbing that in plus processing the resulting
->>> dma_ranges resource probably ends up a bit messier than the concise open-coding
->>> here.
->>
->> right, pci_parse_request_of_pci_ranges() parses "ranges" property and is used
->> for outbound configuration, whereas here we parse "dma-ranges" property and is
->> used for inbound configuration.
-> 
-> If you give it a valid third argument it *also* parses "dma-ranges" into a list
-> of inbound regions. This is already used by various other drivers for
-> equivalent inbound window setup, which is what I was hinting at before, but
-> given the extensibility argument above I'm now going to actively suggest
-> following that pattern for consistency.
-yeah, just got to know about this.
+The changes required to this patch at XIIC driver from suggested DT changes=
+ are pretty minor.
+Basically only checking a different property, reversing logic and some nami=
+ng changes.
+I can make these changes already for the driver if this solution is what wi=
+ll be chosen,
+or would you prefer to still think about this?
 
-Thanks
-Kishon
+Regarding the device tree changes:
+I am not very familiar with the needed documentation changes, YAML bindings=
+ or what needs to be done for new bindings in general.
+Would you prefer to still consider them and/or get these subsystem level bi=
+ndings done by someone more familiar with them?
+Another option would be for me to try find time to do the suggested binding=
+s changes anyway, but it will likely require some effort
+from me to familiarize with device tree bindings changes and schedule the t=
+ime for it.
+
+Best regards,
+Jaakko
