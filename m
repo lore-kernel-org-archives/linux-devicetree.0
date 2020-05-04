@@ -2,508 +2,98 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE84DC47258
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1695C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A1F206A5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8474520707
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4vsbtwc"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="PQLxh8Bx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgEDUBT (ORCPT
+        id S1728084AbgEDUBa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 16:01:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47764 "EHLO
+        Mon, 4 May 2020 16:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726111AbgEDUBT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:01:19 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A100C061A0E;
-        Mon,  4 May 2020 13:01:17 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l18so575637wrn.6;
-        Mon, 04 May 2020 13:01:17 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1728045AbgEDUB3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:01:29 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC77C061A0F
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 13:01:28 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id r16so14711776edw.5
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 13:01:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8LURFpSuPjK7UxUPzLwhwClseyW2K44cZLKIaUSIMHA=;
-        b=l4vsbtwcE5B4Wz7pnPqMff8wVwFg/nf5xeg2ecMJ7950SuI7zrVlbRDTklx8vHg5BH
-         6YnDT58GUmXJzQausIAzvb8fw1wYSQ4MHm7N2HhGwhV6BS739Wjh4qVmMCBPCJqewfTG
-         AHEeRI9RG3fvRCsc94F//kvLrV7srIGH5OSVXFgky9Rqk9A6PFVY8CPAgljqaMCC3xvL
-         HaXfY+HkS4Cq9PRV7NHjVUpfw7KQ5MOZdCbg1jv/xzPpplhEfJXNsXRESLBBAPZW3Z/o
-         RqOoNpGgdBIItCalYVvk5x65gx/sBLZD4PpP+CfLTx8t5s3yV1QJ1EpC+48lIRml7+ry
-         Ujaw==
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a3/e8Z9+7dUAsUY2FABXXWSYilV/IhKWhqiAxe7AB0w=;
+        b=PQLxh8BxfRVNbGhoMqQ+SidqGRLgyNwgg8AMxdhr+hQzfTeHVr36B+yHinyk4RO/N4
+         Y6or3TT0f0D5Fk2htAjerP0VkNsQmuf+6kdiRqGxrmqzFx4LeKaq2tJJyV4BLREtMGXz
+         OYg6bJ8gAXk19xxFW/6JajQ6o5OgEmm+BlSXGcHzftgStQevaAhOKN4SIQzOWZsmtA2M
+         sHN7uXi6oTRnaDA0P8KsZ+qN+PRH+Bz2jlGhskWtqMnQT4Akn2iBxP70/9YiOy2/UExj
+         h7tIFeuI5HvEEkvt4yCaBpVupn252Kup6VLqULCGJqBRmjdtUTAeOXz58YCUjCCiXISr
+         3d3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8LURFpSuPjK7UxUPzLwhwClseyW2K44cZLKIaUSIMHA=;
-        b=G0FZkZxk7txkooMXtiOxoHYdCjJSYrkGZoeBCtMV2/aJx7eI25qSOVarGpfurv1oWW
-         GnaDG4f7XiY7Lsn27FQrD4BOm1HosJUw9VZegOFbpKEJFnPdEh7oZTuzTB9ElejGd+GY
-         LgTySkwjtl/UbbhfCsJUaZ6Ymi0nXje/q3HrJS/sSKjyHlR7sDNNs2k0DAKcdHt56CX3
-         q9adLssFyShNf/ujpkLuk9pffet30iRb6JE7+H78949iR7TI0jURK1G+3HW4pze1TJHH
-         o3kI31oLB/Acrf8158UgGi4kLWufQ5AmMiVUH2kEihvgZIe4VMICKPsn2OqZi89MW5+p
-         jUAg==
-X-Gm-Message-State: AGi0PuaawwYLTr3Anb9UH5ghphI1wrH82XUizCnGJo6E7cQ+Xk6mMSuj
-        Tv3JRy9gEToOTE8CQRdQwPo=
-X-Google-Smtp-Source: APiQypICUFbyPq81sU8MUd9EmZc1rwo0C9cb/xl7K6rU34u2+10xHjK6Nv4xJgz12cEGU1D21QvxHw==
-X-Received: by 2002:adf:e2c2:: with SMTP id d2mr1103270wrj.55.1588622475826;
-        Mon, 04 May 2020 13:01:15 -0700 (PDT)
-Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
-        by smtp.googlemail.com with ESMTPSA id s17sm739252wmc.48.2020.05.04.13.01.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 13:01:15 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [v3 PATCH 1/2] drivers: drm: panel: Add ASUS TM5P5 NT35596 panel driver
-Date:   Mon,  4 May 2020 22:00:59 +0200
-Message-Id: <20200504200102.129195-2-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200504200102.129195-1-konradybcio@gmail.com>
-References: <20200504200102.129195-1-konradybcio@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a3/e8Z9+7dUAsUY2FABXXWSYilV/IhKWhqiAxe7AB0w=;
+        b=XDGosIfJLdYBldj+LpeHNNnJZ1V+VlY48uqtZybjpw2DLzONXrFsAx/T0xuB2FCA+P
+         T23vSz4azwqdjUGBw468qVk3wbl6WPSJIN1HYNNs3JrHxoc/6aEa1Aw0sy5UeaU2vBd9
+         E7QMvcO9lTsMwzEdf3kRu9pyYJOJzcnCkBzAJ7psU7R1t6JrvnLLOJHxL/dtpEluqLIU
+         cOywpgip/6OmZFmD9/yW2Kx0GbhUmE41B8JHuU+t2BS3V1J+Qu96Jp7Iae9Bd9mShpl0
+         m19zYQHIWsX09QRnaA+iiR32Zh8eu7a6VoQKXiN5fFAL+HAmV0nEr3aaRvZFIGfAYyut
+         nZqA==
+X-Gm-Message-State: AGi0Pua1MCqd+dqGT+bo9Is5um8fayYb+sWaGADM6xCXJQo0el6ALRhw
+        lv+KXoRnPGl9OwIx4HgEjL2C0Q5ueJFpnHeQzXBg+g==
+X-Google-Smtp-Source: APiQypJuGrmkU0XtajGtCW6+tnsEvDAvqoXPAkujg8EqXPfFARkabTI9PH5qgtjx1yu+XzN1nobAPxrfByxFFM1kmdk=
+X-Received: by 2002:a05:6402:356:: with SMTP id r22mr17037164edw.3.1588622487633;
+ Mon, 04 May 2020 13:01:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <202005041112.F3C8117F67@keescook> <CA+CK2bBDzbXdH23aDxqGzMoxPppNcVmitrYJ00tJqympMBVJOg@mail.gmail.com>
+ <202005041211.040A1C65C8@keescook> <CA+CK2bAJgKR+=Tby91gU-ZKy29Juv_oJinCTFAWRaKiiro2vkg@mail.gmail.com>
+ <202005041230.806B1581D@keescook>
+In-Reply-To: <202005041230.806B1581D@keescook>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 4 May 2020 16:00:51 -0400
+Message-ID: <CA+CK2bBFQYnFWeDxegR+7rz2nepbK-upqBnRjLgO9JH7oUJoQw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] allow ramoops to collect all kmesg_dump events
+To:     Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds support for TMP5P5 NT35596 1080x1920 video
-mode panel that can be found on some Asus Zenfone 2
-Laser (Z00T) devices.
+> > pstore /mnt/console-ramoops-0 outputs only messages below the console
+> > loglevel, and our console loglevel is set to 3 due to slowness of
+> > serial console. Which means only errors and worse types of messages
+> > are recorded. AFAIK, there is no way to have different log levels for
+> > different consoles.
+>
+> Ah-ha! Okay, thanks. Please include this rationale in the v2 changelog.
+> That makes perfect sense; I just didn't see it and maybe others will
+> need the same clarity too. Thanks!
 
-This panel seems to only be found in this device
-and we have no straightforward way of actually
-getting the correct model number, as no schematics
-are released publicly.
+I will add this explanation to v2.
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- drivers/gpu/drm/panel/Kconfig                 |  10 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../drm/panel/panel-asus-z00t-tm5p5-n35596.c  | 367 ++++++++++++++++++
- 3 files changed, 378 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
+Thank you,
+Pasha
 
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index a1723c1b5fbf8..ad896a877d49f 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -18,6 +18,16 @@ config DRM_PANEL_ARM_VERSATILE
- 	  reference designs. The panel is detected using special registers
- 	  in the Versatile family syscon registers.
- 
-+config DRM_PANEL_ASUS_Z00T_TM5P5_NT35596
-+	tristate "ASUS Z00T TM5P5 NT35596 panel"
-+	depends on GPIOLIB && OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for the ASUS TMP5P5
-+	  NT35596 1080x1920 video mode panel as found in some Asus
-+	  Zenfone 2 Laser Z00T devices.
-+
- config DRM_PANEL_BOE_HIMAX8279D
- 	tristate "Boe Himax8279d panel"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 96a883cd66305..3efc1de93aeeb 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_DRM_PANEL_ARM_VERSATILE) += panel-arm-versatile.o
-+obj-$(CONFIG_DRM_PANEL_ASUS_Z00T_TM5P5_NT35596) += panel-asus-z00t-tm5p5-n35596.o
- obj-$(CONFIG_DRM_PANEL_BOE_HIMAX8279D) += panel-boe-himax8279d.o
- obj-$(CONFIG_DRM_PANEL_BOE_TV101WUM_NL6) += panel-boe-tv101wum-nl6.o
- obj-$(CONFIG_DRM_PANEL_LVDS) += panel-lvds.o
-diff --git a/drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c b/drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
-new file mode 100644
-index 0000000000000..ec5599685a4c2
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
-@@ -0,0 +1,367 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+
-+struct tm5p5_nt35596 {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
-+	struct regulator_bulk_data supplies[2];
-+	struct gpio_desc *reset_gpio;
-+	bool prepared;
-+};
-+
-+static inline struct tm5p5_nt35596 *to_tm5p5_nt35596(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct tm5p5_nt35596, panel);
-+}
-+
-+#define dsi_generic_write_seq(dsi, seq...) do {				\
-+		static const u8 d[] = { seq };				\
-+		int ret;						\
-+		ret = mipi_dsi_generic_write(dsi, d, ARRAY_SIZE(d));	\
-+		if (ret < 0)						\
-+			return ret;					\
-+	} while (0)
-+
-+#define dsi_dcs_write_seq(dsi, seq...) do {				\
-+		static const u8 d[] = { seq };				\
-+		int ret;						\
-+		ret = mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));	\
-+		if (ret < 0)						\
-+			return ret;					\
-+	} while (0)
-+
-+static void tm5p5_nt35596_reset(struct tm5p5_nt35596 *ctx)
-+{
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(1000, 2000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	usleep_range(1000, 2000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(15000, 16000);
-+}
-+
-+static int tm5p5_nt35596_on(struct tm5p5_nt35596 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+
-+	dsi_generic_write_seq(dsi, 0xff, 0x05);
-+	dsi_generic_write_seq(dsi, 0xfb, 0x01);
-+	dsi_generic_write_seq(dsi, 0xc5, 0x31);
-+	dsi_generic_write_seq(dsi, 0xff, 0x04);
-+	dsi_generic_write_seq(dsi, 0x01, 0x84);
-+	dsi_generic_write_seq(dsi, 0x05, 0x25);
-+	dsi_generic_write_seq(dsi, 0x06, 0x01);
-+	dsi_generic_write_seq(dsi, 0x07, 0x20);
-+	dsi_generic_write_seq(dsi, 0x08, 0x06);
-+	dsi_generic_write_seq(dsi, 0x09, 0x08);
-+	dsi_generic_write_seq(dsi, 0x0a, 0x10);
-+	dsi_generic_write_seq(dsi, 0x0b, 0x10);
-+	dsi_generic_write_seq(dsi, 0x0c, 0x10);
-+	dsi_generic_write_seq(dsi, 0x0d, 0x14);
-+	dsi_generic_write_seq(dsi, 0x0e, 0x14);
-+	dsi_generic_write_seq(dsi, 0x0f, 0x14);
-+	dsi_generic_write_seq(dsi, 0x10, 0x14);
-+	dsi_generic_write_seq(dsi, 0x11, 0x14);
-+	dsi_generic_write_seq(dsi, 0x12, 0x14);
-+	dsi_generic_write_seq(dsi, 0x17, 0xf3);
-+	dsi_generic_write_seq(dsi, 0x18, 0xc0);
-+	dsi_generic_write_seq(dsi, 0x19, 0xc0);
-+	dsi_generic_write_seq(dsi, 0x1a, 0xc0);
-+	dsi_generic_write_seq(dsi, 0x1b, 0xb3);
-+	dsi_generic_write_seq(dsi, 0x1c, 0xb3);
-+	dsi_generic_write_seq(dsi, 0x1d, 0xb3);
-+	dsi_generic_write_seq(dsi, 0x1e, 0xb3);
-+	dsi_generic_write_seq(dsi, 0x1f, 0xb3);
-+	dsi_generic_write_seq(dsi, 0x20, 0xb3);
-+	dsi_generic_write_seq(dsi, 0xfb, 0x01);
-+	dsi_generic_write_seq(dsi, 0xff, 0x00);
-+	dsi_generic_write_seq(dsi, 0xfb, 0x01);
-+	dsi_generic_write_seq(dsi, 0x35, 0x01);
-+	dsi_generic_write_seq(dsi, 0xd3, 0x06);
-+	dsi_generic_write_seq(dsi, 0xd4, 0x04);
-+	dsi_generic_write_seq(dsi, 0x5e, 0x0d);
-+	dsi_generic_write_seq(dsi, 0x11, 0x00);
-+	msleep(100);
-+	dsi_generic_write_seq(dsi, 0x29, 0x00);
-+	dsi_generic_write_seq(dsi, 0x53, 0x24);
-+
-+	return 0;
-+}
-+
-+static int tm5p5_nt35596_off(struct tm5p5_nt35596 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set display off: %d\n", ret);
-+		return ret;
-+	}
-+	msleep(60);
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
-+		return ret;
-+	}
-+
-+	dsi_dcs_write_seq(dsi, 0x4f, 0x01);
-+
-+	return 0;
-+}
-+
-+static int tm5p5_nt35596_prepare(struct drm_panel *panel)
-+{
-+	struct tm5p5_nt35596 *ctx = to_tm5p5_nt35596(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	int ret;
-+
-+	if (ctx->prepared)
-+		return 0;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-+		return ret;
-+	}
-+
-+	tm5p5_nt35596_reset(ctx);
-+
-+	ret = tm5p5_nt35596_on(ctx);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-+		gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies),
-+			ctx->supplies);
-+		return ret;
-+	}
-+
-+	ctx->prepared = true;
-+	return 0;
-+}
-+
-+static int tm5p5_nt35596_unprepare(struct drm_panel *panel)
-+{
-+	struct tm5p5_nt35596 *ctx = to_tm5p5_nt35596(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	int ret;
-+
-+	if (!ctx->prepared)
-+		return 0;
-+
-+	ret = tm5p5_nt35596_off(ctx);
-+	if (ret < 0)
-+		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies),
-+		ctx->supplies);
-+
-+	ctx->prepared = false;
-+	return 0;
-+}
-+
-+static const struct drm_display_mode tm5p5_nt35596_mode = {
-+	.clock = (1080 + 100 + 8 + 16) * (1920 + 4 + 2 + 4) * 60 / 1000,
-+	.hdisplay = 1080,
-+	.hsync_start = 1080 + 100,
-+	.hsync_end = 1080 + 100 + 8,
-+	.htotal = 1080 + 100 + 8 + 16,
-+	.vdisplay = 1920,
-+	.vsync_start = 1920 + 4,
-+	.vsync_end = 1920 + 4 + 2,
-+	.vtotal = 1920 + 4 + 2 + 4,
-+	.vrefresh = 60,
-+	.width_mm = 68,
-+	.height_mm = 121,
-+};
-+
-+static int tm5p5_nt35596_get_modes(struct drm_panel *panel,
-+				   struct drm_connector *connector)
-+{
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(connector->dev, &tm5p5_nt35596_mode);
-+	if (!mode)
-+		return -ENOMEM;
-+
-+	drm_mode_set_name(mode);
-+
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	connector->display_info.width_mm = mode->width_mm;
-+	connector->display_info.height_mm = mode->height_mm;
-+	drm_mode_probed_add(connector, mode);
-+
-+	return 1;
-+}
-+
-+static const struct drm_panel_funcs tm5p5_nt35596_panel_funcs = {
-+	.prepare = tm5p5_nt35596_prepare,
-+	.unprepare = tm5p5_nt35596_unprepare,
-+	.get_modes = tm5p5_nt35596_get_modes,
-+};
-+
-+static int tm5p5_nt35596_bl_update_status(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	u16 brightness = bl->props.brightness;
-+	int ret;
-+
-+	if (bl->props.power != FB_BLANK_UNBLANK ||
-+	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
-+	    bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
-+		brightness = 0;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_brightness(dsi, brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	return 0;
-+}
-+
-+static int tm5p5_nt35596_bl_get_brightness(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	u16 brightness = bl->props.brightness;
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_get_display_brightness(dsi, &brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	return brightness & 0xff;
-+}
-+
-+static const struct backlight_ops tm5p5_nt35596_bl_ops = {
-+	.update_status = tm5p5_nt35596_bl_update_status,
-+	.get_brightness = tm5p5_nt35596_bl_get_brightness,
-+};
-+
-+static struct backlight_device *
-+tm5p5_nt35596_create_backlight(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	const struct backlight_properties props = {
-+		.type = BACKLIGHT_RAW,
-+		.brightness = 255,
-+		.max_brightness = 255,
-+	};
-+
-+	return devm_backlight_device_register(dev, dev_name(dev), dev, dsi,
-+					      &tm5p5_nt35596_bl_ops, &props);
-+}
-+
-+static int tm5p5_nt35596_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct tm5p5_nt35596 *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->supplies[0].supply = "vdd";
-+	ctx->supplies[1].supply = "vddio";
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
-+				      ctx->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to get regulators: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(ctx->reset_gpio)) {
-+		ret = PTR_ERR(ctx->reset_gpio);
-+		dev_err(dev, "Failed to get reset-gpios: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ctx->dsi = dsi;
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+
-+	dsi->lanes = 4;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-+			  MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_EOT_PACKET |
-+			  MIPI_DSI_CLOCK_NON_CONTINUOUS | MIPI_DSI_MODE_LPM;
-+
-+	drm_panel_init(&ctx->panel, dev, &tm5p5_nt35596_panel_funcs,
-+		       DRM_MODE_CONNECTOR_DSI);
-+
-+	ctx->panel.backlight = tm5p5_nt35596_create_backlight(dsi);
-+	if (IS_ERR(ctx->panel.backlight)) {
-+		ret = PTR_ERR(ctx->panel.backlight);
-+		dev_err(dev, "Failed to create backlight: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = drm_panel_add(&ctx->panel);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to add panel: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to attach to DSI host: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tm5p5_nt35596_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct tm5p5_nt35596 *ctx = mipi_dsi_get_drvdata(dsi);
-+	int ret;
-+
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret < 0)
-+		dev_err(&dsi->dev,
-+		 "Failed to detach from DSI host: %d\n", ret);
-+
-+	drm_panel_remove(&ctx->panel);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id tm5p5_nt35596_of_match[] = {
-+	{ .compatible = "asus,z00t-tm5p5-n35596" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, tm5p5_nt35596_of_match);
-+
-+static struct mipi_dsi_driver tm5p5_nt35596_driver = {
-+	.probe = tm5p5_nt35596_probe,
-+	.remove = tm5p5_nt35596_remove,
-+	.driver = {
-+		.name = "panel-tm5p5-nt35596",
-+		.of_match_table = tm5p5_nt35596_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(tm5p5_nt35596_driver);
-+
-+MODULE_AUTHOR("Konrad Dybcio <konradybcio@gmail.com>");
-+MODULE_DESCRIPTION("DRM driver for tm5p5 nt35596 1080p video mode dsi panel");
-+MODULE_LICENSE("GPL v2");
--- 
-2.26.1
-
+>
+> -Kees
+>
+> --
+> Kees Cook
