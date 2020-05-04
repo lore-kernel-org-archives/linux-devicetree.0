@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADA2C4725A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACB8C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25F112073E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC1B2073E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="bM0G5Ssa"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ZWE2zh27"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgEDTsF (ORCPT
+        id S1727887AbgEDTrt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 15:48:05 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:35878 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbgEDTrt (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 4 May 2020 15:47:49 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:27580 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726935AbgEDTrs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 15:47:48 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49GD0g55STzGl;
-        Mon,  4 May 2020 21:47:47 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49GD0d4Zw6zHm;
+        Mon,  4 May 2020 21:47:45 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588621667; bh=PlaAuIlDy3wYhoSP1lLGpuqY1fWmmJ/2uPxVj7hhzBo=;
+        t=1588621665; bh=EbSm5+gnAl+lSmHRWVgxHCpfZGr2FXjwGmT2W8WyfjU=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=bM0G5Ssafpcd4gQ6AmyrZCFs48qjeAEpBBHuN9KJaRivjld8/zmlpv3l+30I3mcAY
-         28QVdbNIAgA5JW/g4Yw+Bw0kGLXIkmlACNjLqLDsTTDVmMEhHRBDFURm4owlhJVy1u
-         oCiAYLw8veflUtYcnWJhoeZn+IY6MvpwnvP7nBbD5lx7kOEL/+ipeponlPzzM1pxuv
-         IhDx6V5PFPOj/7EXfj1L/7+mWdhL1ebd1K2B70QQXMby05PNVg6AA7HcJlIsZ2351y
-         5Ing8xufXREMRi/l7d++W2WOn0QGiX6qWxEPBpWxR70UYDf29Lj7onodsq0g/DeQm2
-         tHi9G5Z1T8N3g==
+        b=ZWE2zh27y2h7FAcDCYKF15bYDiS7+dzmZa8zkxNUy+q6KS0z+Bp3cPky7Qn0cZ55z
+         sevtnwo7Ma/EZw/zHLlQdFTxikyCKLJ73tmbxaa2+vag0xV7avoitCJsxPZm8G5yG9
+         whZMtJ4LWLRSpGYbt2kG7TZdmU3NBbeC1OcsqCKcVEr9R+lqBl3BY/m5jqthZxDy4h
+         L3Pl8vYZRNvMErVPVJPY8wC9krRGZq4UEjezMCupmGVsFbPVfj/UmIV3cS7ql1XX64
+         83RbS5Bcv1li2xtv6Ol7dbe47aCy3wvFXDW9hz+lu7QNN7J7qEm9jjt6zljmOXAjxv
+         tLICRYp9KbsiA==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Mon, 04 May 2020 21:47:47 +0200
-Message-Id: <f9bee8d1f65bf1f880752dc17cc390e5d566a93d.1588621247.git.mirq-linux@rere.qmqm.pl>
+Date:   Mon, 04 May 2020 21:47:45 +0200
+Message-Id: <e898499881c3a95daf11c117ac16de49bab9ea73.1588621247.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1588621247.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1588621247.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v3 6/8] power: bq25890: implement INPUT_CURRENT_LIMIT property
+Subject: [PATCH v3 2/8] power: bq25890: fix ADC mode configuration
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -55,56 +55,104 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Report REG00.IINLIM value as INPUT_CURRENT_LIMIT property.
+Datasheet describes two modes for reading ADC measurements:
+1. continuous, 1 Hz - enabled and started by CONV_RATE bit
+2. one-shot - triggered by CONV_START bit
+
+In continuous mode, CONV_START is read-only and signifies an ongoing
+conversion.
+
+Change the code to follow the datasheet and really disable continuous
+mode for power saving.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/power/supply/bq25890_charger.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+v3: drop dependency on new input/output properties
+---
+ drivers/power/supply/bq25890_charger.c | 31 +++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index dfd7bf9a3a55..cb57125ea988 100644
+index 70ecc38fe772..325fdd1b1d23 100644
 --- a/drivers/power/supply/bq25890_charger.c
 +++ b/drivers/power/supply/bq25890_charger.c
-@@ -254,6 +254,7 @@ enum bq25890_table_ids {
- 	/* range tables */
- 	TBL_ICHG,
- 	TBL_ITERM,
-+	TBL_IILIM,
- 	TBL_VREG,
- 	TBL_BOOSTV,
- 	TBL_SYSVMIN,
-@@ -294,6 +295,7 @@ static const union {
- 	/* TODO: BQ25896 has max ICHG 3008 mA */
- 	[TBL_ICHG] =	{ .rt = {0,	  5056000, 64000} },	 /* uA */
- 	[TBL_ITERM] =	{ .rt = {64000,   1024000, 64000} },	 /* uA */
-+	[TBL_IILIM] =   { .rt = {50000,   3200000, 50000} },	 /* uA */
- 	[TBL_VREG] =	{ .rt = {3840000, 4608000, 16000} },	 /* uV */
- 	[TBL_BOOSTV] =	{ .rt = {4550000, 5510000, 64000} },	 /* uV */
- 	[TBL_SYSVMIN] = { .rt = {3000000, 3700000, 100000} },	 /* uV */
-@@ -494,6 +496,14 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
- 		val->intval = bq25890_find_val(bq->init_data.iterm, TBL_ITERM);
- 		break;
+@@ -126,6 +126,7 @@ static const struct regmap_access_table bq25890_writeable_regs = {
  
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		ret = bq25890_field_read(bq, F_IILIM);
-+		if (ret < 0)
-+			return ret;
-+
-+		val->intval = bq25890_find_val(ret, TBL_IILIM);
-+		break;
-+
- 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
- 		ret = bq25890_field_read(bq, F_SYSV); /* read measured value */
- 		if (ret < 0)
-@@ -692,6 +702,7 @@ static const enum power_supply_property bq25890_power_supply_props[] = {
- 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
- 	POWER_SUPPLY_PROP_PRECHARGE_CURRENT,
- 	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
-+	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
- 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
- 	POWER_SUPPLY_PROP_CURRENT_NOW,
+ static const struct regmap_range bq25890_volatile_reg_ranges[] = {
+ 	regmap_reg_range(0x00, 0x00),
++	regmap_reg_range(0x02, 0x02),
+ 	regmap_reg_range(0x09, 0x09),
+ 	regmap_reg_range(0x0b, 0x14),
  };
+@@ -374,18 +375,38 @@ enum bq25890_chrg_fault {
+ 	CHRG_FAULT_TIMER_EXPIRED,
+ };
+ 
++static bool bq25890_is_adc_property(enum power_supply_property psp)
++{
++	switch (psp) {
++	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
++	case POWER_SUPPLY_PROP_CURRENT_NOW:
++		return true;
++
++	default:
++		return false;
++	}
++}
++
+ static int bq25890_power_supply_get_property(struct power_supply *psy,
+ 					     enum power_supply_property psp,
+ 					     union power_supply_propval *val)
+ {
+-	int ret;
+ 	struct bq25890_device *bq = power_supply_get_drvdata(psy);
+ 	struct bq25890_state state;
++	bool do_adc_conv;
++	int ret;
+ 
+ 	mutex_lock(&bq->lock);
+ 	state = bq->state;
++	do_adc_conv = !state.online && bq25890_is_adc_property(psp);
++	if (do_adc_conv)
++		bq25890_field_write(bq, F_CONV_START, 1);
+ 	mutex_unlock(&bq->lock);
+ 
++	if (do_adc_conv)
++		regmap_field_read_poll_timeout(bq->rmap_fields[F_CONV_START],
++			ret, !ret, 25000, 1000000);
++
+ 	switch (psp) {
+ 	case POWER_SUPPLY_PROP_STATUS:
+ 		if (!state.online)
+@@ -623,8 +644,8 @@ static int bq25890_hw_init(struct bq25890_device *bq)
+ 		}
+ 	}
+ 
+-	/* Configure ADC for continuous conversions. This does not enable it. */
+-	ret = bq25890_field_write(bq, F_CONV_RATE, 1);
++	/* Configure ADC for continuous conversions when charging */
++	ret = bq25890_field_write(bq, F_CONV_RATE, !!bq->state.online);
+ 	if (ret < 0) {
+ 		dev_dbg(bq->dev, "Config ADC failed %d\n", ret);
+ 		return ret;
+@@ -966,7 +987,7 @@ static int bq25890_suspend(struct device *dev)
+ 	 * If charger is removed, while in suspend, make sure ADC is diabled
+ 	 * since it consumes slightly more power.
+ 	 */
+-	return bq25890_field_write(bq, F_CONV_START, 0);
++	return bq25890_field_write(bq, F_CONV_RATE, 0);
+ }
+ 
+ static int bq25890_resume(struct device *dev)
+@@ -982,7 +1003,7 @@ static int bq25890_resume(struct device *dev)
+ 
+ 	/* Re-enable ADC only if charger is plugged in. */
+ 	if (bq->state.online) {
+-		ret = bq25890_field_write(bq, F_CONV_START, 1);
++		ret = bq25890_field_write(bq, F_CONV_RATE, 1);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
 -- 
 2.20.1
 
