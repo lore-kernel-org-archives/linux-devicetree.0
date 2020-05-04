@@ -2,183 +2,103 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E62C4724C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 06:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DD3C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 06:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 785EC206EB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 06:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8305D206C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 06:28:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YumOYpGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgEDGY7 (ORCPT
+        id S1727781AbgEDG25 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 02:24:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33140 "EHLO
+        Mon, 4 May 2020 02:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgEDGY7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 02:24:59 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607E9C061A0F
-        for <devicetree@vger.kernel.org>; Sun,  3 May 2020 23:24:59 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jVUX7-0004OA-T3; Mon, 04 May 2020 08:24:53 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jVUWx-0000TK-96; Mon, 04 May 2020 08:24:43 +0200
-Date:   Mon, 4 May 2020 08:24:43 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v6 2/3] media: ov8856: Add devicetree support
-Message-ID: <20200504062443.qgme3pnhzugqeqhk@pengutronix.de>
-References: <20200429162437.2025699-1-robert.foss@linaro.org>
- <20200429162437.2025699-3-robert.foss@linaro.org>
- <20200430093524.GB2188@pengutronix.de>
- <20200430094549.GF867@valkosipuli.retiisi.org.uk>
- <20200430095332.GC2188@pengutronix.de>
- <20200430095907.GG867@valkosipuli.retiisi.org.uk>
- <20200430101157.GD2188@pengutronix.de>
- <20200430102018.GI867@valkosipuli.retiisi.org.uk>
- <20200430120740.GG2188@pengutronix.de>
- <CAG3jFytP9=pL=9Qh64BKqQchs7J7E45USfirK_SnGn3NMeCdcg@mail.gmail.com>
+        with ESMTP id S1727084AbgEDG24 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 02:28:56 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55511C061A0E
+        for <devicetree@vger.kernel.org>; Sun,  3 May 2020 23:28:54 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 188so8683974lfa.10
+        for <devicetree@vger.kernel.org>; Sun, 03 May 2020 23:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IG/tGFQPJCSJYnPu8/15Qbq3jfJlPJ6HJh4I87r1NIs=;
+        b=YumOYpGcROINiP9wKRrt4Kr8G2zKkJEhHgZkkk6XeLTvKHSUHl+YsFerC4ty7e9Xf8
+         MfzmyGkOYAns2VLQMBAKThlZJiF7kql80QFDqWkE1uPP8tBkoUbbrPytRItJDQZ22Hg9
+         9qc21PC1/rxBmnQFNViOT3LuibVLnHFOjhDwIeqncOW7vkmeOF6qBPEYNx+Q/jyme1Ye
+         8J2TfumsMAOhcUxzFEesLq0nu4lbVB4Ys6TAyiZZyOYHlA0v4QJRPHhwRrynhRJTXoJk
+         aDX50M54/DSdHhoT9I4ABRDKZOdZXga3kLlqVTa0kvcMADTIwafVRk6KXQ68f6QFQGDP
+         38Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IG/tGFQPJCSJYnPu8/15Qbq3jfJlPJ6HJh4I87r1NIs=;
+        b=COZylOFIPgZriyn73n3cZO16JmxuleU6mRcSTDa4kNpYjBTo0eo2kTz8gbm0KCWB+8
+         6NoJjSA0+3qrdT4Dsf7spYZZ7Slp0AQqDMYjMjv39ThekiwZxI0h7dIj+zAU4E0qTafl
+         t1JAHcNQowfNQGSSzesv3dWwoH2aWi/LlCCJZU/YhqPEi1ozylb9JIgJSEmRDA5Ow7Xe
+         gqXQkRTUjOfM+YmUoBR+TYkVPyI2tJ+3hhUzXMgSqna8YCLQuu6+7rrs6C738R1FDgWv
+         rAA163xQWtWwjOhJNPfZ7MvxuGrlEyHGX8xMWsQxBtOXGsmry1e63Zj+fbJbUXJu42jk
+         knCw==
+X-Gm-Message-State: AGi0PuZCTT3VwdhKesZDT/N+sfppGuMPWA1xIlqMOVm/Gne+a+FUFgYu
+        qYunQNjkKNEMfy7rLduf15VoSQJbSiWFenxt3AC6Tg==
+X-Google-Smtp-Source: APiQypKO3fJEpw/Lg9UxJ1PfVeF0vg7F8K+oZ9DqX0zFzsZA/c0kCGb3cmKEKqUN6T9RPgBy+nmfJLzBOrTGKieDleA=
+X-Received: by 2002:ac2:5dd4:: with SMTP id x20mr6381625lfq.7.1588573732796;
+ Sun, 03 May 2020 23:28:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG3jFytP9=pL=9Qh64BKqQchs7J7E45USfirK_SnGn3NMeCdcg@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:13:17 up 170 days, 21:31, 171 users,  load average: 0.06, 0.04,
- 0.05
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200501203311.143934-1-konradybcio@gmail.com> <20200501203311.143934-3-konradybcio@gmail.com>
+In-Reply-To: <20200501203311.143934-3-konradybcio@gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 4 May 2020 11:58:22 +0530
+Message-ID: <CAP245DWJsUnR9XaW_2kzcg9Ji8DR6JgfV0Xa_7NmoMK=F4HzSg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: tsens: qcom: Document MSM8939 compatible
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robert,
+On Sat, May 2, 2020 at 2:03 AM Konrad Dybcio <konradybcio@gmail.com> wrote:
+>
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 
-On 20-04-30 18:11, Robert Foss wrote:
-> Hey Marco,
-> 
-> On Thu, 30 Apr 2020 at 14:07, Marco Felsch <m.felsch@pengutronix.de> wrote:
-> >
-> > On 20-04-30 13:20, Sakari Ailus wrote:
-> > > On Thu, Apr 30, 2020 at 12:11:57PM +0200, Marco Felsch wrote:
-> > > > On 20-04-30 12:59, Sakari Ailus wrote:
-> > > > > Hi Marco,
-> > > > >
-> > > > > On Thu, Apr 30, 2020 at 11:53:32AM +0200, Marco Felsch wrote:
-> > > > > > Hi Sakari,
-> > > > > >
-> > > > > > On 20-04-30 12:45, Sakari Ailus wrote:
-> > > > > > > Hi Marco,
-> > > > > > >
-> > > > > > > On Thu, Apr 30, 2020 at 11:35:24AM +0200, Marco Felsch wrote:
-> > > >
-> > > > ...
-> > > >
-> > > > > > > > > - if (mclk != OV8856_MCLK) {
-> > > > > > > > > -         dev_err(dev, "external clock %d is not supported", mclk);
-> > > > > > > > > -         return -EINVAL;
-> > > > > > > > > + if (!is_acpi_node(fwnode)) {
-> > > > > > > > > +         ov8856->xvclk = devm_clk_get(dev, "xvclk");
-> > > > > > > > > +         if (IS_ERR(ov8856->xvclk)) {
-> > > > > > > > > +                 dev_err(dev, "could not get xvclk clock (%pe)\n",
-> > > > > > > > > +                                 ov8856->xvclk);
-> > > > > > > > > +                 return PTR_ERR(ov8856->xvclk);
-> > > > > > > > > +         }
-> > > > > > > > > +
-> > > > > > > > > +         clk_set_rate(ov8856->xvclk, xvclk_rate);
-> > > > > > > > > +         xvclk_rate = clk_get_rate(ov8856->xvclk);
-> > > > > > > > >   }
-> > > > > > > >
-> > > > > > > > Why do we handle the clock only in DT case? Is there a problem with the
-> > > > > > > > clock handling and ACPI?
-> > > > > > >
-> > > > > > > Not really, it's just that ACPI does not provide an interface to the clocks
-> > > > > > > as such.
-> > > > > >
-> > > > > > But you will get a clk by devm_clk_get()?
-> > > > >
-> > > > > No, because ACPI does not expose one to drivers. Effectively the entire
-> > > > > power sequences are implemented in ACPI, not in the driver.
-> > > > >
-> > > >
-> > > > Ah okay, thanks for the explanation. I'm really not into the ACPI
-> > > > stuff.. So this means the __power_off / power_on should only be done if
-> > > > we are using DT's?
-> > >
-> > > Correct. That's why it bails out early. It could be yet earlier though,
-> > > without doing anything.
-> >
-> > Yes I see. For easier and error less prone handling I would prefer:
-> >
-> > if (is_acpi_node())
-> >         return 0;
-> >
-> > as first instruction for __power_off/on().
-> 
-> __ov8856_power_on() does make a check like that, albeit only after
-> having run clk_prepare_enable() which won't do anything due to
-> ov8856->xvclk==NULL. So this should be fixed and be moved to after the
-> ACPI check.
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Yep, I saw that. I didn't checked the clk_prepare_enable() function and
-just saw that we don't request the clk for the acpi case and enable it
-in both cases. This doesn't sound right to me.
-
-> __ov8856_power_off() has no ACPI check, but all of the calls it makes
-> are going to do nothing due to v8856->reset_gpio / v8856->reset_gpio /
-> ov8856->xvclk all being NULL or dummies. For the sake of clarity an
-> early ACPI check+return could be added, but if clarity is the goal a
-> comment would work too.
-
-Thanks god that most of the library functions taking NULL into account
-=) But I think we have to take the regulator count into account. Again I
-don't know how the ACPI part is working. What happens if we request
-regulators which aren't listed within the ACPI table? In case of DT
-there will be added dummy-regulator. If this is the case for ACPI too we
-are ending in an unbalanced regulator enable/disable count since you
-enable it for the DT case and disable it in both cases.
-
-> >
-> > Also I would refactor the ov8856_check_hwcfg() so the common part can be
-> > used by this function and by a ov8856_parse_of() function. But thats
-> > only my opinion.
-> 
-> I'm trying to grok the above paragraph. You'd like to see something in
-> the style of tc358743_probe_of()?
-
-You don't have to if Saki is fine with the current patch. Just saying
-that it would be a bit easier for the patch review.
-
-Regards,
-  Marco
-
-> >
-> > Regards,
-> >   Marco
-> 
+> ---
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> index 2ddd39d967662..2ce489ccbf902 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> @@ -23,6 +23,7 @@ properties:
+>          items:
+>            - enum:
+>                - qcom,msm8916-tsens
+> +              - qcom,msm8939-tsens
+>                - qcom,msm8974-tsens
+>            - const: qcom,tsens-v0_1
+>
+> --
+> 2.26.1
+>
