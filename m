@@ -2,327 +2,105 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACC3C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50F4C47247
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECC72085B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7011205ED
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="luYhgNsh"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="HiS3C7pV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgEDUZW (ORCPT
+        id S1728083AbgEDUbb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 16:25:22 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:39407 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728194AbgEDUZV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:25:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588623920; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=4z02q7C1bVjeOXlDHhPdRKke7uOJKSAT2ssSZ6zrLbo=; b=luYhgNshyATfsZTdsUNkZTNagP0RGNNOAdKcTxb7sLrlBGly1M+5slegm8trj0aom6KwAu1C
- YqZkDwjjTq97dHqmG5fqy33rTNr0MEfI7eRJWsLJ/MHeFQinBD8O0HTgjSdGc3I26eSrMtrL
- RMOu2cH60wPiNaSYtQItIyjPUkc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb07a30.7f7d8ebee3b0-smtp-out-n02;
- Mon, 04 May 2020 20:25:20 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0BDBDC3856D; Mon,  4 May 2020 20:25:18 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8B64AC38559;
-        Mon,  4 May 2020 20:25:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8B64AC38559
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        saravanak@google.com, mka@chromium.org
-Cc:     nm@ti.com, agross@kernel.org, david.brown@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        dianders@chromium.org, vincent.guittot@linaro.org,
-        amit.kucheria@linaro.org, ulf.hansson@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v4 12/12] arm64: dts: qcom: sc7180: Add cpu OPP tables
-Date:   Tue,  5 May 2020 01:52:43 +0530
-Message-Id: <20200504202243.5476-13-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200504202243.5476-1-sibis@codeaurora.org>
-References: <20200504202243.5476-1-sibis@codeaurora.org>
+        Mon, 4 May 2020 16:31:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727798AbgEDUba (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:31:30 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3F0C061A0F
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 13:31:30 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id x1so15104516ejd.8
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 13:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iD+7rCv19A+JVwng0cwm3/xzNCTcSEjwlIiYKk9uiJc=;
+        b=HiS3C7pVeSXcrkb235oy8Rnf/oLD0dVimUKrLc0zeeW/8XaSu203SAaOKchrWyKAxB
+         Z9MjsQPaSAO2yPuBjYFgCll5xe7kHNJ66BXwMCPOffizsuBNB4WoiJGbKqr5FhwcTWL7
+         epoa3TmJlDVEJqejcAW8n4Y+bHuwSpRaBkCJvukLd7/UaCkLY284LPMrm4Zi12c1pzhr
+         NaT85hv/kpIrmtLG5IGEUpvfHioRj+H3SlIznGgpN3pbXQJHmyiQC9brFJZ5pojQ1BO5
+         t38dnwRBT5lNXIzdfhUd7Cjwjgfq3tsYfJfii92eTR/RTHyoxrcmjRtQwuTpRc5Lr46K
+         c6mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iD+7rCv19A+JVwng0cwm3/xzNCTcSEjwlIiYKk9uiJc=;
+        b=ffC9lfjGrFM3O7NWp6sw/Sd6I6bRZCOuJ6viAcifoOjRlHt42hSQRr6UfHUq9JPSUG
+         pl/ip7nic7OtCBomH5Jw0q52XF5RQDfrJO7TfIJn8LGWTHjA128rLEbCfEWFLQMYKKZr
+         S0CAcDaE43GVdg5toVFgW1Z15u3L2aBh37pI/bQMYNvbMSHLcR8k4zgaacV00okHZmwc
+         uZUSvcJFtNvWvjyOmBkv4VcvOCpXdrjfgbpLR+esWQxmcIBCtjBYdlckM1qeB+9UXe+G
+         rRIpTQODkeKJpZYM77YSfPkHyk87enB/LKCJmnpk/D8JNHXyGU+xLaHlEfjTZOlb9sYE
+         QQqQ==
+X-Gm-Message-State: AGi0PublXO11QfXVj4jJEUNoyqPHra4/wV8yA0uybb88J1TjvahumQNb
+        DNRiMqGUQFTKp9ga86mctIXSvci/NRHXj/mz+YSPXA==
+X-Google-Smtp-Source: APiQypLjLLzJYSGQHmzKy9PL7/vfCx8HEa61JRW6aeMlPHl9r7osDVCErguI8BiMvjtked5EcSIjQgppbgkYxYAopd4=
+X-Received: by 2002:a17:906:49c7:: with SMTP id w7mr16855566ejv.29.1588624288649;
+ Mon, 04 May 2020 13:31:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <20200502143555.543636-3-pasha.tatashin@soleen.com> <202005041222.4A870DFEC@keescook>
+In-Reply-To: <202005041222.4A870DFEC@keescook>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 4 May 2020 16:30:52 -0400
+Message-ID: <CA+CK2bDyi-vncYc0_sSZZ9Wb4O7oNUYH-6SN=-XKkeEamB8W8A@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] pstore/ram: allow to dump kmesg during regular reboot
+To:     Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add OPP tables required to scale DDR/L3 per freq-domain on SC7180 SoCs.
+> > -static void pstore_register_kmsg(void)
+> > +static void pstore_register_kmsg(int dmesg_all)
+> >  {
+> > +     if (dmesg_all)
+> > +             pstore_dumper.max_reason = KMSG_DUMP_MAX;
+>
+> So, I'd like to avoid any new arguments in the API and instead add a new
+> field to struct pstore_info, which will be valid when PSTORE_FLAGS_DMESG
+> is set, and the max kdump reason can be set there by the pstore backends.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+Hi Kees,
 
-v4:
- https://lore.kernel.org/patchwork/cover/1230626/
- * Reworked based on Georgi's bindings
+I am trying to verify that I understand the request correctly:
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 168 +++++++++++++++++++++++++++
- 1 file changed, 168 insertions(+)
+1. pstore_register_kmsg() -> remove argument.
+2. pstore_info -> add a new field  max_kmsg_reason: contains the
+actual reason value
+3. Modify: pstore_register() to set this field in pstore_dumper prior
+to calling pstore_register_kmsg().
+4. remove ramoops.dump_all boolean parameter
+5. add a new parameter ramoops.max_reason integer variable, which will
+be set in pstore_register_kmsg
+6. Modify other users of pstore_register() to provide the correct
+max_kmsg_reason.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 4216b574c0803..2421b7bb7dd83 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/clock/qcom,videocc-sc7180.h>
-+#include <dt-bindings/interconnect/qcom,osm-l3.h>
- #include <dt-bindings/interconnect/qcom,sc7180.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
-@@ -100,6 +101,10 @@ &LITTLE_CPU_SLEEP_1
- 					   &CLUSTER_SLEEP_0>;
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-tags = <3 0>;
- 			next-level-cache = <&L2_0>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-@@ -123,6 +128,10 @@ &LITTLE_CPU_SLEEP_1
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_100>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-tags = <3 0>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_100: l2-cache {
-@@ -142,6 +151,10 @@ &LITTLE_CPU_SLEEP_1
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_200>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-tags = <3 0>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_200: l2-cache {
-@@ -161,6 +174,10 @@ &LITTLE_CPU_SLEEP_1
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_300>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-tags = <3 0>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_300: l2-cache {
-@@ -180,6 +197,10 @@ &LITTLE_CPU_SLEEP_1
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_400>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-tags = <3 0>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_400: l2-cache {
-@@ -199,6 +220,10 @@ &LITTLE_CPU_SLEEP_1
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_500>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-tags = <3 0>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_500: l2-cache {
-@@ -218,6 +243,10 @@ &BIG_CPU_SLEEP_1
- 			capacity-dmips-mhz = <1740>;
- 			dynamic-power-coefficient = <405>;
- 			next-level-cache = <&L2_600>;
-+			operating-points-v2 = <&cpu6_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-tags = <3 0>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			L2_600: l2-cache {
-@@ -237,6 +266,10 @@ &BIG_CPU_SLEEP_1
- 			capacity-dmips-mhz = <1740>;
- 			dynamic-power-coefficient = <405>;
- 			next-level-cache = <&L2_700>;
-+			operating-points-v2 = <&cpu6_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-tags = <3 0>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			L2_700: l2-cache {
-@@ -336,6 +369,141 @@ CLUSTER_SLEEP_0: cluster-sleep-0 {
- 		};
- 	};
- 
-+	cpu0_opp_table: cpu0_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cpu0_opp1: opp-300000000 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			opp-peak-kBps = <1200000 4800000>;
-+		};
-+
-+		cpu0_opp2: opp-576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			opp-peak-kBps = <1200000 4800000>;
-+		};
-+
-+		cpu0_opp3: opp-768000000 {
-+			opp-hz = /bits/ 64 <768000000>;
-+			opp-peak-kBps = <1200000 4800000>;
-+		};
-+
-+		cpu0_opp4: opp-1017600000 {
-+			opp-hz = /bits/ 64 <1017600000>;
-+			opp-peak-kBps = <1804000 8908800>;
-+		};
-+
-+		cpu0_opp5: opp-1248000000 {
-+			opp-hz = /bits/ 64 <1248000000>;
-+			opp-peak-kBps = <2188000 12902400>;
-+		};
-+
-+		cpu0_opp6: opp-1324800000 {
-+			opp-hz = /bits/ 64 <1324800000>;
-+			opp-peak-kBps = <2188000 12902400>;
-+		};
-+
-+		cpu0_opp7: opp-1516800000 {
-+			opp-hz = /bits/ 64 <1516800000>;
-+			opp-peak-kBps = <3072000 15052800>;
-+		};
-+
-+		cpu0_opp8: opp-1612800000 {
-+			opp-hz = /bits/ 64 <1612800000>;
-+			opp-peak-kBps = <3072000 15052800>;
-+		};
-+
-+		cpu0_opp9: opp-1708800000 {
-+			opp-hz = /bits/ 64 <1708800000>;
-+			opp-peak-kBps = <3072000 15052800>;
-+		};
-+
-+		cpu0_opp10: opp-1804800000 {
-+			opp-hz = /bits/ 64 <1804800000>;
-+			opp-peak-kBps = <4068000 22425600>;
-+		};
-+	};
-+
-+	cpu6_opp_table: cpu6_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cpu6_opp1: opp-300000000 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			opp-peak-kBps = <2188000 8908800>;
-+		};
-+
-+		cpu6_opp2: opp-652800000 {
-+			opp-hz = /bits/ 64 <652800000>;
-+			opp-peak-kBps = <2188000 8908800>;
-+		};
-+
-+		cpu6_opp3: opp-825600000 {
-+			opp-hz = /bits/ 64 <825600000>;
-+			opp-peak-kBps = <2188000 8908800>;
-+		};
-+
-+		cpu6_opp4: opp-979200000 {
-+			opp-hz = /bits/ 64 <979200000>;
-+			opp-peak-kBps = <2188000 8908800>;
-+		};
-+
-+		cpu6_opp5: opp-1113600000 {
-+			opp-hz = /bits/ 64 <1113600000>;
-+			opp-peak-kBps = <2188000 8908800>;
-+		};
-+
-+		cpu6_opp6: opp-1267200000 {
-+			opp-hz = /bits/ 64 <1267200000>;
-+			opp-peak-kBps = <4068000 12902400>;
-+		};
-+
-+		cpu6_opp7: opp-1555200000 {
-+			opp-hz = /bits/ 64 <1555200000>;
-+			opp-peak-kBps = <4068000 15052800>;
-+		};
-+
-+		cpu6_opp8: opp-1708800000 {
-+			opp-hz = /bits/ 64 <1708800000>;
-+			opp-peak-kBps = <6220000 19353600>;
-+		};
-+
-+		cpu6_opp9: opp-1843200000 {
-+			opp-hz = /bits/ 64 <1843200000>;
-+			opp-peak-kBps = <6220000 19353600>;
-+		};
-+
-+		cpu6_opp10: opp-1900800000 {
-+			opp-hz = /bits/ 64 <1900800000>;
-+			opp-peak-kBps = <6220000 22425600>;
-+		};
-+
-+		cpu6_opp11: opp-1996800000 {
-+			opp-hz = /bits/ 64 <1996800000>;
-+			opp-peak-kBps = <6220000 22425600>;
-+		};
-+
-+		cpu6_opp12: opp-2112000000 {
-+			opp-hz = /bits/ 64 <2112000000>;
-+			opp-peak-kBps = <6220000 22425600>;
-+		};
-+
-+		cpu6_opp13: opp-2208000000 {
-+			opp-hz = /bits/ 64 <2208000000>;
-+			opp-peak-kBps = <7216000 22425600>;
-+		};
-+
-+		cpu6_opp14: opp-2323200000 {
-+			opp-hz = /bits/ 64 <2323200000>;
-+			opp-peak-kBps = <7216000 22425600>;
-+		};
-+
-+		cpu6_opp15: opp-2400000000 {
-+			opp-hz = /bits/ 64 <2400000000>;
-+			opp-peak-kBps = <8532000 23347200>;
-+		};
-+	};
-+
- 	memory@80000000 {
- 		device_type = "memory";
- 		/* We expect the bootloader to fill in the size */
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Is this correct?
+
+Thank you,
+Pasha
