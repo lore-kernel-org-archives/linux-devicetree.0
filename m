@@ -2,108 +2,95 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4E2C47257
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA58C47247
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5552071C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:08:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588586931;
-	bh=SEUEOqsjoer4k2pCLVUZGnBWrdTnfIZTUHr1uR6kYbQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H0jVAa9+xHXqLeymi90g3qIdY0Q9eqDtVkAhwn+Y2abXnAUoatwJVRN8LdZEPLZwf
-	 TfN+MMDOiYJ/dGVl2YKu0SSP0Fp1WZ787e4Stj2qqvntWvbkEmEEXgCjzxJFwkhjcx
-	 b8qvDBSRv/5vCgkacouDvdg/8nrGWMVOVu8IXRLA=
+	by mail.kernel.org (Postfix) with ESMTP id EAC842075B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgEDKI0 (ORCPT
+        id S1727946AbgEDKPx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 06:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51478 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 06:15:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:39941 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728003AbgEDKI0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 06:08:26 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4A0320721;
-        Mon,  4 May 2020 10:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588586905;
-        bh=SEUEOqsjoer4k2pCLVUZGnBWrdTnfIZTUHr1uR6kYbQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s8qWgABDlen8Jac9q20c1YllmktbBgQLwXvc8TBGFNLZ2MO1yY4Ec1y361P0/V74B
-         I1neWkTKuG7sNhzZqWsXbJ6hnkIKSKwGvLVKRk8tXi/nQ5Jmadvr9Uiykfd916GshI
-         PbRZU1DH16iq28zmb1/RCo2z6rsKEhwjbInxx6VU=
-Date:   Mon, 4 May 2020 11:08:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jyri Sarha <jsarha@ti.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
-Message-ID: <20200504100822.GA5491@sirena.org.uk>
-References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+        id S1727786AbgEDKPx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 06:15:53 -0400
+IronPort-SDR: zac0n6+mH4OGwqJlyJPhQ8YUboM1GZLbOwg4U5I+xGCy8OfgwLujC5hTbHqPAywYMUP6V/BMIf
+ XiwcgJm7sOzA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 03:15:52 -0700
+IronPort-SDR: kWzOexmE9gA9GHIa+C/aOVrhX7sZAgooMMGkA7wWet4plCES6C0LHJKpk/ebmQ5jghUQWYWDmf
+ qla8KiukKhPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
+   d="scan'208";a="277483002"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 04 May 2020 03:15:51 -0700
+Received: from [10.215.163.15] (ekotax-mobl.gar.corp.intel.com [10.215.163.15])
+        by linux.intel.com (Postfix) with ESMTP id 2E749580609;
+        Mon,  4 May 2020 03:15:48 -0700 (PDT)
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, robh@kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+ <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
+ <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
+ <20200429121310.GH4201@sirena.org.uk>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <28f6511e-fe85-a834-1652-fd70def9ca88@linux.intel.com>
+Date:   Mon, 4 May 2020 18:15:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Content-Disposition: inline
-In-Reply-To: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
-X-Cookie: My life is a patio of fun!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200429121310.GH4201@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 4/29/2020 8:13 PM, Mark Brown wrote:
+> On Wed, Apr 29, 2020 at 04:20:53PM +0800, Dilip Kota wrote:
+>> On 4/28/2020 7:10 PM, Daniel Schwierzeck wrote:
+>>> actually there is no real bottom half. Reading or writing the FIFOs is
+>>> fast and is therefore be done in hard IRQ context. But as the comment
+>> Doing FIFO r/w in threaded irqs shouldn't cause any impact on maximum
+>> transfer rate i think.
+> Have you actually tested this?  Generally adding extra latency is going
+> to lead to some opportunity for the hardware to idle and the longer the
+> hardware is idle the lower the throughput.
+>
+>> Also the ISR should be quick enough, doing FIFO r/w in ISR adds up more
+>> latency to ISR.
+>> Handling the FIFOs r/w in threaded irq will be a better way.
+> Consider what happens on a heavily loaded system - the threaded
+> interrupt will have to be scheduled along with other tasks.
+>
+>>> for lantiq_ssc_bussy_work() state, the driver needs some busy-waiting
+>>> after the last interrupt. I don't think it's worth to replace this with
+>>> threaded interrupts which add more runtime overhead and likely decrease
+>>> the maximum transfer speed.
+>> Workqueue has a higher chances of causing SPI transfers timedout.
+> because...?
+I just tried to get the history of removing workqueue in SPI driver, on 
+GRX500 (earlier chipset of LGM) the SPI transfers got timedout with 
+workqueues during regression testing. Once changed to threaded IRQs 
+transfers are working successfully.
 
-On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
-> There are some new broken doc links due to yaml renames
-> at DT. Developers should really run:
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6v6ZIACgkQJNaLcl1U
-h9Aaywf9G/ypPAVhxAZkzN0IYu6e43sydvSull/M+q3UIdY9VmDdIhUXVgXoOCOh
-ltmOBr9lM8MTLi7nYRlTCsC7mmSE9EMyF3AlPAwCzT9Y9gffa33run0/3I2SDvJZ
-pUXeobj10+FRhp4iWUSpCkUrMEO8SzGHVXCbLZBLUYkvPWdsaMchNpj2iuy/IIMg
-TW9jzMHLeZGsGR/6OgEBbyKegSqC8r3BHT6xfLGtEzoji30kwnPAHvx2D75DBbHH
-dMN+lrHBjpgpaLZWPYHVf5yVjqrH77LcpGqpvTdoP4ckdZZfHyu2ZmFZiyl5yXJV
-56POKfO+q6cm0wiAfAZyg41Om6tanA==
-=2+iq
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
+Regards,
+Dilip
