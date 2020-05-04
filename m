@@ -2,118 +2,143 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C9DC3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE75C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F871206A5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:54:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="c6opjvGM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KX/tQ5X2"
+	by mail.kernel.org (Postfix) with ESMTP id 040D22073B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 10:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgEDKyA (ORCPT
+        id S1728146AbgEDKyg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 06:54:00 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:48545 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727051AbgEDKyA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 06:54:00 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 409376DB;
-        Mon,  4 May 2020 06:53:59 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 04 May 2020 06:53:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=zvy14YHR+znGe3t+Hmjo/EjD6Mr
-        ZIZqEI9VaeaWaPVA=; b=c6opjvGMp1R7qBwwuGO5veGzwSInNqfyNFTHkFEqsbX
-        j2Qi2i9Zk+h3W3Ku1zJ+QkmW2OwV5oRKl+Mr7b6dyu+OyjsOXMPTMxqKAdu5e3Dq
-        5tFt+4/glEyVTLkkQvvBZL5DrlAk19DdJki0sNbMlZib5ZakBhISqnkUk9eQ1NsK
-        //De2EGAk39Slc9kYnfpZq13rlQlAFuaILbM2LMIlBbIVbfPYsJJliQIj3XjVu0w
-        lvWDPI/UO+raTNSSBZS2Umgktlu4/cqO/+uwdvMw/XOKRuPFr2AOBKDa4erZJO7c
-        fpbwGHXrzZ3+2mXUh8eOaYmkumm0ZLk8EN8yvrQoPmA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zvy14Y
-        HR+znGe3t+Hmjo/EjD6MrZIZqEI9VaeaWaPVA=; b=KX/tQ5X2P4047WY26xXMpN
-        b2CgOT0HlF/mo52lhJp+yhpQsKnu+ibT+PJ1jEtKnZVWRYysBPRFG2YUR4RnmJqw
-        6OBL+cf6T/7Y8HjBrQ399dTvj18V44olYeF0EJOEM+N9wCxqWAynaj6ENjrazRqg
-        luaWfHH0RdFX0DNJcK2qzRkoEgt/6KXQvlUqbRqYSOyL2t2upq4WVS3M88HNFMfg
-        PlRTYq9YiCUjMMxzWA6QVAoMDmfn1j6VAYcZk1OBh9s/T9xOO9oV3XVtaYWkui81
-        tqDrXwaPO15eMDcejU6DMYvoruFYQG5KEWva5E5bfg6f9tngKiNywMcl+8ltPxwA
-        ==
-X-ME-Sender: <xms:QvSvXrqoYQNskZQcQQl8xwEk2H0i7mx16kbdj2CwSsp896PWfE4N9A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeggdeftdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:QvSvXrz30qCcw3ZnA9cGgvIkheGr5Uv1PDHJ_esRVMc_c9shi1md7g>
-    <xmx:QvSvXtwKchh-vk1ZccyGeZifdTRpqXjrVnzC_ZQwyMegWklxK5dqeQ>
-    <xmx:QvSvXiTlRe_4owVrv-vXfGysxgEDdVepPsQKo1J8bSEjnSDnHqtE5w>
-    <xmx:RvSvXtrr16GO2RI2A-sj8RjTFJMAIassDdgQOLxHpCm5qhcP4UwqGA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5F89F3280064;
-        Mon,  4 May 2020 06:53:54 -0400 (EDT)
-Date:   Mon, 4 May 2020 12:53:52 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: pinetab: Fix cpvdd supply
- name
-Message-ID: <20200504105352.m7x3yo7ne2j2goas@gilmour.lan>
-References: <20200426162353.52465-1-samuel@sholland.org>
+        Mon, 4 May 2020 06:54:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:41690 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726756AbgEDKy2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 06:54:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 651541FB;
+        Mon,  4 May 2020 03:54:27 -0700 (PDT)
+Received: from [10.57.39.240] (unknown [10.57.39.240])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0209B3F71F;
+        Mon,  4 May 2020 03:54:25 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-3-kishon@ti.com>
+ <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+ <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
+ <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
+Date:   Mon, 4 May 2020 11:54:24 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3rgwd3wzs7dmr2rs"
-Content-Disposition: inline
-In-Reply-To: <20200426162353.52465-1-samuel@sholland.org>
+In-Reply-To: <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
+> Hi Robin,
+> 
+> On 5/1/2020 9:24 PM, Robin Murphy wrote:
+>> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
+>>> [+Robin - to check on dma-ranges intepretation]
+>>>
+>>> I would need RobH and Robin to review this.
+>>>
+>>> Also, An ACK from Tom is required - for the whole series.
+>>>
+>>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
+>>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+>>>> property to configure the number of bits passed through from PCIe
+>>>> address to internal address in Inbound Address Translation register.
+>>>>
+>>>> However standard PCI dt-binding already defines "dma-ranges" to
+>>>> describe the address range accessible by PCIe controller. Parse
+>>>> "dma-ranges" property to configure the number of bits passed
+>>>> through from PCIe address to internal address in Inbound Address
+>>>> Translation register.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
+>>>>    1 file changed, 11 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>> index 9b1c3966414b..60f912a657b9 100644
+>>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>>>        struct device *dev = rc->pcie.dev;
+>>>>        struct platform_device *pdev = to_platform_device(dev);
+>>>>        struct device_node *np = dev->of_node;
+>>>> +    struct of_pci_range_parser parser;
+>>>>        struct pci_host_bridge *bridge;
+>>>>        struct list_head resources;
+>>>> +    struct of_pci_range range;
+>>>>        struct cdns_pcie *pcie;
+>>>>        struct resource *res;
+>>>>        int ret;
+>>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>>>        rc->max_regions = 32;
+>>>>        of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
+>>>>    -    rc->no_bar_nbits = 32;
+>>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+>>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
+>>>> +        if (of_pci_range_parser_one(&parser, &range))
+>>>> +            rc->no_bar_nbits = ilog2(range.size);
+>>
+>> You probably want "range.pci_addr + range.size" here just in case the bottom of
+>> the window is ever non-zero. Is there definitely only ever a single inbound
+>> window to consider?
+> 
+> Cadence IP has 3 inbound address translation registers, however we use only 1
+> inbound address translation register to map the entire 32 bit or 64 bit address
+> region.
 
---3rgwd3wzs7dmr2rs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, if anything that further strengthens the argument for deprecating a 
+single "number of bits" property in favour of ranges that accurately 
+describe the window(s). However it also suggests that other users in 
+future might have some expectation that specifying "dma-ranges" with up 
+to 3 entries should work to allow a more restrictive inbound 
+configuration. Thus it would be desirable to make the code a little more 
+robust here - even if we don't support multiple windows straight off, it 
+would still be better to implement it in a way that can be cleanly 
+extended later, and at least say something if more ranges are specified 
+rather than just silently ignoring them.
 
-On Sun, Apr 26, 2020 at 11:23:53AM -0500, Samuel Holland wrote:
-> An older version of the analog codec binding referenced the headphone
-> amplifier binding as "hpvcc". However, by the time it was merged in
-> commit 21dd30200e3d ("ASoC: dt-bindings: sun50i-codec-analog: Add
-> headphone amp regulator supply"), the regulator reference was renamed to
-> "cpvdd". This board's device tree still uses the old name, which fails
-> to work at runtime, and which causes a warning from `make dtbs_check`.
-> Resolve both by fixing the name.
->=20
-> Fixes: 674ef1d0a7b2 ("arm64: dts: allwinner: a64: add support for PineTab=
-")
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+>> I believe that pci_parse_request_of_pci_ranges() could do the actual parsing
+>> for you, but I suppose plumbing that in plus processing the resulting
+>> dma_ranges resource probably ends up a bit messier than the concise open-coding
+>> here.
+> 
+> right, pci_parse_request_of_pci_ranges() parses "ranges" property and is used
+> for outbound configuration, whereas here we parse "dma-ranges" property and is
+> used for inbound configuration.
 
-Applied, thanks!
-Maxime
+If you give it a valid third argument it *also* parses "dma-ranges" into 
+a list of inbound regions. This is already used by various other drivers 
+for equivalent inbound window setup, which is what I was hinting at 
+before, but given the extensibility argument above I'm now going to 
+actively suggest following that pattern for consistency.
 
---3rgwd3wzs7dmr2rs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXq/0QAAKCRDj7w1vZxhR
-xfCMAPwKSTdj7Wj0M2iBjxXSpxos0dEHNj3F/XGvsdNIlb16kwEAz/3eiEZHeaVM
-aqGK08WsKBWeCCBX/TXwIfEoD21ruQ8=
-=/g+o
------END PGP SIGNATURE-----
-
---3rgwd3wzs7dmr2rs--
+Robin.
