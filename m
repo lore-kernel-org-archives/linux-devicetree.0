@@ -6,114 +6,156 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E46AC4724C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 16:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D9BC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 16:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB5D2073E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 16:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8E920705
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 16:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ie+B2GQn"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Y/aTiaTT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cm9vUxZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgEDQgG (ORCPT
+        id S1729763AbgEDQkc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 12:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728655AbgEDQgG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 12:36:06 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA51C061A0E
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 09:36:05 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k1so21768422wrx.4
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 09:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Kl5xt2RTiHls+O1+Q0mo8BGBZHrI/nlz87XckVdCL1g=;
-        b=ie+B2GQn0xE9JMPS6WF8xSO2Nb3Bq/Z6k2tntw6DutFeL6B9N4DPWVklfbNH4FnjaN
-         t/FdSJpizjKhO8r7qWYTVIfj5tsh0Pyre46+FgQl/czQpS77eCKBAx7l0fXzqe5oMoJN
-         srD+3dXDSZ1b8gDIeuMqWa8VuGSbuKmcgrBbHkW2D7hnwsTKJTes6Tw8OLdAyIdx9DsB
-         hoEzpcXksJ2R6iwRnxlq1Hy4FZn4zTesCpGIx+6colQIPrKfNOCzGL8j1llscgSmy5B/
-         5cauF3xMhaLP0b+LA+EjuCFSF43vHxSqLu21aoJ22r7LNEmYy0ZayKBxq3kGlHDl94a6
-         bpsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Kl5xt2RTiHls+O1+Q0mo8BGBZHrI/nlz87XckVdCL1g=;
-        b=Dyanh3Ovwtyl+b5rLzAeG+BsPsRsD36eRAPVaOgCPmdnNZ9AeGHGpclqcf+ZQT+7kt
-         umbnMPyJXFXaUuMyWiKzdE9eIEhyurFJ+dvLMKZ14gAx2+A1DGjh7rZvz7rvbNHL90oF
-         atFXfvBQivAkNZO4L2msIPx479fDW2e/PZTi3FMekp+l7RBRxzyKB8X4+zhK0Oi5ZKfz
-         36KHwLqddI3dKk/UuZ579LVMlaV6aH8q/3XTZlZbCkPYlvB0PTGj0wZ8ZuRi3cSowtZt
-         8Z82ktCJaIuIfDoEs08AXqW1qMyMEEhRRTQ89hYLwrxLgmW0E+TVeThVmtNDjvMFwou3
-         20Tw==
-X-Gm-Message-State: AGi0PuaKT2mFRUt30rb7xBePQK6+py/L96UYJ7ow2ggreShyyKWT5k0k
-        B45MdbgfNFkuMtRdHGxslGjpaA==
-X-Google-Smtp-Source: APiQypLd6vuo0MczRTSEBPfkSN84zUGhA14hWPmpa6tAN+ckf2g+Pmwwtmh//IwEutIpZVdWAHOW4g==
-X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr20516301wrx.203.1588610164479;
-        Mon, 04 May 2020 09:36:04 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id z1sm13717417wmf.15.2020.05.04.09.36.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 09:36:03 -0700 (PDT)
-Date:   Mon, 4 May 2020 18:35:53 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org, joro@8bytes.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
-        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
-        Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
-        tanmay@marvell.com
-Subject: Re: [PATCH v6 19/25] iommu/arm-smmu-v3: Add support for Hardware
- Translation Table Update
-Message-ID: <20200504163553.GI170104@myrica>
-References: <20200430143424.2787566-1-jean-philippe@linaro.org>
- <20200430143424.2787566-20-jean-philippe@linaro.org>
- <CAJ2QiJLUxiJRnxQmO3O_48ZcTtNwziCWT6i2SJdAruDi+KGEFw@mail.gmail.com>
+        Mon, 4 May 2020 12:40:32 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:52077 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729670AbgEDQkb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 12:40:31 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7B6705C012C;
+        Mon,  4 May 2020 12:40:30 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Mon, 04 May 2020 12:40:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=vdg1rkzemmkCMJ7/0H2GFUcV8lx
+        jS65Px6J0j+PovYg=; b=Y/aTiaTTCbUEqHfBZSwZqiKXNNL2FArO54/ZQMuMG0r
+        7qtCc7ho8YP4X+ye6cRZinCsk66zG7VqfuYaPPZms2PVkbC96ErrZX5dygRoaELW
+        aiSqDzSWQYW/BK0c11HWyEE2D4LeVnEDbCIimDlt02tVF2pml4YRFqRHEASmQyYO
+        56N6HjPQq57hnf41vAC81IArxfV+GrZiYJlLbzkNaRFJYJ1yztOc1usxYBkAyZZV
+        66s8KrGjnhAeiwsARNuj52vrgcQSpq0P/VT/Fj8tAJC42/iKcA36dRVL80j0+6Yc
+        n4piP5Uo4vwMzK6Gt7/yOB/BeSmFlpYapSniuW/Sg9Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=vdg1rk
+        zemmkCMJ7/0H2GFUcV8lxjS65Px6J0j+PovYg=; b=cm9vUxZgSj8xrHFvxxmOzq
+        IJ2j6pduJTzKjWN3uQ0bvn1W2MyQiSXXZ2PL1zQz1/rrXJrRLNveKsk3Wzp3t5ZT
+        EiOXtsQzbGrALLR9P2Jeelh4TWatBOvqgmasmkCDYMupZDGWnDe7sETdMgzAL2Qs
+        99nTioh79KMcdPYo0DBjYXwu14buskO81171EFz74VVQqKTjt4agAvfA3SNZWgwf
+        sfNQ034Gtjy/rFl2TOKcxI2RGDC6E9beHe2Vag03UYcMvkWJV81jc7KabB2DrHrj
+        5nro+w52i6l3Va5yw03TkJYm+JOoSFchh3tajxRb6cRhRAuglNlGmPG5+eL10ytg
+        ==
+X-ME-Sender: <xms:fUWwXtIxpP7Z6BWd5TBOc0GPf4E3C0H1kc18UMkU-StANVS9Frsk0g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeggdeliecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeduvdduhfekkeehgffftefflefgffdtheffudffgeevteffheeuiedvvdejvdfg
+    veenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:fUWwXgijMEiIURioYaNGaWvlFrwoefPOJqIOpzmFiNKHsEoUYX0xeg>
+    <xmx:fUWwXgDCftHLtOo3xW01oGUqFQmFQk-W0_BQIL9iGGuIuqFxTh6AOg>
+    <xmx:fUWwXkbXsAriOKdJj1Qm5quahlM6XVzafmgUAEfUcjoDwsWMw7D8gg>
+    <xmx:fkWwXuSseolPyCy4avuYkdADC-K5I3gogAImbNr52YNelYXAF2_dLg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 397F13066016;
+        Mon,  4 May 2020 12:40:29 -0400 (EDT)
+Date:   Mon, 4 May 2020 18:40:27 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Piotr Oniszczuk <warpme@o2.pl>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v2] arm64: dts: allwinner: h6: Use
+ dummy regulator for Tanix TX6
+Message-ID: <20200504164027.tvlkcbfoz3igeh6x@gilmour.lan>
+References: <20200428142629.8950-1-peron.clem@gmail.com>
+ <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
+ <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
+ <20200428164522.p7ypca7zwocc7alq@gilmour.lan>
+ <CAJiuCce9UDp--XQ=rXPZ5cZyNDMFC3zyq7pnw3ETXkR3=zMWaQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pwelueerzpkvwdem"
 Content-Disposition: inline
-In-Reply-To: <CAJ2QiJLUxiJRnxQmO3O_48ZcTtNwziCWT6i2SJdAruDi+KGEFw@mail.gmail.com>
+In-Reply-To: <CAJiuCce9UDp--XQ=rXPZ5cZyNDMFC3zyq7pnw3ETXkR3=zMWaQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+
+--pwelueerzpkvwdem
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
 Hi,
 
-On Mon, May 04, 2020 at 07:54:03PM +0530, Prabhakar Kushwaha wrote:
-> Dear Jean,
-> 
-> On Thu, Apr 30, 2020 at 8:11 PM Jean-Philippe Brucker
-> <jean-philippe@linaro.org> wrote:
+On Thu, Apr 30, 2020 at 03:48:04PM +0200, Cl=E9ment P=E9ron wrote:
+> On Tue, 28 Apr 2020 at 18:45, Maxime Ripard <maxime@cerno.tech> wrote:
 > >
-> > If the SMMU supports it and the kernel was built with HTTU support, enable
-> 
-> is there any framework/config for HTTU which must be enabled to use this patch?
-> 
-> 
-> > We can enable HTTU even if CPUs don't support it, because the kernel
-> > always checks for HW dirty bit and updates the PTE flags atomically.
+> > On Tue, Apr 28, 2020 at 06:23:35PM +0200, Cl=E9ment P=E9ron wrote:
+> > > Hi Robin,
+> > >
+> > > On Tue, 28 Apr 2020 at 17:21, Robin Murphy <robin.murphy@arm.com> wro=
+te:
+> > > >
+> > > > On 2020-04-28 3:26 pm, Cl=E9ment P=E9ron wrote:
+> > > > > Tanix TX6 has a fixed regulator. As DVFS is instructed to change
+> > > > > voltage to meet OPP table, the DVFS is not working as expected.
+> > > >
+> > > > Hmm, isn't that really a bug in the DVFS code? I guess it's just bl=
+indly
+> > > > propagating -EINVAL from the fixed regulators not implementing
+> > > > set_voltage, but AFAICS it has no real excuse not to be cleverer and
+> > > > still allow switching frequency as long as the voltage *is* high en=
+ough
+> > > > for the given OPP. I wonder how well it works if the regulator is
+> > > > programmable but shared with other consumers... that case probably =
+can't
+> > > > be hacked around in DT.
+> > >
+> > > Like you, I thought that the DVFS was clever enough to understand this
+> > > but guess not..
+> > >
+> > > Maybe they are some cases where you don't want to leave the voltage h=
+igh and
+> > > reduce the frequency. But I don't know such case.
 > >
-> I believe, this statement is valid in context of this patch-set only.
-> 
-> One cannot use code snipped to test HTTU because exiting
-> io-pgtable-arm.c driver doesn't have framework to leverage HTTU
-> benfits. It by-default sets AF=1 and does not set DBM.
+> > I assume the intent was to prevent a regulator driver to overshoot and =
+end up
+> > over-volting the CPU which would be pretty bad.
+> >
+> > I guess we could check that the voltage is in the range opp < actual vo=
+ltage <
+> > max opp voltage ?
+>=20
+> As this could take more time than expected,
+>=20
+> Could you drop the commit :
+> add1e27fb703f65f33191ccc70dd9d811254387c
+> arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6
 
-Right, this patch only sets the hardware access and dirty flags for SVA
-(page tables shared with the CPU through iommu_bind*()), it doesn't enable
-anything for iommu_map/unmap(). Although I remember discussing it for VM
-migration, I don't know of any effort to use hardware access/dirty bits
-outside of SVA.
+It's done, thanks!
+Maxime
 
-Thanks,
-Jean
+--pwelueerzpkvwdem
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrBFewAKCRDj7w1vZxhR
+xY/yAQDBc+uu39+S+nGtqfFozjixwQHz6PT7mFJIq3iYoXM1cAD/WNTMNvIvvI+Y
+UjQG+ErJYUhaQLPXVlTIfHrf9w8nNwc=
+=jPeV
+-----END PGP SIGNATURE-----
+
+--pwelueerzpkvwdem--
