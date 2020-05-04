@@ -2,135 +2,172 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCA2C47259
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC5AC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF8420705
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B40820721
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vq2ie4yP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmyLFN/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgEDOMO (ORCPT
+        id S1728699AbgEDOUp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 10:12:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49458 "EHLO
+        Mon, 4 May 2020 10:20:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729032AbgEDOMN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 10:12:13 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2513FC061A0F
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 07:12:13 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 188so8624500wmc.2
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 07:12:13 -0700 (PDT)
+        with ESMTP id S1726922AbgEDOUo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 10:20:44 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECAEC061A0E;
+        Mon,  4 May 2020 07:20:44 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id i13so6729055oie.9;
+        Mon, 04 May 2020 07:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cBYi8j74hWiNZr+qveo+/wt9+YdcPXbPEFJvXHtn9pk=;
-        b=Vq2ie4yP/X47QYD6lxsDV5syeThtLJI2ewNwfJLRuRvqg9UoVTEgtYRgWLvaBdnVPa
-         0wxiY2Klubhm0nN4CMoAjyALlAO50NfO102r/fy+H5GCSi63zznRgC0xu4L85wpV03xu
-         DfhamtALWXxNYB9JgzXyAATJJmNT8UEf6XEH6k0T1kswbiEY71Yel0l1afn0RX60zeBH
-         aqxDJDIPxXQSFKQhe8Dd/PnFMhfN2602ltmhdR00hWRbv/fHUel+9cX1FVpDN6rRaZVF
-         s/UX7jAgy7BBd0Tzf4XpwroHU3tmThERIbg1xf8cdc1LjpguouxRX8TELXLyxcryX5LF
-         R2oQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7dFZhnDWS7Tizxu2OEo0qs58jGqBEpce/n1a/aPfM+M=;
+        b=gmyLFN/nYCg1n7UscEV+5jC9u6q5GYu3AHv3+aU7Fjjw9dTfo4ARG/9m1ro0M5MMEi
+         a6bbASvcxqmY5LPFOrLCWtelWFHBnP8G3vtjnzAvkga9NRi0IL3PeSl35vT8irzanSP7
+         X+adc0ebp2xGHjsH9mb4tf/IzHTWObBo2I2ZP2UjPtUS/4L3KuKXlSnSPiFyQ8Tu9e/Q
+         pudQRvc7xxjSRZOVRJk+Pic34GazJCjrGWIT/nmq0uzN7hZoiMNg9CHV+yOCxHj0ykdo
+         jdd5G56/uWvfqtOWfoDIRb3/KOQuKt2WJCeEQCsPAViF+sp9GuGwQQNKwS+CjKNeyMSA
+         Qqbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cBYi8j74hWiNZr+qveo+/wt9+YdcPXbPEFJvXHtn9pk=;
-        b=CjdnWjrXnzg/IGd92WG1zgOQv2GgPXn3fHifoZo9rG0LsIOTJb5UA86gOiCk2lQPcZ
-         cDfkkl5q9E7XhO5OA/fBxaTGS/ngLKQEJgd+iJCVKkbfgjCid8e/uIpEKiHOR0ep9HtS
-         zVUQiyxXcLf+TH1SsiTOtVljeLK9XwK3v6Mu4vcKUuDAkfrIj1lDKlKZNmrXytgXW0Lk
-         tLfU1EkyidNE5N+c9JLR9x9NU+n1uiXiahHLYNdQTfMmJwghpnBjF1XT+8xbqEt2yZVu
-         fVfA1UkxtpLsjegIzwzdzCj4N6G/OK6istBmN8bdtGGZK0VTqLMMmuHP5AQ/W8m49TK8
-         /5CQ==
-X-Gm-Message-State: AGi0PubPo3vvukBQi5JvC6D9vbJM1Gvt96frCLX7mrdpFDdTYiFJ960D
-        m2d/N65mbx1b5ysOyXjDpkyo4Q==
-X-Google-Smtp-Source: APiQypJGsU7OdMfQlFADSEeYP/iyop6F2RgiIW4sMbSjpQ+r/TAhN3MWxBAEOgHp3eUgHcwFPiU/5w==
-X-Received: by 2002:a05:600c:290f:: with SMTP id i15mr14075509wmd.167.1588601531837;
-        Mon, 04 May 2020 07:12:11 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id r23sm13017379wra.74.2020.05.04.07.11.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 07:11:52 -0700 (PDT)
-Date:   Mon, 4 May 2020 16:11:37 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
-        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org
-Subject: Re: [PATCH v6 11/25] iommu/arm-smmu-v3: Share process page tables
-Message-ID: <20200504141137.GA170104@myrica>
-References: <20200430143424.2787566-1-jean-philippe@linaro.org>
- <20200430143424.2787566-12-jean-philippe@linaro.org>
- <580a915f-f8bf-3b3e-c77d-6d0c2ea4bd02@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7dFZhnDWS7Tizxu2OEo0qs58jGqBEpce/n1a/aPfM+M=;
+        b=sRBmZzi/tNu6/JlWqS5W/yZS+/oqRUqHThbrOoR9GtEWGJHuyKQj0uV2podLIFl54k
+         RKEXCC9KbTWgAX4VuQy00LuQThFAE2cnWClq5YNSuGFN1tqeqacZsxC/Gl2uAlY1V7W1
+         WSry1yfnGDuaEyv9h074zLh6ZbrLjGwnsKthNoi3XlPFa2YCCFn2ngTV5vGr5XTDzefI
+         7/F8lOL4xH8Pc4S7j7DTn48tkybjqkPQdrWxZ3Z7DYBv+HA3F2REMjv98yAft7opRvQ1
+         IbtL3MqHnBMn+GbZJQKl9BMi/Lsvo3lGfngvL9LDIF384T7L8tb10/RCxH3fVVQ5xdyl
+         OVgg==
+X-Gm-Message-State: AGi0PuaVKdTFHfZCW8jBM5Q8Ax3InWv/srlPCuX/FC+GFvMmPJqPYw2R
+        6yJrqAe9OFMgnmTtanuoSycgN1jEa5m5kll0LIU=
+X-Google-Smtp-Source: APiQypJJNLmN9IdSWfIrtoFcumitqYdjMlQ/xm3GpcuUQNKTnSGBHyQMIaQNzSPDuLIDwjYVOaixm5qG87Uq7o+MR6w=
+X-Received: by 2002:aca:b783:: with SMTP id h125mr9088932oif.62.1588602043656;
+ Mon, 04 May 2020 07:20:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <580a915f-f8bf-3b3e-c77d-6d0c2ea4bd02@arm.com>
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com>
+In-Reply-To: <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 4 May 2020 15:20:17 +0100
+Message-ID: <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H
+ Qseven SOM
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 04:39:53PM +0100, Suzuki K Poulose wrote:
-> On 04/30/2020 03:34 PM, Jean-Philippe Brucker wrote:
-> > With Shared Virtual Addressing (SVA), we need to mirror CPU TTBR, TCR,
-> > MAIR and ASIDs in SMMU contexts. Each SMMU has a single ASID space split
-> > into two sets, shared and private. Shared ASIDs correspond to those
-> > obtained from the arch ASID allocator, and private ASIDs are used for
-> > "classic" map/unmap DMA.
-> > 
-> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > ---
-> 
-> > +
-> > +	tcr = FIELD_PREP(CTXDESC_CD_0_TCR_T0SZ, 64ULL - VA_BITS) |
-> > +	      FIELD_PREP(CTXDESC_CD_0_TCR_IRGN0, ARM_LPAE_TCR_RGN_WBWA) |
-> > +	      FIELD_PREP(CTXDESC_CD_0_TCR_ORGN0, ARM_LPAE_TCR_RGN_WBWA) |
-> > +	      FIELD_PREP(CTXDESC_CD_0_TCR_SH0, ARM_LPAE_TCR_SH_IS) |
-> > +	      CTXDESC_CD_0_TCR_EPD1 | CTXDESC_CD_0_AA64;
-> > +
-> > +	switch (PAGE_SIZE) {
-> > +	case SZ_4K:
-> > +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_4K);
-> > +		break;
-> > +	case SZ_16K:
-> > +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_16K);
-> > +		break;
-> > +	case SZ_64K:
-> > +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_64K);
-> > +		break;
-> > +	default:
-> > +		WARN_ON(1);
-> > +		ret = -EINVAL;
-> > +		goto err_free_asid;
-> > +	}
-> > +
-> > +	reg = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
-> > +	par = cpuid_feature_extract_unsigned_field(reg, ID_AA64MMFR0_PARANGE_SHIFT);
-> > +	tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_IPS, par);
-> > +
-> > +	cd->ttbr = virt_to_phys(mm->pgd);
-> 
-> Does the TTBR follow the same layout as TTBR_ELx for 52bit IPA ? i.e,
-> TTBR[5:2] = BADDR[51:48] ? Are you covered for that ?
+Hi Geert,
 
-Good point, I don't remember checking this. The SMMU TTBR doesn't have the
-same layout as the CPU's, and we don't need to swizzle the bits. For the
-lower bits, the alignment requirements on the pgd are identical to the
-MMU.
+Thank you for the review.
 
-Thanks,
-Jean
+On Mon, May 4, 2020 at 2:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Sun, May 3, 2020 at 11:48 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add support for iWave RZ/G1H Qseven System On Module.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+> > @@ -0,0 +1,53 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the iWave RZ/G1H Qseven SOM
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +#include "r8a7742.dtsi"
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +
+> > +/ {
+> > +       compatible = "iwave,g21m", "renesas,r8a7742";
+> > +
+> > +       memory@40000000 {
+> > +               device_type = "memory";
+> > +               reg = <0 0x40000000 0 0x40000000>;
+> > +       };
+> > +
+> > +       memory@200000000 {
+> > +               device_type = "memory";
+> > +               reg = <2 0x00000000 0 0x20000000>;
+>
+> According to the schematics, the second bank is also 1 GiB, so the
+> reg length should be 0x40000000.
+>
+Agreed will fix that.
 
+> > +       };
+>
+> > +&pfc {
+> > +       mmc1_pins: mmc1 {
+> > +               groups = "mmc1_data4", "mmc1_ctrl";
+> > +               function = "mmc1";
+> > +       };
+> > +};
+> > +
+> > +&mmcif1 {
+> > +       pinctrl-0 = <&mmc1_pins>;
+> > +       pinctrl-names = "default";
+> > +
+> > +       vmmc-supply = <&reg_3p3v>;
+> > +       bus-width = <4>;
+> > +       non-removable;
+> > +       status = "okay";
+> > +};
+>
+> The eMMC has an 8-bit data path.  Is there any specific reason you use
+> bus-width = <4>, and the "mmc1_data4" pin group?
+>
+MMC1_DATA7 is shared with VI1_CLK, so instead of limiting to only one
+device when using 8-bit just switched to 4bit mode so that both the
+peripherals can be used.
+
+Cheers,
+--Prabhakar
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
