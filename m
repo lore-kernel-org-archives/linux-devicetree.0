@@ -2,121 +2,83 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47723C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F37BC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACDB208DB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13DA20752
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:40:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FKq32PO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbgEDNcK (ORCPT
+        id S1727831AbgEDNkk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 09:32:10 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:8215 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728125AbgEDNcK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 09:32:10 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 May 2020 19:01:27 +0530
-Received: from mkrishn-linux.qualcomm.com ([10.204.66.35])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 04 May 2020 19:01:07 +0530
-Received: by mkrishn-linux.qualcomm.com (Postfix, from userid 438394)
-        id EAE0346E3; Mon,  4 May 2020 19:01:05 +0530 (IST)
-From:   Krishna Manikandan <mkrishn@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org, mka@chromium.org
-Subject: [v1] drm/msm/dpu: update bandwidth threshold check
-Date:   Mon,  4 May 2020 19:01:03 +0530
-Message-Id: <1588599063-15754-1-git-send-email-mkrishn@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 4 May 2020 09:40:40 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40068 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727786AbgEDNkk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 09:40:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=AS2kv0gpUVX7q+EU8jc6o6kLyYe4vA6m3YP11lOv2W4=; b=FKq32PO49K7052ag4nwLaAeRJi
+        SCB9TH1e0Kq8y1nBOTyOs87CbK1XO03zV5+FTyBE09XdTEltwfV898Yq6HgYH/EFd9F3jUxAmgJdo
+        CDEzrhTn364OKsaf6WbCE86VaEECqGwjKKYwu56w9pAEw/R2HOJpSU6j/MjzsjWUF9nc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jVbKi-000nw6-Ve; Mon, 04 May 2020 15:40:32 +0200
+Date:   Mon, 4 May 2020 15:40:32 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH] dt-bindings: net: nxp,tja11xx: add compatible support
+Message-ID: <20200504134032.GB190789@lunn.ch>
+References: <20200504082617.11326-1-o.rempel@pengutronix.de>
+ <20200504084412.juhnxip7lg2d3ct5@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504084412.juhnxip7lg2d3ct5@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Maximum allowed bandwidth  has no dependency on the type
-of panel used. Hence, cleanup the code to use max_bw_high
-as the threshold value for bandwidth checks.
+On Mon, May 04, 2020 at 10:44:12AM +0200, Oleksij Rempel wrote:
+> Hi all,
+> 
+> here is first attempt to rework this binding. So far I have following
+> questions and/or issues:
+> - currently this PHY is identified by ID, not by compatible. Should it
+>   be probed by compatible?
+>   Theoretically I can use:
+>   	compatible = "nxp,tja1102", "ethernet-phy-ieee802.3-c22";
 
-Update the maximum allowed bandwidth as 6.8Gbps for
-SC7180 target.
+Hi Oleksij
 
-Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  | 23 +----------------------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |  4 ++--
- 2 files changed, 3 insertions(+), 24 deletions(-)
+This will not work, in the current framework. PHYs probe via the ID
+registers, or ethernet-phy-id0141.0e90 like compatible strings. MDIO
+devices, which means devices like Ethernet switches, probe via
+compatible strings. There are a few old DT blobs which do have a
+compatible for the PHY, but they are white listed and ignored. See
+of_mdio.c, whitelist_phys and of_mdiobus_child_is_phy().
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-index 11f2beb..7c230f7 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-@@ -36,22 +36,6 @@ static struct dpu_kms *_dpu_crtc_get_kms(struct drm_crtc *crtc)
- 	return to_dpu_kms(priv->kms);
- }
- 
--static bool _dpu_core_video_mode_intf_connected(struct drm_crtc *crtc)
--{
--	struct drm_crtc *tmp_crtc;
--
--	drm_for_each_crtc(tmp_crtc, crtc->dev) {
--		if ((dpu_crtc_get_intf_mode(tmp_crtc) == INTF_MODE_VIDEO) &&
--				tmp_crtc->enabled) {
--			DPU_DEBUG("video interface connected crtc:%d\n",
--				tmp_crtc->base.id);
--			return true;
--		}
--	}
--
--	return false;
--}
--
- static void _dpu_core_perf_calc_crtc(struct dpu_kms *kms,
- 		struct drm_crtc *crtc,
- 		struct drm_crtc_state *state,
-@@ -94,7 +78,6 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
- 	u32 bw, threshold;
- 	u64 bw_sum_of_intfs = 0;
- 	enum dpu_crtc_client_type curr_client_type;
--	bool is_video_mode;
- 	struct dpu_crtc_state *dpu_cstate;
- 	struct drm_crtc *tmp_crtc;
- 	struct dpu_kms *kms;
-@@ -144,11 +127,7 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
- 		bw = DIV_ROUND_UP_ULL(bw_sum_of_intfs, 1000);
- 		DPU_DEBUG("calculated bandwidth=%uk\n", bw);
- 
--		is_video_mode = dpu_crtc_get_intf_mode(crtc) == INTF_MODE_VIDEO;
--		threshold = (is_video_mode ||
--			_dpu_core_video_mode_intf_connected(crtc)) ?
--			kms->catalog->perf.max_bw_low :
--			kms->catalog->perf.max_bw_high;
-+		threshold = kms->catalog->perf.max_bw_high;
- 
- 		DPU_DEBUG("final threshold bw limit = %d\n", threshold);
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index c567917..6ad7472 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -515,8 +515,8 @@
- };
- 
- static const struct dpu_perf_cfg sc7180_perf_data = {
--	.max_bw_low = 3900000,
--	.max_bw_high = 5500000,
-+	.max_bw_low = 6800000,
-+	.max_bw_high = 6800000,
- 	.min_core_ib = 2400000,
- 	.min_llcc_ib = 800000,
- 	.min_dram_ib = 800000,
--- 
-1.9.1
+If the DT validation code is wrongly forcing you to have a compatible,
+i think your best bet is to use the ethernet-phy-id with the correct
+ID values.
 
+   Andrew
