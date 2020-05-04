@@ -2,146 +2,102 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD3FC3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C3AC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28FD920705
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CCD20705
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 19:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vaJNJgNc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGvZgbNE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgEDTea (ORCPT
+        id S1726334AbgEDTj5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 15:34:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
+        Mon, 4 May 2020 15:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgEDTea (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 15:34:30 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E12C061A0E;
-        Mon,  4 May 2020 12:34:30 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id j8so9393326iog.13;
-        Mon, 04 May 2020 12:34:30 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1725956AbgEDTj5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 15:39:57 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA2AAC061A0E;
+        Mon,  4 May 2020 12:39:56 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k12so785473wmj.3;
+        Mon, 04 May 2020 12:39:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=VLedveHRjOWzxQFafIfJM9vIF9bwIvP2E6cViDidxC0=;
-        b=vaJNJgNcxrb1V5Ckol5RMcTftci6iMEwDqjBnwg7I9WEAjRh9OiwFGM1XEAF9FFeFB
-         TwTgyft86VFfbUnMYpmPxCfITWODOtjcvxiVdLsdtn/V7Mgb7iHrEOYEHNWkBobsIRJM
-         cJpt09Z/GjDpK/iBDC14QsKMe8Y+bOfQmMKDsDe8XofsTdqihOsSRFZwhocx7VgajxY9
-         ZAB+ToZsSEVpJzV3lGVsUNRfmktcvgncHQEbmz0Swp3YKoMOByPG8I205KNBzv1Eors6
-         PHCPbMmVEUQ0gRcaClkxLC9inREdEBwepLrV9LmsSAHZAZ3O7OW/A8Kt1/bz1TB0Di9c
-         JXCg==
+        bh=NW8oQWWMjyDuVRlAJpFreByMFafi4QpaqckDeeBZAK4=;
+        b=BGvZgbNEWZJtJB/rLL03NY9rGi/ehlH0jg4N4WKhGixHvbUP/tquGIF4e4ki56rWne
+         Tz+uVwFhd/70t7HHez2Wfo7FBUinRRAwV0VJriMwat8q2EEUNSlL64jdTT5bA10iKRyx
+         IIowCe8n3GYDpxPnBrITwbAUvLNRl0fWAdB735ya0JBTSIRaMoUqvamsrQXPyr+8zaiF
+         XF453YXLy1G6JebbBAtF6Qkh80Zh3npwl8uGSw1KXyMRg7rXYI3UU96M4TJ5/6WKwNoT
+         yN6EOUFOZvFiEU0gO+PL9RHUPFEThCSX/0Tb5IUPAPUIyDtMAemXAQhDOqu87hAVH/Ds
+         G6OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=VLedveHRjOWzxQFafIfJM9vIF9bwIvP2E6cViDidxC0=;
-        b=qIrMv+SxgBsjfSjmB/AfXyRgeB/c8vvzjuBzBq0yaQuot5NHMleiPKPUxGzfb6LyXz
-         GxM5aogsca2Dsq+XpvbZ5souMbiUIssTfcDDLPmMM4I0638nHH24g9lHr5s57Y7QY7Cp
-         iiTURBxOKql3mIRtEB8ZOxSSSLXaeRbgFeWeOmXWfSe2Cy5IBq7wU/Vq5YPvnEPOgZfX
-         /2+/NDPfSRykMAAMLJDvX4GHi/WW4tgNP2Vzvrf2atl7+bl87Eb3Nf0NN4a4CDps7+x0
-         0MmhZq/BfsH2SbjQoYL4t9N6MMtihuJTnXTsv8QToHy/JBVdU9rtoTrq40TgdwpehNkE
-         3Evg==
-X-Gm-Message-State: AGi0PuaFZQ3zLV5V5QAXzKJEYgzNBj/Z8oqGWEMCN3fLssz/GwGKwe9A
-        57lD74GcnpY6HwFv95BoFqbsr/YTOTaS/QQkXiLGDdHn
-X-Google-Smtp-Source: APiQypK9Olv8kCXFxHfdydxi6Zo3gzKdeDYOEOWdBFjLcGrNydDzLvq6rm7R+os2X1oVOh/CZoO1TcZcz7TI7xUtcgY=
-X-Received: by 2002:a02:a004:: with SMTP id a4mr34524jah.18.1588620869486;
- Mon, 04 May 2020 12:34:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NW8oQWWMjyDuVRlAJpFreByMFafi4QpaqckDeeBZAK4=;
+        b=bUvh7JlgT/76oHBko8cULCEj1qGQtbnyZGviye34723Z6d66T9/xatn9iY3LHFhabX
+         yHLnkfifJ8Qubw28IPvnp7hCeqfT7kZyTaCd8/0sRPX7mhHLFymErfnXE9THGhdezqV/
+         oKW5ia8P6ZTLNhBoqqqN9yLVZhBTus/XO8DpgbFyuAC5qW+neR/cr9NzfdDLTLtb17pG
+         l5wRGGcm+TFPZdxLxx4HQPixUODX3UYQVhMO2MOEGHgryhNWIGBUhxp5b9xmCszNs7EU
+         G6VDX+EVNq3OpmxwlcgAurmZiTS137BlKio+FI1EzrcbKXQnmufZtubIcBU6HPuyAduC
+         v9/Q==
+X-Gm-Message-State: AGi0PuayherJlnaNDGKp+ZZ+QdsDjkJ7kBpayxTD8jHdsGVjevbbJodp
+        +o95Ah3ZhEx0T/EGjOfgDFg=
+X-Google-Smtp-Source: APiQypKgVNA1FOuWyq3/1fPwRoS94xnMG7wOri4uYVEUV4/OF7DNlSDZCeZjGj/SyAfRTNf6GeY4FA==
+X-Received: by 2002:a1c:dc8b:: with SMTP id t133mr16729738wmg.117.1588621195459;
+        Mon, 04 May 2020 12:39:55 -0700 (PDT)
+Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
+        by smtp.googlemail.com with ESMTPSA id p7sm20631312wrf.31.2020.05.04.12.39.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 12:39:55 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [v2 PATCH 0/2] Add support for ASUS Z00T TM5P5 NT35596 panel
+Date:   Mon,  4 May 2020 21:38:12 +0200
+Message-Id: <20200504193816.126299-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-References: <20200428142629.8950-1-peron.clem@gmail.com> <20200504122742.er2jd67bvrn2rfgp@core.my.home>
-In-Reply-To: <20200504122742.er2jd67bvrn2rfgp@core.my.home>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 4 May 2020 21:34:17 +0200
-Message-ID: <CAJiuCcdSmgp75ByEDDtH0AtqGsUyc9QrAcD9xqLZduh2ijnrqQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2] arm64: dts: allwinner: h6: Use dummy
- regulator for Tanix TX6
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ondrej,
+changes since v1:
+- make `backlight_properties props` constant
+- a couple of line breaks
+- change name and compatible to reflect ASUS being the vendor
+- remove a redundant TODO
 
-On Mon, 4 May 2020 at 14:27, Ond=C5=99ej Jirman <megous@megous.com> wrote:
->
-> Hi Cl=C3=A9ment,
->
+Konrad Dybcio (2):
+  drivers: drm: panel: Add ASUS TM5P5 NT35596 panel driver
+  dt-bindings: display: Document ASUS Z00T TM5P5 NT35596 panel
+    compatible
 
-<snip>
+ .../display/panel/asus,z00t-tm5p5-n35596.yaml |  56 +++
+ drivers/gpu/drm/panel/Kconfig                 |  10 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../drm/panel/panel-asus-z00t-tm5p5-n35596.c  | 367 ++++++++++++++++++
+ 4 files changed, 434 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
 
->
-> So I guess ignoring the voltage and not disabling this OPP may or may not=
- work
-> based on SoC bin.
->
-> On Orange Pi One, there's a regulator that supports two voltages (that ca=
-n't
-> support all the listed OPPs for H3), and cpufreq-dt can deal with that
-> automagically, if you specify OPP voltages via a tripplet of [prefered mi=
-n max].
-> Kernell will log this in dmesg on boot:
->
-> [    0.672440] core: _opp_supported_by_regulators: OPP minuV: 1320000 max=
-uV: 1320000, not supported by regulator
-> [    0.672454] cpu cpu0: _opp_add: OPP not supported by regulators (11040=
-00000)
-> [    0.672523] core: _opp_supported_by_regulators: OPP minuV: 1320000 max=
-uV: 1320000, not supported by regulator
-> [    0.672530] cpu cpu0: _opp_add: OPP not supported by regulators (12000=
-00000)
-> [    0.672621] core: _opp_supported_by_regulators: OPP minuV: 1340000 max=
-uV: 1340000, not supported by regulator
-> [    0.672628] cpu cpu0: _opp_add: OPP not supported by regulators (12960=
-00000)
-> [    0.672712] core: _opp_supported_by_regulators: OPP minuV: 1400000 max=
-uV: 1400000, not supported by regulator
-> [    0.672719] cpu cpu0: _opp_add: OPP not supported by regulators (13680=
-00000)
->
-> And the list of available OPPs will be reduced at runtime to a supportabl=
-e
-> set by the CPU regulator.
->
-> If you look at:
->
->   https://megous.com/git/linux/commit/?h=3Dths-5.7&id=3Dd231770195913cf54=
-3c0cf9539deee2ecec06680
->
-> you'll see a bunch of OPPs for H3 that are specified as a range. So
-> for example if you want 480MHz, and your regulator can't produce
-> 1.04V exactly, cpufreq will set the voltage to something supportable
-> in the range.
->
-> I think the proper fix is to fix the OPP table for H6, so that it uses
-> voltage ranges for each OPP and not a single fixed voltage, to support
-> boards that don't have the standard PMIC that goes with H6.
+-- 
+2.26.1
 
-Thanks for the suggestion and I agree with you, this is a good way to
-keep the same OPP table for all the H6 devices and handle both board
-with PMIC and with fixed regulator.
-
-I will propose a patch.
-
-Thanks clement
-
->
-> regards,
->         o.
