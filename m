@@ -2,129 +2,105 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB5BC3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 11:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480E8C47258
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 11:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1990020752
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 11:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2416E20658
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 11:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Er757pB4"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="AbYWfCIh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FOvR6siG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgEDLBW (ORCPT
+        id S1728666AbgEDLE1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 07:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726756AbgEDLBW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 07:01:22 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1044BC061A0E;
-        Mon,  4 May 2020 04:01:22 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e16so15255200wra.7;
-        Mon, 04 May 2020 04:01:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8gYfSI9LTcswBBqFfe7141haPYxExZ3uMFkC1/HLr8o=;
-        b=Er757pB4csDycjVcXCmOh++3Va7lgE/d3hS1HwCih97sW3prXSMjWizDZgcytRdk2r
-         cgapq+RDFM+tDupAohhSg8ByjenyW/Q8Yws4pugfIcFlefT+6Q6R9EE+E3rh13EpzY/3
-         P9y278S5lJGhcqYVZ2Rhc9+/RtR2avv6UH8d7mMtlJ9vTSumQRNNIq32eJdJV/CSLTa7
-         4zQdDdXqyYMte+9YaWiE3+o0kzV7xQ/mDLO+6+B/kyZFUY3Uvb/zsy9VuGafoWwvHFjd
-         iBmCjFCKvfe/8/gFjPRDDFJZkZ0EQJoyw6jlKn4KPWkr9Ky5yIEriacriuQ89w37U+hw
-         WpFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8gYfSI9LTcswBBqFfe7141haPYxExZ3uMFkC1/HLr8o=;
-        b=HLg8W5LPD0yJTEpb1U/edBIejliCKIsNnJcqKrGETgpxTuDAOxsd89xps6Uf4ha+aW
-         /VitwshK+s14orjm560mysjnZZl+1SMHW29RwBIfgNJXjv4fDh14A4KWpQb21RYsrBKz
-         ydsT4xSqh+7i8P2CYsO/JOIsOduvYFzoPVqcm3l/CaWzge1xYzyml9reLfVOpLLbgR9n
-         b1Q0+EQ85QIlM9PmJGeJhmMS8lm6J/Z6R2OY+qQvRB4QhQcTgOQVuMiGIMYwtIJ1zPF/
-         19cQtewSsMdOtnZNTHLMFyXgqSaSqMIYt8vHbqVER82k7BXH0vZBab88eImAJByQxW+H
-         bftw==
-X-Gm-Message-State: AGi0PuZ1P0F+sehGoV+Wu6QBYA+Evs9SDL47QjGl0bqPY3VAz8WfSdjP
-        jfsOUsc9AXkb+vYZt7iNsD21tkGz3uLTQwEn41l6jub1EXI=
-X-Google-Smtp-Source: APiQypJbvlr1zD1X04CH2mq6hBepmWIB7EJ18lS67KkLbsAn42ZYeKKB8H4UVnOmZIuoTF5rZku2E4lnkGqfkgB+hCc=
-X-Received: by 2002:adf:f641:: with SMTP id x1mr18421592wrp.151.1588590080839;
- Mon, 04 May 2020 04:01:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com> <20200502114752.1048500-7-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20200502114752.1048500-7-martin.blumenstingl@googlemail.com>
-From:   hex dump <hexdump0815@gmail.com>
-Date:   Mon, 4 May 2020 13:01:06 +0200
-Message-ID: <CAKTihDXu2ZC3p-5w41-jZQ0x9kbcPnVyuwB5zgE3sDA6n3SiaQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] phy: amlogic: meson8b-usb2: Add a compatible string
- for Meson8m2
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     kishon@ti.com, robh+dt@kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        narmstrong@baylibre.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 4 May 2020 07:04:27 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:32907 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728621AbgEDLEZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 07:04:25 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 7F7C62D8;
+        Mon,  4 May 2020 07:04:24 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Mon, 04 May 2020 07:04:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=49dwVzlg4yout0mlI0duNcm7pu2D5zR
+        VEWyuXFEPhGU=; b=AbYWfCIh+Tz/F50g7Tweaswku+okSFIb8Wo4E8U6foqtSM8
+        ZYq90QcAXG/rYSrgWAxUunR/NIKo8L0jrJiDMR2TrbJ6gResjk9t1BjFPHRVJJPG
+        zOISYVxOXjy3U1q2PvSBFOPtOcVx8FteX8dYqEqJE6zGN2+G3o9BUMv/PzUyGWqe
+        qvKqFuKzgQvTRVGFp4XQOBLhT/o0Q3sQ21ehzLKs6bGESJaymgCz3oAw934IdQuP
+        b+J6Xb+AI+IwpOv9F8gYKDJvXOLEAg0zOpXMMfgAl41eAaiZe47EbyZ/KIUOZ4D7
+        Nu0jYnNxdQTBWV8TLYPdWZHk93V+jW4tJzr4eFw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=49dwVz
+        lg4yout0mlI0duNcm7pu2D5zRVEWyuXFEPhGU=; b=FOvR6siGanOLWuUXtSMMl0
+        o5uHqKxG3w5na9zs2jG7xeazFlHVCiqcrLv7AZRInMl063YJSocYi811HiR39MBu
+        YWfJMWtccdjbc96RmKAPg36M4W3FBMl/zu/GcSsJ0q8IWf1qjn9YR9QfQ3hoITct
+        CgcFs+k+yY5pvXJnEvEgb/i/7vi8oubVbOYhzaF3oz0GloUpx/hHghflEIzkFZVj
+        fZDQOyKeC5H6HRGP5WCzpjM6wVKXI8Tmy0fIcbov2c3MOr+CJ1i4A5stkTOl3mEz
+        u3g3BxM7TpJ+IF+J3F0CUnWAzVvY1HKlDx9/N4qrIZDm3WSHAZEshyTDqbqg8Mtg
+        ==
+X-ME-Sender: <xms:t_avXrXmlbQpGG5_yRbhLXtv1WgwUOVvBIS58b2naUbAdf_yleCQ4w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeggdefvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtffrrg
+    htthgvrhhnpeehhfefkefgkeduveehffehieehudejfeejveejfedugfefuedtuedvhefh
+    veeuffenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:t_avXs5I4xlwGIpDS-tB7qxaOzAluwOdfezFC9QOmv-LpJU505O-CQ>
+    <xmx:t_avXurijGF2Ua1hkypHCzPPMfpKzIoNwqGkXHIEyzlbT3mmpCYiwA>
+    <xmx:t_avXnn4wsesB9ILvaXG-OB5KPmuh9NWy5RYqW1PiBM13v7U8UYQjQ>
+    <xmx:uPavXltuK2j6jja0egnmx5b-v3iTrYs6VXZHLR2NwnSSBT7RQ1vzVw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 0543AE0131; Mon,  4 May 2020 07:04:23 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.0-dev0-351-g9981f4f-fmstable-20200421v1
+Mime-Version: 1.0
+Message-Id: <c1de0c90-d486-4855-bb26-0f3cc416b05d@www.fastmail.com>
+In-Reply-To: <CACPK8XcP3V=8fAUfNvRFqPU9G38dGR43Kpp=Uxm=P_AjrMnzBQ@mail.gmail.com>
+References: <20200424135303.20952-1-a.filippov@yadro.com>
+ <CACPK8XcP3V=8fAUfNvRFqPU9G38dGR43Kpp=Uxm=P_AjrMnzBQ@mail.gmail.com>
+Date:   Mon, 04 May 2020 20:34:02 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Joel Stanley" <joel@jms.id.au>,
+        "Alexander A. Filippov" <a.filippov@yadro.com>
+Cc:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>
+Subject: Re: [PATCH v5] ARM: DTS: Aspeed: Add YADRO Nicole BMC
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 2, 2020 at 1:48 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> The 3.10 vendor kernel sets the ACA_ENABLE bit on Meson8b, Meson8m2 and
-> GXBB, but not on Meson8. Add a compatible string for Meson8m2 which also
-> sets that bit.
-> While here, also update the Kconfig text and MODULE_DESCRIPTION.
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Tested-by: hexdump <hexdump0815@googlemail.com>
 
-> ---
->  drivers/phy/amlogic/Kconfig            | 2 +-
->  drivers/phy/amlogic/phy-meson8b-usb2.c | 6 +++++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> index 3495b23af797..5ec53874d1ea 100644
-> --- a/drivers/phy/amlogic/Kconfig
-> +++ b/drivers/phy/amlogic/Kconfig
-> @@ -3,7 +3,7 @@
->  # Phy drivers for Amlogic platforms
->  #
->  config PHY_MESON8B_USB2
-> -       tristate "Meson8, Meson8b and GXBB USB2 PHY driver"
-> +       tristate "Meson8, Meson8b, Meson8m2 and GXBB USB2 PHY driver"
->         default ARCH_MESON
->         depends on OF && (ARCH_MESON || COMPILE_TEST)
->         depends on USB_SUPPORT
-> diff --git a/drivers/phy/amlogic/phy-meson8b-usb2.c b/drivers/phy/amlogic/phy-meson8b-usb2.c
-> index 436dfa1a8a04..03c061dd5f0d 100644
-> --- a/drivers/phy/amlogic/phy-meson8b-usb2.c
-> +++ b/drivers/phy/amlogic/phy-meson8b-usb2.c
-> @@ -302,6 +302,10 @@ static const struct of_device_id phy_meson8b_usb2_of_match[] = {
->                 .compatible = "amlogic,meson8b-usb2-phy",
->                 .data = &phy_meson8b_usb2_match_data
->         },
-> +       {
-> +               .compatible = "amlogic,meson8m2-usb2-phy",
-> +               .data = &phy_meson8b_usb2_match_data
-> +       },
->         {
->                 .compatible = "amlogic,meson-gxbb-usb2-phy",
->                 .data = &phy_meson8b_usb2_match_data
-> @@ -320,5 +324,5 @@ static struct platform_driver phy_meson8b_usb2_driver = {
->  module_platform_driver(phy_meson8b_usb2_driver);
->
->  MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl@googlemail.com>");
-> -MODULE_DESCRIPTION("Meson8, Meson8b and GXBB USB2 PHY driver");
-> +MODULE_DESCRIPTION("Meson8, Meson8b, Meson8m2 and GXBB USB2 PHY driver");
->  MODULE_LICENSE("GPL");
-> --
-> 2.26.2
->
+On Mon, 27 Apr 2020, at 20:41, Joel Stanley wrote:
+> On Fri, 24 Apr 2020 at 13:53, Alexander Filippov <a.filippov@yadro.com> wrote:
+> >
+> > Nicole is an OpenPower machine with an Aspeed 2500 BMC SoC manufactured
+> > by YADRO.
+> >
+> > Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+> 
+> This looks good to me.
+> 
+> Andrew, do you have any comments before I merge?
+
+Not other than muxing all the ADC lines to enable just one seems a bit strange,
+but Alexander mentioned previously that the rest were simply grounded so it's
+not going to cause any problems in practice.
+
+Andrew
