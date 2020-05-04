@@ -2,207 +2,113 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E93BDC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 02:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22980C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 02:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C36FC206EB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 02:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588558092;
-	bh=dt6plPFy6IfeGqNO5ikdo+9XHvpl79KX0TTQJRQKd7M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v+zk6ZIbQtDvQzS8VrPDw7XSleeBfx0/Qw6QACqbza1lYg0TCcEu6Eyp4O9NBjXP/
-	 fLnhb+Lh7MdbZXRIm9PXm5U78TjZR6F0MsvbkL1TqVs4B6rNwBx6eZaUng5bjoMJri
-	 cs72MHq6GQB6e5cJ47YckZ9lYipnbRKunuJhR9f4=
+	by mail.kernel.org (Postfix) with ESMTP id E75682071C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 02:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qam7d7US"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgEDCIF (ORCPT
+        id S1726415AbgEDCbD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 May 2020 22:08:05 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:57012 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgEDCIF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 22:08:05 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 04427232006107;
-        Mon, 4 May 2020 11:07:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 04427232006107
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588558024;
-        bh=WeswAB51SaOHtDRISMVN7runuANP8prxx1ES6IBM9DI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OX22F3GSyXJSv+UrwHKi1Ob3kwrHUSbEsAlu9YExldDDqvgCZjxNcAoLHvHLxmCu6
-         iD+UmXCdhOymLkAQgR67hi9clHFsi2uaSmyOjNEUJK8f02O1j8ow0g4GUUiTqo3qf4
-         P6hV+899mrs5HWEYtaZj08PoF7QQ40WVD75biLE4WjCkHkd9rvg+ujT2HWjkF8PZ/p
-         71EekpvyEjOEdmRar9rd+EB3bAZNrWFRLligKwlQFcHh9eaevUQI2Kyv4n8mrkQrER
-         utfBFVZ5qnTV0Fvl38OQPKoGpfFuFk2TaSXPmOkbtjN+Lni34VRg1cSy7MarNqvwt/
-         bDcCd8u5ZBpAg==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=8F=AB=E2n?= <marek.behun@nic.cz>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 2/2] scripts/dtc: compile separate dtc-yaml
-Date:   Mon,  4 May 2020 11:06:51 +0900
-Message-Id: <20200504020651.37031-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200504020651.37031-1-masahiroy@kernel.org>
-References: <20200504020651.37031-1-masahiroy@kernel.org>
+        Sun, 3 May 2020 22:31:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgEDCbD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 May 2020 22:31:03 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09CE1C061A0E
+        for <devicetree@vger.kernel.org>; Sun,  3 May 2020 19:31:02 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id q206so7285946ybg.1
+        for <devicetree@vger.kernel.org>; Sun, 03 May 2020 19:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3m8mFiJJFlls0jL7OldEMji7AwjJiliGvx/P5K33AUs=;
+        b=Qam7d7USzlv+nj5JiT4AM+NhxY2pit1lpFFzMzzpFkVwdtg3nmwuWRwCXDWJH7UTCS
+         x69ZenAa675bWnkgRa+Btm0vcXiHS57r2Wk3ChqV3wQhT2iCv6bbH0ZHMLEjdtB0/8z8
+         KJ7p5o0Yf6hdC9Cs3Cn3jwmAGzXNQX0EgTKhLYbZF8w5MdBHPuR3KPz2Uwpi2rEEQ4Qw
+         AHn62bvcwgrRqNr5rcrpMMaGtbuwXP23ivbTX+drIdyxLH+9GfryQlqWliryy3jkPD4l
+         6Giwr3SKri3tu2c/jqoNkm327x+rfBX0Ba9Gi+uhFrHuBE8cBv51uUY52ipJ2AclJdP+
+         1pUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3m8mFiJJFlls0jL7OldEMji7AwjJiliGvx/P5K33AUs=;
+        b=skQWal7RkYlqCDsZvEPfQ9nKf7QdZ6eLShkPjCbQ6aWLPhPH9iXgb1GiVZMo3/VL6F
+         n/F8wliQL6XzgBRt2R4GnA9P4MyomkuAWTk90oEKMzFNpmllWYvVey1yZPneWNjb84Vl
+         sAyg5+IBrUVfILUjBW5rIvIPX4WjEqo+nFPyVYstXNl+Zc0xWdQnYeHlG1J+WiYt/wTv
+         lSuWd5ybL80WJg178LVY6UIunJ7MHnbl0D7zh1kjAvKxfyk8IF5i45/hlxSgUjUJFtTm
+         tKrehp5nTUlyVetRuGa9cVcHUOaun4BLMyT4gkFOX/yMUL+SG0UVKWizypjA3NYAkOWC
+         4RQA==
+X-Gm-Message-State: AGi0PuYA0l3ihXMxPOSqNP9uICtJdrs+fbPOdpKWxYJMyrsxWeEfIPBV
+        VQS63/psN1M5qrYEryulyT2eRETKU1nSwiuvLLJL2YWu
+X-Google-Smtp-Source: APiQypKtla2fm9tiFGvO50LdmQ10uZzynXifTZAffJJJidPcN+crNXe2O1fKBX8P5LCczAR8Y4eETM9yvTFDHfLdR3I=
+X-Received: by 2002:a25:eb09:: with SMTP id d9mr11084216ybs.237.1588559462150;
+ Sun, 03 May 2020 19:31:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200430222439.0ae1c4fa9572c8487fca96b6@linaro.org> <CAK7LNAS7U-SxEhsdfAr=ioOP0DGksTWhW1hDVA4AN8a6YG-t-w@mail.gmail.com>
+In-Reply-To: <CAK7LNAS7U-SxEhsdfAr=ioOP0DGksTWhW1hDVA4AN8a6YG-t-w@mail.gmail.com>
+From:   Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Date:   Mon, 4 May 2020 11:30:51 +0900
+Message-ID: <CAA93ih3DpajKf3CcVXo=2E3KM8WFbFmEwb2uwLo4rapsiU3Mxg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] dts: uniphier: Add Akebi96 Board support
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Marek Behún reported a case where pkg-config fails to detect the
-libyaml-dev package, which is presumably a bug of the distro.
+2020=E5=B9=B45=E6=9C=884=E6=97=A5(=E6=9C=88) 10:22 Masahiro Yamada <masahir=
+oy@kernel.org>:
+>
+> On Thu, Apr 30, 2020 at 10:24 PM Masami Hiramatsu
+> <masami.hiramatsu@linaro.org> wrote:
+> >
+> > Hello,
+> >
+> > Here is the 5th version of the patches to add a devicetree for
+> > Akebi96 board.
+> >
+> > This version removes redundant setting of RGMII, fixes some
+> > parameters for max3420-udc node and add the address to
+> > framebuffer node name.
+> >
+> > The Akebi96 is a certified 96boards which is based on Socionext
+> > UniPhier LD20 SoC. Most of the part is similar to LD20 reference
+> > board, but there are some changes.
+> >
+> >   - MAX3421 USB-SPI chip on SPI port3 (for USB gadget port.)
+> >   - Simple frame buffer with 1080p fixed resolution.
+> >   - I2S port which is connected to aout1b instead of aout1.
+> >   - 3 serial ports, only serial3 has CTS/RTS.
+> >   - No NAND, only eMMC on the board.
+> >   - OP-TEE installed firmware.
+> >
+> > See https://www.96boards.org/product/akebi96/ for details.
+> >
+> > Thank you,
+> >
+> > ---
+>
+> Both applied.
 
-Irrespective of that, I am not a big fan of pkg-config in the Makefile
-parse stage. The cost of pkg-config is quite small, but it is evaluated
-everytime we run make, even when we do 'make mrproper'. This commit
-changes the Makefile to not rely on pkg-config at all.
+Thank you so much!
 
-The normal build should not require libyaml-dev while we need to compile
-dtc with libyaml for the schema check.
 
-Build two dtc variants:
-
-  scripts/dtc/dtc      for *.dts -> *.dtb
-  scripts/dtc/dtc-yaml for *.dts -> *.dt.yaml
-
-'make dtbs_check' or 'make dt_binding_check' without libyaml-dev installed
-will fail like this:
-
-  scripts/dtc/yamltree.c:9:10: fatal error: yaml.h: No such file or directory
-
-I hope people will notice what to do.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- scripts/Makefile.lib      |  9 +++++----
- scripts/dtc/.gitignore    |  1 +
- scripts/dtc/Makefile      | 28 +++++++++++-----------------
- scripts/dtc/dtc-no-yaml.c |  3 +++
- 4 files changed, 20 insertions(+), 21 deletions(-)
- create mode 100644 scripts/dtc/dtc-no-yaml.c
-
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 8f9f2abf3d67..ca12412304b8 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
- # DTC
- # ---------------------------------------------------------------------------
- DTC ?= $(objtree)/scripts/dtc/dtc
-+DTC_YAML ?= $(objtree)/scripts/dtc/dtc-yaml
- 
- # Disable noisy checks by default
- ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
-@@ -286,13 +287,13 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
- 
- __cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
- 	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
--	$(DTC) -O $(1) -o $@ -b 0 \
-+	$(1) -O $(2) -o $@ -b 0 \
- 		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
- 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
- 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
- 
- quiet_cmd_dtc = DTC     $@
--      cmd_dtc = $(call __cmd_dtc,dtb)
-+      cmd_dtc = $(call __cmd_dtc,$(DTC),dtb)
- 
- $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
- 	$(call if_changed_dep,dtc)
-@@ -303,7 +304,7 @@ DT_BINDING_DIR := Documentation/devicetree/bindings
- DT_TMP_SCHEMA ?= $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
- 
- quiet_cmd_dtc_yaml = DTCYAML $@
--      cmd_dtc_yaml = $(call __cmd_dtc,yaml)
-+      cmd_dtc_yaml = $(call __cmd_dtc,$(DTC_YAML),yaml)
- 
- quiet_cmd_dtb_check =	CHECK   $@
-       cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@
-@@ -313,7 +314,7 @@ define rule_dtc_yaml
- 	$(call cmd,dtb_check)
- endef
- 
--$(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
-+$(obj)/%.dt.yaml: $(src)/%.dts $(DTC_YAML) $(DT_TMP_SCHEMA) FORCE
- 	$(call if_changed_rule,dtc_yaml)
- 
- dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
-diff --git a/scripts/dtc/.gitignore b/scripts/dtc/.gitignore
-index b814e6076bdb..e0cf8222c137 100644
---- a/scripts/dtc/.gitignore
-+++ b/scripts/dtc/.gitignore
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
- dtc
-+dtc-yaml
-diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-index ef85f8b7d4a7..c6d7e2b70f08 100644
---- a/scripts/dtc/Makefile
-+++ b/scripts/dtc/Makefile
-@@ -1,28 +1,22 @@
- # SPDX-License-Identifier: GPL-2.0
- # scripts/dtc makefile
- 
--hostprogs			:= dtc
--always-$(CONFIG_DTC)		+= $(hostprogs)
--always-$(CHECK_DT_BINDING)	+= $(hostprogs)
-+# Build the yaml variant for DT schema validation, which requires libyaml
-+# development package. The normal build does not need it.
-+hostprogs			:= dtc dtc-yaml
-+always-$(CONFIG_DTC)		+= dtc
-+always-$(CHECK_DTBS)		+= dtc-yaml
-+always-$(CHECK_DT_BINDING)	+= dtc-yaml
- 
--dtc-objs	:= dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
--		   srcpos.o checks.o util.o
--dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
-+common-objs	:= flattree.o fstree.o data.o livetree.o treesource.o \
-+		   srcpos.o checks.o util.o dtc-lexer.lex.o dtc-parser.tab.o
-+dtc-objs	:= dtc-no-yaml.o $(common-objs)
-+dtc-yaml-objs	:= dtc.o yamltree.o $(common-objs)
-+HOSTLDLIBS_dtc-yaml := -lyaml
- 
- # Source files need to get at the userspace version of libfdt_env.h to compile
- HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
- 
--ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
--ifneq ($(CHECK_DT_BINDING)$(CHECK_DTBS),)
--$(error dtc needs libyaml for DT schema validation support. \
--	Install the necessary libyaml development package.)
--endif
--HOST_EXTRACFLAGS += -DNO_YAML
--else
--dtc-objs	+= yamltree.o
--HOSTLDLIBS_dtc	:= $(shell pkg-config yaml-0.1 --libs)
--endif
--
- # Generated files need one more search path to include headers in source tree
- HOSTCFLAGS_dtc-lexer.lex.o := -I $(srctree)/$(src)
- HOSTCFLAGS_dtc-parser.tab.o := -I $(srctree)/$(src)
-diff --git a/scripts/dtc/dtc-no-yaml.c b/scripts/dtc/dtc-no-yaml.c
-new file mode 100644
-index 000000000000..f3459e45835f
---- /dev/null
-+++ b/scripts/dtc/dtc-no-yaml.c
-@@ -0,0 +1,3 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#define NO_YAML
-+#include "dtc.c"
--- 
-2.25.1
-
+--=20
+Masami Hiramatsu
