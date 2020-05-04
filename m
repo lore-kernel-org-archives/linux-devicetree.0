@@ -2,117 +2,107 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A62C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6375EC3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43D2020663
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436BF20705
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:14:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aH742N84"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K1h0aeVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731582AbgEDSMq (ORCPT
+        id S1731084AbgEDSOB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 14:12:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58934 "EHLO
+        Mon, 4 May 2020 14:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732292AbgEDSMp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 14:12:45 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BED5C061A0E
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 11:12:45 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z1so5939663pfn.3
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 11:12:45 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1731776AbgEDSOA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 14:14:00 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C3BBC061A41
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 11:14:00 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id h26so293636qtu.8
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 11:14:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2t85iJlph6Ef8JKJOUjpWg5TqaXW+ZWxyKsRV3ThBgw=;
-        b=aH742N842oe7OA3iNJcOds5bSKnEuHAMCXh+aDAwkdSSQRtoymdunTd5VQAjlYHQOM
-         OjULy3JBZp5yb7vg5p5qDxupV9iTMJr5cLcgxy/lXqRpmEnMPzqfvH6f95xCs9eY01RT
-         47Si/yLCW7fX1qR5gKrcSyaoD4LfqSwa/YQyA=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z3nW96fFZYnDn8jk8+VYyojQcEjzERa3OD5pCIlBdho=;
+        b=K1h0aeVunNzSt5ERI2Q5f1AdAZ3vbRcewfdgTDjWr/DOw/0bFRJyHo5X3G1b4FH9Xu
+         gr4v3njy+NCCtBeUGcdM6EZfJjBU6Sb4QUbjBMA1Kf13psCgtumNxIH5kyXKgupAOryp
+         IQhYOQHjNWrgm0b3KRupuCNtFivn+Gqns6Zb0HPC4S3bQY3xzBOxxEUeNIDvpR6c8JPA
+         O65YVwhn7Nx9KOa2gtSjrvavv1qiH0w42V+gZdqaIAPrDgMfh4SLBo6u3sD/DfiY88EK
+         OMf9ZIRY2El4ZvVgtPG2UoIZkbB3A4Y0bllnjIo9M+x+MzBKenOUkIRU2d1Rhgahl7ik
+         W28A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2t85iJlph6Ef8JKJOUjpWg5TqaXW+ZWxyKsRV3ThBgw=;
-        b=ShG/qK0WdRogHmNE3mv608C7hzfQwu3ngQVW7BRonCVVdw90GskiPKGvg5S0Y5VxrB
-         TNzfSdS1hkAd71IFe8C9K4Q9fQ95abfRI1uzfTdEbSsf5QU+yCr8LqyZKooFwBBsNUyq
-         a9/FHDavbHcA9cV5ggOFYUysnvNe8wpGVu5M0uo4ggIzXwQRoPH/i9/xPDnmKHN3o/Fi
-         7+S39TbbUk4fVl2fjKHN2VcuKclEs1q/QmO9ogBGmjxJlx3B7IMeq9L8IylOFDU6yfqv
-         k2xe095ef+v16FyqT8v367CF6gXTcDKqrRtcKisPePiAqIBdTwMiEl6zG1cmCQalRY5d
-         f1Zw==
-X-Gm-Message-State: AGi0PuaM57fqlq7BT58pQfrjPg+r3jZYbKbX6QnPS7obibjpuU3wUiFX
-        9TYKBg9wt+u+ofVC+PKCy5HT/w==
-X-Google-Smtp-Source: APiQypJwXwd6yTrLo+nsjAM60TJxP6uE+6NhJJmcwz/VBqP3Hf1U27dr+P3P+V/0llWuVJfNyCsDzQ==
-X-Received: by 2002:a63:951b:: with SMTP id p27mr194840pgd.49.1588615963952;
-        Mon, 04 May 2020 11:12:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l5sm1558594pgt.92.2020.05.04.11.12.43
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z3nW96fFZYnDn8jk8+VYyojQcEjzERa3OD5pCIlBdho=;
+        b=dIS6w+IbW9GL/ZYvndjSMoF5j5F6FZyYsupFg6vmKNSi9aemgEC9UU8BODwD5puKXf
+         Us/tbO0Db98Srk4+iFtv0M3x05Bq5SS5trP1A1kSD6wA4X9MaV153jKxtgLhzMceg+JJ
+         mB7RDEFOEWornuw7J4hHDpuWQobWN+zy7JB5/3HjUDZCFnwrV5RxpYF3/3G5tk2IoQa7
+         q74W2VQliI5o683tdifDzc6sx50ppPVhnJGTw4F0Vt5xIBnS5hTFCkD1kY1aOhd32cHt
+         7i/ZM405efFxV6yCAN3f7grLCpkr0E9aBeqVZDci/tBLY+q28GV0C2CcpGo3cuEZjnv6
+         ZaPQ==
+X-Gm-Message-State: AGi0PuZvVrcf0zgqNQ8zE34efd9SjEOMfWdDfD5pmMN+2w6jYdkAt7Kh
+        pkjg4wG+8hPzx2NgWiQz/QwPVvVeSCo=
+X-Google-Smtp-Source: APiQypI4Oi2r4p833QHi40cXGxwDFX3mON5ouXXX22y6pe3WuHg5/KcOdeA1C0f71wZ5egHt2uEuCQ==
+X-Received: by 2002:ac8:1c35:: with SMTP id a50mr389657qtk.286.1588616039180;
+        Mon, 04 May 2020 11:13:59 -0700 (PDT)
+Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id v4sm7107146qkv.43.2020.05.04.11.13.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 11:12:43 -0700 (PDT)
-Date:   Mon, 4 May 2020 11:12:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
-        sashal@kernel.org, linux-kernel@vger.kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] printk: honor the max_reason field in kmsg_dumper
-Message-ID: <202005041111.D803E731@keescook>
-References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
- <20200502143555.543636-2-pasha.tatashin@soleen.com>
- <20200504131500.5f6c8860@gandalf.local.home>
+        Mon, 04 May 2020 11:13:58 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     davem@davemloft.net, evgreen@chromium.org.net,
+        subashab@codeaurora.org, cpratapa@codeaurora.org,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH net-next v2 1/1] arm64: dts: sdm845: add IPA iommus property
+Date:   Mon,  4 May 2020 13:13:50 -0500
+Message-Id: <20200504181350.22822-1-elder@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504131500.5f6c8860@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 04, 2020 at 01:15:00PM -0400, Steven Rostedt wrote:
-> On Sat,  2 May 2020 10:35:53 -0400
-> Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
-> 
-> > kmsg_dump() allows to dump kmesg buffer for various system events: oops,
-> > panic, reboot, etc. It provides an interface to register a callback call
-> > for clients, and in that callback interface there is a field "max_reason"
-> > which gets ignored unless always_kmsg_dump is passed as kernel parameter.
-> > 
-> > Allow clients to decide max_reason, and keep the current behavior when
-> > max_reason is not set.
-> > 
-> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > ---
-> >  include/linux/kmsg_dump.h |  1 +
-> >  kernel/printk/printk.c    | 16 +++++++++-------
-> >  2 files changed, 10 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
-> > index 2e7a1e032c71..c0d703b7ce38 100644
-> > --- a/include/linux/kmsg_dump.h
-> > +++ b/include/linux/kmsg_dump.h
-> > @@ -28,6 +28,7 @@ enum kmsg_dump_reason {
-> >  	KMSG_DUMP_RESTART,
-> >  	KMSG_DUMP_HALT,
-> >  	KMSG_DUMP_POWEROFF,
-> > +	KMSG_DUMP_MAX = KMSG_DUMP_POWEROFF
-> 
-> Hmm, I didn't realize that enums were allowed to have duplicates. That can
-> usually screw up logic. I would recommend making that a define afterward.
-> 
-> #define KMSG_DUMP_MAX KMSG_DUMP_POWEROFF
-> 
-> As is done in other locations of the kernel.
+Add an "iommus" property to the IPA node in "sdm845.dtsi".  It is
+required because there are two regions of memory the IPA accesses
+through an SMMU.  The next few patches define and map those regions.
 
-I've seen it also be the last item in an enum, then comparisons can just
-do "< KMSG_DUMP_MAX" instead of "<= KMSG_DUMP_MAX".
+Signed-off-by: Alex Elder <elder@linaro.org>
+---
 
+NOTE: This was posted in error previously as part of another series,
+      which has since been superseded (and no longer includes it).
+      https://lore.kernel.org/netdev/20200504175859.22606-1-elder@linaro.org/
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 71dfdfcf2033..7cce6f1b7c9e 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1762,6 +1762,8 @@
+ 
+ 		ipa: ipa@1e40000 {
+ 			compatible = "qcom,sdm845-ipa";
++
++			iommus = <&apps_smmu 0x720 0x3>;
+ 			reg = <0 0x1e40000 0 0x7000>,
+ 			      <0 0x1e47000 0 0x2000>,
+ 			      <0 0x1e04000 0 0x2c000>;
 -- 
-Kees Cook
+2.20.1
+
