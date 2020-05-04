@@ -2,163 +2,140 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC721C47254
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 12:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA00C4725B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA487206B9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 12:58:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="XQrQ+2K0"
+	by mail.kernel.org (Postfix) with ESMTP id B749E206D9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgEDM6x (ORCPT
+        id S1726531AbgEDNBi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 08:58:53 -0400
-Received: from mail-eopbgr60040.outbound.protection.outlook.com ([40.107.6.40]:62523
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726796AbgEDM6w (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 May 2020 08:58:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=akGPjmMl5LkEV2Q/zH5Nh3SxesSuJN1gZLOEiTM04ueg6HTAShRRoG/j/gengug2STO5NdkhYBgT2eoVWRWCYYpVbUvgdd+1sCTDfZwAMIXO739WycnhOplgd69EyDxVOo4Kv/p5Gt6+OF/6EuGc9Zy4L4bmz3Rn7QGejxuK6pU1S9y3Qa8P5AWYyJuLOkn8W/bG+/4Oqwu1G4SJfl6SsiSdM/e/2iY9bNH+tmiomNRsOBIlVcYNiXe0WfigMICV1mJUfCpiIvq8oEzjjr0LiX4GfDDMkukC3bv3iiNv1OKtbhmgaKRQc5VnVPkoyswhcUBILJGfXmXd1POkJRL/cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aiwF0qMP3FMNLm9skR2NsH55fIdWBNn20IkfGW83JKo=;
- b=R+tJ2/6owm2cLHqLF/NkYNezpGfUnraty2nnGdRNV3xG9n8VeSHgdrfK4Xabnc0qEe1+IjBi2xYn0AfZyE3zLe75ILQYqY1A+odJ9c28J7EZQds/j4xtfGhicDSvpCytxNajMWvzOmmAw/10cMvIy/T/reCSkMVi3NhnC0zkXbLCgGHLEuCVCjfWdfF9NrLlV+UdqxrmjGlva9r2RMDKso4R0odB8eh4FA3xmUGtdQ1ZDT1lDlogP9a4JS12I6kcpbnfQmHCzXZBUeqOpGfo5lgTnCMGTHQTVHgzIYk6X2rhisISZBJPlAd0f6sDnhh80BD91oMcnnoo8Qg7dlTJVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vaisala.com; dmarc=pass action=none header.from=vaisala.com;
- dkim=pass header.d=vaisala.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aiwF0qMP3FMNLm9skR2NsH55fIdWBNn20IkfGW83JKo=;
- b=XQrQ+2K0LAIiJRL3oCRsNGJ1Tsozn/Nfyj1GicqnDBmarKxF00TIJEyffT6Hr/CtuT2qivP7RqsNW6D2ASI+u/6ukYg2zKrekTK5PLzOmBlWa1UkXc49DfdN0/X/n+8RdFxg33OFF6yLfEIssfYD0WgnLqReyk6jtS20MLPKgi0=
-Received: from AM0PR06MB5185.eurprd06.prod.outlook.com (2603:10a6:208:107::25)
- by AM0PR06MB4420.eurprd06.prod.outlook.com (2603:10a6:208:bf::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.29; Mon, 4 May
- 2020 12:58:48 +0000
-Received: from AM0PR06MB5185.eurprd06.prod.outlook.com
- ([fe80::3c0c:c6e8:c7b6:cabd]) by AM0PR06MB5185.eurprd06.prod.outlook.com
- ([fe80::3c0c:c6e8:c7b6:cabd%5]) with mapi id 15.20.2958.029; Mon, 4 May 2020
- 12:58:48 +0000
-From:   Laine Jaakko EXT <ext-jaakko.laine@vaisala.com>
-To:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>
-CC:     Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH] i2c: xiic: Support disabling multi-master in DT
-Thread-Topic: [PATCH] i2c: xiic: Support disabling multi-master in DT
-Thread-Index: AQHV5mNyTIn2+pYf+Eu7yiopaV9KGKhOcmGAgAAnv5CAFgB+gIAA/BRAgAA+l4CAMnEssA==
-Date:   Mon, 4 May 2020 12:58:48 +0000
-Message-ID: <AM0PR06MB51857F4CDC7AE643CE160F9ED4A60@AM0PR06MB5185.eurprd06.prod.outlook.com>
-References: <20200218135627.24739-1-ext-jaakko.laine@vaisala.com>
- <CAKfKVtFf+VpinkOGsBFZ2-_PKvx-C1L7G7_uhY2RCvV5dy6L_w@mail.gmail.com>
- <AM0PR06MB5185E501349E06428093B62FD4F70@AM0PR06MB5185.eurprd06.prod.outlook.com>
- <20200401143254.GA2409@ninjato>
- <AM0PR06MB5185F8F51316FCD5213F0ABED4C60@AM0PR06MB5185.eurprd06.prod.outlook.com>
- <20200402092813.GA986@ninjato>
-In-Reply-To: <20200402092813.GA986@ninjato>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Enabled=True;
- MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_SiteId=6d7393e0-41f5-4c2e-9b12-4c2be5da5c57;
- MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Owner=ext-jaakko.laine@vaisala.com;
- MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_SetDate=2020-05-04T12:58:46.5802889Z;
- MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Name=Restricted;
- MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_ActionId=0b51210f-13d4-484d-b397-ffb4db30a687;
- MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Extended_MSFT_Method=Automatic;
- MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Enabled=True;
- MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_SiteId=6d7393e0-41f5-4c2e-9b12-4c2be5da5c57;
- MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Owner=ext-jaakko.laine@vaisala.com;
- MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_SetDate=2020-05-04T12:58:46.5802889Z;
- MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Name=No Label;
- MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_ActionId=0b51210f-13d4-484d-b397-ffb4db30a687;
- MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Parent=d5842b46-9b7a-431a-b662-8cc44ff92a4e;
- MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Extended_MSFT_Method=Automatic
-authentication-results: the-dreams.de; dkim=none (message not signed)
- header.d=none;the-dreams.de; dmarc=none action=none header.from=vaisala.com;
-x-originating-ip: [193.143.230.131]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c0c1f6e8-367b-4d21-211c-08d7f02ae313
-x-ms-traffictypediagnostic: AM0PR06MB4420:
-x-microsoft-antispam-prvs: <AM0PR06MB4420116136803AF9DF460032D4A60@AM0PR06MB4420.eurprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 03932714EB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UwY4aY3CVZmLXsQB+Z7qdQ0HPL33BoUlIfIVu2HZDUY2CsPFbCHSFtqQjY/DbXuYU/3Qe8ssG116f/roNnbkQg5VodkHfOvBsi5WVcD93BXXWZYH8ZS+NkOmzGPU1txrJzcNClx3GfgRqUTOljwqxFeqAu6/gyNkg/LGkUqzZ9+WI6vKMJjunmyqMSi0LZYYJfHJvzDejRzedMiqTJ0Obgcc1RcBkamms90jyrTdKNUPE87ubydSOBDYpqTOXqX+VuL8s2euNEHACSwsyeo7ivAcigYD8fjDrIrGZQiU4QzhWLy0ZMPlR0XIxEuPz4Xf3K4KzG6T1hDo+4XvHB5REpbllQgMHYehpR/gCMwSpMtezW2k+5FUmmggXAVVreqqHyRIxGRfSOb4kET3TDRjFFmC8zYP7nOBhYXlh+8EwLUV2dhz8Mj4JeTGUsWeb/WK
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR06MB5185.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(396003)(376002)(346002)(39850400004)(8936002)(54906003)(478600001)(52536014)(110136005)(66946007)(8676002)(76116006)(7696005)(5660300002)(4326008)(33656002)(6506007)(2906002)(55016002)(86362001)(316002)(186003)(66446008)(71200400001)(26005)(64756008)(66556008)(9686003)(66476007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: TH35eitRUBoXgoVYzUwlXVNj1b/CVh9yG9vLZ6I/6YTMbLcTYfV4iEWfoSFBK3hZxysCGPWaygd+ZMAaC/kWRQS9gBwVt+BhC856o8WIDYfFYbuIU86Zp7eUD4BC6Z5AJtOwo2f0QXgjxnYR3J759IPx3hNt8PZbAL1apb7pHvAdfu57OWpqvEOQEUl0gclmlSUV49JGIZvGgZrckTZ0Rmm2nmjUSrYitmH0eN5LUeflEFFqTNQRPTAOq2TS7Ai8J8DBHHPFNMubv3BD4DITWToJ6QdqvAaByQuBrKvhVydbIug8ZHD3jCYhhyDzW2NCwWB6LmMDD8wn4Zbrm4IB1g5n3Rd4WSimsWJtNsmJUxZaT2qqHr6eVe82f4HUE7DoMlfAq0W1OQbAVtkABTBYPPjwE+cVevYYHY9KauiLty5oWZU82gsp1MkdH95gynrY95lF2oL2FmiptGY1X34LlrXtpjV/3zY/fvYlUK/A9antrhoUPF6X9PaYJ5mnLef3oNotK9B6UoTVoNmlnH3wSQGRr4dyAlEW0O+R3lP0o/jBoMQKfM0gFmcbTMilz348sDxE8G4ut25CQTrgM9nnuci+9OcGyNd3HIdgRf9/Mov+5g5ZEgXluXKtE7OsonojLnEoYCvWYCaiepEINh3kIIHEoPPQkDUletRC8Ay2k59Aoum2PNMRnwFYEuC43MYlXULOaKByXRGunmcXs3DMOA3ajC0kdRwEXw7MRkKplPq5riyNGah8qgsnFicdTMxpG+GvaN0ZYPA2xTxukVHVURQKxai6C1NPVsMMjuUijrO+oge/lCRoNWKarOzlYh40
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 4 May 2020 09:01:38 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40080 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgEDNBi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 09:01:38 -0400
+Received: by mail-ot1-f67.google.com with SMTP id i27so8726990ota.7;
+        Mon, 04 May 2020 06:01:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r8zKT+xBy6Gq3229RJb69rkd2OBVlAkNbEfst/RgefA=;
+        b=KfF12E/IZIihS4TWketVaJZ7kTbDFIldK6a/1jpvdh4GHmUsihU+D3ODdQH0PuAQQd
+         scHwckLZYiyx54FCqqATx1Fy51yHJnxYn+IU9nNAaNeJaQDDXJr8PGA93FWAzEb0gLcG
+         CIS6aAhX4n2XJZihF/EvhdUEQz8tv4jSSBPj/U/Pj+9qnJ4yvC/31siAf5xtoSqbfa4R
+         /aoqCqoqIVm6tMgz53gBSI1Bnlx9Cn3Rn9pnU7azUe75AEmAGeq72rZ8eDWTCNOexF8K
+         cU9+/wMY7f5iEteK3AliLGfmXjTXLL2DKMyi5AcSi2l0xPOhfSmo1yVOBEjwJqG1TGb8
+         9LiA==
+X-Gm-Message-State: AGi0PuZADTvlFFCaDRnf2lNGM+RWmJAlMod3N9b63lENUYvBLfhXGecY
+        dRCVRR0mLfYZM2WDF/rBd9GeiC/lNZVGU92GTV7E72TH
+X-Google-Smtp-Source: APiQypJP/gXg+0E7M667GPtseOWpTQreTWWvphkLLyjHkVYI3HGEFPTzknIou3giyAvzYzckPosD7dJMqX44H6jCAfM=
+X-Received: by 2002:a9d:7990:: with SMTP id h16mr13691328otm.145.1588597296834;
+ Mon, 04 May 2020 06:01:36 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vaisala.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0c1f6e8-367b-4d21-211c-08d7f02ae313
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 May 2020 12:58:48.3579
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MAEFxY0aKp+i3zjdKcHi6Ma2bJINAq2JvNURwBam/Z/JRWRTwb4Q9Ly0E4JWDY27ZczYRCryB98pBOIZG9UtfFAjfl2hz4QsLSCL6w3Y+iA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR06MB4420
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 May 2020 15:01:25 +0200
+Message-ID: <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H
+ Qseven SOM
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > How would both bindings existing simultaneously be interpreted? Maybe
-> > both existing simultaneously should be considered as an invalid
-> > configuration, so that it would be enough to just check the one you
-> > need? The other option would be to treat both existing similarly to
-> > neither existing, which would require the driver to always check both
-> > if checking one.
+Hi Prabhakar,
+
+On Sun, May 3, 2020 at 11:48 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for iWave RZ/G1H Qseven System On Module.
 >
-> I am clearly for saying that this is an illegal combination. I'd hope
-> this can be expressed in a YAML binding. Yet, my research didn't give me
-> an answer. Adding Rob and DT list to CC. Question is:
->
-> Can we check if the boolean bindings "multi-master" and "single-master"
-> are not applied at the same time? Any other combination is okay, i.e.
-> just one of them or none of them.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-It seems we have not had any replies by now, but it would be nice to get th=
-is thing moving forward,
-even though we have this current version of patch already applied and worki=
-ng in our kernel branch
-and are not therefore really in hurry in that regard.
+Thanks for your patch!
 
-The changes required to this patch at XIIC driver from suggested DT changes=
- are pretty minor.
-Basically only checking a different property, reversing logic and some nami=
-ng changes.
-I can make these changes already for the driver if this solution is what wi=
-ll be chosen,
-or would you prefer to still think about this?
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+> @@ -0,0 +1,53 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree Source for the iWave RZ/G1H Qseven SOM
+> + *
+> + * Copyright (C) 2020 Renesas Electronics Corp.
+> + */
+> +
+> +#include "r8a7742.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +       compatible = "iwave,g21m", "renesas,r8a7742";
+> +
+> +       memory@40000000 {
+> +               device_type = "memory";
+> +               reg = <0 0x40000000 0 0x40000000>;
+> +       };
+> +
+> +       memory@200000000 {
+> +               device_type = "memory";
+> +               reg = <2 0x00000000 0 0x20000000>;
 
-Regarding the device tree changes:
-I am not very familiar with the needed documentation changes, YAML bindings=
- or what needs to be done for new bindings in general.
-Would you prefer to still consider them and/or get these subsystem level bi=
-ndings done by someone more familiar with them?
-Another option would be for me to try find time to do the suggested binding=
-s changes anyway, but it will likely require some effort
-from me to familiarize with device tree bindings changes and schedule the t=
-ime for it.
+According to the schematics, the second bank is also 1 GiB, so the
+reg length should be 0x40000000.
 
-Best regards,
-Jaakko
+> +       };
+
+> +&pfc {
+> +       mmc1_pins: mmc1 {
+> +               groups = "mmc1_data4", "mmc1_ctrl";
+> +               function = "mmc1";
+> +       };
+> +};
+> +
+> +&mmcif1 {
+> +       pinctrl-0 = <&mmc1_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       vmmc-supply = <&reg_3p3v>;
+> +       bus-width = <4>;
+> +       non-removable;
+> +       status = "okay";
+> +};
+
+The eMMC has an 8-bit data path.  Is there any specific reason you use
+bus-width = <4>, and the "mmc1_data4" pin group?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
