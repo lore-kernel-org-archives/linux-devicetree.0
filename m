@@ -2,105 +2,101 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50F4C47247
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4B0C47258
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7011205ED
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E450205ED
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 20:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="HiS3C7pV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qp+j86uJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgEDUbb (ORCPT
+        id S1726338AbgEDUbg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 16:31:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727798AbgEDUba (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:31:30 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3F0C061A0F
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 13:31:30 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id x1so15104516ejd.8
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 13:31:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iD+7rCv19A+JVwng0cwm3/xzNCTcSEjwlIiYKk9uiJc=;
-        b=HiS3C7pVeSXcrkb235oy8Rnf/oLD0dVimUKrLc0zeeW/8XaSu203SAaOKchrWyKAxB
-         Z9MjsQPaSAO2yPuBjYFgCll5xe7kHNJ66BXwMCPOffizsuBNB4WoiJGbKqr5FhwcTWL7
-         epoa3TmJlDVEJqejcAW8n4Y+bHuwSpRaBkCJvukLd7/UaCkLY284LPMrm4Zi12c1pzhr
-         NaT85hv/kpIrmtLG5IGEUpvfHioRj+H3SlIznGgpN3pbXQJHmyiQC9brFJZ5pojQ1BO5
-         t38dnwRBT5lNXIzdfhUd7Cjwjgfq3tsYfJfii92eTR/RTHyoxrcmjRtQwuTpRc5Lr46K
-         c6mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iD+7rCv19A+JVwng0cwm3/xzNCTcSEjwlIiYKk9uiJc=;
-        b=ffC9lfjGrFM3O7NWp6sw/Sd6I6bRZCOuJ6viAcifoOjRlHt42hSQRr6UfHUq9JPSUG
-         pl/ip7nic7OtCBomH5Jw0q52XF5RQDfrJO7TfIJn8LGWTHjA128rLEbCfEWFLQMYKKZr
-         S0CAcDaE43GVdg5toVFgW1Z15u3L2aBh37pI/bQMYNvbMSHLcR8k4zgaacV00okHZmwc
-         uZUSvcJFtNvWvjyOmBkv4VcvOCpXdrjfgbpLR+esWQxmcIBCtjBYdlckM1qeB+9UXe+G
-         rRIpTQODkeKJpZYM77YSfPkHyk87enB/LKCJmnpk/D8JNHXyGU+xLaHlEfjTZOlb9sYE
-         QQqQ==
-X-Gm-Message-State: AGi0PublXO11QfXVj4jJEUNoyqPHra4/wV8yA0uybb88J1TjvahumQNb
-        DNRiMqGUQFTKp9ga86mctIXSvci/NRHXj/mz+YSPXA==
-X-Google-Smtp-Source: APiQypLjLLzJYSGQHmzKy9PL7/vfCx8HEa61JRW6aeMlPHl9r7osDVCErguI8BiMvjtked5EcSIjQgppbgkYxYAopd4=
-X-Received: by 2002:a17:906:49c7:: with SMTP id w7mr16855566ejv.29.1588624288649;
- Mon, 04 May 2020 13:31:28 -0700 (PDT)
+        Mon, 4 May 2020 16:31:36 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:27100 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728103AbgEDUbf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 16:31:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588624295; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=cqJaYZazg1/VMjB0ocaT64qt21+ld4ZwVZIyw06JsVs=;
+ b=qp+j86uJ4J3He6BwD5Vc2M7Ob+cClVLNygMKnz0p0yoEqJt+d4a4dIcy6HQSZT+dxHYfBl8z
+ ifMnJAwumi5Ju9m6oLaJJ/84adMwxmuLqNuXZRPHZGPttBVXGdkqmyl2Nt7O8TZf86pxoXyw
+ 2kRQ1gMJSWJySbx+t44+BWGV6iU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb07b9f.7efd131cc3b0-smtp-out-n02;
+ Mon, 04 May 2020 20:31:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5DE86C43637; Mon,  4 May 2020 20:31:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D4CDC433D2;
+        Mon,  4 May 2020 20:31:25 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
- <20200502143555.543636-3-pasha.tatashin@soleen.com> <202005041222.4A870DFEC@keescook>
-In-Reply-To: <202005041222.4A870DFEC@keescook>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Mon, 4 May 2020 16:30:52 -0400
-Message-ID: <CA+CK2bDyi-vncYc0_sSZZ9Wb4O7oNUYH-6SN=-XKkeEamB8W8A@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] pstore/ram: allow to dump kmesg during regular reboot
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
-        ccross@android.com, Tony Luck <tony.luck@intel.com>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 May 2020 02:01:25 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
+        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
+        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/7] dt-bindings: opp: Introduce opp-peak-kBps and
+ opp-avg-kBps bindings
+In-Reply-To: <20200424155404.10746-2-georgi.djakov@linaro.org>
+References: <20200424155404.10746-1-georgi.djakov@linaro.org>
+ <20200424155404.10746-2-georgi.djakov@linaro.org>
+Message-ID: <187f2f21e6ca55a9ab26a026f01dd893@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > -static void pstore_register_kmsg(void)
-> > +static void pstore_register_kmsg(int dmesg_all)
-> >  {
-> > +     if (dmesg_all)
-> > +             pstore_dumper.max_reason = KMSG_DUMP_MAX;
->
-> So, I'd like to avoid any new arguments in the API and instead add a new
-> field to struct pstore_info, which will be valid when PSTORE_FLAGS_DMESG
-> is set, and the max kdump reason can be set there by the pstore backends.
+On 2020-04-24 21:23, Georgi Djakov wrote:
+> From: Saravana Kannan <saravanak@google.com>
+> 
+> Interconnects often quantify their performance points in terms of
+> bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) 
+> to
+> allow specifying Bandwidth OPP tables in DT.
+> 
+> opp-peak-kBps is a required property that replaces opp-hz for Bandwidth 
+> OPP
+> tables.
+> 
+> opp-avg-kBps is an optional property that can be used in Bandwidth OPP
+> tables.
+> 
 
-Hi Kees,
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-I am trying to verify that I understand the request correctly:
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> v7:
+> * I have dropped Rob's Reviewed-by, because of the minor change below:
+> * In order to store the bandwidth values for multiple paths, the
+> opp-peak-kBps and opp-avg-kBps are now defined as arrays of integers,
+> instead of just integers.
+> * Improved wording (Viresh)
+...
 
-1. pstore_register_kmsg() -> remove argument.
-2. pstore_info -> add a new field  max_kmsg_reason: contains the
-actual reason value
-3. Modify: pstore_register() to set this field in pstore_dumper prior
-to calling pstore_register_kmsg().
-4. remove ramoops.dump_all boolean parameter
-5. add a new parameter ramoops.max_reason integer variable, which will
-be set in pstore_register_kmsg
-6. Modify other users of pstore_register() to provide the correct
-max_kmsg_reason.
 
-Is this correct?
-
-Thank you,
-Pasha
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
