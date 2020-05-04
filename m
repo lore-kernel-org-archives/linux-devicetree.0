@@ -2,160 +2,143 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D9BC3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 16:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96295C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 16:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8E920705
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 16:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2972068E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 16:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Y/aTiaTT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cm9vUxZg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GVujRTu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbgEDQkc (ORCPT
+        id S1729598AbgEDQoE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 12:40:32 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:52077 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729670AbgEDQkb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 12:40:31 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7B6705C012C;
-        Mon,  4 May 2020 12:40:30 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 04 May 2020 12:40:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=vdg1rkzemmkCMJ7/0H2GFUcV8lx
-        jS65Px6J0j+PovYg=; b=Y/aTiaTTCbUEqHfBZSwZqiKXNNL2FArO54/ZQMuMG0r
-        7qtCc7ho8YP4X+ye6cRZinCsk66zG7VqfuYaPPZms2PVkbC96ErrZX5dygRoaELW
-        aiSqDzSWQYW/BK0c11HWyEE2D4LeVnEDbCIimDlt02tVF2pml4YRFqRHEASmQyYO
-        56N6HjPQq57hnf41vAC81IArxfV+GrZiYJlLbzkNaRFJYJ1yztOc1usxYBkAyZZV
-        66s8KrGjnhAeiwsARNuj52vrgcQSpq0P/VT/Fj8tAJC42/iKcA36dRVL80j0+6Yc
-        n4piP5Uo4vwMzK6Gt7/yOB/BeSmFlpYapSniuW/Sg9Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=vdg1rk
-        zemmkCMJ7/0H2GFUcV8lxjS65Px6J0j+PovYg=; b=cm9vUxZgSj8xrHFvxxmOzq
-        IJ2j6pduJTzKjWN3uQ0bvn1W2MyQiSXXZ2PL1zQz1/rrXJrRLNveKsk3Wzp3t5ZT
-        EiOXtsQzbGrALLR9P2Jeelh4TWatBOvqgmasmkCDYMupZDGWnDe7sETdMgzAL2Qs
-        99nTioh79KMcdPYo0DBjYXwu14buskO81171EFz74VVQqKTjt4agAvfA3SNZWgwf
-        sfNQ034Gtjy/rFl2TOKcxI2RGDC6E9beHe2Vag03UYcMvkWJV81jc7KabB2DrHrj
-        5nro+w52i6l3Va5yw03TkJYm+JOoSFchh3tajxRb6cRhRAuglNlGmPG5+eL10ytg
-        ==
-X-ME-Sender: <xms:fUWwXtIxpP7Z6BWd5TBOc0GPf4E3C0H1kc18UMkU-StANVS9Frsk0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeggdeliecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeduvdduhfekkeehgffftefflefgffdtheffudffgeevteffheeuiedvvdejvdfg
-    veenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:fUWwXgijMEiIURioYaNGaWvlFrwoefPOJqIOpzmFiNKHsEoUYX0xeg>
-    <xmx:fUWwXgDCftHLtOo3xW01oGUqFQmFQk-W0_BQIL9iGGuIuqFxTh6AOg>
-    <xmx:fUWwXkbXsAriOKdJj1Qm5quahlM6XVzafmgUAEfUcjoDwsWMw7D8gg>
-    <xmx:fkWwXuSseolPyCy4avuYkdADC-K5I3gogAImbNr52YNelYXAF2_dLg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 397F13066016;
-        Mon,  4 May 2020 12:40:29 -0400 (EDT)
-Date:   Mon, 4 May 2020 18:40:27 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v2] arm64: dts: allwinner: h6: Use
- dummy regulator for Tanix TX6
-Message-ID: <20200504164027.tvlkcbfoz3igeh6x@gilmour.lan>
-References: <20200428142629.8950-1-peron.clem@gmail.com>
- <98246e5d-ebef-bcb5-f0b8-d74b3834b835@arm.com>
- <CAJiuCcco0d_UoWeHqh6oc0rFNAMFynXjLRQ6APsT0WBh7m+GQg@mail.gmail.com>
- <20200428164522.p7ypca7zwocc7alq@gilmour.lan>
- <CAJiuCce9UDp--XQ=rXPZ5cZyNDMFC3zyq7pnw3ETXkR3=zMWaQ@mail.gmail.com>
+        Mon, 4 May 2020 12:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729604AbgEDQoD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 12:44:03 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B856C061A0E
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 09:44:03 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l18so11032885wrn.6
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 09:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nKcmHJjl9tIFKl3vh2WZWbQ1a6qf0OFNOmjvKAG+T5w=;
+        b=GVujRTu9LfTtfSzWvR/blDgA6L4wRuxbhYL/JkbyHQuSK8LBG1AbIRX7hrdeiN0O7Z
+         8Baza83dK07XMfbk20Q4GjHiYd4X4taXQr82nh40jV8dNTlKcvoKIZtYRHESbkJA0Mei
+         m0JLe0wL6lKWe3B00KhI1No1bnfAYcK4FWXAj0PDFUuXEgS3N/NCSXdao12JT6mYvX7R
+         wWA8cKGRE8zdnC3olLE8Amc6l6swWxcCLhl/UAEav9UYx2rkCZQF3jq3haIKHqp/B/Tc
+         bv20hTPber8xWSwz5soOC6sjFXModYLMxNromwl4JxU9GswTWo613kfBFwjSkE/8acrI
+         lxjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nKcmHJjl9tIFKl3vh2WZWbQ1a6qf0OFNOmjvKAG+T5w=;
+        b=VQy5vXaC//m5OGZpTA1FoPZ/2NFe6AqX3vrowIrVaNfH3LTb4Tn3cVcCzLTuIuT4ms
+         /+qRTY4H5WzogZ98+Gm8vCIhAuE6dwiDkNgv8+EyqrsNnLWUxt61y5N2fpp2+GdfzWVe
+         eGw+K2gJuW2iRGBIvIHK+vq0x1AMKUhkVbG0ZcETJel6XuBgyxtWdK8QQH0SqE5oA2no
+         JLk18kvTaTv0NC7INHgisXfxTiak9aGFXC5UCWBG/Rxx6Y/Vz8Y4lh8zfHGOc4K/XYrV
+         vIzBxUQbOpmX/h/LjEI2UzTxeF7PflsPoRFbofv14i9Ncm2MbXOhchtnoR/wZ3d0kGAs
+         gVMw==
+X-Gm-Message-State: AGi0PuaWcOU7M1Br22cZhnbl9mlBG367a+Me7CbJYXp9uU9FElnvwSUt
+        MUjTR+HrcA51NR2bOu7ektGzpg==
+X-Google-Smtp-Source: APiQypIoWxNfvYjKhhuxv6cQDK75SO+JQ8441jozvjondQeZtyDNRGUJBpfXr2gHhMn+rcM5zZPzpw==
+X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr12708701wrt.215.1588610642110;
+        Mon, 04 May 2020 09:44:02 -0700 (PDT)
+Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id n12sm7101170wrj.95.2020.05.04.09.44.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 09:44:01 -0700 (PDT)
+Date:   Mon, 4 May 2020 18:43:51 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org
+Subject: Re: [PATCH v6 17/25] iommu/arm-smmu-v3: Implement
+ iommu_sva_bind/unbind()
+Message-ID: <20200504164351.GJ170104@myrica>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+ <20200430143424.2787566-18-jean-philippe@linaro.org>
+ <20200430141617.6ad4be4c@jacob-builder>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pwelueerzpkvwdem"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJiuCce9UDp--XQ=rXPZ5cZyNDMFC3zyq7pnw3ETXkR3=zMWaQ@mail.gmail.com>
+In-Reply-To: <20200430141617.6ad4be4c@jacob-builder>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Apr 30, 2020 at 02:16:17PM -0700, Jacob Pan wrote:
+> > +static void arm_smmu_mm_invalidate_range(struct mmu_notifier *mn,
+> > +					 struct mm_struct *mm,
+> > +					 unsigned long start,
+> > unsigned long end) +{
+> > +	/* TODO: invalidate ATS */
+> > +}
+> > +
+> > +static void arm_smmu_mm_release(struct mmu_notifier *mn, struct
+> > mm_struct *mm) +{
+> > +	struct arm_smmu_mmu_notifier *smmu_mn = mn_to_smmu(mn);
+> > +	struct arm_smmu_domain *smmu_domain;
+> > +
+> > +	mutex_lock(&arm_smmu_sva_lock);
+> > +	if (smmu_mn->cleared) {
+> > +		mutex_unlock(&arm_smmu_sva_lock);
+> > +		return;
+> > +	}
+> > +
+> > +	smmu_domain = smmu_mn->domain;
+> > +
+> > +	/*
+> > +	 * DMA may still be running. Keep the cd valid but disable
+> > +	 * translation, so that new events will still result in
+> > stall.
+> > +	 */
+> Does "disable translation" also disable translated requests?
 
---pwelueerzpkvwdem
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No it doesn't disable translated requests, it only prevents the SMMU from
+accessing the pgd.
 
-Hi,
+> I guess
+> release is called after tlb invalidate range, so assuming no more
+> devTLB left to generate translated request?
 
-On Thu, Apr 30, 2020 at 03:48:04PM +0200, Cl=E9ment P=E9ron wrote:
-> On Tue, 28 Apr 2020 at 18:45, Maxime Ripard <maxime@cerno.tech> wrote:
-> >
-> > On Tue, Apr 28, 2020 at 06:23:35PM +0200, Cl=E9ment P=E9ron wrote:
-> > > Hi Robin,
-> > >
-> > > On Tue, 28 Apr 2020 at 17:21, Robin Murphy <robin.murphy@arm.com> wro=
-te:
-> > > >
-> > > > On 2020-04-28 3:26 pm, Cl=E9ment P=E9ron wrote:
-> > > > > Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-> > > > > voltage to meet OPP table, the DVFS is not working as expected.
-> > > >
-> > > > Hmm, isn't that really a bug in the DVFS code? I guess it's just bl=
-indly
-> > > > propagating -EINVAL from the fixed regulators not implementing
-> > > > set_voltage, but AFAICS it has no real excuse not to be cleverer and
-> > > > still allow switching frequency as long as the voltage *is* high en=
-ough
-> > > > for the given OPP. I wonder how well it works if the regulator is
-> > > > programmable but shared with other consumers... that case probably =
-can't
-> > > > be hacked around in DT.
-> > >
-> > > Like you, I thought that the DVFS was clever enough to understand this
-> > > but guess not..
-> > >
-> > > Maybe they are some cases where you don't want to leave the voltage h=
-igh and
-> > > reduce the frequency. But I don't know such case.
-> >
-> > I assume the intent was to prevent a regulator driver to overshoot and =
-end up
-> > over-volting the CPU which would be pretty bad.
-> >
-> > I guess we could check that the voltage is in the range opp < actual vo=
-ltage <
-> > max opp voltage ?
->=20
-> As this could take more time than expected,
->=20
-> Could you drop the commit :
-> add1e27fb703f65f33191ccc70dd9d811254387c
-> arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6
+I'm counting on the invalidate below (here a TODO, implemented in next
+patch) to drop all devTLB entries. After that invalidate, the device:
+* issues a Translation Request, returns with R=W=0 because we disabled
+  translation (and it isn't present in the SMMU TLB).
+* issues a Page Request, returns with InvalidRequest because
+  mmget_not_zero() fails.
 
-It's done, thanks!
-Maxime
+> 
+> > +	arm_smmu_write_ctx_desc(smmu_domain, mm->pasid, &invalid_cd);
+> > +
+> > +	arm_smmu_tlb_inv_asid(smmu_domain->smmu, smmu_mn->cd->asid);
+> > +	/* TODO: invalidate ATS */
+> > +
+> If mm release is called after tlb invalidate range, is it still
+> necessary to invalidate again?
 
---pwelueerzpkvwdem
-Content-Type: application/pgp-signature; name="signature.asc"
+No, provided all mappings from the address space are unmapped and
+invalidated. I'll double check, but in my tests invalidate range didn't
+seem to be called for all mappings on mm exit, so I believe we do need
+this.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Jean
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrBFewAKCRDj7w1vZxhR
-xY/yAQDBc+uu39+S+nGtqfFozjixwQHz6PT7mFJIq3iYoXM1cAD/WNTMNvIvvI+Y
-UjQG+ErJYUhaQLPXVlTIfHrf9w8nNwc=
-=jPeV
------END PGP SIGNATURE-----
-
---pwelueerzpkvwdem--
