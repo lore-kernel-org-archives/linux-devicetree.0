@@ -2,155 +2,108 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F69C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871E8C3A5A9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5080D20721
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B5920757
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:35:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WhE5NNBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgEDO3m (ORCPT
+        id S1729114AbgEDOf1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 10:29:42 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35423 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbgEDO3m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 10:29:42 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k110so4504853otc.2;
-        Mon, 04 May 2020 07:29:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4qmNWbZEWGK3APAzYwIeRF7N4Ey8Oknk1ZvcU1u1ZqU=;
-        b=N1oXyP7br7VE+24jMnpp//tEsI2I9XMyipiwrWkWyV0WlxffaFdZWcngd8JXS1pXP4
-         /6ighEpGKEP276G12e4Pu0JNaLUnWjHgTK6cbnaqvYkYNnROtka1WSFPI+u631GQpSWo
-         j/qX4TSs7AWDXwKmOOK5MCtz/OcYRe+prCpD9/QFZNd7+gcGnJfVIwENZ2Sg00uMeVzh
-         lZ2mBJ8OxZtgGMNJHj4DQxSq6Txc+7+ppz3xhoAhNlsx5Rf6YAVaxwZ/MqKzJsuEYJNX
-         5GGcBolqiK1c5HVmUvZ5chSXUv+OKPPXa1+Y5KZYL1/eEbU27l6ZKz1WvUwwQjtKjDBV
-         IvvA==
-X-Gm-Message-State: AGi0PuYY/E3WPj86DYzI8Lv6+XTmM+aw9qLH865psgy4eTdcKEb2H2hi
-        npNwSZIpNgFJft8rgPTu77NOvfq5q98kkxjqZbo=
-X-Google-Smtp-Source: APiQypIl5oeOYwC1jEI/m9PhRtWzOpl25bOP4xHlOC6xhIPb9atAy1P1nyb7qKk0U0HPJufqUAievgfEuM+jpmQcYow=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr14016322otm.145.1588602579133;
- Mon, 04 May 2020 07:29:39 -0700 (PDT)
+        Mon, 4 May 2020 10:35:27 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16141 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728187AbgEDOf0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 10:35:26 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb027e90000>; Mon, 04 May 2020 07:34:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 04 May 2020 07:35:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 04 May 2020 07:35:26 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May
+ 2020 14:35:26 +0000
+Received: from [10.2.165.119] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May 2020
+ 14:35:25 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <f1cbb602-163e-a539-aaa5-c7e947a8945b@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <834b9295-d46a-dd01-2496-2c24a8e7a8e4@nvidia.com>
+Date:   Mon, 4 May 2020 07:36:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com> <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
-In-Reply-To: <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 16:29:28 +0200
-Message-ID: <CAMuHMdX6_zOVXStgRRCYonZF2XUowsm0T=3L3+xmqhyGCqMi6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H
- Qseven SOM
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f1cbb602-163e-a539-aaa5-c7e947a8945b@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588602857; bh=QbHAIibWev3PVyqXHVQaxCb68Be+zOimcNcvRZM45Ec=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=WhE5NNBNk2KR58CeKJ3JDTLxgB344OmjUeTKqdEmKhd1HZ78sqnH0vFfhVTrZx05a
+         WXVlyyHuW4kCgOKu4JNleNd6oTtCaxH9+0PTpZvFjI57Aj4bkBUSwQGkCZXO0d1g0R
+         nb7CYqEXnEoNKR0Qoi789+TZnaXVlly1lTT6O7gwmFthjPDHsEVeOx9qzWyPh6MUTU
+         OIRHPn1/WZvoacZOR9UBQI35XrrQRHHo5t0FqUjiR4dcyjBOYyXP31QRo/gJVVyG1s
+         hPoB7AqDn9HKFGMi3SdL4Dy5/R/u8WUW6LGkHAiSsMBqYsmYMhKV88e1jhlKZUrAvw
+         ayKTD8qVDkYSw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
 
-On Mon, May 4, 2020 at 4:20 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Mon, May 4, 2020 at 2:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Sun, May 3, 2020 at 11:48 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > Add support for iWave RZ/G1H Qseven System On Module.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
-> > > @@ -0,0 +1,53 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Device Tree Source for the iWave RZ/G1H Qseven SOM
-> > > + *
-> > > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > > + */
-> > > +
-> > > +#include "r8a7742.dtsi"
-> > > +#include <dt-bindings/gpio/gpio.h>
-> > > +
-> > > +/ {
-> > > +       compatible = "iwave,g21m", "renesas,r8a7742";
-> > > +
-> > > +       memory@40000000 {
-> > > +               device_type = "memory";
-> > > +               reg = <0 0x40000000 0 0x40000000>;
-> > > +       };
-> > > +
-> > > +       memory@200000000 {
-> > > +               device_type = "memory";
-> > > +               reg = <2 0x00000000 0 0x20000000>;
-> >
-> > According to the schematics, the second bank is also 1 GiB, so the
-> > reg length should be 0x40000000.
-> >
-> Agreed will fix that.
-
-Thanks for the confirmation.  I can fix that while applying.
-
-> > > +       };
-> >
-> > > +&pfc {
-> > > +       mmc1_pins: mmc1 {
-> > > +               groups = "mmc1_data4", "mmc1_ctrl";
-> > > +               function = "mmc1";
-> > > +       };
-> > > +};
-> > > +
-> > > +&mmcif1 {
-> > > +       pinctrl-0 = <&mmc1_pins>;
-> > > +       pinctrl-names = "default";
-> > > +
-> > > +       vmmc-supply = <&reg_3p3v>;
-> > > +       bus-width = <4>;
-> > > +       non-removable;
-> > > +       status = "okay";
-> > > +};
-> >
-> > The eMMC has an 8-bit data path.  Is there any specific reason you use
-> > bus-width = <4>, and the "mmc1_data4" pin group?
-> >
-> MMC1_DATA7 is shared with VI1_CLK, so instead of limiting to only one
-> device when using 8-bit just switched to 4bit mode so that both the
-> peripherals can be used.
-
-OK.
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.8 with the above fixed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+On 5/4/20 12:44 AM, Dmitry Osipenko wrote:
+> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> +/*
+>> + * VI channel input data type enum.
+>> + * These data type enum value gets programmed into corresponding Tegra =
+VI
+>> + * channel register bits.
+>> + */
+>> +enum tegra_image_dt {
+>> +	TEGRA_IMAGE_DT_YUV420_8 =3D 24,
+>> +	TEGRA_IMAGE_DT_YUV420_10,
+>> +
+>> +	TEGRA_IMAGE_DT_YUV420CSPS_8 =3D 28,
+>> +	TEGRA_IMAGE_DT_YUV420CSPS_10,
+>> +	TEGRA_IMAGE_DT_YUV422_8,
+>> +	TEGRA_IMAGE_DT_YUV422_10,
+>> +	TEGRA_IMAGE_DT_RGB444,
+>> +	TEGRA_IMAGE_DT_RGB555,
+>> +	TEGRA_IMAGE_DT_RGB565,
+>> +	TEGRA_IMAGE_DT_RGB666,
+>> +	TEGRA_IMAGE_DT_RGB888,
+>> +
+>> +	TEGRA_IMAGE_DT_RAW6 =3D 40,
+>> +	TEGRA_IMAGE_DT_RAW7,
+>> +	TEGRA_IMAGE_DT_RAW8,
+>> +	TEGRA_IMAGE_DT_RAW10,
+>> +	TEGRA_IMAGE_DT_RAW12,
+>> +	TEGRA_IMAGE_DT_RAW14,
+>> +};
+> Are these format IDs common to all Tegra SoCs or they unique to T210?
+Common for all SoCs
