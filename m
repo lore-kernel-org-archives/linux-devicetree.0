@@ -2,281 +2,106 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DACC3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0D0C47258
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A3920658
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EDD2075E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 18:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VE9+J/pG"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Loxg7qHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbgEDSat (ORCPT
+        id S1726111AbgEDShZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 14:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729857AbgEDSat (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 14:30:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F19B5C061A41
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 11:30:48 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id fu13so268587pjb.5
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 11:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RUuhz5xBXoG/K++UXih0s5Rf57mKbAsAQqA2QvzhMX0=;
-        b=VE9+J/pGfedeUYNhxncR25PbyH2KgXLb9iFqS2vrp+LhM9Ldl6j6fvdCx/cuy0lJ+Z
-         o05/fWn274uca1WTTjfHHFIkpO3OZOiv2m0chUE4mDek9D2tf/iMzqpq0mLyC1Qim9gx
-         l84kxHl02tcw8Tw85j9yg/ozTLkMNpegnvK7h9nxAR+dYMhdmD995G8RVzczrhu7i3ak
-         oYgtdubob2IUAYsAn4pcsuwluwRF/hy6B3oXbW8w7LbctMbZ2gMiemVGIjPb8yRVY3O2
-         sySiD+hY3FNSWUmhovFdK4eKYqP3nASRfLfNjrPG7pZSfisImDGqerAqeN42sUqMo98K
-         KgzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RUuhz5xBXoG/K++UXih0s5Rf57mKbAsAQqA2QvzhMX0=;
-        b=LwXFtc+QlXSVUeAX26hKSJtz2N361dYAw7kmeD6SaKyCC9XlIgMpOvh4CX9fOafDob
-         gHImt71xneRoB0SJ0oW6bR9JwfOjUo2PcUHjf0+mvnGWqQ+wc693GzCluMx7wYQE6SC9
-         XyHvrxDfkKxunDl4+BSA0UvsYcb3WCX2Gu4LogzYZywuPSZ49qu/EItUlVC84Ap764BB
-         ononqsLE1s+57S6DrM3cU+g6CddjgB/HuLRLpgZg4KN+4jXl+W+IB+68oN/fNgmRfmJC
-         GDhyvejL7M1r0ITzGB9kQczBXttMdROfZJZSdbOfWLZ1f72I3idJqMK9F7eTp0YE+dxe
-         uBAA==
-X-Gm-Message-State: AGi0PuaXVdALf5k3AdA0gFxUQxr4hbTidN9jP/Gh/cwMKqRWUjV0W5S+
-        bwz2+Vu2yV31WLZ2qFpzJV3I0w==
-X-Google-Smtp-Source: APiQypIh26Lt/DvfPRknImxFEZNPZCn4JiJiuLq0Z6UhZb81SXNl/e3axflzPok9SfvAt0pT0eCEnw==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr521992plb.94.1588617048311;
-        Mon, 04 May 2020 11:30:48 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a142sm9325183pfa.6.2020.05.04.11.30.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 11:30:47 -0700 (PDT)
-Date:   Mon, 4 May 2020 11:31:31 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     davem@davemloft.net, evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, agross@kernel.org, robh+dt@kernel.org,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/4] net: ipa: redefine struct ipa_mem_data
-Message-ID: <20200504183131.GE20625@builder.lan>
-References: <20200504175859.22606-1-elder@linaro.org>
- <20200504175859.22606-3-elder@linaro.org>
+        Mon, 4 May 2020 14:37:25 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50048 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbgEDShY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 14:37:24 -0400
+Received: from zn.tnic (p200300EC2F08AF0065FB624DCF4BA4D3.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:af00:65fb:624d:cf4b:a4d3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EC3E21EC02CA;
+        Mon,  4 May 2020 20:37:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1588617440;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=YuW8tb+waz9pfSvMfWhFe9y4ge3JyCySIqtRfEA1Ev8=;
+        b=Loxg7qHfyNd5NlctbHdWyRlUKhl4uMV33Gqbnl6jLD+pV37pY/Z3s97vOjSG0DrJZcSrWC
+        NZZZdI5FefhNTVMEdziALRtWLraKpwHiXKxQSxNrujV9olY0U5AxQM58uFSr0koaRfmiyx
+        xXfDo1hym6MHekNpykIm/9pXyWJlkps=
+Date:   Mon, 4 May 2020 20:37:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Shenhar, Talel" <talel@amazon.com>
+Cc:     mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com,
+        will@kernel.org, linux-edac@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com,
+        jonnyc@amazon.com, hanochu@amazon.com, eitan@amazon.com
+Subject: Re: [PATCH v6 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
+ Labs Memory Controller EDAC
+Message-ID: <20200504183716.GJ15046@zn.tnic>
+References: <20200224134132.23924-1-talel@amazon.com>
+ <20200224134132.23924-3-talel@amazon.com>
+ <20200428113950.GB11272@zn.tnic>
+ <46ccdb47-f28d-63f7-e759-1ba34e98add8@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200504175859.22606-3-elder@linaro.org>
+In-Reply-To: <46ccdb47-f28d-63f7-e759-1ba34e98add8@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 04 May 10:58 PDT 2020, Alex Elder wrote:
+On Mon, May 04, 2020 at 01:16:10PM +0300, Shenhar, Talel wrote:
+> > > +     mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+> > > +                         sizeof(struct al_mc_edac));
+> > You can let that line stick out.
+> 
+> I rather avoid having this as a checkpatch warnning... (automation and
+> stuff...)
 
-> The ipa_mem_data structure type was never actually used.  Instead,
-> the IPA memory regions were defined using the ipa_mem structure.
-> 
-> Redefine struct ipa_mem_data so it encapsulates the array of IPA-local
-> memory region descriptors along with the count of entries in that
-> array.  Pass just an ipa_mem structure pointer to ipa_mem_init().
-> 
-> Rename the ipa_mem_data[] array ipa_mem_local_data[] to emphasize
-> that the memory regions it defines are IPA-local memory.
-> 
-> Signed-off-by: Alex Elder <elder@linaro.org>
+checkpatch.pl - while useful - should not be taken to the letter and
+human brain should be applied to sanity check it what it warns about.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
->  drivers/net/ipa/ipa_data-sc7180.c | 10 +++++++---
->  drivers/net/ipa/ipa_data-sdm845.c | 10 +++++++---
->  drivers/net/ipa/ipa_data.h        | 13 +++++--------
->  drivers/net/ipa/ipa_main.c        |  2 +-
->  drivers/net/ipa/ipa_mem.c         |  9 +++++----
->  drivers/net/ipa/ipa_mem.h         |  3 ++-
->  6 files changed, 27 insertions(+), 20 deletions(-)
+> This line break does seems to my eye as too hard to read.
 > 
-> diff --git a/drivers/net/ipa/ipa_data-sc7180.c b/drivers/net/ipa/ipa_data-sc7180.c
-> index 042b5fc3c135..f97e7e4e61c1 100644
-> --- a/drivers/net/ipa/ipa_data-sc7180.c
-> +++ b/drivers/net/ipa/ipa_data-sc7180.c
-> @@ -193,7 +193,7 @@ static const struct ipa_resource_data ipa_resource_data = {
->  };
->  
->  /* IPA-resident memory region configuration for the SC7180 SoC. */
-> -static const struct ipa_mem ipa_mem_data[] = {
-> +static const struct ipa_mem ipa_mem_local_data[] = {
->  	[IPA_MEM_UC_SHARED] = {
->  		.offset		= 0x0000,
->  		.size		= 0x0080,
-> @@ -296,12 +296,16 @@ static const struct ipa_mem ipa_mem_data[] = {
->  	},
->  };
->  
-> +static struct ipa_mem_data ipa_mem_data = {
-> +	.local_count	= ARRAY_SIZE(ipa_mem_local_data),
-> +	.local		= ipa_mem_local_data,
-> +};
-> +
->  /* Configuration data for the SC7180 SoC. */
->  const struct ipa_data ipa_data_sc7180 = {
->  	.version	= IPA_VERSION_4_2,
->  	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
->  	.endpoint_data	= ipa_gsi_endpoint_data,
->  	.resource_data	= &ipa_resource_data,
-> -	.mem_count	= ARRAY_SIZE(ipa_mem_data),
-> -	.mem_data	= ipa_mem_data,
-> +	.mem_data	= &ipa_mem_data,
->  };
-> diff --git a/drivers/net/ipa/ipa_data-sdm845.c b/drivers/net/ipa/ipa_data-sdm845.c
-> index 0d9c36e1e806..c55507e94559 100644
-> --- a/drivers/net/ipa/ipa_data-sdm845.c
-> +++ b/drivers/net/ipa/ipa_data-sdm845.c
-> @@ -235,7 +235,7 @@ static const struct ipa_resource_data ipa_resource_data = {
->  };
->  
->  /* IPA-resident memory region configuration for the SDM845 SoC. */
-> -static const struct ipa_mem ipa_mem_data[] = {
-> +static const struct ipa_mem ipa_mem_local_data[] = {
->  	[IPA_MEM_UC_SHARED] = {
->  		.offset		= 0x0000,
->  		.size		= 0x0080,
-> @@ -318,12 +318,16 @@ static const struct ipa_mem ipa_mem_data[] = {
->  	},
->  };
->  
-> +static struct ipa_mem_data ipa_mem_data = {
-> +	.local_count	= ARRAY_SIZE(ipa_mem_local_data),
-> +	.local		= ipa_mem_local_data,
-> +};
-> +
->  /* Configuration data for the SDM845 SoC. */
->  const struct ipa_data ipa_data_sdm845 = {
->  	.version	= IPA_VERSION_3_5_1,
->  	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
->  	.endpoint_data	= ipa_gsi_endpoint_data,
->  	.resource_data	= &ipa_resource_data,
-> -	.mem_count	= ARRAY_SIZE(ipa_mem_data),
-> -	.mem_data	= ipa_mem_data,
-> +	.mem_data	= &ipa_mem_data,
->  };
-> diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
-> index 7110de2de817..51d8e5a6f23a 100644
-> --- a/drivers/net/ipa/ipa_data.h
-> +++ b/drivers/net/ipa/ipa_data.h
-> @@ -246,14 +246,12 @@ struct ipa_resource_data {
->  
->  /**
->   * struct ipa_mem - IPA-local memory region description
-> - * @offset:		offset in IPA memory space to base of the region
-> - * @size:		size in bytes base of the region
-> - * @canary_count:	number of 32-bit "canary" values that precede region
-> + * @local_count:	number of regions defined in the local[] array
-> + * @local:		array of IPA-local memory region descriptors
->   */
->  struct ipa_mem_data {
-> -	u32 offset;
-> -	u16 size;
-> -	u16 canary_count;
-> +	u32 local_count;
-> +	const struct ipa_mem *local;
->  };
->  
->  /**
-> @@ -270,8 +268,7 @@ struct ipa_data {
->  	u32 endpoint_count;	/* # entries in endpoint_data[] */
->  	const struct ipa_gsi_endpoint_data *endpoint_data;
->  	const struct ipa_resource_data *resource_data;
-> -	u32 mem_count;		/* # entries in mem_data[] */
-> -	const struct ipa_mem *mem_data;
-> +	const struct ipa_mem_data *mem_data;
->  };
->  
->  extern const struct ipa_data ipa_data_sdm845;
-> diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
-> index 28998dcce3d2..9295a9122e8e 100644
-> --- a/drivers/net/ipa/ipa_main.c
-> +++ b/drivers/net/ipa/ipa_main.c
-> @@ -778,7 +778,7 @@ static int ipa_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_kfree_ipa;
->  
-> -	ret = ipa_mem_init(ipa, data->mem_count, data->mem_data);
-> +	ret = ipa_mem_init(ipa, data->mem_data);
->  	if (ret)
->  		goto err_reg_exit;
->  
-> diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
-> index 42d2c29d9f0c..fb4de2a12796 100644
-> --- a/drivers/net/ipa/ipa_mem.c
-> +++ b/drivers/net/ipa/ipa_mem.c
-> @@ -12,6 +12,7 @@
->  
->  #include "ipa.h"
->  #include "ipa_reg.h"
-> +#include "ipa_data.h"
->  #include "ipa_cmd.h"
->  #include "ipa_mem.h"
->  #include "ipa_data.h"
-> @@ -266,15 +267,15 @@ int ipa_mem_zero_modem(struct ipa *ipa)
->  }
->  
->  /* Perform memory region-related initialization */
-> -int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
-> +int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data)
->  {
->  	struct device *dev = &ipa->pdev->dev;
->  	struct resource *res;
->  	int ret;
->  
-> -	if (count > IPA_MEM_COUNT) {
-> +	if (mem_data->local_count > IPA_MEM_COUNT) {
->  		dev_err(dev, "to many memory regions (%u > %u)\n",
-> -			count, IPA_MEM_COUNT);
-> +			mem_data->local_count, IPA_MEM_COUNT);
->  		return -EINVAL;
->  	}
->  
-> @@ -302,7 +303,7 @@ int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
->  	ipa->mem_size = resource_size(res);
->  
->  	/* The ipa->mem[] array is indexed by enum ipa_mem_id values */
-> -	ipa->mem = mem;
-> +	ipa->mem = mem_data->local;
->  
->  	return 0;
->  }
-> diff --git a/drivers/net/ipa/ipa_mem.h b/drivers/net/ipa/ipa_mem.h
-> index 065cb499ebe5..f99180f84f0d 100644
-> --- a/drivers/net/ipa/ipa_mem.h
-> +++ b/drivers/net/ipa/ipa_mem.h
-> @@ -7,6 +7,7 @@
->  #define _IPA_MEM_H_
->  
->  struct ipa;
-> +struct ipa_mem_data;
->  
->  /**
->   * DOC: IPA Local Memory
-> @@ -84,7 +85,7 @@ void ipa_mem_teardown(struct ipa *ipa);
->  
->  int ipa_mem_zero_modem(struct ipa *ipa);
->  
-> -int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem);
-> +int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data);
->  void ipa_mem_exit(struct ipa *ipa);
->  
->  #endif /* _IPA_MEM_H_ */
-> -- 
-> 2.20.1
+> Let me know if you feel strongly about it.
+
+I'm just sayin' - in the end of the day you'll be staring at that code -
+not me - so whatever *you* prefer. :-)
+
+Just don't follow tools blindly.
+
+> > > +     if (al_mc->irq_ue <= 0 || al_mc->irq_ce <= 0)
+> > Shouldn't this be && here?
+> > 
+> > I mean, you want to poll when neither of the IRQs can be found. But then
+> > if you find one of them and not the other, what do you do? Poll and
+> > interrupt? Is that case even possible?
 > 
+> Correct.
+> 
+> In case dt defined interrupt line only for one type and not for the other,
+> than the interrupt mode shall be used for one of them while polling mode for
+> the other.
+
+That warrants a comment above it.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
