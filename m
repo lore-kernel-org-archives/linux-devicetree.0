@@ -6,358 +6,131 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7754AC3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCA2C47259
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE092075A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 13:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF8420705
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="cr7Ja9/W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vq2ie4yP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgEDNol (ORCPT
+        id S1729000AbgEDOMO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 09:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728191AbgEDNoh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 09:44:37 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59949C061A10
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 06:44:37 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id x2so11247665ilp.13
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 06:44:37 -0700 (PDT)
+        Mon, 4 May 2020 10:12:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729032AbgEDOMN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 10:12:13 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2513FC061A0F
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 07:12:13 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 188so8624500wmc.2
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 07:12:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YiKnWtOgcX4d6/1epbmpUfGmDFGrCbeypzkpKzeVrds=;
-        b=cr7Ja9/WRgMiwRfDa/XjnyXjX+jzxDckxjUFre8+JFmlsh4gFnFYYzm9be1kaR9+xL
-         QsHmhFlDlEvRuooxON67qa/ps6IyB5QRXYmIUA1MIXFwveyQ8uhU5U/IoFzkrzRYQdSK
-         P9UPAG/6jM9E3/bJtU/QqjOOtcvPvllD85Ymg=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cBYi8j74hWiNZr+qveo+/wt9+YdcPXbPEFJvXHtn9pk=;
+        b=Vq2ie4yP/X47QYD6lxsDV5syeThtLJI2ewNwfJLRuRvqg9UoVTEgtYRgWLvaBdnVPa
+         0wxiY2Klubhm0nN4CMoAjyALlAO50NfO102r/fy+H5GCSi63zznRgC0xu4L85wpV03xu
+         DfhamtALWXxNYB9JgzXyAATJJmNT8UEf6XEH6k0T1kswbiEY71Yel0l1afn0RX60zeBH
+         aqxDJDIPxXQSFKQhe8Dd/PnFMhfN2602ltmhdR00hWRbv/fHUel+9cX1FVpDN6rRaZVF
+         s/UX7jAgy7BBd0Tzf4XpwroHU3tmThERIbg1xf8cdc1LjpguouxRX8TELXLyxcryX5LF
+         R2oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YiKnWtOgcX4d6/1epbmpUfGmDFGrCbeypzkpKzeVrds=;
-        b=DBYeRQL2jU+3hqjPJK3nqSOresENiJ+fEsCCI2FqYGd9+Om6Bf6KhtBLr4OLQeQQKV
-         IfGaLSylIieW2cc60IWPuLzqvMx/3f2jLweVbwXfTZCBpIrtLMl7vx2XBKx30bhCZVsd
-         MEGyDrfUjgYNNL2BbG+isYn+ysgpgWE/Jm6PggXe0a+V3JWrAIYhCr5kMGSXSWb8XX8x
-         WuChnjZfmztbciAky2xrj8Nfunsv0uzeio9R3phq7KH/lsvu/F9s8mg0DuAk+sVmYAZf
-         huoV8dSun7KQqJY+3D37XlQhJPHnzyMZFc4HCx8BwPx+wzOiHZxv2QzL5otosbtkY7nL
-         GVjA==
-X-Gm-Message-State: AGi0PuY2zc309EdpLVNY1jJCshvr9Lvfgd+GMRk7GxHGihe35akCHC5Z
-        UypVxsoV6rsHoXvv1a2pv5vvuueNv8MpPy7qjeABvg==
-X-Google-Smtp-Source: APiQypKTBaTlYMo8+eC12IIkd8T/1jhkPCaKJOZPNrBKCvbb82kPAYYpg5jPBch/+CSrG4a1Op54kP6+5xC4z65Pg7U=
-X-Received: by 2002:a92:b710:: with SMTP id k16mr15879307ili.270.1588599876503;
- Mon, 04 May 2020 06:44:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cBYi8j74hWiNZr+qveo+/wt9+YdcPXbPEFJvXHtn9pk=;
+        b=CjdnWjrXnzg/IGd92WG1zgOQv2GgPXn3fHifoZo9rG0LsIOTJb5UA86gOiCk2lQPcZ
+         cDfkkl5q9E7XhO5OA/fBxaTGS/ngLKQEJgd+iJCVKkbfgjCid8e/uIpEKiHOR0ep9HtS
+         zVUQiyxXcLf+TH1SsiTOtVljeLK9XwK3v6Mu4vcKUuDAkfrIj1lDKlKZNmrXytgXW0Lk
+         tLfU1EkyidNE5N+c9JLR9x9NU+n1uiXiahHLYNdQTfMmJwghpnBjF1XT+8xbqEt2yZVu
+         fVfA1UkxtpLsjegIzwzdzCj4N6G/OK6istBmN8bdtGGZK0VTqLMMmuHP5AQ/W8m49TK8
+         /5CQ==
+X-Gm-Message-State: AGi0PubPo3vvukBQi5JvC6D9vbJM1Gvt96frCLX7mrdpFDdTYiFJ960D
+        m2d/N65mbx1b5ysOyXjDpkyo4Q==
+X-Google-Smtp-Source: APiQypJGsU7OdMfQlFADSEeYP/iyop6F2RgiIW4sMbSjpQ+r/TAhN3MWxBAEOgHp3eUgHcwFPiU/5w==
+X-Received: by 2002:a05:600c:290f:: with SMTP id i15mr14075509wmd.167.1588601531837;
+        Mon, 04 May 2020 07:12:11 -0700 (PDT)
+Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id r23sm13017379wra.74.2020.05.04.07.11.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 07:11:52 -0700 (PDT)
+Date:   Mon, 4 May 2020 16:11:37 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
+        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org
+Subject: Re: [PATCH v6 11/25] iommu/arm-smmu-v3: Share process page tables
+Message-ID: <20200504141137.GA170104@myrica>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+ <20200430143424.2787566-12-jean-philippe@linaro.org>
+ <580a915f-f8bf-3b3e-c77d-6d0c2ea4bd02@arm.com>
 MIME-Version: 1.0
-References: <20200425133939.3508912-0-mholenko@antmicro.com>
- <20200425133939.3508912-5-mholenko@antmicro.com> <CAHp75VfsiAaZez7nv7Z7E-5NL0_xObzi_LZsiWbms54jNcyv6A@mail.gmail.com>
-In-Reply-To: <CAHp75VfsiAaZez7nv7Z7E-5NL0_xObzi_LZsiWbms54jNcyv6A@mail.gmail.com>
-From:   Mateusz Holenko <mholenko@antmicro.com>
-Date:   Mon, 4 May 2020 15:44:24 +0200
-Message-ID: <CAPk366R7ty-KAtnaTyqOH6rUewRd7Wvt6GSoB3bYpS+X_xT1CQ@mail.gmail.com>
-Subject: Re: [PATCH v5 5/5] drivers/tty/serial: add LiteUART driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <580a915f-f8bf-3b3e-c77d-6d0c2ea4bd02@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 5:50 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sat, Apr 25, 2020 at 2:45 PM Mateusz Holenko <mholenko@antmicro.com> w=
-rote:
-> >
-> > From: Filip Kokosinski <fkokosinski@antmicro.com>
-> >
-> > This commit adds driver for the FPGA-based LiteUART serial controller
-> > from LiteX SoC builder.
-> >
-> > The current implementation supports LiteUART configured
-> > for 32 bit data width and 8 bit CSR bus width.
-> >
-> > It does not support IRQ.
-> >
-> > Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
-> > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
->
-> Co-developed-by?
-
-Most of the coding here is done by Filip Kokosinski - I'm responsible
-for managing the patches and sending to LKML so I don't think I
-qualify as a co-developer :)
-
-> ...
->
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -9731,6 +9731,7 @@ S:        Maintained
-> >  F:     Documentation/devicetree/bindings/*/litex,*.yaml
-> >  F:     drivers/soc/litex/litex_soc_ctrl.c
-> >  F:     include/linux/litex.h
-> > +F:     drivers/tty/serial/liteuart.c
->
-> Ordering issue, run latest checkpatch.pl and parse-maintaners.pl to fix.
-
-We'll check that.
-
-> ...
->
-> > +config SERIAL_LITEUART
-> > +       tristate "LiteUART serial port support"
-> > +       depends on HAS_IOMEM
->
-> > +       depends on OF
->
-> || COMPILE_TEST ?
-
-Sure, we'll add that.
-
-> > +       depends on LITEX_SOC_CONTROLLER
-> > +       select SERIAL_CORE
->
-> ...
->
-> > +/*
-> > + * CSRs definitions
-> > + * (base address offsets + width)
-> > + *
-> > + * The definitions below are true for
-> > + * LiteX SoC configured for
-> > + * 8-bit CSR Bus, 32-bit aligned.
-> > + *
-> > + * Supporting other configurations
-> > + * might require new definitions
-> > + * or a more generic way of indexing
-> > + * the LiteX CSRs.
-> > + *
-> > + * For more details on how CSRs
-> > + * are defined and handled in LiteX,
-> > + * see comments in the LiteX SoC Driver:
-> > + * drivers/soc/litex/litex_soc_ctrl.c
-> > + */
->
-> Can you use some like 76 characters per line?
->
-
-We'll reformat the code to match 76 chars.
-
-> ...
->
-> > +#define OFF_RXTX       0x00
-> > +#define SIZE_RXTX      1
-> > +#define OFF_TXFULL     0x04
-> > +#define SIZE_TXFULL    1
-> > +#define OFF_RXEMPTY    0x08
-> > +#define SIZE_RXEMPTY   1
-> > +#define OFF_EV_STATUS  0x0c
-> > +#define SIZE_EV_STATUS 1
-> > +#define OFF_EV_PENDING 0x10
-> > +#define SIZE_EV_PENDING        1
-> > +#define OFF_EV_ENABLE  0x14
-> > +#define SIZE_EV_ENABLE 1
->
-> Why do you need all those SIZE_*?
->
-> ...
-
-This is related to how LiteX peripherals (LiteUART being one of them)
-handle register access.
-The LiteX HW splits a classic 32-bit register into 4 32-bit registers,
-each one containing only 8-bit part of it.
-
-SIZE in this context means how many of those "subregisters" (still
-32-bit wide, but with only 8-bit of meaningful data) to read/write.
-The "litex.h" header (patch 3 of this patchset) provides common
-functions for doing it, but it must know the size for each register.
-
->
-> > +static struct uart_driver liteuart_driver =3D {
-> > +       .owner =3D THIS_MODULE,
-> > +       .driver_name =3D DRIVER_NAME,
-> > +       .dev_name =3D DEV_NAME,
->
-> Much easier to see if any name collisions are happen by grepping
-> similar struct definitions, but these macros are making life harder.
-
-Do you mean to avoid indirection caused by defines and write e.g.,
-`.driver_name =3D "liteuart"`?
-
-OK, but the reason we have defines in the first place is because we
-use the same name in many places and we want to avoid inconsistencies
-(typos, partial rename, etc.).
-What's more, looking at other serial drivers I see the notation is not
-consistent - many of them use defines for name/major/minor as well.
-
-> > +       .major =3D DRIVER_MAJOR,
-> > +       .minor =3D DRIVER_MINOR,
->
-> Ditto.
->
-> > +       .nr =3D CONFIG_SERIAL_LITEUART_MAX_PORTS,
->
-> > +#ifdef CONFIG_SERIAL_LITEUART_CONSOLE
-> > +       .cons =3D &liteuart_console,
-> > +#endif
->
-> > +};
->
-> ...
->
-> > +static const char *liteuart_type(struct uart_port *port)
-> > +{
-> > +       return (port->type =3D=3D PORT_LITEUART) ? DRIVER_NAME : NULL;
-> > +}
->
-> Do we need this check? Do we need a port type at all?
->
-> ...
-
-This is inspired by serial_core.c and other serial drivers.
-We don't support any alternative `port->types` values so it's probably
-not necessary for us, but it seems that this is how other serial
-drivers are written too.
-
-> > +static int liteuart_probe(struct platform_device *pdev)
-> > +{
-> > +       struct device_node *np =3D pdev->dev.of_node;
-> > +       struct liteuart_port *uart;
-> > +       struct uart_port *port;
-> > +       int dev_id;
+On Thu, Apr 30, 2020 at 04:39:53PM +0100, Suzuki K Poulose wrote:
+> On 04/30/2020 03:34 PM, Jean-Philippe Brucker wrote:
+> > With Shared Virtual Addressing (SVA), we need to mirror CPU TTBR, TCR,
+> > MAIR and ASIDs in SMMU contexts. Each SMMU has a single ASID space split
+> > into two sets, shared and private. Shared ASIDs correspond to those
+> > obtained from the arch ASID allocator, and private ASIDs are used for
+> > "classic" map/unmap DMA.
+> > 
+> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > ---
+> 
 > > +
-> > +       if (!litex_check_accessors())
-> > +               return -EPROBE_DEFER;
+> > +	tcr = FIELD_PREP(CTXDESC_CD_0_TCR_T0SZ, 64ULL - VA_BITS) |
+> > +	      FIELD_PREP(CTXDESC_CD_0_TCR_IRGN0, ARM_LPAE_TCR_RGN_WBWA) |
+> > +	      FIELD_PREP(CTXDESC_CD_0_TCR_ORGN0, ARM_LPAE_TCR_RGN_WBWA) |
+> > +	      FIELD_PREP(CTXDESC_CD_0_TCR_SH0, ARM_LPAE_TCR_SH_IS) |
+> > +	      CTXDESC_CD_0_TCR_EPD1 | CTXDESC_CD_0_AA64;
 > > +
->
-> > +       /* no device tree */
-> > +       if (!np)
-> > +               return -ENODEV;
->
-> I guess it should go first, otherwise potentially you may end up with
-> deferred module above.
-
-You are right. We'll reorder the initialization.
-
-> > +       /* look for aliases; auto-enumerate for free index if not found=
- */
-> > +       dev_id =3D of_alias_get_id(np, "serial");
-> > +       if (dev_id < 0)
-> > +               dev_id =3D find_first_zero_bit(liteuart_ports_in_use,
-> > +                                            CONFIG_SERIAL_LITEUART_MAX=
-_PORTS);
->
-> Racy.
-
-We'll protect it with a mutex to avoid race conditions.
-
-> > +       /* get {map,mem}base */
-> > +       port->mapbase =3D platform_get_resource(pdev, IORESOURCE_MEM, 0=
-)->start;
-> > +       port->membase =3D of_iomap(np, 0);
->
-> Can't you use devm_platform_get_and_ioremap_resource() ?
-
-This indeed can be simplified.
-
-> > +       if (!port->membase)
-> > +               return -ENXIO;
->
-> > +}
->
-> ...
->
-> > +static struct platform_driver liteuart_platform_driver =3D {
-> > +       .probe =3D liteuart_probe,
-> > +       .remove =3D liteuart_remove,
-> > +       .driver =3D {
-> > +               .name =3D DRIVER_NAME,
->
-> > +               .of_match_table =3D of_match_ptr(liteuart_of_match),
->
-> of_match_ptr() makes no sense (you have depends on OF).
-
-You mean that `of_match_ptr(X)` resolves simply to `X` when
-`CONFIG_OF` is defined?
-In this context it surely can be simplified.
-
-> > +       },
-> > +};
->
-> ...
->
->
-> > +static int __init liteuart_console_init(void)
-> > +{
->
-> Missed spin lock initialization.
-
-We'll fix this.
-
-> > +       register_console(&liteuart_console);
+> > +	switch (PAGE_SIZE) {
+> > +	case SZ_4K:
+> > +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_4K);
+> > +		break;
+> > +	case SZ_16K:
+> > +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_16K);
+> > +		break;
+> > +	case SZ_64K:
+> > +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_64K);
+> > +		break;
+> > +	default:
+> > +		WARN_ON(1);
+> > +		ret = -EINVAL;
+> > +		goto err_free_asid;
+> > +	}
 > > +
-> > +       return 0;
-> > +}
->
+> > +	reg = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
+> > +	par = cpuid_feature_extract_unsigned_field(reg, ID_AA64MMFR0_PARANGE_SHIFT);
+> > +	tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_IPS, par);
 > > +
->
-> Extra blank line.
+> > +	cd->ttbr = virt_to_phys(mm->pgd);
+> 
+> Does the TTBR follow the same layout as TTBR_ELx for 52bit IPA ? i.e,
+> TTBR[5:2] = BADDR[51:48] ? Are you covered for that ?
 
-You mean we should remove an empty line between the definition of
-liteuart_console_init() and the call to console_initcall()? It seems
-to be inconsistent across different drivers, but sure - no problem.
+Good point, I don't remember checking this. The SMMU TTBR doesn't have the
+same layout as the CPU's, and we don't need to swizzle the bits. For the
+lower bits, the alignment requirements on the pgd are identical to the
+MMU.
 
-> > +console_initcall(liteuart_console_init);
->
-> ...
->
-> > +/* LiteUART */
-> > +#define PORT_LITEUART  123
->
-> We have holes in the list, use them.
->
-> And again why we need this?
+Thanks,
+Jean
 
-This is inspired by other serial drivers that also reserves
-identifiers in this file and handles them the same way we do. We
-simply followed the convention.
-
-> --
-> With Best Regards,
-> Andy Shevchenko
-
-Thanks for your time and the comments! We'll address them in the next
-version of the patchset.
-
-Best regards,
-Mateusz Ho=C5=82enko
-
---
-Mateusz Holenko
-Antmicro Ltd | www.antmicro.com
-Roosevelta 22, 60-829 Poznan, Poland
