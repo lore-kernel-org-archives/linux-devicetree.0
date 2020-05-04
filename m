@@ -2,108 +2,108 @@ Return-Path: <SRS0=58Ja=6S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871E8C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC01EC47254
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B5920757
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WhE5NNBN"
+	by mail.kernel.org (Postfix) with ESMTP id B5ECC2078C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 May 2020 14:37:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbgEDOf1 (ORCPT
+        id S1728963AbgEDOhS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 10:35:27 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16141 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbgEDOf0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 10:35:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb027e90000>; Mon, 04 May 2020 07:34:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 04 May 2020 07:35:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 04 May 2020 07:35:26 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May
- 2020 14:35:26 +0000
-Received: from [10.2.165.119] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May 2020
- 14:35:25 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <f1cbb602-163e-a539-aaa5-c7e947a8945b@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <834b9295-d46a-dd01-2496-2c24a8e7a8e4@nvidia.com>
-Date:   Mon, 4 May 2020 07:36:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 10:37:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:46302 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728486AbgEDOhS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 May 2020 10:37:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D6461FB;
+        Mon,  4 May 2020 07:37:17 -0700 (PDT)
+Received: from [10.37.12.17] (unknown [10.37.12.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 543783F305;
+        Mon,  4 May 2020 07:37:04 -0700 (PDT)
+Subject: Re: [PATCH v6 11/25] iommu/arm-smmu-v3: Share process page tables
+To:     jean-philippe@linaro.org
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
+        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+ <20200430143424.2787566-12-jean-philippe@linaro.org>
+ <580a915f-f8bf-3b3e-c77d-6d0c2ea4bd02@arm.com>
+ <20200504141137.GA170104@myrica>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <82f54362-34f1-2378-49c2-2d87e065e385@arm.com>
+Date:   Mon, 4 May 2020 15:42:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <f1cbb602-163e-a539-aaa5-c7e947a8945b@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200504141137.GA170104@myrica>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588602857; bh=QbHAIibWev3PVyqXHVQaxCb68Be+zOimcNcvRZM45Ec=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=WhE5NNBNk2KR58CeKJ3JDTLxgB344OmjUeTKqdEmKhd1HZ78sqnH0vFfhVTrZx05a
-         WXVlyyHuW4kCgOKu4JNleNd6oTtCaxH9+0PTpZvFjI57Aj4bkBUSwQGkCZXO0d1g0R
-         nb7CYqEXnEoNKR0Qoi789+TZnaXVlly1lTT6O7gwmFthjPDHsEVeOx9qzWyPh6MUTU
-         OIRHPn1/WZvoacZOR9UBQI35XrrQRHHo5t0FqUjiR4dcyjBOYyXP31QRo/gJVVyG1s
-         hPoB7AqDn9HKFGMi3SdL4Dy5/R/u8WUW6LGkHAiSsMBqYsmYMhKV88e1jhlKZUrAvw
-         ayKTD8qVDkYSw==
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 05/04/2020 03:11 PM, Jean-Philippe Brucker wrote:
+> On Thu, Apr 30, 2020 at 04:39:53PM +0100, Suzuki K Poulose wrote:
+>> On 04/30/2020 03:34 PM, Jean-Philippe Brucker wrote:
+>>> With Shared Virtual Addressing (SVA), we need to mirror CPU TTBR, TCR,
+>>> MAIR and ASIDs in SMMU contexts. Each SMMU has a single ASID space split
+>>> into two sets, shared and private. Shared ASIDs correspond to those
+>>> obtained from the arch ASID allocator, and private ASIDs are used for
+>>> "classic" map/unmap DMA.
+>>>
+>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+>>> ---
+>>
+>>> +
+>>> +	tcr = FIELD_PREP(CTXDESC_CD_0_TCR_T0SZ, 64ULL - VA_BITS) |
+>>> +	      FIELD_PREP(CTXDESC_CD_0_TCR_IRGN0, ARM_LPAE_TCR_RGN_WBWA) |
+>>> +	      FIELD_PREP(CTXDESC_CD_0_TCR_ORGN0, ARM_LPAE_TCR_RGN_WBWA) |
+>>> +	      FIELD_PREP(CTXDESC_CD_0_TCR_SH0, ARM_LPAE_TCR_SH_IS) |
+>>> +	      CTXDESC_CD_0_TCR_EPD1 | CTXDESC_CD_0_AA64;
+>>> +
+>>> +	switch (PAGE_SIZE) {
+>>> +	case SZ_4K:
+>>> +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_4K);
+>>> +		break;
+>>> +	case SZ_16K:
+>>> +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_16K);
+>>> +		break;
+>>> +	case SZ_64K:
+>>> +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_64K);
+>>> +		break;
+>>> +	default:
+>>> +		WARN_ON(1);
+>>> +		ret = -EINVAL;
+>>> +		goto err_free_asid;
+>>> +	}
+>>> +
+>>> +	reg = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
+>>> +	par = cpuid_feature_extract_unsigned_field(reg, ID_AA64MMFR0_PARANGE_SHIFT);
+>>> +	tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_IPS, par);
+>>> +
+>>> +	cd->ttbr = virt_to_phys(mm->pgd);
+>>
+>> Does the TTBR follow the same layout as TTBR_ELx for 52bit IPA ? i.e,
+>> TTBR[5:2] = BADDR[51:48] ? Are you covered for that ?
+> 
+> Good point, I don't remember checking this. The SMMU TTBR doesn't have the
+> same layout as the CPU's, and we don't need to swizzle the bits. For the
+> lower bits, the alignment requirements on the pgd are identical to the
+> MMU.
 
-On 5/4/20 12:44 AM, Dmitry Osipenko wrote:
-> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> +/*
->> + * VI channel input data type enum.
->> + * These data type enum value gets programmed into corresponding Tegra =
-VI
->> + * channel register bits.
->> + */
->> +enum tegra_image_dt {
->> +	TEGRA_IMAGE_DT_YUV420_8 =3D 24,
->> +	TEGRA_IMAGE_DT_YUV420_10,
->> +
->> +	TEGRA_IMAGE_DT_YUV420CSPS_8 =3D 28,
->> +	TEGRA_IMAGE_DT_YUV420CSPS_10,
->> +	TEGRA_IMAGE_DT_YUV422_8,
->> +	TEGRA_IMAGE_DT_YUV422_10,
->> +	TEGRA_IMAGE_DT_RGB444,
->> +	TEGRA_IMAGE_DT_RGB555,
->> +	TEGRA_IMAGE_DT_RGB565,
->> +	TEGRA_IMAGE_DT_RGB666,
->> +	TEGRA_IMAGE_DT_RGB888,
->> +
->> +	TEGRA_IMAGE_DT_RAW6 =3D 40,
->> +	TEGRA_IMAGE_DT_RAW7,
->> +	TEGRA_IMAGE_DT_RAW8,
->> +	TEGRA_IMAGE_DT_RAW10,
->> +	TEGRA_IMAGE_DT_RAW12,
->> +	TEGRA_IMAGE_DT_RAW14,
->> +};
-> Are these format IDs common to all Tegra SoCs or they unique to T210?
-Common for all SoCs
+Ok, if that is the case:
+
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
