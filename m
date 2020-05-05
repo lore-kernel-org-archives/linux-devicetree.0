@@ -2,110 +2,156 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1DAC47258
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 21:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D890AC47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 21:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EAC72075E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 21:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6399206B8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 21:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bv9ht1Wd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W+FRQA/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgEEViV (ORCPT
+        id S1729332AbgEEV7m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 17:38:21 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60772 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgEEViU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 17:38:20 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4FAB1542;
-        Tue,  5 May 2020 23:38:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1588714698;
-        bh=M5j/b8gzH+fEUm7+KYZDdahsQo0EipSPaFfxodU1oig=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bv9ht1WdBhg5CG4w/4P+SK85qmX/CvOLXcCs97A7poVWrT2LdnEqelj9shuNxri23
-         q+7yrOU1+3pUmQ9bPZT1IQmdPG+EUdXY08/5sotkN0gT4/e7xHTlMi5/1yOEmRdUtF
-         KGW4DTMbakP9826lut/JbXBtDvAaovgd0KwXycFQ=
-Date:   Wed, 6 May 2020 00:38:13 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        spanda@codeaurora.org, linux-gpio@vger.kernel.org, jonas@kwiboo.se,
-        robdclark@chromium.org, bjorn.andersson@linaro.org,
-        jeffrey.l.hugo@gmail.com, jernej.skrabec@siol.net,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/6] dt-bindings: display: Add hpd-gpios to
- panel-common bindings
-Message-ID: <20200505213813.GC8640@pendragon.ideasonboard.com>
-References: <20200430194617.197510-1-dianders@chromium.org>
- <20200430124442.v4.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
+        Tue, 5 May 2020 17:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgEEV7l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 17:59:41 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DFA6C061A0F
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 14:59:39 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id t9so223228pjw.0
+        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 14:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7DJAN+zbZyTzksYSg0qDgZvny75gqESht2EoDUaeiY0=;
+        b=W+FRQA/+YRd56cMxtvZmLJp090eeRcsIqjOPZmT1h4oT7cL+3/93gEuj0aZsyxswoj
+         /g8sIOtDYHgVk9tLzJ0zNLel9iYPQK5Q2L7XWTLQK62Y5fp3tPpRxenMDhgvVGCFLmOQ
+         cax5jcZmQljak+AOJMscZtwwXalTjIF8cLBh8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7DJAN+zbZyTzksYSg0qDgZvny75gqESht2EoDUaeiY0=;
+        b=gkTNl2UMgyH9okmccaino3qVm7fSOaE1IzeiaxfhY2aQU8zPJ+nbjDhBcd21JmK4RH
+         2SKKE0YcGyJL7t2V9QGjx4r+SjX6UhFmQX0jtbyhFdnvOFXDwU8Lxd7sNfmhs4OGUNPi
+         hyu/+43MmbKMomWEqoJFwQt0MofxbAu5jQR8Z1hwTD93Ne18XWZx/1A8dvdEc25HwSqF
+         gzD5Hk0PVegqrZW9lryOE3pE4e/+aUrorWy8D2Dx3u0nJH29OUSGDmrkK6EOwP99iP1e
+         TYvvnQ3cvZ6JAs6gAMfE/Es+Sv5spYVvqoeMkdrPNuwqM4YEzByClOGRFGzGXxl05Olg
+         Nw+Q==
+X-Gm-Message-State: AGi0PuaZuZCcurqiYA0jXZOBnVZ3h922G50lORqHBvTUYWeZwGuR5HvK
+        Uq4JSbsj2hRrBR6qtEjYT/p/kg==
+X-Google-Smtp-Source: APiQypJCt+dy6XRM52vo53M6C2Qv1WIYAb9bhb2IKGG9HB+savuLO3ddRG8mUd+gHanaOatqDPK8Jw==
+X-Received: by 2002:a17:90a:276a:: with SMTP id o97mr5469618pje.194.1588715979157;
+        Tue, 05 May 2020 14:59:39 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s44sm3065952pjc.28.2020.05.05.14.59.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 14:59:38 -0700 (PDT)
+Date:   Tue, 5 May 2020 14:59:37 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
+        pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org, anton@enomsg.org, ccross@android.com,
+        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] pstore/platform: pass max_reason to kmesg dump
+Message-ID: <202005051444.14B6686@keescook>
+References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
+ <20200505154510.93506-3-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430124442.v4.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
+In-Reply-To: <20200505154510.93506-3-pasha.tatashin@soleen.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Doug,
-
-Thank you for the patch.
-
-On Thu, Apr 30, 2020 at 12:46:13PM -0700, Douglas Anderson wrote:
-> In the cases where there is no connector in a system there's no great
-> place to put "hpd-gpios".  As per discussion [1] the best place to put
-> it is in the panel.  Add this to the device tree bindings.
+On Tue, May 05, 2020 at 11:45:07AM -0400, Pavel Tatashin wrote:
+> Add a new field to pstore_info that passes information about kmesg dump
+> maximum reason.
 > 
-> [1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboard.com
+> This allows a finer control of what kmesg dumps are stored on pstore
+> device.
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+> Those clients that do not explicitly set this field (keep it equal to 0),
+> get the default behavior: dump only Oops and Panics, and dump everything
+> if printk.always_kmsg_dump is provided.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 > ---
+>  fs/pstore/platform.c   | 4 +++-
+>  include/linux/pstore.h | 3 +++
+>  2 files changed, 6 insertions(+), 1 deletion(-)
 > 
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2:
-> - ("dt-bindings: display: Add hpd-gpios to panel-common...") new for v2
-> 
->  .../devicetree/bindings/display/panel/panel-common.yaml     | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> index ed051ba12084..e9a04a3a4f5f 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> @@ -96,6 +96,12 @@ properties:
->        (hot plug detect) signal, but the signal isn't hooked up so we should
->        hardcode the max delay from the panel spec when powering up the panel.
+> diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+> index 408277ee3cdb..75bf8a43f92a 100644
+> --- a/fs/pstore/platform.c
+> +++ b/fs/pstore/platform.c
+> @@ -602,8 +602,10 @@ int pstore_register(struct pstore_info *psi)
+>  	if (pstore_is_mounted())
+>  		pstore_get_records(0);
 >  
-> +  hpd-gpios:
-> +    maxItems: 1
-> +    description:
-> +      If Hot Plug Detect (HPD) is connected to a GPIO in the system rather
-> +      than a dedicated HPD pin the pin can be specified here.
-> +
->    # Control I/Os
+> -	if (psi->flags & PSTORE_FLAGS_DMESG)
+> +	if (psi->flags & PSTORE_FLAGS_DMESG) {
+> +		pstore_dumper.max_reason = psinfo->max_reason;
+>  		pstore_register_kmsg();
+> +	}
+
+I haven't finished reading the whole series carefully, but I think
+something we can do here to make things a bit more user-friendly is to
+do the KMSG_DUMP_UNDEF value here to get us the "all" instead of INT_MAX:
+
+	if (psi->flags & PSTORE_FLAGS_DMESG) {
+		pstore_dumper.max_reason = psinfo->max_reason;
+		if (pstore_dumper.max_reason == KMSG_DUMP_UNDEF)
+			pstore_dumper.max_reason = KMSG_DUMP_MAX;
+		pstore_register_kmsg();
+	}
+
+That way setting max_reason to 0 without setting dump_oops at all will
+get "all". I think it'll need some tweaks to the next patch.
+
+>  	if (psi->flags & PSTORE_FLAGS_CONSOLE)
+>  		pstore_register_console();
+>  	if (psi->flags & PSTORE_FLAGS_FTRACE)
+> diff --git a/include/linux/pstore.h b/include/linux/pstore.h
+> index e779441e6d26..45ae424bfeb5 100644
+> --- a/include/linux/pstore.h
+> +++ b/include/linux/pstore.h
+> @@ -97,6 +97,8 @@ struct pstore_record {
+>   * @read_mutex:	serializes @open, @read, @close, and @erase callbacks
+>   * @flags:	bitfield of frontends the backend can accept writes for
+>   * @data:	backend-private pointer passed back during callbacks
+> + * @max_reason: Used when PSTORE_FLAGS_DMESG is set. Contains the
+> + *              kmsg_dump_reason enum value.
+
+Nit: please move this above @data since it has a @flags dependency.
+
+>   *
+>   * Callbacks:
+>   *
+> @@ -180,6 +182,7 @@ struct pstore_info {
 >  
->    # Many display panels can be controlled through pins driven by GPIOs. The nature
+>  	int		flags;
+>  	void		*data;
+> +	int		max_reason;
+>  
+>  	int		(*open)(struct pstore_info *psi);
+>  	int		(*close)(struct pstore_info *psi);
+> -- 
+> 2.25.1
+> 
+
+Looking good!
 
 -- 
-Regards,
-
-Laurent Pinchart
+Kees Cook
