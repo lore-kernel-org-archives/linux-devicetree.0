@@ -2,116 +2,100 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61A8C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35398C47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C39122078C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:33:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BybiyQGR"
+	by mail.kernel.org (Postfix) with ESMTP id 0DAAC2078C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588693104;
+	bh=vnZGTV0PFahJKuxybhCdgPOyDfTZu2dHlmXzSmZauCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lp/CH9J0n9xrv8+1XRAloggkE1WwI1XSgPO+bxgsMmV+iiru9/wey/dyJnPCbeCPe
+	 SHYmu2Wd+ACsm6qW2RcnN+qcTRTTfczoYf45p+12leZx4Z2E+MI+P2dszWqfiKhVhY
+	 aYDY9b4YVT3cEuiBdeKSNPc67pCgrtvjwnre2aMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730332AbgEEPdJ (ORCPT
+        id S1729380AbgEEPiX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 11:33:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730294AbgEEPdH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:33:07 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 531E1C061A0F;
-        Tue,  5 May 2020 08:33:07 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id g10so1695913lfj.13;
-        Tue, 05 May 2020 08:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=L0UN3GdJ+vKgAwHZGo4xnJdgYYkX+IpknMqsaJEpZ0s=;
-        b=BybiyQGRkSRfHqlJtOAL2TZZ9fIM9njtz/iec0blwnKARpU22PJOmso+P2a6V6WikX
-         R4eEHy7CRUF88cnyTWXhANjldq+AG5XtduiWedAdSNotH3fRQs8Va+p783PpTYej0KMb
-         2We1pvJxMHq9X7oGimCi+O0rQbSOreOqKXOViUlBvsVzgJB+GSrU3ewaAxzBOcIJZEjn
-         wqZCWRPYctqXG1KVVDt7QdOjMBGIwfIp2nw9fZGKmPnwSsUnJb+2yuEHWuFy0ehSK432
-         st/sxRG7FRz74WOO/pNovUFRz0o/FXTdYmduACtAL0jONMms2Xbwjn0//p5a1yavbXEd
-         bgGg==
+        Tue, 5 May 2020 11:38:23 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37259 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729276AbgEEPiX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:38:23 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r25so2335440oij.4;
+        Tue, 05 May 2020 08:38:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=L0UN3GdJ+vKgAwHZGo4xnJdgYYkX+IpknMqsaJEpZ0s=;
-        b=ttFDso1wZX/S2eqhiHz6VRMmmc3dTlZ0kzp73PrzxE4hM7nQ35dU96oJJXja6/aZyl
-         oEYoRr+SA/sTeTH63+3AfRaR43KGlJy553L/GuEmMJ2XrH00nF17HqSzSHoVwmzzQKJ9
-         dcvA0ApLOgRc0b0D5aXm4oKWDR/5d9849VWy0RnkkayEnHAsYhsdocA1ndgTgls1+htF
-         pq/LaroitMinSJ1/kaTryo9x2k6BbOinlHb/Lxw8+LcnX8zePGiX6HXnsk4BwaMh3Wlb
-         4aKFZd0ieZcovNsRismIL2/l5pcYsKgLEoG3aF6i8IUgwEyLjsH18uxadez4bw5k3CnG
-         5N9Q==
-X-Gm-Message-State: AGi0PuaCNhld19hVnxXpyMqWXEBjrcI2dApce1wwJu0l9q0xXA4GgCXK
-        W7aZnKpIInjuTEyrHm14In2jjzhF
-X-Google-Smtp-Source: APiQypJzIQigA9yElUci4Z1uO/sOB3hgnu6E74GLqXTUAPfxzXJVk3uVF0WpPra2UA6plGy32awuag==
-X-Received: by 2002:a19:cc92:: with SMTP id c140mr2058528lfg.34.1588692785272;
-        Tue, 05 May 2020 08:33:05 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id r80sm2240082lff.5.2020.05.05.08.33.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 08:33:04 -0700 (PDT)
-Subject: Re: [PATCH v7 0/6] Support NVIDIA Tegra-based Acer A500 and Nexus 7
- devices
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?Q?Pedro_=c3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        Zack Pearsall <zpearsall@yahoo.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200505022517.30523-1-digetx@gmail.com>
- <20200505151136.GA26776@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c34c3bc7-73f7-730c-1581-2e12f3e1d913@gmail.com>
-Date:   Tue, 5 May 2020 18:33:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kqQrkElLVWgKrW0ocIK6no1Eo72/15ji6o+a599XdUg=;
+        b=CfrW0kZs1N7xQV8YSJo4KJASPyM3oQVRbxwp7dA2dnXgoBSBlOU7YUlIS0xJc8LuPn
+         /u2WkdAJF0NhnLM1tjTvvzPxU623oE7kZveH8TCciBLIRe8q9bFz5wKwWqakiCLmujIX
+         nEXLwlIyvFhb1VEby7nld0ii9WUb+YfmhuwU4gzNwxli4LOorPvxweka8IIDDi2rFt8T
+         dyBpyl+FRLyvyI1Amso0EI+qE0b7isQVzUz9W3ijjDwxqYKFtxmsOjFba0NXcJDglQgU
+         apJIIXyMBdgmnh/k0pVrMqYcK5PSTVEftW+azO9kUWhaXgjlWzCOwzHNin3XzGNlATAS
+         Y6nQ==
+X-Gm-Message-State: AGi0Pubnz5beSXZjdv7yPFLZoCQSpYvjKaPt2feb1xjhFGYwsDu6UleQ
+        w6j6/4g08jFbVAi4/snOPw==
+X-Google-Smtp-Source: APiQypKYusD1gPoY+0joGmEA7TK8cSMo/0ZQO2nI0p43i7rGC3r3RtktHEbFfvgfs6RduoaUzLO7zg==
+X-Received: by 2002:aca:5806:: with SMTP id m6mr2830103oib.178.1588693102213;
+        Tue, 05 May 2020 08:38:22 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p17sm656724oot.17.2020.05.05.08.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 08:38:21 -0700 (PDT)
+Received: (nullmailer pid 28227 invoked by uid 1000);
+        Tue, 05 May 2020 15:38:19 -0000
+Date:   Tue, 5 May 2020 10:38:19 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Subject: Re: [PATCH 2/2] dt-bindings: thermal: tsens: Add zeroc interrupt
+ support in yaml
+Message-ID: <20200505153819.GA19181@bogus>
+References: <20200505111204.963-1-manafm@codeaurora.org>
+ <20200505111204.963-3-manafm@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200505151136.GA26776@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505111204.963-3-manafm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-05.05.2020 18:11, Michał Mirosław пишет:
-> On Tue, May 05, 2020 at 05:25:11AM +0300, Dmitry Osipenko wrote:
->> Hello,
->>
->> This series introduces upstream kernel support for Acer Iconia Tab A500
->> and ASUS Google Nexus 7 tablet devices. Please review and apply, thanks
->> in advance.
->>
->> Changelog:
->>
->> v7: - This version brings support for a Nexus 7 variant that uses Ti PMIC
->>       instead of the Maxim PMIC. Previously we assumed that variant with
->>       the Ti PMIC doesn't exist in a wild, but turned out that it was a
->>       wrong assumption. In a result the device-trees are separated into
->>       more DTSI pieces, which combined together form the final device-tree.
->>       Thanks to Zack Pearsall for testing the Ti version!
-> [...]
+On Tue,  5 May 2020 16:42:04 +0530, Manaf Meethalavalappu Pallikunhi wrote:
+> Add 0C (zeroc) interrupt support for tsens in yaml.
 > 
-> Hi Dmitry!
+> Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> This Ti-based (PM269) version might be very similar to Asus TF300T I have.
-> I'll have a look on your DT during the weekend.
 
-Will be great, thank you!
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@c263000: interrupt-names: ['uplow', 'critical', 'zeroc'] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@c263000: interrupts: [[0, 506, 4], [0, 508, 4], [0, 510, 1]] is too long
+
+See https://patchwork.ozlabs.org/patch/1283470
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
