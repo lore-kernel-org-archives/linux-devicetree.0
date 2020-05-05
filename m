@@ -2,142 +2,92 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB5AC47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CE0C47258
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 13:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC28B206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:55:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OPSd7s7E"
+	by mail.kernel.org (Postfix) with ESMTP id 367ED2073B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 13:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgEEMzs (ORCPT
+        id S1729013AbgEENH1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 08:55:48 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50544 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728497AbgEEMzs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 08:55:48 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045CtgJd100492;
-        Tue, 5 May 2020 07:55:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588683342;
-        bh=TFx+viVGB1RJAgHDimKDlop7ZpZlSmdHvKAad8iYbGk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OPSd7s7EyQGGbbs6oMhwkXOkxxVubFW4Hn6fLa9Mcm1djjT7WC5J6yQ4wCiTQzipJ
-         e3zo/AellZ4yCplWQYc0fAPnM2yz9L4m/7BgsvCMGDTnbrWelqUHJ1xYpGlXHtaWxx
-         OUBjKPr7UrAEt+R2bv5ZxIjMOVJlMWtU+3yd2V9A=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 045Ctgmi031790
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 May 2020 07:55:42 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
- 2020 07:55:42 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 5 May 2020 07:55:42 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045Ctchu036626;
-        Tue, 5 May 2020 07:55:39 -0500
-Subject: Re: [PATCH net-next 3/7] net: ethernet: ti: am65-cpsw-nuss: enable
- packet timestamping support
-To:     Anders Roxell <anders.roxell@linaro.org>
-CC:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Nishanth Menon <nm@ti.com>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-4-grygorii.strashko@ti.com>
- <CADYN=9L+RtruRYKah0Bomh7UaPGQ==N9trd0ZoVQ3GTc-VY8Dg@mail.gmail.com>
- <1bf51157-9fee-1948-f9ff-116799d12731@ti.com>
- <CADYN=9LfqLLmKNHPfXEiQbaX8ELF78BL-vWUcX-VP3aQ86csNg@mail.gmail.com>
- <CADYN=9LDCE2sQca12D4ow3BkaxXi1_bnc4Apu7pP4vnA=5AOKA@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <7c32cb2f-e0f3-8861-3cdc-ef3f922aa044@ti.com>
-Date:   Tue, 5 May 2020 15:55:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <CADYN=9LDCE2sQca12D4ow3BkaxXi1_bnc4Apu7pP4vnA=5AOKA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 5 May 2020 09:07:27 -0400
+Received: from mga02.intel.com ([134.134.136.20]:12710 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728268AbgEENH1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 09:07:27 -0400
+IronPort-SDR: T7pEg2wD4zRVMn6cfBNSvjhmml6tTNiEmd7T1hYZKyw2a891+ih8hgRIz/RwMZktX6XBQs+Z+q
+ IC+wcvIbF40Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 06:07:26 -0700
+IronPort-SDR: +rPDXpGUI38tUzBpWnYAvMP6ljMhEHus6kHMEcBIKAONu7I9akXF2/OAZfiDIfqcP+SHF8B4zW
+ 8XCLipjgfNzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
+   d="scan'208";a="277868825"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by orsmga002.jf.intel.com with ESMTP; 05 May 2020 06:07:25 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     broonie@kernel.org, robh+dt@kernel.org
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [PATCH v5 0/7] spi: dw: Add support for Intel Keem Bay SPI
+Date:   Tue,  5 May 2020 21:06:11 +0800
+Message-Id: <20200505130618.554-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patchset adds support for DesignWare DWC_ssi. This soft IP
+is an AMBA version 2.0-compliant AHB slave device. Existing driver
+already supports the older APB version.
+
+Intel Keem Bay SPI controller is using this IP. This patchset is
+tested on Keem Bay evaluation module board.
+
+Changes since v4:
+- Rebased to latest linux-next, since v4 does not apply cleanly.
+
+Changes since v3:
+- DT changes for feature addition is done on snps,dw-apb-ssi.txt.
+- And then convert the updated snps,dw-apb-ssi.txt to DT schema format.
+
+Changes since v2:
+- Rebased to v5.7-rc4.
+- Change the order of the patches i.e. dt-bindings patches go last.
+
+Changes since v1:
+- Rework the third patch based on Rob's feedback.
 
 
-On 05/05/2020 14:59, Anders Roxell wrote:
-> On Tue, 5 May 2020 at 13:16, Anders Roxell <anders.roxell@linaro.org> wrote:
->>
->> On Tue, 5 May 2020 at 13:05, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>>
->>> hi Anders,
->>
->> Hi Grygorii,
-> 
-> Hi again,
-> 
->>
->>>
->>> On 05/05/2020 13:17, Anders Roxell wrote:
->>>> On Fri, 1 May 2020 at 22:50, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>>>>
->>>>> The MCU CPSW Common Platform Time Sync (CPTS) provides possibility to
->>>>> timestamp TX PTP packets and all RX packets.
->>>>>
->>>>> This enables corresponding support in TI AM65x/J721E MCU CPSW driver.
->>>>>
->>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>> ---
->>>>>    drivers/net/ethernet/ti/Kconfig             |   1 +
->>>>>    drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  24 ++-
->>>>>    drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 172 ++++++++++++++++++++
->>>>>    drivers/net/ethernet/ti/am65-cpsw-nuss.h    |   6 +-
->>>>>    4 files changed, 201 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
->>>>> index 1f4e5b6dc686..2c7bd1ccaaec 100644
->>>>> --- a/drivers/net/ethernet/ti/Kconfig
->>>>> +++ b/drivers/net/ethernet/ti/Kconfig
->>>>> @@ -100,6 +100,7 @@ config TI_K3_AM65_CPSW_NUSS
->>>>>           depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
->>>>>           select TI_DAVINCI_MDIO
->>>>>           imply PHY_TI_GMII_SEL
->>>>> +       imply TI_AM65_CPTS
->>>>
->>>> Should this be TI_K3_AM65_CPTS ?
-> 
-> instead of 'imply TI_K3_AM65_CPTS' don't you want to do this:
-> 'depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS'
-> 
-> 
+Wan Ahmad Zainie (7):
+  spi: dw: Fix typo in few registers name
+  spi: dw: Add update_cr0() callback to update CTRLR0
+  spi: dw: Add support for DesignWare DWC_ssi
+  dt-bindings: spi: dw-apb-ssi: Add compatible string for DesignWare
+    DWC_ssi
+  spi: dw: Add support for Intel Keem Bay SPI
+  dt-bindings: spi: dw-apb-ssi: Add Intel Keem Bay support
+  dt-bindings: spi: dw-apb-ssi: Convert bindings to json-schema
 
-this seems will do the trick.
-Dependencies:
-PTP_1588_CLOCK -> TI_K3_AM65_CPTS -> TI_K3_AM65_CPSW_NUSS
-
-I'll send patch.
+ .../bindings/spi/snps,dw-apb-ssi.txt          | 41 ----------
+ .../bindings/spi/snps,dw-apb-ssi.yaml         | 72 +++++++++++++++++
+ drivers/spi/spi-dw-mid.c                      |  4 +
+ drivers/spi/spi-dw-mmio.c                     | 57 ++++++++++++-
+ drivers/spi/spi-dw.c                          | 80 +++++++++++++++----
+ drivers/spi/spi-dw.h                          | 25 +++++-
+ 6 files changed, 214 insertions(+), 65 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
 
 -- 
-Best regards,
-grygorii
+2.17.1
+
