@@ -2,103 +2,82 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF23C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 13:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2B9C47259
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 13:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC516206A5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 13:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588685653;
-	bh=jJviMcp5DBoR3eNvhbgb5HS8okSTXwDDxd9C6+S54Rs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kA1LhUF6M03/iLN/c4AP0B4p7Vbib7PIhbKtzhUKJvnzFdLFu8IZU/t3VuPJZZxeH
-	 Lw9zu/HFbH5sTPrTwvKUpPIgwcG579wG6jJsglRhMYUlg2XjTxFCf9Vc9707NcYCRu
-	 GdLVx7T45+ozv9709FaBV0eU6pKIQNTOwpgwvGMU=
+	by mail.kernel.org (Postfix) with ESMTP id 6DE78206A5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 13:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgEENeN (ORCPT
+        id S1728180AbgEENgI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 09:34:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41106 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728894AbgEENeM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 09:34:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c3so1599227otp.8;
-        Tue, 05 May 2020 06:34:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PsjcTsG/gjBsqBJgHVlid+3Mm782eXV4Fl6ucMTeSJY=;
-        b=g0DMiLC3oTqOfJAIRYjC5H6I4dpZseKlwHFxXx/qUXM9eMOYjrpBfMmmKOQRILvIVV
-         9JnrAYWMF1E+RZRoum9jAsJ2ZwCxZgPBOkYbL1c3u6SNxHchdp517rBXpuEq/vYxaTLm
-         LXlfxlp98IqA5rJ1w5p+uaD7hkFdQg6GLuzBEcscfQOaj5pSynf/G8pN+SXfZoOA7Xrc
-         o32fHqnsqX+1uok/Kw0i9JhvCU1CYNvk/EFVTwM9Q2e8ev0D8665TfY064Tlydi/1kpD
-         VNBkHAHJLPA1xLMhvvtc+l+tPMjQAgakzPQTkkqLCtFAWbJf1jVEeXixl0o7/YCX+hV7
-         I9pg==
-X-Gm-Message-State: AGi0PubUjx4xseRr97MK/y/52Qg42/de0XMF+7+N2WT5RYuqQtNprB+c
-        X+Rj5JltFscZBAcPD2eEdA==
-X-Google-Smtp-Source: APiQypJhIFWNLw18Q+hIiasPVcWn91Fm5B/gR5rb3vMJKDZknTfScGx82vRxm9AubbYYAxYJ7/23iw==
-X-Received: by 2002:a05:6830:1b65:: with SMTP id d5mr2068968ote.141.1588685650099;
-        Tue, 05 May 2020 06:34:10 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e91sm610862otb.40.2020.05.05.06.34.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 06:34:09 -0700 (PDT)
-Received: (nullmailer pid 25501 invoked by uid 1000);
-        Tue, 05 May 2020 13:34:08 -0000
-Date:   Tue, 5 May 2020 08:34:08 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        mgautam@codeaurora.org, vkoul@kernel.org, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jackp@codeaurora.org,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: Re: [PATCH v8 1/5] dt-bindings: phy: Add binding for
- qcom,usb-snps-femto-v2
-Message-ID: <20200505133408.GA24731@bogus>
-References: <1588636467-23409-1-git-send-email-wcheng@codeaurora.org>
- <1588636467-23409-2-git-send-email-wcheng@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588636467-23409-2-git-send-email-wcheng@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 5 May 2020 09:36:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729095AbgEENgG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 09:36:06 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AEA8C061A41
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 06:36:05 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:bd97:8453:3b10:1832])
+        by xavier.telenet-ops.be with bizsmtp
+        id b1c32200D3VwRR3011c34F; Tue, 05 May 2020 15:36:03 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jVxjv-0008Al-Gi; Tue, 05 May 2020 15:36:03 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jVxjv-0006m4-En; Tue, 05 May 2020 15:36:03 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Rajat Jain <rajatja@google.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 resend 2] dt-bindings: net: btusb: DT fix s/interrupt-name/interrupt-names/
+Date:   Tue,  5 May 2020 15:36:02 +0200
+Message-Id: <20200505133602.25987-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  4 May 2020 16:54:23 -0700, Wesley Cheng wrote:
-> This binding shows the descriptions and properties for the
-> Synopsis Femto USB PHY V2 used on QCOM platforms.
-> 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  .../bindings/phy/qcom,usb-snps-femto-v2.yaml       | 77 ++++++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
-> 
+The standard DT property name is "interrupt-names".
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Fixes: fd913ef7ce619467 ("Bluetooth: btusb: Add out-of-band wakeup support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v4:
+  - Add Acked-by,
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda-pll-supply' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda18-supply' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda33-supply' is a required property
+v3:
+  - New.
+---
+ Documentation/devicetree/bindings/net/btusb.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-See https://patchwork.ozlabs.org/patch/1283143
+diff --git a/Documentation/devicetree/bindings/net/btusb.txt b/Documentation/devicetree/bindings/net/btusb.txt
+index b1ad6ee68e909318..c51dd99dc0d3cb73 100644
+--- a/Documentation/devicetree/bindings/net/btusb.txt
++++ b/Documentation/devicetree/bindings/net/btusb.txt
+@@ -38,7 +38,7 @@ Following example uses irq pin number 3 of gpio0 for out of band wake-on-bt:
+ 	compatible = "usb1286,204e";
+ 	reg = <1>;
+ 	interrupt-parent = <&gpio0>;
+-	interrupt-name = "wakeup";
++	interrupt-names = "wakeup";
+ 	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+     };
+ };
+-- 
+2.17.1
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
