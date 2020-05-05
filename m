@@ -4,114 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9339EC47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F4FC47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 756FB206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF9E206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588705862;
-	bh=wKAhIa2zaocQDzOd4/nmOgQ2glmogPCEcqkVT+0Xw6o=;
+	s=default; t=1588705887;
+	bh=llHyglklkhKyNKyuOZUK7Ye6Zr5VKWVZUzb9hXAbEno=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B3gadGKEb3FXJJD4PEcszckp/Z2fZaa2bSdmEpdoKyB00m/HTQ4hSFDpu2Q3sYG+o
-	 HAi8QJFIZS/23sEhzcO9QHkLtwZCsmAqnp8gfSKufhvguy4KULo5BK9Pn6xg3nWUkC
-	 tXQjk5g46QOvCwzbad8w6PWmAKrzt8y+UXXxNNSw=
+	b=iCu2EZ5b+Sur7qCVm3bP2qVQ0e096SRsQSg8k/iKMYu/RsrupawTGHVZt5J9ELfWD
+	 sHTquTay8xy4PDWv3nYF9v5cUb3qWe/bcI9nx+wikzJkTz05Y2EmJjRQobrsygOU9l
+	 LsrlTfcWeOt8MuAuYLndvQagL3ZWXIi+7gPRwMf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgEETLC (ORCPT
+        id S1727785AbgEETL1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 15:11:02 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38657 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbgEETLB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:11:01 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r66so2990791oie.5;
-        Tue, 05 May 2020 12:11:01 -0700 (PDT)
+        Tue, 5 May 2020 15:11:27 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:32847 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbgEETL0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:11:26 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j26so2689020ots.0
+        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 12:11:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sPZdlJTtTRQJiLlibAWVzC2KCD6dgBidSCLi0OcybB8=;
-        b=SAEN4BFeT97B2+GOrt+S6+hpZTjCCZbrSs0thzBkd+3vwRoLo0yGlMDnF559HuQp91
-         5QOMqt16Tfhz0D1M2eZ2Pt2dAianqd84PQsFAW3jTTggYv2ogVym1FaiaP4WkgNlcUez
-         yyY2gyCrDoTOYplAcDtS56kS5veE4by2wbGcF02yna1k4heseit6OHPbOno+NBuumZAz
-         wWd59AvD1pOkCVijCp6eLQ+K65zOkElYKRZSN/oMTYdbeaeQqCF3wcEmcbUquQycBDiN
-         UM0oktnriTK2fAF9ghlc7Rycm28kcVASNJ8o+SDcWywLqQf2CP0SVc+cP/abDwGNxaks
-         kf8w==
-X-Gm-Message-State: AGi0PuYCezJxKOUabyxywNGX2/DHe9emS34t5ADnCVxQPDiWPeB2VXVJ
-        FUjhdiJ3CiUVn+S8B8qn9QAmhno=
-X-Google-Smtp-Source: APiQypIXGxmvcD4gphth8NXIPfPGvEQixA24pgsZd0empG7WGJlIZgA64cPSpqiIpycAgPTrfluZQw==
-X-Received: by 2002:aca:53cd:: with SMTP id h196mr84159oib.104.1588705860814;
-        Tue, 05 May 2020 12:11:00 -0700 (PDT)
+        bh=hfQqQqUDeux0AiumwR3OcP5mXbRrbF31YObLFLL2oyY=;
+        b=jr7VnCDow35xT/9+VBEHdHU7OvFVfFVnNfEiQSWsQGvTdaBc+KkVnS6rhUYEFIPtwj
+         CshTtnZWahC5YjMUDQBNtdZskf63gJEBPEbB67QAotIpSXv3dlmsUgcgIRuqpEmt0jvt
+         DT+Upe1Vfm+zvvnu3rzOWLXrJJEaHr/I5nr8KBo1m/tk2oYCZlDnPfPciMCHxH6P4dxW
+         E8RAs87mzyBdJBUAZ08R4b1KRjj+dyVQu+qjvBFI1Z9jYG8AiJKlAM5oTM9DEFvny7vI
+         lYr8y7dE91BbWYW1Z3Tc940iSSLFKIks/I795JrbushF5r09SfPqADqB0m9qiXzZib78
+         tMqQ==
+X-Gm-Message-State: AGi0PuYMMu6B6ozIZrb83x3aBpdu2bKlyAKiJlmXfuFy1Y0Pr9uS9tM4
+        jemAzeK8/CzCH+hYKLqzzA==
+X-Google-Smtp-Source: APiQypKJXcHVrs8bPzFJ0U3Kl3JJt27BxV3pPbawiypoA12wYwIcXNCz2Df0a58Hr8Igs3g7jFmYbA==
+X-Received: by 2002:a9d:1441:: with SMTP id h59mr3794216oth.192.1588705885678;
+        Tue, 05 May 2020 12:11:25 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y2sm799299oot.16.2020.05.05.12.10.59
+        by smtp.gmail.com with ESMTPSA id t9sm787281oie.24.2020.05.05.12.11.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 12:10:59 -0700 (PDT)
-Received: (nullmailer pid 25300 invoked by uid 1000);
-        Tue, 05 May 2020 19:10:58 -0000
-Date:   Tue, 5 May 2020 14:10:58 -0500
+        Tue, 05 May 2020 12:11:25 -0700 (PDT)
+Received: (nullmailer pid 26249 invoked by uid 1000);
+        Tue, 05 May 2020 19:11:24 -0000
+Date:   Tue, 5 May 2020 14:11:24 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     joro@8bytes.org, robh+dt@kernel.org,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v5] dt-bindings: iommu: renesas,ipmmu-vmsa: convert to
- json-schema
-Message-ID: <20200505191058.GA25129@bogus>
-References: <1587446152-23886-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To:     Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: arm: Add Akebi96 board support
+Message-ID: <20200505191124.GA26192@bogus>
+References: <158824887998.2799.1402930732677315138.stgit@localhost>
+ <20200430222509.c0c3699e42b3e2e3c290ceae@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587446152-23886-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20200430222509.c0c3699e42b3e2e3c290ceae@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Apr 2020 14:15:52 +0900, Yoshihiro Shimoda wrote:
-> Convert Renesas VMSA-Compatible IOMMU bindings documentation
-> to json-schema.
+On Thu, 30 Apr 2020 22:25:09 +0900, Masami Hiramatsu wrote:
+> Add uniphier-ld20-akebi96 compatible string for
+> Akebi96 board support.
 > 
-> Note that original documentation doesn't mention renesas,ipmmu-vmsa
-> for R-Mobile APE6. But, R-Mobile APE6 is similar to the R-Car
-> Gen2. So, renesas,ipmmu-r8a73a4 belongs the renesas,ipmmu-vmsa
-> section.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
 > ---
->  Changes from v4:
->  - Fix description about cell counts on #iommu-cells and renesas,ipmmu-main.
->  - Fix node name on the example. 
->  https://patchwork.kernel.org/patch/11494231/
-> 
->  Changes from v3:
->  - Fix renesas,ipmmu-r8a7795's section
->  https://patchwork.kernel.org/patch/11494079/
-> 
->  Changes from v2:
->  - Add a description for R-Mobile APE6 on the commit log.
->  - Change renesas,ipmmu-r8a73a4 section on the compatible.
->  - Add items on the interrupts.
->  - Add power-domains to required.
->  - Add oneOf for interrupts and renesas,ipmmu-main
->  https://patchwork.kernel.org/patch/11490581/
-> 
->  Changes from v1:
->  - Fix typo in the subject.
->  - Add a description on #iommu-cells.
->  https://patchwork.kernel.org/patch/11485415/
-> 
->  .../bindings/iommu/renesas,ipmmu-vmsa.txt          | 73 ----------------
->  .../bindings/iommu/renesas,ipmmu-vmsa.yaml         | 98 ++++++++++++++++++++++
->  2 files changed, 98 insertions(+), 73 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
->  create mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+>  .../bindings/arm/socionext/uniphier.yaml           |    1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
