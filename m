@@ -2,119 +2,107 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1332C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD490C47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20D120735
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA7F820746
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:40:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SbmAUPvi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PbRweIMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgEELdt (ORCPT
+        id S1728760AbgEELk4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 07:33:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51622 "EHLO
+        Tue, 5 May 2020 07:40:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728874AbgEELdk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 07:33:40 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C54C061A0F
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 04:33:39 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id i5so286522uaq.1
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 04:33:39 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1728736AbgEELkz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 07:40:55 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAC98C061A41
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 04:40:54 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y4so2106715wrm.11
+        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 04:40:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=166ZI2PQYttk8mUuPjh9fJHZKXnQuSqSXt1RrZvFtpA=;
-        b=SbmAUPviBr80iF1qScxhl5zJVFA3V7xs4iTOq1msRXtlVS5Z9A1FelEaA5QOQUWqSn
-         Gciu/AaBzFBmE9zsnvklJwgF+se1u3nj/rAckeZ5e5cdWv6G/dnbkbVhbAILnHgR8ESS
-         0RJNI/xujs7FxJsLMC8nNRkZLo0PDbWYVPfHWPg2m1CApz8MmMYfQf4zmiPiVH+2qRQS
-         KpJhx0xg/64TubUQdiVtwLaCC/RxcIr8uKxVm8m4N4Lz4ee+Ce2Si7BmBh+ccTDUf2Ok
-         cWulD+4LSCa2nf0nb8Ruoidn+kZRLzCVPbwfVcgMFxE3RM0EQsHaWeDgVB2/Rns/tTD9
-         Y36Q==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Zw8AGAHFXGrv2iacmWJVrfWvZyG12y22YZaRvl3DEfA=;
+        b=PbRweIMky5ZkEGXsQqcS5VVBKvjdLKoF8NN6LUtUo0feNkVWNzQuUOP5PfSeNqV7gT
+         kbvVbm8O+vdW5duJm/STuZRMkIMNbwmfX2jKC+yDQzEuoQJ4BUC2IG98/RQmxlTJeo2r
+         fPHppnLpZ6vuzLtSAqWylv3JHkvCuRMmQfevQDwjFf0AZTVy+9HXcYDhNTx2ujb8G6r5
+         H6Im1v94r3puCJFVDfWkYbQHn1SwK9bZzaTWZgun5/zYcI1qw/fPeQmHFuOlRAI7VMQ2
+         sD0JBD/IaldKNgfmuS1Qzbo5inQpZakELaG9LsLWYPKN9Eaa6uA4QTbwIEF1HSmA5wUG
+         tQiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=166ZI2PQYttk8mUuPjh9fJHZKXnQuSqSXt1RrZvFtpA=;
-        b=K2xjBkQQMV8ZUQRHsaPE3yYvQZvcSXDQzco6pkasGfjmpt+DyD0NafjWzcZFJDT2is
-         33fc5BxOhfB32TXXm6wiptoL2BeIkTJ1wWTKcoVUnmaRH4aHQ+bsx3XV2ZPbZvN+teqv
-         8R53rReqffkZEJOKBjg1g78GS8yuqfqqELjLcLc2WXoXIDGTzUDMFXHyRz1lGyPELpwQ
-         lnVyZXU0rzj+0pOyw0cE3B7dnUM956nXXFx2xhIOydalqLevIFnl8cdZDn9rvYxXgmx7
-         HgmS1R7F78jhUzQgsKdGhpV9lteDOPTB53sqYkbX/q2KcC41/LUQfll1lXM+/S2PzfDo
-         9NhA==
-X-Gm-Message-State: AGi0PubesMyySuS85FOLTr7/PubxXgtRjhpizH6t5e3y/L/MCpv81k7k
-        ft4DiGdCh7DVPC3+4TnxzLx4LVgkk+oCABfzjjXuYg==
-X-Google-Smtp-Source: APiQypIVXSv4Xz1Q8pgiALwOrIbs+TbqKGJBWZAvFSYtSethZHtLnwLnQoOS0qNKX6URobh8SNfeXpV8uZemzz1NRmg=
-X-Received: by 2002:ab0:3343:: with SMTP id h3mr1749214uap.19.1588678418386;
- Tue, 05 May 2020 04:33:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-10-git-send-email-rnayak@codeaurora.org> <CAPDyKFrGQvcCB1wfv=iqk66uja3faMRF1gGMSE2VhB8gJcO=sg@mail.gmail.com>
- <15efa375-cf1e-b793-1d3e-29ca0a547522@codeaurora.org>
-In-Reply-To: <15efa375-cf1e-b793-1d3e-29ca0a547522@codeaurora.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 5 May 2020 13:33:01 +0200
-Message-ID: <CAPDyKFoaJTXq2qN+HXoSUovun9+4gzLeVJ-88FKbZCSCKjByLw@mail.gmail.com>
-Subject: Re: [PATCH v3 09/17] mmc: sdhci-msm: Fix error handling for dev_pm_opp_of_add_table()
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Zw8AGAHFXGrv2iacmWJVrfWvZyG12y22YZaRvl3DEfA=;
+        b=Vq8WLNh40BSUHJLpJYUr0DLTMvMmBn8uA2s3OpqGAPplkYOlBVcfoly3YJr84ao5b3
+         pGekxGw7Qw6G2oa6lmJHGmYcTasAlQGek4rHblXmBwEMdTEo2Q7hskkekp335JXQHVnw
+         gK1ZVfHn4B4Hl7+bRLIpmjemwp86yxnNSftu+XIq52sBUkeXoWD1soysJ88HnD5V3gIM
+         IBRyEI5WCgXWL9z2a8oZDJWx3zQKN1sgAUYbOCS7xKezYEUSegkSlwSMmZMlkDW+j+ge
+         oaQtrDudXaV7PVUvmCc5MAoJfhbXHz3SY5nzJ1ATg1zTNEZBYQAX3U6Pk9Y2f1+pqLHI
+         n0zg==
+X-Gm-Message-State: AGi0PuaswtRNIbmOWZuuMWyuXa1dzYEb0g5KhGodp4v+duzhMv8bd0+B
+        mlNglK5n5tY/pQfm2rfbKmfLjOE1iCvRww==
+X-Google-Smtp-Source: APiQypI0HqhUGc3uoEMdVOIh5K+2MJBbCn7ght4cbnf28YDmBZyywJZ1Sw8z06C+sb1meRqW7pVeXg==
+X-Received: by 2002:a5d:4092:: with SMTP id o18mr3239554wrp.227.1588678853373;
+        Tue, 05 May 2020 04:40:53 -0700 (PDT)
+Received: from [192.168.1.3] (212-5-158-166.ip.btc-net.bg. [212.5.158.166])
+        by smtp.googlemail.com with ESMTPSA id e2sm2729863wrv.89.2020.05.05.04.40.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 04:40:52 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Add support for venus on msm8939
+To:     Konrad Dybcio <konradybcio@gmail.com>, skrzynka@konradybcio.pl
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200501203505.144362-1-konradybcio@gmail.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <1bd1e0ea-0be3-340c-9c2a-0e7a03017cc4@linaro.org>
+Date:   Tue, 5 May 2020 14:40:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200501203505.144362-1-konradybcio@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 29 Apr 2020 at 16:09, Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
->
-> On 4/28/2020 11:59 PM, Ulf Hansson wrote:
-> > On Tue, 28 Apr 2020 at 15:39, Rajendra Nayak <rnayak@codeaurora.org> wrote:
-> >>
-> >> Even though specifying OPP's in device tree is optional, ignoring all errors
-> >> reported by dev_pm_opp_of_add_table() means we can't distinguish between a
-> >> missing OPP table and a wrong/buggy OPP table. While missing OPP table
-> >> (dev_pm_opp_of_add_table() returns a -ENODEV in such case) can be ignored,
-> >> a wrong/buggy OPP table in device tree should make the driver error out.
-> >>
-> >> while we fix that, lets also fix the variable names for opp/opp_table to
-> >> avoid confusion and name them opp_table/has_opp_table instead.
-> >>
-> >> Suggested-by: Matthias Kaehlcke <matthias@chromium.org>
-> >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> >> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> >> Cc: Pradeep P V K <ppvk@codeaurora.org>
-> >> Cc: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> >> Cc: linux-mmc@vger.kernel.org
-> >
-> > Is this a standalone patch that I queue up via my mmc tree?
->
-> Hi Ulf, yes, its a standalone patch which applies on top of the one
-> you already have in your tree. No other dependencies.
+Hi Konrad,
 
-Thanks for confirming! Perhaps next time you could add this
-information as part of a description to the patch (where we usually
-add patch version information).
+Thanks for the patches!
 
-Anyway, applied for next!
+Could you describe hear what is the status of the new added SoC. Is
+Venus driver tested on this new platform or that will happen at some
+later point in time.
 
-[...]
+Also, in both patches the description is missing, please add something.
 
-Kind regards
-Uffe
+On 5/1/20 11:35 PM, Konrad Dybcio wrote:
+> Konrad Dybcio (2):
+>   media: venus: Add support for MSM8939
+>   dt-bindings: media: Document MSM8939 Venus
+> 
+>  .../bindings/media/qcom,msm8939-venus.yaml    | 119 ++++++++++++++++++
+>  drivers/media/platform/qcom/venus/core.c      |  33 +++++
+>  2 files changed, 152 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
+> 
+
+-- 
+regards,
+Stan
