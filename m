@@ -2,141 +2,166 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC637C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE46FC47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88084206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:17:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lizeE891"
+	by mail.kernel.org (Postfix) with ESMTP id 8397B206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588667082;
+	bh=/+gpTkLBJ2Kqolj2/ROhBNblDxrQ10aUU/Dm52LEmQw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vENe1XEiZ9Nems4FaBdatpoYKIy9GS182THrMDxt8K4r46zfNBKD9Q3M2KWexYm0k
+	 ur6RZdIvNn7oCKzROyWT/8y+kBo7SfUxYmK1OMJ9cnfkx8+JzJDQUoc0eBpzFzz0NM
+	 xzGGv3Txhm7omuIurNxJ1MD1ALk0zgOmY+A1mMZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgEEIRx (ORCPT
+        id S1726337AbgEEIYm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 04:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726568AbgEEIRw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 04:17:52 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDCA8C061A10
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 01:17:52 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id w188so278570vkf.0
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 01:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TbQ/NUsTl64Wiv4a1ipzIuD3CBdf0yc6n6AHT0AzX6s=;
-        b=lizeE8913OsCMHce51oPvAyEnSr00jzla8Wj9ZJX8Yj4J1Psb7aJ12HDbUuxzEASuV
-         CJOcUf/1RPpJ18db073V2gTXAgZrhjOiqKsFQTtxkRjpOYi7p+8iPI6IgM2MLiGzaKLy
-         cLIvq0bhk4yEFz1lkPgzduKThkyI9/FNNBUECjt00MMWx/SmSy1QyuQ90mKXKVovzmJ9
-         4fKGh0hJnh1TGnDmYd/ZhNdLxC+6X+tPCtAfmgDvTlLfG9iZKYS2tw377gR8NwBlvma+
-         N8uaPL/HAJq4slF/CQIAr93/bDUWK4Xy5o9CeYh1dInheigK6z+mx2xsFNL4I2ItVIiH
-         Sw4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TbQ/NUsTl64Wiv4a1ipzIuD3CBdf0yc6n6AHT0AzX6s=;
-        b=Lq6uIVSoXTS3+nfxK5MndbrrDMSmC88gVJwvemfxjBUKLEJDSoeUTAtlUelG8P3BDp
-         saWLtN4tfE41mQs344Tgbu1+QqLU94kiAeBT67p8FKCmyzooNUrwmcn7gu3XftJ2HJDC
-         x/0WFoU3Ze57P+R8wUsrI/F3NacQrIJGvaMa3m3NGCzF1V05OMqMItM3oAyMHa3+pAt9
-         GkgFJyq6jB/b7gF1B8ySx6Uwc150k4cxilUpN1EKbz8CRBGHEdBA5MC3DHpJDzyZrl8Y
-         hLeguS+h5c3WTtu6fOpXNvpSP3CoRXeywN7JDRZt2Zo/h/Z4hXv9nOkmnnKszY4VyHz5
-         IF2g==
-X-Gm-Message-State: AGi0PuaRC1uKBri0PrpMw9lY34XHX1l1IKOs5nh209r8FyqOBhrTNUWo
-        pR3R4KrI9dDfu6epmhGh5jHA423SGvoIKbK4YlaP+Q==
-X-Google-Smtp-Source: APiQypJn4YPdoD6blL7gFwU0ijM52tdeLzBf7tlSaUAOwu8rfRRQ9Nd8hu+SfYhQA6qyrUO32C4i1Xcp+YT+RFkLY84=
-X-Received: by 2002:a1f:a60b:: with SMTP id p11mr1325157vke.43.1588666671822;
- Tue, 05 May 2020 01:17:51 -0700 (PDT)
+        Tue, 5 May 2020 04:24:42 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:54216 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbgEEIYl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 04:24:41 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 0458ODXX025004;
+        Tue, 5 May 2020 17:24:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0458ODXX025004
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588667054;
+        bh=awhKCUwBKnrY0PuQr1ZiYwWdjhoVOMuvHRPkGvuPBig=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=19phWRHzfucRuYFNCHmJtFb/7S9prMsy4+8xbnqO2UzkhhIYF3PDX0zkECzWjC9rP
+         VPAamfUmx8FZXAphNx0xNboKMDcOukT7A2gcRIn5FCh1ayXqJHXEAtUsrQGAtftYFz
+         W7Cvk0kQy/30DfPXhks3p0xkdNyI8HT6TMYNRqEF/cTlVyjYHauACGyZNE1jCpZQ/l
+         8ds8YhANRh5mAySe5wJNhhi6I5mbhg5kDnw07OH4xijc4kOtyLzIHvcMT3jZSPGDk0
+         w9mP4m2pOj9g7xBrqBtjUyAcWg3gH0ssTP3shR9uL568wRIrMQj7P5fNcspyhfCtfj
+         CQjHfOgzUYTBw==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id s11so708794vsq.13;
+        Tue, 05 May 2020 01:24:14 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYKwtPisPWvtbIE6iMSgusOIidWXM9PZtE+ANDGO/86n6KbzLNn
+        JuP2HABB6yJnbP93suimd+6mFbO/t9pr/uQH+3A=
+X-Google-Smtp-Source: APiQypI+NF72kYXUBGhjZ7K//d9ckRGDhIKCAkr5ao2a5eh/orzgnX4ljHTKFkr5raukyfp0MWA96AsQ9GOht6LNT1E=
+X-Received: by 2002:a67:6e07:: with SMTP id j7mr1604563vsc.181.1588667052874;
+ Tue, 05 May 2020 01:24:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com>
- <20200428210229.703309-3-martin.blumenstingl@googlemail.com>
- <1jlfmdi9uw.fsf@starbuckisacylon.baylibre.com> <CAPDyKFoEh8qKYFONo1SHnvwhDwjUa5bMnnT1Kbu8=4rd=T-8Kg@mail.gmail.com>
- <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 5 May 2020 10:17:15 +0200
-Message-ID: <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] mmc: host: meson-mx-sdhc: new driver for the
- Amlogic Meson SDHC host
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yinxin_1989@aliyun.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>
+References: <20200504020651.37031-1-masahiroy@kernel.org> <20200504020651.37031-2-masahiroy@kernel.org>
+ <CAL_JsqLRUAEmh3kwEo+T-dMhXZTBH_kwbBwKzZyhJMR5P92pwA@mail.gmail.com> <CAK7LNASGKrovgqEzSgqZRU0kAsh7rhZ78fZ21VrdKvmP2XH0JQ@mail.gmail.com>
+In-Reply-To: <CAK7LNASGKrovgqEzSgqZRU0kAsh7rhZ78fZ21VrdKvmP2XH0JQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 5 May 2020 17:23:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATXCKYfogvYxpaKW+CE0KwMeNjHfLpSemFAHdBzG0yGDQ@mail.gmail.com>
+Message-ID: <CAK7LNATXCKYfogvYxpaKW+CE0KwMeNjHfLpSemFAHdBzG0yGDQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] scripts/dtc: compile separate dtc-yaml
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?TWFyZWsgQmVo77+977+9w6Ju?= <marek.behun@nic.cz>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[...]
-
-> >> > +
-> >> > +     return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-> >> > +                                        onecell_data);
-> >>
-> >> I think registering a provider for a module that does not provide clocks
-> >> to any other device is a bit overkill.
-> >>
-> >> I understand the matter is getting the per-user clk* pointer.
-> >> Since this is the module registering the clock, you can use clk_hw->clk
-> >> to get it.
-> >>
-> >> Once you have the clk* of the leaf clocks, you don't even need to keep
-> >> track of the clk_hw* since you are using devm_
-> >>
-> >> Afterward, we should propably discuss with Stephen if something should
-> >> be added in CCF to get a struct clk* from struct clk_hw*.
-> >>
-> >
-> > [...]
-> >
-> > Hmm.
-> >
-> > I am not sure the above is a good idea, at all. Unless, I am
-> > misunderstanding your point, which may be the case.
-> >
-> > I think above "shortcuts" could lead to abuse of the clock framework
-> > and its internal data structures. When going forward, this could make
-> > it unnecessary harder to maintain the clock framework.
-> >
-> > I know, it's not my responsibility, but from my experience with MMC
-> > and SDIO interfaces, is that those have been too easy abuse - since
-> > most of the data structures and interfaces have been exported. Now,
-> > it's hard to roll back that, if you see what I mean.
+On Tue, May 5, 2020 at 12:04 PM Masahiro Yamada <masahiroy@kernel.org> wrot=
+e:
 >
-> Indeed, it worth clarifying this first.
+> On Tue, May 5, 2020 at 4:15 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Sun, May 3, 2020 at 9:07 PM Masahiro Yamada <masahiroy@kernel.org> w=
+rote:
+> > >
+> > > Marek Beh=C3=BAn reported a case where pkg-config fails to detect the
+> > > libyaml-dev package, which is presumably a bug of the distro.
+> > >
+> > > Irrespective of that, I am not a big fan of pkg-config in the Makefil=
+e
+> > > parse stage. The cost of pkg-config is quite small, but it is evaluat=
+ed
+> > > everytime we run make, even when we do 'make mrproper'. This commit
+> > > changes the Makefile to not rely on pkg-config at all.
+> >
+> > I don't really love the solution here... I'm inclined to just make
+> > libyaml always required. Anyone building dtbs should care about
+> > validating them. However, there's some dts files sprinkled in the tree
+> > such as DT unittests and I don't want to break allmodconfig for CI,
+> > 0-day, etc. Though eventually we may have to.
+> >
+> > > The normal build should not require libyaml-dev while we need to comp=
+ile
+> > > dtc with libyaml for the schema check.
+> > >
+> > > Build two dtc variants:
+> > >
+> > >   scripts/dtc/dtc      for *.dts -> *.dtb
+> > >   scripts/dtc/dtc-yaml for *.dts -> *.dt.yaml
+> >
+> > My longer term plan is to integrate the schema checks into dtc. This
+> > would be some sort of plugin to dtc found or specified at run-time. It
+> > would eliminate the need for 2 passes of dtc and the 2nd case will go
+> > away.
 >
-> With clk_register deprecated in favor of clk_hw_register, we are likely
-> to see that case rise elsewhere.
 >
+> OK.
+>
+>
+>
+> > > --- a/scripts/Makefile.lib
+> > > +++ b/scripts/Makefile.lib
+> > > @@ -246,6 +246,7 @@ quiet_cmd_gzip =3D GZIP    $@
+> > >  # DTC
+> > >  # ------------------------------------------------------------------=
+---------
+> > >  DTC ?=3D $(objtree)/scripts/dtc/dtc
+> > > +DTC_YAML ?=3D $(objtree)/scripts/dtc/dtc-yaml
+> >
+> > Can we make 'DTC' override both and keep this an internal detail.
+> >
+>
+> No. For parallel building *.dtb and *.dt.yaml,
+> they must be separate instances.
+>
+>
+> > > +HOSTLDLIBS_dtc-yaml :=3D -lyaml
+> >
+> > Does this work for yocto? As we had this before commit 067c650c456e.
+> > Not clear if this changed for any reason or just 'let's use pkg-config
+> > everywhere'.
+> >
+> > Or is there another way to fix yocto issue and we can just check the
+> > header exists. I assume yocto needs some prefix in front of
+> > '/usr/include/yaml.h'?
+> >
+>
+> My bad - I missed 067c650c456e
+>
+> We need pkg-config to deal with yocto.
+>
+>
+> Sorry, I take back this series.
 
-So, according to the separate discussion [1], I think we can let
-Martin decide what option to implement at this point.
 
-1. Implement the "clk_hw_get_clk()" approach. The preferred option,
-but requires wider changes of the clock subsystem as well.
+On my second thought, we can search libyaml
+in non-standard path without pkg-config.
 
-2. Keep the existing approach, with devm_clk_get(). I am fine with
-this as well, we can always switch to 1) later on.
 
-[...]
+Kbuild provides a way to specify additional flags
+for building host tools.
 
-Kind regards
-Uffe
+make  HOSTCFLAGS=3D<install-dir-in-yocto>/include
+      HOSTLDFLAGS=3D<install-dir-in-yocto>/lib
 
-[1]
-https://www.spinics.net/lists/linux-clk/msg48373.html
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
