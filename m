@@ -2,124 +2,89 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F3FC47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D07C47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCB1220658
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00CC20721
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:02:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cbLyXUbn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725766AbgEEHyt (ORCPT
+        id S1728341AbgEEICX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 03:54:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:54834 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbgEEHyt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 03:54:49 -0400
-IronPort-SDR: iv+inoWeNZRFUtjePqUJenWPei2jidbpWcCdwjTxx7BhJop1Z4AhKP5Ui1OPs+bzTx3aOhp+Mk
- vdPUTcy3hYKw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 00:54:48 -0700
-IronPort-SDR: unY5fCC7FpHtmrq19aiLl/M+8T7+XeyJOKYOTUXGAB2F+YWm2Zsei/nVSh3rqteJKseAzNNyUQ
- MXw1tT80NOPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
-   d="scan'208";a="460949449"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 05 May 2020 00:54:45 -0700
-Received: from [10.215.153.169] (ekotax-mobl.gar.corp.intel.com [10.215.153.169])
-        by linux.intel.com (Postfix) with ESMTP id 25B1758048A;
-        Tue,  5 May 2020 00:54:41 -0700 (PDT)
-Subject: Re: [PATCH v7 3/3] phy: intel: Add driver support for ComboPhy
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, lee.jones@linaro.org, arnd@arndb.de,
-        robh@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com
-References: <cover.1588230494.git.eswara.kota@linux.intel.com>
- <af8a7d7025990d22f6062953247cf80e64c6fd2f.1588230494.git.eswara.kota@linux.intel.com>
- <20200504072923.GN1375924@vkoul-mobl>
- <f12e76ac-e0fd-4afa-e1cd-2b90f175adfd@linux.intel.com>
- <20200504092034.GS1375924@vkoul-mobl>
- <0de7ba47-bc98-9267-46b4-230a86151c2d@linux.intel.com>
- <20200505052122.GW1375924@vkoul-mobl>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <dd259c37-d273-44d3-c095-8618264e3a19@linux.intel.com>
-Date:   Tue, 5 May 2020 15:54:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 04:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725766AbgEEICW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 04:02:22 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0673C061A0F;
+        Tue,  5 May 2020 01:02:21 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id f12so1001909edn.12;
+        Tue, 05 May 2020 01:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZHJL/wGmA1GyknYa9LMPwyUmT5ntJmA/lvZzR1e4zDk=;
+        b=cbLyXUbnbqNHYqTiQjFmduESXf4qSe5tDFHsdxZZXZk/l62hp5Pgk+zqPkbPvIFzqk
+         amS3lkjHZuOoEWea/p+sm4wB2QLJ4WgjBjk5amoM04xJwgnbsuXq2/Ym5MuihL15/169
+         vOb4XfI9vcGlYFZcIZS6LMs2ekJScUhjxoWZ8iQAkWU4MyU3kLvKN2o9x+2g9VKp6Hz9
+         YbBtZJiyl+2UF8aHcB/ErrK0/tE8lWDESUdzH5nyd+5Qg8RI2NOkKCnK1/Uw0DwlD6xt
+         xICn3Nt9+D6KnW8L9dsUo3NZuXS6HywNOf3LrySnfjEFoqAaz92T+KzrQgDnQD25UoGw
+         ASQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZHJL/wGmA1GyknYa9LMPwyUmT5ntJmA/lvZzR1e4zDk=;
+        b=mJy1SM2engl6Db1qPe/HH3BEJEWjadHKsmLOXq+uPhl6Z5zZa3V2ywFNdFlpM6vGDp
+         v8Yavi/VjUbTFLvBDq7oapPF8gGA3xLAs11XAT4KWzXlghS090JQ/lBVATc69QNcHvsw
+         lnxeaRAFrWxexpyNWMD7yl9LwJ1/ThfW9xBBCQPyx2/p9UOWghAEsqh3a2HXa+WZsfgr
+         1UjDYYh0BBzdESad3HxhKCibcWKdCaAcOg6fynWU3TUH9x/zhyg7CqrkN7JuL4PyYeUh
+         yshqIqwShdBEc7YWjeSjXeDlAHjJEkS67CFOtWbwVLEIMFIU6M/NrvlrtLeYWmi2/Jsm
+         B+lQ==
+X-Gm-Message-State: AGi0PubwQt1/QQ86jzYoWnPtdwFw0tr/s40tRY378VV4f3wsytuLyZCh
+        4O3J27UvMmoVGKrixY5vviONZYlUf+PJPQlFymijtYp7
+X-Google-Smtp-Source: APiQypLAbEUiBKhR7J4oihPY5/Cw3SuGUar4Ny8CfFZU1JA3gTWXTGBKmn8SMdIoMJ1FxTfxf998ZFXhw5+I0wPhexs=
+X-Received: by 2002:a05:6402:22ea:: with SMTP id dn10mr1489129edb.70.1588665740372;
+ Tue, 05 May 2020 01:02:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505052122.GW1375924@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200501203505.144362-1-konradybcio@gmail.com>
+ <20200501203505.144362-3-konradybcio@gmail.com> <20200505035543.GA5765@bogus>
+In-Reply-To: <20200505035543.GA5765@bogus>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Tue, 5 May 2020 10:01:44 +0200
+Message-ID: <CAMS8qEUF-M13Mn91DDWLqqPLwD=t6W4BqTd+BZ9q1oa7MCo8cg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: media: Document MSM8939 Venus
+To:     Rob Herring <robh@kernel.org>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-media@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Ah, mea culpa!
 
-On 5/5/2020 1:21 PM, Vinod Koul wrote:
-> On 04-05-20, 17:32, Dilip Kota wrote:
->> On 5/4/2020 5:20 PM, Vinod Koul wrote:
->>> On 04-05-20, 16:26, Dilip Kota wrote:
->>>> On 5/4/2020 3:29 PM, Vinod Koul wrote:
->>>>> On 30-04-20, 15:15, Dilip Kota wrote:
->>>>>
->>>>>> +					  u32 mask, u32 val)
->>>>>> +{
->>>>>> +	u32 reg_val;
->>>>>> +
->>>>>> +	reg_val = readl(base + reg);
->>>>>> +	reg_val &= ~mask;
->>>>>> +	reg_val |= FIELD_PREP(mask, val);
->>>>>> +	writel(reg_val, base + reg);
->>>>> bypassing regmap here... why?
->>>> It is not regmap address, one of the below two addresses are passed to this
->>>> function.
->>> okay, perhaps add a comment somewhere that regmap is not used for this
->>> base?
->> I dont see a need of adding a comment, describing don't do regmap here.
-> Driver uses regmap except here, which seems odd hence explanation
-> required for this.
-During the driver Probe, the register phandles are stored in regmap 
-datatype variables and PHY core addresses are stored in iomem datatype.
-Since then, regmap access is performed for the regmap datatype variables 
-and readl/writel access is performed on the iomem datatype variables. 
-And nowhere in the driver iomem datatype address are converted to regmap 
-address and performed regmap access.
+I completely forgot to mention that this depends on the MSM8939 GCC
+driver that has been sent a few days ago, sorry.. [1]
 
-Driver is not doing any 'regmap_init' on any physical address. Driver is 
-getting the register address phandle from the device tree node and 
-performing the regmap access.
-ret = fwnode_property_get_reference_args(fwnode, "intel,syscfg", NULL, 
-1, 0, &ref);
-[...]
-cbphy->syscfg = device_node_to_regmap(to_of_node(ref.fwnode));
+Have you found any additional mistakes in this patch that I should
+correct besides this one?
 
-[...]
-ret = fwnode_property_get_reference_args(fwnode, "intel,hsio", NULL, 1, 
-0, &ref);
-[...]
 
-cbphy->hsiocfg = device_node_to_regmap(to_of_node(ref.fwnode));
+[1] https://lwn.net/Articles/818486/
 
-[...]
-cbphy->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
-  [...]
-cbphy->cr_base = devm_platform_ioremap_resource_byname(pdev, "core");
-
-The DT parsing logic in the driver is explaining why the PHY driver 
-should do regmap access and to whom should be done. For this reason i am 
-a bit puzzled to what more is needed to explain in the comments and 
-where to add it.
-Please let me know your view.
-
-Regards,
-Dilip
+Konrad
