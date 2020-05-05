@@ -2,192 +2,90 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B885EC47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384C8C47257
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD3320757
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588689617;
-	bh=j/GqXoT+GQGssQ3rGRFGFL3Qfzj08wyd/Iyt+COdg2A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UdEQ5WqaMjHzI2QApaCjcyfEqsqLaTCioIqgGLalOyEk7xM0aENTDP22KaGw4cNLj
-	 /yErJLc3CMFv0P3F5qg7W0YgPs4WZTNpGRThACxq9d7Npaxgoq0znIKH/TUbs8po4a
-	 MO3kFGyot7H+DQs0r0qC378JT/2HpDJUuuWPVeIk=
+	by mail.kernel.org (Postfix) with ESMTP id 18802206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgEEOkR (ORCPT
+        id S1729194AbgEEOsq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 10:40:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgEEOkQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 10:40:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Tue, 5 May 2020 10:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729065AbgEEOsq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 10:48:46 -0400
+X-Greylist: delayed 398 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 May 2020 07:48:46 PDT
+Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f236:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB0BC061A0F;
+        Tue,  5 May 2020 07:48:46 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by mailout3.hostsharing.net (Postfix) with ESMTPS id DEECF101E6B30;
+        Tue,  5 May 2020 16:48:44 +0200 (CEST)
+Received: from localhost (unknown [87.130.102.138])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DB0A206B9;
-        Tue,  5 May 2020 14:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588689616;
-        bh=j/GqXoT+GQGssQ3rGRFGFL3Qfzj08wyd/Iyt+COdg2A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vQRX4RZsIX+qs0WE3rk0U3eOEH1uAOv+i+v2rDbwNKAFYykV6I37Zfaitx0oUXWwm
-         wtxPbEft1eIUz4BouINwCZusQpQ10+hcyUHJspFT+n8tfliHeVjyY4l+zIcs60Gf1f
-         /xBEITuUyoyNppCR7aSoddeDROW8aT33JQLYQlMU=
-Date:   Tue, 5 May 2020 16:40:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, loic.pallardy@st.com,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] bus: stm32: Introduce firewall controller helpers
-Message-ID: <20200505144013.GB838641@kroah.com>
-References: <20200505073308.22914-1-benjamin.gaignard@st.com>
- <20200505073308.22914-3-benjamin.gaignard@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505073308.22914-3-benjamin.gaignard@st.com>
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 6B0EB610EE1A;
+        Tue,  5 May 2020 16:48:44 +0200 (CEST)
+X-Mailbox-Line: From eb9737e7b76ac39d9ae38a46e233c0643c31a9cb Mon Sep 17 00:00:00 2001
+Message-Id: <eb9737e7b76ac39d9ae38a46e233c0643c31a9cb.1588505407.git.lukas@wunner.de>
+In-Reply-To: <cover.1588505407.git.lukas@wunner.de>
+References: <cover.1588505407.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Tue, 5 May 2020 16:42:03 +0200
+Subject: [PATCH 3/4] dt-bindings: serial: Add binding for rs485 bus
+ termination GPIO
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh+dt@kernel.org>
+Cc:     "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 05, 2020 at 09:33:05AM +0200, Benjamin Gaignard wrote:
-> The goal of these helpers are to offer an interface for the
-> hardware blocks controlling bus accesses rights.
-> 
-> Bus firewall controllers are typically used to control if a
-> hardware block can perform read or write operations on bus.
-> 
-> Smarter firewall controllers could be able to define accesses
-> rights per hardware blocks to control where they can read
-> or write.
-> 
-> Firewall controller configurations are provided in device node,
-> parsed by the helpers and send to the driver to apply them.
-> Each controller may need different number and type of inputs
-> to configure the firewall so device-tree properties size have to
-> be define by using "#firewall-cells".
-> Firewall configurations properties have to be named "firewall-X"
-> on device node.
-> "firewall-names" keyword can also be used to give a name to
-> a specific configuration.
-> 
-> Example of device-tree:
-> ctrl0: firewall@0 {
-> 	#firewall-cells = <2>;
->       };
-> 
-> foo: foo@0 {
-> 	firewall-names = "default", "setting1";
-> 	firewall-0 = <&ctrl0 1 2>;
-> 	firewall-1 = <&ctrl0 3 4>;
-> };
-> 
-> Configurations could be applied with functions like
-> firewall_set_config_by_index() or firewall_set_config_by_name().
-> 
-> firewall_set_default_config() function will apply the
-> configuration named "default" (if existing) or the configuration
-> with index 0 (i.e. firewall-0).
-> 
-> Drivers could register/unregister themselves be calling
-> firewall_register/firewall_unregister functions.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  drivers/bus/Kconfig          |   2 +
->  drivers/bus/Makefile         |   2 +
->  drivers/bus/stm32/Kconfig    |   3 +
->  drivers/bus/stm32/Makefile   |   1 +
->  drivers/bus/stm32/firewall.c | 266 +++++++++++++++++++++++++++++++++++++++++++
->  drivers/bus/stm32/firewall.h |  75 ++++++++++++
->  6 files changed, 349 insertions(+)
->  create mode 100644 drivers/bus/stm32/Kconfig
->  create mode 100644 drivers/bus/stm32/Makefile
->  create mode 100644 drivers/bus/stm32/firewall.c
->  create mode 100644 drivers/bus/stm32/firewall.h
-> 
-> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-> index 6d4e4497b59b..843b356322d9 100644
-> --- a/drivers/bus/Kconfig
-> +++ b/drivers/bus/Kconfig
-> @@ -203,4 +203,6 @@ config DA8XX_MSTPRI
->  source "drivers/bus/fsl-mc/Kconfig"
->  source "drivers/bus/mhi/Kconfig"
->  
-> +source "drivers/bus/stm32/Kconfig"
-> +
->  endmenu
-> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-> index 05f32cd694a4..5e0e34b10235 100644
-> --- a/drivers/bus/Makefile
-> +++ b/drivers/bus/Makefile
-> @@ -37,3 +37,5 @@ obj-$(CONFIG_DA8XX_MSTPRI)	+= da8xx-mstpri.o
->  
->  # MHI
->  obj-$(CONFIG_MHI_BUS)		+= mhi/
-> +
-> +obj-$(CONFIG_MACH_STM32MP157) 	+= stm32/
-> \ No newline at end of file
-> diff --git a/drivers/bus/stm32/Kconfig b/drivers/bus/stm32/Kconfig
-> new file mode 100644
-> index 000000000000..57221e833e2d
-> --- /dev/null
-> +++ b/drivers/bus/stm32/Kconfig
-> @@ -0,0 +1,3 @@
-> +config FIREWALL_CONTROLLERS
-> +	bool "Support of bus firewall controllers"
-> +	depends on OF
-> diff --git a/drivers/bus/stm32/Makefile b/drivers/bus/stm32/Makefile
-> new file mode 100644
-> index 000000000000..eb6b978d6450
-> --- /dev/null
-> +++ b/drivers/bus/stm32/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_FIREWALL_CONTROLLERS) += firewall.o
-> diff --git a/drivers/bus/stm32/firewall.c b/drivers/bus/stm32/firewall.c
-> new file mode 100644
-> index 000000000000..95f716cf926f
-> --- /dev/null
-> +++ b/drivers/bus/stm32/firewall.c
-> @@ -0,0 +1,266 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
-> + * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/list.h>
-> +#include <linux/of.h>
-> +#include <linux/slab.h>
-> +
-> +#include "firewall.h"
-> +
-> +/* Mutex taken to protect firewall_list */
-> +static DEFINE_MUTEX(firewall_list_mutex);
-> +
-> +/* Global list of firewall control devices */
-> +static LIST_HEAD(firewall_list);
+Commit e8759ad17d41 ("serial: uapi: Add support for bus termination")
+introduced the ability to enable rs485 bus termination from user space.
+So far the feature is only used by a single driver, 8250_exar.c, using a
+hardcoded GPIO pin specific to Siemens IOT2040 products.
 
-Why is that needed?  Why can't you just walk the list of devices on this
-"bus/class" if you really wanted to?
+Provide for a more generic solution by allowing specification of an
+rs485 bus termination GPIO pin in the device tree.  An upcoming commit
+implements support for this pin for any 8250 driver.  The binding is
+used in device trees of the "Revolution Pi" PLCs offered by KUNBUS.
 
-Along those lines, why is this going around the driver model and
-ignoring it?  Shouldn't this be a bus and you have devices attached to
-it of the specific type?
+[Heiko Stuebner converted the binding to YAML, hence his Signed-off-by.]
 
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
+---
+ Documentation/devicetree/bindings/serial/rs485.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-greg k-h
+diff --git a/Documentation/devicetree/bindings/serial/rs485.yaml b/Documentation/devicetree/bindings/serial/rs485.yaml
+index d4beaf11222d..a9ad17864889 100644
+--- a/Documentation/devicetree/bindings/serial/rs485.yaml
++++ b/Documentation/devicetree/bindings/serial/rs485.yaml
+@@ -43,3 +43,7 @@ properties:
+   rs485-rx-during-tx:
+    description: enables the receiving of data even while sending data.
+    $ref: /schemas/types.yaml#/definitions/flag
++
++  rs485-term-gpios:
++    description: GPIO pin to enable RS485 bus termination.
++    maxItems: 1
+-- 
+2.26.2
+
