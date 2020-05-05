@@ -2,171 +2,104 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B125C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 03:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08941C47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 03:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF1E520757
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 03:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF37B206C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 03:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JxUB27jU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SwyhJPUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgEEDNz (ORCPT
+        id S1726641AbgEEDiT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 23:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728092AbgEEDNy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 23:13:54 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AD00C061A10
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 20:13:53 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s8so458194pgq.1
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 20:13:53 -0700 (PDT)
+        Mon, 4 May 2020 23:38:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgEEDiS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 23:38:18 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCC4C061A10
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 20:38:18 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s20so268816plp.6
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 20:38:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+PbPJJpEILx1ocyOWNOOvEa1Mky7Djw1fch1bGYJADM=;
-        b=JxUB27jUj8xlfXqkbTQnXVABbcJmQ+9sAi9+ktDvOdTQ8+4aj6a22vPjldwemWHXI8
-         BT9aUgTgcoiRRKuFj7OU2R0HToujCVwgRSyu2SKmA22dJByEVOlG3QQv3cHrmjDIDyMp
-         dVCZ/mI3flyAsf8TiMb5grQDjqNZ8DK1Ja/dM=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HBwKtkgcj7e3nr8p0Kt5Si9efTL9Ko6MemGJAknCtRU=;
+        b=SwyhJPUNhCcc7Tp4Jp7nd/nAqeRejEiNeEGtWuuX7TZ22IFY86p2KuTYasfPuh9fys
+         epsXKL0C+e63zY3sqCXmUBZwl2XuiFE87/HWQ7VsDUKhU+7sHSoXc7CdrwvHEZjY94+h
+         hJWUn/YxzT9Z0N12I4nbO+eoWm31RL04sSOuHWG5FKJf83kMSAI/OzLdcfGr3uRgMolm
+         UtNgXgZr6tlOh08IDhoZ7zvO02iIlVDQGzunbXFTDemrwtHI0Bx8faVAcDZQC5v8tUFR
+         +Van6kAal4wXxATTiBVnnZdDJkP2lyEsjFmSIPFscUytZFmIG/GaMOuQ7+/9rsAtiY/U
+         j5bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+PbPJJpEILx1ocyOWNOOvEa1Mky7Djw1fch1bGYJADM=;
-        b=DfNiwEw0Wnn0AC1lZuFd+TEV56Yj9Ds4BbO1M57dZKNUwGgMMctqktUXY7zgOE6mxB
-         jFB6I5snpbKb9K4doVhww1pFGb9ZKPjAJCAdF1IOwykYeHFZb6fm4W3bb+IUDNCgIatE
-         2yMnLWSyhKDW3a+Ix7DzPEp7MlYHK8aeONqXK7wc/XZlXxCpL9wHJSdq5dK/vkg4t3Mt
-         Ct95XO7kwNoD4RLYD2hAXFpb/omJGMzgNF7nlqHVgnNYXnHKjg5JUTkmTLpdD8y33zV1
-         CcXbvggukPJmd/zzUjuwJ1FMBqVhtN+e/f/EiZI1qrHLCdYqcp0U/q4B6f1oTH95fuXI
-         dO+Q==
-X-Gm-Message-State: AGi0PuYL9vs1k1c1UF9OWWI/HZ4E8QpFW4MK49l9fifDv3b9GxCF/6WI
-        S9kbiJ7ZRLLNeV8y90VLhG1KNw==
-X-Google-Smtp-Source: APiQypJCnyF5JL13Hmnm+DYS16ZaSojlEtOIqivZXiCvHH4rD5RvsO8R57gsVKGHLk+nRx8bZWKJrQ==
-X-Received: by 2002:a65:5a47:: with SMTP id z7mr1181189pgs.229.1588648432946;
-        Mon, 04 May 2020 20:13:52 -0700 (PDT)
-Received: from localhost ([2401:fa00:9:14:1105:3e8a:838d:e326])
-        by smtp.gmail.com with ESMTPSA id cm14sm373578pjb.31.2020.05.04.20.13.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 20:13:52 -0700 (PDT)
-From:   Evan Benn <evanbenn@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     jwerner@chromium.org, xingyu.chen@amlogic.com,
-        Evan Benn <evanbenn@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HBwKtkgcj7e3nr8p0Kt5Si9efTL9Ko6MemGJAknCtRU=;
+        b=FoSX521KINPSvT4ERBEtEZpNl1+AmSFyRoJytl6FnAUy2jaR87EgfXS8UkZOPWlh1q
+         sqFLquhhbu6XgwThuI1p+opa/TH1QUV3cP3orh0ujs3BuBCGDcXeOQ8LPf3xJ5hX0E+a
+         U0uQ1Uo0eqVnkeoLAtUmxp9fWS2wys07v0sJmpM9eFwvtF1NTfXDtENmrJx/YPOnygRc
+         xbGxox4iOcGwKM+EcJuOU0zztYwLBniK2mlfWCicNNvawHI+WEH3zpmw3sFmeEB54+DU
+         nHtTdXLo6WijiLDL/zgx0L+1ELBL+shV7zygjwKksoIatWsiiIZikE2Bkf0axoxxITp5
+         3LOw==
+X-Gm-Message-State: AGi0PuaChLqdkwy0cZm74T0+HXNLn7J5gUZ6I1PtNyiPFyILD4nkPjTw
+        K2B4gqPeTlAqd8o228iN8Q7UkQ==
+X-Google-Smtp-Source: APiQypLicexy0ehqN8xOj3LloaEOyPRjQ2nyZrfaqjqvvZbZfaw2Ycgy1LAXgKlbnmF7NhSiqpM/Og==
+X-Received: by 2002:a17:90b:155:: with SMTP id em21mr442033pjb.59.1588649898205;
+        Mon, 04 May 2020 20:38:18 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id p19sm543124pfn.19.2020.05.04.20.38.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 May 2020 20:38:17 -0700 (PDT)
+Date:   Tue, 5 May 2020 09:08:15 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: [PATCH v6 1/2] dt-bindings: watchdog: Add ARM smc wdt for mt8173 watchdog
-Date:   Tue,  5 May 2020 13:13:30 +1000
-Message-Id: <20200505131242.v6.1.Id96574f1f52479d7a2f3b866b8a0552ab8c03d7f@changeid>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-In-Reply-To: <20200505031331.122781-1-evanbenn@chromium.org>
-References: <20200505031331.122781-1-evanbenn@chromium.org>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
+Message-ID: <20200505033815.kz7mhjmsbkaux7av@vireshk-i7>
+References: <20200424155404.10746-1-georgi.djakov@linaro.org>
+ <20200424155404.10746-7-georgi.djakov@linaro.org>
+ <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
+ <20200430060901.j7jjw6soo5h5xoul@vireshk-i7>
+ <CAGETcx_zH_KJ7_A7Ofc2M5GfHKX_J__URJB127MSMcTeaqyzjw@mail.gmail.com>
+ <20200430075356.rjtctfuenirvhxgn@vireshk-i7>
+ <CAGETcx-W5XjNtgjDz2Ma_miN=cUBb5LFfhzYtKRpf6iAi4bXNw@mail.gmail.com>
+ <20200504050017.nsd7fp7gtxxwt3d7@vireshk-i7>
+ <CAGETcx_3ZrTigJ+CxJFA+N1xZaG9Vg6m0egew+kb-h4jSMsk2Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx_3ZrTigJ+CxJFA+N1xZaG9Vg6m0egew+kb-h4jSMsk2Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This watchdog can be used on ARM systems with a Secure
-Monitor firmware to forward watchdog operations to
-firmware via a Secure Monitor Call.
+On 04-05-20, 14:01, Saravana Kannan wrote:
+> Fair enough. But don't "voltage corner" based devices NEED to use OPP
+> framework to set their frequencies?
 
-Signed-off-by: Evan Benn <evanbenn@chromium.org>
+No. Anyone can call dev_pm_genpd_set_performance_state().
 
----
-
-Changes in v6:
-- Don't use dt default
-
-Changes in v5:
-- Change compatible to arm,smc-wdt
-
-Changes in v4:
-- Add arm,smc-id property
-
-Changes in v3:
-- Change name back to arm
-
-Changes in v2:
-- Change name arm > mt8173
-
- .../bindings/watchdog/arm-smc-wdt.yaml        | 37 +++++++++++++++++++
- MAINTAINERS                                   |  6 +++
- 2 files changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
-
-diff --git a/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
-new file mode 100644
-index 0000000000000..bec651541e0c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
-@@ -0,0 +1,37 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/arm-smc-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM Secure Monitor Call based watchdog
-+
-+allOf:
-+  - $ref: "watchdog.yaml#"
-+
-+maintainers:
-+  - Julius Werner <jwerner@chromium.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - arm,smc-wdt
-+  arm,smc-id:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      The ATF smc function id used by the firmware.
-+      Defaults to 0x82003D06 if unset.
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    watchdog {
-+      compatible = "arm,smc-wdt";
-+      arm,smc-id = <0x82003D06>;
-+      timeout-sec = <15>;
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b816a453b10eb..0f2b39767bfa9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1457,6 +1457,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
- F:	drivers/irqchip/irq-vic.c
- 
-+ARM SMC WATCHDOG DRIVER
-+M:	Julius Werner <jwerner@chromium.org>
-+R:	Evan Benn <evanbenn@chromium.org>
-+S:	Maintained
-+F:	devicetree/bindings/watchdog/arm-smc-wdt.yaml
-+
- ARM SMMU DRIVERS
- M:	Will Deacon <will@kernel.org>
- R:	Robin Murphy <robin.murphy@arm.com>
 -- 
-2.26.2.526.g744177e7f7-goog
-
+viresh
