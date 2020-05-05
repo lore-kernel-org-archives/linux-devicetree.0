@@ -2,219 +2,238 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03027C47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 17:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1FFC47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 17:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB769206E6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 17:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D52206E6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 17:19:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ar+YQC5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbgEERSX (ORCPT
+        id S1729315AbgEERTg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 13:18:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:46154 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729199AbgEERSX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 13:18:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DD2A31B;
-        Tue,  5 May 2020 10:18:22 -0700 (PDT)
-Received: from [10.57.39.240] (unknown [10.57.39.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6AE33F305;
-        Tue,  5 May 2020 10:18:19 -0700 (PDT)
-Subject: Re: [PATCH 04/16] arm64: dts: arm: Fix node address fields
-To:     Andre Przywara <andre.przywara@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200505165212.76466-1-andre.przywara@arm.com>
- <20200505165212.76466-5-andre.przywara@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <347cdcba-a1cf-d308-1cc2-6c2194f40d19@arm.com>
-Date:   Tue, 5 May 2020 18:18:19 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+        Tue, 5 May 2020 13:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729199AbgEERTg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 13:19:36 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B4FC061A0F;
+        Tue,  5 May 2020 10:19:35 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id g10so1989685lfj.13;
+        Tue, 05 May 2020 10:19:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=fN8WwnE2LRlNaf6M77DU0dZatEfeAbfUlEhfB3nkRns=;
+        b=ar+YQC5+IzrhOrKTrrxeYt4gi+AFiDPYHMrHdE4YM6SBENqFc/X0mJch+2br09u24E
+         WZVB70SwBtqZfVWpSzMOYGg1rlGFYBCp9LVn8RaTDKXJgmDZj7cklL4gA9Ov3emQRwvA
+         izQyeHIf8CzcbAIhDZCq9HFAvBo2hBXCNC2/SVR7f5i5F/oDsW1O/Bah8HtLhSU2y7Vf
+         U3dER7ZjwMdYmuj2URglq9scPEMEQ6ZVOlqjBsuPx/ZGPvn2gvTgopUXaP4NekIbNRBE
+         6KyjZ7QwokC1coozpMxNzczcFhzJLQ2oIdVc7BoAsoVtgnJDSn0P0bCb7lzw7oM1XCYk
+         A/NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=fN8WwnE2LRlNaf6M77DU0dZatEfeAbfUlEhfB3nkRns=;
+        b=tXWLLGJxQF7tBBkrNNXPI4iNM4kKZoXrtN3GNJGGuwtnTXaovodPD9KRdz6xKr5CYE
+         fuXIESbxs+4XsfssLsqvAbOOKd2s4N+IuoTTs9Rq1X4xvr/15x6w6ipbH8pgpDBwbpqg
+         ylatmtzbbv1y/zaeEEySEqIwruyPlbSM3rWlmKB8QVHYVMs6CZ21gss4nEaip1Wee+6c
+         BLBH2jPpArUVhyw4oMb4P9YjJ9rvC/NgX6BKPeWiMh+VOugoSSMmUOgC66CU0pSse4DJ
+         120pUNfG7Kmy8EjFXnhdciHGtl5uonLBu6X6ZRXOF7LBd5TBT4F/NBlMs+Cz2r+GsuR3
+         TfeA==
+X-Gm-Message-State: AGi0PuZtcN3Yv4Lvk194TQNj6C5Hjgxx3X9cx7hTd818xJPbUbuZdahl
+        bkvy1QLZa59nnA3gwE9nXzk=
+X-Google-Smtp-Source: APiQypKsDr/pXwmUHR9eebHAaQ5nZ+uWqcSwO9LcijLmL2O2nr4OqLhlTriiwsBdbnsr4MUqCEuPMA==
+X-Received: by 2002:a19:c6c1:: with SMTP id w184mr2354137lff.20.1588699173876;
+        Tue, 05 May 2020 10:19:33 -0700 (PDT)
+Received: from ?IPv6:2a01:540:22b8:4400:dc3e:d899:ae3f:7683? ([2a01:540:22b8:4400:dc3e:d899:ae3f:7683])
+        by smtp.gmail.com with ESMTPSA id b1sm2625832lfb.22.2020.05.05.10.19.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2020 10:19:33 -0700 (PDT)
+Subject: Re: [PATCH 1/3] leds: add aw2013 driver
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+References: <20200504162934.4693-1-nikitos.tr@gmail.com>
+ <20200504180049.GA5067@duo.ucw.cz>
+From:   Nikita Travkin <nikitos.tr@gmail.com>
+Message-ID: <acbc956a-6cd8-97ca-545a-07533e43b7b7@gmail.com>
+Date:   Tue, 5 May 2020 22:19:31 +0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200505165212.76466-5-andre.przywara@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20200504180049.GA5067@duo.ucw.cz>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-05 5:52 pm, Andre Przywara wrote:
-> The Arm Ltd. boards were using an outdated address convention in the DT
-> node names, by separating the high from the low 32-bits of an address by
-> a comma.
+> Hi!
+>
+>> +#define AW2013_NAME "aw2013"
+> That's.... not really useful define. Make it NAME? Drop it?
+Will drop it as well as (unnecessary) lines it is used in.
+>> +#define AW2013_TIME_STEP 130
+> I'd add comment with /* units */.
+Will add.
+>> +#define STATE_OFF 0
+>> +#define STATE_KEEP 1
+>> +#define STATE_ON 2
+> We should add enum into core for this...
+>
+>> +static int aw2013_chip_init(struct aw2013 *chip)
+>> +{
+>> +	int i, ret;
+>> +
+>> +	ret = regmap_write(chip->regmap, AW2013_GCR, AW2013_GCR_ENABLE);
+>> +	if (ret) {
+>> +		dev_err(&chip->client->dev, "Failed to enable the chip: %d\n",
+>> +			ret);
+>> +		goto error;
+>> +	}
+>> +
+>> +	for (i = 0; i < chip->num_leds; i++) {
+>> +		ret = regmap_update_bits(chip->regmap,
+>> +					 AW2013_LCFG(chip->leds[i].num),
+>> +					 AW2013_LCFG_IMAX_MASK,
+>> +					 chip->leds[i].imax);
+>> +		if (ret) {
+>> +			dev_err(&chip->client->dev,
+>> +				"Failed to set maximum current for led %d: %d\n",
+>> +				chip->leds[i].num, ret);
+>> +			goto error;
+>> +		}
+>> +	}
+>> +
+>> +error:
+>> +	return ret;
+>> +}
+> No need for goto if you are just returning.
+Will change it.
+>> +static bool aw2013_chip_in_use(struct aw2013 *chip)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < chip->num_leds; i++)
+>> +		if (chip->leds[i].cdev.brightness)
+>> +			return true;
+>> +
+>> +	return false;
+>> +}
+> How is this going to interact with ledstate == KEEP?
+>
+>> +static int aw2013_brightness_set(struct led_classdev *cdev,
+>> +				 enum led_brightness brightness)
+>> +{
+>> +	struct aw2013_led *led = container_of(cdev, struct aw2013_led, cdev);
+>> +	int ret, num;
+>> +
+>> +	mutex_lock(&led->chip->mutex);
+>> +
+>> +	if (aw2013_chip_in_use(led->chip)) {
+>> +		ret = aw2013_chip_enable(led->chip);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+> You are returning with mutex held.
+Will fix.
+>> +	/* Never on - just set to off */
+>> +	if (!*delay_on)
+>> +		return aw2013_brightness_set(&led->cdev, LED_OFF);
+>> +
+>> +	/* Never off - just set to brightness */
+>> +	if (!*delay_off)
+>> +		return aw2013_brightness_set(&led->cdev, led->cdev.brightness);
+> Is this dance neccessary? Should we do it in the core somewhere?
+Right now blink_set() can be called with either delay_on or delay_off
+being zero.
 
-I thought that historically that was deliberate, since the actual thing 
-being encoded is <chip select>,<address>, rather than just cosmetically 
-splitting a 64-bit address value?
+Passing zero into calculations I do later will result in garbage so
+I'm trying to avoid it.
 
-Or maybe I'm thinking too far back and things have already changed in 
-the meantime :/
+Core could probably handle situation where both are zero (This way
+default values will be shared across all drivers) and if only
+delay_on is zero it could disable led and the blink mode. (As if
+brightness was set to 0)
+In case where only delay_off is zero it's a bit more complicated
+since driver should disable blinking but leave led on if it was
+blinking already.
 
-Robin.
+That also means that my current solution is a bit broken since changing
+delay_off to zero while led is already blinking will call brightness_set
+without clearing the mode bit so the led will still blink.
 
-> Remove the comma from the node name suffix to be DT spec compliant.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->   arch/arm/boot/dts/vexpress-v2m-rs1.dtsi              | 10 +++++-----
->   arch/arm64/boot/dts/arm/foundation-v8.dtsi           |  4 ++--
->   arch/arm64/boot/dts/arm/juno-motherboard.dtsi        |  6 +++---
->   arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi |  2 +-
->   arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi     |  6 +++---
->   5 files changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-> index 5c183483ec3b..8010cdcdb37a 100644
-> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-> @@ -31,7 +31,7 @@
->   			#interrupt-cells = <1>;
->   			ranges;
->   
-> -			nor_flash: flash@0,00000000 {
-> +			nor_flash: flash@0 {
->   				compatible = "arm,vexpress-flash", "cfi-flash";
->   				reg = <0 0x00000000 0x04000000>,
->   				      <4 0x00000000 0x04000000>;
-> @@ -41,13 +41,13 @@
->   				};
->   			};
->   
-> -			psram@1,00000000 {
-> +			psram@100000000 {
->   				compatible = "arm,vexpress-psram", "mtd-ram";
->   				reg = <1 0x00000000 0x02000000>;
->   				bank-width = <4>;
->   			};
->   
-> -			ethernet@2,02000000 {
-> +			ethernet@202000000 {
->   				compatible = "smsc,lan9118", "smsc,lan9115";
->   				reg = <2 0x02000000 0x10000>;
->   				interrupts = <15>;
-> @@ -59,14 +59,14 @@
->   				vddvario-supply = <&v2m_fixed_3v3>;
->   			};
->   
-> -			usb@2,03000000 {
-> +			usb@203000000 {
->   				compatible = "nxp,usb-isp1761";
->   				reg = <2 0x03000000 0x20000>;
->   				interrupts = <16>;
->   				port1-otg;
->   			};
->   
-> -			iofpga@3,00000000 {
-> +			iofpga@300000000 {
->   				compatible = "simple-bus";
->   				#address-cells = <1>;
->   				#size-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-> index 12f039fa3dad..e26b492795c5 100644
-> --- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-> +++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-> @@ -151,7 +151,7 @@
->   				<0 0 41 &gic 0 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
->   				<0 0 42 &gic 0 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
->   
-> -		ethernet@2,02000000 {
-> +		ethernet@202000000 {
->   			compatible = "smsc,lan91c111";
->   			reg = <2 0x02000000 0x10000>;
->   			interrupts = <15>;
-> @@ -178,7 +178,7 @@
->   			clock-output-names = "v2m:refclk32khz";
->   		};
->   
-> -		iofpga@3,00000000 {
-> +		iofpga@300000000 {
->   			compatible = "simple-bus";
->   			#address-cells = <1>;
->   			#size-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-> index e3983ded3c3c..d5cefddde08c 100644
-> --- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-> @@ -103,7 +103,7 @@
->   				};
->   			};
->   
-> -			flash@0,00000000 {
-> +			flash@0 {
->   				/* 2 * 32MiB NOR Flash memory mounted on CS0 */
->   				compatible = "arm,vexpress-flash", "cfi-flash";
->   				reg = <0 0x00000000 0x04000000>;
-> @@ -120,7 +120,7 @@
->   				};
->   			};
->   
-> -			ethernet@2,00000000 {
-> +			ethernet@200000000 {
->   				compatible = "smsc,lan9118", "smsc,lan9115";
->   				reg = <2 0x00000000 0x10000>;
->   				interrupts = <3>;
-> @@ -133,7 +133,7 @@
->   				vddvario-supply = <&mb_fixed_3v3>;
->   			};
->   
-> -			iofpga@3,00000000 {
-> +			iofpga@300000000 {
->   				compatible = "simple-bus";
->   				#address-cells = <1>;
->   				#size-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-> index 60703b5763c6..350cbf17e8b4 100644
-> --- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-> +++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-> @@ -9,7 +9,7 @@
->   		motherboard {
->   			arm,v2m-memory-map = "rs2";
->   
-> -			iofpga@3,00000000 {
-> +			iofpga@300000000 {
->   				virtio-p9@140000 {
->   					compatible = "virtio,mmio";
->   					reg = <0x140000 0x200>;
-> diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-> index e333c8d2d0e4..d1bfa62ca073 100644
-> --- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-> +++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-> @@ -17,14 +17,14 @@
->   			#interrupt-cells = <1>;
->   			ranges;
->   
-> -			flash@0,00000000 {
-> +			flash@0 {
->   				compatible = "arm,vexpress-flash", "cfi-flash";
->   				reg = <0 0x00000000 0x04000000>,
->   				      <4 0x00000000 0x04000000>;
->   				bank-width = <4>;
->   			};
->   
-> -			ethernet@2,02000000 {
-> +			ethernet@202000000 {
->   				compatible = "smsc,lan91c111";
->   				reg = <2 0x02000000 0x10000>;
->   				interrupts = <15>;
-> @@ -51,7 +51,7 @@
->   				clock-output-names = "v2m:refclk32khz";
->   			};
->   
-> -			iofpga@3,00000000 {
-> +			iofpga@300000000 {
->   				compatible = "simple-bus";
->   				#address-cells = <1>;
->   				#size-cells = <1>;
-> 
+For now I will fix that and leave all those checks in place.
+>> +		} else {
+>> +			led->imax = 1; // 5mA
+>> +			dev_info(&client->dev,
+>> +				 "DT property led-max-microamp is missing!\n");
+>> +		}
+> Lets remove the exclamation mark.
+Will do.
+>> +		led->num = source;
+>> +		led->chip = chip;
+>> +		led->fwnode = of_fwnode_handle(child);
+>> +
+>> +		if (!of_property_read_string(child, "default-state", &str)) {
+>> +			if (!strcmp(str, "on"))
+>> +				led->default_state = STATE_ON;
+>> +			else if (!strcmp(str, "keep"))
+>> +				led->default_state = STATE_KEEP;
+>> +			else
+>> +				led->default_state = STATE_OFF;
+>> +		}
+> We should really have something in core for this. Should we support
+> arbitrary brightness there?
+Not sure if there is good dt property for that.
+>> +static void aw2013_read_current_state(struct aw2013 *chip)
+>> +{
+>> +	int i, led_on;
+>> +
+>> +	regmap_read(chip->regmap, AW2013_LCTR, &led_on);
+>> +
+>> +	for (i = 0; i < chip->num_leds; i++) {
+>> +		if (!(led_on & AW2013_LCTR_LE(chip->leds[i].num))) {
+>> +			chip->leds[i].cdev.brightness = LED_OFF;
+>> +			continue;
+>> +		}
+>> +		regmap_read(chip->regmap, AW2013_REG_PWM(chip->leds[i].num),
+>> +			    &chip->leds[i].cdev.brightness);
+>> +	}
+>> +}
+>> +
+>> +static void aw2013_init_default_state(struct aw2013_led *led)
+>> +{
+>> +	switch (led->default_state) {
+>> +	case STATE_ON:
+>> +		led->cdev.brightness = LED_FULL;
+>> +		break;
+>> +	case STATE_OFF:
+>> +		led->cdev.brightness = LED_OFF;
+>> +	} /* On keep - just set brightness that was retrieved previously */
+>> +
+>> +	aw2013_brightness_set(&led->cdev, led->cdev.brightness);
+>> +}
+> Aha; I guess this makes "keeping" the state to work. Do you really
+> need that functionality?
+I don't need that. On some theoretical device the chip could be
+enabled by bootloader but I consider that unlikely. I can drop
+support for keeping state. It would be then easier to get rid of
+"default_state" and "fwnode" in device struct. Should I?
+>
+> Pretty nice driver, thanks.
+>
+> 									Pavel
