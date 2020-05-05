@@ -2,106 +2,155 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0268BC47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D25C47257
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E362073B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588694655;
-	bh=UPUCU3eUar7iY9cJbizcok3tqdxkqvfWgxtd4KniG9w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S+WjM5pL+V6i1J2U6QvUlbinxCqouZJ/iGTwnH3tYh2XynIwWHfOZu7SbebpK0zYm
-	 Nrz63BeGc4coCB6KO3lyGLTvkg1Hf6kKNvHcpj1Iyvr1ib9yjPTWjLPq39DONI1+oE
-	 YRwtBKWIukEimi0G1gWq6CF8DxWzfjE0qDxpofp4=
+	by mail.kernel.org (Postfix) with ESMTP id 53E6C206A4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:05:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="pCbw8Q2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbgEEQEP (ORCPT
+        id S1729994AbgEEQF6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 12:04:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729398AbgEEQEN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 12:04:13 -0400
-Received: from localhost (p54B335A1.dip0.t-ipconnect.de [84.179.53.161])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2BCE206A4;
-        Tue,  5 May 2020 16:04:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588694653;
-        bh=UPUCU3eUar7iY9cJbizcok3tqdxkqvfWgxtd4KniG9w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jpyx0GW/MEFsaJ/3a8hJQAhv87YOfwuY2VCRaz2f23rAvywCCpVGpGI62SPlvU69i
-         M6PyJEGWsX8kBfF4OIpUBzoH6UU6urADCJP1Lvy+RrPyzkDrdWg3+P38CzNeDwJ73w
-         fcgb2+iKwsiUevl4QPm+FOQRnr/WwxiojXAm3VSs=
-Date:   Tue, 5 May 2020 18:04:10 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        Tue, 5 May 2020 12:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729195AbgEEQF5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 12:05:57 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E82C061A0F
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 09:05:56 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l18so3384692wrn.6
+        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 09:05:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=njl+I1KZR8dAJRFqU7HOVFmyMwpktP+Payzdk7cqiZo=;
+        b=pCbw8Q2Djt96EsEtPl4Xwf9WOgp+W7CXvZgaxdqcpirmNYjSYs2lAQfYP/qBeN/imW
+         qVMnYbtAIPWG5WvEXKrE3XH56YcQ5PblSP5dxSicG19C+Fm9IHnOwcV3lDboZ/rahDZX
+         KaV7vV6svD+bncNQN5UeWvAx1zaJqLFE+x33f58dhDIhxEQ+WgOKmPKT3J6RZ8o0i06h
+         kf7BZ1v3yDpTlV6C7mQTqSZbNF8qq3GoMgdq9JlBFZzbejBN6FDDzVfxn08kDc2K1pZP
+         dwfSr/9J/i1UZKnhFzYWvndqFjCsIHYjOlxrqmpfh+pStSpfhfIEGQUBA5z85DMujbZr
+         MQUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=njl+I1KZR8dAJRFqU7HOVFmyMwpktP+Payzdk7cqiZo=;
+        b=qZpCPx8QuOGDvik2lgR0A0/u7AnuV5vYYP7CiyaoOR654keSbvoesyy5PvMM+8VyoF
+         PN6T9Fx3nWuxdKVwahOZQfYjb6916qBMzVI9xCX+4OpOV0PSE4oVAlNEEc+6PwcSouwI
+         u+qBst8JVNpekdTxQHwOXdPdyLdFnOeLE9ZCoqI83QxIWildUNj1gFI7YpPMkWAXSkrH
+         fQG7HETRsWKCofYdN3o9w2wOgZ5acF1mMqrNdL7sh2dP8tHhR4wb8qe4hhZj4yOHjtNB
+         jvJXXo9N3e+7HWpqGwkIhqxSesoKPLngce+SrM9Vsu4EITCOmnFiAFae3tYihfSdA6dU
+         EOPQ==
+X-Gm-Message-State: AGi0PuZENQzDho0hSqjw9JJxNBY9dSKsxOT8VceokhSHl9XZgYHYGhCJ
+        ekgNPvKEsdznFTPQ3KqQLYrwjA==
+X-Google-Smtp-Source: APiQypLoB4fjwTQJDOAaK7x/BgWoRefOlMYzgeBPm4DGbTUjdPo8UYmkhAaAStq6Y7TclKEt1oNfMQ==
+X-Received: by 2002:a5d:6107:: with SMTP id v7mr4240620wrt.270.1588694754820;
+        Tue, 05 May 2020 09:05:54 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id l19sm4636869wmj.14.2020.05.05.09.05.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 09:05:54 -0700 (PDT)
+References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com> <20200428210229.703309-3-martin.blumenstingl@googlemail.com> <1jlfmdi9uw.fsf@starbuckisacylon.baylibre.com> <CAPDyKFoEh8qKYFONo1SHnvwhDwjUa5bMnnT1Kbu8=4rd=T-8Kg@mail.gmail.com> <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com> <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        "open list\:ARM\/Amlogic Meson..." 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-mmc\@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, devicetree@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] powerpc/5200: update contact email
-Message-ID: <20200505160410.GH2468@ninjato>
-References: <20200502142642.18979-1-wsa@kernel.org>
- <877dxsdl5e.fsf@mpe.ellerman.id.au>
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        yinxin_1989@aliyun.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH v6 2/2] mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
+In-reply-to: <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com>
+Date:   Tue, 05 May 2020 18:05:53 +0200
+Message-ID: <1j1rnygye6.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="v2Uk6McLiE8OV1El"
-Content-Disposition: inline
-In-Reply-To: <877dxsdl5e.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---v2Uk6McLiE8OV1El
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue 05 May 2020 at 10:17, Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
+> [...]
+>
+>> >> > +
+>> >> > +     return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
+>> >> > +                                        onecell_data);
+>> >>
+>> >> I think registering a provider for a module that does not provide clocks
+>> >> to any other device is a bit overkill.
+>> >>
+>> >> I understand the matter is getting the per-user clk* pointer.
+>> >> Since this is the module registering the clock, you can use clk_hw->clk
+>> >> to get it.
+>> >>
+>> >> Once you have the clk* of the leaf clocks, you don't even need to keep
+>> >> track of the clk_hw* since you are using devm_
+>> >>
+>> >> Afterward, we should propably discuss with Stephen if something should
+>> >> be added in CCF to get a struct clk* from struct clk_hw*.
+>> >>
+>> >
+>> > [...]
+>> >
+>> > Hmm.
+>> >
+>> > I am not sure the above is a good idea, at all. Unless, I am
+>> > misunderstanding your point, which may be the case.
+>> >
+>> > I think above "shortcuts" could lead to abuse of the clock framework
+>> > and its internal data structures. When going forward, this could make
+>> > it unnecessary harder to maintain the clock framework.
+>> >
+>> > I know, it's not my responsibility, but from my experience with MMC
+>> > and SDIO interfaces, is that those have been too easy abuse - since
+>> > most of the data structures and interfaces have been exported. Now,
+>> > it's hard to roll back that, if you see what I mean.
+>>
+>> Indeed, it worth clarifying this first.
+>>
+>> With clk_register deprecated in favor of clk_hw_register, we are likely
+>> to see that case rise elsewhere.
+>>
+>
+> So, according to the separate discussion [1], I think we can let
+> Martin decide what option to implement at this point.
+>
+> 1. Implement the "clk_hw_get_clk()" approach. The preferred option,
+> but requires wider changes of the clock subsystem as well.
+>
+> 2. Keep the existing approach, with devm_clk_get(). I am fine with
+> this as well, we can always switch to 1) later on.
 
-> > My 'pengutronix' address is defunct for years. Merge the entries and use
-> > the proper contact address.
->=20
-> Is there any point adding the new address? It's just likely to bit-rot
-> one day too.
+I have a problem with this approach.
+The dt-bindings would include "#clock-cells = <1>" for a device that
+does not actually provide and only needs it has a temporary work around.
+Those bindings are supposed to be stable ...
 
-At least, this one is a group address, not an individual one, so less
-likey.
+I have proposed 2 other short term solutions, let's see how it goes
 
-> I figure the git history is a better source for more up-to-date emails.
+>
+> [...]
+>
+> Kind regards
+> Uffe
+>
+> [1]
+> https://www.spinics.net/lists/linux-clk/msg48373.html
 
-But yes, can still be argued. I won't persist if you don't like it.
-
-Thanks!
-
-
---v2Uk6McLiE8OV1El
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6xjnoACgkQFA3kzBSg
-KbaTsxAAizU7yVpsyfvJAhLroyGpAVRj7LysT+H5JlZ8JjJ4uDpEhOhL4Hzr5QO4
-T4RfB4o+1xmKc0pwT2BOUteCO05S2hRH6+cwel++k+vWjCnKUBxeinylK+ixk4+V
-P8QWDo/gFuqUtsm/Wb6PtBR8otMVa0FajdEPuaAkhi2OPQjO/2DvffSHT4c3VAtI
-HY4pIIbwaaCiAalCse6IrqkuJT90A0ZDM9oRTZOIaryVkkTHHkBNmB7PKu4viJic
-yS3yH+R0e5yBGEre6FkwL1z2CCNAGNXeBQ23gvq3glJAQIQyfBYgnO+lQFD8lZzq
-Cb8E69+sastbZnUBKAK7GR5xvBYJImCxN35PRakdd8/pLHcdKgwIWu1B9PTO5xQP
-avv3RmViYiSqfRJa5MSWqPu04zkJCYxy/w6yskdPHqhpG+7x1grsLO9hFBWxDN18
-KDQaMtcgGzQbGzhxXnB8aZGJOEOTGrmlCxE35WQ5t3uGQe09hHTKuaUri288LXwH
-7mK08jCqhMDavvLaUPngPz4IkdiAv8yZaK3LH4ikMQ4bKTJXhpnwfHYEswLP9FQq
-Qcrm3tGBksw5Ld3sncU+ENfhhVaoIyxWxxjTp+WQVI+jMjWGCuJ1hy57iPonXfKn
-2LEqI9lEf2iukddWH32wj4eivgYf6UHnf91Y5FoePzMf197dID4=
-=bFLt
------END PGP SIGNATURE-----
-
---v2Uk6McLiE8OV1El--
