@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A744CC47258
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B705C47258
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8371020661
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BE5B2064A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:03:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="b1g+w8Bb"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="lSlyl4mO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgEEODW (ORCPT
+        id S1729426AbgEEODg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 10:03:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46892 "EHLO
+        Tue, 5 May 2020 10:03:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729379AbgEEODW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 10:03:22 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F9A2C0610D5
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 07:03:21 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e16so2894034wra.7
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 07:03:21 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1729390AbgEEODU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 10:03:20 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02E0BC061A10
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 07:03:20 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u16so2466006wmc.5
+        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 07:03:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nZF4M1Ryr6CWnpRgUMWuRsLTKn/UHmWXZ3+MZTEjA0A=;
-        b=b1g+w8BbUfw1KBw5K5flqcpokPuwWxqpurh2OtOPaunuRCeznQpZQlwP/WmuzoQgod
-         CFSP4OiPt1lnEwVmBbNmoJbW8Lp9A94lN6aZgEgid2Id63oLBylgAseWNbdxn6jtSsYR
-         E/Fc3NnZWPVr75Zc4iI18RNGT0JBcgshtWeyJ7ygIa2DncTH6eFWRlYLO+juQ1IJuzRg
-         qq/R2tbLKwU0DYSzilgyEMuOgD9YzdMBKR7ZxLdG9s7DBdX+mipCe+CicuEcioBHW8Pl
-         SLJzfUoWzzS0YBpfZIcrkuLP4G1MO1KO2GPMW7SFg0Od6O4NZwujxJubuNCjSksjEPFg
-         B38Q==
+        bh=KiLRpfO6b7G+PZFXWrA65hqZV6E46x1U4Qg5U0775pc=;
+        b=lSlyl4mOElbeeStRAJ4CWke7R4swrfRTDDvLBAB45QOvM4+7cfviB8IS+q8YjTZ9ER
+         J/ERsLiOQHNV1mTXN3jPp9K18esFG4ne5yM9GcYpMm01CSVnE/W734lRVikO4BAQNJfp
+         NIJ0jLuZD/AMpS3Co94mCUYYzA7Mbr3GSRHF0qswguqdE/7M72H1HNornTVQfgBDvMBf
+         J2lJdqjGdfJQJZaUMRQJG+LjJd44f4bKZ6cbr2NR816aGdFW5ioRRvqPprprQr5Q4qDe
+         0CAUeW3L2CkjgSaKgHc1XyVKlBJjesE4lOuflOL1uJe3/07Mw43PRohiyBdxf3FGLcgj
+         LT/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nZF4M1Ryr6CWnpRgUMWuRsLTKn/UHmWXZ3+MZTEjA0A=;
-        b=QzgB4GjmieU46DRllrHmVaxjQRMQyeWlQWrdqdhxCkChyNlbu10A5LRuvGP9mGFKKC
-         NlVh9t8xXeQLNCRo94lffd9fnooRB/6RNY5uuIKuCw4aaqEt+Fu4W0PWnAak2tToyDd8
-         LuUTYp2Bgutz7Qoe9Jkz/uIZvirTrjuGY4sYlsZ8j3sGoXGDZjiOnjBNSWCq+yDjhiqO
-         edva/LDEjYkRXZM+h0VBtCuuHXz0F+DFVwA1XKuZ5chafL0z0RjKn1QM1AITWGD/AOws
-         vrINGywRnPLUMYNpY8S7GS6qUvmsk1aHNyHze6RugVxXPFAq6kvTYVRtA3WYwBu44+/p
-         fMWA==
-X-Gm-Message-State: AGi0PuakuyC5SYdKdmmvnCOBtDrQVFy36RlWKMtxk63D6Se1NnNBSgz1
-        Sh4RKpaxKupjePpEfqDNnEJtrA==
-X-Google-Smtp-Source: APiQypKSn8NhwYdJ0V9/oJPNixCPyhQzeTO3N+zmykXTaq3hm8BpCPa3gRNfEdcvq21s3N2xigB8/Q==
-X-Received: by 2002:adf:e905:: with SMTP id f5mr3949344wrm.409.1588687400189;
-        Tue, 05 May 2020 07:03:20 -0700 (PDT)
+        bh=KiLRpfO6b7G+PZFXWrA65hqZV6E46x1U4Qg5U0775pc=;
+        b=UXsN4IM5lX+YVk/YELBCVJXYRgoFmr4Voj7TxLC9Svlmek/cWIXiUrf1u5t3gLWnKg
+         XrOXIC5KyTR79M/KqvbkT31e5qQb8altBtJa7HxXBQQHPhXolpmrbPmOlIU6ZziQ0/wy
+         Xd2rJ2XCt3UVws7de4tb9/Spcq8BO3vonUH0S+0qO1slLTWZmjFvGCDNVF41Q/hfenqm
+         mQDXGsbpmH+SOQSBNV4RBq7uwMrRQxWeSHadj1dKSbYCThNq20Y3AvLpQnNNvcmSA7gv
+         MgRaPyL7ss9iC4I/hTvNObVLx2R4x8x2psyl4E1oTfLNVJOvywO5SI9jWHlhPLyEKibW
+         u1wQ==
+X-Gm-Message-State: AGi0PuZyBsPMP312UCRX3pMx6HFMoGfQGEkhfMg0yFxe8BA3fxImFVCg
+        CaIv8s9OIKaHQdiUDnGdFIIIdg==
+X-Google-Smtp-Source: APiQypKwmZMdeEmUAzcUU4K0jiEpe5kHCS1F6NfZ1/9dSidf/8PeL2h2zvcjETlSxePjjPJCHSUbNA==
+X-Received: by 2002:a1c:9c0a:: with SMTP id f10mr3689658wme.139.1588687398732;
+        Tue, 05 May 2020 07:03:18 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id c190sm4075755wme.4.2020.05.05.07.03.18
+        by smtp.gmail.com with ESMTPSA id c190sm4075755wme.4.2020.05.05.07.03.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 07:03:19 -0700 (PDT)
+        Tue, 05 May 2020 07:03:18 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -73,9 +73,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 11/11] ARM64: dts: mediatek: enable ethernet on pumpkin boards
-Date:   Tue,  5 May 2020 16:02:31 +0200
-Message-Id: <20200505140231.16600-12-brgl@bgdev.pl>
+Subject: [PATCH 10/11] ARM64: dts: mediatek: add ethernet pins for pumpkin boards
+Date:   Tue,  5 May 2020 16:02:30 +0200
+Message-Id: <20200505140231.16600-11-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200505140231.16600-1-brgl@bgdev.pl>
 References: <20200505140231.16600-1-brgl@bgdev.pl>
@@ -88,42 +88,37 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add remaining properties to the ethernet node and enable it.
+Setup the pin control for the Ethernet MAC.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- .../boot/dts/mediatek/pumpkin-common.dtsi      | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi b/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi
-index 4b1d5f69aba6..dfceffe6950a 100644
+index 97d9b000c37e..4b1d5f69aba6 100644
 --- a/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi
-@@ -167,6 +167,24 @@ &uart0 {
- 	status = "okay";
- };
- 
-+&ethernet {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ethernet_pins_default>;
-+	phy-handle = <&eth_phy>;
-+	phy-mode = "rmii";
-+	mac-address = [00 00 00 00 00 00];
-+	status = "okay";
+@@ -219,4 +219,19 @@ gpio_mux_int_n_pin {
+ 			bias-pull-up;
+ 		};
+ 	};
 +
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		eth_phy: ethernet-phy@0 {
-+			reg = <0>;
++	ethernet_pins_default: ethernet {
++		pins_ethernet {
++			pinmux = <MT8516_PIN_0_EINT0__FUNC_EXT_TXD0>,
++				 <MT8516_PIN_1_EINT1__FUNC_EXT_TXD1>,
++				 <MT8516_PIN_5_EINT5__FUNC_EXT_RXER>,
++				 <MT8516_PIN_6_EINT6__FUNC_EXT_RXC>,
++				 <MT8516_PIN_7_EINT7__FUNC_EXT_RXDV>,
++				 <MT8516_PIN_8_EINT8__FUNC_EXT_RXD0>,
++				 <MT8516_PIN_9_EINT9__FUNC_EXT_RXD1>,
++				 <MT8516_PIN_12_EINT12__FUNC_EXT_TXEN>,
++				 <MT8516_PIN_38_MRG_DI__FUNC_EXT_MDIO>,
++				 <MT8516_PIN_39_MRG_DO__FUNC_EXT_MDC>;
 +		};
 +	};
-+};
-+
- &usb0 {
- 	status = "okay";
- 	dr_mode = "peripheral";
+ };
 -- 
 2.25.0
 
