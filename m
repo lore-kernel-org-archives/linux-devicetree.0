@@ -2,82 +2,123 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2B9C47259
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 13:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F45BC47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE78206A5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 13:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD9920661
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:01:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BPLdwwcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgEENgI (ORCPT
+        id S1729032AbgEEOBj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 09:36:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729095AbgEENgG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 09:36:06 -0400
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AEA8C061A41
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 06:36:05 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:bd97:8453:3b10:1832])
-        by xavier.telenet-ops.be with bizsmtp
-        id b1c32200D3VwRR3011c34F; Tue, 05 May 2020 15:36:03 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jVxjv-0008Al-Gi; Tue, 05 May 2020 15:36:03 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jVxjv-0006m4-En; Tue, 05 May 2020 15:36:03 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Rajat Jain <rajatja@google.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 resend 2] dt-bindings: net: btusb: DT fix s/interrupt-name/interrupt-names/
-Date:   Tue,  5 May 2020 15:36:02 +0200
-Message-Id: <20200505133602.25987-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Tue, 5 May 2020 10:01:39 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42596 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728076AbgEEOBj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 10:01:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=MQhJQSV5DPC+RnQ18Gv5OjUfrbMB0JR8XzYM9Fu0Cns=; b=BPLdwwcd4KtC0HTYqHjtwDw1X2
+        mJVWPB/049rFgZ8S7LEq4nNbSLR/3zKrk7qLN6vTYnlH2BC+ePiuxyYNm3mjV6WYL4QFpFgEvAcTD
+        mOXu9KbDkhWxhkg1NSMok1gnLzHA8wkShofmqZvzcJausKRgNN1V7JZcqosLpe3YxvJU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jVy8V-000wMg-KV; Tue, 05 May 2020 16:01:27 +0200
+Date:   Tue, 5 May 2020 16:01:27 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v1] dt-bindings: net: nxp,tja11xx: rework validation
+ support
+Message-ID: <20200505140127.GJ208718@lunn.ch>
+References: <20200505104215.8975-1-o.rempel@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505104215.8975-1-o.rempel@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The standard DT property name is "interrupt-names".
+On Tue, May 05, 2020 at 12:42:15PM +0200, Oleksij Rempel wrote:
+> To properly identify this node, we need to use ethernet-phy-id0180.dc80.
+> And add missing required properties.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  .../devicetree/bindings/net/nxp,tja11xx.yaml  | 55 ++++++++++++-------
+>  1 file changed, 35 insertions(+), 20 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> index 42be0255512b3..cc322107a24a2 100644
+> --- a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> @@ -1,4 +1,4 @@
+> -# SPDX-License-Identifier: GPL-2.0+
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+>  $id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> @@ -12,44 +12,59 @@ maintainers:
+>    - Heiner Kallweit <hkallweit1@gmail.com>
+>  
+>  description:
+> -  Bindings for NXP TJA11xx automotive PHYs
+> +  Bindings for the NXP TJA1102 automotive PHY. This is a dual PHY package where
+> +  only the first PHY has global configuration register and HW health
+> +  monitoring.
+>  
+> -allOf:
+> -  - $ref: ethernet-phy.yaml#
+> +properties:
+> +  compatible:
+> +    const: ethernet-phy-id0180.dc80
+> +    description: ethernet-phy-id0180.dc80 used for TJA1102 PHY
+> +
+> +  reg:
+> +    minimum: 0
+> +    maximum: 14
+> +    description:
+> +      The PHY address of the parent PHY.
 
-Fixes: fd913ef7ce619467 ("Bluetooth: btusb: Add out-of-band wakeup support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Rob Herring <robh@kernel.org>
----
-v4:
-  - Add Acked-by,
+Hi Oleksij
 
-v3:
-  - New.
----
- Documentation/devicetree/bindings/net/btusb.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+reg is normally 0 to 31, since that is the address range for MDIO. 
+Did you use 14 here because of what strapping allows?
 
-diff --git a/Documentation/devicetree/bindings/net/btusb.txt b/Documentation/devicetree/bindings/net/btusb.txt
-index b1ad6ee68e909318..c51dd99dc0d3cb73 100644
---- a/Documentation/devicetree/bindings/net/btusb.txt
-+++ b/Documentation/devicetree/bindings/net/btusb.txt
-@@ -38,7 +38,7 @@ Following example uses irq pin number 3 of gpio0 for out of band wake-on-bt:
- 	compatible = "usb1286,204e";
- 	reg = <1>;
- 	interrupt-parent = <&gpio0>;
--	interrupt-name = "wakeup";
-+	interrupt-names = "wakeup";
- 	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-     };
- };
--- 
-2.17.1
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#address-cells'
+> +  - '#size-cells'
+
+So we have two different meanings of 'required' here.
+
+One meaning is the code requires it. compatible is not required, the
+driver will correctly be bind to the device based on its ID registers.
+Is reg also required by the code?
+
+The second meaning is about keeping the yaml verifier happy. It seems
+like compatible is needed for the verifier. Is reg also required? We
+do recommend having reg, but the generic code does not require it.
+
+   Andrew
 
