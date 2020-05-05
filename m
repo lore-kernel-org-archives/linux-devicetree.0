@@ -2,115 +2,136 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1534AC47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D515AC47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 09:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC38520658
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AD7206B8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 09:15:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SFAkZMtU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QXWA/MYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgEEIaM (ORCPT
+        id S1728422AbgEEJPn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 04:30:12 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:37554 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgEEIaM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 04:30:12 -0400
+        Tue, 5 May 2020 05:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728402AbgEEJPm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 05:15:42 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EC7C061A0F
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 02:15:42 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g13so1783665wrb.8
+        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 02:15:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588667412; x=1620203412;
-  h=to:cc:references:from:message-id:date:mime-version:
-   in-reply-to:content-transfer-encoding:subject;
-  bh=DB9DoB4dAy+tSnSPYNEN9V0bWmWAez3y3wdWalkVI28=;
-  b=SFAkZMtUg5437tJkyaAkUwpBwgD3+MhqYc/icE9iGSwTJLJUrNv6WHGj
-   CJyHD4dcbWtK9C4lOqdjx2aWSKLFAwoHshqaj9rFxan13KwR2nAOSz8JT
-   hv2ibk0bad86MFAGCZansOPwiyfVOf0Z0hDRdK8WLryD1y3w4J0duiZC6
-   A=;
-IronPort-SDR: m8F2JJq921i8U2hTPFX0OwXLwYDtpl5tpc29M2DH+3KrOTRiknwDPZ2TJ0WOTyoRcP0j5qH4tC
- TRGUvBBx98GA==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="32985955"
-Subject: Re: [PATCH v9 3/3] edac: Add support for Amazon's Annapurna Labs L2 EDAC
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 May 2020 08:30:08 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 77E8EA1D93;
-        Tue,  5 May 2020 08:30:07 +0000 (UTC)
-Received: from EX13D08UEB003.ant.amazon.com (10.43.60.11) by
- EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 08:30:05 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D08UEB003.ant.amazon.com (10.43.60.11) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 08:30:05 +0000
-Received: from [192.168.17.227] (10.1.213.30) by mail-relay.amazon.com
- (10.43.61.243) with Microsoft SMTP Server (TLS) id 15.0.1497.2 via Frontend
- Transport; Tue, 5 May 2020 08:30:02 +0000
-To:     Robert Richter <rrichter@marvell.com>, <bp@alien8.de>
-CC:     <mchehab@kernel.org>, <tony.luck@intel.com>, <james.morse@arm.com>,
-        <robh+dt@kernel.org>, <frowand.list@gmail.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <Jonathan.Cameron@huawei.com>, <arnd@arndb.de>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
-        <jonnyc@amazon.com>, <hanochu@amazon.com>, <barakw@amazon.com>
-References: <20200129195016.956-1-hhhawa@amazon.com>
- <20200129195016.956-4-hhhawa@amazon.com>
- <20200310134713.n4gtrgtjdjymmgm5@rric.localdomain>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <8bd3e95c-c45e-383a-f1a3-d60be5c2ff19@amazon.com>
-Date:   Tue, 5 May 2020 11:30:00 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sU7U3FhjLtetQ4yGftkHmkBqFM+M9ZWPk430QlcmjSw=;
+        b=QXWA/MYxeBeYOjAoqaNN2WaAGPU0Tv3zhPwTqxa96+5wzt9CdxYYAAOCUz6pWhuzUl
+         933MuJKNFPVD3w9C/QvD/C0e6iA+FZPTltexAp+raUdXk9hamFndUJbWV2K4iPOJiiz7
+         mqMyTD/SmVD6T8yeuC7kKEIaQK7SAcsO3TOplzzSgBS/tPHNt0Is/ZMyXCEdT7r2D46z
+         FIOLqY+T6XzzhHEgdFXwAFjHT0v74ZucOnNkxFTOaVA8+6OV7MLwC5bHsfh2sv+sT888
+         szyzUg2wNsB84mYvmwLGhiEl0EZfJEPVQVC4y7fppcLdtB5gerYO6mRdLiS7XmYwmwZ0
+         XEWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sU7U3FhjLtetQ4yGftkHmkBqFM+M9ZWPk430QlcmjSw=;
+        b=UjDWyDC3Z+hFkH04HdqSRn/71MOuuJRwnbJeZElF5Rsax2zikorWQuMx7dA2Fl2vZE
+         qD+IuzWjtunIES5RCY5BlQo1xqblBc5HzsI7AAFVSrJxsz1Exd14HMr1NCwc5gpqwpkw
+         4M5jb43i8h7Xb3h/QXzkFI0we08ELatemsDUQC8orb78rdlpEGwAwfpOyCcm335w72Nd
+         S1wRCkUqaJv7OCdmbtaF6AMK2lmRwsAovaMibO6VSOknAsyApOB02jhUjh510RRqssQs
+         9c2PuQn4aO7RiOvQIiEic1JBj6m7irFT55YJLZ4MJov2xj3S636opvVhEc67toOcngWJ
+         BZ6g==
+X-Gm-Message-State: AGi0Pubrhz5gZdFaXhHQ1y0iu32hyVUOgmuUExhFtnfkxiF2Byh9CVBr
+        Lr/7F1diGFsuytiEErBikdXMJQ==
+X-Google-Smtp-Source: APiQypLUdwS9EMNq1wqY/xPjJM+u52dIVylq937W1BwIZPG2UftDefGXQhpqhk5pltip4j2URFGphQ==
+X-Received: by 2002:a5d:4652:: with SMTP id j18mr2063792wrs.19.1588670141301;
+        Tue, 05 May 2020 02:15:41 -0700 (PDT)
+Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id c190sm2856893wme.4.2020.05.05.02.15.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 02:15:40 -0700 (PDT)
+Date:   Tue, 5 May 2020 11:15:31 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org
+Subject: Re: [PATCH v6 17/25] iommu/arm-smmu-v3: Implement
+ iommu_sva_bind/unbind()
+Message-ID: <20200505091531.GA203922@myrica>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+ <20200430143424.2787566-18-jean-philippe@linaro.org>
+ <20200430141617.6ad4be4c@jacob-builder>
+ <20200504164351.GJ170104@myrica>
+ <20200504134723.54e2ebcd@jacob-builder>
 MIME-Version: 1.0
-In-Reply-To: <20200310134713.n4gtrgtjdjymmgm5@rric.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504134723.54e2ebcd@jacob-builder>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 3/10/2020 3:47 PM, Robert Richter wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+On Mon, May 04, 2020 at 01:47:23PM -0700, Jacob Pan wrote:
+> > > > +	arm_smmu_write_ctx_desc(smmu_domain, mm->pasid,
+> > > > &invalid_cd); +
+> > > > +	arm_smmu_tlb_inv_asid(smmu_domain->smmu,
+> > > > smmu_mn->cd->asid);
+> > > > +	/* TODO: invalidate ATS */
+> > > > +  
+> > > If mm release is called after tlb invalidate range, is it still
+> > > necessary to invalidate again?  
+> > 
+> > No, provided all mappings from the address space are unmapped and
+> > invalidated. I'll double check, but in my tests invalidate range
+> > didn't seem to be called for all mappings on mm exit, so I believe we
+> > do need this.
+> > 
+> I think it is safe to invalidate again. There was a concern that mm
+> release may delete IOMMU driver from the notification list and miss tlb
+> invalidate range. I had a hard time to confirm that with ftrace while
+> killing a process, many lost events.
 > 
-> 
-> 
-> On 29.01.20 21:50:16, Hanna Hawa wrote:
->> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
->> report L2 errors.
->>
->> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
->> ---
->>   MAINTAINERS               |   5 +
->>   drivers/edac/Kconfig      |   8 ++
->>   drivers/edac/Makefile     |   1 +
->>   drivers/edac/al_l2_edac.c | 270 ++++++++++++++++++++++++++++++++++++++
->>   4 files changed, 284 insertions(+)
->>   create mode 100644 drivers/edac/al_l2_edac.c
-> 
-> Hanna, most of the review comments by Boris for patch #1 (al_l1_edac)
-> apply here too. Please address them.
 
-Hi Boris, Robert,
+If it helps, I have a test that generates small DMA transactions on a SMMU
+model. This is the trace for a job on a 8kB mmap'd buffer:
 
-Sorry for not getting back to you sooner, will address comments on both 
-files and upload new patchset ASAP.
+  smmu_bind_alloc: dev=0000:00:03.0 pasid=1
+  dev_fault: IOMMU:0000:00:03.0 type=2 reason=0 addr=0x0000ffff860e6000 pasid=1 group=74 flags=3 prot=2
+  dev_page_response: IOMMU:0000:00:03.0 code=0 pasid=1 group=74
+  dev_fault: IOMMU:0000:00:03.0 type=2 reason=0 addr=0x0000ffff860e7000 pasid=1 group=143 flags=3 prot=2
+  dev_page_response: IOMMU:0000:00:03.0 code=0 pasid=1 group=143
+  smmu_mm_invalidate: pasid=1 start=0xffff860e6000 end=0xffff860e8000
+  smmu_mm_invalidate: pasid=1 start=0xffff860e6000 end=0xffff860e8000
+  smmu_mm_invalidate: pasid=1 start=0xffff860e8000 end=0xffff860ea000
+  smmu_mm_invalidate: pasid=1 start=0xffff860e8000 end=0xffff860ea000
+  smmu_unbind_free: dev=0000:00:03.0 pasid=1
+
+And this is the same job, but the process immediately kills itself after
+launching it.
+
+  smmu_bind_alloc: dev=0000:00:03.0 pasid=1
+  dev_fault: IOMMU:0000:00:03.0 type=2 reason=0 addr=0x0000ffffb9d15000 pasid=1 group=259 flags=3 prot=2
+  smmu_mm_release: pasid=1
+  dev_page_response: IOMMU:0000:00:03.0 code=0 pasid=1 group=259
+  dev_fault: IOMMU:0000:00:03.0 type=2 reason=0 addr=0x0000ffffb9d15000 pasid=1 group=383 flags=3 prot=2
+  dev_page_response: IOMMU:0000:00:03.0 code=1 pasid=1 group=383
+  smmu_unbind_free: dev=0000:00:03.0 pasid=1
+
+We don't get any invalidate_range notification in this case.
 
 Thanks,
-Hanna
-
-> 
-> Thanks,
-> 
-> -Robert
-> 
+Jean
