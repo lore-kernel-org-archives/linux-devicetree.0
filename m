@@ -2,117 +2,95 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F03BC47259
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 04:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CC8C47256
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 04:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15EA820737
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 04:08:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588651698;
-	bh=uzzMCgqE/O5IIYjUlJGPkxkNrxePxpFGbx62v87B1yk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HAcyUlEafdW5XWXUovTHARxv0QZuX3gL8U9sqnk2Ft9Fa/V2WsVrHQU6hoBiROpNG
-	 B1W4OfvSzNh5NOsAZb80ZhPMVYpLCTrGy6R4ff+Gia56wOLVZnVPRuxc0TmUHRnv+R
-	 eurzK8XuKZ7Tbtx++fim/WirBfqeAEQXvao/5prg=
+	by mail.kernel.org (Postfix) with ESMTP id C4C8F206E6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 04:22:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="D6pOHAQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725830AbgEEEIL (ORCPT
+        id S1725320AbgEEEWh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 00:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725272AbgEEEIL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 00:08:11 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 319202087E;
-        Tue,  5 May 2020 04:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588651690;
-        bh=uzzMCgqE/O5IIYjUlJGPkxkNrxePxpFGbx62v87B1yk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BN6Cy/3HpCwbAGqGdvC+qqnnmWcpBeTMOV+avy7c5MqADF8o2RkgcRkJzIQXdsCsk
-         1Afk3jIt/KQM3TnQcStiKfqzuLsewX65wxQohWJds/+9oXyCCJshgXhqgUpXBb3dvp
-         Pj9E/11iNOGPIQykmHB/KEKg0M4b5I2GMOZkNt/o=
-Received: by mail-ot1-f54.google.com with SMTP id m13so561394otf.6;
-        Mon, 04 May 2020 21:08:10 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYCc8W08LyWksuW5sQZqz/19WrYFFaUhJea7EHP7Nd0bFUJ8bMP
-        TH24vvr7k6O4ssDpVm8Cn3ceMFQOC52xr3mHaw==
-X-Google-Smtp-Source: APiQypKr0Hhrl0+e44U31hazXs0o4bScaIuGYf4nCgkUWwDdJ4zYt2nRLPemlwjIE7S1TGeNHXWRAj+I7RpOjlh+8dk=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr690540otn.107.1588651689440;
- Mon, 04 May 2020 21:08:09 -0700 (PDT)
+        Tue, 5 May 2020 00:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725272AbgEEEWg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 00:22:36 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A8EC061A0F
+        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 21:22:36 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id r7so643429edo.11
+        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 21:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uJ0y6FcFB9jMQW7+VyYkys9OyOfLGv891tBYXbKQ6Lo=;
+        b=D6pOHAQqV6oRTxL2e0a/me5SShTY0XO/9NZf1dqbqzyQwZgQF3OarvhBJyqYJN0vjO
+         R5Ixk0dgTp9/EoOjz0rEcr0mPHhkEKxtTWV8FnJgtUhE/0w7hyYhPO/U7mbGI0Lj4LCf
+         typkORdm614GhaxIgrXewRMy0s/Rm7s7+FiKYI9aKY50ys18ZWYJhcAQA5DEU9sc+eoL
+         S0NjlXGpbt/FrqTmZrrQ3r3CjSYwmjVrUJunR0lNJUWKY42njsJqi9vwBhqDFVqWHE6q
+         HrD3+KbbvTIG+t+7wE1NPXVG7sUeofXBAV9ZWVqZldNFKRWqHbYonZvPwyVm1HhyM/oR
+         1W+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uJ0y6FcFB9jMQW7+VyYkys9OyOfLGv891tBYXbKQ6Lo=;
+        b=LQEp/KKwNsP38GiCqTfZcyDm1JE0xCiXdx3zvKrioOa4h1Kr3h2xtnqe7eN2t/joUm
+         oBfrDp0NZdRAsZW8w068jaKmuLHS+L6QaMNc01ksLNlZ0EAKq+FkbnctPSWXOUReeBGe
+         lQgOuBPZV7siAdmyjcWcUebnfcFB3u6j8v/RzXIJNwpo2X+hUkDmJUx4le76ikk5OQ5u
+         hY8ACLVCFOlrRdw0C02zams0sKOcpIFhaP/qDZoaJBBJdRp8Mo6/cQ3hXvFBusymKpIk
+         8UFgJKLro/civ161S82DlXmI4vrVFc1jXlXza45D4qp4/RMG8+UzfwQKDoT28+w21ebY
+         2YpA==
+X-Gm-Message-State: AGi0PubDzI0Oli+wHvw4ZgV9KVBPGmY+3gLTji5KCgDi3sSI1euhPmCu
+        CmdfuAPBWroRhoayxoAvS8FD2bZJ6t3WrpRKBW86og==
+X-Google-Smtp-Source: APiQypKrSlYwMkQPNUw8t3+Xw52t8PsrOt2V3d2FTdJ37MpHOu8qVhpo1pFWdq/+9CH/1SCr+fYJEYbsTqkYq0TiiB8=
+X-Received: by 2002:aa7:c492:: with SMTP id m18mr960081edq.346.1588652554919;
+ Mon, 04 May 2020 21:22:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
- <20200504174522.GA3383@ravnborg.org> <20200504175553.jdm7a7aabloevxba@pengutronix.de>
-In-Reply-To: <20200504175553.jdm7a7aabloevxba@pengutronix.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 4 May 2020 23:07:57 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJuRrhEtt5uxaQ=7WvDKiF_2v025GiYUvrrFE5jxBr-Xg@mail.gmail.com>
-Message-ID: <CAL_JsqJuRrhEtt5uxaQ=7WvDKiF_2v025GiYUvrrFE5jxBr-Xg@mail.gmail.com>
-Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Sam Ravnborg <sam@ravnborg.org>
-Cc:     Linux-ALSA <alsa-devel@alsa-project.org>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, Jyri Sarha <jsarha@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <20200502143555.543636-2-pasha.tatashin@soleen.com> <20200505010219.GA2282345@jagdpanzerIV.localdomain>
+ <CA+CK2bASiWe=w07gsc-_fFZxPY0SSECSYh6femUCA8yugEpuRg@mail.gmail.com> <CA+CK2bAZAAzAK7G3bJ5dOHR__5+a8LgWPVBzwM+TnbHdVKDUgQ@mail.gmail.com>
+In-Reply-To: <CA+CK2bAZAAzAK7G3bJ5dOHR__5+a8LgWPVBzwM+TnbHdVKDUgQ@mail.gmail.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Tue, 5 May 2020 00:21:59 -0400
+Message-ID: <CA+CK2bAPhXL_p2WkDaLshw2U13KbdU5NMH6qJsy8YTq3rwZwBg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] printk: honor the max_reason field in kmsg_dumper
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 4, 2020 at 12:56 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+> > I changed it to make code cleaner:  for such basic operation there are
+> > too many conditions if we will keep it inside the kmsg_dump().
+> > However, if being able to set always_kmsg_dump dynamically during
+> > runtime is deemed important, I can change it back to be checked in
+> > kmsg_dump.
 >
-> Hi Sam,
->
-> On Mon, May 04, 2020 at 07:45:22PM +0200, Sam Ravnborg wrote:
-> > On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
-> > > There are some new broken doc links due to yaml renames
-> > > at DT. Developers should really run:
-> > >
-> > >     ./scripts/documentation-file-ref-check
-> > >
-> > > in order to solve those issues while submitting patches.
-> > Would love if some bot could do this for me on any patches that creates
-> > .yaml files or so.
-> > I know I will forget this and it can be automated.
-> > If I get a bot mail that my patch would broke a link I would
-> > have it fixed before it hits any tree.
+> If you agree that we do not have to modify this variable dynamically,
+> I will also change the permission here:
+> module_param_named(always_kmsg_dump, always_kmsg_dump, bool, S_IRUGO | S_IWUSR);
 
-I can probably add this to what I'm already checking. Not completely
-automated though as it depends on me to review before sending.
+Hi Sergey,
 
-> What about adding a check to check_patch?
+After thinking about this. I will move this logic back to kmsg_dump(),
+to keep the current behavior where kmsg_dump can be modified during
+runtime.
 
-That would be the best way to get submitters to do this.
-
-Rob
+Thank you,
+Pasha
