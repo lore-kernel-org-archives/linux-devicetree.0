@@ -2,104 +2,307 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEBAC47258
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 03:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F524C47256
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 04:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C01B206CC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 03:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15DBE206B8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 04:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588650950;
-	bh=rHTxzGcwMeCDg1nOjVr/jfX2SZVBp4avXgqxuwEXbW0=;
+	s=default; t=1588651464;
+	bh=yKBTugH8880ycUm1lMIIvYlUDUSJrOPfnZwm2cxXetQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ETe/TkiBV6wQoeVkmMHhVbFrIa2LHF5AyCcjF9Z7ZVVFo2r79CujhfYuFaSjrOig4
-	 ErHBlb2RuraFQS7Bs7W0kWVEXdAG61XtGHrH31SdN1xIRP1i4u0X6e9APD7NXAtOLL
-	 ak0wfbHKmVLDHTtw8Q+m7Y43oeiURuOz3WFLPHS0=
+	b=kvGJVj7upqzyhu7y0XErf+KzkjPdQgxlsRi7NqlzadNgtAdyfyTHWgsXRFnOAfUTl
+	 nA+BExo6H2rhOq9K5o6N++EPRFbC+RrPMnY3JPsUQXnsip82GQSM2gQfTJPdA3MdRc
+	 8EuecLyrrZRd1QlPXly/x6u9uLQA4A58YFbH5Ggk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgEEDzr (ORCPT
+        id S1725294AbgEEEEX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 May 2020 23:55:47 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44737 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgEEDzr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 May 2020 23:55:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j4so524842otr.11;
-        Mon, 04 May 2020 20:55:46 -0700 (PDT)
+        Tue, 5 May 2020 00:04:23 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38880 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgEEEEX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 00:04:23 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r66so866911oie.5;
+        Mon, 04 May 2020 21:04:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fVpmlRqOB7eXke8uevfSsRs8l7hcoXGDZESzEE9L/Kk=;
-        b=LTmzC+z2LtrtoCvIZe1d3Ny2xovOeB6f2rKZV6s3kHfC/8qn5qyqN0p8+bwJFxotHm
-         Zw0cQLRtOx/jciMAuAv76A2SwpoR0f+ljTL7r5/5FDvvbzrApIOlmwSPydkLUer83DGe
-         cqbKEtSQEMqluaOH2T4r41hYfPcdfwjGZaxIuNBlUp1S1A2Wnm8eoEbjfMGbe9nA92u4
-         y+QXHeTAV5QAPPHHsp0MA6kO2da0R1rTufWOi0opKAD+1eLBKw16puxkFZN/E74+Q7dz
-         vLyGbrAq0NxWOQSmelz7Yg56Yk0YNBxRVO7uf358RT0tXqRrMySmI4CHpcqvK6aV3yBU
-         W98Q==
-X-Gm-Message-State: AGi0PuYeact1L4SFN2P1fgTfEUx9WOcFtUntI213U8dbVUhaLA6dZhI3
-        5tuWvi21Th2S6zfRyEkjFiQEXEw=
-X-Google-Smtp-Source: APiQypJTqz87zIpF1xabhLlbR6oZBO16QbukiXQa0HRhnMbsIVziIpe/J85nsrXb8hc4FUxAuvipIg==
-X-Received: by 2002:a9d:5e04:: with SMTP id d4mr988124oti.312.1588650945786;
-        Mon, 04 May 2020 20:55:45 -0700 (PDT)
+        bh=iMdl5NHMDcGt22j2q8uZLDpjB1012t23d7yBsc8MVRI=;
+        b=Hr7PRoa3G9Pt4FWWDnTg7rb7d8tAElb86yqexGp7HV5TNh7vNx6ZRly95SntoEQ2Zy
+         +oplb1pBTE/Bm8pOjrDHVMJ5CnmvETyqi2lpdgUMz80ryHT5WIZu19xhTJweRkQOVima
+         zncZ85c2paSQka3p70PayPJ2MR3xmhZXjwa9m2T3TGMzEz+hCtD0Tu82TBm42f2Snqvn
+         LynNBHmrVmytWA2dmtUp8BXMsyXa7zfrNTBN3rB9K7IacRwyIF4K9+E5U10g5SFjoTsv
+         fsRY8/AIgg3VOacJaGJrFz3sBajciPkHM9hxKfYYTb+fNGbpOw+LJr6VI+YcDdajdY/D
+         gD8g==
+X-Gm-Message-State: AGi0PuZ5P2//vCe7a/lqJh091KC45vZ+6s9avkGskWAeztHkZX/k5Z46
+        adgH2N4napTiUkd/ANuYHg==
+X-Google-Smtp-Source: APiQypJYRFCkAkyyFoIzHA4sjLBO2oP/dKzzry+jQeD8zdlE3vOHNjb6UUmvshmEPJtt+DR2KGBxdg==
+X-Received: by 2002:aca:b6c2:: with SMTP id g185mr1230142oif.166.1588651461515;
+        Mon, 04 May 2020 21:04:21 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b63sm318718otc.23.2020.05.04.20.55.44
+        by smtp.gmail.com with ESMTPSA id t10sm287022oou.38.2020.05.04.21.04.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 20:55:44 -0700 (PDT)
-Received: (nullmailer pid 7523 invoked by uid 1000);
-        Tue, 05 May 2020 03:55:43 -0000
-Date:   Mon, 4 May 2020 22:55:43 -0500
+        Mon, 04 May 2020 21:04:20 -0700 (PDT)
+Received: (nullmailer pid 28389 invoked by uid 1000);
+        Tue, 05 May 2020 04:04:19 -0000
+Date:   Mon, 4 May 2020 23:04:19 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: media: Document MSM8939 Venus
-Message-ID: <20200505035543.GA5765@bogus>
-References: <20200501203505.144362-1-konradybcio@gmail.com>
- <20200501203505.144362-3-konradybcio@gmail.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Richard Cochran <richardcochran@gmail.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tero Kristo <t-kristo@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, netdev@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH net-next 1/7] dt-binding: ti: am65x: document common
+ platform time sync cpts module
+Message-ID: <20200505040419.GA8509@bogus>
+References: <20200501205011.14899-1-grygorii.strashko@ti.com>
+ <20200501205011.14899-2-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501203505.144362-3-konradybcio@gmail.com>
+In-Reply-To: <20200501205011.14899-2-grygorii.strashko@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  1 May 2020 22:35:03 +0200, Konrad Dybcio wrote:
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  .../bindings/media/qcom,msm8939-venus.yaml    | 119 ++++++++++++++++++
->  1 file changed, 119 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
+On Fri, May 01, 2020 at 11:50:05PM +0300, Grygorii Strashko wrote:
+> Document device tree bindings for TI AM654/J721E SoC The Common Platform
+> Time Sync (CPTS) module. The CPTS module is used to facilitate host control
+> of time sync operations. Main features of CPTS module are:
+>   - selection of multiple external clock sources
+>   - 64-bit timestamp mode in ns with ppm and nudge adjustment.
+>   - control of time sync events via interrupt or polling
+>   - hardware timestamp of ext. events (HWx_TS_PUSH)
+>   - periodic generator function outputs (TS_GENFx)
+>   - PPS in combination with timesync router
+>   - Depending on integration it enables compliance with the IEEE 1588-2008
+> standard for a precision clock synchronization protocol, Ethernet Enhanced
+> Scheduled Traffic Operations (CPTS_ESTFn) and PCIe Subsystem Precision Time
+> Measurement (PTM).
 > 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |   7 +
+>  .../bindings/net/ti,k3-am654-cpts.yaml        | 152 ++++++++++++++++++
+>  2 files changed, 159 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> index 78bf511e2892..0f3fde45e200 100644
+> --- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> +++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> @@ -144,6 +144,13 @@ patternProperties:
+>      description:
+>        CPSW MDIO bus.
+>  
+> +  "^cpts$":
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Fixed strings go under 'properties'.
 
-Documentation/devicetree/bindings/media/qcom,msm8939-venus.example.dts:20:18: fatal error: dt-bindings/clock/qcom,gcc-msm8939.h: No such file or directory
-         #include <dt-bindings/clock/qcom,gcc-msm8939.h>
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/media/qcom,msm8939-venus.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/media/qcom,msm8939-venus.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+> +    type: object
+> +    allOf:
+> +      - $ref: "ti,am654-cpts.yaml#"
+> +    description:
+> +      CPSW Common Platform Time Sync (CPTS) module.
+> +
+>  required:
+>    - compatible
+>    - reg
+> diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+> new file mode 100644
+> index 000000000000..1b535d41e5c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+> @@ -0,0 +1,152 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/ti,am654-cpts.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: The TI AM654x/J721E Common Platform Time Sync (CPTS) module Device Tree Bindings
+> +
+> +maintainers:
+> +  - Grygorii Strashko <grygorii.strashko@ti.com>
+> +  - Sekhar Nori <nsekhar@ti.com>
+> +
+> +description: |+
+> +  The TI AM654x/J721E CPTS module is used to facilitate host control of time
+> +  sync operations.
+> +  Main features of CPTS module are
+> +  - selection of multiple external clock sources
+> +  - Software control of time sync events via interrupt or polling
+> +  - 64-bit timestamp mode in ns with PPM and nudge adjustment.
+> +  - hardware timestamp push inputs (HWx_TS_PUSH)
+> +  - timestamp counter compare output (TS_COMP)
+> +  - timestamp counter bit output (TS_SYNC)
+> +  - periodic Generator function outputs (TS_GENFx)
+> +  - Ethernet Enhanced Scheduled Traffic Operations (CPTS_ESTFn) (TSN)
+> +  - external hardware timestamp push inputs (HWx_TS_PUSH) timestamping
+> +
+> +   Depending on integration it enables compliance with the IEEE 1588-2008
+> +   standard for a precision clock synchronization protocol, Ethernet Enhanced
+> +   Scheduled Traffic Operations (CPTS_ESTFn) and PCIe Subsystem Precision Time
+> +   Measurement (PTM).
+> +
+> +  TI AM654x/J721E SoCs has several similar CPTS modules integrated into the
+> +  different parts of the system which could be synchronized with each other
+> +  - Main CPTS
+> +  - MCU CPSW CPTS with IEEE 1588-2008 support
+> +  - PCIe subsystem CPTS for PTM support
+> +
+> +  Depending on CPTS module integration and when CPTS is integral part of
+> +  another module (MCU CPSW for example) "compatible" and "reg" can
+> +  be omitted - parent module is fully responsible for CPTS enabling and
+> +  configuration.
 
-See https://patchwork.ozlabs.org/patch/1281452
+That's fine, but you should still have compatible and reg.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^cpts(@.*|-[0-9a-f])*$"
+> +
+> +  compatible:
+> +    oneOf:
+> +      - const: ti,am65-cpts
+> +      - const: ti,j721e-cpts
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +       The physical base address and size of CPTS IO range
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+Wrong indentation.
 
-Please check and re-submit.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: cpts
+
+Don't really need *-names when there's only one and you haven't picked 
+very meaningful names.
+
+> +
+> +  clocks:
+> +    description: CPTS reference clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: cpts
+> +
+> +  interrupts-extended:
+
+Use 'interrupts' here, the tooling will fixup things to allow both.
+
+> +    items:
+> +      - description: CPTS events interrupt
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: "cpts"
+
+Don't need quotes.
+
+> +
+> +  ti,cpts-ext-ts-inputs:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    maximum: 8
+> +    description:
+> +        Number of hardware timestamp push inputs (HWx_TS_PUSH)
+
+Wrong indentation.
+
+> +
+> +  ti,cpts-periodic-outputs:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    maximum: 8
+> +    description:
+> +         Number of timestamp Generator function outputs (TS_GENFx)
+
+Wrong indentation.
+
+> +
+> +  refclk-mux:
+> +    type: object
+> +    description: CPTS reference clock multiplexer clock
+> +    properties:
+> +      '#clock-cells':
+> +        const: 0
+> +
+> +      clocks:
+> +        maxItems: 8
+> +
+> +      assigned-clocks:
+> +        maxItems: 1
+> +
+> +      assigned-clocks-parents:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - clocks
+> +
+> +required:
+> +  - clocks
+> +  - clock-names
+> +  - interrupts-extended
+> +  - interrupt-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    cpts@310d0000 {
+> +         compatible = "ti,am65-cpts";
+> +         reg = <0x0 0x310d0000 0x0 0x400>;
+> +         reg-names = "cpts";
+> +         clocks = <&main_cpts_mux>;
+> +         clock-names = "cpts";
+> +         interrupts-extended = <&k3_irq 163 0 IRQ_TYPE_LEVEL_HIGH>;
+> +         interrupt-names = "cpts";
+> +         ti,cpts-periodic-outputs = <6>;
+> +         ti,cpts-ext-ts-inputs = <8>;
+> +
+> +         main_cpts_mux: refclk-mux {
+> +               #clock-cells = <0>;
+> +               clocks = <&k3_clks 118 5>, <&k3_clks 118 11>,
+> +                        <&k3_clks 157 91>, <&k3_clks 157 77>,
+> +                        <&k3_clks 157 102>, <&k3_clks 157 80>,
+> +                        <&k3_clks 120 3>, <&k3_clks 121 3>;
+> +               assigned-clocks = <&main_cpts_mux>;
+> +               assigned-clock-parents = <&k3_clks 118 11>;
+> +         };
+> +    };
+> +  - |
+> +
+> +    cpts {
+> +             clocks = <&k3_clks 18 2>;
+> +             clock-names = "cpts";
+> +             interrupts-extended = <&gic500 GIC_SPI 858 IRQ_TYPE_LEVEL_HIGH>;
+> +             interrupt-names = "cpts";
+> +             ti,cpts-ext-ts-inputs = <4>;
+> +             ti,cpts-periodic-outputs = <2>;
+
+How is this example accessed?
+
+> +    };
+> -- 
+> 2.17.1
+> 
