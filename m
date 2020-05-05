@@ -2,89 +2,214 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5554C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 18:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D89FC47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 18:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C41E0206B8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 18:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B3F20663
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 18:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588702849;
+	bh=Osf2+bbLX5ojPeR3tQC6Sz7LiZfQOWyXMbHH9fy+sbg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ATm+VhFMqAaT43gyZASfnKOZgvmWKFogdyfOUikL9bMNVTNu75SryG6IVT/3emeJP
+	 tdb2FBVtz697et4zMhhtFZ6V2ETFtH5Fk91oSXz1aez+msweEKC4JWfRPMTpF4EYNw
+	 zyx1XDYuEtUJsYySu/vweYCpkebL+8a1MtfzEKiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgEESK1 (ORCPT
+        id S1730835AbgEESUq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 14:10:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:47066 "EHLO foss.arm.com"
+        Tue, 5 May 2020 14:20:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729315AbgEESK1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 14:10:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 727811FB;
-        Tue,  5 May 2020 11:10:26 -0700 (PDT)
-Received: from [10.57.39.240] (unknown [10.57.39.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A450F3F305;
-        Tue,  5 May 2020 11:10:24 -0700 (PDT)
-Subject: Re: [PATCH 00/16] dts/dt-bindings: Fix Arm Ltd. ARMv8 "boards"
-To:     Andre Przywara <andre.przywara@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200505165212.76466-1-andre.przywara@arm.com>
- <20200505165212.76466-2-andre.przywara@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a96c83b3-dc58-e1da-de52-d36bdfc0533f@arm.com>
-Date:   Tue, 5 May 2020 19:10:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1730258AbgEESUo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 14:20:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80BBF206CC;
+        Tue,  5 May 2020 18:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588702844;
+        bh=Osf2+bbLX5ojPeR3tQC6Sz7LiZfQOWyXMbHH9fy+sbg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JRHW7xtkpoTcKO2iDm5MYyyHAfBRd3zGZaOmmKJJUlbUO2LfDpD1RqJ+xQrPsPgfs
+         OiW/t5pwpnasu3xt7bF4jSWSlH2a8LE2gQrkD66tWGWuaDnh7ZPZKzPjBqHM9k1jls
+         EmoPIqVXs4scU3njKLlP5L+oDZhgSgy+JQGDAPic=
+Date:   Tue, 5 May 2020 20:20:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/5] bus: stm32: Introduce firewall controller helpers
+Message-ID: <20200505182041.GB1216826@kroah.com>
+References: <20200505073308.22914-1-benjamin.gaignard@st.com>
+ <20200505073308.22914-3-benjamin.gaignard@st.com>
+ <20200505144013.GB838641@kroah.com>
+ <3f15fefa-b70f-5d20-c19b-3c42140a104c@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20200505165212.76466-2-andre.przywara@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f15fefa-b70f-5d20-c19b-3c42140a104c@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-05 5:51 pm, Andre Przywara wrote:
-> Date: Mon, 4 May 2020 12:41:55 +0100
-> Subject: [PATCH 01/16] dt-bindings: mali-midgard: Allow dma-coherent
+On Tue, May 05, 2020 at 03:00:53PM +0000, Benjamin GAIGNARD wrote:
 > 
-> Add the boolean dma-coherent property to the list of allowed properties,
-> since some boards (Arm Juno) integrate the GPU this way.
-
-The same comment as for "iommus" applies to some degree here too. 
-There's a bit more likelihood that the device itself does want to know 
-whether it's integrated coherently, so that it can choose what memory 
-attributes to use (as is the case here), but with protocols like 
-ACE-lite it's possible to hard-wire any old dumb device to behave 
-coherently without even realising. Thus this is another property that 
-could legitimately turn up more or less anywhere.
-
-Robin.
-
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->   Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml | 2 ++
->   1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> index 0407e45eb8c4..5d7165385e1f 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> @@ -87,6 +87,8 @@ properties:
->     "#cooling-cells":
->       const: 2
->   
-> +  dma-coherent: true
-> +
->   required:
->     - compatible
->     - reg
-> 
+> On 5/5/20 4:40 PM, Greg KH wrote:
+> > On Tue, May 05, 2020 at 09:33:05AM +0200, Benjamin Gaignard wrote:
+> >> The goal of these helpers are to offer an interface for the
+> >> hardware blocks controlling bus accesses rights.
+> >>
+> >> Bus firewall controllers are typically used to control if a
+> >> hardware block can perform read or write operations on bus.
+> >>
+> >> Smarter firewall controllers could be able to define accesses
+> >> rights per hardware blocks to control where they can read
+> >> or write.
+> >>
+> >> Firewall controller configurations are provided in device node,
+> >> parsed by the helpers and send to the driver to apply them.
+> >> Each controller may need different number and type of inputs
+> >> to configure the firewall so device-tree properties size have to
+> >> be define by using "#firewall-cells".
+> >> Firewall configurations properties have to be named "firewall-X"
+> >> on device node.
+> >> "firewall-names" keyword can also be used to give a name to
+> >> a specific configuration.
+> >>
+> >> Example of device-tree:
+> >> ctrl0: firewall@0 {
+> >> 	#firewall-cells = <2>;
+> >>        };
+> >>
+> >> foo: foo@0 {
+> >> 	firewall-names = "default", "setting1";
+> >> 	firewall-0 = <&ctrl0 1 2>;
+> >> 	firewall-1 = <&ctrl0 3 4>;
+> >> };
+> >>
+> >> Configurations could be applied with functions like
+> >> firewall_set_config_by_index() or firewall_set_config_by_name().
+> >>
+> >> firewall_set_default_config() function will apply the
+> >> configuration named "default" (if existing) or the configuration
+> >> with index 0 (i.e. firewall-0).
+> >>
+> >> Drivers could register/unregister themselves be calling
+> >> firewall_register/firewall_unregister functions.
+> >>
+> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >> ---
+> >>   drivers/bus/Kconfig          |   2 +
+> >>   drivers/bus/Makefile         |   2 +
+> >>   drivers/bus/stm32/Kconfig    |   3 +
+> >>   drivers/bus/stm32/Makefile   |   1 +
+> >>   drivers/bus/stm32/firewall.c | 266 +++++++++++++++++++++++++++++++++++++++++++
+> >>   drivers/bus/stm32/firewall.h |  75 ++++++++++++
+> >>   6 files changed, 349 insertions(+)
+> >>   create mode 100644 drivers/bus/stm32/Kconfig
+> >>   create mode 100644 drivers/bus/stm32/Makefile
+> >>   create mode 100644 drivers/bus/stm32/firewall.c
+> >>   create mode 100644 drivers/bus/stm32/firewall.h
+> >>
+> >> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> >> index 6d4e4497b59b..843b356322d9 100644
+> >> --- a/drivers/bus/Kconfig
+> >> +++ b/drivers/bus/Kconfig
+> >> @@ -203,4 +203,6 @@ config DA8XX_MSTPRI
+> >>   source "drivers/bus/fsl-mc/Kconfig"
+> >>   source "drivers/bus/mhi/Kconfig"
+> >>   
+> >> +source "drivers/bus/stm32/Kconfig"
+> >> +
+> >>   endmenu
+> >> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+> >> index 05f32cd694a4..5e0e34b10235 100644
+> >> --- a/drivers/bus/Makefile
+> >> +++ b/drivers/bus/Makefile
+> >> @@ -37,3 +37,5 @@ obj-$(CONFIG_DA8XX_MSTPRI)	+= da8xx-mstpri.o
+> >>   
+> >>   # MHI
+> >>   obj-$(CONFIG_MHI_BUS)		+= mhi/
+> >> +
+> >> +obj-$(CONFIG_MACH_STM32MP157) 	+= stm32/
+> >> \ No newline at end of file
+> >> diff --git a/drivers/bus/stm32/Kconfig b/drivers/bus/stm32/Kconfig
+> >> new file mode 100644
+> >> index 000000000000..57221e833e2d
+> >> --- /dev/null
+> >> +++ b/drivers/bus/stm32/Kconfig
+> >> @@ -0,0 +1,3 @@
+> >> +config FIREWALL_CONTROLLERS
+> >> +	bool "Support of bus firewall controllers"
+> >> +	depends on OF
+> >> diff --git a/drivers/bus/stm32/Makefile b/drivers/bus/stm32/Makefile
+> >> new file mode 100644
+> >> index 000000000000..eb6b978d6450
+> >> --- /dev/null
+> >> +++ b/drivers/bus/stm32/Makefile
+> >> @@ -0,0 +1 @@
+> >> +obj-$(CONFIG_FIREWALL_CONTROLLERS) += firewall.o
+> >> diff --git a/drivers/bus/stm32/firewall.c b/drivers/bus/stm32/firewall.c
+> >> new file mode 100644
+> >> index 000000000000..95f716cf926f
+> >> --- /dev/null
+> >> +++ b/drivers/bus/stm32/firewall.c
+> >> @@ -0,0 +1,266 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
+> >> + * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
+> >> + */
+> >> +
+> >> +#include <linux/device.h>
+> >> +#include <linux/err.h>
+> >> +#include <linux/init.h>
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/list.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/slab.h>
+> >> +
+> >> +#include "firewall.h"
+> >> +
+> >> +/* Mutex taken to protect firewall_list */
+> >> +static DEFINE_MUTEX(firewall_list_mutex);
+> >> +
+> >> +/* Global list of firewall control devices */
+> >> +static LIST_HEAD(firewall_list);
+> > Why is that needed?  Why can't you just walk the list of devices on this
+> > "bus/class" if you really wanted to?
+> >
+> > Along those lines, why is this going around the driver model and
+> > ignoring it?  Shouldn't this be a bus and you have devices attached to
+> > it of the specific type?
+> This part of the series is only a a set of common functions and bindings
+> that I plan to reuse for futur STM32 SoCs.
+> The 'real' bus implementation is in patch 4.
+
+Then you don't need a "fake" list of devices in this patch, do you?  Why
+not just create the real bus and then have people use it, otherwise this
+sequence of review is really complicated as you must be deleting this
+code.  Right?  :)
+
+Do it correct the first time please.
+
+thanks,
+
+greg k-h
