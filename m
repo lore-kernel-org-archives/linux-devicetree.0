@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B345C47256
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CF0C47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24FCF206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD75206E6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:09:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="sWtGjDr0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RDd86n/8"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="H0yjZ4Ol";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rd+Xg/4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgEEKJn (ORCPT
+        id S1725766AbgEEKJq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 06:09:43 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:58865 "EHLO
+        Tue, 5 May 2020 06:09:46 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:53799 "EHLO
         out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728401AbgEEKJn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 06:09:43 -0400
+        by vger.kernel.org with ESMTP id S1728402AbgEEKJq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 06:09:46 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 238115C00CB;
-        Tue,  5 May 2020 06:09:42 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 06F1C5C00A6;
+        Tue,  5 May 2020 06:09:45 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 05 May 2020 06:09:42 -0400
+  by compute4.internal (MEProxy); Tue, 05 May 2020 06:09:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=kxz6dVnKinrsF
-        EyoSwmLmcaIKY2++Ip3fyKHn+I7HeI=; b=sWtGjDr00xMO3OAuhCR5Uf1uNS1mF
-        XPcIoWSnz7UPFr6PjLuNQ5k2Q9Y/vRVTv6eX8p1ygcJHFcDbg44fhllqNp/z5Bjb
-        Wgsszwhuvn4VuLvyNJkU/aRwVcSsrTaGCUB61mzQGMsVWnPWFZrtCluukXPk8r/t
-        Z55wOneR/4iir9tmks/2gXZGV99SO8PhaCJIILshBL+jdDNpn46FkkHAOMnfk2+M
-        8fOJGyD4Vw/A9aTFhIIQdyCdj0kvxMGT9C5uok9Kp1HMcuSzO86YTriCvywfZ6bS
-        hCq0CjuZXLJ7EfSoAQkCc7camX10PoylIN4Yc62y7sjYu+QTpszmztBVQ==
+        :mime-version:content-transfer-encoding; s=fm2; bh=PP4evYCSYqJBd
+        tsevGHWNnZYY8QlYKk1hl6EGB/KqB0=; b=H0yjZ4OlhAfuNz13EOHIe6FyIyHpc
+        NuV9z/rZ7+P3eaTjbbV+3g1j+kXlidUHehQZSzuOTkr2W/TzUpQXUzztkuH9IYHi
+        sJVl/yHhfCrr/F2ORbllRUt9TwWXbGWj/ASV/93ysbFj4a5NsLuFHuKkpL68g0yE
+        oo3gbHgM6XXhL+0T+zHC9QkYPN+5I4qfWHlkbm1YS00riIiMRf0mI2A1aioWdNOd
+        qEVZpRunZpRx8/iYphslNISHcjmH21UshgOoQFOFSceOaWNJFCeCAzJ3XSZFdXGr
+        uJqQ6z66whTgoQmf6xbk4nk4pqFq4omBUC0f+2ln26vq0vo9P09d2eqYA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=kxz6dVnKinrsFEyoSwmLmcaIKY2++Ip3fyKHn+I7HeI=; b=RDd86n/8
-        3kW/DV7CJTIvyUuPBfjEdW9pKE+GbJxN5/6/wZ2iyWoiHFVQfbNKkjr+3Q7CkY/c
-        43Bwxw1k+GOWD1XmUK4wBpwtU7B1Kj62Thgqpx7733zJfiB+ddueptgno5FqyPQA
-        u+CU8osIS+6KNRt4zKKMXFk+wy9XQVzdGPOr4i012eIJ9YprgkBQLv24MEJehkSp
-        oRP54ki+GTjSLpED8q7Vrb7FusuUdTayts3eZPhzSkIfgBkY938zX1MITLwoUQz5
-        PGy8VnVU2ej9sEbmqpXKdXSh8ivRlSxy7UxZaCRY61ADT9+0lf4S2at2TcnuW5BG
-        UO0ZPG3jRqt+PA==
-X-ME-Sender: <xms:ZjuxXvPQUZdGJG919kPZZ1pqbBkLp5LzBO5Bn_oZlBQYFu2qqFxgqg>
+        fm2; bh=PP4evYCSYqJBdtsevGHWNnZYY8QlYKk1hl6EGB/KqB0=; b=rd+Xg/4s
+        uKPJkr8c1RnHUdwCOAQZCvnfQdX+2QpQz41dwNyb7WCMmUVyvQVkK5kR61p8bG/o
+        mPnFjPbpczCK00fNkpNxPOpO8cfrVAfunuIcTZHgnSHc/80TMrE+P3a0FvRXzKK8
+        po9BxGaYuy1EhNg12qNePjeR7/jiQNeHJazw8+RsaDysZpfLj2ZxDXT/2/513KZ+
+        lL6+9ty5KMAumBBFb4BzujJKqJWfHHDK/DefIzndKGxyHtPCJJ49sXAU5WaO3lJo
+        pVnekLUcebku6QBvzC6k7lYECsc1Ss5IiD4QNUf/1dG+LmLQ5M25nii6FqzEQERl
+        mIQLTmMVE4IVbA==
+X-ME-Sender: <xms:aDuxXlmSwDrdzMLXTvf5a4ZqyLilCGrjali_54ISFlD_1_Ft5Rws_w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeigddvgecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -57,13 +57,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeigddvgecutefuodetggdote
     gvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveevheeh
     vdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
     grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:ZjuxXkFnmWBEdc6k0orXS39qmuHXaH9qXVwcqMBQUHpzBptMkWY-mw>
-    <xmx:ZjuxXv_l2lXsX7GF7PaYxC1BO-cAgvvGW1CkVkipPQTcPcQseWePbA>
-    <xmx:ZjuxXibZJuSskFNhzb8jzgDlZV6eH3r1kcu8k_XtmfYGeCIReW4Zkg>
-    <xmx:ZjuxXsT5TOfCa0Gcup5G2IoABNUx6Wkm7RLeXZZnzl7U0980Jraj1g>
+X-ME-Proxy: <xmx:aDuxXk02GWIt9t8WK_ZPUAQissQSfhFRLo2zTJrmFZev8bLgbTyv4g>
+    <xmx:aDuxXsSBMRRrZ3N9n0apfmx8BVAOyyGhWFkzinBqwl6K9sVyaiPLJg>
+    <xmx:aDuxXlemXUELViOWBtZLAD4JptqPzPnLouaJbG9HEU-akwMJmyrl0w>
+    <xmx:aTuxXh_wlNCI1S6aCn2-d1iI8O33hqE72lE8Tog4NYFnqWFW5uaifQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B149F328005D;
-        Tue,  5 May 2020 06:09:41 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 96DDF3280063;
+        Tue,  5 May 2020 06:09:44 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
         Maxime Ripard <mripard@kernel.org>,
@@ -72,9 +72,9 @@ To:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
         Frank Rowand <frowand.list@gmail.com>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org, Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 2/5] dt-bindings: display: sun8i-mixer: Allow for an iommu property
-Date:   Tue,  5 May 2020 12:09:31 +0200
-Message-Id: <ef88e9d96eafe3f921cfbe087c5f0a25a5dd41ac.1588673353.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 4/5] arm64: dts: allwinner: h6: Add IOMMU
+Date:   Tue,  5 May 2020 12:09:33 +0200
+Message-Id: <c728eee8371962db79e53b321e1102f3e763db0d.1588673353.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.70f96f9afd2e04161ebece593ae6cd7e17eca41b.1588673353.git-series.maxime@cerno.tech>
 References: <cover.70f96f9afd2e04161ebece593ae6cd7e17eca41b.1588673353.git-series.maxime@cerno.tech>
@@ -85,27 +85,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The H6 mixer is attached to an IOMMU, so let's allow that property to be
-set in the bindings.
+Now that we have a driver for the IOMMU, let's start using it.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- Documentation/devicetree/bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml b/Documentation/devicetree/bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml
-index 1dee641e3ea1..c040eef56518 100644
---- a/Documentation/devicetree/bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml
-+++ b/Documentation/devicetree/bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml
-@@ -36,6 +36,9 @@ properties:
-       - const: bus
-       - const: mod
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index b9ab7d8fa8af..bba64a4030e2 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -123,6 +123,7 @@
+ 				clock-names = "bus",
+ 					      "mod";
+ 				resets = <&display_clocks RST_MIXER0>;
++				iommus = <&iommu 0>;
  
-+  iommus:
-+    maxItems: 1
+ 				ports {
+ 					#address-cells = <1>;
+@@ -387,6 +388,15 @@
+ 			#interrupt-cells = <3>;
+ 		};
+ 
++		iommu: iommu@30f0000 {
++			compatible = "allwinner,sun50i-h6-iommu";
++			reg = <0x030f0000 0x10000>;
++			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_IOMMU>;
++			resets = <&ccu RST_BUS_IOMMU>;
++			#iommu-cells = <1>;
++		};
 +
-   resets:
-     maxItems: 1
- 
+ 		mmc0: mmc@4020000 {
+ 			compatible = "allwinner,sun50i-h6-mmc",
+ 				     "allwinner,sun50i-a64-mmc";
 -- 
 git-series 0.9.1
