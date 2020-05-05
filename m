@@ -2,377 +2,277 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D62B2C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3736AC4725A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3E852495A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E59207DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588694000;
+	bh=So3dphj430fGwwjdsofxgM6YB/R/oxc1hD/OFKcyzz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mnuOuwzu9T1dSoVOLh3HlX0OOKppXoqBL76b6k80zwZB/yvktF/zxjv0cdamKZG7g
+	 eyS0YW2uCSQV6d5bQ+lECVRz0qap1bC5jukxQgsBWvE591zHz068x3pvkvt9Fn4dTQ
+	 sEYZgMz+pO9yxmieDz+5LNsguhce/uXo/TJoNgqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbgEEPvx (ORCPT
+        id S1729739AbgEEPxR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 11:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729643AbgEEPvw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:51:52 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63280C061A41
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 08:51:52 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:bd97:8453:3b10:1832])
-        by baptiste.telenet-ops.be with bizsmtp
-        id b3rU2200q3VwRR3013rU3U; Tue, 05 May 2020 17:51:29 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jVzqy-0003Pb-Qw; Tue, 05 May 2020 17:51:28 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jVzqy-0001Gl-P8; Tue, 05 May 2020 17:51:28 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] dt-bindings: timer: renesas: cmt: Convert to json-schema
-Date:   Tue,  5 May 2020 17:51:27 +0200
-Message-Id: <20200505155127.4836-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Tue, 5 May 2020 11:53:17 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:43259 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729317AbgEEPxR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:53:17 -0400
+Received: by mail-oo1-f65.google.com with SMTP id u190so647437ooa.10;
+        Tue, 05 May 2020 08:53:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lfV1gzGImb5y9zDagXhYeAWYcO3glmlW0YzZP/45Hw8=;
+        b=I7SOBHt00MZeueuFe0vg9eVg4OPj4uA6QqufWUQHZgV381aulzNlIgrRQyAGsDG2HL
+         8k/n/emfA7LA4/nM6SeOQ3EDgM8edjQyYU9BJ3GYuKwGAK0JUNEkH2FJe/NqxZoKf4wG
+         DBKcnjGUSFP6n/rnPiwZSnAqmqzHrLJjlEoaIEP0qW+Js3eHv6XVI+q+VZhJjofiXGAk
+         vu0A0XLtWF20d3ZTQrnbnka7Ek3zUH2W4g98aPvdEE8iUUYziWmkRX3xYc+Cz8uXj2AB
+         AF2LdXDqO2DZAteK3KlJnbenzh9aCGBr5sL29xQOMTQhwuGtm7O5MzYByKMS3owMrbXN
+         Fzeg==
+X-Gm-Message-State: AGi0PuZeM19s9cwYbCe0pTqIFgK8OZQyR3Oh7Kb3zn9ZMgfUz/Vua+An
+        U47OwE892aDiBMXgB+apgg==
+X-Google-Smtp-Source: APiQypLtIV8ak24vn6ZNq3eBD5EyBjX4NVkzOn+K6qenA30N/hf35pu91WLQRD5MnvXauIX1IuWX8g==
+X-Received: by 2002:a4a:3402:: with SMTP id b2mr464231ooa.86.1588693994014;
+        Tue, 05 May 2020 08:53:14 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s73sm652032oih.14.2020.05.05.08.53.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 08:53:13 -0700 (PDT)
+Received: (nullmailer pid 23489 invoked by uid 1000);
+        Tue, 05 May 2020 15:53:11 -0000
+Date:   Tue, 5 May 2020 10:53:11 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for
+ Imagination GPUs
+Message-ID: <20200505155311.GA18025@bogus>
+References: <cover.1587760454.git.hns@goldelico.com>
+ <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Renesas Compare Match Timer (CMT) Device Tree binding
-documentation to json-schema.
+On Fri, Apr 24, 2020 at 10:34:04PM +0200, H. Nikolaus Schaller wrote:
+> The Imagination PVR/SGX GPU is part of several SoC from
+> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
+> Allwinner A83 and others.
+> 
+> With this binding, we describe how the SGX processor is
+> interfaced to the SoC (registers and interrupt).
+> 
+> The interface also consists of clocks, reset, power but
+> information from data sheets is vague and some SoC integrators
+> (TI) deciced to use a PRCM wrapper (ti,sysc) which does
+> all clock, reset and power-management through registers
+> outside of the sgx register block.
+> 
+> Therefore all these properties are optional.
+> 
+> Tested by make dt_binding_check
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 150 ++++++++++++++++++
+>  1 file changed, 150 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> new file mode 100644
+> index 000000000000..33a9c4c6e784
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> @@ -0,0 +1,150 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Imagination PVR/SGX GPU
+> +
+> +maintainers:
+> +  - H. Nikolaus Schaller <hns@goldelico.com>
+> +
+> +description: |+
+> +  This binding describes the Imagination SGX5 series of 3D accelerators which
+> +  are found in several different SoC like TI OMAP, Sitara, Ingenic JZ4780,
+> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
+> +
+> +  For an extensive list see: https://en.wikipedia.org/wiki/PowerVR#Implementations
+> +
+> +  The SGX node is usually a child node of some DT node belonging to the SoC
+> +  which handles clocks, reset and general address space mapping of the SGX
+> +  register area. If not, an optional clock can be specified here.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: '^gpu@[a-f0-9]+$'
+> +  compatible:
+> +    oneOf:
+> +      - description: SGX530-121 based SoC
+> +        items:
+> +          - enum:
+> +            - ti,omap3-sgx530-121 # BeagleBoard A/B/C, OpenPandora 600MHz and similar
 
-Document missing properties.
-Update the example to match reality.
+Should be indented 2 more here and elsewhere where you have a list 
+under a list.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v2:
-  - Add missing "additionalProperties: false",
-  - Add Reviewed-by.
----
- .../devicetree/bindings/timer/renesas,cmt.txt | 110 -----------
- .../bindings/timer/renesas,cmt.yaml           | 182 ++++++++++++++++++
- 2 files changed, 182 insertions(+), 110 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/renesas,cmt.txt
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,cmt.yaml
-
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-deleted file mode 100644
-index a747fabab7d3fda4..0000000000000000
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ /dev/null
-@@ -1,110 +0,0 @@
--* Renesas R-Car Compare Match Timer (CMT)
--
--The CMT is a multi-channel 16/32/48-bit timer/counter with configurable clock
--inputs and programmable compare match.
--
--Channels share hardware resources but their counter and compare match value
--are independent. A particular CMT instance can implement only a subset of the
--channels supported by the CMT model. Channel indices represent the hardware
--position of the channel in the CMT and don't match the channel numbers in the
--datasheets.
--
--Required Properties:
--
--  - compatible: must contain one or more of the following:
--    - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
--    - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
--    - "renesas,r8a7740-cmt0" for the 32-bit CMT0 device included in r8a7740.
--    - "renesas,r8a7740-cmt1" for the 48-bit CMT1 device included in r8a7740.
--    - "renesas,r8a7740-cmt2" for the 32-bit CMT2 device included in r8a7740.
--    - "renesas,r8a7740-cmt3" for the 32-bit CMT3 device included in r8a7740.
--    - "renesas,r8a7740-cmt4" for the 32-bit CMT4 device included in r8a7740.
--    - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8a7743.
--    - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8a7743.
--    - "renesas,r8a7744-cmt0" for the 32-bit CMT0 device included in r8a7744.
--    - "renesas,r8a7744-cmt1" for the 48-bit CMT1 device included in r8a7744.
--    - "renesas,r8a7745-cmt0" for the 32-bit CMT0 device included in r8a7745.
--    - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8a7745.
--    - "renesas,r8a77470-cmt0" for the 32-bit CMT0 device included in r8a77470.
--    - "renesas,r8a77470-cmt1" for the 48-bit CMT1 device included in r8a77470.
--    - "renesas,r8a774a1-cmt0" for the 32-bit CMT0 device included in r8a774a1.
--    - "renesas,r8a774a1-cmt1" for the 48-bit CMT devices included in r8a774a1.
--    - "renesas,r8a774b1-cmt0" for the 32-bit CMT0 device included in r8a774b1.
--    - "renesas,r8a774b1-cmt1" for the 48-bit CMT devices included in r8a774b1.
--    - "renesas,r8a774c0-cmt0" for the 32-bit CMT0 device included in r8a774c0.
--    - "renesas,r8a774c0-cmt1" for the 48-bit CMT devices included in r8a774c0.
--    - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
--    - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
--    - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
--    - "renesas,r8a7791-cmt1" for the 48-bit CMT1 device included in r8a7791.
--    - "renesas,r8a7792-cmt0" for the 32-bit CMT0 device included in r8a7792.
--    - "renesas,r8a7792-cmt1" for the 48-bit CMT1 device included in r8a7792.
--    - "renesas,r8a7793-cmt0" for the 32-bit CMT0 device included in r8a7793.
--    - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
--    - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
--    - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
--    - "renesas,r8a7795-cmt0" for the 32-bit CMT0 device included in r8a7795.
--    - "renesas,r8a7795-cmt1" for the 48-bit CMT devices included in r8a7795.
--    - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
--    - "renesas,r8a7796-cmt1" for the 48-bit CMT devices included in r8a7796.
--    - "renesas,r8a77965-cmt0" for the 32-bit CMT0 device included in r8a77965.
--    - "renesas,r8a77965-cmt1" for the 48-bit CMT devices included in r8a77965.
--    - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
--    - "renesas,r8a77970-cmt1" for the 48-bit CMT devices included in r8a77970.
--    - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
--    - "renesas,r8a77980-cmt1" for the 48-bit CMT devices included in r8a77980.
--    - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
--    - "renesas,r8a77990-cmt1" for the 48-bit CMT devices included in r8a77990.
--    - "renesas,r8a77995-cmt0" for the 32-bit CMT0 device included in r8a77995.
--    - "renesas,r8a77995-cmt1" for the 48-bit CMT devices included in r8a77995.
--    - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
--    - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
--    - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
--    - "renesas,sh73a0-cmt3" for the 32-bit CMT3 device included in sh73a0.
--    - "renesas,sh73a0-cmt4" for the 32-bit CMT4 device included in sh73a0.
--
--    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
--		and RZ/G1.
--    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car Gen2
--		and RZ/G1.
--		These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
--		listed above.
--    - "renesas,rcar-gen3-cmt0" for 32-bit CMT0 devices included in R-Car Gen3
--		and RZ/G2.
--    - "renesas,rcar-gen3-cmt1" for 48-bit CMT devices included in R-Car Gen3
--		and RZ/G2.
--		These are fallbacks for R-Car Gen3 and RZ/G2 entries listed
--		above.
--
--  - reg: base address and length of the registers block for the timer module.
--  - interrupts: interrupt-specifier for the timer, one per channel.
--  - clocks: a list of phandle + clock-specifier pairs, one for each entry
--    in clock-names.
--  - clock-names: must contain "fck" for the functional clock.
--
--
--Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
--
--	cmt0: timer@ffca0000 {
--		compatible = "renesas,r8a7790-cmt0", "renesas,rcar-gen2-cmt0";
--		reg = <0 0xffca0000 0 0x1004>;
--		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
--		clock-names = "fck";
--	};
--
--	cmt1: timer@e6130000 {
--		compatible = "renesas,r8a7790-cmt1", "renesas,rcar-gen2-cmt1";
--		reg = <0 0xe6130000 0 0x1004>;
--		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 122 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 123 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 124 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 125 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 126 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
--		clock-names = "fck";
--	};
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.yaml b/Documentation/devicetree/bindings/timer/renesas,cmt.yaml
-new file mode 100644
-index 0000000000000000..7e4dc5623da80e5d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.yaml
-@@ -0,0 +1,182 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/renesas,cmt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas Compare Match Timer (CMT)
-+
-+maintainers:
-+  - Geert Uytterhoeven <geert+renesas@glider.be>
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-+
-+description:
-+  The CMT is a multi-channel 16/32/48-bit timer/counter with configurable clock
-+  inputs and programmable compare match.
-+
-+  Channels share hardware resources but their counter and compare match values
-+  are independent. A particular CMT instance can implement only a subset of the
-+  channels supported by the CMT model. Channel indices represent the hardware
-+  position of the channel in the CMT and don't match the channel numbers in the
-+  datasheets.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - renesas,r8a7740-cmt0      # 32-bit CMT0 on R-Mobile A1
-+              - renesas,r8a7740-cmt1      # 48-bit CMT1 on R-Mobile A1
-+              - renesas,r8a7740-cmt2      # 32-bit CMT2 on R-Mobile A1
-+              - renesas,r8a7740-cmt3      # 32-bit CMT3 on R-Mobile A1
-+              - renesas,r8a7740-cmt4      # 32-bit CMT4 on R-Mobile A1
-+              - renesas,sh73a0-cmt0       # 32-bit CMT0 on SH-Mobile AG5
-+              - renesas,sh73a0-cmt1       # 48-bit CMT1 on SH-Mobile AG5
-+              - renesas,sh73a0-cmt2       # 32-bit CMT2 on SH-Mobile AG5
-+              - renesas,sh73a0-cmt3       # 32-bit CMT3 on SH-Mobile AG5
-+              - renesas,sh73a0-cmt4       # 32-bit CMT4 on SH-Mobile AG5
-+
-+      - items:
-+          - enum:
-+              - renesas,r8a73a4-cmt0      # 32-bit CMT0 on R-Mobile APE6
-+              - renesas,r8a7743-cmt0      # 32-bit CMT0 on RZ/G1M
-+              - renesas,r8a7744-cmt0      # 32-bit CMT0 on RZ/G1N
-+              - renesas,r8a7745-cmt0      # 32-bit CMT0 on RZ/G1E
-+              - renesas,r8a77470-cmt0     # 32-bit CMT0 on RZ/G1C
-+              - renesas,r8a7790-cmt0      # 32-bit CMT0 on R-Car H2
-+              - renesas,r8a7791-cmt0      # 32-bit CMT0 on R-Car M2-W
-+              - renesas,r8a7792-cmt0      # 32-bit CMT0 on R-Car V2H
-+              - renesas,r8a7793-cmt0      # 32-bit CMT0 on R-Car M2-N
-+              - renesas,r8a7794-cmt0      # 32-bit CMT0 on R-Car E2
-+          - const: renesas,rcar-gen2-cmt0 # 32-bit CMT0 on R-Mobile APE6, R-Car Gen2 and RZ/G1
-+
-+      - items:
-+          - enum:
-+              - renesas,r8a73a4-cmt1      # 48-bit CMT1 on R-Mobile APE6
-+              - renesas,r8a7743-cmt1      # 48-bit CMT1 on RZ/G1M
-+              - renesas,r8a7744-cmt1      # 48-bit CMT1 on RZ/G1N
-+              - renesas,r8a7745-cmt1      # 48-bit CMT1 on RZ/G1E
-+              - renesas,r8a77470-cmt1     # 48-bit CMT1 on RZ/G1C
-+              - renesas,r8a7790-cmt1      # 48-bit CMT1 on R-Car H2
-+              - renesas,r8a7791-cmt1      # 48-bit CMT1 on R-Car M2-W
-+              - renesas,r8a7792-cmt1      # 48-bit CMT1 on R-Car V2H
-+              - renesas,r8a7793-cmt1      # 48-bit CMT1 on R-Car M2-N
-+              - renesas,r8a7794-cmt1      # 48-bit CMT1 on R-Car E2
-+          - const: renesas,rcar-gen2-cmt1 # 48-bit CMT1 on R-Mobile APE6, R-Car Gen2 and RZ/G1
-+
-+      - items:
-+          - enum:
-+              - renesas,r8a774a1-cmt0     # 32-bit CMT0 on RZ/G2M
-+              - renesas,r8a774b1-cmt0     # 32-bit CMT0 on RZ/G2N
-+              - renesas,r8a774c0-cmt0     # 32-bit CMT0 on RZ/G2E
-+              - renesas,r8a7795-cmt0      # 32-bit CMT0 on R-Car H3
-+              - renesas,r8a7796-cmt0      # 32-bit CMT0 on R-Car M3-W
-+              - renesas,r8a77965-cmt0     # 32-bit CMT0 on R-Car M3-N
-+              - renesas,r8a77970-cmt0     # 32-bit CMT0 on R-Car V3M
-+              - renesas,r8a77980-cmt0     # 32-bit CMT0 on R-Car V3H
-+              - renesas,r8a77990-cmt0     # 32-bit CMT0 on R-Car E3
-+              - renesas,r8a77995-cmt0     # 32-bit CMT0 on R-Car D3
-+          - const: renesas,rcar-gen3-cmt0 # 32-bit CMT0 on R-Car Gen3 and RZ/G2
-+
-+      - items:
-+          - enum:
-+              - renesas,r8a774a1-cmt1     # 48-bit CMT on RZ/G2M
-+              - renesas,r8a774b1-cmt1     # 48-bit CMT on RZ/G2N
-+              - renesas,r8a774c0-cmt1     # 48-bit CMT on RZ/G2E
-+              - renesas,r8a7795-cmt1      # 48-bit CMT on R-Car H3
-+              - renesas,r8a7796-cmt1      # 48-bit CMT on R-Car M3-W
-+              - renesas,r8a77965-cmt1     # 48-bit CMT on R-Car M3-N
-+              - renesas,r8a77970-cmt1     # 48-bit CMT on R-Car V3M
-+              - renesas,r8a77980-cmt1     # 48-bit CMT on R-Car V3H
-+              - renesas,r8a77990-cmt1     # 48-bit CMT on R-Car E3
-+              - renesas,r8a77995-cmt1     # 48-bit CMT on R-Car D3
-+          - const: renesas,rcar-gen3-cmt1 # 48-bit CMT on R-Car Gen3 and RZ/G2
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 8
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: fck
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - power-domains
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - renesas,rcar-gen2-cmt0
-+              - renesas,rcar-gen3-cmt0
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 2
-+          maxItems: 2
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - renesas,rcar-gen2-cmt1
-+              - renesas,rcar-gen3-cmt1
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 8
-+          maxItems: 8
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7790-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7790-sysc.h>
-+    cmt0: timer@ffca0000 {
-+            compatible = "renesas,r8a7790-cmt0", "renesas,rcar-gen2-cmt0";
-+            reg = <0xffca0000 0x1004>;
-+            interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&cpg CPG_MOD 124>;
-+            clock-names = "fck";
-+            power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
-+            resets = <&cpg 124>;
-+    };
-+
-+    cmt1: timer@e6130000 {
-+            compatible = "renesas,r8a7790-cmt1", "renesas,rcar-gen2-cmt1";
-+            reg = <0xe6130000 0x1004>;
-+            interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&cpg CPG_MOD 329>;
-+            clock-names = "fck";
-+            power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
-+            resets = <&cpg 329>;
-+    };
--- 
-2.17.1
-
+> +          - const: img,sgx530-121
+> +          - const: img,sgx530
+> +
+> +      - description: SGX530-125 based SoC
+> +        items:
+> +          - enum:
+> +            - ti,am3352-sgx530-125 # BeagleBone Black
+> +            - ti,am3517-sgx530-125
+> +            - ti,am4-sgx530-125
+> +            - ti,omap3-sgx530-125 # BeagleBoard XM, GTA04, OpenPandora 1GHz and similar
+> +            - ti,ti81xx-sgx530-125
+> +          - const: ti,omap3-sgx530-125
+> +          - const: img,sgx530-125
+> +          - const: img,sgx530
+> +
+> +      - description: SGX535-116 based SoC
+> +        items:
+> +          - const: intel,poulsbo-gma500-sgx535 # Atom Z5xx
+> +          - const: img,sgx535-116
+> +          - const: img,sgx535
+> +
+> +      - description: SGX540-116 based SoC
+> +        items:
+> +          - const: intel,medfield-gma-sgx540 # Atom Z24xx
+> +          - const: img,sgx540-116
+> +          - const: img,sgx540
+> +
+> +      - description: SGX540-120 based SoC
+> +        items:
+> +          - enum:
+> +            - samsung,s5pv210-sgx540-120
+> +            - ti,omap4-sgx540-120 # Pandaboard, Pandaboard ES and similar
+> +          - const: img,sgx540-120
+> +          - const: img,sgx540
+> +
+> +      - description: SGX540-130 based SoC
+> +        items:
+> +          - enum:
+> +            - ingenic,jz4780-sgx540-130 # CI20
+> +          - const: img,sgx540-130
+> +          - const: img,sgx540
+> +
+> +      - description: SGX544-112 based SoC
+> +        items:
+> +          - const: ti,omap4470-sgx544-112
+> +          - const: img,sgx544-112
+> +          - const: img,sgx544
+> +
+> +      - description: SGX544-115 based SoC
+> +        items:
+> +          - enum:
+> +            - allwinner,sun8i-a31-sgx544-115
+> +            - allwinner,sun8i-a31s-sgx544-115
+> +            - allwinner,sun8i-a83t-sgx544-115 # Banana-Pi-M3 (Allwinner A83T) and similar
+> +          - const: img,sgx544-115
+> +          - const: img,sgx544
+> +
+> +      - description: SGX544-116 based SoC
+> +        items:
+> +          - enum:
+> +            - ti,dra7-sgx544-116 # DRA7
+> +            - ti,omap5-sgx544-116 # OMAP5 UEVM, Pyra Handheld and similar
+> +          - const: img,sgx544-116
+> +          - const: img,sgx544
+> +
+> +      - description: SGX545 based SoC
+> +        items:
+> +          - const: intel,cedarview-gma3600-sgx545 # Atom N2600, D2500
+> +          - const: img,sgx545-116
+> +          - const: img,sgx545
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    maxItems: 1
+> +    items:
+> +      - const: sgx
+> +
+> +  clocks:
+> +    maxItems: 4
+> +
+> +  clock-names:
+> +    maxItems: 4
+> +    items:
+> +      - const: core
+> +      - const: sys
+> +      - const: mem
+> +      - const: hyd
+> +
+> +  sgx-supply: true
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |+
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    gpu: gpu@fe00 {
+> +      compatible = "ti,omap5-sgx544-116", "img,sgx544-116", "img,sgx544";
+> +      reg = <0xfe00 0x200>;
+> +      interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +
+> +...
+> -- 
+> 2.25.1
+> 
