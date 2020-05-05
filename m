@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70E8C47256
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAD3C47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B04B5206E6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E1C206E6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Mu+zXVFR"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CI9ezify"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbgEEFwg (ORCPT
+        id S1727861AbgEEFwg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 5 May 2020 01:52:36 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:53704 "EHLO
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:53708 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725320AbgEEFwf (ORCPT
+        by vger.kernel.org with ESMTP id S1726635AbgEEFwf (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 01:52:35 -0400
 Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0455lBeA027132;
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0455l5X6027087;
         Tue, 5 May 2020 07:52:21 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=/RG1jmnvaQFJTmB5c3f4Wt7K8CWp+WbtLlXwa1U86qY=;
- b=Mu+zXVFRC3qGokaDcoghATVQ8pmNONE6Cjbzr/DwCxry1ftwv0uNxLgtR5L+GS2lmWch
- jlhMN2cO2EF/nXRICAJ0E/+PEkt+bbhCj09CWVvnqeWxEufybzeBhR7e3Vg/XdakGJUK
- PCTXgC11Ma6F4PLY/LjxmocXVurNc6Elkn5Bhum77xZ194mvG9kDNV4yVg6xCPBprY55
- PMbK1NuYlMemW0aXjUOTBZkWycoPPWIFxivPKJBCHsnE8UznFKJOKioAm0xrck60yIVg
- 5Jr4rNgW3sMhqLtHXyVLGKG6EO0z42TiW1fQ5azQd6wEPoRW3RdliN143gqiXTeP9tcL xQ== 
+ bh=Tkcg9s1uDu/OOadkPkeZF9B5T6AZFP5XkTZX0ihRw8k=;
+ b=CI9ezifyJBfwqbQsaqh8o4ZvjtLehvt6i+UNxWZruakeg+8UXPU8iIljCfAl2KVQJ1/I
+ b7KdHpzD+ozDtarb4Ou6q1PF0xZwyYg6pZ44B4FGtb7Y+FcvtXgHsTeBYkpWqCO9xvwn
+ uhqvf3cOHrc9JjHnOvbrbUocT261I/IjtHTNis2kjzCbjRCyS0A41bAUs2Fl5w72Q7zD
+ 4bbzJ+We2jRW6vq99a977sOBtW2x4rrvzBlioYSo68LpaATZ9ifQW3M0whIjxxOpGbGn
+ aUksql+sktcTaYKQYzYFh62CrDq/eb1PzSCT3OK74teuej2K11aEqZdIxA5dVrwuftU2 yQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30rxb1wy0s-1
+        by mx07-00178001.pphosted.com with ESMTP id 30rxb1wy0p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Tue, 05 May 2020 07:52:21 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2EFF610002A;
-        Tue,  5 May 2020 07:52:21 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D1E57100039;
+        Tue,  5 May 2020 07:52:20 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 21AC021CA74;
-        Tue,  5 May 2020 07:52:21 +0200 (CEST)
-Received: from localhost (10.75.127.51) by SFHDAG3NODE2.st.com (10.75.127.8)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C3EA721CA81;
+        Tue,  5 May 2020 07:52:20 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
  with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May 2020 07:52:20
  +0200
 From:   Alain Volmat <alain.volmat@st.com>
@@ -56,16 +56,16 @@ CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
         <alain.volmat@st.com>
-Subject: [PATCH 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
-Date:   Tue, 5 May 2020 07:51:10 +0200
-Message-ID: <1588657871-14747-4-git-send-email-alain.volmat@st.com>
+Subject: [PATCH 2/4] i2c: addition of client reg/unreg callbacks
+Date:   Tue, 5 May 2020 07:51:09 +0200
+Message-ID: <1588657871-14747-3-git-send-email-alain.volmat@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
 References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-05-05_02:2020-05-04,2020-05-05 signatures=0
@@ -74,29 +74,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a new binding of the i2c-stm32f7 driver to enable the handling
-of the SMBUS-Alert
+Addition of two callbacks reg_client and unreg_client that can be
+implemented by adapter drivers in order to take action whenever a
+client is being registered to it.
 
 Signed-off-by: Alain Volmat <alain.volmat@st.com>
 ---
- Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/i2c/i2c-core-base.c | 11 +++++++++++
+ include/linux/i2c.h         |  6 ++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
-index b50a2f420b36..04c0882c3661 100644
---- a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
-+++ b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
-@@ -36,6 +36,10 @@ allOf:
-                 minItems: 3
-                 maxItems: 3
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 2e4560671183..4c84c6264314 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -319,6 +319,12 @@ static int i2c_device_probe(struct device *dev)
+ 	if (!client)
+ 		return 0;
  
-+        st,smbus-alert:
-+          description: Enable the SMBus Alert feature
-+          $ref: /schemas/types.yaml#/definitions/flag
++	if (client->adapter->algo->reg_client) {
++		status = client->adapter->algo->reg_client(client);
++		if (status)
++			return status;
++	}
 +
-   - if:
-       properties:
-         compatible:
+ 	driver = to_i2c_driver(dev->driver);
+ 
+ 	client->irq = client->init_irq;
+@@ -417,6 +423,8 @@ static int i2c_device_probe(struct device *dev)
+ put_sync_adapter:
+ 	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
+ 		pm_runtime_put_sync(&client->adapter->dev);
++	if (client->adapter->algo->reg_client)
++		client->adapter->algo->unreg_client(client);
+ 
+ 	return status;
+ }
+@@ -445,6 +453,9 @@ static int i2c_device_remove(struct device *dev)
+ 	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
+ 		pm_runtime_put(&client->adapter->dev);
+ 
++	if (client->adapter->algo->unreg_client)
++		client->adapter->algo->unreg_client(client);
++
+ 	return status;
+ }
+ 
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 45d36ba4826b..61b838caf454 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -509,6 +509,8 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
+  *   so e.g. PMICs can be accessed very late before shutdown. Optional.
+  * @functionality: Return the flags that this algorithm/adapter pair supports
+  *   from the ``I2C_FUNC_*`` flags.
++ * @reg_client: Callback informing that a new client is being registered
++ * @unreg_client: Callback informing that a client is being removed
+  * @reg_slave: Register given client to I2C slave mode of this adapter
+  * @unreg_slave: Unregister given client from I2C slave mode of this adapter
+  *
+@@ -545,6 +547,10 @@ struct i2c_algorithm {
+ 	/* To determine what the adapter supports */
+ 	u32 (*functionality)(struct i2c_adapter *adap);
+ 
++	/* To inform the adapter of the probe/remove of a client */
++	int (*reg_client)(struct i2c_client *client);
++	void (*unreg_client)(struct i2c_client *client);
++
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+ 	int (*reg_slave)(struct i2c_client *client);
+ 	int (*unreg_slave)(struct i2c_client *client);
 -- 
 2.17.1
 
