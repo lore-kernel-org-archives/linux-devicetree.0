@@ -2,166 +2,115 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE46FC47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1534AC47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8397B206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588667082;
-	bh=/+gpTkLBJ2Kqolj2/ROhBNblDxrQ10aUU/Dm52LEmQw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vENe1XEiZ9Nems4FaBdatpoYKIy9GS182THrMDxt8K4r46zfNBKD9Q3M2KWexYm0k
-	 ur6RZdIvNn7oCKzROyWT/8y+kBo7SfUxYmK1OMJ9cnfkx8+JzJDQUoc0eBpzFzz0NM
-	 xzGGv3Txhm7omuIurNxJ1MD1ALk0zgOmY+A1mMZI=
+	by mail.kernel.org (Postfix) with ESMTP id DC38520658
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 08:30:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SFAkZMtU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgEEIYm (ORCPT
+        id S1727784AbgEEIaM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 04:24:42 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:54216 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbgEEIYl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 04:24:41 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 0458ODXX025004;
-        Tue, 5 May 2020 17:24:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0458ODXX025004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588667054;
-        bh=awhKCUwBKnrY0PuQr1ZiYwWdjhoVOMuvHRPkGvuPBig=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=19phWRHzfucRuYFNCHmJtFb/7S9prMsy4+8xbnqO2UzkhhIYF3PDX0zkECzWjC9rP
-         VPAamfUmx8FZXAphNx0xNboKMDcOukT7A2gcRIn5FCh1ayXqJHXEAtUsrQGAtftYFz
-         W7Cvk0kQy/30DfPXhks3p0xkdNyI8HT6TMYNRqEF/cTlVyjYHauACGyZNE1jCpZQ/l
-         8ds8YhANRh5mAySe5wJNhhi6I5mbhg5kDnw07OH4xijc4kOtyLzIHvcMT3jZSPGDk0
-         w9mP4m2pOj9g7xBrqBtjUyAcWg3gH0ssTP3shR9uL568wRIrMQj7P5fNcspyhfCtfj
-         CQjHfOgzUYTBw==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id s11so708794vsq.13;
-        Tue, 05 May 2020 01:24:14 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYKwtPisPWvtbIE6iMSgusOIidWXM9PZtE+ANDGO/86n6KbzLNn
-        JuP2HABB6yJnbP93suimd+6mFbO/t9pr/uQH+3A=
-X-Google-Smtp-Source: APiQypI+NF72kYXUBGhjZ7K//d9ckRGDhIKCAkr5ao2a5eh/orzgnX4ljHTKFkr5raukyfp0MWA96AsQ9GOht6LNT1E=
-X-Received: by 2002:a67:6e07:: with SMTP id j7mr1604563vsc.181.1588667052874;
- Tue, 05 May 2020 01:24:12 -0700 (PDT)
+        Tue, 5 May 2020 04:30:12 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:37554 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgEEIaM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 04:30:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588667412; x=1620203412;
+  h=to:cc:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding:subject;
+  bh=DB9DoB4dAy+tSnSPYNEN9V0bWmWAez3y3wdWalkVI28=;
+  b=SFAkZMtUg5437tJkyaAkUwpBwgD3+MhqYc/icE9iGSwTJLJUrNv6WHGj
+   CJyHD4dcbWtK9C4lOqdjx2aWSKLFAwoHshqaj9rFxan13KwR2nAOSz8JT
+   hv2ibk0bad86MFAGCZansOPwiyfVOf0Z0hDRdK8WLryD1y3w4J0duiZC6
+   A=;
+IronPort-SDR: m8F2JJq921i8U2hTPFX0OwXLwYDtpl5tpc29M2DH+3KrOTRiknwDPZ2TJ0WOTyoRcP0j5qH4tC
+ TRGUvBBx98GA==
+X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
+   d="scan'208";a="32985955"
+Subject: Re: [PATCH v9 3/3] edac: Add support for Amazon's Annapurna Labs L2 EDAC
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 May 2020 08:30:08 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 77E8EA1D93;
+        Tue,  5 May 2020 08:30:07 +0000 (UTC)
+Received: from EX13D08UEB003.ant.amazon.com (10.43.60.11) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 08:30:05 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D08UEB003.ant.amazon.com (10.43.60.11) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 08:30:05 +0000
+Received: from [192.168.17.227] (10.1.213.30) by mail-relay.amazon.com
+ (10.43.61.243) with Microsoft SMTP Server (TLS) id 15.0.1497.2 via Frontend
+ Transport; Tue, 5 May 2020 08:30:02 +0000
+To:     Robert Richter <rrichter@marvell.com>, <bp@alien8.de>
+CC:     <mchehab@kernel.org>, <tony.luck@intel.com>, <james.morse@arm.com>,
+        <robh+dt@kernel.org>, <frowand.list@gmail.com>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <Jonathan.Cameron@huawei.com>, <arnd@arndb.de>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <barakw@amazon.com>
+References: <20200129195016.956-1-hhhawa@amazon.com>
+ <20200129195016.956-4-hhhawa@amazon.com>
+ <20200310134713.n4gtrgtjdjymmgm5@rric.localdomain>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Message-ID: <8bd3e95c-c45e-383a-f1a3-d60be5c2ff19@amazon.com>
+Date:   Tue, 5 May 2020 11:30:00 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200504020651.37031-1-masahiroy@kernel.org> <20200504020651.37031-2-masahiroy@kernel.org>
- <CAL_JsqLRUAEmh3kwEo+T-dMhXZTBH_kwbBwKzZyhJMR5P92pwA@mail.gmail.com> <CAK7LNASGKrovgqEzSgqZRU0kAsh7rhZ78fZ21VrdKvmP2XH0JQ@mail.gmail.com>
-In-Reply-To: <CAK7LNASGKrovgqEzSgqZRU0kAsh7rhZ78fZ21VrdKvmP2XH0JQ@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 5 May 2020 17:23:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATXCKYfogvYxpaKW+CE0KwMeNjHfLpSemFAHdBzG0yGDQ@mail.gmail.com>
-Message-ID: <CAK7LNATXCKYfogvYxpaKW+CE0KwMeNjHfLpSemFAHdBzG0yGDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] scripts/dtc: compile separate dtc-yaml
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?TWFyZWsgQmVo77+977+9w6Ju?= <marek.behun@nic.cz>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200310134713.n4gtrgtjdjymmgm5@rric.localdomain>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 5, 2020 at 12:04 PM Masahiro Yamada <masahiroy@kernel.org> wrot=
-e:
->
-> On Tue, May 5, 2020 at 4:15 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Sun, May 3, 2020 at 9:07 PM Masahiro Yamada <masahiroy@kernel.org> w=
-rote:
-> > >
-> > > Marek Beh=C3=BAn reported a case where pkg-config fails to detect the
-> > > libyaml-dev package, which is presumably a bug of the distro.
-> > >
-> > > Irrespective of that, I am not a big fan of pkg-config in the Makefil=
-e
-> > > parse stage. The cost of pkg-config is quite small, but it is evaluat=
-ed
-> > > everytime we run make, even when we do 'make mrproper'. This commit
-> > > changes the Makefile to not rely on pkg-config at all.
-> >
-> > I don't really love the solution here... I'm inclined to just make
-> > libyaml always required. Anyone building dtbs should care about
-> > validating them. However, there's some dts files sprinkled in the tree
-> > such as DT unittests and I don't want to break allmodconfig for CI,
-> > 0-day, etc. Though eventually we may have to.
-> >
-> > > The normal build should not require libyaml-dev while we need to comp=
-ile
-> > > dtc with libyaml for the schema check.
-> > >
-> > > Build two dtc variants:
-> > >
-> > >   scripts/dtc/dtc      for *.dts -> *.dtb
-> > >   scripts/dtc/dtc-yaml for *.dts -> *.dt.yaml
-> >
-> > My longer term plan is to integrate the schema checks into dtc. This
-> > would be some sort of plugin to dtc found or specified at run-time. It
-> > would eliminate the need for 2 passes of dtc and the 2nd case will go
-> > away.
->
->
-> OK.
->
->
->
-> > > --- a/scripts/Makefile.lib
-> > > +++ b/scripts/Makefile.lib
-> > > @@ -246,6 +246,7 @@ quiet_cmd_gzip =3D GZIP    $@
-> > >  # DTC
-> > >  # ------------------------------------------------------------------=
----------
-> > >  DTC ?=3D $(objtree)/scripts/dtc/dtc
-> > > +DTC_YAML ?=3D $(objtree)/scripts/dtc/dtc-yaml
-> >
-> > Can we make 'DTC' override both and keep this an internal detail.
-> >
->
-> No. For parallel building *.dtb and *.dt.yaml,
-> they must be separate instances.
->
->
-> > > +HOSTLDLIBS_dtc-yaml :=3D -lyaml
-> >
-> > Does this work for yocto? As we had this before commit 067c650c456e.
-> > Not clear if this changed for any reason or just 'let's use pkg-config
-> > everywhere'.
-> >
-> > Or is there another way to fix yocto issue and we can just check the
-> > header exists. I assume yocto needs some prefix in front of
-> > '/usr/include/yaml.h'?
-> >
->
-> My bad - I missed 067c650c456e
->
-> We need pkg-config to deal with yocto.
->
->
-> Sorry, I take back this series.
 
 
-On my second thought, we can search libyaml
-in non-standard path without pkg-config.
+On 3/10/2020 3:47 PM, Robert Richter wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> 
+> 
+> 
+> On 29.01.20 21:50:16, Hanna Hawa wrote:
+>> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
+>> report L2 errors.
+>>
+>> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+>> ---
+>>   MAINTAINERS               |   5 +
+>>   drivers/edac/Kconfig      |   8 ++
+>>   drivers/edac/Makefile     |   1 +
+>>   drivers/edac/al_l2_edac.c | 270 ++++++++++++++++++++++++++++++++++++++
+>>   4 files changed, 284 insertions(+)
+>>   create mode 100644 drivers/edac/al_l2_edac.c
+> 
+> Hanna, most of the review comments by Boris for patch #1 (al_l1_edac)
+> apply here too. Please address them.
 
+Hi Boris, Robert,
 
-Kbuild provides a way to specify additional flags
-for building host tools.
+Sorry for not getting back to you sooner, will address comments on both 
+files and upload new patchset ASAP.
 
-make  HOSTCFLAGS=3D<install-dir-in-yocto>/include
-      HOSTLDFLAGS=3D<install-dir-in-yocto>/lib
+Thanks,
+Hanna
 
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+> 
+> Thanks,
+> 
+> -Robert
+> 
