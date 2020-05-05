@@ -2,165 +2,82 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEFFC47256
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A13CC47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5926206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4742073B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:12:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v2PIMyT/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NNAUBPeO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgEELF1 (ORCPT
+        id S1728887AbgEELMu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 07:05:27 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55242 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbgEELF1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 07:05:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045B5Ffc037803;
-        Tue, 5 May 2020 06:05:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588676715;
-        bh=umV3B0I90WivROOQuE1mue7ZnlXEBWCYNsNS60PidxE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=v2PIMyT/xLLLP77mLPoVDXUtJLvKbrHUxN72YgrIJCb8VvZoHp1l8WTXEz0FQQ14o
-         MHYEFMKOH6e3H/joIN/Vnddo7zlh1vIm1cGIOFU1C/cVCl73qbhfdmmwJUzUKtgRrf
-         K8AuRIPQulJ9XLRky3VX1rI5rt5PQVHU6eSzAenA=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045B5FjQ073523;
-        Tue, 5 May 2020 06:05:15 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
- 2020 06:05:15 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 5 May 2020 06:05:14 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045B5BKn127153;
-        Tue, 5 May 2020 06:05:12 -0500
-Subject: Re: [PATCH net-next 3/7] net: ethernet: ti: am65-cpsw-nuss: enable
- packet timestamping support
-To:     Anders Roxell <anders.roxell@linaro.org>
-CC:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Nishanth Menon <nm@ti.com>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-4-grygorii.strashko@ti.com>
- <CADYN=9L+RtruRYKah0Bomh7UaPGQ==N9trd0ZoVQ3GTc-VY8Dg@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <1bf51157-9fee-1948-f9ff-116799d12731@ti.com>
-Date:   Tue, 5 May 2020 14:05:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 07:12:50 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:29277 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727090AbgEELMs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 07:12:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588677167; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=0eyelEi64rXXRGTuED+vS31cCGjUGaQJnhSz6yhcSRw=; b=NNAUBPeONjd2ARUuYO/QsQoPLpq/5dwj2U4LsvbDSfuMOswwGcDlgdxhxvdNSVjy1ykIu9mp
+ BDEc+o7dhC2cz7X+Nyr2Zei4ah6v2QW27Hazt/KR3J9D5lyAtu21h9k4sKOQMAgfwnnPRfhH
+ TuTviQvPJG9nthBDFVlXiZBy6es=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb14a23.7f36f9414a40-smtp-out-n05;
+ Tue, 05 May 2020 11:12:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AAE28C433CB; Tue,  5 May 2020 11:12:34 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: manafm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EA761C433D2;
+        Tue,  5 May 2020 11:12:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EA761C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=manafm@codeaurora.org
+From:   Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Subject: [PATCH 0/2] Add 0C (zeorC) interrupt support to tsens driver
+Date:   Tue,  5 May 2020 16:42:02 +0530
+Message-Id: <20200505111204.963-1-manafm@codeaurora.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <CADYN=9L+RtruRYKah0Bomh7UaPGQ==N9trd0ZoVQ3GTc-VY8Dg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-hi Anders,
+Changes:
+* Add zeroc interrupt support to tsens driver
+* Update zeroc interrupt support in yaml
 
-On 05/05/2020 13:17, Anders Roxell wrote:
-> On Fri, 1 May 2020 at 22:50, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>
->> The MCU CPSW Common Platform Time Sync (CPTS) provides possibility to
->> timestamp TX PTP packets and all RX packets.
->>
->> This enables corresponding support in TI AM65x/J721E MCU CPSW driver.
->>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>   drivers/net/ethernet/ti/Kconfig             |   1 +
->>   drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  24 ++-
->>   drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 172 ++++++++++++++++++++
->>   drivers/net/ethernet/ti/am65-cpsw-nuss.h    |   6 +-
->>   4 files changed, 201 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
->> index 1f4e5b6dc686..2c7bd1ccaaec 100644
->> --- a/drivers/net/ethernet/ti/Kconfig
->> +++ b/drivers/net/ethernet/ti/Kconfig
->> @@ -100,6 +100,7 @@ config TI_K3_AM65_CPSW_NUSS
->>          depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
->>          select TI_DAVINCI_MDIO
->>          imply PHY_TI_GMII_SEL
->> +       imply TI_AM65_CPTS
-> 
-> Should this be TI_K3_AM65_CPTS ?
-> 
-> I did an arm64 allmodconfig build on todays next tag: next-20200505
-> and got this undefined symbol:
-> 
-> aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> function `am65_cpsw_init_cpts':
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:
-> undefined reference to `am65_cpts_create'
-> aarch64-linux-gnu-ld:
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:(.text+0x2e20):
-> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> `am65_cpts_create'
-> aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> function `am65_cpsw_nuss_tx_compl_packets':
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:923:
-> undefined reference to `am65_cpts_tx_timestamp'
-> aarch64-linux-gnu-ld:
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:923:(.text+0x4cf0):
-> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> `am65_cpts_tx_timestamp'
-> aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> function `am65_cpsw_nuss_ndo_slave_xmit':
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1018:
-> undefined reference to `am65_cpts_prep_tx_timestamp'
-> aarch64-linux-gnu-ld:
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1018:(.text+0x58fc):
-> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> `am65_cpts_prep_tx_timestamp'
-> aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> function `am65_cpsw_nuss_hwtstamp_set':
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1265:
-> undefined reference to `am65_cpts_rx_enable'
-> aarch64-linux-gnu-ld:
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1265:(.text+0x7564):
-> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> `am65_cpts_rx_enable'
-> aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-ethtool.o: in
-> function `am65_cpsw_get_ethtool_ts_info':
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-ethtool.c:713:
-> undefined reference to `am65_cpts_phc_index'
-> aarch64-linux-gnu-ld:
-> /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-ethtool.c:713:(.text+0xbe8):
-> relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> `am65_cpts_phc_index'
-> make[1]: *** [/srv/src/kernel/next/Makefile:1114: vmlinux] Error 1
-> make[1]: Target 'Image' not remade because of errors.
-> make: *** [Makefile:180: sub-make] Error 2
-> make: Target 'Image' not remade because of errors.
+Manaf Meethalavalappu Pallikunhi (2):
+  drivers: thermal: tsens: Add 0C (zeorC) interrupt support
+  dt-bindings: thermal: tsens: Add zeroc interrupt support in yaml
 
-Sry, I can't reproduce it net-next. trying next...
-What's your config?
+ .../bindings/thermal/qcom-tsens.yaml          |  7 +-
+ drivers/thermal/qcom/tsens-common.c           | 72 ++++++++++++++++++-
+ drivers/thermal/qcom/tsens-v2.c               |  7 ++
+ drivers/thermal/qcom/tsens.c                  | 51 +++++++++++--
+ drivers/thermal/qcom/tsens.h                  | 11 +++
+ 5 files changed, 140 insertions(+), 8 deletions(-)
 
 -- 
-Best regards,
-grygorii
+2.26.2
