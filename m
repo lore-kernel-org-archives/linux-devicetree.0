@@ -7,195 +7,453 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E916C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB19C47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0610C206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7CC20735
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hHN3cpNo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cI/VTDME"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgEEL7Z (ORCPT
+        id S1728683AbgEEMJu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 07:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55642 "EHLO
+        Tue, 5 May 2020 08:09:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727090AbgEEL7Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 07:59:24 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF0BC061A41
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 04:59:22 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id h26so1121461lfg.6
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 04:59:22 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1728233AbgEEMJt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 08:09:49 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D17C061A0F
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 05:09:49 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id a21so1323839ljb.9
+        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 05:09:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uvyOYLDN9I6G44mzBr+eJp9UfWHxSSZYkeApkR1DRBs=;
-        b=hHN3cpNowtbVxjqPXfJfjcZuJmb+J5Kee+wNPfV9hQkfN6yoyfeyUucbR++axL8aVO
-         fpMlI4YRF0nBgFxj0vf15GhO5Tu6ZjZhlnzuV7hw2ZRQQlbMzyng/Z8bKQscC6Oaufq8
-         l1GmOUQksiW11jYhrFJ4wBF5dsH0k9uAhQH7d8UQF4PlFwcA3sCFOfkX/xyTMNnoIWOF
-         qytR5uXEloKnzfJ+g5FAPbCMc/nIfqmt+qIm3f1NMUgRG9dwDyRuYHU5O9nE8S85orQx
-         hNBEhK7Z/1qq73yW5LxMcV/YZUA6QH8SQO/N9TvmN4GiDfJHntWV+shP19bozbSAO+Xp
-         rBkQ==
+        bh=iOGlYy9uXhZHulZgQ0+V+pYl6SxONHQ8OrIB8ymK4ps=;
+        b=cI/VTDMEfFxsqqItuPTCMGNcbAOVoJT4cTNyAcRAS5tXYSR8gP0oUHRHKeQfegAM5a
+         NFEKi2ILQEBpj4zgt7b/vDfWdA8+Dm2YtgCP/Ll7kvSkXEqyMZt2nm/dyib4zSMuSQFe
+         yQv3P6MGoz8pYRF8ahCMrpvuUbOM0fDIBXaMSVQs7u+Myb43MZ7xE9ATu2Br8nk6ERmr
+         u9odYySxINwVlP+O1jkiieSth5OSr+FE/UIV4aSOWEXA5qG7mR30flSOFIwW3JBDG40M
+         6/HKjaaD9H8pFjJrz/r6UBfliRXA1xzCABBoPelzSXQ3LnOEPLSZuQ6HWPJ97TCDL7FN
+         lU3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uvyOYLDN9I6G44mzBr+eJp9UfWHxSSZYkeApkR1DRBs=;
-        b=Wh/LpSor001Emhd5GG1eA5LR1fTGQvwjq6pgAgPkMMiOSEci0GFHlU+sxRRSHqc7cX
-         m8rixEqHWPeTNhFw92rTLoKPDTkKXGg6xV2ZS1Z5EUtL/F/Q0dyae9HdI/F0wOUqGJF1
-         R1KoqwnHDCLwSIzoIdYQDm4j8HTMTo6H/DQzPNBBJ4zjIZP/xB73jURL4bZVp9XI4uPc
-         yT5Q/gsyxjLbElMyPx3laup6X0Ce8QVBhiyK/dc2jZOtSVz/rzAo5ca7pc1xVbDBmOEL
-         uBUF6pxv13hip5bgNXnqBdR4v3CdyOdBaKx87ETkIOuGQ5kv+OBiAyh3FEKdk/eR/cOJ
-         XRrQ==
-X-Gm-Message-State: AGi0Pub5Ywd85DUOwkodUoeJ9HdL7t9SmPDka0VwSq27oN7cuEbUVwti
-        iY8phooGyvpAzq8og5H3n4ppJgE6GfmclAezcMBTmw==
-X-Google-Smtp-Source: APiQypIOI/I3XWJ7qttW55NOmWj7VnuraK3AIGYXqHuHAPnirsq/4IwWVzOkmHsLKcQv2q+P2ChRK+/WFoZed5VuL3Y=
-X-Received: by 2002:a05:6512:1109:: with SMTP id l9mr1543834lfg.12.1588679960671;
- Tue, 05 May 2020 04:59:20 -0700 (PDT)
+        bh=iOGlYy9uXhZHulZgQ0+V+pYl6SxONHQ8OrIB8ymK4ps=;
+        b=YHRBveymG4mBV0VuwfmkVKcCpw/+6KwlwRKbNicGSlJWaPm6jFEcSATAvVn11mGdZL
+         NYQ/HymesJ77KVw6+6dNyZJPG3QYgRIjek2kE6DYJVPi0zEdwF5UIZK0wcm8QP1DhB2d
+         iruSNe2BIHqvASR6E02lRHzPNe2KItmYyeLzI2wyXI1ctu6t0S4r1vYbtJ5Dp42s7Mdp
+         Cainc5KqqcKCNLkdd+v0ioqhfNbupx5nGkpx9fFW9WqlDNSsbDtR3Zhee1dhX89gdvBE
+         kRpMILFwJFV9BHZa7eGzWNnA8gr+PXR/nIdWsLOK1OZBPCuHX36kGfuCSJrtEsgYCs9H
+         H6zw==
+X-Gm-Message-State: AGi0Pub2dFTOgEEWw7pkRYQAJNGydqFVOSV5sor+P8ydW7JAoj0KNp+n
+        2P6n/DIdIWiLRyr4mvr15c4iBwPbQrj1Pe2lTmKi9Q==
+X-Google-Smtp-Source: APiQypIsUpqg7P4EsnRmnk5zJcX42n/zqB9YCqBESh486eP4/FfbjcFgbgxE9/xBz3IGZ47zlAuEug6fE2dqWyglFpU=
+X-Received: by 2002:a2e:8658:: with SMTP id i24mr1529959ljj.287.1588680587262;
+ Tue, 05 May 2020 05:09:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-4-grygorii.strashko@ti.com> <CADYN=9L+RtruRYKah0Bomh7UaPGQ==N9trd0ZoVQ3GTc-VY8Dg@mail.gmail.com>
- <1bf51157-9fee-1948-f9ff-116799d12731@ti.com> <CADYN=9LfqLLmKNHPfXEiQbaX8ELF78BL-vWUcX-VP3aQ86csNg@mail.gmail.com>
-In-Reply-To: <CADYN=9LfqLLmKNHPfXEiQbaX8ELF78BL-vWUcX-VP3aQ86csNg@mail.gmail.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Tue, 5 May 2020 13:59:09 +0200
-Message-ID: <CADYN=9LDCE2sQca12D4ow3BkaxXi1_bnc4Apu7pP4vnA=5AOKA@mail.gmail.com>
-Subject: Re: [PATCH net-next 3/7] net: ethernet: ti: am65-cpsw-nuss: enable
- packet timestamping support
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
+References: <20200505111204.963-1-manafm@codeaurora.org> <20200505111204.963-2-manafm@codeaurora.org>
+In-Reply-To: <20200505111204.963-2-manafm@codeaurora.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 5 May 2020 17:39:14 +0530
+Message-ID: <CAP245DV3-WXa1183tY=AzREAfzt3nXYugngG+zn6pEjXLc68cA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drivers: thermal: tsens: Add 0C (zeorC) interrupt support
+To:     Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Nishanth Menon <nm@ti.com>
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 5 May 2020 at 13:16, Anders Roxell <anders.roxell@linaro.org> wrote:
->
-> On Tue, 5 May 2020 at 13:05, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
-> >
-> > hi Anders,
->
-> Hi Grygorii,
+Hi Manaf,
 
-Hi again,
+Typo: fix zeorC in subject line.
 
->
-> >
-> > On 05/05/2020 13:17, Anders Roxell wrote:
-> > > On Fri, 1 May 2020 at 22:50, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
-> > >>
-> > >> The MCU CPSW Common Platform Time Sync (CPTS) provides possibility to
-> > >> timestamp TX PTP packets and all RX packets.
-> > >>
-> > >> This enables corresponding support in TI AM65x/J721E MCU CPSW driver.
-> > >>
-> > >> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> > >> ---
-> > >>   drivers/net/ethernet/ti/Kconfig             |   1 +
-> > >>   drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  24 ++-
-> > >>   drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 172 ++++++++++++++++++++
-> > >>   drivers/net/ethernet/ti/am65-cpsw-nuss.h    |   6 +-
-> > >>   4 files changed, 201 insertions(+), 2 deletions(-)
-> > >>
-> > >> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-> > >> index 1f4e5b6dc686..2c7bd1ccaaec 100644
-> > >> --- a/drivers/net/ethernet/ti/Kconfig
-> > >> +++ b/drivers/net/ethernet/ti/Kconfig
-> > >> @@ -100,6 +100,7 @@ config TI_K3_AM65_CPSW_NUSS
-> > >>          depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
-> > >>          select TI_DAVINCI_MDIO
-> > >>          imply PHY_TI_GMII_SEL
-> > >> +       imply TI_AM65_CPTS
-> > >
-> > > Should this be TI_K3_AM65_CPTS ?
+Please rebase this patch[1] on top of my patch merging tsens-common.c
+and tsens.c.
 
-instead of 'imply TI_K3_AM65_CPTS' don't you want to do this:
-'depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS'
+[1] https://lore.kernel.org/linux-arm-msm/e30e2ba6fa5c007983afd4d7d4e0311c0b57917a.1588183879.git.amit.kucheria@linaro.org/
 
+On Tue, May 5, 2020 at 4:42 PM Manaf Meethalavalappu Pallikunhi
+<manafm@codeaurora.org> wrote:
+>
+> TSENS IP v2.6+ adds 0C interrupt support. It triggers set
+> interrupt when aggregated minimum temperature of all TSENS falls
+> below 0C preset threshold and triggers reset interrupt when aggregate
+> minimum temperature of all TSENS crosses above reset threshold.
+> Add support for this interrupt in the driver.
+>
+> It adds another sensor to the of-thermal along with all individual
+> TSENS. It enables to add any mitigation for 0C interrupt.
+>
+> Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+> ---
+>  drivers/thermal/qcom/tsens-common.c | 72 ++++++++++++++++++++++++++++-
+>  drivers/thermal/qcom/tsens-v2.c     |  7 +++
+>  drivers/thermal/qcom/tsens.c        | 51 ++++++++++++++++++--
+>  drivers/thermal/qcom/tsens.h        | 11 +++++
+>  4 files changed, 135 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> index 172545366636..44e7edeb9a90 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -198,7 +198,8 @@ static void tsens_set_interrupt_v1(struct tsens_priv *priv, u32 hw_id,
+>                 index = LOW_INT_CLEAR_0 + hw_id;
+>                 break;
+>         case CRITICAL:
+> -               /* No critical interrupts before v2 */
+> +       case ZEROC:
+> +               /* No critical and 0c interrupts before v2 */
+>                 return;
+>         }
+>         regmap_field_write(priv->rf[index], enable ? 0 : 1);
+> @@ -229,6 +230,9 @@ static void tsens_set_interrupt_v2(struct tsens_priv *priv, u32 hw_id,
+>                 index_mask  = CRIT_INT_MASK_0 + hw_id;
+>                 index_clear = CRIT_INT_CLEAR_0 + hw_id;
+>                 break;
+> +       case ZEROC:
+> +               /* Nothing to handle for 0c interrupt */
+> +               return;
+>         }
+>
+>         if (enable) {
+> @@ -360,6 +364,34 @@ static inline u32 masked_irq(u32 hw_id, u32 mask, enum tsens_ver ver)
+>         return 0;
+>  }
+>
+> +/**
+> + * tsens_0c_irq_thread - Threaded interrupt handler for 0c interrupt
 
-Cheers,
-Anders
+Let's use zeroc instead of 0c in the function and variable names and
+comments everywhere. Easier to grep and better consistency too.
 
-> > >
-> > > I did an arm64 allmodconfig build on todays next tag: next-20200505
-> > > and got this undefined symbol:
-> > >
-> > > aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> > > function `am65_cpsw_init_cpts':
-> > > /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:
-> > > undefined reference to `am65_cpts_create'
-> > > aarch64-linux-gnu-ld:
-> > > /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1685:(.text+0x2e20):
-> > > relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> > > `am65_cpts_create'
-> > > aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> > > function `am65_cpsw_nuss_tx_compl_packets':
-> > > /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:923:
-> > > undefined reference to `am65_cpts_tx_timestamp'
-> > > aarch64-linux-gnu-ld:
-> > > /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:923:(.text+0x4cf0):
-> > > relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> > > `am65_cpts_tx_timestamp'
-> > > aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> > > function `am65_cpsw_nuss_ndo_slave_xmit':
-> > > /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1018:
-> > > undefined reference to `am65_cpts_prep_tx_timestamp'
-> > > aarch64-linux-gnu-ld:
-> > > /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1018:(.text+0x58fc):
-> > > relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> > > `am65_cpts_prep_tx_timestamp'
-> > > aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-nuss.o: in
-> > > function `am65_cpsw_nuss_hwtstamp_set':
-> > > /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1265:
-> > > undefined reference to `am65_cpts_rx_enable'
-> > > aarch64-linux-gnu-ld:
-> > > /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-nuss.c:1265:(.text+0x7564):
-> > > relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> > > `am65_cpts_rx_enable'
-> > > aarch64-linux-gnu-ld: drivers/net/ethernet/ti/am65-cpsw-ethtool.o: in
-> > > function `am65_cpsw_get_ethtool_ts_info':
-> > > /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-ethtool.c:713:
-> > > undefined reference to `am65_cpts_phc_index'
-> > > aarch64-linux-gnu-ld:
-> > > /srv/src/kernel/next/obj-arm64-next-20200505/../drivers/net/ethernet/ti/am65-cpsw-ethtool.c:713:(.text+0xbe8):
-> > > relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol
-> > > `am65_cpts_phc_index'
-> > > make[1]: *** [/srv/src/kernel/next/Makefile:1114: vmlinux] Error 1
-> > > make[1]: Target 'Image' not remade because of errors.
-> > > make: *** [Makefile:180: sub-make] Error 2
-> > > make: Target 'Image' not remade because of errors.
-> >
-> > Sry, I can't reproduce it net-next.
+> + * @irq: irq number
+> + * @data: tsens controller private data
+> + *
+> + * Whenever interrupt triggers notify thermal framework using
+> + * thermal_zone_device_update() to update cold temperature mitigation.
+
+How is this mitigation updated?
+
+> + *
+> + * Return: IRQ_HANDLED
+> + */
+> +irqreturn_t tsens_0c_irq_thread(int irq, void *data)
+> +{
+> +       struct tsens_priv *priv = data;
+> +       struct tsens_sensor *s = &priv->sensor[priv->num_sensors];
+> +       int temp, ret;
+> +
+> +       ret = regmap_field_read(priv->rf[TSENS_0C_STATUS], &temp);
+> +       if (ret)
+> +               return ret;
+> +
+> +       dev_dbg(priv->dev, "[%u] %s: 0c interrupt is %s\n",
+> +               s->hw_id, __func__, temp ? "triggered" : "cleared");
+
+So triggered is printed for non-zero (including negative) values?
+
+> +
+> +       thermal_zone_device_update(s->tzd, THERMAL_EVENT_UNSPECIFIED);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+>  /**
+>   * tsens_critical_irq_thread() - Threaded handler for critical interrupts
+>   * @irq: irq number
+> @@ -566,6 +598,20 @@ void tsens_disable_irq(struct tsens_priv *priv)
+>         regmap_field_write(priv->rf[INT_EN], 0);
+>  }
 >
-> Oh I forgot to try net-next, sorry.
+> +int tsens_get_0c_int_status(const struct tsens_sensor *s, int *temp)
+> +{
+> +       struct tsens_priv *priv = s->priv;
+> +       int last_temp = 0, ret;
+> +
+> +       ret = regmap_field_read(priv->rf[TSENS_0C_STATUS], &last_temp);
+> +       if (ret)
+> +               return ret;
+> +
+> +       *temp = last_temp;
+> +
+> +       return 0;
+> +}
+> +
+>  int get_temp_tsens_valid(const struct tsens_sensor *s, int *temp)
+>  {
+>         struct tsens_priv *priv = s->priv;
+> @@ -833,6 +879,30 @@ int __init init_common(struct tsens_priv *priv)
+>                 regmap_field_write(priv->rf[CC_MON_MASK], 1);
+>         }
 >
-> > trying next...
+> +       if (tsens_version(priv) > VER_1_X &&  ver_minor > 5) {
+> +               /* 0C interrupt is present only on v2.6+ */
+> +               priv->rf[TSENS_0C_INT_EN] = devm_regmap_field_alloc(dev,
+> +                                               priv->srot_map,
+> +                                               priv->fields[TSENS_0C_INT_EN]);
+> +               if (IS_ERR(priv->rf[TSENS_0C_INT_EN])) {
+> +                       ret = PTR_ERR(priv->rf[TSENS_0C_INT_EN]);
+> +                       goto err_put_device;
+> +               }
+> +
+> +               /* Check whether 0C interrupt is enabled or not */
+> +               regmap_field_read(priv->rf[TSENS_0C_INT_EN], &enabled);
+> +               if (enabled) {
+> +                       priv->feat->zero_c_int = 1;
+
+This should be done at the beginning of the block where you check our
+version is > 2.6 since the flag only says whether the feature is
+present.
+
+> +                       priv->rf[TSENS_0C_STATUS] = devm_regmap_field_alloc(dev,
+> +                                               priv->tm_map,
+> +                                               priv->fields[TSENS_0C_STATUS]);
+> +                       if (IS_ERR(priv->rf[TSENS_0C_STATUS])) {
+> +                               ret = PTR_ERR(priv->rf[TSENS_0C_STATUS]);
+> +                               goto err_put_device;
+> +                       }
+> +               }
+> +       }
+> +
+>         spin_lock_init(&priv->ul_lock);
+>         tsens_enable_irq(priv);
+>         tsens_debug_init(op);
+> diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
+> index b293ed32174b..ce80d82c7255 100644
+> --- a/drivers/thermal/qcom/tsens-v2.c
+> +++ b/drivers/thermal/qcom/tsens-v2.c
+> @@ -11,6 +11,7 @@
+>  /* ----- SROT ------ */
+>  #define SROT_HW_VER_OFF        0x0000
+>  #define SROT_CTRL_OFF          0x0004
+> +#define SROT_OC_CTRL_OFF       0x0018
 >
-> Thank you.
+>  /* ----- TM ------ */
+>  #define TM_INT_EN_OFF                  0x0004
+> @@ -23,6 +24,7 @@
+>  #define TM_Sn_UPPER_LOWER_THRESHOLD_OFF 0x0020
+>  #define TM_Sn_CRITICAL_THRESHOLD_OFF   0x0060
+>  #define TM_Sn_STATUS_OFF               0x00a0
+> +#define TM_0C_INT_STATUS_OFF           0x00e0
+>  #define TM_TRDY_OFF                    0x00e4
+>  #define TM_WDOG_LOG_OFF                0x013c
 >
-> > What's your config?
+> @@ -45,6 +47,7 @@ static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
+>         /* CTRL_OFF */
+>         [TSENS_EN]     = REG_FIELD(SROT_CTRL_OFF,    0,  0),
+>         [TSENS_SW_RST] = REG_FIELD(SROT_CTRL_OFF,    1,  1),
+> +       [TSENS_0C_INT_EN] = REG_FIELD(SROT_OC_CTRL_OFF, 0,  0),
 >
-> This is the config [1] I used.
+>         /* ----- TM ------ */
+>         /* INTERRUPT ENABLE */
+> @@ -86,6 +89,9 @@ static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
+>         REG_FIELD_FOR_EACH_SENSOR16(CRITICAL_STATUS, TM_Sn_STATUS_OFF, 19,  19),
+>         REG_FIELD_FOR_EACH_SENSOR16(MAX_STATUS,      TM_Sn_STATUS_OFF, 20,  20),
 >
-> Cheers,
-> Anders
-> [1] https://people.linaro.org/~anders.roxell/kernel-next-20200505.config
+> +       /* 0C INETRRUPT STATUS */
+
+Typo: Interrupt
+
+> +       [TSENS_0C_STATUS] = REG_FIELD(TM_0C_INT_STATUS_OFF, 0, 0),
+> +
+>         /* TRDY: 1=ready, 0=in progress */
+>         [TRDY] = REG_FIELD(TM_TRDY_OFF, 0, 0),
+>  };
+> @@ -93,6 +99,7 @@ static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
+>  static const struct tsens_ops ops_generic_v2 = {
+>         .init           = init_common,
+>         .get_temp       = get_temp_tsens_valid,
+> +       .get_0c_status  = tsens_get_0c_int_status,
+>  };
 >
-> >
-> > --
-> > Best regards,
-> > grygorii
+>  struct tsens_plat_data data_tsens_v2 = {
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 2f77d235cf73..e60870c53383 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -14,6 +14,17 @@
+>  #include <linux/thermal.h>
+>  #include "tsens.h"
+>
+> +static int tsens_0c_get_temp(void *data, int *temp)
+> +{
+> +       struct tsens_sensor *s = data;
+> +       struct tsens_priv *priv = s->priv;
+> +
+> +       if (priv->ops->get_0c_status)
+> +               return priv->ops->get_0c_status(s, temp);
+> +
+> +       return -ENOTSUPP;
+> +}
+> +
+>  static int tsens_get_temp(void *data, int *temp)
+>  {
+>         struct tsens_sensor *s = data;
+> @@ -85,6 +96,10 @@ static const struct thermal_zone_of_device_ops tsens_of_ops = {
+>         .set_trips = tsens_set_trips,
+>  };
+>
+> +static const struct thermal_zone_of_device_ops tsens_0c_of_ops = {
+> +       .get_temp = tsens_0c_get_temp,
+> +};
+> +
+>  static int tsens_register_irq(struct tsens_priv *priv, char *irqname,
+>                               irq_handler_t thread_fn)
+>  {
+> @@ -142,6 +157,21 @@ static int tsens_register(struct tsens_priv *priv)
+>                 ret = tsens_register_irq(priv, "critical",
+>                                          tsens_critical_irq_thread);
+>
+> +       if (priv->feat->zero_c_int) {
+> +               priv->sensor[priv->num_sensors].priv = priv;
+> +               tzd = devm_thermal_zone_of_sensor_register(priv->dev,
+> +                                       priv->sensor[priv->num_sensors].hw_id,
+> +                                       &priv->sensor[priv->num_sensors],
+> +                                       &tsens_0c_of_ops);
+> +               if (IS_ERR(tzd)) {
+> +                       ret = 0;
+> +                       return ret;
+> +               }
+> +
+> +               priv->sensor[priv->num_sensors].tzd = tzd;
+
+Why can't this happen in the previous loop, but increase the loop to
+<= num_sensors? It is duplicated code.
+
+> +               ret = tsens_register_irq(priv, "zeroc", tsens_0c_irq_thread);
+> +       }
+> +
+>         return ret;
+>  }
+>
+> @@ -178,11 +208,22 @@ static int tsens_probe(struct platform_device *pdev)
+>                 return -EINVAL;
+>         }
+>
+> -       priv = devm_kzalloc(dev,
+> -                            struct_size(priv, sensor, num_sensors),
+> -                            GFP_KERNEL);
+> -       if (!priv)
+> -               return -ENOMEM;
+> +       /* Check for 0c interrupt is enabled or not */
+> +       if (platform_get_irq_byname(pdev, "zeroc") > 0) {
+> +               priv = devm_kzalloc(dev,
+> +                               struct_size(priv, sensor, num_sensors + 1),
+> +                               GFP_KERNEL);
+
+Instead of doing this, simply do the following,
+
+if (platform_get_irq_byname(pdev, "zeroc") > 0) {
+        num_sensors++;
+
+The kzalloc will just work then, no?
+
+> +               if (!priv)
+> +                       return -ENOMEM;
+> +               /* Use Max sensor index as 0c sensor hw_id */
+> +               priv->sensor[num_sensors].hw_id = data->feat->max_sensors;
+> +       } else {
+> +               priv = devm_kzalloc(dev,
+> +                               struct_size(priv, sensor, num_sensors),
+> +                               GFP_KERNEL);
+> +               if (!priv)
+> +                       return -ENOMEM;
+> +       }
+>
+>         priv->dev = dev;
+>         priv->num_sensors = num_sensors;
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index 502acf0e6828..5b53a0352b4d 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -34,6 +34,7 @@ enum tsens_irq_type {
+>         LOWER,
+>         UPPER,
+>         CRITICAL,
+> +       ZEROC,
+>  };
+>
+>  /**
+> @@ -64,6 +65,7 @@ struct tsens_sensor {
+>   * @suspend: Function to suspend the tsens device
+>   * @resume: Function to resume the tsens device
+>   * @get_trend: Function to get the thermal/temp trend
+> + * @get_0c_status: Function to get the 0c interrupt status
+>   */
+>  struct tsens_ops {
+>         /* mandatory callbacks */
+> @@ -76,6 +78,7 @@ struct tsens_ops {
+>         int (*suspend)(struct tsens_priv *priv);
+>         int (*resume)(struct tsens_priv *priv);
+>         int (*get_trend)(struct tsens_sensor *s, enum thermal_trend *trend);
+> +       int (*get_0c_status)(const struct tsens_sensor *s, int *temp);
+>  };
+>
+>  #define REG_FIELD_FOR_EACH_SENSOR11(_name, _offset, _startbit, _stopbit) \
+> @@ -161,6 +164,8 @@ enum regfield_ids {
+>         TSENS_SW_RST,
+>         SENSOR_EN,
+>         CODE_OR_TEMP,
+> +       /* 0C CTRL OFFSET */
+> +       TSENS_0C_INT_EN,
+>
+>         /* ----- TM ------ */
+>         /* TRDY */
+> @@ -485,6 +490,8 @@ enum regfield_ids {
+>         MAX_STATUS_14,
+>         MAX_STATUS_15,
+>
+> +       TSENS_0C_STATUS,        /* 0C INTERRUPT status */
+> +
+>         /* Keep last */
+>         MAX_REGFIELDS
+>  };
+> @@ -497,6 +504,7 @@ enum regfield_ids {
+>   * @srot_split: does the IP neatly splits the register space into SROT and TM,
+>   *              with SROT only being available to secure boot firmware?
+>   * @has_watchdog: does this IP support watchdog functionality?
+> + * @zero_c_int: does this IP support 0C interrupt ?
+>   * @max_sensors: maximum sensors supported by this version of the IP
+>   */
+>  struct tsens_features {
+> @@ -505,6 +513,7 @@ struct tsens_features {
+>         unsigned int adc:1;
+>         unsigned int srot_split:1;
+>         unsigned int has_watchdog:1;
+> +       unsigned int zero_c_int:1;
+
+zeroc_interrupt
+
+>         unsigned int max_sensors;
+>  };
+>
+> @@ -580,11 +589,13 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *pt1, u32 *pt2, u32 mo
+>  int init_common(struct tsens_priv *priv);
+>  int get_temp_tsens_valid(const struct tsens_sensor *s, int *temp);
+>  int get_temp_common(const struct tsens_sensor *s, int *temp);
+> +int tsens_get_0c_int_status(const struct tsens_sensor *s, int *temp);
+>  int tsens_enable_irq(struct tsens_priv *priv);
+>  void tsens_disable_irq(struct tsens_priv *priv);
+>  int tsens_set_trips(void *_sensor, int low, int high);
+>  irqreturn_t tsens_irq_thread(int irq, void *data);
+>  irqreturn_t tsens_critical_irq_thread(int irq, void *data);
+> +irqreturn_t tsens_0c_irq_thread(int irq, void *data);
+>
+>  /* TSENS target */
+>  extern struct tsens_plat_data data_8960;
+> --
+> 2.26.2
