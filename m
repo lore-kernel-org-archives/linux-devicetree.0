@@ -2,104 +2,181 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3B8C47258
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3747DC47258
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB5D320735
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DDC20746
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:15:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QFDGpwpd"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="LCS42HtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgEEMMo (ORCPT
+        id S1728810AbgEEMPF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 08:12:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728642AbgEEMMn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 08:12:43 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 749ACC061A10
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 05:12:43 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id g4so1359111ljl.2
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 05:12:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jCkYjBhiVEvy0x3Ue8g2r+hn+6C7TksnCaeziOTVJG0=;
-        b=QFDGpwpdAjG4puvpxt7yXioyDCQRWv8af8uv28j3ibtUVzeEm40eoEpbjJfCOBHeEN
-         nYh+gwUf7GpXOphCOJSSRq5/SrvcRTe/hb6RS+XpqYi8jYaSpk43m3by/tDB162gSyXD
-         8F+k7QECoZNvysKdCFSOIHoOxJvt1CFlLt7aClN/mMwdPQkIQ/G65Od+yFoyfBOIsqui
-         sLED4V37/OhtshXrK3QiN6QZ09KLvSRmeQguVgo9UXSVEeu5zO73lTc2Os0FeQuxHXFV
-         uazREV7iVchOwG9fB7cIX+ZnpSmWkDac/RVVhYef39tZ8IyT4PCR3qJGit3oWLN9iXiW
-         PFrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jCkYjBhiVEvy0x3Ue8g2r+hn+6C7TksnCaeziOTVJG0=;
-        b=ZEohFkAJbZCypEoyb++ccomPfrd2ZI90VWUV7r+UAidqjsGvoF7PECzJN9ZrCzbFGQ
-         alTDx00m773rOtCI2/D11QWg8EnAv+sHobfgJeswkf5ioVRB885ConU+kSLVValUbpfj
-         0zYoqg75/fMEXkMlPozxDuamcQY6/qcEy1cS73Z6+MNo1I7aEwbgunAalEGDWJ74PJai
-         s/QfByKRTL/aYxCdIP3c4orGvZ/y+pyspaOHq3LJ3IR97x3D7ia2NDQR7DUmVb9P+MVl
-         ysZ8ArN7IcnJJRAizwsb9m0zKY4TuAqK75JPlE+QB+2SPrch3oaCr4X6iFIU9pc9YzyX
-         CUgA==
-X-Gm-Message-State: AGi0Pubol0plXN+x/x4+RWRgtQtzo1oor7Ig7HnmsnZZfEFy5Asil/6y
-        WBMKrBT3Tg7RlsWI5nIufDnMHPNcA91e6Vun3X5p8Q==
-X-Google-Smtp-Source: APiQypI4n3wOwtw+5CxzN9WhaiI9i9oWcjIepnnD18HMaud1N/zwYMkYxFtOWeBMr+wDtyiHi2Cq8Q8HPpRcwwyTcmk=
-X-Received: by 2002:a2e:2ac2:: with SMTP id q185mr1605622ljq.125.1588680761762;
- Tue, 05 May 2020 05:12:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505111204.963-1-manafm@codeaurora.org>
-In-Reply-To: <20200505111204.963-1-manafm@codeaurora.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 5 May 2020 17:42:09 +0530
-Message-ID: <CAP245DWxDVBAXU_1uqfA0iuajVCZvZOL4HG4VOOwZ1qMSuuMSA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Add 0C (zeorC) interrupt support to tsens driver
-To:     Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Tue, 5 May 2020 08:15:05 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:58174 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728180AbgEEMPE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 08:15:04 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 6CBCC4C841;
+        Tue,  5 May 2020 12:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1588680898; x=1590495299; bh=ANGqABoxpaoVIMQlJL1z+IGhr
+        ujff4M+QnnNKn0vtsw=; b=LCS42HtBGeGat701v4jxDGuHa2e33+KVuVTVbQfep
+        sR90lOF2snNcyiBDH8v5VrrEkUSSMsXnRzgdlBdSExnDWQxVOBznnBfy4p8r1wSM
+        lZzyOl9ijKM/5z7I6KyNH7jHXybCAteIli2WHqvPK30bA87O521XMVPtODMKXQzH
+        M0=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id l9jgWv9Gon2w; Tue,  5 May 2020 15:14:58 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id EAC764C83F;
+        Tue,  5 May 2020 15:14:57 +0300 (MSK)
+Received: from localhost.localdomain (10.199.2.222) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Tue, 5 May 2020 15:14:58 +0300
+Message-ID: <fbbf971e895694f90c3626ec9fb7a08c5485c6ee.camel@yadro.com>
+Subject: Re: [PATCH v11 1/2] iio: proximity: provide device tree binding
+ document
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Date:   Tue, 5 May 2020 15:15:52 +0300
+In-Reply-To: <20200426103441.6d822c7c@archlinux>
+References: <20200422160509.7117-1-i.mikhaylov@yadro.com>
+         <20200422160509.7117-2-i.mikhaylov@yadro.com>
+         <20200426103441.6d822c7c@archlinux>
+Organization: YADRO
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.199.2.222]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Manaf,
+On Sun, 2020-04-26 at 10:34 +0100, Jonathan Cameron wrote:
+> On Wed, 22 Apr 2020 19:05:08 +0300
+> Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+> 
+> > Mostly standard i2c driver with some additional led-current option
+> > for vcnl3020.
+> > 
+> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> Hm. I missed on previous versions that the title of this patch doesn't
+> match the dt-bindings standard.  Please look at other bindings patches.
+> 
+> e.g. dt-bindings: proximity: Add docs for vcnl3020 
+> 
+> One other comment inline from me.
+> > ---
+> >  .../bindings/iio/proximity/vcnl3020.yaml      | 64 +++++++++++++++++++
+> >  1 file changed, 64 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> > b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> > new file mode 100644
+> > index 000000000000..ac47770609d2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> > @@ -0,0 +1,64 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Integrated Proximity Sensor With Infrared Emitter
+> > +
+> > +maintainers:
+> > +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> > +
+> > +description: |
+> > +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated
+> > means
+> > +  that the infrared emitter is included in the package. It has 16-bit
+> > +  resolution. It includes a signal processing IC and features standard I2C
+> > +  communication interface. It features an interrupt function.
+> > +
+> > +  Specifications about the devices can be found at:
+> > +  https://www.vishay.com/docs/84150/vcnl3020.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - vishay,vcnl3020
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  vdd-supply:
+> > +    description: Regulator that provides power to the sensor
+> > +
+> > +  vddio-supply:
+> > +    description: Regulator that provides power to the bus
+> > +
+> > +  vishay,led-current-microamp:
+> > +    description:
+> > +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
+> > +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
+> > +      higher than decimal 20.
+> The text doesn't add anything to the enum which fully defines the values.
+> I'd go with something simple like:
+> 
+> 	 The drive current for the LED used in proximity sensing.
+> 
+> > +    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000,
+> > 90000,
+> > +          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
+> > +          180000, 190000, 200000]
+> > +    default: 20000
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c {
+> > +
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        proximity@13 {
+> > +              compatible = "vishay,vcnl3020";
+> > +              reg = <0x13>;
+> > +              vishay,led-current-microamp = <200000>;
+> > +        };
+> > +    };
 
-Thanks for sending this.
+Rob, do you have anything to add?
 
-Typo: zeorc in subject line.
+Thanks.
 
-
-On Tue, May 5, 2020 at 4:42 PM Manaf Meethalavalappu Pallikunhi
-<manafm@codeaurora.org> wrote:
->
-> Changes:
-> * Add zeroc interrupt support to tsens driver
-> * Update zeroc interrupt support in yaml
->
-> Manaf Meethalavalappu Pallikunhi (2):
->   drivers: thermal: tsens: Add 0C (zeorC) interrupt support
->   dt-bindings: thermal: tsens: Add zeroc interrupt support in yaml
->
->  .../bindings/thermal/qcom-tsens.yaml          |  7 +-
->  drivers/thermal/qcom/tsens-common.c           | 72 ++++++++++++++++++-
->  drivers/thermal/qcom/tsens-v2.c               |  7 ++
->  drivers/thermal/qcom/tsens.c                  | 51 +++++++++++--
->  drivers/thermal/qcom/tsens.h                  | 11 +++
->  5 files changed, 140 insertions(+), 8 deletions(-)
->
-> --
-> 2.26.2
