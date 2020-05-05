@@ -2,93 +2,171 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757B2C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104DBC47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 440D5206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CCC20735
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588706133;
-	bh=UCuuqfL8ZAomvBFDvmfUe10kuxPYmxwojyZlvJrjzW8=;
+	s=default; t=1588706354;
+	bh=JKqbemjlS2Jeps57ZxEt7Bq7AgfRLVbjmfHyIvNH6w4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ao9lSQLERK4Nj1iT968/e+J6olRzSojvbmlURdzsV18DLVzriySMHetMfr355zo/q
-	 Xsv1xNOxrQ3spNfbRIKVBOIvpSqvTqM9082kr/Sc/BcBHzWuiGtVsyGaUh6wfD7uDt
-	 a2cTNxuoYRjlJDpkMh0fvm0EJUzLNMTHBFdH6slI=
+	b=ZfCNS7JE8HJD4tirx1tSeh322leoHoxUHNdliDJTurBVrHt4RPl/5QEHDB5CHRd3K
+	 e3xsLVYsqKy0PC1/evYFNIKQL6X/S7fxnjB8xHE4mKgJoUf4kqPj9sOS3Dt/GK5Yiw
+	 7hC53udkjJT7VdOmaCv1C26YVvjufFtSjy9D/KAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgEETPc (ORCPT
+        id S1728076AbgEETTO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 15:15:32 -0400
-Received: from mail-ot1-f49.google.com ([209.85.210.49]:46565 "EHLO
-        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbgEETPc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:15:32 -0400
-Received: by mail-ot1-f49.google.com with SMTP id z25so2637915otq.13;
-        Tue, 05 May 2020 12:15:31 -0700 (PDT)
+        Tue, 5 May 2020 15:19:14 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42624 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbgEETTO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:19:14 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m18so2657689otq.9;
+        Tue, 05 May 2020 12:19:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XoHZt1v+HXOCwO7SD36qP6zAfCtrd8CNqlmb++NU8YY=;
-        b=S12EEkeQ0ir49Kki1FsKTHkHjiW0a6Y2p/53OT6636yqsk1yR9I8VLRS/talftGKXu
-         DuOD/J0tTNvUqeTdawPOrq27tLKtXiorcCgfB3j3W2uw2cLihi/j+s3dfXKBOl8Ns6eq
-         pN2zW3l5SZdDk/yaTAejXKAAwH2MfMO2GKFpyO6GqP16PFknKkttewuOIGz4IkbhH0Oc
-         qU0NSlku7rMxXsj1aeCrbed9hK/r7iS0G8KU3M1Eu8XKoxaEEkiLpV2RdpYpVTrHALQc
-         9E7nulRsTeNy+9rt6GiWzNVzgiH+vduKg/eKRfXDqwenhy23p7Cx30sHFgy5c0m8MtqE
-         sRiQ==
-X-Gm-Message-State: AGi0PuZefu1bZf36WBGi8morzW6N9snlJlewQmqcikk+4PGswJjxXxeu
-        rvSvX3TVPMD7UatFnf/Zqg==
-X-Google-Smtp-Source: APiQypJ0OwtXiTN14pTnb4JSYnEKPWlE8p/Y3d5aQVPv5XX3SPxmyciZRldsnF55K55eHRzZK/W7Zw==
-X-Received: by 2002:a05:6830:2158:: with SMTP id r24mr3829724otd.65.1588706131344;
-        Tue, 05 May 2020 12:15:31 -0700 (PDT)
+        bh=/U+Utez0g7tzaxYoGDI1nZpfAtzEcCkPAgk4/VbXcdg=;
+        b=BqhfgD33wNLxcf72Ftg/2wW59Z9qk5ZFP8dmcTRVB3Yge5g+GnydAqHmYqAmqzkgUk
+         zv790zh496mBXeEfZQKiEXhjre96hTVggFbR6D202AxoUDAw2qJcgOWPKg4tmfxZwLG8
+         ClLrc7gZtOocr+2Y8lt82H8oD6uIZjsyR36L5qlRm04g1E3jGKaSoVBC6ijiw0SjnzAb
+         DUQUKO1uEjo5bnl82yAnQaukGZgoIoV2lcLJVdae01FzH9G75L6btZt9MBgZzAMwsRIQ
+         2CDFdJGAxwB/It8pVETZH1YvCU4fQGN9iY45+bY59ZP2f3s38HMyuTGCschHV9+tTaRt
+         nfQQ==
+X-Gm-Message-State: AGi0PubjyAGxlkdHJO6jcm+YAJtxfzES4IY2F28bqzUZmTvTFbpsbX4h
+        S+2RirE1ygoKvkxDjY10ow==
+X-Google-Smtp-Source: APiQypKwZP/zlmQLc48VyxIvtAOarvdP8of6TwzErq8vONQjZi4WM1iTtep+tGTUxGO0T32VkPh4rA==
+X-Received: by 2002:a9d:708c:: with SMTP id l12mr3430660otj.335.1588706352098;
+        Tue, 05 May 2020 12:19:12 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j70sm785945oib.53.2020.05.05.12.15.29
+        by smtp.gmail.com with ESMTPSA id i5sm771139oik.11.2020.05.05.12.19.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 12:15:30 -0700 (PDT)
-Received: (nullmailer pid 765 invoked by uid 1000);
-        Tue, 05 May 2020 19:15:29 -0000
-Date:   Tue, 5 May 2020 14:15:29 -0500
+        Tue, 05 May 2020 12:19:11 -0700 (PDT)
+Received: (nullmailer pid 7384 invoked by uid 1000);
+        Tue, 05 May 2020 19:19:10 -0000
+Date:   Tue, 5 May 2020 14:19:10 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
-        shengnan.wang@mediatek.com, sj.huang@mediatek.com,
-        linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com,
-        louis.kuo@mediatek.com, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org
-Subject: Re: [V5, 1/2] media: dt-bindings: media: i2c: Document DW9768
- bindings
-Message-ID: <20200505191529.GA701@bogus>
-References: <20200502161727.30463-1-dongchun.zhu@mediatek.com>
- <20200502161727.30463-2-dongchun.zhu@mediatek.com>
+To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@linux.intel.com
+Subject: Re: [PATCH v5 7/7] dt-bindings: spi: dw-apb-ssi: Convert bindings to
+ json-schema
+Message-ID: <20200505191910.GA2970@bogus>
+References: <20200505130618.554-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200505130618.554-8-wan.ahmad.zainie.wan.mohamad@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200502161727.30463-2-dongchun.zhu@mediatek.com>
+In-Reply-To: <20200505130618.554-8-wan.ahmad.zainie.wan.mohamad@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 3 May 2020 00:17:26 +0800, Dongchun Zhu wrote:
-> Add DeviceTree binding documentation for Dongwoon Anatech DW9768 voice
-> coil actuator.
+On Tue, May 05, 2020 at 09:06:18PM +0800, Wan Ahmad Zainie wrote:
+> Convert the Synopsis DesignWare dw-apb-ssi binding to DT schema format
+> using json-schema.
 > 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
 > ---
->  .../bindings/media/i2c/dongwoon,dw9768.yaml        | 60 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 +++
->  2 files changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
-> 
+>  .../bindings/spi/snps,dw-apb-ssi.txt          | 42 -----------
+>  .../bindings/spi/snps,dw-apb-ssi.yaml         | 72 +++++++++++++++++++
+>  2 files changed, 72 insertions(+), 42 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> new file mode 100644
+> index 000000000000..edc1e6fb9993
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/spi/snps,dw-apb-ssi.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface
+> +
+> +maintainers:
+> +  - Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+> +
+> +allOf:
+> +  - $ref: "spi-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mscc,ocelot-spi
+> +      - mscc,jaguar2-spi
+> +      - amazon,alpine-dw-apb-ssi
+> +      - snps,dw-apb-ssi
+> +      - snps,dwc-ssi-1.01a
+> +      - intel,keembay-ssi
+
+This doesn't match what's in dts files. You have to list out every 
+combination.
+
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: The register base for the controller.
+> +      - description: For "mscc,<soc>-spi", a second register set is required.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: The core clock used to generate the external SPI clock.
+> +      - description: The interface clock required for register access.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ssi_clk
+> +      - const: pclk
+> +
+> +  reg-io-width:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [ 2, 4 ]
+> +      - default: 4
+> +    description: The I/O register width (in bytes) implemented by this device.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    spi@fff00000 {
+> +          compatible = "snps,dw-apb-ssi";
+> +          reg = <0xfff00000 0x1000>;
+> +          interrupts = <0 154 4>;
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          clocks = <&spi_m_clk>;
+> +          num-cs = <2>;
+> +          cs-gpios = <&gpio0 13 0>,
+> +                     <&gpio0 14 0>;
+> +    };
+> -- 
+> 2.17.1
+> 
