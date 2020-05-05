@@ -2,201 +2,112 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAD2C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80EAC47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750172073B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F22E20836
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HvPZq82y"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iohroaea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgEELtO (ORCPT
+        id S1728238AbgEELwC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 07:49:14 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:22573 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725766AbgEELtN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 07:49:13 -0400
-X-UUID: 55acacd2acf04fc7a284440596d9ed92-20200505
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=pPCw/hSKdiOkecOhojlmReD8aZk/qsyj+9+P5fF9LYA=;
-        b=HvPZq82ywqxJE5RlOFXEeyzPJah9VOMzrT5fEEt5MUXvHBm/UgriO6dPs+Bei3oqYB8cxtuOHWIFE+OnuaCtJ59zzulSMza6B4U40bqEqbV/h2zEQQYTa5fgFkFhWnVotmojvMC3uvtSaz4H1PoAZ3oIqqwSk++2MtXojvLOv10=;
-X-UUID: 55acacd2acf04fc7a284440596d9ed92-20200505
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 35549093; Tue, 05 May 2020 19:49:01 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
- (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
- 2020 19:49:00 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 5 May 2020 19:48:59 +0800
-Message-ID: <1588679279.8804.133.camel@mhfsdcap03>
-Subject: Re: [PATCH v10 1/3] media: dt-bindings: ov8856: Document YAML
- bindings
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Robert Foss <robert.foss@linaro.org>,
-        Tomasz Figa <tfiga@chromium.org>
-CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        "Maxime Ripard" <maxime@cerno.tech>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Tue, 5 May 2020 07:52:02 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:52734 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725766AbgEELwC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 07:52:02 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045BnGiQ000379;
+        Tue, 5 May 2020 13:51:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=l0JyW/3R0Flv5jIiu021fxxE/efUs1UCSOIMu/2MEZo=;
+ b=iohroaeajtm3mtFVZzmUE5VU+VlQAAUS4Hj2hyoarU4yHKIAukyjj+YV+hRG28DKUXCM
+ ApxGyUoSLwC+ND4l1Gg1mfcAK7scIcCdZ992Jk+QLzQiM8w6xXVXlNCPB05Ki6aQcGem
+ YRSu3yw9bpIuMS00y9y+RiF6umQegEpi3UqdrsbKDGO+f/0iBxPneEwSAoPnuaCihHBn
+ 3LF1xZzIQTXAxmFszKxfHjAdqq6Xama6OLsgsP2SdTWUf+ulXAciE3q2BRpuSn0CJvFC
+ CYOSOVO//AvbUQIhbIonjiulIr0FlnxtqGEmSg55CciUJgPUeMppelzMfjgv4VidpVNB OA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30rxb1yub2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 13:51:48 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E55CA10002A;
+        Tue,  5 May 2020 13:51:44 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D36D42AD9E5;
+        Tue,  5 May 2020 13:51:44 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May
+ 2020 13:51:40 +0200
+Subject: Re: [PATCH] ARM: dts: stm32: add sd-uhs properties in SD-card node
+ for stm32mp157c-ed1
+To:     Yann Gautier <yann.gautier@st.com>, <robh+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>,
-        "Maxime Ripard" <mripard@kernel.org>
-Date:   Tue, 5 May 2020 19:47:59 +0800
-In-Reply-To: <20200505100129.104673-2-robert.foss@linaro.org>
-References: <20200505100129.104673-1-robert.foss@linaro.org>
-         <20200505100129.104673-2-robert.foss@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        <linux-kernel@vger.kernel.org>
+CC:     Ludovic Barre <ludovic.barre@st.com>
+References: <20200430101649.29381-1-yann.gautier@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <d9cab5f8-9472-98e3-f0d0-09b44e9563d8@st.com>
+Date:   Tue, 5 May 2020 13:51:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 13630F7D312406468B28054E50195F55DADBD634018715057684F8B50EA5600E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200430101649.29381-1-yann.gautier@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_07:2020-05-04,2020-05-05 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgUm9iZXJ0LA0KDQpUaGFua3MgZm9yIHRoZSB1cGRhdGUuDQoNCk9uIFR1ZSwgMjAyMC0wNS0w
-NSBhdCAxMjowMSArMDIwMCwgUm9iZXJ0IEZvc3Mgd3JvdGU6DQo+IEZyb206IERvbmdjaHVuIFpo
-dSA8ZG9uZ2NodW4uemh1QG1lZGlhdGVrLmNvbT4NCj4gDQo+IFRoaXMgcGF0Y2ggYWRkcyBkb2N1
-bWVudGF0aW9uIG9mIGRldmljZSB0cmVlIGluIFlBTUwgc2NoZW1hIGZvciB0aGUNCj4gT1Y4ODU2
-IENNT1MgaW1hZ2Ugc2Vuc29yLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRG9uZ2NodW4gWmh1IDxk
-b25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBSb2JlcnQgRm9zcyA8
-cm9iZXJ0LmZvc3NAbGluYXJvLm9yZz4NCj4gUmV2aWV3ZWQtYnk6IE1heGltZSBSaXBhcmQgPG1y
-aXBhcmRAa2VybmVsLm9yZz4NCj4gLS0tDQo+IA0KPiAtIENoYW5nZXMgc2luY2Ugdjk6DQo+ICAg
-KiBSZW1vdmUgcmVtb3RlLWVuZHBvaW50IHByb3BlcnR5DQo+ICAgKiBNYXJjbzogTWFrZSBwb3J0
-IHByb3BlcnR5IHJlcXVpcmVkIGFnYWluDQo+ICAgKiBTYWthcmk6IFJlbW92ZSBCZW4gYXMgYSBt
-YWludGFpbmVyDQo+ICAgKiBTYWthcmk6IFJlcGxhY2UgZGF0YS1sYW5lcyB3aXRoIGNvbnN0IGl0
-ZW1zDQo+ICAgKiBTYWthcmk6IFJlbW92ZSBjbG9jay1sYW5lcyBwcm9wZXJ0eQ0KPiAgICogU2Fr
-YXJpICYgUm9iIEhlcnJpbmc6IENoYW5nZSB0eXBlIG9mIGxpbmstZnJlcXVlbmN5DQo+ICAgICB3
-b3JrIGFyb3VuZCBkdC1zY2hlbWEgYnVnDQo+IA0KPiAtIENoYW5nZXMgc2luY2Ugdjg6DQo+ICAg
-KiBNYXhpbWU6IEFkZGVkIHItYg0KPiANCj4gLSBDaGFuZ2VzIHNpbmNlIHY3Og0KPiAgICogTWFy
-Y286IE1ha2UgJ3BvcnQnIHByb3BlcnR5IG9wdGlvbmFsDQo+ICAgKiBNYXhpbWUgJiBTYWthcmk6
-IEFkZCAnbGluay1mcmVxdWVuY2llcycgcHJvcGVydHkgdG8gZHQgYmluZGluZw0KPiAgICogcm9i
-aGVyOiBJbXByb3ZlIGRlc2NyaXB0aW9uIGZvciAncG9ydCcgcHJvcGVydHkNCj4gDQo+IC0gQ2hh
-bmdlcyBzaW5jZSB2NjoNCj4gICAqIE1hcmNvOiByZW1vdmUgcWNvbSBzcGVjaWZpY3MgZnJvbSBE
-VCBleGFtcGxlDQo+ICAgIA0KPiAtIENoYW5nZXMgc2luY2UgdjU6DQo+ICAgKiBBZGQgYXNzaWdu
-ZWQtY2xvY2tzIGFuZCBhc3NpZ25lZC1jbG9jay1yYXRlcw0KPiAgICogcm9iaGVyOiBkdC1zY2hl
-bWEgZXJyb3JzDQo+IA0KPiAtIENoYW5nZXMgc2luY2UgdjQ6DQo+ICAgKiBGYWJpbzogQ2hhbmdl
-IHJlc2V0LWdwaW8gdG8gR1BJT19BQ1RJVkVfTE9XLCBleHBsYWluIGluIGRlc2NyaXB0aW9uDQo+
-ICAgKiBBZGQgY2xvY2stbGFuZXMgcHJvcGVydHkgdG8gZXhhbXBsZQ0KPiAgICogcm9iaGVyOiBG
-aXggc3ludGF4IGVycm9yIGluIGRldmljZXRyZWUgZXhhbXBsZQ0KPiANCj4gLSBDaGFuZ2VzIHNp
-bmNlIHYzOg0KPiAgICogcm9iaGVyOiBGaXggc3ludGF4IGVycm9yDQo+ICAgKiByb2JoZXI6IFJl
-bW92ZWQgbWF4SXRlbXMNCj4gICAqIEZpeGVzIHlhbWwgJ21ha2UgZHQtYmluZGluZy1jaGVjaycg
-ZXJyb3JzDQo+IA0KPiAtIENoYW5nZXMgc2luY2UgdjI6DQo+IA0KPiAtIENoYW5nZXMgc2luY2Ug
-djE6DQo+ICAgRml4ZXMgY29tbWVudHMgZnJvbSBTYWthcmksIFRvbWFzeg0KPiAgICogQWRkIGNs
-b2NrLWZyZXF1ZW5jeSBhbmQgbGluay1mcmVxdWVuY2llcyBpbiBEVA0KPiANCj4gIC4uLi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdjg4NTYueWFtbCB8IDE0MiArKysrKysrKysrKysr
-KysrKysNCj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
-ICAgMSArDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDE0MyBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9v
-djg4NTYueWFtbA0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tZWRpYS9pMmMvb3Y4ODU2LnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWVkaWEvaTJjL292ODg1Ni55YW1sDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+
-IGluZGV4IDAwMDAwMDAwMDAwMC4uZDZhZjY4NWFkM2NhDQo+IC0tLSAvZGV2L251bGwNCj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdjg4NTYueWFt
-bA0KPiBAQCAtMCwwICsxLDE0MiBAQA0KPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQ
-TC0yLjAgT1IgQlNELTItQ2xhdXNlKQ0KPiArIyBDb3B5cmlnaHQgKGMpIDIwMTkgTWVkaWFUZWsg
-SW5jLg0KPiArJVlBTUwgMS4yDQo+ICstLS0NCj4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3Jn
-L3NjaGVtYXMvbWVkaWEvaTJjL292ODg1Ni55YW1sIw0KPiArJHNjaGVtYTogaHR0cDovL2Rldmlj
-ZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ICsNCj4gK3RpdGxlOiBPbW5pdmlz
-aW9uIE9WODg1NiBDTU9TIFNlbnNvciBEZXZpY2UgVHJlZSBCaW5kaW5ncw0KPiArDQo+ICttYWlu
-dGFpbmVyczoNCj4gKyAgLSBEb25nY2h1biBaaHUgPGRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20+
-DQo+ICsNCj4gK2Rlc2NyaXB0aW9uOiB8LQ0KPiArICBUaGUgT21uaXZpc2lvbiBPVjg4NTYgaXMg
-YSBoaWdoIHBlcmZvcm1hbmNlLCAxLzQtaW5jaCwgOCBtZWdhcGl4ZWwsIENNT1MNCj4gKyAgaW1h
-Z2Ugc2Vuc29yIHRoYXQgZGVsaXZlcnMgMzI2NHgyNDQ4IGF0IDMwZnBzLiBJdCBwcm92aWRlcyBm
-dWxsLWZyYW1lLA0KPiArICBzdWItc2FtcGxlZCwgYW5kIHdpbmRvd2VkIDEwLWJpdCBNSVBJIGlt
-YWdlcyBpbiB2YXJpb3VzIGZvcm1hdHMgdmlhIHRoZQ0KPiArICBTZXJpYWwgQ2FtZXJhIENvbnRy
-b2wgQnVzIChTQ0NCKSBpbnRlcmZhY2UuIFRoaXMgY2hpcCBpcyBwcm9ncmFtbWFibGUNCj4gKyAg
-dGhyb3VnaCBJMkMgYW5kIHR3by13aXJlIFNDQ0IuIFRoZSBzZW5zb3Igb3V0cHV0IGlzIGF2YWls
-YWJsZSB2aWEgQ1NJLTINCj4gKyAgc2VyaWFsIGRhdGEgb3V0cHV0ICh1cCB0byA0LWxhbmUpLg0K
-PiArDQo+ICtwcm9wZXJ0aWVzOg0KPiArICBjb21wYXRpYmxlOg0KPiArICAgIGNvbnN0OiBvdnRp
-LG92ODg1Ng0KPiArDQo+ICsgIHJlZzoNCj4gKyAgICBtYXhJdGVtczogMQ0KPiArDQo+ICsgIGNs
-b2NrczoNCj4gKyAgICBtYXhJdGVtczogMQ0KPiArDQo+ICsgIGNsb2NrLW5hbWVzOg0KPiArICAg
-IGRlc2NyaXB0aW9uOg0KPiArICAgICAgSW5wdXQgY2xvY2sgZm9yIHRoZSBzZW5zb3IuDQo+ICsg
-ICAgaXRlbXM6DQo+ICsgICAgICAtIGNvbnN0OiB4dmNsaw0KPiArDQo+ICsgIGNsb2NrLWZyZXF1
-ZW5jeToNCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgIEZyZXF1ZW5jeSBvZiB0aGUgeHZj
-bGsgY2xvY2sgaW4gSGVydHouDQo+ICsNCj4gKyAgZG92ZGQtc3VwcGx5Og0KPiArICAgIGRlc2Ny
-aXB0aW9uOg0KPiArICAgICAgRGVmaW5pdGlvbiBvZiB0aGUgcmVndWxhdG9yIHVzZWQgYXMgaW50
-ZXJmYWNlIHBvd2VyIHN1cHBseS4NCj4gKw0KPiArICBhdmRkLXN1cHBseToNCj4gKyAgICBkZXNj
-cmlwdGlvbjoNCj4gKyAgICAgIERlZmluaXRpb24gb2YgdGhlIHJlZ3VsYXRvciB1c2VkIGFzIGFu
-YWxvZyBwb3dlciBzdXBwbHkuDQo+ICsNCj4gKyAgZHZkZC1zdXBwbHk6DQo+ICsgICAgZGVzY3Jp
-cHRpb246DQo+ICsgICAgICBEZWZpbml0aW9uIG9mIHRoZSByZWd1bGF0b3IgdXNlZCBhcyBkaWdp
-dGFsIHBvd2VyIHN1cHBseS4NCj4gKw0KPiArICByZXNldC1ncGlvczoNCj4gKyAgICBkZXNjcmlw
-dGlvbjoNCj4gKyAgICAgIFRoZSBwaGFuZGxlIGFuZCBzcGVjaWZpZXIgZm9yIHRoZSBHUElPIHRo
-YXQgY29udHJvbHMgc2Vuc29yIHJlc2V0Lg0KPiArICAgICAgVGhpcyBjb3JyZXNwb25kcyB0byB0
-aGUgaGFyZHdhcmUgcGluIFhTSFVURE9XTiB3aGljaCBpcyBwaHlzaWNhbGx5DQo+ICsgICAgICBh
-Y3RpdmUgbG93Lg0KPiArDQo+ICsgIHBvcnQ6DQo+ICsgICAgdHlwZTogb2JqZWN0DQo+ICsgICAg
-YWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAg
-ICBBIG5vZGUgY29udGFpbmluZyBhbiBvdXRwdXQgcG9ydCBub2RlIHdpdGggYW4gZW5kcG9pbnQg
-ZGVmaW5pdGlvbg0KPiArICAgICAgYXMgZG9jdW1lbnRlZCBpbg0KPiArICAgICAgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0DQo+ICsN
-Cj4gKyAgICBwcm9wZXJ0aWVzOg0KPiArICAgICAgZW5kcG9pbnQ6DQo+ICsgICAgICAgIHR5cGU6
-IG9iamVjdA0KPiArDQo+ICsgICAgICAgIHByb3BlcnRpZXM6DQo+ICsgICAgICAgICAgZGF0YS1s
-YW5lczoNCj4gKyAgICAgICAgICAgIGRlc2NyaXB0aW9uOiB8LQ0KPiArICAgICAgICAgICAgICBU
-aGUgZHJpdmVyIG9ubHkgc3VwcG9ydHMgZm91ci1sYW5lIG9wZXJhdGlvbi4NCj4gKyAgICAgICAg
-ICAgIGl0ZW1zOg0KPiArICAgICAgICAgICAgICAtIGNvbnN0OiAxDQo+ICsgICAgICAgICAgICAg
-IC0gY29uc3Q6IDINCj4gKyAgICAgICAgICAgICAgLSBjb25zdDogMw0KPiArICAgICAgICAgICAg
-ICAtIGNvbnN0OiA0DQo+ICsNCj4gKyAgICAgICAgICBsaW5rLWZyZXF1ZW5jaWVzOg0KPiArICAg
-ICAgICAgICAgYWxsT2Y6DQo+ICsgICAgICAgICAgICAgIC0gJHJlZjogL3NjaGVtYXMvdHlwZXMu
-eWFtbCMvZGVmaW5pdGlvbnMvdWludDY0LWFycmF5DQo+ICsgICAgICAgICAgICBkZXNjcmlwdGlv
-bjoNCj4gKyAgICAgICAgICAgICAgQWxsb3dlZCBkYXRhIGJ1cyBmcmVxdWVuY2llcy4gMzYwMDAw
-MDAwLCAxODAwMDAwMDAgSHogb3IgYm90aA0KPiArICAgICAgICAgICAgICBhcmUgc3VwcG9ydGVk
-IGJ5IHRoZSBkcml2ZXIuDQo+ICsNCj4gKw0KPiArICAgICAgICByZXF1aXJlZDoNCj4gKyAgICAg
-ICAgICAtIGxpbmstZnJlcXVlbmNpZXMNCj4gKw0KPiArICAgIHJlcXVpcmVkOg0KPiArICAgICAg
-LSBlbmRwb2ludA0KPiArDQo+ICtyZXF1aXJlZDoNCj4gKyAgLSBjb21wYXRpYmxlDQo+ICsgIC0g
-cmVnDQo+ICsgIC0gY2xvY2tzDQo+ICsgIC0gY2xvY2stbmFtZXMNCj4gKyAgLSBjbG9jay1mcmVx
-dWVuY3kNCj4gKyAgLSBkb3ZkZC1zdXBwbHkNCj4gKyAgLSBhdmRkLXN1cHBseQ0KPiArICAtIGR2
-ZGQtc3VwcGx5DQo+ICsgIC0gcmVzZXQtZ3Bpb3MNCj4gKyAgLSBwb3J0DQo+ICsNCj4gK2FkZGl0
-aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiArDQo+ICtleGFtcGxlczoNCj4gKyAgLSB8DQo+ICsg
-ICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPg0KPiArDQo+ICsgICAgaTJjIHsN
-Cj4gKyAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsgICAgICAgICNzaXplLWNlbGxz
-ID0gPDA+Ow0KPiArDQo+ICsgICAgICAgIG92ODg1NjogY2FtZXJhQDEwIHsNCj4gKyAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAib3Z0aSxvdjg4NTYiOw0KPiArICAgICAgICAgICAgcmVnID0gPDB4
-MTA+Ow0KPiArDQo+ICsgICAgICAgICAgICByZXNldC1ncGlvcyA9IDwmcGlvIDExMSBHUElPX0FD
-VElWRV9MT1c+Ow0KDQpBcG9sb2dpZXMgZm9yIG1pc3NpbmcgdG8gZm9sbG93IHRoZSBlYXJsaWVy
-IGRpc2N1c3Npb24gcmVsYXRlZCB0byB0aGlzLg0KSSBub3RpY2VkIHRoZSBHUElPIGZsYWcgcGFy
-YSBhbmQgX19vdjg4NTZfcG93ZXJfb24oKSBhcmUgYWxpZ25lZCB1c2luZw0KQUNUSVZFX0xPVy4N
-Cg0KQnV0IGZyb20gdGhlIGRhdGFzaGVldCwgWFNIVVRETiBwaW4gaXMgYWN0aXZlLWhpZ2ggZm9y
-IE9WODg1Ni4NCkl0IG1lYW5zIGRldm1fZ3Bpb2RfZ2V0IEFQSSAoaW4gcHJvYmUgZnVuYykgc2hv
-dWxkIHVzZSBHUElPRF9PVVRfTE9XIHRvDQppbml0aWFsaXplIHRoZSBHUElPIGFzIG91dHB1dCB3
-aXRoIGEgdmFsdWUgb2YgMC4NCk90aGVyd2lzZSBpdCBzaG91bGQgdXNlIEdQSU9EX09VVF9ISUdI
-Lg0KDQpUaGVyZSBpcyBvbmUgY2FzZSBmb3IgR1BJT19BQ1RJVkVfTE9XIHNldHRpbmc6DQpodHRw
-czovL3BhdGNod29yay5saW51eHR2Lm9yZy9wYXRjaC82MzQ2MC8NCmh0dHBzOi8vcGF0Y2h3b3Jr
-LmxpbnV4dHYub3JnL3BhdGNoLzYzNDYxLw0KDQpTYWthcmksIFRvbWFzeiwgYW0gSSByaWdodD8N
-Cg0KPiArICAgICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gKyAgICAgICAg
-ICAgIHBpbmN0cmwtMCA9IDwmY2xrXzI0bV9jYW0+Ow0KPiArDQo+ICsgICAgICAgICAgICBjbG9j
-a3MgPSA8JmNhbV9vc2M+Ow0KPiArICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAieHZjbGsiOw0K
-PiArICAgICAgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDE5MjAwMDAwPjsNCj4gKw0KPiArICAg
-ICAgICAgICAgYXZkZC1zdXBwbHkgPSA8Jm10NjM1OF92Y2FtYTJfcmVnPjsNCj4gKyAgICAgICAg
-ICAgIGR2ZGQtc3VwcGx5ID0gPCZtdDYzNThfdmNhbWRfcmVnPjsNCj4gKyAgICAgICAgICAgIGRv
-dmRkLXN1cHBseSA9IDwmbXQ2MzU4X3ZjYW1pb19yZWc+Ow0KPiArDQo+ICsgICAgICAgICAgICBw
-b3J0IHsNCj4gKyAgICAgICAgICAgICAgICB3Y2FtX291dDogZW5kcG9pbnQgew0KPiArICAgICAg
-ICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfaW5fd2NhbT47DQo+ICsgICAg
-ICAgICAgICAgICAgICAgIGRhdGEtbGFuZXMgPSA8MSAyIDMgND47DQo+ICsgICAgICAgICAgICAg
-ICAgICAgIGxpbmstZnJlcXVlbmNpZXMgPSAvYml0cy8gNjQgPDM2MDAwMDAwMD47DQo+ICsgICAg
-ICAgICAgICAgICAgfTsNCj4gKyAgICAgICAgICAgIH07DQo+ICsgICAgICAgIH07DQo+ICsgICAg
-fTsNCj4gKy4uLg0KPiBcIE5vIG5ld2xpbmUgYXQgZW5kIG9mIGZpbGUNCj4gZGlmZiAtLWdpdCBh
-L01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMNCj4gaW5kZXggMjZmMjgxZDlmMzJhLi44NGIyNjJh
-ZmQxM2QgMTAwNjQ0DQo+IC0tLSBhL01BSU5UQUlORVJTDQo+ICsrKyBiL01BSU5UQUlORVJTDQo+
-IEBAIC0xMjQ4OSw2ICsxMjQ4OSw3IEBAIEw6CWxpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZw0K
-PiAgUzoJTWFpbnRhaW5lZA0KPiAgVDoJZ2l0IGdpdDovL2xpbnV4dHYub3JnL21lZGlhX3RyZWUu
-Z2l0DQo+ICBGOglkcml2ZXJzL21lZGlhL2kyYy9vdjg4NTYuYw0KPiArRjoJRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdjg4NTYueWFtbA0KPiAgDQoNCkhhZCB5
-b3UgcnVuIHBhcnNlLW1haW50YWluZXJzLnBsPw0KVGhlIG5ldyBpdGVtIGlzIHN1cHBvc2VkIHRv
-IGJlIGFycmFuZ2VkIGluIGFscGhhYmV0aWNhbCBvcmRlci4NCg0KPiAgT01OSVZJU0lPTiBPVjk2
-NDAgU0VOU09SIERSSVZFUg0KPiAgTToJUGV0ciBDdmVrIDxwZXRyY3Zla2N6QGdtYWlsLmNvbT4N
-Cg0K
+Hi Yann
 
+On 4/30/20 12:16 PM, Yann Gautier wrote:
+> The sdmmc1 peripheral is connected on SD-card on STM32MP1-ED1 board.
+> Add the UHS features the controller is able to manage.
+> Those features require a level shifter on the board, and the support of
+> the voltage switch in driver, which is done in Linux v5.7.
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> Signed-off-by: Yann Gautier <yann.gautier@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+> index 9d2592db630c..1d7dfe97b160 100644
+> --- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
+> +++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+> @@ -320,6 +320,10 @@
+>   	bus-width = <4>;
+>   	vmmc-supply = <&vdd_sd>;
+>   	vqmmc-supply = <&sd_switch>;
+> +	sd-uhs-sdr12;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr50;
+> +	sd-uhs-ddr50;
+>   	status = "okay";
+>   };
+>   
+> 
+
+Applied on stm32-next.
+
+Thanks.
+Alex
