@@ -2,191 +2,412 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF00C47257
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F746C47259
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F123206FA
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F81420675
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:23:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qn+orp4I"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="a5OhINFD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729857AbgEEOSl (ORCPT
+        id S1730046AbgEEOXM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 10:18:41 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:63707 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729179AbgEEOSj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 10:18:39 -0400
-X-UUID: 6e5b004d81ed483296411afc687b381f-20200505
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Ln7segckAaiZAgl5KaodMOtBPiq7uyrqeiRYfTd7390=;
-        b=qn+orp4IE+WGgZ3zaTvwWzfltDoVjEASb2YDxUFQJyMpBrFhMvHWyFLF2KlspoGxrZFpBC6x2ySJVBWVdnZbNeovMfO8k0Yn5Eufdny3Aj0GQpzevI2MbFQDqOpnvtIcUJhwXnQBhkFgSIvVrVsDK8zv1TIPIyhsKTFVzzy924A=;
-X-UUID: 6e5b004d81ed483296411afc687b381f-20200505
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1886301026; Tue, 05 May 2020 22:18:22 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
- 2020 22:18:18 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 5 May 2020 22:18:18 +0800
-Message-ID: <1588688238.8804.150.camel@mhfsdcap03>
-Subject: Re: [V7, 1/2] media: dt-bindings: media: i2c: Document OV02A10
- bindings
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <drinkcat@chromium.org>, <matrix.zhu@aliyun.com>,
-        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
-        <bingbu.cao@intel.com>, <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
-Date:   Tue, 5 May 2020 22:17:18 +0800
-In-Reply-To: <20200505070451.GS9190@paasikivi.fi.intel.com>
-References: <20200430080924.1140-1-dongchun.zhu@mediatek.com>
-         <20200430080924.1140-2-dongchun.zhu@mediatek.com>
-         <20200505070451.GS9190@paasikivi.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 5 May 2020 10:23:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729159AbgEEOXK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 10:23:10 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19BF1C061A0F;
+        Tue,  5 May 2020 07:23:10 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D3496542;
+        Tue,  5 May 2020 16:23:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1588688588;
+        bh=o9XBryszfLjcdNfnhm4K72ACxPUcF32BHIiyzpCtRXk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a5OhINFDijEKPh7+LwVYminuwVz8mCfmN73Sa5/NUlFUUhUwWJbnjGNpxN+FEt73z
+         5Bg9kqVCfx4iMAhMZTLt4AOgdA2o9tvKaF1L7j15UPyO3l+mkLk4r8fSfF7/Jdl9HT
+         d9P2XqQllLIFPXkOkTA/SkXok2px8JT68AWw0aRk=
+Date:   Tue, 5 May 2020 17:23:02 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, hans.verkuil@cisco.com,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v12 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Message-ID: <20200505142302.GA19432@pendragon.ideasonboard.com>
+References: <20200423153038.106453-1-vishal.sagar@xilinx.com>
+ <20200423153038.106453-2-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 4EB007B2B39823776E591625AE24E153515C61B35CE8B89132CA6EE5D2B255FE2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200423153038.106453-2-vishal.sagar@xilinx.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgU2FrYXJpLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCk9uIFR1ZSwgMjAyMC0wNS0w
-NSBhdCAxMDowNCArMDMwMCwgU2FrYXJpIEFpbHVzIHdyb3RlOg0KPiBIaSBEb25nY2h1biwNCj4g
-DQo+IE9uIFRodSwgQXByIDMwLCAyMDIwIGF0IDA0OjA5OjIzUE0gKzA4MDAsIERvbmdjaHVuIFpo
-dSB3cm90ZToNCj4gPiBBZGQgRFQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgT21uaXZpc2lv
-biBPVjAyQTEwIGltYWdlIHNlbnNvci4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBEb25nY2h1
-biBaaHUgPGRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9iaW5k
-aW5ncy9tZWRpYS9pMmMvb3Z0aSxvdjAyYTEwLnlhbWwgICAgICAgICAgIHwgMTQ4ICsrKysrKysr
-KysrKysrKysrKysrKw0KPiA+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAgNyArDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTU1IGluc2VydGlv
-bnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tZWRpYS9pMmMvb3Z0aSxvdjAyYTEwLnlhbWwNCj4gPiANCj4gPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdnRpLG92MDJh
-MTAueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Z0
-aSxvdjAyYTEwLnlhbWwNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAw
-MDAuLjJiZTRiZDINCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdnRpLG92MDJhMTAueWFtbA0KPiA+IEBAIC0w
-LDAgKzEsMTQ4IEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wIE9S
-IEJTRC0yLUNsYXVzZSkNCj4gPiArIyBDb3B5cmlnaHQgKGMpIDIwMjAgTWVkaWFUZWsgSW5jLg0K
-PiA+ICslWUFNTCAxLjINCj4gPiArLS0tDQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3Jn
-L3NjaGVtYXMvbWVkaWEvaTJjL292dGksb3YwMmExMC55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRw
-Oi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3Rp
-dGxlOiBPbW5pdmlzaW9uIE9WMDJBMTAgQ01PUyBTZW5zb3IgRGV2aWNlIFRyZWUgQmluZGluZ3MN
-Cj4gPiArDQo+ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gRG9uZ2NodW4gWmh1IDxkb25nY2h1
-bi56aHVAbWVkaWF0ZWsuY29tPg0KPiA+ICsNCj4gPiArZGVzY3JpcHRpb246IHwtDQo+ID4gKyAg
-VGhlIE9tbml2aXNpb24gT1YwMkExMCBpcyBhIGxvdy1jb3N0LCBoaWdoIHBlcmZvcm1hbmNlLCAx
-LzUtaW5jaCwgMiBtZWdhcGl4ZWwNCj4gPiArICBpbWFnZSBzZW5zb3IsIHdoaWNoIGlzIHRoZSBs
-YXRlc3QgcHJvZHVjdGlvbiBkZXJpdmVkIGZyb20gT21uaXZpc2lvbidzIENNT1MNCj4gPiArICBp
-bWFnZSBzZW5zb3IgdGVjaG5vbG9neS4gSWhpcyBjaGlwIHN1cHBvcnRzIGhpZ2ggZnJhbWUgcmF0
-ZSBzcGVlZHMgdXAgdG8gMzBmcHMNCj4gPiArICBAIDE2MDB4MTIwMCAoVVhHQSkgcmVzb2x1dGlv
-biB0cmFuc2ZlcnJlZCBvdmVyIGEgMS1sYW5lIE1JUEkgaW50ZXJmYWNlLiBUaGUNCj4gPiArICBz
-ZW5zb3Igb3V0cHV0IGlzIGF2YWlsYWJsZSB2aWEgQ1NJLTIgc2VyaWFsIGRhdGEgb3V0cHV0Lg0K
-PiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4gPiArICBjb21wYXRpYmxlOg0KPiA+ICsgICAgY29u
-c3Q6IG92dGksb3YwMmExMA0KPiA+ICsNCj4gPiArICByZWc6DQo+ID4gKyAgICBtYXhJdGVtczog
-MQ0KPiA+ICsNCj4gPiArICBjbG9ja3M6DQo+ID4gKyAgICBpdGVtczoNCj4gPiArICAgICAgLSBk
-ZXNjcmlwdGlvbjogdG9wIG11eCBjYW10ZyBjbG9jaw0KPiA+ICsgICAgICAtIGRlc2NyaXB0aW9u
-OiBkZXZpZGVyIGNsb2NrDQo+ID4gKw0KPiA+ICsgIGNsb2NrLW5hbWVzOg0KPiA+ICsgICAgaXRl
-bXM6DQo+ID4gKyAgICAgIC0gY29uc3Q6IGVjbGsNCj4gPiArICAgICAgLSBjb25zdDogZnJlcV9t
-dXgNCj4gPiArDQo+ID4gKyAgY2xvY2stZnJlcXVlbmN5Og0KPiA+ICsgICAgZGVzY3JpcHRpb246
-DQo+ID4gKyAgICAgIEZyZXF1ZW5jeSBvZiB0aGUgZWNsayBjbG9jayBpbiBIZXJ0ei4NCj4gPiAr
-DQo+ID4gKyAgZG92ZGQtc3VwcGx5Og0KPiA+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAg
-IERlZmluaXRpb24gb2YgdGhlIHJlZ3VsYXRvciB1c2VkIGFzIGludGVyZmFjZSBwb3dlciBzdXBw
-bHkuDQo+ID4gKw0KPiA+ICsgIGF2ZGQtc3VwcGx5Og0KPiA+ICsgICAgZGVzY3JpcHRpb246DQo+
-ID4gKyAgICAgIERlZmluaXRpb24gb2YgdGhlIHJlZ3VsYXRvciB1c2VkIGFzIGFuYWxvZyBwb3dl
-ciBzdXBwbHkuDQo+ID4gKw0KPiA+ICsgIGR2ZGQtc3VwcGx5Og0KPiA+ICsgICAgZGVzY3JpcHRp
-b246DQo+ID4gKyAgICAgIERlZmluaXRpb24gb2YgdGhlIHJlZ3VsYXRvciB1c2VkIGFzIGRpZ2l0
-YWwgcG93ZXIgc3VwcGx5Lg0KPiA+ICsNCj4gPiArICBwb3dlcmRvd24tZ3Bpb3M6DQo+ID4gKyAg
-ICBkZXNjcmlwdGlvbjoNCj4gPiArICAgICAgVGhlIHBoYW5kbGUgYW5kIHNwZWNpZmllciBmb3Ig
-dGhlIEdQSU8gdGhhdCBjb250cm9scyBzZW5zb3IgcG93ZXJkb3duLg0KPiA+ICsNCj4gPiArICBy
-ZXNldC1ncGlvczoNCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBUaGUgcGhhbmRs
-ZSBhbmQgc3BlY2lmaWVyIGZvciB0aGUgR1BJTyB0aGF0IGNvbnRyb2xzIHNlbnNvciByZXNldC4N
-Cj4gPiArDQo+ID4gKyAgcm90YXRpb246DQo+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAg
-ICAgRGVmaW5pdGlvbiBvZiB0aGUgc2Vuc29yJ3MgcGxhY2VtZW50LCB2YWxpZCB2YWx1ZXMgYXJl
-IDAgYW5kIDE4MC4NCj4gPiArICAgIGFsbE9mOg0KPiA+ICsgICAgICAtICRyZWY6ICIvc2NoZW1h
-cy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzIiDQo+ID4gKyAgICAgIC0gZW51bToNCj4g
-PiArICAgICAgICAgIC0gMCAgICAjIFNlbnNvciBNb3VudGVkIFVwcmlnaHQNCj4gPiArICAgICAg
-ICAgIC0gMTgwICAjIFNlbnNvciBNb3VudGVkIFVwc2lkZSBEb3duDQo+ID4gKw0KPiA+ICsgIG92
-dGksbWlwaS10eC1zcGVlZDoNCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBJbmRp
-Y2F0aW9uIG9mIE1JUEkgdHJhbnNtaXNzaW9uIHNwZWVkIHNlbGVjdC4NCj4gDQo+IFdoYXQgZXhh
-Y3RseSBkb2VzIHRoaXMgc2lnbmlmeT8gQW5kIGhvdyBkbyB5b3UgY29tZSB1cCB3aXRoIHRoZSBu
-dW1iZXI/DQo+IA0KDQpBcG9sb2dpZXMgZm9yIG5vdCBhZGRyZXNzaW5nIHRoaXMgbnVtYmVyIGNs
-ZWFyLg0KDQpGcm9tIHRoZSBkYXRhc2hlZXQsIFAxOjB4QTEgcmVnaXN0ZXIgcmVwcmVzZW50cyBU
-WF9TUEVFRF9BUkVBX1NFTCB3aXRoDQp0aGUgZGVmYXVsdCB2YWw6IDB4MDMuDQpUaGUgZGVzY3Jp
-cHRpb24gb2YgdGhpcyBSVyByZWdpc3RlciBpcyBhcyBiZWxvdzoNCkJpdFsyOjBdOiBNSVBJIHRy
-YW5zbWlzc2lvbiBzcGVlZCBzZWxlY3QuDQoNClRodXMgdGhlIGVudW0gc2hvdWxkIGJlIGRlZmlu
-aXRlZCBhcyBbIDAsIDEsIDIsIDMsIDQsIDUsIDYsIDcgXS4NClRoaXMgd291bGQgYmUgZml4ZWQg
-aW4gbmV4dCByZWxlYXNlLg0KDQpJbiB0aGUgbWVhbnRpbWUsIGFzIHRoZSBkZWZhdWx0IHZhbCBv
-ZiBQMToweEExIGlzIDB4MDMsIHdlIGhvcGUgdG8ga2VlcA0KdGhhdCB2YWx1ZSBpZiB0aGVyZSBp
-cyBubyBzZXR0aW5nIGZvciB0aGlzIHByaXZhdGUgcHJvcGVydHkgaW4gRFQuDQpUaGUgY2FsbGVy
-IGluIGRyaXZlciB3b3VsZCBiZSB1cGRhdGVkIGxpa2UgdGhpcyBpbiBuZXh0IHJlbGVhc2UuDQpp
-ZiAob3YwMmExMC0+bWlwaV9jbG9ja190eF9zcGVlZCkNCglyZXQgPSBpMmNfc21idXNfd3JpdGVf
-Ynl0ZV9kYXRhKC4uLiwuLi4pOw0KDQo+ID4gKyAgICBhbGxPZjoNCj4gPiArICAgICAgLSAkcmVm
-OiAiL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMyIg0KPiA+ICsgICAgICAt
-IGVudW06IFsgMywgNCBdDQo+ID4gKw0KPiA+ICsgICMgU2VlIC4uL3ZpZGVvLWludGVyZmFjZXMu
-dHh0IGZvciBkZXRhaWxzDQo+ID4gKyAgcG9ydDoNCj4gPiArICAgIHR5cGU6IG9iamVjdA0KPiA+
-ICsgICAgYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+ID4gKw0KPiA+ICsgICAgcHJvcGVy
-dGllczoNCj4gPiArICAgICAgZW5kcG9pbnQ6DQo+ID4gKyAgICAgICAgdHlwZTogb2JqZWN0DQo+
-ID4gKyAgICAgICAgYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+ID4gKw0KPiA+ICsgICAg
-ICAgIHByb3BlcnRpZXM6DQo+ID4gKyAgICAgICAgICByZW1vdGUtZW5kcG9pbnQ6IHRydWUNCj4g
-PiArICAgICAgICAgIGxpbmstZnJlcXVlbmNpZXM6IHRydWUNCj4gPiArDQo+ID4gKyAgICByZXF1
-aXJlZDoNCj4gPiArICAgICAgLSBlbmRwb2ludA0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6DQo+ID4g
-KyAgLSBjb21wYXRpYmxlDQo+ID4gKyAgLSByZWcNCj4gPiArICAtIGNsb2Nrcw0KPiA+ICsgIC0g
-Y2xvY2stbmFtZXMNCj4gPiArICAtIGNsb2NrLWZyZXF1ZW5jeQ0KPiA+ICsgIC0gZG92ZGQtc3Vw
-cGx5DQo+ID4gKyAgLSBhdmRkLXN1cHBseQ0KPiA+ICsgIC0gZHZkZC1zdXBwbHkNCj4gPiArICAt
-IHBvd2VyZG93bi1ncGlvcw0KPiA+ICsgIC0gcmVzZXQtZ3Bpb3MNCj4gPiArICAtIHBvcnQNCj4g
-PiArDQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiA+ICsNCj4gPiArZXhhbXBs
-ZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svbXQ4
-MTgzLWNsay5oPg0KPiA+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPg0K
-PiA+ICsNCj4gPiArICAgIGkyYyB7DQo+ID4gKyAgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDQw
-MDAwMD47DQo+ID4gKyAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAgICAg
-I3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKw0KPiA+ICsgICAgICAgIG92MDJhMTA6IGNhbWVyYS1z
-ZW5zb3JAM2Qgew0KPiA+ICsgICAgICAgICAgICBjb21wYXRpYmxlID0gIm92dGksb3YwMmExMCI7
-DQo+ID4gKyAgICAgICAgICAgIHJlZyA9IDwweDNkPjsNCj4gPiArICAgICAgICAgICAgcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArICAgICAgICAgICAgcGluY3RybC0wID0gPCZjbGtf
-MjRtX2NhbT47DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICBjbG9ja3MgPSA8JnRvcGNrZ2VuIENM
-S19UT1BfTVVYX0NBTVRHPiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgPCZ0b3Bja2dlbiBD
-TEtfVE9QX1VOSVZQXzE5Mk1fRDg+Ow0KPiA+ICsgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJl
-Y2xrIiwgImZyZXFfbXV4IjsNCj4gPiArICAgICAgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDI0
-MDAwMDAwPjsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgIHJvdGF0aW9uID0gPDE4MD47DQo+ID4g
-KyAgICAgICAgICAgIG92dGksbWlwaS10eC1zcGVlZCA9IDwzPjsNCj4gPiArDQo+ID4gKyAgICAg
-ICAgICAgIGRvdmRkLXN1cHBseSA9IDwmbXQ2MzU4X3ZjYW1pb19yZWc+Ow0KPiA+ICsgICAgICAg
-ICAgICBhdmRkLXN1cHBseSA9IDwmbXQ2MzU4X3ZjYW1hMV9yZWc+Ow0KPiA+ICsgICAgICAgICAg
-ICBkdmRkLXN1cHBseSA9IDwmbXQ2MzU4X3ZjbjE4X3JlZz47DQo+ID4gKyAgICAgICAgICAgIHBv
-d2VyZG93bi1ncGlvcyA9IDwmcGlvIDEwNyBHUElPX0FDVElWRV9MT1c+Ow0KPiA+ICsgICAgICAg
-ICAgICByZXNldC1ncGlvcyA9IDwmcGlvIDEwOSBHUElPX0FDVElWRV9ISUdIPjsNCj4gPiArDQo+
-ID4gKyAgICAgICAgICAgIHBvcnQgew0KPiA+ICsgICAgICAgICAgICAgICAgd2NhbV9vdXQ6IGVu
-ZHBvaW50IHsNCj4gPiArICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jm1p
-cGlfaW5fd2NhbT47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgbGluay1mcmVxdWVuY2llcyA9
-IC9iaXRzLyA2NCA8MzkwMDAwMDAwPjsNCj4gPiArICAgICAgICAgICAgICAgIH07DQo+ID4gKyAg
-ICAgICAgICAgIH07DQo+ID4gKyAgICAgICAgfTsNCj4gPiArICAgIH07DQo+ID4gKw0KPiA+ICsu
-Li4NCj4gPiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUw0KPiA+IGluZGV4
-IGU2NGU1ZGIuLjYzYTIzMzUgMTAwNjQ0DQo+ID4gLS0tIGEvTUFJTlRBSU5FUlMNCj4gPiArKysg
-Yi9NQUlOVEFJTkVSUw0KPiA+IEBAIC0xMjM4OSw2ICsxMjM4OSwxMyBAQCBNOglIYXJhbGQgV2Vs
-dGUgPGxhZm9yZ2VAZ251bW9ua3Mub3JnPg0KPiA+ICBTOglNYWludGFpbmVkDQo+ID4gIEY6CWRy
-aXZlcnMvY2hhci9wY21jaWEvY200MDQwX2NzLioNCj4gPiAgDQo+ID4gK09NTklWSVNJT04gT1Yw
-MkExMCBTRU5TT1IgRFJJVkVSDQo+ID4gK006CURvbmdjaHVuIFpodSA8ZG9uZ2NodW4uemh1QG1l
-ZGlhdGVrLmNvbT4NCj4gPiArTDoJbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnDQo+ID4gK1M6
-CU1haW50YWluZWQNCj4gPiArVDoJZ2l0IGdpdDovL2xpbnV4dHYub3JnL21lZGlhX3RyZWUuZ2l0
-DQo+ID4gK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Z0
-aSxvdjAyYTEwLnlhbWwNCj4gPiArDQo+ID4gIE9NTklWSVNJT04gT1YxMzg1OCBTRU5TT1IgRFJJ
-VkVSDQo+ID4gIE06CVNha2FyaSBBaWx1cyA8c2FrYXJpLmFpbHVzQGxpbnV4LmludGVsLmNvbT4N
-Cj4gPiAgTDoJbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnDQo+IA0KDQo=
+Hi Vishal,
 
+Thank you for the patch.
+
+On Thu, Apr 23, 2020 at 09:00:37PM +0530, Vishal Sagar wrote:
+> Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+> 
+> The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+> D-PHY in Rx mode and a Video Format Bridge.
+> 
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+> ---
+> v12
+> - Moved to yaml format
+> - Update CSI-2 and D-PHY
+> - Mention that bindings for D-PHY not here
+> - reset -> video-reset
+> 
+> v11
+> - Modify compatible string from 4.0 to 5.0
+> 
+> v10
+> - No changes
+> 
+> v9
+> - Fix xlnx,vfb description.
+> - s/Optional/Required endpoint property.
+> - Move data-lanes description from Ports to endpoint property section.
+> 
+> v8
+> - Added reset-gpios optional property to assert video_aresetn
+> 
+> v7
+> - Removed the control name from dt bindings
+> - Updated the example dt node name to csi2rx
+> 
+> v6
+> - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
+> - Added reviewed by Rob Herring
+> 
+> v5
+> - Incorporated comments by Luca Cersoli
+> - Removed DPHY clock from description and example
+> - Removed bayer pattern from device tree MIPI CSI IP
+>   doesn't deal with bayer pattern.
+> 
+> v4
+> - Added reviewed by Hyun Kwon
+> 
+> v3
+> - removed interrupt parent as suggested by Rob
+> - removed dphy clock
+> - moved vfb to optional properties
+> - Added required and optional port properties section
+> - Added endpoint property section
+> 
+> v2
+> - updated the compatible string to latest version supported
+> - removed DPHY related parameters
+> - added CSI v2.0 related property (including VCX for supporting upto 16
+>   virtual channels).
+> - modified csi-pxl-format from string to unsigned int type where the value
+>   is as per the CSI specification
+> - Defined port 0 and port 1 as sink and source ports.
+> - Removed max-lanes property as suggested by Rob and Sakari
+>  .../bindings/media/xilinx/xlnx,csi2rxss.yaml  | 215 ++++++++++++++++++
+>  1 file changed, 215 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> new file mode 100644
+> index 000000000000..365084e27f7e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> @@ -0,0 +1,215 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/xilinx/xlnx,csi2rxss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Xilinx MIPI CSI-2 Receiver Subsystem
+> +
+> +maintainers:
+> +  - Vishal Sagar <vishal.sagar@xilinx.com>
+> +
+> +description: |
+> +  The Xilinx MIPI CSI-2 Receiver Subsystem is used to capture MIPI CSI-2
+> +  traffic from compliant camera sensors and send the output as AXI4 Stream
+> +  video data for image processing.
+> +  The subsystem consists of a MIPI D-PHY in slave mode which captures the
+> +  data packets. This is passed along the MIPI CSI-2 Rx IP which extracts the
+> +  packet data. The optional Video Format Bridge (VFB) converts this data to
+> +  AXI4 Stream video data.
+> +  For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Subsystem.
+> +  Please note that this bindings includes only the MIPI CSI-2 Rx controller
+> +  and Video Format Bridge and not D-PHY.
+
+How should the D-PHY be handled, when DPY_EN_REG_IF is set to true ?
+
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - xlnx,mipi-csi2-rx-subsystem-5.0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: List of clock specifiers
+> +    items:
+> +      - description: AXI Lite clock
+> +      - description: Video clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: lite_aclk
+> +      - const: video_aclk
+> +
+> +  xlnx,csi-pxl-format:
+> +    description: |
+> +      This denotes the CSI Data type selected in hw design.
+> +      Packets other than this data type (except for RAW8 and
+> +      User defined data types) will be filtered out.
+> +      Possible values are as below -
+> +      0x1e - YUV4228B
+> +      0x1f - YUV42210B
+> +      0x20 - RGB444
+> +      0x21 - RGB555
+> +      0x22 - RGB565
+> +      0x23 - RGB666
+> +      0x24 - RGB888
+> +      0x28 - RAW6
+> +      0x29 - RAW7
+> +      0x2a - RAW8
+> +      0x2b - RAW10
+> +      0x2c - RAW12
+> +      0x2d - RAW14
+> +      0x2e - RAW16
+> +      0x2f - RAW20
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f]
+
+This could also be written
+
+    allOf:
+      - $ref: /schemas/types.yaml#/definitions/uint32
+      - anyOf:
+        - minimum: 0x1e
+          maximum: 0x24
+        - minimum: 0x28
+          maximum: 0x2f
+
+if you want to make it a bit more compact (in the number of values, not
+the number of lines obviously), up to you.
+
+I will also quote the question (and your answer) from the previous
+version:
+
+> > Isn't this property required only when the VFB is present ?
+>
+> This will be present irrespective of VFB being enabled.
+> With VFB, the data on the bus will be as per Xilinx UG934 which is similar to media bus formats.
+>
+> Without VFB, it will just be plain data as it comes in data packets. Refer to the Xilinx PG 232
+> "Pixel Packing When Video Format Bridge is Not Present"
+>
+> So the driver is currently made to load only in case VFB is enabled.
+
+I understand that the driver doesn't support the case where the VFB is
+disabled, but the DT bindings shouldn't care about that. The document of
+v4.1 of the subsystem states that the width of the video_out port is
+then selected under "CSI-2 Options TDATA width" (page 11). I however
+don't such such an option described on pages 55 or 56, but there's an
+AXIS_TDATA_WIDTH parameter on page 61.
+
+Is the pixel format relevant when the VFB is disabled ?
+
+> +
+> +  xlnx,vfb:
+> +    type: boolean
+> +    description: Present when Video Format Bridge is enabled in IP configuration
+> +
+> +  xlnx,en-csi-v2-0:
+> +    type: boolean
+> +    description: Present if CSI v2 is enabled in IP configuration.
+> +
+> +  xlnx,en-vcx:
+> +    type: boolean
+> +    description: |
+> +      When present, there are maximum 16 virtual channels, else
+> +      only 4. This is present only if xlnx,en-csi-v2-0 is present.
+
+The last sentence should be removed, and replaced with
+
+if:
+  not:
+    required:
+      - xlnx,en-csi-v2-0
+then:
+  properties:
+    xlnx,en-vcx: false
+
+(to be placed after required: and before additionalProperties:).
+
+> +
+> +  xlnx,en-active-lanes:
+> +    type: boolean
+> +    description: |
+> +      Present if the number of active lanes can be re-configured at
+> +      runtime in the Protocol Configuration Register. Otherwise all lanes,
+> +      as set in IP configuration, are always active.
+> +
+> +  video-reset-gpios:
+> +    description: Optional specifier for a GPIO that asserts video_aresetn.
+> +    maxItems: 1
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: |
+> +          Input / sink port node, single endpoint describing the
+> +          CSI-2 transmitter.
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +          endpoint:
+> +            type: object
+> +
+> +            properties:
+> +
+> +              data-lanes:
+> +                description: |
+> +                  This is required only in the sink port 0 endpoint which
+> +                  connects to MIPI CSI-2 source like sensor.
+> +                  The possible values are -
+> +                  1       - For 1 lane enabled in IP.
+> +                  1 2     - For 2 lanes enabled in IP.
+> +                  1 2 3   - For 3 lanes enabled in IP.
+> +                  1 2 3 4 - For 4 lanes enabled in IP.
+> +                items:
+> +                  - const: 1
+> +                  - const: 2
+> +                  - const: 3
+> +                  - const: 4
+> +
+> +              remote-endpoint: true
+> +
+> +            required:
+> +              - data-lanes
+> +              - remote-endpoint
+> +
+> +            additionalProperties: false
+> +
+> +        additionalProperties: false
+> +
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          Output / source port node, endpoint describing modules
+> +          connected the CSI-2 receiver.
+> +
+> +        properties:
+> +
+> +          reg:
+> +            const: 1
+> +
+> +          endpoint:
+> +            type: object
+> +
+> +            properties:
+> +
+> +              remote-endpoint: true
+> +
+> +            required:
+> +              - remote-endpoint
+> +
+> +            additionalProperties: false
+> +
+> +        additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - xlnx,csi-pxl-format
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    xcsi2rxss_1: csi2rx@a0020000 {
+> +        compatible = "xlnx,mipi-csi2-rx-subsystem-5.0";
+> +        reg = <0x0 0xa0020000 0x0 0x10000>;
+> +        interrupt-parent = <&gic>;
+> +        interrupts = <0 95 4>;
+> +        xlnx,csi-pxl-format = <0x2a>;
+> +        xlnx,vfb;
+> +        xlnx,en-active-lanes;
+> +        xlnx,en-csi-v2-0;
+> +        xlnx,en-vcx;
+> +        clock-names = "lite_aclk", "video_aclk";
+> +        clocks = <&misc_clk_0>, <&misc_clk_1>;
+> +        video-reset-gpios = <&gpio 86 GPIO_ACTIVE_LOW>;
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            port@0 {
+> +                /* Sink port */
+> +                reg = <0>;
+> +                csiss_in: endpoint {
+> +                    data-lanes = <1 2 3 4>;
+> +                    /* MIPI CSI-2 Camera handle */
+> +                    remote-endpoint = <&camera_out>;
+> +                };
+> +            };
+> +            port@1 {
+> +                /* Source port */
+> +                reg = <1>;
+> +                csiss_out: endpoint {
+> +                    remote-endpoint = <&vproc_in>;
+> +                };
+> +            };
+> +        };
+> +    };
+
+-- 
+Regards,
+
+Laurent Pinchart
