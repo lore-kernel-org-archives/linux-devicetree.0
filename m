@@ -2,129 +2,265 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916CFC47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 23:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFA2C47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 23:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71B5D2075E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 23:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D394E206FA
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 23:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhRV68V1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XuU7dBkY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgEEXMN (ORCPT
+        id S1729336AbgEEXP1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 19:12:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48564 "EHLO
+        Tue, 5 May 2020 19:15:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727089AbgEEXMM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 19:12:12 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9830CC061A0F;
-        Tue,  5 May 2020 16:12:11 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e16so4691924wra.7;
-        Tue, 05 May 2020 16:12:11 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1728076AbgEEXP0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 19:15:26 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B383FC061A0F
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 16:15:26 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id y6so23530pjc.4
+        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 16:15:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5nCJ70q6OrlsQs6J0gSq3Rwu8I1zCE+Jl2YwAdQlPNo=;
-        b=jhRV68V1BWkaeYFDVHBkeAYHqLuJC0/f4h1ReJijnx+ZItov5jdwfT05XcBfcUetfv
-         PXYO2+tbZCam9dqETbyWzBUoUONNo3kfSBZ2dxujzNJh0MZvSs2yQEPSFXqk6gLTHtSN
-         LRKkuaER46B8ADSCjz3pUbfNx0rnqxjbcXJwtmHrcz74h87/tXPzZbij0McQDXTXoFFP
-         0Gv9MWevJDZVHQZfruUjJFDVNP+/9K/8jLc2fGbEJwdD/0QqhMzNFWK9q0XZcSGoXiLS
-         V9L2F0oFuvY6d0DzlcSv5z1uQ8w9YjNroxEBzN5sdIi3+iN7WNTuhg1+mkuInifqLtDy
-         Z0DA==
+         :content-disposition:in-reply-to;
+        bh=Dm0dgRkdL/C9MFaGoSlAZDwZiTAnrAgNi7X8qdq6PDw=;
+        b=XuU7dBkYKWBMVd39kmPbpe8lfR9Z+D/yZK0CeYken39/718BQlxvwVb7dW3uKj0HI/
+         ThGz7AKBa86cW5AswNfNJA4RpccID/ytmy3lJt5kH95222DI4cf8qVkS4Nz8UqbsXLzZ
+         deXx2k0YXghUnpLtxY5q7KhqhbZB/9L8kDEI4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5nCJ70q6OrlsQs6J0gSq3Rwu8I1zCE+Jl2YwAdQlPNo=;
-        b=Kl8yWbLqldZVSDCqSTFG9sDnNl8MsptJUiq3c2wz6CMoE4m05sDgk+Q/dZ1WsS/CUq
-         gGTNQ8fPIVy2lqDVjf6BjfC0cQ8oGQ0nMzt9d/Ne4RT3MkTWMCGyPZvX/w4yVzEy0vWk
-         5O/wBKhqwBix/iwpQIJ2qCuZUVm7TjTETWufqN1LAkKXN0ZVmOB+CikE9LMoQcN8cWDb
-         iwA4mFbCEsTZsPbBSYfRFfjDWknNN5vlyEVQ0jGIuYVOQoJu2cOld5rv/8nhqKMse0U7
-         aNniukCP5RteKQkM1jILcdZ8zUkw/2WBDfa68Y5a7fwYNKh8Oj+mwvTlD+w8l9MBhNC4
-         qQmg==
-X-Gm-Message-State: AGi0PuY3/N96yNFlGNkXW5VeQotgGpZBGeO+8XUC9BFBer9DJ17Dg4Ok
-        go36lfhVA43dFKCFxEaIwuo=
-X-Google-Smtp-Source: APiQypLVljBZkbjWKlDFFTM1aT8j4lcKSwyon9q9hMwYVKmrIlQZFEqUiRoqJmuhy2mjP/qcKlYT9Q==
-X-Received: by 2002:adf:dfcd:: with SMTP id q13mr4933591wrn.22.1588720329521;
-        Tue, 05 May 2020 16:12:09 -0700 (PDT)
-Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
-        by smtp.gmail.com with ESMTPSA id w6sm106310wrt.39.2020.05.05.16.12.07
+         :mime-version:content-disposition:in-reply-to;
+        bh=Dm0dgRkdL/C9MFaGoSlAZDwZiTAnrAgNi7X8qdq6PDw=;
+        b=LHMpXCBdctfEFAqXYtaJcn9/JZ5UJNvOLmfGHEglUto1ltW+fyXwPI9rrW2/49Vf02
+         Zk1f83aH5BvPZzYGqmDS6f5HSS/0P+MTRF54WwCQ84MLetHQElR6Y6n5arUfk8ngJLpm
+         ARK9O6izlDS8oJowoI+xXF95CfnnFd4tNbVD2iXO2g6Sl9deB56NKmNu0uD8cGPm5Jbt
+         K5JlhJYVWYUlgxNuChUd4FzP7X94jOsrdjjDJthRXJ+6zedsYtdZ2DCp2hAMyW96s4FG
+         Co23AUdaFGRAz0t8lBgfS8p1OEVF9+87fph79vMMCxZNcZGMID8M8nsjhRBSNx3Flxrb
+         3bvg==
+X-Gm-Message-State: AGi0PuaCChtOUrp1wZL7PB1FO/XEEV24Znphjt+PjW2bWCGY3sfyehh8
+        ny4i2inzP7v0cva7RRJIZkQvgQ==
+X-Google-Smtp-Source: APiQypJp5E93vs/vJZmNsAUhYqY8kUxmJykSuvx1ycRtb6r7XIggG4IKljm1uboDyQqbr1ti1ZVacw==
+X-Received: by 2002:a17:90a:d78e:: with SMTP id z14mr6251945pju.125.1588720526172;
+        Tue, 05 May 2020 16:15:26 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r28sm72249pfg.186.2020.05.05.16.15.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 16:12:07 -0700 (PDT)
-Date:   Wed, 6 May 2020 01:12:05 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Peter Robinson <pbrobinson@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] arm64: tegra: Fix ethernet phy-mode for Jetson Xavier
-Message-ID: <20200505231205.GA2682073@ulmo>
-References: <20200501072756.25348-1-jonathanh@nvidia.com>
+        Tue, 05 May 2020 16:15:25 -0700 (PDT)
+Date:   Tue, 5 May 2020 16:15:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
+        pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org, anton@enomsg.org, ccross@android.com,
+        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] pstore/ram: in ramoops_platform_data convert
+ dump_oops to max_reason
+Message-ID: <202005051559.946100505D@keescook>
+References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
+ <20200505154510.93506-4-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501072756.25348-1-jonathanh@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200505154510.93506-4-pasha.tatashin@soleen.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, May 05, 2020 at 11:45:08AM -0400, Pavel Tatashin wrote:
+> Now, that pstore_register() can correctly pass max_reason to kmesg dump
+> facility, use it instead of dump_oops boolean.
+> 
+> Replace in ramoops_platform_data dump_oops with max_reason. When dump_oops
+> was enabled set max_reason to KMSG_DUMP_OOPS, otherwise set it to
+> KMSG_DUMP_PANIC.
+> 
+> Remove filtering logic from ramoops_pstore_write(), as that is not needed
+> anymore, only dmesges specified by max_reason are passed to
+> ramoops_pstore_write(). Also, because of this, we can remove
+> cxt->dump_oops.
 
---liOOAslEiF7prFVr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is all looking good. I think I'd like to see patch 3 and 4 merged,
+though. I'd like to make the dump_oops/max_reason conversion in one
+patch. Noted below...
 
-On Fri, May 01, 2020 at 08:27:56AM +0100, Jon Hunter wrote:
-> The 'phy-mode' property is currently defined as 'rgmii' for Jetson
-> Xavier. This indicates that the RGMII RX and TX delays are set by the
-> MAC and the internal delays set by the PHY are not used.
->=20
-> If the Marvell PHY driver is enabled, such that it is used and not the
-> generic PHY, ethernet failures are seen (DHCP is failing to obtain an
-> IP address) and this is caused because the Marvell PHY driver is
-> disabling the internal RX and TX delays. For Jetson Xavier the internal
-> PHY RX and TX delay should be used and so fix this by setting the
-> 'phy-mode' to 'rgmii-id' and not 'rgmii'.
->=20
-> Cc: stable@vger.kernel.org
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 > ---
->  arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/admin-guide/ramoops.rst     | 11 ++++++----
+>  drivers/platform/chrome/chromeos_pstore.c |  2 +-
+>  fs/pstore/ram.c                           | 26 +++++++----------------
+>  include/linux/pstore_ram.h                |  2 +-
+>  4 files changed, 17 insertions(+), 24 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+> index 6dbcc5481000..a296e1aa1617 100644
+> --- a/Documentation/admin-guide/ramoops.rst
+> +++ b/Documentation/admin-guide/ramoops.rst
+> @@ -32,11 +32,14 @@ memory to be mapped strongly ordered, and atomic operations on strongly ordered
+>  memory are implementation defined, and won't work on many ARMs such as omaps.
+>  
+>  The memory area is divided into ``record_size`` chunks (also rounded down to
+> -power of two) and each oops/panic writes a ``record_size`` chunk of
+> +power of two) and each kmesg dump writes a ``record_size`` chunk of
+>  information.
+>  
+> -Dumping both oopses and panics can be done by setting 1 in the ``dump_oops``
+> -variable while setting 0 in that variable dumps only the panics.
+> +Dumping reasons can be set via max_reason value, as defined in
+> +include/linux/kmsg_dump.h: kmsg_dump_reason. For example, to
+> +dump for both oopses and panics reasons, max_reason should be set to 2
+> +(KMSG_DUMP_OOPS), to dump panics only max_reason should be set to 1
+> +(KMSG_DUMP_PANIC).
+>  
+>  The module uses a counter to record multiple dumps but the counter gets reset
+>  on restart (i.e. new dumps after the restart will overwrite old ones).
+> @@ -90,7 +93,7 @@ Setting the ramoops parameters can be done in several different manners:
+>          .mem_address            = <...>,
+>          .mem_type               = <...>,
+>          .record_size            = <...>,
+> -        .dump_oops              = <...>,
+> +        .max_reason             = <...>,
+>          .ecc                    = <...>,
+>    };
 
-Added a Fixes: tag and applied to for-5.8/arm64/dt, thanks.
+Good, yes, dump_oops should be removed from the platform data structure
+since that's an entirely internal API.
 
-Thierry
+>  
+> diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
+> index d13770785fb5..fa51153688b4 100644
+> --- a/drivers/platform/chrome/chromeos_pstore.c
+> +++ b/drivers/platform/chrome/chromeos_pstore.c
+> @@ -57,7 +57,7 @@ static struct ramoops_platform_data chromeos_ramoops_data = {
+>  	.record_size	= 0x40000,
+>  	.console_size	= 0x20000,
+>  	.ftrace_size	= 0x20000,
+> -	.dump_oops	= 1,
+> +	.max_reason	= KMSG_DUMP_OOPS,
+>  };
+>  
+>  static struct platform_device chromeos_ramoops = {
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 795622190c01..223581aeea96 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -81,7 +81,6 @@ struct ramoops_context {
+>  	size_t console_size;
+>  	size_t ftrace_size;
+>  	size_t pmsg_size;
+> -	int dump_oops;
+>  	u32 flags;
+>  	struct persistent_ram_ecc_info ecc_info;
+>  	unsigned int max_dump_cnt;
+> @@ -381,18 +380,6 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
+>  	if (record->type != PSTORE_TYPE_DMESG)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * Out of the various dmesg dump types, ramoops is currently designed
+> -	 * to only store crash logs, rather than storing general kernel logs.
+> -	 */
+> -	if (record->reason != KMSG_DUMP_OOPS &&
+> -	    record->reason != KMSG_DUMP_PANIC)
+> -		return -EINVAL;
+> -
+> -	/* Skip Oopes when configured to do so. */
+> -	if (record->reason == KMSG_DUMP_OOPS && !cxt->dump_oops)
+> -		return -EINVAL;
+> -
+>  	/*
+>  	 * Explicitly only take the first part of any new crash.
+>  	 * If our buffer is larger than kmsg_bytes, this can never happen,
+> @@ -687,7 +674,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+>  	pdata->mem_size = resource_size(res);
+>  	pdata->mem_address = res->start;
+>  	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
+> -	pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
+> +	dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
+:
+Is this setting the module param variable? That shouldn't happen here --
+we may fail the DT and overwrite the user-configured setting for a
+different backend. This should be a local variable and the "final"
+max_reason should be calculated in this function, I think.
 
---liOOAslEiF7prFVr
-Content-Type: application/pgp-signature; name="signature.asc"
+>  
+>  #define parse_size(name, field) {					\
+>  		ret = ramoops_parse_dt_size(pdev, name, &value);	\
+> @@ -785,7 +772,6 @@ static int ramoops_probe(struct platform_device *pdev)
+>  	cxt->console_size = pdata->console_size;
+>  	cxt->ftrace_size = pdata->ftrace_size;
+>  	cxt->pmsg_size = pdata->pmsg_size;
+> -	cxt->dump_oops = pdata->dump_oops;
+>  	cxt->flags = pdata->flags;
+>  	cxt->ecc_info = pdata->ecc_info;
+>  
+> @@ -828,8 +814,14 @@ static int ramoops_probe(struct platform_device *pdev)
+>  	 * the single region size is how to check.
+>  	 */
+>  	cxt->pstore.flags = 0;
+> -	if (cxt->max_dump_cnt)
+> +	if (cxt->max_dump_cnt) {
+>  		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
+> +		if (pdata->max_reason <= 0) {
+> +			pdata->max_reason = dump_oops ? KMSG_DUMP_OOPS :
+> +							KMSG_DUMP_PANIC;
+> +		}
+> +		cxt->pstore.max_reason = pdata->max_reason;
+> +	}
 
------BEGIN PGP SIGNATURE-----
+I'm going to take a stab at reorganizing the DT, platform data, and
+module args to have default handling done in a way that I like. I'm
+having a hard time making specific suggestions here. :)
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6x8q4ACgkQ3SOs138+
-s6Hj4A//bZzyUQMMk8z/OhSarJzGUzrOqlYlezjQWrmfuCIkygHuWvV/VxPmaHPK
-PHCC9sdUBqlv2ZLRSlOxwMDYiZGCI8cht26eZwYSteHvaVm/IbIPs24y/nLf+FDB
-GXAN0dGim6OwcwHvJ1UiGzSbmwvp51YIdqTujH8UgQgjfUjHcf5ZQZ95cmXLi6gd
-RSSVQ5Pmmk/FG2wYq9y8w/wgBP0NQXegb0wsQ8U4AMP9EetQL1k+L5BlBIEvhCrp
-9NHvPovmlyzCPic7qEPD637LNJViCT+It7lE46V2y1FWlKeFdFPwwmzipDwxX6i5
-wKGx9x9QMCcg9s50uRRtbSrN81PNUZfR8bE2AITRqrLMF1i1u4wd9ERveLq3qMla
-c2WxvcfTOA2/MCHj62Qq+/WglXw31bzm7FbJyjIdjIz5jNM8oK5E15TWJShSc0MN
-/DGt0YQkZeoeqlzlyYsr1UMeAi087ToBvxA4KgfIX9kx093kM/YOUIvllqUn3GD7
-eqYaoygiMJSQIHLqvHvpPvMLuS3PLBHucJozOjL7E47yzPrkuOZ8rWIQTQZiI4d6
-g1Iyt5CSG5ZZ+XJUpTYuVMPdcTnBp0bdo+AmS6U3sVnpwT22Dr6BnsHKYyweci2A
-c89pQBxfY3quf7jj9XmPX2d8Zf0nQjDkoqAxQbP12CgD5UCUQr0=
-=dj8D
------END PGP SIGNATURE-----
+>  	if (cxt->console_size)
+>  		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
+>  	if (cxt->max_ftrace_cnt)
+> @@ -865,7 +857,6 @@ static int ramoops_probe(struct platform_device *pdev)
+>  	mem_size = pdata->mem_size;
+>  	mem_address = pdata->mem_address;
+>  	record_size = pdata->record_size;
+> -	dump_oops = pdata->dump_oops;
+>  	ramoops_console_size = pdata->console_size;
+>  	ramoops_pmsg_size = pdata->pmsg_size;
+>  	ramoops_ftrace_size = pdata->ftrace_size;
+> @@ -948,7 +939,6 @@ static void __init ramoops_register_dummy(void)
+>  	pdata.console_size = ramoops_console_size;
+>  	pdata.ftrace_size = ramoops_ftrace_size;
+>  	pdata.pmsg_size = ramoops_pmsg_size;
+> -	pdata.dump_oops = dump_oops;
+>  	pdata.flags = RAMOOPS_FLAG_FTRACE_PER_CPU;
+>  
+>  	/*
+> diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
+> index 9cb9b9067298..9f16afec7290 100644
+> --- a/include/linux/pstore_ram.h
+> +++ b/include/linux/pstore_ram.h
+> @@ -133,7 +133,7 @@ struct ramoops_platform_data {
+>  	unsigned long	console_size;
+>  	unsigned long	ftrace_size;
+>  	unsigned long	pmsg_size;
+> -	int		dump_oops;
+> +	int		max_reason;
+>  	u32		flags;
+>  	struct persistent_ram_ecc_info ecc_info;
+>  };
+> -- 
+> 2.25.1
+> 
 
---liOOAslEiF7prFVr--
+So, hold off on a v3, and I'll send a series tomorrow, based on what
+you've got here for v2. I like the refactoring; it's much cleaner to
+have max_reason than dump_oops! :)
+
+-- 
+Kees Cook
