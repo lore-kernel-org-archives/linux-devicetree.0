@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0F7C47257
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FBBC47256
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5D73206E6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC536206CC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:20:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RhMd0BpF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gj4ZWfx4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgEEHSD (ORCPT
+        id S1727978AbgEEHUH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 03:18:03 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:23353 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727935AbgEEHSD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 03:18:03 -0400
+        Tue, 5 May 2020 03:20:07 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:45449 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726568AbgEEHUF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 03:20:05 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588663082; h=Message-ID: References: In-Reply-To: Subject:
+ s=smtp; t=1588663205; h=Message-ID: References: In-Reply-To: Subject:
  Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Ucvka1OSqO/XtIecNYyEKI9KAFnWzP85SPhN34KKW5c=;
- b=RhMd0BpFZUdL2mlrOcxIV9pZPDlMT0eRTLnqvTM3FqhLoV+1a0Tq2NuCsWNuG3h52AS/jHL+
- yoqpueI3UbRJUT1SIG1lPcm9A+WXx5K2NHkHnKPqSOsmxt0Uaxgf6R2GsAlbRdPU7trWgjaN
- QqV9cPuruYgqIJ4oG+TEalU+WM8=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ MIME-Version: Sender; bh=uJwzx6pIPPCofwLtZDB4TDrhcslzQR2DeFg2pp9P5pI=;
+ b=gj4ZWfx4plbtNj0+UN9uomtR24lrdm8oFsrQNOxZ1zrMZSK3vtsCgIva8y1Dbf2aO3Pt/Gz3
+ Ubc/nvcqpa5Iiq/1z8Mp9Y8CuHOSp69TQHkF7TKqLXTi5FImXb4T03XSJzx15Fg8+capYS/G
+ 5RFGxDdwMNDvKsbQT3lZy8FJ4tk=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb11316.7fbb89257420-smtp-out-n04;
- Tue, 05 May 2020 07:17:42 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eb1139d.7f331717f0a0-smtp-out-n05;
+ Tue, 05 May 2020 07:19:57 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4336DC433BA; Tue,  5 May 2020 07:17:42 +0000 (UTC)
+        id 0258AC4478C; Tue,  5 May 2020 07:19:55 +0000 (UTC)
 Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
         (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28A4DC433D2;
-        Tue,  5 May 2020 07:17:41 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53D46C433D2;
+        Tue,  5 May 2020 07:19:55 +0000 (UTC)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 May 2020 12:47:41 +0530
+Date:   Tue, 05 May 2020 12:49:55 +0530
 From:   Sibi Sankar <sibis@codeaurora.org>
 To:     Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     sboyd@kernel.org, georgi.djakov@linaro.org,
@@ -56,14 +56,14 @@ Cc:     sboyd@kernel.org, georgi.djakov@linaro.org,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         dianders@chromium.org, vincent.guittot@linaro.org,
         amit.kucheria@linaro.org, ulf.hansson@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v4 10/12] OPP: Add support for setting interconnect-tags
-In-Reply-To: <20200505045639.i4nnplwaxlkful4o@vireshk-i7>
+        lukasz.luba@arm.com, sudeep.holla@arm.com
+Subject: Re: [PATCH v4 06/12] cpufreq: qcom: Update the bandwidth levels on
+ frequency change
+In-Reply-To: <20200505045012.zfx2e6chqo5f3e4n@vireshk-i7>
 References: <20200504202243.5476-1-sibis@codeaurora.org>
- <20200504202243.5476-11-sibis@codeaurora.org>
- <20200505045639.i4nnplwaxlkful4o@vireshk-i7>
-Message-ID: <9310f586ca2084539353efdbca0d9c7d@codeaurora.org>
+ <20200504202243.5476-7-sibis@codeaurora.org>
+ <20200505045012.zfx2e6chqo5f3e4n@vireshk-i7>
+Message-ID: <8fc5b72c9af6fd6a707a280cfc678677@codeaurora.org>
 X-Sender: sibis@codeaurora.org
 User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
@@ -71,20 +71,21 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-05 10:26, Viresh Kumar wrote:
+On 2020-05-05 10:20, Viresh Kumar wrote:
 > On 05-05-20, 01:52, Sibi Sankar wrote:
->> Add support for setting tags on icc paths associated with
->> the opp_table.
+>> Add support to parse optional OPP table attached to the cpu node when
+>> the OPP bandwidth values are populated. This allows for scaling of
+>> DDR/L3 bandwidth levels with frequency change.
 >> 
 >> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  drivers/opp/of.c | 25 +++++++++++++++++++------
->>  1 file changed, 19 insertions(+), 6 deletions(-)
 > 
-> Maybe this should be part of Georgi's series ?
+> What about using opp_set_rate instead ?
 
-yes, I've requested for the
-same in my cover-letter.
+I can't use opp_set_rate since
+the cpu dev does not have a
+clock associated with it and the
+scaling is done through writing
+on perf state register.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
