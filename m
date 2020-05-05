@@ -2,159 +2,83 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44155C47256
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46AAC47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2116620663
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B334A20663
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wq54FGb2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CZFeoS0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725833AbgEEHdo (ORCPT
+        id S1726337AbgEEHgc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 03:33:44 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:42312 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727938AbgEEHdn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 03:33:43 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0457RaST021748;
-        Tue, 5 May 2020 09:33:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=95ku3/6d1RqLRL3+9BXCw/qoEPmvHEydQikv3nokkHE=;
- b=wq54FGb2PUTIfZ0Z4HWOhJtYsxNX08QLoHAcCvalnRvHeOwIkMrGccNgOT5kIC7rpGdW
- 7R20/3opU85slWnUWzV9CcVaryFNqiNQyPU4nOfznM5dmRkJvTMxsXLGqxsKKo58MFO1
- DYKOXEfDQeCMx6J9oX8CpMHedKRokE8ZCBoNDUqzf8rwl5Sut/CaDYpHjd2WwCJHoaEU
- mcL9aUEizkntHgg/ldYqosPhOVgLvwXBCYCodWa0ULgrxL58W+WxtbJN3fPKOamuaNim
- rVrAio9RVpA8NxQAw0bdW73n6EH3dnulJG1bLvldrmhSAyK9eYR0xE963eYNdiHmgAN5 Vg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30ryrj6f49-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 09:33:26 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0B30F10002A;
-        Tue,  5 May 2020 09:33:26 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EEE642A4927;
-        Tue,  5 May 2020 09:33:25 +0200 (CEST)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May 2020 09:33:25
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <gregkh@linuxfoundation.org>,
-        <loic.pallardy@st.com>, <linus.walleij@linaro.org>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v3 1/5] dt-bindings: bus: Add firewall bindings
-Date:   Tue, 5 May 2020 09:33:04 +0200
-Message-ID: <20200505073308.22914-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200505073308.22914-1-benjamin.gaignard@st.com>
-References: <20200505073308.22914-1-benjamin.gaignard@st.com>
+        Tue, 5 May 2020 03:36:32 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:10755 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726345AbgEEHgc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 03:36:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588664191; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=E5ikgPmsaSTtogguuprJ4svrQMsqzNWKpQn1yRMxllE=;
+ b=CZFeoS0TasQR5L0A7bu0t+3bdIeC61yv+oZfOgHtPhDuS3FmBVgjc4z2n6h7RFKDZDFR4ruZ
+ mq6B1Ajz/6KFzF/wyQcKfY8fvzQUcqJz1o5WJZDtMSads0OH/BWPghjDuH4nOwZcGfDIdLH6
+ gI0tGydy6fHlbHa/4aFDcB8cp9Y=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 17A48C433F2; Tue,  5 May 2020 07:36:25 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 661CBC433D2;
+        Tue,  5 May 2020 07:36:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 661CBC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_04:2020-05-04,2020-05-05 signatures=0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v3 1/3] dt-bindings: ath10k: Add wifi-firmware subnode for
+ wifi node
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <1586971906-20985-2-git-send-email-pillair@codeaurora.org>
+References: <1586971906-20985-2-git-send-email-pillair@codeaurora.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200505073625.17A48C433F2@smtp.codeaurora.org>
+Date:   Tue,  5 May 2020 07:36:25 +0000 (UTC)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add schemas for firewall consumer and provider.
+Rakesh Pillai <pillair@codeaurora.org> wrote:
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
-version 3:
-- add description in firewall consumer bindings
-- add Linus reviewed-by tag
+> Add a wifi-firmware subnode for the wifi node.
+> This wifi-firmware subnode is needed for the
+> targets which do not support TrustZone.
+> 
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
- .../bindings/bus/stm32/firewall-consumer.yaml      | 36 ++++++++++++++++++++++
- .../bindings/bus/stm32/firewall-provider.yaml      | 18 +++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
- create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
+3 patches applied to ath-next branch of ath.git, thanks.
 
-diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
-new file mode 100644
-index 000000000000..d3d76f99b38d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/stm32/firewall-consumer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common Bus Firewall consumer binding
-+
-+description: |
-+  Firewall properties provide the possible firewall bus controller
-+  configurations for a device.
-+  Bus firewall controllers are typically used to control if a hardware
-+  block can perform read or write operations on bus.
-+  The contents of the firewall bus configuration properties are defined by
-+  the binding for the individual firewall controller device.
-+
-+  The first configuration 'firewall-0' or the one named 'default' is
-+  applied before probing the device itself.
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+
-+# always select the core schema
-+select: true
-+
-+properties:
-+  firewall-0: true
-+
-+  firewall-names: true
-+
-+patternProperties:
-+  "firewall-[0-9]":
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+
-+dependencies:
-+  firewall-names: [ firewall-0 ]
-diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
-new file mode 100644
-index 000000000000..299824c620ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/stm32/firewall-provider.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common Bus Firewall provider binding
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+
-+properties:
-+  '#firewall-cells':
-+     $ref: /schemas/types.yaml#/definitions/uint32
-+     description: Number of cells in a bus firewall specifier
-+
-+required:
-+  - '#firewall-cells'
+85325c24d5d2 dt-bindings: ath10k: Add wifi-firmware subnode for wifi node
+727fec790ead ath10k: Setup the msa resources before qmi init
+1423f4327331 ath10k: Add support for targets without trustzone
+
 -- 
-2.15.0
+https://patchwork.kernel.org/patch/11491759/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
