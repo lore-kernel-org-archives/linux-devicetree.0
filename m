@@ -6,69 +6,126 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E51C47256
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0C5C47256
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 050CF2075A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4A120721
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588655689;
-	bh=AtVnOK0VW/cSwhZs5cX0/f6o3T409Sz5J3vQy16+ADQ=;
+	s=default; t=1588656087;
+	bh=Y2jL3pSvPWYflkCioX814L9QG12+dvqUxYSa5B3DQp8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a5LZa2ZGlCM4GN7+TAiPaLdIBnpCOHI3U71pXXpwsy1Mj28N+iW5EGDB996UrHSSc
-	 /riPBM3ATfaOkO/JXOboytv+ESwDjLqPhxqdkkJJCAkkmOShQ7LuzY5ewt8uYRMVHC
-	 jjRBLI658NUOC8P9ZeuvWb/0ksolfO7dWsMUuJJI=
+	b=uSgQOBwZIDUXm4pyWbc7Lbkoh3WSO3hRiCij28vvd2qZwQTEPUETBtDpA8QeaRont
+	 4jBG+EBK+GgMnZIrRUnfgqRwEfTZ5mN06wNmKJdLaq0ypwC4TjUzl3nqJ4reWq153D
+	 dJtEsaj/a/3lv9fq9uLPG/DDjrGfMMRhMoLr/+OA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725830AbgEEFOs (ORCPT
+        id S1725766AbgEEFV1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 01:14:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37546 "EHLO mail.kernel.org"
+        Tue, 5 May 2020 01:21:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbgEEFOs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 01:14:48 -0400
+        id S1725320AbgEEFV1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 01:21:27 -0400
 Received: from localhost (unknown [171.61.99.53])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37978206FA;
-        Tue,  5 May 2020 05:14:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 880C4206FA;
+        Tue,  5 May 2020 05:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588655688;
-        bh=AtVnOK0VW/cSwhZs5cX0/f6o3T409Sz5J3vQy16+ADQ=;
+        s=default; t=1588656086;
+        bh=Y2jL3pSvPWYflkCioX814L9QG12+dvqUxYSa5B3DQp8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ARppKa/U5IIe4nJGmi/oZ9BZ9Uoti7e7cwbiO8JHfZbJV5zvYzbHjOh+CaeZyisLK
-         s686jQ9ecJuzxBxXJewY+gkJ7VOw8Dzv6Rz28mTxyv/4PRXrVB8JuA2oiNOsYkmQZs
-         O6T312HTtGuOvLUzOBqvdw4f+4QtMe+9SKmcBfYk=
-Date:   Tue, 5 May 2020 10:44:44 +0530
+        b=sDbWqchGcvTFtjPTOVNucbIEpIesP5OdB7LGUFpSLW7FxtiCA8gY83OzmTfKXw0PT
+         p/qCIPshq5bbEWbHKDN08JXowaeclj+PH7R+h6HkBSOA0vTTwV9fBf7JYaG1PJ7qbO
+         2CHeCmY1+Td2N6K3rx/hCsQAumHFe7tnI5b9yVyM=
+Date:   Tue, 5 May 2020 10:51:22 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        mgautam@codeaurora.org, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jackp@codeaurora.org
-Subject: Re: [PATCH v8 0/5] Add SS/HS-USB changes for Qualcomm SM8150 chipset
-Message-ID: <20200505051444.GV1375924@vkoul-mobl>
-References: <1588636467-23409-1-git-send-email-wcheng@codeaurora.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, lee.jones@linaro.org, arnd@arndb.de,
+        robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+Subject: Re: [PATCH v7 3/3] phy: intel: Add driver support for ComboPhy
+Message-ID: <20200505052122.GW1375924@vkoul-mobl>
+References: <cover.1588230494.git.eswara.kota@linux.intel.com>
+ <af8a7d7025990d22f6062953247cf80e64c6fd2f.1588230494.git.eswara.kota@linux.intel.com>
+ <20200504072923.GN1375924@vkoul-mobl>
+ <f12e76ac-e0fd-4afa-e1cd-2b90f175adfd@linux.intel.com>
+ <20200504092034.GS1375924@vkoul-mobl>
+ <0de7ba47-bc98-9267-46b4-230a86151c2d@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1588636467-23409-1-git-send-email-wcheng@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0de7ba47-bc98-9267-46b4-230a86151c2d@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 04-05-20, 16:54, Wesley Cheng wrote:
-> This series adds support for the Synopsis 7nm HSPHY USB driver being
-> used in QCOM chipsets.  The HSPHY register map differs compared to 
-> other PHY revisions.  In addition, modifications and updates are done
-> to the QMP driver to add new registers/offsets, and to update the
-> initialization sequence for enabling the SSUSB path on SM8150.
+On 04-05-20, 17:32, Dilip Kota wrote:
+> 
+> On 5/4/2020 5:20 PM, Vinod Koul wrote:
+> > On 04-05-20, 16:26, Dilip Kota wrote:
+> > > On 5/4/2020 3:29 PM, Vinod Koul wrote:
+> > > > On 30-04-20, 15:15, Dilip Kota wrote:
+> > > > 
+> > > > > +					  u32 mask, u32 val)
+> > > > > +{
+> > > > > +	u32 reg_val;
+> > > > > +
+> > > > > +	reg_val = readl(base + reg);
+> > > > > +	reg_val &= ~mask;
+> > > > > +	reg_val |= FIELD_PREP(mask, val);
+> > > > > +	writel(reg_val, base + reg);
+> > > > bypassing regmap here... why?
+> > > It is not regmap address, one of the below two addresses are passed to this
+> > > function.
+> > okay, perhaps add a comment somewhere that regmap is not used for this
+> > base?
+> I dont see a need of adding a comment, describing don't do regmap here.
 
-Applied all, thanks.
+Driver uses regmap except here, which seems odd hence explanation
+required for this.
 
-Pls note the dt-binding patch had a trailing line at the end of file, I
-have stripped that while applying.
+> > 
+> > > struct intel_combo_phy {
+> > > ...
+> > >          void __iomem            *app_base;
+> > >          void __iomem            *cr_base;
+> > > ...
+> > > }
+> > 
+> > > > > +static int intel_cbphy_calibrate(struct phy *phy)
+> > > > > +{
+> > > > > +	struct intel_cbphy_iphy *iphy = phy_get_drvdata(phy);
+> > > > > +	struct intel_combo_phy *cbphy = iphy->parent;
+> > > > > +	void __iomem *cr_base = cbphy->cr_base;
+> > > > > +	int val, ret, id;
+> > > > > +
+> > > > > +	if (cbphy->phy_mode != PHY_XPCS_MODE)
+> > > > > +		return 0;
+> > > > > +
+> > > > > +	id = PHY_ID(iphy);
+> > > > > +
+> > > > > +	/* trigger auto RX adaptation */
+> > > > > +	combo_phy_w32_off_mask(cr_base, CR_ADDR(PCS_XF_ATE_OVRD_IN_2, id),
+> > > > > +			       ADAPT_REQ_MSK, 3);
+> > > > > +	/* Wait RX adaptation to finish */
+> > > > > +	ret = readl_poll_timeout(cr_base + CR_ADDR(PCS_XF_RX_ADAPT_ACK, id),
+> > > > > +				 val, val & RX_ADAPT_ACK_BIT, 10, 5000);
+> > > > > +	if (ret)
+> > > > > +		dev_err(cbphy->dev, "RX Adaptation failed!\n");
+> > > > you want to continue her and not return error?
+> > > Next step is stopping the Adaptation, it should be done in both error and
+> > > success case.
+> > Again documenting this helps, pls add some comments on this behaviour
+> Comments are already in place, mentioning Start and Stop of Rx Adaptation.
+> And Stop is being is done as Start is triggered, so not needed to mention
+> error and success.
+
+Ok
 
 -- 
 ~Vinod
