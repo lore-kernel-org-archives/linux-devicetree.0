@@ -2,148 +2,97 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F59C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF32C47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59A6E20735
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02252073B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 12:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WU/xSzDR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+jlWyYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgEEMUW (ORCPT
+        id S1728233AbgEEMhA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 08:20:22 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46578 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgEEMUV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 08:20:21 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045CKC1d091262;
-        Tue, 5 May 2020 07:20:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588681212;
-        bh=33urkOujjL8eDQqLN/MMIk9++M7FiWab7tR7NHM+1C0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WU/xSzDRKiMWoIZl6UWuffzuHpkfOvdCh6Y3DXwDOWiXZlIXtr/D5CaznKuHQgHnm
-         jlmaeanMLpur4FCZnp8CnrJkwTd71CUhBx9R+0iNNTeNqMQiyYaBWQS3EqLGlGGRwy
-         16PvEiMps7CVR1mDG3PqsWF1vDCGfViAzDjaEfF8=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045CKCwJ040109;
-        Tue, 5 May 2020 07:20:12 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
- 2020 07:20:11 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 5 May 2020 07:20:11 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045CK7qD102805;
-        Tue, 5 May 2020 07:20:08 -0500
-Subject: Re: [PATCH net-next 3/7] net: ethernet: ti: am65-cpsw-nuss: enable
- packet timestamping support
-To:     Anders Roxell <anders.roxell@linaro.org>
-CC:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Clay McClure <clay@daemons.net>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
- <20200501205011.14899-4-grygorii.strashko@ti.com>
- <CADYN=9L+RtruRYKah0Bomh7UaPGQ==N9trd0ZoVQ3GTc-VY8Dg@mail.gmail.com>
- <1bf51157-9fee-1948-f9ff-116799d12731@ti.com>
- <CADYN=9LfqLLmKNHPfXEiQbaX8ELF78BL-vWUcX-VP3aQ86csNg@mail.gmail.com>
- <CADYN=9LDCE2sQca12D4ow3BkaxXi1_bnc4Apu7pP4vnA=5AOKA@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <5f338763-b35b-e2b4-7f15-df3a5bcbb799@ti.com>
-Date:   Tue, 5 May 2020 15:20:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 08:37:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728268AbgEEMg7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 08:36:59 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C740FC061A0F;
+        Tue,  5 May 2020 05:36:59 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id v63so815222pfb.10;
+        Tue, 05 May 2020 05:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1FVwCTdzUus+BeJwL418UcPLHNV4GTDcBxgUZvnFZFs=;
+        b=Z+jlWyYicYxxVCvfexXcKtvUh+MhjDcMy9/ZwcidXROpTSxWxcNd0rA2cj1zVxC+A7
+         AAig6m0k2gnoheiDeBWprjDxkL/h3A3zpmMopT+yRpVVNs7y4rPVFYe2ymXd3o7sjZCS
+         0mvkPgYuHQIhbEpxstCmv45V9yK5cfhnfS2V+QewmP2RqFum+QtfI90DCaqJ1BMbL2xP
+         yvZvq6tmSaZx8P/5k7qSX/b5Xi4G7bu+SnZrMfen79BagSANQlxPBrNrB6luunFSqJCb
+         lrl/A4xhK3icZrRGRHQljWhkXtegn4zS2evbdEzlrXTVDhQXQl1vnq4G3mebj6pRVsFh
+         kIzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1FVwCTdzUus+BeJwL418UcPLHNV4GTDcBxgUZvnFZFs=;
+        b=XYagLqCBYUkfufYNj8QyoZBEu10QXTfsGpxx+iFvgsi6aZgzkDTvu1kGSnE6nMC+z1
+         OOsJp5b9Kn8K6rIa+/mMrT8U2HZR76/NbYrWNy0qjf1SzHnoDtnddRECrJz94vcwLNr/
+         BDZelckSk0G9PNNVtJJ0mjDAbnG50wjDBYrW+8yaw6Y+pSie8SdTBDV3hUVzARgNwY+C
+         Wdc/md4oXmD47naAwawBlGa2Eh3WvhCWIh4EgvPQwdmEX1TnO9OhyfYRsVDlh0I0LUBg
+         WmBigxw1DqWDanisVOWN9VJaUPUiJmUN5RFInw0GAocKlRBRTeIagp5eoppQ59943SVn
+         vp3A==
+X-Gm-Message-State: AGi0PuZKFBPyRnlSostQkUaIm7e9Bd5raicS9MChbLUM8jvBhb+wsvcl
+        gdi2YpX5Y2ZjKcnS87RnNV8=
+X-Google-Smtp-Source: APiQypIf6NjtOfOf1wYGAAOPq3vm+cU/I+FTDflCs1rOtjr+REQjV0K6QvWZm+a/P+UHf4mkhbEmug==
+X-Received: by 2002:a62:844c:: with SMTP id k73mr2876122pfd.235.1588682219284;
+        Tue, 05 May 2020 05:36:59 -0700 (PDT)
+Received: from localhost (146.85.30.125.dy.iij4u.or.jp. [125.30.85.146])
+        by smtp.gmail.com with ESMTPSA id 6sm1475400pgw.47.2020.05.05.05.36.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 05:36:58 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Tue, 5 May 2020 21:36:54 +0900
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] allow ramoops to collect all kmesg_dump events
+Message-ID: <20200505123654.GA509@jagdpanzerIV.localdomain>
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <202005041112.F3C8117F67@keescook>
+ <CA+CK2bBDzbXdH23aDxqGzMoxPppNcVmitrYJ00tJqympMBVJOg@mail.gmail.com>
+ <202005041211.040A1C65C8@keescook>
+ <CA+CK2bAJgKR+=Tby91gU-ZKy29Juv_oJinCTFAWRaKiiro2vkg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CADYN=9LDCE2sQca12D4ow3BkaxXi1_bnc4Apu7pP4vnA=5AOKA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+CK2bAJgKR+=Tby91gU-ZKy29Juv_oJinCTFAWRaKiiro2vkg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anders,
+On (20/05/04 15:17), Pavel Tatashin wrote:
+> AFAIK, there is no way to have different log levels for
+> different consoles.
 
-On 05/05/2020 14:59, Anders Roxell wrote:
-> On Tue, 5 May 2020 at 13:16, Anders Roxell <anders.roxell@linaro.org> wrote:
->> On Tue, 5 May 2020 at 13:05, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>> On 05/05/2020 13:17, Anders Roxell wrote:
->>>> On Fri, 1 May 2020 at 22:50, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>>>>
->>>>> The MCU CPSW Common Platform Time Sync (CPTS) provides possibility to
->>>>> timestamp TX PTP packets and all RX packets.
->>>>>
->>>>> This enables corresponding support in TI AM65x/J721E MCU CPSW driver.
->>>>>
->>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>> ---
->>>>>    drivers/net/ethernet/ti/Kconfig             |   1 +
->>>>>    drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  24 ++-
->>>>>    drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 172 ++++++++++++++++++++
->>>>>    drivers/net/ethernet/ti/am65-cpsw-nuss.h    |   6 +-
->>>>>    4 files changed, 201 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
->>>>> index 1f4e5b6dc686..2c7bd1ccaaec 100644
->>>>> --- a/drivers/net/ethernet/ti/Kconfig
->>>>> +++ b/drivers/net/ethernet/ti/Kconfig
->>>>> @@ -100,6 +100,7 @@ config TI_K3_AM65_CPSW_NUSS
->>>>>           depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
->>>>>           select TI_DAVINCI_MDIO
->>>>>           imply PHY_TI_GMII_SEL
->>>>> +       imply TI_AM65_CPTS
->>>>
->>>> Should this be TI_K3_AM65_CPTS ?
-> 
-> instead of 'imply TI_K3_AM65_CPTS' don't you want to do this:
-> 'depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS'
-> 
-> 
+There was a patch set from facebook several years ago to make
+loglevels per-console, but it didn't land. Perhaps we need to
+refresh it.
 
-Right, I'll try. It seems your defconfig is produced by randconfig as
-I can't get broken cfg TI_AM65_CPTS=m and TI_K3_AM65_CPSW_NUSS=y
-with neither one below:
-
-  make ARCH=arm64 O=k3-arm64 defconfig
-  make ARCH=arm64 O=k3-arm64 allnoconfig
-  make ARCH=arm64 O=k3-arm64 allyesconfig
-  make ARCH=arm64 O=k3-arm64 allmodconfig
-  make ARCH=arm64 O=k3-arm64 alldefconfig
-  make ARCH=arm64 O=k3-arm64 yes2modconfig
-  make ARCH=arm64 O=k3-arm64 mod2yesconfig
-
-Related legacy TI CPTS threads:
-  https://lkml.org/lkml/2020/5/2/344
-  https://lkml.org/lkml/2020/5/1/1348
-
-I'd try summarize goal
-  TI_K3_AM65_CPSW_NUSS	TI_AM65_CPTS
-  Y			Y/N
-  M			Y/M/N
-  N			Y/M/N
-
-
--- 
-Best regards,
-grygorii
+	-ss
