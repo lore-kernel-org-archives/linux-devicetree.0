@@ -2,210 +2,114 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F4FC47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 613A4C47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05AF3206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31CE92068E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SJdtgGTW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HR1/DoOg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgEETZl (ORCPT
+        id S1728076AbgEETeZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 15:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbgEETZk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:25:40 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF8CAC061A0F
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 12:25:40 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id i13so2869890oie.9
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 12:25:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RKLj+Bvazx+0GBaDeiW8XR54CzGKY4AHaP4cILqovw8=;
-        b=SJdtgGTW5rf7rigkvrS0mGJrpwJvn5sAzRAkkSYrU2yWA/lI6TmCZF0sq1SvNFwlg1
-         kREVUdbiAPDNjSfxcJ7oIXu434wnGVlmGdtL6WbnnD9hbqTKUgJpUSsrG2XH0oFtkDpS
-         blRYXGrjL79B5wOO2fnZ53Ph/JTysPZXNngkk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RKLj+Bvazx+0GBaDeiW8XR54CzGKY4AHaP4cILqovw8=;
-        b=b3kcRHWRGKvcHuYK+l8RQi563IwyPBQLn287pZFStcMQ4HSroUT7wl4PEpYZc95jOc
-         VPYd8z/nQciEM5eyW2Pm8eVII6YCfjI9OD0q2IwTyvS4gKtmBSN52PaxkHkUD6lBVeHZ
-         vmxi2xlKho8Hk5FyLcrfe3uAf4vC7f1UeBztGbFZ2qmlEKDj6RVX70VOugqJCNRJbvDD
-         HI9yPOpbwouhvw48RRiFustUs5CeNlxKcMOPF1bHLDx+Pyw2+kNAmXqtPw2i/IjTvVjG
-         q+PtKTmCZjTCYYyA2wKZBsx4r5sSA948CKs+TZqeTo9ZiEEva8hncs35MUxR33YXy/ts
-         qWiQ==
-X-Gm-Message-State: AGi0PuZ4x9UUWWRl9DKn++/NBZahdSwbRopQHg8ZrAVuBaypJ6b9IUbJ
-        BmIpijAJSF6norBAxNx/GEXwboUx0gEdHNhtRI5HFA==
-X-Google-Smtp-Source: APiQypJj1DkGUZt7VIZXosUiRMoBR0Hk5xmD/ibsZ1474R2bICyoP6W/sR5eJX+NBmdVffk3jmYWOAdQstorpI7Bi6g=
-X-Received: by 2002:aca:403:: with SMTP id 3mr227565oie.166.1588706739870;
- Tue, 05 May 2020 12:25:39 -0700 (PDT)
+        Tue, 5 May 2020 15:34:25 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42958 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgEETeZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:34:25 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045JYJlH030554;
+        Tue, 5 May 2020 14:34:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588707259;
+        bh=jzWhvutcEwidozLihf++L4max15eM6nrX1kIh+xmuNY=;
+        h=From:To:CC:Subject:Date;
+        b=HR1/DoOgtMRclap0p8EZT4t3wEJGraiI3e+TnTKpvksSMtKf5P7XIt7tIf3fSB/A0
+         TZOMH/o7LSdfKBDRjHDWGj0XRVxvhEKM9ZV0jVV/TFGX/1Dob3GBYYggzkfo4qZ9nR
+         atvU3qiaHAPP0uGoVF5nn1NC0DGnfnSKbbqu3T/I=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 045JYJvF038853
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 May 2020 14:34:19 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
+ 2020 14:34:18 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 5 May 2020 14:34:19 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045JYHxq126746;
+        Tue, 5 May 2020 14:34:18 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>, <devicetree@vger.kernel.org>
+CC:     Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Nishanth Menon <nm@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v2 0/2] soc: ti: add k3 platforms chipid module driver
+Date:   Tue, 5 May 2020 22:34:15 +0300
+Message-ID: <20200505193417.2112-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-6-brgl@bgdev.pl>
-In-Reply-To: <20200505140231.16600-6-brgl@bgdev.pl>
-From:   Edwin Peer <edwin.peer@broadcom.com>
-Date:   Tue, 5 May 2020 12:25:03 -0700
-Message-ID: <CAKOOJTzcNr7mc9xusQm3nCzkq5P=ha-si3fizeEL2_KJUOC3-Q@mail.gmail.com>
-Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:05 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Provide devm_register_netdev() - a device resource managed variant
-> of register_netdev(). This new helper will only work for net_device
-> structs that have a parent device assigned and are devres managed too.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  include/linux/netdevice.h |  4 ++++
->  net/core/dev.c            | 48 +++++++++++++++++++++++++++++++++++++++
->  net/ethernet/eth.c        |  1 +
->  3 files changed, 53 insertions(+)
->
-> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> index 130a668049ab..433bd5ca2efc 100644
-> --- a/include/linux/netdevice.h
-> +++ b/include/linux/netdevice.h
-> @@ -1515,6 +1515,8 @@ struct net_device_ops {
->   * @IFF_FAILOVER_SLAVE: device is lower dev of a failover master device
->   * @IFF_L3MDEV_RX_HANDLER: only invoke the rx handler of L3 master device
->   * @IFF_LIVE_RENAME_OK: rename is allowed while device is up and running
-> + * @IFF_IS_DEVRES: this structure was allocated dynamically and is managed by
-> + *     devres
->   */
->  enum netdev_priv_flags {
->         IFF_802_1Q_VLAN                 = 1<<0,
-> @@ -1548,6 +1550,7 @@ enum netdev_priv_flags {
->         IFF_FAILOVER_SLAVE              = 1<<28,
->         IFF_L3MDEV_RX_HANDLER           = 1<<29,
->         IFF_LIVE_RENAME_OK              = 1<<30,
-> +       IFF_IS_DEVRES                   = 1<<31,
->  };
->
->  #define IFF_802_1Q_VLAN                        IFF_802_1Q_VLAN
-> @@ -4206,6 +4209,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
->                          count)
->
->  int register_netdev(struct net_device *dev);
-> +int devm_register_netdev(struct net_device *ndev);
->  void unregister_netdev(struct net_device *dev);
->
->  /* General hardware address lists handling functions */
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index 522288177bbd..99db537c9468 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -9519,6 +9519,54 @@ int register_netdev(struct net_device *dev)
->  }
->  EXPORT_SYMBOL(register_netdev);
->
-> +struct netdevice_devres {
-> +       struct net_device *ndev;
-> +};
-> +
-> +static void devm_netdev_release(struct device *dev, void *this)
-> +{
-> +       struct netdevice_devres *res = this;
-> +
-> +       unregister_netdev(res->ndev);
-> +}
-> +
-> +/**
-> + *     devm_register_netdev - resource managed variant of register_netdev()
-> + *     @ndev: device to register
-> + *
-> + *     This is a devres variant of register_netdev() for which the unregister
-> + *     function will be call automatically when the parent device of ndev
-> + *     is detached.
-> + */
-> +int devm_register_netdev(struct net_device *ndev)
-> +{
-> +       struct netdevice_devres *dr;
-> +       int ret;
-> +
-> +       /* struct net_device itself must be devres managed. */
-> +       BUG_ON(!(ndev->priv_flags & IFF_IS_DEVRES));
-> +       /* struct net_device must have a parent device - it will be the device
-> +        * managing this resource.
-> +        */
+Hi All,
 
-Catching static programming errors seems like an expensive use of the
-last runtime flag in the enum. It would be weird to devres manage the
-unregister and not also choose to manage the underlying memory in the
-same fashion, so it wouldn't be an obvious mistake to make. If it must
-be enforced, one could also iterate over the registered release
-functions and check for the presence of devm_free_netdev without
-burning the flag.
+This series introduces TI K3 Multicore SoC platforms chipid module driver
+which provides identification support of the TI K3 SoCs (family, revision)
+and register this information with the SoC bus. It is available under
+/sys/devices/soc0/ for user space, and can be checked, where needed,
+in Kernel using soc_device_match().
+It is also required for introducing support for new revisions of
+K3 AM65x/J721E SoCs.
 
-> +       BUG_ON(!ndev->dev.parent);
-> +
-> +       dr = devres_alloc(devm_netdev_release, sizeof(*dr), GFP_KERNEL);
-> +       if (!dr)
-> +               return -ENOMEM;
-> +
-> +       ret = register_netdev(ndev);
-> +       if (ret) {
-> +               devres_free(dr);
-> +               return ret;
-> +       }
-> +
-> +       dr->ndev = ndev;
-> +       devres_add(ndev->dev.parent, dr);
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL(devm_register_netdev);
-> +
->  int netdev_refcnt_read(const struct net_device *dev)
->  {
->         int i, refcnt = 0;
-> diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
-> index c8b903302ff2..ce9b5e576f20 100644
-> --- a/net/ethernet/eth.c
-> +++ b/net/ethernet/eth.c
-> @@ -423,6 +423,7 @@ struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
->
->         *dr = netdev;
->         devres_add(dev, dr);
-> +       netdev->priv_flags |= IFF_IS_DEVRES;
->
->         return netdev;
->  }
-> --
-> 2.25.0
->
+Example J721E:
+  # cat /sys/devices/soc0/{machine,family,revision}
+  Texas Instruments K3 J721E SoC
+  J721E
+  SR1.0
 
-Regards,
-Edwin Peer
+Example AM65x:
+  # cat /sys/devices/soc0/{machine,family,revision}
+  Texas Instruments AM654 Base Board
+  AM65X
+  SR1.0
+
+Changes in v2:
+ - pr_debug() replaced with pr_info() to show SoC info on init
+ - minor format change
+ - split series on driver and platform changes
+ - add Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+
+v1: https://lwn.net/Articles/818577/
+
+Grygorii Strashko (2):
+  dt-bindings: soc: ti: add binding for k3 platforms chipid module
+  soc: ti: add k3 platforms chipid module driver
+
+ .../bindings/soc/ti/k3-socinfo.yaml           |  40 ++++++
+ drivers/soc/ti/Kconfig                        |  10 ++
+ drivers/soc/ti/Makefile                       |   1 +
+ drivers/soc/ti/k3-socinfo.c                   | 135 ++++++++++++++++++
+ 4 files changed, 186 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+ create mode 100644 drivers/soc/ti/k3-socinfo.c
+
+-- 
+2.17.1
+
