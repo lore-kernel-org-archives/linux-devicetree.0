@@ -2,98 +2,92 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AB4C47256
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 04:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE5BC47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405DA20721
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 04:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aLHlS6xi"
+	by mail.kernel.org (Postfix) with ESMTP id D43C12075E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588655186;
+	bh=e8VuXUN/uzQjDtcEKXPbNGAiXnGLHtDXeImNxpzII78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sxGyAbtNu70tTfePbJPPQeIq54NtlbeCxnZSlZ/0Q/kq8f5gXvKiINAT3ViN1L1O5
+	 UfborpNyJrcbd8XheFHWCTdgs2QnG0K6REV1YzB759Qyf/1NuMo786Sdx6qPafAv7K
+	 h+cwDQ1OA7PKMAcRk9rpep2ab/BAMz+x1VzGBpss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgEEE4p (ORCPT
+        id S1725766AbgEEFG0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 00:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726065AbgEEE4o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 00:56:44 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 534E7C061A10
-        for <devicetree@vger.kernel.org>; Mon,  4 May 2020 21:56:43 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 7so720736pjo.0
-        for <devicetree@vger.kernel.org>; Mon, 04 May 2020 21:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0bcNjjam7owzFyIwJPvOejbVBTQ69maDzUfbwggZ2dA=;
-        b=aLHlS6xiNMHuJwgtS5c5FBNg7bB7qF2DSLw7iTqBVNXqJfmgox5k3SxD7cxrmKdk6v
-         l+kjTGGSZZKpT+CpQLlZN1qjlVBOya7XkibQvKsue/5dKzBH9vCbAJT8qr9Ma53x/3yI
-         QXIwV7ZAU1/UFqF4a6EW2NLopHZvqG1Rpm8orjkIk7tClG4Q8UbHmh8MOlLqqN0yzsYZ
-         Au7XZXV+dC9LVCS2NqNAnPzZ6jxJ22bARxfuvAPIT+7hPeuPDiMyHHV8G3Vs+JhdS+DR
-         cufyrx/Hws7YY7h93HkE1ORrPU2aw1a3ulvVLWrVW3NIhMU4oQfjzxIrNxURG6M226Uu
-         ucbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0bcNjjam7owzFyIwJPvOejbVBTQ69maDzUfbwggZ2dA=;
-        b=b3fFAWJbYjGUyDwVYFmV7HpB5/kU1Vyu9kduGy5piKvY61k5REjg7ICI4DW7XpTSb5
-         Jf1BABLGabwlttdaY723eozEajLkHAX6EAzZoZGSFwYYC/rfU9A/C+drR5PdoTmWIuQC
-         yeCIGFgFumZC3HGny+lYxw9aekPnSxwI/u4j+XuJgjiqsobky0o83E8YEQfqlI6ZpF6+
-         bPuxpDOHxTxIJDXeB2iY9flOAQcRhFUzmeHmf6gXDv1dbOalNej/83TkKbgdOWR+hcxe
-         REaSypR6/LPxQ2d+5lzWoEbFGS5+sEIUubtFyleO7mpdmRuesS/Uyo0CcTncWxSfh2UL
-         q4WA==
-X-Gm-Message-State: AGi0PubzbKiYRewLzg18FCAKsxMNh9v4oGi5TScH3y1Jx/IQO+mOJdii
-        PXEEXP8MnaKG67S2kFFgiHwsxw==
-X-Google-Smtp-Source: APiQypKz5PGkrZWTJbP3+f/TlvnG7+he8Ca87yIh/qmdt7h/HMYRPft82Ev9HjoCwI1XU0L+nqL4ug==
-X-Received: by 2002:a17:90a:f197:: with SMTP id bv23mr677669pjb.3.1588654601713;
-        Mon, 04 May 2020 21:56:41 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id h14sm721964pfq.46.2020.05.04.21.56.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 May 2020 21:56:41 -0700 (PDT)
-Date:   Tue, 5 May 2020 10:26:39 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org,
-        bjorn.andersson@linaro.org, saravanak@google.com, mka@chromium.org,
-        nm@ti.com, agross@kernel.org, david.brown@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        dianders@chromium.org, vincent.guittot@linaro.org,
-        amit.kucheria@linaro.org, ulf.hansson@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com
-Subject: Re: [PATCH v4 10/12] OPP: Add support for setting interconnect-tags
-Message-ID: <20200505045639.i4nnplwaxlkful4o@vireshk-i7>
-References: <20200504202243.5476-1-sibis@codeaurora.org>
- <20200504202243.5476-11-sibis@codeaurora.org>
+        Tue, 5 May 2020 01:06:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725320AbgEEFG0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 01:06:26 -0400
+Received: from localhost (unknown [171.61.99.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD0A2206E6;
+        Tue,  5 May 2020 05:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588655185;
+        bh=e8VuXUN/uzQjDtcEKXPbNGAiXnGLHtDXeImNxpzII78=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YB6AmbTa38GjMc7eliqreZ+dpQzlNmREktrgqMMyF+yMZbRhh6FVKFQrGsMR6yhzz
+         KfgOtZEgzTbQM5+VCXglPTXTEvBrWAKJwrYTuuUuQhQPuS/sgyIk5S2+qL4EWR1zEB
+         jSAPb5EhR65ZKTu8+6zgki6eksV7C0REvhS5p9SY=
+Date:   Tue, 5 May 2020 10:36:21 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     hex dump <hexdump0815@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        kishon@ti.com, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, narmstrong@baylibre.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: phy: meson8b-usb2: Convert to
+ json-schema
+Message-ID: <20200505050621.GU1375924@vkoul-mobl>
+References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com>
+ <20200502114752.1048500-2-martin.blumenstingl@googlemail.com>
+ <CAKTihDVy6oSuQe4eP87hWO17tBu3=XZ-PM41YOqLVOtXJ8+YeQ@mail.gmail.com>
+ <28790ee42242ecc0b0050943a27f569dd1aeec16.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504202243.5476-11-sibis@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <28790ee42242ecc0b0050943a27f569dd1aeec16.camel@perches.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 05-05-20, 01:52, Sibi Sankar wrote:
-> Add support for setting tags on icc paths associated with
-> the opp_table.
+On 04-05-20, 10:31, Joe Perches wrote:
+> On Mon, 2020-05-04 at 12:55 +0200, hex dump wrote:
+> > On Sat, May 2, 2020 at 1:48 PM Martin Blumenstingl
+> > <martin.blumenstingl@googlemail.com> wrote:
+> > > Now that we have the DT validation in place, let's convert the device
+> > > tree bindings for the Amlogic Meson8, Meson8b, Meson8m2 and GXBB USB2
+> > > PHY over to a YAML schema.
+> > > 
+> > > While here, also add the fallback compatible string
+> > > "amlogic,meson-gxbb-usb2-phy" which is already used in
+> > > arch/arm/boot/dts/meson{,8,8b}.dtsi.
+> > > 
+> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > 
+> > Tested-by: hexdump <hexdump0815@googlemail.com>
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/opp/of.c | 25 +++++++++++++++++++------
->  1 file changed, 19 insertions(+), 6 deletions(-)
+> Is the kernel now accepting "Tested-by" lines from robots?
 
-Maybe this should be part of Georgi's series ?
+Should we not? bots have been given Reported-by...
+> 
+> If hexdump0815@googlemail.com is not a robot, can you please use
+> your full legal name instead?
 
+Looking at emails, this doesnt seem a bot, so I am asking for full legal
+name for these to be added.
+
+Thanks
 -- 
-viresh
+~Vinod
