@@ -2,163 +2,135 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AF3C47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1523C47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58D9C2078C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588693537;
-	bh=w7mqyqaalml4dm4BofEVo4menoXUnNvEtnLgftyefjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gl4BOf2mqANufvPieJGGbK9S4nGU+3dUWKEywhfBBhi4CadbhYQK5J6nhu4i2c3UQ
-	 /8TnwkilLiMVzpGe3FATHaOqY9R8OrzJTeT8/U5xjUZ18WMFLtCp/r0OWo9fdVvkVw
-	 pwozzlwEeQVF4NDtlpp8A4Ov32oOalFjVe38YOEs=
+	by mail.kernel.org (Postfix) with ESMTP id C099C206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:45:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="T00n5b+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbgEEPpc (ORCPT
+        id S1730685AbgEEPpP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 11:45:32 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43115 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbgEEPpb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:45:31 -0400
-Received: by mail-oi1-f193.google.com with SMTP id j16so2171804oih.10;
-        Tue, 05 May 2020 08:45:31 -0700 (PDT)
+        Tue, 5 May 2020 11:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730681AbgEEPpP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:45:15 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB645C061A0F
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 08:45:14 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id i68so2316131qtb.5
+        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 08:45:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=F+4SVdWRlFJxnpjgzasS5JspfSz6j1yd8grF/PAppTQ=;
+        b=T00n5b+oSujUoVq9Z+LR8fGuvltBcys+J/cMjZ43GxX17HfOte90BRwC0yFHgeloy3
+         g33W9r3kpjfiEzl6XkZ6QbPSadqWfexzoHSKY5+3OTIIydoF6N3C9+fABrvRoK76orMY
+         dzMuRaIvGNLq6U7Q9x1esMQo+HwKM6Hr7KP75s1/W8mVOZXgh27RBt/sZQS+xOJobww/
+         Ge6yNUjO90b+9imM+W9uQnEJ93L5bAcmHgIyZrDT2kBnh21vlzD2pDW7VYBMGqrHvWkL
+         +eBsdRU8EL/Qu0ygBSlcxtVhubdqfa/Y5ngJc7GolQwHiRiPdPJCmTLZE3FOvoKebrGm
+         4nOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ERx4rFY8Dz8RC1gA8oeju/oL9ln3h6g/sbUq2ZIsMqI=;
-        b=UfhzIl90Cx/F9yuIdyxeWiIAluj9jHVn52BAWVU7+xF4MUL2VQkgcVKpzRvtrMnzfD
-         /KVAbI+MORiK3Tzt0DxInwcc21gq6fifSNKoCckeGBpScp+MlJnXhb8p/8zE+UFBlMeU
-         SuvTfpDebNXhobP7xUsnv/cPtiXpDb86C+i4YJwpbL6QQeA3whkBGTHu57sqaUoBuBZW
-         Vbcvmm01xrNmGzHDBBDLZbJ9wB93B61DfBPD0UEpTAjr5gqsRqsIvHKD/v/VLHeTd63P
-         ae7M6/dQceBZwzCMlDj4jZiY+JV4X4CBaQuA18azQiGfFN/jURRWE4DgLf7gw0TqfhQg
-         tCiw==
-X-Gm-Message-State: AGi0PuY7ZK+8owYLfyC/KZQr8CqD03wZI+ocz+HRfuD5jAoOkJ4brE7Q
-        H9C6LPgc1VGFNU6YVec5mw==
-X-Google-Smtp-Source: APiQypLcJPiZQqfn4NTS17L4CqyYIL327lpeUG2R1ri3KMTOCuIxKZ2yhA2w+R3hoxnFV84blQoz4w==
-X-Received: by 2002:aca:3a55:: with SMTP id h82mr1248106oia.135.1588693530523;
-        Tue, 05 May 2020 08:45:30 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m18sm625885oie.38.2020.05.05.08.45.29
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=F+4SVdWRlFJxnpjgzasS5JspfSz6j1yd8grF/PAppTQ=;
+        b=VWBN0rB4UrMi1cJYEl/VRNJkgI7pNce8H1KbRrK7A4DgZWbAhk1dpezYoqo93Xd65z
+         U7nDiFYiG211btdAxmfLHMdsaxMMKIy+XEdtUTL748WnqNX+6zG3S1XSYIw2gegLlT85
+         2dBjEzAwELnMgyU7HCXq3uqO/eaiiJXk8m/win7nCS1Y7FQyGkBmwvbPThJbWtd9ogOz
+         JUB7c/nx2ojoky3OB0SpwAixXJXXaTFzLpMojhCShmOfQpxePQ8wwZ0jUtQHtZKpZKZV
+         fkKW3wxtSFhhjnDZ0liQbwL6mH/yxrxQRppjLzjhSUdLbylJ6IF1K9ZVy5ZK1vDMfEWT
+         zJUg==
+X-Gm-Message-State: AGi0PuYZCnPpco3fgSjqkz9VuvRLtpoFC6VXYdbzQx/cH1WdwmHaCLxx
+        /iO0K/nX6Vvx+/lLaLgFfwRfRg==
+X-Google-Smtp-Source: APiQypIYfkAPNj3MZ2vxjqvBSwGBRWN0NaGzZ5h6LwCTvoMZorwTkHaSbpnD+l7igUu8/0J3u8897w==
+X-Received: by 2002:ac8:6f03:: with SMTP id g3mr3220891qtv.10.1588693514106;
+        Tue, 05 May 2020 08:45:14 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id x7sm2122407qkx.36.2020.05.05.08.45.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 08:45:29 -0700 (PDT)
-Received: (nullmailer pid 11594 invoked by uid 1000);
-        Tue, 05 May 2020 15:45:29 -0000
-Date:   Tue, 5 May 2020 10:45:29 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v11 1/2] iio: proximity: provide device tree binding
- document
-Message-ID: <20200505154528.GB4630@bogus>
-References: <20200422160509.7117-1-i.mikhaylov@yadro.com>
- <20200422160509.7117-2-i.mikhaylov@yadro.com>
+        Tue, 05 May 2020 08:45:13 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
+        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v2 1/5] printk: honor the max_reason field in kmsg_dumper
+Date:   Tue,  5 May 2020 11:45:06 -0400
+Message-Id: <20200505154510.93506-2-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200505154510.93506-1-pasha.tatashin@soleen.com>
+References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422160509.7117-2-i.mikhaylov@yadro.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 07:05:08PM +0300, Ivan Mikhaylov wrote:
-> Mostly standard i2c driver with some additional led-current option
-> for vcnl3020.
-> 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> ---
->  .../bindings/iio/proximity/vcnl3020.yaml      | 64 +++++++++++++++++++
+kmsg_dump() allows to dump kmesg buffer for various system events: oops,
+panic, reboot, etc. It provides an interface to register a callback call
+for clients, and in that callback interface there is a field "max_reason"
+which gets ignored unless always_kmsg_dump is passed as kernel parameter.
 
-vishay,vcnl3020.yaml
+Allow clients to decide max_reason, and keep the current behavior when
+max_reason is not set.
 
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-> new file mode 100644
-> index 000000000000..ac47770609d2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Integrated Proximity Sensor With Infrared Emitter
-> +
-> +maintainers:
-> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> +
-> +description: |
-> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
-> +  that the infrared emitter is included in the package. It has 16-bit
-> +  resolution. It includes a signal processing IC and features standard I2C
-> +  communication interface. It features an interrupt function.
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - vishay,vcnl3020
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Regulator that provides power to the sensor
-> +
-> +  vddio-supply:
-> +    description: Regulator that provides power to the bus
-> +
-> +  vishay,led-current-microamp:
-> +    description:
-> +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
-> +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
-> +      higher than decimal 20.
-> +    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
-> +          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
-> +          180000, 190000, 200000]
-> +    default: 20000
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        proximity@13 {
-> +              compatible = "vishay,vcnl3020";
-> +              reg = <0x13>;
-> +              vishay,led-current-microamp = <200000>;
-> +        };
-> +    };
-> -- 
-> 2.21.1
-> 
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+---
+ include/linux/kmsg_dump.h |  1 +
+ kernel/printk/printk.c    | 15 +++++++++++----
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
+index 2e7a1e032c71..cfc042066be7 100644
+--- a/include/linux/kmsg_dump.h
++++ b/include/linux/kmsg_dump.h
+@@ -28,6 +28,7 @@ enum kmsg_dump_reason {
+ 	KMSG_DUMP_RESTART,
+ 	KMSG_DUMP_HALT,
+ 	KMSG_DUMP_POWEROFF,
++	KMSG_DUMP_MAX
+ };
+ 
+ /**
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 9a9b6156270b..1aab69a8a2bf 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3157,12 +3157,19 @@ void kmsg_dump(enum kmsg_dump_reason reason)
+ 	struct kmsg_dumper *dumper;
+ 	unsigned long flags;
+ 
+-	if ((reason > KMSG_DUMP_OOPS) && !always_kmsg_dump)
+-		return;
+-
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(dumper, &dump_list, list) {
+-		if (dumper->max_reason && reason > dumper->max_reason)
++		enum kmsg_dump_reason cur_reason = dumper->max_reason;
++
++		/*
++		 * If client has not provided a specific max_reason, default
++		 * to KMSG_DUMP_OOPS, unless always_kmsg_dump was set.
++		 */
++		if (cur_reason == KMSG_DUMP_UNDEF) {
++			cur_reason = always_kmsg_dump ? KMSG_DUMP_MAX :
++							KMSG_DUMP_OOPS;
++		}
++		if (reason > cur_reason)
+ 			continue;
+ 
+ 		/* initialize iterator with data about the stored records */
+-- 
+2.25.1
+
