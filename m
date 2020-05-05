@@ -4,86 +4,137 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A34AC47257
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455AEC47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF8A621835
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2299720746
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588693571;
-	bh=TBqRDwuy4LNsTxlX12Gx5YCWxR24WlCsQf6pTkBQFaY=;
+	s=default; t=1588693722;
+	bh=lK0n3cw9eJsjSZeXGUQU3srqEN79jlafNYd1tTTduSE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cyiDfMax8Yc+apivL3yg9vrTcDX6vpZxS4phS0PH67OWArte8fHihhldc1rrC8SLD
-	 PgCTMzCqIKEQJ4wK2M+3gEEsNJ3anrdvEeZZwOB8A4lIua0kPprltuVK96o5REhhrn
-	 6PBARHAYnYg+gOIWt3MT2Ee3d/lBaFEWeP4SkVfE=
+	b=HauccbQGCDXnGzltl+PQLkvAU8AH/i1wvHhwqcB0BhpWPVv+cMzrCppAaYB41IDTW
+	 uyoZzipOpfM3JbrD3rAXbX3YCFODIyMn/d41k7sgPCTvLtzuxKY1LjUyeG174xu4vN
+	 h4Jwdqj+eWpKPu8nRFrEu+hhdAsEQbjYiY5eZEpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgEEPqL (ORCPT
+        id S1730615AbgEEPsl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 11:46:11 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42429 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730302AbgEEPqK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:46:10 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m18so2011090otq.9;
-        Tue, 05 May 2020 08:46:09 -0700 (PDT)
+        Tue, 5 May 2020 11:48:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46361 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729828AbgEEPsl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:48:41 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z25so2006903otq.13;
+        Tue, 05 May 2020 08:48:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pC5ug4JkZ/Q1WpOKLw3JKlztM2npyZ3pEia8DpeRqCM=;
-        b=I63xafTwMnX4W9jxGF1o8zUIhO9qhDw/Ksb0PVNgkxjuYXKccTSExtvsEbRCVyjlR/
-         NPvBR/2PC3kOy0i//tyMkUxlDtve17oUjyXEz+TIo7S9ZzdxcAXBJWzUy0l1Ae4T+jFf
-         0PvdKkoGdLO7BlHyvZUCzXxBCipHUXfKkuZwv+CnJkZ5NQGLlYZqxsYn3NkIwM83hufP
-         1IFkS6UrtQIFtHEc4IqFP4fRWGEAia6jMDkO2U56MywTNwjHVvMk74P71q+qQgt1c71p
-         j58hPSk82hk3zAoyc83P7KRNDG6OFifa7NmqnMtOvlxKFd7NzoMJPvvz7uL9ab/9wP2g
-         iSFA==
-X-Gm-Message-State: AGi0Pua9ff4L6vqMa+l5/zs9kL4jSxBlXuUraBVyCC8/RWk8ElY0VQbE
-        m89qzuevykB0u+ZU8wJ+4g==
-X-Google-Smtp-Source: APiQypK8wD7ubhAL2Dzd24hZqNu9gr5fEROybj1HrCSj0giazCxA5YvV8rF/q4mgDhvkKDnmlBl5lA==
-X-Received: by 2002:a05:6830:1d62:: with SMTP id l2mr3132718oti.316.1588693569153;
-        Tue, 05 May 2020 08:46:09 -0700 (PDT)
+        bh=kCQr2A1yVRSlZqXHXQYGpMp329yMREeOZVsfc6fgXVk=;
+        b=tqaTX3W6aL8KJjYAEZlyzQWpnV1E+VBstXeVCv23HcTMgrbVh3OhHlHKHi5mq2GUdT
+         DzDnkiLvYJPNWYwUu+BZDdry5QYw2T/K2pFIbcJhNPQBbMXjlKtekYlDWf18tfQNj02w
+         TeeFol+/2JiLo0U0e2GxbwvpwC46HDocV+K9eYpSWVV+MGqaU9YzO5t4E32hh0wk8xnf
+         TQDY0Y811sajk3xmOszGlvY8UjTHVZvkg+ckS6MF3nEo9GM3X0g+tuNio5EF66Ln1Xwc
+         zdgJFgocVywcEOQHDUZDGDCT5VfEclgvBWEMBkCoPgKL4O5Bkv/WyJxyx2lNejF5XNtb
+         132w==
+X-Gm-Message-State: AGi0PubqxMFGTHxYVSVEqmBJqXe8glnlvWtCQb6JztjLSivtJqVNoWbo
+        ShLCMR08QIbrKYQSm82XIg==
+X-Google-Smtp-Source: APiQypJCQ6L9Z5niSmW5s26himlp5zzFw8N3HJiPoMh8Mhq/be6p7Kqv2MO27rDACBO141zFh4YN5A==
+X-Received: by 2002:a9d:a55:: with SMTP id 79mr2843947otg.295.1588693719487;
+        Tue, 05 May 2020 08:48:39 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a93sm694156otc.12.2020.05.05.08.46.07
+        by smtp.gmail.com with ESMTPSA id r6sm657754oom.26.2020.05.05.08.48.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 08:46:08 -0700 (PDT)
-Received: (nullmailer pid 12692 invoked by uid 1000);
-        Tue, 05 May 2020 15:46:07 -0000
-Date:   Tue, 5 May 2020 10:46:07 -0500
+        Tue, 05 May 2020 08:48:38 -0700 (PDT)
+Received: (nullmailer pid 16464 invoked by uid 1000);
+        Tue, 05 May 2020 15:48:38 -0000
+Date:   Tue, 5 May 2020 10:48:38 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
-        Saravanan Sekar <sravanhome@gmail.com>
-Subject: Re: [PATCH v11 1/6] dt-bindings: mfd: add document bindings for
- mp2629
-Message-ID: <20200505154607.GA12636@bogus>
-References: <20200430155810.21383-1-sravanhome@gmail.com>
- <20200430155810.21383-2-sravanhome@gmail.com>
+        linux-arm-kernel@lists.infradead.org,
+        Robert Foss <robert.foss@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v10 1/3] media: dt-bindings: ov8856: Document YAML
+ bindings
+Message-ID: <20200505154837.GA16403@bogus>
+References: <20200505100129.104673-1-robert.foss@linaro.org>
+ <20200505100129.104673-2-robert.foss@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430155810.21383-2-sravanhome@gmail.com>
+In-Reply-To: <20200505100129.104673-2-robert.foss@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Apr 2020 17:58:05 +0200, Saravanan Sekar wrote:
-> Add device tree binding information for mp2629 mfd driver.
+On Tue,  5 May 2020 12:01:29 +0200, Robert Foss wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 > 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> This patch adds documentation of device tree in YAML schema for the
+> OV8856 CMOS image sensor.
+> 
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> Reviewed-by: Maxime Ripard <mripard@kernel.org>
 > ---
->  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 62 +++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> 
+> - Changes since v9:
+>   * Remove remote-endpoint property
+>   * Marco: Make port property required again
+>   * Sakari: Remove Ben as a maintainer
+>   * Sakari: Replace data-lanes with const items
+>   * Sakari: Remove clock-lanes property
+>   * Sakari & Rob Herring: Change type of link-frequency
+>     work around dt-schema bug
+> 
+> - Changes since v8:
+>   * Maxime: Added r-b
+> 
+> - Changes since v7:
+>   * Marco: Make 'port' property optional
+>   * Maxime & Sakari: Add 'link-frequencies' property to dt binding
+>   * robher: Improve description for 'port' property
+> 
+> - Changes since v6:
+>   * Marco: remove qcom specifics from DT example
+>    
+> - Changes since v5:
+>   * Add assigned-clocks and assigned-clock-rates
+>   * robher: dt-schema errors
+> 
+> - Changes since v4:
+>   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+>   * Add clock-lanes property to example
+>   * robher: Fix syntax error in devicetree example
+> 
+> - Changes since v3:
+>   * robher: Fix syntax error
+>   * robher: Removed maxItems
+>   * Fixes yaml 'make dt-binding-check' errors
+> 
+> - Changes since v2:
+> 
+> - Changes since v1:
+>   Fixes comments from Sakari, Tomasz
+>   * Add clock-frequency and link-frequencies in DT
+> 
+>  .../devicetree/bindings/media/i2c/ov8856.yaml | 142 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
