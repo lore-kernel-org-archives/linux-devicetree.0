@@ -2,90 +2,248 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB3DC47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8310C47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCE2C206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F14206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588705456;
-	bh=UuP7WLJzu8BnRd/wowK2PGbs6OHwi5d5lGEgpD9tO7E=;
+	s=default; t=1588705679;
+	bh=JL5IORmgqPh9bputKI/4vX0xw2uIrlc4Mxz0cHBqlqo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Q3QL7qfMk28OGMqUMLToI0d6+errjGlBsE/vEP2qLj+oSWOUPLChNGAVXaggi1A4
-	 stUbVn8ZkYBuqISFg79K8vSU+1JkRMlq0vPIex4QydpKakzsc1CG6DL3ysUvjp6jBx
-	 zbNg29yOKEdfNskHadY1rvsbWdoH2Kl4Gb1cUB48=
+	b=rM6YQ+T5umwIZv3ccD4EzPYccw9NiPfcVKqnW0utNkOs0qCAfVfJyE/MiRghrtX5P
+	 AqPWiDWiD46hZGHH295D8kRe9kATNZLTILnrzFk3XEWiUXGu4EAihfxVOOAFtNWLWL
+	 a5uiljBIEku7vUly/l9TN2KjBnLIhHlspIht7Rnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgEETEO (ORCPT
+        id S1728707AbgEETHz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 15:04:14 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42255 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgEETEN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:04:13 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m18so2616534otq.9;
-        Tue, 05 May 2020 12:04:13 -0700 (PDT)
+        Tue, 5 May 2020 15:07:55 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43729 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbgEETHz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:07:55 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g14so2619590otg.10;
+        Tue, 05 May 2020 12:07:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ez2jZ5YWvWKk1xrc5GCCzcclQFVn2i3O0Z1QVwxg5FI=;
-        b=g3DZn84OeRUG8jNd8/IeYMOL9t/isV/MbWAWk5N63VqO6nZMKiaF7n04514Bfa5OhE
-         Ik62VxjsNMxdPM+4OKzAYf2yd9QrysKwg1SPxm4Lqnk3hlVWLiJzW7UZEOe5JYPOnlRY
-         5/zQa26t6zPaU7OBKpDkupbwk/SC0UCzIH5C/Ud9QaBDVc2EACuu1JhlfGC12tnFl+VZ
-         jZX/EM6sfroYFFFD5XOwiPXnE4VPOR37vFMiNBeXbVuzt4FgdJwUL86eSvDUU9nQh6fH
-         oNp/H/A+WaqXoo7MI7004jv0n5lOJb90dEb6SxHSC45Y1vOk3cw3KU99UKmU1a/dwQPp
-         axPw==
-X-Gm-Message-State: AGi0PuZuERs71OytXu5G1m3tsaLOadTfuDKazCK9PqGgwK0ZIjvaHGFv
-        pPZNHZSK/Majbpqth/9mUA==
-X-Google-Smtp-Source: APiQypLUoaZRtev0sjEUdQ8Wn5budqzOQLwjk0QYb1YINN2vbjLc9NGTn4SK0zkfuNm90+AXolxkHg==
-X-Received: by 2002:a9d:7d8a:: with SMTP id j10mr3878531otn.266.1588705452881;
-        Tue, 05 May 2020 12:04:12 -0700 (PDT)
+        bh=yRzXKHUNDJ+mtxR4YILju7sSskHiz9OTnTLXZbQ3p2Y=;
+        b=hIvg7SPDZem/i5nuv/x0WIHo3fP8UXKpoIxYdnDvlKZqdJFoCALTaVUOkXgNVFBqFa
+         MVmbgeAecx9cWY3LFz9TW44i9g8n0DnazcP1MeDyyHVUt7OR0R0Ys/7nxpgONNIzGTDO
+         9Smp5KK3fMUs6nmZIEmKIB3+F3WNbgzT+ZItryeunhuj6byIVBqErLA8y8nsLssxYxNN
+         3as4AFTSUPMVD9rW/wJiAH+/34SbIzjCdm3MOngQR8HoHTvrlyV+BpUF68YshYYgAaDF
+         KbZrkDmNvIshCsOhyF9gyvjQObU6l7SiOWVgXS4HbGOV6qlLo2y6Ga9kNtKjUW0od+zw
+         ltug==
+X-Gm-Message-State: AGi0PuYNHe4lL4/ufB+J9t/Vz2A9iWmQ2X2JaOMlrdULIHHUBkwzcNgF
+        rhq9/RrwOt26X6Nkprw6yQ==
+X-Google-Smtp-Source: APiQypK2eZKZF5A9T34e/f8dTGyfZ0o4fZJqUzZkYfTgjBhAmNs3W9y7CwGgIbJcYFLhw+3Fn9UvsA==
+X-Received: by 2002:a9d:4716:: with SMTP id a22mr3514646otf.46.1588705674224;
+        Tue, 05 May 2020 12:07:54 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k8sm400975oop.30.2020.05.05.12.04.11
+        by smtp.gmail.com with ESMTPSA id z10sm464168oon.5.2020.05.05.12.07.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 12:04:12 -0700 (PDT)
-Received: (nullmailer pid 13521 invoked by uid 1000);
-        Tue, 05 May 2020 19:04:11 -0000
-Date:   Tue, 5 May 2020 14:04:11 -0500
+        Tue, 05 May 2020 12:07:53 -0700 (PDT)
+Received: (nullmailer pid 19674 invoked by uid 1000);
+        Tue, 05 May 2020 19:07:52 -0000
+Date:   Tue, 5 May 2020 14:07:52 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, robh@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH V6 3/4] backlight: qcom-wled: Add WLED5 bindings
-Message-ID: <20200505190410.GA13452@bogus>
-References: <1587656017-27911-1-git-send-email-kgunda@codeaurora.org>
- <1587656017-27911-4-git-send-email-kgunda@codeaurora.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/7] dt-bindings: iio/adc: Convert ingenic-adc docs to
+ YAML.
+Message-ID: <20200505190752.GA16143@bogus>
+References: <20200503171451.44034-1-contact@artur-rojek.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587656017-27911-4-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <20200503171451.44034-1-contact@artur-rojek.eu>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 23 Apr 2020 21:03:36 +0530, Kiran Gunda wrote:
-> Add WLED5 specific bindings.
+On Sun, May 03, 2020 at 07:14:45PM +0200, Artur Rojek wrote:
+> Convert the textual documentation of Device Tree bindings for the
+> Ingenic JZ47xx SoCs ADC controller to YAML.
 > 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> The `interrupts` property is now explicitly listed and marked as
+> required. While missing from the previous textual documentation, this
+> property has been used with all the boards which probe this driver.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  .../bindings/leds/backlight/qcom-wled.yaml         | 59 ++++++++++++++++++++--
->  1 file changed, 56 insertions(+), 3 deletions(-)
 > 
+> Changes:
+> 
+> v6: new patch
+> 
+>  .../bindings/iio/adc/ingenic,adc.txt          | 49 ------------
+>  .../bindings/iio/adc/ingenic,adc.yaml         | 74 +++++++++++++++++++
+>  2 files changed, 74 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> deleted file mode 100644
+> index cd9048cf9dcf..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> +++ /dev/null
+> @@ -1,49 +0,0 @@
+> -* Ingenic JZ47xx ADC controller IIO bindings
+> -
+> -Required properties:
+> -
+> -- compatible: Should be one of:
+> -  * ingenic,jz4725b-adc
+> -  * ingenic,jz4740-adc
+> -  * ingenic,jz4770-adc
+> -- reg: ADC controller registers location and length.
+> -- clocks: phandle to the SoC's ADC clock.
+> -- clock-names: Must be set to "adc".
+> -- #io-channel-cells: Must be set to <1> to indicate channels are selected
+> -  by index.
+> -
+> -ADC clients must use the format described in iio-bindings.txt, giving
+> -a phandle and IIO specifier pair ("io-channels") to the ADC controller.
+> -
+> -Example:
+> -
+> -#include <dt-bindings/iio/adc/ingenic,adc.h>
+> -
+> -adc: adc@10070000 {
+> -	compatible = "ingenic,jz4740-adc";
+> -	#io-channel-cells = <1>;
+> -
+> -	reg = <0x10070000 0x30>;
+> -
+> -	clocks = <&cgu JZ4740_CLK_ADC>;
+> -	clock-names = "adc";
+> -
+> -	interrupt-parent = <&intc>;
+> -	interrupts = <18>;
+> -};
+> -
+> -adc-keys {
+> -	...
+> -	compatible = "adc-keys";
+> -	io-channels = <&adc INGENIC_ADC_AUX>;
+> -	io-channel-names = "buttons";
+> -	...
+> -};
+> -
+> -battery {
+> -	...
+> -	compatible = "ingenic,jz4740-battery";
+> -	io-channels = <&adc INGENIC_ADC_BATTERY>;
+> -	io-channel-names = "battery";
+> -	...
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> new file mode 100644
+> index 000000000000..e9c46fff840a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019-2020 Artur Rojek
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/iio/adc/ingenic,adc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Ingenic JZ47xx ADC controller IIO bindings
+> +
+> +maintainers:
+> +  - Artur Rojek <contact@artur-rojek.eu>
+> +
+> +description: >
+> +  Industrial I/O subsystem bindings for ADC controller found in
+> +  Ingenic JZ47xx SoCs.
+> +
+> +  ADC clients must use the format described in iio-bindings.txt, giving
+> +  a phandle and IIO specifier pair ("io-channels") to the ADC controller.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ingenic,jz4725b-adc
+> +      - ingenic,jz4740-adc
+> +      - ingenic,jz4770-adc
+> +
+> +  '#io-channel-cells':
+> +    const: 1
+> +    description:
+> +      Must be set to <1> to indicate channels are selected by index.
+> +
+> +  reg:
+> +    items:
+> +      - description: ADC controller registers location and length.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+That's all 'reg' properties. Just 'maxItems: 1' is good for single 
+entry.
+
+> +
+> +  clocks:
+> +    items:
+> +      - description: phandle to the SoC's ADC clock.
+
+Same here.
+
+> +
+> +  clock-names:
+> +    items:
+> +      - const: adc
+> +
+> +  interrupts:
+> +    items:
+> +      - description: IRQ line for the ADC.
+
+And here.
+
+> +
+> +required:
+> +  - compatible
+> +  - '#io-channel-cells'
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4740-cgu.h>
+> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
+> +
+> +    adc@10070000 {
+> +            compatible = "ingenic,jz4740-adc";
+> +            #io-channel-cells = <1>;
+> +
+> +            reg = <0x10070000 0x30>;
+> +
+> +            clocks = <&cgu JZ4740_CLK_ADC>;
+> +            clock-names = "adc";
+> +
+> +            interrupt-parent = <&intc>;
+> +            interrupts = <18>;
+> +    };
+> -- 
+> 2.26.2
+> 
