@@ -2,265 +2,129 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFA2C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 23:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D83C47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 23:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D394E206FA
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 23:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1BC206FA
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 23:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XuU7dBkY"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="noLNRkIA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgEEXP1 (ORCPT
+        id S1728076AbgEEXVi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 19:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728076AbgEEXP0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 19:15:26 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B383FC061A0F
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 16:15:26 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id y6so23530pjc.4
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 16:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Dm0dgRkdL/C9MFaGoSlAZDwZiTAnrAgNi7X8qdq6PDw=;
-        b=XuU7dBkYKWBMVd39kmPbpe8lfR9Z+D/yZK0CeYken39/718BQlxvwVb7dW3uKj0HI/
-         ThGz7AKBa86cW5AswNfNJA4RpccID/ytmy3lJt5kH95222DI4cf8qVkS4Nz8UqbsXLzZ
-         deXx2k0YXghUnpLtxY5q7KhqhbZB/9L8kDEI4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Dm0dgRkdL/C9MFaGoSlAZDwZiTAnrAgNi7X8qdq6PDw=;
-        b=LHMpXCBdctfEFAqXYtaJcn9/JZ5UJNvOLmfGHEglUto1ltW+fyXwPI9rrW2/49Vf02
-         Zk1f83aH5BvPZzYGqmDS6f5HSS/0P+MTRF54WwCQ84MLetHQElR6Y6n5arUfk8ngJLpm
-         ARK9O6izlDS8oJowoI+xXF95CfnnFd4tNbVD2iXO2g6Sl9deB56NKmNu0uD8cGPm5Jbt
-         K5JlhJYVWYUlgxNuChUd4FzP7X94jOsrdjjDJthRXJ+6zedsYtdZ2DCp2hAMyW96s4FG
-         Co23AUdaFGRAz0t8lBgfS8p1OEVF9+87fph79vMMCxZNcZGMID8M8nsjhRBSNx3Flxrb
-         3bvg==
-X-Gm-Message-State: AGi0PuaCChtOUrp1wZL7PB1FO/XEEV24Znphjt+PjW2bWCGY3sfyehh8
-        ny4i2inzP7v0cva7RRJIZkQvgQ==
-X-Google-Smtp-Source: APiQypJp5E93vs/vJZmNsAUhYqY8kUxmJykSuvx1ycRtb6r7XIggG4IKljm1uboDyQqbr1ti1ZVacw==
-X-Received: by 2002:a17:90a:d78e:: with SMTP id z14mr6251945pju.125.1588720526172;
-        Tue, 05 May 2020 16:15:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r28sm72249pfg.186.2020.05.05.16.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 16:15:25 -0700 (PDT)
-Date:   Tue, 5 May 2020 16:15:24 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
-        pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] pstore/ram: in ramoops_platform_data convert
- dump_oops to max_reason
-Message-ID: <202005051559.946100505D@keescook>
-References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
- <20200505154510.93506-4-pasha.tatashin@soleen.com>
+        Tue, 5 May 2020 19:21:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45782 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgEEXVh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 19:21:37 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 045NHtoc137361;
+        Tue, 5 May 2020 23:21:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=M9UOEBWwmZ184fEobRSilNOjw+98cXkdvmHQbspPnsY=;
+ b=noLNRkIA3arLBSV/Gy+JnMlFFFlWcsuRRx/XKm3QnFvmsLdVdtUHAHjKeso6l1oMQetI
+ DzL0URLbwldIJlBrg8IXt39smovo+u7nBrwT9iLMi7iIkad0QGba532SVAEX85lSUQks
+ caMQq55eR6rAWKVyxa+DB/OFLfLInKdJHShNqyH66ryVMek2Q/UguRgWawg4QTVQ0wnw
+ dgEZ5aBW+HY+QcW3wgRTJbsFjPgfxS6p7XWuFM/LK8gpk8XJ0nNOV9LOLYrE8uqE/b2c
+ X6tR3BNhTDE5rSUWQKarsOJjBCqfQ52u1GoE6BPus2dwpwBgcACTS2s2dcPcQv/gQdbJ NA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 30s1gn7bf5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 23:21:21 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 045NHiPq009559;
+        Tue, 5 May 2020 23:21:20 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 30t1r67h7a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 May 2020 23:21:20 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 045NLJI3030865;
+        Tue, 5 May 2020 23:21:19 GMT
+Received: from [10.159.154.132] (/10.159.154.132)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 05 May 2020 16:21:19 -0700
+Subject: Re: [PATCH v2 0/2] soc: ti: add k3 platforms chipid module driver
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>, devicetree@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Dave Gerlach <d-gerlach@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+References: <20200505193417.2112-1-grygorii.strashko@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <c091ac42-ac28-477c-90a9-4bbe790d42f7@oracle.com>
+Date:   Tue, 5 May 2020 16:21:17 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505154510.93506-4-pasha.tatashin@soleen.com>
+In-Reply-To: <20200505193417.2112-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050175
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9612 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050175
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 05, 2020 at 11:45:08AM -0400, Pavel Tatashin wrote:
-> Now, that pstore_register() can correctly pass max_reason to kmesg dump
-> facility, use it instead of dump_oops boolean.
+
+
+On 5/5/20 12:34 PM, Grygorii Strashko wrote:
+> Hi All,
 > 
-> Replace in ramoops_platform_data dump_oops with max_reason. When dump_oops
-> was enabled set max_reason to KMSG_DUMP_OOPS, otherwise set it to
-> KMSG_DUMP_PANIC.
+> This series introduces TI K3 Multicore SoC platforms chipid module driver
+> which provides identification support of the TI K3 SoCs (family, revision)
+> and register this information with the SoC bus. It is available under
+> /sys/devices/soc0/ for user space, and can be checked, where needed,
+> in Kernel using soc_device_match().
+> It is also required for introducing support for new revisions of
+> K3 AM65x/J721E SoCs.
 > 
-> Remove filtering logic from ramoops_pstore_write(), as that is not needed
-> anymore, only dmesges specified by max_reason are passed to
-> ramoops_pstore_write(). Also, because of this, we can remove
-> cxt->dump_oops.
-
-This is all looking good. I think I'd like to see patch 3 and 4 merged,
-though. I'd like to make the dump_oops/max_reason conversion in one
-patch. Noted below...
-
+> Example J721E:
+>    # cat /sys/devices/soc0/{machine,family,revision}
+>    Texas Instruments K3 J721E SoC
+>    J721E
+>    SR1.0
 > 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> ---
->  Documentation/admin-guide/ramoops.rst     | 11 ++++++----
->  drivers/platform/chrome/chromeos_pstore.c |  2 +-
->  fs/pstore/ram.c                           | 26 +++++++----------------
->  include/linux/pstore_ram.h                |  2 +-
->  4 files changed, 17 insertions(+), 24 deletions(-)
+> Example AM65x:
+>    # cat /sys/devices/soc0/{machine,family,revision}
+>    Texas Instruments AM654 Base Board
+>    AM65X
+>    SR1.0
 > 
-> diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
-> index 6dbcc5481000..a296e1aa1617 100644
-> --- a/Documentation/admin-guide/ramoops.rst
-> +++ b/Documentation/admin-guide/ramoops.rst
-> @@ -32,11 +32,14 @@ memory to be mapped strongly ordered, and atomic operations on strongly ordered
->  memory are implementation defined, and won't work on many ARMs such as omaps.
->  
->  The memory area is divided into ``record_size`` chunks (also rounded down to
-> -power of two) and each oops/panic writes a ``record_size`` chunk of
-> +power of two) and each kmesg dump writes a ``record_size`` chunk of
->  information.
->  
-> -Dumping both oopses and panics can be done by setting 1 in the ``dump_oops``
-> -variable while setting 0 in that variable dumps only the panics.
-> +Dumping reasons can be set via max_reason value, as defined in
-> +include/linux/kmsg_dump.h: kmsg_dump_reason. For example, to
-> +dump for both oopses and panics reasons, max_reason should be set to 2
-> +(KMSG_DUMP_OOPS), to dump panics only max_reason should be set to 1
-> +(KMSG_DUMP_PANIC).
->  
->  The module uses a counter to record multiple dumps but the counter gets reset
->  on restart (i.e. new dumps after the restart will overwrite old ones).
-> @@ -90,7 +93,7 @@ Setting the ramoops parameters can be done in several different manners:
->          .mem_address            = <...>,
->          .mem_type               = <...>,
->          .record_size            = <...>,
-> -        .dump_oops              = <...>,
-> +        .max_reason             = <...>,
->          .ecc                    = <...>,
->    };
-
-Good, yes, dump_oops should be removed from the platform data structure
-since that's an entirely internal API.
-
->  
-> diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
-> index d13770785fb5..fa51153688b4 100644
-> --- a/drivers/platform/chrome/chromeos_pstore.c
-> +++ b/drivers/platform/chrome/chromeos_pstore.c
-> @@ -57,7 +57,7 @@ static struct ramoops_platform_data chromeos_ramoops_data = {
->  	.record_size	= 0x40000,
->  	.console_size	= 0x20000,
->  	.ftrace_size	= 0x20000,
-> -	.dump_oops	= 1,
-> +	.max_reason	= KMSG_DUMP_OOPS,
->  };
->  
->  static struct platform_device chromeos_ramoops = {
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index 795622190c01..223581aeea96 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -81,7 +81,6 @@ struct ramoops_context {
->  	size_t console_size;
->  	size_t ftrace_size;
->  	size_t pmsg_size;
-> -	int dump_oops;
->  	u32 flags;
->  	struct persistent_ram_ecc_info ecc_info;
->  	unsigned int max_dump_cnt;
-> @@ -381,18 +380,6 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
->  	if (record->type != PSTORE_TYPE_DMESG)
->  		return -EINVAL;
->  
-> -	/*
-> -	 * Out of the various dmesg dump types, ramoops is currently designed
-> -	 * to only store crash logs, rather than storing general kernel logs.
-> -	 */
-> -	if (record->reason != KMSG_DUMP_OOPS &&
-> -	    record->reason != KMSG_DUMP_PANIC)
-> -		return -EINVAL;
-> -
-> -	/* Skip Oopes when configured to do so. */
-> -	if (record->reason == KMSG_DUMP_OOPS && !cxt->dump_oops)
-> -		return -EINVAL;
-> -
->  	/*
->  	 * Explicitly only take the first part of any new crash.
->  	 * If our buffer is larger than kmsg_bytes, this can never happen,
-> @@ -687,7 +674,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
->  	pdata->mem_size = resource_size(res);
->  	pdata->mem_address = res->start;
->  	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
-> -	pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
-> +	dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
-:
-Is this setting the module param variable? That shouldn't happen here --
-we may fail the DT and overwrite the user-configured setting for a
-different backend. This should be a local variable and the "final"
-max_reason should be calculated in this function, I think.
-
->  
->  #define parse_size(name, field) {					\
->  		ret = ramoops_parse_dt_size(pdev, name, &value);	\
-> @@ -785,7 +772,6 @@ static int ramoops_probe(struct platform_device *pdev)
->  	cxt->console_size = pdata->console_size;
->  	cxt->ftrace_size = pdata->ftrace_size;
->  	cxt->pmsg_size = pdata->pmsg_size;
-> -	cxt->dump_oops = pdata->dump_oops;
->  	cxt->flags = pdata->flags;
->  	cxt->ecc_info = pdata->ecc_info;
->  
-> @@ -828,8 +814,14 @@ static int ramoops_probe(struct platform_device *pdev)
->  	 * the single region size is how to check.
->  	 */
->  	cxt->pstore.flags = 0;
-> -	if (cxt->max_dump_cnt)
-> +	if (cxt->max_dump_cnt) {
->  		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
-> +		if (pdata->max_reason <= 0) {
-> +			pdata->max_reason = dump_oops ? KMSG_DUMP_OOPS :
-> +							KMSG_DUMP_PANIC;
-> +		}
-> +		cxt->pstore.max_reason = pdata->max_reason;
-> +	}
-
-I'm going to take a stab at reorganizing the DT, platform data, and
-module args to have default handling done in a way that I like. I'm
-having a hard time making specific suggestions here. :)
-
->  	if (cxt->console_size)
->  		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
->  	if (cxt->max_ftrace_cnt)
-> @@ -865,7 +857,6 @@ static int ramoops_probe(struct platform_device *pdev)
->  	mem_size = pdata->mem_size;
->  	mem_address = pdata->mem_address;
->  	record_size = pdata->record_size;
-> -	dump_oops = pdata->dump_oops;
->  	ramoops_console_size = pdata->console_size;
->  	ramoops_pmsg_size = pdata->pmsg_size;
->  	ramoops_ftrace_size = pdata->ftrace_size;
-> @@ -948,7 +939,6 @@ static void __init ramoops_register_dummy(void)
->  	pdata.console_size = ramoops_console_size;
->  	pdata.ftrace_size = ramoops_ftrace_size;
->  	pdata.pmsg_size = ramoops_pmsg_size;
-> -	pdata.dump_oops = dump_oops;
->  	pdata.flags = RAMOOPS_FLAG_FTRACE_PER_CPU;
->  
->  	/*
-> diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
-> index 9cb9b9067298..9f16afec7290 100644
-> --- a/include/linux/pstore_ram.h
-> +++ b/include/linux/pstore_ram.h
-> @@ -133,7 +133,7 @@ struct ramoops_platform_data {
->  	unsigned long	console_size;
->  	unsigned long	ftrace_size;
->  	unsigned long	pmsg_size;
-> -	int		dump_oops;
-> +	int		max_reason;
->  	u32		flags;
->  	struct persistent_ram_ecc_info ecc_info;
->  };
-> -- 
-> 2.25.1
+> Changes in v2:
+>   - pr_debug() replaced with pr_info() to show SoC info on init
+>   - minor format change
+>   - split series on driver and platform changes
+>   - add Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
 > 
+> v1: https://lwn.net/Articles/818577/
+> 
+> Grygorii Strashko (2):
+>    dt-bindings: soc: ti: add binding for k3 platforms chipid module
+>    soc: ti: add k3 platforms chipid module driver
+> 
+Need ack from DT maintainers on bindings.
 
-So, hold off on a v3, and I'll send a series tomorrow, based on what
-you've got here for v2. I like the refactoring; it's much cleaner to
-have max_reason than dump_oops! :)
-
--- 
-Kees Cook
+Regards,
+Santosh
