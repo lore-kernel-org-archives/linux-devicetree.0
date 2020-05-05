@@ -2,278 +2,455 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E60C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74A3C4725A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBD42075E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996C7206E6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 05:52:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="d44e5JnE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725830AbgEEF3J (ORCPT
+        id S1728143AbgEEFwj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 01:29:09 -0400
-Received: from mga02.intel.com ([134.134.136.20]:54012 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbgEEF3I (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 01:29:08 -0400
-IronPort-SDR: yESrA+JmCXKYQnS4GH2QRURm/w7t1WOjoexKjH5DTsJZJV9Tcvsy6Y2j470gEXfcBs+uFP+gTL
- 8foQalLN5ldQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 22:29:07 -0700
-IronPort-SDR: Ka2n6nzc72bmrDfCQ8MCGg92c53MFCDeHzralBloqv1HAkxaQX7zKxf9PgWcCfyBz/NDT9/MPv
- VKZRx16Nlrxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
-   d="scan'208";a="284127785"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 04 May 2020 22:29:06 -0700
-Received: from [10.255.159.65] (vramuthx-mobl1.gar.corp.intel.com [10.255.159.65])
-        by linux.intel.com (Postfix) with ESMTP id 24058580609;
-        Mon,  4 May 2020 22:29:00 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     tglx@linutronix.de, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        masonccyang@mxic.com.tw, anders.roxell@linaro.org, vigneshr@ti.com,
-        arnd@arndb.de, hauke.mehrtens@intel.com, richard@nod.at,
-        brendanhiggins@google.com, linux-mips@vger.kernel.org,
-        robh+dt@kernel.org, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com, qi-ming.wu@intel.com,
-        andriy.shevchenko@intel.com
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429162249.55d38ee8@collabora.com>
- <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
- <20200429164832.6800fc70@collabora.com>
- <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
- <20200429173107.5c6d2f55@collabora.com>
- <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
- <20200430102114.29b6552f@collabora.com>
- <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
- <20200430103658.4b0b979e@collabora.com>
- <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
- <20200430143600.27031639@collabora.com>
- <20200430150124.7856d112@collabora.com>
- <df7c1952-bc9b-bad7-bf31-d09707a0829e@linux.intel.com>
- <20200504090824.1eb16b78@collabora.com>
- <854521ed-b0f9-0f0f-2cd7-5ad11b2d059a@linux.intel.com>
- <20200504091755.0d0e73aa@collabora.com>
- <db023399-8b4d-c75c-30c8-b35e38e2e5f8@linux.intel.com>
- <20200504105828.72aaf7b8@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <6a41963b-e018-1a2d-88d4-5bb59d56a7e5@linux.intel.com>
-Date:   Tue, 5 May 2020 13:28:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 01:52:39 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17526 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726788AbgEEFwi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 01:52:38 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0455lPhI009538;
+        Tue, 5 May 2020 07:52:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=sF4j2SqbetdQG3bc1UfJr1QolPm7JTCYL8LwvwH5cZ8=;
+ b=d44e5JnEZT0HHP/1fg2QjB08eFnjfZT1xtNPCEOmeekgsRCaEcV0Rjv1K+eG17weP/Q1
+ Z9ZgzPXphpDFKzXCQdwqFs+2OdcUyMK/3Acnudh7v93DW7AGyh3li2iuzl7kXFWLoJE9
+ e8cefNLchEOEsTTvHGW0u5Uhcv1nY6d5IMa3Z2fzRTBZDdewFdYKEapa633Ha+v+3k3/
+ LG2Dmx86Pfxhm3SiZfZO+aOGCxS6cusLqZeXOMmpiOiFRzSK911xC0XsK725kL4u0nTt
+ SI80Xh2guGqJfEQsWZmgf0DW7wNZMQkxiTeGgj22ZtQfYnJGaoF8vGJ5a5FuMD6yzWgh 7Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30rxmvdw0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 07:52:22 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 96F3D100038;
+        Tue,  5 May 2020 07:52:21 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8A64321CA74;
+        Tue,  5 May 2020 07:52:21 +0200 (CEST)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May 2020 07:52:21
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@kernel.org>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH 4/4] i2c: stm32f7: Add SMBus-specific protocols support
+Date:   Tue, 5 May 2020 07:51:11 +0200
+Message-ID: <1588657871-14747-5-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
+References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20200504105828.72aaf7b8@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_02:2020-05-04,2020-05-05 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+This patch adds the support for SMBus Host notify and SMBus Alert
+extensions protocols
 
-On 4/5/2020 4:58 pm, Boris Brezillon wrote:
-> On Mon, 4 May 2020 16:50:08 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> 
->> Hi Boris,
->>
->> On 4/5/2020 3:17 pm, Boris Brezillon wrote:
->>> On Mon, 4 May 2020 15:15:08 +0800
->>> "Ramuthevar, Vadivel MuruganX"
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>    
->>>> Hi Boris,
->>>>
->>>>      Thank you very much for the prompt review and suggestions...
->>>>
->>>> On 4/5/2020 3:08 pm, Boris Brezillon wrote:
->>>>> On Mon, 4 May 2020 10:02:35 +0800
->>>>> "Ramuthevar, Vadivel MuruganX"
->>>>> <vadivel.muruganx.ramuthevar@linux.intel.com>  wrote:
->>>>>       
->>>>>> Hi Boris,
->>>>>>
->>>>>> On 30/4/2020 9:01 pm, Boris Brezillon wrote:
->>>>>>> On Thu, 30 Apr 2020 14:36:00 +0200
->>>>>>> Boris Brezillon<boris.brezillon@collabora.com>  wrote:
->>>>>>>          
->>>>>>>> On Thu, 30 Apr 2020 17:07:03 +0800
->>>>>>>> "Ramuthevar, Vadivel MuruganX"
->>>>>>>> <vadivel.muruganx.ramuthevar@linux.intel.com>  wrote:
->>>>>>>>         
->>>>>>>>>>>> The question is, is it the same value we have in nand_pa or it is
->>>>>>>>>>>> different?
->>>>>>>>>>>>                  
->>>>>>>>>>> Different address which is 0xE1400000 NAND_BASE_PHY address.
->>>>>>>>>> Then why didn't you tell me they didn't match when I suggested to pass
->>>>>>>>> sorry, because you keep asking nand_pa after that only I realized that.
->>>>>>>>>             
->>>>>>>>>> nand_pa? So now the question is, what does this address represent?
->>>>>>>>>                     EBU-MODULE
->>>>>>>>>       _________     _______________________
->>>>>>>>> |         |   |            |NAND CTRL  |
->>>>>>>>> | FPI BUS |==>| CS0(0x174) | 0xE100    ( 0xE14/0xE1C) NAND_PHY_BASE
->>>>>>>>> |_________|   |_CS1(0x17C)_|__________ |
->>>>>>>>>
->>>>>>>>> EBU_CONRTROLLER_BASE : 0xE0F0_0000
->>>>>>>>> HSNAND_BASE: 0xE100_0000
->>>>>>>>> NAND_CS0: 0xE140_0000
->>>>>>>>> NAND_CS1: 0xE1C0_0000
->>>>>>>>>
->>>>>>>>> MEM_REGION_BASE_CS0: 0x17400 (internal to ebu controller )
->>>>>>>>> MEM_REGION_BASE_CS1: 0x17C00
->>>>>>>>>             
->>>>>>>> Hm, I wonder if we shouldn't use a 'ranges' property to describe this
->>>>>>>> address translation. Something like
->>>>>>>>
->>>>>>>> 	ebu@xxx {
->>>>>>>> 		ranges = <0x17400000 0xe1400000 0x1000>,
->>>>>>>> 			 <0x17c00000 0xe1c00000 0x1000>;
->>>>>>>> 		reg = <0x17400000>, <0x17c00000>;
->>>>>>>> 		reg-names = "cs-0", "cs-1";
->>>>>>>> 	}
->>>>>>>>
->>>>>>>> The translated address (0xE1X00000) will be available in res->start,
->>>>>>>> and the non-translated one (0x17X00000) can be retrieved with
->>>>>>>> of_get_address(). All you'd have to do then would be calculate the
->>>>>>>> mask:
->>>>>>>>
->>>>>>>> 	mask = (translated_address & original_address) >> 22;
->>>>>>>> 	num_comp_bits = fls(mask);
->>>>>>>> 	WARN_ON(mask != GENMASK(num_comp_bits - 1, 0));
->>>>>>>>
->>>>>>>> Which allows you to properly set the ADDR_SEL() register without
->>>>>>>> relying on some hardcoded values:
->>>>>>>>
->>>>>>>> 	writel(original_address | EBU_ADDR_SEL_REGEN |
->>>>>>>> 	       EBU_ADDR_COMP_BITS(num_comp_bits),
->>>>>>>> 	       ebu_host->ebu + EBU_ADDR_SEL(csid));
->>>>>>>>
->>>>>>>> That's quite important if we want to merge the xway NAND driver with
->>>>>>>> this one.
->>>>>>> Looks like the translation is done at the FPI bus declaration level (see
->>>>>>> [1]). We really need to see the big picture to take a wise decision
->>>>>>> about the bindings. Would you mind pasting your dsti/dts files
->>>>>>> somewhere? It feels like the NAND controller is a sub-part of a more
->>>>>>> generic 'memory' controller, in which case the NAND controller should be
->>>>>>> declared as a child of this generic memory bus (called localbus in [1],
->>>>>>> but maybe EBU is more accurate).
->>>>>>>
->>>>>>> [1]https://github.com/xieyaxiongfly/Atheros_CSI_tool_OpenWRT_src/blob/master/target/linux/lantiq/files-4.14/arch/mips/boot/dts/vr9.dtsi#L162
->>>>>>
->>>>>>      ebu_nand: ebu_nand@e0f00000 {
->>>>>>                      compatible = "intel,lgm-ebu-nand";
->>>>>>                      reg = <0xe0f00000 0x100
->>>>>>                      0xe1000000 0x300
->>>>>>                      0xe1400000 0x80000
->>>>>>                      0xe1c00000 0x10000>;
->>>>>>                      reg-names = "ebunand", "hsnand", "nand_cs0", nand_cs1";
->>>>>>                      dmas = <&dma0 8>, <&dma0 9>;
->>>>>>                      dma-names = "ebu_rx", "ebu_tx";
->>>>>>                      clocks =  <&cgu0 LGM_GCLK_EBU>;
->>>>>>              };
->>>>>>
->>>>>>
->>>>>> 	 &ebu_nand {
->>>>>> 	         status = "disabled";
->>>>>> 	        nand,cs = <1>;
->>>>>> 	        nand-ecc-mode = "hw";
->>>>>> 	        pinctrl-names = "default";
->>>>>> 	        pinctrl-0 = <&ebu_nand_base &ebu_cs1>;
->>>>>> 	};
->>>>>>      
->>>>>>>          
->>>>> Ok. If I understand the SoC topology correctly it should actually be
->>>>> something like that:
->>>>>
->>>>> {
->>>>> 	...
->>>>> 	fpi@xxxxx {
->>>>> 		compatible = "intel,lgm-fpi", "simple-bus";
->>>>>
->>>>> 		/* You might have other ranges to define here */
->>>>> 		ranges = <0x16000000 0xe0000000 0x1000000>;
->>>>>
->>>>> 		...
->>>>
->>>> Sorry, we do not have fpi tree node in our dts/dtsi file instead we have
->>>> the below one.. , that also not included the major peripherals
->>>> controllers node.
->>>>            /* Special part from CPU core */
->>>>            core: core {
->>>>                    compatible = "intel,core", "simple-bus";
->>>>                    #address-cells = <1>;
->>>>                    #size-cells = <1>;
->>>>                    ranges;
->>>>
->>>>                    ioapic1: interrupt-controller@fec00000 {
->>>>                            #interrupt-cells = <2>;
->>>>                            #address-cells = <0>;
->>>>                            compatible = "intel,ce4100-ioapic";
->>>>                            interrupt-controller;
->>>>                            reg = <0xfec00000 0x1000>;
->>>>                            nr_entries = <256>;
->>>>                    };
->>>>
->>>>                    hpet: timer@fed00000 {
->>>>                            compatible = "intel,ce4100-hpet";
->>>>                            reg = <0xfed00000 0x400>;
->>>>                    };
->>>>
->>>>                    lapic0: interrupt-controller@fee00000 {
->>>>                            compatible = "intel,ce4100-lapic";
->>>>                            reg = <0xfee00000 0x1000>;
->>>>                            no_pic_mode;
->>>>                    };
->>>>            };
->>>>
->>>> other than this, rest all in independent node .
->>>
->>> But you do have an FPI bus, right? If this is the case it should be
->>> represented.
->>
->> Yes, FPI bus is slave to core which connects all the peripherals.
->>
->>    Or is the "intel,core" bus actually the FPI bus that you
->>> named differently?
->>
->> FPI slave bus connects to core bus by OCP bridge, so here it is named
->> FPI bus, but SW perspective didn't have root tree which has all
->> sub-nodes, as of now each peripheral has its own node.
-> 
-> Duh, not sure that's a good idea to hide that, especially since you
-> have to describe the address translation that happens when crossing the
-> FPI bus (the ranges thing I mentioned previously).
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+---
+ drivers/i2c/busses/Kconfig       |   1 +
+ drivers/i2c/busses/i2c-stm32f7.c | 198 +++++++++++++++++++++++++++++--
+ 2 files changed, 189 insertions(+), 10 deletions(-)
 
-Thanks! for the keep reviewing.
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 2f6e39b41e6c..b82c2f7d7d50 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -1024,6 +1024,7 @@ config I2C_STM32F7
+ 	tristate "STMicroelectronics STM32F7 I2C support"
+ 	depends on ARCH_STM32 || COMPILE_TEST
+ 	select I2C_SLAVE
++	select I2C_SMBUS
+ 	help
+ 	  Enable this option to add support for STM32 I2C controller embedded
+ 	  in STM32F7 SoCs.
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 9c9e10ea9199..6d02ddbc1ab4 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -14,10 +14,12 @@
+  * This driver is based on i2c-stm32f4.c
+  *
+  */
++#include <linux/atomic.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/i2c.h>
++#include <linux/i2c-smbus.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+@@ -50,6 +52,8 @@
+ 
+ /* STM32F7 I2C control 1 */
+ #define STM32F7_I2C_CR1_PECEN			BIT(23)
++#define STM32F7_I2C_CR1_ALERTEN			BIT(22)
++#define STM32F7_I2C_CR1_SMBHEN			BIT(20)
+ #define STM32F7_I2C_CR1_WUPEN			BIT(18)
+ #define STM32F7_I2C_CR1_SBC			BIT(16)
+ #define STM32F7_I2C_CR1_RXDMAEN			BIT(15)
+@@ -121,6 +125,7 @@
+ 				(((n) & STM32F7_I2C_ISR_ADDCODE_MASK) >> 17)
+ #define STM32F7_I2C_ISR_DIR			BIT(16)
+ #define STM32F7_I2C_ISR_BUSY			BIT(15)
++#define STM32F7_I2C_ISR_ALERT			BIT(13)
+ #define STM32F7_I2C_ISR_PECERR			BIT(11)
+ #define STM32F7_I2C_ISR_ARLO			BIT(9)
+ #define STM32F7_I2C_ISR_BERR			BIT(8)
+@@ -134,6 +139,7 @@
+ #define STM32F7_I2C_ISR_TXE			BIT(0)
+ 
+ /* STM32F7 I2C Interrupt Clear */
++#define STM32F7_I2C_ICR_ALERTCF			BIT(13)
+ #define STM32F7_I2C_ICR_PECCF			BIT(11)
+ #define STM32F7_I2C_ICR_ARLOCF			BIT(9)
+ #define STM32F7_I2C_ICR_BERRCF			BIT(8)
+@@ -150,7 +156,7 @@
+ 
+ #define STM32F7_I2C_MAX_LEN			0xff
+ #define STM32F7_I2C_DMA_LEN_MIN			0x16
+-#define STM32F7_I2C_MAX_SLAVE			0x2
++#define STM32F7_I2C_MAX_SLAVE			0x3
+ 
+ #define STM32F7_I2C_DNF_DEFAULT			0
+ #define STM32F7_I2C_DNF_MAX			16
+@@ -274,6 +280,29 @@ struct stm32f7_i2c_msg {
+ 	u8 smbus_buf[I2C_SMBUS_BLOCK_MAX + 3] __aligned(4);
+ };
+ 
++/**
++ * struct stm32f7_i2c_host - SMBus host specific data
++ * @client: I2C slave device that represents SMBus host
++ * @notify_start: indicate that this is the start of the notify transaction
++ * @addr: device address of SMBus device that initiate SMBus host protocol
++ */
++struct stm32f7_i2c_host {
++	struct i2c_client *client;
++	bool notify_start;
++	u8 addr;
++};
++
++/**
++ * struct stm32f7_i2c_alert - SMBus alert specific data
++ * @setup: platform data for the smbus_alert i2c client
++ * @ara: I2C slave device used to respond to the SMBus Alert with Alert
++ * Response Address
++ */
++struct stm32f7_i2c_alert {
++	struct i2c_smbus_alert_setup setup;
++	struct i2c_client *ara;
++};
++
+ /**
+  * struct stm32f7_i2c_dev - private data of the controller
+  * @adap: I2C adapter for this controller
+@@ -301,6 +330,9 @@ struct stm32f7_i2c_msg {
+  * @fmp_creg: register address for clearing Fast Mode Plus bits
+  * @fmp_mask: mask for Fast Mode Plus bits in set register
+  * @wakeup_src: boolean to know if the device is a wakeup source
++ * @host_notify_cnt: atomic to know number of host_notify enabled clients
++ * @host_notify_client: SMBus host-notify client
++ * @alert: SMBus alert specific data
+  */
+ struct stm32f7_i2c_dev {
+ 	struct i2c_adapter adap;
+@@ -327,6 +359,9 @@ struct stm32f7_i2c_dev {
+ 	u32 fmp_creg;
+ 	u32 fmp_mask;
+ 	bool wakeup_src;
++	atomic_t host_notify_cnt;
++	struct i2c_client *host_notify_client;
++	struct stm32f7_i2c_alert *alert;
+ };
+ 
+ /*
+@@ -1321,10 +1356,20 @@ static int stm32f7_i2c_get_free_slave_id(struct stm32f7_i2c_dev *i2c_dev,
+ 	int i;
+ 
+ 	/*
+-	 * slave[0] supports 7-bit and 10-bit slave address
+-	 * slave[1] supports 7-bit slave address only
++	 * slave[0] support only SMBus Host address (0x8)
++	 * slave[1] supports 7-bit and 10-bit slave address
++	 * slave[2] supports 7-bit slave address only
+ 	 */
+-	for (i = STM32F7_I2C_MAX_SLAVE - 1; i >= 0; i--) {
++	if (atomic_read(&i2c_dev->host_notify_cnt)) {
++		if (slave->addr == 0x08) {
++			if (i2c_dev->slave[0])
++				goto fail;
++			*id = 0;
++			return 0;
++		}
++	}
++
++	for (i = STM32F7_I2C_MAX_SLAVE - 1; i > 0; i--) {
+ 		if (i == 1 && (slave->flags & I2C_CLIENT_TEN))
+ 			continue;
+ 		if (!i2c_dev->slave[i]) {
+@@ -1333,6 +1378,7 @@ static int stm32f7_i2c_get_free_slave_id(struct stm32f7_i2c_dev *i2c_dev,
+ 		}
+ 	}
+ 
++fail:
+ 	dev_err(dev, "Slave 0x%x could not be registered\n", slave->addr);
+ 
+ 	return -EINVAL;
+@@ -1586,6 +1632,13 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
+ 		f7_msg->result = -EINVAL;
+ 	}
+ 
++	if (status & STM32F7_I2C_ISR_ALERT) {
++		dev_dbg(dev, "<%s>: SMBus alert received\n", __func__);
++		writel_relaxed(STM32F7_I2C_ICR_ALERTCF, base + STM32F7_I2C_ICR);
++		i2c_handle_smbus_alert(i2c_dev->alert->ara);
++		return IRQ_HANDLED;
++	}
++
+ 	if (!i2c_dev->slave_running) {
+ 		u32 mask;
+ 		/* Disable interrupts */
+@@ -1776,7 +1829,13 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+ 	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
+ 		stm32f7_i2c_enable_wakeup(i2c_dev, true);
+ 
+-	if (id == 0) {
++	switch (id) {
++	case 0:
++		/* Slave SMBus Host */
++		i2c_dev->slave[id] = slave;
++		break;
++
++	case 1:
+ 		/* Configure Own Address 1 */
+ 		oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
+ 		oar1 &= ~STM32F7_I2C_OAR1_MASK;
+@@ -1789,7 +1848,9 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+ 		oar1 |= STM32F7_I2C_OAR1_OA1EN;
+ 		i2c_dev->slave[id] = slave;
+ 		writel_relaxed(oar1, i2c_dev->base + STM32F7_I2C_OAR1);
+-	} else if (id == 1) {
++		break;
++
++	case 2:
+ 		/* Configure Own Address 2 */
+ 		oar2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR2);
+ 		oar2 &= ~STM32F7_I2C_OAR2_MASK;
+@@ -1802,7 +1863,10 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+ 		oar2 |= STM32F7_I2C_OAR2_OA2EN;
+ 		i2c_dev->slave[id] = slave;
+ 		writel_relaxed(oar2, i2c_dev->base + STM32F7_I2C_OAR2);
+-	} else {
++		break;
++
++	default:
++		dev_err(dev, "I2C slave id not supported\n");
+ 		ret = -ENODEV;
+ 		goto pm_free;
+ 	}
+@@ -1843,10 +1907,10 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (id == 0) {
++	if (id == 1) {
+ 		mask = STM32F7_I2C_OAR1_OA1EN;
+ 		stm32f7_i2c_clr_bits(base + STM32F7_I2C_OAR1, mask);
+-	} else {
++	} else if (id == 2) {
+ 		mask = STM32F7_I2C_OAR2_OA2EN;
+ 		stm32f7_i2c_clr_bits(base + STM32F7_I2C_OAR2, mask);
+ 	}
+@@ -1911,6 +1975,103 @@ static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
+ 					  &i2c_dev->fmp_mask);
+ }
+ 
++static int stm32f7_i2c_enable_smbus_host(struct stm32f7_i2c_dev *i2c_dev)
++{
++	struct i2c_adapter *adap = &i2c_dev->adap;
++	void __iomem *base = i2c_dev->base;
++	struct i2c_client *client;
++
++	client = i2c_new_smbus_host_notify_device(adap);
++	if (IS_ERR(client))
++		return PTR_ERR(client);
++
++	i2c_dev->host_notify_client = client;
++
++	/* Enable SMBus Host address */
++	stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, STM32F7_I2C_CR1_SMBHEN);
++
++	return 0;
++}
++
++static void stm32f7_i2c_disable_smbus_host(struct stm32f7_i2c_dev *i2c_dev)
++{
++	void __iomem *base = i2c_dev->base;
++
++	if (i2c_dev->host_notify_client) {
++		/* Disable SMBus Host address */
++		stm32f7_i2c_clr_bits(base + STM32F7_I2C_CR1,
++				     STM32F7_I2C_CR1_SMBHEN);
++		i2c_free_smbus_host_notify_device(i2c_dev->host_notify_client);
++	}
++}
++
++static int stm32f7_i2c_reg_client(struct i2c_client *client)
++{
++	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(client->adapter);
++	int ret;
++
++	if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
++		/* Only enable on the first device registration */
++		if (atomic_inc_return(&i2c_dev->host_notify_cnt) == 1) {
++			ret = stm32f7_i2c_enable_smbus_host(i2c_dev);
++			if (ret) {
++				dev_err(i2c_dev->dev,
++					"failed to enable SMBus host notify (%d)\n",
++					ret);
++				return ret;
++			}
++		}
++	}
++
++	return 0;
++}
++
++static void stm32f7_i2c_unreg_client(struct i2c_client *client)
++{
++	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(client->adapter);
++
++	if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
++		if (atomic_dec_return(&i2c_dev->host_notify_cnt) == 0)
++			stm32f7_i2c_disable_smbus_host(i2c_dev);
++	}
++}
++
++static int stm32f7_i2c_enable_smbus_alert(struct stm32f7_i2c_dev *i2c_dev)
++{
++	struct stm32f7_i2c_alert *alert;
++	struct i2c_adapter *adap = &i2c_dev->adap;
++	struct device *dev = i2c_dev->dev;
++	void __iomem *base = i2c_dev->base;
++
++	alert = devm_kzalloc(dev, sizeof(*alert), GFP_KERNEL);
++	if (!alert)
++		return -ENOMEM;
++
++	alert->ara = i2c_new_smbus_alert_device(adap, &alert->setup);
++	if (IS_ERR(alert->ara))
++		return PTR_ERR(alert->ara);
++
++	i2c_dev->alert = alert;
++
++	/* Enable SMBus Alert */
++	stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, STM32F7_I2C_CR1_ALERTEN);
++
++	return 0;
++}
++
++static void stm32f7_i2c_disable_smbus_alert(struct stm32f7_i2c_dev *i2c_dev)
++{
++	struct stm32f7_i2c_alert *alert = i2c_dev->alert;
++	void __iomem *base = i2c_dev->base;
++
++	if (alert) {
++		/* Disable SMBus Alert */
++		stm32f7_i2c_clr_bits(base + STM32F7_I2C_CR1,
++				     STM32F7_I2C_CR1_ALERTEN);
++		i2c_unregister_device(alert->ara);
++	}
++}
++
+ static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
+ {
+ 	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SLAVE |
+@@ -1918,7 +2079,7 @@ static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
+ 		I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
+ 		I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_BLOCK_PROC_CALL |
+ 		I2C_FUNC_SMBUS_PROC_CALL | I2C_FUNC_SMBUS_PEC |
+-		I2C_FUNC_SMBUS_I2C_BLOCK;
++		I2C_FUNC_SMBUS_I2C_BLOCK | I2C_FUNC_SMBUS_HOST_NOTIFY;
+ }
+ 
+ static const struct i2c_algorithm stm32f7_i2c_algo = {
+@@ -1927,6 +2088,8 @@ static const struct i2c_algorithm stm32f7_i2c_algo = {
+ 	.functionality = stm32f7_i2c_func,
+ 	.reg_slave = stm32f7_i2c_reg_slave,
+ 	.unreg_slave = stm32f7_i2c_unreg_slave,
++	.reg_client = stm32f7_i2c_reg_client,
++	.unreg_client = stm32f7_i2c_unreg_client,
+ };
+ 
+ static int stm32f7_i2c_probe(struct platform_device *pdev)
+@@ -2088,6 +2251,16 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto pm_disable;
+ 
++	if (device_property_read_bool(&pdev->dev, "st,smbus-alert")) {
++		ret = stm32f7_i2c_enable_smbus_alert(i2c_dev);
++		if (ret) {
++			dev_err(i2c_dev->dev,
++				"failed to enable SMBus alert protocol (%d)\n",
++				ret);
++			goto i2c_adapter_remove;
++		}
++	}
++
+ 	dev_info(i2c_dev->dev, "STM32F7 I2C-%d bus adapter\n", adap->nr);
+ 
+ 	pm_runtime_mark_last_busy(i2c_dev->dev);
+@@ -2095,6 +2268,9 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++i2c_adapter_remove:
++	i2c_del_adapter(adap);
++
+ pm_disable:
+ 	pm_runtime_put_noidle(i2c_dev->dev);
+ 	pm_runtime_disable(i2c_dev->dev);
+@@ -2126,6 +2302,8 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
+ {
+ 	struct stm32f7_i2c_dev *i2c_dev = platform_get_drvdata(pdev);
+ 
++	stm32f7_i2c_disable_smbus_alert(i2c_dev);
++
+ 	i2c_del_adapter(&i2c_dev->adap);
+ 	pm_runtime_get_sync(i2c_dev->dev);
+ 
+-- 
+2.17.1
 
-SW Address translation is not required, after discussion with HW team , 
-came to know that 0x17400 and 0x17C00 internal to the SoC.
-
-NOC will translate 0xE1XX... to FPI address 0x17X... internally.
-There is an address translation in the NOC.
-0x17X... is not visible to user.
-
-so far added hard-coded values to CS0 and CS1 is not at required.
-I will change the code accordingly and sent to you.
-
-
-Regards
-Vadivel
-
-> 
