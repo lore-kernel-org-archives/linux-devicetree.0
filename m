@@ -2,100 +2,296 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADC7C47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C82C47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00BA5206A5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Oq+trMWw"
+	by mail.kernel.org (Postfix) with ESMTP id 25BD220746
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgEEPPN (ORCPT
+        id S1729427AbgEEP1u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 11:15:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729301AbgEEPPN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:15:13 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8AB6C061A0F
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 08:15:12 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id b20so1949145ejg.11
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 08:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NWufS7yMnGxvl5RSk1ItG7NV5OTHa1yb6qJ33zBP+RA=;
-        b=Oq+trMWwmRUQH1XRYdoPwFYO1xToUCD3uzdrhYOZCwM4+4LNwbpasHT0e59OHK/mkr
-         2Nfm3lBFclmqXyCZwpdAk1aR/5dcLKZkOFJ+bCGwJ1Qr6eA/gWjW9I1aOvkSkd2vLvwB
-         TL0zEjNn3bkbWfaWcuHOHbnBEG3LtlYkJunUJst8eJguY/WBHf+ZUeLBNTqY//Gh10ja
-         7JE34vPk8mekT31mstA9BUGClZOwwpQ6BMEvH2RDsaKFM8EZZGEQJx2xAuaNYaWvgfUE
-         vaYdAGNgNT+5W4xskiTiJE35MXj7GPrKePC56fVk2OH64Yex3Q61YmJdoCQ/UG8FlEu3
-         xN3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NWufS7yMnGxvl5RSk1ItG7NV5OTHa1yb6qJ33zBP+RA=;
-        b=eES46Tb+UExHqWTZ0w5TOkSyyeZgM/VWhNgbozyumHk267BvNHjrBqdh7q2OaE38n8
-         YxEFq/tkDc+pcJ03rDXVMalE8jniCE0XH0FNPJP0zOd5i7OvtD4uxYmblRyb40LKFZYB
-         2pfvnOtxXfElsCFkzj8NVpbAyOu64Nu/KZHPrlvH1uQaSFzhZzMEADHbnDS3fNLNxW7o
-         I5dsnKv/BW7GldAib7SRTzp3NotDxRtNT0tGQKr8T98yWf+g4VqHIozpUoURqDlKS3sF
-         6wobkxrxq801SOMhogN3JVp7bCDyIqu7lITJ7zFpg8Wgzrit449k7KL/v/+ZNFsFb1g1
-         Q3BQ==
-X-Gm-Message-State: AGi0PuYzLwsTT8u+sRyvz/kcWR2tjdTW9tkep1NXvwBWAwrLE+Ml8ujs
-        16fRBM5AegB/g5p1K1nxzDSqQUrJT903rfts6X1YxQ==
-X-Google-Smtp-Source: APiQypL+4aphyWXOO3H4lGHVtplHmTH5s5zeW7xNhk1CkBPsVbYgj5QGuKQWtFptEgVO6hOU9QoUkj9D9ZzM4UXjq6M=
-X-Received: by 2002:a17:906:374b:: with SMTP id e11mr3245934ejc.283.1588691711197;
- Tue, 05 May 2020 08:15:11 -0700 (PDT)
+        Tue, 5 May 2020 11:27:50 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39397 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729403AbgEEP1u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:27:50 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 051DDFF81C;
+        Tue,  5 May 2020 15:27:06 +0000 (UTC)
+Date:   Tue, 5 May 2020 17:27:06 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] clk: at91: optimize pmc data allocation
+Message-ID: <20200505152706.GS34497@piout.net>
+References: <cover.1588630999.git.mirq-linux@rere.qmqm.pl>
+ <fc6f6d67b8cee0beace4a9d9cca7431e5efa769d.1588630999.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
- <20200502143555.543636-4-pasha.tatashin@soleen.com> <202005041229.D410FE0B1@keescook>
- <CA+CK2bB1=gwaDCcYLLi56oQFS6hdc8wzG-s14rz4q7PDCnLycg@mail.gmail.com>
-In-Reply-To: <CA+CK2bB1=gwaDCcYLLi56oQFS6hdc8wzG-s14rz4q7PDCnLycg@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Tue, 5 May 2020 11:14:35 -0400
-Message-ID: <CA+CK2bCT_19KgBoNMkJ6azriJgncrvzWUQq9yZ8MDB85q5FmHg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] ramoops: add dump_all optional field to ramoops DT node
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
-        ccross@android.com, Tony Luck <tony.luck@intel.com>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fc6f6d67b8cee0beace4a9d9cca7431e5efa769d.1588630999.git.mirq-linux@rere.qmqm.pl>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kees,
+On 05/05/2020 00:37:56+0200, Michał Mirosław wrote:
+> Alloc whole data structure in one block. This makes the code shorter,
+> more efficient and easier to extend in following patch.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-According to Documentation/devicetree/bindings/submitting-patches.txt,
-DT binding docs should be separate patches; checkpath.pl also
-complaints about it. I will keep it as a separate patch in v2.
+> ---
+> v2: rebase and update to clk/clk-at91 branch
+> v3: use struct_size() and C99 trailing array
+>     as suggested by Stephen Boyd
+> v4: fixed sign-off
+> v5: no changes
+> v6: no changes
+> v7: pull all pmc_data_free() from second patch (a rebase artifact)
+> ---
+>  drivers/clk/at91/at91rm9200.c  |  2 +-
+>  drivers/clk/at91/at91sam9260.c |  2 +-
+>  drivers/clk/at91/at91sam9g45.c |  2 +-
+>  drivers/clk/at91/at91sam9n12.c |  2 +-
+>  drivers/clk/at91/at91sam9rl.c  |  2 +-
+>  drivers/clk/at91/at91sam9x5.c  |  2 +-
+>  drivers/clk/at91/pmc.c         | 34 ++++++++--------------------------
+>  drivers/clk/at91/pmc.h         |  3 ++-
+>  drivers/clk/at91/sam9x60.c     |  2 +-
+>  drivers/clk/at91/sama5d2.c     |  2 +-
+>  drivers/clk/at91/sama5d3.c     |  2 +-
+>  drivers/clk/at91/sama5d4.c     |  2 +-
+>  12 files changed, 20 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
+> index c44a431b6c97..6f4e1151553d 100644
+> --- a/drivers/clk/at91/at91rm9200.c
+> +++ b/drivers/clk/at91/at91rm9200.c
+> @@ -187,7 +187,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+>  	return;
+>  
+>  err_free:
+> -	pmc_data_free(at91rm9200_pmc);
+> +	kfree(at91rm9200_pmc);
+>  }
+>  /*
+>   * While the TCB can be used as the clocksource, the system timer is most likely
+> diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
+> index a9d4234758d7..946f03a09858 100644
+> --- a/drivers/clk/at91/at91sam9260.c
+> +++ b/drivers/clk/at91/at91sam9260.c
+> @@ -462,7 +462,7 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
+>  	return;
+>  
+>  err_free:
+> -	pmc_data_free(at91sam9260_pmc);
+> +	kfree(at91sam9260_pmc);
+>  }
+>  
+>  static void __init at91sam9260_pmc_setup(struct device_node *np)
+> diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
+> index 38a7d2d2df0c..53e8252b8a63 100644
+> --- a/drivers/clk/at91/at91sam9g45.c
+> +++ b/drivers/clk/at91/at91sam9g45.c
+> @@ -210,7 +210,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
+>  	return;
+>  
+>  err_free:
+> -	pmc_data_free(at91sam9g45_pmc);
+> +	kfree(at91sam9g45_pmc);
+>  }
+>  /*
+>   * The TCB is used as the clocksource so its clock is needed early. This means
+> diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
+> index 8bb39d2ba84b..f3ae1cd3cb8d 100644
+> --- a/drivers/clk/at91/at91sam9n12.c
+> +++ b/drivers/clk/at91/at91sam9n12.c
+> @@ -228,7 +228,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
+>  	return;
+>  
+>  err_free:
+> -	pmc_data_free(at91sam9n12_pmc);
+> +	kfree(at91sam9n12_pmc);
+>  }
+>  /*
+>   * The TCB is used as the clocksource so its clock is needed early. This means
+> diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
+> index 77fe83a73bf4..cc739d214ae3 100644
+> --- a/drivers/clk/at91/at91sam9rl.c
+> +++ b/drivers/clk/at91/at91sam9rl.c
+> @@ -166,6 +166,6 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
+>  	return;
+>  
+>  err_free:
+> -	pmc_data_free(at91sam9rl_pmc);
+> +	kfree(at91sam9rl_pmc);
+>  }
+>  CLK_OF_DECLARE_DRIVER(at91sam9rl_pmc, "atmel,at91sam9rl-pmc", at91sam9rl_pmc_setup);
+> diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
+> index 086cf0b4955c..aac99d699568 100644
+> --- a/drivers/clk/at91/at91sam9x5.c
+> +++ b/drivers/clk/at91/at91sam9x5.c
+> @@ -278,7 +278,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
+>  	return;
+>  
+>  err_free:
+> -	pmc_data_free(at91sam9x5_pmc);
+> +	kfree(at91sam9x5_pmc);
+>  }
+>  
+>  static void __init at91sam9g15_pmc_setup(struct device_node *np)
+> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+> index b71515acdec1..ac46ea1b9fda 100644
+> --- a/drivers/clk/at91/pmc.c
+> +++ b/drivers/clk/at91/pmc.c
+> @@ -76,48 +76,30 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
+>  	return ERR_PTR(-EINVAL);
+>  }
+>  
+> -void pmc_data_free(struct pmc_data *pmc_data)
+> -{
+> -	kfree(pmc_data->chws);
+> -	kfree(pmc_data->shws);
+> -	kfree(pmc_data->phws);
+> -	kfree(pmc_data->ghws);
+> -}
+> -
+>  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
+>  				   unsigned int nperiph, unsigned int ngck)
+>  {
+> -	struct pmc_data *pmc_data = kzalloc(sizeof(*pmc_data), GFP_KERNEL);
+> +	unsigned int num_clks = ncore + nsystem + nperiph + ngck;
+> +	struct pmc_data *pmc_data;
+>  
+> +	pmc_data = kzalloc(struct_size(pmc_data, hwtable, num_clks),
+> +			   GFP_KERNEL);
+>  	if (!pmc_data)
+>  		return NULL;
+>  
+>  	pmc_data->ncore = ncore;
+> -	pmc_data->chws = kcalloc(ncore, sizeof(struct clk_hw *), GFP_KERNEL);
+> -	if (!pmc_data->chws)
+> -		goto err;
+> +	pmc_data->chws = pmc_data->hwtable;
+>  
+>  	pmc_data->nsystem = nsystem;
+> -	pmc_data->shws = kcalloc(nsystem, sizeof(struct clk_hw *), GFP_KERNEL);
+> -	if (!pmc_data->shws)
+> -		goto err;
+> +	pmc_data->shws = pmc_data->chws + ncore;
+>  
+>  	pmc_data->nperiph = nperiph;
+> -	pmc_data->phws = kcalloc(nperiph, sizeof(struct clk_hw *), GFP_KERNEL);
+> -	if (!pmc_data->phws)
+> -		goto err;
+> +	pmc_data->phws = pmc_data->shws + nsystem;
+>  
+>  	pmc_data->ngck = ngck;
+> -	pmc_data->ghws = kcalloc(ngck, sizeof(struct clk_hw *), GFP_KERNEL);
+> -	if (!pmc_data->ghws)
+> -		goto err;
+> +	pmc_data->ghws = pmc_data->phws + nperiph;
+>  
+>  	return pmc_data;
+> -
+> -err:
+> -	pmc_data_free(pmc_data);
+> -
+> -	return NULL;
+>  }
+>  
+>  #ifdef CONFIG_PM
+> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+> index 9b8db9cdcda5..fc3ef772b9d9 100644
+> --- a/drivers/clk/at91/pmc.h
+> +++ b/drivers/clk/at91/pmc.h
+> @@ -24,6 +24,8 @@ struct pmc_data {
+>  	struct clk_hw **phws;
+>  	unsigned int ngck;
+>  	struct clk_hw **ghws;
+> +
+> +	struct clk_hw *hwtable[];
+>  };
+>  
+>  struct clk_range {
+> @@ -95,7 +97,6 @@ struct clk_pcr_layout {
+>  #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
+>  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
+>  				   unsigned int nperiph, unsigned int ngck);
+> -void pmc_data_free(struct pmc_data *pmc_data);
+>  
+>  int of_at91_get_clk_range(struct device_node *np, const char *propname,
+>  			  struct clk_range *range);
+> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
+> index cc19e8fb83be..a7d4f648db26 100644
+> --- a/drivers/clk/at91/sam9x60.c
+> +++ b/drivers/clk/at91/sam9x60.c
+> @@ -299,7 +299,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
+>  	return;
+>  
+>  err_free:
+> -	pmc_data_free(sam9x60_pmc);
+> +	kfree(sam9x60_pmc);
+>  }
+>  /* Some clks are used for a clocksource */
+>  CLK_OF_DECLARE(sam9x60_pmc, "microchip,sam9x60-pmc", sam9x60_pmc_setup);
+> diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
+> index ff7e3f727082..b2560670e5af 100644
+> --- a/drivers/clk/at91/sama5d2.c
+> +++ b/drivers/clk/at91/sama5d2.c
+> @@ -350,6 +350,6 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
+>  	return;
+>  
+>  err_free:
+> -	pmc_data_free(sama5d2_pmc);
+> +	kfree(sama5d2_pmc);
+>  }
+>  CLK_OF_DECLARE_DRIVER(sama5d2_pmc, "atmel,sama5d2-pmc", sama5d2_pmc_setup);
+> diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
+> index 88506f909c08..914e6f225510 100644
+> --- a/drivers/clk/at91/sama5d3.c
+> +++ b/drivers/clk/at91/sama5d3.c
+> @@ -231,7 +231,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
+>  	return;
+>  
+>  err_free:
+> -	pmc_data_free(sama5d3_pmc);
+> +	kfree(sama5d3_pmc);
+>  }
+>  /*
+>   * The TCB is used as the clocksource so its clock is needed early. This means
+> diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
+> index a6dee4a3b6e4..4ca9a4619500 100644
+> --- a/drivers/clk/at91/sama5d4.c
+> +++ b/drivers/clk/at91/sama5d4.c
+> @@ -267,6 +267,6 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
+>  	return;
+>  
+>  err_free:
+> -	pmc_data_free(sama5d4_pmc);
+> +	kfree(sama5d4_pmc);
+>  }
+>  CLK_OF_DECLARE_DRIVER(sama5d4_pmc, "atmel,sama5d4-pmc", sama5d4_pmc_setup);
+> -- 
+> 2.20.1
+> 
 
-Pasha
-
-On Mon, May 4, 2020 at 4:00 PM Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
->
-> On Mon, May 4, 2020 at 3:29 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Sat, May 02, 2020 at 10:35:55AM -0400, Pavel Tatashin wrote:
-> > > Currently, it is possible to dump kmesges for panic, or oops.
-> > > With dump_all it is possible to dump messages for kmesg_dump events,
-> > > for example reboot, halt, shutdown, kexec.
-> >
-> > Please just collapse this into patch #2.
->
-> Will do it.
->
-> Thank you,
-> Pasha
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
