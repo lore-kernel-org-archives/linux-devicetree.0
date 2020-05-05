@@ -2,115 +2,66 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3249DC47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C253C47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0956F206FA
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:38:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AxWxpNPt"
+	by mail.kernel.org (Postfix) with ESMTP id 32F5620721
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbgEETie (ORCPT
+        id S1729095AbgEETtz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 15:38:34 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:51476 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728076AbgEETie (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:38:34 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588707513; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=5+l4sTupj4Jx3BRxaz5t8PSJeiWtuJYsTLLLRfWD2L4=; b=AxWxpNPtH7rs1IEGHlTffPBQU+a3HSap6iuCZQAjIkR9Qib9DhZq/2sWyYAz14kP3UGCDIV5
- Q8Y5LvnVQQC0QX/yONZUmkuoXI7S5U7VQItp2znz08TfuEvAjC4lKjh/Dym7aorB+HAFBsL1
- kDluilO7uaX4kFyREMgyoZCkymM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb1c0b9.7f1f2605c228-smtp-out-n04;
- Tue, 05 May 2020 19:38:33 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F074CC43637; Tue,  5 May 2020 19:38:32 +0000 (UTC)
-Received: from [10.110.9.159] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 43824C433D2;
-        Tue,  5 May 2020 19:38:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 43824C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v8 1/5] dt-bindings: phy: Add binding for
- qcom,usb-snps-femto-v2
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        mgautam@codeaurora.org, vkoul@kernel.org, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jackp@codeaurora.org
-References: <1588636467-23409-1-git-send-email-wcheng@codeaurora.org>
- <1588636467-23409-2-git-send-email-wcheng@codeaurora.org>
- <20200505133408.GA24731@bogus>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <d1b6c7f2-69d8-027d-267d-22018484441e@codeaurora.org>
-Date:   Tue, 5 May 2020 12:38:26 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200505133408.GA24731@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Tue, 5 May 2020 15:49:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728804AbgEETtz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:49:55 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1FA2C061A0F;
+        Tue,  5 May 2020 12:49:55 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3F6C4128061A8;
+        Tue,  5 May 2020 12:49:55 -0700 (PDT)
+Date:   Tue, 05 May 2020 12:49:54 -0700 (PDT)
+Message-Id: <20200505.124954.501631438927946921.davem@davemloft.net>
+To:     grygorii.strashko@ti.com
+Cc:     robh+dt@kernel.org, netdev@vger.kernel.org, nsekhar@ti.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh@kernel.org
+Subject: Re: [PATCH net-next] dt-binding: net: ti: am65x-cpts: fix
+ dt_binding_check fail
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200505101935.12897-1-grygorii.strashko@ti.com>
+References: <20200505101935.12897-1-grygorii.strashko@ti.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 05 May 2020 12:49:55 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Date: Tue, 5 May 2020 13:19:35 +0300
 
+> Fix dt_binding_check fail:
+> Fix Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml: $id: relative path/filename doesn't match actual path or filename
+> 	expected: http://devicetree.org/schemas/net/ti,k3-am654-cpts.yaml#
+> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/net/ti,am654-cpts.yaml'
+>  Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml: $id: relative path/filename doesn't match actual path or filename
+>  expected: http://devicetree.org/schemas/net/ti,k3-am654-cpts.yaml#
+> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/net/ti,am654-cpts.yaml'
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Fixes: 6e87ac748e94 ("dt-binding: ti: am65x: document common platform time sync cpts module")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-On 5/5/2020 6:34 AM, Rob Herring wrote:
-> On Mon,  4 May 2020 16:54:23 -0700, Wesley Cheng wrote:
->> This binding shows the descriptions and properties for the
->> Synopsis Femto USB PHY V2 used on QCOM platforms.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->> ---
->>  .../bindings/phy/qcom,usb-snps-femto-v2.yaml       | 77 ++++++++++++++++++++++
->>  1 file changed, 77 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda-pll-supply' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda18-supply' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.example.dt.yaml: phy@88e2000: 'vdda33-supply' is a required property
-> 
-> See https://patchwork.ozlabs.org/patch/1283143
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
-
-Hi Rob,
-
-I updated the dt-schema version, and I can see the same error.  Will fix
-and resubmit.  I also realized that the dt_binding_check doesn't stop if
-errors are detected in the example DT checking phase, and that was
-probably why I missed this initially.  I'll pass the DT_SCHEMA_FILES
-argument to my specific binding next time to help verify my file.
-Thanks again!
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Applied.
