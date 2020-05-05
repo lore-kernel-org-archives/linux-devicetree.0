@@ -2,134 +2,163 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE27C4725A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AF3C47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401302085B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:45:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="cczj7UwF"
+	by mail.kernel.org (Postfix) with ESMTP id 58D9C2078C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588693537;
+	bh=w7mqyqaalml4dm4BofEVo4menoXUnNvEtnLgftyefjk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Gl4BOf2mqANufvPieJGGbK9S4nGU+3dUWKEywhfBBhi4CadbhYQK5J6nhu4i2c3UQ
+	 /8TnwkilLiMVzpGe3FATHaOqY9R8OrzJTeT8/U5xjUZ18WMFLtCp/r0OWo9fdVvkVw
+	 pwozzlwEeQVF4NDtlpp8A4Ov32oOalFjVe38YOEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbgEEPpd (ORCPT
+        id S1730223AbgEEPpc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 11:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730695AbgEEPpR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:45:17 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D576C061A0F
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 08:45:16 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id g185so2735303qke.7
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 08:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=lLfGQdqFMPUzVPvaSstChPdTkWTfxzSBzkaUwWkOF9M=;
-        b=cczj7UwFD1mCMdDfMAXJ/38Ds0Ze5+lK4Q6bzE/3IQlKFMk1rHMnOCNc8AsIDC9WJu
-         6bO3K1gLfcoqVrau36MNNjzgeneWfilFCFbYAfiSfvWistTAQoiTOJtdlL5i6+Ig0rnG
-         GN0UzdCAx3eT/B1LP5jzYupMUWF3wXXP/sZu8QKBBS514jzQUOpWSJtdD2BGOawmw+UT
-         LvR5cf4Pe3jE+cusB3x2uxAJcE3UQ1dI3ohxViK7AsgENn3sqlq+eTjoupwBR7p6D3oS
-         3ZUifXJJVwnRLab6Hxu+RAx0qD3DDlLxvGErceh0b1/BSg/7jGGh7/DLU0/VxG2hoDOD
-         Z6aQ==
+        Tue, 5 May 2020 11:45:32 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43115 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730708AbgEEPpb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:45:31 -0400
+Received: by mail-oi1-f193.google.com with SMTP id j16so2171804oih.10;
+        Tue, 05 May 2020 08:45:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lLfGQdqFMPUzVPvaSstChPdTkWTfxzSBzkaUwWkOF9M=;
-        b=fW6utz2Z7ZhXGZ/3iciMogaaQK4NxAfppgzbfb3tdTirgqJWc5t88FTX22GgiwVeTu
-         KaihzkMlFYA9vMXBul7ho5a8ZPh9Yez9RCoanq8KELpTGF6khOyr8YCO9XFdAbXXeC2e
-         0nVIVLmxkWcgT6naFs3Z0/KJko3x9CuiV8ANjApJXcuoJW4BuAG5mNbVzNKUzSNf7EcJ
-         NtrA4/k2SbYtgLC3oY2jGhIF5+Kn2s5C/IDbscj49wBBZ+0hZFeipiYRNIj3C8CfHEaG
-         hOidmcfpeadkPIoZznjtuSUFOuDQ+/rob0vT+fjuM5W6cw9cCig6MBkSTTRtKNYiRM84
-         RU5A==
-X-Gm-Message-State: AGi0PuYbL01KXYIsLJ5PTOg9sJmgwo7K7OIlzvo3WlthBUjRgiQG3p/1
-        glgUMHuHw4RZFn6n1t5mpZmnqw==
-X-Google-Smtp-Source: APiQypIOFXJGyg9UafreFIFeAppzDzDB/7jIORZ/D4iGYlJfYpvYbw7v6WT0a0Xa5lJKXoQ1+Zynog==
-X-Received: by 2002:a05:620a:2042:: with SMTP id d2mr3998565qka.295.1588693515647;
-        Tue, 05 May 2020 08:45:15 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id x7sm2122407qkx.36.2020.05.05.08.45.14
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ERx4rFY8Dz8RC1gA8oeju/oL9ln3h6g/sbUq2ZIsMqI=;
+        b=UfhzIl90Cx/F9yuIdyxeWiIAluj9jHVn52BAWVU7+xF4MUL2VQkgcVKpzRvtrMnzfD
+         /KVAbI+MORiK3Tzt0DxInwcc21gq6fifSNKoCckeGBpScp+MlJnXhb8p/8zE+UFBlMeU
+         SuvTfpDebNXhobP7xUsnv/cPtiXpDb86C+i4YJwpbL6QQeA3whkBGTHu57sqaUoBuBZW
+         Vbcvmm01xrNmGzHDBBDLZbJ9wB93B61DfBPD0UEpTAjr5gqsRqsIvHKD/v/VLHeTd63P
+         ae7M6/dQceBZwzCMlDj4jZiY+JV4X4CBaQuA18azQiGfFN/jURRWE4DgLf7gw0TqfhQg
+         tCiw==
+X-Gm-Message-State: AGi0PuY7ZK+8owYLfyC/KZQr8CqD03wZI+ocz+HRfuD5jAoOkJ4brE7Q
+        H9C6LPgc1VGFNU6YVec5mw==
+X-Google-Smtp-Source: APiQypLcJPiZQqfn4NTS17L4CqyYIL327lpeUG2R1ri3KMTOCuIxKZ2yhA2w+R3hoxnFV84blQoz4w==
+X-Received: by 2002:aca:3a55:: with SMTP id h82mr1248106oia.135.1588693530523;
+        Tue, 05 May 2020 08:45:30 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m18sm625885oie.38.2020.05.05.08.45.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 08:45:14 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 2/5] pstore/platform: pass max_reason to kmesg dump
-Date:   Tue,  5 May 2020 11:45:07 -0400
-Message-Id: <20200505154510.93506-3-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200505154510.93506-1-pasha.tatashin@soleen.com>
-References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
+        Tue, 05 May 2020 08:45:29 -0700 (PDT)
+Received: (nullmailer pid 11594 invoked by uid 1000);
+        Tue, 05 May 2020 15:45:29 -0000
+Date:   Tue, 5 May 2020 10:45:29 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v11 1/2] iio: proximity: provide device tree binding
+ document
+Message-ID: <20200505154528.GB4630@bogus>
+References: <20200422160509.7117-1-i.mikhaylov@yadro.com>
+ <20200422160509.7117-2-i.mikhaylov@yadro.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422160509.7117-2-i.mikhaylov@yadro.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a new field to pstore_info that passes information about kmesg dump
-maximum reason.
+On Wed, Apr 22, 2020 at 07:05:08PM +0300, Ivan Mikhaylov wrote:
+> Mostly standard i2c driver with some additional led-current option
+> for vcnl3020.
+> 
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> ---
+>  .../bindings/iio/proximity/vcnl3020.yaml      | 64 +++++++++++++++++++
 
-This allows a finer control of what kmesg dumps are stored on pstore
-device.
+vishay,vcnl3020.yaml
 
-Those clients that do not explicitly set this field (keep it equal to 0),
-get the default behavior: dump only Oops and Panics, and dump everything
-if printk.always_kmsg_dump is provided.
-
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- fs/pstore/platform.c   | 4 +++-
- include/linux/pstore.h | 3 +++
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 408277ee3cdb..75bf8a43f92a 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -602,8 +602,10 @@ int pstore_register(struct pstore_info *psi)
- 	if (pstore_is_mounted())
- 		pstore_get_records(0);
- 
--	if (psi->flags & PSTORE_FLAGS_DMESG)
-+	if (psi->flags & PSTORE_FLAGS_DMESG) {
-+		pstore_dumper.max_reason = psinfo->max_reason;
- 		pstore_register_kmsg();
-+	}
- 	if (psi->flags & PSTORE_FLAGS_CONSOLE)
- 		pstore_register_console();
- 	if (psi->flags & PSTORE_FLAGS_FTRACE)
-diff --git a/include/linux/pstore.h b/include/linux/pstore.h
-index e779441e6d26..45ae424bfeb5 100644
---- a/include/linux/pstore.h
-+++ b/include/linux/pstore.h
-@@ -97,6 +97,8 @@ struct pstore_record {
-  * @read_mutex:	serializes @open, @read, @close, and @erase callbacks
-  * @flags:	bitfield of frontends the backend can accept writes for
-  * @data:	backend-private pointer passed back during callbacks
-+ * @max_reason: Used when PSTORE_FLAGS_DMESG is set. Contains the
-+ *              kmsg_dump_reason enum value.
-  *
-  * Callbacks:
-  *
-@@ -180,6 +182,7 @@ struct pstore_info {
- 
- 	int		flags;
- 	void		*data;
-+	int		max_reason;
- 
- 	int		(*open)(struct pstore_info *psi);
- 	int		(*close)(struct pstore_info *psi);
--- 
-2.25.1
-
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> new file mode 100644
+> index 000000000000..ac47770609d2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Integrated Proximity Sensor With Infrared Emitter
+> +
+> +maintainers:
+> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> +
+> +description: |
+> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
+> +  that the infrared emitter is included in the package. It has 16-bit
+> +  resolution. It includes a signal processing IC and features standard I2C
+> +  communication interface. It features an interrupt function.
+> +
+> +  Specifications about the devices can be found at:
+> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - vishay,vcnl3020
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +  vddio-supply:
+> +    description: Regulator that provides power to the bus
+> +
+> +  vishay,led-current-microamp:
+> +    description:
+> +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
+> +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
+> +      higher than decimal 20.
+> +    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
+> +          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
+> +          180000, 190000, 200000]
+> +    default: 20000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        proximity@13 {
+> +              compatible = "vishay,vcnl3020";
+> +              reg = <0x13>;
+> +              vishay,led-current-microamp = <200000>;
+> +        };
+> +    };
+> -- 
+> 2.21.1
+> 
