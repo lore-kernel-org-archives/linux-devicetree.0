@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1FBC4725D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A59C47257
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 052B0207DD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18C3207DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:52:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgEEQwc (ORCPT
+        id S1730302AbgEEQwg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 12:52:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:45430 "EHLO foss.arm.com"
+        Tue, 5 May 2020 12:52:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:45452 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730242AbgEEQwc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 12:52:32 -0400
+        id S1730251AbgEEQwg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 12:52:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61614101E;
-        Tue,  5 May 2020 09:52:31 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A356101E;
+        Tue,  5 May 2020 09:52:35 -0700 (PDT)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 482DE3F305;
-        Tue,  5 May 2020 09:52:30 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5540A3F305;
+        Tue,  5 May 2020 09:52:34 -0700 (PDT)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
         Sudeep Holla <sudeep.holla@arm.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 04/16] arm64: dts: arm: Fix node address fields
-Date:   Tue,  5 May 2020 17:52:00 +0100
-Message-Id: <20200505165212.76466-5-andre.przywara@arm.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 07/16] arm64: dts: arm: Fix GIC compatible names
+Date:   Tue,  5 May 2020 17:52:03 +0100
+Message-Id: <20200505165212.76466-8-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200505165212.76466-1-andre.przywara@arm.com>
 References: <20200505165212.76466-1-andre.przywara@arm.com>
@@ -42,163 +43,60 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Arm Ltd. boards were using an outdated address convention in the DT
-node names, by separating the high from the low 32-bits of an address by
-a comma.
+The GIC DT binding only allows a certain combination of DT compatible
+strings, mostly just consisting of one name.
 
-Remove the comma from the node name suffix to be DT spec compliant.
+Drop the combination of multiple names and go with the
+"arm,cortex-a15-gic" name for GICv2, as this seems to be the most widely
+accepted string. "arm,gic-400" would be more correct, but was introduced
+much later into the kernel's GIC driver.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- arch/arm/boot/dts/vexpress-v2m-rs1.dtsi              | 10 +++++-----
- arch/arm64/boot/dts/arm/foundation-v8.dtsi           |  4 ++--
- arch/arm64/boot/dts/arm/juno-motherboard.dtsi        |  6 +++---
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi |  2 +-
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi     |  6 +++---
- 5 files changed, 14 insertions(+), 14 deletions(-)
+ arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi | 2 +-
+ arch/arm64/boot/dts/arm/juno-base.dtsi           | 2 +-
+ arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts       | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-index 5c183483ec3b..8010cdcdb37a 100644
---- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -31,7 +31,7 @@
- 			#interrupt-cells = <1>;
- 			ranges;
+diff --git a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
+index 15fe81738e94..61a1750fcdd6 100644
+--- a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
++++ b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
+@@ -6,7 +6,7 @@
  
--			nor_flash: flash@0,00000000 {
-+			nor_flash: flash@0 {
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>,
- 				      <4 0x00000000 0x04000000>;
-@@ -41,13 +41,13 @@
- 				};
- 			};
+ / {
+ 	gic: interrupt-controller@2c001000 {
+-		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
++		compatible = "arm,cortex-a15-gic";
+ 		#interrupt-cells = <3>;
+ 		#address-cells = <2>;
+ 		interrupt-controller;
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index 3feefd61eb76..62392ab1f880 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -69,7 +69,7 @@
+ 	};
  
--			psram@1,00000000 {
-+			psram@100000000 {
- 				compatible = "arm,vexpress-psram", "mtd-ram";
- 				reg = <1 0x00000000 0x02000000>;
- 				bank-width = <4>;
- 			};
+ 	gic: interrupt-controller@2c010000 {
+-		compatible = "arm,gic-400", "arm,cortex-a15-gic";
++		compatible = "arm,cortex-a15-gic";
+ 		reg = <0x0 0x2c010000 0 0x1000>,
+ 		      <0x0 0x2c02f000 0 0x2000>,
+ 		      <0x0 0x2c04f000 0 0x2000>,
+diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+index c5d15cbd8cf6..f86f6451411f 100644
+--- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
++++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+@@ -95,7 +95,7 @@
+ 	};
  
--			ethernet@2,02000000 {
-+			ethernet@202000000 {
- 				compatible = "smsc,lan9118", "smsc,lan9115";
- 				reg = <2 0x02000000 0x10000>;
- 				interrupts = <15>;
-@@ -59,14 +59,14 @@
- 				vddvario-supply = <&v2m_fixed_3v3>;
- 			};
- 
--			usb@2,03000000 {
-+			usb@203000000 {
- 				compatible = "nxp,usb-isp1761";
- 				reg = <2 0x03000000 0x20000>;
- 				interrupts = <16>;
- 				port1-otg;
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-index 12f039fa3dad..e26b492795c5 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-+++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-@@ -151,7 +151,7 @@
- 				<0 0 41 &gic 0 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
- 				<0 0 42 &gic 0 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 
--		ethernet@2,02000000 {
-+		ethernet@202000000 {
- 			compatible = "smsc,lan91c111";
- 			reg = <2 0x02000000 0x10000>;
- 			interrupts = <15>;
-@@ -178,7 +178,7 @@
- 			clock-output-names = "v2m:refclk32khz";
- 		};
- 
--		iofpga@3,00000000 {
-+		iofpga@300000000 {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-index e3983ded3c3c..d5cefddde08c 100644
---- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-@@ -103,7 +103,7 @@
- 				};
- 			};
- 
--			flash@0,00000000 {
-+			flash@0 {
- 				/* 2 * 32MiB NOR Flash memory mounted on CS0 */
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>;
-@@ -120,7 +120,7 @@
- 				};
- 			};
- 
--			ethernet@2,00000000 {
-+			ethernet@200000000 {
- 				compatible = "smsc,lan9118", "smsc,lan9115";
- 				reg = <2 0x00000000 0x10000>;
- 				interrupts = <3>;
-@@ -133,7 +133,7 @@
- 				vddvario-supply = <&mb_fixed_3v3>;
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-index 60703b5763c6..350cbf17e8b4 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-@@ -9,7 +9,7 @@
- 		motherboard {
- 			arm,v2m-memory-map = "rs2";
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				virtio-p9@140000 {
- 					compatible = "virtio,mmio";
- 					reg = <0x140000 0x200>;
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-index e333c8d2d0e4..d1bfa62ca073 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-@@ -17,14 +17,14 @@
- 			#interrupt-cells = <1>;
- 			ranges;
- 
--			flash@0,00000000 {
-+			flash@0 {
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>,
- 				      <4 0x00000000 0x04000000>;
- 				bank-width = <4>;
- 			};
- 
--			ethernet@2,02000000 {
-+			ethernet@202000000 {
- 				compatible = "smsc,lan91c111";
- 				reg = <2 0x02000000 0x10000>;
- 				interrupts = <15>;
-@@ -51,7 +51,7 @@
- 				clock-output-names = "v2m:refclk32khz";
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
+ 	gic: interrupt-controller@2c001000 {
+-		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
++		compatible = "arm,cortex-a15-gic";
+ 		#interrupt-cells = <3>;
+ 		#address-cells = <0>;
+ 		interrupt-controller;
 -- 
 2.17.1
 
