@@ -2,116 +2,490 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84C7C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 21:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53CEC47258
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 21:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9646420661
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 21:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B383220752
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 21:35:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bc5EqmMG"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="L4sOPRmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgEEVRb (ORCPT
+        id S1728584AbgEEVfA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 17:17:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729265AbgEEVRb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 17:17:31 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA0BC061A10;
-        Tue,  5 May 2020 14:17:30 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id d7so2235847ioq.5;
-        Tue, 05 May 2020 14:17:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ObvnibH/bA7L+qUHQk3KzdXE6hU6sK12JK5IVLdHK8k=;
-        b=Bc5EqmMGLylJiaUpxVrcIqbvJgQ80wtohLMo5qPOCf/qeuHWKdQdlI9l3yA66sKUZh
-         GUT/GEyHNiKgftZOvBHqvEAl3kNfoPE+EWnAZZjhBCn+S9kqWwPPHXZEMbTM7aS1hRJl
-         7bl1ySWpt1tr/aA5f03mB9hJRFL/irZAk8J9VgoSWpnBAE0MmlhkAb/ZuUI3EL0ahb2A
-         fWNpu7BzEYGagww1iC/xlFc1W2k+/e81+MVRGwLbHZKh9StpaI80jl0XeHzTf+Ow2J0r
-         f7a0T+Tw68OBuETkcKU6Oy0XCnDIXfBvZvpehkfYL0Xkw4SgZP5x3rzIrt+2eWlk3xFF
-         6brQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ObvnibH/bA7L+qUHQk3KzdXE6hU6sK12JK5IVLdHK8k=;
-        b=TTkGnRAkmTkFP0bSYnq/M0K9YinbqiHKJmAAW1TjUPNw0GApjGVCxKRlwmH6TmEEGl
-         1xtcWD3cR2D9/Uq8ztmJ6bwrAwGwFghi8TUWRfP0DV4hZB+j55BLAf6BkVIy6V0VE3ud
-         wEcpwEgcH4DKw4dZErmBTwO/9IvyZStPGxCPfioVyXECSupWWVRUqirVP2MYfowOtnwO
-         IidBF5+/Q1jLDJ6Q2fYw1v6ZWu1L9h5qaZA68BnnpQxFJxEF2eDxDcHKJHt3LaTAwAVp
-         dC94P6MIQt125K/KbI0Q9HCTmnG26F1jL0X9cOBRoUHRMdW1sg1FA95Mew+BZe0+hO16
-         W2mw==
-X-Gm-Message-State: AGi0PuYPExvQELhKXFdBt13rA8im+GeIbkCces/I7LuikReYn+JUtGMI
-        LtR+X+8Jq5C4/iAJ5uq1+TH1nP/U2PdW0ArwOmcyXUyW1sQ=
-X-Google-Smtp-Source: APiQypLQ75JK91aDvaW1893+YhytZDhE4HmtF1tn18BlEcLC9Zvi2aFGbd0/Iqk8RU8KgOFEGBQguZGcfBjiml1iWho=
-X-Received: by 2002:a6b:dd16:: with SMTP id f22mr5398940ioc.178.1588713450141;
- Tue, 05 May 2020 14:17:30 -0700 (PDT)
+        Tue, 5 May 2020 17:35:00 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60696 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgEEVe7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 17:34:59 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 89788542;
+        Tue,  5 May 2020 23:34:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1588714495;
+        bh=YHDjkXDnsDM+j5ADChCoJFyfuFCYqoFVwlxnuVKc0ko=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L4sOPRmLgUFQomj1r2bs1jYXkG0njixlxc4uDGiEVt0Wcz3JUIMKlzri13aRYUetW
+         wuxDrbSMkcoXt2MODTB/OQ8xTaVYxMX0r6XBPMmDrId6vu0juZGjYKxcIPsIr5UILz
+         koRwuj1kKAlKWa7EkG+zIj0wAyT+zV3jQFloOEnc=
+Date:   Wed, 6 May 2020 00:34:50 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        narmstrong@baylibre.com, a.hajda@samsung.com,
+        spanda@codeaurora.org, linux-gpio@vger.kernel.org, jonas@kwiboo.se,
+        robdclark@chromium.org, bjorn.andersson@linaro.org,
+        jeffrey.l.hugo@gmail.com, jernej.skrabec@siol.net,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to
+ yaml
+Message-ID: <20200505213450.GA8640@pendragon.ideasonboard.com>
+References: <20200430194617.197510-1-dianders@chromium.org>
+ <20200430124442.v4.4.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
 MIME-Version: 1.0
-References: <20200504230100.181926-1-aford173@gmail.com> <20200505184223.GR37466@atomide.com>
-In-Reply-To: <20200505184223.GR37466@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 5 May 2020 16:17:19 -0500
-Message-ID: <CAHCN7xJxg+uO4h2RcapyjormTMzXFwoMUOi7rh2hUsScJtK56Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: omap3: Migrate AES from hwmods to sysc-omap2
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Russell King <linux@armlinux.org.uk>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200430124442.v4.4.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 5, 2020 at 1:42 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Adam Ford <aford173@gmail.com> [200504 16:02]:
-> > Various OMAP3 boards have two AES blocks, but only one is currently
-> > available, because the hwmods are only configured for one.
-> >
-> > This patch migrates the hwmods for the AES engine to sysc-omap2
-> > which allows the second AES crypto engine to become available.
-> >
-> >   omap-aes 480a6000.aes1: OMAP AES hw accel rev: 2.6
-> >   omap-aes 480a6000.aes1: will run requests pump with realtime priority
-> >   omap-aes 480c5000.aes2: OMAP AES hw accel rev: 2.6
-> >   omap-aes 480c5000.aes2: will run requests pump with realtime priority
->
-> Great :) Looks like I'm getting the following though:
->
-> DTC     arch/arm/boot/dts/am3517-craneboard.dtb
-> arch/arm/boot/dts/omap3.dtsi:160.39-184.5: ERROR (phandle_references):
-> /ocp@68000000/target-module@480a6000:
-> Reference to non-existent node or label "aes1_ick"
->
-> Is this patch maybe missing a change for am3717 for the aes1_ick?
+Hi Doug,
 
-I am guessing it's the same issue that plagues the am3517 with a note
-in the hwmods that stated noone seems to know which am3517's support
-it and which don't.  The RNG was disabled on the 3517, so I am
-guessing I'll do the same for AES.
-I should have posted it as an RFC, because I don't have the proper IRQ
-setup for the newly supported AES engine.  The interrupts that are
-used for the original AES are listed as 'Resereved' in the AM3517 TRM.
-I assume the second engine uses different interrupts.  I don't suppose
-anyone know what it should be?
+Thank you for the patch.
 
-adam
->
-> Regards,
->
-> Tony
+On Thu, Apr 30, 2020 at 12:46:15PM -0700, Douglas Anderson wrote:
+> This moves the bindings over, based a lot on toshiba,tc358768.yaml.
+> Unless there's someone known to be better, I've set the maintainer in
+> the yaml as the first person to submit bindings.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+> 
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2:
+> - specification => specifier.
+> - power up => power.
+> - Added back missing suspend-gpios.
+> - data-lanes and lane-polarities are are the right place now.
+> - endpoints don't need to be patternProperties.
+> - Specified more details for data-lanes and lane-polarities.
+> - Added old example back in, fixing bugs in it.
+> - Example i2c bus is just called "i2c", not "i2c1" now.
+> 
+>  .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
+>  .../bindings/display/bridge/ti,sn65dsi86.yaml | 279 ++++++++++++++++++
+>  2 files changed, 279 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+> deleted file mode 100644
+> index 8ec4a7f2623a..000000000000
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+> +++ /dev/null
+> @@ -1,87 +0,0 @@
+> -SN65DSI86 DSI to eDP bridge chip
+> ---------------------------------
+> -
+> -This is the binding for Texas Instruments SN65DSI86 bridge.
+> -http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
+> -
+> -Required properties:
+> -- compatible: Must be "ti,sn65dsi86"
+> -- reg: i2c address of the chip, 0x2d as per datasheet
+> -- enable-gpios: gpio specification for bridge_en pin (active high)
+> -
+> -- vccio-supply: A 1.8V supply that powers up the digital IOs.
+> -- vpll-supply: A 1.8V supply that powers up the displayport PLL.
+> -- vcca-supply: A 1.2V supply that powers up the analog circuits.
+> -- vcc-supply: A 1.2V supply that powers up the digital core.
+> -
+> -Optional properties:
+> -- interrupts-extended: Specifier for the SN65DSI86 interrupt line.
+> -
+> -- gpio-controller: Marks the device has a GPIO controller.
+> -- #gpio-cells    : Should be two. The first cell is the pin number and
+> -                   the second cell is used to specify flags.
+> -                   See ../../gpio/gpio.txt for more information.
+> -- #pwm-cells : Should be one. See ../../pwm/pwm.yaml for description of
+> -               the cell formats.
+> -
+> -- clock-names: should be "refclk"
+> -- clocks: Specification for input reference clock. The reference
+> -	  clock rate must be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
+> -
+> -- data-lanes: See ../../media/video-interface.txt
+> -- lane-polarities: See ../../media/video-interface.txt
+> -
+> -- suspend-gpios: specification for GPIO1 pin on bridge (active low)
+> -
+> -Required nodes:
+> -This device has two video ports. Their connections are modelled using the
+> -OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+> -
+> -- Video port 0 for DSI input
+> -- Video port 1 for eDP output
+> -
+> -Example
+> --------
+> -
+> -edp-bridge@2d {
+> -	compatible = "ti,sn65dsi86";
+> -	#address-cells = <1>;
+> -	#size-cells = <0>;
+> -	reg = <0x2d>;
+> -
+> -	enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
+> -	suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
+> -
+> -	interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
+> -
+> -	vccio-supply = <&pm8916_l17>;
+> -	vcca-supply = <&pm8916_l6>;
+> -	vpll-supply = <&pm8916_l17>;
+> -	vcc-supply = <&pm8916_l6>;
+> -
+> -	clock-names = "refclk";
+> -	clocks = <&input_refclk>;
+> -
+> -	ports {
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		port@0 {
+> -			reg = <0>;
+> -
+> -			edp_bridge_in: endpoint {
+> -				remote-endpoint = <&dsi_out>;
+> -			};
+> -		};
+> -
+> -		port@1 {
+> -			reg = <1>;
+> -
+> -			edp_bridge_out: endpoint {
+> -				data-lanes = <2 1 3 0>;
+> -				lane-polarities = <0 1 0 1>;
+> -				remote-endpoint = <&edp_panel_in>;
+> -			};
+> -		};
+> -	};
+> -}
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> new file mode 100644
+> index 000000000000..6d7d40ad45ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> @@ -0,0 +1,279 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/ti,sn65dsi86.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SN65DSI86 DSI to eDP bridge chip
+> +
+> +maintainers:
+> +  - Sandeep Panda <spanda@codeaurora.org>
+> +
+> +description: |
+> +  The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
+> +  http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,sn65dsi86
+> +
+> +  reg:
+> +    const: 0x2d
+> +
+> +  enable-gpios:
+> +    maxItems: 1
+> +    description: GPIO specifier for bridge_en pin (active high).
+> +
+> +  suspend-gpios:
+> +    maxItems: 1
+> +    description: GPIO specifier for GPIO1 pin on bridge (active low).
+> +
+> +  vccio-supply:
+> +    description: A 1.8V supply that powers the digital IOs.
+> +
+> +  vpll-supply:
+> +    description: A 1.8V supply that powers the DisplayPort PLL.
+> +
+> +  vcca-supply:
+> +    description: A 1.2V supply that powers the analog circuits.
+> +
+> +  vcc-supply:
+> +    description: A 1.2V supply that powers the digital core.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      Clock specifier for input reference clock. The reference clock rate must
+> +      be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
+> +
+> +  clock-names:
+> +    const: refclk
+> +
+> +  gpio-controller: true
+> +  '#gpio-cells':
+> +    const: 2
+> +    description:
+> +      First cell is pin number, second cell is flags.  GPIO pin numbers are
+> +      1-based to match the datasheet.  See ../../gpio/gpio.txt for more
+> +      information.
+> +
+> +  '#pwm-cells':
+> +    const: 1
+> +    description: See ../../pwm/pwm.yaml for description of the cell formats.
+> +
+> +  ports:
+> +    type: object
+
+Maybe
+
+    additionalProperties: false
+
+here ?
+
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description:
+> +          Video port for MIPI DSI input
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +                items:
+> +                  enum:
+> +                    - 0
+> +                    - 1
+> +                    - 2
+> +                    - 3
+> +                description: See ../../media/video-interface.txt
+
+And maybe
+                uniqueItems: true
+
+? Same for port@1.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +
+> +              lane-polarities:
+> +                minItems: 1
+> +                maxItems: 4
+> +                items:
+> +                  enum:
+> +                    - 0
+> +                    - 1
+> +                description: See ../../media/video-interface.txt
+> +
+> +            dependencies:
+> +              data-lanes: [lane-polarities]
+> +
+> +        required:
+> +          - reg
+> +
+> +      port@1:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description:
+> +          Video port for eDP output (panel or connector).
+> +
+> +        properties:
+> +          reg:
+> +            const: 1
+> +
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +                items:
+> +                  enum:
+> +                    - 0
+> +                    - 1
+> +                    - 2
+> +                    - 3
+> +                description: See ../../media/video-interface.txt
+> +
+> +              lane-polarities:
+> +                minItems: 1
+> +                maxItems: 4
+> +                items:
+> +                  enum:
+> +                    - 0
+> +                    - 1
+> +                description: See ../../media/video-interface.txt
+> +
+> +            dependencies:
+> +              data-lanes: [lane-polarities]
+> +
+> +        required:
+> +          - reg
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - enable-gpios
+> +  - vccio-supply
+> +  - vpll-supply
+> +  - vcca-supply
+> +  - vcc-supply
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      bridge@2d {
+> +        compatible = "ti,sn65dsi86";
+> +        reg = <0x2d>;
+> +
+> +        interrupt-parent = <&tlmm>;
+> +        interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        enable-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+> +
+> +        vpll-supply = <&src_pp1800_s4a>;
+> +        vccio-supply = <&src_pp1800_s4a>;
+> +        vcca-supply = <&src_pp1200_l2a>;
+> +        vcc-supply = <&src_pp1200_l2a>;
+> +
+> +        clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
+> +        clock-names = "refclk";
+> +
+> +        ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +            reg = <0>;
+> +            endpoint {
+> +              remote-endpoint = <&dsi0_out>;
+> +            };
+> +          };
+> +
+> +          port@1 {
+> +            reg = <1>;
+> +            endpoint {
+> +              remote-endpoint = <&panel_in_edp>;
+> +            };
+> +          };
+> +        };
+> +      };
+> +    };
+> +  - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      bridge@2d {
+> +        compatible = "ti,sn65dsi86";
+> +        reg = <0x2d>;
+> +
+> +        enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
+> +        suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
+> +
+> +        interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +        vccio-supply = <&pm8916_l17>;
+> +        vcca-supply = <&pm8916_l6>;
+> +        vpll-supply = <&pm8916_l17>;
+> +        vcc-supply = <&pm8916_l6>;
+> +
+> +        clock-names = "refclk";
+> +        clocks = <&input_refclk>;
+> +
+> +        ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +            reg = <0>;
+> +
+> +            edp_bridge_in: endpoint {
+> +              remote-endpoint = <&dsi_out>;
+> +            };
+> +          };
+> +
+> +          port@1 {
+> +            reg = <1>;
+> +
+> +            edp_bridge_out: endpoint {
+> +              data-lanes = <2 1 3 0>;
+> +              lane-polarities = <0 1 0 1>;
+> +              remote-endpoint = <&edp_panel_in>;
+> +            };
+> +          };
+> +        };
+> +      };
+> +    };
+
+-- 
+Regards,
+
+Laurent Pinchart
