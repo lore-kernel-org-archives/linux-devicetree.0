@@ -7,104 +7,101 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B80EAC47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98DAC47258
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F22E20836
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB149206A5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 11:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iohroaea"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xJnwGeMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgEELwC (ORCPT
+        id S1728180AbgEELwg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 07:52:02 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:52734 "EHLO
+        Tue, 5 May 2020 07:52:36 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:8894 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725766AbgEELwC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 07:52:02 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045BnGiQ000379;
-        Tue, 5 May 2020 13:51:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=l0JyW/3R0Flv5jIiu021fxxE/efUs1UCSOIMu/2MEZo=;
- b=iohroaeajtm3mtFVZzmUE5VU+VlQAAUS4Hj2hyoarU4yHKIAukyjj+YV+hRG28DKUXCM
- ApxGyUoSLwC+ND4l1Gg1mfcAK7scIcCdZ992Jk+QLzQiM8w6xXVXlNCPB05Ki6aQcGem
- YRSu3yw9bpIuMS00y9y+RiF6umQegEpi3UqdrsbKDGO+f/0iBxPneEwSAoPnuaCihHBn
- 3LF1xZzIQTXAxmFszKxfHjAdqq6Xama6OLsgsP2SdTWUf+ulXAciE3q2BRpuSn0CJvFC
- CYOSOVO//AvbUQIhbIonjiulIr0FlnxtqGEmSg55CciUJgPUeMppelzMfjgv4VidpVNB OA== 
+        by vger.kernel.org with ESMTP id S1725766AbgEELwg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 07:52:36 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045BnN8o019017;
+        Tue, 5 May 2020 13:52:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
+ : from : message-id : date : mime-version : in-reply-to : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=3SOp8PhNdW4IrWYxqJrQCRdEteG7eOQ26e42CGGjuAA=;
+ b=xJnwGeMBKd93uRpJLbpprI7VkgCllwAGNZ81JG8prq/cV4mA+UX6aNb/YRrT0Or53xgj
+ uAFYinEeYsQilCi6R/IcWGXhdLjgLqpmqiKG/CZhC7LiZLa4ufizmVUtUeGaLNMB2xSq
+ 4rvNbn0ZjfPZWu2ctwjI5kIldQ4GyCa0r1sFg8rITCzBNf7SHaam7goJ5OTWx2ut1ZDT
+ 5CD6T7z8JvFCWpV7y7pwH4Su8aoU1N+SmXfhcdbOSBk4KVdAuatBkEbXBlSHc7l4hy4g
+ KY2kcpfrHnvrrUZUPxAFK+vz/9lXG3GPIfUuVkOYB/I4UddIi10YGkB2dbei0rGDhwVt 5g== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30rxb1yub2-1
+        by mx07-00178001.pphosted.com with ESMTP id 30rxmvfse6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 13:51:48 +0200
+        Tue, 05 May 2020 13:52:26 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E55CA10002A;
-        Tue,  5 May 2020 13:51:44 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 44ABF10002A;
+        Tue,  5 May 2020 13:52:26 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D36D42AD9E5;
-        Tue,  5 May 2020 13:51:44 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 160F22B8A14;
+        Tue,  5 May 2020 13:52:26 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
  (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May
- 2020 13:51:40 +0200
-Subject: Re: [PATCH] ARM: dts: stm32: add sd-uhs properties in SD-card node
- for stm32mp157c-ed1
-To:     Yann Gautier <yann.gautier@st.com>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <devicetree@vger.kernel.org>,
+ 2020 13:52:21 +0200
+Subject: Re: [PATCH] ARM: dts: stm32: Enable thermal sensor support on
+ stm32mp15xx-dkx
+To:     Pascal Paillet <p.paillet@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Ludovic Barre <ludovic.barre@st.com>
-References: <20200430101649.29381-1-yann.gautier@st.com>
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200430130235.23979-1-p.paillet@st.com>
 From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <d9cab5f8-9472-98e3-f0d0-09b44e9563d8@st.com>
-Date:   Tue, 5 May 2020 13:51:32 +0200
+Message-ID: <264b0346-736e-91a0-c9c2-4f1a53627363@st.com>
+Date:   Tue, 5 May 2020 13:52:13 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200430101649.29381-1-yann.gautier@st.com>
+In-Reply-To: <20200430130235.23979-1-p.paillet@st.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_07:2020-05-04,2020-05-05 signatures=0
+ definitions=2020-05-05_06:2020-05-04,2020-05-05 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Yann
+Hi Pascal
 
-On 4/30/20 12:16 PM, Yann Gautier wrote:
-> The sdmmc1 peripheral is connected on SD-card on STM32MP1-ED1 board.
-> Add the UHS features the controller is able to manage.
-> Those features require a level shifter on the board, and the support of
-> the voltage switch in driver, which is done in Linux v5.7.
+On 4/30/20 3:02 PM, Pascal Paillet wrote:
+> Enable STM32 Digital Thermal Sensor driver for stm32mp15xx-dkx boards.
 > 
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> Signed-off-by: Yann Gautier <yann.gautier@st.com>
+> Signed-off-by: Pascal Paillet <p.paillet@st.com>
 > ---
->   arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
+>   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 4 ++++
 >   1 file changed, 4 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-> index 9d2592db630c..1d7dfe97b160 100644
-> --- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-> @@ -320,6 +320,10 @@
->   	bus-width = <4>;
->   	vmmc-supply = <&vdd_sd>;
->   	vqmmc-supply = <&sd_switch>;
-> +	sd-uhs-sdr12;
-> +	sd-uhs-sdr25;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-ddr50;
+> diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+> index f6672e87aef3..203f7742e054 100644
+> --- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+> @@ -116,6 +116,10 @@
 >   	status = "okay";
 >   };
 >   
+> +&dts {
+> +	status = "okay";
+> +};
+> +
+>   &ethernet0 {
+>   	status = "okay";
+>   	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
 > 
 
 Applied on stm32-next.
