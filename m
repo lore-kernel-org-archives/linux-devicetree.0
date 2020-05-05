@@ -2,112 +2,103 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB465C47258
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04060C47257
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B01020735
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:04:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="kvPVV59b"
+	by mail.kernel.org (Postfix) with ESMTP id CC21C20735
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588687693;
+	bh=AoQ+QNUrZA3/rI32aJOVMR7iN0dP/ZQu8S525JZhojY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=2QOUD+GtAtLeHLib6n5c6Xn40o1YcYxM7g26Zwq9nRqG3TYWLq4PP7SsxNhi6e4/W
+	 ey0HjZON+a3gudjGihvz4cSXktF2HE2d+T6GTtnLJb7RHvlEsVeidr7vNfM4Z4bCCG
+	 WXSlLaZmyhjk230a0WlrYWOL5PTti90UcKe4rVzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgEEOEE (ORCPT
+        id S1729311AbgEEOIN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 10:04:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729325AbgEEODK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 10:03:10 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B805C061A0F
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 07:03:09 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j5so2109886wrq.2
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 07:03:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hGk6SHkwZ0/IFFGnE1iOAP01F59WjRCQF/3H+v3exE4=;
-        b=kvPVV59bLwvQgCRXMMdalhwBGJXiNTAb3RXUaXffdzF/CnPAYnbZfbo5XFRy/U6Hmn
-         UYDrC8U2QoSOzSL6kGoZRN+trWItJsZE5rzGhy9yuYPhWqlj27+0bcwhKKCOlWh3BJTz
-         l98EqUfia2miyFfDeTxIe2M54ZAExtU1gQ4zySphZmhTJmKHOCSN/LRtVxgdZyy0jInD
-         wO02lzvY3Qbg7bm454+9uzwwhlluP7XjN3Ti461uWWCrAgdX/Yj4Iw4pSLlI3+6vKsfZ
-         1RqRrgrWqUsGXLeFN6IFuiLJoSlwRD/aG0+tqgvGYmGcLsB9nQQPQtqFBO1K/kBh/rYb
-         XAEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hGk6SHkwZ0/IFFGnE1iOAP01F59WjRCQF/3H+v3exE4=;
-        b=ayfOs5OD/s8u33C0hdyBHxkrrVIVK3XvtTh9LCuelIRqo9/vfUiNhWBUsBjUDjc/AT
-         gUu/m5bH4RVFWJZjKJqimDYaMxCsJXKmjYXnw37DuhsxC9YBbl/Zaq86OelhtefIjz/c
-         nsEBqBgAkB22iJu/fpiLHsH393ufATLbijdtGnq9G5J5qWG0HCfoBzdz9ATASJzOxxRV
-         S4Vq7H7vINQBoZCLWm6WCWr75Z7DrfiyErdHnOBdYnb8MqVJTJLxxQv17QEcz0vVQSGt
-         fRr11peXZpKORwKno2qeOaWWhNu9uoyLPxTolAwwz2TPQExshF+rZfiomPSKD0vUJ6Uk
-         dq4g==
-X-Gm-Message-State: AGi0PuZFH1s89VMQ158vQRjJjx3Ri8PoQqkF9317jWKSfDAtMbtRwpVO
-        E2booZLUFLwFO8letvvTSH5sYw==
-X-Google-Smtp-Source: APiQypIPk6Gmfh+TOm1lNpI6ui+UW11cc/DzL7lShUJ6Uv4UPglvQgiExWM6SHeIDM9Wlw/jZVJSDQ==
-X-Received: by 2002:adf:8169:: with SMTP id 96mr3846446wrm.283.1588687388304;
-        Tue, 05 May 2020 07:03:08 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id c190sm4075755wme.4.2020.05.05.07.03.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 07:03:07 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 03/11] net: ethernet: mediatek: rename Kconfig prompt
-Date:   Tue,  5 May 2020 16:02:23 +0200
-Message-Id: <20200505140231.16600-4-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200505140231.16600-1-brgl@bgdev.pl>
-References: <20200505140231.16600-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 5 May 2020 10:08:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727857AbgEEOIM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 10:08:12 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF24720661;
+        Tue,  5 May 2020 14:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588687692;
+        bh=AoQ+QNUrZA3/rI32aJOVMR7iN0dP/ZQu8S525JZhojY=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=JVs7rDb7Ym1UFR/lmjF3UOYYYS5kxRbKXWnS3oWc2rmx/ciRUZgWZpCw1+6nxY+xu
+         CJLEhMTcWIM+YFc0L3HHkyNPJY/QuNozRUBhPjpZupiTJFFPCkNE0PuV4Hc0Y1iujN
+         gS5XZnUeiDji0bOKsHo93/mFve2uTPC8pxKixoA0=
+Date:   Tue, 05 May 2020 15:08:09 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     robh+dt@kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Cc:     andriy.shevchenko@linux.intel.com, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <20200505130618.554-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+References: <20200505130618.554-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+Subject: Re: [PATCH v5 0/7] spi: dw: Add support for Intel Keem Bay SPI
+Message-Id: <158868768979.34203.2406918782261039757.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, 5 May 2020 21:06:11 +0800, Wan Ahmad Zainie wrote:
+> This patchset adds support for DesignWare DWC_ssi. This soft IP
+> is an AMBA version 2.0-compliant AHB slave device. Existing driver
+> already supports the older APB version.
+> 
+> Intel Keem Bay SPI controller is using this IP. This patchset is
+> tested on Keem Bay evaluation module board.
+> 
+> [...]
 
-We'll soon by adding a second MediaTek Ethernet driver so modify the
-Kconfig prompt.
+Applied to
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/net/ethernet/mediatek/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.8
 
-diff --git a/drivers/net/ethernet/mediatek/Kconfig b/drivers/net/ethernet/mediatek/Kconfig
-index 4968352ba188..5079b8090f16 100644
---- a/drivers/net/ethernet/mediatek/Kconfig
-+++ b/drivers/net/ethernet/mediatek/Kconfig
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config NET_VENDOR_MEDIATEK
--	bool "MediaTek ethernet driver"
-+	bool "MediaTek devices"
- 	depends on ARCH_MEDIATEK || SOC_MT7621 || SOC_MT7620
- 	---help---
- 	  If you have a Mediatek SoC with ethernet, say Y.
--- 
-2.25.0
+Thanks!
 
+[1/7] spi: dw: Fix typo in few registers name
+      commit: 299cb65c9dd4791242a102f216583773d962c1ac
+[2/7] spi: dw: Add update_cr0() callback to update CTRLR0
+      commit: c4eadee21fa9afd3dc9dd867c71b642177bf671f
+[3/7] spi: dw: Add support for DesignWare DWC_ssi
+      commit: e539f435cb9c78c6984b75f16b65a2ece7867981
+[4/7] spi: dw-apb-ssi: Add compatible string for DesignWare DWC_ssi
+      commit: 3812a081d2fcc297d039c4ffafa7778d75abcbe2
+[5/7] spi: dw: Add support for Intel Keem Bay SPI
+      commit: f42377916ed534649341777669628f22ef1edf59
+[6/7] spi: dw-apb-ssi: Add Intel Keem Bay support
+      commit: c48e0c533e72ca264ac914addccab8a328806ed3
+[7/7] dt-bindings: spi: dw-apb-ssi: Convert bindings to json-schema
+      (not applied)
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
