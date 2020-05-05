@@ -2,1211 +2,417 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D61C47259
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84455C47256
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 666D220721
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:09:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="U/0vh1Ue";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hQ9lG16T"
+	by mail.kernel.org (Postfix) with ESMTP id 6F8BA20675
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgEEKJt (ORCPT
+        id S1728512AbgEEKQO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 06:09:49 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:42399 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728401AbgEEKJr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 06:09:47 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id AC9115C00CF;
-        Tue,  5 May 2020 06:09:43 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 05 May 2020 06:09:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=Ls9zgGcKsYSrS
-        yAiJJR+ujX/9P6Sij4PxuJ1WplH+uo=; b=U/0vh1Ueg9QtMOOgOB8J5ItCAvkTo
-        3YrpPUQmldK6v7avD9fc6fZJUj0K5l5CyrnWWfI2yquKJBle5/E13EqLuwY8wn6h
-        oSIGf4Yvkimgix1ZgdltzkQ9NlbwiocghlwDctLYVidbZxhCPkgXa68B7jhqnCEB
-        oKW/kim27aXAD9wyVFxQsUyhbwda+7VgrafaCsQl4G/bMgLxgcDDuAIBKsx2huEZ
-        eXTn9/6S80TmkKnFJnwUNo6vqjM0FCKDW/bmGcAiUwVDuS8bbZAEB4dS0Eu56OMP
-        AjeVv8veVuqn7Dg6xQdHnGYC1JsX4xnSYDEqAa6FfpJzvqa2gX7rJ+mCQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=Ls9zgGcKsYSrSyAiJJR+ujX/9P6Sij4PxuJ1WplH+uo=; b=hQ9lG16T
-        XkVMkvCoCXj5N7w+eolpgQ7046SqE3sJANsXs++wUM90Br8IMJ04ThgEj4eNehmD
-        qod6z5b/AErAxx64rE0/OhhTroxOnlYUqrxgNubLqFpaC2TdrVZBWYOgEYCTjY4E
-        OAYxswJruQROt4aXRogEWAWcZZeQwjwKCgBegVl48ASuIAESO75fDRO68Dx2FLb9
-        TnWIeSgugnVdKNKxu/RI+jNNeLWtI3AxlE9tM2XTw6XajbxWUaF89fYkPWEL3ZmP
-        +UumEIZTLJEtGwPSEaD3+CUFeqh3E3LbKexWuV/iuFKor4xKnXXc7tv/CVJXpG6M
-        a1EwgjH3f5/JJw==
-X-ME-Sender: <xms:ZzuxXlsbZ39RgcgGW5EiOJuKo54gbTptOUvwfdItg-rEQXGi4jJl_w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeigddvgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveevheeh
-    vdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:ZzuxXhbwRh-d26wH7dg1ov8mi5LISI2TFXCFi2WyXVbyyXeTfo-FiA>
-    <xmx:ZzuxXvguT-iL6SW17JxMIm4PER2Pc4TBZ4uYOOyegj65U3LmZD2JMg>
-    <xmx:ZzuxXmVMZFqOZfCi563QbSGLe-HtLjD1xFxwln5UHau4s7b0ZFwMZg>
-    <xmx:ZzuxXjlklJ2II92ZtzHlRGKaLA4gBBUKKSm2HgYCheO_GPxQ-HxM7w>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2A4D73066014;
-        Tue,  5 May 2020 06:09:43 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 3/5] iommu: Add Allwinner H6 IOMMU driver
-Date:   Tue,  5 May 2020 12:09:32 +0200
-Message-Id: <dcccd40c46982b6ab2fc1c5bc199d045798fbe8e.1588673353.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.70f96f9afd2e04161ebece593ae6cd7e17eca41b.1588673353.git-series.maxime@cerno.tech>
-References: <cover.70f96f9afd2e04161ebece593ae6cd7e17eca41b.1588673353.git-series.maxime@cerno.tech>
+        Tue, 5 May 2020 06:16:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728663AbgEEKQO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 06:16:14 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC2DC061A10
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 03:16:13 -0700 (PDT)
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jVucQ-0006F5-Tf; Tue, 05 May 2020 12:16:06 +0200
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jVucM-0000em-SI; Tue, 05 May 2020 12:16:02 +0200
+Date:   Tue, 5 May 2020 12:16:02 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>
+Subject: Re: [PATCH v7 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200505101602.GE18755@pengutronix.de>
+References: <20200505100129.104673-1-robert.foss@linaro.org>
+ <20200505100129.104673-3-robert.foss@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505100129.104673-3-robert.foss@linaro.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 12:09:57 up 73 days, 21:26, 141 users,  load average: 2.23, 5.70,
+ 24.44
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Allwinner H6 has introduced an IOMMU for a few DMA controllers, mostly
-video related: the display engine, the video decoders / encoders, the
-camera capture controller, etc.
+Hi Robert,
 
-The design is pretty simple compared to other IOMMUs found in SoCs: there's
-a single instance, controlling all the masters, with a single address
-space.
+On 20-05-05 12:01, Robert Foss wrote:
+> Add match table, enable ov8856_probe() to support
+> both ACPI and DT modes.
+> 
+> ACPI and DT modes are primarily distinguished from
+> by checking for ACPI mode and by having resource like
+> be NULL.
+> 
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+> 
+> - Changes since v6:
+>   * Marco: Bail out of __ov8856_power_on earlier if ACPI mode
+> 
+> - Changes since v5:
+>   * Maxime & Sakari: Replaced clock tolerance check with warning
+> 
+> - Changes since v4:
+>   * Maxime & Sakari: Switch to clock-frequency
+> 
+> - Changes since v3:
+>   * Remove redundant {}-brackets
+>   * Compare xvclk_rate to 5% tolerance
+>   * Andy: Use dev_fwnode()
+>   * Andy: Use %pe instead of %ld + PTR_ERR()
+>   * Andy: Invert reset_gpio logic
+>   * Andy: Remove dev_dbg() from failing reset_gpio setup
+>   * Andy: Use dev_err for logging for failures
+>   * Andy: Remove dev_warn from EDEFER/regulator error path
+>   * Andy & Sakari: Replaced GPIOD_OUT_XXX with 0/1
+>   * Maxime & Sakari: Verify clock frequency from DT
+>   * Sakari: Verify the 'xvclk_rate' is set correctly for ACPI/DT devices
+>   * Sakari: Remove duplicate ov8856->dev assignment
+> 
+> - Changes since v2:
+>   * Added "struct device *dev" member to struct ov8856
+>   * Andy: Switch to optional version of devm_gpiod_get
+>   * Andy: Switch to optional version of devm_clk_get
+>   * Fabio: Add reset sleep period
+>   * Sakari: Unify defines for 19.2Mhz
+>   * Sakari: Remove 24Mhz clock, since it isn't needed for supported modes
+>   * Sakari: Replace dev_info() with dev_dbg()
+>   * Sakari: Switch induction variable type to unsigned
+>   * Sakari: Don't wait for reset_gpio when in ACPI mode
+>   * Sakari: Pull reset GPIO high on power on failure
+>   * Sakari: Add power on/off to resume/suspend
+>   * Sakari: Fix indentation
+>   * Sakari: Power off during ov8856_remove()
+>   * Sakari: Don't sleep during power-on in ACPI mode
+>   * Sakari: Switch to getting xvclk from clk_get_rate
+> 
+> - Changes since v1:
+>   * Andy & Sakari: Make XVCLK optional since to not break ACPI
+>   * Fabio: Change n_shutdown_gpio name to reset_gpio
+>   * Fabio: Invert reset_gpio due to GPIO_ACTIVE_HIGH -> GPIO_ACTIVE_LOW change
+>   * Fabio: Remove empty line
+>   * Fabio: Remove real error from devm_gpiod_get() failures
+>   * Sakari: ARRAY_SIZE() directly instead of through OV8856_NUM_SUPPLIES
+>   * Sakari: Use XVCLK rate as provided by DT
+> 
+>  drivers/media/i2c/ov8856.c | 137 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 123 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
+> index 8655842af275..e6418a79801e 100644
+> --- a/drivers/media/i2c/ov8856.c
+> +++ b/drivers/media/i2c/ov8856.c
+> @@ -3,10 +3,13 @@
+>  
+>  #include <asm/unaligned.h>
+>  #include <linux/acpi.h>
+> +#include <linux/clk.h>
+>  #include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-fwnode.h>
+> @@ -18,7 +21,7 @@
+>  #define OV8856_LINK_FREQ_360MHZ		360000000ULL
+>  #define OV8856_LINK_FREQ_180MHZ		180000000ULL
+>  #define OV8856_SCLK			144000000ULL
+> -#define OV8856_MCLK			19200000
+> +#define OV8856_XVCLK_19_2		19200000
+>  #define OV8856_DATA_LANES		4
+>  #define OV8856_RGB_DEPTH		10
+>  
+> @@ -64,6 +67,12 @@
+>  
+>  #define to_ov8856(_sd)			container_of(_sd, struct ov8856, sd)
+>  
+> +static const char * const ov8856_supply_names[] = {
+> +	"dovdd",	/* Digital I/O power */
+> +	"avdd",		/* Analog power */
+> +	"dvdd",		/* Digital core power */
+> +};
+> +
+>  enum {
+>  	OV8856_LINK_FREQ_720MBPS,
+>  	OV8856_LINK_FREQ_360MBPS,
+> @@ -566,6 +575,11 @@ struct ov8856 {
+>  	struct media_pad pad;
+>  	struct v4l2_ctrl_handler ctrl_handler;
+>  
+> +	struct device		*dev;
 
-It also features a performance monitoring unit that allows to retrieve
-various informations (per-master and global TLB accesses, hits and misses,
-access latency, etc) that isn't supported at the moment.
+Why do we need this reference here? We already have all information we
+need to retrieve the device.
 
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- drivers/iommu/Kconfig        |    9 +-
- drivers/iommu/Makefile       |    1 +-
- drivers/iommu/sun50i-iommu.c | 1065 +++++++++++++++++++++++++++++++++++-
- 3 files changed, 1075 insertions(+)
- create mode 100644 drivers/iommu/sun50i-iommu.c
+> +	struct clk		*xvclk;
+> +	struct gpio_desc	*reset_gpio;
+> +	struct regulator_bulk_data supplies[ARRAY_SIZE(ov8856_supply_names)];
+> +
+>  	/* V4L2 Controls */
+>  	struct v4l2_ctrl *link_freq;
+>  	struct v4l2_ctrl *pixel_rate;
+> @@ -908,6 +922,52 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
+>  	return ret;
+>  }
+>  
+> +static int __ov8856_power_on(struct ov8856 *ov8856)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
+> +	int ret;
+> +
+> +	if (is_acpi_node(dev_fwnode(ov8856->dev)))
+> +		return 0;
+> +
+> +	ret = clk_prepare_enable(ov8856->xvclk);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "failed to enable xvclk\n");
+> +		return ret;
+> +	}
+> +
+> +	if (ov8856->reset_gpio) {
+> +		gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
+> +		usleep_range(1000, 2000);
+> +	}
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
+> +				    ov8856->supplies);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "failed to enable regulators\n");
+> +		goto disable_clk;
+> +	}
+> +
+> +	gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
+> +	usleep_range(1500, 1800);
+> +
+> +	return 0;
+> +
+> +disable_clk:
+> +	gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
+> +	clk_disable_unprepare(ov8856->xvclk);
+> +
+> +	return ret;
+> +}
+> +
+> +static void __ov8856_power_off(struct ov8856 *ov8856)
+> +{
+> +	gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
+> +	regulator_bulk_disable(ARRAY_SIZE(ov8856_supply_names),
+> +			       ov8856->supplies);
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 58b4a4dbfc78..6e80b0ea7228 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -303,6 +303,15 @@ config ROCKCHIP_IOMMU
- 	  Say Y here if you are using a Rockchip SoC that includes an IOMMU
- 	  device.
- 
-+config SUN50I_IOMMU
-+	bool "Allwinner H6 IOMMU Support"
-+	depends on ARCH_SUNXI || COMPILE_TEST
-+	select ARM_DMA_USE_IOMMU
-+	select IOMMU_API
-+	select IOMMU_DMA
-+	help
-+	  Support for the IOMMU introduced in the Allwinner H6 SoCs.
-+
- config TEGRA_IOMMU_GART
- 	bool "Tegra GART IOMMU Support"
- 	depends on ARCH_TEGRA_2x_SOC
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index 9f33fdb3bb05..57cf4ba5e27c 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_MTK_IOMMU_V1) += mtk_iommu_v1.o
- obj-$(CONFIG_OMAP_IOMMU) += omap-iommu.o
- obj-$(CONFIG_OMAP_IOMMU_DEBUG) += omap-iommu-debug.o
- obj-$(CONFIG_ROCKCHIP_IOMMU) += rockchip-iommu.o
-+obj-$(CONFIG_SUN50I_IOMMU) += sun50i-iommu.o
- obj-$(CONFIG_TEGRA_IOMMU_GART) += tegra-gart.o
- obj-$(CONFIG_TEGRA_IOMMU_SMMU) += tegra-smmu.o
- obj-$(CONFIG_EXYNOS_IOMMU) += exynos-iommu.o
-diff --git a/drivers/iommu/sun50i-iommu.c b/drivers/iommu/sun50i-iommu.c
-new file mode 100644
-index 000000000000..d4c3fa2f0f82
---- /dev/null
-+++ b/drivers/iommu/sun50i-iommu.c
-@@ -0,0 +1,1065 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+// Copyright (C) 2016-2018, Allwinner Technology CO., LTD.
-+// Copyright (C) 2019-2020, Cerno
-+
-+#include <linux/bitfield.h>
-+#include <linux/bug.h>
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/dma-direction.h>
-+#include <linux/dma-iommu.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/interrupt.h>
-+#include <linux/iommu.h>
-+#include <linux/iopoll.h>
-+#include <linux/ioport.h>
-+#include <linux/log2.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/reset.h>
-+#include <linux/sizes.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+
-+#define IOMMU_RESET_REG			0x010
-+#define IOMMU_ENABLE_REG		0x020
-+#define IOMMU_ENABLE_ENABLE			BIT(0)
-+
-+#define IOMMU_BYPASS_REG		0x030
-+#define IOMMU_AUTO_GATING_REG		0x040
-+#define IOMMU_AUTO_GATING_ENABLE		BIT(0)
-+
-+#define IOMMU_WBUF_CTRL_REG		0x044
-+#define IOMMU_OOO_CTRL_REG		0x048
-+#define IOMMU_4KB_BDY_PRT_CTRL_REG	0x04c
-+#define IOMMU_TTB_REG			0x050
-+#define IOMMU_TLB_ENABLE_REG		0x060
-+#define IOMMU_TLB_PREFETCH_REG		0x070
-+#define IOMMU_TLB_PREFETCH_MASTER_ENABLE(m)	BIT(m)
-+
-+#define IOMMU_TLB_FLUSH_REG		0x080
-+#define IOMMU_TLB_FLUSH_PTW_CACHE		BIT(17)
-+#define IOMMU_TLB_FLUSH_MACRO_TLB		BIT(16)
-+#define IOMMU_TLB_FLUSH_MICRO_TLB(i)		(BIT(i) & GENMASK(5, 0))
-+
-+#define IOMMU_TLB_IVLD_ADDR_REG		0x090
-+#define IOMMU_TLB_IVLD_ADDR_MASK_REG	0x094
-+#define IOMMU_TLB_IVLD_ENABLE_REG	0x098
-+#define IOMMU_TLB_IVLD_ENABLE_ENABLE		BIT(0)
-+
-+#define IOMMU_PC_IVLD_ADDR_REG		0x0a0
-+#define IOMMU_PC_IVLD_ENABLE_REG	0x0a8
-+#define IOMMU_PC_IVLD_ENABLE_ENABLE		BIT(0)
-+
-+#define IOMMU_DM_AUT_CTRL_REG(d)	(0x0b0 + ((d) / 2) * 4)
-+#define IOMMU_DM_AUT_CTRL_RD_UNAVAIL(d, m)	(1 << (((d & 1) * 16) + ((m) * 2)))
-+#define IOMMU_DM_AUT_CTRL_WR_UNAVAIL(d, m)	(1 << (((d & 1) * 16) + ((m) * 2) + 1))
-+
-+#define IOMMU_DM_AUT_OVWT_REG		0x0d0
-+#define IOMMU_INT_ENABLE_REG		0x100
-+#define IOMMU_INT_CLR_REG		0x104
-+#define IOMMU_INT_STA_REG		0x108
-+#define IOMMU_INT_ERR_ADDR_REG(i)	(0x110 + (i) * 4)
-+#define IOMMU_INT_ERR_ADDR_L1_REG	0x130
-+#define IOMMU_INT_ERR_ADDR_L2_REG	0x134
-+#define IOMMU_INT_ERR_DATA_REG(i)	(0x150 + (i) * 4)
-+#define IOMMU_L1PG_INT_REG		0x0180
-+#define IOMMU_L2PG_INT_REG		0x0184
-+
-+#define IOMMU_INT_INVALID_L2PG			BIT(17)
-+#define IOMMU_INT_INVALID_L1PG			BIT(16)
-+#define IOMMU_INT_MASTER_PERMISSION(m)		BIT(m)
-+#define IOMMU_INT_MASTER_MASK			(IOMMU_INT_MASTER_PERMISSION(0) | \
-+						 IOMMU_INT_MASTER_PERMISSION(1) | \
-+						 IOMMU_INT_MASTER_PERMISSION(2) | \
-+						 IOMMU_INT_MASTER_PERMISSION(3) | \
-+						 IOMMU_INT_MASTER_PERMISSION(4) | \
-+						 IOMMU_INT_MASTER_PERMISSION(5))
-+#define IOMMU_INT_MASK				(IOMMU_INT_INVALID_L1PG | \
-+						 IOMMU_INT_INVALID_L2PG | \
-+						 IOMMU_INT_MASTER_MASK)
-+
-+#define PT_ENTRY_SIZE			sizeof(u32)
-+
-+#define NUM_DT_ENTRIES			4096
-+#define DT_SIZE				(NUM_DT_ENTRIES * PT_ENTRY_SIZE)
-+
-+#define NUM_PT_ENTRIES			256
-+#define PT_SIZE				(NUM_PT_ENTRIES * PT_ENTRY_SIZE)
-+
-+struct sun50i_iommu {
-+	struct iommu_device iommu;
-+
-+	/* Lock to modify the IOMMU registers */
-+	spinlock_t iommu_lock;
-+
-+	struct device *dev;
-+	void __iomem *base;
-+	struct reset_control *reset;
-+	struct clk *clk;
-+
-+	struct iommu_domain *domain;
-+	struct iommu_group *group;
-+	struct kmem_cache *pt_pool;
-+};
-+
-+struct sun50i_iommu_domain {
-+	struct iommu_domain domain;
-+
-+	/* Number of devices attached to the domain */
-+	refcount_t refcnt;
-+
-+	/* L1 Page Table */
-+	u32 *dt;
-+	dma_addr_t dt_dma;
-+
-+	struct sun50i_iommu *iommu;
-+};
-+
-+static struct sun50i_iommu_domain *to_sun50i_domain(struct iommu_domain *domain)
-+{
-+	return container_of(domain, struct sun50i_iommu_domain, domain);
-+}
-+
-+static struct sun50i_iommu *sun50i_iommu_from_dev(struct device *dev)
-+{
-+	return dev_iommu_priv_get(dev);
-+}
-+
-+static u32 iommu_read(struct sun50i_iommu *iommu, u32 offset)
-+{
-+	return readl(iommu->base + offset);
-+}
-+
-+static void iommu_write(struct sun50i_iommu *iommu, u32 offset, u32 value)
-+{
-+	writel(value, iommu->base + offset);
-+}
-+
-+/*
-+ * The Allwinner H6 IOMMU uses a 2-level page table.
-+ *
-+ * The first level is the usual Directory Table (DT), that consists of
-+ * 4096 4-bytes Directory Table Entries (DTE), each pointing to a Page
-+ * Table (PT).
-+ *
-+ * Each PT consits of 256 4-bytes Page Table Entries (PTE), each
-+ * pointing to a 4kB page of physical memory.
-+ *
-+ * The IOMMU supports a single DT, pointed by the IOMMU_TTB_REG
-+ * register that contains its physical address.
-+ */
-+
-+#define SUN50I_IOVA_DTE_MASK	GENMASK(31, 20)
-+#define SUN50I_IOVA_PTE_MASK	GENMASK(19, 12)
-+#define SUN50I_IOVA_PAGE_MASK	GENMASK(11, 0)
-+
-+static u32 sun50i_iova_get_dte_index(dma_addr_t iova)
-+{
-+	return FIELD_GET(SUN50I_IOVA_DTE_MASK, iova);
-+}
-+
-+static u32 sun50i_iova_get_pte_index(dma_addr_t iova)
-+{
-+	return FIELD_GET(SUN50I_IOVA_PTE_MASK, iova);
-+}
-+
-+static u32 sun50i_iova_get_page_offset(dma_addr_t iova)
-+{
-+	return FIELD_GET(SUN50I_IOVA_PAGE_MASK, iova);
-+}
-+
-+/*
-+ * Each Directory Table Entry has a Page Table address and a valid
-+ * bit:
-+
-+ * +---------------------+-----------+-+
-+ * | PT address          | Reserved  |V|
-+ * +---------------------+-----------+-+
-+ *  31:10 - Page Table address
-+ *   9:2  - Reserved
-+ *   1:0  - 1 if the entry is valid
-+ */
-+
-+#define SUN50I_DTE_PT_ADDRESS_MASK	GENMASK(31, 10)
-+#define SUN50I_DTE_PT_ATTRS		GENMASK(1, 0)
-+#define SUN50I_DTE_PT_VALID		1
-+
-+static phys_addr_t sun50i_dte_get_pt_address(u32 dte)
-+{
-+	return (phys_addr_t)dte & SUN50I_DTE_PT_ADDRESS_MASK;
-+}
-+
-+static bool sun50i_dte_is_pt_valid(u32 dte)
-+{
-+	return (dte & SUN50I_DTE_PT_ATTRS) == SUN50I_DTE_PT_VALID;
-+}
-+
-+static u32 sun50i_mk_dte(dma_addr_t pt_dma)
-+{
-+	return (pt_dma & SUN50I_DTE_PT_ADDRESS_MASK) | SUN50I_DTE_PT_VALID;
-+}
-+
-+/*
-+ * Each PTE has a Page address, an authority index and a valid bit:
-+ *
-+ * +----------------+-----+-----+-----+---+-----+
-+ * | Page address   | Rsv | ACI | Rsv | V | Rsv |
-+ * +----------------+-----+-----+-----+---+-----+
-+ *  31:12 - Page address
-+ *  11:8  - Reserved
-+ *   7:4  - Authority Control Index
-+ *   3:2  - Reserved
-+ *     1  - 1 if the entry is valid
-+ *     0  - Reserved
-+ *
-+ * The way permissions work is that the IOMMU has 16 "domains" that
-+ * can be configured to give each masters either read or write
-+ * permissions through the IOMMU_DM_AUT_CTRL_REG registers. The domain
-+ * 0 seems like the default domain, and its permissions in the
-+ * IOMMU_DM_AUT_CTRL_REG are only read-only, so it's not really
-+ * useful to enforce any particular permission.
-+ *
-+ * Each page entry will then have a reference to the domain they are
-+ * affected to, so that we can actually enforce them on a per-page
-+ * basis.
-+ *
-+ * In order to make it work with the IOMMU framework, we will be using
-+ * 4 different domains, starting at 1: RD_WR, RD, WR and NONE
-+ * depending on the permission we want to enforce. Each domain will
-+ * have each master setup in the same way, since the IOMMU framework
-+ * doesn't seem to restrict page access on a per-device basis. And
-+ * then we will use the relevant domain index when generating the page
-+ * table entry depending on the permissions we want to be enforced.
-+ */
-+
-+enum sun50i_iommu_aci {
-+	SUN50I_IOMMU_ACI_DO_NOT_USE = 0,
-+	SUN50I_IOMMU_ACI_NONE,
-+	SUN50I_IOMMU_ACI_RD,
-+	SUN50I_IOMMU_ACI_WR,
-+	SUN50I_IOMMU_ACI_RD_WR,
-+};
-+
-+#define SUN50I_PTE_PAGE_ADDRESS_MASK	GENMASK(31, 12)
-+#define SUN50I_PTE_ACI_MASK		GENMASK(7, 4)
-+#define SUN50I_PTE_PAGE_VALID		BIT(1)
-+
-+static phys_addr_t sun50i_pte_get_page_address(u32 pte)
-+{
-+	return (phys_addr_t)pte & SUN50I_PTE_PAGE_ADDRESS_MASK;
-+}
-+
-+static enum sun50i_iommu_aci sun50i_get_pte_aci(u32 pte)
-+{
-+	return FIELD_GET(SUN50I_PTE_ACI_MASK, pte);
-+}
-+
-+static bool sun50i_pte_is_page_valid(u32 pte)
-+{
-+	return pte & SUN50I_PTE_PAGE_VALID;
-+}
-+
-+static u32 sun50i_mk_pte(phys_addr_t page, int prot)
-+{
-+	enum sun50i_iommu_aci aci;
-+	u32 flags = 0;
-+
-+	if (prot & (IOMMU_READ | IOMMU_WRITE))
-+		aci = SUN50I_IOMMU_ACI_RD_WR;
-+	else if (prot & IOMMU_READ)
-+		aci = SUN50I_IOMMU_ACI_RD;
-+	else if (prot & IOMMU_WRITE)
-+		aci = SUN50I_IOMMU_ACI_WR;
-+	else
-+		aci = SUN50I_IOMMU_ACI_NONE;
-+
-+	flags |= FIELD_PREP(SUN50I_PTE_ACI_MASK, aci);
-+	page &= SUN50I_PTE_PAGE_ADDRESS_MASK;
-+	return page | flags | SUN50I_PTE_PAGE_VALID;
-+}
-+
-+static void sun50i_table_flush(struct sun50i_iommu_domain *sun50i_domain,
-+			       void *vaddr, unsigned int count)
-+{
-+	struct sun50i_iommu *iommu = sun50i_domain->iommu;
-+	dma_addr_t dma = virt_to_phys(vaddr);
-+	size_t size = count * PT_ENTRY_SIZE;
-+
-+	dma_sync_single_for_device(iommu->dev, dma, size, DMA_TO_DEVICE);
-+}
-+
-+static int sun50i_iommu_flush_all_tlb(struct sun50i_iommu *iommu)
-+{
-+	u32 reg;
-+	int ret;
-+
-+	assert_spin_locked(&iommu->iommu_lock);
-+
-+	iommu_write(iommu,
-+		    IOMMU_TLB_FLUSH_REG,
-+		    IOMMU_TLB_FLUSH_PTW_CACHE |
-+		    IOMMU_TLB_FLUSH_MACRO_TLB |
-+		    IOMMU_TLB_FLUSH_MICRO_TLB(5) |
-+		    IOMMU_TLB_FLUSH_MICRO_TLB(4) |
-+		    IOMMU_TLB_FLUSH_MICRO_TLB(3) |
-+		    IOMMU_TLB_FLUSH_MICRO_TLB(2) |
-+		    IOMMU_TLB_FLUSH_MICRO_TLB(1) |
-+		    IOMMU_TLB_FLUSH_MICRO_TLB(0));
-+
-+	ret = readl_poll_timeout(iommu->base + IOMMU_TLB_FLUSH_REG,
-+				 reg, !reg,
-+				 1, 2000);
-+	if (ret)
-+		dev_warn(iommu->dev, "TLB Flush timed out!\n");
-+
-+	return ret;
-+}
-+
-+static int sun50i_iommu_ptw_invalidate(struct sun50i_iommu *iommu,
-+				       dma_addr_t iova)
-+{
-+	int ret;
-+	u32 reg;
-+
-+	assert_spin_locked(&iommu->iommu_lock);
-+
-+	iommu_write(iommu, IOMMU_PC_IVLD_ADDR_REG, iova);
-+	iommu_write(iommu, IOMMU_PC_IVLD_ENABLE_REG,
-+		    IOMMU_PC_IVLD_ENABLE_ENABLE);
-+
-+	ret = readl_poll_timeout(iommu->base + IOMMU_PC_IVLD_ENABLE_REG,
-+				 reg, !(reg & IOMMU_PC_IVLD_ENABLE_ENABLE),
-+				 1, 2000);
-+	if (ret)
-+		dev_err(iommu->dev, "PTW cache invalid timed out\n");
-+
-+	return ret;
-+}
-+
-+static void sun50i_iommu_flush_iotlb_all(struct iommu_domain *domain)
-+{
-+	struct sun50i_iommu_domain *sun50i_domain = to_sun50i_domain(domain);
-+	struct sun50i_iommu *iommu = sun50i_domain->iommu;
-+	unsigned long flags;
-+
-+	/*
-+	 * At boot, we'll have a first call into .flush_iotlb_all right after
-+	 * .add_device, and since we link our (single) domain to our iommu in
-+	 * the .attach_device callback, we don't have that pointer set.
-+	 *
-+	 * It shouldn't really be any trouble to ignore it though since we flush
-+	 * all caches as part of the device powerup.
-+	 */
-+	if (!iommu)
-+		return;
-+
-+	spin_lock_irqsave(&iommu->iommu_lock, flags);
-+	sun50i_iommu_flush_all_tlb(iommu);
-+	spin_unlock_irqrestore(&iommu->iommu_lock, flags);
-+}
-+
-+static void sun50i_iommu_iotlb_sync(struct iommu_domain *domain,
-+				    struct iommu_iotlb_gather *gather)
-+{
-+	sun50i_iommu_flush_iotlb_all(domain);
-+}
-+
-+static int sun50i_iommu_enable(struct sun50i_iommu *iommu)
-+{
-+	struct sun50i_iommu_domain *sun50i_domain;
-+	unsigned long flags;
-+	int ret;
-+
-+	if (!iommu->domain)
-+		return 0;
-+
-+	sun50i_domain = to_sun50i_domain(iommu->domain);
-+
-+	ret = reset_control_deassert(iommu->reset);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(iommu->clk);
-+	if (ret)
-+		goto err_reset_assert;
-+
-+	spin_lock_irqsave(&iommu->iommu_lock, flags);
-+
-+	iommu_write(iommu, IOMMU_TTB_REG, sun50i_domain->dt_dma);
-+	iommu_write(iommu, IOMMU_TLB_PREFETCH_REG,
-+		    IOMMU_TLB_PREFETCH_MASTER_ENABLE(0) |
-+		    IOMMU_TLB_PREFETCH_MASTER_ENABLE(1) |
-+		    IOMMU_TLB_PREFETCH_MASTER_ENABLE(2) |
-+		    IOMMU_TLB_PREFETCH_MASTER_ENABLE(3) |
-+		    IOMMU_TLB_PREFETCH_MASTER_ENABLE(4) |
-+		    IOMMU_TLB_PREFETCH_MASTER_ENABLE(5));
-+	iommu_write(iommu, IOMMU_INT_ENABLE_REG, IOMMU_INT_MASK);
-+	iommu_write(iommu, IOMMU_DM_AUT_CTRL_REG(SUN50I_IOMMU_ACI_NONE),
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 0) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 0) |
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 1) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 1) |
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 2) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 2) |
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 3) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 3) |
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 4) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 4) |
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 5) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_NONE, 5));
-+
-+	iommu_write(iommu, IOMMU_DM_AUT_CTRL_REG(SUN50I_IOMMU_ACI_RD),
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_RD, 0) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_RD, 1) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_RD, 2) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_RD, 3) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_RD, 4) |
-+		    IOMMU_DM_AUT_CTRL_WR_UNAVAIL(SUN50I_IOMMU_ACI_RD, 5));
-+
-+	iommu_write(iommu, IOMMU_DM_AUT_CTRL_REG(SUN50I_IOMMU_ACI_WR),
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_WR, 0) |
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_WR, 1) |
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_WR, 2) |
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_WR, 3) |
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_WR, 4) |
-+		    IOMMU_DM_AUT_CTRL_RD_UNAVAIL(SUN50I_IOMMU_ACI_WR, 5));
-+
-+	ret = sun50i_iommu_flush_all_tlb(iommu);
-+	if (ret) {
-+		spin_unlock_irqrestore(&iommu->iommu_lock, flags);
-+		goto err_clk_disable;
-+	}
-+
-+	iommu_write(iommu, IOMMU_AUTO_GATING_REG, IOMMU_AUTO_GATING_ENABLE);
-+	iommu_write(iommu, IOMMU_ENABLE_REG, IOMMU_ENABLE_ENABLE);
-+
-+	spin_unlock_irqrestore(&iommu->iommu_lock, flags);
-+
-+	return 0;
-+
-+err_clk_disable:
-+	clk_disable_unprepare(iommu->clk);
-+
-+err_reset_assert:
-+	reset_control_assert(iommu->reset);
-+
-+	return ret;
-+}
-+
-+static void sun50i_iommu_disable(struct sun50i_iommu *iommu)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&iommu->iommu_lock, flags);
-+
-+	iommu_write(iommu, IOMMU_ENABLE_REG, 0);
-+	iommu_write(iommu, IOMMU_TTB_REG, 0);
-+
-+	spin_unlock_irqrestore(&iommu->iommu_lock, flags);
-+
-+	clk_disable_unprepare(iommu->clk);
-+	reset_control_assert(iommu->reset);
-+}
-+
-+static void *sun50i_iommu_alloc_page_table(struct sun50i_iommu *iommu,
-+					   gfp_t gfp)
-+{
-+	dma_addr_t pt_dma;
-+	u32 *page_table;
-+
-+	page_table = kmem_cache_zalloc(iommu->pt_pool, gfp);
-+	if (!page_table)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pt_dma = dma_map_single(iommu->dev, page_table, PT_SIZE, DMA_TO_DEVICE);
-+	if (dma_mapping_error(iommu->dev, pt_dma)) {
-+		dev_err(iommu->dev, "Couldn't map L2 Page Table\n");
-+		kmem_cache_free(iommu->pt_pool, page_table);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	/* We rely on the physical address and DMA address being the same */
-+	WARN_ON(pt_dma != virt_to_phys(page_table));
-+
-+	return page_table;
-+}
-+
-+static void sun50i_iommu_free_page_table(struct sun50i_iommu *iommu,
-+					 u32 *page_table)
-+{
-+	phys_addr_t pt_phys = virt_to_phys(page_table);
-+
-+	dma_unmap_single(iommu->dev, pt_phys, PT_SIZE, DMA_TO_DEVICE);
-+	kmem_cache_free(iommu->pt_pool, page_table);
-+}
-+
-+static u32 *sun50i_dte_get_page_table(struct sun50i_iommu_domain *sun50i_domain,
-+				      dma_addr_t iova, gfp_t gfp)
-+{
-+	struct sun50i_iommu *iommu = sun50i_domain->iommu;
-+	unsigned long flags;
-+	u32 *page_table;
-+	u32 *dte_addr;
-+	u32 old_dte;
-+	u32 dte;
-+
-+	dte_addr = &sun50i_domain->dt[sun50i_iova_get_dte_index(iova)];
-+	dte = *dte_addr;
-+	if (sun50i_dte_is_pt_valid(dte)) {
-+		phys_addr_t pt_phys = sun50i_dte_get_pt_address(dte);
-+		return (u32 *)phys_to_virt(pt_phys);
-+	}
-+
-+	page_table = sun50i_iommu_alloc_page_table(iommu, gfp);
-+	if (IS_ERR(page_table))
-+		return page_table;
-+
-+	dte = sun50i_mk_dte(virt_to_phys(page_table));
-+	old_dte = cmpxchg(dte_addr, 0, dte);
-+	if (old_dte) {
-+		phys_addr_t installed_pt_phys =
-+			sun50i_dte_get_pt_address(old_dte);
-+		u32 *installed_pt = phys_to_virt(installed_pt_phys);
-+		u32 *drop_pt = page_table;
-+
-+		page_table = installed_pt;
-+		dte = old_dte;
-+		sun50i_iommu_free_page_table(iommu, drop_pt);
-+	}
-+
-+	sun50i_table_flush(sun50i_domain, page_table, PT_SIZE);
-+	sun50i_table_flush(sun50i_domain, dte_addr, 1);
-+
-+	spin_lock_irqsave(&iommu->iommu_lock, flags);
-+	sun50i_iommu_ptw_invalidate(iommu, iova);
-+	spin_unlock_irqrestore(&iommu->iommu_lock, flags);
-+
-+	return page_table;
-+}
-+
-+static int sun50i_iommu_map(struct iommu_domain *domain, unsigned long iova,
-+			    phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
-+{
-+	struct sun50i_iommu_domain *sun50i_domain = to_sun50i_domain(domain);
-+	struct sun50i_iommu *iommu = sun50i_domain->iommu;
-+	u32 pte_index;
-+	u32 *page_table, *pte_addr;
-+	int ret = 0;
-+
-+	page_table = sun50i_dte_get_page_table(sun50i_domain, iova, gfp);
-+	if (IS_ERR(page_table)) {
-+		ret = PTR_ERR(page_table);
-+		goto out;
-+	}
-+
-+	pte_index = sun50i_iova_get_pte_index(iova);
-+	pte_addr = &page_table[pte_index];
-+	if (unlikely(sun50i_pte_is_page_valid(*pte_addr))) {
-+		phys_addr_t page_phys = sun50i_pte_get_page_address(*pte_addr);
-+		dev_err(iommu->dev,
-+			"iova %pad already mapped to %pa cannot remap to %pa prot: %#x\n",
-+			&iova, &page_phys, &paddr, prot);
-+		ret = -EBUSY;
-+		goto out;
-+	}
-+
-+	*pte_addr = sun50i_mk_pte(paddr, prot);
-+	sun50i_table_flush(sun50i_domain, pte_addr, 1);
-+
-+out:
-+	return ret;
-+}
-+
-+static size_t sun50i_iommu_unmap(struct iommu_domain *domain, unsigned long iova,
-+				 size_t size, struct iommu_iotlb_gather *gather)
-+{
-+	struct sun50i_iommu_domain *sun50i_domain = to_sun50i_domain(domain);
-+	struct sun50i_iommu *iommu = sun50i_domain->iommu;
-+	phys_addr_t pt_phys;
-+	dma_addr_t pte_dma;
-+	u32 *pte_addr;
-+	u32 dte;
-+
-+	dte = sun50i_domain->dt[sun50i_iova_get_dte_index(iova)];
-+	if (!sun50i_dte_is_pt_valid(dte))
-+		return 0;
-+
-+	pt_phys = sun50i_dte_get_pt_address(dte);
-+	pte_addr = (u32 *)phys_to_virt(pt_phys) + sun50i_iova_get_pte_index(iova);
-+	pte_dma = pt_phys + sun50i_iova_get_pte_index(iova) * PT_ENTRY_SIZE;
-+
-+	if (!sun50i_pte_is_page_valid(*pte_addr))
-+		return 0;
-+
-+	memset(pte_addr, 0, sizeof(*pte_addr));
-+	sun50i_table_flush(sun50i_domain, pte_addr, 1);
-+
-+	spin_lock(&iommu->iommu_lock);
-+	sun50i_iommu_ptw_invalidate(iommu, iova);
-+	spin_unlock(&iommu->iommu_lock);
-+
-+	return SZ_4K;
-+}
-+
-+static phys_addr_t sun50i_iommu_iova_to_phys(struct iommu_domain *domain,
-+					     dma_addr_t iova)
-+{
-+	struct sun50i_iommu_domain *sun50i_domain = to_sun50i_domain(domain);
-+	phys_addr_t pt_phys;
-+	u32 *page_table;
-+	u32 dte, pte;
-+
-+	dte = sun50i_domain->dt[sun50i_iova_get_dte_index(iova)];
-+	if (!sun50i_dte_is_pt_valid(dte))
-+		return 0;
-+
-+	pt_phys = sun50i_dte_get_pt_address(dte);
-+	page_table = (u32 *)phys_to_virt(pt_phys);
-+	pte = page_table[sun50i_iova_get_pte_index(iova)];
-+	if (!sun50i_pte_is_page_valid(pte))
-+		return 0;
-+
-+	return sun50i_pte_get_page_address(pte) +
-+		sun50i_iova_get_page_offset(iova);
-+}
-+
-+static struct iommu_domain *sun50i_iommu_domain_alloc(unsigned type)
-+{
-+	struct sun50i_iommu_domain *sun50i_domain;
-+
-+	if (type != IOMMU_DOMAIN_DMA &&
-+	    type != IOMMU_DOMAIN_IDENTITY &&
-+	    type != IOMMU_DOMAIN_UNMANAGED)
-+		return NULL;
-+
-+	sun50i_domain = kzalloc(sizeof(*sun50i_domain), GFP_KERNEL);
-+	if (!sun50i_domain)
-+		return NULL;
-+
-+	if (type == IOMMU_DOMAIN_DMA &&
-+	    iommu_get_dma_cookie(&sun50i_domain->domain))
-+		goto err_free_domain;
-+
-+	sun50i_domain->dt = (u32 *)__get_free_pages(GFP_KERNEL,
-+						    get_order(DT_SIZE));
-+	if (!sun50i_domain->dt)
-+		goto err_put_cookie;
-+	memset(sun50i_domain->dt, 0, DT_SIZE);
-+
-+	refcount_set(&sun50i_domain->refcnt, 1);
-+
-+	sun50i_domain->domain.geometry.aperture_start = 0;
-+	sun50i_domain->domain.geometry.aperture_end = DMA_BIT_MASK(32);
-+	sun50i_domain->domain.geometry.force_aperture = true;
-+
-+	return &sun50i_domain->domain;
-+
-+err_put_cookie:
-+	if (type == IOMMU_DOMAIN_DMA)
-+		iommu_put_dma_cookie(&sun50i_domain->domain);
-+
-+err_free_domain:
-+	kfree(sun50i_domain);
-+
-+	return NULL;
-+}
-+
-+static void sun50i_iommu_domain_free(struct iommu_domain *domain)
-+{
-+	struct sun50i_iommu_domain *sun50i_domain = to_sun50i_domain(domain);
-+
-+	free_pages((unsigned long)sun50i_domain->dt, get_order(DT_SIZE));
-+	sun50i_domain->dt = NULL;
-+
-+	iommu_put_dma_cookie(domain);
-+
-+	kfree(sun50i_domain);
-+}
-+
-+static int sun50i_iommu_attach_domain(struct sun50i_iommu *iommu,
-+				      struct sun50i_iommu_domain *sun50i_domain)
-+{
-+	iommu->domain = &sun50i_domain->domain;
-+	sun50i_domain->iommu = iommu;
-+
-+	sun50i_domain->dt_dma = dma_map_single(iommu->dev, sun50i_domain->dt,
-+					       DT_SIZE, DMA_TO_DEVICE);
-+	if (dma_mapping_error(iommu->dev, sun50i_domain->dt_dma)) {
-+		dev_err(iommu->dev, "Couldn't map L1 Page Table\n");
-+		return -ENOMEM;
-+	}
-+
-+	return sun50i_iommu_enable(iommu);
-+}
-+
-+static void sun50i_iommu_detach_domain(struct sun50i_iommu *iommu,
-+				       struct sun50i_iommu_domain *sun50i_domain)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < NUM_DT_ENTRIES; i++) {
-+		phys_addr_t pt_phys;
-+		u32 *page_table;
-+		u32 *dte_addr;
-+		u32 dte;
-+
-+		dte_addr = &sun50i_domain->dt[i];
-+		dte = *dte_addr;
-+		if (!sun50i_dte_is_pt_valid(dte))
-+			continue;
-+
-+		memset(dte_addr, 0, sizeof(*dte_addr));
-+		sun50i_table_flush(sun50i_domain, dte_addr, 1);
-+
-+		pt_phys = sun50i_dte_get_pt_address(dte);
-+		page_table = phys_to_virt(pt_phys);
-+		sun50i_iommu_free_page_table(iommu, page_table);
-+	}
-+
-+
-+	sun50i_iommu_disable(iommu);
-+
-+	dma_unmap_single(iommu->dev, virt_to_phys(sun50i_domain->dt),
-+			 DT_SIZE, DMA_TO_DEVICE);
-+
-+	iommu->domain = NULL;
-+}
-+
-+static void sun50i_iommu_detach_device(struct iommu_domain *domain,
-+				       struct device *dev)
-+{
-+	struct sun50i_iommu_domain *sun50i_domain = to_sun50i_domain(domain);
-+	struct sun50i_iommu *iommu = dev_iommu_priv_get(dev);
-+
-+	dev_dbg(dev, "Detaching from IOMMU domain\n");
-+
-+	if (iommu->domain != domain)
-+		return;
-+
-+	if (refcount_dec_and_test(&sun50i_domain->refcnt))
-+		sun50i_iommu_detach_domain(iommu, sun50i_domain);
-+}
-+
-+static int sun50i_iommu_attach_device(struct iommu_domain *domain,
-+				      struct device *dev)
-+{
-+	struct sun50i_iommu_domain *sun50i_domain = to_sun50i_domain(domain);
-+	struct sun50i_iommu *iommu;
-+
-+	iommu = sun50i_iommu_from_dev(dev);
-+	if (!iommu)
-+		return -ENODEV;
-+
-+	dev_dbg(dev, "Attaching to IOMMU domain\n");
-+
-+	refcount_inc(&sun50i_domain->refcnt);
-+
-+	if (iommu->domain == domain)
-+		return 0;
-+
-+	if (iommu->domain)
-+		sun50i_iommu_detach_device(iommu->domain, dev);
-+
-+	sun50i_iommu_attach_domain(iommu, sun50i_domain);
-+
-+	return 0;
-+}
-+
-+static int sun50i_iommu_add_device(struct device *dev)
-+{
-+	struct sun50i_iommu *iommu;
-+	struct iommu_group *group;
-+
-+	iommu = sun50i_iommu_from_dev(dev);
-+	if (!iommu)
-+		return -ENODEV;
-+
-+	group = iommu_group_get_for_dev(dev);
-+	if (IS_ERR(group))
-+		return PTR_ERR(group);
-+
-+	iommu_group_put(group);
-+
-+	return 0;
-+}
-+
-+static void sun50i_iommu_remove_device(struct device *dev)
-+{
-+	iommu_group_remove_device(dev);
-+}
-+
-+static struct iommu_group *sun50i_iommu_device_group(struct device *dev)
-+{
-+	struct sun50i_iommu *iommu = sun50i_iommu_from_dev(dev);
-+
-+	return iommu_group_ref_get(iommu->group);
-+}
-+
-+static int sun50i_iommu_of_xlate(struct device *dev,
-+				 struct of_phandle_args *args)
-+{
-+	struct platform_device *iommu_pdev = of_find_device_by_node(args->np);
-+	unsigned id = args->args[0];
-+
-+	dev_iommu_priv_set(dev, platform_get_drvdata(iommu_pdev));
-+
-+	return iommu_fwspec_add_ids(dev, &id, 1);
-+}
-+
-+static struct iommu_ops sun50i_iommu_ops = {
-+	.pgsize_bitmap	= SZ_4K,
-+	.add_device	= sun50i_iommu_add_device,
-+	.attach_dev	= sun50i_iommu_attach_device,
-+	.detach_dev	= sun50i_iommu_detach_device,
-+	.device_group	= sun50i_iommu_device_group,
-+	.domain_alloc	= sun50i_iommu_domain_alloc,
-+	.domain_free	= sun50i_iommu_domain_free,
-+	.flush_iotlb_all = sun50i_iommu_flush_iotlb_all,
-+	.iotlb_sync	= sun50i_iommu_iotlb_sync,
-+	.iova_to_phys	= sun50i_iommu_iova_to_phys,
-+	.map		= sun50i_iommu_map,
-+	.of_xlate	= sun50i_iommu_of_xlate,
-+	.remove_device	= sun50i_iommu_remove_device,
-+	.unmap		= sun50i_iommu_unmap,
-+};
-+
-+static void sun50i_iommu_report_fault(struct sun50i_iommu *iommu,
-+				      unsigned master, phys_addr_t iova,
-+				      unsigned prot)
-+{
-+	dev_err(iommu->dev, "Page fault for %pad (master %d, dir %s)\n",
-+		&iova, master, (prot == IOMMU_FAULT_WRITE) ? "wr" : "rd");
-+
-+	if (iommu->domain)
-+		report_iommu_fault(iommu->domain, iommu->dev, iova, prot);
-+	else
-+		dev_err(iommu->dev, "Page fault while iommu not attached to any domain?\n");
-+}
-+
-+static phys_addr_t sun50i_iommu_handle_pt_irq(struct sun50i_iommu *iommu,
-+					      unsigned addr_reg,
-+					      unsigned blame_reg)
-+{
-+	phys_addr_t iova;
-+	unsigned master;
-+	u32 blame;
-+
-+	assert_spin_locked(&iommu->iommu_lock);
-+
-+	iova = iommu_read(iommu, addr_reg);
-+	blame = iommu_read(iommu, blame_reg);
-+	master = ilog2(blame & IOMMU_INT_MASTER_MASK);
-+
-+	/*
-+	 * If the address is not in the page table, we can't get what
-+	 * operation triggered the fault. Assume it's a read
-+	 * operation.
-+	 */
-+	sun50i_iommu_report_fault(iommu, master, iova, IOMMU_FAULT_READ);
-+
-+	return iova;
-+}
-+
-+static phys_addr_t sun50i_iommu_handle_perm_irq(struct sun50i_iommu *iommu)
-+{
-+	enum sun50i_iommu_aci aci;
-+	phys_addr_t iova;
-+	unsigned master;
-+	unsigned dir;
-+	u32 blame;
-+
-+	assert_spin_locked(&iommu->iommu_lock);
-+
-+	blame = iommu_read(iommu, IOMMU_INT_STA_REG);
-+	master = ilog2(blame & IOMMU_INT_MASTER_MASK);
-+	iova = iommu_read(iommu, IOMMU_INT_ERR_ADDR_REG(master));
-+	aci = sun50i_get_pte_aci(iommu_read(iommu,
-+					    IOMMU_INT_ERR_DATA_REG(master)));
-+
-+	switch (aci) {
-+		/*
-+		 * If we are in the read-only domain, then it means we
-+		 * tried to write.
-+		 */
-+	case SUN50I_IOMMU_ACI_RD:
-+		dir = IOMMU_FAULT_WRITE;
-+		break;
-+
-+		/*
-+		 * If we are in the write-only domain, then it means
-+		 * we tried to read.
-+		 */
-+	case SUN50I_IOMMU_ACI_WR:
-+
-+		/*
-+		 * If we are in the domain without any permission, we
-+		 * can't really tell. Let's default to a read
-+		 * operation.
-+		 */
-+	case SUN50I_IOMMU_ACI_NONE:
-+
-+		/* WTF? */
-+	case SUN50I_IOMMU_ACI_RD_WR:
-+	default:
-+		dir = IOMMU_FAULT_READ;
-+		break;
-+	}
-+
-+	/*
-+	 * If the address is not in the page table, we can't get what
-+	 * operation triggered the fault. Assume it's a read
-+	 * operation.
-+	 */
-+	sun50i_iommu_report_fault(iommu, master, iova, dir);
-+
-+	return iova;
-+}
-+
-+static irqreturn_t sun50i_iommu_irq(int irq, void *dev_id)
-+{
-+	struct sun50i_iommu *iommu = dev_id;
-+	phys_addr_t iova;
-+	u32 status;
-+
-+	spin_lock(&iommu->iommu_lock);
-+
-+	status = iommu_read(iommu, IOMMU_INT_STA_REG);
-+	if (!(status & IOMMU_INT_MASK)) {
-+		spin_unlock(&iommu->iommu_lock);
-+		return IRQ_NONE;
-+	}
-+
-+	if (status & IOMMU_INT_INVALID_L2PG)
-+		iova = sun50i_iommu_handle_pt_irq(iommu,
-+						  IOMMU_INT_ERR_ADDR_L2_REG,
-+						  IOMMU_L2PG_INT_REG);
-+	else if (status & IOMMU_INT_INVALID_L1PG)
-+		iova = sun50i_iommu_handle_pt_irq(iommu,
-+						  IOMMU_INT_ERR_ADDR_L1_REG,
-+						  IOMMU_L1PG_INT_REG);
-+	else
-+		iova = sun50i_iommu_handle_perm_irq(iommu);
-+
-+	iommu_write(iommu, IOMMU_INT_CLR_REG, status);
-+
-+	iommu_write(iommu, IOMMU_RESET_REG, ~status);
-+	iommu_write(iommu, IOMMU_RESET_REG, status);
-+
-+	spin_unlock(&iommu->iommu_lock);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sun50i_iommu_probe(struct platform_device *pdev)
-+{
-+	struct sun50i_iommu *iommu;
-+	int ret, irq;
-+
-+	iommu = devm_kzalloc(&pdev->dev, sizeof(*iommu), GFP_KERNEL);
-+	if (!iommu)
-+		return -ENOMEM;
-+	spin_lock_init(&iommu->iommu_lock);
-+	platform_set_drvdata(pdev, iommu);
-+	iommu->dev = &pdev->dev;
-+
-+	iommu->pt_pool = kmem_cache_create(dev_name(&pdev->dev),
-+					   PT_SIZE, PT_SIZE,
-+					   SLAB_HWCACHE_ALIGN,
-+					   NULL);
-+	if (!iommu->pt_pool)
-+		return -ENOMEM;
-+
-+	iommu->group = iommu_group_alloc();
-+	if (IS_ERR(iommu->group)) {
-+		ret = PTR_ERR(iommu->group);
-+		goto err_free_cache;
-+	}
-+
-+	iommu->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (!iommu->base) {
-+		ret = PTR_ERR(iommu->base);
-+		goto err_free_group;
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		ret = irq;
-+		goto err_free_group;
-+	}
-+
-+	iommu->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(iommu->clk)) {
-+		dev_err(&pdev->dev, "Couldn't get our clock.\n");
-+		ret = PTR_ERR(iommu->clk);
-+		goto err_free_group;
-+	}
-+
-+	iommu->reset = devm_reset_control_get(&pdev->dev, NULL);
-+	if (IS_ERR(iommu->reset)) {
-+		dev_err(&pdev->dev, "Couldn't get our reset line.\n");
-+		ret = PTR_ERR(iommu->reset);
-+		goto err_free_group;
-+	}
-+
-+	ret = iommu_device_sysfs_add(&iommu->iommu, &pdev->dev,
-+				     NULL, dev_name(&pdev->dev));
-+	if (ret)
-+		goto err_free_group;
-+
-+	iommu_device_set_ops(&iommu->iommu, &sun50i_iommu_ops);
-+	iommu_device_set_fwnode(&iommu->iommu, &pdev->dev.of_node->fwnode);
-+
-+	ret = iommu_device_register(&iommu->iommu);
-+	if (ret)
-+		goto err_remove_sysfs;
-+
-+	ret = devm_request_irq(&pdev->dev, irq, sun50i_iommu_irq, 0,
-+			       dev_name(&pdev->dev), iommu);
-+	if (ret < 0)
-+		goto err_unregister;
-+
-+	bus_set_iommu(&platform_bus_type, &sun50i_iommu_ops);
-+
-+	return 0;
-+
-+err_unregister:
-+	iommu_device_unregister(&iommu->iommu);
-+
-+err_remove_sysfs:
-+	iommu_device_sysfs_remove(&iommu->iommu);
-+
-+err_free_group:
-+	iommu_group_put(iommu->group);
-+
-+err_free_cache:
-+	kmem_cache_destroy(iommu->pt_pool);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id sun50i_iommu_dt[] = {
-+	{ .compatible = "allwinner,sun50i-h6-iommu", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, sun50i_iommu_dt);
-+
-+static struct platform_driver sun50i_iommu_driver = {
-+	.driver		= {
-+		.name			= "sun50i-iommu",
-+		.of_match_table 	= sun50i_iommu_dt,
-+		.suppress_bind_attrs	= true,
-+	}
-+};
-+builtin_platform_driver_probe(sun50i_iommu_driver, sun50i_iommu_probe);
-+
-+MODULE_DESCRIPTION("Allwinner H6 IOMMU driver");
-+MODULE_AUTHOR("Maxime Ripard <maxime@cerno.tech>");
-+MODULE_AUTHOR("zhuxianbin <zhuxianbin@allwinnertech.com>");
-+MODULE_LICENSE("Dual BSD/GPL");
--- 
-git-series 0.9.1
+In case of ACPI this will still be a unbalanced regulator. Albeit it is a
+dummy_regulator it will produce warnings in the ACPI case. Therefore I
+said to add the check:
+
+if (is_acpi_node(dev_fwnode(ov8856->dev)))
+	return 0;
+
+here to at the begin of this function.
+
+
+> +	clk_disable_unprepare(ov8856->xvclk);
+> +}
+> +
+>  static int __maybe_unused ov8856_suspend(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+> @@ -918,6 +978,7 @@ static int __maybe_unused ov8856_suspend(struct device *dev)
+>  	if (ov8856->streaming)
+>  		ov8856_stop_streaming(ov8856);
+>  
+> +	__ov8856_power_off(ov8856);
+>  	mutex_unlock(&ov8856->mutex);
+>  
+>  	return 0;
+> @@ -931,6 +992,8 @@ static int __maybe_unused ov8856_resume(struct device *dev)
+>  	int ret;
+>  
+>  	mutex_lock(&ov8856->mutex);
+> +
+> +	__ov8856_power_on(ov8856);
+>  	if (ov8856->streaming) {
+>  		ret = ov8856_start_streaming(ov8856);
+>  		if (ret) {
+> @@ -1092,29 +1155,54 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
+>  	return 0;
+>  }
+>  
+> -static int ov8856_check_hwcfg(struct device *dev)
+> +static int ov8856_get_hwcfg(struct ov8856 *ov8856)
+>  {
+> +	struct device *dev = ov8856->dev;
+>  	struct fwnode_handle *ep;
+>  	struct fwnode_handle *fwnode = dev_fwnode(dev);
+>  	struct v4l2_fwnode_endpoint bus_cfg = {
+>  		.bus_type = V4L2_MBUS_CSI2_DPHY
+>  	};
+> -	u32 mclk;
+> +	u32 xvclk_rate;
+>  	int ret;
+>  	unsigned int i, j;
+>  
+>  	if (!fwnode)
+>  		return -ENXIO;
+>  
+> -	ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
+> +	ret = fwnode_property_read_u32(fwnode, "clock-frequency",
+> +		&xvclk_rate);
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (mclk != OV8856_MCLK) {
+> -		dev_err(dev, "external clock %d is not supported", mclk);
+> -		return -EINVAL;
+> +	if (!is_acpi_node(fwnode)) {
+> +		ov8856->xvclk = devm_clk_get(dev, "xvclk");
+> +		if (IS_ERR(ov8856->xvclk)) {
+> +			dev_err(dev, "could not get xvclk clock (%pe)\n",
+> +					ov8856->xvclk);
+
+I tought I commented this to. Pls align it :)
+
+Regards,
+  Marco
+
+> +			return PTR_ERR(ov8856->xvclk);
+> +		}
+> +
+> +		clk_set_rate(ov8856->xvclk, xvclk_rate);
+> +		xvclk_rate = clk_get_rate(ov8856->xvclk);
+>  	}
+>  
+> +	if (xvclk_rate != OV8856_XVCLK_19_2)
+> +		dev_warn(dev, "external clock rate %d is unsupported", xvclk_rate);
+> +
+> +	ov8856->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> +		GPIOD_OUT_LOW);
+> +	if (IS_ERR(ov8856->reset_gpio))
+> +		return PTR_ERR(ov8856->reset_gpio);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ov8856_supply_names); i++)
+> +		ov8856->supplies[i].supply = ov8856_supply_names[i];
+> +
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov8856_supply_names),
+> +				      ov8856->supplies);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
+>  	if (!ep)
+>  		return -ENXIO;
+> @@ -1169,6 +1257,8 @@ static int ov8856_remove(struct i2c_client *client)
+>  	pm_runtime_disable(&client->dev);
+>  	mutex_destroy(&ov8856->mutex);
+>  
+> +	__ov8856_power_off(ov8856);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1177,22 +1267,31 @@ static int ov8856_probe(struct i2c_client *client)
+>  	struct ov8856 *ov8856;
+>  	int ret;
+>  
+> -	ret = ov8856_check_hwcfg(&client->dev);
+> +	ov8856 = devm_kzalloc(&client->dev, sizeof(*ov8856), GFP_KERNEL);
+> +	if (!ov8856)
+> +		return -ENOMEM;
+> +
+> +	ov8856->dev = &client->dev;
+> +
+> +	ret = ov8856_get_hwcfg(ov8856);
+>  	if (ret) {
+> -		dev_err(&client->dev, "failed to check HW configuration: %d",
+> +		dev_err(&client->dev, "failed to get HW configuration: %d",
+>  			ret);
+>  		return ret;
+>  	}
+>  
+> -	ov8856 = devm_kzalloc(&client->dev, sizeof(*ov8856), GFP_KERNEL);
+> -	if (!ov8856)
+> -		return -ENOMEM;
+> -
+>  	v4l2_i2c_subdev_init(&ov8856->sd, client, &ov8856_subdev_ops);
+> +
+> +	ret = __ov8856_power_on(ov8856);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to power on\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = ov8856_identify_module(ov8856);
+>  	if (ret) {
+>  		dev_err(&client->dev, "failed to find sensor: %d", ret);
+> -		return ret;
+> +		goto probe_power_off;
+>  	}
+>  
+>  	mutex_init(&ov8856->mutex);
+> @@ -1238,6 +1337,9 @@ static int ov8856_probe(struct i2c_client *client)
+>  	v4l2_ctrl_handler_free(ov8856->sd.ctrl_handler);
+>  	mutex_destroy(&ov8856->mutex);
+>  
+> +probe_power_off:
+> +	__ov8856_power_off(ov8856);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -1254,11 +1356,18 @@ static const struct acpi_device_id ov8856_acpi_ids[] = {
+>  MODULE_DEVICE_TABLE(acpi, ov8856_acpi_ids);
+>  #endif
+>  
+> +static const struct of_device_id ov8856_of_match[] = {
+> +	{ .compatible = "ovti,ov8856" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ov8856_of_match);
+> +
+>  static struct i2c_driver ov8856_i2c_driver = {
+>  	.driver = {
+>  		.name = "ov8856",
+>  		.pm = &ov8856_pm_ops,
+>  		.acpi_match_table = ACPI_PTR(ov8856_acpi_ids),
+> +		.of_match_table = ov8856_of_match,
+>  	},
+>  	.probe_new = ov8856_probe,
+>  	.remove = ov8856_remove,
+> -- 
+> 2.25.1
+> 
+> 
