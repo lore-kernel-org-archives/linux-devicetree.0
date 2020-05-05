@@ -2,159 +2,169 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A8AC47256
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBA8C47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E60322078C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 099F42073B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:45:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k2jJfmbm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgEEKm2 (ORCPT
+        id S1728743AbgEEKpI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 06:42:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728401AbgEEKm2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 06:42:28 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3955FC061A0F
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 03:42:28 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jVv1n-0000cZ-GV; Tue, 05 May 2020 12:42:19 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jVv1k-0002mo-MH; Tue, 05 May 2020 12:42:16 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-Subject: [PATCH v1] dt-bindings: net: nxp,tja11xx: rework validation support
-Date:   Tue,  5 May 2020 12:42:15 +0200
-Message-Id: <20200505104215.8975-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
+        Tue, 5 May 2020 06:45:08 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:10192 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgEEKpI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 06:45:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588675507; x=1620211507;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=XBSflEuWAde/CeVgwd1MVyCQIVmkLdJKa2kWwWmS9Qc=;
+  b=k2jJfmbmOkUbhT+mX2cFVJ5jz8ZF0aECN+rQqC912s44US6ISTlwOIjJ
+   4H+JM8LuXl8JelavGP9FEA8YblZDM9bPNg5BFB5fWmxItMazrQSG8k4EF
+   0SL937on4Ax9fUN+3r21+GiM5YewKyJqvZbD30SDzInHitFPh3RWjUuW+
+   M=;
+IronPort-SDR: /zcmW88pk2aPTxCJdquuhy1OAS8pv2KZcoSP/u09BnfoQaUg8JxdjY2lqJSRaREoBcNIJ3WsQF
+ +6613ajzi/Cw==
+X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
+   d="scan'208";a="42749270"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 May 2020 10:45:04 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id C2F85A26F7;
+        Tue,  5 May 2020 10:44:58 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 5 May 2020 10:44:58 +0000
+Received: from [192.168.13.172] (10.43.162.38) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
+ 2020 10:44:48 +0000
+Subject: [PATCH v6 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs
+ Memory Controller EDAC
+To:     Borislav Petkov <bp@alien8.de>, <robh+dt@kernel.org>
+CC:     <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
+        <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <linux-edac@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
+        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <eitan@amazon.com>
+References: <20200224134132.23924-1-talel@amazon.com>
+ <20200224134132.23924-2-talel@amazon.com> <20200428110659.GA11272@zn.tnic>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <5e2c5119-52e9-2c3c-e205-e661ba218fcb@amazon.com>
+Date:   Tue, 5 May 2020 13:44:43 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200428110659.GA11272@zn.tnic>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Originating-IP: [10.43.162.38]
+X-ClientProxiedBy: EX13D37UWC004.ant.amazon.com (10.43.162.212) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-To properly identify this node, we need to use ethernet-phy-id0180.dc80.
-And add missing required properties.
+Rob and other DT folks,
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- .../devicetree/bindings/net/nxp,tja11xx.yaml  | 55 ++++++++++++-------
- 1 file changed, 35 insertions(+), 20 deletions(-)
+Can you please help with below query?
 
-diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-index 42be0255512b3..cc322107a24a2 100644
---- a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-+++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: GPL-2.0+
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
- $id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
-@@ -12,44 +12,59 @@ maintainers:
-   - Heiner Kallweit <hkallweit1@gmail.com>
- 
- description:
--  Bindings for NXP TJA11xx automotive PHYs
-+  Bindings for the NXP TJA1102 automotive PHY. This is a dual PHY package where
-+  only the first PHY has global configuration register and HW health
-+  monitoring.
- 
--allOf:
--  - $ref: ethernet-phy.yaml#
-+properties:
-+  compatible:
-+    const: ethernet-phy-id0180.dc80
-+    description: ethernet-phy-id0180.dc80 used for TJA1102 PHY
-+
-+  reg:
-+    minimum: 0
-+    maximum: 14
-+    description:
-+      The PHY address of the parent PHY.
-+
-+  '#address-cells':
-+    description: number of address cells for the MDIO bus
-+    const: 1
-+
-+  '#size-cells':
-+    description: number of size cells on the MDIO bus
-+    const: 0
- 
- patternProperties:
--  "^ethernet-phy@[0-9a-f]+$":
-+  "^ethernet-phy@[0-9a-f]$":
-     type: object
--    description: |
--      Some packages have multiple PHYs. Secondary PHY should be defines as
--      subnode of the first (parent) PHY.
-+    description:
-+      Integrated PHY node
- 
-     properties:
-       reg:
--        minimum: 0
--        maximum: 31
-+        minimum: 1
-+        maximum: 15
-         description:
--          The ID number for the child PHY. Should be +1 of parent PHY.
-+          The PHY address of the slave PHY. Should be +1 of parent PHY.
- 
-     required:
-       - reg
- 
--examples:
--  - |
--    mdio {
--        #address-cells = <1>;
--        #size-cells = <0>;
-+required:
-+  - compatible
-+  - reg
-+  - '#address-cells'
-+  - '#size-cells'
- 
--        tja1101_phy0: ethernet-phy@4 {
--            reg = <0x4>;
--        };
--    };
-+examples:
-   - |
-     mdio {
-         #address-cells = <1>;
-         #size-cells = <0>;
- 
-         tja1102_phy0: ethernet-phy@4 {
-+            compatible = "ethernet-phy-id0180.dc80";
-             reg = <0x4>;
-             #address-cells = <1>;
-             #size-cells = <0>;
--- 
-2.26.2
 
+On 4/28/2020 2:06 PM, Borislav Petkov wrote:
+> On Mon, Feb 24, 2020 at 03:41:31PM +0200, Talel Shenhar wrote:
+>> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+>>
+>> Signed-off-by: Talel Shenhar <talel@amazon.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>>   .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
+>>   1 file changed, 52 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>> new file mode 100644
+>> index 000000000000..20505f37c9f8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>> @@ -0,0 +1,52 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+> WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)
+> #36: FILE: Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml:1:
+> +# SPDX-License-Identifier: GPL-2.0-only
+>
+> Hi Rob, should I listen to checkpatch or ignore it?
+
+Rob and other dt folks,
+
+In continue to disscussion with Boris below, Looking at the checkpatch 
+check:
+
+    if ($realfile =~ m@^Documentation/devicetree/bindings/@ &&
+        not $spdx_license =~/GPL-2\.0.*BSD-2-Clause/) {
+
+It wants the whole string "GPL-2.0-only OR BSD-2-Clause" and my oatch has only "GPL-2.0-only".
+
+Now, looking at a bunch of .yaml DT files, there are all kinds of formatting:
+
+$ git grep -h SPDX *.yaml | sort | uniq -c
+       3 1:# SPDX-License-Identifier: (GPL-2.0)
+     313 1:# SPDX-License-Identifier: GPL-2.0
+       9 1:# SPDX-License-Identifier: GPL-2.0+
+       1 1:# SPDX-License-Identifier: (GPL-2.0-only)
+      43 1:# SPDX-License-Identifier: GPL-2.0-only
+       4 1:# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+       1 1:# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
+     148 1:# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+      25 1:# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+     104 1:# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+       3 1:# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+       2 1:# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+       1 1:# SPDX-License-Identifier: (GPL-2.0-or-later)
+       5 1:# SPDX-License-Identifier: GPL-2.0-or-later
+       3 1:# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+       2 1:# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
+       3 1:# SPDX-License-Identifier: (GPL-2.0 OR MIT)
+       3 1:# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+       3 1:# SPDX-License-Identifier: (GPL-2.0+ OR X11)
+
+And the patch which did rule is:
+
+commit 50c92900214dd9a55bcecc3c53e90d072aff6560
+Author: Lubomir Rintel<lkundrak@v3.sk>
+Date:   Mon Apr 6 20:11:13 2020 -0700
+
+     checkpatch: check proper licensing of Devicetree bindings
+
+     According to Devicetree maintainers (see Link: below), the Devicetree
+     binding documents are preferrably licensed (GPL-2.0-only OR BSD-2-Clause).
+
+     Let's check that.  The actual check is a bit more relaxed, to allow more
+     liberal but compatible licensing (e.g.  GPL-2.0-or-later OR BSD-2-Clause).
+
+
+Will love your help.
+This patch already have your (Rob) Reviewed-by so Boris and myself are unsure what is the right thing to do now.
+
+Thanks,
+Talel.
+
+>
+> --
+> Regards/Gruss,
+>      Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
