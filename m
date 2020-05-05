@@ -2,84 +2,192 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF403C47257
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B885EC47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A60F2206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD3320757
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588689617;
+	bh=j/GqXoT+GQGssQ3rGRFGFL3Qfzj08wyd/Iyt+COdg2A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UdEQ5WqaMjHzI2QApaCjcyfEqsqLaTCioIqgGLalOyEk7xM0aENTDP22KaGw4cNLj
+	 /yErJLc3CMFv0P3F5qg7W0YgPs4WZTNpGRThACxq9d7Npaxgoq0znIKH/TUbs8po4a
+	 MO3kFGyot7H+DQs0r0qC378JT/2HpDJUuuWPVeIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgEEOhm (ORCPT
+        id S1729320AbgEEOkR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 10:37:42 -0400
-Received: from sauhun.de ([88.99.104.3]:33898 "EHLO pokefinder.org"
+        Tue, 5 May 2020 10:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729259AbgEEOhm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 10:37:42 -0400
-Received: from localhost (p54B335A1.dip0.t-ipconnect.de [84.179.53.161])
-        by pokefinder.org (Postfix) with ESMTPSA id 1C0DE2C0892;
-        Tue,  5 May 2020 16:37:40 +0200 (CEST)
-Date:   Tue, 5 May 2020 16:37:39 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, robh+dt@kernel.org, peda@axentia.se,
-        linux@armlinux.org.uk
-Subject: Re: [PATCH v4 1/4] i2c: at91: Send bus clear command if SDA is down
-Message-ID: <20200505143739.GE2468@ninjato>
-References: <20200225155012.22764-1-codrin.ciubotariu@microchip.com>
+        id S1727083AbgEEOkQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 10:40:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DB0A206B9;
+        Tue,  5 May 2020 14:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588689616;
+        bh=j/GqXoT+GQGssQ3rGRFGFL3Qfzj08wyd/Iyt+COdg2A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vQRX4RZsIX+qs0WE3rk0U3eOEH1uAOv+i+v2rDbwNKAFYykV6I37Zfaitx0oUXWwm
+         wtxPbEft1eIUz4BouINwCZusQpQ10+hcyUHJspFT+n8tfliHeVjyY4l+zIcs60Gf1f
+         /xBEITuUyoyNppCR7aSoddeDROW8aT33JQLYQlMU=
+Date:   Tue, 5 May 2020 16:40:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, loic.pallardy@st.com,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] bus: stm32: Introduce firewall controller helpers
+Message-ID: <20200505144013.GB838641@kroah.com>
+References: <20200505073308.22914-1-benjamin.gaignard@st.com>
+ <20200505073308.22914-3-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J4XPiPrVK1ev6Sgr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225155012.22764-1-codrin.ciubotariu@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200505073308.22914-3-benjamin.gaignard@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, May 05, 2020 at 09:33:05AM +0200, Benjamin Gaignard wrote:
+> The goal of these helpers are to offer an interface for the
+> hardware blocks controlling bus accesses rights.
+> 
+> Bus firewall controllers are typically used to control if a
+> hardware block can perform read or write operations on bus.
+> 
+> Smarter firewall controllers could be able to define accesses
+> rights per hardware blocks to control where they can read
+> or write.
+> 
+> Firewall controller configurations are provided in device node,
+> parsed by the helpers and send to the driver to apply them.
+> Each controller may need different number and type of inputs
+> to configure the firewall so device-tree properties size have to
+> be define by using "#firewall-cells".
+> Firewall configurations properties have to be named "firewall-X"
+> on device node.
+> "firewall-names" keyword can also be used to give a name to
+> a specific configuration.
+> 
+> Example of device-tree:
+> ctrl0: firewall@0 {
+> 	#firewall-cells = <2>;
+>       };
+> 
+> foo: foo@0 {
+> 	firewall-names = "default", "setting1";
+> 	firewall-0 = <&ctrl0 1 2>;
+> 	firewall-1 = <&ctrl0 3 4>;
+> };
+> 
+> Configurations could be applied with functions like
+> firewall_set_config_by_index() or firewall_set_config_by_name().
+> 
+> firewall_set_default_config() function will apply the
+> configuration named "default" (if existing) or the configuration
+> with index 0 (i.e. firewall-0).
+> 
+> Drivers could register/unregister themselves be calling
+> firewall_register/firewall_unregister functions.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  drivers/bus/Kconfig          |   2 +
+>  drivers/bus/Makefile         |   2 +
+>  drivers/bus/stm32/Kconfig    |   3 +
+>  drivers/bus/stm32/Makefile   |   1 +
+>  drivers/bus/stm32/firewall.c | 266 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/bus/stm32/firewall.h |  75 ++++++++++++
+>  6 files changed, 349 insertions(+)
+>  create mode 100644 drivers/bus/stm32/Kconfig
+>  create mode 100644 drivers/bus/stm32/Makefile
+>  create mode 100644 drivers/bus/stm32/firewall.c
+>  create mode 100644 drivers/bus/stm32/firewall.h
+> 
+> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> index 6d4e4497b59b..843b356322d9 100644
+> --- a/drivers/bus/Kconfig
+> +++ b/drivers/bus/Kconfig
+> @@ -203,4 +203,6 @@ config DA8XX_MSTPRI
+>  source "drivers/bus/fsl-mc/Kconfig"
+>  source "drivers/bus/mhi/Kconfig"
+>  
+> +source "drivers/bus/stm32/Kconfig"
+> +
+>  endmenu
+> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+> index 05f32cd694a4..5e0e34b10235 100644
+> --- a/drivers/bus/Makefile
+> +++ b/drivers/bus/Makefile
+> @@ -37,3 +37,5 @@ obj-$(CONFIG_DA8XX_MSTPRI)	+= da8xx-mstpri.o
+>  
+>  # MHI
+>  obj-$(CONFIG_MHI_BUS)		+= mhi/
+> +
+> +obj-$(CONFIG_MACH_STM32MP157) 	+= stm32/
+> \ No newline at end of file
+> diff --git a/drivers/bus/stm32/Kconfig b/drivers/bus/stm32/Kconfig
+> new file mode 100644
+> index 000000000000..57221e833e2d
+> --- /dev/null
+> +++ b/drivers/bus/stm32/Kconfig
+> @@ -0,0 +1,3 @@
+> +config FIREWALL_CONTROLLERS
+> +	bool "Support of bus firewall controllers"
+> +	depends on OF
+> diff --git a/drivers/bus/stm32/Makefile b/drivers/bus/stm32/Makefile
+> new file mode 100644
+> index 000000000000..eb6b978d6450
+> --- /dev/null
+> +++ b/drivers/bus/stm32/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_FIREWALL_CONTROLLERS) += firewall.o
+> diff --git a/drivers/bus/stm32/firewall.c b/drivers/bus/stm32/firewall.c
+> new file mode 100644
+> index 000000000000..95f716cf926f
+> --- /dev/null
+> +++ b/drivers/bus/stm32/firewall.c
+> @@ -0,0 +1,266 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
+> + * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/of.h>
+> +#include <linux/slab.h>
+> +
+> +#include "firewall.h"
+> +
+> +/* Mutex taken to protect firewall_list */
+> +static DEFINE_MUTEX(firewall_list_mutex);
+> +
+> +/* Global list of firewall control devices */
+> +static LIST_HEAD(firewall_list);
 
---J4XPiPrVK1ev6Sgr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Why is that needed?  Why can't you just walk the list of devices on this
+"bus/class" if you really wanted to?
 
-On Tue, Feb 25, 2020 at 05:50:09PM +0200, Codrin Ciubotariu wrote:
-> After a transfer timeout, some faulty I2C slave devices might hold down
-> the SDA pin. We can generate a bus clear command, hoping that the slave
-> might release the pins.
-> If the CLEAR command is not supported, we will use gpio recovery, if
-> available, to reset the bus.
->=20
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-
-Applied to for-next, thanks!
+Along those lines, why is this going around the driver model and
+ignoring it?  Shouldn't this be a bus and you have devices attached to
+it of the specific type?
 
 
---J4XPiPrVK1ev6Sgr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6xejMACgkQFA3kzBSg
-Kba7ng//aczcnwIHXEHGSAGdX7AjPZp/niO98R7pHZFfdm2mzqMTZ033SOgF6hSt
-dCiYvgUUkCfo5gnOaIgJgBX/l/H6JY8MsScJi/zZQKZJgj4RR1b0xJgtcxjIMbb0
-C/WHo29TSP7tutQph38nJa9S1T9hx9AulHgb0Xrmb2s7Qo3iLyame1VxP1pmWreO
-U7KID0sB34vmdXKI9aC9T8Uh9eA2xwkceqZedr3+Cp68S0ljLhYnir1p3jnXEb0P
-49+yIOBRDdTc5OImkGheeySqoIZ/pHl/6HtKkNXFpx9mrt/chhAWoDKMAb35tDtD
-ZrC/8lTTc19r6WxqrSg1LeI9SwXAlYCY8SHNNsx5vUZxKmOQWoTAdZbOz4v/+NRe
-LBlgO6BTKre2//N2qzgQm5ZeEqsDYeCLat5EK6l+EJQ0v4SyKHsC8UM2jyq0UY6g
-Uiu9ursq22CUDwuUOSDjeJEQ5BFJOjF3dgJCKq+L7FzdunQGVr5usvf6MtiX+Y7h
-bDP913w76vEvPvj7QhSwXK6qazZ3v3Q9Mz74cMmFXOczxe9GHgSouqBrbxYgjU3k
-kV4hEaDLfHUrsE4FwFkt/Suq4Cn9UHBpG4ZgTbnKIjIxNrYb6oQqT915kA1GjTRf
-+KW8m5gpTU6zdVRHgHX9FYSBzYvG+BsYk+W2c88teSd1HBpzn8A=
-=vY/v
------END PGP SIGNATURE-----
-
---J4XPiPrVK1ev6Sgr--
+greg k-h
