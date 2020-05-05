@@ -2,149 +2,100 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F98C47257
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074AEC47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAA89206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 14:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C885F20757
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 15:00:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="WzXRH7om"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbgEEOts (ORCPT
+        id S1729371AbgEEPAz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 10:49:48 -0400
-Received: from mailout3.hostsharing.net ([176.9.242.54]:45527 "EHLO
-        mailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbgEEOts (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 10:49:48 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by mailout3.hostsharing.net (Postfix) with ESMTPS id A383B100A5F0F;
-        Tue,  5 May 2020 16:49:45 +0200 (CEST)
-Received: from localhost (unknown [87.130.102.138])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Tue, 5 May 2020 11:00:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729235AbgEEPAz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 11:00:55 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3EC8C061A0F;
+        Tue,  5 May 2020 08:00:54 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id 3114D610EE1A;
-        Tue,  5 May 2020 16:49:45 +0200 (CEST)
-X-Mailbox-Line: From a91b9392e8e7914cae16f59beb1ffe6b335f81c9 Mon Sep 17 00:00:00 2001
-Message-Id: <a91b9392e8e7914cae16f59beb1ffe6b335f81c9.1588505407.git.lukas@wunner.de>
-In-Reply-To: <cover.1588505407.git.lukas@wunner.de>
-References: <cover.1588505407.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Tue, 5 May 2020 16:42:04 +0200
-Subject: [PATCH 4/4] serial: 8250: Support rs485 bus termination GPIO
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 94D3423E80;
+        Tue,  5 May 2020 17:00:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588690853;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=T8QHJzdQsqxKUorxv0i84+q/jnRbNR+waUrdwg8sxko=;
+        b=WzXRH7omIgdod2GwSr7P7NftvohR0t4Z6U/E+DQhKjCkTzaBB6v013s/9EAZW8xkJrpOCB
+        5LH8ly/cRqlGucUBJr3oqx/91F/JiXnHp0IaLASdw83rbiHODqxxEmFDqoPURkXME2DpDw
+        p7Ylps13Qk4orZFSTsF0mxPa6AnlrNY=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] arm64: dts: freescale: sl28: enable LPUART1
+Date:   Tue,  5 May 2020 17:00:37 +0200
+Message-Id: <20200505150037.32573-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit e8759ad17d41 ("serial: uapi: Add support for bus termination")
-introduced the ability to enable rs485 bus termination from user space.
-So far the feature is only used by a single driver, 8250_exar.c, using a
-hardcoded GPIO pin specific to Siemens IOT2040 products.
+Now that the LPUART has support for the LS1028A SoC, also enable it on
+our board.
 
-Provide for a more generic solution by allowing specification of an
-rs485 bus termination GPIO pin in the device tree:  Amend the serial
-core to retrieve the GPIO from the device tree (or ACPI table) and amend
-the default ->rs485_config() callback for 8250 drivers to change the
-GPIO on request from user space.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- drivers/tty/serial/8250/8250_port.c |  4 ++++
- drivers/tty/serial/serial_core.c    | 24 ++++++++++++++++++++++++
- include/linux/serial_core.h         |  2 ++
- 3 files changed, 30 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index f77bf820b7a3..b5b630d02110 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -681,6 +681,10 @@ int serial8250_em485_config(struct uart_port *port, struct serial_rs485 *rs485)
- 	memset(rs485->padding, 0, sizeof(rs485->padding));
- 	port->rs485 = *rs485;
- 
-+	if (port->rs485_term_gpio)
-+		gpiod_set_value(port->rs485_term_gpio,
-+				rs485->flags & SER_RS485_TERMINATE_BUS);
-+
- 	/*
- 	 * Both serial8250_em485_init() and serial8250_em485_destroy()
- 	 * are idempotent.
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 43b6682877d5..7c929aad066e 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -3317,6 +3317,7 @@ int uart_get_rs485_mode(struct uart_port *port)
- 	 * to get to a defined state with the following properties:
- 	 */
- 	rs485conf->flags &= ~(SER_RS485_RX_DURING_TX | SER_RS485_ENABLED |
-+			      SER_RS485_TERMINATE_BUS |
- 			      SER_RS485_RTS_AFTER_SEND);
- 	rs485conf->flags |= SER_RS485_RTS_ON_SEND;
- 
-@@ -3331,6 +3332,29 @@ int uart_get_rs485_mode(struct uart_port *port)
- 		rs485conf->flags |= SER_RS485_RTS_AFTER_SEND;
- 	}
- 
-+	if (port->rs485_term_gpio)
-+		devm_gpiod_put(dev, port->rs485_term_gpio);
-+
-+	port->rs485_term_gpio = devm_gpiod_get_optional(dev, "rs485-term",
-+		GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT);
-+	if (IS_ERR(port->rs485_term_gpio)) {
-+		ret = PTR_ERR(port->rs485_term_gpio);
-+		port->rs485_term_gpio = NULL;
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Cannot get rs485-term-gpios\n");
-+		return ret;
-+	}
-+
-+	if (port->rs485_term_gpio) {
-+		ret = gpiod_get_value(port->rs485_term_gpio);
-+		if (ret < 0) {
-+			dev_err(dev, "Cannot get rs485-term-gpios value\n");
-+			return ret;
-+		}
-+		if (ret)
-+			rs485conf->flags |= SER_RS485_TERMINATE_BUS;
-+	}
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(uart_get_rs485_mode);
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index b649a2b894e7..9fd550e7946a 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -10,6 +10,7 @@
- #include <linux/bitops.h>
- #include <linux/compiler.h>
- #include <linux/console.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/circ_buf.h>
- #include <linux/spinlock.h>
-@@ -251,6 +252,7 @@ struct uart_port {
- 	struct attribute_group	*attr_group;		/* port specific attributes */
- 	const struct attribute_group **tty_groups;	/* all attributes (serial core use only) */
- 	struct serial_rs485     rs485;
-+	struct gpio_desc	*rs485_term_gpio;	/* enable RS485 bus termination */
- 	struct serial_iso7816   iso7816;
- 	void			*private_data;		/* generic platform data pointer */
+Hi Shawn,
+
+After adding/fixing the LPUART support for the LS1028A I've forgot to send
+this patch to actually enable the LPUART on our boards. It would be great
+if this could make it into the fixes queue for the -rc. If not its also ok.
+
+Thanks,
+-michael
+
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
+index 5eac8a6ab46f..360b3a168c10 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
+@@ -17,6 +17,7 @@
+ 		crypto = &crypto;
+ 		serial0 = &duart0;
+ 		serial1 = &duart1;
++		serial2 = &lpuart1;
+ 		spi0 = &fspi;
+ 		spi1 = &dspi2;
+ 	};
+@@ -189,3 +190,7 @@
+ 		pagesize = <32>;
+ 	};
  };
++
++&lpuart1 {
++	status = "okay";
++};
 -- 
-2.26.2
+2.20.1
 
