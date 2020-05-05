@@ -5,47 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD43C47247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A76C47257
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE1320663
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1892920721
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 07:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="EmajLjxq"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cRtDuFZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgEEHdl (ORCPT
+        id S1728377AbgEEHdo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 03:33:41 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7718 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725833AbgEEHdl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 03:33:41 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0457XE8i019011;
-        Tue, 5 May 2020 09:33:31 +0200
+        Tue, 5 May 2020 03:33:44 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:42310 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727935AbgEEHdm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 03:33:42 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0457RZWR021741;
+        Tue, 5 May 2020 09:33:28 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=iGCDghN3T5Y00zNouGbtPQSvGhwl/OIHxAZ2MQmEADQ=;
- b=EmajLjxqcwUHcoKFOnS/MbPJFNI09jkypCeIsZf9g1TVhc5Zb+ixhiVdNqoy96bu/ktQ
- KAkOLbJAlMdGRbwVrlDws8jkZ8ZA72Edw6KZWfpF82PcD69caXHNDQNkBLJzU1sDLhn4
- GSqG35pnXN5cLuuePB9yMDOjv2rMEZURG7cpXAGtoxYwdc8WP+Je1ipKG7xDYqFVHq/T
- ynRYajyApOLE5vL1hvIAEFz1xvP+c5UCDBHSJMIiLkjpYH00v23AQIQZtL3dNRVPlrck
- FTA8/mMTMjZA9ES3Qq/Ig9h4ZrJozqcZk2dggRXb6og0RyLwHOdzYo2Fu9JlV7rQSis4 6Q== 
+ bh=Qtjkenp1luntosfDrmrcRmxaJE1CtXuduIjGsuWvcRw=;
+ b=cRtDuFZLue0Utv1b9kUmJhaHhToXdSFHQdQaSd6u5N48TVPsI5dJtXXGv5MATRMNfKVU
+ vsiPAobRTlkb8DCexHm9z18Fpf4zjWgdzQppl41aKmuy8m+3ZGifRJsXc1yyKyS8/GnJ
+ dQ4O2om2HMw4nZ6Z/Uzz2AS368hsds2i2hnzYSr3kiStqINjjuSOkTkdbL1udf6KjsPg
+ Cs63GsubNekIBK/SaPchbPqhQUi7axsHZnPcKwzsk8XRRhAbzqkZvnjZXSqc1zobmk2C
+ trEIRXaOVesKUv1ibuxq1K60ReerrMwK8CDc0JlFehvERlS4pJ8y3dRWv2Tbp9ikuW/y 1Q== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30rxmveesn-1
+        by mx07-00178001.pphosted.com with ESMTP id 30ryrj6f4n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 09:33:31 +0200
+        Tue, 05 May 2020 09:33:28 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B2785100034;
-        Tue,  5 May 2020 09:33:30 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5FA1710002A;
+        Tue,  5 May 2020 09:33:28 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A62F62A4927;
-        Tue,  5 May 2020 09:33:30 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5429B2A4927;
+        Tue,  5 May 2020 09:33:28 +0200 (CEST)
 Received: from localhost (10.75.127.51) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May 2020 09:33:29
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 May 2020 09:33:27
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
@@ -56,16 +56,16 @@ CC:     <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v3 5/5] ARM: dts: stm32: Use ETZPC firewall bus
-Date:   Tue, 5 May 2020 09:33:08 +0200
-Message-ID: <20200505073308.22914-6-benjamin.gaignard@st.com>
+Subject: [PATCH v3 3/5] dt-bindings: bus: Add STM32 ETZPC firewall controller
+Date:   Tue, 5 May 2020 09:33:06 +0200
+Message-ID: <20200505073308.22914-4-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20200505073308.22914-1-benjamin.gaignard@st.com>
 References: <20200505073308.22914-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-05-05_04:2020-05-04,2020-05-05 signatures=0
@@ -74,39 +74,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Allow STM32 ETZPC to check firewall configuration before populating
-the platform bus.
+Document STM32 ETZPC firewall controller bindings
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm/boot/dts/stm32mp151.dtsi | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ .../bindings/bus/stm32/st,stm32-etzpc.yaml         | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
 
-diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 3ea05ba48215..0290eb6f3c35 100644
---- a/arch/arm/boot/dts/stm32mp151.dtsi
-+++ b/arch/arm/boot/dts/stm32mp151.dtsi
-@@ -4,6 +4,7 @@
-  * Author: Ludovic Barre <ludovic.barre@st.com> for STMicroelectronics.
-  */
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/bus/stm32/stm32-etzpc.h>
- #include <dt-bindings/clock/stm32mp1-clks.h>
- #include <dt-bindings/reset/stm32mp1-resets.h>
- 
-@@ -110,8 +111,10 @@
- 		status = "disabled";
- 	};
- 
--	soc {
--		compatible = "simple-bus";
-+	etzpc_bus: soc@5c007000 {
-+		compatible = "st,stm32-etzpc-bus", "simple-bus";
-+		reg = <0x5c007000 0x400>;
-+		#firewall-cells = <2>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		interrupt-parent = <&intc>;
+diff --git a/Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml b/Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
+new file mode 100644
+index 000000000000..d92865fda40c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bus/stm32/st,stm32-etzpc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STM32 Extended TrustZone Protection controller
++
++maintainers:
++  - Benjamin Gaignard <benjamin.gaignard@st.com>
++
++description: STMicroelectronics's STM32 firewall bus controller implementation
++
++allOf:
++  - $ref: "firewall-provider.yaml#"
++  - $ref: /schemas/simple-bus.yaml#
++
++properties:
++  compatible:
++    contains:
++      enum:
++        - st,stm32-etzpc-bus
++
++  reg:
++   maxItems: 1
++
++  '#firewall-cells':
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - '#firewall-cells'
++
++examples:
++  - |
++    soc@5c007000 {
++      compatible = "st,stm32-etzpc-bus", "simple-bus";
++      reg = <0x5c007000 0x400>;
++      #firewall-cells = <2>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges;
++    };
++
++...
 -- 
 2.15.0
 
