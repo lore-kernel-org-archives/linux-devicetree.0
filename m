@@ -2,155 +2,162 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D25C47257
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F6BC47257
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53E6C206A4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55EA6206A4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:06:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="pCbw8Q2D"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MQRREdc+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgEEQF6 (ORCPT
+        id S1729254AbgEEQGk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 12:05:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729195AbgEEQF5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 12:05:57 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E82C061A0F
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 09:05:56 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l18so3384692wrn.6
-        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 09:05:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=njl+I1KZR8dAJRFqU7HOVFmyMwpktP+Payzdk7cqiZo=;
-        b=pCbw8Q2Djt96EsEtPl4Xwf9WOgp+W7CXvZgaxdqcpirmNYjSYs2lAQfYP/qBeN/imW
-         qVMnYbtAIPWG5WvEXKrE3XH56YcQ5PblSP5dxSicG19C+Fm9IHnOwcV3lDboZ/rahDZX
-         KaV7vV6svD+bncNQN5UeWvAx1zaJqLFE+x33f58dhDIhxEQ+WgOKmPKT3J6RZ8o0i06h
-         kf7BZ1v3yDpTlV6C7mQTqSZbNF8qq3GoMgdq9JlBFZzbejBN6FDDzVfxn08kDc2K1pZP
-         dwfSr/9J/i1UZKnhFzYWvndqFjCsIHYjOlxrqmpfh+pStSpfhfIEGQUBA5z85DMujbZr
-         MQUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=njl+I1KZR8dAJRFqU7HOVFmyMwpktP+Payzdk7cqiZo=;
-        b=qZpCPx8QuOGDvik2lgR0A0/u7AnuV5vYYP7CiyaoOR654keSbvoesyy5PvMM+8VyoF
-         PN6T9Fx3nWuxdKVwahOZQfYjb6916qBMzVI9xCX+4OpOV0PSE4oVAlNEEc+6PwcSouwI
-         u+qBst8JVNpekdTxQHwOXdPdyLdFnOeLE9ZCoqI83QxIWildUNj1gFI7YpPMkWAXSkrH
-         fQG7HETRsWKCofYdN3o9w2wOgZ5acF1mMqrNdL7sh2dP8tHhR4wb8qe4hhZj4yOHjtNB
-         jvJXXo9N3e+7HWpqGwkIhqxSesoKPLngce+SrM9Vsu4EITCOmnFiAFae3tYihfSdA6dU
-         EOPQ==
-X-Gm-Message-State: AGi0PuZENQzDho0hSqjw9JJxNBY9dSKsxOT8VceokhSHl9XZgYHYGhCJ
-        ekgNPvKEsdznFTPQ3KqQLYrwjA==
-X-Google-Smtp-Source: APiQypLoB4fjwTQJDOAaK7x/BgWoRefOlMYzgeBPm4DGbTUjdPo8UYmkhAaAStq6Y7TclKEt1oNfMQ==
-X-Received: by 2002:a5d:6107:: with SMTP id v7mr4240620wrt.270.1588694754820;
-        Tue, 05 May 2020 09:05:54 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id l19sm4636869wmj.14.2020.05.05.09.05.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 09:05:54 -0700 (PDT)
-References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com> <20200428210229.703309-3-martin.blumenstingl@googlemail.com> <1jlfmdi9uw.fsf@starbuckisacylon.baylibre.com> <CAPDyKFoEh8qKYFONo1SHnvwhDwjUa5bMnnT1Kbu8=4rd=T-8Kg@mail.gmail.com> <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com> <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        "open list\:ARM\/Amlogic Meson..." 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-mmc\@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
+        Tue, 5 May 2020 12:06:40 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43396 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729171AbgEEQGk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 12:06:40 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045G6aDF018831;
+        Tue, 5 May 2020 11:06:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588694796;
+        bh=QbZDJH8ksQWHexlXjssoaBsD7lkC7FYNaOKBEg46oeY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=MQRREdc+hX+hXg9t+zuz31Isgup1G2IRCeNGNQbJ6pGkUMNzQa1WAUtAEVjwhyGYp
+         sZmbEno9W8qULojUWwZVR7ywQQK++BTT8VSqAFOQ3BTvOo65LkDoc1vBUtzdFsGiJo
+         D69frxO6R+XQO6mcta/lPnO4ZemPdMPVmVPKURuE=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 045G6aO6005367
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 May 2020 11:06:36 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
+ 2020 11:06:36 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 5 May 2020 11:06:36 -0500
+Received: from [10.250.70.56] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045G6amN033733;
+        Tue, 5 May 2020 11:06:36 -0500
+Subject: Re: [PATCH] arm: dts: Add 32KHz clock as default clock source
+To:     Tony Lindgren <tony@atomide.com>, Lokesh Vutla <lokeshvutla@ti.com>
+CC:     Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yinxin_1989@aliyun.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH v6 2/2] mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
-In-reply-to: <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com>
-Date:   Tue, 05 May 2020 18:05:53 +0200
-Message-ID: <1j1rnygye6.fsf@starbuckisacylon.baylibre.com>
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>
+References: <20200427172604.16351-1-lokeshvutla@ti.com>
+ <20200428181919.GS37466@atomide.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <e49e047d-6883-6bee-7dac-a544a27f6293@ti.com>
+Date:   Tue, 5 May 2020 11:06:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200428181919.GS37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On Tue 05 May 2020 at 10:17, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-
-> [...]
->
->> >> > +
->> >> > +     return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
->> >> > +                                        onecell_data);
->> >>
->> >> I think registering a provider for a module that does not provide clocks
->> >> to any other device is a bit overkill.
->> >>
->> >> I understand the matter is getting the per-user clk* pointer.
->> >> Since this is the module registering the clock, you can use clk_hw->clk
->> >> to get it.
->> >>
->> >> Once you have the clk* of the leaf clocks, you don't even need to keep
->> >> track of the clk_hw* since you are using devm_
->> >>
->> >> Afterward, we should propably discuss with Stephen if something should
->> >> be added in CCF to get a struct clk* from struct clk_hw*.
->> >>
->> >
->> > [...]
->> >
->> > Hmm.
->> >
->> > I am not sure the above is a good idea, at all. Unless, I am
->> > misunderstanding your point, which may be the case.
->> >
->> > I think above "shortcuts" could lead to abuse of the clock framework
->> > and its internal data structures. When going forward, this could make
->> > it unnecessary harder to maintain the clock framework.
->> >
->> > I know, it's not my responsibility, but from my experience with MMC
->> > and SDIO interfaces, is that those have been too easy abuse - since
->> > most of the data structures and interfaces have been exported. Now,
->> > it's hard to roll back that, if you see what I mean.
+On 4/28/20 1:19 PM, Tony Lindgren wrote:
+> * Lokesh Vutla <lokeshvutla@ti.com> [200427 17:27]:
+>> Clocksource to timer configured in pwm mode can be selected using the DT
+>> property ti,clock-source. There are few pwm timers which are not
+>> selecting the clock source and relying on default value in hardware or
+>> selected by driver. Instead of relying on default value, always select
+>> the clock source from DT.
 >>
->> Indeed, it worth clarifying this first.
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+
+Thanks Lokesh, with this patch, we should be able to pickup the dmtimer 
+driver patch to finally allow dmtimer clients to use 
+assigned-clock-parents.
+
+Once both of these are merged, we can deprecate the ti,clock-source from 
+the omap-pwm-dmtimer driver.
+
+Reviewed-by: Suman Anna <s-anna@ti.com>
+
+regards
+Suman
+
+>> ---
+>> Tony,
+>> 	This is in preparation with removal of selecting clock source in
+>> 	prepare() api. Let me know if you prefer separate patches for
+>> 	each dts.
+> 
+> Looks just fine to me.
+> 
+> Tony
+> 
+>>   arch/arm/boot/dts/am335x-guardian.dts            | 1 +
+>>   arch/arm/boot/dts/am3517-evm.dts                 | 1 +
+>>   arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi | 1 +
+>>   arch/arm/boot/dts/omap3-gta04.dtsi               | 1 +
+>>   4 files changed, 4 insertions(+)
 >>
->> With clk_register deprecated in favor of clk_hw_register, we are likely
->> to see that case rise elsewhere.
+>> diff --git a/arch/arm/boot/dts/am335x-guardian.dts b/arch/arm/boot/dts/am335x-guardian.dts
+>> index 81e0f63e94d3..0ebe9e2c150e 100644
+>> --- a/arch/arm/boot/dts/am335x-guardian.dts
+>> +++ b/arch/arm/boot/dts/am335x-guardian.dts
+>> @@ -105,6 +105,7 @@
+>>   		ti,timers = <&timer7>;
+>>   		pinctrl-names = "default";
+>>   		pinctrl-0 = <&dmtimer7_pins>;
+>> +		ti,clock-source = <0x01>;
+>>   	};
+>>   
+>>   	vmmcsd_fixed: regulator-3v3 {
+>> diff --git a/arch/arm/boot/dts/am3517-evm.dts b/arch/arm/boot/dts/am3517-evm.dts
+>> index a1fd3e63e86e..92466b9eb6ba 100644
+>> --- a/arch/arm/boot/dts/am3517-evm.dts
+>> +++ b/arch/arm/boot/dts/am3517-evm.dts
+>> @@ -156,6 +156,7 @@
+>>   		pinctrl-0 = <&pwm_pins>;
+>>   		ti,timers = <&timer11>;
+>>   		#pwm-cells = <3>;
+>> +		ti,clock-source = <0x01>;
+>>   	};
+>>   
+>>   	/* HS USB Host PHY on PORT 1 */
+>> diff --git a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
+>> index f7b82ced4080..381f0e82bb70 100644
+>> --- a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
+>> +++ b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
+>> @@ -65,6 +65,7 @@
+>>   		pinctrl-0 = <&pwm_pins>;
+>>   		ti,timers = <&timer10>;
+>>   		#pwm-cells = <3>;
+>> +		ti,clock-source = <0x01>;
+>>   	};
+>>   
+>>   };
+>> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+>> index 409a758c99f1..ecc45862b4f3 100644
+>> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+>> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+>> @@ -150,6 +150,7 @@
+>>   		compatible = "ti,omap-dmtimer-pwm";
+>>   		ti,timers = <&timer11>;
+>>   		#pwm-cells = <3>;
+>> +		ti,clock-source = <0x01>;
+>>   	};
+>>   
+>>   	hsusb2_phy: hsusb2_phy {
+>> -- 
+>> 2.23.0
 >>
->
-> So, according to the separate discussion [1], I think we can let
-> Martin decide what option to implement at this point.
->
-> 1. Implement the "clk_hw_get_clk()" approach. The preferred option,
-> but requires wider changes of the clock subsystem as well.
->
-> 2. Keep the existing approach, with devm_clk_get(). I am fine with
-> this as well, we can always switch to 1) later on.
-
-I have a problem with this approach.
-The dt-bindings would include "#clock-cells = <1>" for a device that
-does not actually provide and only needs it has a temporary work around.
-Those bindings are supposed to be stable ...
-
-I have proposed 2 other short term solutions, let's see how it goes
-
->
-> [...]
->
-> Kind regards
-> Uffe
->
-> [1]
-> https://www.spinics.net/lists/linux-clk/msg48373.html
 
