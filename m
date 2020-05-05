@@ -2,93 +2,101 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49CBC47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C38C47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2A70206B9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10CA206A4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588695150;
+	bh=OMHKJSIPDPRNNrS/RWfaSOA46Dxl/+H8MIneOgNjauA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1pKPMEuD9JyIu8Y1KqRv6cuDzgIlbJKezlt5pETWVgqns2hFuCy7TjCp4yAXjicyl
+	 ssV+IrPF4h0pTef0b2boscSWyb+FyAC0xwvGyOo6gvuQy6TwzcXE9xXuOG5ZIYm6Y5
+	 JgBrfOG/JGLlj26SH1YJIFozyOF0ZEXb1kY+5rcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbgEEQKh (ORCPT
+        id S1729829AbgEEQMa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 12:10:37 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18014 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728687AbgEEQKh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 12:10:37 -0400
-IronPort-SDR: UpDI8n0BOGV6lGmcZD+nNjutQ09fhSb9TKWhtcDpHYarbVe+fT57rGzS+nFMmKiv5VzsLFRPQD
- 4iEEnzsHcOdg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 09:10:36 -0700
-IronPort-SDR: WWEw3Nh9BAn11LiQN0IQebCZMd4vt8vcGrtZuO44a3tC1g04rjtUuaZf83rBi3ZWUh2DsIjMCZ
- vlsZvNPrvzUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
-   d="scan'208";a="248611950"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 05 May 2020 09:10:32 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jW09T-004qNH-Fm; Tue, 05 May 2020 19:10:35 +0300
-Date:   Tue, 5 May 2020 19:10:35 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh+dt@kernel.org>,
-        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        devicetree@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH 4/4] serial: 8250: Support rs485 bus termination GPIO
-Message-ID: <20200505161035.GW185537@smile.fi.intel.com>
-References: <cover.1588505407.git.lukas@wunner.de>
- <a91b9392e8e7914cae16f59beb1ffe6b335f81c9.1588505407.git.lukas@wunner.de>
+        Tue, 5 May 2020 12:12:30 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33694 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729171AbgEEQM3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 12:12:29 -0400
+Received: by mail-oi1-f195.google.com with SMTP id o24so2463642oic.0;
+        Tue, 05 May 2020 09:12:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P4uwIg6IznWYSiI4J+LB8KzTkIyPs2Mm/1Ia9wDW3Qw=;
+        b=Uf8Fm/+RQarS5djAk3ZuSuDk6ZIUfYeLVqqmBudontM/TxqpniBnxtKoJA077F4RNI
+         /iGW0UXRPytSUB+KHaeR9oep4tqisrQiKi7JGoKmMaNT9W4kyVmb0Hk2wXuEJ/xRlG8Q
+         BfGXpc20gzqBqKvcjg+rEk29K/o/Cbi0V6cFzcGO3TkVT2tVv8fDl6YPQIZ6Qmi87ydY
+         QvWOoi67TTwjGRiJGh6yTOGqXV/JrOHKpcPMflcvA1Gn8WEU/Vk0M7bx+5hG/N/Ka/BH
+         TbL8bdVznQ1E/dIewk/OvpbiF2kIyziU2Xe04EwIRLiVgV2vsLYkFnuJldupPz562DjE
+         gACw==
+X-Gm-Message-State: AGi0Pua5KQb338WRPQVMrTBRYQmZsmR+Np3ZooBSlFCPxTxNRarsZ4N4
+        hmJztXUlC8VBl3UtzA9Kpw==
+X-Google-Smtp-Source: APiQypLPTfyCDSQGXksszy6DzFalq0KOuLxkfmgzhJ5Qd4+1aprQV9wF6sc3emzl0a6+rBGzs5/Z+w==
+X-Received: by 2002:aca:ed13:: with SMTP id l19mr1736131oih.132.1588695148437;
+        Tue, 05 May 2020 09:12:28 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t20sm698707ott.51.2020.05.05.09.12.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 09:12:27 -0700 (PDT)
+Received: (nullmailer pid 21692 invoked by uid 1000);
+        Tue, 05 May 2020 16:12:26 -0000
+Date:   Tue, 5 May 2020 11:12:26 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org, benoit.houyere@st.com,
+        eajames@linux.ibm.com, joel@jms.id.au, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        oshri.alkoby@nuvoton.com, tmaimon77@gmail.com, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v7 6/7] tpm: Add YAML schema for TPM TIS I2C options
+Message-ID: <20200505161226.GA555@bogus>
+References: <20200427124931.115697-1-amirmizi6@gmail.com>
+ <20200427124931.115697-7-amirmizi6@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a91b9392e8e7914cae16f59beb1ffe6b335f81c9.1588505407.git.lukas@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200427124931.115697-7-amirmizi6@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 05, 2020 at 04:42:04PM +0200, Lukas Wunner wrote:
-> Commit e8759ad17d41 ("serial: uapi: Add support for bus termination")
-> introduced the ability to enable rs485 bus termination from user space.
-> So far the feature is only used by a single driver, 8250_exar.c, using a
-> hardcoded GPIO pin specific to Siemens IOT2040 products.
+On Mon, Apr 27, 2020 at 03:49:30PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
 > 
-> Provide for a more generic solution by allowing specification of an
-> rs485 bus termination GPIO pin in the device tree:  Amend the serial
-> core to retrieve the GPIO from the device tree (or ACPI table) and amend
-> the default ->rs485_config() callback for 8250 drivers to change the
-> GPIO on request from user space.
+> Added a YAML schema to support tpm tis i2c related dt-bindings for the I2c
+> PTP based physical layer.
+> 
+> This patch adds the documentation for corresponding device tree bindings of
+> I2C based Physical TPM.
+> Refer to the 'I2C Interface Definition' section in
+> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
+> for specification.
 
-...
+Again, DT bindings describe h/w devices, not just a protocol. A device 
+is more than just a protocol interface. There's clocks, power rails, 
+resets, interrupts, firmware, etc. 
 
-> @@ -3331,6 +3332,29 @@ int uart_get_rs485_mode(struct uart_port *port)
+Unless there's something special about TPM chips that makes none of this 
+applicable and no chip will ever have any quirks (or extensions) in 
+their protocol to work-around, then you need compatible string(s) that 
+are specific to the TPM chip. You can have tcg,tpm-tis-i2c as a 
+fallback, but you need specific compatible to handle any quirks.
 
-> +		devm_gpiod_put(dev, port->rs485_term_gpio);
-
-> +	port->rs485_term_gpio = devm_gpiod_get_optional(dev, "rs485-term",
-
-Using devm_*() in uart_get_rs485_mode() seems not right.
-Why do you need this?
-
-> +		GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT);
-
-Parameter has a specific macro GPIOD_OUT_HIGH.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Rob
