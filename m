@@ -2,171 +2,210 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104DBC47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F4FC47247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3CCC20735
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:19:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588706354;
-	bh=JKqbemjlS2Jeps57ZxEt7Bq7AgfRLVbjmfHyIvNH6w4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZfCNS7JE8HJD4tirx1tSeh322leoHoxUHNdliDJTurBVrHt4RPl/5QEHDB5CHRd3K
-	 e3xsLVYsqKy0PC1/evYFNIKQL6X/S7fxnjB8xHE4mKgJoUf4kqPj9sOS3Dt/GK5Yiw
-	 7hC53udkjJT7VdOmaCv1C26YVvjufFtSjy9D/KAs=
+	by mail.kernel.org (Postfix) with ESMTP id 05AF3206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 19:25:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SJdtgGTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgEETTO (ORCPT
+        id S1728076AbgEETZl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 15:19:14 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42624 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbgEETTO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:19:14 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m18so2657689otq.9;
-        Tue, 05 May 2020 12:19:13 -0700 (PDT)
+        Tue, 5 May 2020 15:25:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbgEETZk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 15:25:40 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF8CAC061A0F
+        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 12:25:40 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id i13so2869890oie.9
+        for <devicetree@vger.kernel.org>; Tue, 05 May 2020 12:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RKLj+Bvazx+0GBaDeiW8XR54CzGKY4AHaP4cILqovw8=;
+        b=SJdtgGTW5rf7rigkvrS0mGJrpwJvn5sAzRAkkSYrU2yWA/lI6TmCZF0sq1SvNFwlg1
+         kREVUdbiAPDNjSfxcJ7oIXu434wnGVlmGdtL6WbnnD9hbqTKUgJpUSsrG2XH0oFtkDpS
+         blRYXGrjL79B5wOO2fnZ53Ph/JTysPZXNngkk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/U+Utez0g7tzaxYoGDI1nZpfAtzEcCkPAgk4/VbXcdg=;
-        b=BqhfgD33wNLxcf72Ftg/2wW59Z9qk5ZFP8dmcTRVB3Yge5g+GnydAqHmYqAmqzkgUk
-         zv790zh496mBXeEfZQKiEXhjre96hTVggFbR6D202AxoUDAw2qJcgOWPKg4tmfxZwLG8
-         ClLrc7gZtOocr+2Y8lt82H8oD6uIZjsyR36L5qlRm04g1E3jGKaSoVBC6ijiw0SjnzAb
-         DUQUKO1uEjo5bnl82yAnQaukGZgoIoV2lcLJVdae01FzH9G75L6btZt9MBgZzAMwsRIQ
-         2CDFdJGAxwB/It8pVETZH1YvCU4fQGN9iY45+bY59ZP2f3s38HMyuTGCschHV9+tTaRt
-         nfQQ==
-X-Gm-Message-State: AGi0PubjyAGxlkdHJO6jcm+YAJtxfzES4IY2F28bqzUZmTvTFbpsbX4h
-        S+2RirE1ygoKvkxDjY10ow==
-X-Google-Smtp-Source: APiQypKwZP/zlmQLc48VyxIvtAOarvdP8of6TwzErq8vONQjZi4WM1iTtep+tGTUxGO0T32VkPh4rA==
-X-Received: by 2002:a9d:708c:: with SMTP id l12mr3430660otj.335.1588706352098;
-        Tue, 05 May 2020 12:19:12 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i5sm771139oik.11.2020.05.05.12.19.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 12:19:11 -0700 (PDT)
-Received: (nullmailer pid 7384 invoked by uid 1000);
-        Tue, 05 May 2020 19:19:10 -0000
-Date:   Tue, 5 May 2020 14:19:10 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@linux.intel.com
-Subject: Re: [PATCH v5 7/7] dt-bindings: spi: dw-apb-ssi: Convert bindings to
- json-schema
-Message-ID: <20200505191910.GA2970@bogus>
-References: <20200505130618.554-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200505130618.554-8-wan.ahmad.zainie.wan.mohamad@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RKLj+Bvazx+0GBaDeiW8XR54CzGKY4AHaP4cILqovw8=;
+        b=b3kcRHWRGKvcHuYK+l8RQi563IwyPBQLn287pZFStcMQ4HSroUT7wl4PEpYZc95jOc
+         VPYd8z/nQciEM5eyW2Pm8eVII6YCfjI9OD0q2IwTyvS4gKtmBSN52PaxkHkUD6lBVeHZ
+         vmxi2xlKho8Hk5FyLcrfe3uAf4vC7f1UeBztGbFZ2qmlEKDj6RVX70VOugqJCNRJbvDD
+         HI9yPOpbwouhvw48RRiFustUs5CeNlxKcMOPF1bHLDx+Pyw2+kNAmXqtPw2i/IjTvVjG
+         q+PtKTmCZjTCYYyA2wKZBsx4r5sSA948CKs+TZqeTo9ZiEEva8hncs35MUxR33YXy/ts
+         qWiQ==
+X-Gm-Message-State: AGi0PuZ4x9UUWWRl9DKn++/NBZahdSwbRopQHg8ZrAVuBaypJ6b9IUbJ
+        BmIpijAJSF6norBAxNx/GEXwboUx0gEdHNhtRI5HFA==
+X-Google-Smtp-Source: APiQypJj1DkGUZt7VIZXosUiRMoBR0Hk5xmD/ibsZ1474R2bICyoP6W/sR5eJX+NBmdVffk3jmYWOAdQstorpI7Bi6g=
+X-Received: by 2002:aca:403:: with SMTP id 3mr227565oie.166.1588706739870;
+ Tue, 05 May 2020 12:25:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505130618.554-8-wan.ahmad.zainie.wan.mohamad@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-6-brgl@bgdev.pl>
+In-Reply-To: <20200505140231.16600-6-brgl@bgdev.pl>
+From:   Edwin Peer <edwin.peer@broadcom.com>
+Date:   Tue, 5 May 2020 12:25:03 -0700
+Message-ID: <CAKOOJTzcNr7mc9xusQm3nCzkq5P=ha-si3fizeEL2_KJUOC3-Q@mail.gmail.com>
+Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 05, 2020 at 09:06:18PM +0800, Wan Ahmad Zainie wrote:
-> Convert the Synopsis DesignWare dw-apb-ssi binding to DT schema format
-> using json-schema.
-> 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+On Tue, May 5, 2020 at 7:05 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Provide devm_register_netdev() - a device resource managed variant
+> of register_netdev(). This new helper will only work for net_device
+> structs that have a parent device assigned and are devres managed too.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  .../bindings/spi/snps,dw-apb-ssi.txt          | 42 -----------
->  .../bindings/spi/snps,dw-apb-ssi.yaml         | 72 +++++++++++++++++++
->  2 files changed, 72 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+>  include/linux/netdevice.h |  4 ++++
+>  net/core/dev.c            | 48 +++++++++++++++++++++++++++++++++++++++
+>  net/ethernet/eth.c        |  1 +
+>  3 files changed, 53 insertions(+)
+>
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index 130a668049ab..433bd5ca2efc 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -1515,6 +1515,8 @@ struct net_device_ops {
+>   * @IFF_FAILOVER_SLAVE: device is lower dev of a failover master device
+>   * @IFF_L3MDEV_RX_HANDLER: only invoke the rx handler of L3 master device
+>   * @IFF_LIVE_RENAME_OK: rename is allowed while device is up and running
+> + * @IFF_IS_DEVRES: this structure was allocated dynamically and is managed by
+> + *     devres
+>   */
+>  enum netdev_priv_flags {
+>         IFF_802_1Q_VLAN                 = 1<<0,
+> @@ -1548,6 +1550,7 @@ enum netdev_priv_flags {
+>         IFF_FAILOVER_SLAVE              = 1<<28,
+>         IFF_L3MDEV_RX_HANDLER           = 1<<29,
+>         IFF_LIVE_RENAME_OK              = 1<<30,
+> +       IFF_IS_DEVRES                   = 1<<31,
+>  };
+>
+>  #define IFF_802_1Q_VLAN                        IFF_802_1Q_VLAN
+> @@ -4206,6 +4209,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
+>                          count)
+>
+>  int register_netdev(struct net_device *dev);
+> +int devm_register_netdev(struct net_device *ndev);
+>  void unregister_netdev(struct net_device *dev);
+>
+>  /* General hardware address lists handling functions */
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 522288177bbd..99db537c9468 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -9519,6 +9519,54 @@ int register_netdev(struct net_device *dev)
+>  }
+>  EXPORT_SYMBOL(register_netdev);
+>
+> +struct netdevice_devres {
+> +       struct net_device *ndev;
+> +};
+> +
+> +static void devm_netdev_release(struct device *dev, void *this)
+> +{
+> +       struct netdevice_devres *res = this;
+> +
+> +       unregister_netdev(res->ndev);
+> +}
+> +
+> +/**
+> + *     devm_register_netdev - resource managed variant of register_netdev()
+> + *     @ndev: device to register
+> + *
+> + *     This is a devres variant of register_netdev() for which the unregister
+> + *     function will be call automatically when the parent device of ndev
+> + *     is detached.
+> + */
+> +int devm_register_netdev(struct net_device *ndev)
+> +{
+> +       struct netdevice_devres *dr;
+> +       int ret;
+> +
+> +       /* struct net_device itself must be devres managed. */
+> +       BUG_ON(!(ndev->priv_flags & IFF_IS_DEVRES));
+> +       /* struct net_device must have a parent device - it will be the device
+> +        * managing this resource.
+> +        */
 
+Catching static programming errors seems like an expensive use of the
+last runtime flag in the enum. It would be weird to devres manage the
+unregister and not also choose to manage the underlying memory in the
+same fashion, so it wouldn't be an obvious mistake to make. If it must
+be enforced, one could also iterate over the registered release
+functions and check for the presence of devm_free_netdev without
+burning the flag.
 
-> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> new file mode 100644
-> index 000000000000..edc1e6fb9993
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/snps,dw-apb-ssi.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +       BUG_ON(!ndev->dev.parent);
 > +
-> +title: Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface
+> +       dr = devres_alloc(devm_netdev_release, sizeof(*dr), GFP_KERNEL);
+> +       if (!dr)
+> +               return -ENOMEM;
 > +
-> +maintainers:
-> +  - Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+> +       ret = register_netdev(ndev);
+> +       if (ret) {
+> +               devres_free(dr);
+> +               return ret;
+> +       }
 > +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
+> +       dr->ndev = ndev;
+> +       devres_add(ndev->dev.parent, dr);
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mscc,ocelot-spi
-> +      - mscc,jaguar2-spi
-> +      - amazon,alpine-dw-apb-ssi
-> +      - snps,dw-apb-ssi
-> +      - snps,dwc-ssi-1.01a
-> +      - intel,keembay-ssi
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(devm_register_netdev);
+> +
+>  int netdev_refcnt_read(const struct net_device *dev)
+>  {
+>         int i, refcnt = 0;
+> diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
+> index c8b903302ff2..ce9b5e576f20 100644
+> --- a/net/ethernet/eth.c
+> +++ b/net/ethernet/eth.c
+> @@ -423,6 +423,7 @@ struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
+>
+>         *dr = netdev;
+>         devres_add(dev, dr);
+> +       netdev->priv_flags |= IFF_IS_DEVRES;
+>
+>         return netdev;
+>  }
+> --
+> 2.25.0
+>
 
-This doesn't match what's in dts files. You have to list out every 
-combination.
-
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: The register base for the controller.
-> +      - description: For "mscc,<soc>-spi", a second register set is required.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: The core clock used to generate the external SPI clock.
-> +      - description: The interface clock required for register access.
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ssi_clk
-> +      - const: pclk
-> +
-> +  reg-io-width:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [ 2, 4 ]
-> +      - default: 4
-> +    description: The I/O register width (in bytes) implemented by this device.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +
-> +examples:
-> +  - |
-> +    spi@fff00000 {
-> +          compatible = "snps,dw-apb-ssi";
-> +          reg = <0xfff00000 0x1000>;
-> +          interrupts = <0 154 4>;
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          clocks = <&spi_m_clk>;
-> +          num-cs = <2>;
-> +          cs-gpios = <&gpio0 13 0>,
-> +                     <&gpio0 14 0>;
-> +    };
-> -- 
-> 2.17.1
-> 
+Regards,
+Edwin Peer
