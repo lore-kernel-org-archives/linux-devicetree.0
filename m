@@ -2,169 +2,87 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBA8C47254
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2058C47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 099F42073B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:45:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k2jJfmbm"
+	by mail.kernel.org (Postfix) with ESMTP id 9E59C20735
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 10:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588675826;
+	bh=jdITTTdJ8QmpA/hQeLQ32qrrNcbG6mdnuVwPPkTiCZg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NY9uTYrrnx75raxSuZGSkg5jV64X2yz8SDHM1ooqxem/bw4oNKCM0hf/lHMYPkGU3
+	 k1SaWnlZo6hLqQnt4swMph/ZHyLEck2EbbWkz/1x6sgv3XgQSDpSpH8k9MZDYFEQNn
+	 54CSQxrOxbWArdxSUnd8KV68jtJTDx+Fy8bS1EK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbgEEKpI (ORCPT
+        id S1728238AbgEEKu0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 06:45:08 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:10192 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgEEKpI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 06:45:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588675507; x=1620211507;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=XBSflEuWAde/CeVgwd1MVyCQIVmkLdJKa2kWwWmS9Qc=;
-  b=k2jJfmbmOkUbhT+mX2cFVJ5jz8ZF0aECN+rQqC912s44US6ISTlwOIjJ
-   4H+JM8LuXl8JelavGP9FEA8YblZDM9bPNg5BFB5fWmxItMazrQSG8k4EF
-   0SL937on4Ax9fUN+3r21+GiM5YewKyJqvZbD30SDzInHitFPh3RWjUuW+
-   M=;
-IronPort-SDR: /zcmW88pk2aPTxCJdquuhy1OAS8pv2KZcoSP/u09BnfoQaUg8JxdjY2lqJSRaREoBcNIJ3WsQF
- +6613ajzi/Cw==
-X-IronPort-AV: E=Sophos;i="5.73,354,1583193600"; 
-   d="scan'208";a="42749270"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 May 2020 10:45:04 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id C2F85A26F7;
-        Tue,  5 May 2020 10:44:58 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 5 May 2020 10:44:58 +0000
-Received: from [192.168.13.172] (10.43.162.38) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 5 May
- 2020 10:44:48 +0000
-Subject: [PATCH v6 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs
- Memory Controller EDAC
-To:     Borislav Petkov <bp@alien8.de>, <robh+dt@kernel.org>
-CC:     <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
-        <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <linux-edac@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
-        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <eitan@amazon.com>
-References: <20200224134132.23924-1-talel@amazon.com>
- <20200224134132.23924-2-talel@amazon.com> <20200428110659.GA11272@zn.tnic>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <5e2c5119-52e9-2c3c-e205-e661ba218fcb@amazon.com>
-Date:   Tue, 5 May 2020 13:44:43 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 5 May 2020 06:50:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728233AbgEEKu0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 06:50:26 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 187B7206A5;
+        Tue,  5 May 2020 10:50:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588675825;
+        bh=jdITTTdJ8QmpA/hQeLQ32qrrNcbG6mdnuVwPPkTiCZg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=giJhS33ATK1fGUBlHXvmcG0RNawpGnBV4+z9MjsCc+1nTNdmzXroVtX8YgQGxhwMW
+         rBq6nFED7eOp75BP5krzXqliC+LyUxMRjbGNP+GEUMWZoGcRGCnSMuN5+QBFMgP1SK
+         ALvr53H4xXuV8T8AfbRBDvtBy3EErXZq5Y8gbGnQ=
+Date:   Tue, 5 May 2020 11:50:22 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Cc:     robh+dt@kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@linux.intel.com
+Subject: Re: [PATCH v4 1/7] spi: dw: Fix typo in few registers name
+Message-ID: <20200505105022.GA10294@sirena.org.uk>
+References: <20200504130246.5135-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200504130246.5135-2-wan.ahmad.zainie.wan.mohamad@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428110659.GA11272@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Originating-IP: [10.43.162.38]
-X-ClientProxiedBy: EX13D37UWC004.ant.amazon.com (10.43.162.212) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
+Content-Disposition: inline
+In-Reply-To: <20200504130246.5135-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Cookie: Yes, but which self do you want to be?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob and other DT folks,
 
-Can you please help with below query?
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Mon, May 04, 2020 at 09:02:40PM +0800, Wan Ahmad Zainie wrote:
+> This patch will fix typo in the register name used in the source code,
+> to be consistent with the register name used in the databook.
 
-On 4/28/2020 2:06 PM, Borislav Petkov wrote:
-> On Mon, Feb 24, 2020 at 03:41:31PM +0200, Talel Shenhar wrote:
->> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
->>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->>   .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
->>   1 file changed, 52 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->> new file mode 100644
->> index 000000000000..20505f37c9f8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->> @@ -0,0 +1,52 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
-> WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)
-> #36: FILE: Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml:1:
-> +# SPDX-License-Identifier: GPL-2.0-only
->
-> Hi Rob, should I listen to checkpatch or ignore it?
+This doesn't apply against current code, please check and resend.
 
-Rob and other dt folks,
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In continue to disscussion with Boris below, Looking at the checkpatch 
-check:
+-----BEGIN PGP SIGNATURE-----
 
-    if ($realfile =~ m@^Documentation/devicetree/bindings/@ &&
-        not $spdx_license =~/GPL-2\.0.*BSD-2-Clause/) {
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6xRO4ACgkQJNaLcl1U
+h9DrJgf+KU5UUbUm11LyJJxFkCAPIdpC83xNT+OBucZM79m32Q94UzARD26dTcfw
+6J4P4oKXss6nFdQzZN+ak4QzPCR0s+j3FrExMuUN0oIkpEwqbBHDnS+oQYHmSrHg
+GBe4kjVqACuvGhVseoVKJaVR2IDcJ+RpLoCU8cPl2VCw4n2xp8djlL/Q9MunAvvk
+xj8n9h9CA1kiSI98RIFJbCPwCxf/QOGbE4LTyJOlu4V4ft2WS5gzamnmnvU5YsFs
+IzFnCv6sgLBHoWWVJhH7WhyaPmlJafPc+PcNx2Yjmdp2/XtRf4K5Xb7dzSdETUIt
+IjHkUZS7KG0UVyvJRjFVK7ZUS8cieA==
+=OXpU
+-----END PGP SIGNATURE-----
 
-It wants the whole string "GPL-2.0-only OR BSD-2-Clause" and my oatch has only "GPL-2.0-only".
-
-Now, looking at a bunch of .yaml DT files, there are all kinds of formatting:
-
-$ git grep -h SPDX *.yaml | sort | uniq -c
-       3 1:# SPDX-License-Identifier: (GPL-2.0)
-     313 1:# SPDX-License-Identifier: GPL-2.0
-       9 1:# SPDX-License-Identifier: GPL-2.0+
-       1 1:# SPDX-License-Identifier: (GPL-2.0-only)
-      43 1:# SPDX-License-Identifier: GPL-2.0-only
-       4 1:# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-       1 1:# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
-     148 1:# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-      25 1:# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-     104 1:# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-       3 1:# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-       2 1:# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-       1 1:# SPDX-License-Identifier: (GPL-2.0-or-later)
-       5 1:# SPDX-License-Identifier: GPL-2.0-or-later
-       3 1:# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-       2 1:# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
-       3 1:# SPDX-License-Identifier: (GPL-2.0 OR MIT)
-       3 1:# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-       3 1:# SPDX-License-Identifier: (GPL-2.0+ OR X11)
-
-And the patch which did rule is:
-
-commit 50c92900214dd9a55bcecc3c53e90d072aff6560
-Author: Lubomir Rintel<lkundrak@v3.sk>
-Date:   Mon Apr 6 20:11:13 2020 -0700
-
-     checkpatch: check proper licensing of Devicetree bindings
-
-     According to Devicetree maintainers (see Link: below), the Devicetree
-     binding documents are preferrably licensed (GPL-2.0-only OR BSD-2-Clause).
-
-     Let's check that.  The actual check is a bit more relaxed, to allow more
-     liberal but compatible licensing (e.g.  GPL-2.0-or-later OR BSD-2-Clause).
-
-
-Will love your help.
-This patch already have your (Rob) Reviewed-by so Boris and myself are unsure what is the right thing to do now.
-
-Thanks,
-Talel.
-
->
-> --
-> Regards/Gruss,
->      Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
+--7JfCtLOvnd9MIVvH--
