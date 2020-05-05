@@ -2,162 +2,93 @@ Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F6BC47257
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49CBC47254
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55EA6206A4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:06:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MQRREdc+"
+	by mail.kernel.org (Postfix) with ESMTP id B2A70206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 16:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbgEEQGk (ORCPT
+        id S1729654AbgEEQKh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 12:06:40 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43396 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729171AbgEEQGk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 12:06:40 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 045G6aDF018831;
-        Tue, 5 May 2020 11:06:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588694796;
-        bh=QbZDJH8ksQWHexlXjssoaBsD7lkC7FYNaOKBEg46oeY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MQRREdc+hX+hXg9t+zuz31Isgup1G2IRCeNGNQbJ6pGkUMNzQa1WAUtAEVjwhyGYp
-         sZmbEno9W8qULojUWwZVR7ywQQK++BTT8VSqAFOQ3BTvOo65LkDoc1vBUtzdFsGiJo
-         D69frxO6R+XQO6mcta/lPnO4ZemPdMPVmVPKURuE=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 045G6aO6005367
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 May 2020 11:06:36 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
- 2020 11:06:36 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 5 May 2020 11:06:36 -0500
-Received: from [10.250.70.56] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 045G6amN033733;
-        Tue, 5 May 2020 11:06:36 -0500
-Subject: Re: [PATCH] arm: dts: Add 32KHz clock as default clock source
-To:     Tony Lindgren <tony@atomide.com>, Lokesh Vutla <lokeshvutla@ti.com>
-CC:     Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>
-References: <20200427172604.16351-1-lokeshvutla@ti.com>
- <20200428181919.GS37466@atomide.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <e49e047d-6883-6bee-7dac-a544a27f6293@ti.com>
-Date:   Tue, 5 May 2020 11:06:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 5 May 2020 12:10:37 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18014 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728687AbgEEQKh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 12:10:37 -0400
+IronPort-SDR: UpDI8n0BOGV6lGmcZD+nNjutQ09fhSb9TKWhtcDpHYarbVe+fT57rGzS+nFMmKiv5VzsLFRPQD
+ 4iEEnzsHcOdg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 09:10:36 -0700
+IronPort-SDR: WWEw3Nh9BAn11LiQN0IQebCZMd4vt8vcGrtZuO44a3tC1g04rjtUuaZf83rBi3ZWUh2DsIjMCZ
+ vlsZvNPrvzUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
+   d="scan'208";a="248611950"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 05 May 2020 09:10:32 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jW09T-004qNH-Fm; Tue, 05 May 2020 19:10:35 +0300
+Date:   Tue, 5 May 2020 19:10:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh+dt@kernel.org>,
+        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 4/4] serial: 8250: Support rs485 bus termination GPIO
+Message-ID: <20200505161035.GW185537@smile.fi.intel.com>
+References: <cover.1588505407.git.lukas@wunner.de>
+ <a91b9392e8e7914cae16f59beb1ffe6b335f81c9.1588505407.git.lukas@wunner.de>
 MIME-Version: 1.0
-In-Reply-To: <20200428181919.GS37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a91b9392e8e7914cae16f59beb1ffe6b335f81c9.1588505407.git.lukas@wunner.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/28/20 1:19 PM, Tony Lindgren wrote:
-> * Lokesh Vutla <lokeshvutla@ti.com> [200427 17:27]:
->> Clocksource to timer configured in pwm mode can be selected using the DT
->> property ti,clock-source. There are few pwm timers which are not
->> selecting the clock source and relying on default value in hardware or
->> selected by driver. Instead of relying on default value, always select
->> the clock source from DT.
->>
->> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-
-Thanks Lokesh, with this patch, we should be able to pickup the dmtimer 
-driver patch to finally allow dmtimer clients to use 
-assigned-clock-parents.
-
-Once both of these are merged, we can deprecate the ti,clock-source from 
-the omap-pwm-dmtimer driver.
-
-Reviewed-by: Suman Anna <s-anna@ti.com>
-
-regards
-Suman
-
->> ---
->> Tony,
->> 	This is in preparation with removal of selecting clock source in
->> 	prepare() api. Let me know if you prefer separate patches for
->> 	each dts.
+On Tue, May 05, 2020 at 04:42:04PM +0200, Lukas Wunner wrote:
+> Commit e8759ad17d41 ("serial: uapi: Add support for bus termination")
+> introduced the ability to enable rs485 bus termination from user space.
+> So far the feature is only used by a single driver, 8250_exar.c, using a
+> hardcoded GPIO pin specific to Siemens IOT2040 products.
 > 
-> Looks just fine to me.
-> 
-> Tony
-> 
->>   arch/arm/boot/dts/am335x-guardian.dts            | 1 +
->>   arch/arm/boot/dts/am3517-evm.dts                 | 1 +
->>   arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi | 1 +
->>   arch/arm/boot/dts/omap3-gta04.dtsi               | 1 +
->>   4 files changed, 4 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/am335x-guardian.dts b/arch/arm/boot/dts/am335x-guardian.dts
->> index 81e0f63e94d3..0ebe9e2c150e 100644
->> --- a/arch/arm/boot/dts/am335x-guardian.dts
->> +++ b/arch/arm/boot/dts/am335x-guardian.dts
->> @@ -105,6 +105,7 @@
->>   		ti,timers = <&timer7>;
->>   		pinctrl-names = "default";
->>   		pinctrl-0 = <&dmtimer7_pins>;
->> +		ti,clock-source = <0x01>;
->>   	};
->>   
->>   	vmmcsd_fixed: regulator-3v3 {
->> diff --git a/arch/arm/boot/dts/am3517-evm.dts b/arch/arm/boot/dts/am3517-evm.dts
->> index a1fd3e63e86e..92466b9eb6ba 100644
->> --- a/arch/arm/boot/dts/am3517-evm.dts
->> +++ b/arch/arm/boot/dts/am3517-evm.dts
->> @@ -156,6 +156,7 @@
->>   		pinctrl-0 = <&pwm_pins>;
->>   		ti,timers = <&timer11>;
->>   		#pwm-cells = <3>;
->> +		ti,clock-source = <0x01>;
->>   	};
->>   
->>   	/* HS USB Host PHY on PORT 1 */
->> diff --git a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
->> index f7b82ced4080..381f0e82bb70 100644
->> --- a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
->> +++ b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
->> @@ -65,6 +65,7 @@
->>   		pinctrl-0 = <&pwm_pins>;
->>   		ti,timers = <&timer10>;
->>   		#pwm-cells = <3>;
->> +		ti,clock-source = <0x01>;
->>   	};
->>   
->>   };
->> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
->> index 409a758c99f1..ecc45862b4f3 100644
->> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
->> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
->> @@ -150,6 +150,7 @@
->>   		compatible = "ti,omap-dmtimer-pwm";
->>   		ti,timers = <&timer11>;
->>   		#pwm-cells = <3>;
->> +		ti,clock-source = <0x01>;
->>   	};
->>   
->>   	hsusb2_phy: hsusb2_phy {
->> -- 
->> 2.23.0
->>
+> Provide for a more generic solution by allowing specification of an
+> rs485 bus termination GPIO pin in the device tree:  Amend the serial
+> core to retrieve the GPIO from the device tree (or ACPI table) and amend
+> the default ->rs485_config() callback for 8250 drivers to change the
+> GPIO on request from user space.
+
+...
+
+> @@ -3331,6 +3332,29 @@ int uart_get_rs485_mode(struct uart_port *port)
+
+> +		devm_gpiod_put(dev, port->rs485_term_gpio);
+
+> +	port->rs485_term_gpio = devm_gpiod_get_optional(dev, "rs485-term",
+
+Using devm_*() in uart_get_rs485_mode() seems not right.
+Why do you need this?
+
+> +		GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT);
+
+Parameter has a specific macro GPIOD_OUT_HIGH.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
