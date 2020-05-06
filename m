@@ -2,92 +2,190 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211E5C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B332C4724C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0394320747
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27EEC2078C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:34:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JaXZicmL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xsq7IVsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbgEFSVN (ORCPT
+        id S1729895AbgEFSex (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 14:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58398 "EHLO
+        Wed, 6 May 2020 14:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729477AbgEFSVN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 14:21:13 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF89BC061A10
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 11:21:12 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id g14so2155618otg.10
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 11:21:12 -0700 (PDT)
+        with ESMTP id S1729821AbgEFSex (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 14:34:53 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06436C061A10
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 11:34:52 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id i13so2647099oie.9
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 11:34:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=D2taJJRTg2UNCEqvPUHeisc7wYhhWEOMV6TUWaPz7kg=;
-        b=JaXZicmLPCbQ1s4wEPLd+sV+a4q0wnzPoifqdGpBSL8D7Z8GrydmvQGqC8UT22nL2I
-         WZa/znMpgXW+q41TZVo9zK6nCks5GJUhUduUAyuXBbeNVH+4lSu2c8TsdwQTipW46XE8
-         2YvlAWllyGrBAxfyw+wCC3p4SEMWY6eYou+Co=
+        bh=T1fc7Ga+GKDig3f8S+JUzkFdaI2xEUQOvINcVIib0WA=;
+        b=Xsq7IVsHnRlZrfWWy9YjWJRmlDAazorYIfWBQeQDUMSxW5vmFtwGFsV44smBKus9S4
+         xbYb62OcYapfL60xYO5QNjuV7zQBNx+e/tV+pvO4dZwTIon8yeDJ8xvqs1eOZckYIIKM
+         82sX3oNTaX2advnyIBOMLv5HZQwhuSAkK2ZFe7Q/X64IL6ZIN9XRQRBqWTE5SA/uZPAj
+         ELXe+npy39Qlv9pHNXkb5zHm0rb2uVmNhJTlouQfErdSoLq0rwNof8DnAsXMJWI9N2Nf
+         OXHBdxWoyxJLy2aAbBdGsphGcMpsZr+dbkNSA3gr/VhuogEZPlKXM0owJuNA/9cHcuzb
+         EJ2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=D2taJJRTg2UNCEqvPUHeisc7wYhhWEOMV6TUWaPz7kg=;
-        b=pe59p636996ICmOYMk7FaGjIgKP+QydRhz29wDBrDre7KzNtGAxqE8Po6gK4nYBTYC
-         oHy8i4hpsy5gxcwM8wpvsqCkmOKzUQ3GNfPTSy3oPfohspMD9UDoCULdh7iMe/aoob28
-         GfT0jniabenaVHe53pBor4Jr5wm1SOOA+W4jfHZaGAf6B13ZkND9WhfIMil1reG5Ix+K
-         /DB+1yeyFb5vxDWKSezQHahu/cr41d9SRIKoEBE3Ucvq9HQDiBxvtL+0Sk6Sg0BLRmv5
-         7tJcwjZbHTBsW4JyRwlUpCPgKOx183jSeX5hE0EDNTU60Zz9+cPLg2EXNGKwsgu1N8jT
-         6qhQ==
-X-Gm-Message-State: AGi0PuasGnJ1Mt3nUY+L99Kx5ToR+eoH9+KOONOXfoEw1ylh3S8U41GE
-        vqTKXCyYr0kJUQwEIQ0q1FlmJJDfzYxxSFK8B+ypAQ==
-X-Google-Smtp-Source: APiQypInw39ygS3P/++U3PAE3LlMt925jYmNYdu8cvU7nnL+hmn3yH1R3d09MJ5VoLDPJl2XHnEM/8wYsJ8wMTKfCVI=
-X-Received: by 2002:a9d:490d:: with SMTP id e13mr7509661otf.356.1588789271980;
- Wed, 06 May 2020 11:21:11 -0700 (PDT)
+        bh=T1fc7Ga+GKDig3f8S+JUzkFdaI2xEUQOvINcVIib0WA=;
+        b=Y2tC3v/jWEe7hK1lEHovgFbTPZO5xN80gpl+vXwUKCCVXERslZYeVqizoHZmk5ezjj
+         okwki40/jx1hZf9405v4mJwKUFi2zqCMc3K0ZKkNezasAl5vG2gWeKQopX4wO5iTYVea
+         xYKLdlTaKVbBb/L3wI6cUWNwT+DMMii0YderoJ5nk6/N4LUmRiLjFjDcPtlRExRHO+mD
+         n+hdzlpBtMSCJW/XMqEkMWuphhq8CkpvMMd7HFAyJ5chXtYRTHViHXWf/oAQBxWgytMo
+         DXzxTdmV/jZ6LLK34AFBUwGVgMYsBoTtAMhLxKZPRW+Xcjn/OnkWyt3Fs4w76+dX1rnS
+         0d+Q==
+X-Gm-Message-State: AGi0PuZGdaWe+ysw3dKrDIUsKp2lNlq3dY7beehnFna67Gx207R8Ksn4
+        deeilIJPtsCYfEJU8XhTeCNAse9bDyENdIYwXFRnKA==
+X-Google-Smtp-Source: APiQypJTlIVoV8gTdf/74eWQM4wtQW6JZTe94+ZDgV2T6N38Yf+mk/uD1Cjkm8pYAzrFmRs1xr5PeuuC9TMxezxvdSY=
+X-Received: by 2002:aca:cf83:: with SMTP id f125mr3751724oig.97.1588790092197;
+ Wed, 06 May 2020 11:34:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-6-brgl@bgdev.pl>
- <CAKOOJTzcNr7mc9xusQm3nCzkq5P=ha-si3fizeEL2_KJUOC3-Q@mail.gmail.com> <CAMRc=Md7gLMThfGF-7YLqW17MpMhU=UFbdTvfjbr9fFHTLir8g@mail.gmail.com>
-In-Reply-To: <CAMRc=Md7gLMThfGF-7YLqW17MpMhU=UFbdTvfjbr9fFHTLir8g@mail.gmail.com>
-From:   Edwin Peer <edwin.peer@broadcom.com>
-Date:   Wed, 6 May 2020 11:20:35 -0700
-Message-ID: <CAKOOJTxkcaq0bF34bcz3HZzqsNgfmJH=Hd+odNNMX5gDq4to=w@mail.gmail.com>
-Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200501073949.120396-1-john.stultz@linaro.org>
+ <20200501073949.120396-2-john.stultz@linaro.org> <20200501104216.4f226c2a7bzval5o@DESKTOP-E1NTVVP.localdomain>
+ <CALAqxLVScV1j-zxw=cwpE0+eDoaubchXx6SJgu=1Zvh8HnE-Tg@mail.gmail.com>
+ <20200504085007.5yrjhknkg6ugbqwk@DESKTOP-E1NTVVP.localdomain>
+ <1bddb721-d4d9-f113-bacc-0a0ca2d57753@ti.com> <CALAqxLWnEj-c3CYGC6p23cwMqce-MV6pJOzGbp+ptWFB0NQoog@mail.gmail.com>
+ <1b82e66e-01b9-5c4d-9777-1aa34bf1b07e@ti.com>
+In-Reply-To: <1b82e66e-01b9-5c4d-9777-1aa34bf1b07e@ti.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 6 May 2020 11:34:40 -0700
+Message-ID: <CALAqxLVD=18djAumbP6+ML-Fc32OJbcaWGkdJ8egHsKHhvhHqg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/4] devicetree: bindings: Add linux,cma-heap tag for
+ reserved memory
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Brian Starkey <brian.starkey@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-mm <linux-mm@kvack.org>, nd <nd@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 5, 2020 at 11:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Wed, May 6, 2020 at 10:35 AM Andrew F. Davis <afd@ti.com> wrote:
+> On 5/6/20 12:30 PM, John Stultz wrote:
+> > On Wed, May 6, 2020 at 9:04 AM Andrew F. Davis <afd@ti.com> wrote:
+> >> On 5/4/20 4:50 AM, Brian Starkey wrote:
+> >>> On Fri, May 01, 2020 at 11:40:16AM -0700, John Stultz wrote:
+> >>>> So the name we expose is the CMA name itself. So with dt it will be
+> >>>> the name of the reserved memory node that the flag property is added
+> >>>> to.
+> >>>>
+> >>>
+> >>> Yeah I'm just wondering if that's "stable" so we can say "the heap
+> >>> will use the node name", or if saying that would cause us a headache
+> >>> in the future.
+> >>
+> >>
+> >> The issue is going to be this causes the node name in DT to become a
+> >> kind of ABI. Right now until we have some userspace lib that enumerates
+> >> the heaps in a stable way programs will hard-code the full heap name,
+> >> which right now would look like:
+> >>
+> >> char *heap = "/dev/dma_heap/dma_heap_mem@89000000";
+> >>
+> >
+> > If that's what the device chose to export.
+> >
+>
+>
+> Well no "device" exported it, we did mostly automatically using only DT
 
-> Re the last bit in priv_flags: is this really a problem though? It's
-> not like struct net_device must remain stable - e.g. we can make
-> priv_flags a bitmap.
+Sorry. By "device" I meant the board/phone/system.
 
-Fair enough.
+> information. When making a DT I don't want to be thinking about how
+> names will break userspace, for instance if node naming guidance is
+> updated do apps suddenly stop working? That worries me a bit.
 
-Regards,
-Edwin Peer
+So when folks change an existing board/system's DT, that can cause
+userland breakage.  Be it firmware paths, or when folks moved things
+under an soc{ } node.  But at the same time, just like each system has
+a different partition layout, each system may have different heaps,
+and its up to a system level config in userland to provide the policy
+of what is used where.
+
+> > Eh. I don't see this as such an issue. On different systems we have
+> > different device nodes. Some boards have more or fewer NICs, or
+> > various partitions, etc. There has to be some device specific userland
+> > config that determines which partitions are mounted where (this is my
+> > "gralloc is fstab" thesis :)
+> >
+>
+> Oh I agree here, net interface names and /dev/<hd> names have a history
+> of changing, but those did both break a lot of apps. It could be argued
+> they were abusing the API by making assumptions about the names, but we
+> still have old scripts floating assuming "eth0" is going to just work..
+>
+> So the sooner we get this fstab scheme in place and in practice, the
+> fewer apps in the wild will hard-code names.
+
+Gralloc already exists on Android devices, you ask to allocate for a
+use case, and it picks the heap. It could be *much* simpler (rather
+than per-device implementations, I'm hoping to get to a single
+implementation with a fstab like config file), but it's already widely
+used.
+
+
+> > I think with the heaps, qualities other than name are going to be
+> > poorly specified or unenumerable, so any generic query interface is
+> > going to fall down there (and be awful to use).
+>
+> Sure, so this "fstab" style config will have to be a mapping of names
+> (which we will have to make static per heap in kernel) to properties
+
+I'm not sure I'm following this static per-heap requirement bit . Can
+you clarify?
+
+> that interest the current users of a system. For now I can only think of
+> cached/uncached, contiguous/sg, and secure/mappable. Then maybe a list
+> of devices that can consume buffers of that variety, should allow for
+> simple constraint matching. I'll need to think on this a bit more as the
+> use-cases show up..
+
+There's a lot of other cases that are common on Android. One CMA heap
+might be sized and reserved for camera usage, so it doesn't have to
+compete with other CMA users to quickly get a bunch of frames.  Where
+as another CMA heap might be specified for a HWFB if that has to be
+contiguous.  Again, it's less about the specific attributes
+(contiguous/secure/etc - though those are important considerations
+when creating the mapping for it to work properly), and more of a
+higher level "for this use case or this pipeline, we use this heap"
+mapping.
+
+Just like an application might store data to /home/ which maps to to a
+specific partition configured on a specific system, instead of
+looking for things like "what partition has the most space".
+
+thanks
+-john
