@@ -2,116 +2,107 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC54DC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 10:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3507AC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 10:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6F6620753
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 10:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 128262075A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 10:08:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eF9rRF3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgEFKGS (ORCPT
+        id S1729129AbgEFKIB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 06:06:18 -0400
-Received: from mga04.intel.com ([192.55.52.120]:3649 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728314AbgEFKGS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 May 2020 06:06:18 -0400
-IronPort-SDR: LvCUp3GI6Anddjxj7Mu7TnDSso6jqAZVDCJOX6QaSNArl0eOblQyEGpxpM5rN/tgtIxchDXgrd
- LjfCBkfh39Qg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 03:06:18 -0700
-IronPort-SDR: r19fuwUAueJL4DFUdiljy6sVx5zQvf9+yQP4hJCUiZTP25VNaXqoNlQwTohkNsUKBARrVf06PO
- hhGE6YObO1rQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
-   d="scan'208";a="407189115"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 06 May 2020 03:06:15 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jWGwT-004zXQ-Lf; Wed, 06 May 2020 13:06:17 +0300
-Date:   Wed, 6 May 2020 13:06:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh+dt@kernel.org>,
-        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        devicetree@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH 4/4] serial: 8250: Support rs485 bus termination GPIO
-Message-ID: <20200506100617.GC185537@smile.fi.intel.com>
-References: <cover.1588505407.git.lukas@wunner.de>
- <a91b9392e8e7914cae16f59beb1ffe6b335f81c9.1588505407.git.lukas@wunner.de>
- <20200505161035.GW185537@smile.fi.intel.com>
- <20200506062943.qugqwhnkismnnkrb@wunner.de>
+        Wed, 6 May 2020 06:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728338AbgEFKIA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 06:08:00 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10835C061A41
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 03:08:00 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e16so1476167wra.7
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 03:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=eh6CjI5qlJbfI0/vhnP4eL4p9yTZrlT7LtScBoT0wAA=;
+        b=eF9rRF3kORznrWQ6Ryu3DYtV+uP9iro81Ds3jDSv9PZLgiljc8BeSRWDmWt0EHcu1v
+         yc+OcrRTIVK4KIEKG2ikX9qJ8Ghwpv37guMlIDqPMIcxKbAhnIJcMNAhv9kJlNRvZg8w
+         ykbxXQtCjh3XePczObskArBb5wqVbvEHrUG0+/SvqwTj6TCpkTovV4JUcDamaefrtQtY
+         x4HuBqf7vxVZ800ryyJamkeyn2bNyQmHLUk6N3TcgjgX7pvosP8KzVB7qmbCZ1q3Tu6M
+         /ZDNTK1t9ymxM0/a3RWi4RgJxJAv8Sh5+CWOiB44foLpnAMliiporE/qh/wlrfCK0qzO
+         1PwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=eh6CjI5qlJbfI0/vhnP4eL4p9yTZrlT7LtScBoT0wAA=;
+        b=ZNDmwLaXJcuwP1ZJe4ayfV7R8BeIGw1KTjbfbw8mn6tTIXhX1LPdRZHPiaLFuwFwq2
+         1pO0qD/npez3fX963KngFSsjTsPXAJWK5E5OOkz+mJ3ZNXS0QJpBSrb+R0M/NgdmMGiq
+         3jDwFL6U6wXHSOKOSb5JjdzlNGvFoIYbnvieJeodDjvHGuAghOT6T8UNriY5TgdwPr6f
+         ffnOSgzW8uxByuXRa9wMaBqkhgEBYbsqZBXbofaSb0G8jpa1HpZgEAlHzVdroEbtbf47
+         AySpXed4gz47e0wZFo2Gy+x/JI2EL4Aj921xD2KlLOmyeyW98fjPwlpYO97g7D1LqwRB
+         hhbg==
+X-Gm-Message-State: AGi0PuZGVe3/EBy8abMJwjgFMVk8Sz3rgJW/FAt33Ku75Jg1SfFCC3CF
+        7arXu6XXTjjI0/twIQK5EYo5uA==
+X-Google-Smtp-Source: APiQypKuj4JYfxO8nKTrw9i4Yi3jaNONI0rOK9zdGpxB6OGfTP8PMtsRVxoevWRNas/XupOIzfnd5A==
+X-Received: by 2002:adf:f207:: with SMTP id p7mr8527397wro.20.1588759678524;
+        Wed, 06 May 2020 03:07:58 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id x5sm1820447wro.12.2020.05.06.03.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 03:07:57 -0700 (PDT)
+Date:   Wed, 6 May 2020 11:07:48 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        robh@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V6 1/4] backlight: qcom-wled: convert the wled bindings
+ to .yaml format
+Message-ID: <20200506100748.GD823950@dell>
+References: <1587656017-27911-1-git-send-email-kgunda@codeaurora.org>
+ <1587656017-27911-2-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200506062943.qugqwhnkismnnkrb@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1587656017-27911-2-git-send-email-kgunda@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 06, 2020 at 08:29:43AM +0200, Lukas Wunner wrote:
-> On Tue, May 05, 2020 at 07:10:35PM +0300, Andy Shevchenko wrote:
-> > On Tue, May 05, 2020 at 04:42:04PM +0200, Lukas Wunner wrote:
+On Thu, 23 Apr 2020, Kiran Gunda wrote:
 
-...
-
-> > > +		devm_gpiod_put(dev, port->rs485_term_gpio);
-> > 
-> > > +	port->rs485_term_gpio = devm_gpiod_get_optional(dev, "rs485-term",
-> > 
-> > Using devm_*() in uart_get_rs485_mode() seems not right.
-> > Why do you need this?
+> Convert the qcom-wled bindings from .txt to .yaml format.
+> Also replace PM8941 to WLED3 and PMI8998 to WLED4.
 > 
-> uart_get_rs485_mode() is called from a driver's ->probe() hook and we
-> do not have a corresponding function that is called from a ->remove()
-> hook where we'd be able to relinquish rs485 resources we've acquired
-> on probe.
-> 
-> Of course I could add that but it would be more heavy-weight compared
-> to simply using devm_*().  Do you disagree?
-> 
-> devm_gpiod_put() isn't strictly necessary here.  It is only necessary
-> if one of the drivers would invoke uart_get_rs485_mode() multiple
-> times, which none of them does AFAICS.  It's just a safety measure.
-> I can drop it if that is preferred.
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>  .../bindings/leds/backlight/qcom-wled.txt          | 154 ---------------
+>  .../bindings/leds/backlight/qcom-wled.yaml         | 208 +++++++++++++++++++++
+>  2 files changed, 208 insertions(+), 154 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
 
-I think putting and re-requesting here is also racy. Somebody can request the
-very same GPIO in between (for example crazy user space tool).
-
-Setting the same value many times won't hurt.
-
-> > > +		GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT);
-> > 
-> > Parameter has a specific macro GPIOD_OUT_HIGH.
-> 
-> Good point.  It's also occurred to me now that reading the GPIO's
-> value after changing its direction to output is nonsense.  If anything
-> it ought to be read *before* changing the direction to output.
-
-It's not a complete nonsense, depends what you actually want to achieve here.
-
-> That would make sense in case the board has a pullup or pulldown on
-> the Termination Enable pin.  In other cases the pin may just float
-> and the value will be unpredictable.  However if I do not read the
-> pin, I'd have to choose either high or low as initial state.  Hm.
-> Let me check back with our hardware engineers today and see what they
-> recommend.
+Applied, thanks.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
