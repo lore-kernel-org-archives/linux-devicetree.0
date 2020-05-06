@@ -2,120 +2,182 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5194EC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AB4C47256
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA5B20936
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C5B20575
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFfehZzG"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="dYMsW87k";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QVJBUdD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbgEFPUk (ORCPT
+        id S1729244AbgEFPgz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 11:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728821AbgEFPUj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 11:20:39 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E0BC061A0F;
-        Wed,  6 May 2020 08:20:39 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x17so2674915wrt.5;
-        Wed, 06 May 2020 08:20:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=QhrpUsD5ZNq874T4rNnffIMvqkskOMzNbsR1E6VBIeA=;
-        b=cFfehZzGS3n7CWK8O1uNboha7loFK3c0+QdMWe7LPnCpVeLb0ZxGlU9/U3+A+RJKlC
-         TnaJXouxBMFC8vy4ntN+TEIh+KnP2zVf9O2rNerZkBIXPz9Y0CYB1mQ2pdfnqIiFdVhr
-         NP4TBekv+HV2gPSJ2YIzxb0+IH6QFT8bK3BT/bD9e5/eEGuq0iDz6YVjl7O/Awy38vkT
-         MA/F6DWIAvtrs5fe/JIBcMZWvtBNxfEMn2vSxvRTPNJmOs3GpYk5TUGZwO5+pXRKREr9
-         9CDnmdV9KPsj+Z2IOUK0azD4h/uhkCiUAfI+kh7LIPTqODdphNcJLxuUwlw9flMq9UOK
-         E1lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=QhrpUsD5ZNq874T4rNnffIMvqkskOMzNbsR1E6VBIeA=;
-        b=uYsINYA+GGBvThUWX3f5knnfKBJKrsRa65gd8jtI3a6mhsZD1HariKnCjQbRAurbnz
-         jHXT6bMiWvUq8GrhQ6gkux4wSftdtXPxP6Zohui8ONO9W8ktZJujpWxFM++8jyMYdVeG
-         lQef740FxUgJtLecynRj0xuv6fEOyEMyC9bOFwli/huIU0rMFJbiEaGqhm6jWwo+p1yR
-         XR1Tyt9QBcFuF0wxhWz+2QE1F8dUiCWpVbXX0S7ZFwrL38WjBoI2NLU866R1nUqMDcgg
-         00rjyM3pXYXWb7e3fpTGMA19MzcKJnbaSNtrrGIL6i7PDhuFXGuKUDJloRFVH8X6KHpF
-         mALw==
-X-Gm-Message-State: AGi0PuajUXB+Jb9dWtzKNA2ly+7qv+oNEu78BUjtFBZp43QPJ/cj5IUM
-        P8mplASJ3ims0axBNTaA2TFrBasWiLs=
-X-Google-Smtp-Source: APiQypLrNaNadDSaNH9ff3ofEIzCjPgAJ6OsG2lKZiftpy/CeNAuRBpSK2nKGRnQgqHle1SqjsvOJg==
-X-Received: by 2002:a5d:6082:: with SMTP id w2mr9930466wrt.163.1588778438140;
-        Wed, 06 May 2020 08:20:38 -0700 (PDT)
-Received: from [192.168.43.138] ([185.32.177.92])
-        by smtp.gmail.com with ESMTPSA id i6sm3224360wrw.97.2020.05.06.08.20.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 08:20:37 -0700 (PDT)
-Subject: Re: [PATCH v7 6/7] tpm: Add YAML schema for TPM TIS I2C options
-To:     Rob Herring <robh@kernel.org>
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org, benoit.houyere@st.com,
-        eajames@linux.ibm.com, joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        oshri.alkoby@nuvoton.com, tmaimon77@gmail.com, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, Dan.Morav@nuvoton.com,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com
-References: <20200427124931.115697-1-amirmizi6@gmail.com>
- <20200427124931.115697-7-amirmizi6@gmail.com> <20200505161226.GA555@bogus>
-From:   Amir Mizinski <amirmizi6@gmail.com>
-Message-ID: <c2760659-ec14-237e-e060-5d9a2d7c7e4a@gmail.com>
-Date:   Wed, 6 May 2020 15:20:30 +0000
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 11:36:55 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:40407 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725887AbgEFPgz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 11:36:55 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id A3BCF58032B;
+        Wed,  6 May 2020 11:36:53 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 06 May 2020 11:36:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=/+05KqBTk3oydVggvk0oaQyCPAJ
+        z1Y/tOkrcMC1KWGU=; b=dYMsW87kzQdTYVzBdsHEEWUk+IY0JF5You9OLDT0Plf
+        bjPLfchBAW+G3HReL9Ft0Yfc9GNlDMFzQTv9rce9eVI+Qs6xSqw1/KDwNng44Stc
+        44k5Mj5hXWzWpCDyd9MPU7HRi/9OWXUag+9V9IfUrsfwNmIuZW8V33H2jVKJofBA
+        +RDI+3yqD6rBVx4u36C65xL/8TpyJeqvQRhmtcBHaIwFz6DC6/WHIxVSglCE1zzv
+        FSzwQ9MypkyDIVOEb/P/bzN7cFoygVZd6TMP7pHshw7pf1jVdYyOJJ+lqMei4K29
+        9b5/bbhyzHCQN6nMeaRdVXyEIkbBlbMSFhLOTAhlJTw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/+05Kq
+        BTk3oydVggvk0oaQyCPAJz1Y/tOkrcMC1KWGU=; b=QVJBUdD+tRrFspsGcUoA2F
+        PoD0sa7ltQTt4QsnvkUQSaO3LL+S3/rG7CMvrFmVeDRYgAqQ1+BeS8SPjLY0hYi4
+        EkMHkLDFPY0+kE4xdWuRSaISvGvZSKyENuV6SDNVy2xysZJsSiMz7bbw1qV++Wd2
+        eqSlhLMObAED8BZFQ9gpgwPSwmrr0GeemNFLmEiUSO8OCNQMhujg/EPIax6evtyP
+        NJ0EE1S1vFIElq+GKgPcBjaQ2Y4lyWvW/K3TsI2/mgzeDAz3RlvroOsKG7mg2EIE
+        YfkpyICiEFCK6w5rJpifKeEDJU4uv6dVDyJyC9/buFRhUigfalit1BJPhwQ8Jkwg
+        ==
+X-ME-Sender: <xms:lNmyXgqrCcQNdAIPVuBzajR5lgSq-T-q887yRciGH4wQ7POZKR97Og>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeekgdekkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeethfeiueffueeikeeifefhheeijeeigfelteehheetjeekueevtdfhlefhgfdt
+    ieenucffohhmrghinhepghhithhhuhgsrdgtohhmpdgrrhhmsghirghnrdgtohhmnecukf
+    hppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:lNmyXhlmALE-N71etmI62IoUcm6VIVJqxnhmcYUGF8GOjgbHXwZvDQ>
+    <xmx:lNmyXn3UCN8LilgAP3FDW-4A8rSV_1Cj31Jy1FI5Wtoom_IQAPRjog>
+    <xmx:lNmyXmp7l0HhvY1DRQ0pIQia1SN6AJdaFGDpEl1IA3fHLvkLB_vhEg>
+    <xmx:ldmyXvedgtdvWjzIrDy8oNd09iM8YIUKOKz54FJdGSAdnYSixBEKLA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7F3E8328006C;
+        Wed,  6 May 2020 11:36:52 -0400 (EDT)
+Date:   Wed, 6 May 2020 17:36:49 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [RFC PATCH] PCI: dwc: add support for Allwinner SoCs' PCIe
+ controller
+Message-ID: <20200506153649.ahzlhcquyhnggbou@gilmour.lan>
+References: <20200402160549.296203-1-icenowy@aosc.io>
+ <20200406082732.nt5d7puwn65j4nvl@gilmour.lan>
+ <13564b9a57f734524357a26665c48211e436e305.camel@aosc.io>
 MIME-Version: 1.0
-In-Reply-To: <20200505161226.GA555@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="p2kmtjzg5nllbilb"
+Content-Disposition: inline
+In-Reply-To: <13564b9a57f734524357a26665c48211e436e305.camel@aosc.io>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On 2020-05-05 16:12, Rob Herring wrote:
-> On Mon, Apr 27, 2020 at 03:49:30PM +0300, amirmizi6@gmail.com wrote:
->> From: Amir Mizinski <amirmizi6@gmail.com>
->>
->> Added a YAML schema to support tpm tis i2c related dt-bindings for the I2c
->> PTP based physical layer.
->>
->> This patch adds the documentation for corresponding device tree bindings of
->> I2C based Physical TPM.
->> Refer to the 'I2C Interface Definition' section in
->> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
->> for specification.
->
-> Again, DT bindings describe h/w devices, not just a protocol. A device
-> is more than just a protocol interface. There's clocks, power rails,
-> resets, interrupts, firmware, etc.
->
-> Unless there's something special about TPM chips that makes none of this
-> applicable and no chip will ever have any quirks (or extensions) in
-> their protocol to work-around, then you need compatible string(s) that
-> are specific to the TPM chip. You can have tcg,tpm-tis-i2c as a
-> fallback, but you need specific compatible to handle any quirks.
->
-> Rob
+--p2kmtjzg5nllbilb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hello Rob, currently yes. All TPM chip are implemented according to the TGC specs and should use the same properties for this I2C driver.
-I can't say for sure that it will be the case in the future. Shouldn't we use the standard "tcg,tpm-tis-i2c" compatible, and if a specific TPM chip will deviate from the specs, the vendor should add an additional compatible string for it?
-Thank you,
-Amir
+On Mon, Apr 20, 2020 at 04:18:58PM +0800, Icenowy Zheng wrote:
+> =E5=9C=A8 2020-04-06=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 10:27 +0200=EF=
+=BC=8CMaxime Ripard=E5=86=99=E9=81=93=EF=BC=9A
+> > Hi,
+> >=20
+> > On Fri, Apr 03, 2020 at 12:05:49AM +0800, Icenowy Zheng wrote:
+> > > The Allwinner H6 SoC uses DesignWare's PCIe controller to provide a
+> > > PCIe
+> > > host.
+> > >=20
+> > > However, on Allwinner H6, the PCIe host has bad MMIO, which needs
+> > > to be
+> > > workarounded. A workaround with the EL2 hypervisor functionality of
+> > > ARM
+> > > Cortex cores is now available, which wraps MMIO operations.
+> > >=20
+> > > This patch is going to add a driver for the DWC PCIe controller
+> > > available in Allwinner SoCs, either the H6 one when wrapped by the
+> > > hypervisor (so that the driver can consider it as an ordinary PCIe
+> > > controller) or further not buggy ones.
+> > >=20
+> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > ---
+> > > There's no device tree binding patch available, because I still
+> > > have
+> > > questions on the device tree compatible string. I want to use it to
+> > > describe that this driver doesn't support the "native Allwinner H6
+> > > PCIe
+> > > controller", but a wrapped version with my hypervisor.
+> > >=20
+> > > I think supporting a "para-physical" device is some new thing, so
+> > > this
+> > > patch is RFC.
+> > >=20
+> > > My hypervisor is at [1], and some basic usage documentation is at
+> > > [2].
+> > >=20
+> > > [1] https://github.com/Icenowy/aw-el2-barebone
+> > > [2]=20
+> > > https://forum.armbian.com/topic/13529-a-try-on-utilizing-h6-pcie-with=
+-virtualization/
+> >=20
+> > I'm a bit concerned to throw yet another mandatory, difficult to
+> > update, component in the already quite long boot chain.
+> >=20
+> > Getting fixes deployed in ATF or U-Boot is already pretty long,
+> > having
+> > another component in there will just make it worse, and it's another
+> > hard to debug component that we throw into the mix.
+> >=20
+> > And this prevents any use of virtualisation on the platform.
+> >=20
+> > I haven't found an explanation on what that hypervisor is doing
+> > exactly, but from a look at it it seems that it will trap all the
+> > accesses to the PCIe memory region to emulate a regular space on top
+> > of the restricted one we have?
+> >=20
+> > If so, can't we do that from the kernel directly by using a memory
+> > region that always fault with a fault handler like Framebuffer's
+> > deferred_io is doing (drivers/video/fbdev/core/fb_defio.c) ?
+>=20
+> I don't know well about the memory management of the kernel. However,
+> for PCIe memory space, the kernel allows simple ioremap() on it. So
+> wrapping it shouldn't be so easy.
 
+I'm not sure this would cause any trouble, it's worth exploring I guess. Th=
+is
+would solve all the current shortcomings.
+
+Maxime
+>
+
+--p2kmtjzg5nllbilb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrLZkQAKCRDj7w1vZxhR
+xdzrAP9eNr9KcfU2kbvxMpWxzsG/4z0BCVJuoyB9oqqcCJ+rSgEA8LASQMw0yBXS
+EWoo2T8XCMOXkT+flamRrPJwfGv3/AQ=
+=oD3G
+-----END PGP SIGNATURE-----
+
+--p2kmtjzg5nllbilb--
