@@ -2,143 +2,115 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1679C47258
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3207C47258
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34FD20936
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4D082082E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NaRPnfKV"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FeY1euaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgEFHAu (ORCPT
+        id S1727823AbgEFHDK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 03:00:50 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:27367 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbgEFHAh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 03:00:37 -0400
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200506070028epoutp01512c5097a2957e1a65a0abb9883bbecb~MXkcphRi02834928349epoutp01d
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 07:00:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200506070028epoutp01512c5097a2957e1a65a0abb9883bbecb~MXkcphRi02834928349epoutp01d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588748428;
-        bh=OnGzkKawmgNmEQLHo3fXe9Xbamb/f0idQAQPFcFTxIQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NaRPnfKVC2JS2gQzWD01AdG+UeaUBMjDKcWYpB9DG87U7m31betE5ZUJNtB0v/JLA
-         +TPUPQuvuV2HKi+YGR0fVpEWvS6j2VpOJc1fLJ/tH8QPLpOgfoWKpn2WF+hSPOY0Xy
-         5ZdAw3lwsJNobDwqOYi7sahmY9H3ZiYbvJYvZWT0=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20200506070027epcas2p4f66459a82f3655018136d6476fb9eb6d~MXkcQ2K6J2850728507epcas2p4I;
-        Wed,  6 May 2020 07:00:27 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.40.186]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49H6tL2wK9zMqYl3; Wed,  6 May
-        2020 07:00:26 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0A.D9.49908.98062BE5; Wed,  6 May 2020 16:00:25 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200506070024epcas2p2868e11349d2fee83d340df7fa181f704~MXkZTMzT_2155521555epcas2p2H;
-        Wed,  6 May 2020 07:00:24 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200506070024epsmtrp28ceac7245e1f22ea758df179d2824b55~MXkZSXYMD1581515815epsmtrp2u;
-        Wed,  6 May 2020 07:00:24 +0000 (GMT)
-X-AuditID: b6c32a45-af9ff7000000c2f4-c2-5eb260899e06
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        55.E8.18461.88062BE5; Wed,  6 May 2020 16:00:24 +0900 (KST)
-Received: from ishtar.dsn.sec.samsung.com (unknown [12.36.155.159]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200506070024epsmtip1b7a5d6c791c41164f80f91ae40c4f940~MXkZCsbdb2679526795epsmtip1V;
-        Wed,  6 May 2020 07:00:24 +0000 (GMT)
-From:   Hyunki Koo <hyunki00.koo@samsung.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hyunki Koo <hyunki00.koo@samsung.com>
-Subject: [PATCH v9 2/3] dt-bindings: serial: Add reg-io-width compatible
-Date:   Wed,  6 May 2020 16:00:06 +0900
-Message-Id: <20200506070009.16809-2-hyunki00.koo@samsung.com>
-X-Mailer: git-send-email 2.15.0.rc1
-In-Reply-To: <20200506070009.16809-1-hyunki00.koo@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAKsWRmVeSWpSXmKPExsWy7bCmqW5nwqY4g2tX2CzmHznHatG8eD2b
-        xaqlN5gtLu+aw2ZxZnEvu0Xr3iPsDmwem1Z1snnsn7uG3aNvyypGj8+b5AJYonJsMlITU1KL
-        FFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4CWKymUJeaUAoUCEouL
-        lfTtbIryS0tSFTLyi0tslVILUnIKDA0L9IoTc4tL89L1kvNzrQwNDIxMgSoTcjLWbX3JXjCb
-        veLm480sDYxvWbsYOTkkBEwkrjXMALK5OIQEdjBK7GjczwThfGKU+PW/E8r5xijxffFcJpiW
-        u6vfsUEk9jJKfO7axwjh/GCUmH6zBayKTUBb4s33mcwgCRGBjYwSazc+YARJMAtoSvw4cANs
-        u7CAh0T/th1Aozg4WARUJfYc8QcJ8wrYSjR3L4Dapixx4d0SsHJOATuJN12PwY6VENjFLvFn
-        AcgyDiDHRaK/3xyiXlji1fEt7BC2lMTnd3vZIOx6iX1tE9khensYJX5+eAoNAWOJWc/aGUHm
-        gNy2fpc+xEhliSO3WCAu5pPoOPyXHSLMK9HRJgTRqCax7tsLqCtlJNY83QW11UNizrRt7JAg
-        mQgMkr67rBMY5WYhLFjAyLiKUSy1oDg3PbXYqMAQOcY2MYJTl5brDsYZ53wOMQpwMCrx8Bq4
-        b4wTYk0sK67MPcQowcGsJMLL8wMoxJuSWFmVWpQfX1Sak1p8iNEUGI4TmaVEk/OBaTWvJN7Q
-        1MjMzMDS1MLUzMhCSZx3M/fNGCGB9MSS1OzU1ILUIpg+Jg5OqQZGoyPLrl8v7f/6NUlVVuPc
-        4uPbfl/NjnBdE3UoblKCaJikedSs2IVvrnx2mFDoHRu3JO3YtRmVkUJ2J1bNiOjid7IxNJi5
-        yaS0trNpXurkxTmv/65eXZQpmd/T8bv82bX0l6d/ZmW+2mJhLe9SvPx7lFVMxOqNc20u6aw5
-        e09dQ2L+jONPNv5XU2Ipzkg01GIuKk4EAFqdC1BzAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplluLIzCtJLcpLzFFi42LZdlhJTrcjYVOcwdHZihbzj5xjtWhevJ7N
-        YtXSG8wWl3fNYbM4s7iX3aJ17xF2BzaPTas62Tz2z13D7tG3ZRWjx+dNcgEsUVw2Kak5mWWp
-        Rfp2CVwZ67a+ZC+YzV5x8/FmlgbGt6xdjJwcEgImEndXv2PrYuTiEBLYzShx//FpNoiEjMSE
-        F0uYIWxhifstR1ghir4xSsw69YsFJMEmoC3x5vtMZpCEiMBWRont9yeCjWUW0JT4ceAGmC0s
-        4CHRv20H0FQODhYBVYk9R/xBwrwCthLN3QuYIBYoS1x4twSsnFPATuJN12MwWwioZkffK6YJ
-        jHwLGBlWMUqmFhTnpucWGxYY5qWW6xUn5haX5qXrJefnbmIEh5iW5g7G7as+6B1iZOJgPMQo
-        wcGsJMLL82NjnBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeG4UL44QE0hNLUrNTUwtSi2CyTByc
-        Ug1MFY4MOd+CpebIOZWpvtud/0U8tDj7aW2n0JKtDmkNNZ3f323JcJz0tHZdRq2w/eUZN+uc
-        mG1i3vLIzlJ4wHfz8vyFht8W5K2ISXr2fqOO/13Pa52VYi4//kSfuxLWurdTd+KDdW/+SnQe
-        /LRKu2uX2lx9vQUGnzRj+i+eS6pP+HDqVp5ToH6h3m2NF8enz9J6ePboc5XniRxsfbbraj+m
-        bXLVm3GQIWI9d5rBziMv/+ozsHhZavjMecsyTebiz9RwibxuicxHU7sC/1tMK8uW4OOUvixw
-        0O3Q4vqZpy6UbXvauqDA3lCx9NZOkTfnospT9q3Sc2OsaItO23NQf2L95Jsb2OcnbP5Ue6sl
-        8sh2JZbijERDLeai4kQAOemH5KACAAA=
-X-CMS-MailID: 20200506070024epcas2p2868e11349d2fee83d340df7fa181f704
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200506070024epcas2p2868e11349d2fee83d340df7fa181f704
-References: <20200506070009.16809-1-hyunki00.koo@samsung.com>
-        <CGME20200506070024epcas2p2868e11349d2fee83d340df7fa181f704@epcas2p2.samsung.com>
+        Wed, 6 May 2020 03:03:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727123AbgEFHDJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 03:03:09 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 485BEC061A0F
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 00:03:09 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id f3so1149756ioj.1
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 00:03:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kNp8v77ILg0esKTUhtdtghBS9Oa/t4onJ0W3YRlQA2s=;
+        b=FeY1euazNQf3RbKL1bjD/43J4EwwmimWuHqwEOZnwBz1hd1L/dc031nSE9oFG+Wg3T
+         2MlLi4P3wjow8IWLNhEQw5wQzsUq1yR+pgmzkLdVVMq5F7acvzCJw8xt9tRwn4YzdTqI
+         kq7B8RhWDy1Uvo/U/3HxmGo/XUghQ5rSkaM7QtRSng9YDN+DAZRzDNHwxdWW3bqi1RwX
+         Xh5e60qZDatUFmTvM25J+WaTlWzSbN0N0nS7q/Emfd0rfMxf1322dnteGutZVlRQiV6j
+         fm+T0G1XqnxcfRt5xUFvnQ+oI02GhWQhe3J5K8O2fEQKiuxWrHopugqtZsq2TI4F9eZL
+         Ldxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kNp8v77ILg0esKTUhtdtghBS9Oa/t4onJ0W3YRlQA2s=;
+        b=I9W6NrbZ2SvxJbqmf1dz0IHAYa0yIckl4W1FFKCMx4ZHIj1DRuX1WV/HRH3rNa5alE
+         aRBr0RUkQjGsGVafxqFhJnJ/KmnUceSumj34tIv8JDDu2NMAEgg6W0OFRfsAC5DhIRgX
+         Gnn6BnLKCQpKIy15V7eJ+Xf13BpbXGmqRWYijukN5iN6kMkcMKafpYKMO+/E0JmSNZGT
+         DfRSrqsC3B3e5ZXxOwnTUd48N6OqyRdH2rx7fbiuNWFIN+xrXqKKMGRbWYuepUGvhgiB
+         dSHnpEYRXtZdwV0xJ1NheGYiUPBvXAFt+7K2aDuaLTYfaFubGUvDooSAkMpLkCQ+a11s
+         w/eg==
+X-Gm-Message-State: AGi0PuatPfEOiBls50JvWK1yxAnciLetLMYW+HQNM+BoRaMFaYgApO48
+        3uR1jylsPXSk1a+S74sHrG3jDYECP612VfozZLbY8g==
+X-Google-Smtp-Source: APiQypK484RcQGROR6N++Jsg8cJZdgh7y4enPWlVzQyBROs9NdLHKNWT34OgKh5Hlj/AoF1qRVFqfpsKTSIhrMt9Np8=
+X-Received: by 2002:a6b:8bd2:: with SMTP id n201mr7159413iod.131.1588748588553;
+ Wed, 06 May 2020 00:03:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-7-brgl@bgdev.pl>
+ <20200505174709.GD224913@lunn.ch>
+In-Reply-To: <20200505174709.GD224913@lunn.ch>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 6 May 2020 09:02:57 +0200
+Message-ID: <CAMRc=Meob9VP83HiF4r2zAEXX0+1LduSrJGCXx=rKB1W701pnA@mail.gmail.com>
+Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-mediatek@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a description for reg-io-width options for the samsung serial
-UART peripheral.
+Hi Andrew,
 
-Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
----
- Documentation/devicetree/bindings/serial/samsung_uart.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+thanks for the review.
 
-diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-index 9d2ce347875b..a57b1233c691 100644
---- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-@@ -29,6 +29,14 @@ properties:
-   reg:
-     maxItems: 1
- 
-+  reg-io-width:
-+    description: |
-+      The size (in bytes) of the IO accesses that should be performed
-+      on the device.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 1, 4 ]
-+
-   clocks:
-     minItems: 2
-     maxItems: 5
--- 
-2.15.0.rc1
+wt., 5 maj 2020 o 19:47 Andrew Lunn <andrew@lunn.ch> napisa=C5=82(a):
+>
+> > +static struct net_device *mtk_mac_get_netdev(struct mtk_mac_priv *priv=
+)
+> > +{
+> > +     char *ptr =3D (char *)priv;
+> > +
+> > +     return (struct net_device *)(ptr - ALIGN(sizeof(struct net_device=
+),
+> > +                                              NETDEV_ALIGN));
+> > +}
+>
+> Bit of an odd way to do it. It is much more normal to just have
+>
+>     return priv->netdev;
+>
 
+But then you store a pointer to the starting address of the structure
+in that very structure. This is actually weirder to me. :) I'd say:
+let's generalize it and provide a counterpart to netdev_priv():
+priv_to_netdev(), how about that?
+
+For the other issues: I'll address them in v2.
+
+Bart
