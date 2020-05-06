@@ -4,134 +4,188 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5ACC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7B6C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB0F6208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097E0208DB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="kHo6MP4x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NL61s/IE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgEFOn2 (ORCPT
+        id S1729099AbgEFOsS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 10:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52250 "EHLO
+        Wed, 6 May 2020 10:48:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbgEFOn2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 10:43:28 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5DE8C061A10
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 07:43:27 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g16so2269092eds.1
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 07:43:27 -0700 (PDT)
+        with ESMTP id S1728712AbgEFOsS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 10:48:18 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C074C061A41
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 07:48:18 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k133so1742035oih.12
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 07:48:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ef/MKYQ5o7wpBd5E71PdTHAAiX3bVS8q0Det6zmMp4Q=;
-        b=kHo6MP4xV9gm4/l+y1zeMl6BZmIh4tyBgNceSvc1sj4c0mBeUd+sfY5iEdBNCMVBgb
-         NZFCLkjHOvl5CPqyBnzmT0ZUKNDWR3vnF7n6cNymuecK4Njt6bDFLuOBQWW5HBfeaLaW
-         ZucfMCs91UG2RjL2FPRatRYJVHM/aydwKKoFyW+9sZytQn/8NMFa0VH8enDH5vpye3p3
-         2GLUyWbFaQhgsxGtgpqsVdJRMCm8f6BbqHMShngToRtlL48x5zA2YBxyUKU1eJcwJaMD
-         kHpUZNXKvuyOh2DML/71BOy1W5/n8qXvsevImRFjk7m4yo163Us3B2kTv4k2gN2vm98V
-         nibw==
+        bh=wDj5+tuZkrR7oNrhFt9atUhp/2FopkJwEnSLs3/dRt8=;
+        b=NL61s/IE8eFnPePLN3nuUAK4eaP6MM3y2w4CzNYIdhGhoUmj5C8bunqphDdpHaouVa
+         lqnpq/4XtxVVO+mzUickCYq9BEd1L+5zd2wDuxtw3mLZecF7jxGruEn1VXTQSJvH/esc
+         ozZqVMVWm66x7U9TCr+2oJ3Rcat7yJFgS3GMQeuXl5vtO0nmJGTtqj+JYiZASXBG0M4v
+         qqWtNiDDyVCpTFmWcHt59IikbanIVLl7mYsG0X021wQ39a9kfQUvqr40lbY7IIO+0NOP
+         LwawsK2TTi6/SuDQcBF/bo4WGt9GfnkpF7msRIKBU0IGMKTOCaTqZmnB8bdsTRLYE7rf
+         pWIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ef/MKYQ5o7wpBd5E71PdTHAAiX3bVS8q0Det6zmMp4Q=;
-        b=DrisJQVD0bKj+vRxyWVF3w303rz4lJXo48mBQvmxH75Dr7Jex1gN7qDvCS468V5asw
-         kdOOIpsiYBkNNdLxjBhPzYqsNEEpKucWiL02PijG4sDExDxI7x05k7lPORoCN0oSnGHl
-         oLQ/Pni8QtTKaU4/fDPDwMn94NSJYhFE0GFTrg0dWuCkAdqN/IJl6Gx+1hY7OdErx5WX
-         jCGaeUmI+DATMqbYxuXed5toYP8KPWye9MlUYcx5CHRzjvLixjaKGRGzqWcEd8fKIulX
-         R4t5C6z7v21gNzBDuLIb9uJ4HcfXm8d3YxjAJbxPJH/AAu+J0BOQ0DFbTYbIfez9WRCK
-         QDtw==
-X-Gm-Message-State: AGi0PubnznWVbdVTuxgbUlRF8Ghy+ry6bA97iYOFhGhns0BQImO2JwB7
-        UX/GvDozrSYbeovFnMkLBOXbOS83he+vUfNpOUUIzA==
-X-Google-Smtp-Source: APiQypL1/pQhGhyT2fS1Xsi31EQjwmxdDLv/iuU0yAlT0rFz+35SEDcoonWukDS/42xAWz6GHbKUXAKV9/7RdIOywsI=
-X-Received: by 2002:a05:6402:356:: with SMTP id r22mr7716142edw.3.1588776206549;
- Wed, 06 May 2020 07:43:26 -0700 (PDT)
+        bh=wDj5+tuZkrR7oNrhFt9atUhp/2FopkJwEnSLs3/dRt8=;
+        b=O3B1jCOc9jzHo5VAbTXnDp5CkDFQf4EnCr0e1FiXEQzCPkXgPOQMtg3F3z6N1pcmv7
+         7G0/yL9yjvfxWvUlhbOKwW872p8nOnds1nanaLbBiMfVhK64JRSXhbh6HL34Z491hTBf
+         z0IIZawXrJE6Icd2Rc/o8SROJne+V+nQ7oI8SgqwvmDyT4kd5ZFTYEhTWLrzURfuA2C/
+         tDkj6GqYWbMQ9qoO2O6a5l/ywcTVzGWs1kDIg+/SZkb+q6mHpSWV9e9KBvQsdpChqfvX
+         v04YMsWYgZ/w6TAZEETW47ppFJ2lWxoqoV3lX+e0/SA4VZVemcXMAMPmc5vltODYZHvr
+         p1mA==
+X-Gm-Message-State: AGi0PuZMHw//f3YhyE0kYVTEi/dkMCyp/at5ifPh9rmnjYAkRtWzgYSA
+        tfRixLci47q4fY3KfhC+cbv0TewAEiiz6VYezv/bGg==
+X-Google-Smtp-Source: APiQypLNUtStA5nMDnbX6HOFM0LGQaCEcidSi5vAAWVsLC9SK3lN1UJfYxfdDKcoZRx18eT3Y5ExcVKLSk6kP1N3Arw=
+X-Received: by 2002:aca:1812:: with SMTP id h18mr2665993oih.133.1588776497531;
+ Wed, 06 May 2020 07:48:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
- <20200505154510.93506-3-pasha.tatashin@soleen.com> <202005051444.14B6686@keescook>
-In-Reply-To: <202005051444.14B6686@keescook>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 6 May 2020 10:42:50 -0400
-Message-ID: <CA+CK2bA1_5e8HCwfMJSsCuN7qjRKYTNY2Q-UbJGGVPAEfZVgaw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] pstore/platform: pass max_reason to kmesg dump
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
-        ccross@android.com, Tony Luck <tony.luck@intel.com>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <20200505100129.104673-1-robert.foss@linaro.org>
+ <20200505100129.104673-4-robert.foss@linaro.org> <20200505101729.GF18755@pengutronix.de>
+In-Reply-To: <20200505101729.GF18755@pengutronix.de>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Wed, 6 May 2020 16:48:06 +0200
+Message-ID: <CAG3jFyvvzk8n1+fkfS5h6TPpqMQ3sGXuJ1_yot1MKFRTcDkhnQ@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] media: ov8856: Implement sensor module revision identification
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Maxime Ripard <maxime@cerno.tech>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 5, 2020 at 5:59 PM Kees Cook <keescook@chromium.org> wrote:
+Hey Marco,
+
+On Tue, 5 May 2020 at 12:17, Marco Felsch <m.felsch@pengutronix.de> wrote:
 >
-> On Tue, May 05, 2020 at 11:45:07AM -0400, Pavel Tatashin wrote:
-> > Add a new field to pstore_info that passes information about kmesg dump
-> > maximum reason.
+> Hi Robert,
+>
+> On 20-05-05 12:01, Robert Foss wrote:
+> > Query the sensor for its module revision, and compare it
+> > to known revisions.
 > >
-> > This allows a finer control of what kmesg dumps are stored on pstore
-> > device.
+> > Currently 2A and 1B revision indentification is supported.
 > >
-> > Those clients that do not explicitly set this field (keep it equal to 0),
-> > get the default behavior: dump only Oops and Panics, and dump everything
-> > if printk.always_kmsg_dump is provided.
-> >
-> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
 > > ---
-> >  fs/pstore/platform.c   | 4 +++-
-> >  include/linux/pstore.h | 3 +++
-> >  2 files changed, 6 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-> > index 408277ee3cdb..75bf8a43f92a 100644
-> > --- a/fs/pstore/platform.c
-> > +++ b/fs/pstore/platform.c
-> > @@ -602,8 +602,10 @@ int pstore_register(struct pstore_info *psi)
-> >       if (pstore_is_mounted())
-> >               pstore_get_records(0);
+> > - Changes since v3:
+> >   * Actually add module revision 2A
 > >
-> > -     if (psi->flags & PSTORE_FLAGS_DMESG)
-> > +     if (psi->flags & PSTORE_FLAGS_DMESG) {
-> > +             pstore_dumper.max_reason = psinfo->max_reason;
-> >               pstore_register_kmsg();
+> > - Changes since v2:
+> >   * Add module revision 2A
+> >   * Sakari: Remove ov8856_check_revision()
+> >   * Sakari: Stop EEPROM streaming mode
+> >
+> >  drivers/media/i2c/ov8856.c | 53 ++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 53 insertions(+)
+> >
+> > diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
+> > index e6418a79801e..3c82c3e588d7 100644
+> > --- a/drivers/media/i2c/ov8856.c
+> > +++ b/drivers/media/i2c/ov8856.c
+> > @@ -32,6 +32,19 @@
+> >  #define OV8856_MODE_STANDBY          0x00
+> >  #define OV8856_MODE_STREAMING                0x01
+> >
+> > +/* module revisions */
+> > +#define OV8856_2A_MODULE             0x01
+> > +#define OV8856_1B_MODULE             0x02
+> > +
+> > +/* the OTP read-out buffer is at 0x7000 and 0xf is the offset
+> > + * of the byte in the OTP that means the module revision
+> > + */
+> > +#define OV8856_MODULE_REVISION               0x700f
+> > +#define OV8856_OTP_MODE_CTRL         0x3d84
+> > +#define OV8856_OTP_LOAD_CTRL         0x3d81
+> > +#define OV8856_OTP_MODE_AUTO         0x00
+> > +#define OV8856_OTP_LOAD_CTRL_ENABLE  BIT(0)
+> > +
+> >  /* vertical-timings from sensor */
+> >  #define OV8856_REG_VTS                       0x380e
+> >  #define OV8856_VTS_MAX                       0x7fff
+> > @@ -1152,6 +1165,46 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
+> >               return -ENXIO;
+> >       }
+> >
+> > +     ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
+> > +                            OV8856_REG_VALUE_08BIT, OV8856_MODE_STREAMING);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret = ov8856_write_reg(ov8856, OV8856_OTP_MODE_CTRL,
+> > +                            OV8856_REG_VALUE_08BIT, OV8856_OTP_MODE_AUTO);
+> > +     if (ret) {
+> > +             dev_err(&client->dev, "failed to set otp mode");
+> > +             return ret;
 > > +     }
+> > +
+> > +     ret = ov8856_write_reg(ov8856, OV8856_OTP_LOAD_CTRL,
+> > +                            OV8856_REG_VALUE_08BIT,
+> > +                            OV8856_OTP_LOAD_CTRL_ENABLE);
+> > +     if (ret) {
+> > +             dev_err(&client->dev, "failed to enable load control");
+> > +             return ret;
+> > +     }
+> > +
+> > +     ret = ov8856_read_reg(ov8856, OV8856_MODULE_REVISION,
+> > +                           OV8856_REG_VALUE_08BIT, &val);
+> > +     if (ret) {
+> > +             dev_err(&client->dev, "failed to read module revision");
+> > +             return ret;
+> > +     }
+> > +
+> > +     dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x\n",
+> > +             val,
+> > +             val == OV8856_2A_MODULE ? "2A" :
+> > +             val == OV8856_1B_MODULE ? "1B" : "unknown revision",
+> > +             client->addr);
 >
-> I haven't finished reading the whole series carefully, but I think
-> something we can do here to make things a bit more user-friendly is to
-> do the KMSG_DUMP_UNDEF value here to get us the "all" instead of INT_MAX:
->
->         if (psi->flags & PSTORE_FLAGS_DMESG) {
->                 pstore_dumper.max_reason = psinfo->max_reason;
->                 if (pstore_dumper.max_reason == KMSG_DUMP_UNDEF)
->                         pstore_dumper.max_reason = KMSG_DUMP_MAX;
->                 pstore_register_kmsg();
->         }
->
-> That way setting max_reason to 0 without setting dump_oops at all will
-> get "all". I think it'll need some tweaks to the next patch.
+> Pls check the alignment here too.
 
-Hm, but if we change it this way, it will change the behavior for
-other backends. With the current version of this patchset,
-when psinfo->max_reason is left undefined (0, KMSG_DUMP_UNDEF) -> the
-existing behaviour is honored, which means: printk chooses the kmesg
-dump level, and users can set dump for all reasons via printk
-always_kmsg_dump. This is what efi-pstore, erst, and nvram_64 are
-currently doing, and I am not sure we should change that.
-However, with the proposed change if the backend specifically sets
-max_reason: printk will use it and ignore always_kmsg_dump.
+Ack.
 
-Thank you,
-Pasha
+>
+> Regards,
+>   Marco
+>
+> > +
+> > +     ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
+> > +                            OV8856_REG_VALUE_08BIT, OV8856_MODE_STANDBY);
+> > +     if (ret) {
+> > +             dev_err(&client->dev, "failed to exit streaming mode");
+> > +             return ret;
+> > +     }
+> > +
+> >       return 0;
+> >  }
+> >
+> > --
+> > 2.25.1
