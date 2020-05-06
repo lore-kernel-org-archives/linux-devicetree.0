@@ -2,98 +2,129 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7023C47256
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF145C4724C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8155D2078C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990322075E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:16:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Hbyib1Ju"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="rPTQCTEx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgEFSOZ (ORCPT
+        id S1730096AbgEFSQa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 14:14:25 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40632 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbgEFSOZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 14:14:25 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 046IEArB011357;
-        Wed, 6 May 2020 13:14:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588788850;
-        bh=i7DjKQcoyf7U+urYm+53KnmXgF7F3NKsTjU/TUs3Ap4=;
-        h=From:To:CC:Subject:Date;
-        b=Hbyib1JuMEfN/K7GtiOT/POTCc+fGJl0VEjbG2JF5TSq+sk7jXeUcUdXE4ogchrSX
-         sqgEoS+yLARGLRQ6qNmL8OWWZKHxW+Y3+oi4w65lbBqNxuZ6LL5fL6+mnstaCAeMlQ
-         /uGuo1YN3o8AyJzMZ9FGcflaTByVgDUEhgESOn8s=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 046IEAVl093986
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 May 2020 13:14:10 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
- 2020 13:14:09 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 6 May 2020 13:14:09 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 046IE8Qu064547;
-        Wed, 6 May 2020 13:14:09 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>
-CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 0/3] net: ethernet: ti: am65x-cpts: follow up dt bindings update
-Date:   Wed, 6 May 2020 21:13:58 +0300
-Message-ID: <20200506181401.28699-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 6 May 2020 14:16:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730012AbgEFSQ2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 14:16:28 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A0BC061A10
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 11:16:28 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id g10so2154879lfj.13
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 11:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KEXpBFdxDsOsxHUJbKHvTc13/63fZoyJiUI7zCS8HKc=;
+        b=rPTQCTExlqHfI8liKWG2uYWysFbuJpKzXBvgKhuaKXumurQdsmN6X5rXcyzcrnvTqe
+         hjLgZMiOTGz3bC7k/hXGytt5QJw0YgmMep5W+QROGqanjsux/SsiM/fcd4/WTiMx9wVX
+         DhXBp1zjJziGEecwATXN2bilY9Ak3JH+3FAAFRKortUPAENzF43pyO9lvaAkJOQh+EL0
+         u32+izeEWl/qlexOGNb/t11LYZQB/+N33G3sTrz5AFrKgcXaIOL4pwl6s/7pyZnR4UsX
+         CRvgW+H5vvR/QiFp9M0BN9wS3B7Dw7INdqu0/rmH70DuccuHyS/UQxEtgy6TSSQhZQkh
+         k5GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=KEXpBFdxDsOsxHUJbKHvTc13/63fZoyJiUI7zCS8HKc=;
+        b=HqEcMkxB6muuaghKpfD35PwDocuC5GpRZngCDDN/OMjbqVQw7phkmO28wD0biIuiCp
+         m13YSLzgNMR1M03GmEuMFVDYHpjJVDCZvPWDB3vnqPypkMiLv6XvAejREYPwFgpv2+ds
+         Mqo54CrjJUMWlugnHAIUXWe5QDysgWPaSpr0b4ZexsBtFuOiSe+iaASyR6aGAOrCuywW
+         UDWofT1OxMqdMQGMJub2WSXn3Lt6qelBdmVP1TVCo0MV2QqyAP3Vw5Xee3loqb2Qy9KL
+         ESfcJfoTx9jwqWhVPZMwZ8IdIeUUBGokP8sVFOkDeT9DWJ1Mbo2thELAIVmgpzfoM2sd
+         s/GQ==
+X-Gm-Message-State: AGi0PubORzuSh2jobu8ev0Qtut5APq/tmaQm6V3mI0NCCFdHcfRNGhW2
+        dUOJCuPNvxGlsnt8Dw+8N5Wy3A==
+X-Google-Smtp-Source: APiQypLGUWwNuylqLwt0ewr21qw7FidtN22GXOYoec8xwlCm+ZbM/KF1pXlnii0P1kP7utaJvncpwQ==
+X-Received: by 2002:a05:6512:3ea:: with SMTP id n10mr5747624lfq.127.1588788986770;
+        Wed, 06 May 2020 11:16:26 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:46f7:c018:da89:7e41:8ab5:299d])
+        by smtp.gmail.com with ESMTPSA id 25sm2087051lfr.92.2020.05.06.11.16.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 May 2020 11:16:25 -0700 (PDT)
+Subject: Re: [PATCH v2 14/20] mips: Use offset-sized IO-mem accessors in CPS
+ debug printout
+To:     Sergey.Semin@baikalelectronics.ru,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-15-Sergey.Semin@baikalelectronics.ru>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <82e98cee-d39e-7df2-8b0d-ac77defd5dd8@cogentembedded.com>
+Date:   Wed, 6 May 2020 21:16:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200506174238.15385-15-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob, David,
+Hello!
 
-This series is follow update for  TI A65x/J721E Common platform time sync (CPTS)
-driver [1] to implement  DT bindings review comments from
-Rob Herring <robh@kernel.org> [2].
- - "reg" and "compatible" properties are made required for CPTS DT nodes which
-   also required to change K3 CPSW driver to use of_platform_device_create()
-   instead of of_platform_populate() for proper CPTS and MDIO initialization
- - minor DT bindings format changes
- - K3 CPTS example added to K3 MCU CPSW bindings
+On 05/06/2020 08:42 PM, Sergey.Semin@baikalelectronics.ru wrote:
 
-[1] https://lwn.net/Articles/819313/
-[2] https://lwn.net/ml/linux-kernel/20200505040419.GA8509@bogus/
-Grygorii Strashko (3):
-  net: ethernet: ti: am65-cpsw-nuss: use of_platform_device_create() for
-    mdio
-  dt-binding: net: ti: am65x-cpts: make reg and compatible required
-  arm64: dts: ti: k3-am65/j721e-mcu: update cpts node
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> Similar to commit 8e5c62e38a88 ("mips: early_printk_8250: Use offset-sized
+> IO-mem accessors") the IO-memory might require to use a proper load/store
+> instructions (like Bailal-T1 IO-memory). To fix the cps-vec UART debug
 
- .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   | 15 ++++++++++-
- .../bindings/net/ti,k3-am654-cpts.yaml        | 25 +++++++------------
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  4 ++-
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  4 ++-
- drivers/net/ethernet/ti/am65-cpsw-nuss.c      | 24 +++++++++++++-----
- drivers/net/ethernet/ti/am65-cpsw-nuss.h      |  2 ++
- 6 files changed, 49 insertions(+), 25 deletions(-)
+   Baikal? :-)
 
--- 
-2.17.1
+> printout lets use the memory access instructions in accordance with the
+> UART registers offset config specified at boot time.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> There might be another problem in cps-vec-ns16550.S connected with the
+> difference in CPU/devices endinanness on some platforms. But there is
 
+   Endianness.
+
+> no such for Baikal-T1 SoC.
+[...]
+
+MBR, Sergei
