@@ -2,137 +2,116 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC95C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 10:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC54DC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 10:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1638E2075A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 10:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F6620753
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 10:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgEFKA5 (ORCPT
+        id S1728465AbgEFKGS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 06:00:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:60898 "EHLO foss.arm.com"
+        Wed, 6 May 2020 06:06:18 -0400
+Received: from mga04.intel.com ([192.55.52.120]:3649 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbgEFKA5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 May 2020 06:00:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E6B030E;
-        Wed,  6 May 2020 03:00:56 -0700 (PDT)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 681FE3F71F;
-        Wed,  6 May 2020 03:00:55 -0700 (PDT)
-Subject: Re: [PATCH 07/16] arm64: dts: arm: Fix GIC compatible names
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20200505165212.76466-1-andre.przywara@arm.com>
- <20200505165212.76466-8-andre.przywara@arm.com>
- <86lfm6tf1f.wl-maz@kernel.org> <629da7f9-9cc9-ec9e-f175-ef6c90b5e3f1@arm.com>
- <d9ebbc077d70805bed252656dede750b@kernel.org>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Organization: ARM Ltd.
-Message-ID: <72e7ca7e-003f-7edf-267c-763014f33fdc@arm.com>
-Date:   Wed, 6 May 2020 11:00:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728314AbgEFKGS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 May 2020 06:06:18 -0400
+IronPort-SDR: LvCUp3GI6Anddjxj7Mu7TnDSso6jqAZVDCJOX6QaSNArl0eOblQyEGpxpM5rN/tgtIxchDXgrd
+ LjfCBkfh39Qg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 03:06:18 -0700
+IronPort-SDR: r19fuwUAueJL4DFUdiljy6sVx5zQvf9+yQP4hJCUiZTP25VNaXqoNlQwTohkNsUKBARrVf06PO
+ hhGE6YObO1rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
+   d="scan'208";a="407189115"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 06 May 2020 03:06:15 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jWGwT-004zXQ-Lf; Wed, 06 May 2020 13:06:17 +0300
+Date:   Wed, 6 May 2020 13:06:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh+dt@kernel.org>,
+        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 4/4] serial: 8250: Support rs485 bus termination GPIO
+Message-ID: <20200506100617.GC185537@smile.fi.intel.com>
+References: <cover.1588505407.git.lukas@wunner.de>
+ <a91b9392e8e7914cae16f59beb1ffe6b335f81c9.1588505407.git.lukas@wunner.de>
+ <20200505161035.GW185537@smile.fi.intel.com>
+ <20200506062943.qugqwhnkismnnkrb@wunner.de>
 MIME-Version: 1.0
-In-Reply-To: <d9ebbc077d70805bed252656dede750b@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506062943.qugqwhnkismnnkrb@wunner.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/05/2020 10:16, Marc Zyngier wrote:
-> On 2020-05-06 09:45, André Przywara wrote:
->> On 05/05/2020 19:25, Marc Zyngier wrote:
->>> On Tue, 05 May 2020 17:52:03 +0100,
->>> Andre Przywara <andre.przywara@arm.com> wrote:
->>>>
->>>> The GIC DT binding only allows a certain combination of DT compatible
->>>> strings, mostly just consisting of one name.
->>>>
->>>> Drop the combination of multiple names and go with the
->>>> "arm,cortex-a15-gic" name for GICv2, as this seems to be the most
->>>> widely
->>>> accepted string. "arm,gic-400" would be more correct, but was
->>>> introduced
->>>> much later into the kernel's GIC driver.
->>>>
->>>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
->>>> ---
->>>>  arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi | 2 +-
->>>>  arch/arm64/boot/dts/arm/juno-base.dtsi           | 2 +-
->>>>  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts       | 2 +-
->>>>  3 files changed, 3 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
->>>> b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
->>>> index 15fe81738e94..61a1750fcdd6 100644
->>>> --- a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
->>>> +++ b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
->>>> @@ -6,7 +6,7 @@
->>>>
->>>>  / {
->>>>      gic: interrupt-controller@2c001000 {
->>>> -        compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
->>>> +        compatible = "arm,cortex-a15-gic";
->>>>          #interrupt-cells = <3>;
->>>>          #address-cells = <2>;
->>>>          interrupt-controller;
->>>> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi
->>>> b/arch/arm64/boot/dts/arm/juno-base.dtsi
->>>> index 3feefd61eb76..62392ab1f880 100644
->>>> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
->>>> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
->>>> @@ -69,7 +69,7 @@
->>>>      };
->>>>
->>>>      gic: interrupt-controller@2c010000 {
->>>> -        compatible = "arm,gic-400", "arm,cortex-a15-gic";
->>>> +        compatible = "arm,cortex-a15-gic";
->>>
->>> Why? GIC-400 is definitely the most correct compatible string. I'd
->>> rather see this compatible being generalised to the models rather than
->>> only referencing the A15 GIC.
->>
->> I agree that gic-400 is the far better name, but it was only introduced
->> in v3.16. So omitting arm,cortex-a15-gic would break any kernels before
->> that, which I would like to avoid.
+On Wed, May 06, 2020 at 08:29:43AM +0200, Lukas Wunner wrote:
+> On Tue, May 05, 2020 at 07:10:35PM +0300, Andy Shevchenko wrote:
+> > On Tue, May 05, 2020 at 04:42:04PM +0200, Lukas Wunner wrote:
+
+...
+
+> > > +		devm_gpiod_put(dev, port->rs485_term_gpio);
+> > 
+> > > +	port->rs485_term_gpio = devm_gpiod_get_optional(dev, "rs485-term",
+> > 
+> > Using devm_*() in uart_get_rs485_mode() seems not right.
+> > Why do you need this?
 > 
-> I am not talking about dropping the A15 GIC. I'm saying that both should
-> stay. Is there anything in the DT binding that forbids multiple names in
-> the compatible property?
-
-Well, the current form of the YAML bindings require every combination of
-compatible strings to be listed, either explicitly, or using an list of
-allowed strings for each position. This combination here is not listed
-at the moment.
-
->> It's actually a pity that we are so picky about the compatible listings,
->> because the existing combination is actually quite nice: we get
->> compatibility with older DT consumers, but still can say what it
->> actually is.
->> I wonder if I should introduce this combination to the GIC DT binding
->> instead, it seems like there are other users in the tree as well.
->>
->> What do you think?
+> uart_get_rs485_mode() is called from a driver's ->probe() hook and we
+> do not have a corresponding function that is called from a ->remove()
+> hook where we'd be able to relinquish rs485 resources we've acquired
+> on probe.
 > 
-> I'd say that if the binding forbids multiple compatible strings, the
-> binding is likely to be wrong. We should fix it, and not make the DTs
-> worse as a result of a binding issue.
+> Of course I could add that but it would be more heavy-weight compared
+> to simply using devm_*().  Do you disagree?
+> 
+> devm_gpiod_put() isn't strictly necessary here.  It is only necessary
+> if one of the drivers would invoke uart_get_rs485_mode() multiple
+> times, which none of them does AFAICS.  It's just a safety measure.
+> I can drop it if that is preferred.
 
-OK, thanks for the confirmation, and I agree. I will ditch this patch
-and replace it with a respective bindings fix.
+I think putting and re-requesting here is also racy. Somebody can request the
+very same GPIO in between (for example crazy user space tool).
 
-Thanks,
-Andre.
+Setting the same value many times won't hurt.
+
+> > > +		GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT);
+> > 
+> > Parameter has a specific macro GPIOD_OUT_HIGH.
+> 
+> Good point.  It's also occurred to me now that reading the GPIO's
+> value after changing its direction to output is nonsense.  If anything
+> it ought to be read *before* changing the direction to output.
+
+It's not a complete nonsense, depends what you actually want to achieve here.
+
+> That would make sense in case the board has a pullup or pulldown on
+> the Termination Enable pin.  In other cases the pin may just float
+> and the value will be unpredictable.  However if I do not read the
+> pin, I'd have to choose either high or low as initial state.  Hm.
+> Let me check back with our hardware engineers today and see what they
+> recommend.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
