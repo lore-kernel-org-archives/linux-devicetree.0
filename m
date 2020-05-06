@@ -2,80 +2,217 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A70C54E49
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 14:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD96EC47247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 14:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBAD52084D
+	by mail.kernel.org (Postfix) with ESMTP id C7BA42082E
 	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 14:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgEGOLS (ORCPT
+        id S1728079AbgEGOLH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 10:11:18 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:3827 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgEGOLR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 10:11:17 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 59984240012;
-        Thu,  7 May 2020 14:11:15 +0000 (UTC)
-Date:   Thu, 7 May 2020 16:11:14 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thu, 7 May 2020 10:11:07 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.3]:13694 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726518AbgEGOLG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 10:11:06 -0400
+Received: from [100.113.2.173] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-a.eu-central-1.aws.symcld.net id 49/28-40432-4F614BE5; Thu, 07 May 2020 14:11:00 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRWlGSWpSXmKPExsVy8MN7Xd0vYlv
+  iDM7NkreYf+Qcq8XhRS8YLW5++sZqcXnXHDaLpdcvMlm07j3C7sDmsWbeGkaPnbPusntsWtXJ
+  5vF5k1wASxRrZl5SfkUCa8avR4+YCm5rVqz6tZGxgfGCUhcjF4eQwBpGid1P9rB0MXICOZUSn
+  682M4PYvAIREvMaHjOC2JwCZhL7b61j72LkAKoxlbi8VBEkzCagI/Fo5nomEJtFQEXixt/DYL
+  awgK/EsTc72UFsEYFyiQMfZ7KC7GIWmMYosefjYaj5ghInZz4B28ssICFx8MULZogbtCTOrVn
+  FOIGRdxaSsllIyhYwMq1itEwqykzPKMlNzMzRNTQw0DU0NNY11jU0MtJLrNJN1Est1U1OzSsp
+  SgTK6iWWF+sVV+Ym56To5aWWbGIEhmtKIXPVDsaLy9/rHWKU5GBSEuVd8nlznBBfUn5KZUZic
+  UZ8UWlOavEhRhkODiUJ3v0iW+KEBItS01Mr0jJzgLEDk5bg4FES4bUGxo8Qb3FBYm5xZjpE6h
+  SjMcfvDUsWMXM8uHpvFbMQS15+XqqUOG8mSKkASGlGaR7cIFhMX2KUlRLmZWRgYBDiKUgtys0
+  sQZV/xSjOwagkzHtUFGgKT2ZeCdy+V0CnMAGd8vnTJpBTShIRUlINTEX3HawuLhVT31skUMCb
+  0XBu4pK00kQDafmTzdf/C9bcXj953gMVv4oVWvt/i00NE3bL3HFJZO0ei4zkj4f8U49+Y9P9G
+  rHhkZDth3jNN18S7pybGvgvKmD2zFutmxSctl2byKK+/XFTyvpn+co8SUefv13ik6twoNv/OI
+  /vLzP30iM6NT4L57/o1X/XP/PiZ76b25Ke75Y8UVc96ZxJOuN7m8W3zXtTekwnlcw3Kb/SLFt
+  4JovfIihcezfvM61D99PZe17uCYt1zFT95C8k7jyTLU9/2h+1ZQH159d93ftlzo2pQgxnXhzK
+  jU27azH/tOG9vb/6bdW2pi9c7e9opPzhSQmHfdjSFZ5Mq3p9FymxFGckGmoxFxUnAgA2XLTaZ
+  AMAAA==
+X-Env-Sender: roy.im.opensource@diasemi.com
+X-Msg-Ref: server-19.tower-223.messagelabs.com!1588860659!2836654!3
+X-Originating-IP: [193.240.239.45]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 13099 invoked from network); 7 May 2020 14:11:00 -0000
+Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
+  by server-19.tower-223.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 7 May 2020 14:11:00 -0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Thu, 7 May 2020 16:10:58 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 19A2B13F673; Thu,  7 May 2020 23:10:57 +0900 (KST)
+Message-ID: <ee344a1919a690734ed429bc63d82d5e9fc4a003.1588781316.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1588781316.git.Roy.Im@diasemi.com>
+References: <cover.1588781316.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Thu, 7 May 2020 01:08:36 +0900
+Subject: [PATCH V13 2/3] dt-bindings: input: Add document bindings for DA7280
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>,
-        Ivan Djelic <ivan.djelic@parrot.com>
-Subject: Re: [PATCH v3 1/8] lib/bch: Rework a little bit the exported
- function names
-Message-ID: <20200507161114.0dd2ff4e@xps13>
-In-Reply-To: <20200507134822.21c965b3@collabora.com>
-References: <20200507110034.14736-1-miquel.raynal@bootlin.com>
-        <20200507110034.14736-2-miquel.raynal@bootlin.com>
-        <20200507134822.21c965b3@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Rob Herring <robh+dt@kernel.org>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add device tree binding information for DA7280 haptic driver.
+Example bindings for DA7280 are added.
 
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 7 May
-2020 13:48:22 +0200:
+Reviewed-by: Rob Herring <robh@kernel.org>.
 
-> On Thu,  7 May 2020 13:00:27 +0200
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> 
-> > There are four exported functions, all suffixed by _bch, which is clearly not the norm. Before exporting more functions, let's rename them by prefixing them with bch_ instead.
-> >   
-> 
-> Oops. Missing line wrapping here :-). Also, you don't seem to export new
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
 
-I might have ignored a checkpatch.pl warning thinking it was false
-positive :p
+---
+v13: No changes.
+v12: No changes.
+v11: No changes.
+v10: No changes.
+v9: No changes.
+v8: Updated descriptions for new properties.
+v7: No changes.
+v6: No changes.
+v5: Updated descriptions and fixed errors.
+v4: Fixed commit message, properties.
+v3: Fixed subject format.
+v2: No changes
 
-> functions in this series, so maybe drop that part of the explanation.
-> Sounds good to me otherwise, so:
 
-Oh right, I dropped this patch right before sending the series as it
-was not needed, I forgot I mentioned it here.
+ .../devicetree/bindings/input/dlg,da7280.txt       | 109 +++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
 
-> 
-> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-> 
+diff --git a/Documentation/devicetree/bindings/input/dlg,da7280.txt b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+new file mode 100644
+index 0000000..e6b719d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+@@ -0,0 +1,109 @@
++Dialog Semiconductor DA7280 Haptics bindings
++
++Required properties:
++- compatible: Should be "dlg,da7280".
++- reg: Specifies the I2C slave address.
++
++- interrupt-parent : Specifies the phandle of the interrupt controller to
++  which the IRQs from DA7280 are delivered to.
++
++- dlg,actuator-type: Set Actuator type. it should be one of:
++  "LRA" - Linear Resonance Actuator type.
++  "ERM-bar" - Bar type Eccentric Rotating Mass.
++  "ERM-coin" - Coin type Eccentric Rotating Mass.
++
++- dlg,const-op-mode: Haptic operation mode for FF_CONSTANT.
++  Possible values:
++	1 - Direct register override(DRO) mode triggered by i2c(default),
++	2 - PWM data source mode controlled by PWM duty,
++- dlg,periodic-op-mode: Haptic operation mode for FF_PERIODIC.
++  Possible values:
++	1 - Register triggered waveform memory(RTWM) mode, the pattern
++	    assigned to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
++	2 - Edge triggered waveform memory(ETWM) mode, external GPI(N)
++	    control are required to enable/disable and it needs to keep
++	    device enabled by sending magnitude (X > 0),
++	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below.
++	The default value is 1 for both of the operation modes.
++	For more details, please see the datasheet.
++
++- dlg,nom-microvolt: Nominal actuator voltage rating.
++  Valid values: 0 - 6000000.
++- dlg,abs-max-microvolt: Absolute actuator maximum voltage rating.
++  Valid values: 0 - 6000000.
++- dlg,imax-microamp: Actuator max current rating.
++  Valid values: 0 - 252000.
++  Default: 130000.
++- dlg,impd-micro-ohms: the impedance of the actuator in micro ohms.
++  Valid values: 0 - 1500000000.
++
++Optional properties:
++- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
++  PWM properties should be named "pwms". And number of cell is different
++  for each pwm device.
++  (See Documentation/devicetree/bindings/pwm/pwm.txt
++   for further information relating to pwm properties)
++
++- dlg,ps-seq-id: the PS_SEQ_ID(pattern ID in waveform memory inside chip)
++  to play back when RTWM-MODE is enabled.
++  Valid range: 0 - 15.
++- dlg,ps-seq-loop: the PS_SEQ_LOOP, Number of times the pre-stored sequence
++  pointed to by PS_SEQ_ID or GPI(N)_SEQUENCE_ID is repeated.
++  Valid range: 0 - 15.
++- dlg,gpiN-seq-id: the GPI(N)_SEQUENCE_ID, pattern to play
++  when gpi0 is triggered, 'N' must be 0 - 2.
++  Valid range: 0 - 15.
++- dlg,gpiN-mode: the pattern mode which can select either
++  "Single-pattern" or "Multi-pattern", 'N' must be 0 - 2.
++- dlg,gpiN-polarity: gpiN polarity which can be chosen among
++  "Rising-edge", "Falling-edge" and "Both-edge",
++  'N' must be 0 - 2
++  Haptic will work by this edge option in case of ETWM mode.
++
++- dlg,resonant-freq-hz: use in case of LRA.
++  the frequency range: 50 - 300.
++  Default: 205.
++
++- dlg,bemf-sens-enable: Enable for internal loop computations.
++- dlg,freq-track-enable: Enable for resonant frequency tracking.
++- dlg,acc-enable: Enable for active acceleration.
++- dlg,rapid-stop-enable: Enable for rapid stop.
++- dlg,amp-pid-enable: Enable for the amplitude PID.
++- dlg,mem-array: Customized waveform memory(patterns) data downloaded to
++  the device during initialization. This is an array of 100 values(u8).
++
++For further information, see device datasheet.
++
++======
++
++Example:
++
++	haptics: da7280-haptics@4a {
++		compatible = "dlg,da7280";
++		reg = <0x4a>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++		dlg,actuator-type = "LRA";
++		dlg,dlg,const-op-mode = <1>;
++		dlg,dlg,periodic-op-mode = <1>;
++		dlg,nom-microvolt = <2000000>;
++		dlg,abs-max-microvolt = <2000000>;
++		dlg,imax-microamp = <170000>;
++		dlg,resonant-freq-hz = <180>;
++		dlg,impd-micro-ohms = <10500000>;
++		dlg,freq-track-enable;
++		dlg,rapid-stop-enable;
++		dlg,mem-array = <
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++		>;
++
++	};
+-- 
+end-of-patch for PATCH V13
 
