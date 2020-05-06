@@ -2,115 +2,92 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CCEC47257
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 22:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E14C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 23:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E29692082E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 22:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B59320735
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 23:14:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SWWR+Upk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsjLVjJO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbgEFWk3 (ORCPT
+        id S1726761AbgEFXOF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 18:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42440 "EHLO
+        Wed, 6 May 2020 19:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbgEFWk0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 18:40:26 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BAFBC061A0F
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 15:40:25 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t7so1241248plr.0
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 15:40:25 -0700 (PDT)
+        with ESMTP id S1726014AbgEFXOC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 19:14:02 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F03DCC061A0F;
+        Wed,  6 May 2020 16:14:00 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id fb4so1756566qvb.7;
+        Wed, 06 May 2020 16:14:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QdygR2A72/9LbEfVx2KFs3XOLDP2FAPzE7Df5641CTE=;
-        b=SWWR+UpkmvIE+5IkhyyAYX+75Y/7/mDnDtfjR2ghLwrvagpWXgIcXAMbXN0ctOmC7J
-         r0FxwlPF0uoG20mDKj/ixX1NIadS14OGfhEQm5Yy4h1fp3BkOTWg3wrCj17q6zI+ekN/
-         mDFNQPcrBFBtYUtdiJxBZH03mttId5kD4H4tA=
+        d=gmail.com; s=20161025;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=/FSZGkNLSJDDR4n1PqDaPoz0aI+Ea15kGRpkEPckonU=;
+        b=BsjLVjJOST+HEBPglIqllYkYrofRjyIPV/3DQUSy6oiS5qtdH0hKD5KRKpxPMLbPfe
+         EdWrk0u7bu7wlMsWjnMsUWklVL19ig0xGJYittSrc8K7bQVadJT2XeqRC8+ERkhmFyNh
+         sjFPePAPfvvpV3PImu8umPx5olAS6NMrDNyNZRuGxJnFyUss4Qmv9oYBIoidSn9fiBUQ
+         TpK+z27QiR+mruIbjSUCjSWsqYNR4akaCsdToPa+4q7CNnE3LGr4X9BUhVLDApiouj48
+         OAfK/wEasfdPBS5WgkTprOmWpqaB7NMsHPwPlHWOaiAaflmRrEvnOpNs4aQoy0hINTEN
+         mdbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QdygR2A72/9LbEfVx2KFs3XOLDP2FAPzE7Df5641CTE=;
-        b=SPEaumLUOqqMHbQaWNp855/4T2gjurn5MDTeaqfTb1fDAUTzYcJGhKzURxsAAQcy0d
-         lg1Ta0L/i7SESsIn8qwiKWKPHn5wjixaM+ZCcSMT8x6HBM+ndaJJhSxm7P/yypjMFrmk
-         UpeZ4ZFqBF2oxDayuqziUAx6fRkZdRZW5jeVv38q0RCiysEt0v9avMQo806XQqbfeI/w
-         4DjweyWoaWpyVwsDoL4Iq6wOiujP2XVfqPITqMpG/9eKQeQ/OiGaKRD+zSTDV3fGF8d0
-         fAVHOQKk9Ykn56jJK5jX7nhY6XSO76sYJw0VyyvM/Smt4T8YKTFOsCFJBnD/9z/zWC/Y
-         glUQ==
-X-Gm-Message-State: AGi0PubbiLqQ1U35iAJOHG4OlRBIckx3vem6i85QAs2IFr1btSMX0Wdr
-        dr0sJg9tyDh+GYQzaexEZbXQbA==
-X-Google-Smtp-Source: APiQypLeKev/qpKuUfyxub8k75/PIRWV5N1ol74IL1rE5d96sthNE61DOXvqGS/dnem4REr+Biuuuw==
-X-Received: by 2002:a17:90a:280c:: with SMTP id e12mr11866676pjd.52.1588804824838;
-        Wed, 06 May 2020 15:40:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b140sm2819009pfb.119.2020.05.06.15.40.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 15:40:23 -0700 (PDT)
-Date:   Wed, 6 May 2020 15:40:22 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
-        sashal@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] pstore/platform: Pass max_reason to kmesg dump
-Message-ID: <202005061540.88ECA85@keescook>
-References: <20200506211523.15077-1-keescook@chromium.org>
- <20200506211523.15077-3-keescook@chromium.org>
- <4cdeaa2af2fe0d6cc2ca8ce3a37608340799df8a.camel@perches.com>
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=/FSZGkNLSJDDR4n1PqDaPoz0aI+Ea15kGRpkEPckonU=;
+        b=mz84wTGAEQvy7INf5tTARIvT1z/UoZgoD6qEFyozRucljqWGhDDn0TIllh3SpFCVcd
+         S57X4Ik1L29qoV6+oAX0cxjqu6n6MD6j1baimm9YUNeh5RntP3PqlBgWuntYVZ0x48dW
+         FOYOy+rgwWkXFV/7ZzUX25WO1cN5yx9331kNIrjvUkSJG3S+G5AIWDcpKdfodIiOZ/lA
+         YQ2HUzhime71f6zv7QcSFRwmFeFc9Ownu95F1LTYkHaNrE+O8Rt+InFq8ZZwMzl/L1hC
+         l2XNiaT6qYSv9LfzrbKVyHuV9nUxEinPuJ6cmRsqJsx/gBYMbt8Q76VYVNHtz9yUfZww
+         UBWA==
+X-Gm-Message-State: AGi0PuZvsJIve42q8AdrcTwKTusBY7VnHOUeFrijtEtP1a39sOjHgehO
+        4i5t88eiGKwLVwMDmItK0nnLgiZW2Yg=
+X-Google-Smtp-Source: APiQypLX+8UR89ZGRmwwx/ExIJVWjxeCcSb5ZS6sTPRbM36UJWIYag3vXHgyGZRg+RpEBBTRyDHICw==
+X-Received: by 2002:a0c:ed26:: with SMTP id u6mr10648410qvq.220.1588806840048;
+        Wed, 06 May 2020 16:14:00 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id k127sm2875230qkb.35.2020.05.06.16.13.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 May 2020 16:13:59 -0700 (PDT)
+To:     devicetree@vger.kernel.org,
+        "devicetree-spec@vger.kernel.org" <devicetree-spec@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+From:   Frank Rowand <frowand.list@gmail.com>
+Subject: interested in Devicetree plumbers 2020 session?
+Message-ID: <b2e90447-6917-83fb-d006-b647ad86aad3@gmail.com>
+Date:   Wed, 6 May 2020 18:13:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4cdeaa2af2fe0d6cc2ca8ce3a37608340799df8a.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:25:41PM -0700, Joe Perches wrote:
-> On Wed, 2020-05-06 at 14:15 -0700, Kees Cook wrote:
-> > From: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > 
-> > Add a new member to struct pstore_info for passing information about
-> > kmesg dump maximum reason. This allows a finer control of what kmesg
-> > dumps are sent to pstore storage backends.
-> 
-> trivia:
-> 
-> > diff --git a/include/linux/pstore.h b/include/linux/pstore.h
-> []
-> > @@ -96,6 +96,12 @@ struct pstore_record {
-> >   *
-> >   * @read_mutex:	serializes @open, @read, @close, and @erase callbacks
-> >   * @flags:	bitfield of frontends the backend can accept writes for
-> > + * @max_reason:	Used when PSTORE_FLAGS_DMESG is set. Contains the
-> > + *		kmsg_dump_reason enum value. KMSG_DUMP_UNDEF means
-> > + *		"use existing kmsg_dump() filtering, based on the
-> > + *		printk.always_kmsg_dump boot param" (which is either
-> > + *		KMSG_DUMP_OOPS when false, or KMSG_DUMP_MAX when
-> > + *		tree); see printk.always_kmsg_dump for more details.
-> 
-> s/tree/true/
+Hi All,
 
-Eek, thanks. I'll fix my typo. :)
+Is anyone interested in attending a Devicetree session at the Plumbers 2020
+conference?
 
--- 
-Kees Cook
+And who all is considering traveling to Nova Scotia if the conference is
+held in person?
+
+Plumbers 2020 is scheduled for August 25-27.  Details at:
+
+   https://www.linuxplumbersconf.org/
+
+The microconference proposals are due on Thursday May 7.
+
+-Frank
