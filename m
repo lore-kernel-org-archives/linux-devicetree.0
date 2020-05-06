@@ -2,107 +2,177 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F128C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAD2C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B3120936
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:12:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588785160;
-	bh=Ku4krUxbTherJ1BmYQGERwCK85kJqmidRIcKAfQ+LUs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ixU0apuEm07B7oVdGwwNY7JYuykUK+CUwo61kreEhmER1y4QjPwrz1PS1EyiV1V7e
-	 zaBWrdxPOh7Q1ZjlKPnp2z3lHTjzn/+i1QiCRZ+/ZIdrpDZJvym537F2BoquvGagJp
-	 wtip6yd5GQ6HRFlx5J/wBgIYqmwJx6RQququCaRM=
+	by mail.kernel.org (Postfix) with ESMTP id C645D20936
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:16:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="t+8NSH81";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="DHrGY3Gm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgEFRMj (ORCPT
+        id S1726538AbgEFRQu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 13:12:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbgEFRMj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 May 2020 13:12:39 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93D802080D;
-        Wed,  6 May 2020 17:12:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588785159;
-        bh=Ku4krUxbTherJ1BmYQGERwCK85kJqmidRIcKAfQ+LUs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Bl45Xx9kN8e0nI9GisLHFuEbadb0UmmV/OXVRIFerYwtfJVsE3S16UNt3cKepxZhh
-         tvvGIeKyNDcMwKISdVoioIUzWXNYKID7abt59NSW0pBsVWd0xkOofIu2LboxsTI6F0
-         WYE7TUQyrQj6ZMojfQt96oGAkpCCCRZXKrVj1tXM=
-Date:   Wed, 6 May 2020 10:12:36 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
-Message-ID: <20200506101236.25a13609@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <CAMRc=Mf0ipaeLKhHCZaq2YeZKzi=QBAse7bEz2hHxXN5OL=ptg@mail.gmail.com>
-References: <20200505140231.16600-1-brgl@bgdev.pl>
-        <20200505140231.16600-6-brgl@bgdev.pl>
-        <20200505103105.1c8b0ce3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <CAMRc=Mf0ipaeLKhHCZaq2YeZKzi=QBAse7bEz2hHxXN5OL=ptg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Wed, 6 May 2020 13:16:50 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:13588 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725799AbgEFRQt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 13:16:49 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046HFf3A012841;
+        Wed, 6 May 2020 10:16:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=dJy/LMohT4O+Fq6WtjyAILPqPwccX4Ptu8+lVfyVAPQ=;
+ b=t+8NSH81Cye/ygQ9SDwnB6Ny8t35LUF15+MQEp3DmUmq1oxRh/g4MBPDX4KiXNNDbOKN
+ nmDQ7TeFAeSJwPbjLgEQ+GZweKbEC72pdYJiofmI7Hh5KY0mOltyuGvaVKPGjoezy2rX
+ Vh3s03e0Tuz5xhjHBN1XTDF5JmPhOLcxb3X3dvRcVeEwsIakw7cmHmExMA34IbBJuicq
+ P9bUIC6xgC9g2E1Y5B26Q4XAn2yVqmb824T5oawvfjZmYM5q4ui+Thoo+V67Q9Y9uxfn
+ NfJETcGOAUsjvpYArJ/RFFH3ad4IVgGtM5frlb2g7vIVMHoOi2NnTowA1XkXD/h90ZVr 9Q== 
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2170.outbound.protection.outlook.com [104.47.56.170])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 30s4exs9k1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 10:16:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NYZglAYql8zDy+JYdJR5Ox5k3JLPxdhvT+z3uDRw9La3nuuusnGuMUETlWpEVHBMTrEBDSiP18eLGi3e3O4XFZjE723Hbgk4JzOmIUMVAUrJaAXABW6Ap4jHyDOVlzKfwwaq5WWN9PXcIGZZgdJRZzGWQ6LlMEeJjqtOTGImQVhtDM9G7RlWNv8ib5hMTNEiC9pY6Ly80H2EpfUre1Qe0LXyOuER+2yo+fjP/A4oAmHOe79vF7MEXX2AGnRJV7ZBLi+YHJoJPGjM+bh5jbEFv8f47Qyun/UGDenz8s6lAatGISgy079oPVgc/GIqlTrBxb0gNvcVZE34IL9Zr31hHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dJy/LMohT4O+Fq6WtjyAILPqPwccX4Ptu8+lVfyVAPQ=;
+ b=OEcEYrJVNHsV+wQ8qxZKIvQZGUQHfM7Y54kutGHdEMZqTz0Kz2xACCSZLsEP7HAO/qVGRrUl/c7v12FMHKNOhlEzaw97hxrdtZMGvBDOk+HpVTRDI4iPhuP3CeQM+s4Voq8qlc6ppuM9fB5MXna9+Eny/oX27dnN39fbv7PVgIZn0ttboXPF3RprSe82Hxry4B1zN3O27KEqWp9qd/51oY1Pn5A3+fnCNRwG41pmceoRG5nP4yFYe5aiFOk73C1x3G5P+XysjUrf/JKKQjxnGhVA1qOuwjzkEJLhT1fxrMe74VgQrjoLJr/2kvBiA5HYLjC/ugQEHCgAtVC8fuJWHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dJy/LMohT4O+Fq6WtjyAILPqPwccX4Ptu8+lVfyVAPQ=;
+ b=DHrGY3Gm1gLNT5J2pVSLcm6tHmI877sSV++NlMFETPVGD1tlQK5tCyKlXDINElVpQ1tlFQhWVqHsZwfnvYbq5mSk9vDQ/qRkZo2EmM5xNvXECqwyEYXnVaqpXmLdRZiqm3GMda6IibwwM8qkk6WbvrvGePqF3XX7UIAMgFY2PX4=
+Received: from MN2PR07MB6208.namprd07.prod.outlook.com (2603:10b6:208:111::32)
+ by MN2PR07MB6750.namprd07.prod.outlook.com (2603:10b6:208:169::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Wed, 6 May
+ 2020 17:16:33 +0000
+Received: from MN2PR07MB6208.namprd07.prod.outlook.com
+ ([fe80::715c:e8d2:508a:e2e1]) by MN2PR07MB6208.namprd07.prod.outlook.com
+ ([fe80::715c:e8d2:508a:e2e1%6]) with mapi id 15.20.2958.030; Wed, 6 May 2020
+ 17:16:32 +0000
+From:   Tom Joseph <tjoseph@cadence.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 0/4] PCI: cadence: Deprecate inbound/outbound specific
+ bindings
+Thread-Topic: [PATCH v2 0/4] PCI: cadence: Deprecate inbound/outbound specific
+ bindings
+Thread-Index: AQHWFK1tK73RrSoXgkaVdJGJCCW8UqibaZ5w
+Date:   Wed, 6 May 2020 17:16:32 +0000
+Message-ID: <MN2PR07MB620800FD7334E8FCE795722AA1A40@MN2PR07MB6208.namprd07.prod.outlook.com>
+References: <20200417114322.31111-1-kishon@ti.com>
+In-Reply-To: <20200417114322.31111-1-kishon@ti.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcdGpvc2VwaFxhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTUzNGMzMzVhLThmYmQtMTFlYS04OTI3LTUwN2I5ZDg0NGVhMlxhbWUtdGVzdFw1MzRjMzM1Yi04ZmJkLTExZWEtODkyNy01MDdiOWQ4NDRlYTJib2R5LnR4dCIgc3o9IjIxOTQiIHQ9IjEzMjMzMjU4OTkwODMwNDU4MCIgaD0iV0s4NisvOEtjUkhFUVBOaXNvdU8rYTg0eUZnPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIi8+PC9tZXRhPg==
+x-dg-rorf: true
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=cadence.com;
+x-originating-ip: [185.217.253.59]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6b2161ed-4f1c-4445-aa70-08d7f1e13961
+x-ms-traffictypediagnostic: MN2PR07MB6750:
+x-microsoft-antispam-prvs: <MN2PR07MB6750CFD99E080CDBF6469A21A1A40@MN2PR07MB6750.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 03950F25EC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: W9FqwN9lZSjmtiZBiM2BHA5XJDvLGX1gvfbKkKilrd14Rwbtckw6hkBqDXm9Pl7/nmf0km55pGws+25oFwsk8B6kTx9/JAgIdW0/Bv8SEUaefkdxqFyxD1NcULbsGGiPOOqpVdU5B5d0qg7kiJpIXlLUp6CYD7drFqoWTtZBFTVBEhZK82q4yUk7Wka6GibhYZ8dEG2ZnXNAqt98HcLv9qExvoYA+TfzHhdzR0P+FUkf0b48JVixPNBMv6genHodCDuvcaMbildPfAzTx+cdF3UgcWk4/6O9mmeBsR/mUFwKmRx9MoqWvg4pNWfqvhE+C1ToidnNQp1TrlACo62u3jf7SNN61rKTTP5FdzNz6I4l3ZRh3hSeeuaWE0jM+Q1yn+IydEVlbQ31LKZmO2O+ENQW0hOZJumGFpKW/fc02kIYusDg8i0jY4UZDpIxzgv4nGHDVC0mksphDfBASXfLfrQ0GzmKZ4/HdVhba857YsFa7BXIcfYzx7iwejcAD3+pnUtz6KqUOMTkDrPJ8tucS9hcSkBg47IGIi6Tc/DqEzokBFE0KkaSPL+eGT0IO5r7BMtILQCepvYp0jovr/itwrmQUHW+1TOOBFiPqkwCU9iBF4j07QmiC6E8qZnoEQyAnPOMO3PPtlU4ZHssB1z5OQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR07MB6208.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(36092001)(33430700001)(54906003)(7696005)(55016002)(71200400001)(4326008)(9686003)(110136005)(8936002)(8676002)(26005)(66476007)(5660300002)(66946007)(76116006)(52536014)(66556008)(33656002)(66446008)(2906002)(64756008)(33440700001)(53546011)(86362001)(6506007)(186003)(966005)(498600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: SXGc2b4Mhqprjnr7oE2PZpCs+0Meiva8NmZgWAHi2CEJapQRJ4FiJcZ3X3WYyypIKdv4+TBr7vY/YZUaYUqpG9goiPcnIzOXTQWdZOufzTQDNkL1BIleex8zhbxx72fAA1BxrKnGr4HYeis8c5vRRzAEKmd6+uv24zlybYFE7ekkmhQvRsFhge3ahMX4Zc6y0itqWPh3A+UTi/AxjeFF7xLecKZP6ZyLDE6Dyx5ZzCUGYtHr4KWaYBG1QhYvG+axAjuH2kjtoFt2R8y1+Z+PU5hgJ6LqT2Ia9HxLl6zvqxTmzZuR7O/uoQbIFCZ45FAYcYIhnSAwzXU2MKkBKlrqAcU5dgyDNZ+dxVUt5GWbTqdLUI/D0HHF2GpIoIRLSr8+Ii1/atnqm5tpvEciRIPr91cjzSI3uOEetjKTJtbP6s4SqIj4TPa7KF3jp+WPlBh+HPInyrV3CsRdCn1Id8Smcm9+ZZwxHThtkyeMohQExDOhBoPgokBKuiUZTI3Om5FvMJegqiyBdTFpoMNAjQ22hYT+B/0Kq4K/FOk9g7WOk2QsM5I6Gqd/+vBSz/Rc53kqjsKicIRaPyO11ysT5e7NdBJWswLwayyHgRkKlWnwLy2QF0j6Hubn/VtkROjeH2VKR0sXHyC8RVFHc5u+8j8kJPkmbOudKaHSXPNfb8+GoILZhs9zRKG1PzCRf9BG3q+sFv1fXzTAsJiMe3T2ioqA+RGnAjRbnxRm31TVYQOQ21HHakmeCaKn3Tdi8DtFfBgAyv/PLbS2X/tkojnj+WQn1uVXJDhQx9nGai9q50btvGg=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b2161ed-4f1c-4445-aa70-08d7f1e13961
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 17:16:32.6383
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kpGRBz/vmLRASao01r+gUU1euke3YPLK+dHhT0VuCpsCEpjuIiMErgKRBcpS5DTAhaRhcPk8qZFfTOwjAgFFnJWFmeEzbjXoKbqvlGGHZWM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6750
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-06_09:2020-05-05,2020-05-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 suspectscore=0
+ malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 phishscore=0
+ impostorscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2005060140
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 6 May 2020 08:39:47 +0200 Bartosz Golaszewski wrote:
-> wt., 5 maj 2020 o 19:31 Jakub Kicinski <kuba@kernel.org> napisa=C5=82(a):
-> >
-> > On Tue,  5 May 2020 16:02:25 +0200 Bartosz Golaszewski wrote: =20
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > Provide devm_register_netdev() - a device resource managed variant
-> > > of register_netdev(). This new helper will only work for net_device
-> > > structs that have a parent device assigned and are devres managed too.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com> =20
-> > =20
-> > > diff --git a/net/core/dev.c b/net/core/dev.c
-> > > index 522288177bbd..99db537c9468 100644
-> > > --- a/net/core/dev.c
-> > > +++ b/net/core/dev.c
-> > > @@ -9519,6 +9519,54 @@ int register_netdev(struct net_device *dev)
-> > >  }
-> > >  EXPORT_SYMBOL(register_netdev);
-> > >
-> > > +struct netdevice_devres {
-> > > +     struct net_device *ndev;
-> > > +}; =20
-> >
-> > Is there really a need to define a structure if we only need a pointer?
-> > =20
->=20
-> There is no need for that, but it really is more readable this way.
-> Also: using a pointer directly doesn't save us any memory nor code
-> here.
 
-I don't care either way but devm_alloc_etherdev_mqs() and co. are using
-the double pointer directly. Please make things consistent. Either do
-the same, or define the structure in some header and convert other
-helpers to also make use of it.
+> -----Original Message-----
+> From: Kishon Vijay Abraham I <kishon@ti.com>
+> Sent: 17 April 2020 12:43
+> To: Tom Joseph <tjoseph@cadence.com>; Bjorn Helgaas
+> <bhelgaas@google.com>; Rob Herring <robh+dt@kernel.org>; Lorenzo
+> Pieralisi <lorenzo.pieralisi@arm.com>; Andrew Murray
+> <amurray@thegoodpenguin.co.uk>
+> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: [PATCH v2 0/4] PCI: cadence: Deprecate inbound/outbound specific
+> bindings
+>=20
+>=20
+> This series is a result of comments given by Rob Herring @ [1].
+> Patch series changes the DT bindings and makes the corresponding driver
+> changes.
+>=20
+> [1] ->
+> https://urldefense.com/v3/__http://lore.kernel.org/r/20200219202700.GA2
+> 1908@bogus__;!!EHscmS1ygiU1lA!WloWcIaUFQabEO5FFWQOtNXLI_LZm6w
+> 5hMqRP7KjVX7QEGHBX7W13D1hEXnRbEg$
+>=20
+> Changes from v1:
+> 1) Added Reviewed-by: Rob Herring <robh@kernel.org> for dt-binding patch
+> 2) Fixed nitpick comments from Bjorn Helgaas
+> 3) Added a patch to read 32-bit Vendor ID/Device ID property from DT
+>=20
+> Kishon Vijay Abraham I (4):
+>   dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+>     bindings
+>   PCI: cadence: Use "dma-ranges" instead of "cdns,no-bar-match-nbits"
+>     property
+>   PCI: cadence: Remove "cdns,max-outbound-regions" DT property
+>   PCI: cadence: Fix to read 32-bit Vendor ID/Device ID property from DT
+>=20
+>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
+>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
+>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
+>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
+>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
+>  .../controller/cadence/pcie-cadence-host.c    | 21 +++++++++-------
+>  drivers/pci/controller/cadence/pcie-cadence.h |  6 ++---
+>  7 files changed, 51 insertions(+), 24 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-
+> ep.yaml
+>=20
+> --
+> 2.17.1
+
+Acked-by: Tom Joseph <tjoseph@cadence.com>
