@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F69C4725B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32429C4724C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8CE42080D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E6762080D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbgEFRoS (ORCPT
+        id S1728094AbgEFRoA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 13:44:18 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60956 "EHLO
+        Wed, 6 May 2020 13:44:00 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60848 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730167AbgEFRoN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 13:44:13 -0400
+        with ESMTP id S1728775AbgEFRoA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 13:44:00 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3FBEA8000AFE;
-        Wed,  6 May 2020 17:44:10 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id EE32B8030790;
+        Wed,  6 May 2020 17:43:57 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 4bX1kpA1Q5sq; Wed,  6 May 2020 20:44:09 +0300 (MSK)
+        with ESMTP id dw2DhZ5V0vNK; Wed,  6 May 2020 20:43:57 +0300 (MSK)
 From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Zhou Yanjie <zhouyanjie@zoho.com>,
-        Paul Cercueil <paul@crapouillou.net>,
+        <devicetree@vger.kernel.org>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
         <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 11/20] mips: MAAR: Use more precise address mask
-Date:   Wed, 6 May 2020 20:42:29 +0300
-Message-ID: <20200506174238.15385-12-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v2 08/20] mips: Fix cpu_has_mips64r1/2 activation for MIPS32 CPUs
+Date:   Wed, 6 May 2020 20:42:26 +0300
+Message-ID: <20200506174238.15385-9-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
  <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
@@ -56,17 +56,23 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Indeed according to the P5600/P6000 manual the MAAR pair register
-address field either takes [12:31] bits for 32-bits non-XPA systems
-and [12:35] otherwise. In any case the current address mask is just
-wrong for 64-bit and 32-bits XPA chips. So lets extend it to 39-bits
-value. This shall cover the 64-bits architecture and systems with XPA
-enabled, and won't cause any problem for non-XPA 32-bit systems, since
-the value will be just truncated when written to the 32-bits register.
+Commit 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA
+allows") updated the cpu_has_mips* macro to be replaced with a constant
+expression where it's possible. By mistake it wasn't done correctly
+for cpu_has_mips64r1/cpu_has_mips64r2 macro. They are defined to
+be replaced with conditional expression __isa_range_or_flag(), which
+means either ISA revision being within the range or the corresponding
+CPU options flag was set at the probe stage or both being true at the
+same time. But the ISA level value doesn't indicate whether the ISA is
+MIPS32 or MIPS64. Due to this if we select MIPS32r1 - MIPS32r5
+architectures the __isa_range() macro will activate the
+cpu_has_mips64rX flags, which is incorrect. In order to fix the
+problem we added a new macro __isa_range_and_flag() and use it to
+define the cpu_has_mips64r1/cpu_has_mips64r2 flags.
 
-Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Fixes: 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA allows")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
@@ -75,22 +81,35 @@ Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-pm@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 ---
- arch/mips/include/asm/mipsregs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/include/asm/cpu-features.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index 039ebd913f00..165f6318d861 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -775,7 +775,7 @@
+diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
+index e2f31bd6363b..7e22b9c1e279 100644
+--- a/arch/mips/include/asm/cpu-features.h
++++ b/arch/mips/include/asm/cpu-features.h
+@@ -64,6 +64,8 @@
+ 	((MIPS_ISA_REV >= (ge)) && (MIPS_ISA_REV < (lt)))
+ #define __isa_range_or_flag(ge, lt, flag) \
+ 	(__isa_range(ge, lt) || ((MIPS_ISA_REV < (lt)) && __isa(flag)))
++#define __isa_range_and_flag(ge, lt, flag) \
++	(__isa_range(ge, lt) && __isa(flag))
  
- /* MAAR bit definitions */
- #define MIPS_MAAR_VH		(_U64CAST_(1) << 63)
--#define MIPS_MAAR_ADDR		((BIT_ULL(BITS_PER_LONG - 12) - 1) << 12)
-+#define MIPS_MAAR_ADDR		GENMASK_ULL(35, 12)
- #define MIPS_MAAR_ADDR_SHIFT	12
- #define MIPS_MAAR_S		(_ULCAST_(1) << 1)
- #define MIPS_MAAR_VL		(_ULCAST_(1) << 0)
+ /*
+  * SMP assumption: Options of CPU 0 are a superset of all processors.
+@@ -291,10 +293,10 @@
+ # define cpu_has_mips32r6	__isa_ge_or_flag(6, MIPS_CPU_ISA_M32R6)
+ #endif
+ #ifndef cpu_has_mips64r1
+-# define cpu_has_mips64r1	__isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1)
++# define cpu_has_mips64r1	__isa_range_and_flag(1, 6, MIPS_CPU_ISA_M64R1)
+ #endif
+ #ifndef cpu_has_mips64r2
+-# define cpu_has_mips64r2	__isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2)
++# define cpu_has_mips64r2	__isa_range_and_flag(2, 6, MIPS_CPU_ISA_M64R2)
+ #endif
+ #ifndef cpu_has_mips64r6
+ # define cpu_has_mips64r6	__isa_ge_and_flag(6, MIPS_CPU_ISA_M64R6)
 -- 
 2.25.1
 
