@@ -2,160 +2,115 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6EEC54E49
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 22:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CCEC47257
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 22:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1722078C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 22:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29692082E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 22:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tsm34CKs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SWWR+Upk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbgEFWgm (ORCPT
+        id S1730254AbgEFWk3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 18:36:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41866 "EHLO
+        Wed, 6 May 2020 18:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729675AbgEFWgm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 18:36:42 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22BCEC061A0F;
-        Wed,  6 May 2020 15:36:42 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h4so4150727ljg.12;
-        Wed, 06 May 2020 15:36:42 -0700 (PDT)
+        with ESMTP id S1728173AbgEFWk0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 18:40:26 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BAFBC061A0F
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 15:40:25 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t7so1241248plr.0
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 15:40:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=B+lR9RibOagVSsl39LZ9OK8akQe4JLP7xJR19GpLf1o=;
-        b=Tsm34CKsvSLpR0vTdnP3NXEIfocWbivLXWk8w+tAJE4vffmJ6ALKGmPAv3YVr6sNTJ
-         PZhbhmMAaEJIGzYHbhPiJhHEcc3P37y+LVjHDK11d/zgxezjvH1QIiHmKvMoSMWkso+F
-         p9iRxQbECLqV26uxb4vt/iaRUo0fe68iCd2eQJXK51S3tYRbCQQUDyELDVHtlMplWRNW
-         irFmAnBBMMqbfnHmGW3cJyIwJGM1Pxx4RSYQMyd9fYnCp+iUIqYBaZwM9HpTy2VzOZIz
-         eDFakF5MmrzMKhoY8RzaeIbBgiMHs/uPr8z5P2yWV6A8M/DD3+sBc68tVFny5VTRfxSO
-         q+Iw==
+        bh=QdygR2A72/9LbEfVx2KFs3XOLDP2FAPzE7Df5641CTE=;
+        b=SWWR+UpkmvIE+5IkhyyAYX+75Y/7/mDnDtfjR2ghLwrvagpWXgIcXAMbXN0ctOmC7J
+         r0FxwlPF0uoG20mDKj/ixX1NIadS14OGfhEQm5Yy4h1fp3BkOTWg3wrCj17q6zI+ekN/
+         mDFNQPcrBFBtYUtdiJxBZH03mttId5kD4H4tA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=B+lR9RibOagVSsl39LZ9OK8akQe4JLP7xJR19GpLf1o=;
-        b=jdV95793K56F2VxemgqF4SBIs0eE6YIQHOSwaDBlYNtM2rGGF3dQw7ZZJLKRxHVm1K
-         zH+4+qS3TDeXdsW2G6+v8f3ElXAvMkE6dwFHT6grG0M4u6jCvIUsnqjEZ++NvuO+hwma
-         3K9xMmIa6RxBbpOi8/aLCw7S6cKNbtVqkaZA6snSuk7N6S+fw4Oh59SNwTT5DQG40bxg
-         QAhPg9VrbkJNUH8eC/a5IuEnYgF6JlmOcewbN++xY3y4ImI/UuKW8X6Xeezq8T6mHDX2
-         BKhq651gY5VRkrBuvSeVyrY+tPDucARZWH08A/EOxknBJicoY2jJqtmQBdC76pORY9nz
-         u00w==
-X-Gm-Message-State: AGi0PubTqOBRW2uVSFCrKnlOECXMUUWltAIPW1ElaedLROplcSrij9AZ
-        q/UMVvhW62Z+dptQJ/kzFow=
-X-Google-Smtp-Source: APiQypIn3b6fKkJd20UjwwrJFveGF8cjFc17xH6wdHxzh2I3WM+a3Zo4qxNiMUlQ/0tz6anyOynLdA==
-X-Received: by 2002:a2e:9b13:: with SMTP id u19mr6438685lji.161.1588804600577;
-        Wed, 06 May 2020 15:36:40 -0700 (PDT)
-Received: from mobilestation ([176.213.3.142])
-        by smtp.gmail.com with ESMTPSA id j19sm404666lfh.19.2020.05.06.15.36.38
+        bh=QdygR2A72/9LbEfVx2KFs3XOLDP2FAPzE7Df5641CTE=;
+        b=SPEaumLUOqqMHbQaWNp855/4T2gjurn5MDTeaqfTb1fDAUTzYcJGhKzURxsAAQcy0d
+         lg1Ta0L/i7SESsIn8qwiKWKPHn5wjixaM+ZCcSMT8x6HBM+ndaJJhSxm7P/yypjMFrmk
+         UpeZ4ZFqBF2oxDayuqziUAx6fRkZdRZW5jeVv38q0RCiysEt0v9avMQo806XQqbfeI/w
+         4DjweyWoaWpyVwsDoL4Iq6wOiujP2XVfqPITqMpG/9eKQeQ/OiGaKRD+zSTDV3fGF8d0
+         fAVHOQKk9Ykn56jJK5jX7nhY6XSO76sYJw0VyyvM/Smt4T8YKTFOsCFJBnD/9z/zWC/Y
+         glUQ==
+X-Gm-Message-State: AGi0PubbiLqQ1U35iAJOHG4OlRBIckx3vem6i85QAs2IFr1btSMX0Wdr
+        dr0sJg9tyDh+GYQzaexEZbXQbA==
+X-Google-Smtp-Source: APiQypLeKev/qpKuUfyxub8k75/PIRWV5N1ol74IL1rE5d96sthNE61DOXvqGS/dnem4REr+Biuuuw==
+X-Received: by 2002:a17:90a:280c:: with SMTP id e12mr11866676pjd.52.1588804824838;
+        Wed, 06 May 2020 15:40:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b140sm2819009pfb.119.2020.05.06.15.40.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 15:36:39 -0700 (PDT)
-Date:   Thu, 7 May 2020 01:36:36 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Tony Xie <tony.xie@rock-chips.com>, Wen He <wen.he_1@nxp.com>,
-        Mike Looijmans <mike.looijmans@topic.nl>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] clk: Add Baikal-T1 CCU PLLs driver
-Message-ID: <20200506223636.pgegmxc2z4uqbnbg@mobilestation>
-References: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
- <20200506222300.30895-1-Sergey.Semin@baikalelectronics.ru>
- <20200506222300.30895-4-Sergey.Semin@baikalelectronics.ru>
- <9259445e-86a8-8e4a-58c9-822bd00d62f8@infradead.org>
+        Wed, 06 May 2020 15:40:23 -0700 (PDT)
+Date:   Wed, 6 May 2020 15:40:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
+        sashal@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] pstore/platform: Pass max_reason to kmesg dump
+Message-ID: <202005061540.88ECA85@keescook>
+References: <20200506211523.15077-1-keescook@chromium.org>
+ <20200506211523.15077-3-keescook@chromium.org>
+ <4cdeaa2af2fe0d6cc2ca8ce3a37608340799df8a.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9259445e-86a8-8e4a-58c9-822bd00d62f8@infradead.org>
+In-Reply-To: <4cdeaa2af2fe0d6cc2ca8ce3a37608340799df8a.camel@perches.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+On Wed, May 06, 2020 at 02:25:41PM -0700, Joe Perches wrote:
+> On Wed, 2020-05-06 at 14:15 -0700, Kees Cook wrote:
+> > From: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > 
+> > Add a new member to struct pstore_info for passing information about
+> > kmesg dump maximum reason. This allows a finer control of what kmesg
+> > dumps are sent to pstore storage backends.
+> 
+> trivia:
+> 
+> > diff --git a/include/linux/pstore.h b/include/linux/pstore.h
+> []
+> > @@ -96,6 +96,12 @@ struct pstore_record {
+> >   *
+> >   * @read_mutex:	serializes @open, @read, @close, and @erase callbacks
+> >   * @flags:	bitfield of frontends the backend can accept writes for
+> > + * @max_reason:	Used when PSTORE_FLAGS_DMESG is set. Contains the
+> > + *		kmsg_dump_reason enum value. KMSG_DUMP_UNDEF means
+> > + *		"use existing kmsg_dump() filtering, based on the
+> > + *		printk.always_kmsg_dump boot param" (which is either
+> > + *		KMSG_DUMP_OOPS when false, or KMSG_DUMP_MAX when
+> > + *		tree); see printk.always_kmsg_dump for more details.
+> 
+> s/tree/true/
 
-On Wed, May 06, 2020 at 03:27:57PM -0700, Randy Dunlap wrote:
-> Hi,
-> 
-> Typo(s):
-> 
-> On 5/6/20 3:22 PM, Serge Semin wrote:
-> > diff --git a/drivers/clk/baikal-t1/Kconfig b/drivers/clk/baikal-t1/Kconfig
-> > new file mode 100644
-> > index 000000000000..e1257af9f49e
-> > --- /dev/null
-> > +++ b/drivers/clk/baikal-t1/Kconfig
-> > @@ -0,0 +1,30 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +config CLK_BAIKAL_T1
-> > +	bool "Baikal-T1 Clocks Control Unit interface"
-> > +	depends on (MIPS_BAIKAL_T1 && OF) || COMPILE_TEST
-> > +	default MIPS_BAIKAL_T1
-> > +	help
-> > +	  Clocks Control Unit is the core of Baikal-T1 SoC System Controller
-> > +	  responsible for the chip subsystems clocking and resetting. It
-> > +	  consists of multiple global clock domains, which can be reset by
-> > +	  means of the CCU control registers. These domains and devices placed
-> > +	  in them are fed with clocks generated by a hierarchy of PLLs,
-> > +	  configurable and fixed clock dividers. Enable this option to be able
-> > +	  to select Baikal-T1 CCU PLLs and Dividers drivers.
-> > +
-> > +if CLK_BAIKAL_T1
-> > +
-> > +config CLK_BT1_CCU_PLL
-> > +	bool "Baikal-T1 CCU PLLs support"
-> > +	select MFD_SYSCON
-> > +	default MIPS_BAIKAL_T1
-> > +	help
-> > +	  Enable this to support the PLLs embedded into the Baikal-T1 SoC
-> > +	  System Controller. These are five PLLs placed at the root of the
-> > +	  clocks hierarchy, right after an external reference osciallator
-> 
-> 	                                                      oscillator
+Eek, thanks. I'll fix my typo. :)
 
-Fixed. Thanks.
-
-> 
-> > +	  (normally of 25MHz). They are used to generate high frequency
-> > +	  signals, which are either directly wired to the consumers (like
-> > +	  CPUs, DDR, etc) or passed over the clock dividers to be only then
-> 
-> and while you are here:
-> 
->                      etc.)
-
-Thanks again.
-
--Sergey
-
-> 
-> > +	  used as an individual reference clock of a target device.
-> > +
-> > +endif
-> 
-> thanks.
-> -- 
-> ~Randy
-> 
+-- 
+Kees Cook
