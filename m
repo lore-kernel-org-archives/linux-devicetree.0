@@ -4,94 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4FCC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 20:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4394C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 20:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BCBC2070B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 20:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D162070B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 20:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588795562;
-	bh=jgUN3vH86IMh5mdQ2oTFFzDPwb5XgPKGZ/pa709lY+A=;
+	s=default; t=1588795672;
+	bh=Nt0p1XAwElWlsnP8rsfXs4pncGj9jVnJPsHbNp+5TNk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HysGGlWevS5r+UBECixMeIQekN4+tjcEBPZiXs+ayPvbHX33w+cfZRxceS67MhFDP
-	 ImnDEEOWBa+sA6+VFLTofVhC0k6kCffcaWmK9DAr1YvJHo8mk3aq2oi5iDKUlvTJ3q
-	 STDDGTDEVeaBNFXSA08VTYn1TeNwbz9aKOSJkX7k=
+	b=QQbmNMaPD1jNlnadmb/2lZtTOhDSKxIkcgkWV0paWCH4P89HdDizpiXOUHFlRfJkF
+	 winXxY/ZWNeGYAaUKWOI0TkOaso6YrnEnnd+WZXRsDCRJg193LOl9EPjZ42qokVcix
+	 8F9N0iWUBri+i0+2beQPBtZL1rifTpo18Bci+bg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgEFUGB (ORCPT
+        id S1728070AbgEFUHw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 16:06:01 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33649 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbgEFUGB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 16:06:01 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j26so2466920ots.0;
-        Wed, 06 May 2020 13:06:00 -0700 (PDT)
+        Wed, 6 May 2020 16:07:52 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:40603 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728062AbgEFUHv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 16:07:51 -0400
+Received: by mail-oo1-f66.google.com with SMTP id r1so777144oog.7;
+        Wed, 06 May 2020 13:07:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B63JfAS5DnOPIn359Mu4SF2juiHItV8fI+NFsKVSGD8=;
-        b=DChIcMBiLpGLDrQEQ0IP/DMerBwX31AM3hgbGh3e3SQNqh61k4Ego6Uc6fwkmjYYvo
-         aOMV+uX5Am41yjHEHZiTQEYbreT7d6o2EvF22u9o13ppd8TM6XWSoHV+AxDxUa/q0NkV
-         EXcFMBEhQCmX7him5tdQGUBiKmD5fz3KHs8uV0ItJ9QKmfWTqSBy80TYbJF8KbaKolFZ
-         nxVxgXFDGg/EdLRncS0XYc23OCN6bh5qa5N1nQYR3y7DMjLyuk/OHCDGF7MIq+e1SQ+M
-         34SpGixsbZDDlE2eCVcyXL6Ge12iw1hrhE2+WHLcamwScfMFw5yIciXJuDiMhw5kCOMY
-         NL+w==
-X-Gm-Message-State: AGi0PuYqsbW0dpvKiP4fqD1X2uF8S00TUua+IJjQZBK380emkDE+evzC
-        JYvWv/cIGgo/ZVwCjZt+sQ==
-X-Google-Smtp-Source: APiQypIici0Rg+Y4p7bwcYXH235wYgoJGR0SXXaIzkdixkSakfukZtIjV7CDVl+EVrcArRIbhPWfrQ==
-X-Received: by 2002:a05:6830:1e39:: with SMTP id t25mr7785497otr.114.1588795560432;
-        Wed, 06 May 2020 13:06:00 -0700 (PDT)
+        bh=m//K22Duhst7MLLBowkL8H7YWW4DvGlsi4f3I8y8i0A=;
+        b=Rox7UHtQLgIC6KW0D1bpRBWlRqw2gZjAiazOpnHfhm28YdA8gd5LVpew3h0YyBZUCO
+         IwhKdXjoxbLs1KNIc7BQ9p8fE81cubjkcDxRRaLiw8BoNAZrfVtCzNy0WZs7mma9ibVA
+         Tf0jjEGUqZU1SRpPy85bLmJZrOxoxR5eWKYypvC/zK6AXzalJkhN/aQu3DkEh23nPIoN
+         R7h4rzOdfhXxAO1sGo5vaGdGLcWKx1QgWmM5OxNXOhBNBsaBRNcSJjVb50mwzTgmki0p
+         Iu55sY84AveJOZxZvZWQ8Fjy58a8dFpJhEK02NkADNXUVCyuebbAJnYCx83UwhehobUh
+         N5Cw==
+X-Gm-Message-State: AGi0PuaiMihtNNmZA7pRQec6DXduxfo6YC9GAZ0koLSM0yuiAp2dx1wY
+        9lewMCAl8rpcO6ISkhNSae1duP0=
+X-Google-Smtp-Source: APiQypJG0GZkVXMMvIH0qOJ1vVRwc8oBzdFTSXt7YgCtCveVNkr6Z5mZ06vR2w6MBzufhOQoVl9k6g==
+X-Received: by 2002:a4a:1445:: with SMTP id 66mr8623663ood.87.1588795670622;
+        Wed, 06 May 2020 13:07:50 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a22sm774402otf.42.2020.05.06.13.05.59
+        by smtp.gmail.com with ESMTPSA id m11sm747801otr.79.2020.05.06.13.07.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 13:05:59 -0700 (PDT)
-Received: (nullmailer pid 31500 invoked by uid 1000);
-        Wed, 06 May 2020 20:05:58 -0000
-Date:   Wed, 6 May 2020 15:05:58 -0500
+        Wed, 06 May 2020 13:07:50 -0700 (PDT)
+Received: (nullmailer pid 1918 invoked by uid 1000);
+        Wed, 06 May 2020 20:07:49 -0000
+Date:   Wed, 6 May 2020 15:07:49 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
         linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: power: meson-ee-pwrc: add support
- for  Meson8/8b/8m2
-Message-ID: <20200506200558.GA31434@bogus>
+Subject: Re: [PATCH v3 2/4] dt-bindings: power: meson-ee-pwrc: add support
+ for the  Meson GX SoCs
+Message-ID: <20200506200749.GA1868@bogus>
 References: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
- <20200420202612.369370-2-martin.blumenstingl@googlemail.com>
+ <20200420202612.369370-3-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200420202612.369370-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200420202612.369370-3-martin.blumenstingl@googlemail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Apr 2020 22:26:09 +0200, Martin Blumenstingl wrote:
-> The power domains on the 32-bit Meson8/Meson8b/Meson8m2 SoCs are very
-> similar to what G12A still uses. The (known) differences are:
-> - Meson8 doesn't use any reset lines at all
-> - Meson8b and Meson8m2 use the same reset lines, which are different
->   from what the 64-bit SoCs use
-> - there is no "vapb" clock on the older SoCs
-> - amlogic,ao-sysctrl cannot point to the whole AO sysctrl region but
->   only the power management related registers
+On Mon, 20 Apr 2020 22:26:10 +0200, Martin Blumenstingl wrote:
+> The power domains on the GX SoCs are very similar to G12A. The only
+> known differences so far are:
+> - The GX SoCs do not have the HHI_VPU_MEM_PD_REG2 register (for the
+>   VPU power-domain)
+> - The GX SoCs have an additional reset line called "dvin"
 > 
-> Add a new compatible string and adjust clock and reset line expectations
-> for each SoC.
+> Add a new compatible string and adjust the reset line expectations for
+> these SoCs.
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../bindings/power/amlogic,meson-ee-pwrc.yaml | 74 +++++++++++++++----
->  include/dt-bindings/power/meson8-power.h      | 13 ++++
->  2 files changed, 72 insertions(+), 15 deletions(-)
->  create mode 100644 include/dt-bindings/power/meson8-power.h
+>  .../bindings/power/amlogic,meson-ee-pwrc.yaml | 28 +++++++++++++++++++
+>  include/dt-bindings/power/meson-gxbb-power.h  | 13 +++++++++
+>  2 files changed, 41 insertions(+)
+>  create mode 100644 include/dt-bindings/power/meson-gxbb-power.h
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
