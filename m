@@ -2,158 +2,101 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E83C47254
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 01:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8627FC47247
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 02:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23FB3206E6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 01:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 598BB2073B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 02:33:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="nYo/nDt5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1384l/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbgEFBHY (ORCPT
+        id S1729594AbgEFCdg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 21:07:24 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:53810 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729275AbgEFBHX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 21:07:23 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 45135427B1;
-        Wed,  6 May 2020 01:07:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1588727238; x=1590541639; bh=Dv7w39ju2oOA7NOj7pE5cObQuyLCkCPWH30
-        nVs+H7PQ=; b=nYo/nDt5r3Q2qGsvuwi8ychy08Uk5TL4bognTSSdLapig5pHk/Q
-        akyV9jg86XvwntppszcO83fIhzCMxgXU/9vZOC9zZUa6l1Gequbr/H0YV9qGeZoY
-        LaJbrQxzac9GLZcX7R6uETMUUP7mzgw8pbnqVKs8s5kFa7edEO+Ak+Pg=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LoJs5lQM0-LH; Wed,  6 May 2020 04:07:18 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id B7FE9499B3;
-        Wed,  6 May 2020 04:07:17 +0300 (MSK)
-Received: from localhost.dev.yadro.com (10.199.2.222) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Wed, 6 May 2020 04:07:18 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v12 1/2] dt-bindings: proximity: provide vcnl3020 device tree binding document
-Date:   Wed, 6 May 2020 04:08:08 +0300
-Message-ID: <20200506010809.6348-2-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200506010809.6348-1-i.mikhaylov@yadro.com>
-References: <20200506010809.6348-1-i.mikhaylov@yadro.com>
+        Tue, 5 May 2020 22:33:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729509AbgEFCdg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 22:33:36 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F35C6C061A0F;
+        Tue,  5 May 2020 19:33:34 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id t3so539545qkg.1;
+        Tue, 05 May 2020 19:33:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gcP618iUXG0oqvLPr7DNo5hRWczpuu2twtPmXxdhVpw=;
+        b=R1384l/6yWHB4ooeXERU+zst6yVVl4qdVKUOLKPDL0IFR5k6aI6g7gRjbAuwT4BzKA
+         Z6KH+95F2q4yXt//grj2uZFTWLNoNm8Lu5dIBlqAf5q0PVULxKpDhwpgZFvf7hcM1z7o
+         JWEEw5dFLm4KLFcz3u7lzAjqWTBHjwaPx8OKXuovGeWFo+iTfTDqNgZ8cVEmx2m0Vs6k
+         EANIs7E1P/Hmi/gKrN2ZVtZbqWaVt+JTnGqrK3+DtfWnoQ9itU1GBE/rj7qiUUNBnx8m
+         YJeMGceUIQe7nPht9WV59pnmBnFXycdSyUqerr4PwnHuvfUnVMkw7uFBR3BIpqH5dNjA
+         mXwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gcP618iUXG0oqvLPr7DNo5hRWczpuu2twtPmXxdhVpw=;
+        b=k8pq+1jvN/xTFQLTx2Sw8R3oL1IKm7Mt5RFCp1vv1izecsHk92eQitkfekL2DQuC85
+         YEjESykZugT8ImT1Aa3Zn2kNVPf+Xvx17xqPlY7tyxjpjnq5utcFtj5RlCeDzlRemzuR
+         AzQfpQ4c0n8ptexAGLynMpEI6kPi+zGZYVeVLcC2oecCW8tBPyhMBVTuPOBDk9zSshB1
+         X5CY0eLMjGZs2N8NxgHsucyaeeWH9IEmaUNvzAmf3XjHFJfiKJtfLlSCOdegsndBkZaD
+         nuM7Ky7GrHVtItoRYuKUO6poJMfHTbYQ2+fL/7tAzwUEIJdJS1J4nzFl/wZduauw23og
+         Aihg==
+X-Gm-Message-State: AGi0PuYAfhpEWmOZfN4PXB7AZ4m/Mx5EsEN5oHIYMzx6tJ6c+SpTzx9U
+        Xaj5WPpv1VMokyI1h9KwJv24cakBYcVUr8LemYo=
+X-Google-Smtp-Source: APiQypKPqLRAV/6/dDdwBHpa1YXOYCMpbodQ4y1LcTQnjLMmx87XtQKGZI8fOwO9Tnx5Ay5TOzZj8htcdEBmp+Z16mI=
+X-Received: by 2002:a05:620a:89d:: with SMTP id b29mr6804070qka.103.1588732414259;
+ Tue, 05 May 2020 19:33:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.2.222]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+References: <cover.1588320655.git.shengjiu.wang@nxp.com> <a933bafd2d6a60a69f840d9d4b613337efcf2816.1588320656.git.shengjiu.wang@nxp.com>
+ <20200501102158.GA5276@sirena.org.uk>
+In-Reply-To: <20200501102158.GA5276@sirena.org.uk>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Wed, 6 May 2020 10:33:23 +0800
+Message-ID: <CAA+D8ANDHHejFD1rYmFOG24yivpEJa+xO-WpVr=Vzfz9yW9H7g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ASoC: fsl_esai: Add support for imx8qm
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mostly standard i2c driver with some additional led-current option
-for vcnl3020.
+Hi
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- .../iio/proximity/vishay,vcnl3020.yaml        | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+On Fri, May 1, 2020 at 6:23 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, May 01, 2020 at 04:12:05PM +0800, Shengjiu Wang wrote:
+> > The difference for esai on imx8qm is that DMA device is EDMA.
+> >
+> > EDMA requires the period size to be multiple of maxburst. Otherwise
+> > the remaining bytes are not transferred and thus noise is produced.
+>
+> If this constraint comes from the DMA controller then normally you'd
+> expect the DMA controller integration to be enforcing this - is there no
+> information in the DMA API that lets us know that this constraint is
+> there?
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
-new file mode 100644
-index 000000000000..408dee17cdf5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Integrated Proximity Sensor With Infrared Emitter
-+
-+maintainers:
-+  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
-+
-+description: |
-+  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
-+  that the infrared emitter is included in the package. It has 16-bit
-+  resolution. It includes a signal processing IC and features standard I2C
-+  communication interface. It features an interrupt function.
-+
-+  Specifications about the devices can be found at:
-+  https://www.vishay.com/docs/84150/vcnl3020.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - vishay,vcnl3020
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: Regulator that provides power to the sensor
-+
-+  vddio-supply:
-+    description: Regulator that provides power to the bus
-+
-+  vishay,led-current-microamp:
-+    description:
-+      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
-+      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
-+      higher than decimal 20. The drive current for the LED used in proximity
-+      sensing.
-+    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
-+          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
-+          180000, 190000, 200000]
-+    default: 20000
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        proximity@13 {
-+              compatible = "vishay,vcnl3020";
-+              reg = <0x13>;
-+              vishay,led-current-microamp = <200000>;
-+        };
-+    };
--- 
-2.21.1
+No, I can't find one API for this.
+Do you have a recommendation?
 
+best regards
+wang shengjiu
