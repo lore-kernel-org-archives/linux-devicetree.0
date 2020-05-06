@@ -2,30 +2,30 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAEDC4725B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5897EC47257
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 019AB20CC7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3020C20870
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbgEFTwF (ORCPT
+        id S1729574AbgEFTwO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 15:52:05 -0400
+        Wed, 6 May 2020 15:52:14 -0400
 Received: from relmlor2.renesas.com ([210.160.252.172]:7384 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725799AbgEFTwE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 15:52:04 -0400
+        by vger.kernel.org with ESMTP id S1725799AbgEFTwM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 15:52:12 -0400
 X-IronPort-AV: E=Sophos;i="5.73,360,1583161200"; 
-   d="scan'208";a="46218035"
+   d="scan'208";a="46218045"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 07 May 2020 04:52:03 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 07 May 2020 04:52:11 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 3DFA24003ED0;
-        Thu,  7 May 2020 04:51:59 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C9141400495A;
+        Thu,  7 May 2020 04:52:07 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -42,9 +42,9 @@ Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 3/9] ARM: dts: r8a7742: Add IRQC support
-Date:   Wed,  6 May 2020 20:51:29 +0100
-Message-Id: <1588794695-27852-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 5/9] dt-bindings: serial: renesas,scifb: Document r8a7742 bindings
+Date:   Wed,  6 May 2020 20:51:31 +0100
+Message-Id: <1588794695-27852-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -53,45 +53,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Describe the IRQC interrupt controller in the r8a7742 device tree.
+RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFB ports,
+so document the SoC specific bindings.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Marc Zyngier <maz@kernel.org>
 ---
 v1->v2:
 * No change
 ---
 
- arch/arm/boot/dts/r8a7742.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/devicetree/bindings/serial/renesas,scifb.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
-index 3d3d95678496..06a4241bafd8 100644
---- a/arch/arm/boot/dts/r8a7742.dtsi
-+++ b/arch/arm/boot/dts/r8a7742.dtsi
-@@ -226,6 +226,20 @@
- 			#power-domain-cells = <1>;
- 		};
+diff --git a/Documentation/devicetree/bindings/serial/renesas,scifb.yaml b/Documentation/devicetree/bindings/serial/renesas,scifb.yaml
+index 57205cb1dcd4..b083970c16a9 100644
+--- a/Documentation/devicetree/bindings/serial/renesas,scifb.yaml
++++ b/Documentation/devicetree/bindings/serial/renesas,scifb.yaml
+@@ -24,6 +24,7 @@ properties:
  
-+		irqc: interrupt-controller@e61c0000 {
-+			compatible = "renesas,irqc-r8a7742", "renesas,irqc";
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			reg = <0 0xe61c0000 0 0x200>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 407>;
-+			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-+			resets = <&cpg 407>;
-+		};
-+
- 		icram0: sram@e63a0000 {
- 			compatible = "mmio-sram";
- 			reg = <0 0xe63a0000 0 0x12000>;
+       - items:
+           - enum:
++              - renesas,scifb-r8a7742      # RZ/G1H
+               - renesas,scifb-r8a7743      # RZ/G1M
+               - renesas,scifb-r8a7744      # RZ/G1N
+               - renesas,scifb-r8a7745      # RZ/G1E
 -- 
 2.17.1
 
