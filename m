@@ -2,113 +2,221 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431F0C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB3CC47256
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 208462076D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0639E2075E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:03:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+Y03lcb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D6iW4e20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgEFVB3 (ORCPT
+        id S1729654AbgEFVDF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 17:01:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55154 "EHLO
+        Wed, 6 May 2020 17:03:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728535AbgEFVB3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 17:01:29 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0D45C061A0F;
-        Wed,  6 May 2020 14:01:28 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t9so1607150pjw.0;
-        Wed, 06 May 2020 14:01:28 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1729653AbgEFVDE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 17:03:04 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C322C061A10
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 14:03:04 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n11so1407887pgl.9
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 14:03:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1PrjJgczo6pwbhVfqtxrYxW7d4ubPdJ5akMV/EdzMO8=;
-        b=S+Y03lcbRfS4M03fe9S1xwCVxAew8y69Mno1QzyJ/cD0m8jpGdJg8JIK2yqt//5s/q
-         TKDuS4ScDuolgCXocIib85qeZn8viFjl3ZwYbLZ74AjJPOIww2Z+qq2ecwqNJaWYqvcU
-         2tfQvU8RJYpdhGsK03ZHN8a5gWrGQ2KT7tuiGdxLy/PtyCLeWYjt5xTYChefFsgTRQrh
-         muaj8qoHgMIXaZSNgBd+7u0w4dVpkTHvL+WHSG8rHfvH+rKqyr+oYqER7vb9+ndZ6qIc
-         j5NleHcXh5HGSEkyRv99dn7fWAMNJmGKm0khoWYkhnzH7IWcqWnaY3/iPeCO8FZpzvyI
-         bh4g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jTg3u14b1jSChok706rtCh0zd7QjZC6auThVS1AFynQ=;
+        b=D6iW4e20bdBvu9vZ4q+2yhDpXY+9Am0tRCu81Dhyy+TifmOTdibQPRuQja2EVK19fY
+         WreYomwshtRjtUvP46bVo9YS8KsZM2rbEQN/0uXvAujvDkzUVef/U0ryQ3Z0cMYh69zp
+         EkUSaDewJjfjp/zQ9hImIR112v3DRjTwU6Vj4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1PrjJgczo6pwbhVfqtxrYxW7d4ubPdJ5akMV/EdzMO8=;
-        b=m3k3dPqmeDthwy7mluqMlagKCoHjHkvAkZ/hjmYOGGk/mzjeMAXVMcZGivxBDRU9ND
-         SPOJMjBtZqcjvQS4i7qvvmnsWLQvazPU0EEKG13CrGj5qCSMnw6CehvuciUyidc8xlus
-         WWrHj6a0ER70+HxQDHBA888eu/kIeyPUUI7hLuxva01SjIl0zh3LQhQr4gQyRUPHJmCd
-         WTs1L2KECtT0WkVnv5K5XyvGKkEOKux2wI7Kp82TNz3GA7lbpC1Ws229H01OMtEPHnmb
-         JmdkcEV9WBvaBL4q7FKLNMrFEYPH0ZMRqJhTYVjC9OiqkS3XbnK/k0TvJ/RBORLgjWFc
-         mCWQ==
-X-Gm-Message-State: AGi0PuZOTL1hs2Lt/uY6yKRcjTvh/7SBpjt5JoVMk2Guz1gRPNGuknFb
-        fFc3zCPYiNLH4u1RhtLeGiriElCJHsnCUnoJ1vM=
-X-Google-Smtp-Source: APiQypKdZjzSlTyFQ/T9CUwUL01Xf79l+ICWYHY1E+4V+NAKRwMIyNo2UDSTCSmbRJOkOJSrbKREYvBDA7BlnuxgR6E=
-X-Received: by 2002:a17:902:6901:: with SMTP id j1mr9830320plk.255.1588798888435;
- Wed, 06 May 2020 14:01:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jTg3u14b1jSChok706rtCh0zd7QjZC6auThVS1AFynQ=;
+        b=LX4v4aJLVqOhBj8ANvSteA+hPIMRgYWZ9Wa97HdxDyElbJLvr+0oFjcG8vI3eZv6gK
+         DoFCJHwPnh453gDBrse7QA7xnq0PHC96uDarS04yfwPpUtgZvaizP65pNwsmySXgY6U9
+         kDI1DcvyRsbykPxq5Q+YhL074AHxRleMY5IkGbq/wPpgtmQI3Gc0B0BD/MjclDTGPXBz
+         RSzgCy1VflwRJCbFERHMa0ICOduktVUiNNKP7DPyHbI7/X4mBs2+99+h41sBI3QQlhem
+         Qy86w4jSxPCzyfmWbtWR5BsSOOwLX+JP8srwXczg89enkt6uHF72xJXd5YyJyL1DbHRe
+         LeGw==
+X-Gm-Message-State: AGi0Pub420JYdpPAm0A7KU6iLgzSqgUqF2t3IQDPL4rdJsY+5HK2Ijrz
+        DlMDogKijXyT3P0lVPYAMUQrWw==
+X-Google-Smtp-Source: APiQypJ4p2EB66cdVsjU8aoV6seeh84NlanroNemlQHB07n6r/taT/MsTAE900J1+tl8XNpWPOf5pg==
+X-Received: by 2002:a63:cf10:: with SMTP id j16mr8528746pgg.201.1588798983499;
+        Wed, 06 May 2020 14:03:03 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id u5sm2256412pgi.70.2020.05.06.14.03.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 14:03:02 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     robdclark@chromium.org, seanpaul@chromium.org, swboyd@chromium.org,
+        linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] dt-bindings: drm/bridge: ti-sn65dsi86: Improve the yaml validation
+Date:   Wed,  6 May 2020 14:02:42 -0700
+Message-Id: <20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid>
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+In-Reply-To: <20200506140208.v2.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
+References: <20200506140208.v2.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
 MIME-Version: 1.0
-References: <20200430111258.6091-1-alcooperx@gmail.com> <20200430111258.6091-4-alcooperx@gmail.com>
- <20200505110036.GB93160@kroah.com> <CAOGqxeXboYz2OQhgJsYmH5_7qEwKeWR5AA4Ljq_iFdSX=H2fkA@mail.gmail.com>
-In-Reply-To: <CAOGqxeXboYz2OQhgJsYmH5_7qEwKeWR5AA4Ljq_iFdSX=H2fkA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 7 May 2020 00:01:16 +0300
-Message-ID: <CAHp75VeA8JnsJgEgkv0wivinsxvk51JTVyaPhmLhsjzkqZYR8A@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] usb: ehci: Add new EHCI driver for Broadcom STB SoC's
-To:     Alan Cooper <alcooperx@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 6, 2020 at 11:23 PM Alan Cooper <alcooperx@gmail.com> wrote:
-> On Tue, May 5, 2020 at 7:00 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Thu, Apr 30, 2020 at 07:12:57AM -0400, Al Cooper wrote:
+This patch adds the following checks to the yaml:
+- Remapping of the eDP output lanes is now limited to the subset of
+  remappings that the hardware supports.
+- No more additional properties can be added under 'ports'.
 
-...
+This patch fixes the following bugs in the original yaml conversion:
+- Fixed dependency between 'data-lanes' and 'lane-polarities', which
+  was backwards.  Now you can only specify 'lane-polarities' if you
+  specified 'data-lanes'.  I could have sworn I tried this before.
+- We can't remap input lanes in this hardware.
 
-> > > +     /* Hook the hub control routine to work around a bug */
-> >
-> > What bug?  This feels wrong.
->
-> The bug is explained in a comment above the ehci_brcm_hub_control()
-> routine as follows:
-> /*
->  * ehci_brcm_hub_control
->  * Intercept echi-hcd request to complete RESUME and align it to the start
->  * of the next microframe.
->  * If RESUME is complete too late in the microframe, host controller
->  * detects babble on suspended port and resets the port afterwards.
->  * This s/w workaround allows to avoid this problem.
->  * See SWLINUX-1909 for more details
->  */
-> I'll remove the internal bug tracking reference from the comment.
+This patch doesn't do, but if someone knew how I'd love to:
+- Make sure if we have both 'lane-polarities' and 'data-lanes' that
+  they have the same number of elements.
 
-I guess you may leave the internal bug reference. I can tell from my
-experience that's hard to understand what was going on in the driver
-in years perspective. It will help whoever in this company have a
-chance to look after the driver.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+This patch could be squashed atop the patch adding the yaml [1].  I'm
+sending separately for now to avoid churning the series another time.
 
+[1] https://lore.kernel.org/r/20200430124442.v4.4.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid
+
+Changes in v2:
+- ("... Improve the yaml validation") new for v2.
+
+ .../bindings/display/bridge/ti,sn65dsi86.yaml | 74 ++++++++++---------
+ 1 file changed, 40 insertions(+), 34 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+index 75c4e8b8e4b7..be10e8cf31e1 100644
+--- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+@@ -72,6 +72,7 @@ properties:
+ 
+   ports:
+     type: object
++    additionalProperties: false
+ 
+     properties:
+       "#address-cells":
+@@ -94,33 +95,9 @@ properties:
+           endpoint:
+             type: object
+             additionalProperties: false
+-
+             properties:
+               remote-endpoint: true
+ 
+-              data-lanes:
+-                minItems: 1
+-                maxItems: 4
+-                items:
+-                  enum:
+-                    - 0
+-                    - 1
+-                    - 2
+-                    - 3
+-                description: See ../../media/video-interface.txt
+-
+-              lane-polarities:
+-                minItems: 1
+-                maxItems: 4
+-                items:
+-                  enum:
+-                    - 0
+-                    - 1
+-                description: See ../../media/video-interface.txt
+-
+-            dependencies:
+-              data-lanes: [lane-polarities]
+-
+         required:
+           - reg
+ 
+@@ -143,15 +120,44 @@ properties:
+               remote-endpoint: true
+ 
+               data-lanes:
+-                minItems: 1
+-                maxItems: 4
+-                items:
+-                  enum:
+-                    - 0
+-                    - 1
+-                    - 2
+-                    - 3
+-                description: See ../../media/video-interface.txt
++                oneOf:
++                  - minItems: 1
++                    maxItems: 1
++                    uniqueItems: true
++                    items:
++                      enum:
++                        - 0
++                        - 1
++                    description:
++                      If you have 1 logical lane the bridge supports routing
++                      to either port 0 or port 1.  Port 0 is suggested.
++                      See ../../media/video-interface.txt for details.
++
++                  - minItems: 2
++                    maxItems: 2
++                    uniqueItems: true
++                    items:
++                      enum:
++                        - 0
++                        - 1
++                    description:
++                      If you have 2 logical lanes the bridge supports
++                      reordering but only on physical ports 0 and 1.
++                      See ../../media/video-interface.txt for details.
++
++                  - minItems: 4
++                    maxItems: 4
++                    uniqueItems: true
++                    items:
++                      enum:
++                        - 0
++                        - 1
++                        - 2
++                        - 3
++                    description:
++                      If you have 4 logical lanes the bridge supports
++                      reordering in any way.
++                      See ../../media/video-interface.txt for details.
+ 
+               lane-polarities:
+                 minItems: 1
+@@ -163,7 +169,7 @@ properties:
+                 description: See ../../media/video-interface.txt
+ 
+             dependencies:
+-              data-lanes: [lane-polarities]
++              lane-polarities: [data-lanes]
+ 
+         required:
+           - reg
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.2.645.ge9eca65c58-goog
+
