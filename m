@@ -2,287 +2,137 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC17FC38A24
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 09:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC95C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 10:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 780192075A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 09:57:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="O+gyeJTY"
+	by mail.kernel.org (Postfix) with ESMTP id 1638E2075A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 10:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgEFJ5i (ORCPT
+        id S1728713AbgEFKA5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 05:57:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729280AbgEFJ5h (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 05:57:37 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E0C6C061A10
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 02:57:37 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id g35so274301uad.0
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 02:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GEL91UsQkus4klguPQa562vRpJ+uIdXm90Hm4ZfBR84=;
-        b=O+gyeJTYFhQr/KtUZAfqVIH0WTAfmhlRyJcG9PzPBNo88vGrQJkdDr16BZvo7jyPu6
-         Ed7lGKTv6JjIJgAHiuffQ7zdt91Y7/YwK/C8H6PH81YbSDMaT7Zv8rcWBXYJkOALegJF
-         rJAY9Uyo59++eoiXdinzNuqzYLgXNLvkVZtWvMPJ2yilZdRuOhJSlemOTUXdzkAEV0Kk
-         8fV7a+IT2ZsCs7zOiXWgyXMbAqEBeFCd+Lqp1gZqUnNKNY6v8f4O6sQA1KNL/GVBDIfQ
-         Rm1yfvMggC0xl+3HYZ1Wt/wLjsEnN3tLnvF9C9GxeW5yq0n9gU9hG60xnMk7zOyQHHBQ
-         89MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GEL91UsQkus4klguPQa562vRpJ+uIdXm90Hm4ZfBR84=;
-        b=AI3YDDQXJ51l8KVG+ZZH5i85zD+s/WfxwZrqpQWPuiol9bPwCIbCDL/NcohKaufEpc
-         KuouP+xsg0hZfvkYdGdfkyqdD+f9tP3iwIEMhyDxSbp32bwk/1j5cqFbZy3VTiYrlflO
-         bUXytt/Kn0fXI/eo6OYT27WQ+vxqOPmss4CljqVWXhDVeaOEaLx5qFuaHiYImlH1WjV4
-         CORZtOJIVuaiuE4SqvCAYtmbWXkCAOG/btcU3bXXxTlUH0bNP9hIeXjugNmP6/caZqi8
-         k33yma5bIbloNYuno5zoK3qawu9VX5HvecMEg2OWxY6Hr6/wmp+dGrqqp6w287Q3RS2k
-         RjVg==
-X-Gm-Message-State: AGi0Puam6k43AXbA/HKvqIXI1eFF+HNZszJC3EqpVK/+0j7CEZk39TD4
-        7ZTIH6k5HbfB027kZOknPbiLElaBc9VV6SZ4qECvaQ==
-X-Google-Smtp-Source: APiQypIB5U2qPB5OSGV7qIRCOai6i1EXBaGaXL0Sbf11IKfGkPyP77p/vRNyWCA4qxTcW0PmeYsPujgapi4K9umVGpQ=
-X-Received: by 2002:ab0:20aa:: with SMTP id y10mr5935962ual.60.1588759056227;
- Wed, 06 May 2020 02:57:36 -0700 (PDT)
+        Wed, 6 May 2020 06:00:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:60898 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728465AbgEFKA5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 May 2020 06:00:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E6B030E;
+        Wed,  6 May 2020 03:00:56 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 681FE3F71F;
+        Wed,  6 May 2020 03:00:55 -0700 (PDT)
+Subject: Re: [PATCH 07/16] arm64: dts: arm: Fix GIC compatible names
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20200505165212.76466-1-andre.przywara@arm.com>
+ <20200505165212.76466-8-andre.przywara@arm.com>
+ <86lfm6tf1f.wl-maz@kernel.org> <629da7f9-9cc9-ec9e-f175-ef6c90b5e3f1@arm.com>
+ <d9ebbc077d70805bed252656dede750b@kernel.org>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Organization: ARM Ltd.
+Message-ID: <72e7ca7e-003f-7edf-267c-763014f33fdc@arm.com>
+Date:   Wed, 6 May 2020 11:00:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200429103644.5492-1-daniel.lezcano@linaro.org> <20200429103644.5492-2-daniel.lezcano@linaro.org>
-In-Reply-To: <20200429103644.5492-2-daniel.lezcano@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 6 May 2020 15:27:02 +0530
-Message-ID: <CAHLCerMYLLU6LDEgvq_t=NOzXa00npsjv5K+Z=24Lvh2XZVxgA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] dt-bindings: thermal: Add the idle cooling device
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d9ebbc077d70805bed252656dede750b@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 4:07 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> Some devices are not able to cool down by reducing their voltage /
-> frequency because it could be not available or the system does not
-> allow voltage scaling. In this configuration, it is not possible to
-> use this strategy and the idle injection cooling device can be used
-> instead.
->
-> One idle cooling device is now present for the CPU as implemented by
-> the combination of the idle injection framework belonging to the power
-> capping framework and the thermal cooling device. The missing part is
-> the DT binding providing a way to describe how the cooling device will
-> work on the system.
->
-> A first iteration was done by making the cooling device to point to
-> the idle state. Unfortunately it does not make sense because it would
-> need to duplicate the idle state description for each CPU in order to
-> have a different phandle and make the thermal internal framework
-> happy.
->
-> It was proposed to add an cooling-cells to <3>, unfortunately the
-> thermal framework is expecting a value of <2> as stated by the
-> documentation and it is not possible from the cooling device generic
-> code to loop this third value to the back end cooling device.
->
-> Another proposal was to add a child 'thermal-idle' node as the SCMI
-> does. This approach allows to have a self-contained configuration for
-> the idle cooling device without colliding with the cpufreq cooling
-> device which is based on the CPU node. In addition, it allows to have
-> the cpufreq cooling device and the idle cooling device to co-exist
-> together as shown in the example.
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+On 06/05/2020 10:16, Marc Zyngier wrote:
+> On 2020-05-06 09:45, André Przywara wrote:
+>> On 05/05/2020 19:25, Marc Zyngier wrote:
+>>> On Tue, 05 May 2020 17:52:03 +0100,
+>>> Andre Przywara <andre.przywara@arm.com> wrote:
+>>>>
+>>>> The GIC DT binding only allows a certain combination of DT compatible
+>>>> strings, mostly just consisting of one name.
+>>>>
+>>>> Drop the combination of multiple names and go with the
+>>>> "arm,cortex-a15-gic" name for GICv2, as this seems to be the most
+>>>> widely
+>>>> accepted string. "arm,gic-400" would be more correct, but was
+>>>> introduced
+>>>> much later into the kernel's GIC driver.
+>>>>
+>>>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+>>>> ---
+>>>>  arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi | 2 +-
+>>>>  arch/arm64/boot/dts/arm/juno-base.dtsi           | 2 +-
+>>>>  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts       | 2 +-
+>>>>  3 files changed, 3 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
+>>>> b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
+>>>> index 15fe81738e94..61a1750fcdd6 100644
+>>>> --- a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
+>>>> +++ b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
+>>>> @@ -6,7 +6,7 @@
+>>>>
+>>>>  / {
+>>>>      gic: interrupt-controller@2c001000 {
+>>>> -        compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+>>>> +        compatible = "arm,cortex-a15-gic";
+>>>>          #interrupt-cells = <3>;
+>>>>          #address-cells = <2>;
+>>>>          interrupt-controller;
+>>>> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi
+>>>> b/arch/arm64/boot/dts/arm/juno-base.dtsi
+>>>> index 3feefd61eb76..62392ab1f880 100644
+>>>> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
+>>>> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+>>>> @@ -69,7 +69,7 @@
+>>>>      };
+>>>>
+>>>>      gic: interrupt-controller@2c010000 {
+>>>> -        compatible = "arm,gic-400", "arm,cortex-a15-gic";
+>>>> +        compatible = "arm,cortex-a15-gic";
+>>>
+>>> Why? GIC-400 is definitely the most correct compatible string. I'd
+>>> rather see this compatible being generalised to the models rather than
+>>> only referencing the A15 GIC.
+>>
+>> I agree that gic-400 is the far better name, but it was only introduced
+>> in v3.16. So omitting arm,cortex-a15-gic would break any kernels before
+>> that, which I would like to avoid.
+> 
+> I am not talking about dropping the A15 GIC. I'm saying that both should
+> stay. Is there anything in the DT binding that forbids multiple names in
+> the compatible property?
 
+Well, the current form of the YAML bindings require every combination of
+compatible strings to be listed, either explicitly, or using an list of
+allowed strings for each position. This combination here is not listed
+at the moment.
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+>> It's actually a pity that we are so picky about the compatible listings,
+>> because the existing combination is actually quite nice: we get
+>> compatibility with older DT consumers, but still can say what it
+>> actually is.
+>> I wonder if I should introduce this combination to the GIC DT binding
+>> instead, it seems like there are other users in the tree as well.
+>>
+>> What do you think?
+> 
+> I'd say that if the binding forbids multiple compatible strings, the
+> binding is likely to be wrong. We should fix it, and not make the DTs
+> worse as a result of a binding issue.
 
+OK, thanks for the confirmation, and I agree. I will ditch this patch
+and replace it with a respective bindings fix.
 
-> ---
->  - V4:
->    - Added Rob Herring reviewed-by
->  - V3:
->    - Removed extra line with tab inside
->  - V2:
->    - Fixed comment type
->    - Added dual license
->    - Fixed description s/begins to/should/
->    - Changed name s/duration/duration-us/
->    - Changed name s/latency/exit-latency-us/
->    - Removed types for latency / duration
->    - Fixed s/idle-thermal/thermal-idle/
-> ---
->  .../bindings/thermal/thermal-idle.yaml        | 145 ++++++++++++++++++
->  1 file changed, 145 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal-idle.yaml b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-> new file mode 100644
-> index 000000000000..7a922f540934
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-> @@ -0,0 +1,145 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright 2020 Linaro Ltd.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/thermal-idle.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Thermal idle cooling device binding
-> +
-> +maintainers:
-> +  - Daniel Lezcano <daniel.lezcano@linaro.org>
-> +
-> +description: |
-> +  The thermal idle cooling device allows the system to passively
-> +  mitigate the temperature on the device by injecting idle cycles,
-> +  forcing it to cool down.
-> +
-> +  This binding describes the thermal idle node.
-> +
-> +properties:
-> +   $nodename:
-> +     const: thermal-idle
-> +     description: |
-> +        A thermal-idle node describes the idle cooling device properties to
-> +        cool down efficiently the attached thermal zone.
-> +
-> +   '#cooling-cells':
-> +      const: 2
-> +      description: |
-> +         Must be 2, in order to specify minimum and maximum cooling state used in
-> +         the cooling-maps reference. The first cell is the minimum cooling state
-> +         and the second cell is the maximum cooling state requested.
-> +
-> +   duration-us:
-> +      description: |
-> +         The idle duration in microsecond the device should cool down.
-> +
-> +   exit-latency-us:
-> +      description: |
-> +         The exit latency constraint in microsecond for the injected
-> +         idle state for the device. It is the latency constraint to
-> +         apply when selecting an idle state from among all the present
-> +         ones.
-> +
-> +required:
-> +  - '#cooling-cells'
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/thermal/thermal.h>
-> +
-> +    // Example: Combining idle cooling device on big CPUs with cpufreq cooling device
-> +    cpus {
-> +            #address-cells = <2>;
-> +            #size-cells = <0>;
-> +
-> +            /* ... */
-> +
-> +                 cpu_b0: cpu@100 {
-> +                         device_type = "cpu";
-> +                         compatible = "arm,cortex-a72";
-> +                         reg = <0x0 0x100>;
-> +                         enable-method = "psci";
-> +                         capacity-dmips-mhz = <1024>;
-> +                         dynamic-power-coefficient = <436>;
-> +                         #cooling-cells = <2>; /* min followed by max */
-> +                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-> +                         thermal-idle {
-> +                                 #cooling-cells = <2>;
-> +                                 duration-us = <10000>;
-> +                                 exit-latency-us = <500>;
-> +                         };
-> +                };
-> +
-> +                cpu_b1: cpu@101 {
-> +                        device_type = "cpu";
-> +                        compatible = "arm,cortex-a72";
-> +                        reg = <0x0 0x101>;
-> +                        enable-method = "psci";
-> +                        capacity-dmips-mhz = <1024>;
-> +                        dynamic-power-coefficient = <436>;
-> +                        #cooling-cells = <2>; /* min followed by max */
-> +                        cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-> +                        thermal-idle {
-> +                                #cooling-cells = <2>;
-> +                                duration-us = <10000>;
-> +                                exit-latency-us = <500>;
-> +                        };
-> +                 };
-> +
-> +          /* ... */
-> +
-> +    };
-> +
-> +    /* ... */
-> +
-> +    thermal_zones {
-> +         cpu_thermal: cpu {
-> +                polling-delay-passive = <100>;
-> +                polling-delay = <1000>;
-> +
-> +                /* ... */
-> +
-> +                trips {
-> +                        cpu_alert0: cpu_alert0 {
-> +                                    temperature = <65000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "passive";
-> +                        };
-> +
-> +                        cpu_alert1: cpu_alert1 {
-> +                                    temperature = <70000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "passive";
-> +                        };
-> +
-> +                        cpu_alert2: cpu_alert2 {
-> +                                    temperature = <75000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "passive";
-> +                        };
-> +
-> +                        cpu_crit: cpu_crit {
-> +                                    temperature = <95000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "critical";
-> +                        };
-> +                };
-> +
-> +                cooling-maps {
-> +                        map0 {
-> +                             trip = <&cpu_alert1>;
-> +                             cooling-device = <&{/cpus/cpu@100/thermal-idle} 0 15 >,
-> +                                              <&{/cpus/cpu@101/thermal-idle} 0 15>;
-> +                        };
-> +
-> +                        map1 {
-> +                             trip = <&cpu_alert2>;
-> +                             cooling-device =
-> +                                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                       };
-> +                };
-> +          };
-> +    };
-> --
-> 2.17.1
->
+Thanks,
+Andre.
