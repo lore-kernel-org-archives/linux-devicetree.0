@@ -2,206 +2,91 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0955C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 20:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0654C47256
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 20:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A14C32070B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 20:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38B5207DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 20:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588795834;
-	bh=KoHL0QMrNi4SeTbZjTo/wlcbRErKVLsokjGXsQ/8N1s=;
+	s=default; t=1588795958;
+	bh=BawGbKrwMKMSbpECn8nUxTL8DLiMtYHiF+FvZXcFQq4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H+rTl/k3X6JbpHYtWx6DtvbTTSscyUha+G7zy/I07or2xi07fJGOGJTokZoJbOmF7
-	 SiuqbTD/CrF9TS6E2ud5TifDE0zp6Wwecf77ko/KQ7/f5sDh+sqMGu7D2Ai27J1L79
-	 yhEGFZPbYx92l25+HO5Tg5SnKOz00K8AdjVpKEwI=
+	b=enmbSLmYVssVKwUI5FYUihlkbBo3xCJho6t+r3u2cKgjX9M/CG69Z5x1IUbRLNhqx
+	 qNT+B98GldXezzRzt32F87mxZt9XoB2eHZZWsTYd6FGa3ViXBrk4j4mbwqdVGSQi7r
+	 aSj+KMJeS06lAKEjsiFoJzOGv0msoNeI7VCiyzsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgEFUKe (ORCPT
+        id S1728501AbgEFUMi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 16:10:34 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42009 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbgEFUKd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 16:10:33 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i13so2927857oie.9;
-        Wed, 06 May 2020 13:10:31 -0700 (PDT)
+        Wed, 6 May 2020 16:12:38 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40884 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbgEFUMh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 16:12:37 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i27so2453813ota.7;
+        Wed, 06 May 2020 13:12:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kr9G0io6GcOAL+vMLpiHMdNZyvsp/S0aghS63cxQZpo=;
-        b=MG5wybrJJBbH1dn6FT9f29WHseJoQE6ErI32jj/DlRv9ITAfahJgknh6703jjbWtMA
-         ojwXaOYp2qFv9kbigWV2uJiIgmH7wWVQizyM4Y8I0Ef0l9hJxza1GwW8Qv0pwiOq8mrx
-         U4z/Vv9mnfof8KhScwMc1OEW7A2rd1BZI9/+d6Cgz+99HU50IQ3Y+qQcyAbJkCPKpnq3
-         FudVDV8XgOS1W8jR0YJ9R/0f9jOxfkASzsgk0TDWXCj+P8rlk4IoSIHIjs0aZ2eA+xOq
-         yDAzPPwCGY2wGFZoTfRKz1x6rQSFhMW9BOYWhSRy8FGgXfUcReDXAuDcgmpZakzAqllq
-         BDnQ==
-X-Gm-Message-State: AGi0PuYNY5MmVnrt5SRHbyIdiJ/g84/fR6rvCqZJuXOW+kEqlkFSbqrp
-        WtxWZlseEWtmEJwRhmJ0nA==
-X-Google-Smtp-Source: APiQypKRKlHn1JxPJ2QPh/ADqVMmgsz/+XWbdIoDk44iIftBLeGvnMfd1duy/J0Dd6xx5aDLGDr57A==
-X-Received: by 2002:aca:4982:: with SMTP id w124mr1394719oia.167.1588795831480;
-        Wed, 06 May 2020 13:10:31 -0700 (PDT)
+        bh=e+vn9EFSA0UGxoYXwE1EVzF8LOPmMyHze30Po1rkro0=;
+        b=p56iCFpHuTm37uIAUa7DUcEeRX/VL0Uel3nf8hz9cDhcTkYMX3ErMFREcQ3jgpR2VL
+         pFek2E0yT/Y+Bygx4gpOMldOS4MPx5fUoFCxwHSQBebnU8nm1I69CrfrXezvap7WU05f
+         tZmF8iExA1WGIlo9kXwLVHsNAv0ZB4iZprEwYlonIddFGr8P4cS5KR1fExlsspj9+PBs
+         OrjIYLzCvgo0m13CDJafngqY5M6o+yUOvnVWld5qG3Mw+cxkvzIOIQxKkfKmeHeqeRBk
+         q+UhhWTlOtYpF8uxgqLXkESMcQWA+tDEbO6qwWMd0b0aquyOyjDO9SsfPRFQ4yuvLP+R
+         uMbA==
+X-Gm-Message-State: AGi0PuYxxUXTY1YxQKrPsZYAh3rXeb9SEWuTddAQB/phuVm603/RZU+S
+        oZ9mRqdSzVoLD+ruXQMfPw==
+X-Google-Smtp-Source: APiQypKFp1fXOaDvxKO48NzVwW+KRP+mYewDEAYdGEby8SRscKRUph/tJl+f9aaKBbZIMCVBbTTVqg==
+X-Received: by 2002:a9d:12e3:: with SMTP id g90mr7344939otg.247.1588795956372;
+        Wed, 06 May 2020 13:12:36 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d61sm754458otb.58.2020.05.06.13.10.30
+        by smtp.gmail.com with ESMTPSA id n9sm758855otl.76.2020.05.06.13.12.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 13:10:30 -0700 (PDT)
-Received: (nullmailer pid 6640 invoked by uid 1000);
-        Wed, 06 May 2020 20:10:30 -0000
-Date:   Wed, 6 May 2020 15:10:30 -0500
+        Wed, 06 May 2020 13:12:35 -0700 (PDT)
+Received: (nullmailer pid 14836 invoked by uid 1000);
+        Wed, 06 May 2020 20:12:34 -0000
+Date:   Wed, 6 May 2020 15:12:34 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: dt-bindings: ak4642: switch to yaml base
- Documentation
-Message-ID: <20200506201030.GA2041@bogus>
-References: <87h7xdv2m6.wl-kuninori.morimoto.gx@renesas.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     lee.jones@linaro.org, jdelvare@suse.com, linux@roeck-us.net,
+        srinivas.kandagatla@linaro.org, devicetree@vger.kernel.org,
+        linux-hwmon@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-kernel@vger.kernel.org, nick@khadas.com,
+        linux-amlogic@lists.infradead.org, art@khadas.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC 1/8] dt-bindings: mfd: add Khadas Microcontroller bindings
+Message-ID: <20200506201234.GA14756@bogus>
+References: <20200421080102.22796-1-narmstrong@baylibre.com>
+ <20200421080102.22796-2-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87h7xdv2m6.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <20200421080102.22796-2-narmstrong@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 02:17:53PM +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On Tue, 21 Apr 2020 10:00:55 +0200, Neil Armstrong wrote:
+> This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
+> boards.
 > 
-> This patch switches from .txt base to .yaml base Document.
+> It has multiple boot control features like password check, power-on
+> options, power-off control and system FAN control on recent boards.
 > 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  .../devicetree/bindings/sound/ak4642.txt      | 37 ------------
->  .../devicetree/bindings/sound/ak4642.yaml     | 58 +++++++++++++++++++
->  2 files changed, 58 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/ak4642.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/ak4642.yaml
+>  .../devicetree/bindings/mfd/khadas,mcu.yaml   | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/ak4642.txt b/Documentation/devicetree/bindings/sound/ak4642.txt
-> deleted file mode 100644
-> index 58e48ee97175..000000000000
-> --- a/Documentation/devicetree/bindings/sound/ak4642.txt
-> +++ /dev/null
-> @@ -1,37 +0,0 @@
-> -AK4642 I2C transmitter
-> -
-> -This device supports I2C mode only.
-> -
-> -Required properties:
-> -
-> -  - compatible : "asahi-kasei,ak4642" or "asahi-kasei,ak4643" or "asahi-kasei,ak4648"
-> -  - reg : The chip select number on the I2C bus
-> -
-> -Optional properties:
-> -
-> -  - #clock-cells :		common clock binding; shall be set to 0
-> -  - clocks :			common clock binding; MCKI clock
-> -  - clock-frequency :		common clock binding; frequency of MCKO
-> -  - clock-output-names :	common clock binding; MCKO clock name
-> -
-> -Example 1:
-> -
-> -&i2c {
-> -	ak4648: ak4648@12 {
-> -		compatible = "asahi-kasei,ak4642";
-> -		reg = <0x12>;
-> -	};
-> -};
-> -
-> -Example 2:
-> -
-> -&i2c {
-> -	ak4643: codec@12 {
-> -		compatible = "asahi-kasei,ak4643";
-> -		reg = <0x12>;
-> -		#clock-cells = <0>;
-> -		clocks = <&audio_clock>;
-> -		clock-frequency = <12288000>;
-> -		clock-output-names = "ak4643_mcko";
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/sound/ak4642.yaml b/Documentation/devicetree/bindings/sound/ak4642.yaml
-> new file mode 100644
-> index 000000000000..6cd213be2266
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/ak4642.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/ak4642.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AK4642 I2C transmitter Device Tree Bindings
-> +
-> +maintainers:
-> +  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - asahi-kasei,ak4642
-> +      - asahi-kasei,ak4643
-> +      - asahi-kasei,ak4648
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#clock-cells":
-> +    const: 0
 
-Need a blank line here.
-
-> +  "#sound-dai-cells":
-> +    const: 0
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-frequency:
-> +    description: common clock binding; frequency of MCKO
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-Already has a type. Is there some range of frequencies?
-
-> +
-> +  clock-output-names:
-> +    description: common clock name
-> +    $ref: /schemas/types.yaml#/definitions/string
-
-Already has a type. Just 'maxItems: 1'.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        ak4643: codec@12 {
-> +            compatible = "asahi-kasei,ak4643";
-> +            #sound-dai-cells = <0>;
-> +            reg = <0x12>;
-> +            #clock-cells = <0>;
-> +            clocks = <&audio_clock>;
-> +            clock-frequency = <12288000>;
-> +            clock-output-names = "ak4643_mcko";
-> +        };
-> +    };
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
