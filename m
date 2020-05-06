@@ -2,114 +2,195 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DB1C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 11:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC64CC38A24
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 12:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35581206DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 11:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C283E206DB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 12:26:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgEFL7d (ORCPT
+        id S1727932AbgEFM0f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 07:59:33 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:40186 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbgEFL7d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 07:59:33 -0400
-Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
-        by skedge04.snt-world.com (Postfix) with ESMTP id 283B267A887;
-        Wed,  6 May 2020 13:59:27 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
- (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 6 May 2020
- 13:59:26 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.007; Wed, 6 May 2020 13:59:26 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Adam Ford <aford173@gmail.com>
-CC:     Anson Huang <Anson.Huang@nxp.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "Fabio Estevam" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "Li Jun" <jun.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        "Sascha Hauer" <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Wed, 6 May 2020 08:26:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725985AbgEFM0f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 08:26:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE4DBC061A0F
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 05:26:34 -0700 (PDT)
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jWJ84-0004dl-4N; Wed, 06 May 2020 14:26:24 +0200
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jWJ80-0008SB-9H; Wed, 06 May 2020 14:26:20 +0200
+Date:   Wed, 6 May 2020 14:26:20 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Maxime Ripard <maxime@cerno.tech>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 4/4] arm64: dts: imx8mm: Add GPU nodes for 2D and 3D
- core using Etnaviv
-Thread-Topic: [RFC PATCH 4/4] arm64: dts: imx8mm: Add GPU nodes for 2D and 3D
- core using Etnaviv
-Thread-Index: AQHWHu1XU8cnqZiR7kmt3VxL/7fb7aiWVM8AgASDlACAAAPOgA==
-Date:   Wed, 6 May 2020 11:59:26 +0000
-Message-ID: <c9379cdb-cd53-804b-a214-bfee3022a859@kontron.de>
-References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
- <20200430124602.14463-5-frieder.schrempf@kontron.de>
- <CAHCN7xJ=srZxygtG6hW_+us=qH1heY-k=EosavYH9tDk-KG0Bw@mail.gmail.com>
- <0df68f7c-13d2-5bd6-e27a-4bf8534f88fb@kontron.de>
-In-Reply-To: <0df68f7c-13d2-5bd6-e27a-4bf8534f88fb@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <44F5D1A06A190C449A968796CBDACFE2@snt-world.com>
-Content-Transfer-Encoding: base64
+        Fabio Estevam <festevam@gmail.com>,
+        Ben Kao <ben.kao@intel.com>, Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v10 1/3] media: dt-bindings: ov8856: Document YAML
+ bindings
+Message-ID: <20200506122620.GN18755@pengutronix.de>
+References: <20200505100129.104673-1-robert.foss@linaro.org>
+ <20200505100129.104673-2-robert.foss@linaro.org>
+ <1588679279.8804.133.camel@mhfsdcap03>
+ <CAG3jFyvo3gmO3zLRUKQEdgRkmzvvvMTzDKV-LZAeKYFdOfCnEw@mail.gmail.com>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 283B267A887.AF18A
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: aford173@gmail.com, anson.huang@nxp.com,
-        christian.gmeiner@gmail.com, daniel.baluta@nxp.com,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        etnaviv@lists.freedesktop.org, festevam@gmail.com, jun.li@nxp.com,
-        kernel@pengutronix.de, l.stach@pengutronix.de,
-        leonard.crestez@nxp.com, linux+etnaviv@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, peng.fan@nxp.com,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, shengjiu.wang@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG3jFyvo3gmO3zLRUKQEdgRkmzvvvMTzDKV-LZAeKYFdOfCnEw@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:15:18 up 74 days, 23:32, 107 users,  load average: 0.43, 0.98,
+ 4.24
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gMDYuMDUuMjAgMTM6NDUsIEZyaWVkZXIgU2NocmVtcGYgd3JvdGU6DQo+IE9uIDAzLjA1LjIw
-IDE2OjQ5LCBBZGFtIEZvcmQgd3JvdGU6DQo+PiBPbiBUaHUsIEFwciAzMCwgMjAyMCBhdCA3OjQ2
-IEFNIFNjaHJlbXBmIEZyaWVkZXINCj4+IDxmcmllZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+IHdy
-b3RlOg0KPj4+DQo+Pj4gRnJvbTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBr
-b250cm9uLmRlPg0KPj4+DQo+Pj4gQWNjb3JkaW5nIHRvIHRoZSBkb2N1bWVudHMsIHRoZSBpLk1Y
-OE0tTWluaSBmZWF0dXJlcyBhIEdDMzIwIGFuZCBhDQo+Pj4gR0NOYW5vVWx0cmEgR1BVIGNvcmUu
-IEV0bmF2aXYgZGV0ZWN0cyB0aGVtIGFzOg0KPj4+DQo+Pj4gwqDCoMKgwqDCoMKgwqDCoCBldG5h
-dml2LWdwdSAzODAwMDAwMC5ncHU6IG1vZGVsOiBHQzYwMCwgcmV2aXNpb246IDQ2NTMNCj4+PiDC
-oMKgwqDCoMKgwqDCoMKgIGV0bmF2aXYtZ3B1IDM4MDA4MDAwLmdwdTogbW9kZWw6IEdDNTIwLCBy
-ZXZpc2lvbjogNTM0MQ0KPj4+DQo+Pj4gVGhpcyBzZWVtcyB0byB3b3JrIGZpbmUgbW9yZSBvciBs
-ZXNzIHdpdGhvdXQgYW55IGNoYW5nZXMgdG8gdGhlIEhXREIsDQo+Pj4gd2hpY2ggc3RpbGwgbWln
-aHQgYmUgbmVlZGVkIGluIHRoZSBmdXR1cmUgdG8gY29ycmVjdCBzb21lIGZlYXR1cmVzLA0KPj4+
-IGV0Yy4NCj4+Pg0KPj4+IFNpZ25lZC1vZmYtYnk6IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIu
-c2NocmVtcGZAa29udHJvbi5kZT4NCj4+PiAtLS0NCj4+IFNpbmNlIG5vdCBldmVyeW9uZSB1c2Vz
-IHRoZSAzRCBvciAyRCwgd291bGQgaXQgbWFrZSBzZW5zZSB0byBtYXJrIHRoZW0NCj4+IGFzIGRp
-c2FibGVkIGJ5IGRlZmF1bHQgYW5kIGxldCBwZW9wbGUgd2hvIG5lZWQgdGhlIDNEIGFuZCAyRCBl
-bmFibGUNCj4+IHRoZW0gYXQgdGhlaXIgcmVzcGVjdGl2ZSBib2FyZCBmaWxlcz8NCj4gDQo+IEkg
-d291bGQgcmF0aGVyIGtlZXAgaXQgdGhlIHdheSBpdCBoYXMgYmVlbiBkb25lIGZvciBvdGhlciBT
-b0NzLiBMb29raW5nIA0KPiBhdCB0aGUgaS5NWDYgZGV2aWNldHJlZXMsIHRoZXkgYWxsIHNlZW0g
-dG8gaGF2ZSB0aGUgR1BVcyBlbmFibGVkIGJ5IA0KPiBkZWZhdWx0Lg0KDQpBaCwgSSBoYWQgbWlz
-c2VkIEx1Y2FzIHJlcGx5LiBIZSBhbHJlYWR5IHByb3ZpZGVkIG11Y2ggYmV0dGVyIGFyZ3VtZW50
-cyANCmZvciBrZWVwaW5nIHRoZSBHUFVzIGVuYWJsZWQgYnkgZGVmYXVsdC4=
+On 20-05-06 13:29, Robert Foss wrote:
+> Hey Dongchun,
+> 
+> Thanks for having a look at this series.
+> 
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +
+> > > +    i2c {
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +
+> > > +        ov8856: camera@10 {
+> > > +            compatible = "ovti,ov8856";
+> > > +            reg = <0x10>;
+> > > +
+> > > +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
+> >
+> > Apologies for missing to follow the earlier discussion related to this.
+> > I noticed the GPIO flag para and __ov8856_power_on() are aligned using
+> > ACTIVE_LOW.
+> >
+> > But from the datasheet, XSHUTDN pin is active-high for OV8856.
+> > It means devm_gpiod_get API (in probe func) should use GPIOD_OUT_LOW to
+> > initialize the GPIO as output with a value of 0.
+> > Otherwise it should use GPIOD_OUT_HIGH.
+> >
+> > There is one case for GPIO_ACTIVE_LOW setting:
+> > https://patchwork.linuxtv.org/patch/63460/
+> > https://patchwork.linuxtv.org/patch/63461/
+> 
+> We went back and forth about this a few times, and I switched to this
+> gpio setting after having worked through the device probing reset gpio
+> toggling. Semantically it seemed easier to understand in the driver,
+> since the gpio is called reset and not !shutdown.
+
+IMHO you can keep your version. DTs are part of the system integration.
+What if one system has a invert logic infront of the gpio input.. The
+system integrator needs to read and to understand the schematic
+correctly to pick the correct value.
+
+> Looking into devm_gpiod_get_optional(), the flag argument
+> GPIOD_OUT_LOW or HIGH for that matter is actually not used initialize
+
+The good think about gpiod is that it care about logic values not
+physical/electrical values. If you set GPIOD_OUT_HIGH then the reset is
+asserted, whatever asserted means electrical.
+
+Regards,
+  Marco
+
+> the output, but only used for an exclusivity check.
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib-devres.c#L109
+> 
+> If you prefer, I can invert the logic again. To me making the reset
+> gpio active resulting in the device being actually reset seems like
+> the most intuitive and easy to understand option.
+> The different OmniVision drivers seem to have different approaches to
+> this. The ov9640 driver for example is doing what this series
+> currently is doing.
+> 
+> >
+> > Sakari, Tomasz, am I right?
+> >
+> > > +            pinctrl-names = "default";
+> > > +            pinctrl-0 = <&clk_24m_cam>;
+> > > +
+> > > +            clocks = <&cam_osc>;
+> > > +            clock-names = "xvclk";
+> > > +            clock-frequency = <19200000>;
+> > > +
+> > > +            avdd-supply = <&mt6358_vcama2_reg>;
+> > > +            dvdd-supply = <&mt6358_vcamd_reg>;
+> > > +            dovdd-supply = <&mt6358_vcamio_reg>;
+> > > +
+> > > +            port {
+> > > +                wcam_out: endpoint {
+> > > +                    remote-endpoint = <&mipi_in_wcam>;
+> > > +                    data-lanes = <1 2 3 4>;
+> > > +                    link-frequencies = /bits/ 64 <360000000>;
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > > +...
+> > > \ No newline at end of file
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 26f281d9f32a..84b262afd13d 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -12489,6 +12489,7 @@ L:    linux-media@vger.kernel.org
+> > >  S:   Maintained
+> > >  T:   git git://linuxtv.org/media_tree.git
+> > >  F:   drivers/media/i2c/ov8856.c
+> > > +F:   Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > >
+> >
+> > Had you run parse-maintainers.pl?
+> > The new item is supposed to be arranged in alphabetical order.
+> 
+> No, I have not. But upon running it now, it doesn't make suggest any
+> changes. But let me order the files manually in the next revision.
+> 
+> However, I noticed I removed the wrong person from the maintainers
+> file in this revision.
+> So, I'll correct that and add you Dongchun as the maintainer if that's ok.
+> 
+> >
+> > >  OMNIVISION OV9640 SENSOR DRIVER
+> > >  M:   Petr Cvek <petrcvekcz@gmail.com>
+> >
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
