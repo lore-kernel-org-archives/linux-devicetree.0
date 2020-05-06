@@ -2,189 +2,176 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BEAC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB72CC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 120702075A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29942075A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YYwwgrSQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W43FnSJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbgEFVRb (ORCPT
+        id S1729398AbgEFVYg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 17:17:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57674 "EHLO
+        Wed, 6 May 2020 17:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728621AbgEFVRb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 17:17:31 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F9ABC061A10
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 14:17:31 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id y6so1611674pjc.4
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 14:17:31 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1728621AbgEFVYf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 17:24:35 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FA7C061A0F;
+        Wed,  6 May 2020 14:24:35 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a8so3412674edv.2;
+        Wed, 06 May 2020 14:24:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bHL3TCbZSVY2fY8pK4XpL92L8KHu3Q1pRXqDpleq+io=;
-        b=YYwwgrSQvQ9dTd1lotXO8pdQekhEC2A1cd0Sx4H5u9eyKmscleQOuRfvk8MoYW80cU
-         0Ch/u9M3kotYkExS+646CjlVMuQYoUSUZNUfJ2mmRvudHnmG9c2neAaeLpSB5c74ZjbF
-         LADPNADiw6WfWiGIUGy8MgNcS6UTYgRNw4nrs=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=mWWbg5J4lXzma05LiK4NGSCPfKejk/6RXYcpVrekWg4=;
+        b=W43FnSJgjM8pqpQ3h7zsuPWas3B0BcKDlVSNlIMV5LnlxwtNFV1nE5yDrkTCbMPOU5
+         9RJ/qOpOXG88GhmKVmKs/7hoaJEngUWKYt3yXHaG/3lEOe9StEnbHkI5k1oxd9MleXi6
+         PzEAhAQU54JHwXD/eh4KnJumTZxfVs+mWQeLAJxLKf5Cvv/s6KABY5Y7jsC2ftSHf/u8
+         k4Os7SpdrZpUfDqmOWDYbsbR2CeImAAybT+W3Vf0ULB1pYVlF4oxyu8fNA3nPKGI5ygJ
+         ngOOSZw6fWxX7GxR7fGG+7SIjD7smtLsgYnB1DwWHO5YrJB22L8dyTKtU7K/8YeXj6L2
+         IT/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bHL3TCbZSVY2fY8pK4XpL92L8KHu3Q1pRXqDpleq+io=;
-        b=DfKo7MFrT8dZTHyflQthF2oOM5Q+U0YmowLR+5LtvJrtKO4EADUU/506QQtprTpURS
-         ONtmxUEwsrkvmwGxTKH5VCRPUCAbqqOjK2jsbpJUNDVOWuCJAsyagphVBnZalWDMrZqt
-         V4nCJhKp9CCXVyTb2Sm9rG8crOp8JFsve9xJesSHtpjKysf+276rAod+bP/t4JrWmsex
-         nrhgboAASvIkipmYH17w02nmjf0TJRcUOljDOqgt/46aBLcOE9uoFsYZIPV6t0J3dHqh
-         /jtvpdaQ9qBSNa6Wg0XPu/6BRndx4yrN2IpV1UuN65+y1OSrWriKHhUt//jdNgOE9cTB
-         AUsg==
-X-Gm-Message-State: AGi0PuaYsVzo/c3RduILHSsWi/O6FaTczssqN8Wt/Q+A13INOwG0meuq
-        fUAMymI32UXPWFf5lh+qpdhSrw==
-X-Google-Smtp-Source: APiQypIO+MV5rfj61rKq9gZ6jFXrGGOrTEad7gG6HHHLb2+aMV1Qk523+Rt+BnExFpt2ko7aQbfPSQ==
-X-Received: by 2002:a17:90b:19d6:: with SMTP id nm22mr8651002pjb.225.1588799850551;
-        Wed, 06 May 2020 14:17:30 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g184sm2667391pfb.80.2020.05.06.14.17.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 14:17:29 -0700 (PDT)
-Date:   Wed, 6 May 2020 14:17:28 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
-        sashal@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] pstore/ram: Introduce max_reason and convert
- dump_oops
-Message-ID: <202005061416.4A6114910@keescook>
-References: <20200506211523.15077-1-keescook@chromium.org>
- <20200506211523.15077-5-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mWWbg5J4lXzma05LiK4NGSCPfKejk/6RXYcpVrekWg4=;
+        b=kvFQoIdCO1oOOr47yiGotMMdo1zhtqOxBPwGfqwsFpcSAbY2+vDSwbkj2AQQsX0JO0
+         rSHIn4nA1MY53rrn3OSXrmexIY/ekRKyJy3SgIy8b2nbHpRlhTCulzXRhBMWHXLxIoOI
+         cubN0ibVAMJ7v/nmNSmQy1MpE/yNw+omxcDX4e8zS5yaOStWwl9WOAAQW4kpCgvIp9Gr
+         kc4iKIx+xw6yeXUfljxPaYACezKxN65+WsMhI/ignkJOpzDwR2ffdWcue9ZyVvVKHuLl
+         44FZYjBwH41B20mdfEo5r9sQ87jsSDOBVDeq9SWW7ViUi48JNKRXWTKmcnWLVRAWrL1b
+         eJlA==
+X-Gm-Message-State: AGi0PuZMWBBfCrh3/VUMkGtn+gUW7aew47e2Ud49TBaGcHYHXWCtiBaX
+        NVGHAy3qzht2DXxGq98UnMKVuuPh5BgdfAgH/mY=
+X-Google-Smtp-Source: APiQypI82fV6fjkCfq9q4VuDKIImBP4b4eZAT/8I0iIM3V2LaRQZg8hXvLB/g1sDY2E8tmf9FE+D8DHww97bMgNSn8E=
+X-Received: by 2002:a05:6402:17f1:: with SMTP id t17mr9138481edy.239.1588800274138;
+ Wed, 06 May 2020 14:24:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506211523.15077-5-keescook@chromium.org>
+References: <20200501203505.144362-1-konradybcio@gmail.com>
+ <20200501203505.144362-2-konradybcio@gmail.com> <3d73eb09-ba4e-5706-042c-0d1894928a35@linaro.org>
+In-Reply-To: <3d73eb09-ba4e-5706-042c-0d1894928a35@linaro.org>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Wed, 6 May 2020 23:23:57 +0200
+Message-ID: <CAMS8qEVa_uRdeHEGpjni-qwGqryVVRp9VY8Ej87MbSCfTqWOFA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] media: venus: Add support for MSM8939
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-media@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:15:21PM -0700, Kees Cook wrote:
-> From: Pavel Tatashin <pasha.tatashin@soleen.com>
-> 
-> Now that pstore_register() can correctly pass max_reason to the kmesg
-> dump facility, introduce a new "max_reason" module parameter and
-> "max-reason" Device Tree field.
-> 
-> The "dump_oops" module parameter and "dump-oops" Device
-> Tree field are now considered deprecated, but are now automatically
-> converted to their corresponding max_reason values when present, though
-> the new max_reason setting has precedence.
-> 
-> For struct ramoops_platform_data, the "dump_oops" member is entirely
-> replaced by a new "max_reason" member, with the only existing user
-> updated in place.
-> 
-> Additionally remove the "reason" filter logic from ramoops_pstore_write(),
-> as that is not specifically needed anymore, though technically
-> this is a change in behavior for any ramoops users also setting the
-> printk.always_kmsg_dump boot param, which will cause ramoops to behave as
-> if max_reason was set to KMSG_DUMP_MAX.
-> 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Link: https://lore.kernel.org/r/20200505154510.93506-4-pasha.tatashin@soleen.com
-> Link: https://lore.kernel.org/r/20200505154510.93506-5-pasha.tatashin@soleen.com
-> Co-developed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  Documentation/admin-guide/ramoops.rst     | 14 +++++--
->  drivers/platform/chrome/chromeos_pstore.c |  2 +-
->  fs/pstore/ram.c                           | 51 +++++++++++++++--------
->  include/linux/pstore_ram.h                |  2 +-
->  4 files changed, 45 insertions(+), 24 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
-> index 6dbcc5481000..a60a96218ba9 100644
-> --- a/Documentation/admin-guide/ramoops.rst
-> +++ b/Documentation/admin-guide/ramoops.rst
-> @@ -32,11 +32,17 @@ memory to be mapped strongly ordered, and atomic operations on strongly ordered
->  memory are implementation defined, and won't work on many ARMs such as omaps.
->  
->  The memory area is divided into ``record_size`` chunks (also rounded down to
-> -power of two) and each oops/panic writes a ``record_size`` chunk of
-> +power of two) and each kmesg dump writes a ``record_size`` chunk of
->  information.
->  
-> -Dumping both oopses and panics can be done by setting 1 in the ``dump_oops``
-> -variable while setting 0 in that variable dumps only the panics.
-> +Limiting which kinds of kmsg dumps are stored can be controlled via
-> +the ``max_reason`` value, as defined in include/linux/kmsg_dump.h's
-> +``enum kmsg_dump_reason``. For example, to store both Oopses and Panics,
-> +``max_reason`` should be set to 2 (KMSG_DUMP_OOPS), to store only Panics
-> +``max_reason`` should be set to 1 (KMSG_DUMP_PANIC). Setting this to 0
-> +(KMSG_DUMP_UNDEF), means the reason filtering will be controlled by the
-> +``printk.always_kmsg_dump`` boot param: if unset, it'll be KMSG_DUMP_OOPS,
-> +otherwise KMSG_DUMP_MAX.
->  
->  The module uses a counter to record multiple dumps but the counter gets reset
->  on restart (i.e. new dumps after the restart will overwrite old ones).
-> @@ -90,7 +96,7 @@ Setting the ramoops parameters can be done in several different manners:
->          .mem_address            = <...>,
->          .mem_type               = <...>,
->          .record_size            = <...>,
-> -        .dump_oops              = <...>,
-> +        .max_reason             = <...>,
->          .ecc                    = <...>,
->    };
->  
-> diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
-> index d13770785fb5..fa51153688b4 100644
-> --- a/drivers/platform/chrome/chromeos_pstore.c
-> +++ b/drivers/platform/chrome/chromeos_pstore.c
-> @@ -57,7 +57,7 @@ static struct ramoops_platform_data chromeos_ramoops_data = {
->  	.record_size	= 0x40000,
->  	.console_size	= 0x20000,
->  	.ftrace_size	= 0x20000,
-> -	.dump_oops	= 1,
-> +	.max_reason	= KMSG_DUMP_OOPS,
->  };
->  
->  static struct platform_device chromeos_ramoops = {
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index c2f76b650f91..b8dac1d04e96 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -57,10 +57,15 @@ module_param(mem_type, uint, 0600);
->  MODULE_PARM_DESC(mem_type,
->  		"set to 1 to try to use unbuffered memory (default 0)");
->  
-> -static int dump_oops = 1;
-> -module_param(dump_oops, int, 0600);
-> +static int ramoops_dump_oops = -1;
-> +module_param_named(dump_oops, ramoops_dump_oops, int, 0400);
->  MODULE_PARM_DESC(dump_oops,
-> -		"set to 1 to dump oopses, 0 to only dump panics (default 1)");
-> +		 "set to 1 to dump oopses & panics, 0 to only dump panics (deprecated: use max_reason instead)");
-> +
-> +static int ramoops_max_reason = KMESG_DUMP_OOPS;
+Hi Stan,
 
-This is what I get for a "quick change right before sending". This
-is a typo and should be KMSG_DUMP_OOPS. :|
+I have found some issues with the submitted GCC driver, related to
+venus, but I have to further look into them locally and work out some
+stuff. One of the things is that freq table for venus clock should be
+changed to the values found here [1] (currently it has 8916
+frequencies). When I find all the causes I'll resubmit this and
+include them in the cover letter, as I might've overlooked something
+wrt venus driver itself when creating this patch from my WIP branch.
+Also it seems like I tested this very patch incorrectly (getting
+segfaults in ffmpeg with v4l2m2m now)... Anyways, I'll get back to you
+when I make it work for sure. Sorry again for the inconvenience.
 
--- 
-Kees Cook
+
+[1] https://github.com/konradybcio/android_kernel_asus_msm8916-1/blob/minim=
+al/drivers/clk/qcom/clock-gcc-8936.c#L1613-L1618
+
+Konrad
+
+wt., 5 maj 2020 o 13:43 Stanimir Varbanov
+<stanimir.varbanov@linaro.org> napisa=C5=82(a):
+>
+> Hi Konrad,
+>
+> On 5/1/20 11:35 PM, Konrad Dybcio wrote:
+> > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> > ---
+> >  drivers/media/platform/qcom/venus/core.c | 33 ++++++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >
+> > diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/p=
+latform/qcom/venus/core.c
+> > index 194b10b987672..f3a15991ac763 100644
+> > --- a/drivers/media/platform/qcom/venus/core.c
+> > +++ b/drivers/media/platform/qcom/venus/core.c
+> > @@ -405,6 +405,38 @@ static const struct venus_resources msm8916_res =
+=3D {
+> >       .fwname =3D "qcom/venus-1.8/venus.mdt",
+> >  };
+> >
+> > +static const struct freq_tbl msm8939_freq_table[] =3D {
+> > +     { 489600, 266670000 },  /* 1080p @ 60 */
+> > +     { 244800, 200000000 },  /* 1080p @ 30 */
+> > +     { 244800, 133330000 },  /* 1080p @ 30 (decode only) */
+> > +     { 220800, 133330000 },  /* 720p @ 60 (decode only?) */
+> > +     { 108000, 133330000 },  /* 720p @ 30*/
+> > +     { 72000, 133330000 },  /* VGA @ 60 */
+> > +     { 36000, 133330000 },  /* VGA @ 30 */
+>
+> 133MHz is the minimum clock frequency in the GCC driver? Do you think
+> that will change?
+>
+> > +};
+> > +
+> > +static const struct reg_val msm8939_reg_preset[] =3D {
+> > +     { 0xe0020, 0x0aaaaaaa },
+> > +     { 0xe0024, 0x0aaaaaaa },
+> > +     { 0x80124, 0x00000003 },
+> > +};
+> > +
+> > +static const struct venus_resources msm8939_res =3D {
+> > +     .freq_tbl =3D msm8939_freq_table,
+> > +     .freq_tbl_size =3D ARRAY_SIZE(msm8939_freq_table),
+> > +     .reg_tbl =3D msm8939_reg_preset,
+> > +     .reg_tbl_size =3D ARRAY_SIZE(msm8939_reg_preset),
+> > +     .clks =3D { "core", "iface", "bus", },
+> > +     .clks_num =3D 3,
+> > +     .max_load =3D 489600, /* 1080p @ 60 */
+> > +     .hfi_version =3D HFI_VERSION_1XX,
+> > +     .vmem_id =3D VIDC_RESOURCE_NONE,
+> > +     .vmem_size =3D 0,
+> > +     .vmem_addr =3D 0,
+> > +     .dma_mask =3D 0xddc00000 - 1,
+> > +     .fwname =3D "qcom/venus-1.8/venus.mdt",
+> > +};
+> > +
+> >  static const struct freq_tbl msm8996_freq_table[] =3D {
+> >       { 1944000, 520000000 }, /* 4k UHD @ 60 (decode only) */
+> >       {  972000, 520000000 }, /* 4k UHD @ 30 */
+> > @@ -567,6 +599,7 @@ static const struct venus_resources sc7180_res =3D =
+{
+> >
+> >  static const struct of_device_id venus_dt_match[] =3D {
+> >       { .compatible =3D "qcom,msm8916-venus", .data =3D &msm8916_res, }=
+,
+> > +     { .compatible =3D "qcom,msm8939-venus", .data =3D &msm8939_res, }=
+,
+> >       { .compatible =3D "qcom,msm8996-venus", .data =3D &msm8996_res, }=
+,
+> >       { .compatible =3D "qcom,sdm845-venus", .data =3D &sdm845_res, },
+> >       { .compatible =3D "qcom,sdm845-venus-v2", .data =3D &sdm845_res_v=
+2, },
+> >
+>
+> --
+> regards,
+> Stan
