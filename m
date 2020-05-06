@@ -1,93 +1,92 @@
-Return-Path: <SRS0=A/SL=6T=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0003AC47258
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 23:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA46C47247
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 00:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9D6F206B8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 May 2020 23:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1442082E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 00:08:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HRCEs4Eh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgEEXeO (ORCPT
+        id S1729565AbgEFAIl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 19:34:14 -0400
-Received: from muru.com ([72.249.23.125]:53004 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728642AbgEEXeO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 May 2020 19:34:14 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id F1A6480A5;
-        Tue,  5 May 2020 23:35:00 +0000 (UTC)
-Date:   Tue, 5 May 2020 16:34:08 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Russell King <linux@armlinux.org.uk>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: dts: omap3: Migrate AES from hwmods to sysc-omap2
-Message-ID: <20200505233408.GS37466@atomide.com>
-References: <20200504230100.181926-1-aford173@gmail.com>
- <20200505184223.GR37466@atomide.com>
- <CAHCN7xJxg+uO4h2RcapyjormTMzXFwoMUOi7rh2hUsScJtK56Q@mail.gmail.com>
+        Tue, 5 May 2020 20:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728642AbgEFAIl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 20:08:41 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D169C061A0F;
+        Tue,  5 May 2020 17:08:41 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id v63so91480pfb.10;
+        Tue, 05 May 2020 17:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QFGJdIdUd6NUXC1ZHECnuWqkthSdUxvUFmMdn3gACEE=;
+        b=HRCEs4EhrAqAXHsr0ImCIuBZoEc3aWfUDEY3weOpTde1339ZNl5M1C8w7CWzpKSYu9
+         w5d2it+CuWhkFz1TuYdXPqGX1XZj3uGwNGT2s281Vg4I634g6nTt9QXZakx9DegF4Bsm
+         u6SHxwUYN2hr2GufMMJNxzjhBdcDfu8KOpnXLyFp3nh0EIEO+lBn5gCJzq4m9pMxGgYt
+         qpJgjGHCF7mQ701QZpLMqaXo2ABku/4gWrU2WqmutNLLoR8QYNSKAiaHTpqAamEKePLJ
+         ajVZDP0Na7hARj147zx/lmd8GAMidsQrUbVb5+d7m0JOHvZfujBBm9Dw9pIsFTQS59OC
+         HOew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QFGJdIdUd6NUXC1ZHECnuWqkthSdUxvUFmMdn3gACEE=;
+        b=Pp92XTzR+WTtyyptVPKonSANE7Xyq32MUhb75MHE7fsyB2TOb5x0zV6MRsi5umABLT
+         AMdHy5Eho1sxuYAREyh8cqOeBAEgumxO5RLIhF00C2iEPLEJ93422uNXr2UZ8g0PwwG9
+         ggQHbjE6Bej/Zvz1JlfrCTsYQXl7r1yT3qRKkzttAPZVQ918l8lOIGWhtAayIq9Ffn3x
+         KkCtl+VUNw9mKtC0DzJmpayY5ZBvQFFLNq5w9gO6Hh+ejSiFaNxJSnzRqny45L5XJw4n
+         aei3qpD92AjXRSCQAu+JmcAQ5NlupneNOZteVhRE6xtJaW0kN7lXg76rfRCQnNKJM4qP
+         hhug==
+X-Gm-Message-State: AGi0PublJhuZXbkDxDYBbcrCZpuy6ZZTM11x4EaUNdUA3b3bK7CEcrlj
+        8WVGeH3bsYnvEEd7/xc6INE=
+X-Google-Smtp-Source: APiQypKSbrUwOjOd161Efeu0hYnppBpwMnjdsK3GuHpmNRed+3SPFzKkQ/6Ylm7PSvg536tOLbC9TQ==
+X-Received: by 2002:aa7:9832:: with SMTP id q18mr5790073pfl.179.1588723720455;
+        Tue, 05 May 2020 17:08:40 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id 184sm136054pfy.144.2020.05.05.17.08.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 17:08:39 -0700 (PDT)
+Date:   Tue, 5 May 2020 17:08:37 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: input: Add Dell Wyse 3020 Power Button
+ binding
+Message-ID: <20200506000837.GB70193@dtor-ws>
+References: <20200503201237.413864-1-lkundrak@v3.sk>
+ <20200503201237.413864-2-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHCN7xJxg+uO4h2RcapyjormTMzXFwoMUOi7rh2hUsScJtK56Q@mail.gmail.com>
+In-Reply-To: <20200503201237.413864-2-lkundrak@v3.sk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [200505 21:18]:
-> On Tue, May 5, 2020 at 1:42 PM Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > * Adam Ford <aford173@gmail.com> [200504 16:02]:
-> > > Various OMAP3 boards have two AES blocks, but only one is currently
-> > > available, because the hwmods are only configured for one.
-> > >
-> > > This patch migrates the hwmods for the AES engine to sysc-omap2
-> > > which allows the second AES crypto engine to become available.
-> > >
-> > >   omap-aes 480a6000.aes1: OMAP AES hw accel rev: 2.6
-> > >   omap-aes 480a6000.aes1: will run requests pump with realtime priority
-> > >   omap-aes 480c5000.aes2: OMAP AES hw accel rev: 2.6
-> > >   omap-aes 480c5000.aes2: will run requests pump with realtime priority
-> >
-> > Great :) Looks like I'm getting the following though:
-> >
-> > DTC     arch/arm/boot/dts/am3517-craneboard.dtb
-> > arch/arm/boot/dts/omap3.dtsi:160.39-184.5: ERROR (phandle_references):
-> > /ocp@68000000/target-module@480a6000:
-> > Reference to non-existent node or label "aes1_ick"
-> >
-> > Is this patch maybe missing a change for am3717 for the aes1_ick?
+Hi Lubomir,
+
+On Sun, May 03, 2020 at 10:12:36PM +0200, Lubomir Rintel wrote:
+> Add binding document for the Dell Wyse 3020 a.k.a. "Ariel" Power Button.
 > 
-> I am guessing it's the same issue that plagues the am3517 with a note
-> in the hwmods that stated noone seems to know which am3517's support
-> it and which don't.  The RNG was disabled on the 3517, so I am
-> guessing I'll do the same for AES.
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-OK, I have no idea what modules might be there on am3517.
+Are there any changes compared to the version Rob has acked?
 
-> I should have posted it as an RFC, because I don't have the proper IRQ
-> setup for the newly supported AES engine.  The interrupts that are
-> used for the original AES are listed as 'Resereved' in the AM3517 TRM.
-> I assume the second engine uses different interrupts.  I don't suppose
-> anyone know what it should be?
+Thanks.
 
-Sorry no idea, usually the secure accelerator documentation is just
-left out it seems. My guess the values are the same as on omap3.
-
-Regards,
-
-Tony
+-- 
+Dmitry
