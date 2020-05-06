@@ -2,131 +2,161 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5235EC47257
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 16:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B02C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 16:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3109E208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 16:30:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xGbq/nBk"
+	by mail.kernel.org (Postfix) with ESMTP id 13EB320708
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 16:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbgEFQab (ORCPT
+        id S1729481AbgEFQco (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 12:30:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727984AbgEFQaa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 12:30:30 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D75EC061A0F
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 09:30:28 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id o7so2301871oif.2
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 09:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EvHPxE7L1Cb6oif98tDAWFYOvy9QzwI+EVnlaf1jpTo=;
-        b=xGbq/nBkeNTeQkh8TeQ07h15oTGAYHX6j5LFfR/RI3sHIvBIymNOSSXRcu+wHZ1aVW
-         Bi9WC0jgv9B5Kp+7cwBmKtfn1QjRyVdEkInImfKuIlVtWGUJmKfhJrI1QWyRGwCX0yJD
-         ZWlgp81bR5ws/479qoQiUXdTQKezTywlxfTMxQqtDA8i2bG+9sntoecsCgJ9HLEPbqvg
-         G34LbxJQDBp7Gtl0+VsmxjLGveZyAEy3fCO4pbX5afZwwEcYRPCDhYIDmwlFwhGzmFcG
-         Lqdq+jCKkXA8vZnRXREVS+dR1h3wiY7f35aHnymxitA672W5CrNu0RAOCSEsoG6c/aHS
-         oveg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EvHPxE7L1Cb6oif98tDAWFYOvy9QzwI+EVnlaf1jpTo=;
-        b=RLFhRC9M7R2Jp1guN3wIOybCPhNTT77fa4k8DEGLt1nj+qH/tnUpV44L7G0wWoDNbo
-         mwH1eda+evsVIs8Uhjgw3AaTnhWwy/ezJphXhx7H3/Skr4P2lcMbThxh2DHcsQJTUu3B
-         e1tn52hy27guMWaU4JuOdff+bjMRWPfgVG0LknCHJxdRmrWm3eO4uz0tKToZ1tdm5D/L
-         fymjy/mmdXN3fyKffwO7sEVNZhZh+GR1/9dHb5oRqEysuqUVriES8qS7PcGtaPgDRVn8
-         i/4ZbFQQItcotpd6rbqdRnr3aQTSsR81RdDkBY3+A7vx/31V+zl8op9lgofSg4nbvQBK
-         bYmw==
-X-Gm-Message-State: AGi0PuYKZeL0cNeY5Y4Akqp7riw31T9XFYVZw0Mx3urj+S22Kc714+uA
-        CQMex0bc/pkqS5pa6zBSjWcxuGl0qthdsmutRGgAhw==
-X-Google-Smtp-Source: APiQypJOjwli0ENiyI3cl299qwfEK7rVXtgNZRAGsYZ2j/Qgmpsi7m4V2zQHdFeurrc2zQ1jwMe1nfOg2GrAWKcKGNo=
-X-Received: by 2002:aca:cf83:: with SMTP id f125mr3336594oig.97.1588782627545;
- Wed, 06 May 2020 09:30:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200501073949.120396-1-john.stultz@linaro.org>
- <20200501073949.120396-2-john.stultz@linaro.org> <20200501104216.4f226c2a7bzval5o@DESKTOP-E1NTVVP.localdomain>
- <CALAqxLVScV1j-zxw=cwpE0+eDoaubchXx6SJgu=1Zvh8HnE-Tg@mail.gmail.com>
- <20200504085007.5yrjhknkg6ugbqwk@DESKTOP-E1NTVVP.localdomain> <1bddb721-d4d9-f113-bacc-0a0ca2d57753@ti.com>
-In-Reply-To: <1bddb721-d4d9-f113-bacc-0a0ca2d57753@ti.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 6 May 2020 09:30:16 -0700
-Message-ID: <CALAqxLWnEj-c3CYGC6p23cwMqce-MV6pJOzGbp+ptWFB0NQoog@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/4] devicetree: bindings: Add linux,cma-heap tag for
- reserved memory
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Brian Starkey <brian.starkey@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
+        Wed, 6 May 2020 12:32:44 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:58596 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730295AbgEFQco (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 12:32:44 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id B68C980500;
+        Wed,  6 May 2020 18:32:38 +0200 (CEST)
+Date:   Wed, 6 May 2020 18:32:37 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-mm <linux-mm@kvack.org>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v5 1/6] of_graph: add of_graph_get_local_port()
+Message-ID: <20200506163237.GA19296@ravnborg.org>
+References: <20200418170703.1583-1-digetx@gmail.com>
+ <20200418170703.1583-2-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200418170703.1583-2-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
+        a=cgQggk8NgEdHG04IN60A:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 6, 2020 at 9:04 AM Andrew F. Davis <afd@ti.com> wrote:
-> On 5/4/20 4:50 AM, Brian Starkey wrote:
-> > On Fri, May 01, 2020 at 11:40:16AM -0700, John Stultz wrote:
-> >> So the name we expose is the CMA name itself. So with dt it will be
-> >> the name of the reserved memory node that the flag property is added
-> >> to.
-> >>
-> >
-> > Yeah I'm just wondering if that's "stable" so we can say "the heap
-> > will use the node name", or if saying that would cause us a headache
-> > in the future.
->
->
-> The issue is going to be this causes the node name in DT to become a
-> kind of ABI. Right now until we have some userspace lib that enumerates
-> the heaps in a stable way programs will hard-code the full heap name,
-> which right now would look like:
->
-> char *heap = "/dev/dma_heap/dma_heap_mem@89000000";
->
+Hi Dmitry
 
-If that's what the device chose to export.
+On Sat, Apr 18, 2020 at 08:06:58PM +0300, Dmitry Osipenko wrote:
+> In some case, like a DRM display code for example, it's useful to silently
+> check whether port node exists at all in a device-tree before proceeding
+> with parsing the graph.
+> 
+> This patch adds of_graph_get_local_port() which returns pointer to a local
+> port node, or NULL if graph isn't specified in a device-tree for a given
+> device node.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Nice little helper function.
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-> Yuk.. we might want to look into exporting heap properties to make them
-> searchable based on something other than name here soon. Or this will be
-> a mess to cleanup in the future.
+Rob - OK to commit to drm-misc-next?
 
-Eh. I don't see this as such an issue. On different systems we have
-different device nodes. Some boards have more or fewer NICs, or
-various partitions, etc. There has to be some device specific userland
-config that determines which partitions are mounted where (this is my
-"gralloc is fstab" thesis :)
+	Sam
 
-I think with the heaps, qualities other than name are going to be
-poorly specified or unenumerable, so any generic query interface is
-going to fall down there (and be awful to use).
-
-thanks
--john
+> ---
+>  drivers/of/property.c    | 32 +++++++++++++++++++++++---------
+>  include/linux/of_graph.h |  7 +++++++
+>  2 files changed, 30 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 252e4f600155..5dbeccaabb86 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -608,15 +608,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+>  	 * parent port node.
+>  	 */
+>  	if (!prev) {
+> -		struct device_node *node;
+> -
+> -		node = of_get_child_by_name(parent, "ports");
+> -		if (node)
+> -			parent = node;
+> -
+> -		port = of_get_child_by_name(parent, "port");
+> -		of_node_put(node);
+> -
+> +		port = of_graph_get_local_port(parent);
+>  		if (!port) {
+>  			pr_err("graph: no port node found in %pOF\n", parent);
+>  			return NULL;
+> @@ -765,6 +757,28 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
+>  }
+>  EXPORT_SYMBOL(of_graph_get_remote_port);
+>  
+> +/**
+> + * of_graph_get_local_port() - get local port node
+> + * @node: pointer to a local endpoint device_node
+> + *
+> + * Return: First local port node associated with local endpoint node linked
+> + *	   to @node. Use of_node_put() on it when done.
+> + */
+> +struct device_node *of_graph_get_local_port(const struct device_node *node)
+> +{
+> +	struct device_node *ports, *port;
+> +
+> +	ports = of_get_child_by_name(node, "ports");
+> +	if (ports)
+> +		node = ports;
+> +
+> +	port = of_get_child_by_name(node, "port");
+> +	of_node_put(ports);
+> +
+> +	return port;
+> +}
+> +EXPORT_SYMBOL(of_graph_get_local_port);
+> +
+>  int of_graph_get_endpoint_count(const struct device_node *np)
+>  {
+>  	struct device_node *endpoint;
+> diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+> index 01038a6aade0..1fdeb72c7765 100644
+> --- a/include/linux/of_graph.h
+> +++ b/include/linux/of_graph.h
+> @@ -54,6 +54,7 @@ struct device_node *of_graph_get_remote_port_parent(
+>  struct device_node *of_graph_get_remote_port(const struct device_node *node);
+>  struct device_node *of_graph_get_remote_node(const struct device_node *node,
+>  					     u32 port, u32 endpoint);
+> +struct device_node *of_graph_get_local_port(const struct device_node *node);
+>  #else
+>  
+>  static inline int of_graph_parse_endpoint(const struct device_node *node,
+> @@ -116,6 +117,12 @@ static inline struct device_node *of_graph_get_remote_node(
+>  	return NULL;
+>  }
+>  
+> +static inline struct device_node *of_graph_get_local_port(
+> +					const struct device_node *node)
+> +{
+> +	return NULL;
+> +}
+> +
+>  #endif /* CONFIG_OF */
+>  
+>  #endif /* __LINUX_OF_GRAPH_H */
+> -- 
+> 2.26.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
