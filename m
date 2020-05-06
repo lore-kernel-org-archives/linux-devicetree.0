@@ -2,245 +2,98 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B246C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0699C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3610F206DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:02:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="F9PUcTl8"
+	by mail.kernel.org (Postfix) with ESMTP id D10DB2073A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgEFNCd (ORCPT
+        id S1728542AbgEFNLD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 09:02:33 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46598 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727964AbgEFNCd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 09:02:33 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 28F5A542;
-        Wed,  6 May 2020 15:02:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1588770150;
-        bh=pPBs9Lx7E3HOerlKlsFhTIFSxpXd4xPnpNsOogA3ass=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F9PUcTl8+vkeemaZPSZeHkYs6rtKiaQrG7A2wpwP32X5b5+SEhkYHYoaeJfGm4CsG
-         tUSi7z/c7DahSrKaDG8MhUQKSgo+Zh7eZ0OwAkEGuoIR5nj5X+/LchW1Q/aorhV0Ad
-         3hv5O94CAf4YjlBiWT5j0/zZP2ZjbObN8HjYBpJY=
-Date:   Wed, 6 May 2020 16:02:25 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vishal Sagar <vishal.sagar@xilinx.com>
-Cc:     Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- UHD-SDI Receiver Subsystem
-Message-ID: <20200506130225.GD5946@pendragon.ideasonboard.com>
-References: <20200429141705.18755-1-vishal.sagar@xilinx.com>
- <20200429141705.18755-2-vishal.sagar@xilinx.com>
+        Wed, 6 May 2020 09:11:03 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54284 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728045AbgEFNLD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 09:11:03 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: rcn)
+        with ESMTPSA id 0A2E62A1153
+Date:   Wed, 6 May 2020 15:10:57 +0200
+From:   Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     laurent.pinchart@ideasonboard.com, kernel@collabora.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        geert+renesas@glider.be, xuwei5@hisilicon.com
+Subject: Re: [RFT PATCH 5/5] dt-bindings: drm: bridge: adi,adv7511.txt:
+ convert to yaml
+Message-ID: <20200506131057.uqdo7uca32ehglcd@rcn-XPS-13-9360>
+Mail-Followup-To: Rob Herring <robh@kernel.org>,
+        laurent.pinchart@ideasonboard.com, kernel@collabora.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        geert+renesas@glider.be, xuwei5@hisilicon.com
+References: <20200501083227.10886-1-ricardo.canuelo@collabora.com>
+ <20200501083227.10886-6-ricardo.canuelo@collabora.com>
+ <20200505185607.GA25651@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200429141705.18755-2-vishal.sagar@xilinx.com>
+In-Reply-To: <20200505185607.GA25651@bogus>
+User-Agent: NeoMutt/20171215
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vishal,
+Hi Rob, thanks for taking the time to review the patch. Some comments
+below:
 
-Thank you for the patch.
-
-On Wed, Apr 29, 2020 at 07:47:03PM +0530, Vishal Sagar wrote:
-> Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
+On mar 05-05-2020 13:56:07, Rob Herring wrote:
+> > +  # adi,input-style and adi,input-justification are required except in
+> > +  # "rgb 1x" and "yuv444 1x" modes.
+> > +  - if:
+> > +      not:
+> > +        properties:
+> > +          adi,input-colorspace:
+> > +            contains:
+> > +              enum: [ rgb, yuv444 ]
+> > +          adi,input-clock:
+> > +            contains:
+> > +              const: 1x
 > 
-> The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
-> core, an SDI RX to Video Bridge IP core to convert SDI video to native
-> video and a Video In to AXI4-Stream IP core to convert native video to
-> AXI4-Stream.
-> 
-> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> ---
-> v2
-> - Removed references to xlnx,video*
-> - Fixed as per Sakari Ailus and Rob Herring's comments
-> - Converted to yaml format
-> 
->  .../bindings/media/xilinx/xlnx,sdirxss.yaml   | 132 ++++++++++++++++++
->  1 file changed, 132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> new file mode 100644
-> index 000000000000..9133ad19df55
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> @@ -0,0 +1,132 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/xilinx/xlnx,sdirxss.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +
-> +title: Xilinx SMPTE UHD-SDI Receiver Subsystem
-> +
-> +maintainers:
-> +  - Vishal Sagar <vishal.sagar@xilinx.com>
-> +
-> +description: |
-> +  The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
-> +  based on SMPTE SDI protocols. It receives unaligned native SDI streams from
-> +  the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
-> +  native SDI using Xilinx transceivers as the physical layer.
-> +
-> +  The subsystem consists of
-> +  1 - SMPTE UHD-SDI Rx
-> +  2 - SDI Rx to Native Video Bridge
-> +  3 - Video In to AXI4-Stream Bridge
-> +
-> +  The subsystem can capture SDI streams in upto 12G mode 8 data streams and output
+> I believe this will be true (before the not) if the properties are not 
+> present. You need 'required' if that's not what you want.
 
-s/upto/up to/
+I'm not sure I understand what you mean, but dt_binding_check doesn't
+say anything about adi,input-style and adi,input-justification being
+required when adi,input-colorspace and adi,input-clock are not present.
 
-> +  a dual pixel per clock RGB/YUV444,422/420 10/12 bits per component AXI4-Stream.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - xlnx,v-smpte-uhdsdi-rx-ss-2.0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: List of clock specifiers
-> +    items:
-> +      - description: AXI4-Lite clock
-> +      - description: SMPTE UHD-SDI Rx core clock
-> +      - description: Video clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: s_axi_aclk
-> +      - const: sdi_rx_clk
-> +      - const: video_out_clk
-> +
-> +  xlnx,bpp:
-> +    description: Bits per pixel supported. Can be 10 or 12 bits per pixel only.
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +      - enum: [10, 12]
+I think I covered every possible case wrt those properties when running
+dt_binding_check and I got the results I was looking for:
 
-I don't see this as a design parameter in the documentation (pg290,
-v2.0). What does it correspond to ? All the BPC mentions in the
-documentation always state that 10-bit is the only supported value.
+- When compatible is either "adi,adv7533" or "adi,adv7535",
+  adi,input-colorspace and adi,input-clock aren't required
 
-> +
-> +  xlnx,line-rate:
-> +    description: |
-> +      The maximum mode supported by the design. Possible values are as below
-> +      12G_SDI_8DS - 12G mode with 8 data streams
-> +      6G_SDI      -  6G mode
-> +      3G_SDI      -  3G mode
-> +    enum:
-> +      - 12G_SDI_8DS
-> +      - 6G_SDI
-> +      - 3G_SDI
+- For any of the other compatible strings, adi,input-colorspace and
+  adi,input-clock are required.
 
-How about making this an integer property, with #define in
-include/dt-bindings/media/xilinx-sdi.h ? As far as I understand, the SDI
-TX subsystem has the same parameter, so the #define could be shared
-between the two.
+- When adi,input-colorspace and adi,input-clock are defined and they are
+  different than "rgb 1x" or "yuv444 1x", adi,input-style and
+  adi,input-justification are required.
 
-> +
-> +  xlnx,include-edh:
-> +    type: boolean
-> +    description: |
-> +      This is present when the Error Detection and Handling processor is
-> +      enabled in design.
-> +
-> +  ports:
-> +    type: object
-> +    description: |
-> +      Generally the SDI port is connected to a device like SDI Broadcast camera
-> +      which is independently controlled. Hence port@0 is a source port which can be
-> +      connected to downstream IP which can work with AXI4 Stream data.
+There's an issue I can't figure out, though. adi,input-colorspace and
+adi,input-clock are defined only for devices other than "adi,adv7533"
+and "adi,adv7535", but a DT for one of these devices can use those
+properties and the binding check won't complain. Moreover, it will check
+the above condition even if it doesn't make sense for them (ie. it may
+complain that adi,input-style and adi,input-justification are required
+even if they aren't defined for "adi,adv7533" and "adi,adv7535").
 
-We should still have an input port. It can be connected to a DT node for
-a physical SDI connector, or any other component in the platform (I
-expect the former to be the common case). There are DT bindings for
-connectors in Documentation/devicetree/bindings/display/connector/, we
-should add one for SDI.
+I think it's a minor issue, but do you know if there's a way to model
+that? Are properties always unconditionally defined?
 
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: Source port
-> +        properties:
-> +          reg:
-> +            const: 0
-> +          endpoint:
-> +            type: object
-> +            properties:
-> +              remote-endpoint: true
-> +            required:
-> +              - remote-endpoint
-> +            additionalProperties: false
-> +        additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - xlnx,line-rate
-> +  - xlnx,bpp
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    uhdsdirxss: v-smpte-uhdsdi-rxss@80000000 {
-> +      compatible = "xlnx,v-smpte-uhdsdi-rx-ss-2.0";
-> +      interrupt-parent = <&gic>;
-> +      interrupts = <0 89 4>;
-> +      reg = <0x0 0x80000000 0x0 0x10000>;
-> +      xlnx,include-edh;
-> +      xlnx,line-rate = "12G_SDI_8DS";
-> +      clocks = <&clk_1>, <&si570_1>, <&clk_2>;
-> +      clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
-> +      xlnx,bpp = <10>;
-> +
-> +      ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        port@0 {
-> +          reg = <0>;
-> +          sdirx_out: endpoint {
-> +            remote-endpoint = <&vcap_sdirx_in>;
-> +          };
-> +        };
-> +      };
-> +    };
-
--- 
-Regards,
-
-Laurent Pinchart
+Cheers,
+Ricardo
