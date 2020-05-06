@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBD0C54E4B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC342C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7402075A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0F62075A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 21:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S/mEnu3J"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Txy06LIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbgEFVPu (ORCPT
+        id S1729918AbgEFVPt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 17:15:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57376 "EHLO
+        Wed, 6 May 2020 17:15:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729887AbgEFVPg (ORCPT
+        by vger.kernel.org with ESMTP id S1729895AbgEFVPg (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 17:15:36 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D264C03C1AD
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 14:15:35 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y25so1761536pfn.5
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 14:15:35 -0700 (PDT)
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3729FC061A0F
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 14:15:36 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id p25so1747415pfn.11
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 14:15:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=chFldJtd9FZjzbEOKxRp4afLji7Q0KWB7xH1iew90NQ=;
-        b=S/mEnu3JzGQtRBXs6n9QXncOVmnbQq5t6M+sR4E32zK1XQYrOvego5aed1mRWjWncD
-         2tz1H1BntWuhAGtE8PEzDVxsKZM8F+q25AZZvc/5qRzX9brUtk0LKP5YKdTqsHcD225t
-         2I8vdCiNeAzvK/vHZdIP//OSwMWXpu7JLGw6Q=
+        bh=TpLLG3pWKEaOPKHac5Nkwz9KtMblvoPDFiZ/SitIX00=;
+        b=Txy06LIk/ydKHtmNLAtvcMT48XfUpahkLBKCHntkIXGcYuuitksn6Ujhgb0yRJXnrE
+         028IK5cQeQd3o5b9yievHYq1s04heCzgGC56pigiaNf9pjyFzwe+T497rhY5w823fpkV
+         M99c7WWZZZten6T8yf8iEf0eyLGS/aZGltqBQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=chFldJtd9FZjzbEOKxRp4afLji7Q0KWB7xH1iew90NQ=;
-        b=tgv9gM9gltPj6mwu7EMKS/S1XUlTdrUe/WBZ/YpzISahhToGPeWzdHY8bishD7vL4d
-         vxaV1dV+A7sh7DE5zPI8loBh4n832NUP2b/DGySV+DZbo00oJRhnDwiOwLnEXI941Upz
-         DgrLiZljxPlO8AbWriGwPt5uFAU0IVp3Gnj2Gwdu4obPKL+WyEvgnzGHTizDPGzzPgU8
-         0ildHtt9HBJ9B6Jm2z5+1iIIk2b/vMo91mLOyfOYOAz4vn40jB1/XoZ1c9kQRUaZCTIz
-         aNR4ODCAP8uBEzNfODgHn2GDj9I6VkO/XDC5MgQp+pQ01HOoTSrOlv/a+XGPQ1OtrGJD
-         EKDA==
-X-Gm-Message-State: AGi0PuYxicM5ZBKZK2A1oP8z1FOunv0dzLcSxXtdAgZlQU77HhGwwaLG
-        xk+9ed5RNKwe561nV6SxqzpIKg==
-X-Google-Smtp-Source: APiQypL79U0P8ow991LVqZap9gP1MBGKTzXY+mx8OTkdpEaV+3APK2IHBhp+sM3C67hWTQ9LY7fOoQ==
-X-Received: by 2002:aa7:94a3:: with SMTP id a3mr10431378pfl.101.1588799735085;
+        bh=TpLLG3pWKEaOPKHac5Nkwz9KtMblvoPDFiZ/SitIX00=;
+        b=ZXSOejmbRx3nLN5WJ8ttucsGYW/Sx9KLoXdRVL5PmG0jmjxbHiYERVnOp1yAVYZ48x
+         FV67Z9nB8IEDjnYnHxC8N/Q2cIoHFp8Ygrjg3yTsMqkKk/YF8Q5bzEVnmhJwfzrkpv1v
+         RnKA3Ya7NXUHhx1vINPCOOvmMFhOzEHyzn1ms6hlyrdhfUZY9Spcc7G6Ks/4AnI1wATY
+         tikPfRYzP/x1Q/xM+nr2LP6fL3gPSBys3oifKwq5dItLe1UenJB2e5pIDfqsYzIwgjnj
+         tbF873CxPs0li2iNFg+ZRu+dLg7v/vSCup7qDcowActL4y4EHrZuDgdKp/vmEaOaDX6S
+         ODig==
+X-Gm-Message-State: AGi0Puat3Rf1Bbcqquh2EqPXq2CN0gm6+bVkUbE139kw6ozoIbQtLzAr
+        iiQzgnR2O8IvNalaF0ahUJKrkw==
+X-Google-Smtp-Source: APiQypK8UdDkIoIIO+IC1Ly/YfpTzLO1dFuZ9+vKGj8L8fRa2h/L7QWdnMlATD9BYmUl6aJoPv9b3w==
+X-Received: by 2002:a63:150:: with SMTP id 77mr8334289pgb.136.1588799735729;
         Wed, 06 May 2020 14:15:35 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y25sm2367440pgc.63.2020.05.06.14.15.31
+        by smtp.gmail.com with ESMTPSA id s22sm2721551pfd.51.2020.05.06.14.15.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 06 May 2020 14:15:33 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -70,9 +70,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
         sashal@kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 6/6] pstore/ram: Adjust module param permissions to reflect reality
-Date:   Wed,  6 May 2020 14:15:23 -0700
-Message-Id: <20200506211523.15077-7-keescook@chromium.org>
+Subject: [PATCH v3 5/6] ramoops: Add max_reason optional field to ramoops DT node
+Date:   Wed,  6 May 2020 14:15:22 -0700
+Message-Id: <20200506211523.15077-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200506211523.15077-1-keescook@chromium.org>
 References: <20200506211523.15077-1-keescook@chromium.org>
@@ -83,36 +83,50 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A couple module parameters had 0600 permissions, but changing them would
-have no impact on ramoops, so switch these to 0400 to reflect reality.
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
 
+Currently, it is possible to dump kmsges for panic, or oops.
+With max_reason it is possible to dump messages for other
+kmesg_dump events, for example reboot, halt, shutdown, kexec.
+
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Link: https://lore.kernel.org/r/20200505154510.93506-6-pasha.tatashin@soleen.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/pstore/ram.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/reserved-memory/ramoops.txt | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index b8dac1d04e96..1de9d68d5c24 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -53,7 +53,7 @@ MODULE_PARM_DESC(mem_size,
- 		"size of reserved RAM used to store oops/panic logs");
+diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+index 0eba562fe5c6..b7886fea368c 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
++++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+@@ -30,7 +30,7 @@ Optional properties:
+ - ecc-size: enables ECC support and specifies ECC buffer size in bytes
+   (defaults to 0: no ECC)
  
- static unsigned int mem_type;
--module_param(mem_type, uint, 0600);
-+module_param(mem_type, uint, 0400);
- MODULE_PARM_DESC(mem_type,
- 		"set to 1 to try to use unbuffered memory (default 0)");
+-- record-size: maximum size in bytes of each dump done on oops/panic
++- record-size: maximum size in bytes of each kmsg dump.
+   (defaults to 0: disabled)
  
-@@ -68,7 +68,7 @@ MODULE_PARM_DESC(max_reason,
- 		 "maximum reason for kmsg dump (default 2: Oops and Panic) ");
+ - console-size: size in bytes of log buffer reserved for kernel messages
+@@ -45,7 +45,16 @@ Optional properties:
+ - unbuffered: if present, use unbuffered mappings to map the reserved region
+   (defaults to buffered mappings)
  
- static int ramoops_ecc;
--module_param_named(ecc, ramoops_ecc, int, 0600);
-+module_param_named(ecc, ramoops_ecc, int, 0400);
- MODULE_PARM_DESC(ramoops_ecc,
- 		"if non-zero, the option enables ECC support and specifies "
- 		"ECC buffer size in bytes (1 is a special value, means 16 "
+-- no-dump-oops: if present, only dump panics (defaults to panics and oops)
++- max-reason: if present, sets maximum type of kmsg dump reasons to store
++  (defaults to 2: log Oopses and Panics). This can be set to INT_MAX to
++  store all kmsg dumps. See include/linux/kmsg_dump.h KMSG_DUMP_* for other
++  kmsg dump reason values. Setting this to 0 (KMSG_DUMP_UNDEF), means the
++  reason filtering will be controlled by the printk.always_kmsg_dump boot
++  param: if unset, it will be KMSG_DUMP_OOPS, otherwise KMSG_DUMP_MAX.
++
++- no-dump-oops: deprecated, use max_reason instead. If present, and
++  max_reason is not specified, it is equivalent to max_reason = 1
++  (KMSG_DUMP_PANIC).
+ 
+ - flags: if present, pass ramoops behavioral flags (defaults to 0,
+   see include/linux/pstore_ram.h RAMOOPS_FLAG_* for flag values).
 -- 
 2.20.1
 
