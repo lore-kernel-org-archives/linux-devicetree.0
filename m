@@ -2,293 +2,225 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7B6C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA7CC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A95CE20752
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C8F20870
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:45:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="RQFg+vmy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pXhbgeR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgEFNmy (ORCPT
+        id S1728740AbgEFNpu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 09:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42800 "EHLO
+        Wed, 6 May 2020 09:45:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725801AbgEFNmy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 09:42:54 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936BAC061A10
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 06:42:52 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id s3so1358726eji.6
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 06:42:52 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1725966AbgEFNpu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 09:45:50 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17521C061A0F;
+        Wed,  6 May 2020 06:45:50 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d22so1127304pgk.3;
+        Wed, 06 May 2020 06:45:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AwZ2HXOkXwEq2HHbm/ldWJ+Ha7wxQpNmEACUbIV+REs=;
-        b=RQFg+vmyVowvlJJtYxI8xLKEKN+HKIvRTQbar5Cl4LErlFvZ3mIbhfXLRF1mUyGt5m
-         8OyHNqcxGA2e7Gz6VNBUqX9yGPaPsgzcBE/Q7qkxymnHHDqkiWHCKhc7cJ31nMLj1ipu
-         kKhG+x8gvS9pgH19iPX8gfH69E5+FNUf8W33YzfULpbDs5B000Y5f0LIUXhskCI2/fId
-         gtBby9KluUmRz5JwBUxDZcY2T1osgi2ZIbTZX78IrtygX6nUNLf2BMITOTPqObEFkpRa
-         uYJEHd/Ezu0QbsdLGP4IvYnPkez4cVb1QoZhW3sdgYPqjhXt/bzW5Z5EM9VJTQuPYDK5
-         ZiJA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=S3Lwm4AKo+YF745y2UjeT2m8wwH3bfZOap41uVObmhM=;
+        b=pXhbgeR1QKrcPuSNZiwXRMXBdl17dvD867jNinBv+BMnTfkH+cnwt6kgaa4T1nVWmr
+         dbVKmBxjQ6N4NedamQUDQ50Svb0TpHEJBzeipLe6/Iq2TXy3gO+zCawrOtQlDl8m8egc
+         mbRIqbVy6H/5NvRqUvX8al1LFclAmY/LxwOQdw/nrNWZtFQBqczvoSVsmpmbc4lmHU3h
+         0zMFzmCgITU412brnVgu51qHXBllle1mA7ynClUazyt+yRHNQQW9/pyqe57JXMcVvidd
+         WaTA9Qx8e4ZfYIU4rJtjXAqsSxotlAXImNgdpP0F0uy9YZUGkOScAUhr0PG0wSQBXpwb
+         hZGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AwZ2HXOkXwEq2HHbm/ldWJ+Ha7wxQpNmEACUbIV+REs=;
-        b=ZpeHdOWDaR72YBTuz4JErB5KeEoMieNLf8a1dwvDbQdmNbPOTLow1bOh+xo8jljNIS
-         UVdGBJ5olMNzREi2KXkFz9jnkuV4SqHlP0D+rkjI3Htx45lhS+ecxf3XH0n1U9YroZZh
-         dyMiXJSbMP5J7jhRwAQTdKk+BRCWfurAyY5Efl5a3ARfraQYNjsmRv8WrmhYOAyfpS5Y
-         zVagd1E1LHj0bYP3bbc99WqPQ2MHfJQ5KjdvTF81vNWt0u3Ev6oaBJeT7RKN3XMuOaQm
-         rJaIiWT1yU3K+/qCnSqdSFoQKA4h4Wodon8FhwjdoZBnsObtZj38W/m6SZt0TJ6qibRV
-         lkGg==
-X-Gm-Message-State: AGi0Pubv11GTotvLMjXNk26V+O5/yR6xHo5eNh5K7iHWQ4soeocQyEqb
-        pARM1zUGhlE6J/lUB2/8FYXgvOZojVMnbreL4Jqj0g==
-X-Google-Smtp-Source: APiQypK7Y5o9dE58DnHy5mYwilyI2yZDqALVkpJZUJ66bjBNcdPU+/tCFN7JjLeC6p2qTfgJyocFjoOfYcUNpe6AXL8=
-X-Received: by 2002:a17:906:841a:: with SMTP id n26mr7668693ejx.43.1588772571094;
- Wed, 06 May 2020 06:42:51 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=S3Lwm4AKo+YF745y2UjeT2m8wwH3bfZOap41uVObmhM=;
+        b=ahIU9+u7xBzQN2rOBFM9t1TNSObrM0WfX6P1QIObqTLeDJnoSbMt/ci+V3UBlnSQU1
+         yeChp7biTmwL5tkitSQOea8iUQEUu3v0O3o3QLL2SaX+R+fH0tDEjp289O8B2U6GQsio
+         HMBzZT1BYnAaKPPT3IqcHVhnNX9U8GbWv66L5mR43RgDC2/oaacVqxy+SimSe1WkNQvs
+         4aq48p2cPOqeTk2POMkAZX1Hg0PYq3xykkvE3JRQuf2LyM3oP58MvYtNEEPHroAO5h18
+         RuG8CSKCkWfPxgveNpKtrssNfM/HE7j+b1pdJZpVk5HXH+QyK5gTW4DVv6lflsUjtN+0
+         zj5w==
+X-Gm-Message-State: AGi0PuYibTQ9TF9tGqoapGx8GQhyVd/JuwxkjT+1OU4329W9XjWazkfS
+        76U8uSYsi0royBFYC9gaSHc3IHYG
+X-Google-Smtp-Source: APiQypINpwMfiEoPsVfPVR3/1u/QrlIjA9AJighlTYyj1K8cdQyo3P+Dy7P9kv5Pnuns6elfp4Wx/A==
+X-Received: by 2002:a62:343:: with SMTP id 64mr8265734pfd.47.1588772749363;
+        Wed, 06 May 2020 06:45:49 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 3sm1905650pfo.27.2020.05.06.06.45.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 06:45:48 -0700 (PDT)
+Subject: Re: [PATCH v6 1/2] dt-bindings: watchdog: Add ARM smc wdt for mt8173
+ watchdog
+To:     Evan Benn <evanbenn@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     jwerner@chromium.org, xingyu.chen@amlogic.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20200505031331.122781-1-evanbenn@chromium.org>
+ <20200505131242.v6.1.Id96574f1f52479d7a2f3b866b8a0552ab8c03d7f@changeid>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <adbf700e-20e6-47db-a674-f965f65818c6@roeck-us.net>
+Date:   Wed, 6 May 2020 06:45:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
- <20200505154510.93506-4-pasha.tatashin@soleen.com> <202005051559.946100505D@keescook>
-In-Reply-To: <202005051559.946100505D@keescook>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 6 May 2020 09:42:15 -0400
-Message-ID: <CA+CK2bBa=v0CrTYgugrJ+SvWocdQs5BsBZmd_n9+r-_c9BeriA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] pstore/ram: in ramoops_platform_data convert
- dump_oops to max_reason
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
-        ccross@android.com, Tony Luck <tony.luck@intel.com>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200505131242.v6.1.Id96574f1f52479d7a2f3b866b8a0552ab8c03d7f@changeid>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > Remove filtering logic from ramoops_pstore_write(), as that is not needed
-> > anymore, only dmesges specified by max_reason are passed to
-> > ramoops_pstore_write(). Also, because of this, we can remove
-> > cxt->dump_oops.
->
-> This is all looking good. I think I'd like to see patch 3 and 4 merged,
-> though. I'd like to make the dump_oops/max_reason conversion in one
-> patch. Noted below...
+On 5/4/20 8:13 PM, Evan Benn wrote:
+> This watchdog can be used on ARM systems with a Secure
+> Monitor firmware to forward watchdog operations to
+> firmware via a Secure Monitor Call.
+> 
+> Signed-off-by: Evan Benn <evanbenn@chromium.org>
+> 
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Sure, I can do it.
+> ---
+> 
+> Changes in v6:
+> - Don't use dt default
+> 
+> Changes in v5:
+> - Change compatible to arm,smc-wdt
+> 
+> Changes in v4:
+> - Add arm,smc-id property
+> 
+> Changes in v3:
+> - Change name back to arm
+> 
+> Changes in v2:
+> - Change name arm > mt8173
+> 
+>  .../bindings/watchdog/arm-smc-wdt.yaml        | 37 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 +++
+>  2 files changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
+> new file mode 100644
+> index 0000000000000..bec651541e0c8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
+> @@ -0,0 +1,37 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/arm-smc-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM Secure Monitor Call based watchdog
+> +
+> +allOf:
+> +  - $ref: "watchdog.yaml#"
+> +
+> +maintainers:
+> +  - Julius Werner <jwerner@chromium.org>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - arm,smc-wdt
+> +  arm,smc-id:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      The ATF smc function id used by the firmware.
+> +      Defaults to 0x82003D06 if unset.
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    watchdog {
+> +      compatible = "arm,smc-wdt";
+> +      arm,smc-id = <0x82003D06>;
+> +      timeout-sec = <15>;
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b816a453b10eb..0f2b39767bfa9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1457,6 +1457,12 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
+>  F:	drivers/irqchip/irq-vic.c
+>  
+> +ARM SMC WATCHDOG DRIVER
+> +M:	Julius Werner <jwerner@chromium.org>
+> +R:	Evan Benn <evanbenn@chromium.org>
+> +S:	Maintained
+> +F:	devicetree/bindings/watchdog/arm-smc-wdt.yaml
+> +
+>  ARM SMMU DRIVERS
+>  M:	Will Deacon <will@kernel.org>
+>  R:	Robin Murphy <robin.murphy@arm.com>
+> 
 
->
-> >
-> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > ---
-> >  Documentation/admin-guide/ramoops.rst     | 11 ++++++----
-> >  drivers/platform/chrome/chromeos_pstore.c |  2 +-
-> >  fs/pstore/ram.c                           | 26 +++++++----------------
-> >  include/linux/pstore_ram.h                |  2 +-
-> >  4 files changed, 17 insertions(+), 24 deletions(-)
-> >
-> > diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
-> > index 6dbcc5481000..a296e1aa1617 100644
-> > --- a/Documentation/admin-guide/ramoops.rst
-> > +++ b/Documentation/admin-guide/ramoops.rst
-> > @@ -32,11 +32,14 @@ memory to be mapped strongly ordered, and atomic operations on strongly ordered
-> >  memory are implementation defined, and won't work on many ARMs such as omaps.
-> >
-> >  The memory area is divided into ``record_size`` chunks (also rounded down to
-> > -power of two) and each oops/panic writes a ``record_size`` chunk of
-> > +power of two) and each kmesg dump writes a ``record_size`` chunk of
-> >  information.
-> >
-> > -Dumping both oopses and panics can be done by setting 1 in the ``dump_oops``
-> > -variable while setting 0 in that variable dumps only the panics.
-> > +Dumping reasons can be set via max_reason value, as defined in
-> > +include/linux/kmsg_dump.h: kmsg_dump_reason. For example, to
-> > +dump for both oopses and panics reasons, max_reason should be set to 2
-> > +(KMSG_DUMP_OOPS), to dump panics only max_reason should be set to 1
-> > +(KMSG_DUMP_PANIC).
-> >
-> >  The module uses a counter to record multiple dumps but the counter gets reset
-> >  on restart (i.e. new dumps after the restart will overwrite old ones).
-> > @@ -90,7 +93,7 @@ Setting the ramoops parameters can be done in several different manners:
-> >          .mem_address            = <...>,
-> >          .mem_type               = <...>,
-> >          .record_size            = <...>,
-> > -        .dump_oops              = <...>,
-> > +        .max_reason             = <...>,
-> >          .ecc                    = <...>,
-> >    };
->
-> Good, yes, dump_oops should be removed from the platform data structure
-> since that's an entirely internal API.
->
-> >
-> > diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
-> > index d13770785fb5..fa51153688b4 100644
-> > --- a/drivers/platform/chrome/chromeos_pstore.c
-> > +++ b/drivers/platform/chrome/chromeos_pstore.c
-> > @@ -57,7 +57,7 @@ static struct ramoops_platform_data chromeos_ramoops_data = {
-> >       .record_size    = 0x40000,
-> >       .console_size   = 0x20000,
-> >       .ftrace_size    = 0x20000,
-> > -     .dump_oops      = 1,
-> > +     .max_reason     = KMSG_DUMP_OOPS,
-> >  };
-> >
-> >  static struct platform_device chromeos_ramoops = {
-> > diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> > index 795622190c01..223581aeea96 100644
-> > --- a/fs/pstore/ram.c
-> > +++ b/fs/pstore/ram.c
-> > @@ -81,7 +81,6 @@ struct ramoops_context {
-> >       size_t console_size;
-> >       size_t ftrace_size;
-> >       size_t pmsg_size;
-> > -     int dump_oops;
-> >       u32 flags;
-> >       struct persistent_ram_ecc_info ecc_info;
-> >       unsigned int max_dump_cnt;
-> > @@ -381,18 +380,6 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
-> >       if (record->type != PSTORE_TYPE_DMESG)
-> >               return -EINVAL;
-> >
-> > -     /*
-> > -      * Out of the various dmesg dump types, ramoops is currently designed
-> > -      * to only store crash logs, rather than storing general kernel logs.
-> > -      */
-> > -     if (record->reason != KMSG_DUMP_OOPS &&
-> > -         record->reason != KMSG_DUMP_PANIC)
-> > -             return -EINVAL;
-> > -
-> > -     /* Skip Oopes when configured to do so. */
-> > -     if (record->reason == KMSG_DUMP_OOPS && !cxt->dump_oops)
-> > -             return -EINVAL;
-> > -
-> >       /*
-> >        * Explicitly only take the first part of any new crash.
-> >        * If our buffer is larger than kmsg_bytes, this can never happen,
-> > @@ -687,7 +674,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
-> >       pdata->mem_size = resource_size(res);
-> >       pdata->mem_address = res->start;
-> >       pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
-> > -     pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
-> > +     dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
-> :
-> Is this setting the module param variable? That shouldn't happen here --
-> we may fail the DT and overwrite the user-configured setting for a
-> different backend. This should be a local variable and the "final"
-> max_reason should be calculated in this function, I think.
-
-Hm, interesting, not sure if this is a realistic scenario. If I
-understand the code correctly, dummy is the only device that can
-pick-up dump_oops parameter, and it is registered before the DT based
-backend:
-
-ramoops_init(void)
-   ramoops_register_dummy();  -> register dummy if mem_size is provided
-   platform_driver_register(&ramoops_driver); -> register DT based node.
-
-dummy is registered only if mem_size parameter is provided. Deprecated
-dump_oops if provided by the user is converted to max_reason and
-discarded after that. The value of dump_oops becomes meaningless in
-/sys/module/ramoops/parameters/, as it does not really carry any
-information about kmsg dumps anymore. max_reason is what carries that
-information.
-
-After the dummy backend is registered, even if DT changes dump_oops,
-and still fails to register, it does not matter, as the dummy will
-keep operating correctly with the set max_reason.
-
->
-> >
-> >  #define parse_size(name, field) {                                    \
-> >               ret = ramoops_parse_dt_size(pdev, name, &value);        \
-> > @@ -785,7 +772,6 @@ static int ramoops_probe(struct platform_device *pdev)
-> >       cxt->console_size = pdata->console_size;
-> >       cxt->ftrace_size = pdata->ftrace_size;
-> >       cxt->pmsg_size = pdata->pmsg_size;
-> > -     cxt->dump_oops = pdata->dump_oops;
-> >       cxt->flags = pdata->flags;
-> >       cxt->ecc_info = pdata->ecc_info;
-> >
-> > @@ -828,8 +814,14 @@ static int ramoops_probe(struct platform_device *pdev)
-> >        * the single region size is how to check.
-> >        */
-> >       cxt->pstore.flags = 0;
-> > -     if (cxt->max_dump_cnt)
-> > +     if (cxt->max_dump_cnt) {
-> >               cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
-> > +             if (pdata->max_reason <= 0) {
-> > +                     pdata->max_reason = dump_oops ? KMSG_DUMP_OOPS :
-> > +                                                     KMSG_DUMP_PANIC;
-> > +             }
-> > +             cxt->pstore.max_reason = pdata->max_reason;
-> > +     }
->
-> I'm going to take a stab at reorganizing the DT, platform data, and
-> module args to have default handling done in a way that I like. I'm
-> having a hard time making specific suggestions here. :)
-
-Sure, unfortunatly I do not think we can simply remove "no-dump-oops"
-from DT, and I also looked through the kernel and did not find any DTs
-that use "no-dump-oops" in the kernel.
-
->
-> >       if (cxt->console_size)
-> >               cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
-> >       if (cxt->max_ftrace_cnt)
-> > @@ -865,7 +857,6 @@ static int ramoops_probe(struct platform_device *pdev)
-> >       mem_size = pdata->mem_size;
-> >       mem_address = pdata->mem_address;
-> >       record_size = pdata->record_size;
-> > -     dump_oops = pdata->dump_oops;
-> >       ramoops_console_size = pdata->console_size;
-> >       ramoops_pmsg_size = pdata->pmsg_size;
-> >       ramoops_ftrace_size = pdata->ftrace_size;
-> > @@ -948,7 +939,6 @@ static void __init ramoops_register_dummy(void)
-> >       pdata.console_size = ramoops_console_size;
-> >       pdata.ftrace_size = ramoops_ftrace_size;
-> >       pdata.pmsg_size = ramoops_pmsg_size;
-> > -     pdata.dump_oops = dump_oops;
-> >       pdata.flags = RAMOOPS_FLAG_FTRACE_PER_CPU;
-> >
-> >       /*
-> > diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
-> > index 9cb9b9067298..9f16afec7290 100644
-> > --- a/include/linux/pstore_ram.h
-> > +++ b/include/linux/pstore_ram.h
-> > @@ -133,7 +133,7 @@ struct ramoops_platform_data {
-> >       unsigned long   console_size;
-> >       unsigned long   ftrace_size;
-> >       unsigned long   pmsg_size;
-> > -     int             dump_oops;
-> > +     int             max_reason;
-> >       u32             flags;
-> >       struct persistent_ram_ecc_info ecc_info;
-> >  };
-> > --
-> > 2.25.1
-> >
->
-> So, hold off on a v3, and I'll send a series tomorrow, based on what
-> you've got here for v2. I like the refactoring; it's much cleaner to
-> have max_reason than dump_oops! :)
-
-Sure, I will wait for your changes.
-
-Thank you,
-Pasha
-
->
-> --
-> Kees Cook
