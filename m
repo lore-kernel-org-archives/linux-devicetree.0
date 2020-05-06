@@ -2,129 +2,92 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF145C4724C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211E5C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 990322075E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0394320747
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 18:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="rPTQCTEx"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JaXZicmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbgEFSQa (ORCPT
+        id S1729882AbgEFSVN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 14:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57660 "EHLO
+        Wed, 6 May 2020 14:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730012AbgEFSQ2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 14:16:28 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A0BC061A10
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 11:16:28 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id g10so2154879lfj.13
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 11:16:28 -0700 (PDT)
+        with ESMTP id S1729477AbgEFSVN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 14:21:13 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF89BC061A10
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 11:21:12 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id g14so2155618otg.10
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 11:21:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KEXpBFdxDsOsxHUJbKHvTc13/63fZoyJiUI7zCS8HKc=;
-        b=rPTQCTExlqHfI8liKWG2uYWysFbuJpKzXBvgKhuaKXumurQdsmN6X5rXcyzcrnvTqe
-         hjLgZMiOTGz3bC7k/hXGytt5QJw0YgmMep5W+QROGqanjsux/SsiM/fcd4/WTiMx9wVX
-         DhXBp1zjJziGEecwATXN2bilY9Ak3JH+3FAAFRKortUPAENzF43pyO9lvaAkJOQh+EL0
-         u32+izeEWl/qlexOGNb/t11LYZQB/+N33G3sTrz5AFrKgcXaIOL4pwl6s/7pyZnR4UsX
-         CRvgW+H5vvR/QiFp9M0BN9wS3B7Dw7INdqu0/rmH70DuccuHyS/UQxEtgy6TSSQhZQkh
-         k5GA==
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D2taJJRTg2UNCEqvPUHeisc7wYhhWEOMV6TUWaPz7kg=;
+        b=JaXZicmLPCbQ1s4wEPLd+sV+a4q0wnzPoifqdGpBSL8D7Z8GrydmvQGqC8UT22nL2I
+         WZa/znMpgXW+q41TZVo9zK6nCks5GJUhUduUAyuXBbeNVH+4lSu2c8TsdwQTipW46XE8
+         2YvlAWllyGrBAxfyw+wCC3p4SEMWY6eYou+Co=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=KEXpBFdxDsOsxHUJbKHvTc13/63fZoyJiUI7zCS8HKc=;
-        b=HqEcMkxB6muuaghKpfD35PwDocuC5GpRZngCDDN/OMjbqVQw7phkmO28wD0biIuiCp
-         m13YSLzgNMR1M03GmEuMFVDYHpjJVDCZvPWDB3vnqPypkMiLv6XvAejREYPwFgpv2+ds
-         Mqo54CrjJUMWlugnHAIUXWe5QDysgWPaSpr0b4ZexsBtFuOiSe+iaASyR6aGAOrCuywW
-         UDWofT1OxMqdMQGMJub2WSXn3Lt6qelBdmVP1TVCo0MV2QqyAP3Vw5Xee3loqb2Qy9KL
-         ESfcJfoTx9jwqWhVPZMwZ8IdIeUUBGokP8sVFOkDeT9DWJ1Mbo2thELAIVmgpzfoM2sd
-         s/GQ==
-X-Gm-Message-State: AGi0PubORzuSh2jobu8ev0Qtut5APq/tmaQm6V3mI0NCCFdHcfRNGhW2
-        dUOJCuPNvxGlsnt8Dw+8N5Wy3A==
-X-Google-Smtp-Source: APiQypLGUWwNuylqLwt0ewr21qw7FidtN22GXOYoec8xwlCm+ZbM/KF1pXlnii0P1kP7utaJvncpwQ==
-X-Received: by 2002:a05:6512:3ea:: with SMTP id n10mr5747624lfq.127.1588788986770;
-        Wed, 06 May 2020 11:16:26 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:46f7:c018:da89:7e41:8ab5:299d])
-        by smtp.gmail.com with ESMTPSA id 25sm2087051lfr.92.2020.05.06.11.16.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 May 2020 11:16:25 -0700 (PDT)
-Subject: Re: [PATCH v2 14/20] mips: Use offset-sized IO-mem accessors in CPS
- debug printout
-To:     Sergey.Semin@baikalelectronics.ru,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-15-Sergey.Semin@baikalelectronics.ru>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <82e98cee-d39e-7df2-8b0d-ac77defd5dd8@cogentembedded.com>
-Date:   Wed, 6 May 2020 21:16:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D2taJJRTg2UNCEqvPUHeisc7wYhhWEOMV6TUWaPz7kg=;
+        b=pe59p636996ICmOYMk7FaGjIgKP+QydRhz29wDBrDre7KzNtGAxqE8Po6gK4nYBTYC
+         oHy8i4hpsy5gxcwM8wpvsqCkmOKzUQ3GNfPTSy3oPfohspMD9UDoCULdh7iMe/aoob28
+         GfT0jniabenaVHe53pBor4Jr5wm1SOOA+W4jfHZaGAf6B13ZkND9WhfIMil1reG5Ix+K
+         /DB+1yeyFb5vxDWKSezQHahu/cr41d9SRIKoEBE3Ucvq9HQDiBxvtL+0Sk6Sg0BLRmv5
+         7tJcwjZbHTBsW4JyRwlUpCPgKOx183jSeX5hE0EDNTU60Zz9+cPLg2EXNGKwsgu1N8jT
+         6qhQ==
+X-Gm-Message-State: AGi0PuasGnJ1Mt3nUY+L99Kx5ToR+eoH9+KOONOXfoEw1ylh3S8U41GE
+        vqTKXCyYr0kJUQwEIQ0q1FlmJJDfzYxxSFK8B+ypAQ==
+X-Google-Smtp-Source: APiQypInw39ygS3P/++U3PAE3LlMt925jYmNYdu8cvU7nnL+hmn3yH1R3d09MJ5VoLDPJl2XHnEM/8wYsJ8wMTKfCVI=
+X-Received: by 2002:a9d:490d:: with SMTP id e13mr7509661otf.356.1588789271980;
+ Wed, 06 May 2020 11:21:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200506174238.15385-15-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-6-brgl@bgdev.pl>
+ <CAKOOJTzcNr7mc9xusQm3nCzkq5P=ha-si3fizeEL2_KJUOC3-Q@mail.gmail.com> <CAMRc=Md7gLMThfGF-7YLqW17MpMhU=UFbdTvfjbr9fFHTLir8g@mail.gmail.com>
+In-Reply-To: <CAMRc=Md7gLMThfGF-7YLqW17MpMhU=UFbdTvfjbr9fFHTLir8g@mail.gmail.com>
+From:   Edwin Peer <edwin.peer@broadcom.com>
+Date:   Wed, 6 May 2020 11:20:35 -0700
+Message-ID: <CAKOOJTxkcaq0bF34bcz3HZzqsNgfmJH=Hd+odNNMX5gDq4to=w@mail.gmail.com>
+Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+On Tue, May 5, 2020 at 11:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-On 05/06/2020 08:42 PM, Sergey.Semin@baikalelectronics.ru wrote:
+> Re the last bit in priv_flags: is this really a problem though? It's
+> not like struct net_device must remain stable - e.g. we can make
+> priv_flags a bitmap.
 
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> Similar to commit 8e5c62e38a88 ("mips: early_printk_8250: Use offset-sized
-> IO-mem accessors") the IO-memory might require to use a proper load/store
-> instructions (like Bailal-T1 IO-memory). To fix the cps-vec UART debug
+Fair enough.
 
-   Baikal? :-)
-
-> printout lets use the memory access instructions in accordance with the
-> UART registers offset config specified at boot time.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-pm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> There might be another problem in cps-vec-ns16550.S connected with the
-> difference in CPU/devices endinanness on some platforms. But there is
-
-   Endianness.
-
-> no such for Baikal-T1 SoC.
-[...]
-
-MBR, Sergei
+Regards,
+Edwin Peer
