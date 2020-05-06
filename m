@@ -2,222 +2,108 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA32C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 06:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09D2C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 06:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 548D9206E6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 06:27:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBpcEW5l"
+	by mail.kernel.org (Postfix) with ESMTP id 88A68206E6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 06:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgEFG1M (ORCPT
+        id S1727099AbgEFG3s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 02:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725882AbgEFG1M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 02:27:12 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38EAC061A0F;
-        Tue,  5 May 2020 23:27:11 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y25so502624pfn.5;
-        Tue, 05 May 2020 23:27:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=r7GDOB4KUTMAbqLQjSRn2Yp8VhPGDy0fV6+iumq7awY=;
-        b=jBpcEW5lr69j9so5i/oJ4oaQlk3dKCoXXc4idlY97rLzzTIBuu6I2lueaxazBcscmw
-         uU5TBTArJH2JBLJUjne0pDUBnrOHBiVV4ybEaXaTvsuYwDK+KfX1z/H1KBnud0jM9qWG
-         q7IUENdQXz2f8ADzBXN3nJq/dHGNAJwwYb5X6zJUe9KRj7NwtUn0Cq42W26PcHRpQzxp
-         LWMIZO0BNiCsHKNW8qzocWLdkF04vvq7YqHCwG4rB5EbKZ1hRBCeSU1r7B03B2FTUXg3
-         EtpO2mKOlZ2kj2//fxGhcw1tK6qd0vTMckQmLA7gzuN5Cw+VdKDDRm/K893UqpOvbNn0
-         baWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=r7GDOB4KUTMAbqLQjSRn2Yp8VhPGDy0fV6+iumq7awY=;
-        b=UwVwCkcbWd5bYY5SZe5JV6EzJNJHzj1ZeT/eTGtl0In45EqBPEiQ/5HCiU9NNhp0Uk
-         s3gR8c7grqZzGYp6sw6q/mGIniJJL+s4lUlAOTeCkMNdnXbbWrWhJUJhqUcBpjdVn3oE
-         AW6Nrfjx7n0EdoNQSBH0rgY68Fve7w71/me3sjTnr0VTsuVS/T2ezCASZSKJUBtMK1gl
-         /0n9p+Q/ATrXBSlgITmx0GC2AZjrKjdP2+ajiVuwBRz0HdUapsycDus1AZs9PRJ/tZea
-         MTFovlihAlzxumUxvPbxVdxXoL1ZL9M+Y/cKJ6SeIwcVP/CQRV+vcpvhNhzJWo22NRLH
-         1b5Q==
-X-Gm-Message-State: AGi0PuYS2D1Ggbeoozw2nJ9MntbAdKKeopT0DR4BA86KQI4Uy34ikpQp
-        l1PFf71uNqJWzrox4pfl270=
-X-Google-Smtp-Source: APiQypLbjeASMuNkeJLplI8TjiKwaneBMu4BbXtAmciArzDMjGce99NPaKS94y0pdnFzRR5Qi7Z8yQ==
-X-Received: by 2002:a63:7214:: with SMTP id n20mr5948835pgc.437.1588746431402;
-        Tue, 05 May 2020 23:27:11 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
-        by smtp.gmail.com with ESMTPSA id b140sm752399pfb.119.2020.05.05.23.27.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 May 2020 23:27:11 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     alexandre.torgue@st.com, robh+dt@kernel.org,
-        mcoquelin.stm32@gmail.com, sam@ravnborg.org
-Cc:     devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH 1/4] ARM: dts: stm32: Add drm panel ili9341 support for stm32f429-disco board
-Date:   Wed,  6 May 2020 14:27:06 +0800
-Message-Id: <1588746426-30979-1-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 6 May 2020 02:29:48 -0400
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:50703 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgEFG3r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 02:29:47 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 929A02802D276;
+        Wed,  6 May 2020 08:29:43 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 3F63E1C0A9; Wed,  6 May 2020 08:29:43 +0200 (CEST)
+Date:   Wed, 6 May 2020 08:29:43 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh+dt@kernel.org>,
+        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 4/4] serial: 8250: Support rs485 bus termination GPIO
+Message-ID: <20200506062943.qugqwhnkismnnkrb@wunner.de>
+References: <cover.1588505407.git.lukas@wunner.de>
+ <a91b9392e8e7914cae16f59beb1ffe6b335f81c9.1588505407.git.lukas@wunner.de>
+ <20200505161035.GW185537@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505161035.GW185537@smile.fi.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+On Tue, May 05, 2020 at 07:10:35PM +0300, Andy Shevchenko wrote:
+> On Tue, May 05, 2020 at 04:42:04PM +0200, Lukas Wunner wrote:
+> > Commit e8759ad17d41 ("serial: uapi: Add support for bus termination")
+> > introduced the ability to enable rs485 bus termination from user space.
+> > So far the feature is only used by a single driver, 8250_exar.c, using a
+> > hardcoded GPIO pin specific to Siemens IOT2040 products.
+> > 
+> > Provide for a more generic solution by allowing specification of an
+> > rs485 bus termination GPIO pin in the device tree:  Amend the serial
+> > core to retrieve the GPIO from the device tree (or ACPI table) and amend
+> > the default ->rs485_config() callback for 8250 drivers to change the
+> > GPIO on request from user space.
+> 
+> ...
+> 
+> > @@ -3331,6 +3332,29 @@ int uart_get_rs485_mode(struct uart_port *port)
+> 
+> > +		devm_gpiod_put(dev, port->rs485_term_gpio);
+> 
+> > +	port->rs485_term_gpio = devm_gpiod_get_optional(dev, "rs485-term",
+> 
+> Using devm_*() in uart_get_rs485_mode() seems not right.
+> Why do you need this?
 
-1, add stm32f429-disco ltdc pins mux config
-2, add ltdc nodes pinned with ili9341
-3, add spi5 node
+uart_get_rs485_mode() is called from a driver's ->probe() hook and we
+do not have a corresponding function that is called from a ->remove()
+hook where we'd be able to relinquish rs485 resources we've acquired
+on probe.
 
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
- arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 67 ++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/stm32f429-disco.dts  | 40 ++++++++++++++++++++
- 2 files changed, 107 insertions(+)
+Of course I could add that but it would be more heavy-weight compared
+to simply using devm_*().  Do you disagree?
 
-diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-index 392fa14..0eb107f 100644
---- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-@@ -316,6 +316,73 @@
- 				};
- 			};
- 
-+			ltdc_pins_f429_disco: ltdc-1 {
-+				pins {
-+					pinmux = <STM32_PINMUX('C', 6,  AF14)>,
-+						/* LCD_HSYNC */
-+						 <STM32_PINMUX('A', 4,  AF14)>,
-+						 /* LCD_VSYNC */
-+						 <STM32_PINMUX('G', 7,  AF14)>,
-+						 /* LCD_CLK */
-+						 <STM32_PINMUX('C', 10, AF14)>,
-+						 /* LCD_R2 */
-+						 <STM32_PINMUX('B', 0,  AF9)>,
-+						 /* LCD_R3 */
-+						 <STM32_PINMUX('A', 11, AF14)>,
-+						 /* LCD_R4 */
-+						 <STM32_PINMUX('A', 12, AF14)>,
-+						 /* LCD_R5 */
-+						 <STM32_PINMUX('B', 1,  AF9)>,
-+						 /* LCD_R6*/
-+						 <STM32_PINMUX('G', 6,  AF14)>,
-+						 /* LCD_R7 */
-+						 <STM32_PINMUX('A', 6,  AF14)>,
-+						 /* LCD_G2 */
-+						 <STM32_PINMUX('G', 10, AF9)>,
-+						 /* LCD_G3 */
-+						 <STM32_PINMUX('B', 10, AF14)>,
-+						 /* LCD_G4 */
-+						 <STM32_PINMUX('D', 6,  AF14)>,
-+						 /* LCD_B2 */
-+						 <STM32_PINMUX('G', 11, AF14)>,
-+						 /* LCD_B3*/
-+						 <STM32_PINMUX('B', 11, AF14)>,
-+						 /* LCD_G5 */
-+						 <STM32_PINMUX('C', 7,  AF14)>,
-+						 /* LCD_G6 */
-+						 <STM32_PINMUX('D', 3,  AF14)>,
-+						 /* LCD_G7 */
-+						 <STM32_PINMUX('G', 12, AF9)>,
-+						 /* LCD_B4 */
-+						 <STM32_PINMUX('A', 3,  AF14)>,
-+						 /* LCD_B5 */
-+						 <STM32_PINMUX('B', 8,  AF14)>,
-+						 /* LCD_B6 */
-+						 <STM32_PINMUX('B', 9,  AF14)>,
-+						 /* LCD_B7 */
-+						 <STM32_PINMUX('F', 10, AF14)>;
-+						 /* LCD_DE */
-+					slew-rate = <2>;
-+				};
-+			};
-+
-+			spi5_pins: spi5-0 {
-+				pins1 {
-+					pinmux = <STM32_PINMUX('F', 7, AF5)>,
-+						/* SPI5_CLK */
-+						 <STM32_PINMUX('F', 9, AF5)>;
-+						/* SPI5_MOSI */
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <0>;
-+				};
-+				pins2 {
-+					pinmux = <STM32_PINMUX('F', 8, AF5)>;
-+						/* SPI5_MISO */
-+					bias-disable;
-+				};
-+			};
-+
- 			dcmi_pins: dcmi-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('A', 4, AF13)>, /* DCMI_HSYNC */
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index 30c0f67..3aadddb 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -49,6 +49,8 @@
- #include "stm32f429.dtsi"
- #include "stm32f429-pinctrl.dtsi"
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "STMicroelectronics STM32F429i-DISCO board";
-@@ -127,3 +129,41 @@
- 	pinctrl-names = "default";
- 	status = "okay";
- };
-+
-+&ltdc {
-+	status = "okay";
-+	pinctrl-0 = <&ltdc_pins_f429_disco>;
-+	pinctrl-names = "default";
-+
-+	port {
-+		ltdc_out_rgb: endpoint {
-+			remote-endpoint = <&panel_in_rgb>;
-+		};
-+	};
-+};
-+
-+&spi5 {
-+	status = "okay";
-+	pinctrl-0 = <&spi5_pins>;
-+	pinctrl-names = "default";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	cs-gpios = <&gpioc 2 GPIO_ACTIVE_LOW>;
-+	dmas = <&dma2 3 2 0x400 0x0>,
-+	       <&dma2 4 2 0x400 0x0>;
-+	dma-names = "rx", "tx";
-+	display: display@0{
-+		/* Connect panel-ilitek-9341 to ltdc */
-+		compatible = "stm32f429-disco,ltdc-panel", "ilitek,ili9341";
-+		reg = <0>;
-+		spi-3wire;
-+		spi-max-frequency = <10000000>;
-+		dc-gpios = <&gpiod 13 0>;
-+		port {
-+			panel_in_rgb: endpoint {
-+			remote-endpoint = <&ltdc_out_rgb>;
-+			};
-+		};
-+	};
-+};
-+
--- 
-2.7.4
+devm_gpiod_put() isn't strictly necessary here.  It is only necessary
+if one of the drivers would invoke uart_get_rs485_mode() multiple
+times, which none of them does AFAICS.  It's just a safety measure.
+I can drop it if that is preferred.
 
+
+> > +		GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT);
+> 
+> Parameter has a specific macro GPIOD_OUT_HIGH.
+
+Good point.  It's also occurred to me now that reading the GPIO's
+value after changing its direction to output is nonsense.  If anything
+it ought to be read *before* changing the direction to output.
+That would make sense in case the board has a pullup or pulldown on
+the Termination Enable pin.  In other cases the pin may just float
+and the value will be unpredictable.  However if I do not read the
+pin, I'd have to choose either high or low as initial state.  Hm.
+Let me check back with our hardware engineers today and see what they
+recommend.
+
+Thanks,
+
+Lukas
