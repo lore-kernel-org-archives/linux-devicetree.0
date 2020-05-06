@@ -2,48 +2,68 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6DBC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 22:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6EEC54E49
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 22:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBA86207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 22:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1722078C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 22:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BS21sHH0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tsm34CKs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbgEFW2M (ORCPT
+        id S1730254AbgEFWgm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 18:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40514 "EHLO
+        Wed, 6 May 2020 18:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729870AbgEFW2L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 18:28:11 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87F74C061A0F;
-        Wed,  6 May 2020 15:28:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=WRT8zecINQ4TfsGBK/5Thu+/n6sZfvk/O+ayHUpUAJ8=; b=BS21sHH0tt0oR4lqM/Tx/zhNwF
-        H3AIJTLYqVop0wNFaor6qz22KPX5DqURcTeAQVpHgYqDqnNnQ1cnfQ7PI5ENTIm0j7rO33VPEseEn
-        B16QeyKIxiuAfnqGzF5DHCoA3s2Wl2UmgHhCl/rILZWwS3N1TWWWP1s59qwtpDE+aqnN9imyVqJVk
-        sGUeoqi9D0dSPA5Cmh5PUN+bl/bZxPEuc7lkxU7RkoK5jsG6fK1B3zvF7CkI9XfwoonQQdYHVAW7C
-        /eFSzPRR9nMX/ahh8AHTcePoxVq00jTSfo92JOmqh+U3My29Rks2pPhnlO52cwkJj/AwDFyYbSzT7
-        c6q8htCQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWSWG-0001zQ-Aw; Wed, 06 May 2020 22:28:00 +0000
-Subject: Re: [PATCH v2 3/4] clk: Add Baikal-T1 CCU PLLs driver
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        with ESMTP id S1729675AbgEFWgm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 18:36:42 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22BCEC061A0F;
+        Wed,  6 May 2020 15:36:42 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h4so4150727ljg.12;
+        Wed, 06 May 2020 15:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=B+lR9RibOagVSsl39LZ9OK8akQe4JLP7xJR19GpLf1o=;
+        b=Tsm34CKsvSLpR0vTdnP3NXEIfocWbivLXWk8w+tAJE4vffmJ6ALKGmPAv3YVr6sNTJ
+         PZhbhmMAaEJIGzYHbhPiJhHEcc3P37y+LVjHDK11d/zgxezjvH1QIiHmKvMoSMWkso+F
+         p9iRxQbECLqV26uxb4vt/iaRUo0fe68iCd2eQJXK51S3tYRbCQQUDyELDVHtlMplWRNW
+         irFmAnBBMMqbfnHmGW3cJyIwJGM1Pxx4RSYQMyd9fYnCp+iUIqYBaZwM9HpTy2VzOZIz
+         eDFakF5MmrzMKhoY8RzaeIbBgiMHs/uPr8z5P2yWV6A8M/DD3+sBc68tVFny5VTRfxSO
+         q+Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B+lR9RibOagVSsl39LZ9OK8akQe4JLP7xJR19GpLf1o=;
+        b=jdV95793K56F2VxemgqF4SBIs0eE6YIQHOSwaDBlYNtM2rGGF3dQw7ZZJLKRxHVm1K
+         zH+4+qS3TDeXdsW2G6+v8f3ElXAvMkE6dwFHT6grG0M4u6jCvIUsnqjEZ++NvuO+hwma
+         3K9xMmIa6RxBbpOi8/aLCw7S6cKNbtVqkaZA6snSuk7N6S+fw4Oh59SNwTT5DQG40bxg
+         QAhPg9VrbkJNUH8eC/a5IuEnYgF6JlmOcewbN++xY3y4ImI/UuKW8X6Xeezq8T6mHDX2
+         BKhq651gY5VRkrBuvSeVyrY+tPDucARZWH08A/EOxknBJicoY2jJqtmQBdC76pORY9nz
+         u00w==
+X-Gm-Message-State: AGi0PubTqOBRW2uVSFCrKnlOECXMUUWltAIPW1ElaedLROplcSrij9AZ
+        q/UMVvhW62Z+dptQJ/kzFow=
+X-Google-Smtp-Source: APiQypIn3b6fKkJd20UjwwrJFveGF8cjFc17xH6wdHxzh2I3WM+a3Zo4qxNiMUlQ/0tz6anyOynLdA==
+X-Received: by 2002:a2e:9b13:: with SMTP id u19mr6438685lji.161.1588804600577;
+        Wed, 06 May 2020 15:36:40 -0700 (PDT)
+Received: from mobilestation ([176.213.3.142])
+        by smtp.gmail.com with ESMTPSA id j19sm404666lfh.19.2020.05.06.15.36.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 15:36:39 -0700 (PDT)
+Date:   Thu, 7 May 2020 01:36:36 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
@@ -59,75 +79,83 @@ Cc:     Serge Semin <fancer.lancer@gmail.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] clk: Add Baikal-T1 CCU PLLs driver
+Message-ID: <20200506223636.pgegmxc2z4uqbnbg@mobilestation>
 References: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
  <20200506222300.30895-1-Sergey.Semin@baikalelectronics.ru>
  <20200506222300.30895-4-Sergey.Semin@baikalelectronics.ru>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9259445e-86a8-8e4a-58c9-822bd00d62f8@infradead.org>
-Date:   Wed, 6 May 2020 15:27:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ <9259445e-86a8-8e4a-58c9-822bd00d62f8@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200506222300.30895-4-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9259445e-86a8-8e4a-58c9-822bd00d62f8@infradead.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-Typo(s):
+On Wed, May 06, 2020 at 03:27:57PM -0700, Randy Dunlap wrote:
+> Hi,
+> 
+> Typo(s):
+> 
+> On 5/6/20 3:22 PM, Serge Semin wrote:
+> > diff --git a/drivers/clk/baikal-t1/Kconfig b/drivers/clk/baikal-t1/Kconfig
+> > new file mode 100644
+> > index 000000000000..e1257af9f49e
+> > --- /dev/null
+> > +++ b/drivers/clk/baikal-t1/Kconfig
+> > @@ -0,0 +1,30 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +config CLK_BAIKAL_T1
+> > +	bool "Baikal-T1 Clocks Control Unit interface"
+> > +	depends on (MIPS_BAIKAL_T1 && OF) || COMPILE_TEST
+> > +	default MIPS_BAIKAL_T1
+> > +	help
+> > +	  Clocks Control Unit is the core of Baikal-T1 SoC System Controller
+> > +	  responsible for the chip subsystems clocking and resetting. It
+> > +	  consists of multiple global clock domains, which can be reset by
+> > +	  means of the CCU control registers. These domains and devices placed
+> > +	  in them are fed with clocks generated by a hierarchy of PLLs,
+> > +	  configurable and fixed clock dividers. Enable this option to be able
+> > +	  to select Baikal-T1 CCU PLLs and Dividers drivers.
+> > +
+> > +if CLK_BAIKAL_T1
+> > +
+> > +config CLK_BT1_CCU_PLL
+> > +	bool "Baikal-T1 CCU PLLs support"
+> > +	select MFD_SYSCON
+> > +	default MIPS_BAIKAL_T1
+> > +	help
+> > +	  Enable this to support the PLLs embedded into the Baikal-T1 SoC
+> > +	  System Controller. These are five PLLs placed at the root of the
+> > +	  clocks hierarchy, right after an external reference osciallator
+> 
+> 	                                                      oscillator
 
-On 5/6/20 3:22 PM, Serge Semin wrote:
-> diff --git a/drivers/clk/baikal-t1/Kconfig b/drivers/clk/baikal-t1/Kconfig
-> new file mode 100644
-> index 000000000000..e1257af9f49e
-> --- /dev/null
-> +++ b/drivers/clk/baikal-t1/Kconfig
-> @@ -0,0 +1,30 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config CLK_BAIKAL_T1
-> +	bool "Baikal-T1 Clocks Control Unit interface"
-> +	depends on (MIPS_BAIKAL_T1 && OF) || COMPILE_TEST
-> +	default MIPS_BAIKAL_T1
-> +	help
-> +	  Clocks Control Unit is the core of Baikal-T1 SoC System Controller
-> +	  responsible for the chip subsystems clocking and resetting. It
-> +	  consists of multiple global clock domains, which can be reset by
-> +	  means of the CCU control registers. These domains and devices placed
-> +	  in them are fed with clocks generated by a hierarchy of PLLs,
-> +	  configurable and fixed clock dividers. Enable this option to be able
-> +	  to select Baikal-T1 CCU PLLs and Dividers drivers.
-> +
-> +if CLK_BAIKAL_T1
-> +
-> +config CLK_BT1_CCU_PLL
-> +	bool "Baikal-T1 CCU PLLs support"
-> +	select MFD_SYSCON
-> +	default MIPS_BAIKAL_T1
-> +	help
-> +	  Enable this to support the PLLs embedded into the Baikal-T1 SoC
-> +	  System Controller. These are five PLLs placed at the root of the
-> +	  clocks hierarchy, right after an external reference osciallator
+Fixed. Thanks.
 
-	                                                      oscillator
+> 
+> > +	  (normally of 25MHz). They are used to generate high frequency
+> > +	  signals, which are either directly wired to the consumers (like
+> > +	  CPUs, DDR, etc) or passed over the clock dividers to be only then
+> 
+> and while you are here:
+> 
+>                      etc.)
 
-> +	  (normally of 25MHz). They are used to generate high frequency
-> +	  signals, which are either directly wired to the consumers (like
-> +	  CPUs, DDR, etc) or passed over the clock dividers to be only then
+Thanks again.
 
-and while you are here:
+-Sergey
 
-                     etc.)
-
-> +	  used as an individual reference clock of a target device.
-> +
-> +endif
-
-thanks.
--- 
-~Randy
-
+> 
+> > +	  used as an individual reference clock of a target device.
+> > +
+> > +endif
+> 
+> thanks.
+> -- 
+> ~Randy
+> 
