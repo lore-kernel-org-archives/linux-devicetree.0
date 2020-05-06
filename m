@@ -2,117 +2,186 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EF1C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3177C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1C6F20769
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C5F20836
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="XmHGbCjY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OTNu/And"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbgEFOch (ORCPT
+        id S1729230AbgEFOmG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 10:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728357AbgEFOch (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 10:32:37 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4761C061A0F
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 07:32:36 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id w2so2105044edx.4
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 07:32:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NO33uLD6Xr6XiFPTqsufLgQrcpAR6VqVSptPcb3vCPM=;
-        b=XmHGbCjY9XHs4RDllkZr7GYbW3x17Xp/d2ZM7/YMaE9ZkCbhONDDDa7HeD0HRh74bq
-         YKPQO2EzhiUxtaRm3oZTt9Nv6BDImxVv3K/GPUhcLI7IrOefAffsFHHm8ywD4W6iHudl
-         DxVysky4je4edF7Stgs34qe5gCbgZ/MPaICSiiGdE9juP74oXcpZZzAbnJxi27yhalhj
-         DLNxC+PxvCZNtG5SbSBAWnfQKlFEtwLVI52AIoZhVB0MEGeDLvuCRuEGHenVXh6RLeoN
-         TiHEnM2OzuqqixUAR0h5G+xnYX+ki23UyP6rJKLqPrD+mfb91EDxD7ZEKfmhNhlA8NkX
-         tzKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NO33uLD6Xr6XiFPTqsufLgQrcpAR6VqVSptPcb3vCPM=;
-        b=mse6JjzzQkZ+y/5LauI55Yp5noof5A2pa8gAA3MyyaX/Unqc9yPERPVT6/o7KMSd82
-         Q5fgCJLgOmS8wkvvvkD+qtP3dfLG2pVxoKSIdS3BNu5gDHwgWnkCSe4mW2pEnLV5lHbb
-         yo8fwyKdTu8nlCX0TyohxG9gXnSm7Q0y/9LGYSs/94e0eAY8M44FTNk1+n0L+diIBWue
-         ynNcC3jpWV64KkSyUgVYjW5YET6Sv2Lb4HmmKF7c7lHEBEIzcXtEyZERm/9s5Jfb+p7N
-         cAqsc10HZ/eDTflgwIxf2T/CCxyxrFgAKZW+yjr/6eqLB8UNbh1mxAG6Wx8Ai5rmgYst
-         3SWA==
-X-Gm-Message-State: AGi0PuaVudbwwuGwSvizA47Mcqne0eEfNKvvgYyEmSseSPbntgn0nhMr
-        h90gtZqGgiFKSoFiBqPCnSrLLb6HhGDFBs1i6uuGSA==
-X-Google-Smtp-Source: APiQypLadWKCh5cKd8+XAM3rxskPpXwANJdRLpqUHQap12ixTxs6zbMNEiCnqvUneUgX3f1gT3naBeyCuwqqUKi4tds=
-X-Received: by 2002:aa7:cfc3:: with SMTP id r3mr7469705edy.342.1588775555412;
- Wed, 06 May 2020 07:32:35 -0700 (PDT)
+        Wed, 6 May 2020 10:42:06 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:35586 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729181AbgEFOmG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 10:42:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588776124; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=cx846LpCI/mxVQVVyh+RuRGtZ75GrHh3+ShglsOfGD4=;
+ b=OTNu/AndhEmi2zrusukaSrTtS1LU95cM3tjQRdqURbipsYnllf/QMTKO1tjGI0Ed+SlHin7w
+ Or6ZcsMBe+vMVVwvPQpmS00Y4t1gWls7eaoN7fOxUPMccA7hWxqPV4k3TM7KF2CN1gqld4e0
+ 9z/PYHQoMOxl/xM7AW4x1/uyLcs=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb2ccb5.7f1064742c70-smtp-out-n02;
+ Wed, 06 May 2020 14:41:57 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E0711C44791; Wed,  6 May 2020 14:41:55 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 887D4C433F2;
+        Wed,  6 May 2020 14:41:54 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
- <20200505154510.93506-3-pasha.tatashin@soleen.com> <202005051444.14B6686@keescook>
- <20200506095239.11a76a76@gandalf.local.home>
-In-Reply-To: <20200506095239.11a76a76@gandalf.local.home>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 6 May 2020 10:31:59 -0400
-Message-ID: <CA+CK2bB-Qim9T2NKV97HdPbSER+RR5R4_rOCZ3JZgZ5FcU05Pg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] pstore/platform: pass max_reason to kmesg dump
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        anton@enomsg.org, ccross@android.com,
-        Tony Luck <tony.luck@intel.com>, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 06 May 2020 20:11:54 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nishanth Menon <nm@ti.com>, Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+In-Reply-To: <CAHLCerM_wdHDwzEDN7YxU9pBdHo3KvNyJeRWMC6seTG6aCH7nw@mail.gmail.com>
+References: <20200504202243.5476-1-sibis@codeaurora.org>
+ <CAHLCerM_wdHDwzEDN7YxU9pBdHo3KvNyJeRWMC6seTG6aCH7nw@mail.gmail.com>
+Message-ID: <87126044e367432ee8722ec2346d1dd5@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 6, 2020 at 9:52 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Tue, 5 May 2020 14:59:37 -0700
-> Kees Cook <keescook@chromium.org> wrote:
->
-> > > @@ -97,6 +97,8 @@ struct pstore_record {
-> > >   * @read_mutex:    serializes @open, @read, @close, and @erase callbacks
-> > >   * @flags: bitfield of frontends the backend can accept writes for
-> > >   * @data:  backend-private pointer passed back during callbacks
-> > > + * @max_reason: Used when PSTORE_FLAGS_DMESG is set. Contains the
-> > > + *              kmsg_dump_reason enum value.
-> >
-> > Nit: please move this above @data since it has a @flags dependency.
-> >
-> > >   *
-> > >   * Callbacks:
-> > >   *
-> > > @@ -180,6 +182,7 @@ struct pstore_info {
-> > >
-> > >     int             flags;
-> > >     void            *data;
-> > > +   int             max_reason;
->
-> Not to mention that moving max_reason above data will fill in the hole left
-> by a 32 bit int, followed by a 64 bit pointer.
+Hey Amit,
+Thanks for taking time to review
+the series!
 
-Good point. I will do it in the next version.
+On 2020-05-06 18:08, Amit Kucheria wrote:
+> On Tue, May 5, 2020 at 1:54 AM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> This patch series aims to extend cpu based scaling support to L3/DDR 
+>> on
+>> SDM845 and SC7180 SoCs.
+>> 
+>> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
+>> Patches [4-8] - Update bw levels based on cpu frequency change
+>> Patches [9-10] - Add tag setting support to OPP
+>> Patches [11-12] - Add the cpu opp tables for SDM845 and SC7180 SoCs.
+>> 
+>> Depends on the following series:
+>> https://lore.kernel.org/patchwork/cover/1230626/
+> 
+> Are there any other dependencies for this series? I tried applying
+> this on top of Georgi's series on v5.7-rc3. Patch 12 didn't apply
+> cleanly and needed a manual fixup for the include change.
+> 
 
-Thank you,
-Pasha
+When I posted out it was based on
+next-20200428 tree, there shouldn't
+be any other dependency needed.
 
->
-> -- Steve
->
->
-> > >
-> > >     int             (*open)(struct pstore_info *psi);
-> > >     int             (*close)(struct pstore_info *psi);
+> Compilation failed with:
+> Error:
+> /home/amit/work/sources/worktree-review-pipeline/arch/arm64/boot/dts/qcom/sc7180.dtsi:101.30-31
+> syntax error
+> FATAL ERROR: Unable to parse input tree
+> 
+> I've been squinting at the offending lines with no success:
+>                         interconnects = <&gem_noc MASTER_APPSS_PROC
+> &mc_virt SLAVE_EBI1>,
+>                                         <&osm_l3 MASTER_OSM_L3_APPS
+> &osm_l3 SLAVE_OSM_L3>;
+> 
+
+#include <dt-bindings/interconnect/qcom,sc7180.h>
+You are probably missing ^^ which
+is present in next.
+
+>> Georgi,
+>>  Would it make sense to include tag support patches [9-10] in your 
+>> next
+>>  re-spin?
+>> 
+>> V4:
+>>  * Migrate to using Georgi's new bindings
+>>  * Misc fixups based on Matthias comments
+>>  * API fixups based on Bjorn's comments on v2
+>>  * Picked up a few R-bs from Matthias
+>> 
+>> v3:
+>>  * Migrated to using Saravana's opp-kBps bindings [1]
+>>  * Fixed some misc comments from Rajendra
+>>  * Added support for SC7180
+>> 
+>> v2:
+>>  * Incorporated Viresh's comments from:
+>>  
+>> https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+>>  
+>> https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+>>  * Dropped cpufreq-map passive governor
+>> 
+>> Sibi Sankar (12):
+>>   arm64: dts: qcom: sdm845: Add SoC compatible to MTP
+>>   cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+>>   cpufreq: blacklist SC7180 in cpufreq-dt-platdev
+>>   OPP: Add and export helper to update voltage
+>>   OPP: Add and export helper to set bandwidth
+>>   cpufreq: qcom: Update the bandwidth levels on frequency change
+>>   OPP: Add and export helper to get icc path count
+>>   cpufreq: qcom: Disable fast switch when scaling ddr/l3
+>>   dt-bindings: interconnect: Add interconnect-tags bindings
+>>   OPP: Add support for setting interconnect-tags
+>>   arm64: dts: qcom: sdm845: Add cpu OPP tables
+>>   arm64: dts: qcom: sc7180: Add cpu OPP tables
+>> 
+>>  .../bindings/interconnect/interconnect.txt    |   5 +
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi          | 168 ++++++++++++
+>>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |   2 +-
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 258 
+>> ++++++++++++++++++
+>>  drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
+>>  drivers/cpufreq/qcom-cpufreq-hw.c             |  89 +++++-
+>>  drivers/opp/core.c                            | 114 ++++++++
+>>  drivers/opp/of.c                              |  25 +-
+>>  include/linux/pm_opp.h                        |  22 ++
+>>  9 files changed, 675 insertions(+), 10 deletions(-)
+>> 
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
