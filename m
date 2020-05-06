@@ -4,26 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EE6C47258
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8009C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 189862084D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6C1206D5
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgEFIIR (ORCPT
+        id S1728344AbgEFIJl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 04:08:17 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:38515 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728522AbgEFIIR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 04:08:17 -0400
-X-Originating-IP: 86.202.105.35
+        Wed, 6 May 2020 04:09:41 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:47503 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728217AbgEFIJk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 04:09:40 -0400
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 338E6240009;
-        Wed,  6 May 2020 08:08:14 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 2964524002E;
+        Wed,  6 May 2020 08:08:15 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -31,11 +30,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v3 2/9] dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
-Date:   Wed,  6 May 2020 10:05:47 +0200
-Message-Id: <20200506080554.283177-3-alexandre.belloni@bootlin.com>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v3 3/9] ARM: dts: at91: sama5d2: add TCB GCLK
+Date:   Wed,  6 May 2020 10:05:48 +0200
+Message-Id: <20200506080554.283177-4-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
 References: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
@@ -46,77 +44,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The sama5d2 TC block TIMER_CLOCK1 is different from the at91sam9x5 one.
-Instead of being MCK / 2, it is the TCB GCLK.
+The sama5d2 tcbs take an extra input clock, their gclk.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
-Cc: Rob Herring <robh+dt@kernel.org>
+ arch/arm/boot/dts/sama5d2.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
- .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 36 +++++++++++++++----
- 1 file changed, 30 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-index 4b683151265e..38403760f64d 100644
---- a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-+++ b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-@@ -19,6 +19,7 @@ properties:
-       - enum:
-           - atmel,at91rm9200-tcb
-           - atmel,at91sam9x5-tcb
-+          - atmel,sama5d2-tcb
-       - const: simple-mfd
-       - const: syscon
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index ab550d69db91..996143e966d8 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -499,23 +499,23 @@ macb0: ethernet@f8008000 {
+ 			};
  
-@@ -38,12 +39,6 @@ properties:
-       t1_clk and t2_clk if a clock per channel is available.
-     minItems: 2
-     maxItems: 4
--    items:
--      enum:
--        - t0_clk
--        - t1_clk
--        - t2_clk
--        - slow_clk
+ 			tcb0: timer@f800c000 {
+-				compatible = "atmel,at91sam9x5-tcb", "simple-mfd", "syscon";
++				compatible = "atmel,sama5d2-tcb", "simple-mfd", "syscon";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				reg = <0xf800c000 0x100>;
+ 				interrupts = <35 IRQ_TYPE_LEVEL_HIGH 0>;
+-				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>, <&clk32k>;
+-				clock-names = "t0_clk", "slow_clk";
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>, <&pmc PMC_TYPE_GCK 35>, <&clk32k>;
++				clock-names = "t0_clk", "gclk", "slow_clk";
+ 			};
  
-   clocks:
-     minItems: 2
-@@ -72,6 +67,35 @@ patternProperties:
-       - compatible
-       - reg
+ 			tcb1: timer@f8010000 {
+-				compatible = "atmel,at91sam9x5-tcb", "simple-mfd", "syscon";
++				compatible = "atmel,sama5d2-tcb", "simple-mfd", "syscon";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				reg = <0xf8010000 0x100>;
+ 				interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
+-				clocks = <&pmc PMC_TYPE_PERIPHERAL 36>, <&clk32k>;
+-				clock-names = "t0_clk", "slow_clk";
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 36>, <&pmc PMC_TYPE_GCK 36>, <&clk32k>;
++				clock-names = "t0_clk", "gclk", "slow_clk";
+ 			};
  
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: atmel,sama5d2-tcb
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 3
-+          maxItems: 3
-+        clock-names:
-+          items:
-+            - const: t0_clk
-+            - const: gclk
-+            - const: slow_clk
-+    else:
-+      properties:
-+        clocks:
-+          minItems: 2
-+          maxItems: 4
-+        clock-names:
-+          items:
-+            enum:
-+              - t0_clk
-+              - t1_clk
-+              - t2_clk
-+              - slow_clk
-+
- required:
-   - compatible
-   - reg
+ 			hsmc: hsmc@f8014000 {
 -- 
 2.26.2
 
