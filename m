@@ -2,138 +2,245 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFCEC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B246C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6A1206DB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3610F206DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:02:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sCNlxsrb"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="F9PUcTl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgEFNBF (ORCPT
+        id S1728158AbgEFNCd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 09:01:05 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46800 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728276AbgEFNBE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 09:01:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588770064; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=EEVpYpqQ1QRwHdkwdt5mqy1ieqOZLEZitiAbr0eLLME=; b=sCNlxsrbHvm79/qg44dD9MDtjbiBIvymGa8PbZq6vVXFJ2lf31b95cG9TMxCi7J7yJNCZxEM
- VZwOUVFt6UV33J3qCzjffyYFmxJGzHaUKkFw87zvRxkUuk4XXpjGckrgtVcaI1RCsYpNUrSV
- 7+jyOx7Y6zvWXV0JpZuhCz4jw0E=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb2b4e8.7fc83cd1fdf8-smtp-out-n03;
- Wed, 06 May 2020 13:00:24 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0BFC2C00456; Wed,  6 May 2020 13:00:20 +0000 (UTC)
-Received: from [192.168.43.57] (unknown [27.59.131.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9225C433BA;
-        Wed,  6 May 2020 13:00:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B9225C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH v5 1/5] mmc: core: Extend mmc_of_parse() to parse CQE
- bindings
-To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>, mirq-linux@rere.qmqm.pl,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        Yong Mao <yong.mao@mediatek.com>
-Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <1588031768-23677-1-git-send-email-chun-hung.wu@mediatek.com>
- <1588031768-23677-2-git-send-email-chun-hung.wu@mediatek.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <9bc2454f-0b42-e256-7927-2564b56f369f@codeaurora.org>
-Date:   Wed, 6 May 2020 18:30:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 09:02:33 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46598 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgEFNCd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 09:02:33 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 28F5A542;
+        Wed,  6 May 2020 15:02:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1588770150;
+        bh=pPBs9Lx7E3HOerlKlsFhTIFSxpXd4xPnpNsOogA3ass=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F9PUcTl8+vkeemaZPSZeHkYs6rtKiaQrG7A2wpwP32X5b5+SEhkYHYoaeJfGm4CsG
+         tUSi7z/c7DahSrKaDG8MhUQKSgo+Zh7eZ0OwAkEGuoIR5nj5X+/LchW1Q/aorhV0Ad
+         3hv5O94CAf4YjlBiWT5j0/zZP2ZjbObN8HjYBpJY=
+Date:   Wed, 6 May 2020 16:02:25 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ UHD-SDI Receiver Subsystem
+Message-ID: <20200506130225.GD5946@pendragon.ideasonboard.com>
+References: <20200429141705.18755-1-vishal.sagar@xilinx.com>
+ <20200429141705.18755-2-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <1588031768-23677-2-git-send-email-chun-hung.wu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200429141705.18755-2-vishal.sagar@xilinx.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Vishal,
 
-On 4/28/2020 5:26 AM, Chun-Hung Wu wrote:
-> Parse CQE bindings "supports-cqe" and "disable-cqe-dcmd"
-> in mmc_of_parse().
->
-> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Thank you for the patch.
+
+On Wed, Apr 29, 2020 at 07:47:03PM +0530, Vishal Sagar wrote:
+> Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
+> 
+> The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
+> core, an SDI RX to Video Bridge IP core to convert SDI video to native
+> video and a Video In to AXI4-Stream IP core to convert native video to
+> AXI4-Stream.
+> 
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
 > ---
->   drivers/mmc/core/host.c | 5 +++++
->   1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index c876872..47521c6 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -302,6 +302,11 @@ int mmc_of_parse(struct mmc_host *host)
->   		host->caps2 |= MMC_CAP2_NO_SD;
->   	if (device_property_read_bool(dev, "no-mmc"))
->   		host->caps2 |= MMC_CAP2_NO_MMC;
-> +	if (device_property_read_bool(dev, "supports-cqe"))
-> +		host->caps2 |= MMC_CAP2_CQE;
+> v2
+> - Removed references to xlnx,video*
+> - Fixed as per Sakari Ailus and Rob Herring's comments
+> - Converted to yaml format
+> 
+>  .../bindings/media/xilinx/xlnx,sdirxss.yaml   | 132 ++++++++++++++++++
+>  1 file changed, 132 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> new file mode 100644
+> index 000000000000..9133ad19df55
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> @@ -0,0 +1,132 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/xilinx/xlnx,sdirxss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +
+> +title: Xilinx SMPTE UHD-SDI Receiver Subsystem
+> +
+> +maintainers:
+> +  - Vishal Sagar <vishal.sagar@xilinx.com>
+> +
+> +description: |
+> +  The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
+> +  based on SMPTE SDI protocols. It receives unaligned native SDI streams from
+> +  the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
+> +  native SDI using Xilinx transceivers as the physical layer.
+> +
+> +  The subsystem consists of
+> +  1 - SMPTE UHD-SDI Rx
+> +  2 - SDI Rx to Native Video Bridge
+> +  3 - Video In to AXI4-Stream Bridge
+> +
+> +  The subsystem can capture SDI streams in upto 12G mode 8 data streams and output
 
-This change is breaking emmc driver on qcom platforms where this dt 
-property is defined.
+s/upto/up to/
 
-[    1.543453]  cqhci_deactivate+0xc/0x38
-[    1.545627]  sdhci_msm_reset+0x40/0x58
-[    1.549447]  sdhci_do_reset+0x48/0x7c
-[    1.553180]  __sdhci_read_caps+0x7c/0x214
-[    1.556913]  sdhci_setup_host+0x58/0xce8
-[    1.560905]  sdhci_msm_probe+0x588/0x8a4
-[    1.564900]  platform_drv_probe+0x4c/0xb0
+> +  a dual pixel per clock RGB/YUV444,422/420 10/12 bits per component AXI4-Stream.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - xlnx,v-smpte-uhdsdi-rx-ss-2.0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: List of clock specifiers
+> +    items:
+> +      - description: AXI4-Lite clock
+> +      - description: SMPTE UHD-SDI Rx core clock
+> +      - description: Video clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: s_axi_aclk
+> +      - const: sdi_rx_clk
+> +      - const: video_out_clk
+> +
+> +  xlnx,bpp:
+> +    description: Bits per pixel supported. Can be 10 or 12 bits per pixel only.
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> +      - enum: [10, 12]
 
-So, we cant have this flag defined before sdhci_setup_host().
+I don't see this as a design parameter in the documentation (pg290,
+v2.0). What does it correspond to ? All the BPC mentions in the
+documentation always state that 10-bit is the only supported value.
 
-I will have to clear this cap and re-enable it in our initialization.
+> +
+> +  xlnx,line-rate:
+> +    description: |
+> +      The maximum mode supported by the design. Possible values are as below
+> +      12G_SDI_8DS - 12G mode with 8 data streams
+> +      6G_SDI      -  6G mode
+> +      3G_SDI      -  3G mode
+> +    enum:
+> +      - 12G_SDI_8DS
+> +      - 6G_SDI
+> +      - 3G_SDI
 
-> +	if (!device_property_read_bool(dev, "disable-cqe-dcmd")) {
-> +		host->caps2 |= MMC_CAP2_CQE_DCMD;
-> +	}
->   
->   	/* Must be after "non-removable" check */
->   	if (device_property_read_u32(dev, "fixed-emmc-driver-type", &drv_type) == 0) {
+How about making this an integer property, with #define in
+include/dt-bindings/media/xilinx-sdi.h ? As far as I understand, the SDI
+TX subsystem has the same parameter, so the #define could be shared
+between the two.
+
+> +
+> +  xlnx,include-edh:
+> +    type: boolean
+> +    description: |
+> +      This is present when the Error Detection and Handling processor is
+> +      enabled in design.
+> +
+> +  ports:
+> +    type: object
+> +    description: |
+> +      Generally the SDI port is connected to a device like SDI Broadcast camera
+> +      which is independently controlled. Hence port@0 is a source port which can be
+> +      connected to downstream IP which can work with AXI4 Stream data.
+
+We should still have an input port. It can be connected to a DT node for
+a physical SDI connector, or any other component in the platform (I
+expect the former to be the common case). There are DT bindings for
+connectors in Documentation/devicetree/bindings/display/connector/, we
+should add one for SDI.
+
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: Source port
+> +        properties:
+> +          reg:
+> +            const: 0
+> +          endpoint:
+> +            type: object
+> +            properties:
+> +              remote-endpoint: true
+> +            required:
+> +              - remote-endpoint
+> +            additionalProperties: false
+> +        additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - xlnx,line-rate
+> +  - xlnx,bpp
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    uhdsdirxss: v-smpte-uhdsdi-rxss@80000000 {
+> +      compatible = "xlnx,v-smpte-uhdsdi-rx-ss-2.0";
+> +      interrupt-parent = <&gic>;
+> +      interrupts = <0 89 4>;
+> +      reg = <0x0 0x80000000 0x0 0x10000>;
+> +      xlnx,include-edh;
+> +      xlnx,line-rate = "12G_SDI_8DS";
+> +      clocks = <&clk_1>, <&si570_1>, <&clk_2>;
+> +      clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
+> +      xlnx,bpp = <10>;
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        port@0 {
+> +          reg = <0>;
+> +          sdirx_out: endpoint {
+> +            remote-endpoint = <&vcap_sdirx_in>;
+> +          };
+> +        };
+> +      };
+> +    };
+
+-- 
+Regards,
+
+Laurent Pinchart
