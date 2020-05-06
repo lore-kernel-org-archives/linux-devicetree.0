@@ -2,181 +2,141 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F06CC47256
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 05:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F1CC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 06:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5276D206E6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 05:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CDA206E6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 06:09:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Nl6mdz+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgEFFLr (ORCPT
+        id S1727071AbgEFGJQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 01:11:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47764 "EHLO
+        Wed, 6 May 2020 02:09:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727084AbgEFFLp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 01:11:45 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D94E1C061A10
-        for <devicetree@vger.kernel.org>; Tue,  5 May 2020 22:11:44 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jWCLH-0002HK-M7; Wed, 06 May 2020 07:11:35 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jWCLG-00086W-Ft; Wed, 06 May 2020 07:11:34 +0200
-Date:   Wed, 6 May 2020 07:11:34 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        by vger.kernel.org with ESMTP id S1726751AbgEFGJQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 02:09:16 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8003DC061A0F;
+        Tue,  5 May 2020 23:09:16 -0700 (PDT)
+Received: from flygoat-x1e (unknown [IPv6:2409:891e:6b40:4ccf:a277:695f:88be:4123])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 93E731FAF7;
+        Wed,  6 May 2020 06:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1588745356; bh=A4jfPl3F7aTVgpe4nLCMijDOi3+pUZ6bmkfPi8BYFEc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Nl6mdz+KS0BxVJFJBxa1LZPTQUZAo5bbHCM7nC26G8p7Ist/+31lEdGwdjClIFDKd
+         rmnaX0ekaflA+fgPWHXHzvv9pYs2LLHbdxp2YKzQtwOtL3FtZjfslGZdiX6+tsXjf7
+         hAJHZzKeK2oK1dvTjomBqZtgm1S9bcnJO1pjAnwRh/hfAJ1LFgudwnIy5blsV3Ls4T
+         0siqdGX0Q99FOJto60UraRS4SjFhpSyrAS8a/x1q6Oa5mri/I/2F16ex0sNv7KMmSW
+         VneT3zgf3/IwXv+Er69AgMnIVfNkcuRH4SxxoDIq3DFIvBR8qF1ej7pJSwUISU5UUG
+         7/fpsQ1XHPzvw==
+Date:   Wed, 6 May 2020 14:08:52 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v1] dt-bindings: net: nxp,tja11xx: rework validation
- support
-Message-ID: <20200506051134.mrm4nuqxssw255tl@pengutronix.de>
-References: <20200505104215.8975-1-o.rempel@pengutronix.de>
- <20200505140127.GJ208718@lunn.ch>
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/5] PCI: Add Loongson PCI Controller support
+Message-ID: <20200506140852.49bf7d2c@flygoat-x1e>
+In-Reply-To: <20200504234329.GA300770@bjorn-Precision-5520>
+References: <20200428011429.1852081-3-jiaxun.yang@flygoat.com>
+        <20200504234329.GA300770@bjorn-Precision-5520>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="y6mtvp5pc3cshvwy"
-Content-Disposition: inline
-In-Reply-To: <20200505140127.GJ208718@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:01:44 up 172 days, 20:20, 176 users,  load average: 0.19, 0.10,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, 4 May 2020 18:43:29 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
---y6mtvp5pc3cshvwy
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, May 05, 2020 at 04:01:27PM +0200, Andrew Lunn wrote:
-> On Tue, May 05, 2020 at 12:42:15PM +0200, Oleksij Rempel wrote:
-> > To properly identify this node, we need to use ethernet-phy-id0180.dc80.
-> > And add missing required properties.
-> >=20
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> On Tue, Apr 28, 2020 at 09:14:17AM +0800, Jiaxun Yang wrote:
+> > This controller can be found on Loongson-2K SoC, Loongson-3
+> > systems with RS780E/LS7A PCH.
+> > 
+> > The RS780E part of code was previously located at
+> > arch/mips/pci/ops-loongson3.c and now it can use generic PCI
+> > driver implementation.
+> > 
+> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > 
+> > --
+> > v2:
+> > 	- Clean up according to rob's suggestions
+> > 	- Claim that it can't work as a module
+> > v3:
+> > 	- Fix a typo
+> > v4:
+> > 	- More clean-ups: Drop flag check, use devfn
+> > v7:
+> > 	- Fix ordering according to huacai's suggestion
 > > ---
-> >  .../devicetree/bindings/net/nxp,tja11xx.yaml  | 55 ++++++++++++-------
-> >  1 file changed, 35 insertions(+), 20 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/D=
-ocumentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> > index 42be0255512b3..cc322107a24a2 100644
-> > --- a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> > +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> > @@ -1,4 +1,4 @@
-> > -# SPDX-License-Identifier: GPL-2.0+
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >  %YAML 1.2
-> >  ---
-> >  $id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
-> > @@ -12,44 +12,59 @@ maintainers:
-> >    - Heiner Kallweit <hkallweit1@gmail.com>
-> > =20
-> >  description:
-> > -  Bindings for NXP TJA11xx automotive PHYs
-> > +  Bindings for the NXP TJA1102 automotive PHY. This is a dual PHY pack=
-age where
-> > +  only the first PHY has global configuration register and HW health
-> > +  monitoring.
-> > =20
-> > -allOf:
-> > -  - $ref: ethernet-phy.yaml#
-> > +properties:
-> > +  compatible:
-> > +    const: ethernet-phy-id0180.dc80
-> > +    description: ethernet-phy-id0180.dc80 used for TJA1102 PHY
+> >  drivers/pci/controller/Kconfig        |  10 +
+> >  drivers/pci/controller/Makefile       |   1 +
+> >  drivers/pci/controller/pci-loongson.c | 251
+> > ++++++++++++++++++++++++++ 3 files changed, 262 insertions(+)
+> >  create mode 100644 drivers/pci/controller/pci-loongson.c
+> > 
+> > diff --git a/drivers/pci/controller/Kconfig
+> > b/drivers/pci/controller/Kconfig index 91bfdb784829..ae36edb1d7db
+> > 100644 --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -258,6 +258,16 @@ config PCI_HYPERV_INTERFACE
+> >  	  The Hyper-V PCI Interface is a helper driver allows
+> > other drivers to have a common interface with the Hyper-V PCI
+> > frontend driver. 
+> > +config PCI_LOONGSON
+> > +	bool "LOONGSON PCI Controller"
+> > +	depends on MACH_LOONGSON64 || COMPILE_TEST
+> > +	depends on OF
+> > +	depends on PCI_QUIRKS
+> > +	default MACH_LOONGSON64
+> > +	help
+> > +	  Say Y here if you want to enable PCI controller support
+> > on
+> > +	  Loongson systems.
 > > +
-> > +  reg:
-> > +    minimum: 0
-> > +    maximum: 14
-> > +    description:
-> > +      The PHY address of the parent PHY.
->=20
-> Hi Oleksij
->=20
-> reg is normally 0 to 31, since that is the address range for MDIO.=20
-> Did you use 14 here because of what strapping allows?
+> >  source "drivers/pci/controller/dwc/Kconfig"
+> >  source "drivers/pci/controller/mobiveil/Kconfig"
+> >  source "drivers/pci/controller/cadence/Kconfig"
+> > diff --git a/drivers/pci/controller/Makefile
+> > b/drivers/pci/controller/Makefile index 158c59771824..fbac4b0190a0
+> > 100644 --- a/drivers/pci/controller/Makefile
+> > +++ b/drivers/pci/controller/Makefile
+> > @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+> >  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+> >  obj-$(CONFIG_VMD) += vmd.o
+> >  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
+> > +obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o  
+> 
+> This is apparently a PCIe controller, not a Conventional PCI
+> controller, since you reference PCIe-specific things like MRRS below.
+> 
+> If that's the case, I'd name it pcie-loongson.c.
+> 
 
-Yes. Only BITs 1:3 are configurable. BIT(0) is always 0 for the PHY0 and 1
-for the PHY1
+Hi Bjorn,
 
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - '#address-cells'
-> > +  - '#size-cells'
->=20
-> So we have two different meanings of 'required' here.
->=20
-> One meaning is the code requires it. compatible is not required, the
-> driver will correctly be bind to the device based on its ID registers.
-> Is reg also required by the code?
->=20
-> The second meaning is about keeping the yaml verifier happy. It seems
-> like compatible is needed for the verifier. Is reg also required? We
-> do recommend having reg, but the generic code does not require it.
+Thanks for your careful review.
 
-reg is used by:
-tja1102_p0_probe()
-  tja1102_p1_register()
-    of_mdio_parse_addr()
+I'll resolve other comments, for the naming as it's exactly a PCI host
+bridge with some on-chip devices like AHCI, Ethernet, VGA controller
+attached on it, also some PCI to PCIe bridges are attached on it to
+provide PCIe port. I'd still prefer pci-loongson as it's name.
 
-But this is required for the slave PHY. I assume the reg can be
-optional for the master PHY. Should I?
-
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---y6mtvp5pc3cshvwy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6yRvkACgkQ4omh9DUa
-UbPheA//Te8R3kEDCbeoDdug4dcFxw6htc5AlZmxKUGyHniiMNo5ew1OleQGFEg+
-c48xPMKS+5d4hvh5qp/Yw4g4Vl7pE59vVScvU8nX/H1P6FFM4SrQQDDosNGRwIB1
-SKaSa/mIfdzCr8tBFM5i3CLnyRjPmYXkkzbBQjUo2spO0HPyMzl3suLvtuPB8mRf
-csh9yPAazDtz6MfyI1YiDmJqonRnt/GAOdhBTlkeb2UYkQ4EOWQXkQ5Zu2zgkvOV
-z2vwshWm0H1uVnSNXh4Zr3nsZyWHuYRpUBmmcxXFV1wXz66tc0hO56l+iGpVFLRs
-lFeA0M1/UNHeCmKX76WrCnnSDIvTuPKdlVWh1GsnhCEums++2LXuP2XMajVPBfXv
-oPwIs7xBydzxbShTUgaIpmpC7jGwVT78XFRfzo/2gX/PxrTfcY5DM4SdJvhs+xS3
-sV+8Jc7STqrPTYY2iWno3dKf5ESZG66JV++ZHZks6RUK/ttfi438yLVK5AP5RREH
-IOKY/xvk3//wFM0UbHwQiC2dV3bvv2T/sdkWopg6/dN3DBjlUGVTeM1B/wYjZeW6
-YrWn3aR94IyIbCjEaDqOS0H9+rcSWYJYkh8JBiLiGH2P6aG381rNONYhCZVibekq
-pd1dZ+bGGW29K8RcoTtW27FuOcSqn/wqjANviuF5dxBdGXj+OAw=
-=K2Aq
------END PGP SIGNATURE-----
-
---y6mtvp5pc3cshvwy--
+--
+Jiaxun Yang
