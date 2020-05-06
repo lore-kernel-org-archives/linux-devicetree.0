@@ -2,487 +2,293 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAE6C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7B6C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEF120575
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95CE20752
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 13:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhMHi4qo"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="RQFg+vmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgEFN3k (ORCPT
+        id S1728621AbgEFNmy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 09:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40770 "EHLO
+        Wed, 6 May 2020 09:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728081AbgEFN3k (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 09:29:40 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97FBEC061A0F;
-        Wed,  6 May 2020 06:29:38 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id j14so1330033lfg.9;
-        Wed, 06 May 2020 06:29:38 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1725801AbgEFNmy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 09:42:54 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936BAC061A10
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 06:42:52 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id s3so1358726eji.6
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 06:42:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=soleen.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3WSGT5aSSPofuhblN5WQYnfIQ9Jrf9gWsONcHiYwF7U=;
-        b=VhMHi4qoUyL8WtNhVRHydnIW/B/6juH8ln5kTRUDd3k4EkYKf4dkSFHM1Bi7jPZeq1
-         oxhUPZOoGVhByWEEl+OCXPBkVdAhUSon06voYhi/kF2EkBVTOUL37yzDak0PmQRHF1d5
-         b8u6wsWb5yn1kdVEcbeHmZIytMSJyECtYJ8PWw/SDxQUAlAKWcW1EG2eQQhkA/W7D1Eb
-         ZY8+LvhJZfCvwr/8VfOFOJlzntYejJhL5EfkhdQWke7stF/VAUcGwaPlwPDrzdlE6b/s
-         l+OYwaYRLK5GAfr8QnUOZfPjcMuGyN3//kg+exuf01WRTyjmB4DEUJzk5Bi6TbmnCdXV
-         VJnA==
+        bh=AwZ2HXOkXwEq2HHbm/ldWJ+Ha7wxQpNmEACUbIV+REs=;
+        b=RQFg+vmyVowvlJJtYxI8xLKEKN+HKIvRTQbar5Cl4LErlFvZ3mIbhfXLRF1mUyGt5m
+         8OyHNqcxGA2e7Gz6VNBUqX9yGPaPsgzcBE/Q7qkxymnHHDqkiWHCKhc7cJ31nMLj1ipu
+         kKhG+x8gvS9pgH19iPX8gfH69E5+FNUf8W33YzfULpbDs5B000Y5f0LIUXhskCI2/fId
+         gtBby9KluUmRz5JwBUxDZcY2T1osgi2ZIbTZX78IrtygX6nUNLf2BMITOTPqObEFkpRa
+         uYJEHd/Ezu0QbsdLGP4IvYnPkez4cVb1QoZhW3sdgYPqjhXt/bzW5Z5EM9VJTQuPYDK5
+         ZiJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3WSGT5aSSPofuhblN5WQYnfIQ9Jrf9gWsONcHiYwF7U=;
-        b=mFT6FOs/Y1MBev8dVvA9cfx8AEJmZelkVnnBwARJJf2/SPlJ+2hwtx/4pCgNMfiTU5
-         IzZakVsZH29Pj7cTRJQO/AMLuyCEE9qa6IltXg/eT7a/BKOv4p2a3vFwDPGDzr7dNzZZ
-         iKlA59gPHwXQdIR13NJzYNfF3Nv1byZXSGEKU2QqQFwNquTExKHYWC/WFjI4bHr9j/hq
-         WTVM7fCOLTLoDmjDE+mBeP6n8Yb2VNqdrbqPNuU7+Hcuy4ZfIUIuCDVuLIN7/AjW2WJe
-         86wukFlt+ul9HQicpz6vIzh5YwjyvjYD0KNBWNDf+Oa6dwhUnJcdq2kBYYZagO3JANTL
-         zpFQ==
-X-Gm-Message-State: AGi0PuYjPWHGJcoGAQzH1z8V5E7OcsAsEqKzbPLSRh/SQ1SvlzeFJwGY
-        3F9tbIiKsGfoDcqg1XVcUaCPf8q5KIbofCj70PU=
-X-Google-Smtp-Source: APiQypLNKFy84GSo4pS3A0W92yHfVSARm25Nv/n6i1ZWozFXMc+W6Yf33k9T3XsimW6N9mukNKxdIrHUV4bOOp2q3+U=
-X-Received: by 2002:ac2:57cd:: with SMTP id k13mr4472442lfo.104.1588771777000;
- Wed, 06 May 2020 06:29:37 -0700 (PDT)
+        bh=AwZ2HXOkXwEq2HHbm/ldWJ+Ha7wxQpNmEACUbIV+REs=;
+        b=ZpeHdOWDaR72YBTuz4JErB5KeEoMieNLf8a1dwvDbQdmNbPOTLow1bOh+xo8jljNIS
+         UVdGBJ5olMNzREi2KXkFz9jnkuV4SqHlP0D+rkjI3Htx45lhS+ecxf3XH0n1U9YroZZh
+         dyMiXJSbMP5J7jhRwAQTdKk+BRCWfurAyY5Efl5a3ARfraQYNjsmRv8WrmhYOAyfpS5Y
+         zVagd1E1LHj0bYP3bbc99WqPQ2MHfJQ5KjdvTF81vNWt0u3Ev6oaBJeT7RKN3XMuOaQm
+         rJaIiWT1yU3K+/qCnSqdSFoQKA4h4Wodon8FhwjdoZBnsObtZj38W/m6SZt0TJ6qibRV
+         lkGg==
+X-Gm-Message-State: AGi0Pubv11GTotvLMjXNk26V+O5/yR6xHo5eNh5K7iHWQ4soeocQyEqb
+        pARM1zUGhlE6J/lUB2/8FYXgvOZojVMnbreL4Jqj0g==
+X-Google-Smtp-Source: APiQypK7Y5o9dE58DnHy5mYwilyI2yZDqALVkpJZUJ66bjBNcdPU+/tCFN7JjLeC6p2qTfgJyocFjoOfYcUNpe6AXL8=
+X-Received: by 2002:a17:906:841a:: with SMTP id n26mr7668693ejx.43.1588772571094;
+ Wed, 06 May 2020 06:42:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
- <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
-In-Reply-To: <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Wed, 6 May 2020 21:29:24 +0800
-Message-ID: <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-To:     Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
+ <20200505154510.93506-4-pasha.tatashin@soleen.com> <202005051559.946100505D@keescook>
+In-Reply-To: <202005051559.946100505D@keescook>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 6 May 2020 09:42:15 -0400
+Message-ID: <CA+CK2bBa=v0CrTYgugrJ+SvWocdQs5BsBZmd_n9+r-_c9BeriA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] pstore/ram: in ramoops_platform_data convert
+ dump_oops to max_reason
+To:     Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jassi,
+> > Remove filtering logic from ramoops_pstore_write(), as that is not needed
+> > anymore, only dmesges specified by max_reason are passed to
+> > ramoops_pstore_write(). Also, because of this, we can remove
+> > cxt->dump_oops.
+>
+> This is all looking good. I think I'd like to see patch 3 and 4 merged,
+> though. I'd like to make the dump_oops/max_reason conversion in one
+> patch. Noted below...
 
-On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> From: Baolin Wang <baolin.wang@unisoc.com>
->
-> The Spreadtrum mailbox controller supports 8 channels to communicate
-> with MCUs, and it contains 2 different parts: inbox and outbox, which
-> are used to send and receive messages by IRQ mode.
->
-> Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> ---
-> Changes from v3:
->  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
->
-> Changes from v2:
->  - None.
->
-> Changes from v1:
->  - None
+Sure, I can do it.
 
-Gentle ping, do you have any other comments? Thanks.
+>
+> >
+> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > ---
+> >  Documentation/admin-guide/ramoops.rst     | 11 ++++++----
+> >  drivers/platform/chrome/chromeos_pstore.c |  2 +-
+> >  fs/pstore/ram.c                           | 26 +++++++----------------
+> >  include/linux/pstore_ram.h                |  2 +-
+> >  4 files changed, 17 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+> > index 6dbcc5481000..a296e1aa1617 100644
+> > --- a/Documentation/admin-guide/ramoops.rst
+> > +++ b/Documentation/admin-guide/ramoops.rst
+> > @@ -32,11 +32,14 @@ memory to be mapped strongly ordered, and atomic operations on strongly ordered
+> >  memory are implementation defined, and won't work on many ARMs such as omaps.
+> >
+> >  The memory area is divided into ``record_size`` chunks (also rounded down to
+> > -power of two) and each oops/panic writes a ``record_size`` chunk of
+> > +power of two) and each kmesg dump writes a ``record_size`` chunk of
+> >  information.
+> >
+> > -Dumping both oopses and panics can be done by setting 1 in the ``dump_oops``
+> > -variable while setting 0 in that variable dumps only the panics.
+> > +Dumping reasons can be set via max_reason value, as defined in
+> > +include/linux/kmsg_dump.h: kmsg_dump_reason. For example, to
+> > +dump for both oopses and panics reasons, max_reason should be set to 2
+> > +(KMSG_DUMP_OOPS), to dump panics only max_reason should be set to 1
+> > +(KMSG_DUMP_PANIC).
+> >
+> >  The module uses a counter to record multiple dumps but the counter gets reset
+> >  on restart (i.e. new dumps after the restart will overwrite old ones).
+> > @@ -90,7 +93,7 @@ Setting the ramoops parameters can be done in several different manners:
+> >          .mem_address            = <...>,
+> >          .mem_type               = <...>,
+> >          .record_size            = <...>,
+> > -        .dump_oops              = <...>,
+> > +        .max_reason             = <...>,
+> >          .ecc                    = <...>,
+> >    };
+>
+> Good, yes, dump_oops should be removed from the platform data structure
+> since that's an entirely internal API.
+>
+> >
+> > diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
+> > index d13770785fb5..fa51153688b4 100644
+> > --- a/drivers/platform/chrome/chromeos_pstore.c
+> > +++ b/drivers/platform/chrome/chromeos_pstore.c
+> > @@ -57,7 +57,7 @@ static struct ramoops_platform_data chromeos_ramoops_data = {
+> >       .record_size    = 0x40000,
+> >       .console_size   = 0x20000,
+> >       .ftrace_size    = 0x20000,
+> > -     .dump_oops      = 1,
+> > +     .max_reason     = KMSG_DUMP_OOPS,
+> >  };
+> >
+> >  static struct platform_device chromeos_ramoops = {
+> > diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> > index 795622190c01..223581aeea96 100644
+> > --- a/fs/pstore/ram.c
+> > +++ b/fs/pstore/ram.c
+> > @@ -81,7 +81,6 @@ struct ramoops_context {
+> >       size_t console_size;
+> >       size_t ftrace_size;
+> >       size_t pmsg_size;
+> > -     int dump_oops;
+> >       u32 flags;
+> >       struct persistent_ram_ecc_info ecc_info;
+> >       unsigned int max_dump_cnt;
+> > @@ -381,18 +380,6 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
+> >       if (record->type != PSTORE_TYPE_DMESG)
+> >               return -EINVAL;
+> >
+> > -     /*
+> > -      * Out of the various dmesg dump types, ramoops is currently designed
+> > -      * to only store crash logs, rather than storing general kernel logs.
+> > -      */
+> > -     if (record->reason != KMSG_DUMP_OOPS &&
+> > -         record->reason != KMSG_DUMP_PANIC)
+> > -             return -EINVAL;
+> > -
+> > -     /* Skip Oopes when configured to do so. */
+> > -     if (record->reason == KMSG_DUMP_OOPS && !cxt->dump_oops)
+> > -             return -EINVAL;
+> > -
+> >       /*
+> >        * Explicitly only take the first part of any new crash.
+> >        * If our buffer is larger than kmsg_bytes, this can never happen,
+> > @@ -687,7 +674,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+> >       pdata->mem_size = resource_size(res);
+> >       pdata->mem_address = res->start;
+> >       pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
+> > -     pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
+> > +     dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
+> :
+> Is this setting the module param variable? That shouldn't happen here --
+> we may fail the DT and overwrite the user-configured setting for a
+> different backend. This should be a local variable and the "final"
+> max_reason should be calculated in this function, I think.
 
-> ---
->  drivers/mailbox/Kconfig        |   8 +
->  drivers/mailbox/Makefile       |   2 +
->  drivers/mailbox/sprd-mailbox.c | 341 +++++++++++++++++++++++++++++++++
->  3 files changed, 351 insertions(+)
->  create mode 100644 drivers/mailbox/sprd-mailbox.c
+Hm, interesting, not sure if this is a realistic scenario. If I
+understand the code correctly, dummy is the only device that can
+pick-up dump_oops parameter, and it is registered before the DT based
+backend:
+
+ramoops_init(void)
+   ramoops_register_dummy();  -> register dummy if mem_size is provided
+   platform_driver_register(&ramoops_driver); -> register DT based node.
+
+dummy is registered only if mem_size parameter is provided. Deprecated
+dump_oops if provided by the user is converted to max_reason and
+discarded after that. The value of dump_oops becomes meaningless in
+/sys/module/ramoops/parameters/, as it does not really carry any
+information about kmsg dumps anymore. max_reason is what carries that
+information.
+
+After the dummy backend is registered, even if DT changes dump_oops,
+and still fails to register, it does not matter, as the dummy will
+keep operating correctly with the set max_reason.
+
 >
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index 5a577a6734cf..e03f3fb5caed 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -236,4 +236,12 @@ config SUN6I_MSGBOX
->           various Allwinner SoCs. This mailbox is used for communication
->           between the application CPUs and the power management coprocessor.
+> >
+> >  #define parse_size(name, field) {                                    \
+> >               ret = ramoops_parse_dt_size(pdev, name, &value);        \
+> > @@ -785,7 +772,6 @@ static int ramoops_probe(struct platform_device *pdev)
+> >       cxt->console_size = pdata->console_size;
+> >       cxt->ftrace_size = pdata->ftrace_size;
+> >       cxt->pmsg_size = pdata->pmsg_size;
+> > -     cxt->dump_oops = pdata->dump_oops;
+> >       cxt->flags = pdata->flags;
+> >       cxt->ecc_info = pdata->ecc_info;
+> >
+> > @@ -828,8 +814,14 @@ static int ramoops_probe(struct platform_device *pdev)
+> >        * the single region size is how to check.
+> >        */
+> >       cxt->pstore.flags = 0;
+> > -     if (cxt->max_dump_cnt)
+> > +     if (cxt->max_dump_cnt) {
+> >               cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
+> > +             if (pdata->max_reason <= 0) {
+> > +                     pdata->max_reason = dump_oops ? KMSG_DUMP_OOPS :
+> > +                                                     KMSG_DUMP_PANIC;
+> > +             }
+> > +             cxt->pstore.max_reason = pdata->max_reason;
+> > +     }
 >
-> +config SPRD_MBOX
-> +       tristate "Spreadtrum Mailbox"
-> +       depends on ARCH_SPRD || COMPILE_TEST
-> +       help
-> +         Mailbox driver implementation for the Spreadtrum platform. It is used
-> +         to send message between application processors and MCU. Say Y here if
-> +         you want to build the Spreatrum mailbox controller driver.
-> +
->  endif
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index 2e4364ef5c47..9caf4ede6ce0 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -50,3 +50,5 @@ obj-$(CONFIG_MTK_CMDQ_MBOX)   += mtk-cmdq-mailbox.o
->  obj-$(CONFIG_ZYNQMP_IPI_MBOX)  += zynqmp-ipi-mailbox.o
+> I'm going to take a stab at reorganizing the DT, platform data, and
+> module args to have default handling done in a way that I like. I'm
+> having a hard time making specific suggestions here. :)
+
+Sure, unfortunatly I do not think we can simply remove "no-dump-oops"
+from DT, and I also looked through the kernel and did not find any DTs
+that use "no-dump-oops" in the kernel.
+
 >
->  obj-$(CONFIG_SUN6I_MSGBOX)     += sun6i-msgbox.o
-> +
-> +obj-$(CONFIG_SPRD_MBOX)                += sprd-mailbox.o
-> diff --git a/drivers/mailbox/sprd-mailbox.c b/drivers/mailbox/sprd-mailbox.c
-> new file mode 100644
-> index 000000000000..f2c04984858a
-> --- /dev/null
-> +++ b/drivers/mailbox/sprd-mailbox.c
-> @@ -0,0 +1,341 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Spreadtrum mailbox driver
-> + *
-> + * Copyright (c) 2020 Spreadtrum Communications Inc.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/clk.h>
-> +
-> +#define SPRD_MBOX_ID           0x0
-> +#define SPRD_MBOX_MSG_LOW      0x4
-> +#define SPRD_MBOX_MSG_HIGH     0x8
-> +#define SPRD_MBOX_TRIGGER      0xc
-> +#define SPRD_MBOX_FIFO_RST     0x10
-> +#define SPRD_MBOX_FIFO_STS     0x14
-> +#define SPRD_MBOX_IRQ_STS      0x18
-> +#define SPRD_MBOX_IRQ_MSK      0x1c
-> +#define SPRD_MBOX_LOCK         0x20
-> +#define SPRD_MBOX_FIFO_DEPTH   0x24
-> +
-> +/* Bit and mask definiation for inbox's SPRD_MBOX_FIFO_STS register */
-> +#define SPRD_INBOX_FIFO_DELIVER_MASK           GENMASK(23, 16)
-> +#define SPRD_INBOX_FIFO_OVERLOW_MASK           GENMASK(15, 8)
-> +#define SPRD_INBOX_FIFO_DELIVER_SHIFT          16
-> +#define SPRD_INBOX_FIFO_BUSY_MASK              GENMASK(7, 0)
-> +
-> +/* Bit and mask definiation for SPRD_MBOX_IRQ_STS register */
-> +#define SPRD_MBOX_IRQ_CLR                      BIT(0)
-> +
-> +/* Bit and mask definiation for outbox's SPRD_MBOX_FIFO_STS register */
-> +#define SPRD_OUTBOX_FIFO_FULL                  BIT(0)
-> +#define SPRD_OUTBOX_FIFO_WR_SHIFT              16
-> +#define SPRD_OUTBOX_FIFO_RD_SHIFT              24
-> +#define SPRD_OUTBOX_FIFO_POS_MASK              GENMASK(7, 0)
-> +
-> +/* Bit and mask definiation for inbox's SPRD_MBOX_IRQ_MSK register */
-> +#define SPRD_INBOX_FIFO_BLOCK_IRQ              BIT(0)
-> +#define SPRD_INBOX_FIFO_OVERFLOW_IRQ           BIT(1)
-> +#define SPRD_INBOX_FIFO_DELIVER_IRQ            BIT(2)
-> +#define SPRD_INBOX_FIFO_IRQ_MASK               GENMASK(2, 0)
-> +
-> +/* Bit and mask definiation for outbox's SPRD_MBOX_IRQ_MSK register */
-> +#define SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ         BIT(0)
-> +#define SPRD_OUTBOX_FIFO_IRQ_MASK              GENMASK(4, 0)
-> +
-> +#define SPRD_MBOX_CHAN_MAX                     8
-> +
-> +struct sprd_mbox_priv {
-> +       struct mbox_controller  mbox;
-> +       struct device           *dev;
-> +       void __iomem            *inbox_base;
-> +       void __iomem            *outbox_base;
-> +       struct clk              *clk;
-> +       u32                     outbox_fifo_depth;
-> +
-> +       struct mbox_chan        chan[SPRD_MBOX_CHAN_MAX];
-> +};
-> +
-> +static struct sprd_mbox_priv *to_sprd_mbox_priv(struct mbox_controller *mbox)
-> +{
-> +       return container_of(mbox, struct sprd_mbox_priv, mbox);
-> +}
-> +
-> +static u32 sprd_mbox_get_fifo_len(struct sprd_mbox_priv *priv, u32 fifo_sts)
-> +{
-> +       u32 wr_pos = (fifo_sts >> SPRD_OUTBOX_FIFO_WR_SHIFT) &
-> +               SPRD_OUTBOX_FIFO_POS_MASK;
-> +       u32 rd_pos = (fifo_sts >> SPRD_OUTBOX_FIFO_RD_SHIFT) &
-> +               SPRD_OUTBOX_FIFO_POS_MASK;
-> +       u32 fifo_len;
-> +
-> +       /*
-> +        * If the read pointer is equal with write pointer, which means the fifo
-> +        * is full or empty.
-> +        */
-> +       if (wr_pos == rd_pos) {
-> +               if (fifo_sts & SPRD_OUTBOX_FIFO_FULL)
-> +                       fifo_len = priv->outbox_fifo_depth;
-> +               else
-> +                       fifo_len = 0;
-> +       } else if (wr_pos > rd_pos) {
-> +               fifo_len = wr_pos - rd_pos;
-> +       } else {
-> +               fifo_len = priv->outbox_fifo_depth - rd_pos + wr_pos;
-> +       }
-> +
-> +       return fifo_len;
-> +}
-> +
-> +static irqreturn_t sprd_mbox_outbox_isr(int irq, void *data)
-> +{
-> +       struct sprd_mbox_priv *priv = data;
-> +       struct mbox_chan *chan;
-> +       u32 fifo_sts, fifo_len, msg[2];
-> +       int i, id;
-> +
-> +       fifo_sts = readl(priv->outbox_base + SPRD_MBOX_FIFO_STS);
-> +
-> +       fifo_len = sprd_mbox_get_fifo_len(priv, fifo_sts);
-> +       if (!fifo_len) {
-> +               dev_warn_ratelimited(priv->dev, "spurious outbox interrupt\n");
-> +               return IRQ_NONE;
-> +       }
-> +
-> +       for (i = 0; i < fifo_len; i++) {
-> +               msg[0] = readl(priv->outbox_base + SPRD_MBOX_MSG_LOW);
-> +               msg[1] = readl(priv->outbox_base + SPRD_MBOX_MSG_HIGH);
-> +               id = readl(priv->outbox_base + SPRD_MBOX_ID);
-> +
-> +               chan = &priv->chan[id];
-> +               mbox_chan_received_data(chan, (void *)msg);
-> +
-> +               /* Trigger to update outbox FIFO pointer */
-> +               writel(0x1, priv->outbox_base + SPRD_MBOX_TRIGGER);
-> +       }
-> +
-> +       /* Clear irq status after reading all message. */
-> +       writel(SPRD_MBOX_IRQ_CLR, priv->outbox_base + SPRD_MBOX_IRQ_STS);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t sprd_mbox_inbox_isr(int irq, void *data)
-> +{
-> +       struct sprd_mbox_priv *priv = data;
-> +       struct mbox_chan *chan;
-> +       u32 fifo_sts, send_sts, id;
-> +
-> +       fifo_sts = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS);
-> +
-> +       /* Get the inbox data delivery status */
-> +       send_sts = (fifo_sts & SPRD_INBOX_FIFO_DELIVER_MASK) >>
-> +               SPRD_INBOX_FIFO_DELIVER_SHIFT;
-> +       if (!send_sts) {
-> +               dev_warn_ratelimited(priv->dev, "spurious inbox interrupt\n");
-> +               return IRQ_NONE;
-> +       }
-> +
-> +       while (send_sts) {
-> +               id = __ffs(send_sts);
-> +               send_sts &= (send_sts - 1);
-> +
-> +               chan = &priv->chan[id];
-> +               mbox_chan_txdone(chan, 0);
-> +       }
-> +
-> +       /* Clear FIFO delivery and overflow status */
-> +       writel(fifo_sts &
-> +              (SPRD_INBOX_FIFO_DELIVER_MASK | SPRD_INBOX_FIFO_OVERLOW_MASK),
-> +              priv->inbox_base + SPRD_MBOX_FIFO_RST);
-> +
-> +       /* Clear irq status */
-> +       writel(SPRD_MBOX_IRQ_CLR, priv->inbox_base + SPRD_MBOX_IRQ_STS);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int sprd_mbox_send_data(struct mbox_chan *chan, void *msg)
-> +{
-> +       struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-> +       unsigned long id = (unsigned long)chan->con_priv;
-> +       u32 *data = msg, busy;
-> +
-> +       /*
-> +        * Check if current channel is busy or not, and we can not send data
-> +        * if current channel is busy.
-> +        */
-> +       busy = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS) &
-> +               SPRD_INBOX_FIFO_BUSY_MASK;
-> +       if (busy & BIT(id)) {
-> +               dev_err(priv->dev, "Channel %ld is busy\n", id);
-> +               return -EBUSY;
-> +       }
-> +
-> +       /* Write data into inbox FIFO, and only support 8 bytes every time */
-> +       writel(data[0], priv->inbox_base + SPRD_MBOX_MSG_LOW);
-> +       writel(data[1], priv->inbox_base + SPRD_MBOX_MSG_HIGH);
-> +
-> +       /* Set target core id */
-> +       writel(id, priv->inbox_base + SPRD_MBOX_ID);
-> +
-> +       /* Trigger remote request */
-> +       writel(0x1, priv->inbox_base + SPRD_MBOX_TRIGGER);
-> +
-> +       return 0;
-> +}
-> +
-> +static int sprd_mbox_startup(struct mbox_chan *chan)
-> +{
-> +       struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-> +       u32 val;
-> +
-> +       /* Select outbox FIFO mode and reset the outbox FIFO status */
-> +       writel(0x0, priv->outbox_base + SPRD_MBOX_FIFO_RST);
-> +
-> +       /* Enable inbox FIFO overflow and delivery interrupt */
-> +       val = readl(priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-> +       val &= ~(SPRD_INBOX_FIFO_OVERFLOW_IRQ | SPRD_INBOX_FIFO_DELIVER_IRQ);
-> +       writel(val, priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-> +
-> +       /* Enable outbox FIFO not empty interrupt */
-> +       val = readl(priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-> +       val &= ~SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ;
-> +       writel(val, priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-> +
-> +       return 0;
-> +}
-> +
-> +static void sprd_mbox_shutdown(struct mbox_chan *chan)
-> +{
-> +       struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-> +
-> +       /* Disable inbox & outbox interrupt */
-> +       writel(SPRD_INBOX_FIFO_IRQ_MASK, priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-> +       writel(SPRD_OUTBOX_FIFO_IRQ_MASK, priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-> +}
-> +
-> +static const struct mbox_chan_ops sprd_mbox_ops = {
-> +       .send_data    = sprd_mbox_send_data,
-> +       .startup      = sprd_mbox_startup,
-> +       .shutdown     = sprd_mbox_shutdown,
-> +};
-> +
-> +static void sprd_mbox_disable(void *data)
-> +{
-> +       struct sprd_mbox_priv *priv = data;
-> +
-> +       clk_disable_unprepare(priv->clk);
-> +}
-> +
-> +static int sprd_mbox_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct sprd_mbox_priv *priv;
-> +       int ret, inbox_irq, outbox_irq;
-> +       unsigned long id;
-> +
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       priv->dev = dev;
-> +
-> +       /*
-> +        * The Spreadtrum mailbox uses an inbox to send messages to the target
-> +        * core, and uses an outbox to receive messages from other cores.
-> +        *
-> +        * Thus the mailbox controller supplies 2 different register addresses
-> +        * and IRQ numbers for inbox and outbox.
-> +        */
-> +       priv->inbox_base = devm_platform_ioremap_resource(pdev, 0);
-> +       if (IS_ERR(priv->inbox_base))
-> +               return PTR_ERR(priv->inbox_base);
-> +
-> +       priv->outbox_base = devm_platform_ioremap_resource(pdev, 1);
-> +       if (IS_ERR(priv->outbox_base))
-> +               return PTR_ERR(priv->outbox_base);
-> +
-> +       priv->clk = devm_clk_get(dev, "enable");
-> +       if (IS_ERR(priv->clk)) {
-> +               dev_err(dev, "failed to get mailbox clock\n");
-> +               return PTR_ERR(priv->clk);
-> +       }
-> +
-> +       ret = clk_prepare_enable(priv->clk);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = devm_add_action_or_reset(dev, sprd_mbox_disable, priv);
-> +       if (ret) {
-> +               dev_err(dev, "failed to add mailbox disable action\n");
-> +               return ret;
-> +       }
-> +
-> +       inbox_irq = platform_get_irq(pdev, 0);
-> +       if (inbox_irq < 0)
-> +               return inbox_irq;
-> +
-> +       ret = devm_request_irq(dev, inbox_irq, sprd_mbox_inbox_isr,
-> +                              IRQF_NO_SUSPEND, dev_name(dev), priv);
-> +       if (ret) {
-> +               dev_err(dev, "failed to request inbox IRQ: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       outbox_irq = platform_get_irq(pdev, 1);
-> +       if (outbox_irq < 0)
-> +               return outbox_irq;
-> +
-> +       ret = devm_request_irq(dev, outbox_irq, sprd_mbox_outbox_isr,
-> +                              IRQF_NO_SUSPEND, dev_name(dev), priv);
-> +       if (ret) {
-> +               dev_err(dev, "failed to request outbox IRQ: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       /* Get the default outbox FIFO depth */
-> +       priv->outbox_fifo_depth =
-> +               readl(priv->outbox_base + SPRD_MBOX_FIFO_DEPTH) + 1;
-> +       priv->mbox.dev = dev;
-> +       priv->mbox.chans = &priv->chan[0];
-> +       priv->mbox.num_chans = SPRD_MBOX_CHAN_MAX;
-> +       priv->mbox.ops = &sprd_mbox_ops;
-> +       priv->mbox.txdone_irq = true;
-> +
-> +       for (id = 0; id < SPRD_MBOX_CHAN_MAX; id++)
-> +               priv->chan[id].con_priv = (void *)id;
-> +
-> +       ret = devm_mbox_controller_register(dev, &priv->mbox);
-> +       if (ret) {
-> +               dev_err(dev, "failed to register mailbox: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id sprd_mbox_of_match[] = {
-> +       { .compatible = "sprd,sc9860-mailbox", },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, sprd_mbox_of_match);
-> +
-> +static struct platform_driver sprd_mbox_driver = {
-> +       .driver = {
-> +               .name = "sprd-mailbox",
-> +               .of_match_table = sprd_mbox_of_match,
-> +       },
-> +       .probe  = sprd_mbox_probe,
-> +};
-> +module_platform_driver(sprd_mbox_driver);
-> +
-> +MODULE_AUTHOR("Baolin Wang <baolin.wang@unisoc.com>");
-> +MODULE_DESCRIPTION("Spreadtrum mailbox driver");
-> +MODULE_LICENSE("GPL v2");
+> >       if (cxt->console_size)
+> >               cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
+> >       if (cxt->max_ftrace_cnt)
+> > @@ -865,7 +857,6 @@ static int ramoops_probe(struct platform_device *pdev)
+> >       mem_size = pdata->mem_size;
+> >       mem_address = pdata->mem_address;
+> >       record_size = pdata->record_size;
+> > -     dump_oops = pdata->dump_oops;
+> >       ramoops_console_size = pdata->console_size;
+> >       ramoops_pmsg_size = pdata->pmsg_size;
+> >       ramoops_ftrace_size = pdata->ftrace_size;
+> > @@ -948,7 +939,6 @@ static void __init ramoops_register_dummy(void)
+> >       pdata.console_size = ramoops_console_size;
+> >       pdata.ftrace_size = ramoops_ftrace_size;
+> >       pdata.pmsg_size = ramoops_pmsg_size;
+> > -     pdata.dump_oops = dump_oops;
+> >       pdata.flags = RAMOOPS_FLAG_FTRACE_PER_CPU;
+> >
+> >       /*
+> > diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
+> > index 9cb9b9067298..9f16afec7290 100644
+> > --- a/include/linux/pstore_ram.h
+> > +++ b/include/linux/pstore_ram.h
+> > @@ -133,7 +133,7 @@ struct ramoops_platform_data {
+> >       unsigned long   console_size;
+> >       unsigned long   ftrace_size;
+> >       unsigned long   pmsg_size;
+> > -     int             dump_oops;
+> > +     int             max_reason;
+> >       u32             flags;
+> >       struct persistent_ram_ecc_info ecc_info;
+> >  };
+> > --
+> > 2.25.1
+> >
+>
+> So, hold off on a v3, and I'll send a series tomorrow, based on what
+> you've got here for v2. I like the refactoring; it's much cleaner to
+> have max_reason than dump_oops! :)
+
+Sure, I will wait for your changes.
+
+Thank you,
+Pasha
+
+>
 > --
-> 2.17.1
->
-
-
--- 
-Baolin Wang
+> Kees Cook
