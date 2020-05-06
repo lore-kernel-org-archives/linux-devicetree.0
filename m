@@ -2,40 +2,73 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB162C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A64C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86ECB20661
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B68B320661
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:07:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aetJOg64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgEFIGE (ORCPT
+        id S1728463AbgEFIHM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 04:06:04 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:51591 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728290AbgEFIGE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 04:06:04 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B644B20004;
-        Wed,  6 May 2020 08:06:00 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 0/9] clocksource/drivers/timer-atmel-tcb: add sama5d2 support
-Date:   Wed,  6 May 2020 10:05:45 +0200
-Message-Id: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 6 May 2020 04:07:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728290AbgEFIHL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 04:07:11 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365F2C061A0F
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 01:07:10 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id w7so191095wre.13
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 01:07:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xOdCgu/2Jy1tRi9zrYa6LH0k7m/VVjyha5EYFTG8NAo=;
+        b=aetJOg64fafwbqr8yYkLGjHl6qzscu85yjX9IHjyMS/h5GpuGUxpoRAUiYs0qqZBi0
+         ZDoWMlbT6vYd+OZHgqWo08TI/ZgElBqLEoPr1P8fDk8ybf2Xz0z4d6xf7Je2Cez9n6UX
+         kwuHd+/wwRXTGLYKZ1ZxW4HaBaKOBMyOY/2gjmNfKl3ODiz4l6LEVoJasYaHt2QlvVqH
+         qIBt6rlgmwptvWBp6ovFpNBRCyGa4rvjEIIhBNiqxNzuUFwWGvUYjr57bHCsW0ztr3re
+         m5tXQa6QzSeweTLwmDgtZqT793p7ZQ6cOYcJBClNE3Q33sVQUwWgifH3Kmw46o0p4zM1
+         krCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xOdCgu/2Jy1tRi9zrYa6LH0k7m/VVjyha5EYFTG8NAo=;
+        b=BpSaYp2CVrCdo5WiYH+QyOMQYmm6zhYBcIar12sQUP40X/qdG+VtCKviTJ2piUe2QW
+         WL0QTLyC+wnmiQSk/ajL1uIA7Ut1KwZzCOzUz/PgKYslyHliNQOe7jGlP3olc91Z0vvh
+         bJ//cNA+KkWEbW3zsTrq5ym3Tk1coSoNLikQFFeaxWzqk2jZR9JcllhFlSl3n/DkCsmw
+         QWMY4AD9OJPn8XtfiskJ8SPokCRbkJXGWsHnOr7w7jgryffd0UOcs6INRex8OHJK6PQY
+         iYt335HybxmUAWEdOswcVA8iGeZ3itjamA2gmZuJ6gCCYd2AP3HBiTg+XQE4IJ9bY0Xg
+         Xa7w==
+X-Gm-Message-State: AGi0PubUBxAq4ImEQEL0csQPZOQJ0zttXoPwjiK4itpDc9vsMxgHqDEe
+        gXnfVD7tvq93i8fRvmbAD60E+w==
+X-Google-Smtp-Source: APiQypIy9oYBfj3mT0Be+u73kYYCxHD4KaaaPWnaw+q/zH2bB13J5wEk7HAF5mwNCjpdHTIciHNyxg==
+X-Received: by 2002:adf:ce0d:: with SMTP id p13mr8748742wrn.66.1588752428801;
+        Wed, 06 May 2020 01:07:08 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
+        by smtp.gmail.com with ESMTPSA id 185sm1872098wmc.32.2020.05.06.01.07.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 01:07:07 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com, devicetree@vger.kernel.org
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/2] dt-bindings: arm: amlogic: add odroid-c4 bindings
+Date:   Wed,  6 May 2020 10:07:01 +0200
+Message-Id: <20200506080702.6645-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200506080702.6645-1-narmstrong@baylibre.com>
+References: <20200506080702.6645-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -43,45 +76,25 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series mainly adds sama5d2 support where we need to avoid using
-clock index 0 because that clock is never enabled by the driver.
+Add the board bindings for the Hardkernel Odroid-C4 single board computer.
 
-There is also a rework of the 32khz clock handling so it is not used for
-clockevents on 32 bit counter because the increased rate improves the
-resolution and doesn't have any drawback with that counter width. This
-replaces a patch that has been carried in the linux-rt tree for a while.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v3:
- - Moved the child node documentation to the parent documentation
-
-Changes in v2:
- - Rebased on v5.7-rc1
- - Moved the binding documentation to its proper place
- - Added back the atmel,tcb-timer child node documentation
-
-Alexandre Belloni (8):
-  dt-bindings: atmel-tcb: convert bindings to json-schema
-  dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
-  ARM: dts: at91: sama5d2: add TCB GCLK
-  clocksource/drivers/timer-atmel-tcb: rework 32khz clock selection
-  clocksource/drivers/timer-atmel-tcb: fill tcb_config
-  clocksource/drivers/timer-atmel-tcb: stop using the 32kHz for
-    clockevents
-  clocksource/drivers/timer-atmel-tcb: allow selecting first divider
-  clocksource/drivers/timer-atmel-tcb: add sama5d2 support
-
-Kamel Bouhara (1):
-  ARM: at91: add atmel tcb capabilities
-
- .../devicetree/bindings/mfd/atmel-tcb.txt     |  56 -------
- .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 150 ++++++++++++++++++
- arch/arm/boot/dts/sama5d2.dtsi                |  12 +-
- drivers/clocksource/timer-atmel-tcb.c         | 101 +++++++-----
- include/soc/at91/atmel_tcb.h                  |   5 +
- 5 files changed, 219 insertions(+), 105 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
- create mode 100644 Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index f74aba48cec1..11908b151e0a 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -159,6 +159,7 @@ properties:
+           - enum:
+               - seirobotics,sei610
+               - khadas,vim3l
++              - hardkernel,odroid-c4
+           - const: amlogic,sm1
+ 
+       - description: Boards with the Amlogic Meson A1 A113L SoC
 -- 
-2.26.2
+2.22.0
 
