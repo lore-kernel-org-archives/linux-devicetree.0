@@ -2,145 +2,110 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027DCC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 11:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9C1C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 11:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8171206DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 11:30:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ahVcX9y0"
+	by mail.kernel.org (Postfix) with ESMTP id 84BC4206D5
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 11:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgEFLat (ORCPT
+        id S1726908AbgEFLpz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 07:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726356AbgEFLat (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 07:30:49 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9DCFC061A41
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 04:30:47 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id t3so1041788otp.3
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 04:30:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i/mnRlrL4hTk5ZWZZBpQB+A2vYhFKnlQEEPlCkWsPZE=;
-        b=ahVcX9y0875VtYAfqeLGE8/rEUacYR6cv0gOwEAGAK2TtEt3EZqIgzdUxj8+oqmEtg
-         x9e9VKyqjWNyJMH3BbsQqcIEjgMedce3ldo/d88jKQw534PPBjFG3b1ecntQ/L+MSrcl
-         ZSsO+EEouEiGHHSZtucCvwmF6m6HWcUfia96aiIq5kRGKvsJhToKu+3nBY4adWL1wQj9
-         Zgu3L2lTon+z/3KU5UDDwaKQWxILJ9o47N4Yzpd9MGuGXRq/E0gFe5pgMh3uEVm/hpkD
-         otLpeiuEMsLF4/Qq9XuYwSDdlDq6/9PsatWSJf8CRiWCWwW7t7ejcu+eVg5Gn6WRWeku
-         k3Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i/mnRlrL4hTk5ZWZZBpQB+A2vYhFKnlQEEPlCkWsPZE=;
-        b=VCvptlaHMvWSzbUFb/eZcHJ5mlFmcWqHunjD3/WBA7zWKgjLPvHQw3RIMSG/VwH15H
-         i/umCHSIL6xxDFoAuiVvkH7YBd7gDjE9Icr9OWoX+b+yq6E0Ml+NNXMjGkuoivNmZfyN
-         FlLG1WTVN2OXLRmmkki3IcIiu1RTBP4o4DLMh7yJ/2fWx3fzekXLdC2s+wVP36i5r9U2
-         JUPhxP1EtPhUuwsde3FyODF+NNsM0DtWRVaEk7UEmdEDh7Ru0+G03fFKDFoqmsDCzpmc
-         uDnUQd4r2NvWTHmYYz5HXk+4JAgE7M/Bja669/92gz3OY8vnfej4dneCnWmRNm6Zqc3y
-         QZZQ==
-X-Gm-Message-State: AGi0Pua/NHSPw4mLP7k69rcDemOS0PONXAFx42z7PLKbIp15J4DG352v
-        y4rDYRZEKvhHy1ey6FYe5zBuJ2tuBiXCBX8GTFpX4w==
-X-Google-Smtp-Source: APiQypI10Opg1+VL0qGtAj9swPO65KogncWTx9LO8yV8j8xz4TIqaR59fBT2pvHi/zHAbFL61M3nNSKybpyU+5oO17k=
-X-Received: by 2002:a9d:7645:: with SMTP id o5mr5754004otl.272.1588764646808;
- Wed, 06 May 2020 04:30:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505100129.104673-1-robert.foss@linaro.org>
- <20200505100129.104673-2-robert.foss@linaro.org> <20200505154913.GA17438@bogus>
-In-Reply-To: <20200505154913.GA17438@bogus>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Wed, 6 May 2020 13:30:35 +0200
-Message-ID: <CAG3jFytNwG0tZJnf-qCGEzY_cXucMDYxmCn8z4QW+EHrab8m_A@mail.gmail.com>
-Subject: Re: [PATCH v10 1/3] media: dt-bindings: ov8856: Document YAML bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Maxime Ripard <maxime@cerno.tech>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Wed, 6 May 2020 07:45:55 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:60176 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbgEFLpz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 07:45:55 -0400
+Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
+        by skedge03.snt-world.com (Postfix) with ESMTP id 586F467A6F3;
+        Wed,  6 May 2020 13:45:49 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
+ (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 6 May 2020
+ 13:45:48 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1913.007; Wed, 6 May 2020 13:45:48 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Adam Ford <aford173@gmail.com>
+CC:     Anson Huang <Anson.Huang@nxp.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "Fabio Estevam" <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "Li Jun" <jun.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        "Sascha Hauer" <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 4/4] arm64: dts: imx8mm: Add GPU nodes for 2D and 3D
+ core using Etnaviv
+Thread-Topic: [RFC PATCH 4/4] arm64: dts: imx8mm: Add GPU nodes for 2D and 3D
+ core using Etnaviv
+Thread-Index: AQHWHu1XU8cnqZiR7kmt3VxL/7fb7aiWVM8AgASDlAA=
+Date:   Wed, 6 May 2020 11:45:48 +0000
+Message-ID: <0df68f7c-13d2-5bd6-e27a-4bf8534f88fb@kontron.de>
+References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
+ <20200430124602.14463-5-frieder.schrempf@kontron.de>
+ <CAHCN7xJ=srZxygtG6hW_+us=qH1heY-k=EosavYH9tDk-KG0Bw@mail.gmail.com>
+In-Reply-To: <CAHCN7xJ=srZxygtG6hW_+us=qH1heY-k=EosavYH9tDk-KG0Bw@mail.gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D5D0FB36A8FD884AA9AA8B63FC338A6F@snt-world.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 586F467A6F3.A2ED9
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: aford173@gmail.com, anson.huang@nxp.com,
+        christian.gmeiner@gmail.com, daniel.baluta@nxp.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        etnaviv@lists.freedesktop.org, festevam@gmail.com, jun.li@nxp.com,
+        kernel@pengutronix.de, l.stach@pengutronix.de,
+        leonard.crestez@nxp.com, linux+etnaviv@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, peng.fan@nxp.com,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, shengjiu.wang@nxp.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks Rob!
-
-On Tue, 5 May 2020 at 17:49, Rob Herring <robh@kernel.org> wrote:
->
-> On Tue,  5 May 2020 12:01:29 +0200, Robert Foss wrote:
-> > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> >
-> > This patch adds documentation of device tree in YAML schema for the
-> > OV8856 CMOS image sensor.
-> >
-> > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > Reviewed-by: Maxime Ripard <mripard@kernel.org>
-> > ---
-> >
-> > - Changes since v9:
-> >   * Remove remote-endpoint property
-> >   * Marco: Make port property required again
-> >   * Sakari: Remove Ben as a maintainer
-> >   * Sakari: Replace data-lanes with const items
-> >   * Sakari: Remove clock-lanes property
-> >   * Sakari & Rob Herring: Change type of link-frequency
-> >     work around dt-schema bug
-> >
-> > - Changes since v8:
-> >   * Maxime: Added r-b
-> >
-> > - Changes since v7:
-> >   * Marco: Make 'port' property optional
-> >   * Maxime & Sakari: Add 'link-frequencies' property to dt binding
-> >   * robher: Improve description for 'port' property
-> >
-> > - Changes since v6:
-> >   * Marco: remove qcom specifics from DT example
-> >
-> > - Changes since v5:
-> >   * Add assigned-clocks and assigned-clock-rates
-> >   * robher: dt-schema errors
-> >
-> > - Changes since v4:
-> >   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
-> >   * Add clock-lanes property to example
-> >   * robher: Fix syntax error in devicetree example
-> >
-> > - Changes since v3:
-> >   * robher: Fix syntax error
-> >   * robher: Removed maxItems
-> >   * Fixes yaml 'make dt-binding-check' errors
-> >
-> > - Changes since v2:
-> >
-> > - Changes since v1:
-> >   Fixes comments from Sakari, Tomasz
-> >   * Add clock-frequency and link-frequencies in DT
-> >
-> >  .../devicetree/bindings/media/i2c/ov8856.yaml | 142 ++++++++++++++++++
-> >  MAINTAINERS                                   |   1 +
-> >  2 files changed, 143 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> >
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+T24gMDMuMDUuMjAgMTY6NDksIEFkYW0gRm9yZCB3cm90ZToNCj4gT24gVGh1LCBBcHIgMzAsIDIw
+MjAgYXQgNzo0NiBBTSBTY2hyZW1wZiBGcmllZGVyDQo+IDxmcmllZGVyLnNjaHJlbXBmQGtvbnRy
+b24uZGU+IHdyb3RlOg0KPj4NCj4+IEZyb206IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2No
+cmVtcGZAa29udHJvbi5kZT4NCj4+DQo+PiBBY2NvcmRpbmcgdG8gdGhlIGRvY3VtZW50cywgdGhl
+IGkuTVg4TS1NaW5pIGZlYXR1cmVzIGEgR0MzMjAgYW5kIGENCj4+IEdDTmFub1VsdHJhIEdQVSBj
+b3JlLiBFdG5hdml2IGRldGVjdHMgdGhlbSBhczoNCj4+DQo+PiAgICAgICAgICBldG5hdml2LWdw
+dSAzODAwMDAwMC5ncHU6IG1vZGVsOiBHQzYwMCwgcmV2aXNpb246IDQ2NTMNCj4+ICAgICAgICAg
+IGV0bmF2aXYtZ3B1IDM4MDA4MDAwLmdwdTogbW9kZWw6IEdDNTIwLCByZXZpc2lvbjogNTM0MQ0K
+Pj4NCj4+IFRoaXMgc2VlbXMgdG8gd29yayBmaW5lIG1vcmUgb3IgbGVzcyB3aXRob3V0IGFueSBj
+aGFuZ2VzIHRvIHRoZSBIV0RCLA0KPj4gd2hpY2ggc3RpbGwgbWlnaHQgYmUgbmVlZGVkIGluIHRo
+ZSBmdXR1cmUgdG8gY29ycmVjdCBzb21lIGZlYXR1cmVzLA0KPj4gZXRjLg0KPj4NCj4+IFNpZ25l
+ZC1vZmYtYnk6IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4N
+Cj4+IC0tLQ0KPiBTaW5jZSBub3QgZXZlcnlvbmUgdXNlcyB0aGUgM0Qgb3IgMkQsIHdvdWxkIGl0
+IG1ha2Ugc2Vuc2UgdG8gbWFyayB0aGVtDQo+IGFzIGRpc2FibGVkIGJ5IGRlZmF1bHQgYW5kIGxl
+dCBwZW9wbGUgd2hvIG5lZWQgdGhlIDNEIGFuZCAyRCBlbmFibGUNCj4gdGhlbSBhdCB0aGVpciBy
+ZXNwZWN0aXZlIGJvYXJkIGZpbGVzPw0KDQpJIHdvdWxkIHJhdGhlciBrZWVwIGl0IHRoZSB3YXkg
+aXQgaGFzIGJlZW4gZG9uZSBmb3Igb3RoZXIgU29Dcy4gTG9va2luZyANCmF0IHRoZSBpLk1YNiBk
+ZXZpY2V0cmVlcywgdGhleSBhbGwgc2VlbSB0byBoYXZlIHRoZSBHUFVzIGVuYWJsZWQgYnkgZGVm
+YXVsdC4=
