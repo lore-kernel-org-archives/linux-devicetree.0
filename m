@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B88C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 12:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331FCC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 12:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30BD320752
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 12:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A73206DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 12:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XShFsqLy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HKgt/yuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgEFMtO (ORCPT
+        id S1728614AbgEFMtv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 08:49:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34328 "EHLO
+        Wed, 6 May 2020 08:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728181AbgEFMtO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 08:49:14 -0400
+        by vger.kernel.org with ESMTP id S1728543AbgEFMtu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 08:49:50 -0400
 Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0387C061A10
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 05:49:13 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a21so2168787ljj.11
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 05:49:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B692CC0610D5
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 05:49:49 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id b2so2215780ljp.4
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 05:49:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=96KaXeAdxDN7S+27ovqYy5Q1Gxi7lCFPE6ZMVCl7BqI=;
-        b=XShFsqLyplry1L66Zl8shbZPee8zXMCvlxoM7IkG1FzFQ3hPub4i8SNAgGCpmm6PNY
-         YjJ+mIQyLOXDlvML5V0GFIz+o1dyZKBI8PkTFCqF7AFrTHmUoIf/bqTubfdbXqPuoU7Z
-         T4/Td7CrjFOCqoCOZj1jZUS/y4sbVIfUM2P4hal5UoenYCIUfkUjhVvSxxiK+y1ReG5G
-         3wJEDnQQy4WhZHjSuldD/Hen21HlzKR+/BwTLit6vSKdvXwJZYdud4UOZBKnMu+EDQHx
-         ozQ+1w50lCl2HU223fSSsDIT9Df9y6xRBRcGxDEi9b93sljfYrisRuLKsBtWbyutmIbL
-         +oQg==
+        bh=vGrAL221U5LNFhyomdWD44/6fcd1PnVHrarNM3q/rB4=;
+        b=HKgt/yucHxP3oL+g7rj+nOg7Qg8kMDg6w4PXkk9Qk5J32RYqKhXSzTfL2UusXRkZ9r
+         O2StDPBYRDXKb+J1PtGUc24f0sARXZnS89BtEMms1cXY+5flaKRfapQ9K7V3s03lll89
+         codd1AN2XQZhUsdeXdFmiRNpoBYDAUcyiS0479s0pfBTTnLJwWpyBLJj5SZ+mIJ9zFCj
+         PEtcVypA6N3FwlvTcob+epUPeNM+uiS+Cnl3BN1CpVJGlbKygZgVmT8OMBCL1Aos2QIv
+         4/mPn1QV6hB/SLg2g4Q0UmozH8hGwGVOYINA418+STfObX11M7ZQPiR/e0tttmUtjlBR
+         ddxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=96KaXeAdxDN7S+27ovqYy5Q1Gxi7lCFPE6ZMVCl7BqI=;
-        b=Xz7enOpEmqCxkQK4zeWy3BrN40C0JqSK0SU8eoFRzlTdox7GVu/OK3iR/d8Vv2t/i8
-         1dcalNNpImJ602oPXh9UTQhdLqqFRGvOvpId7P6oB+4khNIBSKP34JfubAPL32M3IWVH
-         lhfPnt3ON9Nb+5cfml3Rnzs9Ml+c3m4MWP7FOMQSCJxdffBd9J8Qr5zhJTfq15+LocHL
-         VfaJAu+lFQ46j8KW4HBCanExhegmjtN+9QeAmPSEKICnefH19jQBrTo4A7MKWV5JwrG7
-         HzUDbCv2ACf4zNIa7x7vYZC1L97SDsXWdAJNPYz1OmihEnf2zLuKlG/3nJqkHIv/rz1y
-         W0fg==
-X-Gm-Message-State: AGi0Puby2yxA9dTRCeGKxWsMCVTZ4ljQVP8AofcJ7I/eT/a4SaDcU6P9
-        f5849FBDDtTgeLMtXtwaHleU4s4csFFdqQxoIckLsw==
-X-Google-Smtp-Source: APiQypIAyC6SBzHiCf7KEpdPSxq7XIL/sTxURCMc4sLRWiat+uT9NDQsN6LvZJJH7Ri2pTRFUwI+ZZApG8SocpWjcsE=
-X-Received: by 2002:a2e:2ac2:: with SMTP id q185mr4721006ljq.125.1588769352183;
- Wed, 06 May 2020 05:49:12 -0700 (PDT)
+        bh=vGrAL221U5LNFhyomdWD44/6fcd1PnVHrarNM3q/rB4=;
+        b=ea/O0z90nYbchBpkK5672EBwyZSDsQRlBHVBeY6vr0kNVlRcGytmm0HkdahG1N+T9U
+         TKCUChLEpVqwWnpGyFSqKYUwB0ZDlGg/99zctbaeiVOJLUhqTat8iZeEB+wimsxbTraX
+         qE0diCfGfczL/EffpMaQM2KO1v1IzU9QR+DYV/aGJCV7J9BhoPAzoK99H1JbdKnXpCEM
+         +x4Ga2VBYosPQVJOfvN/CsjdQ8mpXMB5Gc6DNNKP/pZlTqMn2J1svsPa6ogd21gvPRKI
+         qlWjrFU7kdZQ3p9K+CYGNSPcMVz36j+WutLCwZCzupeRSBjQ2puyAZ3wApK9+NmgJlSG
+         7FPw==
+X-Gm-Message-State: AGi0PuatQVTgVqX7PoLSaMYtSGwuL/94La9sV51jBYrovzxOwsR8DVcf
+        Cxka6T1IjotOTSZc2wVPdoRbFwZAWl9QOCvG/ulINQ==
+X-Google-Smtp-Source: APiQypKsFo3w+1HtO8wBxx6yf4L26hGpogFQ0SkxurfXqdzs9iDJ62nzs6zcG/VDKtCJyrzv6laayACPUSjDv3/Lfjo=
+X-Received: by 2002:a2e:8087:: with SMTP id i7mr4455713ljg.99.1588769387748;
+ Wed, 06 May 2020 05:49:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200503172206.13782-1-xc-racer2@live.ca> <BN6PR04MB0660DA2A47787A56A2FC7290A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
-In-Reply-To: <BN6PR04MB0660DA2A47787A56A2FC7290A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
+References: <20200503172206.13782-1-xc-racer2@live.ca> <BN6PR04MB06609033B2E0AB157A228989A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <BN6PR04MB06609033B2E0AB157A228989A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 6 May 2020 14:49:00 +0200
-Message-ID: <CACRpkdYxT0qrAuaFsmEOgZXF8Sj2wRn-PAjJp_RpY=3QVEwT5w@mail.gmail.com>
-Subject: Re: [PATCH 3/5] dt-bindings: iio: accel: Add bma023 compatible to bma180
+Date:   Wed, 6 May 2020 14:49:36 +0200
+Message-ID: <CACRpkdY7aSe-MWdWvL-2NC0RKohpgibnod9dnNiS_Wr9eHL-_Q@mail.gmail.com>
+Subject: Re: [PATCH 4/5] dt-bindings: iio: accel: Add required regulators to bma180
 To:     Jonathan Bakker <xc-racer2@live.ca>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -84,18 +84,12 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Sun, May 3, 2020 at 7:22 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
 
-> The bma023 is in the same family as the bma180 and support is
-> being added to the bma180 IIO driver for it.
+> The bma180 and related chips should have two registers attached to
+> them.  The IIO driver currently uses them, document them here as
+> well.
 >
 > Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-(...)
->    - compatible : should be one of:
-> +    "bosch,bma023"
 
-Please add bma150 and smb380 compatibles at the
-same time, it's simple enough and nobody will get hurt.
-
-With that:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
