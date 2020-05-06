@@ -2,182 +2,112 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AB4C47256
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ED5C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40C5B20575
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D8621744
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:53:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="dYMsW87k";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QVJBUdD+"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cuN863ca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbgEFPgz (ORCPT
+        id S1729364AbgEFPx2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 11:36:55 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:40407 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725887AbgEFPgz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 11:36:55 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A3BCF58032B;
-        Wed,  6 May 2020 11:36:53 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 06 May 2020 11:36:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=/+05KqBTk3oydVggvk0oaQyCPAJ
-        z1Y/tOkrcMC1KWGU=; b=dYMsW87kzQdTYVzBdsHEEWUk+IY0JF5You9OLDT0Plf
-        bjPLfchBAW+G3HReL9Ft0Yfc9GNlDMFzQTv9rce9eVI+Qs6xSqw1/KDwNng44Stc
-        44k5Mj5hXWzWpCDyd9MPU7HRi/9OWXUag+9V9IfUrsfwNmIuZW8V33H2jVKJofBA
-        +RDI+3yqD6rBVx4u36C65xL/8TpyJeqvQRhmtcBHaIwFz6DC6/WHIxVSglCE1zzv
-        FSzwQ9MypkyDIVOEb/P/bzN7cFoygVZd6TMP7pHshw7pf1jVdYyOJJ+lqMei4K29
-        9b5/bbhyzHCQN6nMeaRdVXyEIkbBlbMSFhLOTAhlJTw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/+05Kq
-        BTk3oydVggvk0oaQyCPAJz1Y/tOkrcMC1KWGU=; b=QVJBUdD+tRrFspsGcUoA2F
-        PoD0sa7ltQTt4QsnvkUQSaO3LL+S3/rG7CMvrFmVeDRYgAqQ1+BeS8SPjLY0hYi4
-        EkMHkLDFPY0+kE4xdWuRSaISvGvZSKyENuV6SDNVy2xysZJsSiMz7bbw1qV++Wd2
-        eqSlhLMObAED8BZFQ9gpgwPSwmrr0GeemNFLmEiUSO8OCNQMhujg/EPIax6evtyP
-        NJ0EE1S1vFIElq+GKgPcBjaQ2Y4lyWvW/K3TsI2/mgzeDAz3RlvroOsKG7mg2EIE
-        YfkpyICiEFCK6w5rJpifKeEDJU4uv6dVDyJyC9/buFRhUigfalit1BJPhwQ8Jkwg
-        ==
-X-ME-Sender: <xms:lNmyXgqrCcQNdAIPVuBzajR5lgSq-T-q887yRciGH4wQ7POZKR97Og>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeekgdekkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeethfeiueffueeikeeifefhheeijeeigfelteehheetjeekueevtdfhlefhgfdt
-    ieenucffohhmrghinhepghhithhhuhgsrdgtohhmpdgrrhhmsghirghnrdgtohhmnecukf
-    hppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
-    pehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:lNmyXhlmALE-N71etmI62IoUcm6VIVJqxnhmcYUGF8GOjgbHXwZvDQ>
-    <xmx:lNmyXn3UCN8LilgAP3FDW-4A8rSV_1Cj31Jy1FI5Wtoom_IQAPRjog>
-    <xmx:lNmyXmp7l0HhvY1DRQ0pIQia1SN6AJdaFGDpEl1IA3fHLvkLB_vhEg>
-    <xmx:ldmyXvedgtdvWjzIrDy8oNd09iM8YIUKOKz54FJdGSAdnYSixBEKLA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7F3E8328006C;
-        Wed,  6 May 2020 11:36:52 -0400 (EDT)
-Date:   Wed, 6 May 2020 17:36:49 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [RFC PATCH] PCI: dwc: add support for Allwinner SoCs' PCIe
- controller
-Message-ID: <20200506153649.ahzlhcquyhnggbou@gilmour.lan>
-References: <20200402160549.296203-1-icenowy@aosc.io>
- <20200406082732.nt5d7puwn65j4nvl@gilmour.lan>
- <13564b9a57f734524357a26665c48211e436e305.camel@aosc.io>
+        Wed, 6 May 2020 11:53:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728991AbgEFPx1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 11:53:27 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DAA8C061A0F
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 08:53:27 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5A240542;
+        Wed,  6 May 2020 17:53:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1588780405;
+        bh=FZL3UzlgiZlC3gydGO3GxyRmPe5XV61eLRKHOqGkBEk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cuN863caji1YMQLJSqCYgsli5Vq39qbegv7yEMniTBM8nE//uPtb86i5v8NyQST8k
+         5QefX1UL/NFihwI26EOXlnHAqpx37Fy7i3z1TGvui3aAo8UZ7tlB6ZdgOH0B/d0zO3
+         RQejHxuVqbF8Eur5wglykify6gUQQlUlY9JWQkbE=
+Date:   Wed, 6 May 2020 18:53:20 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+        robh+dt@kernel.org, kernel@collabora.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net
+Subject: Re: [RFC PATCH] dt-bindings: display: ti,tfp410.txt: convert to yaml
+Message-ID: <20200506155320.GC15206@pendragon.ideasonboard.com>
+References: <20200428092048.14939-1-ricardo.canuelo@collabora.com>
+ <3e377c73-25a3-a7b3-0604-41c54d70039e@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p2kmtjzg5nllbilb"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <13564b9a57f734524357a26665c48211e436e305.camel@aosc.io>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3e377c73-25a3-a7b3-0604-41c54d70039e@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Tomi,
 
---p2kmtjzg5nllbilb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 28, 2020 at 12:49:28PM +0300, Tomi Valkeinen wrote:
+> On 28/04/2020 12:20, Ricardo Cañuelo wrote:
+> 
+> > 2) The definition of ti,deskew in the original binding seems to be
+> > tailored to the current driver and the way it's defined may not be very
+> > DT-friendly.
+> > 
+> >    This parameter maps to a 3-bit field in a hardware register that takes
+> >    a value from 0 to 7, so the [-4, 3] range described for this would map
+> >    to [000, 111]: -4 -> 000, -3 -> 001, -2 -> 010, ... 3 -> 111.
+> > 
+> >    Then, the driver parses the parameter (unsigned) and casts it to a
+> >    signed integer to get a number in the [-4, 3] range.
+> 
+> Interestingly the current example has ti,deskew = <4>...
+> 
+> >    A vendor-specific property must have a type definition in json-schema,
+> >    so if I translate the original bindings semantics directly, I should
+> >    define ti,deskew as an int32, but this makes dt_binding_check fail if
+> >    the property has a negative value in the example because of the
+> >    internal representation of cells as unsigned integers:
+> > 
+> >       ti,deskew:0:0: 4294967293 is greater than the maximum of 2147483647
+> 
+> I don't quite understand this. We cannot have negative numbers in dts files? Or we can, but 
+> dt_binding_check doesn't handle them correctly? Or that int32 is not supported in yaml bindings?
+> 
+> >    So I can think of two solutions to this:
+> > 
+> >    a) Keep the ti,deskew property as an uint32 and document the valid
+> >    range ([-4, 3]) in the property description (this is what this patch
+> >    does currently).
+> > 
+> >    b) Redefine this property to be closer to the datasheet description
+> >    (ie. unsigned integers from 0 to 7) and adapt the driver accordingly.
+> >    This would also let us define its range properly using minimum and
+> >    maximum properties for it.
+> > 
+> >    I think (b) is the right thing to do but I want to know your
+> >    opinion. Besides, I don't have this hardware at hand and if I updated
+> >    the driver I wouldn't be able to test it.
+> 
+> I don't think anyone has used deskew property, so I guess changing it is not out of the question.
+> 
+> Laurent, did you have a board that needs deskew when you added it to tfp410?
 
-On Mon, Apr 20, 2020 at 04:18:58PM +0800, Icenowy Zheng wrote:
-> =E5=9C=A8 2020-04-06=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 10:27 +0200=EF=
-=BC=8CMaxime Ripard=E5=86=99=E9=81=93=EF=BC=9A
-> > Hi,
-> >=20
-> > On Fri, Apr 03, 2020 at 12:05:49AM +0800, Icenowy Zheng wrote:
-> > > The Allwinner H6 SoC uses DesignWare's PCIe controller to provide a
-> > > PCIe
-> > > host.
-> > >=20
-> > > However, on Allwinner H6, the PCIe host has bad MMIO, which needs
-> > > to be
-> > > workarounded. A workaround with the EL2 hypervisor functionality of
-> > > ARM
-> > > Cortex cores is now available, which wraps MMIO operations.
-> > >=20
-> > > This patch is going to add a driver for the DWC PCIe controller
-> > > available in Allwinner SoCs, either the H6 one when wrapped by the
-> > > hypervisor (so that the driver can consider it as an ordinary PCIe
-> > > controller) or further not buggy ones.
-> > >=20
-> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > > ---
-> > > There's no device tree binding patch available, because I still
-> > > have
-> > > questions on the device tree compatible string. I want to use it to
-> > > describe that this driver doesn't support the "native Allwinner H6
-> > > PCIe
-> > > controller", but a wrapped version with my hypervisor.
-> > >=20
-> > > I think supporting a "para-physical" device is some new thing, so
-> > > this
-> > > patch is RFC.
-> > >=20
-> > > My hypervisor is at [1], and some basic usage documentation is at
-> > > [2].
-> > >=20
-> > > [1] https://github.com/Icenowy/aw-el2-barebone
-> > > [2]=20
-> > > https://forum.armbian.com/topic/13529-a-try-on-utilizing-h6-pcie-with=
--virtualization/
-> >=20
-> > I'm a bit concerned to throw yet another mandatory, difficult to
-> > update, component in the already quite long boot chain.
-> >=20
-> > Getting fixes deployed in ATF or U-Boot is already pretty long,
-> > having
-> > another component in there will just make it worse, and it's another
-> > hard to debug component that we throw into the mix.
-> >=20
-> > And this prevents any use of virtualisation on the platform.
-> >=20
-> > I haven't found an explanation on what that hypervisor is doing
-> > exactly, but from a look at it it seems that it will trap all the
-> > accesses to the PCIe memory region to emulate a regular space on top
-> > of the restricted one we have?
-> >=20
-> > If so, can't we do that from the kernel directly by using a memory
-> > region that always fault with a fault handler like Framebuffer's
-> > deferred_io is doing (drivers/video/fbdev/core/fb_defio.c) ?
->=20
-> I don't know well about the memory management of the kernel. However,
-> for PCIe memory space, the kernel allows simple ioremap() on it. So
-> wrapping it shouldn't be so easy.
+I didn't if I remember correctly, I just mapped it to the hardware
+features. The hardware register indeed takes a value between 0 and 7,
+and that is mapped to [-4,3] x t(STEP). I don't mind either option.
 
-I'm not sure this would cause any trouble, it's worth exploring I guess. Th=
-is
-would solve all the current shortcomings.
+-- 
+Regards,
 
-Maxime
->
-
---p2kmtjzg5nllbilb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrLZkQAKCRDj7w1vZxhR
-xdzrAP9eNr9KcfU2kbvxMpWxzsG/4z0BCVJuoyB9oqqcCJ+rSgEA8LASQMw0yBXS
-EWoo2T8XCMOXkT+flamRrPJwfGv3/AQ=
-=oD3G
------END PGP SIGNATURE-----
-
---p2kmtjzg5nllbilb--
+Laurent Pinchart
