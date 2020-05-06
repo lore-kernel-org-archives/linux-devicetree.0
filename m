@@ -2,84 +2,104 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC66C4CECD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0C6C47257
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EAFC207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925A52076D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbgEFTwJ (ORCPT
+        id S1728750AbgEFTww (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 15:52:09 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:7384 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725799AbgEFTwI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 15:52:08 -0400
-X-IronPort-AV: E=Sophos;i="5.73,360,1583161200"; 
-   d="scan'208";a="46218040"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 07 May 2020 04:52:07 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 813054003EC8;
-        Thu,  7 May 2020 04:52:03 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wed, 6 May 2020 15:52:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33548 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbgEFTww (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 15:52:52 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0533F8030808;
+        Wed,  6 May 2020 19:52:49 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id boAYS9ab8GRM; Wed,  6 May 2020 22:52:47 +0300 (MSK)
+Date:   Wed, 6 May 2020 22:52:46 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 4/9] dt-bindings: serial: renesas,scif: Document r8a7742 bindings
-Date:   Wed,  6 May 2020 20:51:30 +0100
-Message-Id: <1588794695-27852-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 14/20] mips: Use offset-sized IO-mem accessors in CPS
+ debug printout
+Message-ID: <20200506195246.noammz7zdt4d6gb4@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-15-Sergey.Semin@baikalelectronics.ru>
+ <82e98cee-d39e-7df2-8b0d-ac77defd5dd8@cogentembedded.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <82e98cee-d39e-7df2-8b0d-ac77defd5dd8@cogentembedded.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIF ports,
-so document the SoC specific bindings.
+Hi
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v1->v2:
-* No change
----
+On Wed, May 06, 2020 at 09:16:24PM +0300, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 05/06/2020 08:42 PM, Sergey.Semin@baikalelectronics.ru wrote:
+> 
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Similar to commit 8e5c62e38a88 ("mips: early_printk_8250: Use offset-sized
+> > IO-mem accessors") the IO-memory might require to use a proper load/store
+> > instructions (like Bailal-T1 IO-memory). To fix the cps-vec UART debug
+> 
+>    Baikal? :-)
 
- Documentation/devicetree/bindings/serial/renesas,scif.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Yeah, thanks.)
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,scif.yaml b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-index 70392b9bd977..570b379f9f19 100644
---- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-+++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-@@ -33,6 +33,7 @@ properties:
- 
-       - items:
-           - enum:
-+              - renesas,scif-r8a7742      # RZ/G1H
-               - renesas,scif-r8a7743      # RZ/G1M
-               - renesas,scif-r8a7744      # RZ/G1N
-               - renesas,scif-r8a7745      # RZ/G1E
--- 
-2.17.1
+> 
+> > printout lets use the memory access instructions in accordance with the
+> > UART registers offset config specified at boot time.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > 
+> > ---
+> > There might be another problem in cps-vec-ns16550.S connected with the
+> > difference in CPU/devices endinanness on some platforms. But there is
+> 
+>    Endianness.
 
+Ah, this won't get into the commit message anyway. But thanks for noticing.)
+
+-Sergey
+
+
+> 
+> > no such for Baikal-T1 SoC.
+> [...]
+> 
+> MBR, Sergei
