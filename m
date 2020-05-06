@@ -2,115 +2,255 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3207C47258
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4860FC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4D082082E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE3A20721
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:04:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FeY1euaz"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="1CFght9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgEFHDK (ORCPT
+        id S1727788AbgEFHEb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 03:03:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727123AbgEFHDJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 03:03:09 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 485BEC061A0F
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 00:03:09 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id f3so1149756ioj.1
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 00:03:09 -0700 (PDT)
+        Wed, 6 May 2020 03:04:31 -0400
+Received: from mail-dm6nam12on2132.outbound.protection.outlook.com ([40.107.243.132]:17168
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726480AbgEFHE3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 May 2020 03:04:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S6xGXJKuO6tWizAfnDx6nGPfB87+TXtqbAdSk206pHMiUaq46wiToET9hW9wB5XRGhOCm57sdWrE6tkkupp0rYYM3yYvOqhG/Yj8Nm4d9bAjxs6YRReVxcvQLpSVZCLm5utAyCYPb37AoVTQITwvpp3HkNBLPs57Xvko4fom8M/zIB4vdH5L35ZGHJYoSDb7a503rZb0mwKvepI+M4VW2d3UDeHYOe+wZ/xS6xTyqQ/+6QfJ2/xhAm8IxFksopCLtweU39NlXa/xnHSBu/M3H22vqCEgO9rteys8WqtL/z3gp2ihp4FXp0JLo8A5yJbDDZ6j4oBfQeUB/p0E5Wjgrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NGMZbczxRpmr3QTkwGKR6R14Wm7TKdHr/7k6sHlzySk=;
+ b=No0vXlP8z9ms7aZvg/viza/AI9WYDTcuuQmVW1XG3vw+pp2QE3RmDzeYw1hUSdbSOpzu6XV8UNxGFvijWt6CqlfvWOC31e0rPFTEQILS8xWpMxFqs6kDyaaK0etoXq4rJ+6qZlGuIqJk7XTGLNPSPPRECXzjGBstQo8+Lx/DwOjQqQEj2udP+O52iR1j5Ehe8jWR0CgaBKzW7Q/yJPYUCG4CymlSOIQfYa5qdul3vklGOitvx6wjhnpP9KHeHnCT3EYFAufxvclS9+ffWteUl4ZIailzYEIasv+JkcybO21eWNeBpvrRrzpFUJN9/jhzil9pFpP5Ou4oRdNM03UHbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kNp8v77ILg0esKTUhtdtghBS9Oa/t4onJ0W3YRlQA2s=;
-        b=FeY1euazNQf3RbKL1bjD/43J4EwwmimWuHqwEOZnwBz1hd1L/dc031nSE9oFG+Wg3T
-         2MlLi4P3wjow8IWLNhEQw5wQzsUq1yR+pgmzkLdVVMq5F7acvzCJw8xt9tRwn4YzdTqI
-         kq7B8RhWDy1Uvo/U/3HxmGo/XUghQ5rSkaM7QtRSng9YDN+DAZRzDNHwxdWW3bqi1RwX
-         Xh5e60qZDatUFmTvM25J+WaTlWzSbN0N0nS7q/Emfd0rfMxf1322dnteGutZVlRQiV6j
-         fm+T0G1XqnxcfRt5xUFvnQ+oI02GhWQhe3J5K8O2fEQKiuxWrHopugqtZsq2TI4F9eZL
-         Ldxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kNp8v77ILg0esKTUhtdtghBS9Oa/t4onJ0W3YRlQA2s=;
-        b=I9W6NrbZ2SvxJbqmf1dz0IHAYa0yIckl4W1FFKCMx4ZHIj1DRuX1WV/HRH3rNa5alE
-         aRBr0RUkQjGsGVafxqFhJnJ/KmnUceSumj34tIv8JDDu2NMAEgg6W0OFRfsAC5DhIRgX
-         Gnn6BnLKCQpKIy15V7eJ+Xf13BpbXGmqRWYijukN5iN6kMkcMKafpYKMO+/E0JmSNZGT
-         DfRSrqsC3B3e5ZXxOwnTUd48N6OqyRdH2rx7fbiuNWFIN+xrXqKKMGRbWYuepUGvhgiB
-         dSHnpEYRXtZdwV0xJ1NheGYiUPBvXAFt+7K2aDuaLTYfaFubGUvDooSAkMpLkCQ+a11s
-         w/eg==
-X-Gm-Message-State: AGi0PuatPfEOiBls50JvWK1yxAnciLetLMYW+HQNM+BoRaMFaYgApO48
-        3uR1jylsPXSk1a+S74sHrG3jDYECP612VfozZLbY8g==
-X-Google-Smtp-Source: APiQypK484RcQGROR6N++Jsg8cJZdgh7y4enPWlVzQyBROs9NdLHKNWT34OgKh5Hlj/AoF1qRVFqfpsKTSIhrMt9Np8=
-X-Received: by 2002:a6b:8bd2:: with SMTP id n201mr7159413iod.131.1588748588553;
- Wed, 06 May 2020 00:03:08 -0700 (PDT)
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NGMZbczxRpmr3QTkwGKR6R14Wm7TKdHr/7k6sHlzySk=;
+ b=1CFght9U45GCQNA/EztzVIsUJUNJteMs5XN+EjxIv/v+HVVer6Wz2TQeBscUypR7+ralvzzVv6tFYoxQYVOKNLpgeVC4xgf6Ml8VL5dilHFffQPY+Ta+XpiDsvfDPOzKv/I70EhO+3SGtfiX2gJZmQFaG8rkK2xGvNj9RDLw64A=
+Authentication-Results: analogixsemi.com; dkim=none (message not signed)
+ header.d=none;analogixsemi.com; dmarc=none action=none
+ header.from=analogixsemi.com;
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BY5PR04MB6755.namprd04.prod.outlook.com (2603:10b6:a03:22d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Wed, 6 May
+ 2020 07:04:26 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.2979.028; Wed, 6 May 2020
+ 07:04:26 +0000
+Date:   Wed, 6 May 2020 15:04:20 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     devicetree@vger.kernel.org, devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v10 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Message-ID: <b720f7d2c5338813d31b7f715f59ca68c367d5a8.1588747998.git.xji@analogixsemi.com>
+References: <cover.1588747998.git.xji@analogixsemi.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1588747998.git.xji@analogixsemi.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK2PR02CA0201.apcprd02.prod.outlook.com
+ (2603:1096:201:20::13) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
 MIME-Version: 1.0
-References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-7-brgl@bgdev.pl>
- <20200505174709.GD224913@lunn.ch>
-In-Reply-To: <20200505174709.GD224913@lunn.ch>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 6 May 2020 09:02:57 +0200
-Message-ID: <CAMRc=Meob9VP83HiF4r2zAEXX0+1LduSrJGCXx=rKB1W701pnA@mail.gmail.com>
-Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-mediatek@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK2PR02CA0201.apcprd02.prod.outlook.com (2603:1096:201:20::13) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2979.26 via Frontend Transport; Wed, 6 May 2020 07:04:25 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8ef78c33-8af3-429a-1a34-08d7f18bb6a4
+X-MS-TrafficTypeDiagnostic: BY5PR04MB6755:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR04MB6755430579225B2EA07216A2C7A40@BY5PR04MB6755.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:989;
+X-Forefront-PRVS: 03950F25EC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: W6jcKE6hL0dEp9H4Ljhvz6hHUsZvGogHpiEx6HdpJ1LGgh1v4vi6NvF/yvdf+qzN96b524zyQkEftv+wXRCpyLU7AWJ8lbrXfOKilXemeih+TcwsEmU865UH4/xuVPhaNcrb9ozHM1TVhPvOf+5LDb5+qvmrVh8QEbZd1SsLFfJAO2fsOdHdQwK8zkVPrU7P8/MHqOiFberkMRXowQD7jD5VxbXfTzUM6IG9eDXqldMAz/0pHqqV5VlCPf2GzuWe2NGlqcdGRciLAYwuczqmDtRvtnsNXWKikpoN+k0NIs6xpzz/f1CS3kAghMLp3MvDW79aWhwqk/41uwLOOpHeHHruajOyyOtV1M+0kM5kKn2OVuyyqN4Vk8A+1Zcw4BLTTzmWfo8e3viocsl9qeY2f+f+OiVm5iacpcDxQzrlcVzHxZzl1DEe2OyOsDUEsMcp9yEoc/gzIuzOPZpk3WOdxgRY16rk6YKWENoiowAge1Li/XKYPc1n1xjcKJm7Ocyt2PynhuMFyOr742yct3syPspbtDFaAvhkkBNGBesMNJTvct/VjSiOM6d412FNgz8WDe3sR98sQHfv9mQ5bpKnwB1TCA8r42z4DYKjzxUHw+A=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(346002)(39840400004)(136003)(376002)(366004)(33430700001)(7416002)(186003)(5660300002)(36756003)(478600001)(16526019)(8676002)(33440700001)(66946007)(66476007)(316002)(66556008)(4326008)(54906003)(110136005)(52116002)(956004)(2616005)(86362001)(6666004)(8936002)(6486002)(6496006)(107886003)(26005)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: tDQ+fRwZi2+K/3WuSV9RVaMXqYIe7M24mIbwMLvbWIj1fqP1UE3kWwc8otXbZv1JTZsDv4MUNF3urnVkFncheqNdt3lghE04VwTvoW+Y8Cij2bvfJvKsgioe8B46tc+2PYFH4TpG33a6Hr3IoK3TKCZTt/hF94WZKz36v0G4tIpLWkJQHYFldhWfp/6DYKi/Y1mIYH1Dv38u9xeyOO94UUyeVDRMROzA3Hezb2RNjxo+FPx4kNx4yKq+Lv9nFOiuvrupJ1YtUZcXPG9BE9KLdLe4vswoxw7Jh5w4h2jZ1cvPuH87ZkkI/y4jDV+yM25ziNC7269jFjMcroO3JJajy1vwzLBU8jHN5frdLKUzzX8TL5dPYBfkmpRGxTzVI0UML83BJt1Wdxn9X1AFD/IkFi9J9Ux+etc8mjjjlG+Os9PdwmMCjbNo9Qv3TBsvVlykfLz6c3678PbcsPIiHHy353rXXsnsj7F0fKiZuYLh9XASjHyRnc0SsrnHsUEzhWCkjsAyE2+SXjt3Z5H0kvshHSzFkxOvNK8Vxy62hhYJKfbdUj4szYnFDkX7vQ0YD20LFfkqcF0POdPDZOs55qhws9e6+mf73yl1AB5e8IPErfkhrMycyLgFJQvZFH7pT1e3094Jn/f+HVGfcVWvvM0C5/3D/UGpFwaBfGdOsHdcpTgTegwu6wnOMZXMUuJaLkIYsyJU5mufCi3hM0MiH3jwozTWA5+IssfpgzO7u+xohaO0Hxj9vi3Lbmhwumf/huTMm5raqksvwBMiNLqJrgAvgSLmYNBOv7AXIdGWd2M6H7pAioKQLFEq2WtE/PqJRP6c
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ef78c33-8af3-429a-1a34-08d7f18bb6a4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2020 07:04:26.6257
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3tpBcdxI7oXerdCvZXaFIoMvLu3Ox/Ee78U1+dmdQ/xcA0cq7NzukzIrtSBAwwuREEUtAHCPqAJKIsPfoXAC6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6755
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrew,
+The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+for portable device. It converts MIPI to DisplayPort 1.3 4K.
 
-thanks for the review.
+You can add support to your board with binding.
 
-wt., 5 maj 2020 o 19:47 Andrew Lunn <andrew@lunn.ch> napisa=C5=82(a):
->
-> > +static struct net_device *mtk_mac_get_netdev(struct mtk_mac_priv *priv=
-)
-> > +{
-> > +     char *ptr =3D (char *)priv;
-> > +
-> > +     return (struct net_device *)(ptr - ALIGN(sizeof(struct net_device=
-),
-> > +                                              NETDEV_ALIGN));
-> > +}
->
-> Bit of an odd way to do it. It is much more normal to just have
->
->     return priv->netdev;
->
+Example:
+	anx7625_bridge: encoder@58 {
+		compatible = "analogix,anx7625";
+		reg = <0x58>;
+		status = "okay";
+		enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
 
-But then you store a pointer to the starting address of the structure
-in that very structure. This is actually weirder to me. :) I'd say:
-let's generalize it and provide a counterpart to netdev_priv():
-priv_to_netdev(), how about that?
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
 
-For the other issues: I'll address them in v2.
+			mipi2dp_bridge_in: port@0 {
+				reg = <0>;
+				anx7625_in: endpoint {
+					remote-endpoint = <&mipi_dsi>;
+				};
+			};
 
-Bart
+			mipi2dp_bridge_out: port@1 {
+				reg = <1>;
+				anx7625_out: endpoint {
+					remote-endpoint = <&panel_in>;
+				};
+			};
+		};
+	};
+
+Signed-off-by: Xin Ji <xji@analogixsemi.com>
+---
+ .../bindings/display/bridge/analogix,anx7625.yaml  | 98 ++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+new file mode 100644
+index 0000000..6e54176
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+@@ -0,0 +1,98 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Analogix Semiconductor, Inc.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/bridge/analogix,anx7625.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
++
++maintainers:
++  - Xin Ji <xji@analogixsemi.com>
++
++description: |
++  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
++  designed for portable devices.
++
++properties:
++  "#address-cells": true
++  "#size-cells": true
++
++  compatible:
++    items:
++      - const: analogix,anx7625
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: used for interrupt pin B8.
++    maxItems: 1
++
++  enable-gpios:
++    description: used for power on chip control, POWER_EN pin D2.
++    maxItems: 1
++
++  reset-gpios:
++    description: used for reset chip control, RESET_N pin B7.
++    maxItems: 1
++
++  ports:
++    type: object
++
++    properties:
++      port@0:
++        type: object
++        description:
++          Video port for MIPI DSI input.
++
++      port@1:
++        type: object
++        description:
++          Video port for panel or connector.
++
++    required:
++        - port@0
++        - port@1
++
++required:
++  - compatible
++  - reg
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        anx7625_bridge: encoder@58 {
++            compatible = "analogix,anx7625";
++            reg = <0x58>;
++            enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
++            reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                mipi2dp_bridge_in: port@0 {
++                    reg = <0>;
++                    anx7625_in: endpoint {
++                        remote-endpoint = <&mipi_dsi>;
++                    };
++                };
++
++                mipi2dp_bridge_out: port@1 {
++                    reg = <1>;
++                    anx7625_out: endpoint {
++                        remote-endpoint = <&panel_in>;
++                    };
++                };
++            };
++        };
++    };
+-- 
+2.7.4
+
