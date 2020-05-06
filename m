@@ -2,291 +2,70 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02DEC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAFEC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2CF220735
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:10:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="WQsD3+ap"
+	by mail.kernel.org (Postfix) with ESMTP id 9FD2320721
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgEFHKE (ORCPT
+        id S1727872AbgEFHWJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 03:10:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726480AbgEFHKD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 03:10:03 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA48C061A0F
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 00:10:03 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id d7so1071907ioq.5
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 00:10:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TNeZGBvQE65OD4RI/VJlF9TAoXRNVe2+IJUTG86DGbA=;
-        b=WQsD3+apXpq3/3yaFrL3/0+eSLnGTDQTR0Fsp8/qK2Rthwbduv7jAJSEPLt4Z4Kevh
-         NPCy2rzwD2NCLi8cWzq0DSsLTh0aoWwbMoRMOpvTno8FVluR5qx/lR7XFhsyAEV9sSHm
-         c4VEg2dEhbt+Yk6QWE+yeBtAVjIv2B7YyuEttTHMLuDTailXpL5mtUQKNO9Y6OXVNZsO
-         rY9KPUlOp9yTonJ3djuZnrAf68VmjVZc1wbWDHX43bgfMzTyteYwq7VthJBFsuribOf/
-         ljdtuRUMLFbAroFkewRsGn2i4ldJtX0iI6wHQxUFNnYnSeRqYSkRSrPw6Yrupk0QHyVw
-         EFmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TNeZGBvQE65OD4RI/VJlF9TAoXRNVe2+IJUTG86DGbA=;
-        b=OobSq6UWhn5j877zFSUNgdR2y+cgBYg7Qca5XIEzpb5uRWAcxKMaA0c5z1JwBTj15S
-         NQ6ZyWRjRPi1loFh5AeNrqDZ/YGOeQPpVMNhsS9diyAIX1dNgBy8De5lBzCFPfMSDt6u
-         uuVVERy5XOLa7ZpV68Vi5OhBKqFMOm4ua+6i7J1kCMeZ42BZizb7bEj88yEsT7n+Aygx
-         cnCMlfasdlMhCjuwwecuV5CxdSN6ni0OejpHuDWMJMdo/XOPhofR9HHTYlPKG/5Hlxv/
-         hMq6uUtsK5cp5gnmeDVpwUeUr+vJpzOa3xEhf1hh2s0huE0ThWV2pW8gYD2XrrfRaNpb
-         uaaw==
-X-Gm-Message-State: AGi0PuZtwc8+Z99OY/lECobJZrMCw54OiYzUpl2CZsPfXSqs/R4zjspt
-        iutG3gaHGXT7M+9p0gqQ2Ncy7PYraj5SxKJ7B71XXA==
-X-Google-Smtp-Source: APiQypK8JUTpUHWQidMAM1RM6r/RYgCmN3qiFqNGsyI2sRX+0s50wlApjk2j2yJQrSBljYxkxedUj9ER2mJ5DgL7aSU=
-X-Received: by 2002:a6b:8bd2:: with SMTP id n201mr7183055iod.131.1588749002876;
- Wed, 06 May 2020 00:10:02 -0700 (PDT)
+        Wed, 6 May 2020 03:22:09 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51174 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgEFHWJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 03:22:09 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: rcn)
+        with ESMTPSA id 7BD4E2A0D06
+Date:   Wed, 6 May 2020 09:21:55 +0200
+From:   Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     robh+dt@kernel.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        kernel@collabora.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net
+Subject: Re: [RFC PATCH] dt-bindings: display: ti,tfp410.txt: convert to yaml
+Message-ID: <20200506072155.6dmj35zdnr3to5ib@rcn-XPS-13-9360>
+Mail-Followup-To: Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        robh+dt@kernel.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        kernel@collabora.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net
+References: <20200428092048.14939-1-ricardo.canuelo@collabora.com>
+ <3e377c73-25a3-a7b3-0604-41c54d70039e@ti.com>
 MIME-Version: 1.0
-References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-7-brgl@bgdev.pl>
- <20200505110447.2404985c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200505110447.2404985c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 6 May 2020 09:09:52 +0200
-Message-ID: <CAMRc=MfmuKd64YaqrkhGFThDZd0_tRecR5H0QLY0cDJWSM-VgQ@mail.gmail.com>
-Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3e377c73-25a3-a7b3-0604-41c54d70039e@ti.com>
+User-Agent: NeoMutt/20171215
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jakub,
+Hi Tomi, thanks for reviewing the patch.
 
-thanks for the review.
+On mar 28-04-2020 12:49:28, Tomi Valkeinen wrote: 
+> I don't quite understand this. We cannot have negative numbers in dts files?
+> Or we can, but dt_binding_check doesn't handle them correctly? Or that int32
+> is not supported in yaml bindings?
 
-wt., 5 maj 2020 o 20:04 Jakub Kicinski <kuba@kernel.org> napisa=C5=82(a):
->
-> > +/* Represents the actual structure of descriptors used by the MAC. We =
-can
-> > + * reuse the same structure for both TX and RX - the layout is the sam=
-e, only
-> > + * the flags differ slightly.
-> > + */
-> > +struct mtk_mac_ring_desc {
-> > +     /* Contains both the status flags as well as packet length. */
-> > +     u32 status;
-> > +     u32 data_ptr;
-> > +     u32 vtag;
-> > +     u32 reserved;
-> > +} __aligned(4) __packed;
->
-> It will be aligned to 4, because the members are all 4B. And there is
-> no possibility of holes. You can safely remove those attrs.
->
+AFAICT, you can have negative numbers in dts files (see [1] and [2]) and
+the DT schema certainly supports signed integers, but dt_binding_check
+seems to interpret all cells as unsigned 32bit integers because that's
+what they are, really. In kernel code this is not a problem because you
+can cast the value back to a signed int before you run your own sanity
+checks on them.
 
-I noticed some other drivers whose descriptors are well aligned define
-these attributes anyway so I assumed it's a convention. I'll drop them
-in v2.
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/159682.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/159681.html
 
->
-> > +     status =3D desc->status;
-> > +
-> > +     if (!(status & MTK_MAC_DESC_BIT_COWN))
-> > +             return -1;
-> > +
-> > +     desc_data->len =3D status & MTK_MAC_DESC_MSK_LEN;
-> > +     desc_data->flags =3D status & ~MTK_MAC_DESC_MSK_LEN;
-> > +     desc_data->dma_addr =3D desc->data_ptr;
-> > +     desc_data->skb =3D ring->skbs[ring->tail];
-> > +
-> > +     desc->data_ptr =3D 0;
-> > +     desc->status =3D MTK_MAC_DESC_BIT_COWN;
-> > +     if (status & MTK_MAC_DESC_BIT_EOR)
-> > +             desc->status |=3D MTK_MAC_DESC_BIT_EOR;
-> > +
-> > +     dma_wmb();
->
-> What is this separating?
-
-I'll add comments to barriers in v2.
-
->
-> > +/* All processing for TX and RX happens in the napi poll callback. */
-> > +static irqreturn_t mtk_mac_handle_irq(int irq, void *data)
-> > +{
-> > +     struct mtk_mac_priv *priv;
-> > +     struct net_device *ndev;
-> > +     unsigned int status;
-> > +
-> > +     ndev =3D data;
-> > +     priv =3D netdev_priv(ndev);
-> > +
-> > +     if (netif_running(ndev)) {
-> > +             mtk_mac_intr_mask_all(priv);
-> > +             status =3D mtk_mac_intr_read_and_clear(priv);
-> > +
-> > +             /* RX Complete */
-> > +             if (status & MTK_MAC_BIT_INT_STS_FNRC)
-> > +                     napi_schedule(&priv->napi);
-> > +
-> > +             /* TX Complete */
-> > +             if (status & MTK_MAC_BIT_INT_STS_TNTC)
-> > +                     schedule_work(&priv->tx_work);
-> > +
-> > +             /* One of the counter reached 0x8000000 */
-> > +             if (status & MTK_MAC_REG_INT_STS_MIB_CNT_TH) {
-> > +                     mtk_mac_update_stats(priv);
-> > +                     mtk_mac_reset_counters(priv);
-> > +             }
-> > +
-> > +             mtk_mac_intr_unmask_all(priv);
->
-> Why do you unmask all IRQs here? The usual way to operate is to leave
-> TX and RX IRQs masked until NAPI finishes.
->
-
-I actually did it before as the leftover comment says above the
-function. Then I thought this way we mask interrupt for a shorter
-period of time. I can go back to the previous approach.
-
-> > +     }
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
->
-> > +static int mtk_mac_enable(struct net_device *ndev)
-> > +{
-> > +     /* Reset all counters */
-> > +     mtk_mac_reset_counters(priv);
->
-> This doesn't reset the counters to zero, right?
->
-
-Yes, it does actually. I'll drop it in v2 - it's not necessary.
-
->
-> > +static void mtk_mac_tx_work(struct work_struct *work)
-> > +{
-> > +     struct mtk_mac_priv *priv;
-> > +     struct mtk_mac_ring *ring;
-> > +     struct net_device *ndev;
-> > +     bool wake =3D false;
-> > +     int ret;
-> > +
-> > +     priv =3D container_of(work, struct mtk_mac_priv, tx_work);
-> > +     ndev =3D mtk_mac_get_netdev(priv);
-> > +     ring =3D &priv->tx_ring;
-> > +
-> > +     for (;;) {
-> > +             mtk_mac_lock(priv);
-> > +
-> > +             if (!mtk_mac_ring_descs_available(ring)) {
-> > +                     mtk_mac_unlock(priv);
-> > +                     break;
-> > +             }
-> > +
-> > +             ret =3D mtk_mac_tx_complete(priv);
-> > +             mtk_mac_unlock(priv);
-> > +             if (ret)
-> > +                     break;
-> > +
-> > +             wake =3D true;
-> > +     }
-> > +
-> > +     if (wake)
-> > +             netif_wake_queue(ndev);
->
-> This looks racy, if the TX path runs in parallel the queue may have
-> already been filled up at the point you wake it up.
->
-> > +}
->
-> Why do you clean the TX ring from a work rather than from the NAPI
-> context?
->
-
-So this was unclear to me, that's why I went with a workqueue. The
-budget argument in napi poll is for RX. Should I put some cap on the
-number of TX descriptors processed in napi context?
-
->
-> > +static int mtk_mac_receive_packet(struct mtk_mac_priv *priv)
-> > +{
-> > +     struct net_device *ndev =3D mtk_mac_get_netdev(priv);
-> > +     struct mtk_mac_ring *ring =3D &priv->rx_ring;
-> > +     struct device *dev =3D mtk_mac_get_dev(priv);
-> > +     struct mtk_mac_ring_desc_data desc_data;
-> > +     struct sk_buff *new_skb;
-> > +     int ret;
-> > +
-> > +     mtk_mac_lock(priv);
-> > +     ret =3D mtk_mac_ring_pop_tail(ring, &desc_data);
-> > +     mtk_mac_unlock(priv);
-> > +     if (ret)
-> > +             return -1;
-> > +
-> > +     mtk_mac_dma_unmap_rx(priv, &desc_data);
-> > +
-> > +     if ((desc_data.flags & MTK_MAC_DESC_BIT_RX_CRCE) ||
-> > +         (desc_data.flags & MTK_MAC_DESC_BIT_RX_OSIZE)) {
-> > +             /* Error packet -> drop and reuse skb. */
-> > +             new_skb =3D desc_data.skb;
-> > +             goto map_skb;
-> > +     }
-> > +
-> > +     new_skb =3D mtk_mac_alloc_skb(ndev);
-> > +     if (!new_skb) {
-> > +             netdev_err(ndev, "out of memory for skb\n");
->
-> No need for printing, kernel will complain loudly about oom.
->
-> > +             ndev->stats.rx_dropped++;
-> > +             new_skb =3D desc_data.skb;
-> > +             goto map_skb;
-> > +     }
-> > +
-> > +     skb_put(desc_data.skb, desc_data.len);
-> > +     desc_data.skb->ip_summed =3D CHECKSUM_NONE;
-> > +     desc_data.skb->protocol =3D eth_type_trans(desc_data.skb, ndev);
-> > +     desc_data.skb->dev =3D ndev;
-> > +     netif_receive_skb(desc_data.skb);
-> > +
-> > +map_skb:
-> > +     desc_data.dma_addr =3D mtk_mac_dma_map_rx(priv, new_skb);
-> > +     if (dma_mapping_error(dev, desc_data.dma_addr)) {
-> > +             dev_kfree_skb(new_skb);
-> > +             netdev_err(ndev, "DMA mapping error of RX descriptor\n");
-> > +             return -ENOMEM;
->
-> In this case nothing will ever replenish the RX ring right? If we hit
-> this condition 128 times the ring will be empty?
->
-
-Indeed. What should I do if this fails though?
-
-I'll address all other issues in v2.
-
-Bart
+Cheers,
+Ricardo
