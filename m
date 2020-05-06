@@ -2,181 +2,144 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6903DC4725B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001F5C47262
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 483E1206D5
+	by mail.kernel.org (Postfix) with ESMTP id D8BBF20661
 	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 08:04:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="I7/e6n0r"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QgL8Ks7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgEFICQ (ORCPT
+        id S1728440AbgEFIDA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 04:02:16 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:13015 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728280AbgEFICQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 04:02:16 -0400
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200506080212epoutp0167dbfb6f0a17c953a5301a731fe230fa~MYaWzftyl2259522595epoutp01H
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 08:02:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200506080212epoutp0167dbfb6f0a17c953a5301a731fe230fa~MYaWzftyl2259522595epoutp01H
+        Wed, 6 May 2020 04:03:00 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:10448 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbgEFIC7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 04:02:59 -0400
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200506080257epoutp02786902f6349b7ee66bd5badf645e887e~MYbAF0Eza1634716347epoutp02P
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 08:02:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200506080257epoutp02786902f6349b7ee66bd5badf645e887e~MYbAF0Eza1634716347epoutp02P
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588752132;
-        bh=kzOrUDnA47Fa796XI3n9wX8Cjb3+4V30NIZwUCokYas=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=I7/e6n0rTd2l9aNg0OphVL6WDJEZpCBLdL+LPlfxEN0scbsOkLq/sgtNL8WO+ADyW
-         Gv5sJigEEvwvUkc0CdIfypVHs9LpcLnfyOIfLOnup9VbahbE7xIWwQ3ZRtkdlN38ZV
-         ySd1D7/NMOfaC2kSASyoPQZa2y7M4PtjYQmoOYPU=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-        20200506080211epcas2p3e2b1e2d59a8b3553af74e5b8dd1a4873~MYaV45Anr2705127051epcas2p3B;
-        Wed,  6 May 2020 08:02:11 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.40.184]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49H8FY3BDSzMqYkp; Wed,  6 May
-        2020 08:02:09 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C4.6E.04393.00F62BE5; Wed,  6 May 2020 17:02:08 +0900 (KST)
+        s=mail20170921; t=1588752177;
+        bh=WQxhQAXtu4xKEkaXj9l2A6PTUue9TVZdXiYo7uQZEr0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QgL8Ks7fOr6MO5g3LcRk08bB1uyQI8d+HXIy66Xvsw8zBiUIvwHP2hZaryi+dVMB/
+         EG5p/bqt8xjv4WLGUPV0rxxRc/XdfKcWaIPdDTB6MQQY04MbHzyEdPUi2qKdBEfcHk
+         utG2SoWQfLUjTwamuO+jjxkVkFKKfjAbnXHjMHg4=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20200506080256epcas2p4287cdfbae823a43f1e99c230ee420b22~MYa-2YnPi1326713267epcas2p4n;
+        Wed,  6 May 2020 08:02:56 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.40.186]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49H8GR4qHdzMqYkb; Wed,  6 May
+        2020 08:02:55 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        77.53.04647.F2F62BE5; Wed,  6 May 2020 17:02:55 +0900 (KST)
 Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
         epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200506080208epcas2p2b5038265370e21bd38c21002d236b5fe~MYaSrHUal2929829298epcas2p2w;
-        Wed,  6 May 2020 08:02:08 +0000 (GMT)
+        20200506080255epcas2p2bbaae2e0f3fa181bafa5012f069200be~MYa_QhJ0p1824218242epcas2p2N;
+        Wed,  6 May 2020 08:02:55 +0000 (GMT)
 Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
         epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200506080208epsmtrp2eca4602d7c276b8fb9f2d4f8bf53d9a7~MYaSqMMuc1615416154epsmtrp2u;
-        Wed,  6 May 2020 08:02:08 +0000 (GMT)
-X-AuditID: b6c32a47-667ff70000001129-e0-5eb26f0033e9
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        20200506080255epsmtrp2e3120e224c68c4847fb769893b1a3fcd~MYa_P1kIW1615416154epsmtrp2K;
+        Wed,  6 May 2020 08:02:55 +0000 (GMT)
+X-AuditID: b6c32a48-8a5ff70000001227-68-5eb26f2f1ff6
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
         epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3F.2F.18461.00F62BE5; Wed,  6 May 2020 17:02:08 +0900 (KST)
+        7D.3F.18461.F2F62BE5; Wed,  6 May 2020 17:02:55 +0900 (KST)
 Received: from ishtar.dsn.sec.samsung.com (unknown [12.36.155.159]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200506080208epsmtip2ef2f53091999c2426884fb6c7c6786da~MYaSbu6G72751227512epsmtip2H;
-        Wed,  6 May 2020 08:02:08 +0000 (GMT)
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200506080255epsmtip14134b7b0b1b41313549365a34ae6f706~MYa_FKBFQ2178121781epsmtip19;
+        Wed,  6 May 2020 08:02:55 +0000 (GMT)
 From:   Hyunki Koo <hyunki00.koo@samsung.com>
-To:     krzk@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
-        robh+dt@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Hyunki Koo <hyunki00.koo@samsung.com>
-Subject: [PATCH v10 0/3] 32-bit access for TX/RX hold registers for
- samsung_tty driver
-Date:   Wed,  6 May 2020 17:02:01 +0900
-Message-Id: <20200506080201.18560-1-hyunki00.koo@samsung.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hyunki Koo <hyunki00.koo@samsung.com>
+Subject: [PATCH v10 2/3] dt-bindings: serial: Add reg-io-width compatible
+Date:   Wed,  6 May 2020 17:02:39 +0900
+Message-Id: <20200506080242.18623-2-hyunki00.koo@samsung.com>
 X-Mailer: git-send-email 2.15.0.rc1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURT1ddqZoVoda9Ub3JpRjBvQgoXRWKPRSBM1khCNMQqOdFII3dJp
-        idUPqygiokJcwOJaMdEGBQolhogLxRiVgAYobomJisEdxQ33tlMjf+fed8475753SUzuwWPJ
-        XLOds5lZI41LxY2Bmanxwyy+TNW+YDJzsrVdwhScqcEZ79n7GHOotl/EdHTUEozvWVDCdDYd
-        w5mKjisipu3MPoLZ1dxKLJLqfN49uO7q8WpCV1+1Tbe/wYt0NQ3dYt2Ab3I6vs64IIdj9ZxN
-        yZmzLfpcs0FLL8/IWpKlSVGp49XzmFRaaWZNnJZeuiI9flmuMZSMVuazRkeolc7yPJ24cIHN
-        4rBzyhwLb9fSnFVvtKrV1gSeNfEOsyEh22Kar1apkjQh5kZjzr1gJW5tUWx+9PKyyIUeUcUo
-        hgRqLvQdcWPFSErKqUsIXHVvJULxEcFjfxEhFF8QHPixU/xP4nnWG2U1I9jbVi4Wim8Irg2U
-        icIsnJoNb74excJYQa2B7Wd7IgqMakdQWHc6QhpDrYU2/wU8jMVUHNz45IkIZJQWXL0lhGA3
-        Fe6+q5II/dFw6+jzSAyMmgIF/spIcqC2k3D7/GeRIFgKpU/PRfEYeHWzIXpRLAy8a8YFvA2u
-        FJYRgrgEwWB/r0Q4SAb3i92oGJEhh5lQ05QYhuEQrQ+jviOhKPCLENoyKCqUC8LpcPFLX9R1
-        IlT3NkVddfD6zi0UxnJqAwx2D4pL0RT3kGncQ6Zx//c9hTAvGsdZeZOB45OsyUO/1Yci+zkr
-        7RJqbF/RgigS0SNkqrS6TLmEzeedphYEJEYrZCO+hVoyPevcwtksWTaHkeNbkCb02GVY7Nhs
-        S2jbzfYstSYpJUU1T8NoUpIYerzMN/zBejllYO1cHsdZOds/nYiMiXWhUQcTVx5e5VxcM1bf
-        peArvx8r6ZKs7umOyx+wldF/ymO0HUFj449k57UPzQYvk7v1Z+fyWs/nVLnVdX/OuE2Nv0+k
-        KR39984pLnftGDXN769w581IXU/MpzKrpE9KJzyXXnd6AsGEvklV5QXQV/++03mzLuPu1sDh
-        wMqePMfr7OO0mM9h1bMwG8/+BbBO9du1AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOLMWRmVeSWpSXmKPExsWy7bCSvC5D/qY4g4l9ghbzj5xjtWhevJ7N
-        YtXSG8wWUzZ8YLI4f34Du8Wmx9dYLS7vmsNmMeP8PiaLM4t72S1a9x5hd+Dy2LSqk81j/9w1
-        7B6bl9R79G1ZxeixfstVFo/Pm+QC2KK4bFJSczLLUov07RK4Mi5em81WcEik4vbLPUwNjLcF
-        uhg5OSQETCQWPX7KCmILCexmlPi+qAQiLiMx4cUSZghbWOJ+yxGgGi6gmm+MEheW/mcBSbAJ
-        aEu8+T4TqIiDQ0QgSmLPR3+QGmaBK4wSC99vYQSpERYIk5j55QU7iM0ioCpx9MsisKG8ArYS
-        DU972CEWKEtceLeEFSIuKHFy5hMWkJnMAuoS6+cJgYSZBeQlmrfOZp7AyD8LSdUshKpZSKoW
-        MDKvYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIDnstzR2M21d90DvEyMTBeIhRgoNZ
-        SYSX58fGOCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8NwoXxgkJpCeWpGanphakFsFkmTg4pRqY
-        RA3Elti87y5yfbB+xplJ71ytpbTOBJbksl3a0MurHGH7QSHVnm3yudIJb94kznV9vPGerW77
-        tw7ne4xPPufcY+N58Uiy7xV3eaSlscHPAymTt4hqPpUoF53ffI1XZoJM68mW9sdlGRNvZk+T
-        vzLnvk591JUQ5+5klsk56Y/rjXqnW5vFnJ6irZ76njHo6+L5njPVfr3dsVUp7Xsn75U9CXtZ
-        JwZxKU2ezTznhevhqnTzb0oH+H6qLOOpsVxcfqTyMf/hxVOfidv4SUY/VTa6ucv75NF+zlPb
-        TxaFFmhovF/qvnq6VkJh2LEf72yLfL8WfMso8V/YnrrpubDlWRYvCZ9fv/d8Sl9YeOao1ZLf
-        SizFGYmGWsxFxYkA0wVJ/uoCAAA=
-X-CMS-MailID: 20200506080208epcas2p2b5038265370e21bd38c21002d236b5fe
+In-Reply-To: <20200506080242.18623-1-hyunki00.koo@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAKsWRmVeSWpSXmKPExsWy7bCmqa5+/qY4g1e7lC3mHznHatG8eD2b
+        xaqlN5gtLu+aw2ZxZnEvu0Xr3iPsDmwem1Z1snnsn7uG3aNvyypGj8+b5AJYonJsMlITU1KL
+        FFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4CWKymUJeaUAoUCEouL
+        lfTtbIryS0tSFTLyi0tslVILUnIKDA0L9IoTc4tL89L1kvNzrQwNDIxMgSoTcjI+HpvNWnCc
+        vWLmr1csDYxT2LoYOTgkBEwk5m8x72Lk4hAS2MEosXj1bHYI5xOjxNxHXawQzjdGiVPLbwN1
+        cIJ1bF90nA0isZdR4u6eu8wQzg9Gib6Tk5hBqtgEtCXefJ8JlhAR2MgosXbjA0aQBLOApsSP
+        AzdYQWxhAU+JXZ9aweIsAqoSLzdeAlvBK2Ar0f70JtQ6ZYkL75awghzLKWAnsfqSJ8hMCYFd
+        7BJzn55ihKhxkXj/6jU7hC0s8er4FihbSuLzu71Qc+ol9rVNZIdo7mGU+PnhKStEwlhi1rN2
+        RpAFIMet36UPCRhliSO3WCBO5pPoOPyXHSLMK9HRJgTRqCax7tsLJghbRmLN011QWz0kTl8D
+        GQgKk4mMEm0HWxgnMMrNQliwgJFxFaNYakFxbnpqsVGBCXKMbWIEpy4tjx2MB875HGIU4GBU
+        4uE1cN8YJ8SaWFZcmXuIUYKDWUmEl+cHUIg3JbGyKrUoP76oNCe1+BCjKTAgJzJLiSbnA9Nq
+        Xkm8oamRmZmBpamFqZmRhZI47ybumzFCAumJJanZqakFqUUwfUwcnFINjAq38nJPmO3gUPz+
+        f+eEBYLaAq7C08PKz+R31wbFSHtcsltu0Z06S3LvBdEt0+t7or7xus1u/ZK0R7y6dUrA+wmT
+        t/ydONOq+nTmxkilJobQwOl8PQFnGdercgWqHjM8e3bHyuf81gahrrIbb7Hbs+9fuiL/2Icd
+        q46W14Y4Bu20vMTQcYW7VYmlOCPRUIu5qDgRAA8Wy+5zAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplluLIzCtJLcpLzFFi42LZdlhJTlc/f1Ocwe0XnBbzj5xjtWhevJ7N
+        YtXSG8wWl3fNYbM4s7iX3aJ17xF2BzaPTas62Tz2z13D7tG3ZRWjx+dNcgEsUVw2Kak5mWWp
+        Rfp2CVwZH4/NZi04zl4x89crlgbGKWxdjJwcEgImEtsXHQeyuTiEBHYzSqy48oURIiEjMeHF
+        EmYIW1jifssRVoiib4wSE2buZAdJsAloS7z5PpMZJCEisJVRYvv9iawgCWYBTYkfB26A2cIC
+        nhK7PrWCTWURUJV4ufES2GpeAVuJ9qc3oc5QlrjwbglQPQcHp4CdxOpLniBhIaCSTS8Ps05g
+        5FvAyLCKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93EyM4xLQ0dzBuX/VB7xAjEwfjIUYJ
+        DmYlEV6eHxvjhHhTEiurUovy44tKc1KLDzFKc7AoifPeKFwYJySQnliSmp2aWpBaBJNl4uCU
+        amAq+Sarpn44dq39zH3fYloDZQ7tEJn76boS2xI2iSVeom5nGVPvxB567BJ2JMX01t1W6WX+
+        SruvPTbdm3BD/4n1u98LX1VPXrZr92PDsnlHvuuuUE3XsTobxLv0U1m9Ou9G9vlRp2d7M0x5
+        f3xSbfOeNPks1epniR1lPX8+fHGe8e6jxZYv6fdVbDV0riiY5RmcuuPYz3/Rpe5ar8zk/q1L
+        l+i/UL6tOb099NueyAzfJSwBZdvsm4733X28Os90fyYve+mV13EaNw0aK04E8BSFub11cN7k
+        3W6U9yjtx8lXf7acM5rTLXc+Lfd7ln98o/jLgEQV5q8GtcKTswLe7duoe8D4rUXWt1PPNO4u
+        3SuvxFKckWioxVxUnAgAlQia5aACAAA=
+X-CMS-MailID: 20200506080255epcas2p2bbaae2e0f3fa181bafa5012f069200be
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200506080208epcas2p2b5038265370e21bd38c21002d236b5fe
-References: <CGME20200506080208epcas2p2b5038265370e21bd38c21002d236b5fe@epcas2p2.samsung.com>
+X-CMS-RootMailID: 20200506080255epcas2p2bbaae2e0f3fa181bafa5012f069200be
+References: <20200506080242.18623-1-hyunki00.koo@samsung.com>
+        <CGME20200506080255epcas2p2bbaae2e0f3fa181bafa5012f069200be@epcas2p2.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Change in v10:
-- add reviewd by and tested by in commit of each patch
+Add a description for reg-io-width options for the samsung serial
+UART peripheral.
 
-Change in v9:
-- move wr_reg_barrier into ifdef of CONFIG_SERIAL_SAMSUNG_CONSOLE
-  to fix following build error for x86 build
-  CC [M]  drivers/tty/serial/samsung_tty.o
-  drivers/tty/serial/samsung_tty.c:186:13: warning: ‘wr_reg_barrier’
-  defined but not used [-Wunused-function]
+Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/serial/samsung_uart.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Change in v8:
-- spit into 3 patch
-  [1/3] create the new functions with no functional change to the code as-is.
-  Replace rd_regb/wr_regb with rd_reg/wr_reg for general usage.
-  [2/3] add the new binding reg-io-width in device tree
-  [3/3] add the new funtinality of rd_reg / wr_reg and wr_reg_barrier 
-        to support 32-bit access for the TX/RX hold registers UTXH and URXH.
-
-Change in v7:
-- [1/2] correct build error on running 'make dt_binding_check' 
-Documentation/devicetree/bindings/serial/samsung_uart.yaml:  mapping values are not allowed in this context
-  in "<unicode string>", line 36, column 13
-  Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/serial/samsung_uart.example.dts' failed
-  make[1]: *** [Documentation/devicetree/bindings/serial/samsung_uart.example.dts] Error 1
-  make[1]: *** Waiting for unfinished jobs....
-  Makefile:1262: recipe for target 'dt_binding_check' failed
-  make: *** [dt_binding_check] Error 2
-- [2/2] add commit message of reviewed by and tested by in commit message
-  Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-  Tested on Odroid HC1 (Exynos5422):
-  Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Change in v6:
-- [2/2] clean description of reg-io-width
-  allOf is not needed. Just enum [1, 2] is enough.
-
-Changes in v5:
-- spit into 2 patch, newly added patch for dt-binding
-  [1/2] newly added dt-binding and go as first patch in this series.
-  [2/2] go as second patch in this series.
-
-Changes in v4:
-- correct variable types and change misleading function name
-
-Changes in v3:
-- line 2031: remove redundant init value  for ourport->port.iotype
-
-Changes in v2:
-- line 954 : change rd_regl to rd_reg in for backward compatibility.
-- line 2031: Add init value for ourport->port.iotype  to UPIO_MEM
-
-Hyunki Koo (3):
-  serial: samsung: Replace rd_regb/wr_regb with rd_reg/wr_reg
-  dt-bindings: serial: Add reg-io-width compatible
-  tty: samsung_tty: 32-bit access for TX/RX hold registers
-
- .../devicetree/bindings/serial/samsung_uart.yaml   |  8 +++
- drivers/tty/serial/samsung_tty.c                   | 76 ++++++++++++++++++----
- 2 files changed, 72 insertions(+), 12 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+index 9d2ce347875b..a57b1233c691 100644
+--- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
++++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+@@ -29,6 +29,14 @@ properties:
+   reg:
+     maxItems: 1
+ 
++  reg-io-width:
++    description: |
++      The size (in bytes) of the IO accesses that should be performed
++      on the device.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [ 1, 4 ]
++
+   clocks:
+     minItems: 2
+     maxItems: 5
 -- 
 2.15.0.rc1
 
