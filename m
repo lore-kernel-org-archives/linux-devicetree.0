@@ -2,530 +2,215 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5808C47256
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5D0C4724C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE6E20870
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:58:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ScSH9kOL"
+	by mail.kernel.org (Postfix) with ESMTP id D40E6208DB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 15:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729698AbgEFP60 (ORCPT
+        id S1729589AbgEFP7F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 11:58:26 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:15794 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728991AbgEFP6H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 11:58:07 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046Fv9kE002695;
-        Wed, 6 May 2020 10:58:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=D8lxO0jOF7dymb3aMu0u4/x0Qs85pik+E1CjBWhgIjg=;
- b=ScSH9kOL+LTw6wjkkzR4WahRechL1NT4+ND6HgY2IP/PNs2ecOuuMfkehmxcZ0pZoXFD
- a6Ln7kA0MUYjYGsBQC9QS/x1K8w6+FEgYB/o08TOIQDR9aWH9UZm088bW0ok4F/g04Ya
- LNURygZhBp8sI4Nd+m5VaR8IiWkC1Hohs5jrg8d/GyPpyFAwGBm8gGD+AuWSoJPD2AW4
- 9ex9rzMuv6qQAgj8JQNTWRNTNSWnWVgWRi7y87HW8Vul/YmV5Sftt5CbLiNERq82ifPh
- XKBdm2oFNokaNz1Nt+i8mtIuotLy+YauVy7MHZiCQtSGZzBdb4hlBSCblAw6nvmPDyOu TQ== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 30s59pqch3-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 06 May 2020 10:58:01 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 6 May 2020
- 16:57:59 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Wed, 6 May 2020 16:57:59 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 3919245D;
-        Wed,  6 May 2020 15:57:59 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
-        <lee.jones@linaro.org>, <linus.walleij@linaro.org>,
-        <broonie@kernel.org>
-CC:     <myungjoo.ham@samsung.com>, <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH v2 4/7] mfd: arizona: Move binding over to dtschema
-Date:   Wed, 6 May 2020 16:57:55 +0100
-Message-ID: <20200506155758.14643-4-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200506155758.14643-1-ckeepax@opensource.cirrus.com>
-References: <20200506155758.14643-1-ckeepax@opensource.cirrus.com>
+        Wed, 6 May 2020 11:59:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64020 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729431AbgEFP7F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 11:59:05 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046FZfuI078664;
+        Wed, 6 May 2020 11:58:29 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4r5ea1f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 11:58:29 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 046FtbkZ006829;
+        Wed, 6 May 2020 15:58:28 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma05wdc.us.ibm.com with ESMTP id 30s0g6tcyb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 15:58:28 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 046FwQCo28311840
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 May 2020 15:58:26 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7249E7805E;
+        Wed,  6 May 2020 15:58:27 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C99C978066;
+        Wed,  6 May 2020 15:58:26 +0000 (GMT)
+Received: from [9.163.13.169] (unknown [9.163.13.169])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  6 May 2020 15:58:26 +0000 (GMT)
+Subject: Re: [PATCH 3/3] hwmon: (occ) Add new temperature sensor type
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Eddie James <eajames@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-fsi@lists.ozlabs.org, devicetree@vger.kernel.org,
+        jdelvare@suse.com, alistair@popple.id.au, joel@jms.id.au,
+        jk@ozlabs.org, robh+dt@kernel.org
+References: <20200501150833.5251-1-eajames@linux.ibm.com>
+ <20200501150833.5251-4-eajames@linux.ibm.com>
+ <20200506155704.GA30543@roeck-us.net>
+From:   Eddie James <eajames@linux.vnet.ibm.com>
+Message-ID: <68296e99-bd7e-03dd-073d-03487b7a265e@linux.vnet.ibm.com>
+Date:   Wed, 6 May 2020 10:58:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- clxscore=1015 phishscore=0 adultscore=0 spamscore=0 priorityscore=1501
- mlxlogscore=999 suspectscore=0 lowpriorityscore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005060128
+In-Reply-To: <20200506155704.GA30543@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-06_08:2020-05-05,2020-05-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1011 priorityscore=1501 malwarescore=0
+ impostorscore=0 bulkscore=0 suspectscore=0 adultscore=0 phishscore=0
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060122
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
 
-Changes since v1:
- - Removed some description that duplicates constraints
- - Added some blank lines for readability
+On 5/6/20 10:57 AM, Guenter Roeck wrote:
+> On Fri, May 01, 2020 at 10:08:33AM -0500, Eddie James wrote:
+>> The latest version of the On-Chip Controller (OCC) has a different
+>> format for the temperature sensor data. Add a new temperature sensor
+>> version to handle this data.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> For my reference:
+>
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
+>
+> I assume this depends on at least patch 2 of the series, so we'll have
+> to wait for that to be accepted.
 
-Thanks,
-Charles
 
- Documentation/devicetree/bindings/mfd/arizona.txt  | 101 -------
- .../devicetree/bindings/mfd/wlf,arizona.yaml       | 298 +++++++++++++++++++++
- MAINTAINERS                                        |   8 +-
- 3 files changed, 302 insertions(+), 105 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/arizona.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+Thanks Guenter. Yes that's correct.
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-deleted file mode 100644
-index 148ef621a5e5d..0000000000000
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ /dev/null
-@@ -1,101 +0,0 @@
--Cirrus Logic/Wolfson Microelectronics Arizona class audio SoCs
--
--These devices are audio SoCs with extensive digital capabilities and a range
--of analogue I/O.
--
--Required properties:
--
--  - compatible : One of the following chip-specific strings:
--        "cirrus,cs47l24"
--        "wlf,wm5102"
--        "wlf,wm5110"
--        "wlf,wm8280"
--        "wlf,wm8997"
--        "wlf,wm8998"
--        "wlf,wm1814"
--        "wlf,wm1831"
--
--  - reg : I2C slave address when connected using I2C, chip select number when
--    using SPI.
--
--  - interrupts : The interrupt line the /IRQ signal for the device is
--    connected to.
--  - interrupt-controller : Arizona class devices contain interrupt controllers
--    and may provide interrupt services to other devices.
--  - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
--    The first cell is the IRQ number.
--    The second cell is the flags, encoded as the trigger masks from
--    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
--
--  - gpio-controller : Indicates this device is a GPIO controller.
--  - #gpio-cells : Must be 2. The first cell is the pin number and the
--    second cell is used to specify optional parameters, see ../gpio/gpio.txt
--    for details.
--
--  - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
--    as covered in Documentation/devicetree/bindings/regulator/regulator.txt
--
--  - DBVDD2-supply, DBVDD3-supply : Additional databus power supplies (wm5102,
--    wm5110, wm8280, wm8998, wm1814)
--
--  - SPKVDDL-supply, SPKVDDR-supply : Speaker driver power supplies (wm5102,
--    wm5110, wm8280, wm8998, wm1814)
--
--  - SPKVDD-supply : Speaker driver power supply (wm8997)
--
--  - DCVDD-supply : Main power supply (cs47l24, wm1831)
--
--  - MICVDD-supply : Microphone power supply (cs47l24, wm1831)
--
--Optional properties:
--
--  - reset-gpios : GPIO specifier for the GPIO controlling /RESET
--
--  - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
--  - clock-names: Should contains two strings:
--      "mclk1" for the clock supplied on MCLK1, recommended to be a high
--      quality audio reference clock
--      "mclk2" for the clock supplied on MCLK2, recommended to be an always on
--      32k clock
--
--  - wlf,gpio-defaults : A list of GPIO configuration register values. Defines
--    for the appropriate values can found in <dt-bindings/mfd/arizona.txt>. If
--    absent, no configuration of these registers is performed. If any entry has
--    a value that is out of range for a 16 bit register then the chip default
--    will be used. If present exactly five values must be specified.
--
--  - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
--    they are being externally supplied. As covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
--    (wm5102, wm5110, wm8280, wm8997, wm8998, wm1814)
--
--Deprecated properties:
--
--  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
--
--Also see child specific device properties:
--  Regulator - ../regulator/arizona-regulator.txt
--  Extcon    - ../extcon/extcon-arizona.txt
--  Sound     - ../sound/wlf,arizona.txt
--
--Example:
--
--codec: wm5102@1a {
--	compatible = "wlf,wm5102";
--	reg = <0x1a>;
--	interrupts = <347>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--        interrupt-parent = <&gic>;
--
--	gpio-controller;
--	#gpio-cells = <2>;
--
--	wlf,gpio-defaults = <
--		ARIZONA_GP_FN_TXLRCLK
--		ARIZONA_GP_DEFAULT
--		ARIZONA_GP_DEFAULT
--		ARIZONA_GP_DEFAULT
--		ARIZONA_GP_DEFAULT
--	>;
--};
-diff --git a/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml b/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
-new file mode 100644
-index 0000000000000..49e4f37fdd8b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
-@@ -0,0 +1,298 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/wlf,arizona.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cirrus Logic/Wolfson Microelectronics Arizona class audio SoCs
-+
-+maintainers:
-+  - patches@opensource.cirrus.com
-+
-+description: |
-+  These devices are audio SoCs with extensive digital capabilities and a
-+  range of analogue I/O.
-+
-+allOf:
-+  - $ref: /schemas/sound/wlf,arizona.yaml#
-+  - $ref: /schemas/regulator/wlf,arizona.yaml#
-+  - $ref: /schemas/extcon/wlf,arizona.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - cirrus,cs47l24
-+              - wlf,wm1831
-+    then:
-+      required:
-+        - DCVDD-supply
-+        - MICVDD-supply
-+    else:
-+      properties:
-+        LDOVDD-supply:
-+          description:
-+            Digital power supply, used internally to generate DCVDD when
-+            internally supplied.
-+          $ref: /schemas/types.yaml#/definitions/phandle
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - wlf,wm1814
-+              - wlf,wm5102
-+              - wlf,wm5110
-+              - wlf,wm8280
-+              - wlf,wm8997
-+              - wlf,wm8998
-+    then:
-+      properties:
-+        DBVDD2-supply:
-+          description:
-+            Databus power supply.
-+          $ref: /schemas/types.yaml#/definitions/phandle
-+
-+      required:
-+        - DBVDD2-supply
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - wlf,wm1814
-+              - wlf,wm5102
-+              - wlf,wm5110
-+              - wlf,wm8280
-+              - wlf,wm8998
-+    then:
-+      properties:
-+        DBVDD3-supply:
-+          description:
-+            Databus power supply.
-+          $ref: /schemas/types.yaml#/definitions/phandle
-+
-+      required:
-+        - DBVDD3-supply
-+  - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - cirrus,cs47l24
-+             - wlf,wm1831
-+             - wlf,wm8997
-+    then:
-+      properties:
-+        SPKVDD-supply:
-+          description:
-+            Mono speaker driver power supply.
-+          $ref: /schemas/types.yaml#/definitions/phandle
-+
-+      required:
-+        - SPKVDD-supply
-+    else:
-+      properties:
-+        SPKVDDL-supply:
-+          description:
-+            Left speaker driver power supply.
-+          $ref: /schemas/types.yaml#/definitions/phandle
-+
-+        SPKVDDR-supply:
-+          description:
-+            Right speaker driver power supply.
-+          $ref: /schemas/types.yaml#/definitions/phandle
-+
-+      required:
-+        - SPKVDDL-supply
-+        - SPKVDDR-supply
-+
-+properties:
-+  compatible:
-+    enum:
-+      - cirrus,cs47l24
-+      - wlf,wm1814
-+      - wlf,wm1831
-+      - wlf,wm5102
-+      - wlf,wm5110
-+      - wlf,wm8280
-+      - wlf,wm8997
-+      - wlf,wm8998
-+
-+  reg:
-+    maxItems: 1
-+
-+  AVDD-supply:
-+    description:
-+      Analogue power supply.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  CPVDD-supply:
-+    description:
-+      Charge pump power supply.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  DBVDD1-supply:
-+    description:
-+      Databus power supply.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  DCVDD-supply:
-+    description:
-+      Digital power supply, normally supplied internally except on cs47l24,
-+      wm1831 where it is mandatory.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  MICVDD-supply:
-+    description:
-+      Microphone power supply, normally supplied internally except on
-+      cs47l24, wm1831 where it is mandatory.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  gpio-controller:
-+    description:
-+      Indicates this device is a GPIO controller.
-+
-+  '#gpio-cells':
-+    description:
-+      The first cell is the pin number and the second cell is used to
-+      specify optional parameters.
-+    const: 2
-+
-+  wlf,gpio-defaults:
-+    description:
-+      A list of GPIO configuration register values. Defines for the
-+      appropriate values can found in dt-bindings/mfd/arizona.h. If
-+      absent, no configuration of these registers is performed. If any
-+      entry has a value that is out of range for a 16 bit register then the
-+      chip default will be used. If present exactly five values must be
-+      specified.
-+    $ref: "/schemas/types.yaml#/definitions/uint32-array"
-+    minItems: 1
-+    maxItems: 5
-+
-+  interrupt-controller:
-+    description:
-+      Arizona class devices contain interrupt controllers and may provide
-+      interrupt services to other devices.
-+
-+  '#interrupt-cells':
-+    description:
-+      The first cell is the IRQ number.  The second cell is the flags,
-+      encoded as trigger masks.
-+    const: 2
-+
-+  interrupts:
-+    description:
-+      The interrupt line the /IRQ signal for the device is connected to.
-+
-+  clocks:
-+    description:
-+      Should reference the clocks supplied on MCLK1 and MCLK2.
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    description:
-+      Should contains two strings mclk1 for the clock supplied on MCLK1,
-+      recommended to be a high quality audio reference clock mclk2 for the
-+      clock supplied on MCLK2, recommended to be an always on 32k clock.
-+    oneOf:
-+      - items:
-+        - const: mclk1
-+      - items:
-+        - const: mclk2
-+      - items:
-+        - const: mclk1
-+        - const: mclk2
-+
-+  reset-gpios:
-+    description:
-+      GPIO specifier for the GPIO controlling RESET
-+    maxItems: 1
-+
-+  wlf,reset:
-+    description:
-+      GPIO specifier for the GPIO controlling RESET
-+    deprecated: true
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - AVDD-supply
-+  - CPVDD-supply
-+  - DBVDD1-supply
-+  - gpio-controller
-+  - '#gpio-cells'
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+  - interrupts
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/mfd/arizona.h>
-+    i2c@e0004000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        reg = <0xe0004000 0x1000>;
-+
-+        wm5102: codec@1a {
-+            compatible = "wlf,wm5102";
-+            reg = <0x1a>;
-+
-+            reset-gpios = <&gpio 0>;
-+            wlf,ldoena = <&gpio 1>;
-+
-+            AVDD-supply = <&vdd1v8>;
-+            DBVDD1-supply = <&vdd1v8>;
-+            DBVDD2-supply = <&vdd1v8>;
-+            DBVDD3-supply = <&vdd1v8>;
-+            CPVDD-supply = <&vdd1v8>;
-+            LDOVDD-supply = <&vdd1v8>;
-+            SPKVDDL-supply = <&vdd5v>;
-+            SPKVDDR-supply = <&vdd5v>;
-+
-+            interrupts = <347>;
-+            interrupt-controller;
-+            #interrupt-cells = <2>;
-+            interrupt-parent = <&gic>;
-+
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+
-+            #sound-dai-cells = <1>;
-+
-+            wlf,gpio-defaults = <
-+                ARIZONA_GP_FN_TXLRCLK
-+                ARIZONA_GP_DEFAULT
-+                ARIZONA_GP_DEFAULT
-+                ARIZONA_GP_DEFAULT
-+                ARIZONA_GP_DEFAULT
-+            >;
-+
-+            clocks = <&clks 0>, <&clks 1>;
-+            clock-names = "mclk1", "mclk2";
-+
-+            wlf,inmode = <ARIZONA_INMODE_DIFF ARIZONA_INMODE_DMIC>;
-+            wlf,dmic-ref = <ARIZONA_DMIC_MICBIAS1 ARIZONA_DMIC_MICBIAS3>;
-+
-+            wlf,use-jd2;
-+            wlf,use-jd2-nopull;
-+            wlf,jd-invert;
-+
-+            wlf,micd-software-compare;
-+            wlf,micd-detect-debounce = <0>;
-+            wlf,micd-pol-gpio = <&codec 2 0>;
-+            wlf,micd-rate = <ARIZONA_MICD_TIME_8MS>;
-+            wlf,micd-dbtime = <4>;
-+            wlf,micd-timeout-ms = <100>;
-+            wlf,micd-force-micbias;
-+            wlf,micd-configs = <0 ARIZONA_DMIC_MICBIAS1 0>,
-+                               <0x2000 ARIZONA_DMIC_MICBIAS2 1>;
-+
-+            wlf,gpsw = <ARIZONA_GPSW_OPEN>;
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 91bf1fbe98c8e..92a96cc0ea734 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18257,11 +18257,11 @@ L:	patches@opensource.cirrus.com
- S:	Supported
- W:	https://github.com/CirrusLogic/linux-drivers/wiki
- T:	git https://github.com/CirrusLogic/linux-drivers.git
--F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
--F:	Documentation/devicetree/bindings/mfd/arizona.txt
-+F:	Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
-+F:	Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
- F:	Documentation/devicetree/bindings/mfd/wm831x.txt
--F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
--F:	Documentation/devicetree/bindings/sound/wlf,arizona.txt
-+F:	Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
-+F:	Documentation/devicetree/bindings/sound/wlf,arizona.yaml
- F:	Documentation/hwmon/wm83??.rst
- F:	arch/arm/mach-s3c64xx/mach-crag6410*
- F:	drivers/clk/clk-wm83*.c
--- 
-2.11.0
+Eddie
 
+
+>
+> Guenter
+>
+>> ---
+>>   drivers/hwmon/occ/common.c | 75 ++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 75 insertions(+)
+>>
+>> diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
+>> index 30e18eb60da7..52af0e728232 100644
+>> --- a/drivers/hwmon/occ/common.c
+>> +++ b/drivers/hwmon/occ/common.c
+>> @@ -41,6 +41,14 @@ struct temp_sensor_2 {
+>>   	u8 value;
+>>   } __packed;
+>>   
+>> +struct temp_sensor_10 {
+>> +	u32 sensor_id;
+>> +	u8 fru_type;
+>> +	u8 value;
+>> +	u8 throttle;
+>> +	u8 reserved;
+>> +} __packed;
+>> +
+>>   struct freq_sensor_1 {
+>>   	u16 sensor_id;
+>>   	u16 value;
+>> @@ -307,6 +315,60 @@ static ssize_t occ_show_temp_2(struct device *dev,
+>>   	return snprintf(buf, PAGE_SIZE - 1, "%u\n", val);
+>>   }
+>>   
+>> +static ssize_t occ_show_temp_10(struct device *dev,
+>> +				struct device_attribute *attr, char *buf)
+>> +{
+>> +	int rc;
+>> +	u32 val = 0;
+>> +	struct temp_sensor_10 *temp;
+>> +	struct occ *occ = dev_get_drvdata(dev);
+>> +	struct occ_sensors *sensors = &occ->sensors;
+>> +	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+>> +
+>> +	rc = occ_update_response(occ);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	temp = ((struct temp_sensor_10 *)sensors->temp.data) + sattr->index;
+>> +
+>> +	switch (sattr->nr) {
+>> +	case 0:
+>> +		val = get_unaligned_be32(&temp->sensor_id);
+>> +		break;
+>> +	case 1:
+>> +		val = temp->value;
+>> +		if (val == OCC_TEMP_SENSOR_FAULT)
+>> +			return -EREMOTEIO;
+>> +
+>> +		/*
+>> +		 * VRM doesn't return temperature, only alarm bit. This
+>> +		 * attribute maps to tempX_alarm instead of tempX_input for
+>> +		 * VRM
+>> +		 */
+>> +		if (temp->fru_type != OCC_FRU_TYPE_VRM) {
+>> +			/* sensor not ready */
+>> +			if (val == 0)
+>> +				return -EAGAIN;
+>> +
+>> +			val *= 1000;
+>> +		}
+>> +		break;
+>> +	case 2:
+>> +		val = temp->fru_type;
+>> +		break;
+>> +	case 3:
+>> +		val = temp->value == OCC_TEMP_SENSOR_FAULT;
+>> +		break;
+>> +	case 4:
+>> +		val = temp->throttle * 1000;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return snprintf(buf, PAGE_SIZE - 1, "%u\n", val);
+>> +}
+>> +
+>>   static ssize_t occ_show_freq_1(struct device *dev,
+>>   			       struct device_attribute *attr, char *buf)
+>>   {
+>> @@ -745,6 +807,10 @@ static int occ_setup_sensor_attrs(struct occ *occ)
+>>   		num_attrs += (sensors->temp.num_sensors * 4);
+>>   		show_temp = occ_show_temp_2;
+>>   		break;
+>> +	case 0x10:
+>> +		num_attrs += (sensors->temp.num_sensors * 5);
+>> +		show_temp = occ_show_temp_10;
+>> +		break;
+>>   	default:
+>>   		sensors->temp.num_sensors = 0;
+>>   	}
+>> @@ -844,6 +910,15 @@ static int occ_setup_sensor_attrs(struct occ *occ)
+>>   			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
+>>   						     show_temp, NULL, 3, i);
+>>   			attr++;
+>> +
+>> +			if (sensors->temp.version == 0x10) {
+>> +				snprintf(attr->name, sizeof(attr->name),
+>> +					 "temp%d_max", s);
+>> +				attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
+>> +							     show_temp, NULL,
+>> +							     4, i);
+>> +				attr++;
+>> +			}
+>>   		}
+>>   	}
+>>   
