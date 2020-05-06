@@ -2,133 +2,349 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89D3C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 09:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D938C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 09:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A432A2073A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 09:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617F32075E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 09:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dDaNLch6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZfYS1xqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgEFJRP (ORCPT
+        id S1729134AbgEFJko (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 05:17:15 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4952 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728385AbgEFJRO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 05:17:14 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04697PPv015737;
-        Wed, 6 May 2020 11:17:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=VqFBe3qF20cGOA89aBohpMcGBG6ZZWxJV16qNY9PmWo=;
- b=dDaNLch6Ij6B7YztMRN7x8yS+n+gqvuruXugu/ZEwu3IFMX0KXLTyoIxK9sTCUSxM5cS
- vdWZdsVrlDYFpgkn3uDbh6byBdO8nhSyeHaAlEm7i4YUoOrGxmpn7OjmFWggLX76/tfC
- 8pTFBysQpGf+PQZB9nS1HONCBE1kxYEfHaEM15qI2DIxFjuCM6YkVqigngdoFndGDHEP
- G6JgunUGZv5zfF9NdqLhj8tvFFNCMxfLhIB7GZpWFUsIfl12ltMRfb7jmaPVWoLwz4+B
- YG6Jo+hlb2tYCLXdLITJ+tiIKjPMjQpsvRfmEkG8v5HZTXYSW81t5UEjxqpaoKjp3yaF MA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30rxmvn3gy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 11:17:02 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B75BA100034;
-        Wed,  6 May 2020 11:17:01 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 957AE2AB47F;
-        Wed,  6 May 2020 11:17:01 +0200 (CEST)
-Received: from [10.211.5.75] (10.75.127.49) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 6 May
- 2020 11:17:00 +0200
-Subject: Re: [PATCH v3 00/10] add STM32 FMC2 EBI controller driver
-To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <gregkh@linuxfoundation.org>, <boris.brezillon@collabora.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-References: <1588698668-25288-1-git-send-email-christophe.kerello@st.com>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <dd56b6cb-3e99-0365-b1e6-211549e0ef21@st.com>
-Date:   Wed, 6 May 2020 11:16:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 6 May 2020 05:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729060AbgEFJko (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 05:40:44 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCCC3C061A0F;
+        Wed,  6 May 2020 02:40:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
+        In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=igfHHLT9Lsvlc6wsZWGGqnCegmlNg2TkVdUfdxxutBg=; b=ZfYS1xqjwdUOeLFwcFDf1BeVT2
+        IMnI2EfhjgSn7Q5rCt8nMCtfVsdh53SaG6oSqqjaIwVFlzslXAiTnzgNpd0lS++uJzxzVOOmIjCtU
+        HM+Aauqc/clXiosFS9Pvb2De9HG019/9CpORucssVIr4SioZ3RyzwpOpG09OxWjzMkBXz/Ybjkh5C
+        VC4aDKx9NTKAvUURkkuU2SQO19XcPzHsIP5u7oILTche1O/5kCre3zORBp5LffspXbvX8NfDnfM79
+        NK2GpOVMaVbPb6BJNWSRKRtcK/unufooWxkKldbFvjNkm3l2fbKDdcMr7hx0QJdnm09qW0LcBKukU
+        ap6nwfew==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:36052 helo=rmk-PC.armlinux.org.uk)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1jWGXY-0007pk-J3; Wed, 06 May 2020 10:40:32 +0100
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1jWGXX-0000Yx-UL; Wed, 06 May 2020 10:40:31 +0100
+In-Reply-To: <20200506094001.GP1551@shell.armlinux.org.uk>
+References: <20200506094001.GP1551@shell.armlinux.org.uk>
+From:   Russell King <rmk+kernel@armlinux.org.uk>
+To:     linux-i2c@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Vladimir Vid <vladimir.vid@sartura.hr>
+Subject: [PATCH 1/2] i2c: pxa: implement generic i2c bus recovery
 MIME-Version: 1.0
-In-Reply-To: <1588698668-25288-1-git-send-email-christophe.kerello@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-06_03:2020-05-04,2020-05-06 signatures=0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1jWGXX-0000Yx-UL@rmk-PC.armlinux.org.uk>
+Date:   Wed, 06 May 2020 10:40:31 +0100
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Implement generic GPIO-based I2C bus recovery for the PXA I2C driver.
 
-Please do not spend time to review v3.
-V4 has been pushed to fix an issue in YAML bindings.
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ drivers/i2c/busses/i2c-pxa.c | 176 +++++++++++++++++++++++++++++++----
+ 1 file changed, 159 insertions(+), 17 deletions(-)
 
-Regards,
-Christophe Kerello.
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 0e194d6cd1b5..da15ab2a519e 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -20,6 +20,7 @@
+ #include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+@@ -28,6 +29,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/i2c-pxa.h>
+ #include <linux/slab.h>
+@@ -260,6 +262,11 @@ struct pxa_i2c {
+ 	bool			highmode_enter;
+ 	u32			fm_mask;
+ 	u32			hs_mask;
++
++	struct i2c_bus_recovery_info recovery;
++	struct pinctrl		*pinctrl;
++	struct pinctrl_state	*pinctrl_default;
++	struct pinctrl_state	*pinctrl_recovery;
+ };
+ 
+ #define _IBMR(i2c)	((i2c)->reg_ibmr)
+@@ -559,13 +566,8 @@ static void i2c_pxa_set_slave(struct pxa_i2c *i2c, int errcode)
+ #define i2c_pxa_set_slave(i2c, err)	do { } while (0)
+ #endif
+ 
+-static void i2c_pxa_reset(struct pxa_i2c *i2c)
++static void i2c_pxa_do_reset(struct pxa_i2c *i2c)
+ {
+-	pr_debug("Resetting I2C Controller Unit\n");
+-
+-	/* abort any transfer currently under way */
+-	i2c_pxa_abort(i2c);
+-
+ 	/* reset according to 9.8 */
+ 	writel(ICR_UR, _ICR(i2c));
+ 	writel(I2C_ISR_INIT, _ISR(i2c));
+@@ -584,12 +586,25 @@ static void i2c_pxa_reset(struct pxa_i2c *i2c)
+ #endif
+ 
+ 	i2c_pxa_set_slave(i2c, 0);
++}
+ 
++static void i2c_pxa_enable(struct pxa_i2c *i2c)
++{
+ 	/* enable unit */
+ 	writel(readl(_ICR(i2c)) | ICR_IUE, _ICR(i2c));
+ 	udelay(100);
+ }
+ 
++static void i2c_pxa_reset(struct pxa_i2c *i2c)
++{
++	pr_debug("Resetting I2C Controller Unit\n");
++
++	/* abort any transfer currently under way */
++	i2c_pxa_abort(i2c);
++	i2c_pxa_do_reset(i2c);
++	i2c_pxa_enable(i2c);
++}
++
+ 
+ #ifdef CONFIG_I2C_PXA_SLAVE
+ /*
+@@ -1043,6 +1058,7 @@ static int i2c_pxa_do_xfer(struct pxa_i2c *i2c, struct i2c_msg *msg, int num)
+ 	ret = i2c_pxa_wait_bus_not_busy(i2c);
+ 	if (ret) {
+ 		dev_err(&i2c->adap.dev, "i2c_pxa: timeout waiting for bus free\n");
++		i2c_recover_bus(&i2c->adap);
+ 		goto out;
+ 	}
+ 
+@@ -1088,6 +1104,7 @@ static int i2c_pxa_do_xfer(struct pxa_i2c *i2c, struct i2c_msg *msg, int num)
+ 
+ 	if (!timeout && i2c->msg_num) {
+ 		i2c_pxa_scream_blue_murder(i2c, "timeout with active message");
++		i2c_recover_bus(&i2c->adap);
+ 		ret = I2C_RETRY;
+ 	}
+ 
+@@ -1277,6 +1294,129 @@ static int i2c_pxa_probe_pdata(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
++static void i2c_pxa_prepare_recovery(struct i2c_adapter *adap)
++{
++	struct pxa_i2c *i2c = adap->algo_data;
++	u32 ibmr = readl(_IBMR(i2c));
++
++	/*
++	 * Program the GPIOs to reflect the current I2C bus state while
++	 * we transition to recovery; this avoids glitching the bus.
++	 */
++	gpiod_set_value(i2c->recovery.scl_gpiod, ibmr & IBMR_SCLS);
++	gpiod_set_value(i2c->recovery.sda_gpiod, ibmr & IBMR_SDAS);
++
++	WARN_ON(pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_recovery));
++}
++
++static void i2c_pxa_unprepare_recovery(struct i2c_adapter *adap)
++{
++	struct pxa_i2c *i2c = adap->algo_data;
++	u32 isr;
++
++	/*
++	 * The bus should now be free. Clear up the I2C controller before
++	 * handing control of the bus back to avoid the bus changing state.
++	 */
++	isr = readl(_ISR(i2c));
++	if (isr & (ISR_UB | ISR_IBB)) {
++		dev_dbg(&i2c->adap.dev,
++			"recovery: resetting controller, ISR=0x%08x\n", isr);
++		i2c_pxa_do_reset(i2c);
++	}
++
++	WARN_ON(pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_default));
++
++	dev_dbg(&i2c->adap.dev, "recovery: IBMR 0x%08x ISR 0x%08x\n",
++	        readl(_IBMR(i2c)), readl(_ISR(i2c)));
++
++	i2c_pxa_enable(i2c);
++}
++
++static int i2c_pxa_init_recovery(struct pxa_i2c *i2c)
++{
++	struct i2c_bus_recovery_info *bri = &i2c->recovery;
++	struct device *dev = i2c->adap.dev.parent;
++
++	/*
++	 * When slave mode is enabled, we are not the only master on the bus.
++	 * Bus recovery can only be performed when we are the master, which
++	 * we can't be certain of. Therefore, when slave mode is enabled, do
++	 * not configure bus recovery.
++	 */
++	if (IS_ENABLED(CONFIG_I2C_PXA_SLAVE))
++		return 0;
++
++	i2c->pinctrl = devm_pinctrl_get(dev);
++	if (IS_ERR(i2c->pinctrl))
++		return PTR_ERR(i2c->pinctrl);
++
++	if (!i2c->pinctrl)
++		return 0;
++
++	i2c->pinctrl_default = pinctrl_lookup_state(i2c->pinctrl,
++						    PINCTRL_STATE_DEFAULT);
++	i2c->pinctrl_recovery = pinctrl_lookup_state(i2c->pinctrl, "recovery");
++
++	if (IS_ERR(i2c->pinctrl_default) || IS_ERR(i2c->pinctrl_recovery)) {
++		dev_info(dev, "missing pinmux recovery information: %ld %ld\n",
++			 PTR_ERR(i2c->pinctrl_default),
++			 PTR_ERR(i2c->pinctrl_recovery));
++		return 0;
++	}
++
++	/*
++	 * Claiming GPIOs can influence the pinmux state, and may glitch the
++	 * I2C bus. Do this carefully.
++	 */
++	bri->scl_gpiod = devm_gpiod_get(dev, "scl", GPIOD_OUT_HIGH_OPEN_DRAIN);
++	if (bri->scl_gpiod == ERR_PTR(-EPROBE_DEFER))
++		return -EPROBE_DEFER;
++	if (IS_ERR(bri->scl_gpiod)) {
++		dev_info(dev, "missing scl gpio recovery information: %pe\n",
++			 bri->scl_gpiod);
++		return 0;
++	}
++
++	/*
++	 * We have SCL. Pull SCL low and wait a bit so that SDA glitches
++	 * have no effect.
++	 */
++	gpiod_direction_output(bri->scl_gpiod, 0);
++	udelay(10);
++	bri->sda_gpiod = devm_gpiod_get(dev, "sda", GPIOD_OUT_HIGH_OPEN_DRAIN);
++
++	/* Wait a bit in case of a SDA glitch, and then release SCL. */
++	udelay(10);
++	gpiod_direction_output(bri->scl_gpiod, 1);
++
++	if (bri->sda_gpiod == ERR_PTR(-EPROBE_DEFER))
++		return -EPROBE_DEFER;
++
++	if (IS_ERR(bri->sda_gpiod)) {
++		dev_info(dev, "missing sda gpio recovery information: %pe\n",
++			 bri->sda_gpiod);
++		return 0;
++	}
++
++	bri->prepare_recovery = i2c_pxa_prepare_recovery;
++	bri->unprepare_recovery = i2c_pxa_unprepare_recovery;
++	bri->recover_bus = i2c_generic_scl_recovery;
++
++	i2c->adap.bus_recovery_info = bri;
++
++	/*
++	 * Claiming GPIOs can change the pinmux state, which confuses the
++	 * pinctrl since since pinctrl's idea of the current setting is
++	 * unaffected by the pinmux change caused by claiming the GPIO.
++	 * Work around that by switching pinctrl to the GPIO state here.
++	 * We do it this way to avoid glitching the I2C bus.
++	 */
++	pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_recovery);
++
++	return pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_default);
++}
++
+ static int i2c_pxa_probe(struct platform_device *dev)
+ {
+ 	struct i2c_pxa_platform_data *plat = dev_get_platdata(&dev->dev);
+@@ -1289,6 +1429,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
+ 	if (!i2c)
+ 		return -ENOMEM;
+ 
++	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
++	i2c->adap.nr = dev->id;
++	i2c->adap.owner   = THIS_MODULE;
++	i2c->adap.retries = 5;
++	i2c->adap.algo_data = i2c;
++	i2c->adap.dev.parent = &dev->dev;
++#ifdef CONFIG_OF
++	i2c->adap.dev.of_node = dev->dev.of_node;
++#endif
++
+ 	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
+ 	i2c->reg_base = devm_ioremap_resource(&dev->dev, res);
+ 	if (IS_ERR(i2c->reg_base))
+@@ -1298,8 +1448,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
+ 	if (irq < 0)
+ 		return irq;
+ 
+-	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
+-	i2c->adap.nr = dev->id;
++	ret = i2c_pxa_init_recovery(i2c);
++	if (ret)
++		return ret;
+ 
+ 	ret = i2c_pxa_probe_dt(dev, i2c, &i2c_type);
+ 	if (ret > 0)
+@@ -1307,9 +1458,6 @@ static int i2c_pxa_probe(struct platform_device *dev)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	i2c->adap.owner   = THIS_MODULE;
+-	i2c->adap.retries = 5;
+-
+ 	spin_lock_init(&i2c->lock);
+ 	init_waitqueue_head(&i2c->wait);
+ 
+@@ -1375,12 +1523,6 @@ static int i2c_pxa_probe(struct platform_device *dev)
+ 
+ 	i2c_pxa_reset(i2c);
+ 
+-	i2c->adap.algo_data = i2c;
+-	i2c->adap.dev.parent = &dev->dev;
+-#ifdef CONFIG_OF
+-	i2c->adap.dev.of_node = dev->dev.of_node;
+-#endif
+-
+ 	ret = i2c_add_numbered_adapter(&i2c->adap);
+ 	if (ret < 0)
+ 		goto ereqirq;
+-- 
+2.20.1
 
-On 5/5/20 7:10 PM, Christophe Kerello wrote:
-> The FMC2 functional block makes the interface with: synchronous and
-> asynchronous static devices (such as PSNOR, PSRAM or other memory-mapped
-> peripherals) and NAND flash memories.
-> Its main purposes are:
->    - to translate AXI transactions into the appropriate external device
->      protocol
->    - to meet the access time requirements of the external devices
-> All external devices share the addresses, data and control signals with the
-> controller. Each external device is accessed by means of a unique Chip
-> Select. The FMC2 performs only one access at a time to an external device.
-> 
-> Changes in v3:
->   - NAND:
->     - rename labels used on errors
->     - add in the commit log the reason to increase FMC2_TIMEOUT_MS (patch 3)
->     - add Miquel reviewed-by tag (patches 2/4/5/9)
->   - EBI:
->     - move in memory folder
->     - merge MFD and BUS drivers to avoid a MFD driver
->   - bindings:
->     - pattern name has been modified
->     - vendor properties have been modified
->       - s/_/-/
->       - add unit suffix (-ns) on timing properties
-> 
-> Christophe Kerello (10):
->    mtd: rawnand: stm32_fmc2: manage all errors cases at probe time
->    mtd: rawnand: stm32_fmc2: remove useless inline comments
->    mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS for timeouts
->    mtd: rawnand: stm32_fmc2: cleanup
->    mtd: rawnand: stm32_fmc2: use FIELD_PREP/FIELD_GET macros
->    dt-bindings: mtd: update STM32 FMC2 NAND controller documentation
->    dt-bindings: memory-controller: add STM32 FMC2 EBI controller
->      documentation
->    memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
->    mtd: rawnand: stm32_fmc2: use regmap APIs
->    mtd: rawnand: stm32_fmc2: get resources from parent node
-> 
->   .../memory-controllers/st,stm32-fmc2-ebi.yaml      |  261 +++++
->   .../bindings/mtd/st,stm32-fmc2-nand.yaml           |   19 +-
->   drivers/memory/Kconfig                             |   10 +
->   drivers/memory/Makefile                            |    1 +
->   drivers/memory/stm32-fmc2-ebi.c                    | 1206 ++++++++++++++++++++
->   drivers/mtd/nand/raw/Kconfig                       |    1 +
->   drivers/mtd/nand/raw/stm32_fmc2_nand.c             | 1176 ++++++++++---------
->   7 files changed, 2061 insertions(+), 613 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
->   create mode 100644 drivers/memory/stm32-fmc2-ebi.c
-> 
