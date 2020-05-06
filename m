@@ -2,154 +2,133 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE69C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 09:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89D3C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 09:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFC422075A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 09:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588756594;
-	bh=zALfP4xVA+WvMHMrj3CUbm45HqoM4nmq5AW9bGrPH2k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FejN1f3AwhVNqYXSJXXR4eUwRh4HNWzVrswMrehiTlRODs8EoteoSAMTjfaPrp9Gm
-	 6E1TI22QR4qSayN+VxR4vUD451H83tm/HRmelodGDJ7uEIKh9kokWeeCa4LCivDexp
-	 ly6ul4jHlMZWGQP0nPHTF5YfxQoeQcea5+J9tYWY=
+	by mail.kernel.org (Postfix) with ESMTP id A432A2073A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 09:17:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dDaNLch6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgEFJQd (ORCPT
+        id S1728714AbgEFJRP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 05:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbgEFJQd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 May 2020 05:16:33 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D66720714;
-        Wed,  6 May 2020 09:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588756592;
-        bh=zALfP4xVA+WvMHMrj3CUbm45HqoM4nmq5AW9bGrPH2k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ffCmxnVjUNbGEYXs7ebndAaB16aD56h/wOafPQ9nhbc3AQTxKanXfu8za8iS2Sj82
-         bmu9jj4FUSEsJyg0unDcCOcQAysGyMS0gP8Fbht+RdDADAC/HhmXIkK2bKk+Uum8ly
-         YmjKIACtYOKj6oQTAulpDDWFMk09Q1iduE77w1Q8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jWGAI-009tyT-Rk; Wed, 06 May 2020 10:16:30 +0100
+        Wed, 6 May 2020 05:17:15 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4952 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728385AbgEFJRO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 05:17:14 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04697PPv015737;
+        Wed, 6 May 2020 11:17:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=VqFBe3qF20cGOA89aBohpMcGBG6ZZWxJV16qNY9PmWo=;
+ b=dDaNLch6Ij6B7YztMRN7x8yS+n+gqvuruXugu/ZEwu3IFMX0KXLTyoIxK9sTCUSxM5cS
+ vdWZdsVrlDYFpgkn3uDbh6byBdO8nhSyeHaAlEm7i4YUoOrGxmpn7OjmFWggLX76/tfC
+ 8pTFBysQpGf+PQZB9nS1HONCBE1kxYEfHaEM15qI2DIxFjuCM6YkVqigngdoFndGDHEP
+ G6JgunUGZv5zfF9NdqLhj8tvFFNCMxfLhIB7GZpWFUsIfl12ltMRfb7jmaPVWoLwz4+B
+ YG6Jo+hlb2tYCLXdLITJ+tiIKjPMjQpsvRfmEkG8v5HZTXYSW81t5UEjxqpaoKjp3yaF MA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30rxmvn3gy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 11:17:02 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B75BA100034;
+        Wed,  6 May 2020 11:17:01 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 957AE2AB47F;
+        Wed,  6 May 2020 11:17:01 +0200 (CEST)
+Received: from [10.211.5.75] (10.75.127.49) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 6 May
+ 2020 11:17:00 +0200
+Subject: Re: [PATCH v3 00/10] add STM32 FMC2 EBI controller driver
+To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <gregkh@linuxfoundation.org>, <boris.brezillon@collabora.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+References: <1588698668-25288-1-git-send-email-christophe.kerello@st.com>
+From:   Christophe Kerello <christophe.kerello@st.com>
+Message-ID: <dd56b6cb-3e99-0365-b1e6-211549e0ef21@st.com>
+Date:   Wed, 6 May 2020 11:16:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 06 May 2020 10:16:30 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 07/16] arm64: dts: arm: Fix GIC compatible names
-In-Reply-To: <629da7f9-9cc9-ec9e-f175-ef6c90b5e3f1@arm.com>
-References: <20200505165212.76466-1-andre.przywara@arm.com>
- <20200505165212.76466-8-andre.przywara@arm.com>
- <86lfm6tf1f.wl-maz@kernel.org>
- <629da7f9-9cc9-ec9e-f175-ef6c90b5e3f1@arm.com>
-User-Agent: Roundcube Webmail/1.4.3
-Message-ID: <d9ebbc077d70805bed252656dede750b@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: andre.przywara@arm.com, robh@kernel.org, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <1588698668-25288-1-git-send-email-christophe.kerello@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-06_03:2020-05-04,2020-05-06 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-06 09:45, André Przywara wrote:
-> On 05/05/2020 19:25, Marc Zyngier wrote:
->> On Tue, 05 May 2020 17:52:03 +0100,
->> Andre Przywara <andre.przywara@arm.com> wrote:
->>> 
->>> The GIC DT binding only allows a certain combination of DT compatible
->>> strings, mostly just consisting of one name.
->>> 
->>> Drop the combination of multiple names and go with the
->>> "arm,cortex-a15-gic" name for GICv2, as this seems to be the most 
->>> widely
->>> accepted string. "arm,gic-400" would be more correct, but was 
->>> introduced
->>> much later into the kernel's GIC driver.
->>> 
->>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
->>> ---
->>>  arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi | 2 +-
->>>  arch/arm64/boot/dts/arm/juno-base.dtsi           | 2 +-
->>>  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts       | 2 +-
->>>  3 files changed, 3 insertions(+), 3 deletions(-)
->>> 
->>> diff --git a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi 
->>> b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
->>> index 15fe81738e94..61a1750fcdd6 100644
->>> --- a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
->>> +++ b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
->>> @@ -6,7 +6,7 @@
->>> 
->>>  / {
->>>  	gic: interrupt-controller@2c001000 {
->>> -		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
->>> +		compatible = "arm,cortex-a15-gic";
->>>  		#interrupt-cells = <3>;
->>>  		#address-cells = <2>;
->>>  		interrupt-controller;
->>> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi 
->>> b/arch/arm64/boot/dts/arm/juno-base.dtsi
->>> index 3feefd61eb76..62392ab1f880 100644
->>> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
->>> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
->>> @@ -69,7 +69,7 @@
->>>  	};
->>> 
->>>  	gic: interrupt-controller@2c010000 {
->>> -		compatible = "arm,gic-400", "arm,cortex-a15-gic";
->>> +		compatible = "arm,cortex-a15-gic";
->> 
->> Why? GIC-400 is definitely the most correct compatible string. I'd
->> rather see this compatible being generalised to the models rather than
->> only referencing the A15 GIC.
+Hi,
+
+Please do not spend time to review v3.
+V4 has been pushed to fix an issue in YAML bindings.
+
+Regards,
+Christophe Kerello.
+
+On 5/5/20 7:10 PM, Christophe Kerello wrote:
+> The FMC2 functional block makes the interface with: synchronous and
+> asynchronous static devices (such as PSNOR, PSRAM or other memory-mapped
+> peripherals) and NAND flash memories.
+> Its main purposes are:
+>    - to translate AXI transactions into the appropriate external device
+>      protocol
+>    - to meet the access time requirements of the external devices
+> All external devices share the addresses, data and control signals with the
+> controller. Each external device is accessed by means of a unique Chip
+> Select. The FMC2 performs only one access at a time to an external device.
 > 
-> I agree that gic-400 is the far better name, but it was only introduced
-> in v3.16. So omitting arm,cortex-a15-gic would break any kernels before
-> that, which I would like to avoid.
-
-I am not talking about dropping the A15 GIC. I'm saying that both should
-stay. Is there anything in the DT binding that forbids multiple names in
-the compatible property?
-
-> It's actually a pity that we are so picky about the compatible 
-> listings,
-> because the existing combination is actually quite nice: we get
-> compatibility with older DT consumers, but still can say what it
-> actually is.
-> I wonder if I should introduce this combination to the GIC DT binding
-> instead, it seems like there are other users in the tree as well.
+> Changes in v3:
+>   - NAND:
+>     - rename labels used on errors
+>     - add in the commit log the reason to increase FMC2_TIMEOUT_MS (patch 3)
+>     - add Miquel reviewed-by tag (patches 2/4/5/9)
+>   - EBI:
+>     - move in memory folder
+>     - merge MFD and BUS drivers to avoid a MFD driver
+>   - bindings:
+>     - pattern name has been modified
+>     - vendor properties have been modified
+>       - s/_/-/
+>       - add unit suffix (-ns) on timing properties
 > 
-> What do you think?
-
-I'd say that if the binding forbids multiple compatible strings, the
-binding is likely to be wrong. We should fix it, and not make the DTs
-worse as a result of a binding issue.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> Christophe Kerello (10):
+>    mtd: rawnand: stm32_fmc2: manage all errors cases at probe time
+>    mtd: rawnand: stm32_fmc2: remove useless inline comments
+>    mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS for timeouts
+>    mtd: rawnand: stm32_fmc2: cleanup
+>    mtd: rawnand: stm32_fmc2: use FIELD_PREP/FIELD_GET macros
+>    dt-bindings: mtd: update STM32 FMC2 NAND controller documentation
+>    dt-bindings: memory-controller: add STM32 FMC2 EBI controller
+>      documentation
+>    memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
+>    mtd: rawnand: stm32_fmc2: use regmap APIs
+>    mtd: rawnand: stm32_fmc2: get resources from parent node
+> 
+>   .../memory-controllers/st,stm32-fmc2-ebi.yaml      |  261 +++++
+>   .../bindings/mtd/st,stm32-fmc2-nand.yaml           |   19 +-
+>   drivers/memory/Kconfig                             |   10 +
+>   drivers/memory/Makefile                            |    1 +
+>   drivers/memory/stm32-fmc2-ebi.c                    | 1206 ++++++++++++++++++++
+>   drivers/mtd/nand/raw/Kconfig                       |    1 +
+>   drivers/mtd/nand/raw/stm32_fmc2_nand.c             | 1176 ++++++++++---------
+>   7 files changed, 2061 insertions(+), 613 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
+>   create mode 100644 drivers/memory/stm32-fmc2-ebi.c
+> 
