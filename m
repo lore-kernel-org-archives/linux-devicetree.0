@@ -4,229 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC36C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 16:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3085CC4724C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB603208CA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 16:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FC52080D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n4ITJP8Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJ/sVN4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbgEFQ6h (ORCPT
+        id S1729939AbgEFRFb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 12:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45368 "EHLO
+        Wed, 6 May 2020 13:05:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727984AbgEFQ6g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 12:58:36 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47386C061A0F;
-        Wed,  6 May 2020 09:58:36 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r26so3567576wmh.0;
-        Wed, 06 May 2020 09:58:36 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1729414AbgEFRFb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 13:05:31 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3E2FC061A0F;
+        Wed,  6 May 2020 10:05:30 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f11so3206517ljp.1;
+        Wed, 06 May 2020 10:05:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=urL/1Hl7CbQz1tvWJVXBDZwwE0k+bC9CyG/pLzAD9eY=;
-        b=n4ITJP8ZUmskRYarZpj4We/HSjgI/T0Hg9NqtQwemLwUNJVGtEKpWyCyCTp1JMhzQh
-         sUs5YCX/fPYV0E4aDGpKnBg3LUKq/lpro2RImH9LrwMIO/vQnundwo84smYOpH8b2Bll
-         UpYdAtyetbFM3nd9p4PwYvIUqay9wFG/oBUaY6v2jmHSzGu82RYkuOi3Z7Yuwduvgkvr
-         sSKy8B7jfObi65qrK4fWP2YP5cANwiWkDBKhmALtBdfJqeq9Ej5dNDE+cKe9eIGyyEkt
-         oE5oVjtEFr5prUat//7+XyuWae2oXYL7JsF+NQJCwBXjKqbzj8sofzwWLoPEMIWN5rsd
-         7C7A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=i6DgO5+TRdDJq45v1B/zETVA5zYOWCANdfi6IDZAE08=;
+        b=nJ/sVN4kSr6t9IdoSsZPyyOmbUtLWQu7s5b311BEDJvl06V1lFO2Wk5poGrlIbZsWG
+         G8EybU7nSnwfFfkbvCXPrcZUZQIqm16wZ+rPp0O3hQE0JEcsYsFTb3O3J/N12j9y2gzY
+         RBKwbVGcFBA26M8N0u/dDpO8IVTP26eaMkcKJ0052VehWgaqhfAqoGIcUzS/bm+YkiGh
+         Ky74G8aJ+0xjJNlTypLKNlTCx+b/tYENL6cUTpTDZwR/eERinbs/nmOg/5KfmgeHFH8G
+         DQemBq3wpqRb34Ade7odH7pdEztMk6j5BPSz1mhgc2rrp7b5WDgNZtw5mGMw6mWcU5J2
+         Vzgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=urL/1Hl7CbQz1tvWJVXBDZwwE0k+bC9CyG/pLzAD9eY=;
-        b=Z/P9exuENOfcsLabHAj50PGlmUoCa+GS9XD/MsFMjLnB4VASLFop/73mnPPBUxZ3DN
-         t+opijYYem7dbv4juAg/mS1hSVEgm/DaeMgV6x7nZGQqX7tPxnU7fAiTs59ulJTpFpqE
-         xMsF6UGolLhduuFxkE0se8+k3nq3dEPY3Vm70wklSvHViyJvr8r9W1ZMwk0xU7oVb2dc
-         hzjAdXrpiFYxa3aWcer5FjfOzWpE2oRKVPI6FUBXi50uM61zFTuAjruRYsOkdepzTNto
-         VmJiiiTu4bqCdHiz/Y9ncJenxmC9cGux10v/MBd4VwMyOCXEE8dWwmUm52Uebf/FvN9R
-         0oCA==
-X-Gm-Message-State: AGi0PuaeLxCxw+ujsFwFWN+ccnyoQVUaNXs6qiq1GsR7LOuMl6Nq9NJk
-        hzlzAEZYqPkMWWJzbHDY4gU=
-X-Google-Smtp-Source: APiQypLL8NcQW71SlaZlZM66Xm2JGhE9FIsxnUUClaZ7Wp7fOFdRjERSk9KK8D941iPG5yUy/53sng==
-X-Received: by 2002:a1c:a4c2:: with SMTP id n185mr5853495wme.104.1588784313927;
-        Wed, 06 May 2020 09:58:33 -0700 (PDT)
-Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
-        by smtp.gmail.com with ESMTPSA id l16sm3551225wrp.91.2020.05.06.09.58.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 09:58:32 -0700 (PDT)
-Date:   Wed, 6 May 2020 18:58:31 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Mikko Perttunen <cyndis@kapsi.fi>, Sumit Gupta <sumitg@nvidia.com>,
-        catalin.marinas@arm.com, will@kernel.org, jonathanh@nvidia.com,
-        talho@nvidia.com, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
-        mperttunen@nvidia.com, devicetree@vger.kernel.org
-Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
- get BPMP data
-Message-ID: <20200506165831.GD2723987@ulmo>
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
- <20191203174229.GA1721849@ulmo>
- <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
- <20191204091703.d32to5omdm3eynon@vireshk-i7>
- <20191204093339.GA2784830@ulmo>
- <20191204095138.rrul5vxnkprfwmku@vireshk-i7>
- <20200407100520.GA1720957@ulmo>
- <20200427071800.GA3451400@ulmo>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=i6DgO5+TRdDJq45v1B/zETVA5zYOWCANdfi6IDZAE08=;
+        b=X/DJ7g8LVCJd9Mwys2iRezV9obV/srv9ag8+BsKWBCQ1c0MvG/9ou3Gm0YYFWDUShY
+         tvOzxj1Gm1U3URAnukF+bFuWqE6qYdwV0xnuOnH4/KfXstGMWaXd0740ajC41xLhNOoc
+         V1WdeBKgyzR14OeHpwYkl43vCTSl5/8Wf+XISW3nCl9JiQPgKuhQ1tw5adl3DUki6Suw
+         8QTVfpCM+yAOF6K6iN5hlXcWA1pFmDBWj3ZdfvNdEfRPmKwIDOiEggduIbs6BdmwErlU
+         Fshge/A99aQifaAsHxAFCPGB3p2V+NJ1LEaZDdkoPUt/3NZ+6MkN33yku5cUjD39CmId
+         PKsQ==
+X-Gm-Message-State: AGi0PuaNgC34bypz34amyowUGNL1187KFnR0e/KNZR15JGCFA5R4BA+8
+        vSlykkGs70s0mVuUGf3m0CA3doJg
+X-Google-Smtp-Source: APiQypKTUTxtYqnFPuX+HwJKBbGWBlPEj9Ko1LNSd7vmorqXwvlYb84XnkdhwewUOEpEiJLOYMc43Q==
+X-Received: by 2002:a2e:80c1:: with SMTP id r1mr5389478ljg.227.1588784729261;
+        Wed, 06 May 2020 10:05:29 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id d9sm1971851lfa.77.2020.05.06.10.05.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 10:05:28 -0700 (PDT)
+Subject: Re: [PATCH v5 2/6] drm/of: Make drm_of_find_panel_or_bridge() to
+ check graph's presence
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20200418170703.1583-1-digetx@gmail.com>
+ <20200418170703.1583-3-digetx@gmail.com>
+ <20200506164133.GB19296@ravnborg.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f288e704-2fdb-d548-9f5b-8016412dfd3f@gmail.com>
+Date:   Wed, 6 May 2020 20:05:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mJm6k4Vb/yFcL9ZU"
-Content-Disposition: inline
-In-Reply-To: <20200427071800.GA3451400@ulmo>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200506164133.GB19296@ravnborg.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+06.05.2020 19:41, Sam Ravnborg пишет:
+> On Sat, Apr 18, 2020 at 08:06:59PM +0300, Dmitry Osipenko wrote:
+>> When graph isn't defined in a device-tree, the of_graph_get_remote_node()
+>> prints a noisy error message, telling that port node is not found. This is
+>> undesirable behaviour in our case because absence of a panel/bridge graph
+>> is a valid case. Let's check presence of the local port in a device-tree
+>> before proceeding with parsing the graph.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
---mJm6k4Vb/yFcL9ZU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Apr 27, 2020 at 09:18:00AM +0200, Thierry Reding wrote:
-> On Tue, Apr 07, 2020 at 12:05:20PM +0200, Thierry Reding wrote:
-> > On Wed, Dec 04, 2019 at 03:21:38PM +0530, Viresh Kumar wrote:
-> > > On 04-12-19, 10:33, Thierry Reding wrote:
-> > > > Yeah, the code that registers this device is in drivers/base/cpu.c =
-in
-> > > > register_cpu(). It even retrieves the device tree node for the CPU =
-=66rom
-> > > > device tree and stores it in cpu->dev.of_node, so we should be able=
- to
-> > > > just pass &cpu->dev to tegra_bpmp_get() in order to retrieve a refe=
-rence
-> > > > to the BPMP.
-> > > >=20
-> > > > That said, I'm wondering if perhaps we could just add a compatible
-> > > > string to the /cpus node for cases like this where we don't have an
-> > > > actual device representing the CPU complex. There are a number of C=
-PU
-> > > > frequency drivers that register dummy devices just so that they have
-> > > > something to bind a driver to.
-> > > >=20
-> > > > If we allow the /cpus node to represent the CPU complex (if no other
-> > > > "device" does that yet), we can add a compatible string and have the
-> > > > cpufreq driver match on that.
-> > > >=20
-> > > > Of course this would be slightly difficult to retrofit into existing
-> > > > drivers because they'd need to remain backwards compatible with exi=
-sting
-> > > > device trees. But it would allow future drivers to do this a little=
- more
-> > > > elegantly. For some SoCs this may not matter, but especially once y=
-ou
-> > > > start depending on additional resources this would come in handy.
-> > > >=20
-> > > > Adding Rob and the device tree mailing list for feedback on this id=
-ea.
-> > >=20
-> > > Took some time to find this thread, but something around this was
-> > > suggested by Rafael earlier.
-> > >=20
-> > > https://lore.kernel.org/lkml/8139001.Q4eV8YG1Il@vostro.rjw.lan/
-> >=20
-> > I gave this a try and came up with the following:
-> >=20
-> > --- >8 ---
-> > diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot=
-/dts/nvidia/tegra194.dtsi
-> > index f4ede86e32b4..e4462f95f0b3 100644
-> > --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> > +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> > @@ -1764,6 +1764,9 @@ bpmp_thermal: thermal {
-> >  	};
-> > =20
-> >  	cpus {
-> > +		compatible =3D "nvidia,tegra194-ccplex";
-> > +		nvidia,bpmp =3D <&bpmp>;
-> > +
-> >  		#address-cells =3D <1>;
-> >  		#size-cells =3D <0>;
-> > =20
-> > --- >8 ---
-> >=20
-> > Now I can do something rougly like this, although I have a more complete
-> > patch locally that also gets rid of all the global variables because we
-> > now actually have a struct platform_device that we can anchor everything
-> > at:
-> >=20
-> > --- >8 ---
-> > static const struct of_device_id tegra194_cpufreq_of_match[] =3D {
-> > 	{ .compatible =3D "nvidia,tegra194-ccplex", },
-> > 	{ /* sentinel */ }
-> > };
-> > MODULE_DEVICE_TABLE(of, tegra194_cpufreq_of_match);
-> >=20
-> > static struct platform_driver tegra194_ccplex_driver =3D {
-> > 	.driver =3D {
-> > 		.name =3D "tegra194-cpufreq",
-> > 		.of_match_table =3D tegra194_cpufreq_of_match,
-> > 	},
-> > 	.probe =3D tegra194_cpufreq_probe,
-> > 	.remove =3D tegra194_cpufreq_remove,
-> > };
-> > module_platform_driver(tegra194_ccplex_driver);
-> > --- >8 ---
-> >=20
-> > I don't think that's exactly what Rafael (Cc'ed) had in mind, since the
-> > above thread seems to have mostly talked about binding a driver to each
-> > individual CPU.
-> >=20
-> > But this seems a lot better than having to instantiate a device from
-> > scratch just so that a driver can bind to it and it allows additional
-> > properties to be associated with the CCPLEX device.
-> >=20
-> > Rob, any thoughts on this from a device tree point of view? The /cpus
-> > bindings don't mention the compatible property, but there doesn't seem
-> > to be anything in the bindings that would prohibit its use.
-> >=20
-> > If we can agree on that, I can forward my local changes to Sumit for
-> > inclusion or reference.
->=20
-> Rob, do you see any reason why we shouldn't be able to use a compatible
-> string in the /cpus node for devices such as Tegra194 where there is no
-> dedicated hardware block for the CCPLEX?
-
-Rob, can you take a brief look and provide some feedback on this? I'd
-like to get this merged for v5.8 and where to instantiate this is the
-only thing holding this up at this point.
-
-Thanks,
-Thierry
-
---mJm6k4Vb/yFcL9ZU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6y7LQACgkQ3SOs138+
-s6H8fhAAsblr+qgCiB7yS180H3p6InsOYHfDulKJs1Q5JgPntHbYFHnkkOY8ciHS
-3FYgPS7F1UEbIq3hSKsd9W/eEaAEPI9wCah03JEUQwhICaIJRDjyT8ZRN4hNxtDW
-DBI0TfsGIz+DwjbNkfYdjoSzACDUKtq4ROeJxo2qIUdAwNxlQ5c0coSma3EgPocA
-AUwQ2dn+26tXF6ghTdmwT30rrXAHsZ8mMAawS0FmFgXIQhRrRTTmoMz+Khi8H8/I
-UfKmF5wHXnWRGMViKrlotwr5imKryi5IWHjTTgppCNHHWZXqRVgfjz1d8VIMxSrd
-hPchNhx+kE43wsf030h2TAhmdQ4YONqRCthET4UmAcK2H+OzOIpwdb9ukJxx0NxU
-5EGuPpOGeZc8pIkWtGt9tbKmxUf4CijBbc01FbTXAnX6oVl12MnXu2QiyMXNh9qM
-AEyuxG0cbKDDSVDqnjqiZtsBiicNnsR3aZE/bKLWA3ZaoloqKJTKM/c1k0WV/ea8
-OPE5lmwoEJCtIL2I/TYKaOexVYuXcO2JjLNVhJ7gKbXB0CGblDygcvvKV/bbivSU
-Osn/wiXGz8fen/IBfWGG5VAwXr79aMn89EJeKkUqXGMhJ+CW+Lk5XhA4WxGE/44/
-POtwuKsO4lFKLthTmNkAwhy4zLnYTRJ769DSUzNdpaRs1h4+lcU=
-=frvo
------END PGP SIGNATURE-----
-
---mJm6k4Vb/yFcL9ZU--
+Thank you again for taking a look at these patches!
