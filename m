@@ -2,127 +2,187 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED58C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043D6C47257
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA534207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58242076D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588791791;
-	bh=Yqg0FR03ICsngX2rB2sb2xuYkFg82NaW1zU2YIloR8Y=;
+	s=default; t=1588792074;
+	bh=vEk1l0b0aFjTQ+QBNrJc+lWz02KZWQQiVF4ewewFykU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FXgzgPQLfc4UufDHKe5nAVvo4gkspwG9tgXvQolscIyNIdV23UIe952dn7gc9GeBA
-	 jp4HSH5o9yB7FoIKxQ0+m1GxscMr0t9NorW/TZNpg5g6SkjnhnvgRv6v1tSMjcghhu
-	 al79CalNDbi6QZp/ECPGJSNtC5IMQb8DPVX680WE=
+	b=d6IEfNJZQR7CjdB+vla+UUqgcM9+LnRf4Dq6qcei9SOpSRuiQum3Jo6O07FXahT3+
+	 e6Cq6hiu36tTwJXTQS66F8nk+9dNsJ5I5srbAJWBmd4LBlBkYg+J8AyHmaPn317hop
+	 ibhG5fbbrpR3oOrCV9wRuw48+xeI/+28bYM4NMB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgEFTDL (ORCPT
+        id S1727977AbgEFTHt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 15:03:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60740 "EHLO mail.kernel.org"
+        Wed, 6 May 2020 15:07:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbgEFTDK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 May 2020 15:03:10 -0400
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+        id S1725966AbgEFTHt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 May 2020 15:07:49 -0400
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2539520A8B;
-        Wed,  6 May 2020 19:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5422E2082E;
+        Wed,  6 May 2020 19:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588791790;
-        bh=Yqg0FR03ICsngX2rB2sb2xuYkFg82NaW1zU2YIloR8Y=;
+        s=default; t=1588792068;
+        bh=vEk1l0b0aFjTQ+QBNrJc+lWz02KZWQQiVF4ewewFykU=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bflTPGqsgd+C46NDp/kwSeS28/ILDYVhFL2jv6BZuKjpMUR/ktwXLjhxxhqV4DNxw
-         BdV11rDjdoML/1GZLEggZCBW3Rv5+aD1y+3mF+n45ozmDuANoOdC0IriusDb27jvo9
-         q1hg6eJ4AJRQ26qvWHRcDAwDx1PTrIFvQ0txMZVk=
-Received: by mail-ot1-f43.google.com with SMTP id i27so2269092ota.7;
-        Wed, 06 May 2020 12:03:10 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZEh5UQxYharW/JZCj4jfLCggDzrUz/geGqhTsr1EzUkIr8Vxo1
-        KmI4Uxy3tiSQbG9DLSvOB1Gbilms3QdG7gAbiQ==
-X-Google-Smtp-Source: APiQypK+MaFY1Iurl8mjdABioyqSrQP03zlo2Xmdf7/+1qRLRnupLAu9sz8qI0nEExTPXKjiGpEvDyKMczIxLkNxBhk=
-X-Received: by 2002:a9d:1441:: with SMTP id h59mr7763912oth.192.1588791789287;
- Wed, 06 May 2020 12:03:09 -0700 (PDT)
+        b=0QsngKDy/UO8gxrQY1fAvH4QzO5WeKaDcfHIrnt7woYWDCCvSKkxaileozhDC5MLB
+         oqElanvadLKbqmBxOniFXtHkRMO0N4OOfFFIWvjqESHoITgf3Q5q8AL8WDQjWccAA0
+         EKJ2mhJVOx15ruRXrdP/nTwYnOKmlvMyjBPxCFvw=
+Received: by mail-oi1-f182.google.com with SMTP id x7so1852127oic.3;
+        Wed, 06 May 2020 12:07:48 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYzYydBbUhhFhjcDSPtrZ+aFI1Njo74rG7KVPggs3yNSvqtydhe
+        Td90S1TZ13miPVo7+rfseoLf5nSQ70Cwq/xByw==
+X-Google-Smtp-Source: APiQypIxk+82zWtS2WRfVpiOgxoVhgubSQ/9B246d0TSOVrM2QLI+fFAW4fIxOBrlbcY7o4Hsx5IbKqmonMdFvVQz7c=
+X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr4069585oie.152.1588792067520;
+ Wed, 06 May 2020 12:07:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200427124931.115697-1-amirmizi6@gmail.com> <20200427124931.115697-7-amirmizi6@gmail.com>
- <20200505161226.GA555@bogus> <c2760659-ec14-237e-e060-5d9a2d7c7e4a@gmail.com>
-In-Reply-To: <c2760659-ec14-237e-e060-5d9a2d7c7e4a@gmail.com>
+References: <20200501205011.14899-1-grygorii.strashko@ti.com>
+ <20200501205011.14899-2-grygorii.strashko@ti.com> <20200505040419.GA8509@bogus>
+ <b8bb1076-e345-5146-62d3-e1da1d35da4f@ti.com>
+In-Reply-To: <b8bb1076-e345-5146-62d3-e1da1d35da4f@ti.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 6 May 2020 14:02:57 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLEkoa1+nnWBQHah14_6BozkMzjcSpbk-hhLS=Rnqaa8Q@mail.gmail.com>
-Message-ID: <CAL_JsqLEkoa1+nnWBQHah14_6BozkMzjcSpbk-hhLS=Rnqaa8Q@mail.gmail.com>
-Subject: Re: [PATCH v7 6/7] tpm: Add YAML schema for TPM TIS I2C options
-To:     Amir Mizinski <amirmizi6@gmail.com>
-Cc:     Eyal.Cohen@nuvoton.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Oshri Alkobi <oshrialkoby85@gmail.com>,
-        Alexander Steffen <alexander.steffen@infineon.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        benoit.houyere@st.com, Eddie James <eajames@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org,
+Date:   Wed, 6 May 2020 14:07:35 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+P_OEFDBbAsvyCCOKZnQuAUYYnyDDwm7aNudN3pRK78g@mail.gmail.com>
+Message-ID: <CAL_Jsq+P_OEFDBbAsvyCCOKZnQuAUYYnyDDwm7aNudN3pRK78g@mail.gmail.com>
+Subject: Re: [PATCH net-next 1/7] dt-binding: ti: am65x: document common
+ platform time sync cpts module
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Richard Cochran <richardcochran@gmail.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tero Kristo <t-kristo@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        netdev <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
-        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, IS30 Dan Morav <Dan.Morav@nuvoton.com>,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 6, 2020 at 10:20 AM Amir Mizinski <amirmizi6@gmail.com> wrote:
+On Tue, May 5, 2020 at 10:01 AM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 >
 >
-> On 2020-05-05 16:12, Rob Herring wrote:
-> > On Mon, Apr 27, 2020 at 03:49:30PM +0300, amirmizi6@gmail.com wrote:
-> >> From: Amir Mizinski <amirmizi6@gmail.com>
+>
+> On 05/05/2020 07:04, Rob Herring wrote:
+> > On Fri, May 01, 2020 at 11:50:05PM +0300, Grygorii Strashko wrote:
+> >> Document device tree bindings for TI AM654/J721E SoC The Common Platform
+> >> Time Sync (CPTS) module. The CPTS module is used to facilitate host control
+> >> of time sync operations. Main features of CPTS module are:
+> >>    - selection of multiple external clock sources
+> >>    - 64-bit timestamp mode in ns with ppm and nudge adjustment.
+> >>    - control of time sync events via interrupt or polling
+> >>    - hardware timestamp of ext. events (HWx_TS_PUSH)
+> >>    - periodic generator function outputs (TS_GENFx)
+> >>    - PPS in combination with timesync router
+> >>    - Depending on integration it enables compliance with the IEEE 1588-2008
+> >> standard for a precision clock synchronization protocol, Ethernet Enhanced
+> >> Scheduled Traffic Operations (CPTS_ESTFn) and PCIe Subsystem Precision Time
+> >> Measurement (PTM).
 > >>
-> >> Added a YAML schema to support tpm tis i2c related dt-bindings for the I2c
-> >> PTP based physical layer.
+> >> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> >> ---
+> >>   .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |   7 +
+> >>   .../bindings/net/ti,k3-am654-cpts.yaml        | 152 ++++++++++++++++++
+> >>   2 files changed, 159 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
 > >>
-> >> This patch adds the documentation for corresponding device tree bindings of
-> >> I2C based Physical TPM.
-> >> Refer to the 'I2C Interface Definition' section in
-> >> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
-> >> for specification.
-> >
-> > Again, DT bindings describe h/w devices, not just a protocol. A device
-> > is more than just a protocol interface. There's clocks, power rails,
-> > resets, interrupts, firmware, etc.
-> >
-> > Unless there's something special about TPM chips that makes none of this
-> > applicable and no chip will ever have any quirks (or extensions) in
-> > their protocol to work-around, then you need compatible string(s) that
-> > are specific to the TPM chip. You can have tcg,tpm-tis-i2c as a
-> > fallback, but you need specific compatible to handle any quirks.
-> >
-> > Rob
+> >> diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> >> index 78bf511e2892..0f3fde45e200 100644
+> >> --- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> >> +++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> >> @@ -144,6 +144,13 @@ patternProperties:
+> >>       description:
+> >>         CPSW MDIO bus.
+> >>
+> >> +  "^cpts$":
 >
-> Hello Rob, currently yes. All TPM chip are implemented according to the TGC specs and should use the same properties for this I2C driver.
-> I can't say for sure that it will be the case in the future.
+> ok
+>
+> >
+> > Fixed strings go under 'properties'.
+> >
+> >> +    type: object
+> >> +    allOf:
+> >> +      - $ref: "ti,am654-cpts.yaml#"
+> >> +    description:
+> >> +      CPSW Common Platform Time Sync (CPTS) module.
+> >> +
+> >>   required:
+> >>     - compatible
+> >>     - reg
+> >> diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+> >> new file mode 100644
+> >> index 000000000000..1b535d41e5c6
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+> >> @@ -0,0 +1,152 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/net/ti,am654-cpts.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: The TI AM654x/J721E Common Platform Time Sync (CPTS) module Device Tree Bindings
+> >> +
+> >> +maintainers:
+> >> +  - Grygorii Strashko <grygorii.strashko@ti.com>
+> >> +  - Sekhar Nori <nsekhar@ti.com>
+> >> +
+> >> +description: |+
+> >> +  The TI AM654x/J721E CPTS module is used to facilitate host control of time
+> >> +  sync operations.
+> >> +  Main features of CPTS module are
+> >> +  - selection of multiple external clock sources
+> >> +  - Software control of time sync events via interrupt or polling
+> >> +  - 64-bit timestamp mode in ns with PPM and nudge adjustment.
+> >> +  - hardware timestamp push inputs (HWx_TS_PUSH)
+> >> +  - timestamp counter compare output (TS_COMP)
+> >> +  - timestamp counter bit output (TS_SYNC)
+> >> +  - periodic Generator function outputs (TS_GENFx)
+> >> +  - Ethernet Enhanced Scheduled Traffic Operations (CPTS_ESTFn) (TSN)
+> >> +  - external hardware timestamp push inputs (HWx_TS_PUSH) timestamping
+> >> +
+> >> +   Depending on integration it enables compliance with the IEEE 1588-2008
+> >> +   standard for a precision clock synchronization protocol, Ethernet Enhanced
+> >> +   Scheduled Traffic Operations (CPTS_ESTFn) and PCIe Subsystem Precision Time
+> >> +   Measurement (PTM).
+> >> +
+> >> +  TI AM654x/J721E SoCs has several similar CPTS modules integrated into the
+> >> +  different parts of the system which could be synchronized with each other
+> >> +  - Main CPTS
+> >> +  - MCU CPSW CPTS with IEEE 1588-2008 support
+> >> +  - PCIe subsystem CPTS for PTM support
+> >> +
+> >> +  Depending on CPTS module integration and when CPTS is integral part of
+> >> +  another module (MCU CPSW for example) "compatible" and "reg" can
+> >> +  be omitted - parent module is fully responsible for CPTS enabling and
+> >> +  configuration.
+> >
+> > That's fine, but you should still have compatible and reg.
+>
+> I'll add reg as below. But compatible is an issue, because
+> k3-am654-cpsw-nuss call of_platform_populate() to create mdio device.
+> But for CPTS I do not want to create device as k3-am654-cpsw-nuss uses direct
+> function calls to CPTS.
+>
+> Will it be correct to switch to of_platform_device_create() instead of
+> of_platform_populate()?
 
-Exactly. That's the issue. If you have just "tcg,tpm-tis-i2c" and need
-to handle some difference in the future, then you can't without
-updating the DT. You must be able to handle future issues without
-updating the DT.
-
-> Shouldn't we use the standard "tcg,tpm-tis-i2c" compatible, and if a specific TPM chip will deviate from the specs, the vendor should add an additional compatible string for it?
-
-Name something where multiple vendors have implemented a spec and
-there's no deviation. It simply doesn't exist. How would you know?
-
-Does the TPM spec define all the things I listed above outside of just
-the I2C protocol?
-
-Also, what version of the spec is "tcg,tpm-tis-i2c"? Few specs have
-only 1 version.
+That should be fine I think.
 
 Rob
