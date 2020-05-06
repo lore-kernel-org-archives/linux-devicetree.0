@@ -2,84 +2,90 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C39AC28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E527C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 406F320747
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588793797;
-	bh=uAMQvip1+58/TgaaSbFxo+PJakeM582Z+rHAF7IZJf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2SBQZx+XXLY3a8Q63vGfT+8cWeml9p3N5j/nRUpwLZD40lJvDOA6bmQb8tYbzKvv3
-	 eUCyATq23osJc8/ETopywKfcMHJdIoTckxQelMLKBHZtfO+AZOVplejbjGJTiQWsQP
-	 rXdr5dnHGwI/PgjEYIzCz7xYOCqEQWr4TIGEU/gk=
+	by mail.kernel.org (Postfix) with ESMTP id 3E76E2080D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgEFTgg (ORCPT
+        id S1726093AbgEFTvw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 15:36:36 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46284 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728531AbgEFTgg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 15:36:36 -0400
-Received: by mail-oi1-f193.google.com with SMTP id c124so2620735oib.13;
-        Wed, 06 May 2020 12:36:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rnfpFrTk6qQXOr8sM3/2W6CmEzipxR2+8pAqFytyXqI=;
-        b=pYMSbESToWSZRgzeGNHGjAWZbELb7qL3F9lB6ZzfFbpNN2bj1+u0ns5tN4xophy300
-         8BN/dcaWq5Gzs8qkHtiim0xNbfjJN7nH/amAXl9yv8bNcobucSI4+Bi3bTzv2TPGy7me
-         HHpZyxcJJfnC1jxufTxrooaoFmkGBRvEKVzlDPAnh4mCj5MWZUa87H5Op8M3+r1kIDvG
-         FJ/t32QcwZd5+BEs+wzm8koAPtNCu3KAR/PR7BF/Ga+NJ8/Gxej0TbNCBpiSBE0rOHWh
-         NsaOK075ZfDD80RyS9oEQRkvGYuzfditjNP9whMw77mnIoh2Ynp+YH6mXL9hYCYh584V
-         T2tw==
-X-Gm-Message-State: AGi0PuYTEWGXRo0UaqERlZcxD0ApmFWcEZzaWHCThRtjDyqClsXXE754
-        60Ff0yOrzP7YDDyderc35Q==
-X-Google-Smtp-Source: APiQypK/PKmOgedCZiIdqA69OthKkxGU0LMfRCwhmWEdBjKXwWsK4lkiQOyMamTfj38oAd46ZV0DbA==
-X-Received: by 2002:aca:4541:: with SMTP id s62mr4017103oia.100.1588793795634;
-        Wed, 06 May 2020 12:36:35 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s69sm770207otb.4.2020.05.06.12.36.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 12:36:34 -0700 (PDT)
-Received: (nullmailer pid 21850 invoked by uid 1000);
-        Wed, 06 May 2020 19:36:34 -0000
-Date:   Wed, 6 May 2020 14:36:34 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au,
-        andrew@aj.id.au, eajames@linux.ibm.com
-Subject: Re: [PATCH v11 1/8] dt-bindings: soc: Add Aspeed XDMA Engine
-Message-ID: <20200506193634.GA21647@bogus>
-References: <1588697905-23444-1-git-send-email-eajames@linux.ibm.com>
- <1588697905-23444-2-git-send-email-eajames@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588697905-23444-2-git-send-email-eajames@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 6 May 2020 15:51:52 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:51023 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725799AbgEFTvw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 15:51:52 -0400
+X-IronPort-AV: E=Sophos;i="5.73,360,1583161200"; 
+   d="scan'208";a="46431211"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 07 May 2020 04:51:50 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 6DF984003EC8;
+        Thu,  7 May 2020 04:51:46 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/9] RZ/G1H describe IRQC, [H]SCIF{A|B} and GPIO nodes
+Date:   Wed,  6 May 2020 20:51:26 +0100
+Message-Id: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue,  5 May 2020 11:58:18 -0500, Eddie James wrote:
-> Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  .../devicetree/bindings/soc/aspeed/xdma.yaml       | 103 +++++++++++++++++++++
->  MAINTAINERS                                        |   6 ++
->  2 files changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
-> 
+Hi All,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This patch series describes irqc, serial and gpio controllers on
+R8A7742 SoC.
+
+* Patch 1/9 is from series [1], which added initial basic support for
+  iW-RainboW-G21D-Qseven development board.
+* Patches 2-9 are from series [2] ("Add R8A7742/RZG1H board support")
+
+Cheers,
+Prabhakar
+
+[1] https://lkml.org/lkml/2020/5/3/294
+[2] https://lkml.org/lkml/2020/4/29/1300
+
+Lad Prabhakar (9):
+  dt-bindings: mmc: renesas,mmcif: Document r8a7742 DT bindings
+  dt-bindings: irqchip: renesas-irqc: Document r8a7742 bindings
+  ARM: dts: r8a7742: Add IRQC support
+  dt-bindings: serial: renesas,scif: Document r8a7742 bindings
+  dt-bindings: serial: renesas,scifb: Document r8a7742 bindings
+  dt-bindings: serial: renesas,hscif: Document r8a7742 bindings
+  ARM: dts: r8a7742: Add [H]SCIF{A|B} support
+  dt-bindings: gpio: renesas,gpio-rcar: Add r8a7742 (RZ/G1H) support
+  ARM: dts: r8a7742: Add GPIO nodes
+
+ .../bindings/gpio/renesas,gpio-rcar.txt       |   1 +
+ .../interrupt-controller/renesas,irqc.yaml    |   1 +
+ .../devicetree/bindings/mmc/renesas,mmcif.txt |   5 +-
+ .../bindings/serial/renesas,hscif.yaml        |   1 +
+ .../bindings/serial/renesas,scif.yaml         |   1 +
+ .../bindings/serial/renesas,scifb.yaml        |   1 +
+ arch/arm/boot/dts/r8a7742.dtsi                | 259 ++++++++++++++++++
+ 7 files changed, 267 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
