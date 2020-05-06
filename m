@@ -4,44 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32429C4724C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAE8C4725B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6762080D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A755F2080D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 17:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgEFRoA (ORCPT
+        id S1730325AbgEFRo1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 13:44:00 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60848 "EHLO
+        Wed, 6 May 2020 13:44:27 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:32852 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbgEFRoA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 13:44:00 -0400
+        with ESMTP id S1730167AbgEFRo0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 13:44:26 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id EE32B8030790;
-        Wed,  6 May 2020 17:43:57 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 234AA8000B84;
+        Wed,  6 May 2020 17:44:21 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dw2DhZ5V0vNK; Wed,  6 May 2020 20:43:57 +0300 (MSK)
+        with ESMTP id Z08SmWcnA9yN; Wed,  6 May 2020 20:44:20 +0300 (MSK)
 From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 08/20] mips: Fix cpu_has_mips64r1/2 activation for MIPS32 CPUs
-Date:   Wed, 6 May 2020 20:42:26 +0300
-Message-ID: <20200506174238.15385-9-Sergey.Semin@baikalelectronics.ru>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 15/20] mips: cdmm: Add mti,mips-cdmm dtb node support
+Date:   Wed, 6 May 2020 20:42:33 +0300
+Message-ID: <20200506174238.15385-16-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
  <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
@@ -56,60 +55,64 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Commit 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA
-allows") updated the cpu_has_mips* macro to be replaced with a constant
-expression where it's possible. By mistake it wasn't done correctly
-for cpu_has_mips64r1/cpu_has_mips64r2 macro. They are defined to
-be replaced with conditional expression __isa_range_or_flag(), which
-means either ISA revision being within the range or the corresponding
-CPU options flag was set at the probe stage or both being true at the
-same time. But the ISA level value doesn't indicate whether the ISA is
-MIPS32 or MIPS64. Due to this if we select MIPS32r1 - MIPS32r5
-architectures the __isa_range() macro will activate the
-cpu_has_mips64rX flags, which is incorrect. In order to fix the
-problem we added a new macro __isa_range_and_flag() and use it to
-define the cpu_has_mips64r1/cpu_has_mips64r2 flags.
+Since having and mapping the CDMM block is platform specific, then
+instead of just returning a zero-address, lets make the default CDMM
+base address search method (mips_cdmm_phys_base()) to do something
+useful. For instance to find the address in a dedicated dtb-node in
+order to support of-based platforms by default.
 
-Fixes: 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA allows")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
 Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
 Cc: linux-pm@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 ---
- arch/mips/include/asm/cpu-features.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/bus/mips_cdmm.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
-index e2f31bd6363b..7e22b9c1e279 100644
---- a/arch/mips/include/asm/cpu-features.h
-+++ b/arch/mips/include/asm/cpu-features.h
-@@ -64,6 +64,8 @@
- 	((MIPS_ISA_REV >= (ge)) && (MIPS_ISA_REV < (lt)))
- #define __isa_range_or_flag(ge, lt, flag) \
- 	(__isa_range(ge, lt) || ((MIPS_ISA_REV < (lt)) && __isa(flag)))
-+#define __isa_range_and_flag(ge, lt, flag) \
-+	(__isa_range(ge, lt) && __isa(flag))
+diff --git a/drivers/bus/mips_cdmm.c b/drivers/bus/mips_cdmm.c
+index 1b14256376d2..7faa8c049f07 100644
+--- a/drivers/bus/mips_cdmm.c
++++ b/drivers/bus/mips_cdmm.c
+@@ -16,6 +16,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/smp.h>
++#include <linux/of_address.h>
++#include <linux/of.h>
+ #include <asm/cdmm.h>
+ #include <asm/hazards.h>
+ #include <asm/mipsregs.h>
+@@ -337,9 +339,22 @@ static phys_addr_t mips_cdmm_cur_base(void)
+  * Picking a suitable physical address at which to map the CDMM region is
+  * platform specific, so this weak function can be overridden by platform
+  * code to pick a suitable value if none is configured by the bootloader.
++ * By default this method tries to find a CDMM-specific node in the system
++ * dtb. Note that this won't work for early serial console.
+  */
+ phys_addr_t __weak mips_cdmm_phys_base(void)
+ {
++	struct device_node *np;
++	struct resource res;
++	int err;
++
++	np = of_find_compatible_node(NULL, NULL, "mti,mips-cdmm");
++	if (np) {
++		err = of_address_to_resource(np, 0, &res);
++		if (!err)
++			return res.start;
++	}
++
+ 	return 0;
+ }
  
- /*
-  * SMP assumption: Options of CPU 0 are a superset of all processors.
-@@ -291,10 +293,10 @@
- # define cpu_has_mips32r6	__isa_ge_or_flag(6, MIPS_CPU_ISA_M32R6)
- #endif
- #ifndef cpu_has_mips64r1
--# define cpu_has_mips64r1	__isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1)
-+# define cpu_has_mips64r1	__isa_range_and_flag(1, 6, MIPS_CPU_ISA_M64R1)
- #endif
- #ifndef cpu_has_mips64r2
--# define cpu_has_mips64r2	__isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2)
-+# define cpu_has_mips64r2	__isa_range_and_flag(2, 6, MIPS_CPU_ISA_M64R2)
- #endif
- #ifndef cpu_has_mips64r6
- # define cpu_has_mips64r6	__isa_ge_and_flag(6, MIPS_CPU_ISA_M64R6)
 -- 
 2.25.1
 
