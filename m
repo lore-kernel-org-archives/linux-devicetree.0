@@ -7,90 +7,91 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA80C47256
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4FCC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 20:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBC02078C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 19:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BCBC2070B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 20:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588795162;
-	bh=rmZabe06EpzDUel3riEAfauHROJwfYA0XDeLDRE3n00=;
+	s=default; t=1588795562;
+	bh=jgUN3vH86IMh5mdQ2oTFFzDPwb5XgPKGZ/pa709lY+A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eJ8j0CqS9UBXljOzy5GKwoWcNCQmrwePyTwMQELolyFV/olUAyVhR9cFONkLnJ2fe
-	 p5FtCVpvbD+WdYT5Zm3LKEu+XZl5swT3JVNhwGZ3LdIufQlwvymq87VMXzjXyXErl+
-	 PRe2MzbumCKNcvKtPXo7cGkBcBtCgEpNAYRgn9EY=
+	b=HysGGlWevS5r+UBECixMeIQekN4+tjcEBPZiXs+ayPvbHX33w+cfZRxceS67MhFDP
+	 ImnDEEOWBa+sA6+VFLTofVhC0k6kCffcaWmK9DAr1YvJHo8mk3aq2oi5iDKUlvTJ3q
+	 STDDGTDEVeaBNFXSA08VTYn1TeNwbz9aKOSJkX7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgEFT7V (ORCPT
+        id S1727102AbgEFUGB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 15:59:21 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37407 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbgEFT7T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 15:59:19 -0400
-Received: by mail-oi1-f194.google.com with SMTP id r25so2911507oij.4;
-        Wed, 06 May 2020 12:59:18 -0700 (PDT)
+        Wed, 6 May 2020 16:06:01 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33649 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbgEFUGB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 16:06:01 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j26so2466920ots.0;
+        Wed, 06 May 2020 13:06:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bO0DJaCUE0XKssvRg38lswObA4y7SjfSv2q1CR1u7z0=;
-        b=Gi5chG4/JpnzOfFxkdDoZ4tjGs17v118ckN6didtg16/EukLeaUZD1bs0kTOLQTNCN
-         Rqb1wUSdD6GEKn51f1TKUlENsLIRR4fUYPfuV4M7TP/e2Duw5Pjga7J6aJmNUGv+Zaor
-         grWff5+9uuBFQyVK2xszT3oWyi3/z88h2m30b8AIQ2n19+XSnSFyNIQ0YLFnwhO6G82/
-         4C4SjypEnAFUqaxnNkyVGrwuVW/InwdW5YWYn38kLkZ4XUVjXWoQO+zM4Uk7j+S12DRo
-         IbnVmgarOVVFIprodTFa8xi8S7YS1w63iJGVgjx1GdXHpYxaHMFApB8Kx37y7LVJQ5vm
-         H7NA==
-X-Gm-Message-State: AGi0PuaGD3GtV4Sry6aedSWGhlFBou6gceYwDs+6nN3eDoWBah2+yeFP
-        cF4vPf9BmRsY06gMbuvF/w==
-X-Google-Smtp-Source: APiQypLR5WjjYamVAcv6tfzD1IA0+5vseecA/FXkvzZpzsWL3ae3CrTRLxA9Orkli3Z7VBOdSdow2Q==
-X-Received: by 2002:a54:4811:: with SMTP id j17mr3960001oij.29.1588795158503;
-        Wed, 06 May 2020 12:59:18 -0700 (PDT)
+        bh=B63JfAS5DnOPIn359Mu4SF2juiHItV8fI+NFsKVSGD8=;
+        b=DChIcMBiLpGLDrQEQ0IP/DMerBwX31AM3hgbGh3e3SQNqh61k4Ego6Uc6fwkmjYYvo
+         aOMV+uX5Am41yjHEHZiTQEYbreT7d6o2EvF22u9o13ppd8TM6XWSoHV+AxDxUa/q0NkV
+         EXcFMBEhQCmX7him5tdQGUBiKmD5fz3KHs8uV0ItJ9QKmfWTqSBy80TYbJF8KbaKolFZ
+         nxVxgXFDGg/EdLRncS0XYc23OCN6bh5qa5N1nQYR3y7DMjLyuk/OHCDGF7MIq+e1SQ+M
+         34SpGixsbZDDlE2eCVcyXL6Ge12iw1hrhE2+WHLcamwScfMFw5yIciXJuDiMhw5kCOMY
+         NL+w==
+X-Gm-Message-State: AGi0PuYqsbW0dpvKiP4fqD1X2uF8S00TUua+IJjQZBK380emkDE+evzC
+        JYvWv/cIGgo/ZVwCjZt+sQ==
+X-Google-Smtp-Source: APiQypIici0Rg+Y4p7bwcYXH235wYgoJGR0SXXaIzkdixkSakfukZtIjV7CDVl+EVrcArRIbhPWfrQ==
+X-Received: by 2002:a05:6830:1e39:: with SMTP id t25mr7785497otr.114.1588795560432;
+        Wed, 06 May 2020 13:06:00 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e13sm767826otj.46.2020.05.06.12.59.17
+        by smtp.gmail.com with ESMTPSA id a22sm774402otf.42.2020.05.06.13.05.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 12:59:17 -0700 (PDT)
-Received: (nullmailer pid 22166 invoked by uid 1000);
-        Wed, 06 May 2020 19:59:16 -0000
-Date:   Wed, 6 May 2020 14:59:16 -0500
+        Wed, 06 May 2020 13:05:59 -0700 (PDT)
+Received: (nullmailer pid 31500 invoked by uid 1000);
+        Wed, 06 May 2020 20:05:58 -0000
+Date:   Wed, 6 May 2020 15:05:58 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     mani@kernel.org
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        devicetree@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
-        linux-serial@vger.kernel.org, fabrice.gasnier@st.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: serial: Document CTS/RTS gpios in
- STM32  UART
-Message-ID: <20200506195916.GA22126@bogus>
-References: <20200420170204.24541-1-mani@kernel.org>
- <20200420170204.24541-2-mani@kernel.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: power: meson-ee-pwrc: add support
+ for  Meson8/8b/8m2
+Message-ID: <20200506200558.GA31434@bogus>
+References: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
+ <20200420202612.369370-2-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200420170204.24541-2-mani@kernel.org>
+In-Reply-To: <20200420202612.369370-2-martin.blumenstingl@googlemail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Apr 2020 22:32:03 +0530, mani@kernel.org wrote:
-> From: Manivannan Sadhasivam <mani@kernel.org>
+On Mon, 20 Apr 2020 22:26:09 +0200, Martin Blumenstingl wrote:
+> The power domains on the 32-bit Meson8/Meson8b/Meson8m2 SoCs are very
+> similar to what G12A still uses. The (known) differences are:
+> - Meson8 doesn't use any reset lines at all
+> - Meson8b and Meson8m2 use the same reset lines, which are different
+>   from what the 64-bit SoCs use
+> - there is no "vapb" clock on the older SoCs
+> - amlogic,ao-sysctrl cannot point to the whole AO sysctrl region but
+>   only the power management related registers
 > 
-> Document the use of CTS/RTS gpios for flow control in STM32 UART
-> controller. These properties can be used instead of 'st,hw-flow-ctrl'
-> for making use of any gpio pins for flow control instead of dedicated
-> pins. It should be noted that both CTS/RTS and 'st,hw-flow-ctrl'
-> properties cannot co-exist in a design.
+> Add a new compatible string and adjust clock and reset line expectations
+> for each SoC.
 > 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../devicetree/bindings/serial/st,stm32-uart.yaml  | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  .../bindings/power/amlogic,meson-ee-pwrc.yaml | 74 +++++++++++++++----
+>  include/dt-bindings/power/meson8-power.h      | 13 ++++
+>  2 files changed, 72 insertions(+), 15 deletions(-)
+>  create mode 100644 include/dt-bindings/power/meson8-power.h
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
