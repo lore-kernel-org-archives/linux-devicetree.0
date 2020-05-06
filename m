@@ -2,82 +2,111 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99858C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F000FC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C52A20714
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCDF720747
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 07:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgEFHkV (ORCPT
+        id S1728292AbgEFHoc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 03:40:21 -0400
-Received: from mga05.intel.com ([192.55.52.43]:36587 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726897AbgEFHkU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 May 2020 03:40:20 -0400
-IronPort-SDR: zFFu9M223WP0/MMosOpIwwvy7gNJt+Sjab1hBN8ElUy2a5R3CuKTGRK3Tj0C2X+8rzOYhcFPvt
- eCRfF9dRP8pg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 00:40:19 -0700
-IronPort-SDR: QirAKY4LxgsJS8I4FdkzFFbfa513ClR/a4N5rxqtKlnQNz8Mz423RJZrNTJ9kiB9uoLAP3i3Ot
- Xtdn6vKb03ng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
-   d="scan'208";a="251127777"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 06 May 2020 00:40:18 -0700
-Received: from [10.213.154.130] (ekotax-mobl.gar.corp.intel.com [10.213.154.130])
-        by linux.intel.com (Postfix) with ESMTP id 50A6658048A;
-        Wed,  6 May 2020 00:40:16 -0700 (PDT)
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, robh@kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
- <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
- <20200429121310.GH4201@sirena.org.uk>
- <28f6511e-fe85-a834-1652-fd70def9ca88@linux.intel.com>
- <20200505112339.GC5377@sirena.org.uk>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <fce0b146-9ffc-839f-d34a-cb37206a0699@linux.intel.com>
-Date:   Wed, 6 May 2020 15:40:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 03:44:32 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34924 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728112AbgEFHob (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 03:44:31 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k110so633234otc.2
+        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 00:44:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+PZSdGjgBrO1ZN1QwTXyPWZrbqZlSLSFkTwxM8ooADM=;
+        b=MCzBdptQ01mkeAp1Re2zdzp2vkjABocDEqhiCfbfVBQSssfZWS08UTjFLih0DK1j84
+         /tBO4xxRU+TUdSwKKNPR6v0pTgWPB6kFm/FPWJMiveHaRj5QRwfClyjRrmRo5C7lpKSz
+         Y3iMocfrZLlSuAouSRza34W5EpEWSvcBl1N0jibjOz/Ax+W15kEsv9UEXmemLu1IiZ+B
+         kE76FOJsJlMEcNPZVBkUD/HqhgFvDRGuTqH4mu/AHSsJWi5TSyeNI+73gKoH/nhnKjkv
+         3FCte0TiXSuFvz7rpHUVCE2fkuK+RPbqR3lOvGzaLm/uh57v4tyB37k8Xaui6CLZrK1E
+         WC7Q==
+X-Gm-Message-State: AGi0PuZetssLNvqzOU2grPw7plv8BH9BgENtPWwn2kKvdqFYp6EQ2Kxt
+        9hf2gVbUE7JHEtzzjNJwUdkhjlWi3TGL9n/Y+j8=
+X-Google-Smtp-Source: APiQypJ+4xFnHOiS2S+JNds3Xmz+4Kuk15I6/2b9iYq7lC5nwvlq/+iCHXAiNqEpGOfxXlsFFKlO5CbDC3CjtSH/Olk=
+X-Received: by 2002:a9d:564:: with SMTP id 91mr5681994otw.250.1588751071000;
+ Wed, 06 May 2020 00:44:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505112339.GC5377@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200501083227.10886-1-ricardo.canuelo@collabora.com> <20200501083227.10886-6-ricardo.canuelo@collabora.com>
+In-Reply-To: <20200501083227.10886-6-ricardo.canuelo@collabora.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 6 May 2020 09:44:19 +0200
+Message-ID: <CAMuHMdVbRoGAqeqePQDgRpxg4Vsr_LEfHERW-r6KdiSOCo5a6g@mail.gmail.com>
+Subject: Re: [RFT PATCH 5/5] dt-bindings: drm: bridge: adi,adv7511.txt:
+ convert to yaml
+To:     =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>, Wei Xu <xuwei5@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Ricardo,
 
-On 5/5/2020 7:23 PM, Mark Brown wrote:
-> On Mon, May 04, 2020 at 06:15:47PM +0800, Dilip Kota wrote:
->> On 4/29/2020 8:13 PM, Mark Brown wrote:
+On Fri, May 1, 2020 at 10:33 AM Ricardo Cañuelo
+<ricardo.canuelo@collabora.com> wrote:
+> Convert the ADV7511/11w/13/33/35 DT bindings to json-schema.
 >
->> I just tried to get the history of removing workqueue in SPI driver, on
->> GRX500 (earlier chipset of LGM) the SPI transfers got timedout with
->> workqueues during regression testing. Once changed to threaded IRQs
->> transfers are working successfully.
-> That doesn't really explain why though, it just explains what.
-I didnt find more information about it. I will work to reproduce the 
-issue and share the detailed information sooner i get the accessibility 
-of the SoC (because of covid19 doing wfh)
+> Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 
-Regards,
-Dilip
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.yaml
+> @@ -0,0 +1,293 @@
+
+> +  reg-names:
+> +    description:
+> +      Names of maps with programmable addresses. It can contain any map
+> +      needing a non-default address.
+> +    minItems: 1
+> +    items:
+> +      - const: main
+> +      - const: edid
+> +      - const: cec
+> +      - const: packet
+
+Can't you avoid the need for patches
+[RFT PATCH 1/5] arm64: dts: draak: Reorder hdmi-encoder@39 reg and
+reg-names properties
+[RFT PATCH 2/5] ARM: dts: wheat: reorder reg and reg-names properties
+in hdmi bridges
+
+by using
+
+    items:
+      enum:
+        - main
+        - edid
+        - cec
+        - packet
+
+instead?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
