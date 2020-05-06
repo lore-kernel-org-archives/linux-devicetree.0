@@ -2,91 +2,143 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA46C47247
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 00:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5877EC47247
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 01:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1442082E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 00:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F1C206E6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 01:07:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HRCEs4Eh"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="N57NqQ5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbgEFAIl (ORCPT
+        id S1728717AbgEFBHW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 May 2020 20:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728642AbgEFAIl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 May 2020 20:08:41 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D169C061A0F;
-        Tue,  5 May 2020 17:08:41 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id v63so91480pfb.10;
-        Tue, 05 May 2020 17:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QFGJdIdUd6NUXC1ZHECnuWqkthSdUxvUFmMdn3gACEE=;
-        b=HRCEs4EhrAqAXHsr0ImCIuBZoEc3aWfUDEY3weOpTde1339ZNl5M1C8w7CWzpKSYu9
-         w5d2it+CuWhkFz1TuYdXPqGX1XZj3uGwNGT2s281Vg4I634g6nTt9QXZakx9DegF4Bsm
-         u6SHxwUYN2hr2GufMMJNxzjhBdcDfu8KOpnXLyFp3nh0EIEO+lBn5gCJzq4m9pMxGgYt
-         qpJgjGHCF7mQ701QZpLMqaXo2ABku/4gWrU2WqmutNLLoR8QYNSKAiaHTpqAamEKePLJ
-         ajVZDP0Na7hARj147zx/lmd8GAMidsQrUbVb5+d7m0JOHvZfujBBm9Dw9pIsFTQS59OC
-         HOew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QFGJdIdUd6NUXC1ZHECnuWqkthSdUxvUFmMdn3gACEE=;
-        b=Pp92XTzR+WTtyyptVPKonSANE7Xyq32MUhb75MHE7fsyB2TOb5x0zV6MRsi5umABLT
-         AMdHy5Eho1sxuYAREyh8cqOeBAEgumxO5RLIhF00C2iEPLEJ93422uNXr2UZ8g0PwwG9
-         ggQHbjE6Bej/Zvz1JlfrCTsYQXl7r1yT3qRKkzttAPZVQ918l8lOIGWhtAayIq9Ffn3x
-         KkCtl+VUNw9mKtC0DzJmpayY5ZBvQFFLNq5w9gO6Hh+ejSiFaNxJSnzRqny45L5XJw4n
-         aei3qpD92AjXRSCQAu+JmcAQ5NlupneNOZteVhRE6xtJaW0kN7lXg76rfRCQnNKJM4qP
-         hhug==
-X-Gm-Message-State: AGi0PublJhuZXbkDxDYBbcrCZpuy6ZZTM11x4EaUNdUA3b3bK7CEcrlj
-        8WVGeH3bsYnvEEd7/xc6INE=
-X-Google-Smtp-Source: APiQypKSbrUwOjOd161Efeu0hYnppBpwMnjdsK3GuHpmNRed+3SPFzKkQ/6Ylm7PSvg536tOLbC9TQ==
-X-Received: by 2002:aa7:9832:: with SMTP id q18mr5790073pfl.179.1588723720455;
-        Tue, 05 May 2020 17:08:40 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id 184sm136054pfy.144.2020.05.05.17.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 17:08:39 -0700 (PDT)
-Date:   Tue, 5 May 2020 17:08:37 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: input: Add Dell Wyse 3020 Power Button
- binding
-Message-ID: <20200506000837.GB70193@dtor-ws>
-References: <20200503201237.413864-1-lkundrak@v3.sk>
- <20200503201237.413864-2-lkundrak@v3.sk>
+        Tue, 5 May 2020 21:07:22 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:53790 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728609AbgEFBHV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 May 2020 21:07:21 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id C322D4C83F;
+        Wed,  6 May 2020 01:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1588727237; x=
+        1590541638; bh=7zdTSg/YpORI67pNtF1hXovvQa2Yrhy7TR7Vr3f2tMo=; b=N
+        57NqQ5fjDkvU5M9t/H3CNmXKZatmtXRI1Vg5TYJKdP/yi2y0WATIvf5+DLeBOogj
+        8FEduFzA7dnzohZtJKK0Q/3e5ieBGBoaiA4djhv6Wo5vwXy+YarXTf7NKDdSS/Zq
+        p7+fF+3Di6EagBId4uZIeuV0O1jJpEAmv+7GcrQ0VY=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id a_XwDhOFpGWD; Wed,  6 May 2020 04:07:17 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 2498F427B1;
+        Wed,  6 May 2020 04:07:17 +0300 (MSK)
+Received: from localhost.dev.yadro.com (10.199.2.222) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Wed, 6 May 2020 04:07:18 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v12 0/2] iio: proximity: driver for vcnl3020
+Date:   Wed, 6 May 2020 04:08:07 +0300
+Message-ID: <20200506010809.6348-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200503201237.413864-2-lkundrak@v3.sk>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.2.222]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lubomir,
+Add proximity sensor driver for Vishay vcnl3020. Only on-demand
+measurement is supported for now.
 
-On Sun, May 03, 2020 at 10:12:36PM +0200, Lubomir Rintel wrote:
-> Add binding document for the Dell Wyse 3020 a.k.a. "Ariel" Power Button.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Changes from v11:
+   1. minor changes to yaml.
 
-Are there any changes compared to the version Rob has acked?
+Changes from v10:
+   1. add vcnl3020_property struct for optional properties.
 
-Thanks.
+Changes from v9:
+   1. minor changes.
+   2. pass microamps from dts, not register value.
+
+Changes from v8:
+   1. add vcnl3020 prefix into get_and_apply_property function.
+   2. add bsd license into yaml.
+   3. vishay,led-current-milliamp -> vishay,led-current-microamp.
+   4. add default value into vishay,led-current-microamp and change
+      register values into microamps.
+
+Changes from v7:
+   1. forgot to add Reviewed-by tag.
+
+Changes from v6:
+   1. minor changes
+     1.1 remove VCNL_DRV_NAME
+     1.2 add braces in get_and_apply_property
+
+Changes from v5:
+   1. add get_and_apply_property function for optional parameters.
+   2. minor changes.
+
+Changes from v4:
+   1. add vdd-supply,vddio-supply,interrupts properties into yaml.
+   2. led-current -> vishay,led-current-milliamp in yaml.
+   3. add possible values enum list.
+   4. add bulk_read for result hi/lo registers.
+   5. add description of vcnl3020_data structure.
+   6. vcnl3020 id table is removed.
+   7. make "vishay,led-current-milliamp" optional in yaml and code.
+
+Changes from v3:
+   1. minor changes.
+   2. add i2c block to fix dts section in yaml.
+
+Changes from v2:
+   1. using regmap_read_poll_timeout instead of do-while in measurement
+      function.
+   2. change struct i2client* in vcnl3020_data to struct dev*
+   3. enable REGMAP_I2C in Kconfig
+
+Changes from v1:
+   1. using regmap interface instead of i2c_smbus_* calls.
+   2. switch from probe to probe_new.
+   3. s32/int32_t -> int
+
+Ivan Mikhaylov (2):
+  dt-bindings: proximity: provide vcnl3020 device tree binding document
+  iio: proximity: Add driver support for vcnl3020 proximity sensor
+
+ .../iio/proximity/vishay,vcnl3020.yaml        |  65 +++++
+ drivers/iio/proximity/Kconfig                 |  11 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/vcnl3020.c              | 258 ++++++++++++++++++
+ 4 files changed, 335 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+ create mode 100644 drivers/iio/proximity/vcnl3020.c
 
 -- 
-Dmitry
+2.21.1
+
