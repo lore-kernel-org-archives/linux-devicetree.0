@@ -2,190 +2,112 @@ Return-Path: <SRS0=1UAq=6U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7B6C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFB6C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 097E0208DB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NL61s/IE"
+	by mail.kernel.org (Postfix) with ESMTP id 34697208D5
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 May 2020 14:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgEFOsS (ORCPT
+        id S1729072AbgEFOyk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 10:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53010 "EHLO
+        Wed, 6 May 2020 10:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbgEFOsS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 10:48:18 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C074C061A41
-        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 07:48:18 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id k133so1742035oih.12
-        for <devicetree@vger.kernel.org>; Wed, 06 May 2020 07:48:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wDj5+tuZkrR7oNrhFt9atUhp/2FopkJwEnSLs3/dRt8=;
-        b=NL61s/IE8eFnPePLN3nuUAK4eaP6MM3y2w4CzNYIdhGhoUmj5C8bunqphDdpHaouVa
-         lqnpq/4XtxVVO+mzUickCYq9BEd1L+5zd2wDuxtw3mLZecF7jxGruEn1VXTQSJvH/esc
-         ozZqVMVWm66x7U9TCr+2oJ3Rcat7yJFgS3GMQeuXl5vtO0nmJGTtqj+JYiZASXBG0M4v
-         qqWtNiDDyVCpTFmWcHt59IikbanIVLl7mYsG0X021wQ39a9kfQUvqr40lbY7IIO+0NOP
-         LwawsK2TTi6/SuDQcBF/bo4WGt9GfnkpF7msRIKBU0IGMKTOCaTqZmnB8bdsTRLYE7rf
-         pWIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wDj5+tuZkrR7oNrhFt9atUhp/2FopkJwEnSLs3/dRt8=;
-        b=O3B1jCOc9jzHo5VAbTXnDp5CkDFQf4EnCr0e1FiXEQzCPkXgPOQMtg3F3z6N1pcmv7
-         7G0/yL9yjvfxWvUlhbOKwW872p8nOnds1nanaLbBiMfVhK64JRSXhbh6HL34Z491hTBf
-         z0IIZawXrJE6Icd2Rc/o8SROJne+V+nQ7oI8SgqwvmDyT4kd5ZFTYEhTWLrzURfuA2C/
-         tDkj6GqYWbMQ9qoO2O6a5l/ywcTVzGWs1kDIg+/SZkb+q6mHpSWV9e9KBvQsdpChqfvX
-         v04YMsWYgZ/w6TAZEETW47ppFJ2lWxoqoV3lX+e0/SA4VZVemcXMAMPmc5vltODYZHvr
-         p1mA==
-X-Gm-Message-State: AGi0PuZMHw//f3YhyE0kYVTEi/dkMCyp/at5ifPh9rmnjYAkRtWzgYSA
-        tfRixLci47q4fY3KfhC+cbv0TewAEiiz6VYezv/bGg==
-X-Google-Smtp-Source: APiQypLNUtStA5nMDnbX6HOFM0LGQaCEcidSi5vAAWVsLC9SK3lN1UJfYxfdDKcoZRx18eT3Y5ExcVKLSk6kP1N3Arw=
-X-Received: by 2002:aca:1812:: with SMTP id h18mr2665993oih.133.1588776497531;
- Wed, 06 May 2020 07:48:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505100129.104673-1-robert.foss@linaro.org>
- <20200505100129.104673-4-robert.foss@linaro.org> <20200505101729.GF18755@pengutronix.de>
-In-Reply-To: <20200505101729.GF18755@pengutronix.de>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Wed, 6 May 2020 16:48:06 +0200
-Message-ID: <CAG3jFyvvzk8n1+fkfS5h6TPpqMQ3sGXuJ1_yot1MKFRTcDkhnQ@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] media: ov8856: Implement sensor module revision identification
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Maxime Ripard <maxime@cerno.tech>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>
+        with ESMTP id S1729078AbgEFOyk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 10:54:40 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABABC061A0F
+        for <devicetree@vger.kernel.org>; Wed,  6 May 2020 07:54:40 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jWLRW-0004Ds-LE; Wed, 06 May 2020 16:54:38 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jWLRW-0003Y2-7b; Wed, 06 May 2020 16:54:38 +0200
+Message-ID: <05e51534c3d6284f555fd262b666c94d12cbd010.camel@pengutronix.de>
+Subject: Re: [PATCH] dt-bindings: reset: meson: add gxl internal dac reset
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 06 May 2020 16:54:38 +0200
+In-Reply-To: <1jy2q5f9zc.fsf@starbuckisacylon.baylibre.com>
+References: <20200122092526.2436421-1-jbrunet@baylibre.com>
+         <6f661498f58c6a519095d0657413f4b89d3ef21e.camel@pengutronix.de>
+         <1jimi2tqsn.fsf@starbuckisacylon.baylibre.com>
+         <1jy2q5f9zc.fsf@starbuckisacylon.baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Marco,
+Hi Jerome,
 
-On Tue, 5 May 2020 at 12:17, Marco Felsch <m.felsch@pengutronix.de> wrote:
->
-> Hi Robert,
->
-> On 20-05-05 12:01, Robert Foss wrote:
-> > Query the sensor for its module revision, and compare it
-> > to known revisions.
-> >
-> > Currently 2A and 1B revision indentification is supported.
-> >
-> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > ---
-> >
-> > - Changes since v3:
-> >   * Actually add module revision 2A
-> >
-> > - Changes since v2:
-> >   * Add module revision 2A
-> >   * Sakari: Remove ov8856_check_revision()
-> >   * Sakari: Stop EEPROM streaming mode
-> >
-> >  drivers/media/i2c/ov8856.c | 53 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> >
-> > diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-> > index e6418a79801e..3c82c3e588d7 100644
-> > --- a/drivers/media/i2c/ov8856.c
-> > +++ b/drivers/media/i2c/ov8856.c
-> > @@ -32,6 +32,19 @@
-> >  #define OV8856_MODE_STANDBY          0x00
-> >  #define OV8856_MODE_STREAMING                0x01
-> >
-> > +/* module revisions */
-> > +#define OV8856_2A_MODULE             0x01
-> > +#define OV8856_1B_MODULE             0x02
-> > +
-> > +/* the OTP read-out buffer is at 0x7000 and 0xf is the offset
-> > + * of the byte in the OTP that means the module revision
-> > + */
-> > +#define OV8856_MODULE_REVISION               0x700f
-> > +#define OV8856_OTP_MODE_CTRL         0x3d84
-> > +#define OV8856_OTP_LOAD_CTRL         0x3d81
-> > +#define OV8856_OTP_MODE_AUTO         0x00
-> > +#define OV8856_OTP_LOAD_CTRL_ENABLE  BIT(0)
-> > +
-> >  /* vertical-timings from sensor */
-> >  #define OV8856_REG_VTS                       0x380e
-> >  #define OV8856_VTS_MAX                       0x7fff
-> > @@ -1152,6 +1165,46 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
-> >               return -ENXIO;
-> >       }
-> >
-> > +     ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
-> > +                            OV8856_REG_VALUE_08BIT, OV8856_MODE_STREAMING);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = ov8856_write_reg(ov8856, OV8856_OTP_MODE_CTRL,
-> > +                            OV8856_REG_VALUE_08BIT, OV8856_OTP_MODE_AUTO);
-> > +     if (ret) {
-> > +             dev_err(&client->dev, "failed to set otp mode");
-> > +             return ret;
-> > +     }
-> > +
-> > +     ret = ov8856_write_reg(ov8856, OV8856_OTP_LOAD_CTRL,
-> > +                            OV8856_REG_VALUE_08BIT,
-> > +                            OV8856_OTP_LOAD_CTRL_ENABLE);
-> > +     if (ret) {
-> > +             dev_err(&client->dev, "failed to enable load control");
-> > +             return ret;
-> > +     }
-> > +
-> > +     ret = ov8856_read_reg(ov8856, OV8856_MODULE_REVISION,
-> > +                           OV8856_REG_VALUE_08BIT, &val);
-> > +     if (ret) {
-> > +             dev_err(&client->dev, "failed to read module revision");
-> > +             return ret;
-> > +     }
-> > +
-> > +     dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x\n",
-> > +             val,
-> > +             val == OV8856_2A_MODULE ? "2A" :
-> > +             val == OV8856_1B_MODULE ? "1B" : "unknown revision",
-> > +             client->addr);
->
-> Pls check the alignment here too.
+On Wed, 2020-05-06 at 15:50 +0200, Jerome Brunet wrote:
+> On Tue 14 Apr 2020 at 10:28, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> 
+> > On Thu 23 Jan 2020 at 11:13, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > 
+> > > On Wed, 2020-01-22 at 10:25 +0100, Jerome Brunet wrote:
+> > > > Add the reset line of the internal DAC found on the amlogic gxl SoC family
+> > > > 
+> > > > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > > > ---
+> > > >  include/dt-bindings/reset/amlogic,meson-gxbb-reset.h | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+> > > > index ea5058618863..883bfd3bcbad 100644
+> > > > --- a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+> > > > +++ b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+> > > > @@ -69,7 +69,7 @@
+> > > >  #define RESET_SYS_CPU_L2		58
+> > > >  #define RESET_SYS_CPU_P			59
+> > > >  #define RESET_SYS_CPU_MBIST		60
+> > > > -/*					61	*/
+> > > > +#define RESET_ACODEC			61
+> > > >  /*					62	*/
+> > > >  /*					63	*/
+> > > >  /*	RESET2					*/
+> > > 
+> > > Thank you, applied to reset/next.
+> > 
+> > Hi Philip,
+> > 
+> > It seems reset/next has not made it to v5.7-rc1
+> > 
+> > Would it be possible to provide an immutable branch with this change, or
+> > maybe let Kevin apply this change through the amlogic tree ?
+> > 
+> > It would allow us to progress on some DT changes during this new cycle.
+> > 
+> > Thanks
+> > Jerome
+> 
+> Hi Philip, how can we move forward on this ?
 
-Ack.
+Sorry for the delay, I have missed the last window. I've now created an
+immutable branch:
 
->
-> Regards,
->   Marco
->
-> > +
-> > +     ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
-> > +                            OV8856_REG_VALUE_08BIT, OV8856_MODE_STANDBY);
-> > +     if (ret) {
-> > +             dev_err(&client->dev, "failed to exit streaming mode");
-> > +             return ret;
-> > +     }
-> > +
-> >       return 0;
-> >  }
-> >
-> > --
-> > 2.25.1
+  git://git.pengutronix.de/pza/linux.git reset/meson-gxl-dac
+
+which I will be included in the next reset pull request.
+
+regards
+Philipp
