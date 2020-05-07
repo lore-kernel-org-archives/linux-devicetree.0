@@ -6,47 +6,56 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FCAC38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 16:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFD3C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 16:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4349F208D6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 16:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350412083B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 16:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgEGQUC (ORCPT
+        id S1726495AbgEGQZp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 12:20:02 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:33379 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgEGQUC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 12:20:02 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9527120002;
-        Thu,  7 May 2020 16:19:57 +0000 (UTC)
-Date:   Thu, 7 May 2020 18:19:56 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>
-Subject: Re: [PATCH v3 7/8] mtd: rawnand: arasan: Add new Arasan NAND
- controller
-Message-ID: <20200507181956.24cc93d2@xps13>
-In-Reply-To: <20200507181139.0fc36c39@collabora.com>
-References: <20200507110034.14736-1-miquel.raynal@bootlin.com>
-        <20200507110034.14736-8-miquel.raynal@bootlin.com>
-        <20200507145127.71615ed8@collabora.com>
-        <20200507174559.58b57452@xps13>
-        <20200507181139.0fc36c39@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 7 May 2020 12:25:45 -0400
+Received: from mga11.intel.com ([192.55.52.93]:21311 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726470AbgEGQZp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 May 2020 12:25:45 -0400
+IronPort-SDR: dx3xesLci+fKG1o5vNeaJDaI7mzsELKq/xcLU16yRnXtFQsCozExJxOuBCMmtUdnBMG/5NmP6w
+ SbUgNO+Q9pzg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 09:25:44 -0700
+IronPort-SDR: UI2DdPDFZfRj74OALBpuW41w58LXZwgsjf3LGqDj+vALiCsEHXQU/Sa9YbL1TRdZwaxVQulhgj
+ S1oqukCmHM3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
+   d="scan'208";a="278651044"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 07 May 2020 09:25:43 -0700
+Date:   Thu, 7 May 2020 09:31:50 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 17/25] iommu/arm-smmu-v3: Implement
+ iommu_sva_bind/unbind()
+Message-ID: <20200507093150.6da9d6fb@jacob-builder>
+In-Reply-To: <20200505091531.GA203922@myrica>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+        <20200430143424.2787566-18-jean-philippe@linaro.org>
+        <20200430141617.6ad4be4c@jacob-builder>
+        <20200504164351.GJ170104@myrica>
+        <20200504134723.54e2ebcd@jacob-builder>
+        <20200505091531.GA203922@myrica>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -55,178 +64,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+On Tue, 5 May 2020 11:15:31 +0200
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 7 May
-2020 18:11:39 +0200:
-
-> On Thu, 7 May 2020 17:45:59 +0200
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> 
-> > > > +	}
-> > > > +
-> > > > +	return steps;      
+> On Mon, May 04, 2020 at 01:47:23PM -0700, Jacob Pan wrote:
+> > > > > +	arm_smmu_write_ctx_desc(smmu_domain, mm->pasid,
+> > > > > &invalid_cd); +
+> > > > > +	arm_smmu_tlb_inv_asid(smmu_domain->smmu,
+> > > > > smmu_mn->cd->asid);
+> > > > > +	/* TODO: invalidate ATS */
+> > > > > +    
+> > > > If mm release is called after tlb invalidate range, is it still
+> > > > necessary to invalidate again?    
 > > > 
-> > > I guess you have a limit on steps. It's probably worth checking
-> > > that steps is in bounds.    
-> > 
-> > The upper limit is 2048, I'm not sure it is relevant to add a check
-> > here?  
-> 
-> Well, it wouldn't hurt to add it, just for correctness.
-> 
-> > >     
-> > > > +}
-> > > > +
-> > > > +/* NAND framework ->exec_op() hooks and related helpers */
-> > > > +static void anfc_parse_instructions(struct nand_chip *chip,
-> > > > +				    const struct nand_subop *subop,
-> > > > +				    struct anfc_op *nfc_op)
-> > > > +{
-> > > > +	struct anand *anand = to_anand(chip);
-> > > > +	const struct nand_op_instr *instr = NULL;
-> > > > +	bool first_cmd = true;
-> > > > +	unsigned int op_id;
-> > > > +	int i;
-> > > > +
-> > > > +	memset(nfc_op, 0, sizeof(*nfc_op));
-> > > > +	nfc_op->addr2_reg = ADDR2_CS(anand->cs);
-> > > > +	nfc_op->cmd_reg = CMD_PAGE_SIZE(anand->page_sz);
-> > > > +
-> > > > +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
-> > > > +		unsigned int offset, naddrs, pktsize;
-> > > > +		const u8 *addrs;
-> > > > +		u8 *buf;
-> > > > +
-> > > > +		instr = &subop->instrs[op_id];
-> > > > +
-> > > > +		switch (instr->type) {
-> > > > +		case NAND_OP_CMD_INSTR:
-> > > > +			if (first_cmd)
-> > > > +				nfc_op->cmd_reg |= CMD_1(instr->ctx.cmd.opcode);
-> > > > +			else
-> > > > +				nfc_op->cmd_reg |= CMD_2(instr->ctx.cmd.opcode);
-> > > > +
-> > > > +			first_cmd = false;
-> > > > +			break;
-> > > > +
-> > > > +		case NAND_OP_ADDR_INSTR:
-> > > > +			offset = nand_subop_get_addr_start_off(subop, op_id);
-> > > > +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
-> > > > +			addrs = &instr->ctx.addr.addrs[offset];
-> > > > +			nfc_op->cmd_reg |= CMD_NADDRS(naddrs);
-> > > > +
-> > > > +			for (i = 0; i < min(ANFC_MAX_ADDR_CYC, naddrs); i++) {
-> > > > +				if (i < 4)
-> > > > +					nfc_op->addr1_reg |= (u32)addrs[i] << i * 8;
-> > > > +				else
-> > > > +					nfc_op->addr2_reg |= addrs[i];
-> > > > +			}
-> > > > +
-> > > > +			break;
-> > > > +		case NAND_OP_DATA_IN_INSTR:
-> > > > +			nfc_op->read = true;
-> > > > +			fallthrough;
-> > > > +		case NAND_OP_DATA_OUT_INSTR:
-> > > > +			offset = nand_subop_get_data_start_off(subop, op_id);
-> > > > +			buf = instr->ctx.data.buf.in;
-> > > > +			nfc_op->buf = &buf[offset];
-> > > > +			nfc_op->len = nand_subop_get_data_len(subop, op_id);
-> > > > +			nfc_op->steps = anfc_len_to_steps(chip, nfc_op->len);
-> > > > +			pktsize = DIV_ROUND_UP(nfc_op->len, nfc_op->steps);
-> > > > +			nfc_op->pkt_reg |= PKT_SIZE(round_up(pktsize, 4)) |      
-> > > 
-> > > Hm, pktsize has to be aligned on 4? Again, that's not great since you
-> > > adjust the size without letting the core know you did that.    
-> > 
-> > Mmmh probably not, I will test that.
-> > 
-> > But a FIFO read is 4 bytes long so anyway, it will probably read/write
-> > more no matter what I request (and move the SRAM pointer).  
-> 
-> The FIFO/SRAM pointer and actual DATA len are most of the time not
-> correlated, meaning that you can write/read more to/from the FIFO/SRAM
-> without having extra DATA cycles issued on the bus.
-> 
-> > > > +static const struct nand_op_parser anfc_op_parser = NAND_OP_PARSER(
-> > > > +	NAND_OP_PARSER_PATTERN(
-> > > > +		anfc_param_read_type_exec,
-> > > > +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
-> > > > +		NAND_OP_PARSER_PAT_ADDR_ELEM(false, ANFC_MAX_ADDR_CYC),
-> > > > +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(true),
-> > > > +		NAND_OP_PARSER_PAT_DATA_IN_ELEM(false, ANFC_MAX_CHUNK_SIZE)),
-> > > > +	NAND_OP_PARSER_PATTERN(
-> > > > +		anfc_param_write_type_exec,
-> > > > +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
-> > > > +		NAND_OP_PARSER_PAT_ADDR_ELEM(false, ANFC_MAX_ADDR_CYC),
-> > > > +		NAND_OP_PARSER_PAT_DATA_OUT_ELEM(false, ANFC_MAX_PARAM_SIZE)),
-> > > > +	NAND_OP_PARSER_PATTERN(
-> > > > +		anfc_data_read_type_exec,
-> > > > +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
-> > > > +		NAND_OP_PARSER_PAT_ADDR_ELEM(false, ANFC_MAX_ADDR_CYC),
-> > > > +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
-> > > > +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(true),
-> > > > +		NAND_OP_PARSER_PAT_DATA_IN_ELEM(false, ANFC_MAX_CHUNK_SIZE)),
-> > > > +	NAND_OP_PARSER_PATTERN(
-> > > > +		anfc_data_write_type_exec,
-> > > > +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
-> > > > +		NAND_OP_PARSER_PAT_ADDR_ELEM(false, ANFC_MAX_ADDR_CYC),
-> > > > +		NAND_OP_PARSER_PAT_DATA_OUT_ELEM(false, ANFC_MAX_CHUNK_SIZE),
-> > > > +		NAND_OP_PARSER_PAT_CMD_ELEM(false)),
-> > > > +	NAND_OP_PARSER_PATTERN(
-> > > > +		anfc_reset_type_exec,
-> > > > +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
-> > > > +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(false)),
-> > > > +	NAND_OP_PARSER_PATTERN(
-> > > > +		anfc_erase_type_exec,
-> > > > +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
-> > > > +		NAND_OP_PARSER_PAT_ADDR_ELEM(false, ANFC_MAX_ADDR_CYC),
-> > > > +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
-> > > > +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(false)),
-> > > > +	NAND_OP_PARSER_PATTERN(
-> > > > +		anfc_status_type_exec,
-> > > > +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
-> > > > +		NAND_OP_PARSER_PAT_DATA_IN_ELEM(false, ANFC_MAX_CHUNK_SIZE)),
-> > > > +	NAND_OP_PARSER_PATTERN(
-> > > > +		anfc_wait_type_exec,
-> > > > +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(false)),
-> > > > +	);
-> > > > +      
-> > > 
-> > > Okay, no DATA-only patterns, so my suggestion to split non-aligned data
-> > > reads doesn't work. I'd suggest to describe data-lengths
-> > > constraints rather than automatically adjusting the data length to
-> > > something bigger when we can't do exactly the number of requested DATA
-> > > cycles.    
-> > 
-> > Well, we *must* adjust the data length automatically. But the below
-> > change is interesting and should be extended and then this controller
-> > updated (see the next sentence).  
-> 
-> What's probably as important as allowing controllers to exceed the
-> amount of DATA cycles is flagging operations where that's allowed. I
-> can think of any READ/WRITE operations where you can issue a
-> RNDOUT/RNDIN to move the pointer after reading/writing data. READID
-> would also qualify here as data are just wrapping around, and I think
-> SET/GET_FEATURES allow that too, but I'm not sure.
-> 
-> Note that the mxc driver is probably even worse in that it only allows
-> 512byte reads/writes, so we'll need the feature if we want to convert
-> that one.
-> 
+> > > No, provided all mappings from the address space are unmapped and
+> > > invalidated. I'll double check, but in my tests invalidate range
+> > > didn't seem to be called for all mappings on mm exit, so I
+> > > believe we do need this.
+> > >   
+> > I think it is safe to invalidate again. There was a concern that mm
+> > release may delete IOMMU driver from the notification list and miss
+> > tlb invalidate range. I had a hard time to confirm that with ftrace
+> > while killing a process, many lost events.
 > >   
-> > > I started doing something similar here [1], except you'd need
-> > > much more fined-grained constraints, so maybe we should add an optional
-> > > check hook to data patterns.    
-> > 
-> > We could describe a "round_up" limitation too. That's definitely
-> > something that we can add in this driver on top of [1].
-> > 
-> > Would apply to Marvell NFC as well for instance.  
 > 
-> Until we have that working, may I suggest to return ENOTSUPP when you
-> can't issue exactly the number of DATA cycles requested? That implies
-> doing an extra check to make sure any DATA instruction is either
-> smaller than MAX_PKT_SIZE or has a valid NUM_PKTS divisor.
+> If it helps, I have a test that generates small DMA transactions on a
+> SMMU model. This is the trace for a job on a 8kB mmap'd buffer:
+> 
+>   smmu_bind_alloc: dev=0000:00:03.0 pasid=1
+>   dev_fault: IOMMU:0000:00:03.0 type=2 reason=0
+> addr=0x0000ffff860e6000 pasid=1 group=74 flags=3 prot=2
+> dev_page_response: IOMMU:0000:00:03.0 code=0 pasid=1 group=74
+> dev_fault: IOMMU:0000:00:03.0 type=2 reason=0 addr=0x0000ffff860e7000
+> pasid=1 group=143 flags=3 prot=2 dev_page_response:
+> IOMMU:0000:00:03.0 code=0 pasid=1 group=143 smmu_mm_invalidate:
+> pasid=1 start=0xffff860e6000 end=0xffff860e8000 smmu_mm_invalidate:
+> pasid=1 start=0xffff860e6000 end=0xffff860e8000 smmu_mm_invalidate:
+> pasid=1 start=0xffff860e8000 end=0xffff860ea000 smmu_mm_invalidate:
+> pasid=1 start=0xffff860e8000 end=0xffff860ea000 smmu_unbind_free:
+> dev=0000:00:03.0 pasid=1
+> 
+> And this is the same job, but the process immediately kills itself
+> after launching it.
+> 
+>   smmu_bind_alloc: dev=0000:00:03.0 pasid=1
+>   dev_fault: IOMMU:0000:00:03.0 type=2 reason=0
+> addr=0x0000ffffb9d15000 pasid=1 group=259 flags=3 prot=2
+> smmu_mm_release: pasid=1 dev_page_response: IOMMU:0000:00:03.0 code=0
+> pasid=1 group=259 dev_fault: IOMMU:0000:00:03.0 type=2 reason=0
+> addr=0x0000ffffb9d15000 pasid=1 group=383 flags=3 prot=2
+> dev_page_response: IOMMU:0000:00:03.0 code=1 pasid=1 group=383
+> smmu_unbind_free: dev=0000:00:03.0 pasid=1
+> 
+> We don't get any invalidate_range notification in this case.
+> 
+Thanks for the confirmation. We do need to invalidate here.
 
-Sure!
+> Thanks,
+> Jean
+
+[Jacob Pan]
