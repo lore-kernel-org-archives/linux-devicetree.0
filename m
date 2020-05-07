@@ -2,46 +2,47 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAD4C54E93
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 17:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B87C54E9A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 17:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C005215A4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 17:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E227221473
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 17:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgEGRXx (ORCPT
+        id S1728015AbgEGRXs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 13:23:53 -0400
-Received: from muru.com ([72.249.23.125]:53194 "EHLO muru.com"
+        Thu, 7 May 2020 13:23:48 -0400
+Received: from muru.com ([72.249.23.125]:53180 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728070AbgEGRXt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 May 2020 13:23:49 -0400
+        id S1726074AbgEGRXr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 May 2020 13:23:47 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 226C3822F;
-        Thu,  7 May 2020 17:24:37 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 03DD881A1;
+        Thu,  7 May 2020 17:24:34 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
         "H. Nikolaus Schaller" <hns@goldelico.com>,
         Aaro Koskinen <aaro.koskinen@iki.fi>,
         Adam Ford <aford173@gmail.com>,
         Andreas Kemnade <andreas@kemnade.info>,
         Brian Hutchinson <b.hutchman@gmail.com>,
         Graeme Smecher <gsmecher@threespeedlogic.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH 04/14] bus: ti-sysc: Ignore timer12 on secure omap3
-Date:   Thu,  7 May 2020 10:23:20 -0700
-Message-Id: <20200507172330.18679-5-tony@atomide.com>
+        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 03/14] clk: ti: dm816: enable sysclk6_ck on init
+Date:   Thu,  7 May 2020 10:23:19 -0700
+Message-Id: <20200507172330.18679-4-tony@atomide.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200507172330.18679-1-tony@atomide.com>
 References: <20200507172330.18679-1-tony@atomide.com>
@@ -52,41 +53,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some early omap3 boards use timer12 for system timer, but for secure
-SoCs like on n900 it's not accessible. Likely we will be configuring
-unavailable devices for other SoCs too based on runtime SoC detection,
-so let's use a switch to start with.
+We need sysclk6_ck enabled early as it is needed by l4_ls and system
+timers early on boot. This removes the dependency of system timers to
+the interconnect related code that can be then probed later on when
+suitable at module_init time.
 
+Cc: linux-clk@vger.kernel.org
 Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Michael Turquette <mturquette@baylibre.com>
 Cc: Rob Herring <robh@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>
 Cc: Tero Kristo <t-kristo@ti.com>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/bus/ti-sysc.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/clk/ti/clk-816x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -2744,6 +2744,17 @@ static int sysc_init_soc(struct sysc *ddata)
- 	if (match && match->data)
- 		sysc_soc->soc = (int)match->data;
+diff --git a/drivers/clk/ti/clk-816x.c b/drivers/clk/ti/clk-816x.c
+--- a/drivers/clk/ti/clk-816x.c
++++ b/drivers/clk/ti/clk-816x.c
+@@ -73,6 +73,7 @@ static const char *enable_init_clks[] = {
+ 	"ddr_pll_clk1",
+ 	"ddr_pll_clk2",
+ 	"ddr_pll_clk3",
++	"sysclk6_ck",
+ };
  
-+	/* Ignore devices that are not available on HS and EMU SoCs */
-+	if (!sysc_soc->general_purpose) {
-+		switch (sysc_soc->soc) {
-+		case SOC_3430 ... SOC_3630:
-+			sysc_add_disabled(0x48304000);	/* timer12 */
-+			break;
-+		default:
-+			break;
-+		};
-+	}
-+
- 	match = soc_device_match(sysc_soc_feat_match);
- 	if (!match)
- 		return 0;
+ int __init dm816x_dt_clk_init(void)
 -- 
 2.26.2
