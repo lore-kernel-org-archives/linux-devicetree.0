@@ -2,93 +2,103 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23FFC38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 18:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EF3C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 18:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1ACA2145D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 18:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588875259;
-	bh=jeehLrP9WsJXxek6vrvYvD1Jg5CfFupp+KA9FAnV86w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AeWp0BhLtAT1/vD5Sr8FoN/jy2RmP9zlUCcI17xP0Kzqou74OZSqzBiIbKjeTikdH
-	 l7PnfXouaUCyTZVI3s6oSscacHlNBaj84M6A860E6u+sfNNmQwnLyJSyNwlAtLKf6g
-	 KMeDNgo2frvwWDSetmiwMXn4jTCe9vcLiRzXLSTw=
+	by mail.kernel.org (Postfix) with ESMTP id C06D820735
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 18:15:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XYGNDRDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgEGSOT (ORCPT
+        id S1726367AbgEGSPk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 14:14:19 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41591 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgEGSOS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 14:14:18 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 19so6057023oiy.8;
-        Thu, 07 May 2020 11:14:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bqvmG1HWU4qDf3HKBnBhC+AWlEauaP8o4/CF6AJISL0=;
-        b=iSUXC9FtqIsaz5t/tsaDPTR3YMAKjOQOdYIxB/sUlRcaOuSAG8eIGs6buiJiEuxFw8
-         SvYzxzEX55/hjfBmuDdvth3x4AwYnV1rDoRtbvHXJwyNoytTHZLDzXkAf1G2tZaHljFE
-         rQ2qyhuoWc5OeXRPEuNtwG5WV8bSWlVIfAafdl1ZolXwIMLbbblB2P+Mih6hpRvLIGmE
-         J0h9duhUHWG8Mk0LjbGGjDPPXyAKlj+TpDTyuUJtj4KNauGrCbSV6SCsgWkXifWR+7BY
-         ocV1HC72TBNhK88kr7JXT0AW0kUwiCzoV9TLgNbHXAQo6SJYI6sdAXzNz17lJoy6+Hvn
-         UWMg==
-X-Gm-Message-State: AGi0PuaFC0zawbDbCiduKWFE28QweaAJ7YXjXzD/ER7M8fExMKI1r2Q7
-        VfQ9qFyRmXNAdtHcIgVsFQ==
-X-Google-Smtp-Source: APiQypJjqWjf+xvhTf9ElI+7SobF1c8l+Bvu1wEqEqBkg7vIj/KOJeoIu4c/pPG8DqzuQbZDurAklA==
-X-Received: by 2002:aca:b2c2:: with SMTP id b185mr3192687oif.169.1588875257552;
-        Thu, 07 May 2020 11:14:17 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m16sm1500117oop.40.2020.05.07.11.14.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 11:14:16 -0700 (PDT)
-Received: (nullmailer pid 25817 invoked by uid 1000);
-        Thu, 07 May 2020 18:14:15 -0000
-Date:   Thu, 7 May 2020 13:14:15 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 10/11] devicetree: bindings: pci: add ipq8064 rev 2
- variant to qcom,pcie
-Message-ID: <20200507181415.GA25718@bogus>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-11-ansuelsmth@gmail.com>
+        Thu, 7 May 2020 14:15:40 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41118 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgEGSPk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 14:15:40 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 047IFURQ069949;
+        Thu, 7 May 2020 13:15:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588875330;
+        bh=YZqZOiyTdpd6D7lyHKpIqa4mX/cvgizJMPiENUz0xKs=;
+        h=From:To:CC:Subject:Date;
+        b=XYGNDRDlEbvrQ0uYCoF3acT1XCsUor3Oq0OX9i5ASfS3SuWsMOm0u6jWhgch4yzo/
+         dXmdtYaQDlpxVJK1LLXa4F6bzoD00q3rzVUZ+Rn8qw9I0ddpY+XxiHXvJ654U9wG5N
+         qoXf3btGVn/OloCGl/jt/pKY9kOfYZZe54bZgeUE=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 047IFUF3115778
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 7 May 2020 13:15:30 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 7 May
+ 2020 13:15:30 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 7 May 2020 13:15:30 -0500
+Received: from a0230074-Latitude-E7470.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 047IFQPO121363;
+        Thu, 7 May 2020 13:15:27 -0500
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <t-kristo@ti.com>,
+        <faiz_abbas@ti.com>
+Subject: [PATCH v2] arm64: dts: ti: k3-am654-main: Update otap-del-sel values
+Date:   Thu, 7 May 2020 23:45:26 +0530
+Message-ID: <20200507181526.12529-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430220619.3169-11-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  1 May 2020 00:06:17 +0200, Ansuel Smith wrote:
-> Document qcom,pcie-ipq8064-v2 needed to use different phy_tx0_term_offset.
-> In ipq8064 phy_tx0_term_offset is 7.
-> In ipq8064 v2 other SoC it's set to 0 by default.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+According to the latest AM65x Data Manual[1], a different output tap
+delay value is optimum for a given speed mode. Update these values.
 
-Acked-by: Rob Herring <robh@kernel.org>
+[1] http://www.ti.com/lit/gpn/am6526
+
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+v2: Rebased to the latest mainline kernel
+
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 11887c72f23a..6cd9701e4ead 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -244,7 +244,17 @@
+ 		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+ 		mmc-ddr-1_8v;
+ 		mmc-hs200-1_8v;
+-		ti,otap-del-sel = <0x2>;
++		ti,otap-del-sel-legacy = <0x0>;
++		ti,otap-del-sel-mmc-hs = <0x0>;
++		ti,otap-del-sel-sd-hs = <0x0>;
++		ti,otap-del-sel-sdr12 = <0x0>;
++		ti,otap-del-sel-sdr25 = <0x0>;
++		ti,otap-del-sel-sdr50 = <0x8>;
++		ti,otap-del-sel-sdr104 = <0x5>;
++		ti,otap-del-sel-ddr50 = <0x5>;
++		ti,otap-del-sel-ddr52 = <0x5>;
++		ti,otap-del-sel-hs200 = <0x5>;
++		ti,otap-del-sel-hs400 = <0x0>;
+ 		ti,trm-icp = <0x8>;
+ 		dma-coherent;
+ 	};
+-- 
+2.17.1
+
