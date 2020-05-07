@@ -2,59 +2,59 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AD8C4724C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 21:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88542C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 21:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 930CF20CC7
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 21:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B4520CC7
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 21:35:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hhnnE6pM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JEPOGcmw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgEGVf1 (ORCPT
+        id S1727030AbgEGVfb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 17:35:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59200 "EHLO
+        Thu, 7 May 2020 17:35:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgEGVf1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 17:35:27 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056DAC05BD0B
-        for <devicetree@vger.kernel.org>; Thu,  7 May 2020 14:35:27 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id f15so2608251plr.3
-        for <devicetree@vger.kernel.org>; Thu, 07 May 2020 14:35:27 -0700 (PDT)
+        with ESMTP id S1726464AbgEGVfa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 17:35:30 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF54DC05BD0B
+        for <devicetree@vger.kernel.org>; Thu,  7 May 2020 14:35:29 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l25so3389336pgc.5
+        for <devicetree@vger.kernel.org>; Thu, 07 May 2020 14:35:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3EHfl+OZQ86xl3nnBfabGaWfnGOtgLn9bxyisBpB13s=;
-        b=hhnnE6pMuSjGxbdEhUqhrtz8mbWCLLN5LkkxK1NxLHSPp3O0WTkCLROvKUgNxSTHGa
-         0DbNWk3aI+/KjHfsrCRBpx2/15gnwwyBeCnPpvxSK7o+bxecMGa+GPZ3UrU4d9l8PS6b
-         8wkvPLbSVLmrTJtmMesDHAslZOhOFMWognir0=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XfNEDCRiXjCC8oOylpb9JNhfA9+c9hrQufk7O01EutI=;
+        b=JEPOGcmwFBfW5QCKms1+maouE+hSH796fyxNeSs6NafNDFXUhutuNYMqtyu+Cz4ftE
+         smDDleCiYarIBTBNcvs9qhyaX4KxL7re6xdgs706c6CBvnOPokM8Q5Hjxqfd+u70iMzN
+         L4Nfj73BfoYxzl3kVdWZnth1x62n3HdcVf5uo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3EHfl+OZQ86xl3nnBfabGaWfnGOtgLn9bxyisBpB13s=;
-        b=EA5uHAKCzc53FB802M8S7ztQruJ1vGQHHNeMJhqpaKMXAAXGIP+k5kzuQOr3D8Zpf8
-         LPQhVKf9yeDKjlmh7S+bpBt461UHY5douMjA/0qcOsfcIDr5iN1IhnMAfhC7+8iUfdr5
-         r0XnC6B38CITnOWbAsLU+bqGEabZHlScgMcI6HwOt2RWCoN0t6cwbpA/9p3Ia6bxLMVd
-         CY2sLXFODyVQ9Oj9E3Kl1S/8/IkPVoKNJ2LhcGbtOG/Yt0GzelnhW7ghR080VsaHSCyU
-         Orvhm1hmzHgPNm/npzEZse8qJJGTgpXqoj+NrWR5l8dLlz5hjbgQeVijZgx5KBtoRTY0
-         D1Ug==
-X-Gm-Message-State: AGi0Pubof2qJSfiWa5jHv8tCm3DnF/6J9ipJWfeV2ECmO7tzQ9D8UQs9
-        eA9jmJA0BstjYrzELIpD3e374A==
-X-Google-Smtp-Source: APiQypKQSS3uzlkYHq8gThdNX9odtEUYpe3SwGbt56mePxUb+nlwO2wwSe+J7lSKN9DYDNPgDmZloQ==
-X-Received: by 2002:a17:902:9042:: with SMTP id w2mr15140927plz.127.1588887326189;
-        Thu, 07 May 2020 14:35:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XfNEDCRiXjCC8oOylpb9JNhfA9+c9hrQufk7O01EutI=;
+        b=cJgUKsc5mj3h2XpGFRMyAyUOY666jS+obdAcna1kt5SEAHCQYFC1wiV43E4lfI5/zn
+         04o7P3oH7vgTHy+Xfn7CODKSWVSllcFZvYMdA8XohqbxSXBDzG7OOPrwKWndgQ9igJVM
+         d9MddOtYsF9A0B2GJYswxyY3A1nNABMWcRX10sytPsdTvWB4hlbqSgL8PEcWvdOQ28iW
+         58B6R5M4Qe1+eyRkM59pAIl8yGIoQe3wCH+UYY0hcm5BVtaP72JT1Do10GBxrTV2KjL0
+         4qq/fOoYIoY9Rfg0QtP+OqImACjLA/ZTbR2x6uYmAiG50eRTmNjhbQKjVVya6Nu0PtWM
+         16hw==
+X-Gm-Message-State: AGi0PuZGD6O1yHw0DiTcXEK60lkW61J5VAMDcW2l4IIL1VvpdwsS781w
+        cgSKBEFn7EZJm4Mqzr4l8p9W5A==
+X-Google-Smtp-Source: APiQypIN4LGb4WwjVAsqDkdk6/Lm8XZyQnvUfoNsrt2XHG4HD0F4xJ4m0Ae8nle3ctmT2+GxbHwNUA==
+X-Received: by 2002:a63:741e:: with SMTP id p30mr13075429pgc.433.1588887329409;
+        Thu, 07 May 2020 14:35:29 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id i10sm5884860pfa.166.2020.05.07.14.35.24
+        by smtp.gmail.com with ESMTPSA id i10sm5884860pfa.166.2020.05.07.14.35.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:35:25 -0700 (PDT)
+        Thu, 07 May 2020 14:35:28 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
@@ -66,18 +66,16 @@ Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
         devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-arm-msm@vger.kernel.org, robdclark@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
         Sam Ravnborg <sam@ravnborg.org>,
-        Stephen Boyd <sboyd@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for Hot Plug Detect
-Date:   Thu,  7 May 2020 14:34:54 -0700
-Message-Id: <20200507213500.241695-1-dianders@chromium.org>
+Subject: [PATCH v5 2/6] dt-bindings: display: Add hpd-gpios to panel-common bindings
+Date:   Thu,  7 May 2020 14:34:56 -0700
+Message-Id: <20200507143354.v5.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
 X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+In-Reply-To: <20200507213500.241695-1-dianders@chromium.org>
+References: <20200507213500.241695-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -85,109 +83,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+In the cases where there is no connector in a system there's no great
+place to put "hpd-gpios".  As per discussion [1] the best place to put
+it is in the panel.  Add this to the device tree bindings.
 
-As talked about in commit c2bfc223882d ("drm/bridge: ti-sn65dsi86:
-Remove the mystery delay"), the normal HPD pin on ti-sn65dsi86 is
-kinda useless, at least for embedded DisplayPort (eDP).  However,
-despite the fact that the actual HPD pin on the bridge is mostly
-useless for eDP, the concept of HPD for eDP still makes sense.  It
-allows us to optimize out a hardcoded delay that many panels need if
-HPD isn't hooked up.  Panel timing diagrams show HPD as one of the
-events to measure timing from and we have to assume the worst case if
-we can't actually read HPD.
+[1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboard.com
 
-One way to use HPD for eDP without using the mostly useless HPD pin on
-ti-sn65dsi86 is to route the panel's HPD somewhere else in the system,
-like to a GPIO.  This works great because eDP panels aren't physically
-hotplugged.  That means the debouncing logic that caused us problems
-wasn't really needed and a raw GPIO works great.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
 
-As per the above, a smart board designer would realize the value of
-HPD and choose to route it to a GPIO somewhere on the board to avoid
-the silly sn65dsi86 debouncing.  While said "smart designer" could
-theoretically route HPD anywhere on the board, a really smart designer
-would realize that there are several GPIOs on the bridge itself that
-are nearly useless for anything but this purpose and route HPD to one
-of those.
-
-This series of patches is intended to allow the scenario described
-above.
-
-This patch has been tested on a board that is not yet mainline.  On
-the hardware I have:
-- Panel spec says HPD could take up to 200 ms to come up, so without
-  HPD hooked up we need to delay 200 ms.
-- On my board the panel is powered by the same rail as the
-  touchscreen.  By chance of probe order the touchscreen comes up
-  first.  This means by the time we check HPD in ti_sn_bridge_enable()
-  it's already up.  Thus we can use the panel on 200 ms earlier.
-- If I measure HPD on this pane it comes up ~56 ms after the panel is
-  powered.  This means I can save 144 ms of delay.
-
-Side effects (though not main goals) of this series are:
-- ti-sn65dsi86 GPIOs are now exported in Linux.
-- ti-sn65dsi86 bindings are converted to yaml.
-- Common panel bindings now have "hpd-gpios" listed.
-- The simple-panel driver in Linux can delay in prepare based on
-  "hpd-gpios"
-- ti-sn65dsi86 bindings (and current user) now specifies "no-hpd"
-  if HPD isn't hooked up.
-
-Changes in v5:
-- Use of_xlate so that numbers in dts start at 1, not 0.
-- Squash https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid/
-
-Changes in v4:
-- Don't include gpio.h
-- Use gpiochip_get_data() instead of container_of() to get data.
-- GPIOF_DIR_XXX => GPIO_LINE_DIRECTION_XXX
-- Use Linus W's favorite syntax to read a bit from a bitfield.
-- Define and use SN_GPIO_MUX_MASK.
-- Add a comment about why we use a bitmap for gchip_output.
-- Tacked on "or is otherwise unusable." to description.
-
-Changes in v3:
-- Becaue => Because
-- Add a kernel-doc to our pdata to clarify double-duty of gchip_output.
-- More comments about how powering off affects us (get_dir, dir_input).
-- Cleanup tail of ti_sn_setup_gpio_controller() to avoid one "return".
-- Use a bitmap rather than rolling my own.
-- Remind how gpio_get_optional() works in the commit message.
-- useful implement => useful to implement
-
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
 Changes in v2:
-- ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
 - ("dt-bindings: display: Add hpd-gpios to panel-common...") new for v2
-- ("simple...hpd-gpios") is 1/2 of replacement for ("Allow...bridge GPIOs")
-- specification => specifier.
-- power up => power.
-- Added back missing suspend-gpios.
-- data-lanes and lane-polarities are are the right place now.
-- endpoints don't need to be patternProperties.
-- Specified more details for data-lanes and lane-polarities.
-- Added old example back in, fixing bugs in it.
-- Example i2c bus is just called "i2c", not "i2c1" now.
-- ("dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd") new for v2.
-- ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
 
-Douglas Anderson (6):
-  drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
-  dt-bindings: display: Add hpd-gpios to panel-common bindings
-  drm/panel-simple: Support hpd-gpios for delaying prepare()
-  dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml
-  dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd
-  arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza
+ .../devicetree/bindings/display/panel/panel-common.yaml     | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
- .../bindings/display/bridge/ti,sn65dsi86.yaml | 293 ++++++++++++++++++
- .../bindings/display/panel/panel-common.yaml  |   6 +
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |   2 +
- drivers/gpu/drm/bridge/ti-sn65dsi86.c         | 214 +++++++++++++
- drivers/gpu/drm/panel/panel-simple.c          |  53 ++++
- 6 files changed, 568 insertions(+), 87 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+index ed051ba12084..e9a04a3a4f5f 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+@@ -96,6 +96,12 @@ properties:
+       (hot plug detect) signal, but the signal isn't hooked up so we should
+       hardcode the max delay from the panel spec when powering up the panel.
+ 
++  hpd-gpios:
++    maxItems: 1
++    description:
++      If Hot Plug Detect (HPD) is connected to a GPIO in the system rather
++      than a dedicated HPD pin the pin can be specified here.
++
+   # Control I/Os
+ 
+   # Many display panels can be controlled through pins driven by GPIOs. The nature
 -- 
 2.26.2.645.ge9eca65c58-goog
 
