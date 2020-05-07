@@ -2,138 +2,139 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C5FC38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF1AC47247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 025CF2080D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588834062;
-	bh=hUD5exA4dNKvCcKV83BYNh5VFO685TqU5GU5ToDg3us=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bm+gN/cCYob8HUurjrzoxt2nR/Grt9KOMIdSpCQjuzv3zYb9AgiBGPACRUu/1yPOr
-	 BUGbQq6kexF8VMsGmeozittfvahyx+l6u4aJ7V/SXfFpVMnM/HpCKM1R4B172zFkVr
-	 rg6tZ1gO+i/VDTrfJOFR4htHSW7PqJ7WNWge6gjo=
+	by mail.kernel.org (Postfix) with ESMTP id 48C23207DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgEGGrh (ORCPT
+        id S1725914AbgEGGsg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 02:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgEGGrh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 May 2020 02:47:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Thu, 7 May 2020 02:48:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725763AbgEGGsg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 02:48:36 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62CA6C061A10;
+        Wed,  6 May 2020 23:48:36 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D794F2078C;
-        Thu,  7 May 2020 06:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588834056;
-        bh=hUD5exA4dNKvCcKV83BYNh5VFO685TqU5GU5ToDg3us=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dCZ6mLUcN1lIcruUpjFnEcOhlyrmSgxjeyHHlnFw/4co12Hwb9W/Qsgzq6nZ+HnJp
-         DibKlr9P4RQGxGYL3/8X8BfHpXRz53ezegCOp/1lVZvRByJvVXChNS4+D1DL4tpB3T
-         fOVh6T5cCACfVwnSp8ZDtkKBDaj/Y7C6rRFAF5rg=
-Date:   Thu, 7 May 2020 08:47:34 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vince Bridgers <vbridger@opensource.altera.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
-        Vitaly Bordug <vbordug@ru.mvista.com>,
-        Claudiu Manoil <claudiu.manoil@freescale.com>,
-        Li Yang <leoli@freescale.com>,
-        Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <blogic@openwrt.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Lars Persson <lars.persson@axis.com>,
-        Mugunthan V N <mugunthanvnm@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
-        Netdev <netdev@vger.kernel.org>,
-        nios2-dev@lists.rocketboards.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH net 11/16] net: ethernet: marvell: mvneta: fix fixed-link
- phydev leaks
-Message-ID: <20200507064734.GA798308@kroah.com>
-References: <1480357509-28074-1-git-send-email-johan@kernel.org>
- <1480357509-28074-12-git-send-email-johan@kernel.org>
- <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
- <20200507064412.GL2042@localhost>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4FF7D2A27B2;
+        Thu,  7 May 2020 07:48:34 +0100 (BST)
+Date:   Thu, 7 May 2020 08:48:31 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v5 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200507084831.1483b19a@collabora.com>
+In-Reply-To: <69a06362-1f9d-bf65-4a9b-98fc6b63a391@linux.intel.com>
+References: <20200507001537.4034-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200507001537.4034-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200507072831.1bf7f784@collabora.com>
+        <440c0002-e572-7b8b-ba08-773932370eb0@linux.intel.com>
+        <20200507082730.6425cd96@collabora.com>
+        <69a06362-1f9d-bf65-4a9b-98fc6b63a391@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507064412.GL2042@localhost>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 07, 2020 at 08:44:12AM +0200, Johan Hovold wrote:
-> On Thu, May 07, 2020 at 12:27:53AM +0530, Naresh Kamboju wrote:
-> > On Tue, 29 Nov 2016 at 00:00, Johan Hovold <johan@kernel.org> wrote:
-> > >
-> > > Make sure to deregister and free any fixed-link PHY registered using
-> > > of_phy_register_fixed_link() on probe errors and on driver unbind.
-> > >
-> > > Fixes: 83895bedeee6 ("net: mvneta: add support for fixed links")
-> > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > ---
-> > >  drivers/net/ethernet/marvell/mvneta.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-> > > index 0c0a45af950f..707bc4680b9b 100644
-> > > --- a/drivers/net/ethernet/marvell/mvneta.c
-> > > +++ b/drivers/net/ethernet/marvell/mvneta.c
-> > > @@ -4191,6 +4191,8 @@ static int mvneta_probe(struct platform_device *pdev)
-> > >         clk_disable_unprepare(pp->clk);
-> > >  err_put_phy_node:
-> > >         of_node_put(phy_node);
-> > > +       if (of_phy_is_fixed_link(dn))
-> > > +               of_phy_deregister_fixed_link(dn);
-> > 
-> > While building kernel Image for arm architecture on stable-rc 4.4 branch
-> > the following build error found.
-> > 
-> > drivers/net/ethernet/marvell/mvneta.c:3442:3: error: implicit
-> > declaration of function 'of_phy_deregister_fixed_link'; did you mean
-> > 'of_phy_register_fixed_link'? [-Werror=implicit-function-declaration]
-> > |    of_phy_deregister_fixed_link(dn);
-> > |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > |    of_phy_register_fixed_link
-> > 
-> > ref:
-> > https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/541374729
-> 
-> Greg, 3f65047c853a ("of_mdio: add helper to deregister fixed-link
-> PHYs") needs to be backported as well for these.
-> 
-> Original series can be found here:
-> 
-> 	https://lkml.kernel.org/r/1480357509-28074-1-git-send-email-johan@kernel.org
+On Thu, 7 May 2020 14:38:52 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-Ah, thanks for that, I thought I dropped all of the ones that caused
-build errors, but missed the above one.  I'll go take the whole series
-instead.
+> Hi Boris,
+> 
+>    Thank you very much for the review comments and your time...
+> 
+> On 7/5/2020 2:27 pm, Boris Brezillon wrote:
+> > On Thu, 7 May 2020 14:13:42 +0800
+> > "Ramuthevar, Vadivel MuruganX"
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >   
+> >> Hi Boris,
+> >>
+> >>      Thank you very much for the review comments and your time...
+> >>
+> >> On 7/5/2020 1:28 pm, Boris Brezillon wrote:  
+> >>> On Thu,  7 May 2020 08:15:37 +0800
+> >>> "Ramuthevar,Vadivel MuruganX"
+> >>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >>>      
+> >>>> +	reg = readl(ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
+> >>>> +	writel(reg | EBU_ADDR_MASK(5) | EBU_ADDR_SEL_REGEN,
+> >>>> +	       ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));  
+> >>>
+> >>> Seriously, did you really think I would not notice what you're doing
+> >>> here?  
+> >> Yes , I know that you have very good understanding about this.
+> >>    You're reading the previous value which either contains a default  
+> >>> mapping or has the mapping set by the bootloader, and write it back to
+> >>> the register along with a new mask and the REGEN bit set (which
+> >>> BTW is wrong since you don't mask out other fields before updating
+> >>> them).  
+> >> There is no other field get overwritten
+> >>    This confirms that this Core -> FPI address translation exists  
+> >>> and has to be set properly, so please stop lying about that.  
+> >>
+> >> Sorry, there is no SW translation, as I have mentioned that it's
+> >> optional only, for safer side , reading and writing the default values.  
+> > 
+> > Then write EBU_ADDR_SEL_REGEN and we'll if see that works. I suspect it
+> > won't.  
+> 
+> You mean, without reading just writing EBU_ADDR_SEL_REGEN bit alone in 
+> EBU_ADDR_SELx , as you said it won't work because it overwrites 0x174 
+> with 0x0 values so BASE is lost.
 
-greg k-h
+Which confirms that this mapping has to be defined.
+
+> either we can leave it or read & write with ORed | EBU_ADDR_SEL_REGEN
+
+None of this is acceptable IMO. You have to build the value based on the
+address translation described in the DT. Why are you so reluctant to
+this approach?
+
+> 
+> Please correct me if anything is wrong, Thanks!
+> >   
+> >> The memory region to enabled that's my concern so written the same
+> >> register values.  
+> > 
+> > I don't buy that, sorry.
+> >   
+> >>
+> >> This will not be impact other fields, so please see below for reference
+> >>
+> >> The EBU Address Select Registers EBU_ADDR_SEL_0 to EBU_ADDSEL3 establish
+> >> and control memory regions for external accesses.
+> >>
+> >> Reset Value: 17400001H  
+> > 
+> > See, as suspected the reset value is exactly what you expect.  
+> 
+> Yes , that's the reason said being optional.
+
+Then it's not optional. It just works because you use the default
+value.
