@@ -3,35 +3,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F5BC38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BBBC54E49
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A94C2075E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B304D2064A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726093AbgEGG1i (ORCPT
+        id S1725900AbgEGGi7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 02:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgEGG1i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 02:27:38 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45649C061A10;
-        Wed,  6 May 2020 23:27:38 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6BD222A2798;
-        Thu,  7 May 2020 07:27:33 +0100 (BST)
-Date:   Thu, 7 May 2020 08:27:30 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
+        Thu, 7 May 2020 02:38:59 -0400
+Received: from mga03.intel.com ([134.134.136.65]:61723 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgEGGi6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 May 2020 02:38:58 -0400
+IronPort-SDR: IqiaAYcegqRmQfXmjTVh4Uo672wN+wJ54hotYONufBRaeUef9HKslkgdWGxuOMNGySBMDs7zjI
+ /P4op/WirYsg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 23:38:58 -0700
+IronPort-SDR: tvK4wWX+bS5AcJ9A2a4809Q98KrU/B3Mh/c5yzxVCk6esNSjACXHutlyq3+CiEbNdRy79BWsfV
+ 3PvhL+rOBXlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,362,1583222400"; 
+   d="scan'208";a="249187511"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 06 May 2020 23:38:58 -0700
+Received: from [10.213.151.174] (vramuthx-mobl1.gar.corp.intel.com [10.213.151.174])
+        by linux.intel.com (Postfix) with ESMTP id BC1E0580378;
+        Wed,  6 May 2020 23:38:53 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v5 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
 Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
         devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
         richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
@@ -40,71 +47,91 @@ Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
         robh+dt@kernel.org, linux-mips@vger.kernel.org,
         hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
         qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-Subject: Re: [PATCH v5 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200507082730.6425cd96@collabora.com>
-In-Reply-To: <440c0002-e572-7b8b-ba08-773932370eb0@linux.intel.com>
 References: <20200507001537.4034-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200507001537.4034-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200507072831.1bf7f784@collabora.com>
-        <440c0002-e572-7b8b-ba08-773932370eb0@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+ <20200507001537.4034-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200507072831.1bf7f784@collabora.com>
+ <440c0002-e572-7b8b-ba08-773932370eb0@linux.intel.com>
+ <20200507082730.6425cd96@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <69a06362-1f9d-bf65-4a9b-98fc6b63a391@linux.intel.com>
+Date:   Thu, 7 May 2020 14:38:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200507082730.6425cd96@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 7 May 2020 14:13:42 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+Hi Boris,
 
-> Hi Boris,
+   Thank you very much for the review comments and your time...
+
+On 7/5/2020 2:27 pm, Boris Brezillon wrote:
+> On Thu, 7 May 2020 14:13:42 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 > 
->     Thank you very much for the review comments and your time...
+>> Hi Boris,
+>>
+>>      Thank you very much for the review comments and your time...
+>>
+>> On 7/5/2020 1:28 pm, Boris Brezillon wrote:
+>>> On Thu,  7 May 2020 08:15:37 +0800
+>>> "Ramuthevar,Vadivel MuruganX"
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>    
+>>>> +	reg = readl(ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
+>>>> +	writel(reg | EBU_ADDR_MASK(5) | EBU_ADDR_SEL_REGEN,
+>>>> +	       ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
+>>>
+>>> Seriously, did you really think I would not notice what you're doing
+>>> here?
+>> Yes , I know that you have very good understanding about this.
+>>    You're reading the previous value which either contains a default
+>>> mapping or has the mapping set by the bootloader, and write it back to
+>>> the register along with a new mask and the REGEN bit set (which
+>>> BTW is wrong since you don't mask out other fields before updating
+>>> them).
+>> There is no other field get overwritten
+>>    This confirms that this Core -> FPI address translation exists
+>>> and has to be set properly, so please stop lying about that.
+>>
+>> Sorry, there is no SW translation, as I have mentioned that it's
+>> optional only, for safer side , reading and writing the default values.
 > 
-> On 7/5/2020 1:28 pm, Boris Brezillon wrote:
-> > On Thu,  7 May 2020 08:15:37 +0800
-> > "Ramuthevar,Vadivel MuruganX"
-> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> >   
-> >> +	reg = readl(ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
-> >> +	writel(reg | EBU_ADDR_MASK(5) | EBU_ADDR_SEL_REGEN,
-> >> +	       ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));  
-> > 
-> > Seriously, did you really think I would not notice what you're doing
-> > here?  
-> Yes , I know that you have very good understanding about this.
->   You're reading the previous value which either contains a default
-> > mapping or has the mapping set by the bootloader, and write it back to
-> > the register along with a new mask and the REGEN bit set (which
-> > BTW is wrong since you don't mask out other fields before updating
-> > them).  
-> There is no other field get overwritten
->   This confirms that this Core -> FPI address translation exists
-> > and has to be set properly, so please stop lying about that.  
+> Then write EBU_ADDR_SEL_REGEN and we'll if see that works. I suspect it
+> won't.
+
+You mean, without reading just writing EBU_ADDR_SEL_REGEN bit alone in 
+EBU_ADDR_SELx , as you said it won't work because it overwrites 0x174 
+with 0x0 values so BASE is lost.
+either we can leave it or read & write with ORed | EBU_ADDR_SEL_REGEN
+
+Please correct me if anything is wrong, Thanks!
 > 
-> Sorry, there is no SW translation, as I have mentioned that it's 
-> optional only, for safer side , reading and writing the default values.
-
-Then write EBU_ADDR_SEL_REGEN and we'll if see that works. I suspect it
-won't.
-
-> The memory region to enabled that's my concern so written the same 
-> register values.
-
-I don't buy that, sorry.
-
+>> The memory region to enabled that's my concern so written the same
+>> register values.
 > 
-> This will not be impact other fields, so please see below for reference
+> I don't buy that, sorry.
 > 
-> The EBU Address Select Registers EBU_ADDR_SEL_0 to EBU_ADDSEL3 establish 
-> and control memory regions for external accesses.
+>>
+>> This will not be impact other fields, so please see below for reference
+>>
+>> The EBU Address Select Registers EBU_ADDR_SEL_0 to EBU_ADDSEL3 establish
+>> and control memory regions for external accesses.
+>>
+>> Reset Value: 17400001H
 > 
-> Reset Value: 17400001H
+> See, as suspected the reset value is exactly what you expect.
 
-See, as suspected the reset value is exactly what you expect.
+Yes , that's the reason said being optional.
 
+Regards
+Vadivel
+> 
