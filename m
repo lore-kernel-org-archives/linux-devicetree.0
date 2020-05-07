@@ -2,95 +2,95 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D68C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0BEC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA26520663
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:14:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XfOJJXm+"
+	by mail.kernel.org (Postfix) with ESMTP id 3BF342073A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgEGKOA (ORCPT
+        id S1725900AbgEGKQY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 06:14:00 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12964 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgEGKN7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 06:13:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb3df5b0000>; Thu, 07 May 2020 03:13:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 07 May 2020 03:13:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 07 May 2020 03:13:59 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 7 May
- 2020 10:13:59 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 7 May 2020 10:13:59 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.26.74.75]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5eb3df660002>; Thu, 07 May 2020 03:13:59 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <linux-tegra@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH 2/2] arm64: tegra: Allow the PMIC RTC to wakeup Jetson Xavier
-Date:   Thu, 7 May 2020 11:13:49 +0100
-Message-ID: <20200507101349.14118-2-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200507101349.14118-1-jonathanh@nvidia.com>
-References: <20200507101349.14118-1-jonathanh@nvidia.com>
-X-NVConfidentiality: public
+        Thu, 7 May 2020 06:16:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:55720 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgEGKQY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 May 2020 06:16:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 036B2D6E;
+        Thu,  7 May 2020 03:16:22 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFF403F71F;
+        Thu,  7 May 2020 03:16:20 -0700 (PDT)
+Subject: Re: [PATCH RFC 4/8] arm64: dts: actions: disable sps node from S700
+To:     Amit Singh Tomar <amittomer25@gmail.com>, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
+Cc:     cristian.ciocaltea@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+References: <1588761371-9078-1-git-send-email-amittomer25@gmail.com>
+ <1588761371-9078-5-git-send-email-amittomer25@gmail.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Organization: ARM Ltd.
+Message-ID: <8cf98b73-8c8e-b9d7-989b-f1e869c990d5@arm.com>
+Date:   Thu, 7 May 2020 11:15:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588846427; bh=1hd7UO7e4/0O4siyJRQzrwEbDwRzmLIjEN8fOV8V+vY=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=XfOJJXm+p+XN23h5v5jI9Q4PoatxfEMJLor300JC/4DCnCTYL78Z4SoJ/U4jUx40D
-         p876Nz1T9wxIPrcnngkkBDACuWvlSKJupUQpOGzvcdkpVZXHgdpelzB5H4EMcJ04Uv
-         ZBIBP/nOvUiVnILHDvkdyIO9H1EOv2PfwveBLxPXNdimxSXVYJyLFkxL5/XffLdGxD
-         HNodcLANPI3s2fe8o2Fd4es2CjdngVWkxqNzfGhT1Qi/PwQXMbuRt3Zut8PTI1b8Mk
-         ST15nxkGROIc/OPYVBCAKz5ZfxTA7yR8aDy0797R/JZJiZMKpQgNKxq8OtS3iKrFka
-         63GE6LA8oROZw==
+In-Reply-To: <1588761371-9078-5-git-send-email-amittomer25@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The PMIC RTC is currently unable to wakeup Tegra194 on the Jetson Xavier
-platform because the interrupt from the PMIC is not usin the PMC as the
-interrupt parent but the GIC directly. Update the PMIC interrupt to use
-the PMC as the interrupt parent so that the PMIC RTC alarms can wakeup
-the device.
+On 06/05/2020 11:36, Amit Singh Tomar wrote:
+> After commit 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for
+> Actions Semi S700") following error has been observed while booting
+> Linux on Cubieboard7-lite(based on S700 SoC).
+> 
+> [    0.257415] pinctrl-s700 e01b0000.pinctrl: can't request region for
+> resource [mem 0xe01b0000-0xe01b0fff]
+> [    0.266902] pinctrl-s700: probe of e01b0000.pinctrl failed with error -16
+> 
+> This is due to the fact that memory range for "sps" power domain controller
+> clashes with pinctrl.
+> 
+> This commit fixes it by disabling "sps" node, it is safe as "sps" is not
+> being used at the moment.
+> 
+> Fixes: 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for Actions
+> Semi S700")
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+But this is more of a hack than a proper solution, right? Especially
+since you actually need the SPS later on (patch 8/8).
+It's probably good enough to prove that the DMA and MMC parts are
+working, but should not be merged.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-index 623f7d7d216b..eaba167d6cf0 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-@@ -111,7 +111,8 @@
- 				compatible = "maxim,max20024";
- 				reg = <0x3c>;
- 
--				interrupts = <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&pmc>;
-+				interrupts = <24 IRQ_TYPE_LEVEL_LOW>;
- 				#interrupt-cells = <2>;
- 				interrupt-controller;
- 
--- 
-2.17.1
+Cheers,
+Andre.
+
+> 
+> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+> ---
+>  arch/arm64/boot/dts/actions/s700.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+> index 2006ad5424fa..0397c5dd3dec 100644
+> --- a/arch/arm64/boot/dts/actions/s700.dtsi
+> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
+> @@ -220,6 +220,7 @@
+>  			compatible = "actions,s700-sps";
+>  			reg = <0x0 0xe01b0100 0x0 0x100>;
+>  			#power-domain-cells = <1>;
+> +			status = "disabled";
+>  		};
+>  
+>  		timer: timer@e024c000 {
+> 
 
