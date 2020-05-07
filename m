@@ -2,108 +2,243 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0980AC54E4A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 14:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F4CC47247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 14:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E74812084D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 14:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CCF2083B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 14:12:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgEGOLF (ORCPT
+        id S1727991AbgEGOL7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 10:11:05 -0400
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.1]:30358 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728103AbgEGOLE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 10:11:04 -0400
-Received: from [100.113.2.173] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-a.eu-central-1.aws.symcld.net id ED/3D-08563-4F614BE5; Thu, 07 May 2020 14:11:00 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRWlGSWpSXmKPExsVy8MN7Xd0vYlv
-  iDK7+ELSYc76FxWL+kXOsFocXvWC0aF68ns3i/tejjBY3P31jtbi8aw6bRfvG2awWS69fZLJ4
-  /6mTyaJ17xF2i/97drBb/Nw1j8Xi9sTJjA58HmvmrWH02LLyJpPHzll32T02repk87hzbQ+bx
-  /65a9g9+v8aeHzeJBfAEcWamZeUX5HAmvF/XSdrwQ/2ioeHOlkaGD+zdjFycQgJrGGU2P1kD0
-  sXIyeQUymxYcUsoAQHB6+AqcTj2WUgYTYBHYlHM9czgdgsAioSN/4eBrOFBawkPl+czAYyR0T
-  gJLNE572vLCAOs8A0Rok9Hw8zg1TxCghKnJz5BGwBs4CExMEXL5ghlmlJnFuzinECI/csJGWz
-  kJQtYGRaxWiZVJSZnlGSm5iZo2toYKBraGisa6hrZGCil1ilm6iXWqqbnJpXUpQIlNVLLC/WK
-  67MTc5J0ctLLdnECAz7lELGMzsYdy1/r3eIUZKDSUmUd8nnzXFCfEn5KZUZicUZ8UWlOanFhx
-  hlODiUJHj3i2yJExIsSk1PrUjLzAHGIExagoNHSYTXGhiHQrzFBYm5xZnpEKlTjLoc19/vXco
-  sxJKXn5cqJc6bCVIkAFKUUZoHNwKWDi4xykoJ8zIyMDAI8RSkFuVmlqDKv2IU52BUEuY9Kgo0
-  hSczrwRu0yugI5iAjvj8aRPIESWJCCmpBqb0TXyvNzscjljso8p4U8bh0GkXp3SuXzGFFX/6d
-  x2pEdka+zEiZ15V9ES3yAKPjGdHU3/vifrB0d1nUXH6BcMuzRbf1mamqffeil6JnmIip9N/LH
-  V7ga6nqm1MrPPEvbynLqy8qeZ89OCWxbXMB1I/CEw+UmKbn/7+0tvO99eEdBbOqymeccUiy2/
-  lbo1+9qge69xyV7NNWf/YXJftOi68+Xja9OpXghWhG9WmH3x279xmyWNTNkwqvRT5YGGyZPSt
-  ON01G5UnRLAf+K/6fr8yy+4d4tHN1XFSp9dkvl9pFtjbZxX2wHtXjfVssUP2co+jZ0xQ/RapM
-  iXUxmwWu6Huwj9rWdY+Oehq6XBCaqUSS3FGoqEWc1FxIgC9hAYEggMAAA==
-X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-19.tower-223.messagelabs.com!1588860659!2836654!2
-X-Originating-IP: [193.240.239.45]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.50.1; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 13072 invoked from network); 7 May 2020 14:11:00 -0000
-Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
-  by server-19.tower-223.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 7 May 2020 14:11:00 -0000
-Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Thu, 7 May 2020 16:10:58 +0200
-Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- 1660413F671; Thu,  7 May 2020 23:10:57 +0900 (KST)
-Message-ID: <cover.1588781316.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Thu, 7 May 2020 01:08:36 +0900
-Subject: [PATCH V13 0/3]  da7280: haptic driver submission
-To:     "David S. Miller" <davem@davemloft.net>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
+        Thu, 7 May 2020 10:11:59 -0400
+Received: from mga11.intel.com ([192.55.52.93]:9090 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727925AbgEGOL7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 May 2020 10:11:59 -0400
+IronPort-SDR: hTDz4VsBMkrVKHFI11zcZQd65TWFEDborTvD4KF9nuxb9P5+lU+bHnKDm3z2jx3OzXQumWReiC
+ EkE72ka3b8Yg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 07:11:55 -0700
+IronPort-SDR: i4ow1BEKENeTAcpljqM75JW4LeccNa7KTLCQzJHaZdz9DzrlWIIDqn9HU7/dIvkQ70ePRyv2vZ
+ UNzqo3eApsPQ==
+X-IronPort-AV: E=Sophos;i="5.73,363,1583222400"; 
+   d="scan'208";a="435300752"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 07:11:49 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 90C4320752; Thu,  7 May 2020 17:11:47 +0300 (EEST)
+Date:   Thu, 7 May 2020 17:11:47 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>, matrix.zhu@aliyun.com,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Cao Bing Bu <bingbu.cao@intel.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Louis Kuo <louis.kuo@mediatek.com>,
+        Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= 
+        <shengnan.wang@mediatek.com>
+Subject: Re: [V7, 1/2] media: dt-bindings: media: i2c: Document OV02A10
+ bindings
+Message-ID: <20200507141147.GF9190@paasikivi.fi.intel.com>
+References: <20200430080924.1140-1-dongchun.zhu@mediatek.com>
+ <20200430080924.1140-2-dongchun.zhu@mediatek.com>
+ <20200505070451.GS9190@paasikivi.fi.intel.com>
+ <1588688238.8804.150.camel@mhfsdcap03>
+ <20200506112136.GV9190@paasikivi.fi.intel.com>
+ <1588856325.8804.179.camel@mhfsdcap03>
+ <CAAFQd5CXRD_j7Xkxb4=9kkd+pDy4W5pirAPSG8RsMVH6L-MU2w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5CXRD_j7Xkxb4=9kkd+pDy4W5pirAPSG8RsMVH6L-MU2w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support for the Dialog DA7280 Haptic driver IC.
+Hi Tomasz, Dongchun,
 
-In this patch set the following is provided:
+On Thu, May 07, 2020 at 03:50:40PM +0200, Tomasz Figa wrote:
+> Hi Sakari and Dongchun,
+> 
+> On Thu, May 7, 2020 at 3:00 PM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+> >
+> > Hi Sakari,
+> >
+> > Thanks for the review.
+> >
+> > On Wed, 2020-05-06 at 14:21 +0300, Sakari Ailus wrote:
+> > > Hi Dongchun,
+> > >
+> > > On Tue, May 05, 2020 at 10:17:18PM +0800, Dongchun Zhu wrote:
+> > > > Hi Sakari,
+> > > >
+> > > > Thanks for the review.
+> > > >
+> > > > On Tue, 2020-05-05 at 10:04 +0300, Sakari Ailus wrote:
+> > > > > Hi Dongchun,
+> > > > >
+> > > > > On Thu, Apr 30, 2020 at 04:09:23PM +0800, Dongchun Zhu wrote:
+> > > > > > Add DT bindings documentation for Omnivision OV02A10 image sensor.
+> > > > > >
+> > > > > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > > > ---
+> > > > > >  .../bindings/media/i2c/ovti,ov02a10.yaml           | 148 +++++++++++++++++++++
+> > > > > >  MAINTAINERS                                        |   7 +
+> > > > > >  2 files changed, 155 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
+> > > > > > new file mode 100644
+> > > > > > index 0000000..2be4bd2
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
+> > > > > > @@ -0,0 +1,148 @@
+> > > > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > > > +# Copyright (c) 2020 MediaTek Inc.
+> > > > > > +%YAML 1.2
+> > > > > > +---
+> > > > > > +$id: http://devicetree.org/schemas/media/i2c/ovti,ov02a10.yaml#
+> > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > +
+> > > > > > +title: Omnivision OV02A10 CMOS Sensor Device Tree Bindings
+> > > > > > +
+> > > > > > +maintainers:
+> > > > > > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > > > +
+> > > > > > +description: |-
+> > > > > > +  The Omnivision OV02A10 is a low-cost, high performance, 1/5-inch, 2 megapixel
+> > > > > > +  image sensor, which is the latest production derived from Omnivision's CMOS
+> > > > > > +  image sensor technology. Ihis chip supports high frame rate speeds up to 30fps
+> > > > > > +  @ 1600x1200 (UXGA) resolution transferred over a 1-lane MIPI interface. The
+> > > > > > +  sensor output is available via CSI-2 serial data output.
+> > > > > > +
+> > > > > > +properties:
+> > > > > > +  compatible:
+> > > > > > +    const: ovti,ov02a10
+> > > > > > +
+> > > > > > +  reg:
+> > > > > > +    maxItems: 1
+> > > > > > +
+> > > > > > +  clocks:
+> > > > > > +    items:
+> > > > > > +      - description: top mux camtg clock
+> > > > > > +      - description: devider clock
+> > > > > > +
+> > > > > > +  clock-names:
+> > > > > > +    items:
+> > > > > > +      - const: eclk
+> > > > > > +      - const: freq_mux
+> > > > > > +
+> > > > > > +  clock-frequency:
+> > > > > > +    description:
+> > > > > > +      Frequency of the eclk clock in Hertz.
+> > > > > > +
+> > > > > > +  dovdd-supply:
+> > > > > > +    description:
+> > > > > > +      Definition of the regulator used as interface power supply.
+> > > > > > +
+> > > > > > +  avdd-supply:
+> > > > > > +    description:
+> > > > > > +      Definition of the regulator used as analog power supply.
+> > > > > > +
+> > > > > > +  dvdd-supply:
+> > > > > > +    description:
+> > > > > > +      Definition of the regulator used as digital power supply.
+> > > > > > +
+> > > > > > +  powerdown-gpios:
+> > > > > > +    description:
+> > > > > > +      The phandle and specifier for the GPIO that controls sensor powerdown.
+> > > > > > +
+> > > > > > +  reset-gpios:
+> > > > > > +    description:
+> > > > > > +      The phandle and specifier for the GPIO that controls sensor reset.
+> > > > > > +
+> > > > > > +  rotation:
+> > > > > > +    description:
+> > > > > > +      Definition of the sensor's placement, valid values are 0 and 180.
+> > > > > > +    allOf:
+> > > > > > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> > > > > > +      - enum:
+> > > > > > +          - 0    # Sensor Mounted Upright
+> > > > > > +          - 180  # Sensor Mounted Upside Down
+> > > > > > +
+> > > > > > +  ovti,mipi-tx-speed:
+> > > > > > +    description:
+> > > > > > +      Indication of MIPI transmission speed select.
+> > > > >
+> > > > > What exactly does this signify? And how do you come up with the number?
+> > > > >
+> > > >
+> > > > Apologies for not addressing this number clear.
+> > > >
+> > > > From the datasheet, P1:0xA1 register represents TX_SPEED_AREA_SEL with
+> > > > the default val: 0x03.
+> > > > The description of this RW register is as below:
+> > > > Bit[2:0]: MIPI transmission speed select.
+> > > >
+> > > > Thus the enum should be definited as [ 0, 1, 2, 3, 4, 5, 6, 7 ].
+> > > > This would be fixed in next release.
+> > > >
+> > > > In the meantime, as the default val of P1:0xA1 is 0x03, we hope to keep
+> > > > that value if there is no setting for this private property in DT.
+> > > > The caller in driver would be updated like this in next release.
+> > > > if (ov02a10->mipi_clock_tx_speed)
+> > > >     ret = i2c_smbus_write_byte_data(...,...);
+> > >
+> > > How did you pick the value in the example? And why do you believe it is
+> > > specific to a platform, and not e.g. a sensor mode?
+> > >
+> >
+> > We look into P1:0XA1, one register that defines MIPI transmission speed
+> > select.
+> > From the datasheet, we can get the possible values that could be set to
+> > P1:0xA1.
+> >
+> > Actually this register is an independent of sensor mode, it is just
+> > included in sensor mode's register setting table.
+> >
+> > In addition, this private DT Property is created to fix the MIPI test
+> > failure. The register values are adjusted and verified from vendor to
+> > make sensor signal meet MIPI specification.
+> >
+> 
+> In theory the value could depend on the mode, because different link
+> rate could impose different requirements for the physical interface.
+> In practice, we haven't seen any hardware that would require different
+> values for different modes.
 
-[PATCH V13 1/3] MAINTAINERS file update for DA7280
-[PATCH V13 2/3] DA7280 DT Binding
-[PATCH V13 3/3] DA7280 Driver
+The mode (possibly in conjunction with other information available to the
+driver via V4L2 fwnode interface) precisely defines the parameters of the
+CSI-2 bus --- apart from the possible exception of the bus timing related
+parameters but this is not supported by the name of the parameter.
 
-This patch applies against linux-next and v5.7-rc4
-
-Thank you,
-Roy Im, Dialog Semiconductor Ltd.
-
-Roy Im (3):
-  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
-  dt-bindings: input: Add document bindings for DA7280
-  Input: new da7280 haptic driver
-
- .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
- MAINTAINERS                                        |    2 +
- drivers/input/misc/Kconfig                         |   13 +
- drivers/input/misc/Makefile                        |    1 +
- drivers/input/misc/da7280.c                        | 1898 ++++++++++++++++++++
- 5 files changed, 2023 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
- create mode 100644 drivers/input/misc/da7280.c
+Therefore I don't see how this parameter, which supposedly is used to
+determine the CSI-2 transmissions speed, could be board specific and thus
+belong to DT.
 
 -- 
-end-of-patch for PATCH V13
+Kind regards,
 
+Sakari Ailus
