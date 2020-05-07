@@ -2,125 +2,73 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF52C38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97C4C38A24
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E197208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:32:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezklgun3"
+	by mail.kernel.org (Postfix) with ESMTP id BE88D208CA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbgEGLct (ORCPT
+        id S1726587AbgEGLnW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 07:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbgEGLcs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 07:32:48 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1427AC05BD43;
-        Thu,  7 May 2020 04:32:47 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id s8so5952415wrt.9;
-        Thu, 07 May 2020 04:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=miVjUF+kU459Gr4P0bFX33XFzImTaFGt5nwVSljspPk=;
-        b=ezklgun3NG8L1ZLbd0I/M8AZkRmb1NVMMIzZtOYA91JKlr7sDY4h8dRsT8fHiZr5sc
-         2sKrYYkfWy7mm6Dop7KFiE7THZONbRDESBN5SaxRJyxxPlV75OGFN5EwIeHYNMfcUs+7
-         WHfoMElCdA+YwRMYWk7eDqMnoBRVoOdWHVwFqlgVvXodrb/6OyPVetautl0IkOlR0lSd
-         bhoqGy1Uwk+sx7DQBfov++lxLzCGHj2VbAqkaGnjQyqRWtZU9QeEENpE13pjwZsSlp0c
-         prbBP2cwXGsLBVjkN2TnjXD2QppwjO/pDiBiyJtvIxq1e2LCMS0YGWJdTZe2otTlprTs
-         k33Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=miVjUF+kU459Gr4P0bFX33XFzImTaFGt5nwVSljspPk=;
-        b=Cny1AeQyB80SoiyPXOs3y3asR2BywmUluOee3m+KpmhQduWvx0yJWbdd6Ax/C3Ru8X
-         fTgWNXbWiR5u8OFga6dJKenGL2Ffn+2//ZVtj8ApmZvbVtnTABqkNFfY7tTvl9tFlmLP
-         JeCa3PfYBDgpM7H+11uFmhFAPu94+ffzpk+5Ky7TVDpeV9eHRh2/cIAJcaMeX7Z33HdD
-         yNRoYFiHOnsQq1lGTUv9b3U39h3DUPh/UYwxbnSHd7DLY+q+9Ek7i12FtlaCVKFlvcPQ
-         8j/AfHbP0RvjLIaGrLkfthPjX40tiGIK1v/+uolvcF0OqnuGNvX0YpRzdGW0B4RySrcH
-         MPOw==
-X-Gm-Message-State: AGi0PuacPWWa5ll3ki3CyFKhey2g4bGT5C/oLHIkcml0FFNYgumc7Ewe
-        xN8DSSTEtM1WA3XCimZc/n4=
-X-Google-Smtp-Source: APiQypKZOjvXEiIprA5Ny63FeE9kMmGQs4HOWplnvTx4gD1ekq4zG5NManY4iny4mcyhjAje3EfW1Q==
-X-Received: by 2002:a5d:6712:: with SMTP id o18mr16171936wru.115.1588851165984;
-        Thu, 07 May 2020 04:32:45 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id e21sm7745787wrc.1.2020.05.07.04.32.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 May 2020 04:32:45 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1] ASoC: rockchip-i2s: add description for rk3308
-Date:   Thu,  7 May 2020 13:32:38 +0200
-Message-Id: <20200507113238.7904-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 7 May 2020 07:43:22 -0400
+Received: from elvis.franken.de ([193.175.24.41]:43576 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbgEGLnV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 May 2020 07:43:21 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jWevq-00081e-03; Thu, 07 May 2020 13:43:14 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 93899C0409; Thu,  7 May 2020 13:09:51 +0200 (CEST)
+Date:   Thu, 7 May 2020 13:09:51 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Zhou Yanjie <zhouyanjie@zoho.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 11/20] mips: MAAR: Use more precise address mask
+Message-ID: <20200507110951.GD11616@alpha.franken.de>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-12-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506174238.15385-12-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The description below is already in use for rk3308.dtsi,
-but was somehow never added to a document, so add
-"rockchip,rk3308-i2s", "rockchip,rk3066-i2s"
-for i2s nodes on a rk3308 platform to rockchip-i2s.yaml.
-One of the rk3308 i2s nodes also has a different dma layout,
-so change that as well.
+On Wed, May 06, 2020 at 08:42:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> Indeed according to the P5600/P6000 manual the MAAR pair register
+> address field either takes [12:31] bits for 32-bits non-XPA systems
+> and [12:35] otherwise. In any case the current address mask is just
+> wrong for 64-bit and 32-bits XPA chips. So lets extend it to 39-bits
+> value. This shall cover the 64-bits architecture and systems with XPA
+> enabled, and won't cause any problem for non-XPA 32-bit systems, since
+> the value will be just truncated when written to the 32-bits register.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
-The rk3308 i2s nodes also contain the properties
-"reset-names" and "resets". Code in the manufacturer tree is
-not yet applied in the mainline kernel, so skip them for now.
----
- Documentation/devicetree/bindings/sound/rockchip-i2s.yaml | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+according to MIPS32 Priveleged Resoure Architecture Rev. 6.02
+ADDR spans from bit 12 to bit 55. So your patch fits only for P5600.
+Does the wider mask cause any problems ?
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-index a3ba2186d..10f9d3ad0 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-+++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-@@ -24,6 +24,7 @@ properties:
-             - rockchip,rk3188-i2s
-             - rockchip,rk3228-i2s
-             - rockchip,rk3288-i2s
-+            - rockchip,rk3308-i2s
-             - rockchip,rk3328-i2s
-             - rockchip,rk3366-i2s
-             - rockchip,rk3368-i2s
-@@ -47,14 +48,15 @@ properties:
-       - const: i2s_hclk
- 
-   dmas:
--    items:
--      - description: TX DMA Channel
--      - description: RX DMA Channel
-+    minItems: 1
-+    maxItems: 2
- 
-   dma-names:
--    items:
--      - const: tx
-+    oneOf:
-       - const: rx
-+      - items:
-+        - const: tx
-+        - const: rx
- 
-   power-domains:
-     maxItems: 1
+Thomas.
+
 -- 
-2.11.0
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
