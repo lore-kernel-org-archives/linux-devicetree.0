@@ -2,378 +2,759 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E131C38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 12:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A43C38A24
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 12:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 091A8207DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 12:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="seEm0ytv"
+	by mail.kernel.org (Postfix) with ESMTP id B9F822063A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 12:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbgEGMqq (ORCPT
+        id S1725947AbgEGMvg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 08:46:46 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:36747 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725857AbgEGMqq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 08:46:46 -0400
-X-UUID: f281595b85724906b1b2ac3234039cca-20200507
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Cnyq0ap0od9ETjikpOiyNssrJ6H77vhRUTGnWmVzp7A=;
-        b=seEm0ytv0D8UIHGeeOoS923kMDaWmUNcbSH9qqaeMjW0Qkn/cLupSrllSiFyksHap1XZ7Q1c7vQbVdiXhc4L3aaxXEz0H8y78yYukG0DZkNtm0CrvOYGOkwuTvh9zAURRUhdga5YYJzUesxjS/V640jThTmH9KVMEd84Jek1JaM=;
-X-UUID: f281595b85724906b1b2ac3234039cca-20200507
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 761235958; Thu, 07 May 2020 20:46:30 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 7 May
- 2020 20:46:28 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 7 May 2020 20:46:29 +0800
-Message-ID: <1588855524.8804.168.camel@mhfsdcap03>
-Subject: Re: [V5, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <drinkcat@chromium.org>, <tfiga@chromium.org>,
-        <matthias.bgg@gmail.com>, <bingbu.cao@intel.com>,
-        <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
-Date:   Thu, 7 May 2020 20:45:24 +0800
-In-Reply-To: <20200506151352.GZ9190@paasikivi.fi.intel.com>
-References: <20200502161727.30463-1-dongchun.zhu@mediatek.com>
-         <20200502161727.30463-3-dongchun.zhu@mediatek.com>
-         <20200506151352.GZ9190@paasikivi.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 7 May 2020 08:51:36 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38202 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgEGMvf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 08:51:35 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 23EAF2A29FB;
+        Thu,  7 May 2020 13:51:30 +0100 (BST)
+Date:   Thu, 7 May 2020 14:51:27 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        <devicetree@vger.kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Naga Sureshkumar Relli <nagasure@xilinx.com>
+Subject: Re: [PATCH v3 7/8] mtd: rawnand: arasan: Add new Arasan NAND
+ controller
+Message-ID: <20200507145127.71615ed8@collabora.com>
+In-Reply-To: <20200507110034.14736-8-miquel.raynal@bootlin.com>
+References: <20200507110034.14736-1-miquel.raynal@bootlin.com>
+        <20200507110034.14736-8-miquel.raynal@bootlin.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: D1FAE596B3EA16B283DDB710A97CBE78338F679B1D408994C1DC7D551E3354D82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgU2FrYXJpLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCk9uIFdlZCwgMjAyMC0wNS0w
-NiBhdCAxODoxMyArMDMwMCwgU2FrYXJpIEFpbHVzIHdyb3RlOg0KPiBIaSBEb25nY2h1biwNCj4g
-DQo+IE9uIFN1biwgTWF5IDAzLCAyMDIwIGF0IDEyOjE3OjI3QU0gKzA4MDAsIERvbmdjaHVuIFpo
-dSB3cm90ZToNCj4gPiBBZGQgYSBWNEwyIHN1Yi1kZXZpY2UgZHJpdmVyIGZvciBEVzk3Njggdm9p
-Y2UgY29pbCBtb3RvciwgcHJvdmlkaW5nDQo+ID4gY29udHJvbCB0byBzZXQgdGhlIGRlc2lyZWQg
-Zm9jdXMgdmlhIElJQyBzZXJpYWwgaW50ZXJmYWNlLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
-IERvbmdjaHVuIFpodSA8ZG9uZ2NodW4uemh1QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAg
-TUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiA+ICBkcml2ZXJzL21lZGlhL2ky
-Yy9LY29uZmlnICB8ICAxMSArKw0KPiA+ICBkcml2ZXJzL21lZGlhL2kyYy9NYWtlZmlsZSB8ICAg
-MSArDQo+ID4gIGRyaXZlcnMvbWVkaWEvaTJjL2R3OTc2OC5jIHwgNDQwICsrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDQ1
-MyBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL2ky
-Yy9kdzk3NjguYw0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlO
-RVJTDQo+ID4gaW5kZXggOGQ3MmM0MS4uYzkyZGM5OSAxMDA2NDQNCj4gPiAtLS0gYS9NQUlOVEFJ
-TkVSUw0KPiA+ICsrKyBiL01BSU5UQUlORVJTDQo+ID4gQEAgLTUxNTcsNiArNTE1Nyw3IEBAIEw6
-CWxpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZw0KPiA+ICBTOglNYWludGFpbmVkDQo+ID4gIFQ6
-CWdpdCBnaXQ6Ly9saW51eHR2Lm9yZy9tZWRpYV90cmVlLmdpdA0KPiA+ICBGOglEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Rvbmd3b29uLGR3OTc2OC55YW1sDQo+
-ID4gK0Y6CWRyaXZlcnMvbWVkaWEvaTJjL2R3OTc2OC5jDQo+ID4gIA0KPiA+ICBET05HV09PTiBE
-Vzk4MDcgTEVOUyBWT0lDRSBDT0lMIERSSVZFUg0KPiA+ICBNOglTYWthcmkgQWlsdXMgPHNha2Fy
-aS5haWx1c0BsaW51eC5pbnRlbC5jb20+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEv
-aTJjL0tjb25maWcgYi9kcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnDQo+ID4gaW5kZXggMTI1ZDU5
-Ni4uNmEzZjlkYSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnDQo+
-ID4gKysrIGIvZHJpdmVycy9tZWRpYS9pMmMvS2NvbmZpZw0KPiA+IEBAIC0xMDQwLDYgKzEwNDAs
-MTcgQEAgY29uZmlnIFZJREVPX0RXOTcxNA0KPiA+ICAJICBjYXBhYmlsaXR5LiBUaGlzIGlzIGRl
-c2lnbmVkIGZvciBsaW5lYXIgY29udHJvbCBvZg0KPiA+ICAJICB2b2ljZSBjb2lsIG1vdG9ycywg
-Y29udHJvbGxlZCB2aWEgSTJDIHNlcmlhbCBpbnRlcmZhY2UuDQo+ID4gIA0KPiA+ICtjb25maWcg
-VklERU9fRFc5NzY4DQo+ID4gKwl0cmlzdGF0ZSAiRFc5NzY4IGxlbnMgdm9pY2UgY29pbCBzdXBw
-b3J0Ig0KPiA+ICsJZGVwZW5kcyBvbiBJMkMgJiYgVklERU9fVjRMMiAmJiBNRURJQV9DT05UUk9M
-TEVSDQo+ID4gKwlkZXBlbmRzIG9uIFZJREVPX1Y0TDJfU1VCREVWX0FQSQ0KPiANCj4gUGxlYXNl
-IGNoZWNrIGhvdyB0aGlzIHdvcmtzIGluIHRoZSBtZWRpYSB0cmVlIG1hc3RlciBicmFuY2ggbm93
-IC0tLSBpdCdzDQo+IGxhcmdlbHkgc2VsZWN0IGJhc2VkLg0KPiANCg0KVGhlIGFjdHVhdG9yIGRy
-aXZlciB1c2VzIHNvbWUgc3RydWN0dXJlcyB0aGF0IHJlcXVpcmUgdGhlDQpWSURFT19WNEwyX1NV
-QkRFVl9BUEkgY29kZSwgc28gaGVyZSB3ZSBhZGQgVklERU9fVjRMMl9TVUJERVZfQVBJDQpkZXBl
-bmRlbmN5IHRvIGF2b2lkIHBvc3NpYmxlIGJ1aWxkIGVycm9yIHdoZW4gaXQncyBub3QgZW5hYmxl
-ZC4NCg0KPiBJbiBnZW5lcmFsIHRoZSBwYXRjaCBzZWVtcyBmaW5lIHRvIG1lLCBidXQgcGxlYXNl
-IHNlZSB0aGUgb3RoZXIgY29tbWVudHMNCj4gYmVsb3csIHRvby4NCj4gDQo+ID4gKwlkZXBlbmRz
-IG9uIFBNDQo+ID4gKwloZWxwDQo+ID4gKwkgIFRoaXMgaXMgYSBkcml2ZXIgZm9yIHRoZSBEVzk3
-NjggY2FtZXJhIGxlbnMgdm9pY2UgY29pbC4NCj4gPiArCSAgRFc5NzY4IGlzIGEgMTAgYml0IERB
-QyB3aXRoIDEwMG1BIG91dHB1dCBjdXJyZW50IHNpbmsNCj4gPiArCSAgY2FwYWJpbGl0eS4gVGhp
-cyBpcyBkZXNpZ25lZCBmb3IgbGluZWFyIGNvbnRyb2wgb2YNCj4gPiArCSAgdm9pY2UgY29pbCBt
-b3RvcnMsIGNvbnRyb2xsZWQgdmlhIEkyQyBzZXJpYWwgaW50ZXJmYWNlLg0KPiA+ICsNCj4gPiAg
-Y29uZmlnIFZJREVPX0RXOTgwN19WQ00NCj4gPiAgCXRyaXN0YXRlICJEVzk4MDcgbGVucyB2b2lj
-ZSBjb2lsIHN1cHBvcnQiDQo+ID4gIAlkZXBlbmRzIG9uIEkyQyAmJiBWSURFT19WNEwyICYmIE1F
-RElBX0NPTlRST0xMRVINCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9pMmMvTWFrZWZp
-bGUgYi9kcml2ZXJzL21lZGlhL2kyYy9NYWtlZmlsZQ0KPiA+IGluZGV4IDc3YmY3ZDAuLjQwNTc0
-NzYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tZWRpYS9pMmMvTWFrZWZpbGUNCj4gPiArKysg
-Yi9kcml2ZXJzL21lZGlhL2kyYy9NYWtlZmlsZQ0KPiA+IEBAIC0yNCw2ICsyNCw3IEBAIG9iai0k
-KENPTkZJR19WSURFT19TQUE2NzUySFMpICs9IHNhYTY3NTJocy5vDQo+ID4gIG9iai0kKENPTkZJ
-R19WSURFT19BRDU4MjApICArPSBhZDU4MjAubw0KPiA+ICBvYmotJChDT05GSUdfVklERU9fQUs3
-Mzc1KSAgKz0gYWs3Mzc1Lm8NCj4gPiAgb2JqLSQoQ09ORklHX1ZJREVPX0RXOTcxNCkgICs9IGR3
-OTcxNC5vDQo+ID4gK29iai0kKENPTkZJR19WSURFT19EVzk3NjgpICArPSBkdzk3Njgubw0KPiA+
-ICBvYmotJChDT05GSUdfVklERU9fRFc5ODA3X1ZDTSkgICs9IGR3OTgwNy12Y20ubw0KPiA+ICBv
-YmotJChDT05GSUdfVklERU9fQURWNzE3MCkgKz0gYWR2NzE3MC5vDQo+ID4gIG9iai0kKENPTkZJ
-R19WSURFT19BRFY3MTc1KSArPSBhZHY3MTc1Lm8NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
-ZWRpYS9pMmMvZHc5NzY4LmMgYi9kcml2ZXJzL21lZGlhL2kyYy9kdzk3NjguYw0KPiA+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uZGQ2ODUzNA0KPiA+IC0tLSAvZGV2
-L251bGwNCj4gPiArKysgYi9kcml2ZXJzL21lZGlhL2kyYy9kdzk3NjguYw0KPiA+IEBAIC0wLDAg
-KzEsNDQwIEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4g
-Ky8vIENvcHlyaWdodCAoYykgMjAyMCBNZWRpYVRlayBJbmMuDQo+ID4gKw0KPiA+ICsjaW5jbHVk
-ZSA8bGludXgvZGVsYXkuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2kyYy5oPg0KPiA+ICsjaW5j
-bHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+
-DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4NCj4gPiArI2luY2x1
-ZGUgPG1lZGlhL3Y0bDItYXN5bmMuaD4NCj4gPiArI2luY2x1ZGUgPG1lZGlhL3Y0bDItY3RybHMu
-aD4NCj4gPiArI2luY2x1ZGUgPG1lZGlhL3Y0bDItZGV2aWNlLmg+DQo+ID4gKyNpbmNsdWRlIDxt
-ZWRpYS92NGwyLXN1YmRldi5oPg0KPiA+ICsNCj4gPiArI2RlZmluZSBEVzk3NjhfTkFNRQkJCQki
-ZHc5NzY4Ig0KPiA+ICsjZGVmaW5lIERXOTc2OF9NQVhfRk9DVVNfUE9TCQkJKDEwMjQgLSAxKQ0K
-PiA+ICsvKg0KPiA+ICsgKiBUaGlzIHNldHMgdGhlIG1pbmltdW0gZ3JhbnVsYXJpdHkgZm9yIHRo
-ZSBmb2N1cyBwb3NpdGlvbnMuDQo+ID4gKyAqIEEgdmFsdWUgb2YgMSBnaXZlcyBtYXhpbXVtIGFj
-Y3VyYWN5IGZvciBhIGRlc2lyZWQgZm9jdXMgcG9zaXRpb24NCj4gPiArICovDQo+ID4gKyNkZWZp
-bmUgRFc5NzY4X0ZPQ1VTX1NURVBTCQkJMQ0KPiA+ICsNCj4gPiArLyoNCj4gPiArICogUmluZyBj
-b250cm9sIGFuZCBQb3dlciBjb250cm9sIHJlZ2lzdGVyDQo+ID4gKyAqIEJpdFsxXSBSSU5HX0VO
-DQo+ID4gKyAqIDA6IERpcmVjdCBtb2RlDQo+ID4gKyAqIDE6IEFBQyBtb2RlIChyaW5naW5nIGNv
-bnRyb2wgbW9kZSkNCj4gPiArICogQml0WzBdIFBEDQo+ID4gKyAqIDA6IE5vcm1hbCBvcGVyYXRp
-b24gbW9kZQ0KPiA+ICsgKiAxOiBQb3dlciBkb3duIG1vZGUNCj4gPiArICogRFc5NzY4IHJlcXVp
-cmVzIHdhaXRpbmcgdGltZSBvZiBUb3ByIGFmdGVyIFBEIHJlc2V0IHRha2VzIHBsYWNlLg0KPiA+
-ICsgKi8NCj4gPiArI2RlZmluZSBEVzk3NjhfUklOR19QRF9DT05UUk9MX1JFRwkJMHgwMg0KPiA+
-ICsjZGVmaW5lIERXOTc2OF9QRF9NT0RFX09GRgkJCTB4MDANCj4gPiArI2RlZmluZSBEVzk3Njhf
-UERfTU9ERV9FTgkJCUJJVCgwKQ0KPiA+ICsjZGVmaW5lIERXOTc2OF9BQUNfTU9ERV9FTgkJCUJJ
-VCgxKQ0KPiA+ICsNCj4gPiArLyoNCj4gPiArICogRFc5NzY4IHNlcGFyYXRlcyB0d28gcmVnaXN0
-ZXJzIHRvIGNvbnRyb2wgdGhlIFZDTSBwb3NpdGlvbi4NCj4gPiArICogT25lIGZvciBNU0IgdmFs
-dWUsIGFub3RoZXIgaXMgTFNCIHZhbHVlLg0KPiA+ICsgKiBEQUNfTVNCOiBEWzk6OF0gKEFERDog
-MHgwMykNCj4gPiArICogREFDX0xTQjogRFs3OjBdIChBREQ6IDB4MDQpDQo+ID4gKyAqIERbOTow
-XSBEQUMgZGF0YSBpbnB1dDogcG9zaXRpdmUgb3V0cHV0IGN1cnJlbnQgPSBEWzk6MF0gLyAxMDIz
-ICogMTAwW21BXQ0KPiA+ICsgKi8NCj4gPiArI2RlZmluZSBEVzk3NjhfTVNCX0FERFIJCQkJMHgw
-Mw0KPiA+ICsjZGVmaW5lIERXOTc2OF9MU0JfQUREUgkJCQkweDA0DQo+ID4gKyNkZWZpbmUgRFc5
-NzY4X1NUQVRVU19BRERSCQkJMHgwNQ0KPiA+ICsNCj4gPiArLyoNCj4gPiArICogQUFDIG1vZGUg
-Y29udHJvbCAmIHByZXNjYWxlIHJlZ2lzdGVyDQo+ID4gKyAqIEJpdFs3OjVdIE5hbWVseSBBQ1sy
-OjBdLCBkZWNpZGUgdGhlIFZDTSBtb2RlIGFuZCBvcGVyYXRpb24gdGltZS4NCj4gPiArICogMDAw
-IERpcmVjdChkZWZhdWx0KQ0KPiA+ICsgKiAwMDEgQUFDMiAwLjQ4eFR2aWINCj4gPiArICogMDEw
-IEFBQzMgMC43MHhUdmliDQo+ID4gKyAqIDAxMSBBQUM0IDAuNzV4VHZpYg0KPiA+ICsgKiAxMDAg
-UmVzZXJ2ZWQNCj4gPiArICogMTAxIEFBQzggMS4xM3hUdmliDQo+ID4gKyAqIDExMCBSZXNlcnZl
-ZA0KPiA+ICsgKiAxMTEgUmVzZXJ2ZWQNCj4gPiArICogQml0WzI6MF0gTmFtZWx5IFBSRVNDWzI6
-MF0sIHNldCB0aGUgaW50ZXJuYWwgY2xvY2sgZGl2aWRpbmcgcmF0ZSBhcyBmb2xsb3cuDQo+ID4g
-KyAqIDAwMCAyDQo+ID4gKyAqIDAwMSAxKGRlZmF1bHQpDQo+ID4gKyAqIDAxMCAxLzINCj4gPiAr
-ICogMDExIDEvNA0KPiA+ICsgKiAxMDAgOA0KPiA+ICsgKiAxMDEgNA0KPiA+ICsgKiAxMTAgUmVz
-ZXJ2ZWQNCj4gPiArICogMTExIFJlc2VydmVkDQo+ID4gKyAqLw0KPiA+ICsjZGVmaW5lIERXOTc2
-OF9BQUNfUFJFU0NfUkVHCQkJMHgwNg0KPiA+ICsjZGVmaW5lIERXOTc2OF9BQUMzX1NFTEVDVF9E
-SVZJRElOR19SQVRFXzEJMHg0MQ0KPiANCj4gSSBndWVzcyB3ZSBjYW4gc3RhcnQgd2l0aCB0aGVz
-ZSB2YWx1ZXMuIEJ1dCBJIGNhbid0IHRoaW5rIG9mIGFub3RoZXIgb3B0aW9uDQo+IHRoYW4gcHV0
-dGluZyB0aGVtIGludG8gRFQgaWYgdGhlcmUgYXJlIGRpZmZlcmVuY2VzIGJldHdlZW4gd2hhdCBo
-YXJkd2FyZQ0KPiBwbGF0Zm9ybXMgcmVxdWlyZS4NCj4gDQoNCkxldCdzIGhhdmUgYSBkaXNjdXNz
-aW9uIGFib3V0IHRoaXMuDQpOb3cgdGhlc2Ugbm9uLWRlZmF1bHQgcmVnaXN0ZXIgc2V0dGluZ3Mg
-cmVwcmVzZW50IG9uZSBBQUMgb3BlcmF0aW9uDQptb2RlLCB0aGlzIGlzIG9uZSBvcHRpb24gYW5k
-IHdvcmtzIGZvciBhIGdpdmVuIGxlbnMgb3IgYSBtb2R1bGUuDQpJZiBzb21ldGltZSBpbiB0aGUg
-ZnV0dXJlIGhhcmR3YXJlIHBsYXRmb3JtcyByZXF1aXJlIGFub3RoZXIgZGlmZmVyZW50DQpzZXR0
-aW5ncywgdGhlbiBEVCBwcm9wZXJ0aWVzIG1heSBuZWVkIHRvIGJlIGNyZWF0ZWQuDQoNCj4gPiAr
-DQo+ID4gKy8qDQo+ID4gKyAqIFZDTSBwZXJpb2Qgb2YgdmlicmF0aW9uIHJlZ2lzdGVyDQo+ID4g
-KyAqIEJpdFs1OjBdIERlZmluZWQgYXMgVkNNIHJpc2luZyBwZXJpb2RpYyB0aW1lIChUdmliKSB0
-b2dldGhlciB3aXRoIFBSRVNDWzI6MF0NCj4gPiArICogVHZpYiA9ICg2LjNtcyArIEFBQ1RbNTow
-XSAqIDAuMW1zKSAqIERpdmlkaW5nIFJhdGUNCj4gPiArICogRGl2aWRpbmcgUmF0ZSBpcyB0aGUg
-aW50ZXJuYWwgY2xvY2sgZGl2aWRpbmcgcmF0ZSB0aGF0IGlzIGRlZmluZWQgYXQNCj4gPiArICog
-UFJFU0NBTEUgcmVnaXN0ZXIgKEFERDogMHgwNikNCj4gPiArICovDQo+ID4gKyNkZWZpbmUgRFc5
-NzY4X0FBQ19USU1FX1JFRwkJCTB4MDcNCj4gPiArI2RlZmluZSBEVzk3NjhfQUFDVF9DTlQJCQkJ
-MHgzOQ0KPiA+ICsNCj4gPiArLyoNCj4gPiArICogRFc5NzY4IHJlcXVpcmVzIHdhaXRpbmcgdGlt
-ZSAoZGVsYXkgdGltZSkgb2YgdF9PUFIgYWZ0ZXIgcG93ZXItdXAsDQo+ID4gKyAqIG9yIGluIHRo
-ZSBjYXNlIG9mIFBEIHJlc2V0IHRha2luZyBwbGFjZS4NCj4gPiArICovDQo+ID4gKyNkZWZpbmUg
-RFc5NzY4X1RfT1BSX1VTCQkJCTEwMDANCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIFRoaXMgYWN0
-cyBhcyB0aGUgbWluaW11bSBncmFudWxhcml0eSBvZiBsZW5zIG1vdmVtZW50Lg0KPiA+ICsgKiBL
-ZWVwIHRoaXMgdmFsdWUgcG93ZXIgb2YgMiwgc28gdGhlIGNvbnRyb2wgc3RlcHMgY2FuIGJlDQo+
-ID4gKyAqIHVuaWZvcm1seSBhZGp1c3RlZCBmb3IgZ3JhZHVhbCBsZW5zIG1vdmVtZW50LCB3aXRo
-IGRlc2lyZWQNCj4gPiArICogbnVtYmVyIG9mIGNvbnRyb2wgc3RlcHMuDQo+ID4gKyAqLw0KPiA+
-ICsjZGVmaW5lIERXOTc2OF9NT1ZFX1NURVBTCQkJMTYNCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAq
-IERXOTc2OF9BQUNfUFJFU0NfUkVHICYgRFc5NzY4X0FBQ19USU1FX1JFRyBkZXRlcm1pbmUgVkNN
-IG9wZXJhdGlvbiB0aW1lLg0KPiA+ICsgKiBJZiBEVzk3NjhfQUFDX1BSRVNDX1JFRyBpcyAweDQx
-LCBhbmQgRFc5NzY4X0FBQ19USU1FX1JFRyBpcyAweDM5LCBWQ00gbW9kZQ0KPiA+ICsgKiB3b3Vs
-ZCBiZSBBQUMzLCBPcGVyYXRpb24gVGltZSB3b3VsZCBiZSAwLjcweFR2aWIsIHRoYXQgaXMgOC40
-MG1zLg0KPiA+ICsgKi8NCj4gPiArI2RlZmluZSBEVzk3NjhfTU9WRV9ERUxBWV9VUwkJCTg0MDAN
-Cj4gPiArI2RlZmluZSBEVzk3NjhfU1RBQkxFX1RJTUVfVVMJCQkyMDAwMA0KPiA+ICsNCj4gPiAr
-c3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBkdzk3Njhfc3VwcGx5X25hbWVzW10gPSB7DQo+ID4g
-KwkidmluIiwJLyogSTJDIEkvTyBpbnRlcmZhY2UgcG93ZXIgKi8NCj4gPiArCSJ2ZGQiLAkvKiBW
-Q00gcG93ZXIgKi8NCj4gPiArfTsNCj4gPiArDQo+ID4gKy8qIGR3OTc2OCBkZXZpY2Ugc3RydWN0
-dXJlICovDQo+ID4gK3N0cnVjdCBkdzk3Njggew0KPiA+ICsJc3RydWN0IHJlZ3VsYXRvcl9idWxr
-X2RhdGEgc3VwcGxpZXNbQVJSQVlfU0laRShkdzk3Njhfc3VwcGx5X25hbWVzKV07DQo+ID4gKwlz
-dHJ1Y3QgdjRsMl9jdHJsX2hhbmRsZXIgY3RybHM7DQo+ID4gKwlzdHJ1Y3QgdjRsMl9jdHJsICpm
-b2N1czsNCj4gPiArCXN0cnVjdCB2NGwyX3N1YmRldiBzZDsNCj4gPiArfTsNCj4gPiArDQo+ID4g
-K3N0YXRpYyBpbmxpbmUgc3RydWN0IGR3OTc2OCAqdG9fZHc5NzY4KHN0cnVjdCB2NGwyX2N0cmwg
-KmN0cmwpDQo+ID4gK3sNCj4gPiArCXJldHVybiBjb250YWluZXJfb2YoY3RybC0+aGFuZGxlciwg
-c3RydWN0IGR3OTc2OCwgY3RybHMpOw0KPiA+ICt9DQo+IA0KPiBUaGlzIGlzIHVzZWQgaW4gYSBz
-aW5nbGUgcGxhY2UuIEknZCBqdXN0IHVzZSBjb250YWluZXJfb2YoKSBkaXJlY3RseSB0aGVyZS4N
-Cj4gDQoNClRoYW5rcyBmb3IgdGhlIHJlbWluZGVyLg0KRml4ZWQgaW4gbmV4dCByZWxlYXNlLg0K
-DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW5saW5lIHN0cnVjdCBkdzk3NjggKnNkX3RvX2R3OTc2OChz
-dHJ1Y3QgdjRsMl9zdWJkZXYgKnN1YmRldikNCj4gPiArew0KPiA+ICsJcmV0dXJuIGNvbnRhaW5l
-cl9vZihzdWJkZXYsIHN0cnVjdCBkdzk3NjgsIHNkKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3Ry
-dWN0IHJlZ3ZhbF9saXN0IHsNCj4gPiArCXU4IHJlZ19udW07DQo+ID4gKwl1OCB2YWx1ZTsNCj4g
-PiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmVndmFsX2xpc3QgZHc5NzY4
-X2luaXRfcmVnc1tdID0gew0KPiA+ICsJe0RXOTc2OF9SSU5HX1BEX0NPTlRST0xfUkVHLCBEVzk3
-NjhfQUFDX01PREVfRU59LA0KPiA+ICsJe0RXOTc2OF9BQUNfUFJFU0NfUkVHLCBEVzk3NjhfQUFD
-M19TRUxFQ1RfRElWSURJTkdfUkFURV8xfSwNCj4gPiArCXtEVzk3NjhfQUFDX1RJTUVfUkVHLCBE
-Vzk3NjhfQUFDVF9DTlR9LA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGludCBkdzk3Njhf
-d3JpdGVfYXJyYXkoc3RydWN0IGR3OTc2OCAqZHc5NzY4LA0KPiA+ICsJCQkgICAgICBjb25zdCBz
-dHJ1Y3QgcmVndmFsX2xpc3QgKnZhbHMsIHNpemVfdCBsZW4pDQo+ID4gK3sNCj4gPiArCXN0cnVj
-dCBpMmNfY2xpZW50ICpjbGllbnQgPSB2NGwyX2dldF9zdWJkZXZkYXRhKCZkdzk3NjgtPnNkKTsN
-Cj4gPiArCXVuc2lnbmVkIGludCBpOw0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlmb3Ig
-KGkgPSAwOyBpIDwgbGVuOyBpKyspIHsNCj4gPiArCQlyZXQgPSBpMmNfc21idXNfd3JpdGVfYnl0
-ZV9kYXRhKGNsaWVudCwgdmFsc1tpXS5yZWdfbnVtLA0KPiA+ICsJCQkJCQl2YWxzW2ldLnZhbHVl
-KTsNCj4gPiArCQlpZiAocmV0IDwgMCkNCj4gPiArCQkJcmV0dXJuIHJldDsNCj4gPiArCX0NCj4g
-PiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGR3OTc2OF9zZXRf
-ZGFjKHN0cnVjdCBkdzk3NjggKmR3OTc2OCwgdTE2IHZhbCkNCj4gPiArew0KPiA+ICsJc3RydWN0
-IGkyY19jbGllbnQgKmNsaWVudCA9IHY0bDJfZ2V0X3N1YmRldmRhdGEoJmR3OTc2OC0+c2QpOw0K
-PiA+ICsNCj4gPiArCS8qIFdyaXRlIFZDTSBwb3NpdGlvbiB0byByZWdpc3RlcnMgKi8NCj4gPiAr
-CXJldHVybiBpMmNfc21idXNfd3JpdGVfd29yZF9zd2FwcGVkKGNsaWVudCwgRFc5NzY4X01TQl9B
-RERSLCB2YWwpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGR3OTc2OF9pbml0KHN0
-cnVjdCBkdzk3NjggKmR3OTc2OCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGkyY19jbGllbnQgKmNs
-aWVudCA9IHY0bDJfZ2V0X3N1YmRldmRhdGEoJmR3OTc2OC0+c2QpOw0KPiA+ICsJaW50IHJldCwg
-dmFsOw0KPiA+ICsNCj4gPiArCS8qIFJlc2V0IERXOTc2OF9SSU5HX1BEX0NPTlRST0xfUkVHIHRv
-IGRlZmF1bHQgc3RhdHVzIDB4MDAgKi8NCj4gPiArCXJldCA9IGkyY19zbWJ1c193cml0ZV9ieXRl
-X2RhdGEoY2xpZW50LCBEVzk3NjhfUklOR19QRF9DT05UUk9MX1JFRywNCj4gPiArCQkJCQlEVzk3
-NjhfUERfTU9ERV9PRkYpOw0KPiA+ICsJaWYgKHJldCA8IDApDQo+ID4gKwkJcmV0dXJuIHJldDsN
-Cj4gPiArDQo+ID4gKwkvKg0KPiA+ICsJICogRFc5NzY5IHJlcXVpcmVzIHdhaXRpbmcgZGVsYXkg
-dGltZSBvZiB0X09QUg0KPiA+ICsJICogYWZ0ZXIgUEQgcmVzZXQgdGFrZXMgcGxhY2UuDQo+ID4g
-KwkgKi8NCj4gPiArCXVzbGVlcF9yYW5nZShEVzk3NjhfVF9PUFJfVVMsIERXOTc2OF9UX09QUl9V
-UyArIDEwMCk7DQo+ID4gKw0KPiA+ICsJcmV0ID0gZHc5NzY4X3dyaXRlX2FycmF5KGR3OTc2OCwg
-ZHc5NzY4X2luaXRfcmVncywNCj4gPiArCQkJCSBBUlJBWV9TSVpFKGR3OTc2OF9pbml0X3JlZ3Mp
-KTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArDQo+ID4gKwlmb3Ig
-KHZhbCA9IGR3OTc2OC0+Zm9jdXMtPnZhbCAlIERXOTc2OF9NT1ZFX1NURVBTOw0KPiA+ICsJICAg
-ICB2YWwgPD0gZHc5NzY4LT5mb2N1cy0+dmFsOw0KPiA+ICsJICAgICB2YWwgKz0gRFc5NzY4X01P
-VkVfU1RFUFMpIHsNCj4gPiArCQlyZXQgPSBkdzk3Njhfc2V0X2RhYyhkdzk3NjgsIHZhbCk7DQo+
-ID4gKwkJaWYgKHJldCkgew0KPiA+ICsJCQlkZXZfZXJyKCZjbGllbnQtPmRldiwgIiVzIEkyQyBm
-YWlsdXJlOiAlZCIsDQo+ID4gKwkJCQlfX2Z1bmNfXywgcmV0KTsNCj4gPiArCQkJcmV0dXJuIHJl
-dDsNCj4gPiArCQl9DQo+ID4gKwkJdXNsZWVwX3JhbmdlKERXOTc2OF9NT1ZFX0RFTEFZX1VTLA0K
-PiA+ICsJCQkgICAgIERXOTc2OF9NT1ZFX0RFTEFZX1VTICsgMTAwMCk7DQo+ID4gKwl9DQo+ID4g
-Kw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgZHc5NzY4
-X3JlbGVhc2Uoc3RydWN0IGR3OTc2OCAqZHc5NzY4KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgaTJj
-X2NsaWVudCAqY2xpZW50ID0gdjRsMl9nZXRfc3ViZGV2ZGF0YSgmZHc5NzY4LT5zZCk7DQo+ID4g
-KwlpbnQgcmV0LCB2YWw7DQo+ID4gKw0KPiA+ICsJdmFsID0gcm91bmRfZG93bihkdzk3NjgtPmZv
-Y3VzLT52YWwsIERXOTc2OF9NT1ZFX1NURVBTKTsNCj4gPiArCWZvciAoIDsgdmFsID49IDA7IHZh
-bCAtPSBEVzk3NjhfTU9WRV9TVEVQUykgew0KPiA+ICsJCXJldCA9IGR3OTc2OF9zZXRfZGFjKGR3
-OTc2OCwgdmFsKTsNCj4gPiArCQlpZiAocmV0KSB7DQo+ID4gKwkJCWRldl9lcnIoJmNsaWVudC0+
-ZGV2LCAiSTJDIHdyaXRlIGZhaWw6ICVkIiwgcmV0KTsNCj4gPiArCQkJcmV0dXJuIHJldDsNCj4g
-PiArCQl9DQo+ID4gKwkJdXNsZWVwX3JhbmdlKERXOTc2OF9NT1ZFX0RFTEFZX1VTLCBEVzk3Njhf
-TU9WRV9ERUxBWV9VUyArIDEwMDApOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCS8qDQo+ID4gKwkg
-KiBXYWl0IGZvciB0aGUgbW90b3IgdG8gc3RhYmlsaXplIGFmdGVyIHRoZSBsYXN0IG1vdmVtZW50
-DQo+ID4gKwkgKiB0byBwcmV2ZW50IHRoZSBtb3RvciBmcm9tIHNoYWtpbmcuDQo+ID4gKwkgKi8N
-Cj4gPiArCXVzbGVlcF9yYW5nZShEVzk3NjhfU1RBQkxFX1RJTUVfVVMgLSBEVzk3NjhfTU9WRV9E
-RUxBWV9VUywNCj4gPiArCQkgICAgIERXOTc2OF9TVEFCTEVfVElNRV9VUyAtIERXOTc2OF9NT1ZF
-X0RFTEFZX1VTICsgMTAwMCk7DQo+ID4gKw0KPiA+ICsJcmV0ID0gaTJjX3NtYnVzX3dyaXRlX2J5
-dGVfZGF0YShjbGllbnQsIERXOTc2OF9SSU5HX1BEX0NPTlRST0xfUkVHLA0KPiA+ICsJCQkJCURX
-OTc2OF9QRF9NT0RFX0VOKTsNCj4gPiArCWlmIChyZXQgPCAwKQ0KPiA+ICsJCXJldHVybiByZXQ7
-DQo+ID4gKw0KPiA+ICsJLyoNCj4gPiArCSAqIERXOTc2OSByZXF1aXJlcyB3YWl0aW5nIGRlbGF5
-IHRpbWUgb2YgdF9PUFINCj4gPiArCSAqIGFmdGVyIFBEIHJlc2V0IHRha2VzIHBsYWNlLg0KPiA+
-ICsJICovDQo+ID4gKwl1c2xlZXBfcmFuZ2UoRFc5NzY4X1RfT1BSX1VTLCBEVzk3NjhfVF9PUFJf
-VVMgKyAxMDApOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtz
-dGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGR3OTc2OF9ydW50aW1lX3N1c3BlbmQoc3RydWN0IGRl
-dmljZSAqZGV2KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gdG9f
-aTJjX2NsaWVudChkZXYpOw0KPiA+ICsJc3RydWN0IHY0bDJfc3ViZGV2ICpzZCA9IGkyY19nZXRf
-Y2xpZW50ZGF0YShjbGllbnQpOw0KPiA+ICsJc3RydWN0IGR3OTc2OCAqZHc5NzY4ID0gc2RfdG9f
-ZHc5NzY4KHNkKTsNCj4gPiArDQo+ID4gKwlkdzk3NjhfcmVsZWFzZShkdzk3NjgpOw0KPiA+ICsJ
-cmVndWxhdG9yX2J1bGtfZGlzYWJsZShBUlJBWV9TSVpFKGR3OTc2OF9zdXBwbHlfbmFtZXMpLA0K
-PiA+ICsJCQkgICAgICAgZHc5NzY4LT5zdXBwbGllcyk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7
-DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgZHc5NzY4X3J1
-bnRpbWVfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiArew0KPiA+ICsJc3RydWN0IGky
-Y19jbGllbnQgKmNsaWVudCA9IHRvX2kyY19jbGllbnQoZGV2KTsNCj4gPiArCXN0cnVjdCB2NGwy
-X3N1YmRldiAqc2QgPSBpMmNfZ2V0X2NsaWVudGRhdGEoY2xpZW50KTsNCj4gPiArCXN0cnVjdCBk
-dzk3NjggKmR3OTc2OCA9IHNkX3RvX2R3OTc2OChzZCk7DQo+ID4gKwlpbnQgcmV0Ow0KPiA+ICsN
-Cj4gPiArCXJldCA9IHJlZ3VsYXRvcl9idWxrX2VuYWJsZShBUlJBWV9TSVpFKGR3OTc2OF9zdXBw
-bHlfbmFtZXMpLA0KPiA+ICsJCQkJICAgIGR3OTc2OC0+c3VwcGxpZXMpOw0KPiA+ICsJaWYgKHJl
-dCA8IDApIHsNCj4gPiArCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byBlbmFibGUgcmVndWxhdG9y
-c1xuIik7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwkvKg0KPiA+
-ICsJICogVGhlIGRhdGFzaGVldCByZWZlcnMgdG8gdF9PUFIgdGhhdCBuZWVkcyB0byBiZSB3YWl0
-ZWQgYmVmb3JlIHNlbmRpbmcNCj4gPiArCSAqIEkyQyBjb21tYW5kcyBhZnRlciBwb3dlci11cC4N
-Cj4gPiArCSAqLw0KPiA+ICsJdXNsZWVwX3JhbmdlKERXOTc2OF9UX09QUl9VUywgRFc5NzY4X1Rf
-T1BSX1VTICsgMTAwKTsNCj4gPiArDQo+ID4gKwlyZXQgPSBkdzk3NjhfaW5pdChkdzk3NjgpOw0K
-PiA+ICsJaWYgKHJldCA8IDApDQo+ID4gKwkJZ290byBkaXNhYmxlX3JlZ3VsYXRvcjsNCj4gPiAr
-DQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArDQo+ID4gK2Rpc2FibGVfcmVndWxhdG9yOg0KPiA+ICsJ
-cmVndWxhdG9yX2J1bGtfZGlzYWJsZShBUlJBWV9TSVpFKGR3OTc2OF9zdXBwbHlfbmFtZXMpLA0K
-PiA+ICsJCQkgICAgICAgZHc5NzY4LT5zdXBwbGllcyk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIHJl
-dDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBkdzk3Njhfc2V0X2N0cmwoc3RydWN0
-IHY0bDJfY3RybCAqY3RybCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGR3OTc2OCAqZHc5NzY4ID0g
-dG9fZHc5NzY4KGN0cmwpOw0KPiA+ICsNCj4gPiArCWlmIChjdHJsLT5pZCA9PSBWNEwyX0NJRF9G
-T0NVU19BQlNPTFVURSkNCj4gPiArCQlyZXR1cm4gZHc5NzY4X3NldF9kYWMoZHc5NzY4LCBjdHJs
-LT52YWwpOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0
-aWMgY29uc3Qgc3RydWN0IHY0bDJfY3RybF9vcHMgZHc5NzY4X2N0cmxfb3BzID0gew0KPiA+ICsJ
-LnNfY3RybCA9IGR3OTc2OF9zZXRfY3RybCwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBp
-bnQgZHc5NzY4X29wZW4oc3RydWN0IHY0bDJfc3ViZGV2ICpzZCwgc3RydWN0IHY0bDJfc3ViZGV2
-X2ZoICpmaCkNCj4gPiArew0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlyZXQgPSBwbV9y
-dW50aW1lX2dldF9zeW5jKHNkLT5kZXYpOw0KPiA+ICsJaWYgKHJldCA8IDApIHsNCj4gPiArCQlw
-bV9ydW50aW1lX3B1dF9ub2lkbGUoc2QtPmRldik7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiAr
-CX0NCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGlu
-dCBkdzk3NjhfY2xvc2Uoc3RydWN0IHY0bDJfc3ViZGV2ICpzZCwgc3RydWN0IHY0bDJfc3ViZGV2
-X2ZoICpmaCkNCj4gPiArew0KPiA+ICsJcG1fcnVudGltZV9wdXQoc2QtPmRldik7DQo+ID4gKw0K
-PiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qg
-djRsMl9zdWJkZXZfaW50ZXJuYWxfb3BzIGR3OTc2OF9pbnRfb3BzID0gew0KPiA+ICsJLm9wZW4g
-PSBkdzk3Njhfb3BlbiwNCj4gPiArCS5jbG9zZSA9IGR3OTc2OF9jbG9zZSwNCj4gPiArfTsNCj4g
-PiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgdjRsMl9zdWJkZXZfb3BzIGR3OTc2OF9vcHMg
-PSB7IH07DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGR3OTc2OF9pbml0X2NvbnRyb2xzKHN0cnVj
-dCBkdzk3NjggKmR3OTc2OCkNCj4gPiArew0KPiA+ICsJc3RydWN0IHY0bDJfY3RybF9oYW5kbGVy
-ICpoZGwgPSAmZHc5NzY4LT5jdHJsczsNCj4gPiArCWNvbnN0IHN0cnVjdCB2NGwyX2N0cmxfb3Bz
-ICpvcHMgPSAmZHc5NzY4X2N0cmxfb3BzOw0KPiA+ICsNCj4gPiArCXY0bDJfY3RybF9oYW5kbGVy
-X2luaXQoaGRsLCAxKTsNCj4gPiArDQo+ID4gKwlkdzk3NjgtPmZvY3VzID0gdjRsMl9jdHJsX25l
-d19zdGQoaGRsLCBvcHMsIFY0TDJfQ0lEX0ZPQ1VTX0FCU09MVVRFLCAwLA0KPiA+ICsJCQkJCSAg
-RFc5NzY4X01BWF9GT0NVU19QT1MsDQo+ID4gKwkJCQkJICBEVzk3NjhfRk9DVVNfU1RFUFMsIDAp
-Ow0KPiA+ICsNCj4gPiArCWlmIChoZGwtPmVycm9yKQ0KPiA+ICsJCXJldHVybiBoZGwtPmVycm9y
-Ow0KPiA+ICsNCj4gPiArCWR3OTc2OC0+c2QuY3RybF9oYW5kbGVyID0gaGRsOw0KPiA+ICsNCj4g
-PiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGR3OTc2OF9wcm9i
-ZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZGV2aWNl
-ICpkZXYgPSAmY2xpZW50LT5kZXY7DQo+ID4gKwlzdHJ1Y3QgZHc5NzY4ICpkdzk3Njg7DQo+ID4g
-Kwl1bnNpZ25lZCBpbnQgaTsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJZHc5NzY4ID0g
-ZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpkdzk3NjgpLCBHRlBfS0VSTkVMKTsNCj4gPiArCWlm
-ICghZHc5NzY4KQ0KPiA+ICsJCXJldHVybiAtRU5PTUVNOw0KPiA+ICsNCj4gPiArCXY0bDJfaTJj
-X3N1YmRldl9pbml0KCZkdzk3NjgtPnNkLCBjbGllbnQsICZkdzk3Njhfb3BzKTsNCj4gPiArDQo+
-ID4gKwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShkdzk3Njhfc3VwcGx5X25hbWVzKTsgaSsr
-KQ0KPiA+ICsJCWR3OTc2OC0+c3VwcGxpZXNbaV0uc3VwcGx5ID0gZHc5NzY4X3N1cHBseV9uYW1l
-c1tpXTsNCj4gPiArDQo+ID4gKwlyZXQgPSBkZXZtX3JlZ3VsYXRvcl9idWxrX2dldChkZXYsIEFS
-UkFZX1NJWkUoZHc5NzY4X3N1cHBseV9uYW1lcyksDQo+ID4gKwkJCQkgICAgICBkdzk3NjgtPnN1
-cHBsaWVzKTsNCj4gPiArCWlmIChyZXQpIHsNCj4gPiArCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0
-byBnZXQgcmVndWxhdG9yc1xuIik7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArCX0NCj4gPiAr
-DQo+ID4gKwlyZXQgPSBkdzk3NjhfaW5pdF9jb250cm9scyhkdzk3NjgpOw0KPiA+ICsJaWYgKHJl
-dCkNCj4gPiArCQlnb3RvIGVudGl0eV9jbGVhbnVwOw0KPiA+ICsNCj4gPiArCWR3OTc2OC0+c2Qu
-ZmxhZ3MgfD0gVjRMMl9TVUJERVZfRkxfSEFTX0RFVk5PREU7DQo+ID4gKwlkdzk3NjgtPnNkLmlu
-dGVybmFsX29wcyA9ICZkdzk3NjhfaW50X29wczsNCj4gPiArDQo+ID4gKwlyZXQgPSBtZWRpYV9l
-bnRpdHlfcGFkc19pbml0KCZkdzk3NjgtPnNkLmVudGl0eSwgMCwgTlVMTCk7DQo+ID4gKwlpZiAo
-cmV0IDwgMCkNCj4gPiArCQlnb3RvIGVudGl0eV9jbGVhbnVwOw0KPiA+ICsNCj4gPiArCWR3OTc2
-OC0+c2QuZW50aXR5LmZ1bmN0aW9uID0gTUVESUFfRU5UX0ZfTEVOUzsNCj4gPiArDQo+ID4gKwlw
-bV9ydW50aW1lX2VuYWJsZShkZXYpOw0KPiA+ICsJaWYgKCFwbV9ydW50aW1lX2VuYWJsZWQoZGV2
-KSkgew0KPiA+ICsJCXJldCA9IGR3OTc2OF9ydW50aW1lX3Jlc3VtZShkZXYpOw0KPiA+ICsJCWlm
-IChyZXQgPCAwKSB7DQo+ID4gKwkJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIHBvd2VyIG9uOiAl
-ZFxuIiwgcmV0KTsNCj4gPiArCQkJZ290byBlbnRpdHlfY2xlYW51cDsNCj4gPiArCQl9DQo+ID4g
-Kwl9DQo+ID4gKw0KPiA+ICsJcmV0ID0gdjRsMl9hc3luY19yZWdpc3Rlcl9zdWJkZXYoJmR3OTc2
-OC0+c2QpOw0KPiA+ICsJaWYgKHJldCA8IDApDQo+ID4gKwkJZ290byBlbnRpdHlfY2xlYW51cDsN
-Cj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArDQo+ID4gK2VudGl0eV9jbGVhbnVwOg0KPiA+
-ICsJdjRsMl9jdHJsX2hhbmRsZXJfZnJlZSgmZHc5NzY4LT5jdHJscyk7DQo+ID4gKwltZWRpYV9l
-bnRpdHlfY2xlYW51cCgmZHc5NzY4LT5zZC5lbnRpdHkpOw0KPiA+ICsJcmV0dXJuIHJldDsNCj4g
-PiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBkdzk3NjhfcmVtb3ZlKHN0cnVjdCBpMmNfY2xp
-ZW50ICpjbGllbnQpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCB2NGwyX3N1YmRldiAqc2QgPSBpMmNf
-Z2V0X2NsaWVudGRhdGEoY2xpZW50KTsNCj4gPiArCXN0cnVjdCBkdzk3NjggKmR3OTc2OCA9IHNk
-X3RvX2R3OTc2OChzZCk7DQo+ID4gKw0KPiA+ICsJcG1fcnVudGltZV9kaXNhYmxlKCZjbGllbnQt
-PmRldik7DQo+ID4gKwl2NGwyX2FzeW5jX3VucmVnaXN0ZXJfc3ViZGV2KCZkdzk3NjgtPnNkKTsN
-Cj4gPiArCXY0bDJfY3RybF9oYW5kbGVyX2ZyZWUoJmR3OTc2OC0+Y3RybHMpOw0KPiA+ICsJbWVk
-aWFfZW50aXR5X2NsZWFudXAoJmR3OTc2OC0+c2QuZW50aXR5KTsNCj4gPiArCWlmICghcG1fcnVu
-dGltZV9zdGF0dXNfc3VzcGVuZGVkKCZjbGllbnQtPmRldikpDQo+ID4gKwkJZHc5NzY4X3J1bnRp
-bWVfc3VzcGVuZCgmY2xpZW50LT5kZXYpOw0KPiA+ICsJcG1fcnVudGltZV9zZXRfc3VzcGVuZGVk
-KCZjbGllbnQtPmRldik7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+
-ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGR3OTc2OF9vZl90YWJsZVtdID0g
-ew0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJkb25nd29vbixkdzk3NjgiIH0sDQo+ID4gKwl7fQ0K
-PiA+ICt9Ow0KPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBkdzk3Njhfb2ZfdGFibGUpOw0K
-PiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGR3OTc2OF9wbV9vcHMg
-PSB7DQo+ID4gKwlTRVRfU1lTVEVNX1NMRUVQX1BNX09QUyhwbV9ydW50aW1lX2ZvcmNlX3N1c3Bl
-bmQsDQo+ID4gKwkJCQlwbV9ydW50aW1lX2ZvcmNlX3Jlc3VtZSkNCj4gPiArCVNFVF9SVU5USU1F
-X1BNX09QUyhkdzk3NjhfcnVudGltZV9zdXNwZW5kLCBkdzk3NjhfcnVudGltZV9yZXN1bWUsIE5V
-TEwpDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IGkyY19kcml2ZXIgZHc5NzY4
-X2kyY19kcml2ZXIgPSB7DQo+ID4gKwkuZHJpdmVyID0gew0KPiA+ICsJCS5uYW1lID0gRFc5NzY4
-X05BTUUsDQo+ID4gKwkJLnBtID0gJmR3OTc2OF9wbV9vcHMsDQo+ID4gKwkJLm9mX21hdGNoX3Rh
-YmxlID0gZHc5NzY4X29mX3RhYmxlLA0KPiA+ICsJfSwNCj4gPiArCS5wcm9iZV9uZXcgID0gZHc5
-NzY4X3Byb2JlLA0KPiA+ICsJLnJlbW92ZSA9IGR3OTc2OF9yZW1vdmUsDQo+ID4gK307DQo+ID4g
-K21vZHVsZV9pMmNfZHJpdmVyKGR3OTc2OF9pMmNfZHJpdmVyKTsNCj4gPiArDQo+ID4gK01PRFVM
-RV9BVVRIT1IoIkRvbmdjaHVuIFpodSA8ZG9uZ2NodW4uemh1QG1lZGlhdGVrLmNvbT4iKTsNCj4g
-PiArTU9EVUxFX0RFU0NSSVBUSU9OKCJEVzk3NjggVkNNIGRyaXZlciIpOw0KPiA+ICtNT0RVTEVf
-TElDRU5TRSgiR1BMIHYyIik7DQo+IA0KDQo=
+On Thu,  7 May 2020 13:00:33 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
+
+> +/**
+> + * struct arasan_nfc - Defines the Arasan NAND flash controller driver instance
+> + * @dev:		Pointer to the device structure
+> + * @base:		Remapped register area
+> + * @controller_clk:		Pointer to the system clock
+> + * @bus_clk:		Pointer to the flash clock
+> + * @controller:		Base controller structure
+> + * @chips:		List of all NAND chips attached to the controller
+> + * @assigned_cs:	Bitmask describing already assigned CS lines
+> + * @cur_clk:		Current clock rate
+> + * @bf:			Array of bitflips read in each ECC step
+> + */
+> +struct arasan_nfc {
+> +	struct device *dev;
+> +	void __iomem *base;
+> +	struct clk *controller_clk;
+> +	struct clk *bus_clk;
+> +	struct nand_controller controller;
+> +	struct list_head chips;
+> +	unsigned long assigned_cs;
+> +	unsigned int cur_clk;
+> +	u8 *bf;
+
+Looks like this field is never used.
+
+> +};
+> +
+> +static struct anand *to_anand(struct nand_chip *nand)
+> +{
+> +	return container_of(nand, struct anand, chip);
+> +}
+> +
+> +static struct arasan_nfc *to_anfc(struct nand_controller *ctrl)
+> +{
+> +	return container_of(ctrl, struct arasan_nfc, controller);
+> +}
+> +
+> +static void anfc_disable_int(struct arasan_nfc *nfc, u32 mask)
+> +{
+> +	mask &= ~EVENT_MASK;
+> +	mask &= EVENT_MASK;
+> +	writel_relaxed(mask, nfc->base + INTR_SIG_EN_REG);
+> +}
+> +
+> +static int anfc_wait_for_event(struct arasan_nfc *nfc, unsigned int event)
+> +{
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret = readl_relaxed_poll_timeout(nfc->base + INTR_STS_REG, val,
+> +					 val & event, 0,
+> +					 ANFC_DFLT_TIMEOUT_US);
+> +	if (ret) {
+> +		dev_err(nfc->dev, "Timeout waiting for event 0x%x\n", event);
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	writel_relaxed(event, nfc->base + INTR_STS_REG);
+> +
+> +	return 0;
+> +}
+> +
+> +static int anfc_wait_for_rb(struct arasan_nfc *nfc, struct nand_chip *chip,
+> +			    unsigned int timeout_ms)
+> +{
+> +	struct anand *anand = to_anand(chip);
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret = readl_relaxed_poll_timeout(nfc->base + READY_STS_REG, val,
+> +					 val & BIT(anand->rb),
+> +					 0, timeout_ms * 1000);
+
+You don't have an interrupt on R/B transition? If can, that would
+probably be better to use interrupts than polling the status reg.
+
+> +	if (ret) {
+> +		dev_err(nfc->dev, "Timeout waiting for R/B 0x%x\n",
+> +			readl_relaxed(nfc->base + READY_STS_REG));
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void anfc_trigger_op(struct arasan_nfc *nfc, struct anfc_op *nfc_op)
+> +{
+> +	writel_relaxed(nfc_op->pkt_reg, nfc->base + PKT_REG);
+> +	writel_relaxed(nfc_op->addr1_reg, nfc->base + MEM_ADDR1_REG);
+> +	writel_relaxed(nfc_op->addr2_reg, nfc->base + MEM_ADDR2_REG);
+> +	writel_relaxed(nfc_op->cmd_reg, nfc->base + CMD_REG);
+> +	writel_relaxed(nfc_op->prog_reg, nfc->base + PROG_REG);
+> +}
+> +
+> +static int anfc_len_to_steps(struct nand_chip *chip, unsigned int len)
+> +{
+> +	unsigned int steps = 1, pktsize = len;
+> +
+> +	while (pktsize > ANFC_MAX_PKT_SIZE) {
+> +		steps *= 2;
+> +		pktsize = DIV_ROUND_UP(len, steps);
+
+Hm, I'm not sure that's right. What happens if steps * pksize is bigger
+than the requested number of DATA cycles? Not all operations accept to
+have more data read/written than requested.
+
+I'd rather have something that does:
+
+static void anfc_len_to_steps(struct nand_chip *chip, unsigned int len,
+			      unsigned int *pktsize,
+			      unsigned int *npkts)
+{
+	if (len <= ANFC_MAX_PKT_SIZE) {
+		*pktsize = len;
+		*npkts = 1;
+		return;
+	}
+
+	for (*npkts = 2; *npkts < ANFC_MAX_NUM_PKTS; *npkts *= 2) {
+		*pktsize = len / *npkts;
+		if (*pktsize <= ANFC_MAX_PKT_SIZE)
+			break;
+	}
+}
+
+And then, from the call size, you trigger new DATA_OUT/IN operation if
+len > pktsize * npkts.
+
+> +	}
+> +
+> +	return steps;
+
+I guess you have a limit on steps. It's probably worth checking
+that steps is in bounds.
+
+> +}
+> +
+> +/* NAND framework ->exec_op() hooks and related helpers */
+> +static void anfc_parse_instructions(struct nand_chip *chip,
+> +				    const struct nand_subop *subop,
+> +				    struct anfc_op *nfc_op)
+> +{
+> +	struct anand *anand = to_anand(chip);
+> +	const struct nand_op_instr *instr = NULL;
+> +	bool first_cmd = true;
+> +	unsigned int op_id;
+> +	int i;
+> +
+> +	memset(nfc_op, 0, sizeof(*nfc_op));
+> +	nfc_op->addr2_reg = ADDR2_CS(anand->cs);
+> +	nfc_op->cmd_reg = CMD_PAGE_SIZE(anand->page_sz);
+> +
+> +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
+> +		unsigned int offset, naddrs, pktsize;
+> +		const u8 *addrs;
+> +		u8 *buf;
+> +
+> +		instr = &subop->instrs[op_id];
+> +
+> +		switch (instr->type) {
+> +		case NAND_OP_CMD_INSTR:
+> +			if (first_cmd)
+> +				nfc_op->cmd_reg |= CMD_1(instr->ctx.cmd.opcode);
+> +			else
+> +				nfc_op->cmd_reg |= CMD_2(instr->ctx.cmd.opcode);
+> +
+> +			first_cmd = false;
+> +			break;
+> +
+> +		case NAND_OP_ADDR_INSTR:
+> +			offset = nand_subop_get_addr_start_off(subop, op_id);
+> +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
+> +			addrs = &instr->ctx.addr.addrs[offset];
+> +			nfc_op->cmd_reg |= CMD_NADDRS(naddrs);
+> +
+> +			for (i = 0; i < min(ANFC_MAX_ADDR_CYC, naddrs); i++) {
+> +				if (i < 4)
+> +					nfc_op->addr1_reg |= (u32)addrs[i] << i * 8;
+> +				else
+> +					nfc_op->addr2_reg |= addrs[i];
+> +			}
+> +
+> +			break;
+> +		case NAND_OP_DATA_IN_INSTR:
+> +			nfc_op->read = true;
+> +			fallthrough;
+> +		case NAND_OP_DATA_OUT_INSTR:
+> +			offset = nand_subop_get_data_start_off(subop, op_id);
+> +			buf = instr->ctx.data.buf.in;
+> +			nfc_op->buf = &buf[offset];
+> +			nfc_op->len = nand_subop_get_data_len(subop, op_id);
+> +			nfc_op->steps = anfc_len_to_steps(chip, nfc_op->len);
+> +			pktsize = DIV_ROUND_UP(nfc_op->len, nfc_op->steps);
+> +			nfc_op->pkt_reg |= PKT_SIZE(round_up(pktsize, 4)) |
+
+Hm, pktsize has to be aligned on 4? Again, that's not great since you
+adjust the size without letting the core know you did that.
+
+> +					   PKT_STEPS(nfc_op->steps);
+> +			break;
+> +		case NAND_OP_WAITRDY_INSTR:
+> +			nfc_op->rdy_timeout_ms = instr->ctx.waitrdy.timeout_ms;
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+> +static int anfc_rw_pio_op(struct arasan_nfc *nfc, struct anfc_op *nfc_op)
+> +{
+> +	unsigned int dwords = (nfc_op->len / 4) / nfc_op->steps;
+> +	unsigned int last_len = nfc_op->len % 4;
+> +	unsigned int offset, dir;
+> +	u8 *buf = nfc_op->buf;
+> +	int ret, i;
+> +
+> +	for (i = 0; i < nfc_op->steps; i++) {
+> +		dir = nfc_op->read ? READ_READY : WRITE_READY;
+> +		ret = anfc_wait_for_event(nfc, dir);
+> +		if (ret) {
+> +			dev_err(nfc->dev, "PIO %s ready signal not received\n",
+> +				nfc_op->read ? "Read" : "Write");
+> +			return ret;
+> +		}
+> +
+> +		offset = i * (dwords * 4);
+> +		if (nfc_op->read)
+> +			ioread32_rep(nfc->base + DATA_PORT_REG, &buf[offset],
+> +				     dwords);
+> +		else
+> +			iowrite32_rep(nfc->base + DATA_PORT_REG, &buf[offset],
+> +				      dwords);
+> +	}
+> +
+> +	if (last_len) {
+> +		u32 remainder;
+> +
+> +		offset = nfc_op->len - last_len;
+> +
+> +		if (nfc_op->read) {
+> +			remainder = readl_relaxed(nfc->base + DATA_PORT_REG);
+> +			memcpy(&buf[offset], &remainder, last_len);
+> +		} else {
+> +			memcpy(&remainder, &buf[offset], last_len);
+> +			writel_relaxed(remainder, nfc->base + DATA_PORT_REG);
+> +		}
+> +	}
+> +
+> +	return anfc_wait_for_event(nfc, XFER_COMPLETE);
+> +}
+> +
+> +static int anfc_misc_data_type_exec(struct nand_chip *chip,
+> +				    const struct nand_subop *subop,
+> +				    u32 prog_reg)
+> +{
+> +	struct arasan_nfc *nfc = to_anfc(chip->controller);
+> +	struct anfc_op nfc_op = {};
+> +	int ret;
+> +
+> +	anfc_parse_instructions(chip, subop, &nfc_op);
+> +	nfc_op.prog_reg = prog_reg;
+> +	anfc_trigger_op(nfc, &nfc_op);
+> +
+> +	if (nfc_op.rdy_timeout_ms) {
+> +		ret = anfc_wait_for_rb(nfc, chip, nfc_op.rdy_timeout_ms);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return anfc_rw_pio_op(nfc, &nfc_op);
+> +}
+> +
+> +static int anfc_param_read_type_exec(struct nand_chip *chip,
+> +				     const struct nand_subop *subop)
+> +{
+> +	return anfc_misc_data_type_exec(chip, subop, PROG_RDPARAM);
+> +}
+> +
+> +static int anfc_data_read_type_exec(struct nand_chip *chip,
+> +				    const struct nand_subop *subop)
+> +{
+> +	return anfc_misc_data_type_exec(chip, subop, PROG_PGRD);
+> +}
+> +
+> +static int anfc_param_write_type_exec(struct nand_chip *chip,
+> +				      const struct nand_subop *subop)
+> +{
+> +	return anfc_misc_data_type_exec(chip, subop, PROG_SET_FEATURE);
+> +}
+> +
+> +static int anfc_data_write_type_exec(struct nand_chip *chip,
+> +				     const struct nand_subop *subop)
+> +{
+> +	return anfc_misc_data_type_exec(chip, subop, PROG_PGPROG);
+> +}
+> +
+> +static int anfc_misc_zerolen_type_exec(struct nand_chip *chip,
+> +				       const struct nand_subop *subop,
+> +				       u32 prog_reg)
+> +{
+> +	struct arasan_nfc *nfc = to_anfc(chip->controller);
+> +	struct anfc_op nfc_op = {};
+> +	int ret;
+> +
+> +	anfc_parse_instructions(chip, subop, &nfc_op);
+> +	nfc_op.prog_reg = prog_reg;
+> +	anfc_trigger_op(nfc, &nfc_op);
+> +
+> +	ret = anfc_wait_for_event(nfc, XFER_COMPLETE);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (nfc_op.rdy_timeout_ms)
+> +		ret = anfc_wait_for_rb(nfc, chip, nfc_op.rdy_timeout_ms);
+> +
+> +	return ret;
+> +}
+> +
+> +static int anfc_status_type_exec(struct nand_chip *chip,
+> +				 const struct nand_subop *subop)
+> +{
+> +	struct arasan_nfc *nfc = to_anfc(chip->controller);
+> +	u32 tmp;
+> +	int ret;
+> +
+> +	/*
+> +	 * This controller does not allow to proceed with a CMD+DATA_IN cycle
+> +	 * manually on the bus by reading data from the data register. Instead,
+> +	 * the controller abstract the status read operation with its own status
+> +	 * register after ordering a read status operation. Hence, the following
+> +	 * hack.
+> +	 */
+> +	if (subop->instrs[0].ctx.cmd.opcode != NAND_CMD_STATUS)
+> +		return -ENOTSUPP;
+> +
+> +	ret = anfc_misc_zerolen_type_exec(chip, subop, PROG_STATUS);
+> +	if (ret)
+> +		return ret;
+> +
+> +	tmp = readl_relaxed(nfc->base + FLASH_STS_REG);
+> +	memcpy(subop->instrs[1].ctx.data.buf.in, &tmp, 1);
+> +
+> +	return 0;
+> +}
+> +
+> +static int anfc_reset_type_exec(struct nand_chip *chip,
+> +				const struct nand_subop *subop)
+> +{
+> +	return anfc_misc_zerolen_type_exec(chip, subop, PROG_RST);
+> +}
+> +
+> +static int anfc_erase_type_exec(struct nand_chip *chip,
+> +				const struct nand_subop *subop)
+> +{
+> +	return anfc_misc_zerolen_type_exec(chip, subop, PROG_ERASE);
+> +}
+> +
+> +static int anfc_wait_type_exec(struct nand_chip *chip,
+> +			       const struct nand_subop *subop)
+> +{
+> +	struct arasan_nfc *nfc = to_anfc(chip->controller);
+> +	struct anfc_op nfc_op = {};
+> +
+> +	anfc_parse_instructions(chip, subop, &nfc_op);
+> +
+> +	return anfc_wait_for_rb(nfc, chip, nfc_op.rdy_timeout_ms);
+> +}
+> +
+> +static const struct nand_op_parser anfc_op_parser = NAND_OP_PARSER(
+> +	NAND_OP_PARSER_PATTERN(
+> +		anfc_param_read_type_exec,
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
+> +		NAND_OP_PARSER_PAT_ADDR_ELEM(false, ANFC_MAX_ADDR_CYC),
+> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(true),
+> +		NAND_OP_PARSER_PAT_DATA_IN_ELEM(false, ANFC_MAX_CHUNK_SIZE)),
+> +	NAND_OP_PARSER_PATTERN(
+> +		anfc_param_write_type_exec,
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
+> +		NAND_OP_PARSER_PAT_ADDR_ELEM(false, ANFC_MAX_ADDR_CYC),
+> +		NAND_OP_PARSER_PAT_DATA_OUT_ELEM(false, ANFC_MAX_PARAM_SIZE)),
+> +	NAND_OP_PARSER_PATTERN(
+> +		anfc_data_read_type_exec,
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
+> +		NAND_OP_PARSER_PAT_ADDR_ELEM(false, ANFC_MAX_ADDR_CYC),
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
+> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(true),
+> +		NAND_OP_PARSER_PAT_DATA_IN_ELEM(false, ANFC_MAX_CHUNK_SIZE)),
+> +	NAND_OP_PARSER_PATTERN(
+> +		anfc_data_write_type_exec,
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
+> +		NAND_OP_PARSER_PAT_ADDR_ELEM(false, ANFC_MAX_ADDR_CYC),
+> +		NAND_OP_PARSER_PAT_DATA_OUT_ELEM(false, ANFC_MAX_CHUNK_SIZE),
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(false)),
+> +	NAND_OP_PARSER_PATTERN(
+> +		anfc_reset_type_exec,
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
+> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(false)),
+> +	NAND_OP_PARSER_PATTERN(
+> +		anfc_erase_type_exec,
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
+> +		NAND_OP_PARSER_PAT_ADDR_ELEM(false, ANFC_MAX_ADDR_CYC),
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
+> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(false)),
+> +	NAND_OP_PARSER_PATTERN(
+> +		anfc_status_type_exec,
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(false),
+> +		NAND_OP_PARSER_PAT_DATA_IN_ELEM(false, ANFC_MAX_CHUNK_SIZE)),
+> +	NAND_OP_PARSER_PATTERN(
+> +		anfc_wait_type_exec,
+> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(false)),
+> +	);
+> +
+
+Okay, no DATA-only patterns, so my suggestion to split non-aligned data
+reads doesn't work. I'd suggest to describe data-lengths
+constraints rather than automatically adjusting the data length to
+something bigger when we can't do exactly the number of requested DATA
+cycles. I started doing something similar here [1], except you'd need
+much more fined-grained constraints, so maybe we should add an optional
+check hook to data patterns.
+
+> +static int anfc_select_target(struct nand_chip *chip, int target)
+> +{
+> +	struct anand *anand = to_anand(chip);
+> +	struct arasan_nfc *nfc = to_anfc(chip->controller);
+> +	int ret;
+> +
+> +	/* Update the controller timings and the potential ECC configuration */
+> +	writel_relaxed(anand->timings, nfc->base + DATA_INTERFACE_REG);
+> +
+> +	/* Update clock frequency */
+> +	if (nfc->cur_clk != anand->clk) {
+> +		clk_disable_unprepare(nfc->controller_clk);
+> +		ret = clk_set_rate(nfc->controller_clk, anand->clk);
+> +		if (ret) {
+> +			dev_err(nfc->dev, "Failed to change clock rate\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = clk_prepare_enable(nfc->controller_clk);
+> +		if (ret) {
+> +			dev_err(nfc->dev,
+> +				"Failed to re-enable the controller clock\n");
+> +			return ret;
+> +		}
+> +
+> +		nfc->cur_clk = anand->clk;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int anfc_exec_op(struct nand_chip *chip,
+> +			const struct nand_operation *op,
+> +			bool check_only)
+> +{
+> +	int ret;
+> +
+> +	if (!check_only) {
+> +		ret = anfc_select_target(chip, op->cs);
+> +		if (ret)
+> +			return ret;
+> +	}
+
+Given you do only one thing in the check_only case, I'd do:
+
+	if (check_only)
+		nand_op_parser_exec_op(chip, &anfc_op_parser, op, true);
+
+	ret = anfc_select_target(chip, op->cs);
+	if (ret)
+		return ret;
+
+	...
+> +
+> +	return nand_op_parser_exec_op(chip, &anfc_op_parser, op, check_only);
+> +}
+> +
+> +static int anfc_setup_data_interface(struct nand_chip *chip, int target,
+> +				     const struct nand_data_interface *conf)
+> +{
+> +	struct anand *anand = to_anand(chip);
+> +	struct arasan_nfc *nfc = to_anfc(chip->controller);
+> +	struct device_node *np = nfc->dev->of_node;
+> +
+> +	if (target < 0)
+> +		return 0;
+> +
+> +	anand->timings = DIFACE_SDR | DIFACE_SDR_MODE(conf->timings.mode);
+> +	anand->clk = ANFC_XLNX_SDR_DFLT_CORE_CLK;
+> +
+> +	/*
+> +	 * Due to a hardware bug in the ZynqMP SoC, SDR timing modes 0-1 work
+> +	 * with f > 90MHz (default clock is 100MHz) but signals are unstable
+> +	 * with higher modes. Hence we decrease a little bit the clock rate to
+> +	 * 80MHz when using modes 2-5 with this SoC.
+> +	 */
+> +	if (of_device_is_compatible(np, "xlnx,zynqmp-nand-controller") &&
+> +	    conf->timings.mode >= 2)
+> +		anand->clk = ANFC_XLNX_SDR_HS_CORE_CLK;
+> +
+> +	return 0;
+> +}
+> +
+> +static int anfc_attach_chip(struct nand_chip *chip)
+> +{
+> +	struct anand *anand = to_anand(chip);
+> +	struct arasan_nfc *nfc = to_anfc(chip->controller);
+> +	struct mtd_info *mtd = nand_to_mtd(chip);
+> +	int ret = 0;
+> +
+> +	if (mtd->writesize <= SZ_512)
+> +		anand->caddr_cycles = 1;
+> +	else
+> +		anand->caddr_cycles = 2;
+> +
+> +	if (chip->options & NAND_ROW_ADDR_3)
+> +		anand->raddr_cycles = 3;
+> +	else
+> +		anand->raddr_cycles = 2;
+> +
+> +	switch (mtd->writesize) {
+> +	case 512:
+> +		anand->page_sz = 0;
+> +		break;
+> +	case 1024:
+> +		anand->page_sz = 5;
+> +		break;
+> +	case 2048:
+> +		anand->page_sz = 1;
+> +		break;
+> +	case 4096:
+> +		anand->page_sz = 2;
+> +		break;
+> +	case 8192:
+> +		anand->page_sz = 3;
+> +		break;
+> +	case 16384:
+> +		anand->page_sz = 4;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* These hooks are valid for all ECC providers */
+> +	chip->ecc.read_page_raw = nand_monolithic_read_page_raw;
+> +	chip->ecc.write_page_raw = nand_monolithic_write_page_raw;
+> +
+> +	switch (chip->ecc.mode) {
+> +	case NAND_ECC_NONE:
+> +	case NAND_ECC_SOFT:
+> +	case NAND_ECC_ON_DIE:
+> +		break;
+> +	case NAND_ECC_HW:
+> +	default:
+> +		dev_err(nfc->dev, "Unsupported ECC mode: %d\n",
+> +			chip->ecc.mode);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct nand_controller_ops anfc_ops = {
+> +	.exec_op = anfc_exec_op,
+> +	.setup_data_interface = anfc_setup_data_interface,
+> +	.attach_chip = anfc_attach_chip,
+> +};
+> +
+> +static int anfc_chip_init(struct arasan_nfc *nfc, struct device_node *np)
+> +{
+> +	struct anand *anand;
+> +	struct nand_chip *chip;
+> +	struct mtd_info *mtd;
+> +	int cs, rb, ret;
+> +
+> +	anand = devm_kzalloc(nfc->dev, sizeof(*anand), GFP_KERNEL);
+> +	if (!anand)
+> +		return -ENOMEM;
+> +
+> +	/* Only one CS can be asserted at a time */
+
+You mean the controller only has one CS? Cause that comment doesn't
+make much sense.
+
+> +	if (of_property_count_elems_of_size(np, "reg", sizeof(u32)) != 1) {
+> +		dev_err(nfc->dev, "Invalid reg property\n");
+> +		return -EINVAL;
+> +	}
+
+It's only a SW limitation. If your controller has several CS pins
+(which seems to be the case since you have a list of chips), it can
+handle multi-CS chips too. I'm perfectly fine with the limitation
+itself, but the comment should reflect the reality. And if you want to
+support multi-CS chips, you just have to define an array of CS/RB in
+anand.
+
+> +
+> +	ret = of_property_read_u32(np, "reg", &cs);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = of_property_read_u32(np, "nand-rb", &rb);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (cs >= ANFC_MAX_CS || rb >= ANFC_MAX_CS) {
+> +		dev_err(nfc->dev, "Wrong CS %d or RB %d\n", cs, rb);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (test_and_set_bit(cs, &nfc->assigned_cs)) {
+> +		dev_err(nfc->dev, "Already assigned CS %d\n", cs);
+> +		return -EINVAL;
+> +	}
+> +
+> +	anand->cs = cs;
+> +	anand->rb = rb;
+> +
+> +	chip = &anand->chip;
+> +	mtd = nand_to_mtd(chip);
+> +	mtd->dev.parent = nfc->dev;
+> +	chip->controller = &nfc->controller;
+> +	chip->options = NAND_BUSWIDTH_AUTO | NAND_NO_SUBPAGE_WRITE |
+> +			NAND_USES_DMA;
+> +
+> +	nand_set_flash_node(chip, np);
+> +	if (!mtd->name) {
+> +		dev_err(nfc->dev, "NAND label property is mandatory\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = nand_scan(chip, 1);
+> +	if (ret) {
+> +		dev_err(nfc->dev, "Scan operation failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = mtd_device_register(mtd, NULL, 0);
+> +	if (ret) {
+> +		nand_release(chip);
+
+		nand_cleanup(chip);
+
+> +		return ret;
+> +	}
+> +
+> +	list_add_tail(&anand->node, &nfc->chips);
+> +
+> +	return 0;
+> +}
+> +
+> +static void anfc_chips_cleanup(struct arasan_nfc *nfc)
+> +{
+> +	struct anand *anand, *tmp;
+> +
+> +	list_for_each_entry_safe(anand, tmp, &nfc->chips, node) {
+> +		nand_release(&anand->chip);
+> +		list_del(&anand->node);
+> +	}
+> +}
+> +
+> +static int anfc_chips_init(struct arasan_nfc *nfc)
+> +{
+> +	struct device_node *np = nfc->dev->of_node, *nand_np;
+> +	int nchips = of_get_child_count(np);
+> +	int ret;
+> +
+> +	if (!nchips || nchips > ANFC_MAX_CS) {
+> +		dev_err(nfc->dev, "Incorrect number of NAND chips (%d)\n",
+> +			nchips);
+> +		return -EINVAL;
+> +	}
+> +
+> +	for_each_child_of_node(np, nand_np) {
+> +		ret = anfc_chip_init(nfc, nand_np);
+> +		if (ret) {
+> +			of_node_put(nand_np);
+> +			anfc_chips_cleanup(nfc);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void anfc_reset(struct arasan_nfc *nfc)
+> +{
+> +	anfc_disable_int(nfc, EVENT_MASK);
+> +
+> +	/* Enable all interrupt status */
+> +	writel_relaxed(EVENT_MASK, nfc->base + INTR_STS_EN_REG);
+
+That doesn't sounds like a good idea. Interrupts should be enabled only
+when you need to wait on specific events.
+
+> +}
+> +
+
+
+[1]https://github.com/bbrezillon/linux/commit/02c0ce63be2d43f207bdecafd555c42efdacece2
