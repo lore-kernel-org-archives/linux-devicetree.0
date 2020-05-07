@@ -2,142 +2,131 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4105DC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA94C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6CF21582
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588849996;
-	bh=JpJwu3HzMRZiNarifyoKzt5DSF15LyA9t4q0RBYx/+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G78/ZO4wb5EorzZyAP3BYllz06G7MsbfE3wtsDuDXDw8sRr8xtDRC7eE/yYEW7+Cz
-	 MWjyOQH/injgL07IyxKIhSdm3v9PfDCSxCMlMVAEQHag0p4T6tx7sv91wEegPD3CfB
-	 DkT0+1ipEly2E+e6YG1E71bJpw1hh8QvXYE/ikbs=
+	by mail.kernel.org (Postfix) with ESMTP id 2674920725
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbgEGLNP (ORCPT
+        id S1726029AbgEGLYn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 07:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44558 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 07:24:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:56806 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgEGLNP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 May 2020 07:13:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF74E208E4;
-        Thu,  7 May 2020 11:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588849994;
-        bh=JpJwu3HzMRZiNarifyoKzt5DSF15LyA9t4q0RBYx/+Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U0ZIgjbxbrUQp22xHRVXhrRyXYovhO9OcSbJLRCt06RzSv/mH0Mi/xwKnQhuqUAE5
-         bq6FwoI59EsiNC3tKiUsGN+5q7sqMFLPCdtlFoH6z0/XtKE9yLiprcbT//sCoJDkbK
-         emJbjo8/AvGo/ULzVUqsZa9FJLI8MDche1ilHUnM=
-Date:   Thu, 7 May 2020 13:13:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vince Bridgers <vbridger@opensource.altera.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
-        Vitaly Bordug <vbordug@ru.mvista.com>,
-        Claudiu Manoil <claudiu.manoil@freescale.com>,
-        Li Yang <leoli@freescale.com>,
-        Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <blogic@openwrt.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Lars Persson <lars.persson@axis.com>,
-        Mugunthan V N <mugunthanvnm@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
-        Netdev <netdev@vger.kernel.org>,
-        nios2-dev@lists.rocketboards.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH net 11/16] net: ethernet: marvell: mvneta: fix fixed-link
- phydev leaks
-Message-ID: <20200507111312.GA1497799@kroah.com>
-References: <1480357509-28074-1-git-send-email-johan@kernel.org>
- <1480357509-28074-12-git-send-email-johan@kernel.org>
- <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
- <20200507064412.GL2042@localhost>
- <20200507064734.GA798308@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507064734.GA798308@kroah.com>
+        id S1725948AbgEGLYn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 May 2020 07:24:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1D5A1FB;
+        Thu,  7 May 2020 04:24:42 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCACF3F68F;
+        Thu,  7 May 2020 04:24:41 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH v2 00/17] dts/dt-bindings: Fix Arm Ltd. ARMv8 "boards"
+Date:   Thu,  7 May 2020 12:24:13 +0100
+Message-Id: <20200507112430.183940-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 07, 2020 at 08:47:34AM +0200, Greg Kroah-Hartman wrote:
-> On Thu, May 07, 2020 at 08:44:12AM +0200, Johan Hovold wrote:
-> > On Thu, May 07, 2020 at 12:27:53AM +0530, Naresh Kamboju wrote:
-> > > On Tue, 29 Nov 2016 at 00:00, Johan Hovold <johan@kernel.org> wrote:
-> > > >
-> > > > Make sure to deregister and free any fixed-link PHY registered using
-> > > > of_phy_register_fixed_link() on probe errors and on driver unbind.
-> > > >
-> > > > Fixes: 83895bedeee6 ("net: mvneta: add support for fixed links")
-> > > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > > ---
-> > > >  drivers/net/ethernet/marvell/mvneta.c | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > >
-> > > > diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-> > > > index 0c0a45af950f..707bc4680b9b 100644
-> > > > --- a/drivers/net/ethernet/marvell/mvneta.c
-> > > > +++ b/drivers/net/ethernet/marvell/mvneta.c
-> > > > @@ -4191,6 +4191,8 @@ static int mvneta_probe(struct platform_device *pdev)
-> > > >         clk_disable_unprepare(pp->clk);
-> > > >  err_put_phy_node:
-> > > >         of_node_put(phy_node);
-> > > > +       if (of_phy_is_fixed_link(dn))
-> > > > +               of_phy_deregister_fixed_link(dn);
-> > > 
-> > > While building kernel Image for arm architecture on stable-rc 4.4 branch
-> > > the following build error found.
-> > > 
-> > > drivers/net/ethernet/marvell/mvneta.c:3442:3: error: implicit
-> > > declaration of function 'of_phy_deregister_fixed_link'; did you mean
-> > > 'of_phy_register_fixed_link'? [-Werror=implicit-function-declaration]
-> > > |    of_phy_deregister_fixed_link(dn);
-> > > |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > |    of_phy_register_fixed_link
-> > > 
-> > > ref:
-> > > https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/541374729
-> > 
-> > Greg, 3f65047c853a ("of_mdio: add helper to deregister fixed-link
-> > PHYs") needs to be backported as well for these.
-> > 
-> > Original series can be found here:
-> > 
-> > 	https://lkml.kernel.org/r/1480357509-28074-1-git-send-email-johan@kernel.org
-> 
-> Ah, thanks for that, I thought I dropped all of the ones that caused
-> build errors, but missed the above one.  I'll go take the whole series
-> instead.
+Just some small fixes in v2: changing the GIC binding instead of the
+compatible strings used for Juno, re-ordering the patches, and, most
+importantly, (hopefully) fixing the subject lines ;-)
+I keep the last two patches in, even though I agree that there should be
+a more generic solution.
+-----------------------------------
 
-This should now all be fixed up, thanks.
+The .dts files in the arch/arm64/boot/dts/arm directory describe several
+boards and platforms provided by Arm Ltd. (mostly Juno and fastmodels).
+Both the .dts files and some of their associated .yaml bindings were not
+fully compliant, for some boards a simple dtc run complains already.
+And make dtbs_check would create quite a list of violations.
 
-greg k-h
+This series attempts to fix all of them, although some are not yet
+covered, as they require some discussion about potential binding or
+DT schema changes.
+
+The first three patches fix some minor omissions in the yaml bindings.
+The rest of the series then address the violations that dtbs_check
+reported: many node name scheme mismatches, some missing properties or
+wrong child node handling. See the respective patches for more details.
+
+After applying this series I still see the following warnings:
+- vexpress-v2f-1xv7-ca53x2: leds: linux,default-trigger names not
+  listed. The kernel provides triggers for each CPU core, which the DT
+  tries to use. However cpu<x> is not listed in the binding, and I fail
+  to add a regexp for a property *value* to express this easily.
+  Alternatively we could drop any constraint on this string at all,
+  since this might become a moving target and is not really a hardware
+  property, rather than a convenience Linux configuration option.
+- juno: scp-sram: The compatible names for the SCPI child nodes are not
+  fully converted to yaml yet, so dtbs_check fails to find a matching
+  schema. Converting the SCPI bindings over is next on my list.
+- fvp-base-revc: panel: 'power-supply' is a required property
+  Indeed the Linux driver depends on that property, not sure how this
+  ever worked. I am about to test this, the fix should a rather easy
+  addition of a fixed regulator.
+
+Please have a look, I am open to discussions.
+
+Cheers,
+Andre
+
+Changelog v1 .. v2:
+- drop GIC "compatible" changes for Juno
+- add "arm,gic-400", "arm,cortex-a15-gic" as a valid combination
+- reorder more controversial binding fixes to the end
+- add Robin's Acked-by:
+- fix subject lines in first three emails
+
+Andre Przywara (17):
+  dt-bindings: arm-smmu: Allow mmu-400,smmu-v1 compatible
+  dt-bindings: arm: gic: Allow combining arm,gic-400 compatible strings
+  arm64: dts: arm: Fix node address fields
+  arm64: dts: arm: FVP: Fix motherboard .dtsi
+  arm64: dts: juno: Fix mem-timer
+  arm64: dts: arm: Fix GIC compatible names
+  arm64: dts: arm: Fix GIC child nodes
+  arm64: dts: arm: Fix ITS node names and #msi-cells
+  arm64: dts: juno: usb: Use proper DT node name
+  arm64: dts: arm: Fix serial node names
+  arm64: dts: fvp: Fix SMMU DT node
+  arm64: dts: arm: Fix bus node names
+  arm64: dts: juno: Fix GPU interrupt order
+  arm64: dts: arm: Fix VExpress LED names
+  arm64: dts: juno: Fix SCPI shared mem node name
+  dt-bindings: mali-midgard: Allow dma-coherent
+  dt-bindings: ehci/ohci: Allow iommus property
+
+ .../bindings/gpu/arm,mali-midgard.yaml        |   2 +
+ .../interrupt-controller/arm,gic.yaml         |   6 +
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |   4 +-
+ .../devicetree/bindings/usb/generic-ehci.yaml |   3 +
+ .../devicetree/bindings/usb/generic-ohci.yaml |   3 +
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi       |  38 ++---
+ .../boot/dts/arm/foundation-v8-gicv2.dtsi     |   4 +-
+ .../boot/dts/arm/foundation-v8-gicv3.dtsi     |   3 +-
+ arch/arm64/boot/dts/arm/foundation-v8.dtsi    |  12 +-
+ arch/arm64/boot/dts/arm/fvp-base-revc.dts     |  10 +-
+ arch/arm64/boot/dts/arm/juno-base.dtsi        |  42 ++---
+ arch/arm64/boot/dts/arm/juno-motherboard.dtsi |   8 +-
+ arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts    |   2 +-
+ .../boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi |   4 +-
+ .../boot/dts/arm/rtsm_ve-motherboard.dtsi     | 152 +++++++++---------
+ 15 files changed, 155 insertions(+), 138 deletions(-)
+
+-- 
+2.17.1
+
