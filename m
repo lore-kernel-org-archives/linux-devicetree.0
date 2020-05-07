@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429EAC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A814C38A24
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C582208CA
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E00208CA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbgEGLBZ (ORCPT
+        id S1726618AbgEGLB1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 07:01:25 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60937 "EHLO
+        Thu, 7 May 2020 07:01:27 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38577 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgEGLBZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 07:01:25 -0400
+        with ESMTP id S1726616AbgEGLB1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 07:01:27 -0400
 X-Originating-IP: 91.224.148.103
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 970A22000E;
-        Thu,  7 May 2020 11:01:21 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id EB01020014;
+        Thu,  7 May 2020 11:01:23 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -36,9 +36,9 @@ Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Michal Simek <monstr@monstr.eu>,
         Naga Sureshkumar Relli <nagasure@xilinx.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 5/8] MAINTAINERS: Add Arasan NAND controller and bindings
-Date:   Thu,  7 May 2020 13:00:31 +0200
-Message-Id: <20200507110034.14736-6-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 6/8] dt-bindings: mtd: Document ARASAN NAND bindings
+Date:   Thu,  7 May 2020 13:00:32 +0200
+Message-Id: <20200507110034.14736-7-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507110034.14736-1-miquel.raynal@bootlin.com>
 References: <20200507110034.14736-1-miquel.raynal@bootlin.com>
@@ -50,29 +50,83 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Document the Arasan NAND controller bindings.
+
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../bindings/mtd/arasan,nand-controller.yaml  | 63 +++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b816a453b10e..1f2c83ead00b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1285,6 +1285,13 @@ S:	Supported
- W:	http://www.aquantia.com
- F:	drivers/net/ethernet/aquantia/atlantic/aq_ptp*
- 
-+ARASAN NAND CONTROLLER DRIVER
-+M:	Naga Sureshkumar Relli <nagasure@xilinx.com>
-+L:	linux-mtd@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
-+F:	drivers/mtd/nand/raw/arasan-nand-controller.c
+diff --git a/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
+new file mode 100644
+index 000000000000..db8f115a13ec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mtd/arasan,nand-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- ARC FRAMEBUFFER DRIVER
- M:	Jaya Kumar <jayalk@intworks.biz>
- S:	Maintained
++title: Arasan NAND Flash Controller with ONFI 3.1 support device tree bindings
++
++allOf:
++  - $ref: "nand-controller.yaml"
++
++maintainers:
++  - Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - xlnx,zynqmp-nand-controller
++        - enum:
++          - arasan,nfc-v3p10
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Controller clock
++      - description: NAND bus clock
++
++  clock-names:
++    items:
++      - const: controller
++      - const: bus
++
++  interrupts:
++    maxItems: 1
++
++  "#address-cells": true
++  "#size-cells": true
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: true
++
++examples:
++  - |
++    nfc: nand-controller@ff100000 {
++        compatible = "xlnx,zynqmp-nand-controller", "arasan,nfc-v3p10";
++        reg = <0x0 0xff100000 0x0 0x1000>;
++        clock-names = "controller", "bus";
++        clocks = <&clk200>, <&clk100>;
++        interrupt-parent = <&gic>;
++        interrupts = <0 14 4>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++    };
 -- 
 2.20.1
 
