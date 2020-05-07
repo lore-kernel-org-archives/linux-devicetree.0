@@ -2,132 +2,108 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC48BC38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 19:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3064AC54E49
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 19:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF74B2173E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 19:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174FA208D6
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 19:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgEGTNI (ORCPT
+        id S1726860AbgEGTNt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 15:13:08 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:43535 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgEGTNI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 15:13:08 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 12C4924000A;
-        Thu,  7 May 2020 19:13:03 +0000 (UTC)
-Date:   Thu, 7 May 2020 21:13:02 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>
-Subject: Re: [PATCH v3 7/8] mtd: rawnand: arasan: Add new Arasan NAND
- controller
-Message-ID: <20200507211302.59f7c2ba@xps13>
-In-Reply-To: <20200507145127.71615ed8@collabora.com>
-References: <20200507110034.14736-1-miquel.raynal@bootlin.com>
-        <20200507110034.14736-8-miquel.raynal@bootlin.com>
-        <20200507145127.71615ed8@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 7 May 2020 15:13:49 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38258 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgEGTNt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 15:13:49 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 590F2803087B;
+        Thu,  7 May 2020 19:13:40 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7gxrh3JYj9Az; Thu,  7 May 2020 22:13:38 +0300 (MSK)
+Date:   Thu, 7 May 2020 22:13:37 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Zhou Yanjie <zhouyanjie@zoho.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 11/20] mips: MAAR: Use more precise address mask
+Message-ID: <20200507191337.la6z476myszqethj@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-12-Sergey.Semin@baikalelectronics.ru>
+ <20200507110951.GD11616@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200507110951.GD11616@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
-
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 7 May
-2020 14:51:27 +0200:
-
-> > +/* NAND framework ->exec_op() hooks and related helpers */
-> > +static void anfc_parse_instructions(struct nand_chip *chip,
-> > +				    const struct nand_subop *subop,
-> > +				    struct anfc_op *nfc_op)
-> > +{
-> > +	struct anand *anand = to_anand(chip);
-> > +	const struct nand_op_instr *instr = NULL;
-> > +	bool first_cmd = true;
-> > +	unsigned int op_id;
-> > +	int i;
-> > +
-> > +	memset(nfc_op, 0, sizeof(*nfc_op));
-> > +	nfc_op->addr2_reg = ADDR2_CS(anand->cs);
-> > +	nfc_op->cmd_reg = CMD_PAGE_SIZE(anand->page_sz);
-> > +
-> > +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
-> > +		unsigned int offset, naddrs, pktsize;
-> > +		const u8 *addrs;
-> > +		u8 *buf;
-> > +
-> > +		instr = &subop->instrs[op_id];
-> > +
-> > +		switch (instr->type) {
-> > +		case NAND_OP_CMD_INSTR:
-> > +			if (first_cmd)
-> > +				nfc_op->cmd_reg |= CMD_1(instr->ctx.cmd.opcode);
-> > +			else
-> > +				nfc_op->cmd_reg |= CMD_2(instr->ctx.cmd.opcode);
-> > +
-> > +			first_cmd = false;
-> > +			break;
-> > +
-> > +		case NAND_OP_ADDR_INSTR:
-> > +			offset = nand_subop_get_addr_start_off(subop, op_id);
-> > +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
-> > +			addrs = &instr->ctx.addr.addrs[offset];
-> > +			nfc_op->cmd_reg |= CMD_NADDRS(naddrs);
-> > +
-> > +			for (i = 0; i < min(ANFC_MAX_ADDR_CYC, naddrs); i++) {
-> > +				if (i < 4)
-> > +					nfc_op->addr1_reg |= (u32)addrs[i] << i * 8;
-> > +				else
-> > +					nfc_op->addr2_reg |= addrs[i];
-> > +			}
-> > +
-> > +			break;
-> > +		case NAND_OP_DATA_IN_INSTR:
-> > +			nfc_op->read = true;
-> > +			fallthrough;
-> > +		case NAND_OP_DATA_OUT_INSTR:
-> > +			offset = nand_subop_get_data_start_off(subop, op_id);
-> > +			buf = instr->ctx.data.buf.in;
-> > +			nfc_op->buf = &buf[offset];
-> > +			nfc_op->len = nand_subop_get_data_len(subop, op_id);
-> > +			nfc_op->steps = anfc_len_to_steps(chip, nfc_op->len);
-> > +			pktsize = DIV_ROUND_UP(nfc_op->len, nfc_op->steps);
-> > +			nfc_op->pkt_reg |= PKT_SIZE(round_up(pktsize, 4)) |  
+On Thu, May 07, 2020 at 01:09:51PM +0200, Thomas Bogendoerfer wrote:
+> On Wed, May 06, 2020 at 08:42:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Indeed according to the P5600/P6000 manual the MAAR pair register
+> > address field either takes [12:31] bits for 32-bits non-XPA systems
+> > and [12:35] otherwise. In any case the current address mask is just
+> > wrong for 64-bit and 32-bits XPA chips. So lets extend it to 39-bits
+> > value. This shall cover the 64-bits architecture and systems with XPA
+> > enabled, and won't cause any problem for non-XPA 32-bit systems, since
+> > the value will be just truncated when written to the 32-bits register.
 > 
-> Hm, pktsize has to be aligned on 4? Again, that's not great since you
-> adjust the size without letting the core know you did that.
+> according to MIPS32 Priveleged Resoure Architecture Rev. 6.02
+> ADDR spans from bit 12 to bit 55. So your patch fits only for P5600.
 
-I confirm the round_up() is needed. It does not work without.
+> Does the wider mask cause any problems ?
+
+No, it won't. Bits written to the [40:62] range will be just ignored,
+while reading from there should return zeros. Setting GENMASK_ULL(55, 12)
+would also work. Though this solution is a bit workarounding because
+MIPS_MAAR_ADDR wouldn't reflect the real mask of the ADDR field. Something
+like the next macro would work better:
+
++#define MIPS_MAAR_ADDR							\
++({									\
++	u64 __mask;							\
++									\
++	if (cpu_has_lpa && read_c0_pagegrain() & PG_ELPA) {		\
++		__mask = GENMASK_ULL(55, 12);				\
++	else								\
++		__mask = GENMASK_ULL(31, 12);				\
++									\
++	__mask;								\
++})
+
+What do you think? What is better: the macro above or setting
+GENMASK_ULL(55, 12)?
+
+BTW I've just figured out, that since XPA is currently only supported by
+kernels with CPU_MIPS32x config enabled, then only MIPS32 may have extended
+physical addressing of 2^60 bytes if CONFIG_XPA is enabled. Generic MIPS64
+doesn't support the extended phys addressing so only 2^36 bytes are available
+on such platforms. (Loongson64 doesn't count, the platform code sets the
+PG_ELPA bit manually in kernel-entry-init.h)
+
+-Sergey
 
 > 
-> > +					   PKT_STEPS(nfc_op->steps);
-> > +			break;
-> > +		case NAND_OP_WAITRDY_INSTR:
-> > +			nfc_op->rdy_timeout_ms = instr->ctx.waitrdy.timeout_ms;
-> > +			break;
-> > +		}
-> > +	}
-> > +}
-
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
