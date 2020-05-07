@@ -2,110 +2,145 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFF3C38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 03:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D87C47247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 03:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6700620725
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 03:48:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Huotxyr7"
+	by mail.kernel.org (Postfix) with ESMTP id 20BC2215A4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 03:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgEGDsY (ORCPT
+        id S1725857AbgEGDtX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 23:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725809AbgEGDsX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 23:48:23 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E47C061A0F;
-        Wed,  6 May 2020 20:48:22 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id s9so3221463lfp.1;
-        Wed, 06 May 2020 20:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/au1P+LKp7UGcITXckfJpNTDS25YxZ0TSqVFN3ZEiRA=;
-        b=Huotxyr7xcPRjx/eppGI6o40oTPYZhC35YkjqS0Da0hrwxfHfTCZhoDtvy4zBkmskK
-         GMDnOdfrMe6v7b2f3CBvtF35xxZYgnxACnwHUfsy/3GbYLP6aEuNz8lWMWeQazz6A6d1
-         KuR5nZ8A1FKFSFIE4x9uHLPjUE8m140aKcE4cIaME/hUEJAxNk8IqWMZ2RJOkDl9zEiF
-         04ycUOZEja5swK+kchyPVRD9/bxZE/pDMfx1RgSRXTvqC+lQ3dv/J752Migi2a/u40f9
-         Rra2BU7s5vP6JkKC6YTNZpgHwmJaliY+RQlDY4GdJsaFMbV+CjVbchpf32E5nbscHmLK
-         uOKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/au1P+LKp7UGcITXckfJpNTDS25YxZ0TSqVFN3ZEiRA=;
-        b=T1EXeEzAWLelRNIQsyd/cJb87l55/5QJvCq4hAXWwaZH9Oi5oGC/OuvfGlYL30xnHB
-         7gQu85vOcOW2lrc24D6XOJU5pQiuzAvHUd6yHmQUA2PRpPsr9Uu48HcxiHhtavIhunyS
-         bWiEEa3PlDEQ7uW/xPiA5uGlo6hZqHwzHlxCNoUjGTEXiywi4AC0u6wqvNfs/Q2tisAo
-         XoQsqp5nbwY3zOSko07sIZbxNF98VeEYdRXx/+PHgknv7y20aFrZEYD2s/v2Zd2V1Wvk
-         3wSH9UrOuWlFLg6ORhHMmFjSNT8+BbbaTSliXrVWNhERHXXeghDUTXLo7hx+h1OwX4Ei
-         k7IA==
-X-Gm-Message-State: AGi0PuZvnNGTYHkB08GPESoHXujkQlWfHKnBhbGCgDqSgcdKXYGZLcMC
-        R5/8t+ViSxUXeS8e7K5nXptk6xFC5aI+T9h9TcA=
-X-Google-Smtp-Source: APiQypKGKAViU1DdiQYgx/qoKOwR6hee8Kj1KrI9t7atXw+zCve75aBN2UiRyE1F5LQNGot+nOkW2RgNsyyWjFgqooU=
-X-Received: by 2002:a05:6512:10d0:: with SMTP id k16mr7385994lfg.71.1588823300383;
- Wed, 06 May 2020 20:48:20 -0700 (PDT)
+        Wed, 6 May 2020 23:49:23 -0400
+Received: from mail-co1nam11olkn2042.outbound.protection.outlook.com ([40.92.18.42]:60609
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725809AbgEGDtX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 May 2020 23:49:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YMSaXUqIB4D8s/6a3KdOakYsLpOxLzmh8pcLLdH8+RKW4jE0GVQTTCdNor/J6RLvrADJlMPB5Oicts+Y1r1MnTNYXDimYdNElXizv7NBbKi1JQtm8Cct+FEJLzXtPvcatqkQDN5pL005EMNCA6/wTmo31usXwiZKnRXX5P4vqVYqkE+i7WC85eltGDnZkwEIMa03CfJ7UT8ZJbmuh97KMKsTWGSjkm3+WEBV4yRTdGOGdwDiqVR6I8TcYTSkba3mCBVDTAqXK0cFWUuVX+5yHJDRL5R9NRkKWk0FJptEapv5h9QNUcwJs5VWsUj1Dpt7zho2E6Khda1gsjyATiV5sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n7WS0ep6Pof67yFRn3nDZEba4oGZkhMCcHX7e4vT7vE=;
+ b=A4RCxDHP2vdqAQwTaV2UAmCW/RHDNTTFcrNcZYB49QG/BCDLHcw+TdsR/zxCTO4ZxKGb0waAnKTEPLedPHDXvd1r1p4ssbUtjIU152gf2JuW8HhAQFaSgfz3ZTh8Gwn6GjeeQ5yYKdZhYQzOC2LfFS6FzBjDA37UeE9+k/3TR9SZXJ1CoifGT6JNP/+vaMt7RQyCbhvKAe3ezdPYCJgQ7FFVIhUgt5u41LGbtuk7epkl4BODZjzaEMUJ4/aa2UFEDn7kTqpkZa9uzZAJBcZWEDIla+FiChnyIzZEk2ok+m16eqf6Sa1ChOHCRtvfUCyF8wYphM9Qk1upqdJ3CMgvcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from DM6NAM11FT046.eop-nam11.prod.protection.outlook.com
+ (2a01:111:e400:fc4d::52) by
+ DM6NAM11HT211.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4d::260)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Thu, 7 May
+ 2020 03:49:21 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc4d::50) by DM6NAM11FT046.mail.protection.outlook.com
+ (2a01:111:e400:fc4d::121) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend
+ Transport; Thu, 7 May 2020 03:49:21 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:D62C5FD99AA6B2C7BB5B5814B373DA82F85035C1579510770DE4DCDFC959F25C;UpperCasedChecksum:E72F6D97373CD4F15348698307B3CF6FE7D5D32898808A3C7BC0E0F56EC93F3D;SizeAsReceived:9609;Count:50
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2979.028; Thu, 7 May 2020
+ 03:49:21 +0000
+Subject: Re: [PATCH 0/5] iio: accel: Add bma023 support to bma180
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Input <linux-input@vger.kernel.org>
+References: <BN6PR04MB0660046ABD79433EA94A85A9A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <CACRpkdbb89q2FRJZ1=2QoQs8JFYcwWpNZwJUbnjsVvZYEE-LKw@mail.gmail.com>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB0660BD7ABF64EC0C19A65A03A3A50@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Wed, 6 May 2020 20:49:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+In-Reply-To: <CACRpkdbb89q2FRJZ1=2QoQs8JFYcwWpNZwJUbnjsVvZYEE-LKw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MWHPR13CA0014.namprd13.prod.outlook.com
+ (2603:10b6:300:16::24) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <1bb115be-fb1a-2024-d42f-4886f4cf207d@live.ca>
 MIME-Version: 1.0
-References: <20200401013851.16227-1-peter.chen@nxp.com> <20200409143205.GA15163@portage>
- <CAL411-rfxO-88aPaiDcjW+ri+RKMFz=C6tkNMztWYA-+uNvopA@mail.gmail.com> <d91e7b91-4197-3f5e-ba0d-854281b94403@ti.com>
-In-Reply-To: <d91e7b91-4197-3f5e-ba0d-854281b94403@ti.com>
-From:   Peter Chen <hzpeterchen@gmail.com>
-Date:   Thu, 7 May 2020 11:48:08 +0800
-Message-ID: <CAL411-oycAoGFwStjcr4Xjxat=p0syketTLf7yN+ntBrFsCY-Q@mail.gmail.com>
-Subject: Re: [PATH v4 1/2] phy: cadence: salvo: add salvo phy driver
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Oliver Graute <oliver.graute@gmail.com>,
-        Peter Chen <peter.chen@nxp.com>, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        jun.li@nxp.com, linux-imx@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR13CA0014.namprd13.prod.outlook.com (2603:10b6:300:16::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend Transport; Thu, 7 May 2020 03:49:19 +0000
+X-Microsoft-Original-Message-ID: <1bb115be-fb1a-2024-d42f-4886f4cf207d@live.ca>
+X-TMN:  [guzGGOMzR893nySBwTW0D24rgCeYJMv37PiOHM3O8jvitFAJljdWPSVHhpCYxaG9]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 76cc8ac4-9800-48a5-0dfe-08d7f239a006
+X-MS-TrafficTypeDiagnostic: DM6NAM11HT211:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: H0SlhJ89kHbXu+2bL3mhpeRiKukjGmTJntsSk8GLGk32f7onWt3yOjIv5YWSIf0SGgmPP7NesMkPg2i2eQCJYRYuYlNeqCcymhiEwbxFJIlYGYUS/yk081BNEoA+PxF40SFSPysnz7dl+gSzIrMTQNBc10GRN8rhmzOULe/BEWOHxp3SSJz5WXTLmJO4K1t+FB3jS1j6E5D77A8yfnbWWg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: KdSp707CMaCaKb/T+6/RBiFX+R6hGsSF48youbVNqH7rSIqb2emCzhDCE4m40CgAf+OQPBGyLDzOdobsj6Oju4U91aTREh2mQDClzRjHVIOPlgi4Ii3ppEen+QJlDNGsplangyM7FUejLM8VdBH5DeAYJ7gBX4rGNna3yRL2LyEQ50tu5mTGd91ZcEOl5h1wLDrq2LBMsUo/1hKLzdahKA==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76cc8ac4-9800-48a5-0dfe-08d7f239a006
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 03:49:21.1701
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM11HT211
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 8:47 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Peter,
->
-> On 4/26/2020 12:30 PM, Peter Chen wrote:
-> > On Fri, Apr 10, 2020 at 12:30 AM Oliver Graute <oliver.graute@gmail.com> wrote:
-> >>
-> >> On 01/04/20, Peter Chen wrote:
-> >>> Cadence SALVO PHY is a 28nm product, and is only used for USB3 & USB2.
-> >>> According to the Cadence, this PHY is a legacy Module, and Sierra and
-> >>> Torrent are later evolutions from it, and their sequence overlap is
-> >>> minimal, meaning we cannot reuse either (Sierra & Torrent) of the PHY
-> >>> drivers.
-> >>>
-> >>> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> >>
-> >> Tested-by:  Oliver Graute <oliver.graute@kococonnector.com>
-> >
-> > Hi Kithon,
-> >
-> > Rob has already acked the dt-binding patch, would you please merge
-> > these two patches,
->
-> Sure, I'll be merging it this week.
->
+Hi Linus,
 
-HI Kishon,
+On 2020-05-06 5:47 a.m., Linus Walleij wrote:
+> On Sun, May 3, 2020 at 7:22 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
+> 
+>> This patchset adds support for the bma023 three axis accelerometer
+>> to the bma180 IIO driver.  The bma023 is found on several ~2010
+>> phones, including the first-gen Galaxy S series.
+>>
+>> The bma023 differs from later chips (bma180, bma25x) in that it
+>> has no low power but still working mode and no temperature
+>> channel.
+>>
+>> The bma023 is already supported by a misc input driver (bma150), so
+>> when both are enabled, the iio driver is preferred.  The bma150
+>> is very similar to the bma023, but has a temperature channel.
+>> Support for the bma150 is not added in this patchset.
+> 
+> I'd say, if it's not too much trouble please also patch in
+> support for BMA150 and SMB380 to the IIO driver so
+> we can delete this old Input driver, we have done this
+> before and thes "input drivers" are just causing headaches
+> and wasting time for the Input maintainer.
+> 
 
-I still not find it at your next tree:
+Looking at the bma150, it looks the same.  The temperature is implemented
+slightly differently than on the bma180+ (unsigned vs signed) but should
+be quite easy to add.  I'll add a new patch for it in v2.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/tree/drivers/phy/cadence?h=next
+> It can be in a separate patch set from this one if you
+> don't want to get stuck on this.
+> 
+> Yours,
+> Linus Walleij
+> 
 
-Would you please merge it, I have patches based on it, thanks.
-
-Peter
+Thanks,
+Jonathan
