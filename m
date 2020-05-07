@@ -2,145 +2,94 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DE0C38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 14:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41634C54E49
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 15:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0FC22083B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 14:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225F1208DB
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 15:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tBO1gh+b"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wPnB9xqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgEGOu7 (ORCPT
+        id S1727118AbgEGPBP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 10:50:59 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:30953 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgEGOu6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 10:50:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588863057; x=1620399057;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=8GxZ5JWaOF5dn92Ks/d0RZ9+Pn/zgloMkgU+aU97AqA=;
-  b=tBO1gh+bP8bvdAQtQj0RKYn6OzBvzvBwPBX49ObsfROMnelUTncp7dBA
-   fwZu0vvw8Wc7bIxyPBxW1qp+5Ej6ja+E4yNn/2GTRZ4Qgni10onm5iYSd
-   sGY+ihRCfoDHXd/NdxVWXmSKthn5ZC6rf/5xhQnTHrZnDWb3DyWEUDgFH
-   c=;
-IronPort-SDR: UEJZk9DZwIeWEBZQ19joB9qGIH5Isb2hyLAQgICV8zK4hgBUf4k54zDJrFfHdprBjugHv3iHXO
- gCdieeaZyYyQ==
-X-IronPort-AV: E=Sophos;i="5.73,364,1583193600"; 
-   d="scan'208";a="30530374"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 07 May 2020 14:50:41 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 89215A1C36;
-        Thu,  7 May 2020 14:50:40 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 7 May 2020 14:50:40 +0000
-Received: from uf25486d27d2d5b.ant.amazon.com (10.43.162.200) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 7 May 2020 14:50:30 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
-        <talel@amazon.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <eitan@amazon.com>
-Subject: [PATCH v7 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs Memory Controller EDAC
-Date:   Thu, 7 May 2020 17:50:01 +0300
-Message-ID: <20200507145002.22010-2-talel@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200507145002.22010-1-talel@amazon.com>
-References: <20200507145002.22010-1-talel@amazon.com>
+        Thu, 7 May 2020 11:01:15 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53250 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726788AbgEGPBL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 11:01:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588863670; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=AFhcDY80LnoZO27lj6FbOhp6YvSPD5A1HvjLsjxeVEQ=; b=wPnB9xqT08+hRH9htkvbXSdejAbrJC+t8UefFBQtrIJ51NfqKQuTOQ5uTkEwPD31cgKcSj8L
+ GcNI7lAG75aQJs8RhMi//4WKNCx1Vd7D79PDW/EmKl2fagOHiqPuJ22wu+XrsG0GMtrg7FHN
+ 3Bk0zKq92EiLB/v+HuQ0TWUml08=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb42299.7fc67079e570-smtp-out-n05;
+ Thu, 07 May 2020 15:00:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9D6D7C3855D; Thu,  7 May 2020 15:00:40 +0000 (UTC)
+Received: from [192.168.1.100] (unknown [27.59.217.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A08CEC00449;
+        Thu,  7 May 2020 15:00:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A08CEC00449
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V5 2/3] dt-bindings: geni-se: Add interconnect binding for
+ GENI QUP
+To:     Rob Herring <robh@kernel.org>
+Cc:     agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, c_skakit@codeaurora.org, mka@chromium.org
+References: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
+ <1584095350-841-3-git-send-email-akashast@codeaurora.org>
+ <20200313220638.GA30287@bogus>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <0aef42fe-6ae9-4d77-c0bb-363c8869df69@codeaurora.org>
+Date:   Thu, 7 May 2020 20:30:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.200]
-X-ClientProxiedBy: EX13D25UWB003.ant.amazon.com (10.43.161.33) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+In-Reply-To: <20200313220638.GA30287@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+Hi Rob,
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>>   
+>> +      interconnects:
+>> +         minItems: 2
+>> +         maxItems: 3
+>> +
+>> +      interconnect-names:
+>> +         items:
+>> +           - const: qup-core
+>> +           - const: qup-config
+>> +           - const: qup-memory
+> Don't you need 'minItems: 2' here?
 
-diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-new file mode 100644
-index 000000000000..543f0a6be2f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/edac/amazon,al-mc-edac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amazon's Annapurna Labs Memory Controller EDAC
-+
-+maintainers:
-+  - Talel Shenhar <talel@amazon.com>
-+  - Talel Shenhar <talelshenhar@gmail.com>
-+
-+description: |
-+  EDAC node is defined to describe on-chip error detection and correction for
-+  Amazon's Annapurna Labs Memory Controller.
-+
-+properties:
-+
-+  compatible:
-+    const: amazon,al-mc-edac
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: uncorrectable error interrupt
-+      - description: correctable error interrupt
-+
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: ue
-+      - const: ce
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    edac@f0080000 {
-+      compatible = "amazon,al-mc-edac";
-+      reg = <0x0 0xf0080000 0x0 0x00010000>;
-+      interrupt-parent = <&amazon_al_system_fabric>;
-+      interrupt-names = "ue";
-+      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-+    };
+Yeah I need minItems: 2 here, thanks for reviewing.
+
+regards,
+
+Akash
+
+>
+> Rob
+
 -- 
-2.17.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
