@@ -2,186 +2,134 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E498C35280
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 23:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12011C47247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 23:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03B2B208D6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 23:01:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZvvpLly"
+	by mail.kernel.org (Postfix) with ESMTP id EDD2621473
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 23:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgEGXBw (ORCPT
+        id S1726538AbgEGXHS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 19:01:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgEGXBv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 19:01:51 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FB6C05BD43;
-        Thu,  7 May 2020 16:01:51 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id v4so8546042wme.1;
-        Thu, 07 May 2020 16:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Amh3I1P5I6BDFw+wjiIvKdrZM+vTRzn1yeHAQhH/mXQ=;
-        b=JZvvpLly/WeFwEdPOAjsfNLtdVO1/saQlF77s8DN/ZF0BWu1MgILCIAn0AhqV/pkzw
-         A0z4h7Q7Qvesyxx0pJK9xiME+nqD+bD7+zezYnuvLxdVrG7bfR2xuNnCOZbd7Dp6Aw9W
-         FlL9tVfTviOY30rRUZm/SMF+6ks0eCV/FFZHuBJ0WdDjEBUfnVt31v0t9gAzu0jsoLVH
-         AwOgqjj5EJZcN1de/fTVXyjqZ+mIoyGc2+9/yRLieRQErLNiDBjfrZDxmp+4ReKs+gkd
-         qbJraJ6Wg1CzU+dZlm9aoFQFOrDAszZLkvflSUVLE3Z17CrA2vSTtqaGC/3MMcKqRqSQ
-         qsvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Amh3I1P5I6BDFw+wjiIvKdrZM+vTRzn1yeHAQhH/mXQ=;
-        b=p/rg0Wa6yv46m788z5w0d3V2XuL+bOmX7K9qDmi0ZCTLK1FoTIElswqCajarVw83nc
-         CpKc76+lnNrUbDaM+HECwcecKFzvFEwic4dAJzPw1FUth+4FP6jWyC6V34MW7xzcOT4/
-         aaDoOgsRyc8OemaCDiF6dkfbEl7CJ7bshMMfTDtW3f9HRnxKNL2TuPNFZo1bd7vYfZXc
-         i5hqIh7eSrOBzAx20oEOzHMI7oMNOtCPQqhsNrqVVgrr+XcKVhUF4eA9B5oW1Oltwuqh
-         t0xj5ZF9EE9F8E/e969tLmjrtIY3kcIHN2dmaERTvIknGc7DBz1L6EoUuOCEPNMl7FJn
-         dlUA==
-X-Gm-Message-State: AGi0PuYot0Kvt7tfVomYwa39SbAm6ruAtwjbDtsN/3POpPGQaWrDNnFl
-        Am/t0N7AwB9pZASXijWfQeQ=
-X-Google-Smtp-Source: APiQypIXEPr64bDK5N2O7Q4uwKSHEOYR2e4k2roCXqGS0mC2od1qBH2YrfIpQ9yDJcfBWvqV0nWskg==
-X-Received: by 2002:a1c:4b15:: with SMTP id y21mr12876858wma.150.1588892510056;
-        Thu, 07 May 2020 16:01:50 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id o6sm10910992wrw.63.2020.05.07.16.01.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 16:01:49 -0700 (PDT)
-Subject: Re: [PATCH v3 1/4] dt-bindings: rockchip-rga: Add PX30 compatible
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     devicetree@vger.kernel.org, ezequiel@collabora.com,
-        hansverk@cisco.com, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        thomas.petazzoni@bootlin.com
-References: <20200430164245.1630174-2-paul.kocialkowski@bootlin.com>
- <ed1ac7d6-12d3-5480-3699-70a88595cac2@gmail.com>
- <20200507202337.GJ2422122@aptenodytes>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <b3d65325-7383-f89b-f493-6219904c8931@gmail.com>
-Date:   Fri, 8 May 2020 01:01:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 19:07:18 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:39192 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgEGXHS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 19:07:18 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 12EEF803087B;
+        Thu,  7 May 2020 23:07:15 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id molr0_Og1NvB; Fri,  8 May 2020 02:07:13 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        <linux-mips@vger.kernel.org>, <soc@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/2] memory: Add Baikal-T1 L2-cache driver
+Date:   Fri, 8 May 2020 02:07:02 +0300
+Message-ID: <20200507230705.6468-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200306130731.938808030702@mail.baikalelectronics.ru>
+References: <20200306130731.938808030702@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200507202337.GJ2422122@aptenodytes>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
+Aside from PCIe/SATA/DDR/I2C/CPU-reboot specific settings the Baikal-T1
+system controller provides a MIPS P5600 CM2 L2-cache tuning block.
+It is responsible for the setting up the Tag/Data/WS L2-to-RAM latencies.
+This small patchset provides a driver and DT-schema-based binding for the
+described device. So that the latencies can be tuned up by means of
+dedicated DT properties and sysfs nodes.
 
-With help of enum each additional compatibility string with fall back
-'rockchip,rk3288-rga' adds only 1 extra line instead of 3.
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
 
-See my and Heiko's response at the review of 'rockchip-saradc.yaml'.
+Note initially the driver was a part of the patchset created to reside in
+the kernel soc subsystem. But after a short discussion with Arnd:
+https://lkml.org/lkml/2020/3/6/422
+we decided to move it here.
 
-Re: [PATCH v1 1/3] dt-bindings: iio: adc: convert rockchip saradc
-bindings to yaml
-https://lore.kernel.org/lkml/a35bdff4-601e-6186-584e-9a0b88cf3dbb@gmail.com/
+New vendor prefix will be added in the framework of the next patchset:
+https://lkml.org/lkml/2020/5/6/1047
 
-The response of robh when I did something similar wrong as this patch.
+Changelog v2:
+- Fix some commit message and Kconfig help text spelling.
+- Move the driver to the memory subsystem.
+- Assign dual GPL/BSD license to the DT binding.
+- Use single lined copyright header in the binding.
+- Discard reg property and syscon compatible string.
+- Move "allOf" restrictions to the root level of the properties.
+- The DT node is supposed to be a child of the Baikal-T1 system controller
+  node. So regmap will be fetched from there.
+- Use generic FIELD_{GET,PREP} macro.
+- Remove probe-status info string printout.
+- Since the driver depends on the OF config we can remove of_match_ptr()
+  macro utilization.
 
-Re: [PATCH 1/2] dt-bindings: usb: dwc2: add compatible property for
-rk3328 usb
-https://lore.kernel.org/lkml/20200310192933.GA15236@bogus/
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Paul Cercueil <paul@crapouillou.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-mips@vger.kernel.org
+Cc: soc@kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-Example of an approved patch with enum.
+Serge Semin (2):
+  dt-bindings: memory: Add Baikal-T1 L2-cache Control Block binding
+  memory: Add Baikal-T1 L2-cache Control Block driver
 
-[PATCH v2 1/2] dt-bindings: usb: dwc2: add compatible property for
-rk3328 usb
-https://lore.kernel.org/lkml/20200311122121.8912-1-jbx6244@gmail.com/
+ .../memory-controllers/baikal,bt1-l2-ctl.yaml |  59 ++++
+ drivers/memory/Kconfig                        |  11 +
+ drivers/memory/Makefile                       |   1 +
+ drivers/memory/bt1-l2-ctl.c                   | 322 ++++++++++++++++++
+ 4 files changed, 393 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+ create mode 100644 drivers/memory/bt1-l2-ctl.c
 
-Kind regards,
-
-Johan
-
-On 5/7/20 10:23 PM, Paul Kocialkowski wrote:
-> Hi,
-> 
-> On Thu 30 Apr 20, 23:24, Johan Jonker wrote:
->> Hi Paul,
->>
->>>
->>> Add a new compatible for the PX30 Rockchip SoC, which also features
->>> a RGA block. It is compatible with the RK3288 RGA block.
->>>
->>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
->>> ---
->>>  Documentation/devicetree/bindings/media/rockchip-rga.yaml | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.yaml b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
->>> index dd645ddccb07..740586299da9 100644
->>> --- a/Documentation/devicetree/bindings/media/rockchip-rga.yaml
->>> +++ b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
->>> @@ -23,6 +23,9 @@ properties:
->>
->>
->>>        - items:
->>>            - const: rockchip,rk3228-rga
->>>            - const: rockchip,rk3288-rga
->>> +      - items:
->>> +          - const: rockchip,px30-rga
->>> +          - const: rockchip,rk3288-rga
->>
->> Use enum.
->>
->>       - items:
->>           - enum:
->>             - rockchip,px30-rga
->>             - rockchip,rk3228-rga
->>           - const: rockchip,rk3288-rga
-> 
-> Are you sure about this? The rk3228 above does it as I did it and other examples
-> like allwinner,sun4i-a10-csi.yaml appear to be doing the same too.
-
-The use of enum starts from 2 or more identical fall back strings.
-'allwinner,sun4i-a10-csi.yaml' has 2 different fall back strings.
-
-properties:
-  compatible:
-    oneOf:
-      - const: allwinner,sun4i-a10-csi1
-      - const: allwinner,sun7i-a20-csi0
-      - items:
-        - const: allwinner,sun7i-a20-csi1
-        - const: allwinner,sun4i-a10-csi1
-      - items:
-        - const: allwinner,sun8i-r40-csi0
-        - const: allwinner,sun7i-a20-csi0
-
-> 
-> The case with rockchip,rk3288-rga alone already seems covered.
-See yaml examples in the links above.
-
-> 
-> Cheers,
-> 
-> Paul
-> 
->>>  
->>>    reg:
->>>      maxItems: 1
->>> -- 
->>> 2.26.0
->>
-> 
+-- 
+2.25.1
 
