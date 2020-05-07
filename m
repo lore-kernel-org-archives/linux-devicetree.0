@@ -2,519 +2,160 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCB6C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 02:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6924AC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 03:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB6420838
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 02:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411C32068E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 03:08:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B2sIj2Mx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQH6RfxU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgEGCx2 (ORCPT
+        id S1727086AbgEGDIR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 May 2020 22:53:28 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49040 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgEGCx2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 22:53:28 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0472qtu3103567;
-        Wed, 6 May 2020 21:52:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588819975;
-        bh=L0nU496hZdbdRsagNnFwhK+8Afmw2+jXQkD34ygMVgc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=B2sIj2MxkPozV2ZWt99LmldkDblt7NVGvS/JLCNdOK5exNdOoaeZ3rT5nKF2tQOEr
-         i2K9SHRfiMxa+qbNmeVKs4uCLWyrXA7aVrIEbxvnADpXiNd9xfZH1Kfa9T0d71hlfx
-         kwvhcZJeSTXI+S2Ro8C3XHnzYZL/la9oOXNVqkVw=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0472qtJ8094533
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 May 2020 21:52:55 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
- 2020 21:52:55 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 6 May 2020 21:52:54 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0472qmu4110785;
-        Wed, 6 May 2020 21:52:49 -0500
-Subject: Re: [PATCH v9 5/8] PCI: endpoint: Add support to handle multiple base
- for mapping outbound memory
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587666159-6035-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <cbc214fd-541a-ef2d-d00b-43379730ac1f@ti.com>
-Date:   Thu, 7 May 2020 08:22:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 23:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725879AbgEGDIQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 May 2020 23:08:16 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C17BC061A0F;
+        Wed,  6 May 2020 20:08:16 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id b6so1346113uak.6;
+        Wed, 06 May 2020 20:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=b5KrgkS9IpHYVnkrIf1m2LB5pieWU4ZRsegpvq8ZuNM=;
+        b=nQH6RfxU7ceNQuXYXgG9OZlSHcATWEnjnhVkzSi1Bop+6sQlFdf2KboXe+5MRiTOPZ
+         wXed/hWDipbbakcaTpb+kOKIbF7MLdB84XNqIhkkaPvWP3L2PD8d6D+Y6W+3gClHxG+H
+         K8qib7WZguDpYxSbhB1djNjEJZks9oM9+/cMA+5mNycHbJfDzz+2S9eJ3vHO6jeQwId0
+         0+m05MEFgioXDWBnkBJ4z8D1JeUYmsRs3wYGcbtrU9O1SkQVJQkFFR6PVHEai0Tx5iK7
+         05Htbwrt6jmfcrguLgsyCehN71Ydh/PPSJsZoDLUibLmLwScZdvQU1ISgYZZKzOzc+4h
+         AfJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=b5KrgkS9IpHYVnkrIf1m2LB5pieWU4ZRsegpvq8ZuNM=;
+        b=re5YeSuedIfPEN5jqxu2c6gGTtNBVJrqTEeXsp3pCNxKanjqE6l99v+ioBEJ9kjs0M
+         hLZ1oLfmNbs0tz8KJtO55PNuWD5e6hZoCBn7pkECFydliFJJgYvGBw5DtYDdC0HwxIU3
+         ndMY3BMfIyC8MSNlTUruowsZ2saGhRLDZzTnC5EJfrT138ZnANYoXaSqSjxZ/cZRrenS
+         n/EcZw9YJpG2elSTJ6kVNb/hvYC+RUopsDr+yPE/z30faMBuuyEnPzAMVJ5mdMMzo+O4
+         ET3gNiTGuoJGiPekpZZllJDuSFq30QYi2hEMF7Jr7KQjInlkupKHqO0Xx/T3WC0ZohAT
+         ezug==
+X-Gm-Message-State: AGi0PuYg2sQClTF1dkkeINThCeZWotKQ0UlVTcn+T3T3f2AMtFK8I4Uz
+        pdJxx99gKeHwwGydY1mNQG8H6VrNpbqyEZanB/nxBknI
+X-Google-Smtp-Source: APiQypLy2gZGyrB2039SyMEF5+hQSLSHuFESjGbmWh7/XJ2Fxp/FeHdyAqmT6q9hnYF5XM72W3uT7UPzgl0MM0NuEqg=
+X-Received: by 2002:ab0:375a:: with SMTP id i26mr9842013uat.120.1588820895622;
+ Wed, 06 May 2020 20:08:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1587666159-6035-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191028215919.83697-1-john.stultz@linaro.org>
+ <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com>
+ <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com>
+ <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com> <CALAqxLVXauXP0r4Hv2Axa4PNf_F9wp644peYV06bdsPtMKGmLA@mail.gmail.com>
+In-Reply-To: <CALAqxLVXauXP0r4Hv2Axa4PNf_F9wp644peYV06bdsPtMKGmLA@mail.gmail.com>
+From:   Jun Li <lijun.kernel@gmail.com>
+Date:   Thu, 7 May 2020 11:08:04 +0800
+Message-ID: <CAKgpwJU7VDx90STE7bhx9VZ5p1jtqCyyLavmhXfpaicyDAYt_g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by
+ device controller
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+John Stultz <john.stultz@linaro.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=887=E6=
+=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=886:27=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Wed, May 6, 2020 at 2:00 AM Jun Li <lijun.kernel@gmail.com> wrote:
+> > John Stultz <john.stultz@linaro.org> =E4=BA=8E2019=E5=B9=B410=E6=9C=883=
+0=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=885:18=E5=86=99=E9=81=93=EF=BC=
+=9A
+> > > On Tue, Oct 29, 2019 at 2:11 AM Felipe Balbi <balbi@kernel.org> wrote=
+:
+> > > > John Stultz <john.stultz@linaro.org> writes:
+> > > > > From: Yu Chen <chenyu56@huawei.com>
+> > > > >
+> > > > > It needs more time for the device controller to clear the CmdAct =
+of
+> > > > > DEPCMD on Hisilicon Kirin Soc.
+> > > >
+> > > > Why does it need more time? Why is it so that no other platform nee=
+ds
+> > > > more time, only this one? And which command, specifically, causes
+> > > > problem?
+> >
+> > Sorry for my back to this so late.
+> >
+> > This change is required on my dwc3 based HW too, I gave a check
+> > and the reason is suspend_clk is used in case the PIPE phy is at P3,
+> > this slow clock makes my EP command below timeout.
+> >
+> > dwc3_gadget_ep_cmd: ep0out: cmd 'Set Endpoint Configuration' [401]
+> > params 00001000 00000500 00000000 --> status: Timed Out
+> >
+> > Success case takes about 400us to complete, see below trace(44.286278
+> > - 44.285897 =3D 0.000381):
+> >
+> > configfs_acm.sh-822   [000] d..1    44.285896: dwc3_writel: addr
+> > 000000006d59aae1 value 00000401
+> > configfs_acm.sh-822   [000] d..1    44.285897: dwc3_readl: addr
+> > 000000006d59aae1 value 00000401
+> > ... ...
+> > configfs_acm.sh-822   [000] d..1    44.286278: dwc3_readl: addr
+> > 000000006d59aae1 value 00000001
+> > configfs_acm.sh-822   [000] d..1    44.286279: dwc3_gadget_ep_cmd:
+> > ep0out: cmd 'Set Endpoint Configuration' [401] params 00001000
+> > 00000500 00000000 --> status: Successful
+> >
+> > Hi John,
+> >
+> > Do you still have this problem? if yes, What's the value of
+> > USBLNKST[21:18] when the timeout happens?
+>
+> Sorry. As I mentioned, I was working to upstream a patchset that I
+> hadn't created, so the context I had was limited. As I couldn't
+> reproduce an issue without the change on the device I had, I figured
+> it would be best to drop it.
 
+That was fine.
+>
+> However, as you have some analysis and rational for why such a change
+> would be needed, I don't have an objection to it. Do you want to
+> resubmit the patch with your explanation and detailed log above in the
+> commit message?
 
-On 4/23/2020 11:52 PM, Lad Prabhakar wrote:
-> R-Car PCIe controller has support to map multiple memory regions for
-> mapping the outbound memory in local system also the controller limits
-> single allocation for each region (that is, once a chunk is used from the
-> region it cannot be used to allocate a new one). This features inspires to
-> add support for handling multiple memory bases in endpoint framework.
-> 
-> With this patch pci_epc_mem_init() initializes address space for endpoint
-> controller which support single window and pci_epc_multi_mem_init()
-> initializes multiple windows supported by endpoint controller.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Sure, I will resubmit the patch with my explanation added in commit message=
+.
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   |  16 +-
->  drivers/pci/endpoint/pci-epc-mem.c            | 199 ++++++++++++------
->  include/linux/pci-epc.h                       |  33 ++-
->  3 files changed, 170 insertions(+), 78 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 1cdcbd102ce8..a78902cbf2f0 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -412,11 +412,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  		reg = ep->msi_cap + PCI_MSI_DATA_32;
->  		msg_data = dw_pcie_readw_dbi(pci, reg);
->  	}
-> -	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
-> +	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
->  	msg_addr = ((u64)msg_addr_upper) << 32 |
->  			(msg_addr_lower & ~aligned_offset);
->  	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
-> -				  epc->mem->page_size);
-> +				  epc->mem->window.page_size);
->  	if (ret)
->  		return ret;
->  
-> @@ -459,9 +459,9 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
->  		return -EPERM;
->  	}
->  
-> -	aligned_offset = msg_addr & (epc->mem->page_size - 1);
-> +	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
->  	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys,  msg_addr,
-> -				  epc->mem->page_size);
-> +				  epc->mem->window.page_size);
->  	if (ret)
->  		return ret;
->  
-> @@ -477,7 +477,7 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->  	struct pci_epc *epc = ep->epc;
->  
->  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
-> -			      epc->mem->page_size);
-> +			      epc->mem->window.page_size);
->  
->  	pci_epc_mem_exit(epc);
->  }
-> @@ -610,15 +610,15 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	if (ret < 0)
->  		epc->max_functions = 1;
->  
-> -	ret = __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
-> -				 ep->page_size);
-> +	ret = pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
-> +			       ep->page_size);
->  	if (ret < 0) {
->  		dev_err(dev, "Failed to initialize address space\n");
->  		return ret;
->  	}
->  
->  	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
-> -					     epc->mem->page_size);
-> +					     epc->mem->window.page_size);
->  	if (!ep->msi_mem) {
->  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
->  		return -ENOMEM;
-> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-> index cdd1d3821249..a3466da2a16f 100644
-> --- a/drivers/pci/endpoint/pci-epc-mem.c
-> +++ b/drivers/pci/endpoint/pci-epc-mem.c
-> @@ -23,7 +23,7 @@
->  static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
->  {
->  	int order;
-> -	unsigned int page_shift = ilog2(mem->page_size);
-> +	unsigned int page_shift = ilog2(mem->window.page_size);
->  
->  	size--;
->  	size >>= page_shift;
-> @@ -36,67 +36,95 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
->  }
->  
->  /**
-> - * __pci_epc_mem_init() - initialize the pci_epc_mem structure
-> + * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
->   * @epc: the EPC device that invoked pci_epc_mem_init
-> - * @phys_base: the physical address of the base
-> - * @size: the size of the address space
-> - * @page_size: size of each page
-> + * @windows: pointer to windows supported by the device
-> + * @num_windows: number of windows device supports
->   *
->   * Invoke to initialize the pci_epc_mem structure used by the
->   * endpoint functions to allocate mapped PCI address.
->   */
-> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
-> -		       size_t page_size)
-> +int pci_epc_multi_mem_init(struct pci_epc *epc,
-> +			   struct pci_epc_mem_window *windows,
-> +			   unsigned int num_windows)
->  {
-> -	int ret;
-> -	struct pci_epc_mem *mem;
-> -	unsigned long *bitmap;
-> +	struct pci_epc_mem *mem = NULL;
-> +	unsigned long *bitmap = NULL;
->  	unsigned int page_shift;
-> -	int pages;
-> +	size_t page_size;
->  	int bitmap_size;
-> +	int pages;
-> +	int ret;
-> +	int i;
->  
-> -	if (page_size < PAGE_SIZE)
-> -		page_size = PAGE_SIZE;
-> +	epc->num_windows = 0;
->  
-> -	page_shift = ilog2(page_size);
-> -	pages = size >> page_shift;
-> -	bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
-> +	if (!windows || !num_windows)
-> +		return -EINVAL;
->  
-> -	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-> -	if (!mem) {
-> -		ret = -ENOMEM;
-> -		goto err;
-> -	}
-> +	epc->windows = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
-> +	if (!epc->windows)
-> +		return -ENOMEM;
->  
-> -	bitmap = kzalloc(bitmap_size, GFP_KERNEL);
-> -	if (!bitmap) {
-> -		ret = -ENOMEM;
-> -		goto err_mem;
-> -	}
-> +	for (i = 0; i < num_windows; i++) {
-> +		page_size = windows[i].page_size;
-> +		if (page_size < PAGE_SIZE)
-> +			page_size = PAGE_SIZE;
-> +		page_shift = ilog2(page_size);
-> +		pages = windows[i].size >> page_shift;
-> +		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->  
-> -	mem->bitmap = bitmap;
-> -	mem->phys_base = phys_base;
-> -	mem->page_size = page_size;
-> -	mem->pages = pages;
-> -	mem->size = size;
-> -	mutex_init(&mem->lock);
-> +		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-> +		if (!mem) {
-> +			ret = -ENOMEM;
-> +			i--;
-> +			goto err_mem;
-> +		}
->  
-> -	epc->mem = mem;
-> +		bitmap = kzalloc(bitmap_size, GFP_KERNEL);
-> +		if (!bitmap) {
-> +			ret = -ENOMEM;
-> +			kfree(mem);
-> +			i--;
-> +			goto err_mem;
-> +		}
-> +
-> +		mem->window.phys_base = windows[i].phys_base;
-> +		mem->window.size = windows[i].size;
-> +		mem->window.page_size = page_size;
-> +		mem->bitmap = bitmap;
-> +		mem->pages = pages;
-> +		mutex_init(&mem->lock);
-> +		epc->windows[i] = mem;
-> +	}
-> +
-> +	epc->mem = epc->windows[0];
-> +	epc->num_windows = num_windows;
->  
->  	return 0;
->  
->  err_mem:
-> -	kfree(mem);
-> +	for (; i >= 0; i--) {
-> +		mem = epc->windows[i];
-> +		kfree(mem->bitmap);
-> +		kfree(mem);
-> +	}
-> +	kfree(epc->windows);
->  
-> -err:
-> -return ret;
-> +	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
-> +EXPORT_SYMBOL_GPL(pci_epc_multi_mem_init);
->  
->  int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
->  		     size_t size, size_t page_size)
->  {
-> -	return __pci_epc_mem_init(epc, base, size, page_size);
-> +	struct pci_epc_mem_window mem_window;
-> +
-> +	mem_window.phys_base = base;
-> +	mem_window.size = size;
-> +	mem_window.page_size = page_size;
-> +
-> +	return pci_epc_multi_mem_init(epc, &mem_window, 1);
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_init);
->  
-> @@ -109,11 +137,22 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_init);
->   */
->  void pci_epc_mem_exit(struct pci_epc *epc)
->  {
-> -	struct pci_epc_mem *mem = epc->mem;
-> +	struct pci_epc_mem *mem;
-> +	int i;
->  
-> +	if (!epc->num_windows)
-> +		return;
-> +
-> +	for (i = 0; i < epc->num_windows; i++) {
-> +		mem = epc->windows[i];
-> +		kfree(mem->bitmap);
-> +		kfree(mem);
-> +	}
-> +	kfree(epc->windows);
-> +
-> +	epc->windows = NULL;
->  	epc->mem = NULL;
-> -	kfree(mem->bitmap);
-> -	kfree(mem);
-> +	epc->num_windows = 0;
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
->  
-> @@ -129,31 +168,60 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
->  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->  				     phys_addr_t *phys_addr, size_t size)
->  {
-> -	int pageno;
->  	void __iomem *virt_addr = NULL;
-> -	struct pci_epc_mem *mem = epc->mem;
-> -	unsigned int page_shift = ilog2(mem->page_size);
-> +	struct pci_epc_mem *mem;
-> +	unsigned int page_shift;
-> +	size_t align_size;
-> +	int pageno;
->  	int order;
-> +	int i;
->  
-> -	size = ALIGN(size, mem->page_size);
-> -	order = pci_epc_mem_get_order(mem, size);
-> -
-> -	mutex_lock(&mem->lock);
-> -	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
-> -	if (pageno < 0)
-> -		goto ret;
-> +	for (i = 0; i < epc->num_windows; i++) {
-> +		mem = epc->windows[i];
-> +		mutex_lock(&mem->lock);
-> +		align_size = ALIGN(size, mem->window.page_size);
-> +		order = pci_epc_mem_get_order(mem, align_size);
->  
-> -	*phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
-> -	virt_addr = ioremap(*phys_addr, size);
-> -	if (!virt_addr)
-> -		bitmap_release_region(mem->bitmap, pageno, order);
-> +		pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
-> +						 order);
-> +		if (pageno >= 0) {
-> +			page_shift = ilog2(mem->window.page_size);
-> +			*phys_addr = mem->window.phys_base +
-> +				((phys_addr_t)pageno << page_shift);
-> +			virt_addr = ioremap(*phys_addr, align_size);
-> +			if (!virt_addr) {
-> +				bitmap_release_region(mem->bitmap,
-> +						      pageno, order);
-> +				mutex_unlock(&mem->lock);
-> +				continue;
-> +			}
-> +			mutex_unlock(&mem->lock);
-> +			return virt_addr;
-> +		}
-> +		mutex_unlock(&mem->lock);
-> +	}
->  
-> -ret:
-> -	mutex_unlock(&mem->lock);
->  	return virt_addr;
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
->  
-> +struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
-> +						phys_addr_t phys_addr)
-> +{
-> +	struct pci_epc_mem *mem;
-> +	int i;
-> +
-> +	for (i = 0; i < epc->num_windows; i++) {
-> +		mem = epc->windows[i];
-> +
-> +		if (phys_addr >= mem->window.phys_base &&
-> +		    phys_addr < (mem->window.phys_base + mem->window.size))
-> +			return mem;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->  /**
->   * pci_epc_mem_free_addr() - free the allocated memory address
->   * @epc: the EPC device on which memory was allocated
-> @@ -166,14 +234,23 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
->  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
->  			   void __iomem *virt_addr, size_t size)
->  {
-> +	struct pci_epc_mem *mem;
-> +	unsigned int page_shift;
-> +	size_t page_size;
->  	int pageno;
-> -	struct pci_epc_mem *mem = epc->mem;
-> -	unsigned int page_shift = ilog2(mem->page_size);
->  	int order;
->  
-> +	mem = pci_epc_get_matching_window(epc, phys_addr);
-> +	if (!mem) {
-> +		pr_err("failed to get matching window\n");
-> +		return;
-> +	}
-> +
-> +	page_size = mem->window.page_size;
-> +	page_shift = ilog2(page_size);
->  	iounmap(virt_addr);
-> -	pageno = (phys_addr - mem->phys_base) >> page_shift;
-> -	size = ALIGN(size, mem->page_size);
-> +	pageno = (phys_addr - mem->window.phys_base) >> page_shift;
-> +	size = ALIGN(size, page_size);
->  	order = pci_epc_mem_get_order(mem, size);
->  	mutex_lock(&mem->lock);
->  	bitmap_release_region(mem->bitmap, pageno, order);
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 5bc1de65849e..cc66bec8be90 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -65,20 +65,28 @@ struct pci_epc_ops {
->  	struct module *owner;
->  };
->  
-> +/**
-> + * struct pci_epc_mem_window - address window of the endpoint controller
-> + * @phys_base: physical base address of the PCI address window
-> + * @size: the size of the PCI address window
-> + * @page_size: size of each page
-> + */
-> +struct pci_epc_mem_window {
-> +	phys_addr_t	phys_base;
-> +	size_t		size;
-> +	size_t		page_size;
-> +};
-> +
->  /**
->   * struct pci_epc_mem - address space of the endpoint controller
-> - * @phys_base: physical base address of the PCI address space
-> - * @size: the size of the PCI address space
-> + * @window: address window of the endpoint controller
->   * @bitmap: bitmap to manage the PCI address space
->   * @pages: number of bits representing the address region
-> - * @page_size: size of each page
->   * @lock: mutex to protect bitmap
->   */
->  struct pci_epc_mem {
-> -	phys_addr_t	phys_base;
-> -	size_t		size;
-> +	struct pci_epc_mem_window window;
->  	unsigned long	*bitmap;
-> -	size_t		page_size;
->  	int		pages;
->  	/* mutex to protect against concurrent access for memory allocation*/
->  	struct mutex	lock;
-> @@ -89,7 +97,11 @@ struct pci_epc_mem {
->   * @dev: PCI EPC device
->   * @pci_epf: list of endpoint functions present in this EPC device
->   * @ops: function pointers for performing endpoint operations
-> - * @mem: address space of the endpoint controller
-> + * @windows: array of address space of the endpoint controller
-> + * @mem: first window of the endpoint controller, which corresponds to
-> + *       default address space of the endpoint controller supporting
-> + *       single window.
-> + * @num_windows: number of windows supported by device
->   * @max_functions: max number of functions that can be configured in this EPC
->   * @group: configfs group representing the PCI EPC device
->   * @lock: mutex to protect pci_epc ops
-> @@ -100,7 +112,9 @@ struct pci_epc {
->  	struct device			dev;
->  	struct list_head		pci_epf;
->  	const struct pci_epc_ops	*ops;
-> +	struct pci_epc_mem		**windows;
->  	struct pci_epc_mem		*mem;
-> +	unsigned int			num_windows;
->  	u8				max_functions;
->  	struct config_group		*group;
->  	/* mutex to protect against concurrent access of EP controller */
-> @@ -194,8 +208,9 @@ void pci_epc_put(struct pci_epc *epc);
->  
->  int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
->  		     size_t size, size_t page_size);
-> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_addr, size_t size,
-> -		       size_t page_size);
-> +int pci_epc_multi_mem_init(struct pci_epc *epc,
-> +			   struct pci_epc_mem_window *window,
-> +			   unsigned int num_windows);
->  void pci_epc_mem_exit(struct pci_epc *epc);
->  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->  				     phys_addr_t *phys_addr, size_t size);
-> 
+thanks
+Li Jun
+>
+> thanks
+> -john
