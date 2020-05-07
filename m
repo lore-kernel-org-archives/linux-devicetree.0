@@ -2,214 +2,183 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E907AC47247
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 07:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05649C47247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 07:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9BAD207DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 07:36:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="c1QbtHwk"
+	by mail.kernel.org (Postfix) with ESMTP id D9DC4207DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 07:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgEGHgr (ORCPT
+        id S1725845AbgEGHua (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 03:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40948 "EHLO
+        Thu, 7 May 2020 03:50:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725819AbgEGHgq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 03:36:46 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A402C061A10
-        for <devicetree@vger.kernel.org>; Thu,  7 May 2020 00:36:46 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d7so1088807ioq.5
-        for <devicetree@vger.kernel.org>; Thu, 07 May 2020 00:36:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=izaC0j97DaEKeWCVsCGRwOFQb7MeNG6AyPzpQh6sfPU=;
-        b=c1QbtHwkMQwm1lStyF86Ezx5rzlYQTI7Gd32BWAMTad1lET7RxRG96/ZyNAa0lWZgi
-         jAKxt+Z8dD53SeH0xJDt3n4hoiJfIdVzYLiumVXiPvdwhw4uRfCScA028Z8nmu+CgGAy
-         Qrl4Qy6OUmThArCylKm6AbYDL2ohS7DjGGSkY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=izaC0j97DaEKeWCVsCGRwOFQb7MeNG6AyPzpQh6sfPU=;
-        b=DezQg84Dw+4Ytwub9a0jb+nqWH/mh9NC38Z7pusub2QJCxnQ9XfCNe7rSCkT2aAwFa
-         lVN2qi4DloGkqSgePHMuhJ0JbdtRM2Q9ZHm6xU1/KsrQPvI/y0VTNFK+lPDbsJ2r5I07
-         R+0Xhw0s9fuYXQAN13YDaKHC9FKIXQSVEbK3V9h92qrcIxn+Ei00yYWAaMpn0Gy0RP9B
-         VylNLeSORQr8v0/cDH18MhGyD3JshGxcnv4e9dWAD5iFLqS+a6tysGwIQ9HbxzNJLRfI
-         WWwfWEEPxk3aWKfjbWTYfpbIrTN7/qmtG0UZRUCFDFmRTWiessnytK7FUcMAo9nkFC1l
-         Mo3A==
-X-Gm-Message-State: AGi0PuY90kysGDt35X8EP06A1mi/v/NPvPTcGSyU9L3HiffLe/9QBUcX
-        mkUhwYAdoD8RDY7Su5nUl7bUcr7N1XHudx7m6Vop+g==
-X-Google-Smtp-Source: APiQypLpq8huNxkhKDsHKb6+tSygwEJaTcwboqexXdJmXAAKs6Kn4dvmnWL1eZ5wk46A23oHuVJmrRRiqSUQuHS+m9g=
-X-Received: by 2002:a02:6983:: with SMTP id e125mr12598539jac.47.1588837005803;
- Thu, 07 May 2020 00:36:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200425133939.3508912-0-mholenko@antmicro.com>
- <20200425133939.3508912-3-mholenko@antmicro.com> <aa7c915310753b042be35758893dee91d3651ffc.camel@kernel.crashing.org>
-In-Reply-To: <aa7c915310753b042be35758893dee91d3651ffc.camel@kernel.crashing.org>
-From:   Mateusz Holenko <mholenko@antmicro.com>
-Date:   Thu, 7 May 2020 09:36:34 +0200
-Message-ID: <CAPk366T3ACKrKX=RZwcN3D+Gy43-EGA+6vpwvOh5SKLXd1BM1Q@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] drivers/soc/litex: add LiteX SoC Controller driver
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        by vger.kernel.org with ESMTP id S1725834AbgEGHua (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 03:50:30 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 798E8C061A41
+        for <devicetree@vger.kernel.org>; Thu,  7 May 2020 00:50:29 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:6572:4a1f:d283:9ae8])
+        by laurent.telenet-ops.be with bizsmtp
+        id bjqT220073ZRV0X01jqTao; Thu, 07 May 2020 09:50:27 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jWbIZ-0001PA-El; Thu, 07 May 2020 09:50:27 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jWbIZ-0008K4-CR; Thu, 07 May 2020 09:50:27 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: clock: renesas: div6: Convert to json-schema
+Date:   Thu,  7 May 2020 09:50:26 +0200
+Message-Id: <20200507075026.31941-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 5:12 AM Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
->
-> On Sat, 2020-04-25 at 13:42 +0200, Mateusz Holenko wrote:
-> > From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> >
-> > This commit adds driver for the FPGA-based LiteX SoC
-> > Controller from LiteX SoC builder.
->
-> Sorry for jumping in late, Joel only just pointed me to this :)
->
-> > + * The purpose of `litex_set_reg`/`litex_get_reg` is to implement
-> > + * the logic of writing to/reading from the LiteX CSR in a single
-> > + * place that can be then reused by all LiteX drivers.
-> > + */
-> > +void litex_set_reg(void __iomem *reg, unsigned long reg_size,
-> > +                 unsigned long val)
-> > +{
-> > +     unsigned long shifted_data, shift, i;
-> > +     unsigned long flags;
-> > +
-> > +     spin_lock_irqsave(&csr_lock, flags);
-> > +
-> > +     for (i = 0; i < reg_size; ++i) {
-> > +             shift = ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
-> > +             shifted_data = val >> shift;
-> > +
-> > +             __raw_writel(shifted_data, reg + (LITEX_REG_SIZE * i));
-> > +     }
-> > +
-> > +     spin_unlock_irqrestore(&csr_lock, flags);
-> > +}
-> > +
-> > +unsigned long litex_get_reg(void __iomem *reg, unsigned long reg_size)
-> > +{
-> > +     unsigned long shifted_data, shift, i;
-> > +     unsigned long result = 0;
-> > +     unsigned long flags;
-> > +
-> > +     spin_lock_irqsave(&csr_lock, flags);
-> > +
-> > +     for (i = 0; i < reg_size; ++i) {
-> > +             shifted_data = __raw_readl(reg + (LITEX_REG_SIZE * i));
-> > +
-> > +             shift = ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
-> > +             result |= (shifted_data << shift);
-> > +     }
-> > +
-> > +     spin_unlock_irqrestore(&csr_lock, flags);
-> > +
-> > +     return result;
-> > +}
->
-> I really don't like the fact that the register sizes & sub sizes are
-> #defined. As your comment explains, this makes it harder to support
-> other configurations. This geometry should come from the device-tree
-> instead.
+Convert the Renesas CPG DIV6 Clock Device Tree binding documentation to
+json-schema.
 
-This is a valid point - putting those parameters into DT would indeed allow
-for more flexibility. Currently we are focusing on supporting a single LiteX
-configuration (32-bit/8-bit bus) and that's why those parameters got fixed.
+Drop R-Car Gen2 compatible values, which were obsoleted by the unified
+"Renesas Clock Pulse Generator / Module Standby and Software Reset" DT
+bindings.
+Update the example to match reality.
 
-Adding support for other configurations however is not just changing those
-two parameters (which should be fairly easy by itself), but also
-handling different
-registers layout for a single peripheral (in different configurations
-CSRs offsets and sizes may differ).
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+To be queued in clk-renesas-for-v5.8.
 
-Since this adds another layer of complexity we want to start with a simpler
-version that can be extended in the future.
+ .../clock/renesas,cpg-div6-clock.yaml         | 60 +++++++++++++++++++
+ .../clock/renesas,cpg-div6-clocks.txt         | 40 -------------
+ 2 files changed, 60 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-div6-clock.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
 
-> Also this while thing is rather gross (and the lock will not help
-> performance). Why can't CSRs be normally memory mapped always instead ?
-
-Using a different LiteX configuration 32-bit/32-bit bus would solve
-the problem -
-a single LiteX CSR would map nicely to a single 32-bit memory pointer and no
-loop/locks would be needed.
-
-In the default configuration (32-bit/8-bit bus) there are gaps between bytes
-(as Gabriel Somlo already explained in his mail) which need to be handled
-"manually".
-
-> Even when transporting them on a HW bus that's smaller, the HW bus
-> conversion should be able to do the break-down into a multi-breat
-> transfer rather than doing that in SW.
->
-> Or at least have a fast-path if the register size is no larger than the
-> sub size, so you can use a normal ioread32/iowrite32.
-
-Again - this is possible, but using a non-default 32-bit/32-bit bus LiteX
-configuration.
-
-> Also I wonder ... last I played with LiteX, it would re-generate the
-> register layout (including the bit layout inside registers potentially)
-> rather enthousiastically, making it pretty hard to have a fixed
-> register layout for use by a kernel driver. Was this addressed ?
-
-TBH I never experienced bit layout inside a register to change by itself,
-but I agree that using different bus width configurations causes CSRs
-to be splitted into 4/2/1 32-bit registers (changing de facto the layout
-from the SW perspective) - that's why we provide helper functions
-in this file.
-
-It is possible to have different configurations of a peripheral
-in LiteX that e.g, turns features on/off - this might cause some CSRs
-to shift and result in incompatibilities. There are ways in LiteX
-to avoid such problems if the model is properly designed, though.
-
-Another aspect of LiteX is that the order in which separate peripherals
-(modules) are created results in a different memory map of the whole SoC.
-This, however, is easily addressed by using a dynamically generated DT
-and do not require the code of drivers to be altered in any way.
-
-> Cheers,
-> Ben.
->
->
-
-Thanks for your comments!
-
-
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clock.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clock.yaml
+new file mode 100644
+index 0000000000000000..c55a7c494e013da5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clock.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/renesas,cpg-div6-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas CPG DIV6 Clock
++
++maintainers:
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++
++description:
++  The CPG DIV6 clocks are variable factor clocks provided by the Clock Pulse
++  Generator (CPG). Their clock input is divided by a configurable factor from 1
++  to 64.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r8a73a4-div6-clock # R-Mobile APE6
++          - renesas,r8a7740-div6-clock # R-Mobile A1
++          - renesas,sh73a0-div6-clock  # SH-Mobile AG5
++      - const: renesas,cpg-div6-clock
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    oneOf:
++      - maxItems: 1
++      - maxItems: 4
++      - maxItems: 8
++    description:
++      For clocks with multiple parents, invalid settings must be specified as
++      "<0>".
++
++  '#clock-cells':
++    const: 0
++
++  clock-output-names: true
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a73a4-clock.h>
++    sdhi2_clk: sdhi2_clk@e615007c {
++            compatible = "renesas,r8a73a4-div6-clock", "renesas,cpg-div6-clock";
++            reg = <0xe615007c 4>;
++            clocks = <&pll1_div2_clk>, <&cpg_clocks R8A73A4_CLK_PLL2S>, <0>,
++                     <&extal2_clk>;
++            #clock-cells = <0>;
++    };
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+deleted file mode 100644
+index ae36ab84291988b7..0000000000000000
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
++++ /dev/null
+@@ -1,40 +0,0 @@
+-* Renesas CPG DIV6 Clock
+-
+-The CPG DIV6 clocks are variable factor clocks provided by the Clock Pulse
+-Generator (CPG). Their clock input is divided by a configurable factor from 1
+-to 64.
+-
+-Required Properties:
+-
+-  - compatible: Must be one of the following
+-    - "renesas,r8a73a4-div6-clock" for R8A73A4 (R-Mobile APE6) DIV6 clocks
+-    - "renesas,r8a7740-div6-clock" for R8A7740 (R-Mobile A1) DIV6 clocks
+-    - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
+-    - "renesas,r8a7791-div6-clock" for R8A7791 (R-Car M2-W) DIV6 clocks
+-    - "renesas,r8a7793-div6-clock" for R8A7793 (R-Car M2-N) DIV6 clocks
+-    - "renesas,r8a7794-div6-clock" for R8A7794 (R-Car E2) DIV6 clocks
+-    - "renesas,sh73a0-div6-clock" for SH73A0 (SH-Mobile AG5) DIV6 clocks
+-    and "renesas,cpg-div6-clock" as a fallback.
+-  - reg: Base address and length of the memory resource used by the DIV6 clock
+-  - clocks: Reference to the parent clock(s); either one, four, or eight
+-    clocks must be specified.  For clocks with multiple parents, invalid
+-    settings must be specified as "<0>".
+-  - #clock-cells: Must be 0
+-
+-
+-Optional Properties:
+-
+-  - clock-output-names: The name of the clock as a free-form string
+-
+-
+-Example
+--------
+-
+-	sdhi2_clk: sdhi2_clk@e615007c {
+-		compatible = "renesas,r8a73a4-div6-clock", "renesas,cpg-div6-clock";
+-		reg = <0 0xe615007c 0 4>;
+-		clocks = <&pll1_div2_clk>, <&cpg_clocks R8A73A4_CLK_PLL2S>,
+-			 <0>, <&extal2_clk>;
+-		#clock-cells = <0>;
+-		clock-output-names = "sdhi2ck";
+-	};
 -- 
-Mateusz Holenko
-Antmicro Ltd | www.antmicro.com
-Roosevelta 22, 60-829 Poznan, Poland
+2.17.1
+
