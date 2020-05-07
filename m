@@ -4,90 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631CBC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 20:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB2FC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 21:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED8720A8B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 20:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEC62075E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 21:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588883280;
-	bh=QRlqD7aEFzeM8uQBhm5tHAtwCsGg2Qyfufe2wt8A6vM=;
+	s=default; t=1588885527;
+	bh=83PrL5s+hTnt+kmPDJQ+oyNs/Tji4/M4/BIN15DDJHo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kd4AWDAz/turj3XaaCX8WZfbjHgPOfTbFuL148mt+fbPvMJsG78bNTxlK/dFXvaZd
-	 rIjQVE5CmXejAsdg/Q7/9mvTvGV1KY0o7cMWHCH6JhA9L7bkpvg4xNHHTT0bb5CnNo
-	 L2HSfV9qbHvJ9rHYZI6NmThvliy+n1ku1ip8frH8=
+	b=acOaFJ562mjLs1epH4i6Cv919S2puXKvEAdSAy86JJJCywLuKwcm3omMbLSJAbjcS
+	 tbuAXj8u0SO/3XtZF89vzjVHtCxr63jdIUa6zymXNEz2EmFPzkMm5CoXSjtsQ0dLKP
+	 chVrmJHg+McGXs8zl42lvIlDSkQIVIfnwRurKzM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgEGU14 (ORCPT
+        id S1726437AbgEGVF1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 16:27:56 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39314 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbgEGU1z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 16:27:55 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m13so5679306otf.6;
-        Thu, 07 May 2020 13:27:55 -0700 (PDT)
+        Thu, 7 May 2020 17:05:27 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41966 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbgEGVF0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 17:05:26 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c3so5777838otp.8;
+        Thu, 07 May 2020 14:05:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ln2E/jvReZq9WnHJIz5sFnJWJFU3r566YgUAK7BxH3c=;
-        b=Na8lwbiXBV5ptJcpEw0IKA2SmvcAzLIR5MPACTvdjy1/ZqOLIXRBJhgDCNA+emLC63
-         euqRLQ4gHFbq9Uc4pyCob67GX5pRh+C/lV99tGrahHb5u/QLQ0hp+cGOd+KE2tOT+wvD
-         OIRqwWdBvCuXHHW5uiLIVR7SOwrET/4w6Sob0LmGMEzTiE8DaCwkT9vGCZZuQTxTMvc5
-         gyNtW8sYmECxH+ChfhRr5rNBfCnF89Z3IOVllejoYT55Nwt8e9IqtTaeK2Km9/lstoOH
-         DR2KiC2Ur2xvh18Rc54rvDJKoXxT2v1gfIf48ogx2bx4uLmho5rQhb7H/bnMVG0FSpzJ
-         SHHw==
-X-Gm-Message-State: AGi0Pubrhm9nvqAzQmImyIDn3EkUB8vwnLqPJJNF15Urylwjl6ECk5n6
-        EGYnOkrVNSjl027zgf9kNw==
-X-Google-Smtp-Source: APiQypKx/+0vAYYfToTPh9BTuoAyIx1XP/EVGGtjl4K9DLnqWKUm7OqAxftP3FPyEX4UUrd0KuCqog==
-X-Received: by 2002:a9d:4113:: with SMTP id o19mr11603329ote.354.1588883274822;
-        Thu, 07 May 2020 13:27:54 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GIj6kxDR7LGNuMotCOajJTwyR96cZe3Qpni2Sj/PoIY=;
+        b=l1447p3gnOCNtkWw6U2Vu+6hvNC9desFaXzPss625l+w/mM/gaJJR0VUkUAot79vs9
+         8bbiBzoN0YgBySrbZS73PgupapeMyPJkn6WcDva4qohpguygt2oZ3hy9NDiE2aIC2Jzu
+         Z3KBZzE4fD8lYrnGDmOLpB3+UwnG9UAZHRUXWdKb/LkLLqoPuH7ctouNg6hO25OfqO59
+         I9VEn9m8wZesTn5tePjyRaVe7A78AzV1nfxKCm47zBlZvjPDGactrktURIA+BdgfBeaX
+         ygzr/3toYJSm0IChVGL+gvr89CJ3QS8m6E6aeBA9eT3x5FPnjkG8UqnVgG/XQbnENEIM
+         qGEQ==
+X-Gm-Message-State: AGi0PuanioIEmGB/tzVX9Bba9EU5+0KvMkL5Ia7xO1vW0fi/7SJ2WLJB
+        3/Xbw4KZLqUknOVzLlinG/Uf774=
+X-Google-Smtp-Source: APiQypJdtsPrvNlnN0TthkAX/I+9RMU6sL0lnI0AMoufaSaLCpUUL+uGICO4QBCt32XId2EnXg1yQw==
+X-Received: by 2002:a05:6830:1592:: with SMTP id i18mr12868544otr.190.1588885525673;
+        Thu, 07 May 2020 14:05:25 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z13sm1621472oth.10.2020.05.07.13.27.53
+        by smtp.gmail.com with ESMTPSA id e13sm1619297otj.46.2020.05.07.14.05.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 13:27:54 -0700 (PDT)
-Received: (nullmailer pid 21941 invoked by uid 1000);
-        Thu, 07 May 2020 20:27:53 -0000
-Date:   Thu, 7 May 2020 15:27:53 -0500
+        Thu, 07 May 2020 14:05:24 -0700 (PDT)
+Received: (nullmailer pid 23601 invoked by uid 1000);
+        Thu, 07 May 2020 21:05:23 -0000
+Date:   Thu, 7 May 2020 16:05:23 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device
- ID property from DT
-Message-ID: <20200507202753.GA21833@bogus>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-5-kishon@ti.com>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 01/12] PCI: aardvark: Train link immediately after
+ enabling training
+Message-ID: <20200507210523.GA23539@bogus>
+References: <20200430080625.26070-1-pali@kernel.org>
+ <20200430080625.26070-2-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200417114322.31111-5-kishon@ti.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200430080625.26070-2-pali@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 17 Apr 2020 17:13:22 +0530, Kishon Vijay Abraham I wrote:
-> The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
-> defines both Vendor ID and Device ID to be 32-bits. Fix
-> pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
-> properties from device tree.
+On Thu, 30 Apr 2020 10:06:14 +0200, =?UTF-8?q?Pali=20Roh=C3=A1r?= wrote:
+> Adding even 100ms (PCI_PM_D3COLD_WAIT) delay between enabling link
+> training and starting link training causes detection issues with some
+> buggy cards (such as Compex WLE900VX).
 > 
-> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+> Move the code which enables link training immediately before the one
+> which starts link traning.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> This fixes detection issues of Compex WLE900VX card on Turris MOX after
+> cold boot.
+> 
+> Fixes: f4c7d053d7f7 ("PCI: aardvark: Wait for endpoint to be ready...")
+> Signed-off-by: Pali Rohár <pali@kernel.org>
 > ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
->  drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+>  drivers/pci/controller/pci-aardvark.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
