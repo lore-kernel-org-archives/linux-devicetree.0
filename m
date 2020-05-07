@@ -2,38 +2,44 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A764EC47247
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 22:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ACFC54E4A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 22:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE8520870
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 22:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D047208CA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 22:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgEGWlt (ORCPT
+        id S1726877AbgEGWlo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 18:41:49 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:39048 "EHLO
+        Thu, 7 May 2020 18:41:44 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38962 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgEGWls (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 18:41:48 -0400
+        with ESMTP id S1726515AbgEGWlo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 18:41:44 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4376580307C2;
-        Thu,  7 May 2020 22:41:45 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id E334480307C1;
+        Thu,  7 May 2020 22:41:38 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id t8s8ukNo7Mpq; Fri,  8 May 2020 01:41:43 +0300 (MSK)
+        with ESMTP id sIuzsjFm3Owd; Fri,  8 May 2020 01:41:37 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
+        Arnd Bergmann <arnd@arndb.de>
 List-Id: <soc.lore.kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Tony Lindgren <tony@atomide.com>,
@@ -41,15 +47,15 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Jeffrey Hugo <jhugo@codeaurora.org>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Olof Johansson <olof@lixom.net>, <linux-mips@vger.kernel.org>,
         <soc@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/4] dt-bindings: bus: Add Baikal-T1 APB-bus binding
-Date:   Fri, 8 May 2020 01:41:14 +0300
-Message-ID: <20200507224116.1523-3-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200507224116.1523-1-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v2 0/4] bus: Add Baikal-T1 SoC APB/AXI bus drivers
+Date:   Fri, 8 May 2020 01:41:12 +0300
+Message-ID: <20200507224116.1523-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200306130731.938808030702@mail.baikalelectronics.ru>
 References: <20200306130731.938808030702@mail.baikalelectronics.ru>
- <20200507224116.1523-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -59,16 +65,78 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Baikal-T1 CPU or DMAC MMIO requests are handled by the AMBA 3 AXI
-Interconnect which routes them to the AXI-APB bridge, which in turn
-serializes accesses and routes them to the corresponding APB slave device.
-This binding describes the AXI-APB bridge considered as the APB-bus. It is
-supposed to be compatible with "be,bt1-apb" and "simple-bus" drivers,
-should be equipped with EHB MMIO region and a region with no slave device
-mapped, interrupts line number, APB reference clock and domain reset line.
+Baikal-T1 SoC CPU is based on two MIPS Warrior P5600 cores. Their main
+memory Non-Coherent IO interface is connected to the OCP2AXI bridge, which
+in turn is then connected to the DW AMBA 3 AXI Interconnect (so called Main
+Interconnect) with nine masters and four slaves ports. Main Interconnect is
+responsible for the AXI-bus traffic arbitration (QoS) and its routing from
+one component to another. In addition there is a Errors Handler Block
+(EHB) responsible to detect AXI protocol errors and device not responding
+situations built on top the interconnect. Baikal-T1 AXI-bus driver included in
+this patchset will be responsible for working with that functionality,
+though currently it doesn't support QoS tuning. Instead it's capable of
+detecting the error events, reporting an info about them to the system
+log, injecting artificial errors to test the driver functionality.
+Since AXI Interconnect doesn't provide a way to find out which devices are
+connected to it, so its DT node is supposed to be compatible with
+"simple-bus" driver, while sub-nodes shall represent the masters attached
+to the bus.
+
+One of the AXI Interconnect slaves is an AXI-APB bridge used to access the
+Baikal-T1 SoC subsystems CSRs. MMIO request from CPU and DMAC masters are
+routed there if they are detected to be within [0x08000000 0x1FFFFFFF]
+range of the physical memory. In case if an attempted APB transaction
+stays with no response for a pre-defined time it will be detected by the
+APB-bus Errors Handler Block (EHB), which will raise an interrupt, then
+the bus gets freed for a next operation. The APB-bus driver provides the
+interrupt handler to detect the erroneous address, update an errors
+counter and prints an error message about the faulty address. The counter
+and the APB-bus operations timeout can be accessed via corresponding sysfs
+nodes. A dedicated sysfs-node can be also used to artificially cause the
+bus errors described above. Since APB-bus is a platform bus, it doesn't
+provide a way to detect slave devices connected to it, so similarly to the
+AXI-bus it's also supposed to be compatible with "simple-bus" driver.
+
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
+
+Note initially the driver was a part of the patchset created to reside in
+the kernel soc subsystem. But after a short discussion with Arnd:
+https://lkml.org/lkml/2020/3/6/422
+we decided to move it here.
+
+New vendor prefix will be added in the framework of the next patchset:
+https://lkml.org/lkml/2020/5/6/1047
+
+Changelog v2:
+- Assign dual GPL/BSD licenses to the bindings.
+- Use single lined copyright headers in the bindings.
+- Replace "additionalProperties: false" property with
+  "unevaluatedProperties: false" in the bindings.
+- Don't use a multi-arg clock phandle reference in DT binding examples.
+  Thus remove includes from there.
+- Fix some commit message and Kconfig help text spelling.
+- Move drivers from soc to the bus subsystem.
+- Convert a simple EHB drivers to the Baikal-T1 AXI and APB bus ones.
+- Convert APB bus driver to using regmap MMIO API.
+- Use syscon regmap to access the AXI-bus erroneous address.
+- Add reset line support.
+- Add Main Interconnect clock support to the AXI-bus driver.
+- Remove probe-status info string printout.
+- Discard of_match_ptr() macro utilization.
+- Don't print error-message if no platform IRQ found. Just return an error.
+- Use generic FIELD_{GET,PREP} macros instead of handwritten ones in the
+  AXI-bus driver.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Tony Lindgren <tony@atomide.com>
@@ -76,128 +144,31 @@ Cc: Tero Kristo <t-kristo@ti.com>
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Jeffrey Hugo <jhugo@codeaurora.org>
 Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Olof Johansson <olof@lixom.net>
 Cc: linux-mips@vger.kernel.org
 Cc: soc@kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
----
+Serge Semin (4):
+  dt-bindings: bus: Add Baikal-T1 AXI-bus binding
+  dt-bindings: bus: Add Baikal-T1 APB-bus binding
+  bus: Add Baikal-T1 AXI-bus driver
+  bus: Add Baikal-T1 APB-bus driver
 
-Rob, I had to remove your Reviewed-by tag, since new changes had been
-introduced.
-
-Changelog v2:
-- Move driver to the bus subsystem.
-- Don't use a multi-arg clock phandle reference in the examples dt-bindings
-  property. Thus redundant include statement can be removed.
-- Use dual GPL/BSD license.
-- Use single lined copyright header.
-- Lowercase the unit-address.
-- Convert a dedicated EHB block binding to the Baikal-T1 APB-bus one.
-- Add APB reference clock and reset support.
-- Replace "additionalProperties: false" property with
-  "unevaluatedProperties: false".
-- Add reg-names property.
----
- .../bindings/bus/baikal,bt1-apb.yaml          | 90 +++++++++++++++++++
- 1 file changed, 90 insertions(+)
+ .../bindings/bus/baikal,bt1-apb.yaml          |  90 ++++
+ .../bindings/bus/baikal,bt1-axi.yaml          |  95 ++++
+ drivers/bus/Kconfig                           |  30 ++
+ drivers/bus/Makefile                          |   2 +
+ drivers/bus/bt1-apb.c                         | 421 ++++++++++++++++++
+ drivers/bus/bt1-axi.c                         | 318 +++++++++++++
+ 6 files changed, 956 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
+ create mode 100644 drivers/bus/bt1-apb.c
+ create mode 100644 drivers/bus/bt1-axi.c
 
-diff --git a/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml b/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
-new file mode 100644
-index 000000000000..d6a3b71ea835
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
-@@ -0,0 +1,90 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/baikal,bt1-apb.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Baikal-T1 APB-bus
-+
-+maintainers:
-+  - Serge Semin <fancer.lancer@gmail.com>
-+
-+description: |
-+  Baikal-T1 CPU or DMAC MMIO requests are handled by the AMBA 3 AXI Interconnect
-+  which routes them to the AXI-APB bridge. This interface is a single master
-+  multiple slaves bus in turn serializing IO accesses and routing them to the
-+  addressed APB slave devices. In case of any APB protocol collisions, slave
-+  device not responding on timeout an IRQ is raised with an erroneous address
-+  reported to the APB terminator (APB Errors Handler Block).
-+
-+allOf:
-+ - $ref: /schemas/simple-bus.yaml#
-+
-+properties:
-+  compatible:
-+    contains:
-+      const: baikal,bt1-apb
-+
-+  reg:
-+    items:
-+      - description: APB EHB MMIO registers
-+      - description: APB MMIO region with no any device mapped
-+
-+  reg-names:
-+    items:
-+      - const: ehb
-+      - const: nodev
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: APB reference clock
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+
-+  resets:
-+    items:
-+      - description: APB domain reset line
-+
-+  reset-names:
-+    items:
-+      - const: prst
-+
-+unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/mips-gic.h>
-+
-+    bus@1f059000 {
-+      compatible = "baikal,bt1-apb", "simple-bus";
-+      reg = <0 0x1f059000 0 0x1000>,
-+            <0 0x1d000000 0 0x2040000>;
-+      reg-names = "ehb", "nodev";
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      ranges;
-+
-+      interrupts = <GIC_SHARED 16 IRQ_TYPE_LEVEL_HIGH>;
-+
-+      clocks = <&ccu_sys 1>;
-+      clock-names = "pclk";
-+
-+      resets = <&ccu_sys 1>;
-+      reset-names = "prst";
-+    };
-+...
 -- 
 2.25.1
 
