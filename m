@@ -2,89 +2,128 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86B9C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 19:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4227C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 20:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 891B7208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 19:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FAC021655
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 20:04:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsWLwMn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgEGT6R (ORCPT
+        id S1726514AbgEGUEO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 15:58:17 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:42078 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgEGT6R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 15:58:17 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 32D9380520;
-        Thu,  7 May 2020 21:58:14 +0200 (CEST)
-Date:   Thu, 7 May 2020 21:58:12 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Thu, 7 May 2020 16:04:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726320AbgEGUEN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 16:04:13 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77710C05BD43;
+        Thu,  7 May 2020 13:04:13 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g12so8226016wmh.3;
+        Thu, 07 May 2020 13:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3h6Wxaol0a6qz/g9sOk8sowFQqPv0zlTHK7/yKTpjYc=;
+        b=IsWLwMn8j1JgikjQjSbx9WlCvSqoimGfPPOhOuvPNFHc9GgZPUT/uK4bqxK4Lp4KL/
+         DAR7QivKlnzkNW+Nr3pb5Bs7LEnOHNH+JG8AFKYzZoFpnW8nJhIDk4PDvh6NAhYHshbE
+         okWVzmyJTN7tZLfSll5ZDZzy95NDq4/imj8p247gLuX3K3y9xvPOJCuNxiHqUKQtFnp0
+         8i0ToaZfIxxIdLZotBDCRrD81n8t4ia7ULXy4RqHTGFJmjgkPiQyVUsvwU4Npw5T1Bhi
+         vfzXgPYKFo9fK8O2n7dtNslVOo6kYTXaWHLORv3qOkoD6WQSihZ5WUMtJzmzBdVve6lV
+         XS+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3h6Wxaol0a6qz/g9sOk8sowFQqPv0zlTHK7/yKTpjYc=;
+        b=jTz7k3diacny5EOGkF0Ehw4XH+RXU7dJXLxh2MiMQ0x5hgbwfMsYSK381TgiIMvLko
+         blk9DGvILpv1LTsYdF61ord3CNV9Gq/Xzw/rIyJeOiZyFLQp8wXgaoy6XFDYxWjOTtkM
+         P1WO0QkeCtnAKFS9NztGTM2/8+a0Zk5/p6F/doddFRP1XE2G6hT40w4PceqKbKNtOiQW
+         AmHOZedPskWNRahwp9+Qhy3eXZyrv8TwUZLRx7KJ5l1HnQK/sYxRBm2shLC57g+yn4LA
+         an8t9MWPxDdX1XCZMRTNqRrumVWZtYlW1VQoPzRIB25bDDlwMA42x0MWGYSIcoamAcba
+         7pSw==
+X-Gm-Message-State: AGi0PuaBl2N2bkLv7FzV6IHd3t1X1p1R5ytSkWs6IvbWgUAgTwVniJfK
+        33/m/M/d4dGUdTyUwvEFfmLNCRiLR7E=
+X-Google-Smtp-Source: APiQypKMDle9coDHG1Uju21cbB19u8GxlfizS+EPRRytfITIdCofTGnAygyGcQ70fRPEzLmmo47vwA==
+X-Received: by 2002:a1c:2383:: with SMTP id j125mr11966019wmj.6.1588881852261;
+        Thu, 07 May 2020 13:04:12 -0700 (PDT)
+Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
+        by smtp.gmail.com with ESMTPSA id y7sm10050182wmb.43.2020.05.07.13.04.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 13:04:10 -0700 (PDT)
+Date:   Thu, 7 May 2020 22:04:10 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [v4 PATCH 0/2] Add support for ASUS Z00T TM5P5 NT35596 panel
-Message-ID: <20200507195812.GB17398@ravnborg.org>
-References: <20200506210957.344590-1-konradybcio@gmail.com>
+Subject: Re: [PATCH 2/2] memory: tegra: Drop <linux/clk-provider.h>
+Message-ID: <20200507200410.GB2981633@ulmo>
+References: <20200506123236.7463-1-geert+renesas@glider.be>
+ <20200506123236.7463-3-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Y7xTucakfITjPcLV"
 Content-Disposition: inline
-In-Reply-To: <20200506210957.344590-1-konradybcio@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=m4rRuWqDM7RkiSaC_YMA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <20200506123236.7463-3-geert+renesas@glider.be>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Konrad.
 
-On Wed, May 06, 2020 at 11:09:54PM +0200, Konrad Dybcio wrote:
-> changes since v3:
-> - fix dt-bindings issue
-> 
-> changes since v2:
-> - fix Kconfig indentation
-> 
-> changes since v1:
-> - make `backlight_properties props` constant
-> - a couple of line breaks
-> - change name and compatible to reflect ASUS being the vendor
-> - remove a redundant TODO
-> 
-> Konrad Dybcio (2):
->   drivers: drm: panel: Add ASUS TM5P5 NT35596 panel driver
->   dt-bindings: display: Document ASUS Z00T TM5P5 NT35596 panel
->     compatible
+--Y7xTucakfITjPcLV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, applied in the reverse order to have the binding before the
-driver.
-Fixed a few checkpatch warnings while applying.
-We use --strict for code in drivers/gpu/*
+On Wed, May 06, 2020 at 02:32:36PM +0200, Geert Uytterhoeven wrote:
+> The Tegra EMC scaling support code is not a clock provider, but merely a
+> clock consumer, and thus does not need to include
+> <linux/clk-provider.h>.
+>=20
+> Fixes: ec37a9a17afbfad5 ("memory: tegra: Add EMC scaling support code for=
+ Tegra210")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/memory/tegra/tegra210-emc-core.c | 1 -
+>  drivers/memory/tegra/tegra210-emc.h      | 1 -
+>  2 files changed, 2 deletions(-)
 
-	Sam
+Applied to for-5.8/memory, thanks.
 
-> 
->  .../panel/asus,z00t-tm5p5-nt35596.yaml        |  56 +++
->  drivers/gpu/drm/panel/Kconfig                 |  10 +
->  drivers/gpu/drm/panel/Makefile                |   1 +
->  .../drm/panel/panel-asus-z00t-tm5p5-n35596.c  | 367 ++++++++++++++++++
->  4 files changed, 434 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-nt35596.yaml
->  create mode 100644 drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
-> 
-> -- 
-> 2.26.2
+Thierry
+
+--Y7xTucakfITjPcLV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl60aboACgkQ3SOs138+
+s6EsCQ//fUz2NWTm2ukVFtdianU99A5+5SJwxhJ5j6U6gmB7SXmm7bFY0YT2odot
+J0M3Ppj4BKbdO3EZL4bRxKngsHc4TSLTrt2QkyfGu/N2XEHymo2kPDM7P+QSCqxk
+LT0w2P4b41h2UF/cuIwx41E6vZcZyCyJpSQyjFI6TwjT2u1BIo6HS6xqld/W/8Dg
+MqYgaMxl1HfPCyRI2PmP9gEvMK5dEwFqTUW0hZSAslxi0jA0cJGkpUGbeNcRMTHo
+ha/hK4ZzZjb6M7Y7k+Ln8LN7Wr/kFiei5PiY3jRuJhsV2BASXtF5WTbF9xlSlS9D
+ROBzxvCpEceNMDyW4EX2wZlvCBekAS5kUKt34zAulEzJq9cGMGUNDK9VbUagUo5f
+/5+3nOV1hg7gRedrQH3Gt0wCKqc8CEGsMlz+cAKo8tUc02/Pf9GEvoLHcdsSDZCV
+ziT30qXgvVTK2ZYOyqJM04Mt1LJFIDOXBnyrc/vqAn5QItKPMqO1gomV+e5R+fz+
+zevHSX8sFSU4z0z6bh43Y5cC+W6F2RijRZ90eVPRjLkxtxS6zAUpnMjl+NH988ZJ
+vY3CpjLxMvHFKN6YxGBSHz7/Gvn76YPuyCc5HjBKX7Em5K6/sBqAIc6N/mbliNyw
+Q3M3wBrn0bWntsWR+v2VBAxovOjvLJHnaz0+ULNP95w9FXr1SHM=
+=jrqz
+-----END PGP SIGNATURE-----
+
+--Y7xTucakfITjPcLV--
