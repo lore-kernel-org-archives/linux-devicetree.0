@@ -2,136 +2,104 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BBBC54E49
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E347C38A24
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B304D2064A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65F032080D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588833708;
+	bh=ZfGZjSQzlxql6JrfYK2CjpWc5gUaW3O8isNZHL1cHgQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qtxhFC0JC2Alonhwc5uj/e5hI0bxhirJBVuRs2pF9AI7XNFaEShE9TU8X86gTr98P
+	 1lYuONFavF+MczR7berXcpM71K2cJNgCQ4L8/tuLndbTAQJPiVED6DTsE4+o6cz3cd
+	 Q7iR3/MoJiAp8y931Nemk8HfYjCscDHqH3WPyVQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbgEGGi7 (ORCPT
+        id S1726445AbgEGGlr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 02:38:59 -0400
-Received: from mga03.intel.com ([134.134.136.65]:61723 "EHLO mga03.intel.com"
+        Thu, 7 May 2020 02:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgEGGi6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 May 2020 02:38:58 -0400
-IronPort-SDR: IqiaAYcegqRmQfXmjTVh4Uo672wN+wJ54hotYONufBRaeUef9HKslkgdWGxuOMNGySBMDs7zjI
- /P4op/WirYsg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 23:38:58 -0700
-IronPort-SDR: tvK4wWX+bS5AcJ9A2a4809Q98KrU/B3Mh/c5yzxVCk6esNSjACXHutlyq3+CiEbNdRy79BWsfV
- 3PvhL+rOBXlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,362,1583222400"; 
-   d="scan'208";a="249187511"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 06 May 2020 23:38:58 -0700
-Received: from [10.213.151.174] (vramuthx-mobl1.gar.corp.intel.com [10.213.151.174])
-        by linux.intel.com (Postfix) with ESMTP id BC1E0580378;
-        Wed,  6 May 2020 23:38:53 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v5 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
-        robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-References: <20200507001537.4034-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200507001537.4034-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200507072831.1bf7f784@collabora.com>
- <440c0002-e572-7b8b-ba08-773932370eb0@linux.intel.com>
- <20200507082730.6425cd96@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <69a06362-1f9d-bf65-4a9b-98fc6b63a391@linux.intel.com>
-Date:   Thu, 7 May 2020 14:38:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1725813AbgEGGlr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 May 2020 02:41:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9141F20753;
+        Thu,  7 May 2020 06:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588833707;
+        bh=ZfGZjSQzlxql6JrfYK2CjpWc5gUaW3O8isNZHL1cHgQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M09WcW1KjQjAJdPTQm0zozAA6/w6JqJ+af+Z9XAf7SHLgvMuh64pWlYzK/VnpMS6I
+         mP1uw8407EQPHb2GkFDezqjut6jLHEnsLov8p1RWeNzwruCy100T1i2lCe8MECNhi1
+         b2/yksuqVxBEj5B6xSJeLVCPdSnxRKp54DYlAR24=
+Date:   Thu, 7 May 2020 08:41:45 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Alan Cooper <alcooperx@gmail.com>,
+        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v6 3/4] usb: ehci: Add new EHCI driver for Broadcom STB
+ SoC's
+Message-ID: <20200507064145.GB777100@kroah.com>
+References: <20200430111258.6091-1-alcooperx@gmail.com>
+ <20200430111258.6091-4-alcooperx@gmail.com>
+ <20200505110036.GB93160@kroah.com>
+ <CAOGqxeXboYz2OQhgJsYmH5_7qEwKeWR5AA4Ljq_iFdSX=H2fkA@mail.gmail.com>
+ <CAHp75VeA8JnsJgEgkv0wivinsxvk51JTVyaPhmLhsjzkqZYR8A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200507082730.6425cd96@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeA8JnsJgEgkv0wivinsxvk51JTVyaPhmLhsjzkqZYR8A@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+On Thu, May 07, 2020 at 12:01:16AM +0300, Andy Shevchenko wrote:
+> On Wed, May 6, 2020 at 11:23 PM Alan Cooper <alcooperx@gmail.com> wrote:
+> > On Tue, May 5, 2020 at 7:00 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > > On Thu, Apr 30, 2020 at 07:12:57AM -0400, Al Cooper wrote:
+> 
+> ...
+> 
+> > > > +     /* Hook the hub control routine to work around a bug */
+> > >
+> > > What bug?  This feels wrong.
+> >
+> > The bug is explained in a comment above the ehci_brcm_hub_control()
+> > routine as follows:
+> > /*
+> >  * ehci_brcm_hub_control
+> >  * Intercept echi-hcd request to complete RESUME and align it to the start
+> >  * of the next microframe.
+> >  * If RESUME is complete too late in the microframe, host controller
+> >  * detects babble on suspended port and resets the port afterwards.
+> >  * This s/w workaround allows to avoid this problem.
+> >  * See SWLINUX-1909 for more details
+> >  */
+> > I'll remove the internal bug tracking reference from the comment.
+> 
+> I guess you may leave the internal bug reference. I can tell from my
+> experience that's hard to understand what was going on in the driver
+> in years perspective. It will help whoever in this company have a
+> chance to look after the driver.
 
-   Thank you very much for the review comments and your time...
+"internal bug references" mean nothing to the 99% of the people that can
+see this.  Document the heck out of what this is instead please.
 
-On 7/5/2020 2:27 pm, Boris Brezillon wrote:
-> On Thu, 7 May 2020 14:13:42 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> 
->> Hi Boris,
->>
->>      Thank you very much for the review comments and your time...
->>
->> On 7/5/2020 1:28 pm, Boris Brezillon wrote:
->>> On Thu,  7 May 2020 08:15:37 +0800
->>> "Ramuthevar,Vadivel MuruganX"
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>    
->>>> +	reg = readl(ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
->>>> +	writel(reg | EBU_ADDR_MASK(5) | EBU_ADDR_SEL_REGEN,
->>>> +	       ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
->>>
->>> Seriously, did you really think I would not notice what you're doing
->>> here?
->> Yes , I know that you have very good understanding about this.
->>    You're reading the previous value which either contains a default
->>> mapping or has the mapping set by the bootloader, and write it back to
->>> the register along with a new mask and the REGEN bit set (which
->>> BTW is wrong since you don't mask out other fields before updating
->>> them).
->> There is no other field get overwritten
->>    This confirms that this Core -> FPI address translation exists
->>> and has to be set properly, so please stop lying about that.
->>
->> Sorry, there is no SW translation, as I have mentioned that it's
->> optional only, for safer side , reading and writing the default values.
-> 
-> Then write EBU_ADDR_SEL_REGEN and we'll if see that works. I suspect it
-> won't.
-
-You mean, without reading just writing EBU_ADDR_SEL_REGEN bit alone in 
-EBU_ADDR_SELx , as you said it won't work because it overwrites 0x174 
-with 0x0 values so BASE is lost.
-either we can leave it or read & write with ORed | EBU_ADDR_SEL_REGEN
-
-Please correct me if anything is wrong, Thanks!
-> 
->> The memory region to enabled that's my concern so written the same
->> register values.
-> 
-> I don't buy that, sorry.
-> 
->>
->> This will not be impact other fields, so please see below for reference
->>
->> The EBU Address Select Registers EBU_ADDR_SEL_0 to EBU_ADDSEL3 establish
->> and control memory regions for external accesses.
->>
->> Reset Value: 17400001H
-> 
-> See, as suspected the reset value is exactly what you expect.
-
-Yes , that's the reason said being optional.
-
-Regards
-Vadivel
-> 
+greg k-h
