@@ -2,257 +2,296 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADDDC54E4B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA4FC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEEF2208CA
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EFD620735
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 11:46:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WSqjti+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgEGLnh (ORCPT
+        id S1725964AbgEGLq2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 07:43:37 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37298 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgEGLnh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 07:43:37 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0E1192A0C07;
-        Thu,  7 May 2020 12:43:33 +0100 (BST)
-Date:   Thu, 7 May 2020 13:43:30 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-mtd@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>,
-        Ivan Djelic <ivan.djelic@parrot.com>
-Subject: Re: [PATCH v3 2/8] lib/bch: Allow easy bit swapping
-Message-ID: <20200507134330.6e8a9f80@collabora.com>
-In-Reply-To: <20200507110034.14736-3-miquel.raynal@bootlin.com>
-References: <20200507110034.14736-1-miquel.raynal@bootlin.com>
-        <20200507110034.14736-3-miquel.raynal@bootlin.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 7 May 2020 07:46:28 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50542 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgEGLq1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 07:46:27 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 047BkEJ6039101;
+        Thu, 7 May 2020 06:46:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588851974;
+        bh=sF4wAHusSkrbpestxLREjlXxVqemoRZLzTl02eRiUsI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WSqjti+H11RtJh6UueT5YsVfZi8JbLjUFCY+/sFYKC3zX1URZp1X13zYN86IwaFF0
+         Y8g/ZhpelbSoMZGyZz3w1aLj43LlhzNQdaLP8q8Yzcoj66SyfoyxG35WzFwGaWN5tK
+         tdZbqHq6Y4aruH02GxXjqkru1GGBkjYhvXMs0Xpo=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 047BkENs088197
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 7 May 2020 06:46:14 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 7 May
+ 2020 06:46:13 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 7 May 2020 06:46:13 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 047Bk8S6120420;
+        Thu, 7 May 2020 06:46:10 -0500
+Subject: Re: [PATCH v2 2/2] soc: ti: add k3 platforms chipid module driver
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>, <devicetree@vger.kernel.org>
+CC:     Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>
+References: <20200505193417.2112-1-grygorii.strashko@ti.com>
+ <20200505193417.2112-3-grygorii.strashko@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <aa46a0f5-8774-d5e4-14f6-16d50a7aa310@ti.com>
+Date:   Thu, 7 May 2020 14:46:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200505193417.2112-3-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu,  7 May 2020 13:00:28 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-
-Hehe. I sent a raw diff and now there's my name on this patch :-).
-Given you debugged/polished it, I'd rather have you take the ownership
-here.
-
+On 05/05/2020 22:34, Grygorii Strashko wrote:
+> The Texas Instruments K3 Multicore SoC platforms have chipid module which
+> is represented by CTRLMMR_xxx_JTAGID register and contains information
+> about SoC id and revision.
+>   Bits:
+>    31-28 VARIANT Device variant
+>    27-12 PARTNO  Part number
+>    11-1  MFG     Indicates TI as manufacturer (0x17)
+>    1             Always 1
 > 
-> It seems that several hardware ECC engine use a swapped representation
-> of bytes compared to software.
-
-Some more details here. I think it has to do with how the ECC engine
-is wired to the NAND controller or the order the bits are passed to the
-HW BCH logic. Given the sunxi NAND controller driver has the same
-bit-swapping, I suspect it's actually pretty common.
-
-> It means that when the software BCH
-> engine is working in conjunction with data generated with hardware, we
-> must swap the bits inside bytes, eg:
+> This patch adds corresponding driver to identify the TI K3 SoC family and
+> revision, and registers this information with the SoC bus. It is available
+> under /sys/devices/soc0/ for user space, and can be checked, where needed,
+> in Kernel using soc_device_match().
 > 
->     0x0A = b0000_1010 -> b0101_0000 = 0x50
+> Identification is done by:
+> - checking MFG to be TI ID
+>   - retrieving Device variant (revision)
+>   - retrieving Part number and convert it to the family
+>   - retrieving machine from DT "/model"
 > 
-> Make it possible just by flipping a boolean in the BCH control
-
-		   ^ by adding a swap_bits boolen to the ...
-
-> structure.
-
-Regarding the implementation itself, I came up with something simple
-because I didn't want to spend too much time looking at how things
-could be changed to avoid those swap_bits(). I suspect we can prepare
-the ->a_{mod,pow}_tab tables to avoid that. Ivan, any opinion?
-
-Note that we can also optimize that in a second step, so Miquel can get
-the rest of the series merged.
-
+> Example J721E:
+>    # cat /sys/devices/soc0/{machine,family,revision}
+>    Texas Instruments K3 J721E SoC
+>    J721E
+>    SR1.0
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Ivan Djelic <ivan.djelic@parrot.com>
+> Example AM65x:
+>    # cat /sys/devices/soc0/{machine,family,revision}
+>    Texas Instruments AM654 Base Board
+>    AM65X
+>    SR1.0
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
 > ---
->  include/linux/bch.h |  1 +
->  lib/bch.c           | 84 ++++++++++++++++++++++++++++++++++++++-------
->  2 files changed, 72 insertions(+), 13 deletions(-)
+>   drivers/soc/ti/Kconfig      |  10 +++
+>   drivers/soc/ti/Makefile     |   1 +
+>   drivers/soc/ti/k3-socinfo.c | 135 ++++++++++++++++++++++++++++++++++++
+>   3 files changed, 146 insertions(+)
+>   create mode 100644 drivers/soc/ti/k3-socinfo.c
 > 
-> diff --git a/include/linux/bch.h b/include/linux/bch.h
-> index 9c35e7cd5890..c42f50cacfdc 100644
-> --- a/include/linux/bch.h
-> +++ b/include/linux/bch.h
-> @@ -51,6 +51,7 @@ struct bch_control {
->  	int            *cache;
->  	struct gf_poly *elp;
->  	struct gf_poly *poly_2t[4];
-> +	bool		swap_bits;
-
-This new field should be documented.
-
->  };
->  
->  struct bch_control *bch_init(int m, int t, unsigned int prim_poly);
-> diff --git a/lib/bch.c b/lib/bch.c
-> index 1091841ac716..81bf8b426eea 100644
-> --- a/lib/bch.c
-> +++ b/lib/bch.c
-> @@ -114,6 +114,49 @@ struct gf_poly_deg1 {
->  	unsigned int   c[2];
->  };
->  
-> +static u8 swap_bits_table[] = {
-> +	0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
-> +	0x10, 0x90, 0x50, 0xd0, 0x30, 0xb0, 0x70, 0xf0,
-> +	0x08, 0x88, 0x48, 0xc8, 0x28, 0xa8, 0x68, 0xe8,
-> +	0x18, 0x98, 0x58, 0xd8, 0x38, 0xb8, 0x78, 0xf8,
-> +	0x04, 0x84, 0x44, 0xc4, 0x24, 0xa4, 0x64, 0xe4,
-> +	0x14, 0x94, 0x54, 0xd4, 0x34, 0xb4, 0x74, 0xf4,
-> +	0x0c, 0x8c, 0x4c, 0xcc, 0x2c, 0xac, 0x6c, 0xec,
-> +	0x1c, 0x9c, 0x5c, 0xdc, 0x3c, 0xbc, 0x7c, 0xfc,
-> +	0x02, 0x82, 0x42, 0xc2, 0x22, 0xa2, 0x62, 0xe2,
-> +	0x12, 0x92, 0x52, 0xd2, 0x32, 0xb2, 0x72, 0xf2,
-> +	0x0a, 0x8a, 0x4a, 0xca, 0x2a, 0xaa, 0x6a, 0xea,
-> +	0x1a, 0x9a, 0x5a, 0xda, 0x3a, 0xba, 0x7a, 0xfa,
-> +	0x06, 0x86, 0x46, 0xc6, 0x26, 0xa6, 0x66, 0xe6,
-> +	0x16, 0x96, 0x56, 0xd6, 0x36, 0xb6, 0x76, 0xf6,
-> +	0x0e, 0x8e, 0x4e, 0xce, 0x2e, 0xae, 0x6e, 0xee,
-> +	0x1e, 0x9e, 0x5e, 0xde, 0x3e, 0xbe, 0x7e, 0xfe,
-> +	0x01, 0x81, 0x41, 0xc1, 0x21, 0xa1, 0x61, 0xe1,
-> +	0x11, 0x91, 0x51, 0xd1, 0x31, 0xb1, 0x71, 0xf1,
-> +	0x09, 0x89, 0x49, 0xc9, 0x29, 0xa9, 0x69, 0xe9,
-> +	0x19, 0x99, 0x59, 0xd9, 0x39, 0xb9, 0x79, 0xf9,
-> +	0x05, 0x85, 0x45, 0xc5, 0x25, 0xa5, 0x65, 0xe5,
-> +	0x15, 0x95, 0x55, 0xd5, 0x35, 0xb5, 0x75, 0xf5,
-> +	0x0d, 0x8d, 0x4d, 0xcd, 0x2d, 0xad, 0x6d, 0xed,
-> +	0x1d, 0x9d, 0x5d, 0xdd, 0x3d, 0xbd, 0x7d, 0xfd,
-> +	0x03, 0x83, 0x43, 0xc3, 0x23, 0xa3, 0x63, 0xe3,
-> +	0x13, 0x93, 0x53, 0xd3, 0x33, 0xb3, 0x73, 0xf3,
-> +	0x0b, 0x8b, 0x4b, 0xcb, 0x2b, 0xab, 0x6b, 0xeb,
-> +	0x1b, 0x9b, 0x5b, 0xdb, 0x3b, 0xbb, 0x7b, 0xfb,
-> +	0x07, 0x87, 0x47, 0xc7, 0x27, 0xa7, 0x67, 0xe7,
-> +	0x17, 0x97, 0x57, 0xd7, 0x37, 0xb7, 0x77, 0xf7,
-> +	0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef,
-> +	0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff,
+> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
+> index 4486e055794c..e192fb788836 100644
+> --- a/drivers/soc/ti/Kconfig
+> +++ b/drivers/soc/ti/Kconfig
+> @@ -91,6 +91,16 @@ config TI_K3_RINGACC
+>   	  and a consumer. There is one RINGACC module per NAVSS on TI AM65x SoCs
+>   	  If unsure, say N.
+>   
+> +config TI_K3_SOCINFO
+> +	bool
+> +	depends on ARCH_K3 || COMPILE_TEST
+> +	select SOC_BUS
+> +	select MFD_SYSCON
+> +	help
+> +	  Include support for the SoC bus socinfo for the TI K3 Multicore SoC
+> +	  platforms to provide information about the SoC family and
+> +	  variant to user space.
+> +
+>   endif # SOC_TI
+>   
+>   config TI_SCI_INTA_MSI_DOMAIN
+> diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
+> index bec827937a5f..1110e5c98685 100644
+> --- a/drivers/soc/ti/Makefile
+> +++ b/drivers/soc/ti/Makefile
+> @@ -11,3 +11,4 @@ obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
+>   obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
+>   obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
+>   obj-$(CONFIG_TI_K3_RINGACC)		+= k3-ringacc.o
+> +obj-$(CONFIG_TI_K3_SOCINFO)		+= k3-socinfo.o
+> diff --git a/drivers/soc/ti/k3-socinfo.c b/drivers/soc/ti/k3-socinfo.c
+> new file mode 100644
+> index 000000000000..4c21e099d3c7
+> --- /dev/null
+> +++ b/drivers/soc/ti/k3-socinfo.c
+> @@ -0,0 +1,135 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * TI K3 SoC info driver
+> + *
+> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/string.h>
+> +#include <linux/sys_soc.h>
+> +
+> +#define CTRLMMR_WKUP_JTAGID_REG		0
+> +/*
+> + * Bits:
+> + *  31-28 VARIANT	Device variant
+> + *  27-12 PARTNO	Part number
+> + *  11-1  MFG		Indicates TI as manufacturer (0x17)
+> + *  1			Always 1
+> + */
+> +#define CTRLMMR_WKUP_JTAGID_VARIANT_SHIFT	(28)
+> +#define CTRLMMR_WKUP_JTAGID_VARIANT_MASK	GENMASK(31, 28)
+> +
+> +#define CTRLMMR_WKUP_JTAGID_PARTNO_SHIFT	(12)
+> +#define CTRLMMR_WKUP_JTAGID_PARTNO_MASK		GENMASK(27, 12)
+> +
+> +#define CTRLMMR_WKUP_JTAGID_MFG_SHIFT		(1)
+> +#define CTRLMMR_WKUP_JTAGID_MFG_MASK		GENMASK(11, 1)
+> +
+> +#define CTRLMMR_WKUP_JTAGID_MFG_TI		0x17
+> +
+> +static const struct k3_soc_id {
+> +	unsigned int id;
+> +	const char *family_name;
+> +} k3_soc_ids[] = {
+> +	{ 0xBB5A, "AM65X" },
+> +	{ 0xBB64, "J721E" },
 > +};
 > +
-> +static u8 swap_bits(struct bch_control *bch, u8 in)
+> +static int __init partno_to_names(unsigned int partno,
+> +				  struct soc_device_attribute *soc_dev_attr)
 > +{
-> +	if (!bch->swap_bits)
-> +		return in;
+> +	int i;
 > +
-> +	return swap_bits_table[in];
+> +	for (i = 0; i < ARRAY_SIZE(k3_soc_ids); i++)
+> +		if (partno == k3_soc_ids[i].id) {
+> +			soc_dev_attr->family = k3_soc_ids[i].family_name;
+> +			return 0;
+> +		}
+> +
+> +	return -EINVAL;
 > +}
 > +
->  /*
->   * same as bch_encode(), but process input data one byte at a time
->   */
-> @@ -126,7 +169,9 @@ static void bch_encode_unaligned(struct bch_control *bch,
->  	const int l = BCH_ECC_WORDS(bch)-1;
->  
->  	while (len--) {
-> -		p = bch->mod8_tab + (l+1)*(((ecc[0] >> 24)^(*data++)) & 0xff);
-> +		u8 tmp = swap_bits(bch, *data++);
+> +static int __init k3_chipinfo_init(void)
+> +{
+> +	struct soc_device_attribute *soc_dev_attr;
+> +	struct soc_device *soc_dev;
+> +	struct device_node *node;
+> +	struct regmap *regmap;
+> +	u32 partno_id;
+> +	u32 variant;
+> +	u32 jtag_id;
+> +	u32 mfg;
+> +	int ret;
 > +
-> +		p = bch->mod8_tab + (l+1)*(((ecc[0] >> 24)^(tmp)) & 0xff);
->  
->  		for (i = 0; i < l; i++)
->  			ecc[i] = ((ecc[i] << 8)|(ecc[i+1] >> 24))^(*p++);
-> @@ -145,10 +190,16 @@ static void load_ecc8(struct bch_control *bch, uint32_t *dst,
->  	unsigned int i, nwords = BCH_ECC_WORDS(bch)-1;
->  
->  	for (i = 0; i < nwords; i++, src += 4)
-> -		dst[i] = (src[0] << 24)|(src[1] << 16)|(src[2] << 8)|src[3];
-> +		dst[i] = ((u32)swap_bits(bch, src[0]) << 24) |
-> +			 ((u32)swap_bits(bch, src[1]) << 16) |
-> +			 ((u32)swap_bits(bch, src[2]) << 8) |
-> +			 swap_bits(bch, src[3]);
->  
->  	memcpy(pad, src, BCH_ECC_BYTES(bch)-4*nwords);
-> -	dst[nwords] = (pad[0] << 24)|(pad[1] << 16)|(pad[2] << 8)|pad[3];
-> +	dst[nwords] = ((u32)swap_bits(bch, pad[0]) << 24) |
-> +		      ((u32)swap_bits(bch, pad[1]) << 16) |
-> +		      ((u32)swap_bits(bch, pad[2]) << 8) |
-> +		      swap_bits(bch, pad[3]);
->  }
->  
->  /*
-> @@ -161,15 +212,15 @@ static void store_ecc8(struct bch_control *bch, uint8_t *dst,
->  	unsigned int i, nwords = BCH_ECC_WORDS(bch)-1;
->  
->  	for (i = 0; i < nwords; i++) {
-> -		*dst++ = (src[i] >> 24);
-> -		*dst++ = (src[i] >> 16) & 0xff;
-> -		*dst++ = (src[i] >>  8) & 0xff;
-> -		*dst++ = (src[i] >>  0) & 0xff;
-> +		*dst++ = swap_bits(bch, src[i] >> 24);
-> +		*dst++ = swap_bits(bch, src[i] >> 16);
-> +		*dst++ = swap_bits(bch, src[i] >> 8);
-> +		*dst++ = swap_bits(bch, src[i]);
->  	}
-> -	pad[0] = (src[nwords] >> 24);
-> -	pad[1] = (src[nwords] >> 16) & 0xff;
-> -	pad[2] = (src[nwords] >>  8) & 0xff;
-> -	pad[3] = (src[nwords] >>  0) & 0xff;
-> +	pad[0] = swap_bits(bch, src[nwords] >> 24);
-> +	pad[1] = swap_bits(bch, src[nwords] >> 16);
-> +	pad[2] = swap_bits(bch, src[nwords] >> 8);
-> +	pad[3] = swap_bits(bch, src[nwords]);
->  	memcpy(dst, pad, BCH_ECC_BYTES(bch)-4*nwords);
->  }
->  
-> @@ -240,7 +291,12 @@ void bch_encode(struct bch_control *bch, const uint8_t *data,
->  	 */
->  	while (mlen--) {
->  		/* input data is read in big-endian format */
-> -		w = r[0]^cpu_to_be32(*pdata++);
-> +		w = cpu_to_be32(*pdata++);
-> +		w = (u32)swap_bits(bch, w) |
-> +		    ((u32)swap_bits(bch, w >> 8) << 8) |
-> +		    ((u32)swap_bits(bch, w >> 16) << 16) |
-> +		    ((u32)swap_bits(bch, w >> 24) << 24);
+> +	node = of_find_compatible_node(NULL, NULL, "ti,am654-chipid");
+> +	if (!node)
+> +		return -ENODEV;
+> +
+> +	regmap = device_node_to_regmap(node);
+> +	of_node_put(node);
+> +
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	ret = regmap_read(regmap, CTRLMMR_WKUP_JTAGID_REG, &jtag_id);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	mfg = (jtag_id & CTRLMMR_WKUP_JTAGID_MFG_MASK) >>
+> +	       CTRLMMR_WKUP_JTAGID_MFG_SHIFT;
+> +
+> +	if (mfg != CTRLMMR_WKUP_JTAGID_MFG_TI) {
+> +		pr_err("Invalid MFG SoC\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	variant = (jtag_id & CTRLMMR_WKUP_JTAGID_VARIANT_MASK) >>
+> +		  CTRLMMR_WKUP_JTAGID_VARIANT_SHIFT;
+> +	variant++;
+> +
+> +	partno_id = (jtag_id & CTRLMMR_WKUP_JTAGID_PARTNO_MASK) >>
+> +		 CTRLMMR_WKUP_JTAGID_PARTNO_SHIFT;
+> +
+> +	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> +	if (!soc_dev_attr)
+> +		return -ENOMEM;
+> +
+> +	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "SR%x.0", variant);
 
-We should make the bit swapping conditional (only do it if
-bch->swap_bit is true) to not penalize the !swap_bits case.
+kasprintf can fail.
 
-> +		w ^= r[0];
->  		p0 = tab0 + (l+1)*((w >>  0) & 0xff);
->  		p1 = tab1 + (l+1)*((w >>  8) & 0xff);
->  		p2 = tab2 + (l+1)*((w >> 16) & 0xff);
-> @@ -1048,7 +1104,9 @@ int bch_decode(struct bch_control *bch, const uint8_t *data, unsigned int len,
->  				break;
->  			}
->  			errloc[i] = nbits-1-errloc[i];
-> -			errloc[i] = (errloc[i] & ~7)|(7-(errloc[i] & 7));
-> +			if (!bch->swap_bits)
-> +				errloc[i] = (errloc[i] & ~7) |
-> +					    (7-(errloc[i] & 7));
->  		}
->  	}
->  	return (err >= 0) ? err : -EBADMSG;
+-Tero
 
-Oh, and we should patch bch_init() to take a bool swap_bits. I'm not
-comfortable having users set bch_control fields on their own,
-especially one that's marked 'private'.
+> +
+> +	ret = partno_to_names(partno_id, soc_dev_attr);
+> +	if (ret) {
+> +		pr_err("Unknown SoC JTAGID[0x%08X]\n", jtag_id);
+> +		ret = -ENODEV;
+> +		goto err;
+> +	}
+> +
+> +	node = of_find_node_by_path("/");
+> +	of_property_read_string(node, "model", &soc_dev_attr->machine);
+> +	of_node_put(node);
+> +
+> +	soc_dev = soc_device_register(soc_dev_attr);
+> +	if (IS_ERR(soc_dev)) {
+> +		ret = PTR_ERR(soc_dev);
+> +		goto err;
+> +	}
+> +
+> +	pr_info("Family:%s rev:%s JTAGID[0x%08x] Detected\n",
+> +		soc_dev_attr->family,
+> +		soc_dev_attr->revision, jtag_id);
+> +
+> +	return 0;
+> +
+> +err:
+> +	kfree(soc_dev_attr->revision);
+> +	kfree(soc_dev_attr);
+> +	return ret;
+> +}
+> +
+> +subsys_initcall(k3_chipinfo_init);
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
