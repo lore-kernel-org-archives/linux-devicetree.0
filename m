@@ -2,183 +2,127 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BA1C47257
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 16:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696FEC38A24
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 16:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC77A20643
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 16:33:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cGCFLfok"
+	by mail.kernel.org (Postfix) with ESMTP id 4344620A8B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 16:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588870400;
+	bh=NujDvlsKX4AJIFdjy/ZhQD238Qri2e97mGwjx7CIqAE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=j2RjIvMYgAnZvHoNrNosU3E9zeOIvNGjhOyYM8fzAnlNsfJmZOEtnKMkYRGCVJH++
+	 Edd7BBuSl3QpR2NOhjMk0LKgdWl7zgv76gNPbro8V9Qw3elLby5C3/LDzcNDXLW//m
+	 MtGqNceYtI2d73OYv1X0lZciX3uvDJHRNnI3+hNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgEGQds (ORCPT
+        id S1726222AbgEGQxT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 12:33:48 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:52135 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726641AbgEGQdr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 12:33:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588869227; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=wLT5CFLaqtgLB/BEi/RGwsauWrW4mdPxSqIRzxuvoL8=; b=cGCFLfokxY3LFm7T8XeVtJnZx4e1Wu/Y3/jQu68xtGo2xrEGOVvv9oyW6Lb0yGSUkA7/BNH3
- 1zvKXkwSMZcEbKq9i9NB2El3SXdWwlK473XlLS5oAXoIqW0OvijJhc/Gkh2qtePSF5qqUZNH
- ft5SAAlzTE/om7X6wd0xfw8i7Yg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb43865.7f82d41e94c8-smtp-out-n05;
- Thu, 07 May 2020 16:33:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CB5D3C44792; Thu,  7 May 2020 16:33:41 +0000 (UTC)
-Received: from [192.168.0.106] (unknown [183.83.65.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 7 May 2020 12:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725949AbgEGQxT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 May 2020 12:53:19 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6B9BCC433D2;
-        Thu,  7 May 2020 16:33:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6B9BCC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH v5 1/5] mmc: core: Extend mmc_of_parse() to parse CQE
- bindings
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Chun-Hung Wu <chun-hung.wu@mediatek.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id BA13720870;
+        Thu,  7 May 2020 16:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588870398;
+        bh=NujDvlsKX4AJIFdjy/ZhQD238Qri2e97mGwjx7CIqAE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JlpUvKEn0HsL1QzZ6h0GinpcwY43KR9GznAQ+FL4QesMiCkMJw93GU5TwBvOCIFlz
+         oDiB+OAbY87TeFnWWySAZIX6SU7tU2T9wJTNWj2i7/rl5S7c6osUw7TFtna6K9D1mG
+         wfTQmnKlhMMMYAIGnBkzPrnxLqDRRPiR4meHNTtg=
+Date:   Thu, 7 May 2020 09:53:15 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        Yong Mao <yong.mao@mediatek.com>,
-        Android Kernel Team <kernel-team@android.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
+        netdev <netdev@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <1588031768-23677-1-git-send-email-chun-hung.wu@mediatek.com>
- <1588031768-23677-2-git-send-email-chun-hung.wu@mediatek.com>
- <9bc2454f-0b42-e256-7927-2564b56f369f@codeaurora.org>
- <CAPDyKFq7ffHeWg-S41tLvScg_BXCUULig=G=EzD_to1TG0NhVg@mail.gmail.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <f9fa0232-3945-4e47-9238-0b51f6531199@codeaurora.org>
-Date:   Thu, 7 May 2020 22:03:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        linux-mediatek@lists.infradead.org,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
+Message-ID: <20200507095315.1154a1a6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <CAMpxmJWckQdKvUGFDAJ1WMtD9WoGWmGe3kyKYhcfRT2nOB93xw@mail.gmail.com>
+References: <20200505140231.16600-1-brgl@bgdev.pl>
+        <20200505140231.16600-6-brgl@bgdev.pl>
+        <20200505103105.1c8b0ce3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <CAMRc=Mf0ipaeLKhHCZaq2YeZKzi=QBAse7bEz2hHxXN5OL=ptg@mail.gmail.com>
+        <20200506101236.25a13609@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <CAMpxmJWckQdKvUGFDAJ1WMtD9WoGWmGe3kyKYhcfRT2nOB93xw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFq7ffHeWg-S41tLvScg_BXCUULig=G=EzD_to1TG0NhVg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, 7 May 2020 11:25:01 +0200 Bartosz Golaszewski wrote:
+> =C5=9Br., 6 maj 2020 o 19:12 Jakub Kicinski <kuba@kernel.org> napisa=C5=
+=82(a):
+> >
+> > On Wed, 6 May 2020 08:39:47 +0200 Bartosz Golaszewski wrote: =20
+> > > wt., 5 maj 2020 o 19:31 Jakub Kicinski <kuba@kernel.org> napisa=C5=82=
+(a): =20
+> > > >
+> > > > On Tue,  5 May 2020 16:02:25 +0200 Bartosz Golaszewski wrote: =20
+> > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > >
+> > > > > Provide devm_register_netdev() - a device resource managed variant
+> > > > > of register_netdev(). This new helper will only work for net_devi=
+ce
+> > > > > structs that have a parent device assigned and are devres managed=
+ too.
+> > > > >
+> > > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com> =20
+> > > > =20
+> > > > > diff --git a/net/core/dev.c b/net/core/dev.c
+> > > > > index 522288177bbd..99db537c9468 100644
+> > > > > --- a/net/core/dev.c
+> > > > > +++ b/net/core/dev.c
+> > > > > @@ -9519,6 +9519,54 @@ int register_netdev(struct net_device *dev)
+> > > > >  }
+> > > > >  EXPORT_SYMBOL(register_netdev);
+> > > > >
+> > > > > +struct netdevice_devres {
+> > > > > +     struct net_device *ndev;
+> > > > > +}; =20
+> > > >
+> > > > Is there really a need to define a structure if we only need a poin=
+ter?
+> > > > =20
+> > >
+> > > There is no need for that, but it really is more readable this way.
+> > > Also: using a pointer directly doesn't save us any memory nor code
+> > > here. =20
+> >
+> > I don't care either way but devm_alloc_etherdev_mqs() and co. are using
+> > the double pointer directly. Please make things consistent. Either do
+> > the same, or define the structure in some header and convert other
+> > helpers to also make use of it. =20
+>=20
+> In order to use devres_find() to check if struct net_device is managed
+> in devm_register_netdev() I need to know the address of the release
+> function used by devm_alloc_etherdev_mqs(). Do you mind if I move all
+> networking devres routines (currently only devm_alloc_etherdev_mqs())
+> into a separate .c file (e.g. under net/devres.c)?
 
-On 5/6/2020 10:06 PM, Ulf Hansson wrote:
-> On Wed, 6 May 2020 at 15:01, Veerabhadrarao Badiganti
-> <vbadigan@codeaurora.org> wrote:
->>
->> On 4/28/2020 5:26 AM, Chun-Hung Wu wrote:
->>> Parse CQE bindings "supports-cqe" and "disable-cqe-dcmd"
->>> in mmc_of_parse().
->>>
->>> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
->>> ---
->>>    drivers/mmc/core/host.c | 5 +++++
->>>    1 file changed, 5 insertions(+)
->>>
->>> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
->>> index c876872..47521c6 100644
->>> --- a/drivers/mmc/core/host.c
->>> +++ b/drivers/mmc/core/host.c
->>> @@ -302,6 +302,11 @@ int mmc_of_parse(struct mmc_host *host)
->>>                host->caps2 |= MMC_CAP2_NO_SD;
->>>        if (device_property_read_bool(dev, "no-mmc"))
->>>                host->caps2 |= MMC_CAP2_NO_MMC;
->>> +     if (device_property_read_bool(dev, "supports-cqe"))
->>> +             host->caps2 |= MMC_CAP2_CQE;
->> This change is breaking emmc driver on qcom platforms where this dt
->> property is defined.
->>
->> [    1.543453]  cqhci_deactivate+0xc/0x38
->> [    1.545627]  sdhci_msm_reset+0x40/0x58
->> [    1.549447]  sdhci_do_reset+0x48/0x7c
->> [    1.553180]  __sdhci_read_caps+0x7c/0x214
->> [    1.556913]  sdhci_setup_host+0x58/0xce8
->> [    1.560905]  sdhci_msm_probe+0x588/0x8a4
->> [    1.564900]  platform_drv_probe+0x4c/0xb0
->>
->> So, we cant have this flag defined before sdhci_setup_host().
->>
->> I will have to clear this cap and re-enable it in our initialization.
-> Thanks for reporting! I have dropped all the four patches from
-> Chun-Hung, so we can figure out how to fix this.
->
-> Please help to review the next version of the series.
-
-Thanks Ulf.
-
-Hi Chun-Hung,
-
-On qcom controller CQE also gets reset when SDHC is reset. So we have to 
-explicitly disable CQE
-by invoking  cqhci_deactivate() during sdhc reset
-
-SDHC gets reset in sdhci_setup_host() even before cqe is initialized.
-With MMC_CAP2_CQE_DCMD cap set even before sdhci_set_host(), we are 
-getting null pointer access with cqhci_deactivate().
-
-If CQE getting reset with SDHC reset is generic (applicable to other 
-controllers) then you have revisit your logic.
-If its not the case then only qcom driver would get affected.
-
-I see you are updating sdhci-msm.c file as-well. How about including 
-below change besides your change?
-
-@@ -1658,6 +1658,8 @@ static int sdhci_msm_cqe_add_host(struct 
-sdhci_host *host,
-         if (host->caps & SDHCI_CAN_64BIT)
-                 host->alloc_desc_sz = 16;
-
-+       /* Clear the CQE cap during setup host */
-+       msm_host->mmc->caps2 &= ~MMC_CAP2_CQE;
-+
-         ret = sdhci_setup_host(host);
-
->>> +     if (!device_property_read_bool(dev, "disable-cqe-dcmd")) {
->>> +             host->caps2 |= MMC_CAP2_CQE_DCMD;
->>> +     }
->>>
->>>        /* Must be after "non-removable" check */
->>>        if (device_property_read_u32(dev, "fixed-emmc-driver-type", &drv_type) == 0) {
-> Kind regards
-> Uffe
+To implement Edwin's suggestion? Makes sense, but I'm no expert, let's
+also CC Heiner since he was asking about it last time.
