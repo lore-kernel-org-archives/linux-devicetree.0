@@ -2,260 +2,109 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2DBC38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F5BC38A24
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAC232075E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A94C2075E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 06:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725809AbgEGGVS (ORCPT
+        id S1726093AbgEGG1i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 02:21:18 -0400
-Received: from atl4mhfb03.myregisteredsite.com ([209.17.115.119]:56144 "EHLO
-        atl4mhfb03.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725763AbgEGGVS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 02:21:18 -0400
-X-Greylist: delayed 316 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 May 2020 02:21:16 EDT
-Received: from jax4mhob14.registeredsite.com (jax4mhob14.registeredsite.com [64.69.218.102])
-        by atl4mhfb03.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 0476G0OL023279
-        for <devicetree@vger.kernel.org>; Thu, 7 May 2020 02:16:00 -0400
-Received: from mailpod.hostingplatform.com ([10.30.71.203])
-        by jax4mhob14.registeredsite.com (8.14.4/8.14.4) with ESMTP id 0476Ftfu020821
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <devicetree@vger.kernel.org>; Thu, 7 May 2020 02:15:56 -0400
-Received: (qmail 7574 invoked by uid 0); 7 May 2020 06:15:55 -0000
-X-TCPREMOTEIP: 83.128.90.119
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
-  by 0 with ESMTPA; 7 May 2020 06:15:55 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     linux-clk@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] clk: clk-si5341: Add support for the Si5345 series
-Date:   Thu,  7 May 2020 08:15:44 +0200
-Message-Id: <20200507061544.11388-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Thu, 7 May 2020 02:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgEGG1i (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 02:27:38 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45649C061A10;
+        Wed,  6 May 2020 23:27:38 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6BD222A2798;
+        Thu,  7 May 2020 07:27:33 +0100 (BST)
+Date:   Thu, 7 May 2020 08:27:30 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v5 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200507082730.6425cd96@collabora.com>
+In-Reply-To: <440c0002-e572-7b8b-ba08-773932370eb0@linux.intel.com>
+References: <20200507001537.4034-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200507001537.4034-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200507072831.1bf7f784@collabora.com>
+        <440c0002-e572-7b8b-ba08-773932370eb0@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the Si5342, Si5344 and Si5345 chips. These are equivalent
-to the Si5341 family, but with more clock input options (which are not
-supported yet by this driver).
+On Thu, 7 May 2020 14:13:42 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- .../bindings/clock/silabs,si5341.txt          | 11 ++-
- drivers/clk/clk-si5341.c                      | 69 +++++++++++++++++--
- 2 files changed, 74 insertions(+), 6 deletions(-)
+> Hi Boris,
+> 
+>     Thank you very much for the review comments and your time...
+> 
+> On 7/5/2020 1:28 pm, Boris Brezillon wrote:
+> > On Thu,  7 May 2020 08:15:37 +0800
+> > "Ramuthevar,Vadivel MuruganX"
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >   
+> >> +	reg = readl(ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
+> >> +	writel(reg | EBU_ADDR_MASK(5) | EBU_ADDR_SEL_REGEN,
+> >> +	       ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));  
+> > 
+> > Seriously, did you really think I would not notice what you're doing
+> > here?  
+> Yes , I know that you have very good understanding about this.
+>   You're reading the previous value which either contains a default
+> > mapping or has the mapping set by the bootloader, and write it back to
+> > the register along with a new mask and the REGEN bit set (which
+> > BTW is wrong since you don't mask out other fields before updating
+> > them).  
+> There is no other field get overwritten
+>   This confirms that this Core -> FPI address translation exists
+> > and has to be set properly, so please stop lying about that.  
+> 
+> Sorry, there is no SW translation, as I have mentioned that it's 
+> optional only, for safer side , reading and writing the default values.
 
-diff --git a/Documentation/devicetree/bindings/clock/silabs,si5341.txt b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
-index a70c333e4cd4..504cce3abe46 100644
---- a/Documentation/devicetree/bindings/clock/silabs,si5341.txt
-+++ b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
-@@ -1,15 +1,21 @@
--Binding for Silicon Labs Si5341 and Si5340 programmable i2c clock generator.
-+Binding for Silicon Labs Si5340, Si5341 Si5342, Si5344 and Si5345 programmable
-+i2c clock generator.
- 
- Reference
- [1] Si5341 Data Sheet
-     https://www.silabs.com/documents/public/data-sheets/Si5341-40-D-DataSheet.pdf
- [2] Si5341 Reference Manual
-     https://www.silabs.com/documents/public/reference-manuals/Si5341-40-D-RM.pdf
-+[3] Si5345 Reference Manual
-+    https://www.silabs.com/documents/public/reference-manuals/Si5345-44-42-D-RM.pdf
- 
- The Si5341 and Si5340 are programmable i2c clock generators with up to 10 output
- clocks. The chip contains a PLL that sources 5 (or 4) multisynth clocks, which
- in turn can be directed to any of the 10 (or 4) outputs through a divider.
- The internal structure of the clock generators can be found in [2].
-+The Si5345 is similar to the Si5341 with the addition of fractional input
-+dividers and automatic input selection, as described in [3].
-+The Si5342 and Si5344 are smaller versions of the Si5345, with 2 or 4 outputs.
- 
- The driver can be used in "as is" mode, reading the current settings from the
- chip at boot, in case you have a (pre-)programmed device. If the PLL is not
-@@ -28,6 +34,9 @@ Required properties:
- - compatible: shall be one of the following:
- 	"silabs,si5340" - Si5340 A/B/C/D
- 	"silabs,si5341" - Si5341 A/B/C/D
-+	"silabs,si5342" - Si5342 A/B/C/D
-+	"silabs,si5344" - Si5344 A/B/C/D
-+	"silabs,si5345" - Si5345 A/B/C/D
- - reg: i2c device address, usually 0x74
- - #clock-cells: from common clock binding; shall be set to 2.
- 	The first value is "0" for outputs, "1" for synthesizers.
-diff --git a/drivers/clk/clk-si5341.c b/drivers/clk/clk-si5341.c
-index 3c228b018116..3d7acab9d280 100644
---- a/drivers/clk/clk-si5341.c
-+++ b/drivers/clk/clk-si5341.c
-@@ -1,8 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Driver for Silicon Labs Si5341/Si5340 Clock generator
-+ * Driver for Silicon Labs Si5340, Si5341, Si5342, Si5344 and Si5345
-  * Copyright (C) 2019 Topic Embedded Products
-  * Author: Mike Looijmans <mike.looijmans@topic.nl>
-+ *
-+ * The Si5341 has 10 outputs and 5 synthesizers.
-+ * The Si5340 is a smaller version of the Si5341 with only 4 outputs.
-+ * The Si5345 is similar to the Si5341, with the addition of fractional input
-+ * dividers and automatic input selection.
-+ * The Si5342 and Si5344 are smaller versions of the Si5345.
-  */
- 
- #include <linux/clk.h>
-@@ -18,11 +24,17 @@
- 
- #define SI5341_NUM_INPUTS 4
- 
--#define SI5341_MAX_NUM_OUTPUTS 10
- #define SI5340_MAX_NUM_OUTPUTS 4
-+#define SI5341_MAX_NUM_OUTPUTS 10
-+#define SI5342_MAX_NUM_OUTPUTS 2
-+#define SI5344_MAX_NUM_OUTPUTS 4
-+#define SI5345_MAX_NUM_OUTPUTS 10
- 
--#define SI5341_NUM_SYNTH 5
- #define SI5340_NUM_SYNTH 4
-+#define SI5341_NUM_SYNTH 5
-+#define SI5342_NUM_SYNTH 2
-+#define SI5344_NUM_SYNTH 4
-+#define SI5345_NUM_SYNTH 5
- 
- /* Range of the synthesizer fractional divider */
- #define SI5341_SYNTH_N_MIN	10
-@@ -65,6 +77,7 @@ struct clk_si5341 {
- 	u64 freq_vco; /* 13500–14256 MHz */
- 	u8 num_outputs;
- 	u8 num_synth;
-+	u16 chip_id;
- };
- #define to_clk_si5341(_hw)	container_of(_hw, struct clk_si5341, hw)
- 
-@@ -142,6 +155,7 @@ static const char * const si5341_input_clock_names[] = {
- };
- 
- /* Output configuration registers 0..9 are not quite logically organized */
-+/* Also for si5345 */
- static const u16 si5341_reg_output_offset[] = {
- 	0x0108,
- 	0x010D,
-@@ -155,6 +169,7 @@ static const u16 si5341_reg_output_offset[] = {
- 	0x013A,
- };
- 
-+/* for si5340, si5342 and si5344 */
- static const u16 si5340_reg_output_offset[] = {
- 	0x0112,
- 	0x0117,
-@@ -974,12 +989,32 @@ static int si5341_probe_chip_id(struct clk_si5341 *data)
- 		data->reg_output_offset = si5341_reg_output_offset;
- 		data->reg_rdiv_offset = si5341_reg_rdiv_offset;
- 		break;
-+	case 0x5342:
-+		data->num_outputs = SI5342_MAX_NUM_OUTPUTS;
-+		data->num_synth = SI5342_NUM_SYNTH;
-+		data->reg_output_offset = si5340_reg_output_offset;
-+		data->reg_rdiv_offset = si5340_reg_rdiv_offset;
-+		break;
-+	case 0x5344:
-+		data->num_outputs = SI5344_MAX_NUM_OUTPUTS;
-+		data->num_synth = SI5344_NUM_SYNTH;
-+		data->reg_output_offset = si5340_reg_output_offset;
-+		data->reg_rdiv_offset = si5340_reg_rdiv_offset;
-+		break;
-+	case 0x5345:
-+		data->num_outputs = SI5345_MAX_NUM_OUTPUTS;
-+		data->num_synth = SI5345_NUM_SYNTH;
-+		data->reg_output_offset = si5341_reg_output_offset;
-+		data->reg_rdiv_offset = si5341_reg_rdiv_offset;
-+		break;
- 	default:
- 		dev_err(&data->i2c_client->dev, "Model '%x' not supported\n",
- 			model);
- 		return -EINVAL;
- 	}
- 
-+	data->chip_id = model;
-+
- 	return 0;
- }
- 
-@@ -1054,6 +1089,11 @@ static const struct si5341_reg_default si5341_preamble[] = {
- 	{ 0x0B4E, 0x1A },
- };
- 
-+static const struct si5341_reg_default si5345_preamble[] = {
-+	{ 0x0B25, 0x00 },
-+	{ 0x0540, 0x01 },
-+};
-+
- static int si5341_send_preamble(struct clk_si5341 *data)
- {
- 	int res;
-@@ -1068,8 +1108,14 @@ static int si5341_send_preamble(struct clk_si5341 *data)
- 	res = regmap_write(data->regmap, 0xB24, revision < 2 ? 0xD8 : 0xC0);
- 	if (res < 0)
- 		return res;
--	res = si5341_write_multiple(data,
--		si5341_preamble, ARRAY_SIZE(si5341_preamble));
-+
-+	/* The si5342..si5345 require a different preamble */
-+	if (data->chip_id > 0x5341)
-+		res = si5341_write_multiple(data,
-+			si5345_preamble, ARRAY_SIZE(si5345_preamble));
-+	else
-+		res = si5341_write_multiple(data,
-+			si5341_preamble, ARRAY_SIZE(si5341_preamble));
- 	if (res < 0)
- 		return res;
- 
-@@ -1095,6 +1141,13 @@ static int si5341_finalize_defaults(struct clk_si5341 *data)
- 	if (res < 0)
- 		return res;
- 
-+	/* The si5342..si5345 have an additional post-amble */
-+	if (data->chip_id > 0x5341) {
-+		res = regmap_write(data->regmap, 0x540, 0x0);
-+		if (res < 0)
-+			return res;
-+	}
-+
- 	/* Datasheet does not explain these nameless registers */
- 	res = regmap_write(data->regmap, 0xB24, revision < 2 ? 0xDB : 0xC3);
- 	if (res < 0)
-@@ -1499,6 +1552,9 @@ static int si5341_probe(struct i2c_client *client,
- static const struct i2c_device_id si5341_id[] = {
- 	{ "si5340", 0 },
- 	{ "si5341", 1 },
-+	{ "si5342", 2 },
-+	{ "si5344", 4 },
-+	{ "si5345", 5 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, si5341_id);
-@@ -1506,6 +1562,9 @@ MODULE_DEVICE_TABLE(i2c, si5341_id);
- static const struct of_device_id clk_si5341_of_match[] = {
- 	{ .compatible = "silabs,si5340" },
- 	{ .compatible = "silabs,si5341" },
-+	{ .compatible = "silabs,si5342" },
-+	{ .compatible = "silabs,si5344" },
-+	{ .compatible = "silabs,si5345" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, clk_si5341_of_match);
--- 
-2.17.1
+Then write EBU_ADDR_SEL_REGEN and we'll if see that works. I suspect it
+won't.
+
+> The memory region to enabled that's my concern so written the same 
+> register values.
+
+I don't buy that, sorry.
+
+> 
+> This will not be impact other fields, so please see below for reference
+> 
+> The EBU Address Select Registers EBU_ADDR_SEL_0 to EBU_ADDSEL3 establish 
+> and control memory regions for external accesses.
+> 
+> Reset Value: 17400001H
+
+See, as suspected the reset value is exactly what you expect.
 
