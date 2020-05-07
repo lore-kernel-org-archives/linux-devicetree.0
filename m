@@ -2,136 +2,158 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B631C54E49
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 09:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042EFC38A24
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA77208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 09:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC2F21473
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:05:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="st0dcCb/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sW4R2D6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgEGJ3y (ORCPT
+        id S1726268AbgEGKFG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 05:29:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgEGJ3v (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 05:29:51 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6865C061A41
-        for <devicetree@vger.kernel.org>; Thu,  7 May 2020 02:29:50 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id f7so1320495vkl.6
-        for <devicetree@vger.kernel.org>; Thu, 07 May 2020 02:29:50 -0700 (PDT)
+        Thu, 7 May 2020 06:05:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725985AbgEGKFG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 06:05:06 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B07B9C061A10;
+        Thu,  7 May 2020 03:05:05 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h9so5645385wrt.0;
+        Thu, 07 May 2020 03:05:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XDi3h98mQHCtREHS90wezcyoS3twXkQG1OpaJtTR05E=;
-        b=st0dcCb/GQYY2YzJ505z0YNbJa0O2n9TD/OBObEDwuO91e5Dqud7HBZ1Of4ZDhoV+0
-         lIxgMlmG62LkJSvLmXNmoJHl1jA6vWNvMxRTftDCA3t8hwi462pIxtVJ0L1zbtoEUb+A
-         gXcTn6kJSsXxoWcSV/SQW/z2/RcZKhq/7QopyXPV6grYDsiEhT3SMr5reMRIvx+sgc+n
-         O7ihWY2o7HxZiiO1TJv/ZTWFLbN1RYBnNPxYsGtbuvh7VzKFiH4kXFtIxsmQidWImbfr
-         5cxjx+JliMqvCpAd9cMFhphvVJdUAFr0BrM46Ux7UTROSQk62YrwoLkwwBfPupREPdMc
-         sTzw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I3XEZEir8mjaU7+45jVwuKvE1Mu0PTN/zTUIAubFKCI=;
+        b=sW4R2D6NmQc/uUkzHBPZ4dq0iO4vvS8WsupKHd3y24pQe39FsaJwi6QzwL7xoDmw2h
+         XBHYToik/4pPr6d6Lp7QWkXuNvqEVqW9pHIfEboU3Hbj2TkLLTi2hLU3dz8qitlVWd+8
+         D/QvAn3tPNshlPruWsw8B37XSzmQHFNLKAV+kH1x0U2ja6VDNaab7EhOxyUiEq7F+DV0
+         hxTgXO98fnmMWf2HeasuQ9AFhPP39Pp8F8woB6fhf4d02R0oqU3TZkPMutliFV6SCPs9
+         jhATiucY8rroK5dkA4OImXdOsJclFSJUWSW4+6YoRZMmwlBpEWk5h23c0z08ru1RGf+G
+         lbMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XDi3h98mQHCtREHS90wezcyoS3twXkQG1OpaJtTR05E=;
-        b=CPGMHPMCCqUscctqL51trPIqbr5PBtyo+7LnENmStC5WofPydDpTiK6A0NhlVimAQm
-         iTI56C8alV/BRrblJ1lCKLGuOq83EqYOWQXWt/OJtSZm8MDN2gGycKkmFSIkw3Q+w/IP
-         IhteQbqJmfMn6V9E8rEpNYYTJSw22ULM6rBRGMaEPIp/DQvBGWbZq4AwtRWosvRezybX
-         7vCd9ffogyZCZ+NHJjCZoSguu6p2bSFu3mU98dysv9oLRB6163vxwF2k7u/UWOEWz681
-         aOOFZ7rjbDRlEU0NyeoUSG3tXOVX+f19ghdyH0LpGjCXjcb3rf5kjEo7UUK6I/LhhmmI
-         iEvA==
-X-Gm-Message-State: AGi0PuZkIGtNPMZ+BIRtnv06y0adW/TDMF4XhTznJ3Z40hv+Zx4D7VOQ
-        g5CB4UHtq+2tswnHP2ckw9ymQtMPrbWKyXdDP3D/Xw==
-X-Google-Smtp-Source: APiQypKzFsKczdnWmdHQPnQ/h/SiYxQvsKKkhjZlHf0YbkAdYsLFFbQCIl2a1NGtqXQJsnmCxojtIUrNwBPLgVGo12Q=
-X-Received: by 2002:a1f:31cf:: with SMTP id x198mr10672278vkx.101.1588843789884;
- Thu, 07 May 2020 02:29:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I3XEZEir8mjaU7+45jVwuKvE1Mu0PTN/zTUIAubFKCI=;
+        b=Gn4dSavsbetfZQOmlHuLoTu3rF3cnOgySgFpPZt347WTifDfbKYlGCDeRY9cZ1Y4iG
+         VBjBjtDnMVSkItJos7Oi6LdoZWG1XFKEpvrHLuXqrbw2Re6U19+WBrRzmIPMXy/sIVCV
+         +gSI2VQD4Ut2HKSHCy2rtOHlEeNBEnAEsmNHXrRb8vIEk3rwLwhBMopdJxTUVNKHw437
+         K8JFRbWyeFztVcW5VSmk1Q4+LvLHOmBQezW0Iu5WXQu4HX4ZkzqzSXSUG02tJCLEzYPF
+         kp1p56xViy4pIt9tpjhvW+tM45RyqKYh6uepLsshedirxQsi/xBa7V1UwxJVOb9g1fKP
+         u1EA==
+X-Gm-Message-State: AGi0PubmUWZxZarzZ5BEx8sh8moi7zQoLA6TqWPfPNR78OQa7NSS6tYF
+        3pecC41yYy4x5mW/mO8WOXc=
+X-Google-Smtp-Source: APiQypL85Rp4PcfWy+llAW584pUmkpqwuyGQDd09cVbrIG6suk/obuRQvQYjV9Xq1ENcCd2K0dt0pg==
+X-Received: by 2002:adf:ed0f:: with SMTP id a15mr1871371wro.320.1588845904337;
+        Thu, 07 May 2020 03:05:04 -0700 (PDT)
+Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
+        by smtp.gmail.com with ESMTPSA id w6sm7594181wrt.39.2020.05.07.03.05.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 03:05:03 -0700 (PDT)
+Date:   Thu, 7 May 2020 12:05:02 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] arm64: tegra: Fix ethernet phy-mode for Jetson Xavier
+Message-ID: <20200507100502.GB2890327@ulmo>
+References: <20200501072756.25348-1-jonathanh@nvidia.com>
+ <20200506234218.4E11D2082E@mail.kernel.org>
 MIME-Version: 1.0
-References: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588794695-27852-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588794695-27852-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 7 May 2020 11:29:13 +0200
-Message-ID: <CAPDyKFrP_W0xAESF+pN9-=Jw8FWbRWEPnZwtMijbSvYjrTYxZg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: mmc: renesas,mmcif: Document r8a7742
- DT bindings
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
+Content-Disposition: inline
+In-Reply-To: <20200506234218.4E11D2082E@mail.kernel.org>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 6 May 2020 at 21:51, Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Add support for r8a7742 SoC. Renesas RZ/G1H (R8A7742) MMCIF is identical
-> to the R-Car Gen2 family.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Applied for next, thanks!
+--f2QGlHpHGjS2mn6Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Kind regards
-Uffe
+On Wed, May 06, 2020 at 11:42:17PM +0000, Sasha Levin wrote:
+> Hi
+>=20
+> [This is an automated email]
+>=20
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+>=20
+> The bot has tested the following trees: v5.6.8, v5.4.36, v4.19.119, v4.14=
+=2E177, v4.9.220, v4.4.220.
+>=20
+> v5.6.8: Build OK!
+> v5.4.36: Build OK!
+> v4.19.119: Build OK!
+> v4.14.177: Failed to apply! Possible dependencies:
+>     5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
+>     b8656c673a6b ("arm64: tegra: Add device tree for the Tegra194 P2972-0=
+000 board")
+>     f69ce393ec48 ("arm64: tegra: Add GPIO controller on Tegra194")
+>     f89b58ce71a9 ("arm64: tegra: Add ethernet controller on Tegra194")
+>=20
+> v4.9.220: Failed to apply! Possible dependencies:
+>     5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
+>     99575bceebd6 ("arm64: tegra: Add NVIDIA P2771 board support")
+>     b8656c673a6b ("arm64: tegra: Add device tree for the Tegra194 P2972-0=
+000 board")
+>     f69ce393ec48 ("arm64: tegra: Add GPIO controller on Tegra194")
+>     f89b58ce71a9 ("arm64: tegra: Add ethernet controller on Tegra194")
+>=20
+> v4.4.220: Failed to apply! Possible dependencies:
+>     0f279ebdf3ce ("arm64: tegra: Add NVIDIA Tegra132 Norrin support")
+>     2cc85bd90337 ("arm64: tegra: Add NVIDIA P2571 board support")
+>     34b4f6d0599e ("arm64: tegra: Add Tegra132 support")
+>     5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
+>     5d17ba6e638e ("arm64: tegra: Add support for Google Pixel C")
+>     63023e95bec0 ("arm64: tegra: Add NVIDIA P2371 board support")
+>     99575bceebd6 ("arm64: tegra: Add NVIDIA P2771 board support")
+>     b8656c673a6b ("arm64: tegra: Add device tree for the Tegra194 P2972-0=
+000 board")
+>     f69ce393ec48 ("arm64: tegra: Add GPIO controller on Tegra194")
+>     f89b58ce71a9 ("arm64: tegra: Add ethernet controller on Tegra194")
+>=20
+>=20
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+>=20
+> How should we proceed with this patch?
 
+Tegra194 support was merged into v4.17, so it doesn't make backport this
+to any stable kernels prior to that.
 
-> ---
-> v1->v2:
-> * Updated interrupts table to include r8a7742
-> ---
->  Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> index c064af5838aa..291532ac0446 100644
-> --- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> +++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> @@ -11,6 +11,7 @@ Required properties:
->         - "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
->         - "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
->         - "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
-> +       - "renesas,mmcif-r8a7742" for the MMCIF found in r8a7742 SoCs
->         - "renesas,mmcif-r8a7743" for the MMCIF found in r8a7743 SoCs
->         - "renesas,mmcif-r8a7744" for the MMCIF found in r8a7744 SoCs
->         - "renesas,mmcif-r8a7745" for the MMCIF found in r8a7745 SoCs
-> @@ -24,8 +25,8 @@ Required properties:
->  - interrupts: Some SoCs have only 1 shared interrupt, while others have either
->    2 or 3 individual interrupts (error, int, card detect). Below is the number
->    of interrupts for each SoC:
-> -    1: r8a73a4, r8a7743, r8a7744, r8a7745, r8a7778, r8a7790, r8a7791, r8a7793,
-> -       r8a7794
-> +    1: r8a73a4, r8a7742, r8a7743, r8a7744, r8a7745, r8a7778, r8a7790, r8a7791,
-> +       r8a7793, r8a7794
->      2: r8a7740, sh73a0
->      3: r7s72100
->
-> --
-> 2.17.1
->
+Thierry
+
+--f2QGlHpHGjS2mn6Y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6z3U4ACgkQ3SOs138+
+s6ERdQ/+M8e+Pq//sHoBLsVfspJENeX9JUSLVqTVsXEnHTxnv0Ri/qKuRYOzWcgU
+zktBmBWHxJt8UPlgxRqL9rcRHBf2mXRu7QsRSvBozLOuszdbp2pDq8dKGO1TgBKm
+ZQJekFzhEeWm8JAQiDlHjMfqwtPNXhRefl+gyRvWjOsTlROipbcm7Qr/RmztNmWJ
+73p4lkUcZ6BuRQoZgn9JDIBhDK3v02DwlJHAUjdYjRt6n4Wh39D4bllyi0JAw6FG
+4zV9fLL+PY9ie6ZtRiA3ACmjc9I28UiCMs4/VXnXVxGK+L9UjjrKvONaZtQ+aPDS
+wP9P9jihX6wcYOEPSoIvNBw4ne1eyWIOCdDjM0PjtYVov73xoseYv1OQGPfFdR6T
+77SWjnbppJNjA1IuV1adwWBJrY8w8jxdXLTXNehURSAc+ve6WOQ725kxIRZ2HAeL
+AVZb7nUI/+TiAZVYP4dntzk6rzZsQx4JhyKgYF9yVQ1NANw6QAog+RIc+4KOW+Ee
+0bLJeNRNoCvAlJdwaynn6gVXNmgF3jQeMHoLpVWPwDu2ARN1vhcwYmoVC4xtdPaY
+V0Eb1gORelEyYb1HwVN446IjAse8ex9wvAMPKu59l7PrbonEO8ismM2tx+8/7bkJ
+9ChG18/p+Ln1yUybHvHR+FGTYdBJriPZ33rcLZ1wSkzmbnFAcA4=
+=+6E+
+-----END PGP SIGNATURE-----
+
+--f2QGlHpHGjS2mn6Y--
