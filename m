@@ -2,87 +2,186 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCC3C35280
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 22:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E498C35280
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 23:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1A520A8B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 22:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588892213;
-	bh=DFVZVtjOy5Zq82K7JozE2r2KIIrkXMdk+V1nGag44c4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=IMLpmj3vjmEKuMZflvD1xxXJXk/coMvCVW/WstUMl/IQnrLl2Sf0BGr9D7jZB5Lm8
-	 pdtm6BtZG6isz0tU7U99hEma3+m7/T9CzDuuOLjeIMhwJMdcs9wbgIrjRpCwkPQQI4
-	 uRxxVmksKBH6U0ul/fn3j5LxKz2rZ09PguVhtRVI=
+	by mail.kernel.org (Postfix) with ESMTP id 03B2B208D6
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 23:01:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZvvpLly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgEGW4x (ORCPT
+        id S1726533AbgEGXBw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 18:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgEGW4w (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 May 2020 18:56:52 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B888A2083B;
-        Thu,  7 May 2020 22:56:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588892212;
-        bh=DFVZVtjOy5Zq82K7JozE2r2KIIrkXMdk+V1nGag44c4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cfWvMsu2a/TSPk7q/+Zmfy29Q+AC9QWezN1eQf99G/LyIFEochDHBbNGHvRrHDHwd
-         SZglIFhyk6ytKrqx4WYehFbADUTk/TTe7OKAqe6BCfjM+R6c6vfSj6H2Ogxrf/0GT4
-         qWEFvrGtflMZ2XaXUvIx5uz56muVQ9+ZoWAD9EJ0=
-Date:   Thu, 7 May 2020 15:56:50 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
-Message-ID: <20200507155650.0c19229e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <CAMpxmJUEk3itZs4HujJOXUiL80kmEvGBvLF0NFc2UQoVDVTWRg@mail.gmail.com>
-References: <20200505140231.16600-1-brgl@bgdev.pl>
-        <20200505140231.16600-6-brgl@bgdev.pl>
-        <20200505103105.1c8b0ce3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <CAMRc=Mf0ipaeLKhHCZaq2YeZKzi=QBAse7bEz2hHxXN5OL=ptg@mail.gmail.com>
-        <20200506101236.25a13609@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <CAMpxmJWckQdKvUGFDAJ1WMtD9WoGWmGe3kyKYhcfRT2nOB93xw@mail.gmail.com>
-        <20200507095315.1154a1a6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <CAMpxmJUEk3itZs4HujJOXUiL80kmEvGBvLF0NFc2UQoVDVTWRg@mail.gmail.com>
+        Thu, 7 May 2020 19:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgEGXBv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 19:01:51 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FB6C05BD43;
+        Thu,  7 May 2020 16:01:51 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v4so8546042wme.1;
+        Thu, 07 May 2020 16:01:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Amh3I1P5I6BDFw+wjiIvKdrZM+vTRzn1yeHAQhH/mXQ=;
+        b=JZvvpLly/WeFwEdPOAjsfNLtdVO1/saQlF77s8DN/ZF0BWu1MgILCIAn0AhqV/pkzw
+         A0z4h7Q7Qvesyxx0pJK9xiME+nqD+bD7+zezYnuvLxdVrG7bfR2xuNnCOZbd7Dp6Aw9W
+         FlL9tVfTviOY30rRUZm/SMF+6ks0eCV/FFZHuBJ0WdDjEBUfnVt31v0t9gAzu0jsoLVH
+         AwOgqjj5EJZcN1de/fTVXyjqZ+mIoyGc2+9/yRLieRQErLNiDBjfrZDxmp+4ReKs+gkd
+         qbJraJ6Wg1CzU+dZlm9aoFQFOrDAszZLkvflSUVLE3Z17CrA2vSTtqaGC/3MMcKqRqSQ
+         qsvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Amh3I1P5I6BDFw+wjiIvKdrZM+vTRzn1yeHAQhH/mXQ=;
+        b=p/rg0Wa6yv46m788z5w0d3V2XuL+bOmX7K9qDmi0ZCTLK1FoTIElswqCajarVw83nc
+         CpKc76+lnNrUbDaM+HECwcecKFzvFEwic4dAJzPw1FUth+4FP6jWyC6V34MW7xzcOT4/
+         aaDoOgsRyc8OemaCDiF6dkfbEl7CJ7bshMMfTDtW3f9HRnxKNL2TuPNFZo1bd7vYfZXc
+         i5hqIh7eSrOBzAx20oEOzHMI7oMNOtCPQqhsNrqVVgrr+XcKVhUF4eA9B5oW1Oltwuqh
+         t0xj5ZF9EE9F8E/e969tLmjrtIY3kcIHN2dmaERTvIknGc7DBz1L6EoUuOCEPNMl7FJn
+         dlUA==
+X-Gm-Message-State: AGi0PuYot0Kvt7tfVomYwa39SbAm6ruAtwjbDtsN/3POpPGQaWrDNnFl
+        Am/t0N7AwB9pZASXijWfQeQ=
+X-Google-Smtp-Source: APiQypIXEPr64bDK5N2O7Q4uwKSHEOYR2e4k2roCXqGS0mC2od1qBH2YrfIpQ9yDJcfBWvqV0nWskg==
+X-Received: by 2002:a1c:4b15:: with SMTP id y21mr12876858wma.150.1588892510056;
+        Thu, 07 May 2020 16:01:50 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id o6sm10910992wrw.63.2020.05.07.16.01.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 16:01:49 -0700 (PDT)
+Subject: Re: [PATCH v3 1/4] dt-bindings: rockchip-rga: Add PX30 compatible
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     devicetree@vger.kernel.org, ezequiel@collabora.com,
+        hansverk@cisco.com, heiko@sntech.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        thomas.petazzoni@bootlin.com
+References: <20200430164245.1630174-2-paul.kocialkowski@bootlin.com>
+ <ed1ac7d6-12d3-5480-3699-70a88595cac2@gmail.com>
+ <20200507202337.GJ2422122@aptenodytes>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <b3d65325-7383-f89b-f493-6219904c8931@gmail.com>
+Date:   Fri, 8 May 2020 01:01:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200507202337.GJ2422122@aptenodytes>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 7 May 2020 19:03:44 +0200 Bartosz Golaszewski wrote:
->> To implement Edwin's suggestion? Makes sense, but I'm no expert, let's
->> also CC Heiner since he was asking about it last time. =20
->=20
-> Yes, because taking the last bit of priv_flags from net_device seems
-> to be more controversial but if net maintainers are fine with that I
-> can simply go with the current approach.
+Hi Paul,
 
-=46rom my perspective what Edwin suggests makes sense. Apart from
-little use for the bit after probe, it also seems cleaner for devres=20
-to be able to recognize managed objects based on its own state.
+With help of enum each additional compatibility string with fall back
+'rockchip,rk3288-rga' adds only 1 extra line instead of 3.
+
+See my and Heiko's response at the review of 'rockchip-saradc.yaml'.
+
+Re: [PATCH v1 1/3] dt-bindings: iio: adc: convert rockchip saradc
+bindings to yaml
+https://lore.kernel.org/lkml/a35bdff4-601e-6186-584e-9a0b88cf3dbb@gmail.com/
+
+The response of robh when I did something similar wrong as this patch.
+
+Re: [PATCH 1/2] dt-bindings: usb: dwc2: add compatible property for
+rk3328 usb
+https://lore.kernel.org/lkml/20200310192933.GA15236@bogus/
+
+Example of an approved patch with enum.
+
+[PATCH v2 1/2] dt-bindings: usb: dwc2: add compatible property for
+rk3328 usb
+https://lore.kernel.org/lkml/20200311122121.8912-1-jbx6244@gmail.com/
+
+Kind regards,
+
+Johan
+
+On 5/7/20 10:23 PM, Paul Kocialkowski wrote:
+> Hi,
+> 
+> On Thu 30 Apr 20, 23:24, Johan Jonker wrote:
+>> Hi Paul,
+>>
+>>>
+>>> Add a new compatible for the PX30 Rockchip SoC, which also features
+>>> a RGA block. It is compatible with the RK3288 RGA block.
+>>>
+>>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/media/rockchip-rga.yaml | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.yaml b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
+>>> index dd645ddccb07..740586299da9 100644
+>>> --- a/Documentation/devicetree/bindings/media/rockchip-rga.yaml
+>>> +++ b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
+>>> @@ -23,6 +23,9 @@ properties:
+>>
+>>
+>>>        - items:
+>>>            - const: rockchip,rk3228-rga
+>>>            - const: rockchip,rk3288-rga
+>>> +      - items:
+>>> +          - const: rockchip,px30-rga
+>>> +          - const: rockchip,rk3288-rga
+>>
+>> Use enum.
+>>
+>>       - items:
+>>           - enum:
+>>             - rockchip,px30-rga
+>>             - rockchip,rk3228-rga
+>>           - const: rockchip,rk3288-rga
+> 
+> Are you sure about this? The rk3228 above does it as I did it and other examples
+> like allwinner,sun4i-a10-csi.yaml appear to be doing the same too.
+
+The use of enum starts from 2 or more identical fall back strings.
+'allwinner,sun4i-a10-csi.yaml' has 2 different fall back strings.
+
+properties:
+  compatible:
+    oneOf:
+      - const: allwinner,sun4i-a10-csi1
+      - const: allwinner,sun7i-a20-csi0
+      - items:
+        - const: allwinner,sun7i-a20-csi1
+        - const: allwinner,sun4i-a10-csi1
+      - items:
+        - const: allwinner,sun8i-r40-csi0
+        - const: allwinner,sun7i-a20-csi0
+
+> 
+> The case with rockchip,rk3288-rga alone already seems covered.
+See yaml examples in the links above.
+
+> 
+> Cheers,
+> 
+> Paul
+> 
+>>>  
+>>>    reg:
+>>>      maxItems: 1
+>>> -- 
+>>> 2.26.0
+>>
+> 
+
