@@ -2,99 +2,79 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B059FC38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 12:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3617C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 12:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B772075E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 12:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87ECE2075E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 12:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgEGMFU (ORCPT
+        id S1726093AbgEGMLI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 08:05:20 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58121 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgEGMFU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 08:05:20 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 015A2FF814;
-        Thu,  7 May 2020 12:03:01 +0000 (UTC)
-Date:   Thu, 7 May 2020 14:03:01 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] dt-bindings: timer: Move snps,dw-apb-timer DT
- schema from rtc
-Message-ID: <20200507120301.GF34497@piout.net>
-References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
- <20200506214107.25956-3-Sergey.Semin@baikalelectronics.ru>
+        Thu, 7 May 2020 08:11:08 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37722 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgEGMLH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 08:11:07 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id EA2C82A29CE;
+        Thu,  7 May 2020 13:11:05 +0100 (BST)
+Date:   Thu, 7 May 2020 14:11:03 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Naga Sureshkumar Relli <nagasure@xilinx.com>
+Subject: Re: [PATCH v3 7/8] mtd: rawnand: arasan: Add new Arasan NAND
+ controller
+Message-ID: <20200507141103.0c241877@collabora.com>
+In-Reply-To: <20200507110034.14736-8-miquel.raynal@bootlin.com>
+References: <20200507110034.14736-1-miquel.raynal@bootlin.com>
+        <20200507110034.14736-8-miquel.raynal@bootlin.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506214107.25956-3-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 07/05/2020 00:41:02+0300, Serge Semin wrote:
-> This binding file doesn't belong to the rtc seeing it's a pure timer
-> with no rtc facilities like days/months/years counting and alarms.
-> So move the YAML-file to the Documentation/devicetree/bindings/timer/
-> directory.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-mips@vger.kernel.org
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+On Thu,  7 May 2020 13:00:33 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> ---
->  .../devicetree/bindings/{rtc => timer}/snps,dw-apb-timer.yaml   | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/{rtc => timer}/snps,dw-apb-timer.yaml (96%)
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/snps,dw-apb-timer.yaml b/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
-> similarity index 96%
-> rename from Documentation/devicetree/bindings/rtc/snps,dw-apb-timer.yaml
-> rename to Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
-> index 002fe1ee709b..5d300efdf0ca 100644
-> --- a/Documentation/devicetree/bindings/rtc/snps,dw-apb-timer.yaml
-> +++ b/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/rtc/snps,dw-apb-timer.yaml#
-> +$id: http://devicetree.org/schemas/timer/snps,dw-apb-timer.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Synopsys DesignWare APB Timer
-> -- 
-> 2.25.1
-> 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +
+> +static void anfc_chips_cleanup(struct arasan_nfc *nfc)
+> +{
+> +	struct anand *anand, *tmp;
+> +
+> +	list_for_each_entry_safe(anand, tmp, &nfc->chips, node) {
+> +		nand_release(&anand->chip);
+
+		ret = mtd_device_unregister(nand_to_mtd(&anand->chip));
+		WARN_ON(ret);
+		nand_cleanup(&anand->chip);
+
+Or maybe add this WARN_ON() to nand_release() so we don't have to ask
+people to use mtd_device_unregister() + nand_cleanup(). We really
+should fix that at some point (allocate nand_chip and mtd_info
+separately and leave a dummy mtd_info object with all hooks returning
+ENODEV when the unregister fails).
+
+> +		list_del(&anand->node);
+> +	}
+> +}
