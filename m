@@ -2,95 +2,105 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0BEC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA36AC4724C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF342073A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854B520CC7
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:50:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1lm1uYG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbgEGKQY (ORCPT
+        id S1726815AbgEGKu3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 06:16:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:55720 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgEGKQY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 May 2020 06:16:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 036B2D6E;
-        Thu,  7 May 2020 03:16:22 -0700 (PDT)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFF403F71F;
-        Thu,  7 May 2020 03:16:20 -0700 (PDT)
-Subject: Re: [PATCH RFC 4/8] arm64: dts: actions: disable sps node from S700
-To:     Amit Singh Tomar <amittomer25@gmail.com>, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-References: <1588761371-9078-1-git-send-email-amittomer25@gmail.com>
- <1588761371-9078-5-git-send-email-amittomer25@gmail.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Organization: ARM Ltd.
-Message-ID: <8cf98b73-8c8e-b9d7-989b-f1e869c990d5@arm.com>
-Date:   Thu, 7 May 2020 11:15:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 06:50:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbgEGKu2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 06:50:28 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E7A7C0610D5
+        for <devicetree@vger.kernel.org>; Thu,  7 May 2020 03:50:27 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 23so5470632qkf.0
+        for <devicetree@vger.kernel.org>; Thu, 07 May 2020 03:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1TQDLXk4eka+0Oxp2Bn8b1wcydmS2119xNQQ8v9Of3A=;
+        b=1lm1uYG4FqWg47V6Y+gYDIshBO9zX4KSYru04NwBJPv6kFFVFfM5JuAxDs6tZvphbJ
+         oTJilxGIAeSQOYU0i6u9kVh9LY2c67xWbyrpnSBiPqECpZSiW2moygN7fZbQTfav8QK2
+         PVhyXc4CtEJIGCrd0bzJhiTefp0mzyZ+EbOyJMUDZqyQufbiHgLItmYN1hQD9wMB44pb
+         +U7sR5l34T2+ELpQdAtOqjowgdxN4GWWNkcVU6+j6hZhi4t6FdtitjmBcfH4EYiq0eXp
+         4P1xej1eG3C2yyeUwdIE9QTRIDhAZrZ/5hXNsRThBODI7DVg3bGoIKHJESig7V88bGr5
+         VM8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1TQDLXk4eka+0Oxp2Bn8b1wcydmS2119xNQQ8v9Of3A=;
+        b=uj996J3rbecAyP71gucXQagtPFuMge0wg6zVu2i97yKayfbNnrOxWXGSOYDhNN1F83
+         QkWd7yxODnkyrgjD8A69jvLULp2NxY1gU6nSqKrO/I6Yz5lPRM86Ukg+cTe3hptLhqMs
+         acPbZ60uVnLbjc1aYC4tj/0B4fbe46Vm5LWDmjTkhX1E65Bw95UJnfGU8/lgJZwWtXqh
+         rLthRNhnN0GTcU1D86AnuFtrIh37Ux4Ti5AR7qQjU0KZ8ScrS5p76R/VK3cdBfYfOvFD
+         8PS5zlc+jgpn2WV5wXFRKtn1aV8UvVjVGzN1Uy/nnG9wcg0icUyyC7H7IUzSj1Pi9TpM
+         UdLg==
+X-Gm-Message-State: AGi0PuYqoJFdn8BQBBrKK9WSiwg1F3kW/eL+dB6nJ+WB3inn7rJRNbRp
+        Wzxy0k8Rv012tuK9KER8skpl4jzNKHJelaIhmMYmkw==
+X-Google-Smtp-Source: APiQypJYXCCd2c3pYbt+kfphPDDGvjl+YT7aIrmnou1JUBqsathcHJRlRjCQ8fMwJjvYV4gCZxU1KJCPXjpaGZcnQi0=
+X-Received: by 2002:a05:620a:1f1:: with SMTP id x17mr13989074qkn.330.1588848626441;
+ Thu, 07 May 2020 03:50:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1588761371-9078-5-git-send-email-amittomer25@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-7-brgl@bgdev.pl>
+ <1588844771.5921.27.camel@mtksdccf07>
+In-Reply-To: <1588844771.5921.27.camel@mtksdccf07>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 7 May 2020 12:50:15 +0200
+Message-ID: <CAMpxmJW4qZ_Wnp_oRa=j=YnvTzVa3HZ13Hgwy71jS6L3Bd3oMQ@mail.gmail.com>
+Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
+To:     "Mark-MC.Lee" <Mark-MC.Lee@mediatek.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/05/2020 11:36, Amit Singh Tomar wrote:
-> After commit 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for
-> Actions Semi S700") following error has been observed while booting
-> Linux on Cubieboard7-lite(based on S700 SoC).
-> 
-> [    0.257415] pinctrl-s700 e01b0000.pinctrl: can't request region for
-> resource [mem 0xe01b0000-0xe01b0fff]
-> [    0.266902] pinctrl-s700: probe of e01b0000.pinctrl failed with error -16
-> 
-> This is due to the fact that memory range for "sps" power domain controller
-> clashes with pinctrl.
-> 
-> This commit fixes it by disabling "sps" node, it is safe as "sps" is not
-> being used at the moment.
-> 
-> Fixes: 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for Actions
-> Semi S700")
+czw., 7 maj 2020 o 11:46 Mark-MC.Lee <Mark-MC.Lee@mediatek.com> napisa=C5=
+=82(a):
+>
+> Hi Bartosz:
+>  I think the naming of this driver and its Kconfig option is too generic
+> that will confuse with current mediatek SoCs eth driver architecture(for
+> all mt7xxx SoCs).
+>   Since mtk_eth_mac.c is not a common MAC part for all mediatek SoC but
+> only a specific eth driver for mt85xx, it will be more reasonable to
+> name it as mt85xx_eth.c and change NET_MEDIATEK_MAC to
+> NET_MEDIATEK_MT85XX. How do you think?
+>
 
-But this is more of a hack than a proper solution, right? Especially
-since you actually need the SPS later on (patch 8/8).
-It's probably good enough to prove that the DMA and MMC parts are
-working, but should not be merged.
+Hi Mark,
 
-Cheers,
-Andre.
+I actually consulted this with MediaTek and the name is their idea.
+Many drivers in drivers/net/ethernet have very vague names. I guess
+this isn't a problem.
 
-> 
-> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
-> ---
->  arch/arm64/boot/dts/actions/s700.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-> index 2006ad5424fa..0397c5dd3dec 100644
-> --- a/arch/arm64/boot/dts/actions/s700.dtsi
-> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
-> @@ -220,6 +220,7 @@
->  			compatible = "actions,s700-sps";
->  			reg = <0x0 0xe01b0100 0x0 0x100>;
->  			#power-domain-cells = <1>;
-> +			status = "disabled";
->  		};
->  
->  		timer: timer@e024c000 {
-> 
-
+Bart
