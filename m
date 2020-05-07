@@ -2,158 +2,87 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042EFC38A24
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEA3C38A24
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEC2F21473
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0BCE20663
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 10:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sW4R2D6N"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MR64uQqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgEGKFG (ORCPT
+        id S1726029AbgEGKN7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 06:05:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725985AbgEGKFG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 06:05:06 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B07B9C061A10;
-        Thu,  7 May 2020 03:05:05 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h9so5645385wrt.0;
-        Thu, 07 May 2020 03:05:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I3XEZEir8mjaU7+45jVwuKvE1Mu0PTN/zTUIAubFKCI=;
-        b=sW4R2D6NmQc/uUkzHBPZ4dq0iO4vvS8WsupKHd3y24pQe39FsaJwi6QzwL7xoDmw2h
-         XBHYToik/4pPr6d6Lp7QWkXuNvqEVqW9pHIfEboU3Hbj2TkLLTi2hLU3dz8qitlVWd+8
-         D/QvAn3tPNshlPruWsw8B37XSzmQHFNLKAV+kH1x0U2ja6VDNaab7EhOxyUiEq7F+DV0
-         hxTgXO98fnmMWf2HeasuQ9AFhPP39Pp8F8woB6fhf4d02R0oqU3TZkPMutliFV6SCPs9
-         jhATiucY8rroK5dkA4OImXdOsJclFSJUWSW4+6YoRZMmwlBpEWk5h23c0z08ru1RGf+G
-         lbMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I3XEZEir8mjaU7+45jVwuKvE1Mu0PTN/zTUIAubFKCI=;
-        b=Gn4dSavsbetfZQOmlHuLoTu3rF3cnOgySgFpPZt347WTifDfbKYlGCDeRY9cZ1Y4iG
-         VBjBjtDnMVSkItJos7Oi6LdoZWG1XFKEpvrHLuXqrbw2Re6U19+WBrRzmIPMXy/sIVCV
-         +gSI2VQD4Ut2HKSHCy2rtOHlEeNBEnAEsmNHXrRb8vIEk3rwLwhBMopdJxTUVNKHw437
-         K8JFRbWyeFztVcW5VSmk1Q4+LvLHOmBQezW0Iu5WXQu4HX4ZkzqzSXSUG02tJCLEzYPF
-         kp1p56xViy4pIt9tpjhvW+tM45RyqKYh6uepLsshedirxQsi/xBa7V1UwxJVOb9g1fKP
-         u1EA==
-X-Gm-Message-State: AGi0PubmUWZxZarzZ5BEx8sh8moi7zQoLA6TqWPfPNR78OQa7NSS6tYF
-        3pecC41yYy4x5mW/mO8WOXc=
-X-Google-Smtp-Source: APiQypL85Rp4PcfWy+llAW584pUmkpqwuyGQDd09cVbrIG6suk/obuRQvQYjV9Xq1ENcCd2K0dt0pg==
-X-Received: by 2002:adf:ed0f:: with SMTP id a15mr1871371wro.320.1588845904337;
-        Thu, 07 May 2020 03:05:04 -0700 (PDT)
-Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
-        by smtp.gmail.com with ESMTPSA id w6sm7594181wrt.39.2020.05.07.03.05.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 03:05:03 -0700 (PDT)
-Date:   Thu, 7 May 2020 12:05:02 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] arm64: tegra: Fix ethernet phy-mode for Jetson Xavier
-Message-ID: <20200507100502.GB2890327@ulmo>
-References: <20200501072756.25348-1-jonathanh@nvidia.com>
- <20200506234218.4E11D2082E@mail.kernel.org>
+        Thu, 7 May 2020 06:13:59 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17306 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgEGKN7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 06:13:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb3df1f0001>; Thu, 07 May 2020 03:12:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 07 May 2020 03:13:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 07 May 2020 03:13:58 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 7 May
+ 2020 10:13:58 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 7 May 2020 10:13:58 +0000
+Received: from moonraker.nvidia.com (Not Verified[10.26.74.75]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5eb3df650003>; Thu, 07 May 2020 03:13:57 -0700
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <linux-tegra@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH 1/2] soc/tegra: pmc: Enable PMIC wake event on Tegra194
+Date:   Thu, 7 May 2020 11:13:48 +0100
+Message-ID: <20200507101349.14118-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
-Content-Disposition: inline
-In-Reply-To: <20200506234218.4E11D2082E@mail.kernel.org>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588846367; bh=t9gTwozOHgg3m7gBcwlx21hE4YpD6u1BNNY3CUGg+k4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=MR64uQqkBuww9e31bIAcVAfkIszmx0unZ6qP2Y4tVT4z5WHIDbubGOcuD0RoXJZGo
+         HUq9pdKyq9PzD3PivQO7EwjccQ8vFNgX9xwXHGKLRkZvZhiPj+WU3AXME7UERozqxt
+         MpbbASiNwXUmVrSjChp1kNtpMAzPXevlgtu2J0NtW24OXz23Yk5e/b8nEmpZFUzMYO
+         +HZN0vxVeet6rjNfxTkHtlp3qJTjgQiUm8K1eey1SWqsyvBhhltykyiryvFqEl16NH
+         ioAzshbYVZc+8O6sDALx/YKPkF0++UCvIhm7Od3GyGYzD4sawWK+OhsBJFdOkrp9+U
+         M+Pf83yOAL7Ig==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The PMIC wake event can be used to bring the system out of suspend based
+on certain events happening on the PMIC (such as an RTC alarm).
 
---f2QGlHpHGjS2mn6Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ drivers/soc/tegra/pmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Wed, May 06, 2020 at 11:42:17PM +0000, Sasha Levin wrote:
-> Hi
->=20
-> [This is an automated email]
->=20
-> This commit has been processed because it contains a -stable tag.
-> The stable tag indicates that it's relevant for the following trees: all
->=20
-> The bot has tested the following trees: v5.6.8, v5.4.36, v4.19.119, v4.14=
-=2E177, v4.9.220, v4.4.220.
->=20
-> v5.6.8: Build OK!
-> v5.4.36: Build OK!
-> v4.19.119: Build OK!
-> v4.14.177: Failed to apply! Possible dependencies:
->     5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
->     b8656c673a6b ("arm64: tegra: Add device tree for the Tegra194 P2972-0=
-000 board")
->     f69ce393ec48 ("arm64: tegra: Add GPIO controller on Tegra194")
->     f89b58ce71a9 ("arm64: tegra: Add ethernet controller on Tegra194")
->=20
-> v4.9.220: Failed to apply! Possible dependencies:
->     5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
->     99575bceebd6 ("arm64: tegra: Add NVIDIA P2771 board support")
->     b8656c673a6b ("arm64: tegra: Add device tree for the Tegra194 P2972-0=
-000 board")
->     f69ce393ec48 ("arm64: tegra: Add GPIO controller on Tegra194")
->     f89b58ce71a9 ("arm64: tegra: Add ethernet controller on Tegra194")
->=20
-> v4.4.220: Failed to apply! Possible dependencies:
->     0f279ebdf3ce ("arm64: tegra: Add NVIDIA Tegra132 Norrin support")
->     2cc85bd90337 ("arm64: tegra: Add NVIDIA P2571 board support")
->     34b4f6d0599e ("arm64: tegra: Add Tegra132 support")
->     5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
->     5d17ba6e638e ("arm64: tegra: Add support for Google Pixel C")
->     63023e95bec0 ("arm64: tegra: Add NVIDIA P2371 board support")
->     99575bceebd6 ("arm64: tegra: Add NVIDIA P2771 board support")
->     b8656c673a6b ("arm64: tegra: Add device tree for the Tegra194 P2972-0=
-000 board")
->     f69ce393ec48 ("arm64: tegra: Add GPIO controller on Tegra194")
->     f89b58ce71a9 ("arm64: tegra: Add ethernet controller on Tegra194")
->=20
->=20
-> NOTE: The patch will not be queued to stable trees until it is upstream.
->=20
-> How should we proceed with this patch?
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 72cfda7305d5..8169737c3252 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -3326,6 +3326,7 @@ static const char * const tegra194_reset_sources[] = {
+ };
+ 
+ static const struct tegra_wake_event tegra194_wake_events[] = {
++	TEGRA_WAKE_IRQ("pmu", 24, 209),
+ 	TEGRA_WAKE_GPIO("power", 29, 1, TEGRA194_AON_GPIO(EE, 4)),
+ 	TEGRA_WAKE_IRQ("rtc", 73, 10),
+ };
+-- 
+2.17.1
 
-Tegra194 support was merged into v4.17, so it doesn't make backport this
-to any stable kernels prior to that.
-
-Thierry
-
---f2QGlHpHGjS2mn6Y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6z3U4ACgkQ3SOs138+
-s6ERdQ/+M8e+Pq//sHoBLsVfspJENeX9JUSLVqTVsXEnHTxnv0Ri/qKuRYOzWcgU
-zktBmBWHxJt8UPlgxRqL9rcRHBf2mXRu7QsRSvBozLOuszdbp2pDq8dKGO1TgBKm
-ZQJekFzhEeWm8JAQiDlHjMfqwtPNXhRefl+gyRvWjOsTlROipbcm7Qr/RmztNmWJ
-73p4lkUcZ6BuRQoZgn9JDIBhDK3v02DwlJHAUjdYjRt6n4Wh39D4bllyi0JAw6FG
-4zV9fLL+PY9ie6ZtRiA3ACmjc9I28UiCMs4/VXnXVxGK+L9UjjrKvONaZtQ+aPDS
-wP9P9jihX6wcYOEPSoIvNBw4ne1eyWIOCdDjM0PjtYVov73xoseYv1OQGPfFdR6T
-77SWjnbppJNjA1IuV1adwWBJrY8w8jxdXLTXNehURSAc+ve6WOQ725kxIRZ2HAeL
-AVZb7nUI/+TiAZVYP4dntzk6rzZsQx4JhyKgYF9yVQ1NANw6QAog+RIc+4KOW+Ee
-0bLJeNRNoCvAlJdwaynn6gVXNmgF3jQeMHoLpVWPwDu2ARN1vhcwYmoVC4xtdPaY
-V0Eb1gORelEyYb1HwVN446IjAse8ex9wvAMPKu59l7PrbonEO8ismM2tx+8/7bkJ
-9ChG18/p+Ln1yUybHvHR+FGTYdBJriPZ33rcLZ1wSkzmbnFAcA4=
-=+6E+
------END PGP SIGNATURE-----
-
---f2QGlHpHGjS2mn6Y--
