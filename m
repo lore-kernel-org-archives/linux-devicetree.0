@@ -2,108 +2,103 @@ Return-Path: <SRS0=rqTW=6V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3064AC54E49
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 19:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0314FC38A24
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 19:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 174FA208D6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 19:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CACAD24954
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 May 2020 19:23:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLie9QZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgEGTNt (ORCPT
+        id S1727889AbgEGTXi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 15:13:49 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38258 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgEGTNt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 15:13:49 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 590F2803087B;
-        Thu,  7 May 2020 19:13:40 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7gxrh3JYj9Az; Thu,  7 May 2020 22:13:38 +0300 (MSK)
-Date:   Thu, 7 May 2020 22:13:37 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Zhou Yanjie <zhouyanjie@zoho.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 11/20] mips: MAAR: Use more precise address mask
-Message-ID: <20200507191337.la6z476myszqethj@mobilestation>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-12-Sergey.Semin@baikalelectronics.ru>
- <20200507110951.GD11616@alpha.franken.de>
+        Thu, 7 May 2020 15:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726863AbgEGTXh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 15:23:37 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4075C05BD43;
+        Thu,  7 May 2020 12:23:37 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id f6so3109083pgm.1;
+        Thu, 07 May 2020 12:23:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Rg8nxTro0ISSd5M3WvCA/ngLZr53aAa4/KH8D93b/O4=;
+        b=RLie9QZOhVw1NcAtFZTDYovRs49qmnHhtfylH7BwGQSFFCJd2kZUiX1Kr1psd7a5PR
+         l59oxsPMPt5FKfqUCsENGVbzVgsoJ2OYMv0drdgk5KVQviEsvp/R4SBfVCsA4u5WttpA
+         mm2wzXpRGW0nJWd0t8O+lgZcNzOhqyURIYlsPR/ZQZzETz79CInBAzOrvlTxEH1vmLwA
+         3YIsl4Z1uru+8hMuLU8fOwxQmLXh3CPruXdHgpJQhHCzAvHFKKZM/YCkZPUaiyMaRB8F
+         0b4FPrqZIS5pVqzwaexGir7wpP4aVnjee7nPRm1yLuQgIHHqbAsrumvdGVPh4R22BSso
+         vpqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Rg8nxTro0ISSd5M3WvCA/ngLZr53aAa4/KH8D93b/O4=;
+        b=I9UoHTVe43KXdISk4AQqsRgoR7GZMiw2QBnYLnlVuuQn4EXf9MUbnM9SRxBVVG0+5j
+         xGORx0/TcWDHllZQ4D6ABDYY+SnfCnQWAuTnfLxVcFuCNLYREjaZ+M08L2BxAqnJX4/Y
+         Tc4NrDWX+zgpQ1zhZfOedPwW2B04VEY+A523g9gtfNzZ4xQnk9KigTQekYal0/HNw+lv
+         +QpC2k2UOBkkDkBU4fMkx0JG1jK9sfrM7ZtfqQ6xwF0UkKalJjGrnXfe65qmzgq7oudz
+         qu5VBwpA0NH5S2nsdGzntiDTdCw8kJtqzgyDKt+QJsWI6pwpg9qTjZWycdex+RWeH0Np
+         za9w==
+X-Gm-Message-State: AGi0PuYjeYZmTE8uDGGNYIyzxcbG7FRY+dDfMPRG9GyDWf358LgacTWa
+        Q16ej6YAzSeYZwCRySZs9r0=
+X-Google-Smtp-Source: APiQypLGGInIi5niVq/AuZHDEALyOPU+N0V7vmKLHNfsYnKpiZ6g2Bqhtvw0Yo1/qPM1pWj8QAM56Q==
+X-Received: by 2002:aa7:8a92:: with SMTP id a18mr15680900pfc.0.1588879417137;
+        Thu, 07 May 2020 12:23:37 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id x7sm5717399pfj.122.2020.05.07.12.23.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 12:23:36 -0700 (PDT)
+Date:   Thu, 7 May 2020 12:23:34 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Input: add driver for power button on Dell Wyse 3020
+Message-ID: <20200507192334.GJ89269@dtor-ws>
+References: <20200503201237.413864-1-lkundrak@v3.sk>
+ <20200503201237.413864-3-lkundrak@v3.sk>
+ <20200507174644.GF1216@bug>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507110951.GD11616@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200507174644.GF1216@bug>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:09:51PM +0200, Thomas Bogendoerfer wrote:
-> On Wed, May 06, 2020 at 08:42:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Indeed according to the P5600/P6000 manual the MAAR pair register
-> > address field either takes [12:31] bits for 32-bits non-XPA systems
-> > and [12:35] otherwise. In any case the current address mask is just
-> > wrong for 64-bit and 32-bits XPA chips. So lets extend it to 39-bits
-> > value. This shall cover the 64-bits architecture and systems with XPA
-> > enabled, and won't cause any problem for non-XPA 32-bit systems, since
-> > the value will be just truncated when written to the 32-bits register.
+On Thu, May 07, 2020 at 07:46:44PM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> according to MIPS32 Priveleged Resoure Architecture Rev. 6.02
-> ADDR spans from bit 12 to bit 55. So your patch fits only for P5600.
-
-> Does the wider mask cause any problems ?
-
-No, it won't. Bits written to the [40:62] range will be just ignored,
-while reading from there should return zeros. Setting GENMASK_ULL(55, 12)
-would also work. Though this solution is a bit workarounding because
-MIPS_MAAR_ADDR wouldn't reflect the real mask of the ADDR field. Something
-like the next macro would work better:
-
-+#define MIPS_MAAR_ADDR							\
-+({									\
-+	u64 __mask;							\
-+									\
-+	if (cpu_has_lpa && read_c0_pagegrain() & PG_ELPA) {		\
-+		__mask = GENMASK_ULL(55, 12);				\
-+	else								\
-+		__mask = GENMASK_ULL(31, 12);				\
-+									\
-+	__mask;								\
-+})
-
-What do you think? What is better: the macro above or setting
-GENMASK_ULL(55, 12)?
-
-BTW I've just figured out, that since XPA is currently only supported by
-kernels with CPU_MIPS32x config enabled, then only MIPS32 may have extended
-physical addressing of 2^60 bytes if CONFIG_XPA is enabled. Generic MIPS64
-doesn't support the extended phys addressing so only 2^36 bytes are available
-on such platforms. (Loongson64 doesn't count, the platform code sets the
-PG_ELPA bit manually in kernel-entry-init.h)
-
--Sergey
-
+> > +struct ec_input_response {
+> > +	u8 reserved;
+> > +	u8 msg_counter:2;
+> > +	u8 count:2;
+> > +	u8 type:4;
+> > +	u8 data[3];
+> > +} __packed;
 > 
-> Thomas.
+
+> Bitfields, and relying on them being in the right place for
+> communication with hardware.
 > 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+> We don't usually do that, and there may be reasons why we don't. I'm
+> pretty sure it breaks on big endian... and Im not sure if there's
+> something else.
+
+Usually it is endianness first and foremost, but this hardware is not
+going to be used anywhere else...
+
+-- 
+Dmitry
