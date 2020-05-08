@@ -2,66 +2,66 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AA6C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 12:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E7EC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 12:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 532422054F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 12:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE82921473
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 12:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941213;
-	bh=ejhiM8NHJMuTZXdqdOyX+hekGsnaDmTfDNSbpquUrn4=;
+	s=default; t=1588941331;
+	bh=pALps1Jxm/+WOhQxg8hNkKb98br61bdG69sV4vDTzzc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=lFcx0PzvpVFURMWd2jbl9ZAqNEP2FGUlB1rbzY3MmpSLa0akUaQXG8aXXf6nHBitF
-	 YKWQf1Z6Q+dhntOlYibZXjuX/VH5Ni6DSdqIoYiT2cG1vs3Yq+60x4uEJxEqo/FHY9
-	 5fkEx2jwbqhqHHdRilVd+a2y1JvXNIXCt6H4OGp8=
+	b=Z1lHaxutnwgthRlBZkikdainj4S4xr1E5fq5wPSMOLwXJJ4BpomKUG0U530SJgwrn
+	 baLA2V2F21P16QxWgCgFyjtaBU5i6hxGj1CTh9l/T92g4JUxnb4ECjUJt9hcgwkTFu
+	 QawaQbJb8tcJlWmRXAnRtldKN/iJOr7VE1Z1xMz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgEHMdc (ORCPT
+        id S1726770AbgEHMfb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 08:33:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57938 "EHLO
+        Fri, 8 May 2020 08:35:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726616AbgEHMdc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 08:33:32 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D82FCC05BD43;
-        Fri,  8 May 2020 05:33:31 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id x73so1283125lfa.2;
-        Fri, 08 May 2020 05:33:31 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1726616AbgEHMfa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 08:35:30 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE8AC05BD43;
+        Fri,  8 May 2020 05:35:30 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id o14so429926ljp.4;
+        Fri, 08 May 2020 05:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=CoSvhOk2TKxABz0OmqmQcHc5OuF6+RsHZpa58OAH/34=;
-        b=dD2k5/Ek6KnRUsU+D+ixqMe1EQuf5h0tF+3dioSM7wkRSEjx+4vp/B1zd5bHXluPQd
-         bsYjRQQt8xrsPSVRb+8cH+jbwv2KBo6yFu4enTdoU0gazvbJV7eFrqAIFKIgef7elGrq
-         7Rc2tBiTQegQpq3p25FaHzFU/+rvrfus8tKmmnuDi9HW8pc7s3tclNN/ycGTF5CmOUh3
-         6imGTdiQsq9epMc/lDOLrdcSBeJjsuQSL2smwb/AyVR6J5n7fIytsWTqR+gU1e9KGGV3
-         EBkOaw1pB5i4hcKoN0ow0YFqbsWGULcJp2S61TPEdv6/HnKpBO6SG29KXeGGc/VfB9er
-         pwRg==
+        bh=71j6PMRO3vVpRcVHQ+g+fJbWnjsKtLz5FDZRpYbeeK8=;
+        b=tUWQeYARS4BEfMt1TTgN71TJ1Ksnk5T7uMRPVcYKyhA9yTWNuzH14mt/1ju4/2WgLS
+         b1oGaW517E8BRXHtASVU3CtT4eIw9x7lG5x9+jaSniyfUMtMhv2iocA6ho2nRXTfDqZo
+         Y5Nbb4/q6TBxX4ezIB86poffH9bCEhp3VvgrrwGP/gn9LFNx2jVuQoLfvjOSpWtfUJmJ
+         oup+kMx5pDf0Y86dglBhOEXzfEDaoCGCj3OttCjet8wLmcRZwLt1YYgbGzhxN0OHIluh
+         BkdlcVZpYsUb1Esyuo+pTvjfEMlURRsR1g9GySepXqPoWUE8QL7hhOZNc5lgXvtQkz3g
+         j0EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
          :date:message-id:mime-version;
-        bh=CoSvhOk2TKxABz0OmqmQcHc5OuF6+RsHZpa58OAH/34=;
-        b=GX6gcFfyyjeyTzWyPzquZngGwahEvbfTV9mmHaWJCnq6xcy6Jq/K3/GYnZD59Kld3o
-         NHhH2hoU14+GaDU3BaHFzdy5iOGB4UTovdxXM3zBYdRoak6SZldBoncMjJl/8K7n8K8b
-         XKJADILlU1SAHUOhSFZ7rSnjylYQI4olU8RwDtL3OwH0UPadCRbJ4ogj1DzGqY/IQ9Ia
-         dw38Jm1hLGyY9phX2YVlr6Adfh4jc1WSqSpWGIjI6gi/gjOf9+T++Xt7vbK+6H7rfnS1
-         gXrtuSDAmKfu4buNygW9/7BkwrE76chUGR73C9CmybQiDJYGHfZj7XqpVDO1aNfiZr3Q
-         Lqlg==
-X-Gm-Message-State: AOAM532k4hbCYw0tkIzltV/vIZq3Oo4xUZ8xrj9pHyzhvI+2FCqoI4Ab
-        RIt5/OjfFn+9wG6EEc2OuX2h3+x3
-X-Google-Smtp-Source: ABdhPJzvr4X/AYv0DFeKOuTzzREeoVyCg2dgEh0XOr/ZLDML8Syvgltrw72JoJfWZFFQnW4pDJcuEg==
-X-Received: by 2002:ac2:57cd:: with SMTP id k13mr1755034lfo.104.1588941209929;
-        Fri, 08 May 2020 05:33:29 -0700 (PDT)
+        bh=71j6PMRO3vVpRcVHQ+g+fJbWnjsKtLz5FDZRpYbeeK8=;
+        b=mS8D8FKGfQmZGfsnmpU2leN3jO/KEMz+dGcEWlMv7CgvBAx/3govULClb6n1/3urbs
+         xUJJ/ZMuXuu612K8p30Q1AGSOj9khDFoAMQiZJF+yeuiX4kS4PmNNk4rnu9bm2oPvV8Z
+         SHtDjW1kBMZLb/stPtrwB3Afp40/5SOwNAkjQyz0qkHxGKWpfESZ2tZgFe7nJecBqeAO
+         aJ3NcSnaH3k1cl0F6Txzq0nLGkU/ScSnBM1ml0TkMYkaExyx1kYunMZjbmlD6PVyjMJd
+         98cIflgUwiA4QK/e8SoQAVouWn0oU+r+zU976vIazcv8vyTug67rkkXBYDijVH6N1aO5
+         1suQ==
+X-Gm-Message-State: AOAM5313GAk8ZE6ZgHLU846zu5G6uvUyqaSoPRBJlo5GWw8oARpQgjO4
+        sZ0q8PmVBYTsL66iUK7m1vJsWSVl+tA=
+X-Google-Smtp-Source: ABdhPJxsv7NTezQmck9qlgIe5r3q6ecB/xo+T0lF2eq4Eu2MIUjdpMOJFVlge4LwafjYuN2i6rQIiA==
+X-Received: by 2002:a2e:9258:: with SMTP id v24mr1557337ljg.109.1588941328356;
+        Fri, 08 May 2020 05:35:28 -0700 (PDT)
 Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id u9sm1098992lfl.74.2020.05.08.05.33.28
+        by smtp.gmail.com with ESMTPSA id s7sm1107753lfb.40.2020.05.08.05.35.27
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 May 2020 05:33:29 -0700 (PDT)
+        Fri, 08 May 2020 05:35:27 -0700 (PDT)
 From:   Felipe Balbi <balbi@kernel.org>
 To:     Jun Li <lijun.kernel@gmail.com>,
         John Stultz <john.stultz@linaro.org>
@@ -81,10 +81,10 @@ Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
         "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>
 Subject: Re: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by device controller
-In-Reply-To: <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com>
-References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com> <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com> <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com>
-Date:   Fri, 08 May 2020 15:33:24 +0300
-Message-ID: <87h7wqmwrv.fsf@kernel.org>
+In-Reply-To: <CAKgpwJVU9m6G8PRdray2fGCp_peOU9C-ZAVKTk7pmSdq6z4NiA@mail.gmail.com>
+References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com> <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com> <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com> <CALAqxLVXauXP0r4Hv2Axa4PNf_F9wp644peYV06bdsPtMKGmLA@mail.gmail.com> <CAKgpwJU7VDx90STE7bhx9VZ5p1jtqCyyLavmhXfpaicyDAYt_g@mail.gmail.com> <CAKgpwJVU9m6G8PRdray2fGCp_peOU9C-ZAVKTk7pmSdq6z4NiA@mail.gmail.com>
+Date:   Fri, 08 May 2020 15:35:23 +0300
+Message-ID: <87eerumwok.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -101,103 +101,90 @@ Content-Transfer-Encoding: quoted-printable
 Hi,
 
 Jun Li <lijun.kernel@gmail.com> writes:
-> John Stultz <john.stultz@linaro.org> =E4=BA=8E2019=E5=B9=B410=E6=9C=8830=
-=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=885:18=E5=86=99=E9=81=93=EF=BC=
-=9A
+> Jun Li <lijun.kernel@gmail.com> =E4=BA=8E2020=E5=B9=B45=E6=9C=887=E6=97=
+=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=8811:08=E5=86=99=E9=81=93=EF=BC=9A
 >>
->> On Tue, Oct 29, 2019 at 2:11 AM Felipe Balbi <balbi@kernel.org> wrote:
->> > John Stultz <john.stultz@linaro.org> writes:
->> > > From: Yu Chen <chenyu56@huawei.com>
->> > >
->> > > It needs more time for the device controller to clear the CmdAct of
->> > > DEPCMD on Hisilicon Kirin Soc.
+>> John Stultz <john.stultz@linaro.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=887=
+=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=886:27=E5=86=99=E9=81=93=EF=BC=
+=9A
 >> >
->> > Why does it need more time? Why is it so that no other platform needs
->> > more time, only this one? And which command, specifically, causes
->> > problem?
+>> > On Wed, May 6, 2020 at 2:00 AM Jun Li <lijun.kernel@gmail.com> wrote:
+>> > > John Stultz <john.stultz@linaro.org> =E4=BA=8E2019=E5=B9=B410=E6=9C=
+=8830=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=885:18=E5=86=99=E9=81=93=
+=EF=BC=9A
+>> > > > On Tue, Oct 29, 2019 at 2:11 AM Felipe Balbi <balbi@kernel.org> wr=
+ote:
+>> > > > > John Stultz <john.stultz@linaro.org> writes:
+>> > > > > > From: Yu Chen <chenyu56@huawei.com>
+>> > > > > >
+>> > > > > > It needs more time for the device controller to clear the CmdA=
+ct of
+>> > > > > > DEPCMD on Hisilicon Kirin Soc.
+>> > > > >
+>> > > > > Why does it need more time? Why is it so that no other platform =
+needs
+>> > > > > more time, only this one? And which command, specifically, causes
+>> > > > > problem?
+>> > >
+>> > > Sorry for my back to this so late.
+>> > >
+>> > > This change is required on my dwc3 based HW too, I gave a check
+>> > > and the reason is suspend_clk is used in case the PIPE phy is at P3,
+>> > > this slow clock makes my EP command below timeout.
+>> > >
+>> > > dwc3_gadget_ep_cmd: ep0out: cmd 'Set Endpoint Configuration' [401]
+>> > > params 00001000 00000500 00000000 --> status: Timed Out
+>> > >
+>> > > Success case takes about 400us to complete, see below trace(44.286278
+>> > > - 44.285897 =3D 0.000381):
+>> > >
+>> > > configfs_acm.sh-822   [000] d..1    44.285896: dwc3_writel: addr
+>> > > 000000006d59aae1 value 00000401
+>> > > configfs_acm.sh-822   [000] d..1    44.285897: dwc3_readl: addr
+>> > > 000000006d59aae1 value 00000401
+>> > > ... ...
+>> > > configfs_acm.sh-822   [000] d..1    44.286278: dwc3_readl: addr
+>> > > 000000006d59aae1 value 00000001
+>> > > configfs_acm.sh-822   [000] d..1    44.286279: dwc3_gadget_ep_cmd:
+>> > > ep0out: cmd 'Set Endpoint Configuration' [401] params 00001000
+>> > > 00000500 00000000 --> status: Successful
+>> > >
+>> > > Hi John,
+>> > >
+>> > > Do you still have this problem? if yes, What's the value of
+>> > > USBLNKST[21:18] when the timeout happens?
+>> >
+>> > Sorry. As I mentioned, I was working to upstream a patchset that I
+>> > hadn't created, so the context I had was limited. As I couldn't
+>> > reproduce an issue without the change on the device I had, I figured
+>> > it would be best to drop it.
+>>
+>> That was fine.
+>> >
+>> > However, as you have some analysis and rational for why such a change
+>> > would be needed, I don't have an objection to it. Do you want to
+>> > resubmit the patch with your explanation and detailed log above in the
+>> > commit message?
+>>
+>> Sure, I will resubmit the patch with my explanation added in commit mess=
+age.
 >
-> Sorry for my back to this so late.
+> Hi John
 >
-> This change is required on my dwc3 based HW too, I gave a check
-> and the reason is suspend_clk is used in case the PIPE phy is at P3,
-> this slow clock makes my EP command below timeout.
+> A second think of this, I feel use readl_poll_timeout_atomic() to wait by=
+ time
+> is more proper here, so I create a new patch to address this also other
+> registers polling, see below patch with you CCed:
+>
+> https://patchwork.kernel.org/patch/11536081/
 
-The phy needs to woken up before the command is triggered. Currently we
-only wake up the HS PHY. Does it help you if we wake up the SS phy as
-well?
+Fixing a bug has nothing to do with using
+readl_poll_timeout_atomic(). Please don't mix things as it just makes
+review time consuming.
 
-Something like below ought to do it:
+Let's find out what the bug is all about, only then should we consider
+moving over to readl_poll_timeout_atomic().
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index a0555252dee0..ee46c2dacaeb 100644
-=2D-- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -274,7 +274,8 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsign=
-ed cmd,
- 	const struct usb_endpoint_descriptor *desc =3D dep->endpoint.desc;
- 	struct dwc3		*dwc =3D dep->dwc;
- 	u32			timeout =3D 1000;
-=2D	u32			saved_config =3D 0;
-+	u32			saved_hs_config =3D 0;
-+	u32			saved_ss_config =3D 0;
- 	u32			reg;
-=20
- 	int			cmd_status =3D 0;
-@@ -293,19 +294,28 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsi=
-gned cmd,
- 	if (dwc->gadget.speed <=3D USB_SPEED_HIGH) {
- 		reg =3D dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
- 		if (unlikely(reg & DWC3_GUSB2PHYCFG_SUSPHY)) {
-=2D			saved_config |=3D DWC3_GUSB2PHYCFG_SUSPHY;
-+			saved_hs_config |=3D DWC3_GUSB2PHYCFG_SUSPHY;
- 			reg &=3D ~DWC3_GUSB2PHYCFG_SUSPHY;
- 		}
-=20
- 		if (reg & DWC3_GUSB2PHYCFG_ENBLSLPM) {
-=2D			saved_config |=3D DWC3_GUSB2PHYCFG_ENBLSLPM;
-+			saved_hs_config |=3D DWC3_GUSB2PHYCFG_ENBLSLPM;
- 			reg &=3D ~DWC3_GUSB2PHYCFG_ENBLSLPM;
- 		}
-=20
-=2D		if (saved_config)
-+		if (saved_hs_config)
- 			dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
- 	}
-=20
-+	reg =3D dwc3_readl(dwc->regs, DWC3_GUSB3PIPECTL(0));
-+	if (unlikely(reg & DWC3_GUSB3PIPECTL_SUSPHY)) {
-+		saved_ss_config |=3D DWC3_GUSB3PIPECTL_SUSPHY;
-+		reg &=3D ~DWC3_GUSB3PIPECTL_SUSPHY;
-+	}
-+
-+	if (saved_ss_config)
-+		dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
-+
- 	if (DWC3_DEPCMD_CMD(cmd) =3D=3D DWC3_DEPCMD_STARTTRANSFER) {
- 		int		needs_wakeup;
-=20
-@@ -397,12 +407,18 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsi=
-gned cmd,
- 			dwc3_gadget_ep_get_transfer_index(dep);
- 	}
-=20
-=2D	if (saved_config) {
-+	if (saved_hs_config) {
- 		reg =3D dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
-=2D		reg |=3D saved_config;
-+		reg |=3D saved_hs_config;
- 		dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
- 	}
-=20
-+	if (saved_ss_config) {
-+		reg =3D dwc3_readl(dwc->regs, DWC3_GUSB3PIPECTL(0));
-+		reg |=3D saved_ss_config;
-+		dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
-+	}
-+
- 	return ret;
- }
-=20
 =2D-=20
 balbi
 
@@ -206,18 +193,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl61UZQACgkQzL64meEa
-mQYYqA//Z42qLNqOG3w2DrxTaXdF//8YPssyoW2RRP5UxCzi5dMdj3f17kk5HFet
-RAC4SiFXowUV+MpoDUfKzeu72KPWPSfXYEA1AnSuZ8X4U5yfETQgJsO7dbAO+Y5B
-AmgwfNde96HbOgNWywrVoX5t5ipKZwiHubsqVFeVG8r/PMwd0dT5DxPlGzoRa0JF
-fXDbbBlujt4hvCZR3LZf2Vn3i5P2BcbtYgZlCTmqUc1xV9f2lJw3JHlkM2t0dASF
-h0cLMps3GfwuhpaBZ0se/s4HI6giSYYqPx7nFy42/YdX7fOB/+OduzB2xeJ3vG+f
-ZGMv2K7i6tfVYn+3NA9OmulV1ZQiIUN4M3KdQggf0Mga+1CxsxeWLVYzTxrVY3bI
-koGBm2I5FYk3h079D1LyduZqfFfk6h0CexDKvncDiqnVm8RkZUxPQI5Iaq4l5cE1
-YRyvREYkdD9tz5tcjo0Y1C+Fex6R7Mw4cHSHIc44wmwLcJ0lP/T0kKFbA1axw/+P
-72Jw0/w7tjNyGteE8FL03/0gj9s7iVbP9sD6G4rDTD7QEURXbp2HkvETmqPvXchv
-EeCtW38EhL2MuTzRRtHoetRn7ldi7iqqsthLanqGHJoTY/Q/Qe5mu9ED4bI8TLZR
-OO7k9SjUAE7ur6mBp4mVqMYoLWf9kpzLwAUsJd0jfFSMax7nJoI=
-=yq+4
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl61UgsACgkQzL64meEa
+mQbuBA//dEmweQ1Dhcmw8Sut1NUrlcQMQrzZdVo9W36wzV03PjQ8ycIqdiuQ8e+i
+ZzlTZJkLVkHTICp7ksAcTwma7rJummOyXjuI9niBE7B/zkRB13bYZh7kQ2NgNoPj
++vDa5e050OsrpWyzIP1k64jAtz7KReUMRuIQtMxl1xYDuVxjWjXe91Z71R4BDIza
+QQET0+jPqyinzXEhsC1Gh9yuoyyzfzU+XQjWoa5m70S9RFvH3FPv0Y8LXBWCb9lN
+7++e7RUKzlOlGu973kXWgH8sN9dxxFjxZQnY3wELfirDDN0+9/bpJfFg0lYW9mHH
+UNtPcYD7TPXGfzz2wxM0MO3AOi17HXJ6mdG2DlDcJ9Desw1wn2GXt46mJoRODG3o
+7qnrkp7zBs59MnTomBmgAoF3L2eylMCDCKmn9feaJy85FJDB3a0b5hgUpcegwbF6
+JG9iff08jmIrfawITlFsbUVhA2hLL9YYj903JxoU7NEyoqdwXZzjY7Jd4Jz3QW4N
+9myaG5DiJ+zFglnj83awlH1rBAoPwfKZ1Ojv57zGBDHWpjKT+3LoJ/gtE6eEv0Kk
+Vzb9Na1D3dCBD0x4SVdiYAf9yocFsQqkjZnjlxu4X8LzZC7eYM7aV9vS7+FpTuxe
+58u16XtqKkFuq5EYWcNIZVlJYPyo6KOlMatddTVO+cvzkLDrEsc=
+=0L/w
 -----END PGP SIGNATURE-----
 --=-=-=--
