@@ -2,181 +2,114 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47228C54E49
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD6BC47255
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A97D218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D250E21974
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gh80ZyF5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="snHrOFI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgEHSZg (ORCPT
+        id S1727117AbgEHS1X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 14:25:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56640 "EHLO
+        Fri, 8 May 2020 14:27:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726885AbgEHSZg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 14:25:36 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761BDC05BD09
-        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 11:25:35 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t40so4649405pjb.3
-        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 11:25:35 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1726756AbgEHS1W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 14:27:22 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB32C05BD09
+        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 11:27:20 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id 7so5525711pjo.0
+        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 11:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bqkEG1gBbegEHG+vcv1JCfT8GVbBD+E8PBJdI8FAn6E=;
-        b=gh80ZyF5iS1qUz+dRJn6n19DWyvc4DsN2amHWcYu50NgDPFmz5DbO5VaH42wEGqp6X
-         lH/oA7JwYJJ8Dd6M8f1tMqkXaDEzuhYR1q2cx1HBq1HQq49vhE1GwApDKNJQNoNqJ+bb
-         yD0syRG5ERkk4NWakIC+kMmLdhO3nj+aEbBfw=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ga/qNfK8qaYIuHphyvcsQekOQ1uu5eR07ZODaD6ZS2c=;
+        b=snHrOFI3dZfBSVsw8yrMRHUktU3g+703SMyWNlei8TVfJqoiTewyN4bHs7Y7eRI3/e
+         0MLcZNDTfHVR6J3gc7VTj47Y4xa4XDoIR/oQ056edpED21jcYAJDK4A/gxOwXs4hhSgY
+         0DVK0hEJKGBXyzhaTsl+4CgOA97Z2a67JHy0Oy+l0w11QSyTPQ05hG7EduNjpRVnGFlZ
+         0mIwqrSrzFto6eOKXsrT/XUb0DFo5QO2vsUMWxHizrOh4TLvkK9zfv8orTe70/MfImHI
+         yoPH6FwHGILyo/ggT4Gp0gtcqCd9IGxdz09MHuGe6Itm3XPaxa1K2tLESAz737Mycx8p
+         Ijxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bqkEG1gBbegEHG+vcv1JCfT8GVbBD+E8PBJdI8FAn6E=;
-        b=gO1Eq0uAAGWJ7AP338/rwMLne0BKa6EIvhttZpJbpAvJulCvIyVMCzU4e/3UBBExdX
-         66jf/P3waIOsQwvXfjVHeeqVpRYBcLWZ7Pxoggky7B7bqx0mWCh4WpHvgXWSIS+/IKVk
-         /w46Gqh/bSFWsjxlEzSVH7sbzvGav8LF+zIGbI4vE3yp+TkeQOe6tbM1B9n6CHk+V3zY
-         d1DOiB4C+p+knN+1MeIXyQiG99AMjyFPXA9V3hRB6dOntvcPV8qDPo85gEmrI9b9DEWV
-         BEcfYyPHFUntDKkoArv0BafF7A9WW+sIPJuJYRzFVs6GROwkdeOzLOo8gAXpb7HXlvzb
-         IwbQ==
-X-Gm-Message-State: AGi0PubqjjK5KyNEBjUgCnEUBp9hlDMeYv0ObQ89EU+BLANQrDmoHQ6R
-        6M03t/S04TXVDZbyUFGVddw3Ow==
-X-Google-Smtp-Source: APiQypJ0xrtY/dohI6/d6DP6TfAzvGejQDeWeS22AEZXfFO4twLKGk586Hs7RZ8ERNOpFBcoqmdlMg==
-X-Received: by 2002:a17:90a:840e:: with SMTP id j14mr7609836pjn.85.1588962334905;
-        Fri, 08 May 2020 11:25:34 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id e11sm1816073pgs.41.2020.05.08.11.25.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 11:25:33 -0700 (PDT)
-Date:   Fri, 8 May 2020 11:25:32 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org, georgi.djakov@linaro.org
-Subject: Re: [PATCH V5 4/7] spi: spi-geni-qcom: Add interconnect support
-Message-ID: <20200508182532.GD4525@google.com>
-References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
- <1588919619-21355-5-git-send-email-akashast@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1588919619-21355-5-git-send-email-akashast@codeaurora.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ga/qNfK8qaYIuHphyvcsQekOQ1uu5eR07ZODaD6ZS2c=;
+        b=T6603sill/N7p+ge42O1U4n8GDi6BCAbhnPdkuflp17TYxGFl45gFN28NatvFq1YME
+         iBhQ3PB8DFvObgbiaATjjM7fzxrvUJstOBZO68YzjtOSobINDa6vGJbfzHSY9CFCaOUN
+         Ai5XshDG0Fic/tRywKBLefqjHu9kWq/IrMmRwVn2gIkEs9Qb/bAMfu6qBwTx2l30kooR
+         DuLxY/NphTc/sWzI4NAoL3sgDmZCF8AXt2e/0mNSKb/1cnvjb2vVZfw+8q3aGfy8TBnJ
+         5iibqDm6B0oVwsklgMjE3OuP/jC4Tv+dlw3j5CcBT8LDsYb8u2LHWmblUjO21rvxuxpA
+         PBjQ==
+X-Gm-Message-State: AGi0PuYDCxeZCSviwfEnaOEDgfRMkDIGSI8sHtBuuWpj3Nq/9081xSuB
+        zh2pY1AG03wPmWMDFzh3GO5x
+X-Google-Smtp-Source: APiQypKRBb0cUNG9crvGty4AlyLXkEh/rGAGhwEozwfRy3MUySHBpJn78TRWQL4fcOsI5c1tdcGLTw==
+X-Received: by 2002:a17:90a:8a09:: with SMTP id w9mr7085692pjn.95.1588962439483;
+        Fri, 08 May 2020 11:27:19 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:9e:e39a:a052:f8c0:a37b:3255])
+        by smtp.gmail.com with ESMTPSA id y24sm2248379pfn.211.2020.05.08.11.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 11:27:18 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     jassisinghbrar@gmail.com, robh+dt@kernel.org
+Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/3] Add Qualcomm IPCC driver support
+Date:   Fri,  8 May 2020 23:57:00 +0530
+Message-Id: <20200508182703.29021-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:03:36PM +0530, Akash Asthana wrote:
-> Get the interconnect paths for SPI based Serial Engine device
-> and vote according to the current bus speed of the driver.
-> 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> ---
-> Changes in V2:
->  - As per Bjorn's comment, removed se == NULL check from geni_spi_icc_get
->  - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
->  - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
->    path handle
->  - As per Matthias comment, added error handling for icc_set_bw call
-> 
-> Changes in V3:
->  - As per Matthias's comment, use helper ICC function from geni-se driver.
-> 
-> Changes in V4:
->  - Move peak_bw guess as twice of avg_bw if nothing mentioned explicitly
->    to ICC core.
-> 
-> Changes in V5:
->  - Use icc_enable/disable in power on/off call.
->  - Save some non-zero avg/peak value to ICC core by calling geni_icc_set_bw
->    from probe so that when resume/icc_enable is called NOC are running at
->    some non-zero value. No need to call icc_disable after BW vote because
->    device will resume and suspend before probe return and will leave ICC in
->    disabled state.
-> 
->  drivers/spi/spi-geni-qcom.c | 32 +++++++++++++++++++++++++++++++-
->  1 file changed, 31 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-> index c397242..5dfa1fb 100644
-> --- a/drivers/spi/spi-geni-qcom.c
-> +++ b/drivers/spi/spi-geni-qcom.c
-> @@ -234,6 +234,13 @@ static int setup_fifo_params(struct spi_device *spi_slv,
->  		return ret;
->  	}
->  
-> +	/* Set BW quota for CPU as driver supports FIFO mode only. */
-> +	geni_icc_bw_init(&se->icc_paths[CPU_TO_GENI],
-> +				Bps_to_icc(mas->cur_speed_hz), 0);
-> +	ret = geni_icc_set_bw(se);
-> +	if (ret)
-> +		return ret;
-> +
->  	clk_sel = idx & CLK_SEL_MSK;
->  	m_clk_cfg = (div << CLK_DIV_SHFT) | SER_CLK_EN;
->  	spi_setup_word_len(mas, spi_slv->mode, spi_slv->bits_per_word);
-> @@ -578,6 +585,19 @@ static int spi_geni_probe(struct platform_device *pdev)
->  	spin_lock_init(&mas->lock);
->  	pm_runtime_enable(dev);
->  
-> +	ret = geni_icc_get(&mas->se, NULL);
-> +	if (ret)
-> +		goto spi_geni_probe_runtime_disable;
-> +	/* Set the bus quota to a reasonable value for register access */
-> +	geni_icc_bw_init(&mas->se.icc_paths[GENI_TO_CORE],
-> +			Bps_to_icc(CORE_2X_50_MHZ), 0);
-> +	geni_icc_bw_init(&mas->se.icc_paths[CPU_TO_GENI], GENI_DEFAULT_BW, 0);
-> +
-> +	/* Set BW for register access */
+Hello,
 
-This comment doesn't add any value. Register access is mentioned a few lines
-above and from the function name it's evident that it sets the ICC bandwidth.
+This series adds mailbox driver support for Qualcomm Inter Processor
+Communications Controller (IPCC) block found in MSM chipsets. This block
+is used to route interrupts between modems, DSPs and APSS (Application
+Processor Subsystem).
 
-> +	ret = geni_icc_set_bw(&mas->se);
-> +	if (ret)
-> +		goto spi_geni_probe_runtime_disable;
-> +
->  	ret = spi_geni_init(mas);
->  	if (ret)
->  		goto spi_geni_probe_runtime_disable;
-> @@ -616,14 +636,24 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
->  {
->  	struct spi_master *spi = dev_get_drvdata(dev);
->  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
-> +	int ret;
-> +
-> +	ret = geni_se_resources_off(&mas->se);
-> +	if (ret)
-> +		return ret;
->  
-> -	return geni_se_resources_off(&mas->se);
-> +	return geni_icc_disable(&mas->se);
->  }
->  
->  static int __maybe_unused spi_geni_runtime_resume(struct device *dev)
->  {
->  	struct spi_master *spi = dev_get_drvdata(dev);
->  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
-> +	int ret;
-> +
-> +	ret = geni_icc_enable(&mas->se);
-> +	if (ret)
-> +		return ret;
->  
->  	return geni_se_resources_on(&mas->se);
->  }
+The driver is modeled as a mailbox+irqchip driver. The irqchip part helps
+in receiving the interrupts from the IPCC clients such as modems, DSPs,
+PCI-E etc... and forwards them to respective entities in APSS.
+    
+On the other hand, the mailbox part is used to send interrupts to the IPCC
+clients from the entities of APSS.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+This series is tested on SM8250-MTP board.
+
+Thanks,
+Mani
+
+Changes in v2:
+
+* Moved from soc/ to mailbox/
+* Switched to static mbox channels
+* Some misc cleanups
+
+Manivannan Sadhasivam (3):
+  dt-bindings: mailbox: Add devicetree binding for Qcom IPCC
+  mailbox: Add support for Qualcomm IPCC
+  MAINTAINERS: Add entry for Qualcomm IPCC driver
+
+ .../bindings/mailbox/qcom-ipcc.yaml           |  77 +++++
+ MAINTAINERS                                   |   8 +
+ drivers/mailbox/Kconfig                       |  10 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/qcom-ipcc.c                   | 286 ++++++++++++++++++
+ include/dt-bindings/mailbox/qcom-ipcc.h       |  33 ++
+ 6 files changed, 416 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
+ create mode 100644 drivers/mailbox/qcom-ipcc.c
+ create mode 100644 include/dt-bindings/mailbox/qcom-ipcc.h
+
+-- 
+2.17.1
+
