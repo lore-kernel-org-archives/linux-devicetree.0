@@ -2,124 +2,70 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579CFC47255
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48F7C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 391E82173E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:39:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="bqJnS5va"
+	by mail.kernel.org (Postfix) with ESMTP id AB78F207DD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgEHSje (ORCPT
+        id S1726811AbgEHSqw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 14:39:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726864AbgEHSje (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 14:39:34 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E289C05BD09
-        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 11:39:34 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id b18so2340390ilf.2
-        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 11:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RGIpRsn9hXDxHTNl/QnLM0SbzmG3DHjOVcysfR1ByLg=;
-        b=bqJnS5vane6smgkAuFEEcD0f6Ycc9yf0lJgeJRU4JjUw54yjKs7BXh8x7lk1vbGGnV
-         0f+IMGeKn3Gw8E15EFVxSoihcpqVq3H2ka3HfRPYyf0OuTLXCPToeBb+OyVQEtZC7lHl
-         zuolyQtCP3X66zQBV9+hARMxLnivHPtSnxXf5rUK+0xz88gPQQ3kiIwNSw4silZ09ksy
-         iZesm817N+ct23uLjo+cnMxE5KHcCYtZJFFhLRXkIQCkpT0bZ5O/5lBtIwyt1tjgyZpr
-         XXPJFtNZ04z6cdHl7rsn9ul842f84tS91OI8taD3ChAh0ODWd61l9meBxJla50/OQul7
-         oA8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RGIpRsn9hXDxHTNl/QnLM0SbzmG3DHjOVcysfR1ByLg=;
-        b=D6Q5ITN+Tns3nYE4wQ19L4oZupVgSGjyp4DfADsWLlmI9qiUHBAlBozER03BZcHChS
-         YXYHlkLZrt10zPHZ0mjyrxFokWp0tM1yB23FSf5wxAC+yN1g3K9klj2RQGwbEpnevBPE
-         0y/lotmw/6M6ToIIZD0uS41WipJY2+gMwoQYa4ytvHVCpmw20Swl9piPWVEiKloWbxw4
-         N+WRyMHmHIwfK0bKfPjS11QXLV4NpjXdKx/DvfM/+l37F4o+VZZO+N358RVgMrrp8pv+
-         cLJXJY8/qDrmnQ7LgATyGbJW4Wthuxt2c1uipZU0TYgW+RO6MBmynI26x77fMEP6DeyO
-         SDTQ==
-X-Gm-Message-State: AGi0PubNKmQ6SygujD1HhxcAQMaXaK12ElC9RZ/ncdvoiTfWhLeV5/X8
-        7AvRhISGHMCK+nkE4dt5MBTo8pRwaBJ0I0ciSqZZCpIo
-X-Google-Smtp-Source: APiQypIK7HVLTAX4pxfdG4Np+jILsEOGqiII5aB+gQC6LJN5kcIhjqNVKZy0G/G/rBz+o1NbRC9W4C8NgLZeDmRHgVw=
-X-Received: by 2002:a92:aa07:: with SMTP id j7mr4467857ili.40.1588963173745;
- Fri, 08 May 2020 11:39:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-6-brgl@bgdev.pl>
- <20200505103105.1c8b0ce3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAMRc=Mf0ipaeLKhHCZaq2YeZKzi=QBAse7bEz2hHxXN5OL=ptg@mail.gmail.com>
- <20200506101236.25a13609@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAMpxmJWckQdKvUGFDAJ1WMtD9WoGWmGe3kyKYhcfRT2nOB93xw@mail.gmail.com>
- <20200507095315.1154a1a6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAMpxmJUEk3itZs4HujJOXUiL80kmEvGBvLF0NFc2UQoVDVTWRg@mail.gmail.com>
- <20200507155650.0c19229e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com> <c6e12eb6-d6ea-9ba9-4559-b2eda326601f@gmail.com>
-In-Reply-To: <c6e12eb6-d6ea-9ba9-4559-b2eda326601f@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 8 May 2020 20:39:22 +0200
-Message-ID: <CAMRc=MdKjZbHFfTYV12DjMet3sXbBht+qgiViddxs9csDvrf-Q@mail.gmail.com>
-Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Fri, 8 May 2020 14:46:52 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:36067 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726636AbgEHSqv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 14:46:51 -0400
+Received: (qmail 11698 invoked by uid 500); 8 May 2020 14:46:50 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 8 May 2020 14:46:50 -0400
+Date:   Fri, 8 May 2020 14:46:50 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Al Cooper <alcooperx@gmail.com>
+cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v7 4/5] usb: ehci: Add new EHCI driver for Broadcom STB
+ SoC's
+In-Reply-To: <20200507173408.20754-5-alcooperx@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2005081444450.11470-100000@netrider.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pt., 8 maj 2020 o 07:54 Heiner Kallweit <hkallweit1@gmail.com> napisa=C5=82=
-(a):
->
-> On 08.05.2020 00:56, Jakub Kicinski wrote:
-> > On Thu, 7 May 2020 19:03:44 +0200 Bartosz Golaszewski wrote:
-> >>> To implement Edwin's suggestion? Makes sense, but I'm no expert, let'=
-s
-> >>> also CC Heiner since he was asking about it last time.
-> >>
-> >> Yes, because taking the last bit of priv_flags from net_device seems
-> >> to be more controversial but if net maintainers are fine with that I
-> >> can simply go with the current approach.
-> >
-> > From my perspective what Edwin suggests makes sense. Apart from
-> > little use for the bit after probe, it also seems cleaner for devres
-> > to be able to recognize managed objects based on its own state.
-> >
-> What I was saying is that we should catch the case that a driver
-> author uses a device-managed register() w/o doing the same for the
-> alloc(). A core function should not assume that driver authors do
-> sane things only.
-> I don't have a strong preference how it should be done.
-> Considering what is being discussed, have a look at get_pci_dr() and
-> find_pci_dr(), they deal with managing which parts of the PCI
-> subsystem are device-managed.
+On Thu, 7 May 2020, Al Cooper wrote:
 
-Yes, I have - that's why I asked if anyone objects to me moving all
-networking devres functions into their own source file. The reason for
-that being: devres_find() needs to know the address of the release
-function, meanwhile devm_register_netdev() would have to go into
-net/core, while devm_alloc_etherdev() lives in net/ethernet.
+> Add a new EHCI driver for Broadcom STB SoC's. A new EHCI driver
+> was created instead of adding support to the existing ehci platform
+> driver because of the code required to workaround bugs in the EHCI
+> controller. The primary workround is for a bug where the Core
+> violates the SOF interval between the first two SOFs transmitted after
+> resume. This only happens if the resume occurs near the end of a
+> microframe. The fix is to intercept the echi-hcd request to complete
+> RESUME and align it to the start of the next microframe.
+> 
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Bart
+Adding a new EHCI platform-specific driver is okay with me.  However, 
+this patch does not include most of the changes you discussed with 
+Greg.  I assume you will submit a revised version with those changes in 
+place; when you do I will Ack it.
+
+Alan Stern
+
