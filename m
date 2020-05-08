@@ -2,149 +2,93 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EB4C47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 11:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E422CC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 11:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1DB208D6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 11:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57CA20A8B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 11:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgEHLnb (ORCPT
+        id S1726792AbgEHLtw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 07:43:31 -0400
-Received: from mga04.intel.com ([192.55.52.120]:17037 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727084AbgEHLnb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 07:43:31 -0400
-IronPort-SDR: 18nEa2Sn5Bd/naPm8YKevnHR/rG+XuZQlaqTmnjxSqOqXfRK56/Ws3p18Uf3QwiyGoAfAbzhhy
- l9g74k2mrGyQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 04:43:30 -0700
-IronPort-SDR: N520jTIwBLbQ3eYPYfqgXoYmzna7PwGI5hq/piziWOApkWt7/SY2gIpRH6PMVQ/+XaA1GoMTon
- 3aKmR+5XPkTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="462212826"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 08 May 2020 04:43:27 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jX1Pe-005PPL-CS; Fri, 08 May 2020 14:43:30 +0300
-Date:   Fri, 8 May 2020 14:43:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] dmaengine: dw: Take HC_LLP flag into account for
- noLLP auto-config
-Message-ID: <20200508114330.GL185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-7-Sergey.Semin@baikalelectronics.ru>
+        Fri, 8 May 2020 07:49:52 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:52367 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgEHLtw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 07:49:52 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 92B6220000C;
+        Fri,  8 May 2020 11:49:48 +0000 (UTC)
+Date:   Fri, 8 May 2020 13:49:47 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Biwen Li <biwen.li@oss.nxp.com>
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, a.zummo@towertech.it,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Biwen Li <biwen.li@nxp.com>
+Subject: Re: [PATCH 1/3] rtc: ds1374: add uie_unsupported property to drop
+ warning
+Message-ID: <20200508114947.GK34497@piout.net>
+References: <20200508054925.48237-1-biwen.li@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508105304.14065-7-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200508054925.48237-1-biwen.li@oss.nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 01:53:04PM +0300, Serge Semin wrote:
-> Full multi-block transfers functionality is enabled in DW DMA
-> controller only if CHx_MULTI_BLK_EN is set. But LLP-based transfers
-> can be executed only if hardcode channel x LLP register feature isn't
-> enabled, which can be switched on at the IP core synthesis for
-> optimization. If it's enabled then the LLP register is hardcoded to
-> zero, so the blocks chaining based on the LLPs is unsupported.
+Hi,
+
+On 08/05/2020 13:49:23+0800, Biwen Li wrote:
+> From: Biwen Li <biwen.li@nxp.com>
 > 
-
-This one is good.
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Feel free to reassemble the series, so, Vinod can apply it independently.
-
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+> Add uie_unsupported property to drop warning as follows:
+>     - $ hwclock.util-linux
+>       hwclock.util-liux: select() /dev/rtc0
+>       to wait for clock tick timed out
 > 
+> My case:
+>     - RTC ds1374's INT pin is connected to VCC on T4240RDB,
+>       then the RTC cannot inform cpu about the alarm
+>       interrupt
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 > ---
+>  drivers/rtc/rtc-ds1374.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Changelog v2:
-> - Rearrange SoBs.
-> - Add comment about why hardware accelerated LLP list support depends
->   on both MBLK_EN and HC_LLP configs setting.
-> - Use explicit bits state comparison operator.
-> ---
->  drivers/dma/dw/core.c | 11 ++++++++++-
->  drivers/dma/dw/regs.h |  1 +
->  2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-> index 5b76ccc857fd..3179d45df662 100644
-> --- a/drivers/dma/dw/core.c
-> +++ b/drivers/dma/dw/core.c
-> @@ -1180,8 +1180,17 @@ int do_dma_probe(struct dw_dma_chip *chip)
->  			 */
->  			dwc->block_size =
->  				(4 << ((pdata->block_size >> 4 * i) & 0xf)) - 1;
+> diff --git a/drivers/rtc/rtc-ds1374.c b/drivers/rtc/rtc-ds1374.c
+> index 9c51a12cf70f..e530e887a17e 100644
+> --- a/drivers/rtc/rtc-ds1374.c
+> +++ b/drivers/rtc/rtc-ds1374.c
+> @@ -651,6 +651,10 @@ static int ds1374_probe(struct i2c_client *client,
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (of_property_read_bool(client->dev.of_node,
+> +						 "uie_unsupported"))
+> +		ds1374->rtc->uie_unsupported = true;
 > +
-> +			/*
-> +			 * According to the DW DMA databook the true scatter-
-> +			 * gether LLPs aren't available if either multi-block
-> +			 * config is disabled (CHx_MULTI_BLK_EN == 0) or the
-> +			 * LLP register is hard-coded to zeros
-> +			 * (CHx_HC_LLP == 1).
-> +			 */
->  			dwc->nollp =
-> -				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
-> +				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0 ||
-> +				(dwc_params >> DWC_PARAMS_HC_LLP & 0x1) == 1;
->  			dwc->max_burst =
->  				(0x4 << (dwc_params >> DWC_PARAMS_MSIZE & 0x7));
->  		} else {
-> diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
-> index f581d4809b71..a8af19d0eabd 100644
-> --- a/drivers/dma/dw/regs.h
-> +++ b/drivers/dma/dw/regs.h
-> @@ -126,6 +126,7 @@ struct dw_dma_regs {
->  
->  /* Bitfields in DWC_PARAMS */
->  #define DWC_PARAMS_MSIZE	16		/* max group transaction size */
-> +#define DWC_PARAMS_HC_LLP	13		/* set LLP register to zero */
->  #define DWC_PARAMS_MBLK_EN	11		/* multi block transfer */
->  
->  /* bursts size */
+
+This is not how this is supposed to work, either the RTC support uie or
+don't, it is not board dependent and certainly doesn't require an
+(undocumented) DT property.
+
+>  #ifdef CONFIG_RTC_DRV_DS1374_WDT
+>  	save_client = client;
+>  	ret = misc_register(&ds1374_miscdev);
 > -- 
-> 2.25.1
+> 2.17.1
 > 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
