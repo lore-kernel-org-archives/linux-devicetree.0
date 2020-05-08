@@ -2,92 +2,227 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84548C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13549C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6661621974
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588963903;
-	bh=G0Uu5w3eBIja3ZOupFgWdBHmfnHRekLsvyYCif+pd5Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=EIzZ0BMRv4oVLKlseQAgoiUV36mmj2elmBX3o4uvzqzXgiurjg/SLoUCBGgpWw901
-	 azB/7o62Wagb47QVkxy12adHatGDiYVRQrTuaDX7G3rAeHv4EEdYvY3/jW77R0Joy5
-	 Bn9qN2F0pYXYC1d/lpaOu2yxkm1nMg+xcUhIlRiI=
+	by mail.kernel.org (Postfix) with ESMTP id E2316207DD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:53:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aVLs5Fmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgEHSvk (ORCPT
+        id S1727107AbgEHSxN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 14:51:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgEHSvk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 14:51:40 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5A3A207DD;
-        Fri,  8 May 2020 18:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588963900;
-        bh=G0Uu5w3eBIja3ZOupFgWdBHmfnHRekLsvyYCif+pd5Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kDmaDXrDaXsYKLqNvQ8A9gMAks0N3gYY6dGxvuPenkkFVJspAtgDNT5yoaYzeOZO0
-         ZcyCjsy2Mo8mAsdsNISutBNbPmgWdxZPKktHB3gs2XbvNolR8NI2jma/Pyq3XUr/08
-         YupB9oKpgmffnkJN7SxqrHjzqmLOT/1d9tCa0Z0k=
-Date:   Fri, 8 May 2020 13:51:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/5] PCI: Don't disable decoding when mmio_always_on
- is set
-Message-ID: <20200508185138.GA78849@bjorn-Precision-5520>
+        Fri, 8 May 2020 14:53:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727093AbgEHSxM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 14:53:12 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5367C05BD43
+        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 11:53:12 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 18so1407076pfx.6
+        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 11:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=i7cajeOI7t/O4BieeA4MfIrn4RGmhWaaIwirB4vXuQc=;
+        b=aVLs5Fmu4qrpOaBYOgocdVnjGjVZbzjtw2eD0B09bZ2TwTqFF3YBdASmRvE2O6pXoI
+         crpCPiiSVN9Yy1cl+mXSGnsyl/dPDHazS/n56/2bF5m3cBfNFEf+enwAl4YI/W6ZPiXO
+         XNr/SnHsyQWRzBHlaJi4Is529BaSjn7Vekl0I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i7cajeOI7t/O4BieeA4MfIrn4RGmhWaaIwirB4vXuQc=;
+        b=figPSxq9GRTBGYi1oCpGyYVqmWg1Cf/ABDNuTvfDDQN1Qiy194tKpxKOHBmpmo3NyI
+         e58D5hjbX0CLpSTKx+FVFg9WqT4rx4iYYHxCochU/EYGvhwND04yIA/4mXjxg/dj+iQ2
+         wdE5SH+lGx8nwi55kcnUI3qHZ9lGEKn5XQ74WtPAauXtuVa1+eZME0d7W9whLJyPfLxu
+         ogDRDcKIc8gP759pi+CEQfPjj5+ut5LesuPA9F2Z5Ro5NpNgYKe6S8GWl70x0WEqTizD
+         eiHxVNkboNwpT627LI7Jl3AbNIKLlLETCUhye4XgoVWTMoWYr9UxJH/2v9fWTTNaOl+z
+         yM+w==
+X-Gm-Message-State: AGi0Publ9G3sRFoT7ZzxmErAm2MY2+pvn6AtwCTuZj6Vz1e+a3nGxpPX
+        +erD2YycrWDLkCj8quK7KzsXew==
+X-Google-Smtp-Source: APiQypKROAa/6+J17up8ZlBL6maJRsHFmxy82YxcjouGV6Krao/qBNGx9il4jK0PDfZp+LoO+4NjlQ==
+X-Received: by 2002:a65:460f:: with SMTP id v15mr3259783pgq.24.1588963992211;
+        Fri, 08 May 2020 11:53:12 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id h15sm2498074pfr.161.2020.05.08.11.53.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 11:53:11 -0700 (PDT)
+Date:   Fri, 8 May 2020 11:53:10 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org, georgi.djakov@linaro.org
+Subject: Re: [PATCH V5 6/7] spi: spi-qcom-qspi: Add interconnect support
+Message-ID: <20200508185310.GF4525@google.com>
+References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
+ <1588919619-21355-7-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200428011429.1852081-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <1588919619-21355-7-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:14:16AM +0800, Jiaxun Yang wrote:
-> Don't disable MEM/IO decoding when a device have both non_compliant_bars
-> and mmio_always_on.
+On Fri, May 08, 2020 at 12:03:38PM +0530, Akash Asthana wrote:
+> Get the interconnect paths for QSPI device and vote according to the
+> current bus speed of the driver.
 > 
-> That would allow us quirk devices with junk in BARs but can't disable
-> their decoding.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
 > ---
->  drivers/pci/probe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes in V2:
+>  - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>    path handle
+>  - As per Matthias comment, added error handling for icc_set_bw call
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 77b8a145c39b..d9c2c3301a8a 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
->  	/* Device class may be changed after fixup */
->  	class = dev->class >> 8;
+> Changes in V3:
+>  - No Change.
+> 
+> Changes in V4:
+>  - As per Mark's comment move peak_bw guess as twice of avg_bw if
+>    nothing mentioned explicitly to ICC core.
+> 
+> Changes in V5:
+>  - Add icc_enable/disable to power on/off call.
+>  - Save some non-zero avg/peak value to ICC core by calling geni_icc_set_bw
+>    from probe so that when resume/icc_enable is called NOC are running at
+>    some non-zero value.
+> 
+>  drivers/spi/spi-qcom-qspi.c | 59 ++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 58 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
+> index 3c4f83b..6e299f4 100644
+> --- a/drivers/spi/spi-qcom-qspi.c
+> +++ b/drivers/spi/spi-qcom-qspi.c
+> @@ -2,6 +2,7 @@
+>  // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
 >  
-> -	if (dev->non_compliant_bars) {
-> +	if (dev->non_compliant_bars && !dev->mmio_always_on) {
->  		pci_read_config_word(dev, PCI_COMMAND, &cmd);
->  		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
->  			pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
-> -- 
-> 2.26.0.rc2
-> 
+>  #include <linux/clk.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> @@ -139,7 +140,10 @@ struct qcom_qspi {
+>  	struct device *dev;
+>  	struct clk_bulk_data *clks;
+>  	struct qspi_xfer xfer;
+> -	/* Lock to protect xfer and IRQ accessed registers */
+> +	struct icc_path *icc_path_cpu_to_qspi;
+> +	unsigned int avg_bw_cpu;
+> +	unsigned int peak_bw_cpu;
+
+There is no point in having two fields, 'peak_bw_cpu' is always assigned
+to 'avg_bw_cpu' and passed to icc_set_bw(). Just make it a single field
+'icc_bw_cpu'.
+
+> +	/* Lock to protect data accessed by IRQs */
+>  	spinlock_t lock;
+>  };
+>  
+> @@ -241,6 +245,20 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
+>  		return ret;
+>  	}
+>  
+> +	/*
+> +	 * Set BW quota for CPU as driver supports FIFO mode only.
+> +	 * We don't have explicit peak requirement so keep it equal to avg_bw.
+> +	 */
+> +	ctrl->avg_bw_cpu = Bps_to_icc(speed_hz);
+> +	ctrl->peak_bw_cpu = ctrl->avg_bw_cpu;
+> +	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, ctrl->avg_bw_cpu,
+> +		ctrl->peak_bw_cpu);
+> +	if (ret) {
+> +		dev_err(ctrl->dev, "%s: ICC BW voting failed for cpu\n",
+> +			__func__);
+
+the logging in this patch is inconsistent. Here the error is not printed,
+at all, in other cases it's "<error>, ret:-42" or "<error> ret:-42".
+Please stick to a common format (unless there is no error). My
+suggestion would be "<error>: -42", in my perception "ret:" just adds
+noise.
+
+> +		return ret;
+> +	}
+> +
+>  	spin_lock_irqsave(&ctrl->lock, flags);
+>  
+>  	/* We are half duplex, so either rx or tx will be set */
+> @@ -458,6 +476,29 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto exit_probe_master_put;
+>  
+> +	ctrl->icc_path_cpu_to_qspi = devm_of_icc_get(dev, "qspi-config");
+> +	if (IS_ERR(ctrl->icc_path_cpu_to_qspi)) {
+> +		ret = PTR_ERR(ctrl->icc_path_cpu_to_qspi);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "Failed to get cpu path, ret:%d\n", ret);
+> +		goto exit_probe_master_put;
+> +	}
+> +	/* Set BW vote for register access */
+> +	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, Bps_to_icc(1000),
+> +				Bps_to_icc(1000));
+> +	if (ret) {
+> +		dev_err(ctrl->dev, "%s: ICC BW voting failed for cpu ret:%d\n",
+> +				__func__, ret);
+> +		goto exit_probe_master_put;
+> +	}
+> +
+> +	ret = icc_disable(ctrl->icc_path_cpu_to_qspi);
+> +	if (ret) {
+> +		dev_err(ctrl->dev, "%s: ICC disable failed for cpu ret:%d\n",
+> +				__func__, ret);
+> +		goto exit_probe_master_put;
+> +	}
+> +
+>  	ret = platform_get_irq(pdev, 0);
+>  	if (ret < 0)
+>  		goto exit_probe_master_put;
+> @@ -511,9 +552,17 @@ static int __maybe_unused qcom_qspi_runtime_suspend(struct device *dev)
+>  {
+>  	struct spi_master *master = dev_get_drvdata(dev);
+>  	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
+> +	int ret;
+>  
+>  	clk_bulk_disable_unprepare(QSPI_NUM_CLKS, ctrl->clks);
+>  
+> +	ret = icc_disable(ctrl->icc_path_cpu_to_qspi);
+> +	if (ret) {
+> +		dev_err_ratelimited(ctrl->dev, "%s: ICC disable failed for cpu ret:%d\n",
+> +			__func__, ret);
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -521,6 +570,14 @@ static int __maybe_unused qcom_qspi_runtime_resume(struct device *dev)
+>  {
+>  	struct spi_master *master = dev_get_drvdata(dev);
+>  	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
+> +	int ret;
+> +
+> +	ret = icc_enable(ctrl->icc_path_cpu_to_qspi);
+> +	if (ret) {
+> +		dev_err_ratelimited(ctrl->dev, "%s: ICC enable failed for cpu ret:%d\n",
+> +			__func__, ret);
+> +		return ret;
+> +	}
+>  
+>  	return clk_bulk_prepare_enable(QSPI_NUM_CLKS, ctrl->clks);
+>  }
