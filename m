@@ -2,130 +2,114 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F66AC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46791C47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D120D20870
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24FF52173E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:40:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqH4kh2p"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Foo79FwS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgEHGjR (ORCPT
+        id S1727911AbgEHGkq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 02:39:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59328 "EHLO
+        Fri, 8 May 2020 02:40:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727071AbgEHGjR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 02:39:17 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2111FC05BD43;
-        Thu,  7 May 2020 23:39:17 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y25so442677pfn.5;
-        Thu, 07 May 2020 23:39:17 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1726690AbgEHGkp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 02:40:45 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6251C05BD43;
+        Thu,  7 May 2020 23:40:44 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id e2so419050eje.13;
+        Thu, 07 May 2020 23:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4aQlSgO0Elh0LQFz4EdrUrM6btXVzv3njgKIJHFMY3A=;
-        b=fqH4kh2pc7Zm5xI9ma42CYbrngTvtTiiEy7mkfbS9jsJuLN24ngPBYnA4FxKtssdUW
-         04aV6fyqzFV3FCS2lKkaiSxuSbqNDH5L/LWkWrN74qgPVOoyZHs1YDDKuz1SPr6E9J4m
-         JK/uuJauH90bvJ/8hSHIo72eOfy08MIe8WRALTsnYCBipNK+wPGgByJ/j0sSGDF7lvMz
-         59klzb/Uuc2JPl0wMIoCLnWaH9goX3g1MYsq3jWA+2h3CY5MuMIVhhNC3ohL5M9uGsRm
-         NB5al4LOsWgZolzFGhfKzqeN/OMYKun0J3ByMF/hAfIEsD0QCwI5sSHWFruWlngdRIWd
-         snKw==
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jrb5SpxBpfxnJarYhbVR8JuF3xmhz+iatL9rlTHsEyY=;
+        b=Foo79FwS3ejJHJvHDvjZDXSJfa/QxQXrU0lzOnmBQ9WcsEwGV0ll49OPXx0ySElUd/
+         Vjc3F0YYJ7a4sgcg2y/Ny/Mz+A81AMCIpV5kcql4HDcGNqFVf8hJg7DQpuz8DrMN/5JF
+         jAlfdNkr4BgDV/HIDfkeoBKHpBGf607JsE6hA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=4aQlSgO0Elh0LQFz4EdrUrM6btXVzv3njgKIJHFMY3A=;
-        b=RyLbrveKnK2QLOYMFAqwJrqXV4fKgWAHNcPw/M/dxLMY0ll5sKhvggv+nHjnOzX5uG
-         et0hkq1Z+gbDkjRmTOjGafQ/A0MsQ/QjFuOPJJwAv3H4KhxY5xyMBgpjd9Iu0hu9UP49
-         WWO901tRQrzc3ZG78mmEB0hotkD94fqNXWdrIZazlLrJw8tWHVW82vzg5tMZIYBRm3Aq
-         hraUjU6m2PIuOk15SAgfMhlct0ZkRKBYFTdtZtNjSbWxikVE4WdNzh+O2PEMquxOQ2uD
-         sFALzD3+vy1z4fq9+0DYqjps7sGb3jAGYv/wElwgNw++DhFo2o9HSfggmnw0+1k2uSzR
-         bzyQ==
-X-Gm-Message-State: AGi0PubqRQ5gwUD9zuPFiHxzA+V5Qjtmh08cpj4kKF349zKhB5wh9ygR
-        FeaNQhJCft0ueyey+sBZ/wCnft5G
-X-Google-Smtp-Source: APiQypLQfREFkfCiTZTKfTnNytxjyVvXbyfxeaa0IMd44kGxgxvh/rgY7LDEjnXYez0t65A8tLeNjw==
-X-Received: by 2002:a63:a505:: with SMTP id n5mr897719pgf.173.1588919956500;
-        Thu, 07 May 2020 23:39:16 -0700 (PDT)
-Received: from localhost.localdomain ([45.124.203.15])
-        by smtp.gmail.com with ESMTPSA id k24sm712913pfk.134.2020.05.07.23.39.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 23:39:15 -0700 (PDT)
-From:   Joel Stanley <joel@jms.id.au>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH] dtc: Remove warning for I2C_OWN_SLAVE_ADDRESS
-Date:   Fri,  8 May 2020 16:09:04 +0930
-Message-Id: <20200508063904.60162-1-joel@jms.id.au>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jrb5SpxBpfxnJarYhbVR8JuF3xmhz+iatL9rlTHsEyY=;
+        b=hErDwZims/K/XVVj9G+cSw85+3fIhr2nypu9lT8GBtuVZbxFYFkPjRPVMU8TuGSJcg
+         XjcswU5UqsMRFC5p/jZDsI/bJIyPRPAq4f3cGb1JrL5D++nBYuZ7WlaXrPD8A7h/pufj
+         LcDu9Lx7kI9XNC98UBvdtCtAVWuW14C1vkGopkf5riyCfDt0ohTvDpA8tuFIZ44x0wea
+         RP/oZXliauHjcebWB8WPLIaYgHdgDmE1aP3HwHxw4DS+7dIs9KPjG2l1p+nKG9ec6Fp9
+         a5PNwQABe3G2DLvTRhT3ANndHoLK8LVvKXoRVHsnlNT0sMH/CNArXSA+ekAwW2NbCdpx
+         Fidg==
+X-Gm-Message-State: AGi0PuaPx//kyAwdy/ciLPYkhYUN1inDiwlxxrNIAeNBWeHV/9ai8icP
+        toGqTphF1B0rqWLWziXgeDZongxfCUiTyTqf84k=
+X-Google-Smtp-Source: APiQypLH/Ux5BoAFAL9pL/NG4/QCY9jLTfLa7OlOxytAbk1YdAAUjg0TOkQxMjPfoWcCNuOSNknN+TbzIjFSumduBz4=
+X-Received: by 2002:a17:906:4c8e:: with SMTP id q14mr658681eju.208.1588920043365;
+ Thu, 07 May 2020 23:40:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200507091008.1bd38185@canb.auug.org.au> <CACPK8XfOJqj=E4JwQsZWvAsp7cv=bjqj2twZk0=MR+ZJQP1nqQ@mail.gmail.com>
+In-Reply-To: <CACPK8XfOJqj=E4JwQsZWvAsp7cv=bjqj2twZk0=MR+ZJQP1nqQ@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 8 May 2020 06:40:31 +0000
+Message-ID: <CACPK8XcUydETZvJEkWPvLnLXatAg3D-MfA1yeDzE0epc-hisJQ@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the aspeed tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        devicetree-compiler@vger.kernel.org
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>, Vijay Khemka <vkhemka@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-dtc does a sanity check on reg properties that they are within the 10
-bit address range for i2c slave addresses. In the case of multi-master
-buses the binding may describe an address that the bus will listen on as
-a device. Do not warn when this flag is set.
+On Wed, 6 May 2020 at 23:13, Joel Stanley <joel@jms.id.au> wrote:
+>
+> Hi Rob,
+>
+> On Wed, 6 May 2020 at 23:10, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> >
+> > After merging the aspeed tree, today's linux-next build (arm
+> > multi_v7_defconfig) produced this warning:
+>
+> Thanks Stephen.
+>
+> > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10: I2C bus unit address format error, expected "40000010"
+> > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137.11-141.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10: I2C bus unit address format error, expected "40000010"
+> > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148.11-152.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10: I2C bus unit address format error, expected "40000010"
+> > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159.11-163.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10: I2C bus unit address format error, expected "40000010"
+> > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+>
+> These are IPMB nodes with the SLAVE_ADDRESS bit set:
+>
+> +&i2c5 {
+> +       //Host3 IPMB bus
+> +       status = "okay";
+> +       multi-master;
+> +       ipmb5@10 {
+> +               compatible = "ipmb-dev";
+> +               reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
+> +               i2c-protocol;
+> +       };
+>
+> This is a correct entry, so dtc should not warn about it.
 
-This fixes the following build warnings reported by Stephen:
+I sent a patch for dtc here:
+https://lore.kernel.org/lkml/20200508063904.60162-1-joel@jms.id.au/
 
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4:
-  Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:
-    I2C bus unit address format error, expected "40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30:
-  Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg:
-    I2C address must be less than 10-bits, got "0x40000010"
+Cheers,
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- scripts/dtc/checks.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-index 4b3c486f1399..986754f858cf 100644
---- a/scripts/dtc/checks.c
-+++ b/scripts/dtc/checks.c
-@@ -1022,6 +1022,8 @@ static void check_i2c_bus_bridge(struct check *c, struct dt_info *dti, struct no
- }
- WARNING(i2c_bus_bridge, check_i2c_bus_bridge, NULL, &addr_size_cells);
- 
-+#define I2C_OWN_SLAVE_ADDRESS	(1 << 30)
-+
- static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
- {
- 	struct property *prop;
-@@ -1044,6 +1046,8 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
- 	}
- 
- 	reg = fdt32_to_cpu(*cells);
-+	/* Ingore I2C_OWN_SLAVE_ADDRESS */
-+	reg &= ~I2C_OWN_SLAVE_ADDRESS;
- 	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
- 	if (!streq(unitname, unit_addr))
- 		FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
-@@ -1051,6 +1055,8 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
- 
- 	for (len = prop->val.len; len > 0; len -= 4) {
- 		reg = fdt32_to_cpu(*(cells++));
-+		/* Ingore I2C_OWN_SLAVE_ADDRESS */
-+		reg &= ~I2C_OWN_SLAVE_ADDRESS;
- 		if (reg > 0x3ff)
- 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
- 				  reg);
--- 
-2.26.2
-
+Joel
