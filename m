@@ -2,50 +2,66 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1B3C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFD5C47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 07:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8FE820643
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4966720CC7
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 07:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgEHG4E (ORCPT
+        id S1727794AbgEHHVC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 02:56:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
+        Fri, 8 May 2020 03:21:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725991AbgEHG4E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 02:56:04 -0400
+        by vger.kernel.org with ESMTP id S1727789AbgEHHVC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 03:21:02 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 162EDC05BD09
-        for <devicetree@vger.kernel.org>; Thu,  7 May 2020 23:56:04 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1jWwvS-0007FL-Er; Fri, 08 May 2020 08:56:02 +0200
-Subject: Re: [PATCH v3 1/2] dt-bindings: nvmem: skip nodes with compatibles
- other than "nvmem-cell"
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     kernel@pengutronix.de, ceggers@arri.de,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200428111829.2215-1-a.fatoum@pengutronix.de>
- <20200428111829.2215-2-a.fatoum@pengutronix.de>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-Message-ID: <50580c0f-1780-4d58-ebaa-8b03e3035464@pengutronix.de>
-Date:   Fri, 8 May 2020 08:56:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C69FFC05BD09
+        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 00:21:01 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jWxJS-0001g6-HU; Fri, 08 May 2020 09:20:50 +0200
+Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jWxJR-0002Lo-IX; Fri, 08 May 2020 09:20:49 +0200
+Date:   Fri, 8 May 2020 09:20:49 +0200
+From:   Philipp Zabel <pza@pengutronix.de>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
+        stable@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/11] PCI: qcom: add missing reset for ipq806x
+Message-ID: <20200508072049.GA31261@pengutronix.de>
+References: <20200430220619.3169-1-ansuelsmth@gmail.com>
+ <20200430220619.3169-5-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428111829.2215-2-a.fatoum@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430220619.3169-5-ansuelsmth@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:18:34 up 78 days, 14:49, 108 users,  load average: 0.06, 0.16,
+ 0.24
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: pza@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
@@ -53,20 +69,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Srini,
-Hello Rob,
+Hi Ansuel,
 
-On 4/28/20 1:18 PM, Ahmad Fatoum wrote:
-> To allow co-existence of nvmem-cells with other nodes, loosen the
-> binding to consult an optional compatible property for the cells:
+On Fri, May 01, 2020 at 12:06:11AM +0200, Ansuel Smith wrote:
+> Add missing ext reset used by ipq8064 SoC in PCIe qcom driver.
+> 
+> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Cc: stable@vger.kernel.org # v4.5+
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 7a8901efc031..921030a64bab 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+[...]
+> @@ -347,6 +353,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  		goto err_deassert_ahb;
+>  	}
+>  
+> +	ret = reset_control_deassert(res->ext_reset);
+> +	if (ret) {
+> +		dev_err(dev, "cannot assert ext reset\n");
+                                     ^
+This probably should say "cannot deassert ext reset". Apart from this,
 
-Gentle ping.
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Cheers,
-Ahmad
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+regards
+Philipp
