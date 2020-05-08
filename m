@@ -2,116 +2,76 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365EBC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 08:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100CEC47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 08:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1905D208CA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 08:42:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hXER7gFz"
+	by mail.kernel.org (Postfix) with ESMTP id E8F34208D6
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 08:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgEHImN (ORCPT
+        id S1727092AbgEHIo4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 04:42:13 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40720 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbgEHImM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 04:42:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0488gBvN020971;
-        Fri, 8 May 2020 03:42:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588927331;
-        bh=j0RPwytwTGu6DXnBXsaicV6+R0ACC0J3LuDsBmxAjQ4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hXER7gFzPsBdW1U2+5FyzdOorrvEDdsp/UzYYcmXg92H1um39+yV547pRu/ZsOq6C
-         OYwIWlU1UyWh3ivKj8Dk2V+Q865+Vk1w6V1KjkU+md8ZqUNqY3MvZPXB8ZROSiN6vm
-         /6pXM8XDZI6Z4LOSYIHnSNyzRWko1VRK18QR1Ioo=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0488gA2I115472;
-        Fri, 8 May 2020 03:42:10 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
- 2020 03:42:10 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 8 May 2020 03:42:10 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0488g8hm050354;
-        Fri, 8 May 2020 03:42:09 -0500
-Subject: Re: [PATCH v3 1/7] dt-bindings: syscon: Add TI's J721E specific
- compatible string
-To:     Kishon Vijay Abraham I <kishon@ti.com>, <t-kristo@ti.com>
-CC:     <robh@kernel.org>, <nm@ti.com>, <nsekhar@ti.com>,
-        <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200508082937.14171-1-rogerq@ti.com>
- <20200508082937.14171-2-rogerq@ti.com>
- <6efa9374-e8f2-4054-3f35-6cacead783b8@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <e833753a-20dd-e57d-2aa4-49e96f31df4d@ti.com>
-Date:   Fri, 8 May 2020 11:42:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Fri, 8 May 2020 04:44:56 -0400
+Received: from mx.socionext.com ([202.248.49.38]:6321 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727076AbgEHIo4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 May 2020 04:44:56 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 08 May 2020 17:44:54 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id A72DF180139;
+        Fri,  8 May 2020 17:44:54 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 8 May 2020 17:44:54 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 1FB14401DC;
+        Fri,  8 May 2020 17:44:54 +0900 (JST)
+Received: from [10.213.29.153] (unknown [10.213.29.153])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 95917120136;
+        Fri,  8 May 2020 17:44:53 +0900 (JST)
+Subject: Re: [PATCH net] dt-bindings: net: Convert UniPhier AVE4 controller to
+ json-schema
+To:     David Miller <davem@davemloft.net>, robh+dt@kernel.org
+Cc:     yamada.masahiro@socionext.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <20200501.152130.2290341369746144284.davem@davemloft.net>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <846aef8c-50b4-e264-9a9e-7d7f25729a94@socionext.com>
+Date:   Fri, 8 May 2020 17:44:53 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <6efa9374-e8f2-4054-3f35-6cacead783b8@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200501.152130.2290341369746144284.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kishon,
+Hi David, Rob,
 
-On 08/05/2020 11:40, Kishon Vijay Abraham I wrote:
-> Hi,
+On 2020/05/02 7:21, David Miller wrote:
+> From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Date: Tue, 28 Apr 2020 15:31:22 +0900
 > 
-> On 5/8/2020 1:59 PM, Roger Quadros wrote:
->> From: Kishon Vijay Abraham I <kishon@ti.com>
+>> Convert the UniPhier AVE4 controller binding to DT schema format.
+>> This changes phy-handle property to required.
 >>
->> Add TI's J721E SoC specific compatible string.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > 
-> This patch should be dropped given that patch 2 adds a new binding for the
-> compatible added here.
+> DT folks, is it ok if I take this into net-next or do you folks want to
+> take it instead?
+Rob, how about this?
+I think net-next is preferable.
 
-Indeed, my bad.
+Thank you,
 
-> 
-> Thanks
-> Kishon
-> 
->> ---
->>   Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
->> index 39375e4313d2..f9aac75d423a 100644
->> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
->> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
->> @@ -38,6 +38,7 @@ properties:
->>             - allwinner,sun8i-h3-system-controller
->>             - allwinner,sun8i-v3s-system-controller
->>             - allwinner,sun50i-a64-system-controller
->> +          - ti,j721e-system-controller
->>   
->>           - const: syscon
->>   
->>
-
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+---
+Best Regards
+Kunihiko Hayashi
