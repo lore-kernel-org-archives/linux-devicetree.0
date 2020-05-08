@@ -2,117 +2,87 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2A0C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE06C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C22CD2495C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672482495A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgEHNbb (ORCPT
+        id S1728661AbgEHNbo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 09:31:31 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43046 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727794AbgEHNbb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 09:31:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D436C8030790;
-        Fri,  8 May 2020 13:31:27 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tIQrgy8F71PE; Fri,  8 May 2020 16:31:27 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Fri, 8 May 2020 09:31:44 -0400
+Received: from elvis.franken.de ([193.175.24.41]:44851 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727975AbgEHNbo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 May 2020 09:31:44 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jX36M-0003ty-03; Fri, 08 May 2020 15:31:42 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 9EAF3C041B; Fri,  8 May 2020 15:28:09 +0200 (CEST)
+Date:   Fri, 8 May 2020 15:28:09 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Paul Burton <paulburton@kernel.org>,
         Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 13/17] spi: dw: Initialize paddr in DW SPI MMIO private data
-Date:   Fri, 8 May 2020 16:29:38 +0300
-Message-ID: <20200508132943.9826-14-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/20] mips: Fix cpu_has_mips64r1/2 activation for
+ MIPS32 CPUs
+Message-ID: <20200508132809.GA15641@alpha.franken.de>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-9-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506174238.15385-9-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This field is used only for the DW SPI DMA code initialization, that's
-why there were no problems with it being uninitialized in Dw SPI MMIO
-driver. Since in a further patch we are going to introduce the DW SPI DMA
-support in the MMIO version of the driver, lets set the field with the
-physical address of the DW SPI controller registers region.
+On Wed, May 06, 2020 at 08:42:26PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
+> index e2f31bd6363b..7e22b9c1e279 100644
+> --- a/arch/mips/include/asm/cpu-features.h
+> +++ b/arch/mips/include/asm/cpu-features.h
+> @@ -64,6 +64,8 @@
+>  	((MIPS_ISA_REV >= (ge)) && (MIPS_ISA_REV < (lt)))
+>  #define __isa_range_or_flag(ge, lt, flag) \
+>  	(__isa_range(ge, lt) || ((MIPS_ISA_REV < (lt)) && __isa(flag)))
+> +#define __isa_range_and_flag(ge, lt, flag) \
+> +	(__isa_range(ge, lt) && __isa(flag))
+>  
+>  /*
+>   * SMP assumption: Options of CPU 0 are a superset of all processors.
+> @@ -291,10 +293,10 @@
+>  # define cpu_has_mips32r6	__isa_ge_or_flag(6, MIPS_CPU_ISA_M32R6)
+>  #endif
+>  #ifndef cpu_has_mips64r1
+> -# define cpu_has_mips64r1	__isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1)
+> +# define cpu_has_mips64r1	__isa_range_and_flag(1, 6, MIPS_CPU_ISA_M64R1)
 
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
----
- drivers/spi/spi-dw-mmio.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+that's not the correct fix. You want to check for cpu_has_64bits here.
+Something like 
 
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index 384a3ab6dc2d..2ff1b700305f 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -136,6 +136,7 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
- 	int (*init_func)(struct platform_device *pdev,
- 			 struct dw_spi_mmio *dwsmmio);
- 	struct dw_spi_mmio *dwsmmio;
-+	struct resource *mem;
- 	struct dw_spi *dws;
- 	int ret;
- 	int num_cs;
-@@ -148,11 +149,13 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
- 	dws = &dwsmmio->dws;
- 
- 	/* Get basic io resource and map it */
--	dws->regs = devm_platform_ioremap_resource(pdev, 0);
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	dws->regs = devm_ioremap_resource(&pdev->dev, mem);
- 	if (IS_ERR(dws->regs)) {
- 		dev_err(&pdev->dev, "SPI region map failed\n");
- 		return PTR_ERR(dws->regs);
- 	}
-+	dws->paddr = mem->start;
- 
- 	dws->irq = platform_get_irq(pdev, 0);
- 	if (dws->irq < 0)
+# define cpu_has_mips64r1    (cpu_has_64bits && __isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1))
+
+should do the trick.
+
+Thomas.
+
 -- 
-2.25.1
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
