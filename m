@@ -2,66 +2,87 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C78FC35280
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 00:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE64CC47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 01:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F79A208CA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 00:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD108208DB
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 01:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588900285;
+	bh=SRyTRR0ofpehB0QrbI1UPDJ/+BG7MqfbSadDor9zC3U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UqZG/nXvOYnuX1mZElf+HzCvbSH/IhqtiGpq5TvL0YDs0nNaEOY2/LawacLXSzrDy
+	 fx7gKEkrjtwQrQ/UY1f+OtK1We5mJ3cyCyVILNoA94E9I1ryslXs8E4dYA+AeSS9jl
+	 JTuvzPIFh+HzDsDKtlObYkIYCyelsX7pEHp0QTvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgEHAvZ (ORCPT
+        id S1726612AbgEHBLW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 May 2020 20:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726470AbgEHAvZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 May 2020 20:51:25 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0ACC05BD43;
-        Thu,  7 May 2020 17:51:25 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DE2761193777F;
-        Thu,  7 May 2020 17:51:24 -0700 (PDT)
-Date:   Thu, 07 May 2020 17:51:24 -0700 (PDT)
-Message-Id: <20200507.175124.699169292892309991.davem@davemloft.net>
-To:     grygorii.strashko@ti.com
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org, t-kristo@ti.com,
-        netdev@vger.kernel.org, nsekhar@ti.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next 0/3] net: ethernet: ti: am65x-cpts: follow up
- dt bindings update
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200506181401.28699-1-grygorii.strashko@ti.com>
-References: <20200506181401.28699-1-grygorii.strashko@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 17:51:25 -0700 (PDT)
+        Thu, 7 May 2020 21:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbgEHBLW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 May 2020 21:11:22 -0400
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4C02208E4;
+        Fri,  8 May 2020 01:11:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588900281;
+        bh=SRyTRR0ofpehB0QrbI1UPDJ/+BG7MqfbSadDor9zC3U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=c+rw2UGsXPBNRL+un0z9oA50sOLj8SneEQspZzKSvbGztUfr+/1WYCD+fN55XLNrh
+         SSeV5UbAoAypBDJpzcSJ+Vlr69yFrYW74mm2u/AdTKMxbeHt17dk4sQ3Hb9bOXVIaf
+         dEKSa0AascySxTZYqkhkGbDWI6UhwFqHvkRuuZtw=
+Received: by mail-oo1-f54.google.com with SMTP id p67so1794891ooa.11;
+        Thu, 07 May 2020 18:11:21 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaObNVo0O55GUPI772Pif6wkOGQ/ixoz4cVSutGYMJsghTuj3w8
+        7PmfBc4FqKnyV5EmwR7koy44sM9L8II7fDRydA==
+X-Google-Smtp-Source: APiQypIJrtYxVWl5r+pD/EJOcnRBaXUluMS28Zu3xjxB8gNg2GGajVyDihdMtWJJ8AOfidD0XwNySGRNmFShbAmj8z0=
+X-Received: by 2002:a4a:9c55:: with SMTP id c21mr345333ook.25.1588900280975;
+ Thu, 07 May 2020 18:11:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200507201544.43432-1-james.quinlan@broadcom.com> <20200507201544.43432-4-james.quinlan@broadcom.com>
+In-Reply-To: <20200507201544.43432-4-james.quinlan@broadcom.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 7 May 2020 20:11:09 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK6mHhw=9gCyyS7nP35WcqQLQdKhgNXYPSXwkhVe_8t0g@mail.gmail.com>
+Message-ID: <CAL_JsqK6mHhw=9gCyyS7nP35WcqQLQdKhgNXYPSXwkhVe_8t0g@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] dt-bindings: PCI: brcmstb: New prop 'aspm-no-l0s'
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Wed, 6 May 2020 21:13:58 +0300
+On Thu, May 7, 2020 at 3:16 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+>
+> From: Jim Quinlan <jquinlan@broadcom.com>
+>
+> For various reasons, one may want to disable the ASPM L0s
+> capability.
+>
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> ---
+>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
-> This series is follow update for  TI A65x/J721E Common platform time sync (CPTS)
-> driver [1] to implement  DT bindings review comments from
-> Rob Herring <robh@kernel.org> [2].
->  - "reg" and "compatible" properties are made required for CPTS DT nodes which
->    also required to change K3 CPSW driver to use of_platform_device_create()
->    instead of of_platform_populate() for proper CPTS and MDIO initialization
->  - minor DT bindings format changes
->  - K3 CPTS example added to K3 MCU CPSW bindings
-> 
-> [1] https://lwn.net/Articles/819313/
-> [2] https://lwn.net/ml/linux-kernel/20200505040419.GA8509@bogus/
-
-Series applied, thanks.
+Acked-by: Rob Herring <robh@kernel.org>
