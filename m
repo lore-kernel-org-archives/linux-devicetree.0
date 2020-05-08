@@ -2,86 +2,108 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC722C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DDFC47254
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B752F206D6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDBF218AC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588944820;
+	bh=mONIV7U+kyBJ+32pgZbmybpjfg+r5T9JwvmQQECspjk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Gik1tgvCq80i0JyRZ38zEH3GUUoWjJA4bZspTBGgpq4SMZril1q+EaIs47N6ZyHZG
+	 7fu3UWvx+mMQpZvfguBK6vHyi1W5DW5MWqTk3dCRhTaBGYywDkYooqzVBqUZiNKqaz
+	 g5orKEUQK/Pc5OmfBBkKpIBSDUGsGZdTLQbsvHwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgEHNb4 (ORCPT
+        id S1726922AbgEHNdk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 09:31:56 -0400
-Received: from elvis.franken.de ([193.175.24.41]:44873 "EHLO elvis.franken.de"
+        Fri, 8 May 2020 09:33:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbgEHNbz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 09:31:55 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jX36M-0003ty-04; Fri, 08 May 2020 15:31:42 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 82BA6C041B; Fri,  8 May 2020 15:30:40 +0200 (CEST)
-Date:   Fri, 8 May 2020 15:30:40 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Sergey.Semin@baikalelectronics.ru
+        id S1726736AbgEHNdj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 May 2020 09:33:39 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC1B120708;
+        Fri,  8 May 2020 13:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588944819;
+        bh=mONIV7U+kyBJ+32pgZbmybpjfg+r5T9JwvmQQECspjk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nyn14izNbLw13+C8aRmGKLcZ3BwlQUuLEJ+wYP5GhFb2XP30lsbQM10NmgZC09Vk+
+         UckP1Oje+G2jOGzqWw2Ut/0r8k5jd+3UhDGOVWT+ssUTm6Cvxir3gVhiZHdxwzrl2M
+         ywV18wQajYEE9Ko/eynJhng+mXsz4m3l1ELplzdk=
+Date:   Fri, 8 May 2020 14:33:36 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Daniel Silsby <dansilsby@gmail.com>,
-        =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Allison Randal <allison@lohutok.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v2 06/20] mips: Add MIPS32 Release 5 support
-Message-ID: <20200508133040.GB15641@alpha.franken.de>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-7-Sergey.Semin@baikalelectronics.ru>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/17] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200508133336.GK4820@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HcXnUX77nabWBLF4"
 Content-Disposition: inline
-In-Reply-To: <20200506174238.15385-7-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+X-Cookie: Give him an evasive answer.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 06, 2020 at 08:42:24PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> We also could add CPU_MIPS64_R5 config support here, but I don't think
-> it's necessary at the moment seeing there is no any real chip ever
-> produced with that arch. Right?
 
-how much is missing ? Looks like not too much, so it might be worth
-to add it at least for symmetry to the other ISAs...
+--HcXnUX77nabWBLF4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thomas.
+On Fri, May 08, 2020 at 04:29:25PM +0300, Serge Semin wrote:
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+> Serge Semin (17):
+>   dt-bindings: spi: Convert DW SPI binding to DT schema
+
+Please don't make new feature development dependent on conversion to the
+new schema format, there's quite a backlog of reviews of schema
+conversions so it can slow things down.  It's good to do the conversions
+but please do them after adding any new stuff to the binding rather than
+before.
+
+--HcXnUX77nabWBLF4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61X7AACgkQJNaLcl1U
+h9CLnAf+O/mkQGXZWskF1aU9ifA3WKCaGO7ENKOG2HlI7+/2BtDt7ImOkCrcBbKb
+K9yAjXfWqhx47uiQoeLJtmdZQVBhn73fL867tXqzbvo1IfIw8nAk7VNmePzIDMcL
+61DQCKjbmBvQd70xDDzjrOCZbMSJ5zzjWSBClVFZDi7VvB0Q7ngIRoWJkKy/mm8D
+joP8Y76nidk0LMvKgqhmCwxIXKTFgacy9ld8zckl1VgkzFAQ5AT1yKOOWZiCUHMt
+8dfJt0DwzuBEUKUDcGFXFg4duheda20SgYnFkrM19Nh/D39dqJ//xyCUhViWz/yB
+GaOwQ+OgauLqiTph56P0R/1rFek2/Q==
+=FjO8
+-----END PGP SIGNATURE-----
+
+--HcXnUX77nabWBLF4--
