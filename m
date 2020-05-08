@@ -2,206 +2,119 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DE3C47255
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90EDC47255
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 145E92192A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91181218AC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588957659;
-	bh=gFrMAqNENiqsLuPP+ou0xff1gNs2mwSrUOEUDm/fTOM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yt3yaHlALSOKD5XD1PdikV5N1H9BoVU6H5D47AEHt/h/aZunH1rr04hpGL52TI3Fu
-	 giS6j8lZ0van21LkWC4DSxJNj3iuwsNeFco/GqGsw1HLFFwg9Ld3RNoOtsc/re4qU/
-	 vTvMnTB5G59B/gWZN37M+3GVhsWL3+9Q0jd0K+dU=
+	s=default; t=1588958012;
+	bh=gLM9qUvxrYiPMfAOqRJ1PoOf5M7hFr7u2n4CEILO50I=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=TiGNNpzNdpu3g/rbND5mGxhdzEcv/nPD5g6vM1fNZhliw4OHT6tfIKq/B9NQTUfUh
+	 ebB99R10Xp30LV8eK53VXUX4bJ7b0civFyZ/QS+LvKqGqWTUbz/RNwp8kA7PZBMnJq
+	 ih4AYUoGvRcWVjaGcQ2E1WyK7nhBFTP65JPKW/5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgEHRHi (ORCPT
+        id S1727860AbgEHRNc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 13:07:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 13:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgEHRHi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 13:07:38 -0400
+        id S1726750AbgEHRNb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 May 2020 13:13:31 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF4CC2083B;
-        Fri,  8 May 2020 17:07:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC6892192A;
+        Fri,  8 May 2020 17:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588957657;
-        bh=gFrMAqNENiqsLuPP+ou0xff1gNs2mwSrUOEUDm/fTOM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kX/2yeg05jcKk+oVnZzlPwEc9jZ/nTz/aPemBJqejITzrT5lwkP62pRO9vzU3HjgN
-         +B/Iqt5YJ4Bu/Da0PiCBkcIVGIRraMpmFLrk2d1csggYueTfBvjpnn5Z85jCijRxOG
-         pXLz2DCR+cF7tmQ1h8zwoXl7iVRbTE5DK6BoKKYY=
-Date:   Fri, 8 May 2020 18:07:34 +0100
+        s=default; t=1588958011;
+        bh=gLM9qUvxrYiPMfAOqRJ1PoOf5M7hFr7u2n4CEILO50I=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=pSqawFDd76MgRyToBM4GrmZnPrfhoRCCqOjCZp1j9YT7EJe1vdGGbozD9MIXSdw/L
+         FGR6AumafkY52sb47IYMlOE06dvz2uBlovSRPbvHswEFpV2Z1mMPEN7M57zpugdQOo
+         e7CH7dlCgzb3mD5q68T8j6b8yZsHdPRdACerkg4A=
+Date:   Fri, 08 May 2020 18:13:28 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Message-ID: <20200508170733.GL4820@sirena.org.uk>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
- <20200508101541.e3yxaocuilaiyutg@mobilestation>
- <20200508102210.GC4820@sirena.org.uk>
- <20200508154210.r2pp5asadalvf6ij@mobilestation>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TdMwOTenGjBWB1uY"
-Content-Disposition: inline
-In-Reply-To: <20200508154210.r2pp5asadalvf6ij@mobilestation>
-X-Cookie: Give him an evasive answer.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     robh@kernel.org, linus.walleij@linaro.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        lee.jones@linaro.org
+Cc:     linux-gpio@vger.kernel.org, bgoswami@codeaurora.org,
+        linux-kernel@vger.kernel.org, vinod.koul@linaro.org,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        spapothi@codeaurora.org
+In-Reply-To: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
+References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v4 00/12] ASoC: Add support to WCD9340/WCD9341 codec
+Message-Id: <158895800277.30774.11001800526381716360.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, 21 Nov 2019 17:04:57 +0000, Srinivas Kandagatla wrote:
+> This patchset adds support to Qualcomm WCD9340/WCD9341 Codec which
+> is a standalone Hi-Fi audio codec IC.
+> This codec supports both I2S/I2C and SLIMbus audio interfaces.
+> On slimbus interface it supports two data lanes; 16 Tx ports
+> and 8 Rx ports. It has Five DACs and seven dedicated interpolators,
+> Multibutton headset control (MBHC), Active noise cancellation,
+> Sidetone paths, MAD (mic activity detection) and codec processing engine.
+> It supports Class-H differential earpiece out and stereo single
+> ended headphones out.
+> 
+> [...]
 
---TdMwOTenGjBWB1uY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to
 
-On Fri, May 08, 2020 at 06:42:10PM +0300, Serge Semin wrote:
-> On Fri, May 08, 2020 at 11:22:10AM +0100, Mark Brown wrote:
+   local tree regulator/for-5.7
 
-> > Can you be more specific about the issues?  From what you wrote it
-> > sounded like the main thing was chip select handling.
+Thanks!
 
-> I thought it would be obvious from the patch itself. I've thoroughly described all
-> the issues there. Here in cover-letter it's a summary of the main ones.
+[01/12] dt-bindings: SLIMBus: add slim devices optional properties
+        (no commit info)
+[02/12] ASoC: dt-bindings: add dt bindings for WCD9340/WCD9341 audio codec
+        (no commit info)
+[03/12] mfd: wcd934x: add support to wcd9340/wcd9341 codec
+        (no commit info)
+[04/12] ASoC: wcd934x: add support to wcd9340/wcd9341 codec
+        (no commit info)
+[05/12] ASoC: wcd934x: add basic controls
+        (no commit info)
+[06/12] ASoC: wcd934x: add playback dapm widgets
+        (no commit info)
+[07/12] ASoC: wcd934x: add capture dapm widgets
+        (no commit info)
+[08/12] ASoC: wcd934x: add audio routings
+        (no commit info)
+[09/12] dt-bindings: gpio: wcd934x: Add bindings for gpio
+        (no commit info)
+[10/12] gpio: wcd934x: Add support to wcd934x gpio controller
+        (no commit info)
+[11/12] ASoC: qcom: dt-bindings: Add compatible for DB845c and Lenovo Yoga
+        (no commit info)
+[12/12] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
+        (no commit info)
 
-Bear in mind that the patch is a stand alone thing, there's not a copy
-of the existing driver sitting with it and the stylistic changes make
-comparisons even less obvious.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> 1) Registers mapping. The DW SSI registers are shifted by 0x100 with
-> respect to the MMIO region start. The lowest 0x100 registers are
-> responsible for the Baikal-T1 Boot Controller settings. There aren't much
-> of them there though. Our code is interested only in a flag, which switches
-> an accessibility of the DW APB SSI registers and direct SPI flash mapping.
-> And this switchability is a reason of another peculiarity (see the next
-> item for details).
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-That seems fairly easy to address, for example with a subdevice or
-indirecting through ops for I/O that could add on an offset (what a
-subdevice would end up accomplishing really).
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> 2) SPI flash direct mapping. SPI flash direct mapping and DW APB SSI registers
-> are mutual exclusive, so only one of them can be enabled at a time. In
-> order to use the dirmap we have to switch the RDA bit off in the Boot
-> Controller setup register. If DW APB SSI registers need to be accessed the
-> RDA bit should be set. For this reason we have to make sure that dirmap
-> operations, SPI operations and SPI-mem-ops operations are exclusive, since
-> some of them need to interact with the DW APB SSI registers, while another
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-This exclusivity requirement is pretty standard for these flash memory
-map controllers, the framework should ensure you don't get any overlap
-between memory mapped and regular interactions.
-
-> the directly mapped SPI flash MMIO (currently ctlr->io_mutex is responsible
-> for this).
-
-It only seemed to be referenced in the debugfs code?
-
-> 3) A specific access to MMIO (concerning directly mapped SPI flash MMIO).
-> The SoC interconnect is designed in a way so we can't use any instruction to
-> read/write from/to the MMIO space. It has to be done by lw/sw with
-> dword-aligned address passed. Though in this driver we only use a read
-> operation from the directly mapped SPI flash memory.
-
-That's a custom IP block for your systems so that'd be a separate
-operation no matter what.
-
-> 4) No direct handling of the CS. Though this is an issue of all DW SSI
-> controllers, here with very small FIFO and no DMA/IRQ supported it mandates to
-> workaround any preemption/interruption during a non-GPIO-CS-based transfer.
-> For the same reason the driver doesn't support normal spi-messages based
-
-As I said when reviewing the driver I think all you need here is support
-in the core for linearizing messages into a single transfer and then
-what you're left with is what should be a fairly small quirk for running
-with interrupts disabled if there's no DMA or interrupts.  I'd expect
-both bits of that to benefit some other users too, there's definitely
-other controllers that have problems with automated chip select
-handling but happen to get away with it a lot of the time.
-
-> interface if no GPIO-CS supplied. In addition since FIFO is too small and most
-> of our platforms don't have GPIO-CS support we had to create the SPI-mem-ops
-> instead of generic SPI-callback.
-
-As I also said in reviewing the driver that's just not a good idea
-anyway, there is no way a driver should be open coding things like that
-and there are much better ways to support this.  This is only there
-because the driver isn't able to cope with normal messages, it's better
-to solve that problem and use the generic flash code than to emulate the
-generic flash code here.
-
-In both these cases it looks like the majority of the reason the driver
-is different is that you're trying to solve problems in the driver
-without changing the core, some things are a lot easier to handle
-further up the stack.
-
-> 5) MMIO access race condition. As I described in the in-code comment it's a
-> very tricky race happening during concurrent access from different cores to the
-> APB bus. Due to this if SPI interface is working high frequency like
-
-This looks like it should be a fairly small quirk?
-
-> I am pretty sure I have forgotten something. Anyway it has been much easier
-> to create a new driver instead of integrating all of these into a generic
-> one. Integrating something like this in the current DW APB SSI driver would
-> mean to have it completely overwritten (refactored if you want) which would
-> bring us to a new driver anyway. I don't think it would be good to
-> complicate the generic driver with so many peculiar things scattered around
-> the code with various hooks or ifdef, especially seeing the current code has
-> already become a bit messy.
-
-It really does sound like other than the bits I don't think should be
-implemented on a per-driver level these differences are relatively
-small.
-
---TdMwOTenGjBWB1uY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61kdQACgkQJNaLcl1U
-h9BK0Qf/XnNZ8iZshg/MisGBW5otVRjj/VHOY47GKBd8cBJFzqRzBItBC+FY9LTa
-M27kfFmD5PL6uQkyKLcMO6bT4fQfId97DgK6wFZTzD92iHA2HlDxplJfde+x7FYz
-MiW/SgJrKOiTjz7sDs3awuB3CcyEe9AdDtgxCaxiTe40MDhmIdYclRoxyZmTMpBi
-qFGmeBrGi6jUKiFTdeHu/hmaVa9du2/VaBZxsPicEJl21O2aLHcw5cCQHFiBFqgw
-fAaT2/gKAHlSQ9rJLXIr0kxMupFoP5ugVDgxGAqnhlrqLXeEvhaAcPmM6poRVkmO
-ETdt5doSEWB8225kqpKrDEBQUIlStQ==
-=ZZx2
------END PGP SIGNATURE-----
-
---TdMwOTenGjBWB1uY--
+Thanks,
+Mark
