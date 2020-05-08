@@ -2,158 +2,289 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E63C47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BB0C47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C19C24999
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:11:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqIriFNW"
+	by mail.kernel.org (Postfix) with ESMTP id 32FD120870
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:16:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588943763;
+	bh=iFD8Mfft0k7NWVbgyxaIRINdfUqCl7az6w/fb8VdR+c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=g3BRkvyORqP+FwczgPdrECG8JyAnekOTEd7MlCoOW5GEqvn6i8hDVm0lSxMdEQrlo
+	 Fkn1li1ioplcbO6tIz9jELTBvmaJJgAxTEAV3KXJ/6zWlw64ss4A22+dLUZiRf7prm
+	 41QeVrpo0FoWJwtoejQ95hq6cU+ycLXRvnwjydGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbgEHNLz (ORCPT
+        id S1729369AbgEHNPy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 09:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35788 "EHLO
+        Fri, 8 May 2020 09:15:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730192AbgEHNLx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 09:11:53 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C16E8C05BD43;
-        Fri,  8 May 2020 06:11:52 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id w7so1761245wre.13;
-        Fri, 08 May 2020 06:11:52 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1727958AbgEHMpp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 08:45:45 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B24C05BD43;
+        Fri,  8 May 2020 05:45:44 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id o14so460579ljp.4;
+        Fri, 08 May 2020 05:45:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m6PwKC0GGKuK1AQCcfQJuTFB4k9S8lgpVMeQgt9tC7M=;
-        b=sqIriFNWfo+C01cQSiy2PlZsONvClgfMh/XyGoUm/jLV/eavxNsd/+2a5uGsdcB44r
-         08CaTwxdgLKC2JffT68IPYyTue5HyS9eH7ikLBpla/57s3BTJ+4xsSdXN4lB3na5eevA
-         CU52bAJODnMyBLF4UKg3SNbnLnbTZ5SKthIznITkqTJXinHtcLkbRNX8JReg1QaupdQV
-         cDrc6R8rX2Vhblj5n5irkd+lIEr+EzDpTuCZr0XiosydNi7WpW6h0IwUd6FVtjb21Pio
-         4DCv5Y4bL+ZpYojiw9dEDJSTyH/Fp/ehE9FQ9AlEMv3hxGbM+I53QvUWJ1w+FrKvEuyX
-         0eaQ==
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=YSng6s9kq7jWuWtp8R03+la3j7hugWr6HZq0thRDMsw=;
+        b=b69aJl/1L7KB2qJ0oF7F6kv2hwxAQ4daURADql9u/ekBS/L1Tz2ZHu89m3XVcb2w6W
+         dNwZGU1DjplF/G0O18SW/cEBR4KEayJ4aU1GHAQjI843Tce1+GtZRPrc9bl1C6X0Ac+a
+         9eBUM4ABedE0ae3lmUoA4hrodg3QrX7lNRZPUjk8kviXNLv+Ud32Srz8spWXDFJlrtCx
+         0IQqzPRS9tWz5bONsL5w7EiC89orR/22yzymWjK3xsZS3mhrzdLq1WYwb22m577hA4hr
+         BHSJza1xJZUtIhyLawSd4eSrSVxZ+Xu8RAiERDAn9m9vZpe7zrGe1JJrwNqj7kH/McZq
+         6rBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m6PwKC0GGKuK1AQCcfQJuTFB4k9S8lgpVMeQgt9tC7M=;
-        b=mb/gXF7O61HCOv4YtEn3mhuGnkbDvQOs7KaPX0JineUjtEeer+ZLz6ejbAgVcSX8D6
-         teDefBB4Hu1r7tAWxU4oXTjzsYIMYkTioOeA/S5RT7CD7I+89yssEblEW0X5lqi1mJhv
-         FJlT7k7Z2c1yZQXl0JMCSu17fAtQ+fwsfvRm8DdiUNNuqh9LCrU8KS2DMmYAYLCxzJ+U
-         nICeNwndIX9HK0/Kc/4dstNYTYioTZJb7c+5d6kxqUVol9VwJz/DW8xkGUYkly9w739Q
-         TblMDIA5QnjAvhoVWAkAmjLyKHkS6Jx3Lg4qJHS3gakkgvA8ZOTcle4DHMmVwSWo84xS
-         KZZQ==
-X-Gm-Message-State: AGi0PuYebcIvlEKFcb082/srDUGTRoxTHokwnjUmvuD9Mdt8Rf0dGHR7
-        BQ0aDVrL0WX86h7qjuMj1hE2dQ8OVMNUu0sM
-X-Google-Smtp-Source: APiQypIDsTyVBV8sQuS/K/6cCNcKKifc+7wFf6IB98XX1bm8I0BIRm6w640Gs6sWGa5I5em0HqkaiA==
-X-Received: by 2002:adf:efcc:: with SMTP id i12mr2830699wrp.325.1588943511317;
-        Fri, 08 May 2020 06:11:51 -0700 (PDT)
-Received: from [10.8.0.6] ([5.2.67.190])
-        by smtp.gmail.com with ESMTPSA id 88sm3139115wrq.77.2020.05.08.06.11.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 06:11:50 -0700 (PDT)
-Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
- Compex wifi cards
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
-        Xogium <contact@xogium.me>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20200430080625.26070-1-pali@kernel.org>
-From:   Tomasz Maciej Nowak <tmn505@gmail.com>
-Message-ID: <6ff6d161-adba-9e5c-5a4a-1bfa49de0fc4@gmail.com>
-Date:   Fri, 8 May 2020 15:11:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=YSng6s9kq7jWuWtp8R03+la3j7hugWr6HZq0thRDMsw=;
+        b=BYL79snopseVuk2BNcws7JxWnX6bFj59xWTGaA6jWzndbKquQmeMFnUHhmC2AAuy8G
+         ZLjT1bTNbtGIy3Pz+GIyD0R5PS3l+A4cyT/NGdcpeTZ2iD2T70Aoh0dweLriBjpXHoaJ
+         5CnXGIBEGz3BMwaECXp+2NQ4inYz41JCQm9s6ThB5PYjh6AGyRVWioJe38p/NC8PBLkK
+         5FMx8GmmqjFkC41XfYOqhTat6I8tBdGxbC0sl/NIEZDdWte5585zPAfCbgDeoc5dYBIV
+         69FgRUsyTf0tRvu+OVL1TFQml9Fx+HmQq1/w+re36rx4NGyvjsIxLLp+GWtdyqcL4y0o
+         KuLg==
+X-Gm-Message-State: AOAM531PGdJSEB4EgZUy34zS69hY0rdBpeiW414hYkSibkB3NrxcBliv
+        RF7br3dGDCVCW0d+kL3pHLpbpuKiOLk=
+X-Google-Smtp-Source: ABdhPJwDS/GZZFlRRnVMI1EzibGW84OxWoBLd1oUiwjHRj+J4PaXXb+wv/M7CIgJEp5mHbyNe2lZQg==
+X-Received: by 2002:a2e:6e13:: with SMTP id j19mr1615226ljc.292.1588941943223;
+        Fri, 08 May 2020 05:45:43 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id r3sm1133891lfm.52.2020.05.08.05.45.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 May 2020 05:45:42 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: Re: [RFC 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting requirements
+In-Reply-To: <1588888768-25315-2-git-send-email-wcheng@codeaurora.org>
+References: <1588888768-25315-1-git-send-email-wcheng@codeaurora.org> <1588888768-25315-2-git-send-email-wcheng@codeaurora.org>
+Date:   Fri, 08 May 2020 15:45:37 +0300
+Message-ID: <878si2mw7i.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200430080625.26070-1-pali@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-W dniu 30.04.2020 o 10:06, Pali Rohár pisze:
-> Hello,
-> 
-> this is the fourth version of the patch series for Armada 3720 PCIe
-> controller (aardvark). It's main purpose is to fix some bugs regarding
-> buggy ath10k cards, but we also found out some suspicious stuff about
-> the driver and the SOC itself, which we try to address.
-> 
-> Patches are available also in my git branch pci-aardvark:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
-> 
-> Changes since v3:
-> - do not change return value of of_pci_get_max_link_speed() function
-> - mark zero 'max-link-speed' as invalid
-> - silently use gen3 speed when 'max-link-speed' as invalid
-> 
-> Changes since v2:
-> - move PCIe max-link-speed property to armada-37xx.dtsi
-> - replace custom macros by standard linux/pci_regs.h macros
-> - increase PERST delay to 10ms (needed for initialized Compex WLE900VX)
-> - disable link training before PERST (needed for Compex WLE900VX)
-> - change of_pci_get_max_link_speed() function to signal -ENOENT
-> - handle errors from of_pci_get_max_link_speed() function
-> - updated comments, commit titles and messages
-> 
-> Changes since v1:
-> - commit titles and messages were reviewed and some of them were rewritten
-> - patches 1 and 5 from v1 which touch PCIe speed configuration were
->   reworked into one patch
-> - patch 2 from v1 was removed, it is not needed anymore
-> - patch 7 from v1 now touches the device tree of armada-3720-db
-> - a patch was added that tries to enable PCIe PHY via generic-phy API
->   (if a phandle to the PHY is found in the device tree)
-> - a patch describing the new PCIe node DT properties was added
-> - a patch was added that moves the PHY phandle from board device trees
->   to armada-37xx.dtsi
-> 
-> Marek and Pali
-> 
-> Marek Behún (5):
->   PCI: aardvark: Improve link training
->   PCI: aardvark: Add PHY support
->   dt-bindings: PCI: aardvark: Describe new properties
->   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
->   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
-> 
-> Pali Rohár (7):
->   PCI: aardvark: Train link immediately after enabling training
->   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
->     read-only register
->   PCI: of: Zero max-link-speed value is invalid
->   PCI: aardvark: Issue PERST via GPIO
->   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
->   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
->     macros
->   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Hi.
-The PCI interface seems to work fine as in the first series, so
 
-Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+Hi,
 
--- 
-TMN
+Wesley Cheng <wcheng@codeaurora.org> writes:
+> Some devices have USB compositions which may require multiple endpoints
+> that support EP bursting.  HW defined TX FIFO sizes may not always be
+> sufficient for these compositions.  By utilizing flexible TX FIFO
+> allocation, this allows for endpoints to request the required FIFO depth =
+to
+> achieve higher bandwidth.  With some higher bMaxBurst configurations, usi=
+ng
+> a larger TX FIFO size results in better TX throughput.
+
+This needs to be carefully thought out as it can introduce situations
+where gadget drivers that worked previously stop working.
+
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 4c171a8..e815c13 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -675,6 +675,7 @@ struct dwc3_event_buffer {
+>   *		isochronous START TRANSFER command failure workaround
+>   * @start_cmd_status: the status of testing START TRANSFER command with
+>   *		combo_num =3D 'b00
+> + * @fifo_depth: allocated TXFIFO depth
+>   */
+>  struct dwc3_ep {
+>  	struct usb_ep		endpoint;
+> @@ -718,6 +719,7 @@ struct dwc3_ep {
+>  	u8			resource_index;
+>  	u32			frame_number;
+>  	u32			interval;
+> +	int			fifo_depth;
+>=20=20
+>  	char			name[20];
+>=20=20
+> @@ -1004,6 +1006,7 @@ struct dwc3_scratchpad_array {
+>   * 	1	- utmi_l1_suspend_n
+>   * @is_fpga: true when we are using the FPGA board
+>   * @pending_events: true when we have pending IRQs to be handled
+> + * @needs_fifo_resize: not all users might want fifo resizing, flag it
+>   * @pullups_connected: true when Run/Stop bit is set
+>   * @setup_packet_pending: true when there's a Setup Packet in FIFO. Work=
+around
+>   * @three_stage_setup: set if we perform a three phase setup
+> @@ -1044,6 +1047,7 @@ struct dwc3_scratchpad_array {
+>   * @dis_metastability_quirk: set to disable metastability quirk.
+>   * @imod_interval: set the interrupt moderation interval in 250ns
+>   *                 increments or 0 to disable.
+> + * @last_fifo_depth: total TXFIFO depth of all enabled USB IN/INT endpoi=
+nts
+>   */
+>  struct dwc3 {
+>  	struct work_struct	drd_work;
+> @@ -1204,6 +1208,7 @@ struct dwc3 {
+>  	unsigned		is_utmi_l1_suspend:1;
+>  	unsigned		is_fpga:1;
+>  	unsigned		pending_events:1;
+> +	unsigned		needs_fifo_resize:1;
+
+Instead of passing a flag, this could be detected in runtime during ->udc_s=
+tart()
+
+> diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
+> index 6dee4da..7ee2302 100644
+> --- a/drivers/usb/dwc3/ep0.c
+> +++ b/drivers/usb/dwc3/ep0.c
+> @@ -611,6 +612,43 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc, str=
+uct usb_ctrlrequest *ctrl)
+>  		return -EINVAL;
+>=20=20
+>  	case USB_STATE_ADDRESS:
+
+are you sure it's safe to fiddle with TX FIFO allocation at SetAddress()
+time?
+
+> +		/*
+> +		 * If tx-fifo-resize flag is not set for the controller, then
+> +		 * do not clear existing allocated TXFIFO since we do not
+> +		 * allocate it again in dwc3_gadget_resize_tx_fifos
+> +		 */
+> +		if (dwc->needs_fifo_resize) {
+> +			/* Read ep0IN related TXFIFO size */
+> +			dep =3D dwc->eps[1];
+> +			size =3D dwc3_readl(dwc->regs, DWC3_GTXFIFOSIZ(0));
+> +			if (dwc3_is_usb31(dwc))
+> +				dep->fifo_depth =3D DWC31_GTXFIFOSIZ_TXFDEP(size);
+> +			else
+> +				dep->fifo_depth =3D DWC3_GTXFIFOSIZ_TXFDEP(size);
+> +
+> +			dwc->last_fifo_depth =3D dep->fifo_depth;
+> +			/* Clear existing TXFIFO for all IN eps except ep0 */
+> +			for (num =3D 3; num < min_t(int, dwc->num_eps,
+> +				DWC3_ENDPOINTS_NUM); num +=3D 2) {
+> +				dep =3D dwc->eps[num];
+> +				/* Don't change TXFRAMNUM on usb31 version */
+> +				size =3D dwc3_is_usb31(dwc) ?
+> +					dwc3_readl(dwc->regs,
+> +						   DWC3_GTXFIFOSIZ(num >> 1)) &
+> +						   DWC31_GTXFIFOSIZ_TXFRAMNUM :
+> +						   0;
+> +
+> +				dwc3_writel(dwc->regs,
+> +					    DWC3_GTXFIFOSIZ(num >> 1),
+> +					    size);
+> +				dep->fifo_depth =3D 0;
+> +
+> +				dev_dbg(dwc->dev, "%s(): %s fifo_depth:%x\n",
+> +					__func__, dep->name,
+> +					dep->fifo_depth);
+
+no dev_dbg() calls in this driver, please.
+
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 00746c2..6baca05 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -540,6 +540,97 @@ static int dwc3_gadget_start_config(struct dwc3_ep *=
+dep)
+>  	return 0;
+>  }
+>=20=20
+> +/*
+> + * dwc3_gadget_resize_tx_fifos - reallocate fifo spaces for current use-=
+case
+> + * @dwc: pointer to our context structure
+> + *
+> + * This function will a best effort FIFO allocation in order
+> + * to improve FIFO usage and throughput, while still allowing
+> + * us to enable as many endpoints as possible.
+> + *
+> + * Keep in mind that this operation will be highly dependent
+> + * on the configured size for RAM1 - which contains TxFifo -,
+> + * the amount of endpoints enabled on coreConsultant tool, and
+> + * the width of the Master Bus.
+> + *
+> + * In the ideal world, we would always be able to satisfy the
+> + * following equation:
+> + *
+> + * ((512 + 2 * MDWIDTH-Bytes) + (Number of IN Endpoints - 1) * \
+> + * (3 * (1024 + MDWIDTH-Bytes) + MDWIDTH-Bytes)) / MDWIDTH-Bytes
+> + *
+> + * Unfortunately, due to many variables that's not always the case.
+> + */
+> +static int dwc3_gadget_resize_tx_fifos(struct dwc3 *dwc, struct dwc3_ep =
+*dep)
+> +{
+> +	int fifo_size, mdwidth, max_packet =3D 1024;
+> +	int tmp, mult =3D 1, fifo_0_start, ram1_depth;
+> +
+> +	if (!dwc->needs_fifo_resize)
+> +		return 0;
+> +
+> +	/* resize IN endpoints excepts ep0 */
+
+typo: excepts
+
+> +	if (!usb_endpoint_dir_in(dep->endpoint.desc) || dep->number <=3D 1)
+> +		return 0;
+> +
+> +	/* Don't resize already resized IN endpoint */
+> +	if (dep->fifo_depth) {
+> +		dev_dbg(dwc->dev, "%s fifo_depth:%d is already set\n",
+> +					dep->endpoint.name, dep->fifo_depth);
+
+no dev_dbg()
+
+> @@ -620,6 +711,10 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *d=
+ep, unsigned int action)
+>  	int			ret;
+>=20=20
+>  	if (!(dep->flags & DWC3_EP_ENABLED)) {
+> +		ret =3D dwc3_gadget_resize_tx_fifos(dwc, dep);
+
+technically, you're no resizing a single FIFO. In any case, what happens
+when you run out of space midway through the resizing? You already
+accepted the gadget driver, you're already bound to it, then you resize
+the FIFOs and things start to fall apart. How do we handle that?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl61VHEACgkQzL64meEa
+mQaO5hAAijU5AvEFe4sTMgb/COtCQI4iIFQWYlb/myz6eJ/um98np7FTt/nJuxbn
+Z1SjqTkKgOcAA542perYF9xmAjsB7ll4Nmluq1Z6brX1Pr3H6JbnPTKq2uvXF4+v
+OgMPIYa3X8hgK5Wi/wyooVm6IlbymDOHGHCI2/3X1YVrs1wZg9HznPibFooMIVS7
+pFwO95hnMSDLnzklaIbQYurpGt3KPjBJCSkyxZoUTCpcL5gbgCFE62kSCmJnjIoX
+dncti3l6eBc1D2eGf8Vl926WbsrROrnX7bD/56CA4Wrk3XfA4JzouMOpxLuTl6ca
+RcQYauEXIsm6SgrD10l3Dw3DEC44wEo+IUd6H7eF+96HHRtvgEYiFp165LyOOvtB
+s6QX1XnzZbHUa0CbaHZ8TmgefWMe9faCdPiILCQP7UDHS2/tyoePVd/W77TydlFP
+2f8UiAmJwGhVWx4evDBvCKYUCH049OY9xi980U4yMw+A3U6jicOGuUI5kiCHWENO
+l6l4M6V/mR1Q/bJaoFNyddTCMBOUCSM6Og2Hy8sfcRSvzf1PzuUMHNhFxGFExIKM
+gO68Hllos8wpaHTnDXRemD97zzzKufB/kYc/PQ0rqpk3LNaUHftozhODkjnMua6m
+K69ac7JRE/ElKMEbQFcnsO9426COQTv5KLJULWApDuHQoCaqwHI=
+=bjYh
+-----END PGP SIGNATURE-----
+--=-=-=--
