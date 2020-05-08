@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD1DC47247
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2AAC54E4B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92118206DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8294A20A8B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgEHKxh (ORCPT
+        id S1727823AbgEHKxX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 06:53:37 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:41836 "EHLO
+        Fri, 8 May 2020 06:53:23 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41726 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgEHKxh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:53:37 -0400
+        with ESMTP id S1726091AbgEHKxW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:53:22 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A301B80307C7;
-        Fri,  8 May 2020 10:53:32 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BA4328030779;
+        Fri,  8 May 2020 10:53:15 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IsieoRzs4P28; Fri,  8 May 2020 13:53:31 +0300 (MSK)
+        with ESMTP id 5ixZ5ZeYd0ZK; Fri,  8 May 2020 13:53:14 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -37,12 +37,12 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw config
-Date:   Fri, 8 May 2020 13:53:03 +0300
-Message-ID: <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
+        Dan Williams <dan.j.williams@intel.com>,
+        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/6] dt-bindings: dma: dw: Convert DW DMAC to DT binding
+Date:   Fri, 8 May 2020 13:52:59 +0300
+Message-ID: <20200508105304.14065-2-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
  <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
@@ -55,18 +55,15 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-IP core of the DW DMA controller may be synthesized with different
-max burst length of the transfers per each channel. According to Synopsis
-having the fixed maximum burst transactions length may provide some
-performance gain. At the same time setting up the source and destination
-multi size exceeding the max burst length limitation may cause a serious
-problems. In our case the system just hangs up. In order to fix this
-lets introduce the max burst length platform config of the DW DMA
-controller device and don't let the DMA channels configuration code
-exceed the burst length hardware limitation. Depending on the IP core
-configuration the maximum value can vary from channel to channel.
-It can be detected either in runtime from the DWC parameter registers
-or from the dedicated dts property.
+Modern device tree bindings are supposed to be created as YAML-files
+in accordance with dt-schema. This commit replaces the Synopsis
+Designware DMA controller legacy bare text bindings with YAML file.
+The only required prorties are "compatible", "reg", "#dma-cells" and
+"interrupts", which will be used by the driver to correctly find the
+controller memory region and handle its events. The rest of the properties
+are optional, since in case if either "dma-channels" or "dma-masters" isn't
+specified, the driver will attempt to auto-detect the IP core
+configuration.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -76,154 +73,267 @@ Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
 
 ---
 
 Changelog v2:
 - Rearrange SoBs.
-- Discard dwc_get_maxburst() accessor. It's enough to have a clamping
-  guard against exceeding the hardware max burst limitation.
+- Move $ref to the root level of the properties. So do do with the
+  constraints.
+- Discard default settings defined out of the property enum constraint.
+- Replace "additionalProperties: false" with "unevaluatedProperties: false"
+  property.
+- Remove a label definition from the binding example.
 ---
- drivers/dma/dw/core.c                | 14 ++++++++++++++
- drivers/dma/dw/dw.c                  |  1 +
- drivers/dma/dw/of.c                  |  9 +++++++++
- drivers/dma/dw/regs.h                |  2 ++
- include/linux/platform_data/dma-dw.h |  4 ++++
- 5 files changed, 30 insertions(+)
+ .../bindings/dma/snps,dma-spear1340.yaml      | 161 ++++++++++++++++++
+ .../devicetree/bindings/dma/snps-dma.txt      |  69 --------
+ 2 files changed, 161 insertions(+), 69 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
 
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index e4749c296fca..5b76ccc857fd 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -1053,6 +1053,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- {
- 	struct dw_dma *dw = chip->dw;
- 	struct dw_dma_platform_data *pdata;
-+	u32			max_burst = DW_DMA_MAX_BURST;
- 	bool			autocfg = false;
- 	unsigned int		block_size = 0;
- 	unsigned int		dw_params;
-@@ -1181,9 +1182,12 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 				(4 << ((pdata->block_size >> 4 * i) & 0xf)) - 1;
- 			dwc->nollp =
- 				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
-+			dwc->max_burst =
-+				(0x4 << (dwc_params >> DWC_PARAMS_MSIZE & 0x7));
- 		} else {
- 			dwc->block_size = pdata->block_size;
- 			dwc->nollp = !pdata->multi_block[i];
-+			dwc->max_burst = pdata->max_burst[i] ?: DW_DMA_MAX_BURST;
- 		}
- 
- 		/*
-@@ -1198,6 +1202,15 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 		if (dwc->block_size > block_size)
- 			block_size = dwc->block_size;
- 
-+		/*
-+		 * Find minimum of maximum burst lengths to be set in the
-+		 * DMA device descriptor. This will at least leave us on a safe
-+		 * side of using the DMA device, so the DMA clients can have it
-+		 * to properly set buffer thresholds up.
-+		 */
-+		if (dwc->max_burst < max_burst)
-+			max_burst = dwc->max_burst;
+diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+new file mode 100644
+index 000000000000..e7611840a7cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+@@ -0,0 +1,161 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/snps,dma-spear1340.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 		/*
- 		 * It might crucial for some devices to have the hardware
- 		 * accelerated multi-block transfers supported. Especially it
-@@ -1244,6 +1257,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	/* DMA capabilities */
- 	dw->dma.src_addr_widths = DW_DMA_BUSWIDTHS;
- 	dw->dma.dst_addr_widths = DW_DMA_BUSWIDTHS;
-+	dw->dma.max_burst = max_burst;
- 	dw->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
- 			     BIT(DMA_MEM_TO_MEM);
- 	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-diff --git a/drivers/dma/dw/dw.c b/drivers/dma/dw/dw.c
-index 7a085b3c1854..4d6b1ecabda4 100644
---- a/drivers/dma/dw/dw.c
-+++ b/drivers/dma/dw/dw.c
-@@ -86,6 +86,7 @@ static void dw_dma_encode_maxburst(struct dw_dma_chan *dwc, u32 *maxburst)
- 	 * Fix burst size according to dw_dmac. We need to convert them as:
- 	 * 1 -> 0, 4 -> 1, 8 -> 2, 16 -> 3.
- 	 */
-+	*maxburst = clamp(*maxburst, 0U, dwc->max_burst);
- 	*maxburst = *maxburst > 1 ? fls(*maxburst) - 2 : 0;
- }
- 
-diff --git a/drivers/dma/dw/of.c b/drivers/dma/dw/of.c
-index 9e27831dee32..d7323aad7cb5 100644
---- a/drivers/dma/dw/of.c
-+++ b/drivers/dma/dw/of.c
-@@ -98,6 +98,15 @@ struct dw_dma_platform_data *dw_dma_parse_dt(struct platform_device *pdev)
- 			pdata->multi_block[tmp] = 1;
- 	}
- 
-+	if (!of_property_read_u32_array(np, "snps,max-burst-len", mb,
-+					nr_channels)) {
-+		for (tmp = 0; tmp < nr_channels; tmp++)
-+			pdata->max_burst[tmp] = mb[tmp];
-+	} else {
-+		for (tmp = 0; tmp < nr_channels; tmp++)
-+			pdata->max_burst[tmp] = DW_DMA_MAX_BURST;
-+	}
++title: Synopsys Designware DMA Controller
 +
- 	if (!of_property_read_u32(np, "snps,dma-protection-control", &tmp)) {
- 		if (tmp > CHAN_PROTCTL_MASK)
- 			return NULL;
-diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
-index 20037d64f961..f581d4809b71 100644
---- a/drivers/dma/dw/regs.h
-+++ b/drivers/dma/dw/regs.h
-@@ -125,6 +125,7 @@ struct dw_dma_regs {
- #define DW_PARAMS_EN		28		/* encoded parameters */
- 
- /* Bitfields in DWC_PARAMS */
-+#define DWC_PARAMS_MSIZE	16		/* max group transaction size */
- #define DWC_PARAMS_MBLK_EN	11		/* multi block transfer */
- 
- /* bursts size */
-@@ -284,6 +285,7 @@ struct dw_dma_chan {
- 	/* hardware configuration */
- 	unsigned int		block_size;
- 	bool			nollp;
-+	u32			max_burst;
- 
- 	/* custom slave configuration */
- 	struct dw_dma_slave	dws;
-diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
-index f3eaf9ec00a1..13e679afc0e0 100644
---- a/include/linux/platform_data/dma-dw.h
-+++ b/include/linux/platform_data/dma-dw.h
-@@ -12,6 +12,7 @@
- 
- #define DW_DMA_MAX_NR_MASTERS	4
- #define DW_DMA_MAX_NR_CHANNELS	8
-+#define DW_DMA_MAX_BURST	256
- 
- /**
-  * struct dw_dma_slave - Controller-specific information about a slave
-@@ -42,6 +43,8 @@ struct dw_dma_slave {
-  * @data_width: Maximum data width supported by hardware per AHB master
-  *		(in bytes, power of 2)
-  * @multi_block: Multi block transfers supported by hardware per channel.
-+ * @max_burst: Maximum value of burst transaction size supported by hardware
-+ *	       per channel (in units of CTL.SRC_TR_WIDTH/CTL.DST_TR_WIDTH).
-  * @protctl: Protection control signals setting per channel.
-  */
- struct dw_dma_platform_data {
-@@ -56,6 +59,7 @@ struct dw_dma_platform_data {
- 	unsigned char	nr_masters;
- 	unsigned char	data_width[DW_DMA_MAX_NR_MASTERS];
- 	unsigned char	multi_block[DW_DMA_MAX_NR_CHANNELS];
-+	unsigned int	max_burst[DW_DMA_MAX_NR_CHANNELS];
- #define CHAN_PROTCTL_PRIVILEGED		BIT(0)
- #define CHAN_PROTCTL_BUFFERABLE		BIT(1)
- #define CHAN_PROTCTL_CACHEABLE		BIT(2)
++maintainers:
++  - Viresh Kumar <vireshk@kernel.org>
++  - Andy Shevchenko <andriy.shevchenko@linux.intel.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    const: snps,dma-spear1340
++
++  "#dma-cells":
++    const: 3
++    description: |
++      First cell is a phandle pointing to the DMA controller. Second one is
++      the DMA request line number. Third cell is the memory master identifier
++      for transfers on dynamically allocated channel. Fourth cell is the
++      peripheral master identifier for transfers on an allocated channel.
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    description: AHB interface reference clock.
++    const: hclk
++
++  dma-channels:
++    description: |
++      Number of DMA channels supported by the controller. In case if
++      not specified the driver will try to auto-detect this and
++      the rest of the optional parameters.
++    minimum: 1
++    maximum: 8
++
++  dma-requests:
++    minimum: 1
++    maximum: 16
++
++  dma-masters:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++      Number of DMA masters supported by the controller. In case if
++      not specified the driver will try to auto-detect this and
++      the rest of the optional parameters.
++    minimum: 1
++    maximum: 4
++
++  chan_allocation_order:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++      DMA channels allocation order specifier. Zero means ascending order
++      (first free allocated), while one - descending (last free allocated).
++    default: 0
++    enum: [0, 1]
++
++  chan_priority:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++      DMA channels priority order. Zero means ascending channels priority
++      so the very first channel has the highest priority. While 1 means
++      descending priority (the last channel has the highest priority).
++    default: 0
++    enum: [0, 1]
++
++  block_size:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: Maximum block size supported by the DMA controller.
++    enum: [3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095]
++
++  data-width:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: Data bus width per each DMA master in bytes.
++    items:
++      maxItems: 4
++      items:
++        enum: [4, 8, 16, 32]
++
++  data_width:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    deprecated: true
++    description: |
++      Data bus width per each DMA master in (2^n * 8) bits. This property is
++      deprecated. It' usage is discouraged in favor of data-width one. Moreover
++      the property incorrectly permits to define data-bus width of 8 and 16
++      bits, which is impossible in accordance with DW DMAC IP-core data book.
++    items:
++      maxItems: 4
++      items:
++        enum:
++          - 0 # 8 bits
++          - 1 # 16 bits
++          - 2 # 32 bits
++          - 3 # 64 bits
++          - 4 # 128 bits
++          - 5 # 256 bits
++        default: 0
++
++  multi-block:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      LLP-based multi-block transfer supported by hardware per
++      each DMA channel.
++    items:
++      maxItems: 8
++      items:
++        enum: [0, 1]
++        default: 1
++
++  snps,dma-protection-control:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++      Bits one-to-one passed to the AHB HPROT[3:1] bus. Each bit setting
++      indicates the following features: bit 0 - privileged mode,
++      bit 1 - DMA is bufferable, bit 2 - DMA is cacheable.
++    default: 0
++    minimum: 0
++    maximum: 7
++
++unevaluatedProperties: false
++
++required:
++  - compatible
++  - "#dma-cells"
++  - reg
++  - interrupts
++
++examples:
++  - |
++    dma-controller@fc000000 {
++      compatible = "snps,dma-spear1340";
++      reg = <0xfc000000 0x1000>;
++      interrupt-parent = <&vic1>;
++      interrupts = <12>;
++
++      dma-channels = <8>;
++      dma-requests = <16>;
++      dma-masters = <4>;
++      #dma-cells = <3>;
++
++      chan_allocation_order = <1>;
++      chan_priority = <1>;
++      block_size = <0xfff>;
++      data-width = <8 8>;
++      multi-block = <0 0 0 0 0 0 0 0>;
++      snps,max-burst-len = <16 16 4 4 4 4 4 4>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
+deleted file mode 100644
+index 0bedceed1963..000000000000
+--- a/Documentation/devicetree/bindings/dma/snps-dma.txt
++++ /dev/null
+@@ -1,69 +0,0 @@
+-* Synopsys Designware DMA Controller
+-
+-Required properties:
+-- compatible: "snps,dma-spear1340"
+-- reg: Address range of the DMAC registers
+-- interrupt: Should contain the DMAC interrupt number
+-- dma-channels: Number of channels supported by hardware
+-- dma-requests: Number of DMA request lines supported, up to 16
+-- dma-masters: Number of AHB masters supported by the controller
+-- #dma-cells: must be <3>
+-- chan_allocation_order: order of allocation of channel, 0 (default): ascending,
+-  1: descending
+-- chan_priority: priority of channels. 0 (default): increase from chan 0->n, 1:
+-  increase from chan n->0
+-- block_size: Maximum block size supported by the controller
+-- data-width: Maximum data width supported by hardware per AHB master
+-  (in bytes, power of 2)
+-
+-
+-Deprecated properties:
+-- data_width: Maximum data width supported by hardware per AHB master
+-  (0 - 8bits, 1 - 16bits, ..., 5 - 256bits)
+-
+-
+-Optional properties:
+-- multi-block: Multi block transfers supported by hardware. Array property with
+-  one cell per channel. 0: not supported, 1 (default): supported.
+-- snps,dma-protection-control: AHB HPROT[3:1] protection setting.
+-  The default value is 0 (for non-cacheable, non-buffered,
+-  unprivileged data access).
+-  Refer to include/dt-bindings/dma/dw-dmac.h for possible values.
+-
+-Example:
+-
+-	dmahost: dma@fc000000 {
+-		compatible = "snps,dma-spear1340";
+-		reg = <0xfc000000 0x1000>;
+-		interrupt-parent = <&vic1>;
+-		interrupts = <12>;
+-
+-		dma-channels = <8>;
+-		dma-requests = <16>;
+-		dma-masters = <2>;
+-		#dma-cells = <3>;
+-		chan_allocation_order = <1>;
+-		chan_priority = <1>;
+-		block_size = <0xfff>;
+-		data-width = <8 8>;
+-	};
+-
+-DMA clients connected to the Designware DMA controller must use the format
+-described in the dma.txt file, using a four-cell specifier for each channel.
+-The four cells in order are:
+-
+-1. A phandle pointing to the DMA controller
+-2. The DMA request line number
+-3. Memory master for transfers on allocated channel
+-4. Peripheral master for transfers on allocated channel
+-
+-Example:
+-	
+-	serial@e0000000 {
+-		compatible = "arm,pl011", "arm,primecell";
+-		reg = <0xe0000000 0x1000>;
+-		interrupts = <0 35 0x4>;
+-		dmas = <&dmahost 12 0 1>,
+-			<&dmahost 13 1 0>;
+-		dma-names = "rx", "rx";
+-	};
 -- 
 2.25.1
 
