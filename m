@@ -2,148 +2,241 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1D8C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7471C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77894207DD
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98FE220870
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Qyq62rRt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QnebNh+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbgEHG3i (ORCPT
+        id S1726906AbgEHGe0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 02:29:38 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:61283 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726009AbgEHG3h (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 02:29:37 -0400
+        Fri, 8 May 2020 02:34:26 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:39675 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726099AbgEHGe0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 02:34:26 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588919376; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=CF2yXGR1Cj7U8eHdFjQo7x7s1pH7cJ9xAyOsnmO0Hew=; b=Qyq62rRtDMl3NIhiQbsaISrXBUhPsl1slk3OfS9AzvqfisRya1sBdaz15/v83R+Sv/sgJxkZ
- 6wTe0SEeyDkCxVH3sTyjOQ8+WaHFwCij4WHKb1/djoLhILKJqT3IxGcVC8MUZ82D+TxZ0IaT
- NpfB6Cfuv88YOWlrERkp7s6Q+IE=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ s=smtp; t=1588919664; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=x1W5jjwZbtTsjEd67VWwIdrufwp2MFs61Va66JMD5ms=; b=QnebNh+JVWa4hQvcOlJk07p7SJBmYz8U2XEECasy9wd8EDodcbKMLZJX/EhGi10ddjZELNFq
+ H9T5buD9qsYtdEYtfBIMIriH5O5jJ8W0Vorg4cz+sOZ8yHdzZ0yNjEN/OBCDXMcnyASWEhOX
+ rS5wdC5tuzjbtIWhOUWw/XtB8jE=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb4fc50.7f0f278679d0-smtp-out-n01;
- Fri, 08 May 2020 06:29:36 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eb4fd66.7f706e6340d8-smtp-out-n01;
+ Fri, 08 May 2020 06:34:14 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1DDFAC43637; Fri,  8 May 2020 06:29:35 +0000 (UTC)
-Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id B998BC43637; Fri,  8 May 2020 06:34:14 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: sanm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2FD94C433D2;
-        Fri,  8 May 2020 06:29:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2FD94C433D2
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22B82C433F2;
+        Fri,  8 May 2020 06:34:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22B82C433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
-Subject: Re: [PATCH v7 0/4] ADD interconnect support for Qualcomm DWC3 driver
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
- <20200429183542.GS4525@google.com>
-From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Message-ID: <a119cf75-8bda-f380-8249-173fa426279c@codeaurora.org>
-Date:   Fri, 8 May 2020 11:59:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200429183542.GS4525@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org,
+        georgi.djakov@linaro.org, Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH V5 2/7] soc: qcom-geni-se: Add interconnect support to fix earlycon crash
+Date:   Fri,  8 May 2020 12:03:34 +0530
+Message-Id: <1588919619-21355-3-git-send-email-akashast@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
+References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Felipe,
+QUP core clock is shared among all the SE drivers present on particular
+QUP wrapper, the system will reset(unclocked access) if earlycon used after
+QUP core clock is put to 0 from other SE drivers before real console comes
+up.
 
-Any update about landing this series.
+As earlycon can't vote for it's QUP core need, to fix this add ICC
+support to common/QUP wrapper driver and put vote for QUP core from
+probe on behalf of earlycon and remove vote during earlycon exit call.
 
-Regards
+Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+Reported-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Change in V3:
+ - Add geni_remove_earlycon_icc_vote API that will be used by earlycon
+   exit function to remove ICC vote for earlyconsole.
+ - Remove suspend/resume hook for geni-se driver as we are no longer
+   removing earlyconsole ICC vote from system suspend, we are removing
+   from earlycon exit.
 
-Sandeep
+Change in V4:
+ - As per Matthias comment make 'earlycon_wrapper' as static structure.
 
-On 4/30/2020 12:05 AM, Matthias Kaehlcke wrote:
-> Hi Felipe,
->
-> all patches of this series have been reviewed and there are no outstanding
-> comments, so I guess it should be ready to land?
->
-> Thanks
->
-> Matthias
->
-> On Wed, Apr 01, 2020 at 10:45:41AM +0530, Sandeep Maheswaram wrote:
->> This path series aims to add interconnect support in
->> dwc3-qcom driver on SDM845 and SC7180 SoCs.
->>
->> Changes from v6 -> v7
->>    > [PATCH 2/4] Fixed review comments from Matthias in DWC3 driver.
->>    > Other patches remain unchanged.
->>
->> Changes from v5 -> v6
->>    > [PATCH 1/4] Addressed comments from Rob.
->>    > [PATCH 2/4] Fixed review comments from Matthias in DWC3 driver.
->>    > [PATCH 3/4] Ignoring 80 char limit in defining interconnect paths.
->>    > Added [PATCH 4/4] in this series. Adding interconnect nodes for SC7180.
->>      Depends on patch https://patchwork.kernel.org/patch/11417989/.	
->>
->> Changes from v4 -> v5
->>    > [PATCH 1/3] Added the interconnect properties in yaml. This patch depends
->>      on series https://patchwork.kernel.org/cover/11372641/.
->>    > [PATCH 2/3] Fixed review comments from Matthias in DWC3 driver.
->>    > [PATCH 3/3] Modified as per the new interconnect nodes in sdm845. Depends
->>      on series https://patchwork.kernel.org/cover/11372211/.
->>
->>
->> Changes from v3 -> v4
->>    > Fixed review comments from Matthias
->>    > [PATCH 1/3] and [PATCH 3/3] remains unchanged
->>
->> Changes from v2 -> v3
->>    > Fixed review comments from Matthias and Manu
->>    > changed the functions prefix from usb_* to dwc3_qcom_*
->>
->> Changes since V1:
->>    > Comments by Georgi Djakov on "[PATCH 2/3]" addressed
->>    > [PATCH 1/3] and [PATCH 3/3] remains unchanged
->>
->>
->> Sandeep Maheswaram (4):
->>    dt-bindings: usb: qcom,dwc3: Introduce interconnect properties for
->>      Qualcomm DWC3 driver
->>    usb: dwc3: qcom: Add interconnect support in dwc3 driver
->>    arm64: dts: qcom: sdm845: Add interconnect properties for USB
->>    arm64: dts: qcom: sc7180: Add interconnect properties for USB
->>
->>   .../devicetree/bindings/usb/qcom,dwc3.yaml         |   8 ++
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi               |   4 +
->>   arch/arm64/boot/dts/qcom/sdm845.dtsi               |   8 ++
->>   drivers/usb/dwc3/dwc3-qcom.c                       | 128 ++++++++++++++++++++-
->>   4 files changed, 146 insertions(+), 2 deletions(-)
->>
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
+Changes in V5:
+ - Vote for core path only after checking whether "qcom_geni" earlycon is
+   actually present or not by traversing over structure "console_drivers".
+
+ drivers/soc/qcom/qcom-geni-se.c       | 63 +++++++++++++++++++++++++++++++++++
+ drivers/tty/serial/qcom_geni_serial.c |  7 ++++
+ include/linux/qcom-geni-se.h          |  2 ++
+ 3 files changed, 72 insertions(+)
+
+diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+index 63403bf..66fe6f2 100644
+--- a/drivers/soc/qcom/qcom-geni-se.c
++++ b/drivers/soc/qcom/qcom-geni-se.c
+@@ -3,6 +3,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/clk.h>
++#include <linux/console.h>
+ #include <linux/slab.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/io.h>
+@@ -90,11 +91,14 @@ struct geni_wrapper {
+ 	struct device *dev;
+ 	void __iomem *base;
+ 	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
++	struct geni_icc_path to_core;
+ };
+ 
+ static const char * const icc_path_names[] = {"qup-core", "qup-config",
+ 								"qup-memory"};
+ 
++static struct geni_wrapper *earlycon_wrapper;
++
+ #define QUP_HW_VER_REG			0x4
+ 
+ /* Common SE registers */
+@@ -812,11 +816,33 @@ int geni_icc_disable(struct geni_se *se)
+ }
+ EXPORT_SYMBOL(geni_icc_disable);
+ 
++void geni_remove_earlycon_icc_vote(void)
++{
++	struct geni_wrapper *wrapper = earlycon_wrapper;
++	struct device_node *parent = of_get_next_parent(wrapper->dev->of_node);
++	struct device_node *child;
++
++	for_each_child_of_node(parent, child) {
++		if (of_device_is_compatible(child, "qcom,geni-se-qup")) {
++			wrapper = platform_get_drvdata(of_find_device_by_node(
++					child));
++			icc_put(wrapper->to_core.path);
++			wrapper->to_core.path = NULL;
++		}
++	}
++	of_node_put(parent);
++
++	earlycon_wrapper = NULL;
++}
++EXPORT_SYMBOL(geni_remove_earlycon_icc_vote);
++
+ static int geni_se_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct resource *res;
+ 	struct geni_wrapper *wrapper;
++	struct console *bcon;
++	int earlycon_present = 0;
+ 	int ret;
+ 
+ 	wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
+@@ -839,6 +865,43 @@ static int geni_se_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++#ifdef CONFIG_SERIAL_EARLYCON
++	if (console_drivers)
++		for_each_console(bcon)
++			if (!strcmp(bcon->name, "qcom_geni")) {
++				earlycon_present = 1;
++				break;
++			}
++	if (!earlycon_present)
++		goto exit;
++
++	wrapper->to_core.path = devm_of_icc_get(dev, "qup-core");
++	if (IS_ERR(wrapper->to_core.path))
++		return PTR_ERR(wrapper->to_core.path);
++	/*
++	 * Put minmal BW request on core clocks on behalf of early console.
++	 * The vote will be removed earlycon exit function.
++	 *
++	 * Note: We are putting vote on each QUP wrapper instead only to which
++	 * earlycon is connected because QUP core clock of different wrapper
++	 * share same voltage domain. If core1 is put to 0, then core2 will
++	 * also run at 0, if not voted. Default ICC vote will be removed ASA
++	 * we touch any of the core clock.
++	 * core1 = core2 = max(core1, core2)
++	 */
++	ret = icc_set_bw(wrapper->to_core.path, GENI_DEFAULT_BW,
++							GENI_DEFAULT_BW);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: ICC BW voting failed for core\n",
++			__func__);
++		return ret;
++	}
++
++	if (of_get_compatible_child(pdev->dev.of_node, "qcom,geni-debug-uart"))
++		earlycon_wrapper = wrapper;
++	of_node_put(pdev->dev.of_node);
++#endif
++exit:
+ 	dev_set_drvdata(dev, wrapper);
+ 	dev_dbg(dev, "GENI SE Driver probed\n");
+ 	return devm_of_platform_populate(dev);
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 6119090..8c5d97c 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -1090,6 +1090,12 @@ static void qcom_geni_serial_earlycon_write(struct console *con,
+ 	__qcom_geni_serial_console_write(&dev->port, s, n);
+ }
+ 
++static int qcom_geni_serial_earlycon_exit(struct console *con)
++{
++	geni_remove_earlycon_icc_vote();
++	return 0;
++}
++
+ static int __init qcom_geni_serial_earlycon_setup(struct earlycon_device *dev,
+ 								const char *opt)
+ {
+@@ -1135,6 +1141,7 @@ static int __init qcom_geni_serial_earlycon_setup(struct earlycon_device *dev,
+ 	writel(stop_bit_len, uport->membase + SE_UART_TX_STOP_BIT_LEN);
+ 
+ 	dev->con->write = qcom_geni_serial_earlycon_write;
++	dev->con->exit = qcom_geni_serial_earlycon_exit;
+ 	dev->con->setup = NULL;
+ 	return 0;
+ }
+diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+index 7afa08d..51e9e9b 100644
+--- a/include/linux/qcom-geni-se.h
++++ b/include/linux/qcom-geni-se.h
+@@ -458,5 +458,7 @@ void geni_icc_bw_init(struct geni_icc_path *icc_paths, unsigned int avg_bw,
+ int geni_icc_enable(struct geni_se *se);
+ 
+ int geni_icc_disable(struct geni_se *se);
++
++void geni_remove_earlycon_icc_vote(void);
+ #endif
+ #endif
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
