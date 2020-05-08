@@ -2,126 +2,226 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EE0C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396F7C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33B7A215A4
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:03:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u/NCyVG6"
+	by mail.kernel.org (Postfix) with ESMTP id 248F021835
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbgEHKDU (ORCPT
+        id S1727124AbgEHKDZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 06:03:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34654 "EHLO
+        Fri, 8 May 2020 06:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgEHKDT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:03:19 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89582C05BD43;
-        Fri,  8 May 2020 03:03:18 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a7so4043473pju.2;
-        Fri, 08 May 2020 03:03:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Fg0tqQ7YdDHVvpo6cAydXlG7VoLZVAf5Pe+YX8RF1U=;
-        b=u/NCyVG6CzWS7pw0cVQAQnsq+Lf6SFeLH7drFG01yY59AfQ7lMhouQ3Pg2ToMqbJQL
-         2POW+E2A5sROd3nUY8fmotQr5FoH2M/JlcIIkysWB8eO8ogi6JXo+H56/wpD4EfUJ5n0
-         994SFeBIX7AJ1nG1Rz3CwPP4hoUHla1nDCpFo5RAE0ekzm6MAYZJjxK+jSvng+sF9HIt
-         6KNmn+2qIDY410kZd7xhCIb0cmC+ipwD+fjNCWAnw2dujVHotaxpAsxRwA9IEcOHukpk
-         Rn/FzsDrK+46oQqBtt24AOFdR1meEYkGeqetdSO0HNrJ15VPF76HEodrshyYicE1r7o5
-         nEHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Fg0tqQ7YdDHVvpo6cAydXlG7VoLZVAf5Pe+YX8RF1U=;
-        b=T6gt70RpdDsVNPB6O4FYQ5/iIhlaaAnkiay+/BqubM/Guxtx6S+k7J4YJ/IlMznogY
-         2iOWZTj9Qbllq1PSOXLyrkzq8SNE6BrnMZCWUXlI22iEDhul58bJOcRu+mQ6hZQwFQcq
-         eeLhBIkaN36NgCJ2MMaYj4DcjGp3Nl8z9Qcm9+rvYcSfAiMDhN1h3GcniBoXs1mwIQV6
-         lXv8wXGxo/7Ci1N/zVP+UfVqLOhjuZ4ZuIVXhbTKXos2MdOL3iSiJjQSiTRAG966Crbx
-         jqL9VigZvBmN7iG6Nyol7ACB8SP/N+S4+d7oMq9IO1v77NFLUDlFBht/qSv9FOI/TYQ1
-         YqDw==
-X-Gm-Message-State: AGi0PuZ4eswVW4llvECyxkmHKW+X7cuThYPTi/yQa0b6kyW1N8rzlbGI
-        nDJy5ibOMZIFsedyZeXAEI49Nf3dlY6vebqd7Uk=
-X-Google-Smtp-Source: APiQypIYSY85bDmuNcTHocu/ewpdNMG8j/aKGbo5ccq1Q5fhJ062xJSYj+xkopkvK/UvMdGwbYVbRLif6bs3S8dCqrc=
-X-Received: by 2002:a17:902:6901:: with SMTP id j1mr1688511plk.255.1588932198001;
- Fri, 08 May 2020 03:03:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru> <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 8 May 2020 13:03:11 +0300
-Message-ID: <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S1726908AbgEHKDZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:03:25 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF931C05BD09
+        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 03:03:24 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:5bb:5444:969e:23bc])
+        by laurent.telenet-ops.be with bizsmtp
+        id cA3N2200Y2zKgvk01A3NcZ; Fri, 08 May 2020 12:03:23 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jWzqk-0002zj-Sj; Fri, 08 May 2020 12:03:22 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jWzqk-0001l7-Rg; Fri, 08 May 2020 12:03:22 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: clock: renesas: mstp: Convert to json-schema
+Date:   Fri,  8 May 2020 12:03:21 +0200
+Message-Id: <20200508100321.6720-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 8, 2020 at 12:37 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> This SPI-controller is a part of the Baikal-T1 System Controller and
-> is based on the DW APB SSI IP-core, but with very limited resources:
-> no IRQ, no DMA, only a single native chip-select and just 8 bytes Tx/Rx
-> FIFO available. In order to provide a transparent initial boot code
-> execution this controller is also utilized by an vendor-specific block,
-> which provides an CS0 SPI flash direct mapping interface. Since both
-> direct mapping and SPI controller normal utilization are mutual exclusive
-> only a one of these interfaces can be used to access an external SPI
-> slave device. Taking into account the peculiarities of the controller
-> registers and physically mapped SPI flash access, very limited resources
-> and seeing the normal usecase of the controller is to access an external
-> SPI-nor flash, we decided to create a dedicated SPI driver for it.
+Convert the Renesas Clock Pulse Generator (CPG) Module Stop (MSTP)
+Clocks Device Tree binding documentation to json-schema.
 
-It seems a lot of code.
-Why can't you use spi-dw-mmio.c et al.?
+Drop R-Car Gen2 compatible values, which were obsoleted by the unified
+"Renesas Clock Pulse Generator / Module Standby and Software Reset" DT
+bindings.
+Replace the obsolete example for R-Car H2 by an example that is still
+valid.
 
-> The driver provides callbacks for native messages-based SPI interface,
-> SPI-memory and direct mapping read operations. Due to not having any
-> asynchronous signaling interface provided by the core we have no choice
-> but to implement a polling-based data transmission/reception algorithm.
-> In addition to that in order to bypass the automatic native chip-select
-> toggle the driver disables the local interrupts during the memory-based
-> transfers if no complementary GPIO-based chip-select detected in the
-> platform.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+To be queued in clk-renesas-for-v5.8.
+---
+ .../clock/renesas,cpg-mstp-clocks.txt         | 60 --------------
+ .../clock/renesas,cpg-mstp-clocks.yaml        | 82 +++++++++++++++++++
+ 2 files changed, 82 insertions(+), 60 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.yaml
 
-
-
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+deleted file mode 100644
+index da578ebdda2889fc..0000000000000000
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
++++ /dev/null
+@@ -1,60 +0,0 @@
+-* Renesas CPG Module Stop (MSTP) Clocks
+-
+-The CPG can gate SoC device clocks. The gates are organized in groups of up to
+-32 gates.
+-
+-This device tree binding describes a single 32 gate clocks group per node.
+-Clocks are referenced by user nodes by the MSTP node phandle and the clock
+-index in the group, from 0 to 31.
+-
+-Required Properties:
+-
+-  - compatible: Must be one of the following
+-    - "renesas,r7s72100-mstp-clocks" for R7S72100 (RZ) MSTP gate clocks
+-    - "renesas,r8a73a4-mstp-clocks" for R8A73A4 (R-Mobile APE6) MSTP gate clocks
+-    - "renesas,r8a7740-mstp-clocks" for R8A7740 (R-Mobile A1) MSTP gate clocks
+-    - "renesas,r8a7778-mstp-clocks" for R8A7778 (R-Car M1) MSTP gate clocks
+-    - "renesas,r8a7779-mstp-clocks" for R8A7779 (R-Car H1) MSTP gate clocks
+-    - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
+-    - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2-W) MSTP gate clocks
+-    - "renesas,r8a7792-mstp-clocks" for R8A7792 (R-Car V2H) MSTP gate clocks
+-    - "renesas,r8a7793-mstp-clocks" for R8A7793 (R-Car M2-N) MSTP gate clocks
+-    - "renesas,r8a7794-mstp-clocks" for R8A7794 (R-Car E2) MSTP gate clocks
+-    - "renesas,sh73a0-mstp-clocks" for SH73A0 (SH-MobileAG5) MSTP gate clocks
+-    and "renesas,cpg-mstp-clocks" as a fallback.
+-  - reg: Base address and length of the I/O mapped registers used by the MSTP
+-    clocks. The first register is the clock control register and is mandatory.
+-    The second register is the clock status register and is optional when not
+-    implemented in hardware.
+-  - clocks: Reference to the parent clocks, one per output clock. The parents
+-    must appear in the same order as the output clocks.
+-  - #clock-cells: Must be 1
+-  - clock-output-names: The name of the clocks as free-form strings
+-  - clock-indices: Indices of the gate clocks into the group (0 to 31)
+-
+-The clocks, clock-output-names and clock-indices properties contain one entry
+-per gate clock. The MSTP groups are sparsely populated. Unimplemented gate
+-clocks must not be declared.
+-
+-
+-Example
+--------
+-
+-	#include <dt-bindings/clock/r8a7790-clock.h>
+-
+-	mstp3_clks: mstp3_clks@e615013c {
+-		compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+-		reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
+-		clocks = <&cp_clk>, <&mmc1_clk>, <&sd3_clk>, <&sd2_clk>,
+-			 <&cpg_clocks R8A7790_CLK_SD1>, <&cpg_clocks R8A7790_CLK_SD0>,
+-			 <&mmc0_clk>;
+-		#clock-cells = <1>;
+-		clock-output-names =
+-			"tpu0", "mmcif1", "sdhi3", "sdhi2",
+-			 "sdhi1", "sdhi0", "mmcif0";
+-		clock-indices = <
+-			R8A7790_CLK_TPU0 R8A7790_CLK_MMCIF1 R8A7790_CLK_SDHI3
+-			R8A7790_CLK_SDHI2 R8A7790_CLK_SDHI1 R8A7790_CLK_SDHI0
+-			R8A7790_CLK_MMCIF0
+-		>;
+-	};
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.yaml
+new file mode 100644
+index 0000000000000000..9b79e70ae5504bd7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.yaml
+@@ -0,0 +1,82 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/renesas,cpg-mstp-clocks.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas Clock Pulse Generator (CPG) Module Stop (MSTP) Clocks
++
++maintainers:
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++
++description:
++  The Clock Pulse Generator (CPG) can gate SoC device clocks. The gates are
++  organized in groups of up to 32 gates.
++
++  This device tree binding describes a single 32 gate clocks group per node.
++  Clocks are referenced by user nodes by the Module Stop (MSTP) node phandle
++  and the clock index in the group, from 0 to 31.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r7s72100-mstp-clocks # RZ/A1
++          - renesas,r8a73a4-mstp-clocks  # R-Mobile APE6
++          - renesas,r8a7740-mstp-clocks  # R-Mobile A1
++          - renesas,r8a7778-mstp-clocks  # R-Car M1
++          - renesas,r8a7779-mstp-clocks  # R-Car H1
++          - renesas,sh73a0-mstp-clocks   # SH-Mobile AG5
++      - const: renesas,cpg-mstp-clocks
++
++  reg:
++    minItems: 1
++    items:
++      - description: Module Stop Control Register (MSTPCR)
++      - description: Module Stop Status Register (MSTPSR)
++
++  clocks:
++    minItems: 1
++    maxItems: 32
++
++  '#clock-cells':
++    const: 1
++
++  clock-indices:
++    minItems: 1
++    maxItems: 32
++
++  clock-output-names:
++    minItems: 1
++    maxItems: 32
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++  - clock-indices
++  - clock-output-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a73a4-clock.h>
++    mstp2_clks: mstp2_clks@e6150138 {
++            compatible = "renesas,r8a73a4-mstp-clocks",
++                         "renesas,cpg-mstp-clocks";
++            reg = <0xe6150138 0 4>, <0xe6150040 0 4>;
++            clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>,
++                     <&mp_clk>, <&cpg_clocks R8A73A4_CLK_HP>;
++            #clock-cells = <1>;
++            clock-indices = <
++                    R8A73A4_CLK_SCIFA0 R8A73A4_CLK_SCIFA1
++                    R8A73A4_CLK_SCIFB0 R8A73A4_CLK_SCIFB1
++                    R8A73A4_CLK_SCIFB2 R8A73A4_CLK_SCIFB3
++                    R8A73A4_CLK_DMAC
++            >;
++            clock-output-names =
++                    "scifa0", "scifa1", "scifb0", "scifb1", "scifb2", "scifb3",
++                    "dmac";
++    };
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
