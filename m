@@ -2,102 +2,111 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFD5C47247
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 07:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDF7C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 08:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4966720CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 07:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF48208CA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 08:29:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QS9p/Edf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgEHHVC (ORCPT
+        id S1726616AbgEHI3p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 03:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727789AbgEHHVC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 03:21:02 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C69FFC05BD09
-        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 00:21:01 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jWxJS-0001g6-HU; Fri, 08 May 2020 09:20:50 +0200
-Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jWxJR-0002Lo-IX; Fri, 08 May 2020 09:20:49 +0200
-Date:   Fri, 8 May 2020 09:20:49 +0200
-From:   Philipp Zabel <pza@pengutronix.de>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        stable@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/11] PCI: qcom: add missing reset for ipq806x
-Message-ID: <20200508072049.GA31261@pengutronix.de>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-5-ansuelsmth@gmail.com>
+        Fri, 8 May 2020 04:29:45 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49578 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbgEHI3o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 04:29:44 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0488TgCO023259;
+        Fri, 8 May 2020 03:29:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588926582;
+        bh=WVLyKexaTHThjRBNIWhIYQ1jHDIkHwKx9rD6q73WgVk=;
+        h=From:To:CC:Subject:Date;
+        b=QS9p/EdfPaPpTCMbj/RHIyREw+FGLCtXRlpht5fyX5QwC8q3YbwUDVIgdqnR7ltiF
+         jEJO4zzHzDRwLz1hJzdfcTjRuRJszMhWxoDlX2WJhl4c8lXCJHvzIbi6bbcQ98z+6v
+         pDAldR/ooW9tHtOkHtNxrfEIaje3H1DrBW7BfR/4=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0488Tgox103003
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 May 2020 03:29:42 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
+ 2020 03:29:42 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 8 May 2020 03:29:42 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0488Tdn9073953;
+        Fri, 8 May 2020 03:29:40 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <t-kristo@ti.com>
+CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <nsekhar@ti.com>,
+        <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v3 0/7] arm64: ti: k3-j721e: Add SERDES PHY and USB3.0 support
+Date:   Fri, 8 May 2020 11:29:30 +0300
+Message-ID: <20200508082937.14171-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430220619.3169-5-ansuelsmth@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:18:34 up 78 days, 14:49, 108 users,  load average: 0.06, 0.16,
- 0.24
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: pza@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ansuel,
+Hi Tero,
 
-On Fri, May 01, 2020 at 12:06:11AM +0200, Ansuel Smith wrote:
-> Add missing ext reset used by ipq8064 SoC in PCIe qcom driver.
-> 
-> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Cc: stable@vger.kernel.org # v4.5+
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 7a8901efc031..921030a64bab 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-[...]
-> @@ -347,6 +353,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  		goto err_deassert_ahb;
->  	}
->  
-> +	ret = reset_control_deassert(res->ext_reset);
-> +	if (ret) {
-> +		dev_err(dev, "cannot assert ext reset\n");
-                                     ^
-This probably should say "cannot deassert ext reset". Apart from this,
+This series adds SERDES PHY support and Type-C USB Super-Speed support
+to the J721E EVM.
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Please queue this for v5.8. Thanks.
 
-regards
-Philipp
+cheers,
+-roger
+
+Changelog:
+v3:
+- Add new DT schema for J721E System controller.
+- Re-order system controller's compatible string i.e. most compatible to least.
+
+v2:
+- Addressed Rob's comments.
+- Changed type-C debounce delay from 300ms to 700ms as 300ms is not
+sufficient on EVM.
+
+Kishon Vijay Abraham I (3):
+  dt-bindings: syscon: Add TI's J721E specific compatible string
+  arm64: dts: ti: k3-j721e-main: Add WIZ and SERDES PHY nodes
+  arm64: dts: ti: k3-j721e-main: Add system controller node and SERDES
+    lane mux
+
+Roger Quadros (4):
+  dt-bindings: mdf: ti,j721e-syscon.yaml: Add J721e system controller
+  arm64: dts: ti: k3-j721e-main.dtsi: Add USB to SERDES MUX
+  arm64: dts: ti: k3-j721e: Enable Super-Speed support for USB0
+  arm64: dts: k3-j721e-proc-board: Add wait time for sampling Type-C DIR
+    line
+
+ .../devicetree/bindings/mfd/syscon.yaml       |   1 +
+ .../bindings/mfd/ti,j721e-syscon.yaml         |  69 +++++
+ .../dts/ti/k3-j721e-common-proc-board.dts     |  33 ++-
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 275 ++++++++++++++++++
+ include/dt-bindings/mux/mux-j721e-wiz.h       |  53 ++++
+ 5 files changed, 429 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-syscon.yaml
+ create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
