@@ -2,124 +2,220 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B3FC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 19:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BB0C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 19:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 288212173E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 19:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9EFF24953
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 19:10:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpBFv0HP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgEHTGY (ORCPT
+        id S1726797AbgEHTKq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 15:06:24 -0400
-Received: from mga06.intel.com ([134.134.136.31]:1210 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726807AbgEHTGY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 15:06:24 -0400
-IronPort-SDR: v2gjK4RKVJ1v/sdovzL2O+wNylxbADOvG7CwVQ2mYCdz9xLJxz/HixotXkwpwCZ+kmPH0d16Cx
- 1FbYJHrKB4gw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:06:23 -0700
-IronPort-SDR: nTJv2Ub7B7vBvOk28P4x1cVdUZbPUuOksDDQNy7s9MtBirBS8RvT9K4KcLsZoqahFtSTTuVdmk
- 9Xl7ImcTOcnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
-   d="scan'208";a="462687274"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 08 May 2020 12:06:19 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jX8KE-005Sw7-9j; Fri, 08 May 2020 22:06:22 +0300
-Date:   Fri, 8 May 2020 22:06:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200508190622.GQ185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
+        Fri, 8 May 2020 15:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726767AbgEHTKp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 15:10:45 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BCDCC061A0C;
+        Fri,  8 May 2020 12:10:45 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id g14so1783479wme.1;
+        Fri, 08 May 2020 12:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j0R1bpNtmiUv8laLb8N5wJf9G9BrMJmIpRltoZ1sMr8=;
+        b=CpBFv0HP/TV6VMgbfdLKt5MNRpk4jZFc2VHOrfjwo7dVC8r9nSYnbILepI/Wp+W2sb
+         G1O9oM6lngMAmvOgWlSfyZlDrQqwkHqJrQTiqBYPbs97qtkbxxo1Abk+TxSKFeDBPvY2
+         61jNXBYJF+RxOxqivBi4nahv7H+DVwkyn76Eisr5oa5StnlaL4kLjP3EQNJXDEpM2nIc
+         aaD71FCoPty3N9sC9hH+o1gN52Y595RChT+2nTUei2hy9LlpOrXqdVR621agdfh5Bn4I
+         iBi33lwZqt8a6hgsL1AQR8gtNs+wtsLdOh5P4a2mldbNviqXmOFAFLMXgG058BYzMKDQ
+         V8ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j0R1bpNtmiUv8laLb8N5wJf9G9BrMJmIpRltoZ1sMr8=;
+        b=NR6XlA87XhYw/S4GN+TqPeLgaNmFSz6evYpRq5MZZZ6PXTvW9UbYuOOgPSDOmux+/2
+         R5AP/tRY92ngWbtYe7Iq19DG4jcvRePPAVPJum4uXdCYVwrXugv5hPXs4CwCX7Jc4+Zo
+         lEMPg4aqMnMwm6/ZYSct1fQKN9dRKDh72a45sja3HBjSRqIqabzrwo5G0ixB4fbXasRu
+         SG07gNgV7zjaIcAlFk7BJ7xcMn8BHTR2Ye8QOoPFWqWnSUbi8dkgkWJXtLekEbYeMjL+
+         SPQRdIcg1tVcVOs+JnYL+NOug1+WMuwAxkRaMdS4oPQWYYi5VL51vPoMCZuZ9OhLQmyG
+         aF0A==
+X-Gm-Message-State: AGi0Puau1uGEo02nMhGL88nDup/jh3eYvu08mZSGhK8H/Qajw7c8T9Q0
+        cpHJ7vGDfTKf/VdnYHfRpxlYfzb2/PA=
+X-Google-Smtp-Source: APiQypIqRYWKTbZrWqnb9ThiSmgx4OWhf8bQUmM8TucfI0KAH7NTdrcysk1wMpnZMoy/gyuRTsJVXw==
+X-Received: by 2002:a1c:3dd6:: with SMTP id k205mr17454575wma.138.1588965043831;
+        Fri, 08 May 2020 12:10:43 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:29ef:df7c:92a1:e024])
+        by smtp.gmail.com with ESMTPSA id 5sm14074670wmz.16.2020.05.08.12.10.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 12:10:43 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
+        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>
+Subject: [PATCH 1/2] arm64: dts: allwinner: h6: add voltage range to OPP table
+Date:   Fri,  8 May 2020 21:10:34 +0200
+Message-Id: <20200508191035.24276-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508115334.GE4820@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:53:34PM +0100, Mark Brown wrote:
-> On Fri, May 08, 2020 at 02:26:04PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 08, 2020 at 01:53:02PM +0300, Serge Semin wrote:
-> 
-> > > Multi-block support provides a way to map the kernel-specific SG-table so
-> > > the DW DMA device would handle it as a whole instead of handling the
-> > > SG-list items or so called LLP block items one by one. So if true LLP
-> > > list isn't supported by the DW DMA engine, then soft-LLP mode will be
-> > > utilized to load and execute each LLP-block one by one. A problem may
-> > > happen for multi-block DMA slave transfers, when the slave device buffers
-> > > (for example Tx and Rx FIFOs) depend on each other and have size smaller
-> > > than the block size. In this case writing data to the DMA slave Tx buffer
-> > > may cause the Rx buffer overflow if Rx DMA channel is paused to
-> > > reinitialize the DW DMA controller with a next Rx LLP item. In particular
-> > > We've discovered this problem in the framework of the DW APB SPI device
-> 
-> > Mark, do we have any adjustment knobs in SPI core to cope with this?
-> 
-> Frankly I'm not sure I follow what the issue is - is an LLP block item
-> different from a SG list entry?  As far as I can tell the problem is
-> that the DMA controller does not support chaining transactions together
-> and possibly also has a limit on the transfer size?  Or possibly some
-> issue with the DMA controller locking the CPU out of the I/O bus for
-> noticable periods?  I can't really think what we could do about that if
-> the issue is transfer sizes, that just seems like hardware which is
-> never going to work reliably.  If the issue is not being able to chain
-> transfers then possibly an option to linearize messages into a single
-> transfer as suggested to cope with PIO devices with ill considered
-> automated chip select handling, though at some point you have to worry
-> about the cost of the memcpy() vs the cost of just doing PIO.
+Some boards have a fixed regulator and can't reach the voltage set
+by the OPP table.
 
-My understanding that the programmed transfers (as separate items in SG list)
-can be desynchronized due to LLP emulation in DMA driver. And suggestion
-probably is to use only single entry (block) SG lists will do the trick (I
-guess that we can configure SPI core do or do not change CS between them).
+Add a range where the minimal voltage is the target and the maximal
+voltage is 1.2V.
 
-> > > working in conjunction with DW DMA. Since there is no comprehensive way to
-> > > fix it right now lets at least print a warning for the first found
-> > > multi-blockless DW DMAC channel. This shall point a developer to the
-> > > possible cause of the problem if one would experience a sudden data loss.
-> 
-> I thought from the description of the SPI driver I just reviewed that
-> this hardware didn't have DMA?  Or are there separate blocks in the
-> hardware that have a more standard instantiation of the DesignWare SPI
-> controller with DMA attached?
+Suggested-by: Ondřej Jirman <megous@megous.com>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ .../boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi | 60 +++++++++----------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
 
-I speculate that the right words there should be 'we don't enable DMA right now
-due to some issues' (see above).
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+index dcb789519797..1a5eddc5a40f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+@@ -12,90 +12,90 @@
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			opp-hz = /bits/ 64 <480000000>;
+ 
+-			opp-microvolt-speed0 = <880000>;
+-			opp-microvolt-speed1 = <820000>;
+-			opp-microvolt-speed2 = <820000>;
++			opp-microvolt-speed0 = <880000 880000 1200000>;
++			opp-microvolt-speed1 = <820000 820000 1200000>;
++			opp-microvolt-speed2 = <820000 820000 1200000>;
+ 		};
+ 
+ 		opp@720000000 {
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			opp-hz = /bits/ 64 <720000000>;
+ 
+-			opp-microvolt-speed0 = <880000>;
+-			opp-microvolt-speed1 = <820000>;
+-			opp-microvolt-speed2 = <820000>;
++			opp-microvolt-speed0 = <880000 880000 1200000>;
++			opp-microvolt-speed1 = <820000 820000 1200000>;
++			opp-microvolt-speed2 = <820000 820000 1200000>;
+ 		};
+ 
+ 		opp@816000000 {
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			opp-hz = /bits/ 64 <816000000>;
+ 
+-			opp-microvolt-speed0 = <880000>;
+-			opp-microvolt-speed1 = <820000>;
+-			opp-microvolt-speed2 = <820000>;
++			opp-microvolt-speed0 = <880000 880000 1200000>;
++			opp-microvolt-speed1 = <820000 820000 1200000>;
++			opp-microvolt-speed2 = <820000 820000 1200000>;
+ 		};
+ 
+ 		opp@888000000 {
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			opp-hz = /bits/ 64 <888000000>;
+ 
+-			opp-microvolt-speed0 = <880000>;
+-			opp-microvolt-speed1 = <820000>;
+-			opp-microvolt-speed2 = <820000>;
++			opp-microvolt-speed0 = <880000 880000 1200000>;
++			opp-microvolt-speed1 = <820000 820000 1200000>;
++			opp-microvolt-speed2 = <820000 820000 1200000>;
+ 		};
+ 
+ 		opp@1080000000 {
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			opp-hz = /bits/ 64 <1080000000>;
+ 
+-			opp-microvolt-speed0 = <940000>;
+-			opp-microvolt-speed1 = <880000>;
+-			opp-microvolt-speed2 = <880000>;
++			opp-microvolt-speed0 = <940000 940000 1200000>;
++			opp-microvolt-speed1 = <880000 880000 1200000>;
++			opp-microvolt-speed2 = <880000 880000 1200000>;
+ 		};
+ 
+ 		opp@1320000000 {
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			opp-hz = /bits/ 64 <1320000000>;
+ 
+-			opp-microvolt-speed0 = <1000000>;
+-			opp-microvolt-speed1 = <940000>;
+-			opp-microvolt-speed2 = <940000>;
++			opp-microvolt-speed0 = <1000000 1000000 1200000>;
++			opp-microvolt-speed1 = <940000 940000 1200000>;
++			opp-microvolt-speed2 = <940000 940000 1200000>;
+ 		};
+ 
+ 		opp@1488000000 {
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			opp-hz = /bits/ 64 <1488000000>;
+ 
+-			opp-microvolt-speed0 = <1060000>;
+-			opp-microvolt-speed1 = <1000000>;
+-			opp-microvolt-speed2 = <1000000>;
++			opp-microvolt-speed0 = <1060000 1060000 1200000>;
++			opp-microvolt-speed1 = <1000000 1000000 1200000>;
++			opp-microvolt-speed2 = <1000000 1000000 1200000>;
+ 		};
+ 
+ 		opp@1608000000 {
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			opp-hz = /bits/ 64 <1608000000>;
+ 
+-			opp-microvolt-speed0 = <1090000>;
+-			opp-microvolt-speed1 = <1030000>;
+-			opp-microvolt-speed2 = <1030000>;
++			opp-microvolt-speed0 = <1090000 1090000 1200000>;
++			opp-microvolt-speed1 = <1030000 1030000 1200000>;
++			opp-microvolt-speed2 = <1030000 1030000 1200000>;
+ 		};
+ 
+ 		opp@1704000000 {
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			opp-hz = /bits/ 64 <1704000000>;
+ 
+-			opp-microvolt-speed0 = <1120000>;
+-			opp-microvolt-speed1 = <1060000>;
+-			opp-microvolt-speed2 = <1060000>;
++			opp-microvolt-speed0 = <1120000 1120000 1200000>;
++			opp-microvolt-speed1 = <1060000 1060000 1200000>;
++			opp-microvolt-speed2 = <1060000 1060000 1200000>;
+ 		};
+ 
+ 		opp@1800000000 {
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			opp-hz = /bits/ 64 <1800000000>;
+ 
+-			opp-microvolt-speed0 = <1160000>;
+-			opp-microvolt-speed1 = <1100000>;
+-			opp-microvolt-speed2 = <1100000>;
++			opp-microvolt-speed0 = <1160000 1160000 1200000>;
++			opp-microvolt-speed1 = <1100000 1100000 1200000>;
++			opp-microvolt-speed2 = <1100000 1100000 1200000>;
+ 		};
+ 	};
+ };
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
