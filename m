@@ -2,157 +2,151 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66748C47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 11:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E03EC47254
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 12:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEC6208CA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 11:59:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="DYpOCoHZ"
+	by mail.kernel.org (Postfix) with ESMTP id 1D3B3208DB
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 12:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588939333;
+	bh=MVgAInBlHbFucqqOMS2zpzCl41mt8McPbpWInuTvt7A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iH2RsmMDUTuHsO9jDw1OI+aTADMeyaKX3+wTgSRcML3Vm9KvNGQj5746kkzFb/cTJ
+	 EIZvd6D7Lrp4vSLwrwC1gMrhcPJ20PBvV+gCdW01NkY5stdoX1t8rtT0UTlNrPpBbo
+	 FYMXyqUw+LTP2yiyQihK/dZXaUr7NM1HPue9rPcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgEHL7r (ORCPT
+        id S1727083AbgEHMCJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 07:59:47 -0400
-Received: from mail-eopbgr40083.outbound.protection.outlook.com ([40.107.4.83]:60038
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726618AbgEHL7r (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 07:59:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hjYPb0anFLwpofFGOKO6YJCNsBdSlRehxPRcse7OK6Rhu83KcrMdF3UPDJVp+F6W2RGTQlx1dssqh4O4+CXyioTKrnYMOjEBcmftR0DCIv6PjfTZedefl/Xty/BnqlY5kRKBlso1XnB/SXalM4G/HDSHnlHzO/NXjNWNNTQLHzBFRCxJm6/KLsnYFYM8StwH7ywLuZThh98cPcVbySj8ALvGFQmDIy9Us69jLe3KrAToFEbjw6Oyh2S2GTg0nD8YcXWPDvThNVdpGtwUHn3MYAwsWOW9PTVWoefbVk31UTRPXzav0X0umoWtqau/6lfZQ+LaLkNVxmEFiosIAOtoFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+UBV7XO3/IvXxF4gjbUYi6wqHF6vtOJ2AG/54gtWA3Y=;
- b=dDbohGc3+i4X+XZt9IitjGjpH0QC7kbBQEIjvRiqim5/EEQjj2wuTZc1U2gelKUsDB+MSbxHOEU4SSkry7V8lbUsTNolP9b/MmKAkt+Y+ijDjdi6EqNz9EjPNQ8ksI5RHQQgWYFn2D4V0YjDHygTWXQZ+isYehd5AUTQBc5h3i2AQVLouiNNt7ndZVu1gEKBIfqyimHzqwIwJSenK3G+kFub15F6BJ//3V11X5HXQgzeuOqljZs/ZNT3UII6zBlmG3klA62EU7hxdomTnhOmcM/xEpg07jESMhxMRjG3BHPO1e/s0tKsYtLJYgGe1YvkP+4HKlUco+q4dK26Z7lh0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+UBV7XO3/IvXxF4gjbUYi6wqHF6vtOJ2AG/54gtWA3Y=;
- b=DYpOCoHZhXbz2ilPubpV6vYpGc5vUxl6gLdek5nxXHSE9lEWCwPyglaR8XjAaxszNE3k6+jI5M7KVyjUNohesYxiZbmCgcZJ383o1mVbiTyQr9/74sN1nDm6TXnWAfp8yhuI9EYoA6vT6qno1cTw2U9liBsZrRqKOfx/h/6G1lU=
-Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com (2603:10a6:4:33::14)
- by DB6PR0401MB2518.eurprd04.prod.outlook.com (2603:10a6:4:36::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Fri, 8 May
- 2020 11:59:43 +0000
-Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com
- ([fe80::444:b05a:a5:5710]) by DB6PR0401MB2438.eurprd04.prod.outlook.com
- ([fe80::444:b05a:a5:5710%9]) with mapi id 15.20.2958.035; Fri, 8 May 2020
- 11:59:43 +0000
-From:   "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
-CC:     Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Subject: RE: [PATCH 2/3] dts: ppc: t4240rdb: add uie_unsupported property to
- drop warning
-Thread-Topic: [PATCH 2/3] dts: ppc: t4240rdb: add uie_unsupported property to
- drop warning
-Thread-Index: AQHWJTApGzOZVK/3qUmR8Dfb1zRWHw==
-Date:   Fri, 8 May 2020 11:59:43 +0000
-Message-ID: <DB6PR0401MB2438A53873ABE34EFA0BB9498FA20@DB6PR0401MB2438.eurprd04.prod.outlook.com>
-References: <20200508054925.48237-1-biwen.li@oss.nxp.com>
- <20200508054925.48237-2-biwen.li@oss.nxp.com>
- <20200508115052.GL34497@piout.net>
-In-Reply-To: <20200508115052.GL34497@piout.net>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: bootlin.com; dkim=none (message not signed)
- header.d=none;bootlin.com; dmarc=none action=none header.from=oss.nxp.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 355f6f90-954a-4f89-1ca8-08d7f3474bfd
-x-ms-traffictypediagnostic: DB6PR0401MB2518:|DB6PR0401MB2518:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0401MB251862E78A3D95F49E98E440CEA20@DB6PR0401MB2518.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 039735BC4E
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /fi7rBbWOkuNU2jSZ0y3Ji/4eBnhTOjZJN2A03vj9ebVhfKXH0OFhrmMZHsg/vWGNY9SKum0tMH2whB0K809HrPGJwf9utcVjnktCG3pkCufOOHK8GAygs+RRGUYemLoeT/ONqCFOxBm/nzqInONbY3sWakymIz+RBKbt9g1HK2VyZnzP/oMetBZjmudEQHzYyRxGHMOTr9kT7mTwmCU59Bu/3ieiAMCm+UVmfTi+tPcbQNdQCZUWURWoVAzg26gWQQWFnTMSKHgeGgelHKkesp/yJVXjgwHThWeSULI8mi937ivNpRaiJSkovk8cou53AikNe6qRWzuEGEug1DW7lDrbBkiQxjlBwLr147j0EjOhyHIeAzMfZkW6tZXmditImtoOJQQhEd15k7eE/hJJd9KkKG9wWXre1P0aaKL/qVhUhMJqIBO1Ld+kQsIOfaMDYB/yMlCWORn4kDxT7DMA/u/RdDX6uxNp+/NfMjWNmOHwUx453R9aeC3ShJjmzo8iF0kazZcPa6vX1g2JZpNzi2+DQfXAH35PkEZmdFfYXITeQ0gHngxyrqEQnHnReL/U0KIZu7hz0EYNAjrpQfHkxVdBKuiaygPLePQzsSPi9Y=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0401MB2438.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(33430700001)(186003)(52536014)(2906002)(9686003)(55016002)(83280400001)(8676002)(83300400001)(5660300002)(83290400001)(83310400001)(86362001)(83320400001)(33440700001)(8936002)(478600001)(966005)(33656002)(66946007)(6506007)(7696005)(76116006)(66446008)(66476007)(64756008)(26005)(66556008)(110136005)(316002)(54906003)(71200400001)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: IHMX9G0POAMuG+RSCR3mdjkKabPazeqxZxHeuk5fkdxrEE0nYCRV7+zZFsqzdkO36yeTOuLYBJoYm7UJXt9KWyNMDIdFBByH54+7DDMkN884LMI3hVe08I5u1m7vXCmr/dV43qiPwyXlt+RJCvQCAAP/jVm1xKN+kor5vkdtEwv5M+Vg7eQYGr8lUNXpT4kGzowDYvco0tnrWEYIrYravfMDzUal7Q9jvO0jEb45kwLUAgnNYOENNA/5DE36ZR8PmF6TODEERyrdIO9DD1NkjxfgTat5JHKohGdlXydgGNiW+pjvy+FlRW0ddWN4MNPd2Dk38z2WguooxhQKqMCIISsMSdOC4bc4hon2ka5ckuhKS6NHGMXFGUt9diS9Vs3looU/IXHqxiT2SajGpDK003N5BQU2GbQav6dklMHOwv2h4cxhjEc6P4c5RPn9HIaTNxpSRKO0VbzpO9fcK6K6Q+1grlPi1q2p9+rPcnJ9qXc=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 8 May 2020 08:02:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbgEHMCI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 May 2020 08:02:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44B0B208DB;
+        Fri,  8 May 2020 12:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588939327;
+        bh=MVgAInBlHbFucqqOMS2zpzCl41mt8McPbpWInuTvt7A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Twetzls2F3Jeu+KmG5FUOutvjCz/WoqfrsBaX8GvAALNLGFDnKHPy8LdLPUulm0yK
+         tBOfN6D3JwamP0kQgp3199ol6mSEtcR3ZeMDY8UHhllndREBSrWk/ouW1UclYwkLr1
+         L125iRZ6ei661Ah3Bz5HYH2pfNhM462Cs2rBmyg0=
+Date:   Fri, 8 May 2020 14:02:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Lars Persson <lars.persson@axis.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Netdev <netdev@vger.kernel.org>,
+        nios2-dev@lists.rocketboards.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org
+Subject: Re: [PATCH net 11/16] net: ethernet: marvell: mvneta: fix fixed-link
+ phydev leaks
+Message-ID: <20200508120205.GA4089177@kroah.com>
+References: <1480357509-28074-1-git-send-email-johan@kernel.org>
+ <1480357509-28074-12-git-send-email-johan@kernel.org>
+ <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
+ <20200507064412.GL2042@localhost>
+ <20200507064734.GA798308@kroah.com>
+ <20200507111312.GA1497799@kroah.com>
+ <CA+G9fYu2SrkEHyAzF57xJz5WjgHv361qdL2wPqON_pGS4Vtxmw@mail.gmail.com>
+ <20200508062119.GE25962@localhost>
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 355f6f90-954a-4f89-1ca8-08d7f3474bfd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2020 11:59:43.8131
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PANhxx5xRj3UYhTzU2IRszibzdlJH8rDmFj8pn8rJW9IFq5YIc+wiP6HEjOt2ufixzAafpHbu8A0x1BWohUQHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2518
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200508062119.GE25962@localhost>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
->=20
-> On 08/05/2020 13:49:24+0800, Biwen Li wrote:
-> > From: Biwen Li <biwen.li@nxp.com>
-> >
-> > This adds uie_unsupported property to drop warning as follows:
-> >     - $ hwclock.util-linux
-> >       hwclock.util-linux: select() to /dev/rtc0
-> >       to wait for clock tick timed out
-> >
-> > My case:
-> >     - RTC ds1374's INT pin is connected to VCC on T4240RDB,
-> >       then the RTC cannot inform cpu about the alarm interrupt
-> >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> >  arch/powerpc/boot/dts/fsl/t4240rdb.dts | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/powerpc/boot/dts/fsl/t4240rdb.dts
-> b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
-> > index a56a705d41f7..ccdd10202e56 100644
-> > --- a/arch/powerpc/boot/dts/fsl/t4240rdb.dts
-> > +++ b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
-> > @@ -144,7 +144,11 @@
-> >  			rtc@68 {
-> >  				compatible =3D "dallas,ds1374";
-> >  				reg =3D <0x68>;
-> > -				interrupts =3D <0x1 0x1 0 0>;
->=20
-> removing the interrupt should be enough to solve your issue
-Okay, got it. Thanks.
->=20
-> > +				// The ds1374's INT pin isn't
-> > +				// connected to cpu's INT pin,
-> > +				// so the rtc cannot synchronize
-> > +				// clock tick per second.
-> > +				uie_unsupported;
-> >  			};
-> >  		};
-> >
-> > --
-> > 2.17.1
-> >
->=20
-> --
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+On Fri, May 08, 2020 at 08:21:19AM +0200, Johan Hovold wrote:
+> On Fri, May 08, 2020 at 03:35:02AM +0530, Naresh Kamboju wrote:
+> > On Thu, 7 May 2020 at 16:43, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > <trim>
+> > > > >
+> > > > > Greg, 3f65047c853a ("of_mdio: add helper to deregister fixed-link
+> > > > > PHYs") needs to be backported as well for these.
+> > > > >
+> > > > > Original series can be found here:
+> > > > >
+> > > > >     https://lkml.kernel.org/r/1480357509-28074-1-git-send-email-johan@kernel.org
+> > > >
+> > > > Ah, thanks for that, I thought I dropped all of the ones that caused
+> > > > build errors, but missed the above one.  I'll go take the whole series
+> > > > instead.
+> > >
+> > > This should now all be fixed up, thanks.
+> > 
+> > While building kernel Image for arm architecture on stable-rc 4.4 branch
+> > the following build error found.
+> > 
+> > of_mdio: add helper to deregister fixed-link PHYs
+> > commit 3f65047c853a2a5abcd8ac1984af3452b5df4ada upstream.
+> > 
+> > Add helper to deregister fixed-link PHYs registered using
+> > of_phy_register_fixed_link().
+> > 
+> > Convert the two drivers that care to deregister their fixed-link PHYs to
+> > use the new helper, but note that most drivers currently fail to do so.
+> > 
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > Signed-off-by: David S. Miller <davem@davemloft.net>
+> > [only take helper function for 4.4.y - gregkh]
+> > 
+> >  # make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm
+> > CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
+> > arm-linux-gnueabihf-gcc" O=build zImage
+> > 70 #
+> > 71 ../drivers/of/of_mdio.c: In function ‘of_phy_deregister_fixed_link’:
+> > 72 ../drivers/of/of_mdio.c:379:2: error: implicit declaration of
+> > function ‘fixed_phy_unregister’; did you mean ‘fixed_phy_register’?
+> > [-Werror=implicit-function-declaration]
+> > 73  379 | fixed_phy_unregister(phydev);
+> > 74  | ^~~~~~~~~~~~~~~~~~~~
+> > 75  | fixed_phy_register
+> > 76 ../drivers/of/of_mdio.c:381:22: error: ‘struct phy_device’ has no
+> > member named ‘mdio’; did you mean ‘mdix’?
+> > 77  381 | put_device(&phydev->mdio.dev); /* of_phy_find_device() */
+> > 78  | ^~~~
+> > 79  | mdix
+> 
+> Another dependency: 5bcbe0f35fb1 ("phy: fixed: Fix removal of phys.")
+> 
+> Greg, these patches are from four years ago so can't really remember if
+> there are other dependencies or reasons against backporting them (the
+> missing stable tags are per Dave's preference), sorry.
+> 
+> The cover letter also mentions another dependency, but that may just
+> have been some context conflict.
+> 
+> Perhaps you better drop these unless you want to review them closer.
+
+Good idea, I've dropped them all for now, sorry for the noise.
+
+greg k-h
