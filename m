@@ -2,97 +2,106 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0C6C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BEFC54E49
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F09421974
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F50214D8
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:51:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rbdz2xcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgEHWSQ (ORCPT
+        id S1727778AbgEHWu6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 18:18:16 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:60543 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgEHWSQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 18:18:16 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MbTCr-1izlNf3xZx-00bolG; Sat, 09 May 2020 00:18:15 +0200
-Received: by mail-qk1-f179.google.com with SMTP id n14so3438855qke.8;
-        Fri, 08 May 2020 15:18:14 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZXXrcnFE5WxGCjnL2UKzVhIPlSHopk1YMFK2xLFfMAHsTrwN7c
-        gL06v4YjBetgZj0UhlZuyr57xtwKtwIxeZL28Y4=
-X-Google-Smtp-Source: APiQypJrR0dMcIrORsz+mb0P5jMKjcH41Y5dSQnIphjwVkSDjNgvO+SuEE4oe+M/6LHNn7ZHN8PzaYAriS9TiHos0+0=
-X-Received: by 2002:a37:c96:: with SMTP id 144mr3233352qkm.138.1588976293715;
- Fri, 08 May 2020 15:18:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200508100100.20740-1-grygorii.strashko@ti.com> <20200508100100.20740-3-grygorii.strashko@ti.com>
-In-Reply-To: <20200508100100.20740-3-grygorii.strashko@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 9 May 2020 00:17:57 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0vewSiFc4rXu43_bs_A85EYx12_YuyBaU3PYJ1HszE=w@mail.gmail.com>
-Message-ID: <CAK8P3a0vewSiFc4rXu43_bs_A85EYx12_YuyBaU3PYJ1HszE=w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] soc: ti: add k3 platforms chipid module driver
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
+        Fri, 8 May 2020 18:50:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727774AbgEHWu6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 18:50:58 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A472FC061A0C;
+        Fri,  8 May 2020 15:50:57 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s8so3744559wrt.9;
+        Fri, 08 May 2020 15:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=V3nc4NBSeZ0B9rUqgxGAX48Rma2M/iKEjSutkviGE4Q=;
+        b=Rbdz2xcrk8vpCyPDyAgfbsmQ8rl7ctSx/u0Q/RXDgSP+qyWCYVkMEEA5FGk1FFHlMu
+         0rG/+L7W3uqMRXEtCtPcoq0/VFYPz3BjOoM6ArXS4d4GVxmFIUhmCb4371XIeKm3TbNn
+         jmQ/Hz1FEOMOV/gkqny9GJ9Y0UDgRhrnVsuzsCEMpSYX1Xm7fJKtaAZhOZW182ssoRhM
+         vsqEtUjrKKqYGptTR+2Sk5lkS9Tz6Zi045IQCRGDjRu7SuV/us7o+kbop7E5cGyz45dS
+         3OXpIP9pqSEJjdmekc5kpnvljSQmOlq9Mggx/Zfkc1BWcRDZG7LBJLr6LrP57IyCv5xG
+         7TLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V3nc4NBSeZ0B9rUqgxGAX48Rma2M/iKEjSutkviGE4Q=;
+        b=JxXp3UsiJsMbGtIPl7IxkFHA+BX0YdlMmwQZafROpKBsqbo5r4mf4D7NhzyY1DR7lI
+         4pcP6xLUlj/s83p8n22AOArhpXP1av4TGu1jsrj8BRwjnz1ljevB9GGT3LiYVTNvMRUU
+         lkpVi+e/8LU0mLlyB9/ztrN6+bTj1VFX0WAbCYjm0zuKFyZUvYvreX98frgbLV2HO4zB
+         TirTKfICf2600f5SHtn/WMzC0gCvLhWvQflPfbRRPlGEpGIe+dZS7MRgNPyIOFYTmix+
+         oGfVUpElDcQUsiaBh0Gz0gfH9jFZ1AJ+Cpp59PAcQPLZyV3zoeySdGHZKcfVkJMuGrMN
+         5D7w==
+X-Gm-Message-State: AGi0PuY8uTdZH4+4VInLuC34LwgcQ9uHiMZrdFNVhQ/q8ND/MYXBk+GQ
+        MMvN6Vk1f3VWNcRJREO1Gf0=
+X-Google-Smtp-Source: APiQypLI4Byv5T7Lmh2uWKQSyxmalzDJUkuVIv6YUIt/fdFeuVoSLcHQsePCIMB8Z0kKMP4AhIDcKg==
+X-Received: by 2002:adf:ea44:: with SMTP id j4mr5797953wrn.38.1588978256310;
+        Fri, 08 May 2020 15:50:56 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u67sm3429631wmu.3.2020.05.08.15.50.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 15:50:55 -0700 (PDT)
+Subject: Re: [PATCH v8 1/5] usb: xhci: Change the XHCI link order in the
+ Makefile
+To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:wqHunh3wqcmINbNGb9nGV583lJCWKGaCaaiJyxPNcLJ0Bg5xQTd
- PgIz2Lq6iSdl0tMUEDHlQYZHIKc2kFEH+m8epA2+fzEhKx5p7oDSFnCuVYqmD69n0qjxidr
- oDtIuJU2IX8Mjh6EyQUh5/cmEdRI/VKHuQa4kc8dnWTPoTIjlNG6JRJRR8oFJQR7rG58xhA
- Mpqn37pSkw3514eJBku/A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:T8bxtkkUkuo=:gJrTbxq7w3Hmd7gn2RVXtu
- j/AswyJoEclCsiwUrYqNb9o/PKV9cO6sIOyuHFDapkcEzl5zcxDgEUMTCqXzMMMp6L4isbXYu
- +qzeqTql0MbMliL7TmOa/UDjx4hBPju31wxHJ4fUfQWcYrAZNSXB7Ww5uK8D9V4tthP5gS7Cw
- cmX1sRc0W2bMI1ljlNbEVxK/4fRcPYv0QwD0B2FcVSBHlaqSdwjTowyUXvvZHYrGwqJ1vy4eX
- awkpX9WlbMsUarBN9x6UaKHzLqXQNvMU2h1bgEFNEiH3+YlBiCILCZQ04tJetTBPrXViWZr0R
- 3jcP6PWNCWt0+vrgcONsRtChSqVecW+axNjAsgTFAGSYt1kCaMY2T30Vc9T61UEs9aQWWXmJ8
- q0BLzvIWy/Q5dySxBCOmnSd3aBRv5I5YsEui9zyU603HFYDx0qg57MXKeq+7GxTuZUm6TbX2r
- fuw5zNEWULmMvafXvU9FySe9KxQ+aGUIO7mWJhKXReDiLyWG83j94VK1bQxxDMF0Bwn0s09Fh
- vpN3/kV8n2cTU0LHK2jyXIxqvHT9A7hOlMTrF4S/j+1zvANAGmNIuFZ2uwHR8CU29EYFsrfQk
- J+3CeTl6ffcXPx5YrDqAzjzRSkC7L7002lAyQQqM8IoYCAk88LwM+8gY2QK+rMgIJ6SKmlEzu
- TMhcM+/nrC21FkhGIdxodpRLM19IWuE+ji+qtjO2HawFGkJJTmuLGukXj+Iq8x7+grzDMZAsk
- 7pwqEi81rqvs+HLklm96tYgmLqVltKxzbUyM/H0MvU+vs1+zLEjvhew+uybeVmomuSf4w+4lr
- K58dyHpamWjKpRxuPhUNkk2GrRGNtoHPkZgzIUn/DiwvaBJv2U=
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20200508211929.39020-1-alcooperx@gmail.com>
+ <20200508211929.39020-2-alcooperx@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <39262358-9ba5-20f7-656b-63825da369d6@gmail.com>
+Date:   Fri, 8 May 2020 15:50:51 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200508211929.39020-2-alcooperx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 8, 2020 at 12:01 PM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
 
-> +static int __init k3_chipinfo_init(void)
-> +{
-> +       struct soc_device_attribute *soc_dev_attr;
-> +       struct soc_device *soc_dev;
-> +       struct device_node *node;
-> +       struct regmap *regmap;
-> +       u32 partno_id;
-> +       u32 variant;
-> +       u32 jtag_id;
-> +       u32 mfg;
-> +       int ret;
-> +
-> +       node = of_find_compatible_node(NULL, NULL, "ti,am654-chipid");
-> +       if (!node)
-> +               return -ENODEV;
 
-This will fail the initcall and print a warning when the kernel runs on any
-other SoC. Would it be possible to just make this a platform_driver?
+On 5/8/2020 2:19 PM, Al Cooper wrote:
+> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
+> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
+> devices and OHCI handles <2.0 devices. Currently the Makefile
+> has XHCI linking at the bottom which will result in the XHIC driver
+> initalizing after the EHCI and OHCI drivers and any installed 3.0
+> device will be seen as a 2.0 device. Moving the XHCI linking
+> above the EHCI and OHCI linking fixes the issue.
+> 
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 
-If not, I think you should silently return success when the device
-node is absent.
-
-       Arnd
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
