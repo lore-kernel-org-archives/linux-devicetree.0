@@ -2,131 +2,188 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCF0C54E7F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4039DC54E7E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEB3F24955
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1870E218AC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:14:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KEeH6BFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgEHRNy (ORCPT
+        id S1728005AbgEHRNz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 13:13:54 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:2041 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbgEHRNx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 13:13:53 -0400
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id DEE4D24000E;
-        Fri,  8 May 2020 17:13:50 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 6/8] dt-bindings: mtd: Document ARASAN NAND bindings
-Date:   Fri,  8 May 2020 19:13:37 +0200
-Message-Id: <20200508171339.8052-7-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200508171339.8052-1-miquel.raynal@bootlin.com>
-References: <20200508171339.8052-1-miquel.raynal@bootlin.com>
+        Fri, 8 May 2020 13:13:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727981AbgEHRNz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 13:13:55 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12384C05BD43
+        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 10:13:55 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 145so1263040pfw.13
+        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 10:13:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Nb47I82/IxA2gle1iw0XqnYNPtNXoYXnaPYNxEi54LA=;
+        b=KEeH6BFZU9eraiCcEwOrrHoh1rqTJnlfgwHucNffiqawEYszvUgBxksGXmTs1Tq8DG
+         pRBC0CkKC9G1MB5LyfkiyVONeMJMKW0LahPEfZm7lB6WftSVKGQ0mZPspkCVtVxzRDHv
+         UbzQ7XGzVWDVB+h7SKnxQU6UxfLrXGdHGIUqQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Nb47I82/IxA2gle1iw0XqnYNPtNXoYXnaPYNxEi54LA=;
+        b=nXSfMtAs/42EiyN8D+dD65zPQnUWLZyUtk0lPd5rJp22lpiaMB+JjPhgE/cBHDQu+B
+         hgWis3HoL2MPCOfK99jjuLyygT9dezlO9mRRllNsJHCHEjPf0gxqcc/8CDM6lUM5S23h
+         Oo4bYeODrQE7QZ4c9Zh8+/OjP7HUmUEFoqwIGeQcoxpY3U6Vl34l/aW2hCIx/KG3+SQN
+         feCv84ilVO9ZRpKmg4dXCfBN2HSf/5Gu/QsTTIuuZZGxfk1d9LfFFChaPcOZNHmFFkXt
+         cwh3tocw58Fi2bsu+DINOHfcSWpSxpvx36dyhdkLR+2Yc1DmgyT6HIOETtPApSgpI9ju
+         YPJg==
+X-Gm-Message-State: AGi0PuZIqNwzzGLz6ZH1xFbWd6kx+3u8kKZLkKJS6pxlS5UILa2FpHZ0
+        PVxGRFy7mfflVm3+tqHulytCxQ==
+X-Google-Smtp-Source: APiQypJqUtILU9Di1LjiTI4FCIAn9705PSxM0Ut708GH64qmbLmlmtgLcjT6tKrSg02YtLlyIOrcKA==
+X-Received: by 2002:aa7:8bc5:: with SMTP id s5mr4040633pfd.19.1588958034462;
+        Fri, 08 May 2020 10:13:54 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id a2sm1709593pgh.57.2020.05.08.10.13.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 10:13:53 -0700 (PDT)
+Date:   Fri, 8 May 2020 10:13:52 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org, georgi.djakov@linaro.org
+Subject: Re: [PATCH V5 1/7] soc: qcom: geni: Support for ICC voting
+Message-ID: <20200508171352.GA4525@google.com>
+References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
+ <1588919619-21355-2-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1588919619-21355-2-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the Arasan NAND controller bindings.
+Hi Akash,
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- .../bindings/mtd/arasan,nand-controller.yaml  | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
+note: my comments below are clearly entering bikeshed territory. Please
+take what you agree with and feel free to ignore the rest.
 
-diff --git a/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
-new file mode 100644
-index 000000000000..db8f115a13ec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/arasan,nand-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Arasan NAND Flash Controller with ONFI 3.1 support device tree bindings
-+
-+allOf:
-+  - $ref: "nand-controller.yaml"
-+
-+maintainers:
-+  - Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+        - enum:
-+          - xlnx,zynqmp-nand-controller
-+        - enum:
-+          - arasan,nfc-v3p10
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Controller clock
-+      - description: NAND bus clock
-+
-+  clock-names:
-+    items:
-+      - const: controller
-+      - const: bus
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#address-cells": true
-+  "#size-cells": true
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+additionalProperties: true
-+
-+examples:
-+  - |
-+    nfc: nand-controller@ff100000 {
-+        compatible = "xlnx,zynqmp-nand-controller", "arasan,nfc-v3p10";
-+        reg = <0x0 0xff100000 0x0 0x1000>;
-+        clock-names = "controller", "bus";
-+        clocks = <&clk200>, <&clk100>;
-+        interrupt-parent = <&gic>;
-+        interrupts = <0 14 4>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
--- 
-2.20.1
+On Fri, May 08, 2020 at 12:03:33PM +0530, Akash Asthana wrote:
+> Add necessary macros and structure variables to support ICC BW
+> voting from individual SE drivers.
+> 
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Bjorn's comment dropped enums for ICC paths, given the three
+>    paths individual members
+> 
+> Changes in V3:
+>  - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
+>  - Add geni_icc_path structure in common header
+> 
+> Changes in V4:
+>  - As per Bjorn's comment print error message in geni_icc_get if return
+>    value is not -EPROBE_DEFER.
+>  - As per Bjorn's comment remove NULL on path before calling icc_set_bw
+>    API.
+>  - As per Bjorn's comment drop __func__ print.
+>  - As per Matthias's comment, make ICC path a array instead of individual
+>    member entry in geni_se struct.
+> 
+> Note: I have ignored below check patch suggestion because it was throwing
+>       compilation error as 'icc_ddr' is not compile time comstant.
+> 
+> WARNING: char * array declaration might be better as static const
+>  - FILE: drivers/soc/qcom/qcom-geni-se.c:726:
+>  - const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
+> 
+> Changes in V5:
+>  - As per Matthias's comment defined enums for ICC paths.
+>  - Integrate icc_enable/disable with power on/off call for driver.
+>  - As per Matthias's comment added icc_path_names array to print icc path name
+>    in failure case.
+>  - As per Georgi's suggestion assume peak_bw = avg_bw if not mentioned.
+> 
+>  drivers/soc/qcom/qcom-geni-se.c | 92 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/qcom-geni-se.h    | 42 +++++++++++++++++++
+>  2 files changed, 134 insertions(+)
+> 
+> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> index 7d622ea..63403bf 100644
+> --- a/drivers/soc/qcom/qcom-geni-se.c
+> +++ b/drivers/soc/qcom/qcom-geni-se.c
+> @@ -92,6 +92,9 @@ struct geni_wrapper {
+>  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+>  };
+>  
+> +static const char * const icc_path_names[] = {"qup-core", "qup-config",
+> +								"qup-memory"};
 
+nit: the indentation is a bit odd. I would align it either with "qup-core" or
+at a tab stop nearby.
+
+> +
+>  #define QUP_HW_VER_REG			0x4
+>  
+>  /* Common SE registers */
+> @@ -720,6 +723,95 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
+>  }
+>  EXPORT_SYMBOL(geni_se_rx_dma_unprep);
+>  
+> +int geni_icc_get(struct geni_se *se, const char *icc_ddr)
+> +{
+> +	int i, icc_err;
+
+nit: the 'icc_' prefix doesn't add value here, just 'err' would be less
+'noisy' IMO.
+
+> +	const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
+
+nit: you could avoid repeating the first to strings by referencing
+icc_path_names[GENI_TO_CORE] and icc_path_names[CPU_TO_GENI]. Not sure
+if it's really better, it avoids the redundant names, but is slightly
+less readable.
+
+> +
+> +	for (i = 0; i < ARRAY_SIZE(se->icc_paths); i++) {
+> +		if (!icc_names[i])
+> +			continue;
+> +
+> +		se->icc_paths[i].path = devm_of_icc_get(se->dev, icc_names[i]);
+> +		if (IS_ERR(se->icc_paths[i].path))
+> +			goto icc_get_failure;
+
+nit: since there is only a single label it isn't really necessary to be so
+precise. 'goto err' is very common in the kernel, 'err_icc_get' would be
+another alternative.
+
+> +	}
+> +
+> +	return 0;
+> +
+> +icc_get_failure:
+> +	icc_err = PTR_ERR(se->icc_paths[i].path);
+> +	if (icc_err != -EPROBE_DEFER)
+> +		dev_err_ratelimited(se->dev, "Failed to get ICC path:%s, ret:%d\n",
+
+All the logs in this patch result in something like "... path:qup-core, ret:42".
+For humans I think it is more intuitive to parse "... path 'qup-core': 42".
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
