@@ -2,181 +2,124 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85465C47255
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 19:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B3FC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 19:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69689218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 19:03:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z5/sCkA2"
+	by mail.kernel.org (Postfix) with ESMTP id 288212173E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 19:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgEHTDG (ORCPT
+        id S1726948AbgEHTGY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 15:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726797AbgEHTDF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 15:03:05 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52F98C061A0C
-        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 12:03:04 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x10so1138788plr.4
-        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 12:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HmDf2i2KESXfyfZqBgVUXuoXosgZ5LwL/gvkhTXF/E0=;
-        b=Z5/sCkA2lUpsmU6DwE23/ZwZRvYhJmLY4VGnuxXnJZawTDmiLvcUxWDdhG/EpvsI7+
-         PwqJ/+ucUsoEc4B/IMoIJmxnSXsDqOhqEhdNlMGOy21HJ/9MVwh8FhSLMH2QPkEbmpZN
-         ftshZB0IQCA9YS7AkxmtbLfyyYu0ZpeQ7k+TI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HmDf2i2KESXfyfZqBgVUXuoXosgZ5LwL/gvkhTXF/E0=;
-        b=i7mMw9wTR9PgJg/Jo6KjL38Um7Rhoj9BOhgiO8Vd9XqCCQFdYTE1zMFu7IHXfyYMlc
-         IS8oYhv6gcO/7CoopZYFsEFPu/W8RUO3y4fDXJRZAILl9o4zTEvbKPc1dClJk3c8S25r
-         p9sobWZaA41OnQUSYv3ssRnb40nY1zeoCLnQ4xaiKrSfyb9TQjFZnWEocqOd7V7TkYGm
-         hsUwDHJZNvOBX2tNwEz9JtWHEKkeqQIK+K47c8ZrMX6l9UlNo1/9wt7k5kOV4ba5tYHi
-         rUofCxxlWSZ2QeqiY57MtOgjg5ZL42CAGSoI5nqXdyOHxobG1imP1/3ck2qsk83t68lh
-         AWlw==
-X-Gm-Message-State: AGi0Pua0QisXbPwjLhbKminUgJay9NNc8tkt/Civ1WfQ9woNQHiqecw8
-        6hGE6P2dRUBZCULrnMaX5HWjJA==
-X-Google-Smtp-Source: APiQypI1Y+6v8efVKW8oF8O0/yGro6rJKbF0OoidUbBbVucSIFNWrHNPt96+oWAD/806sC8HvwUvVQ==
-X-Received: by 2002:a17:90a:ba84:: with SMTP id t4mr6965747pjr.81.1588964583825;
-        Fri, 08 May 2020 12:03:03 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id h64sm2631168pfe.42.2020.05.08.12.03.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 12:03:03 -0700 (PDT)
-Date:   Fri, 8 May 2020 12:03:01 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org, georgi.djakov@linaro.org
-Subject: Re: [PATCH V5 1/7] soc: qcom: geni: Support for ICC voting
-Message-ID: <20200508190301.GG4525@google.com>
-References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
- <1588919619-21355-2-git-send-email-akashast@codeaurora.org>
+        Fri, 8 May 2020 15:06:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:1210 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726807AbgEHTGY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 May 2020 15:06:24 -0400
+IronPort-SDR: v2gjK4RKVJ1v/sdovzL2O+wNylxbADOvG7CwVQ2mYCdz9xLJxz/HixotXkwpwCZ+kmPH0d16Cx
+ 1FbYJHrKB4gw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:06:23 -0700
+IronPort-SDR: nTJv2Ub7B7vBvOk28P4x1cVdUZbPUuOksDDQNy7s9MtBirBS8RvT9K4KcLsZoqahFtSTTuVdmk
+ 9Xl7ImcTOcnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
+   d="scan'208";a="462687274"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 08 May 2020 12:06:19 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jX8KE-005Sw7-9j; Fri, 08 May 2020 22:06:22 +0300
+Date:   Fri, 8 May 2020 22:06:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200508190622.GQ185537@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588919619-21355-2-git-send-email-akashast@codeaurora.org>
+In-Reply-To: <20200508115334.GE4820@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:03:33PM +0530, Akash Asthana wrote:
-> Add necessary macros and structure variables to support ICC BW
-> voting from individual SE drivers.
+On Fri, May 08, 2020 at 12:53:34PM +0100, Mark Brown wrote:
+> On Fri, May 08, 2020 at 02:26:04PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 08, 2020 at 01:53:02PM +0300, Serge Semin wrote:
 > 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> ---
-> Changes in V2:
->  - As per Bjorn's comment dropped enums for ICC paths, given the three
->    paths individual members
+> > > Multi-block support provides a way to map the kernel-specific SG-table so
+> > > the DW DMA device would handle it as a whole instead of handling the
+> > > SG-list items or so called LLP block items one by one. So if true LLP
+> > > list isn't supported by the DW DMA engine, then soft-LLP mode will be
+> > > utilized to load and execute each LLP-block one by one. A problem may
+> > > happen for multi-block DMA slave transfers, when the slave device buffers
+> > > (for example Tx and Rx FIFOs) depend on each other and have size smaller
+> > > than the block size. In this case writing data to the DMA slave Tx buffer
+> > > may cause the Rx buffer overflow if Rx DMA channel is paused to
+> > > reinitialize the DW DMA controller with a next Rx LLP item. In particular
+> > > We've discovered this problem in the framework of the DW APB SPI device
 > 
-> Changes in V3:
->  - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
->  - Add geni_icc_path structure in common header
+> > Mark, do we have any adjustment knobs in SPI core to cope with this?
 > 
-> Changes in V4:
->  - As per Bjorn's comment print error message in geni_icc_get if return
->    value is not -EPROBE_DEFER.
->  - As per Bjorn's comment remove NULL on path before calling icc_set_bw
->    API.
->  - As per Bjorn's comment drop __func__ print.
->  - As per Matthias's comment, make ICC path a array instead of individual
->    member entry in geni_se struct.
-> 
-> Note: I have ignored below check patch suggestion because it was throwing
->       compilation error as 'icc_ddr' is not compile time comstant.
-> 
-> WARNING: char * array declaration might be better as static const
->  - FILE: drivers/soc/qcom/qcom-geni-se.c:726:
->  - const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
-> 
-> Changes in V5:
->  - As per Matthias's comment defined enums for ICC paths.
->  - Integrate icc_enable/disable with power on/off call for driver.
->  - As per Matthias's comment added icc_path_names array to print icc path name
->    in failure case.
->  - As per Georgi's suggestion assume peak_bw = avg_bw if not mentioned.
-> 
->  drivers/soc/qcom/qcom-geni-se.c | 92 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/qcom-geni-se.h    | 42 +++++++++++++++++++
->  2 files changed, 134 insertions(+)
-> 
-> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-> index 7d622ea..63403bf 100644
-> --- a/drivers/soc/qcom/qcom-geni-se.c
-> +++ b/drivers/soc/qcom/qcom-geni-se.c
-> @@ -92,6 +92,9 @@ struct geni_wrapper {
->  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
->  };
->  
-> +static const char * const icc_path_names[] = {"qup-core", "qup-config",
-> +								"qup-memory"};
-> +
->  #define QUP_HW_VER_REG			0x4
->  
->  /* Common SE registers */
-> @@ -720,6 +723,95 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
->  }
->  EXPORT_SYMBOL(geni_se_rx_dma_unprep);
->  
-> +int geni_icc_get(struct geni_se *se, const char *icc_ddr)
-> +{
-> +	int i, icc_err;
-> +	const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
-> +
-> +	for (i = 0; i < ARRAY_SIZE(se->icc_paths); i++) {
-> +		if (!icc_names[i])
-> +			continue;
-> +
-> +		se->icc_paths[i].path = devm_of_icc_get(se->dev, icc_names[i]);
-> +		if (IS_ERR(se->icc_paths[i].path))
-> +			goto icc_get_failure;
-> +	}
-> +
-> +	return 0;
-> +
-> +icc_get_failure:
-> +	icc_err = PTR_ERR(se->icc_paths[i].path);
-> +	if (icc_err != -EPROBE_DEFER)
-> +		dev_err_ratelimited(se->dev, "Failed to get ICC path:%s, ret:%d\n",
-> +					icc_names[i], icc_err);
-> +	return icc_err;
-> +
-> +}
-> +EXPORT_SYMBOL(geni_icc_get);
-> +
-> +void geni_icc_bw_init(struct geni_icc_path *icc_paths, unsigned int avg_bw,
-> +			unsigned int peak_bw)
+> Frankly I'm not sure I follow what the issue is - is an LLP block item
+> different from a SG list entry?  As far as I can tell the problem is
+> that the DMA controller does not support chaining transactions together
+> and possibly also has a limit on the transfer size?  Or possibly some
+> issue with the DMA controller locking the CPU out of the I/O bus for
+> noticable periods?  I can't really think what we could do about that if
+> the issue is transfer sizes, that just seems like hardware which is
+> never going to work reliably.  If the issue is not being able to chain
+> transfers then possibly an option to linearize messages into a single
+> transfer as suggested to cope with PIO devices with ill considered
+> automated chip select handling, though at some point you have to worry
+> about the cost of the memcpy() vs the cost of just doing PIO.
 
-I noticed that all callers of geni_icc_bw_init() pass 0 as
-'peak_pw' (aka peak == avg). Unless there are plans to use other
-values for the peak bandwidth in the future it is pointless to
-track the bandwidth(s) in two variables. And if the bandwidth is
-tracked in a single variable this function is not needed.
+My understanding that the programmed transfers (as separate items in SG list)
+can be desynchronized due to LLP emulation in DMA driver. And suggestion
+probably is to use only single entry (block) SG lists will do the trick (I
+guess that we can configure SPI core do or do not change CS between them).
 
-> +{
-> +	if (!peak_bw)
-> +		peak_bw = avg_bw;
-> +	icc_paths->avg_bw = avg_bw;
-> +	icc_paths->peak_bw = peak_bw;
-> +}
-> +EXPORT_SYMBOL(geni_icc_bw_init);
+> > > working in conjunction with DW DMA. Since there is no comprehensive way to
+> > > fix it right now lets at least print a warning for the first found
+> > > multi-blockless DW DMAC channel. This shall point a developer to the
+> > > possible cause of the problem if one would experience a sudden data loss.
+> 
+> I thought from the description of the SPI driver I just reviewed that
+> this hardware didn't have DMA?  Or are there separate blocks in the
+> hardware that have a more standard instantiation of the DesignWare SPI
+> controller with DMA attached?
+
+I speculate that the right words there should be 'we don't enable DMA right now
+due to some issues' (see above).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
