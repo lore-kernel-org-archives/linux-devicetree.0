@@ -4,31 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC4FC47257
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D87C54E7E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8ADB20870
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4F3218AC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgEHKx1 (ORCPT
+        id S1727878AbgEHKx3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 06:53:27 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:41750 "EHLO
+        Fri, 8 May 2020 06:53:29 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41798 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgEHKxZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:53:25 -0400
+        with ESMTP id S1726091AbgEHKx2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:53:28 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 26BEB803078D;
-        Fri,  8 May 2020 10:53:19 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id D67D0803078F;
+        Fri,  8 May 2020 10:53:23 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id poF6TwKT_f0O; Fri,  8 May 2020 13:53:18 +0300 (MSK)
+        with ESMTP id 43gaQWD2vqt6; Fri,  8 May 2020 13:53:23 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -36,13 +37,12 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction length property
-Date:   Fri, 8 May 2020 13:53:00 +0300
-Message-ID: <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is unsupported
+Date:   Fri, 8 May 2020 13:53:02 +0300
+Message-ID: <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
  <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
@@ -55,8 +55,21 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This array property is used to indicate the maximum burst transaction
-length supported by each DMA channel.
+Multi-block support provides a way to map the kernel-specific SG-table so
+the DW DMA device would handle it as a whole instead of handling the
+SG-list items or so called LLP block items one by one. So if true LLP
+list isn't supported by the DW DMA engine, then soft-LLP mode will be
+utilized to load and execute each LLP-block one by one. A problem may
+happen for multi-block DMA slave transfers, when the slave device buffers
+(for example Tx and Rx FIFOs) depend on each other and have size smaller
+than the block size. In this case writing data to the DMA slave Tx buffer
+may cause the Rx buffer overflow if Rx DMA channel is paused to
+reinitialize the DW DMA controller with a next Rx LLP item. In particular
+We've discovered this problem in the framework of the DW APB SPI device
+working in conjunction with DW DMA. Since there is no comprehensive way to
+fix it right now lets at least print a warning for the first found
+multi-blockless DW DMAC channel. This shall point a developer to the
+possible cause of the problem if one would experience a sudden data loss.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -64,45 +77,47 @@ Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Viresh Kumar <vireshk@kernel.org>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
 ---
 
 Changelog v2:
-- Rearrange SoBs.
-- Move $ref to the root level of the properties. So do with the
-  constraints.
-- Set default max-burst-len to 256 TR-WIDTH words.
+- This is a new patch created instead of the dropped one:
+  "dmaengine: dw: Add LLP and block size config accessors"
 ---
- .../devicetree/bindings/dma/snps,dma-spear1340.yaml  | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/dma/dw/core.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-index e7611840a7cf..7df4f9ad418a 100644
---- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-+++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-@@ -120,6 +120,18 @@ properties:
-         enum: [0, 1]
-         default: 1
- 
-+  snps,max-burst-len:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description: |
-+      Maximum length of burst transactions supported by hardware.
-+      It's an array property with one cell per channel in units of
-+      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH (data-width) field.
-+    items:
-+      maxItems: 8
-+      items:
-+        enum: [4, 8, 16, 32, 64, 128, 256]
-+        default: 256
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index 8bcd82c64478..e4749c296fca 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -1197,6 +1197,21 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 		 */
+ 		if (dwc->block_size > block_size)
+ 			block_size = dwc->block_size;
 +
-   snps,dma-protection-control:
-     $ref: /schemas/types.yaml#definitions/uint32
-     description: |
++		/*
++		 * It might crucial for some devices to have the hardware
++		 * accelerated multi-block transfers supported. Especially it
++		 * concerns if Tx and Rx DMA slave device buffers somehow
++		 * depend on each other. For instance an SPI controller may
++		 * experience Rx buffer overflow error if Tx DMA channel keeps
++		 * pushing data to the Tx FIFO, while Rx DMA channel is paused
++		 * to initialize the DW DMA controller with a next Rx LLP item.
++		 * Since there is no comprehensive way to fix it right now lets
++		 * at least print a warning that hardware LLPs reloading is
++		 * unsupported.
++		 */
++		if (dwc->nollp)
++			dev_warn_once(chip->dev, "No hardware LLP support\n");
+ 	}
+ 
+ 	/* Clear all interrupts on all channels. */
 -- 
 2.25.1
 
