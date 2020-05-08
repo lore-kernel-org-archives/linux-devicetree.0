@@ -2,97 +2,183 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7DDC47247
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 04:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D7CC47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 05:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4816B208D6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 04:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21B0208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 05:06:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yOR+kZsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgEHETa (ORCPT
+        id S1726009AbgEHFGJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 00:19:30 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45452 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725550AbgEHETa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 00:19:30 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 936272A2D84
-Message-ID: <96c35183ad7cde60afb8617e334b060e718ee532.camel@collabora.com>
-Subject: Re: [PATCH v3 4/4] media: rockchip: rga: Only set output CSC mode
- for RGB input
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date:   Fri, 08 May 2020 01:19:17 -0300
-In-Reply-To: <20200430164245.1630174-5-paul.kocialkowski@bootlin.com>
-References: <20200430164245.1630174-1-paul.kocialkowski@bootlin.com>
-         <20200430164245.1630174-5-paul.kocialkowski@bootlin.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Fri, 8 May 2020 01:06:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725550AbgEHFGI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 01:06:08 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC90DC05BD43
+        for <devicetree@vger.kernel.org>; Thu,  7 May 2020 22:06:06 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id i5so207080uaq.1
+        for <devicetree@vger.kernel.org>; Thu, 07 May 2020 22:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GOyJCplE0htCyKO+7S6/vnX0Dv0M9OHzxvwXwcOQOP4=;
+        b=yOR+kZsOgcu3/Opchfd0y0C8bGMkBMGR0doFFK9FPvDPc7z8ErZvL7sKHTdw/qa/dz
+         vwQb7uq+1bBHAJitd7DHu33y1u5/2XWL6XeR7xIfarln2m0W5tyjJxIQtragP/eGPxSZ
+         QICFM4RGditudJKQTQrhmZJqvAMtj+Yli1q6nJY0g3+7l/ikFJYY48TWu6Mx7KHEHC/4
+         Ir622C0eVbJVEXEqtkrkjMVfd/sijw36iAinDFuIlOYVM2FNShq5zd9P1r0ydAMOBLn9
+         4G1Ez4KEljvtrT13T1s5DY74tCI1M7t50tW71tit6nh8LhN7AeyBuWfJIeLwQXONv5aQ
+         yQig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GOyJCplE0htCyKO+7S6/vnX0Dv0M9OHzxvwXwcOQOP4=;
+        b=P/gCyjfb8VUydNLZz1Ki0QbfJvg3iePVH3BBGmrpXWFyAHReUOIEYfH3zTiQxiwaWr
+         GQymf5kJ+k3skFI+NtdovA9rtnykjlqmEpNcaISWj11KNHwhE6/yatvkQdjNND9ckmc2
+         KJRdHmwI96D8KKtO0xHDijpUw+AoAFBujuoy6tKHQPG5PUEtAdl1qosr62vFfK0Kdgfy
+         3pMMEu84cIPz5lD6sjSAcBnHl/dZBTuza4AjYNBwsswfIjCohPZr2h8jY2XofNlte1kt
+         6iwWgRkpJQn6GGNiIrNYLlXBnGvG5qIDNAHqaOkLSbQQuEsXq3zCMpxXgDOHay1h8F2U
+         AAxg==
+X-Gm-Message-State: AGi0PuYxlNYfU58XR78kJY7LbzHUb0iDMbrXE7C3JT+ZXMohz6+s/PP5
+        RxCq1U03AtDUC9+4kW7TQmRCHjyreA8bM3bbLMW45Q==
+X-Google-Smtp-Source: APiQypIV3sbG4ZSLW2R9RC7kszUeNGv4pTkPCpr++SJIgTpFreELrbQMO3vTo+toXhRCi6FYQeprQHSzN9Qws1pY5HQ=
+X-Received: by 2002:ab0:5ca:: with SMTP id e68mr505205uae.19.1588914365738;
+ Thu, 07 May 2020 22:06:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <1588031768-23677-1-git-send-email-chun-hung.wu@mediatek.com>
+ <1588031768-23677-2-git-send-email-chun-hung.wu@mediatek.com>
+ <9bc2454f-0b42-e256-7927-2564b56f369f@codeaurora.org> <CAPDyKFq7ffHeWg-S41tLvScg_BXCUULig=G=EzD_to1TG0NhVg@mail.gmail.com>
+ <f9fa0232-3945-4e47-9238-0b51f6531199@codeaurora.org>
+In-Reply-To: <f9fa0232-3945-4e47-9238-0b51f6531199@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 8 May 2020 07:05:29 +0200
+Message-ID: <CAPDyKFoAa3=Rg77Af7nNQOZN13m9NQYERosrqiK_kuL3s-YECA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] mmc: core: Extend mmc_of_parse() to parse CQE bindings
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Cc:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        Yong Mao <yong.mao@mediatek.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 2020-04-30 at 18:42 +0200, Paul Kocialkowski wrote:
-> Setting the output CSC mode is required for a YUV output, but must not
-> be set when the input is also YUV. Doing this (as tested with a YUV420P
-> to YUV420P conversion) results in wrong colors.
-> 
-> Adapt the logic to only set the output CSC mode when the output is YUV and
-> the input is RGB. Also add a comment to clarify the rationale.
-> 
-> Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+On Thu, 7 May 2020 at 18:33, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+>
+> On 5/6/2020 10:06 PM, Ulf Hansson wrote:
+> > On Wed, 6 May 2020 at 15:01, Veerabhadrarao Badiganti
+> > <vbadigan@codeaurora.org> wrote:
+> >>
+> >> On 4/28/2020 5:26 AM, Chun-Hung Wu wrote:
+> >>> Parse CQE bindings "supports-cqe" and "disable-cqe-dcmd"
+> >>> in mmc_of_parse().
+> >>>
+> >>> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> >>> ---
+> >>>    drivers/mmc/core/host.c | 5 +++++
+> >>>    1 file changed, 5 insertions(+)
+> >>>
+> >>> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> >>> index c876872..47521c6 100644
+> >>> --- a/drivers/mmc/core/host.c
+> >>> +++ b/drivers/mmc/core/host.c
+> >>> @@ -302,6 +302,11 @@ int mmc_of_parse(struct mmc_host *host)
+> >>>                host->caps2 |= MMC_CAP2_NO_SD;
+> >>>        if (device_property_read_bool(dev, "no-mmc"))
+> >>>                host->caps2 |= MMC_CAP2_NO_MMC;
+> >>> +     if (device_property_read_bool(dev, "supports-cqe"))
+> >>> +             host->caps2 |= MMC_CAP2_CQE;
+> >> This change is breaking emmc driver on qcom platforms where this dt
+> >> property is defined.
+> >>
+> >> [    1.543453]  cqhci_deactivate+0xc/0x38
+> >> [    1.545627]  sdhci_msm_reset+0x40/0x58
+> >> [    1.549447]  sdhci_do_reset+0x48/0x7c
+> >> [    1.553180]  __sdhci_read_caps+0x7c/0x214
+> >> [    1.556913]  sdhci_setup_host+0x58/0xce8
+> >> [    1.560905]  sdhci_msm_probe+0x588/0x8a4
+> >> [    1.564900]  platform_drv_probe+0x4c/0xb0
+> >>
+> >> So, we cant have this flag defined before sdhci_setup_host().
+> >>
+> >> I will have to clear this cap and re-enable it in our initialization.
+> > Thanks for reporting! I have dropped all the four patches from
+> > Chun-Hung, so we can figure out how to fix this.
+> >
+> > Please help to review the next version of the series.
+>
+> Thanks Ulf.
+>
+> Hi Chun-Hung,
+>
+> On qcom controller CQE also gets reset when SDHC is reset. So we have to
+> explicitly disable CQE
+> by invoking  cqhci_deactivate() during sdhc reset
+>
+> SDHC gets reset in sdhci_setup_host() even before cqe is initialized.
+> With MMC_CAP2_CQE_DCMD cap set even before sdhci_set_host(), we are
+> getting null pointer access with cqhci_deactivate().
+>
+> If CQE getting reset with SDHC reset is generic (applicable to other
+> controllers) then you have revisit your logic.
+> If its not the case then only qcom driver would get affected.
 
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Thanks for clarifying the problem, much appreciated.
 
-Thanks!
+To me, it looks like the DT parsing of the CQE properties are better
+suited to be managed by each sdhci variant, to continue to leave some
+room for flexibility.
 
-> ---
->  drivers/media/platform/rockchip/rga/rga-hw.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
-> index 5607ee8d1917..aaa96f256356 100644
-> --- a/drivers/media/platform/rockchip/rga/rga-hw.c
-> +++ b/drivers/media/platform/rockchip/rga/rga-hw.c
-> @@ -200,6 +200,11 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
->  	dst_info.data.format = ctx->out.fmt->hw_format;
->  	dst_info.data.swap = ctx->out.fmt->color_swap;
->  
-> +	/*
-> +	 * CSC mode must only be set when the colorspace families differ between
-> +	 * input and output. It must remain unset (zeroed) if both are the same.
-> +	 */
-> +
->  	if (RGA_COLOR_FMT_IS_YUV(ctx->in.fmt->hw_format) &&
->  	    RGA_COLOR_FMT_IS_RGB(ctx->out.fmt->hw_format)) {
->  		switch (ctx->in.colorspace) {
-> @@ -212,7 +217,8 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
->  		}
->  	}
->  
-> -	if (RGA_COLOR_FMT_IS_YUV(ctx->out.fmt->hw_format)) {
-> +	if (RGA_COLOR_FMT_IS_RGB(ctx->in.fmt->hw_format) &&
-> +	    RGA_COLOR_FMT_IS_YUV(ctx->out.fmt->hw_format)) {
->  		switch (ctx->out.colorspace) {
->  		case V4L2_COLORSPACE_REC709:
->  			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
+Chun-Hung, can you please drop patch 1 and patch2 from the series and
+adapt to this change in the mediatek variant?
 
+[...]
 
+Kind regards
+Uffe
