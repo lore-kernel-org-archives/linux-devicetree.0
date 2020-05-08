@@ -2,135 +2,160 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CD9C47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 11:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B17C47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 11:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65F292145D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 11:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588938818;
-	bh=jzJEqUl7O2hoMsDgMhYgkpN3Z6UxDEbLpvdrbJ3KRrI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x+Y4kLPP3+2aAlOldxo0KR90Ms/hI0tMxMLZLEoZkPZdrxNVylcak3hRSpjukI+Td
-	 d0XAml/lM/YvcHTjqv3mIKD6aHFRSwv5yEopxHDqN/Ur9pvD8YakA1clggXAisOFDM
-	 fYXqieu0a7+hdSTg1QOS9jNiFHu68qK39ti2F1Gg=
+	by mail.kernel.org (Postfix) with ESMTP id F1235208CA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 11:59:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="fLVJDEOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgEHLxi (ORCPT
+        id S1727083AbgEHL7F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 07:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgEHLxh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 07:53:37 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F28420708;
-        Fri,  8 May 2020 11:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588938816;
-        bh=jzJEqUl7O2hoMsDgMhYgkpN3Z6UxDEbLpvdrbJ3KRrI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=unZZyYdpUTKrHMtCm8KsBWR5frLQlAiisCSejaTBg+JDqqEeVcSetcJfh4htKJXWr
-         H1XUC2+vGwayrJFMuiJo6HOc/OwQPwy6RSE5unyim2rfFgJKQ9na6uaHNNjeWmlVqR
-         DxOrv4P7w22gfrFLPRfxDx3bfzuUWoLwSqiG0SlQ=
-Date:   Fri, 8 May 2020 12:53:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200508115334.GE4820@sirena.org.uk>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
+        Fri, 8 May 2020 07:59:05 -0400
+Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:3950
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726767AbgEHL7E (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 May 2020 07:59:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EbHVKA7rYBut1TAeMLZ8BNT9cm6xURyyaP4VA+AAHTRxqU8pQQS4Xz+xgMhg2dVG1PK0uKYsE6FLvHspILJ6ocRUoc6nEbeYTAW5+4oUHcSm/sAw4HyFh4vDKqY+8SqzRz1AjQ1yJQZMvspueAG79PurXmMmpjuUaktYcdN96HgN72VgdWxDQ4ScQ7nYQHDrmOpJjgSc9UuR48cHMxFCa9j5kHAQWD37kgupgHSpazKREMpNbtsRJg6wdz20NZpbFN6K49poRanu8QJHB8uIuhfruVe559dgUZYojAwe7A+mUFWgbWa2Trrh3YJK5bVtft2rqOjCmN7Llv6O8bC1Tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KpZZcXSxxrm4Sf9wNtz01CSA1UVcl9bVwIucZVROdr8=;
+ b=ZlmHEcSycOsTQW6I7ngDRDnbf7Tgoboh27xOM9v6NO5G2dQA42p58R2BEWeHFpUnxlvo2X9Aa6nxbiXeBSsMlhO0A4bCpIrtdwZlP/IMHKftvJsZpkMGN3O6rYzGRjPDx6aWPIrL/wfKn1jDi4PNHil/bpRWJWcaMsgSp72US97e9nfz5muCfJRkLuUTXny7VV+h1t9I28etrIkNsA9XamBz23GODlREdxnFjwf0Qp1vjHFmB7xrTQDWAmdNKYOuviuGI4IldVzuJM5v6Kr0hk2+Ivs19fOnp6LkPgEEAIHl9kTrsIwYJbrvXhCVH+bXchHrmMKopND56mxtE3fc1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KpZZcXSxxrm4Sf9wNtz01CSA1UVcl9bVwIucZVROdr8=;
+ b=fLVJDEOXQJTaFodme2aSl08+ZH/uCvGIRF2n9kO2Td8WNAgahe0zM1O4ik2kz1vj4BAbOiyT/QOXVF9lgDxaw26fNwNnwaIa7toV5DjFF+gFEWzXLmfPC3KPR6fnU1C2FqvvLfM+uPwst+bpR1fxefObT6rLWNvuJ0BhPHlnWkA=
+Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com (2603:10a6:4:33::14)
+ by DB6PR0401MB2518.eurprd04.prod.outlook.com (2603:10a6:4:36::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Fri, 8 May
+ 2020 11:59:00 +0000
+Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com
+ ([fe80::444:b05a:a5:5710]) by DB6PR0401MB2438.eurprd04.prod.outlook.com
+ ([fe80::444:b05a:a5:5710%9]) with mapi id 15.20.2958.035; Fri, 8 May 2020
+ 11:59:00 +0000
+From:   "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
+CC:     Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Subject: RE: [PATCH 1/3] rtc: ds1374: add uie_unsupported property to drop
+ warning
+Thread-Topic: [PATCH 1/3] rtc: ds1374: add uie_unsupported property to drop
+ warning
+Thread-Index: AQHWJTAP1zCUHqdJKU+S5DjH5/rYUg==
+Date:   Fri, 8 May 2020 11:59:00 +0000
+Message-ID: <DB6PR0401MB2438A00D64C922C44B335E418FA20@DB6PR0401MB2438.eurprd04.prod.outlook.com>
+References: <20200508054925.48237-1-biwen.li@oss.nxp.com>
+ <20200508114947.GK34497@piout.net>
+In-Reply-To: <20200508114947.GK34497@piout.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=none action=none header.from=oss.nxp.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2ad3d512-520c-4649-07dd-08d7f3473203
+x-ms-traffictypediagnostic: DB6PR0401MB2518:|DB6PR0401MB2518:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0401MB2518B4D62D866320E0DB84DBCEA20@DB6PR0401MB2518.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 039735BC4E
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Dyc9saOGZGmL26N982fCTn040tzd5DtYb3SGFWTFwflV7nzCNqjgiReXpES3uoZd2Ge/sgub7MkOnUbki4r28F0Ttkk7xn15PVg1/Cc8F4TePZ/gJPAuXDVN5v8xJYEUodKaV/hj0p9jTWYxxMzEQgf+CfzvD9qOjOcG7ux9Od2DMEgvWWbwt9iLdWuXDtXuozp/1cZf0WbfHtG1LyUFfSSNMWuFy4vvVpT9+331NC0blj+4hva8njk9aUQK9tD+W+0u0R8GrtrxN8BZcUh04s3G2lgATwTJHPL8ydNHdP0z58SOZYRUgvHDlxjvbEd7wQBaccBU5s6eLrZwzQvmnV5mGzSFGriyBfq/M+0ptmd2JjpA0uRVpNFbWnDzUJbwNY412XmSs+w8OKquAxGuVcHs0Obbfk75kyxrYV+5z8zNjxiPkc2vO2uz4IOf0Vbbq6qmwh3FHklyCmb0M3nUlilpyXehpbwm3/Uy/U98kGaBn/rjOvOUsTl8s68icb9OOGLrvPZ953gNfHBlHgPN32nSrZhgu9lPgJ7yS8Rx7w6c+xIbssfEKctgM6zIo1r9P3VXgWaIFfgShIf3MPoi8r1VsKFXBirN7Hz+BWITd6M=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0401MB2438.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(33430700001)(186003)(52536014)(2906002)(9686003)(55016002)(83280400001)(8676002)(83300400001)(5660300002)(83290400001)(83310400001)(86362001)(83320400001)(33440700001)(8936002)(478600001)(966005)(33656002)(66946007)(6506007)(7696005)(76116006)(66446008)(66476007)(64756008)(26005)(66556008)(110136005)(316002)(54906003)(71200400001)(4326008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: kEQDNwiMD1eQgISeM7sEMo6Oao3qqqjUYL9GIT/qN/IdgRp/UT8yXyUvnIG7p8r20jG/DhgF1RgzQmPxtqH3NX4vV963V/OfM6uYpaT2teVUU9OBR0LthJ23Us8gNSd719mJ/rwBqeLM47Kg3HNIJi0v1hbKP4iF8xS/b21Mxfo6UfiM/yS5CHaoe4Afqw6IvpEXEyNZcfwUSrFYR0F0ZqWop+5RbOQ7FLPNgZkSzd/1hUwBQbNFRag9vV1wKEtzltXfF8bCikpiYC7wFY95hzQzpivNP2JqX5dN9z+b5Vn0m/kckLEGnMKc+an+oJaybGky8+JmkioKDBJkbcQOkEKxuaT34bU8vkIdgJcD7Qwbu65gw9HGKZ8qV3JgWM56jeo0uGMKeuEQ32/s5sy1lvYZuzmhRltf1+XRJGeN2I1D7HtWBANU5mhXLNOKAI4SNhXEOWvVlpAagi0AFabh1p9Z14ZWocO3PLxTUrFXlHg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="N1GIdlSm9i+YlY4t"
-Content-Disposition: inline
-In-Reply-To: <20200508112604.GJ185537@smile.fi.intel.com>
-X-Cookie: Give him an evasive answer.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ad3d512-520c-4649-07dd-08d7f3473203
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2020 11:59:00.1932
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mn9reyBq2wD5XE09HRe5ynZtx59+htwl7snSw/UioWumDAeo7OsuoR/VZhmR3OLpkiIn6itcMqwWCjDjUz9TQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2518
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---N1GIdlSm9i+YlY4t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, May 08, 2020 at 02:26:04PM +0300, Andy Shevchenko wrote:
-> On Fri, May 08, 2020 at 01:53:02PM +0300, Serge Semin wrote:
-
-> > Multi-block support provides a way to map the kernel-specific SG-table so
-> > the DW DMA device would handle it as a whole instead of handling the
-> > SG-list items or so called LLP block items one by one. So if true LLP
-> > list isn't supported by the DW DMA engine, then soft-LLP mode will be
-> > utilized to load and execute each LLP-block one by one. A problem may
-> > happen for multi-block DMA slave transfers, when the slave device buffers
-> > (for example Tx and Rx FIFOs) depend on each other and have size smaller
-> > than the block size. In this case writing data to the DMA slave Tx buffer
-> > may cause the Rx buffer overflow if Rx DMA channel is paused to
-> > reinitialize the DW DMA controller with a next Rx LLP item. In particular
-> > We've discovered this problem in the framework of the DW APB SPI device
-
-> Mark, do we have any adjustment knobs in SPI core to cope with this?
-
-Frankly I'm not sure I follow what the issue is - is an LLP block item
-different from a SG list entry?  As far as I can tell the problem is
-that the DMA controller does not support chaining transactions together
-and possibly also has a limit on the transfer size?  Or possibly some
-issue with the DMA controller locking the CPU out of the I/O bus for
-noticable periods?  I can't really think what we could do about that if
-the issue is transfer sizes, that just seems like hardware which is
-never going to work reliably.  If the issue is not being able to chain
-transfers then possibly an option to linearize messages into a single
-transfer as suggested to cope with PIO devices with ill considered
-automated chip select handling, though at some point you have to worry
-about the cost of the memcpy() vs the cost of just doing PIO.
-
-> > working in conjunction with DW DMA. Since there is no comprehensive way to
-> > fix it right now lets at least print a warning for the first found
-> > multi-blockless DW DMAC channel. This shall point a developer to the
-> > possible cause of the problem if one would experience a sudden data loss.
-
-I thought from the description of the SPI driver I just reviewed that
-this hardware didn't have DMA?  Or are there separate blocks in the
-hardware that have a more standard instantiation of the DesignWare SPI
-controller with DMA attached?
-
---N1GIdlSm9i+YlY4t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61SD0ACgkQJNaLcl1U
-h9DP6wf/dFDiSHbfTbYpSBNRkptpoGaeMDgglGVpj5gntGcn3CfTESvxjfYguuNL
-N0xgW+7ee24CfMkR02v6ZvvKavFGKggBsOw/WjyHnltNYKXiY1vfdk+bDnVLoXEM
-hq7TOqA7PZkP2ChJVoG7Vnd/WBFVpWKijUcYzv8t4T2ZaHO7tymWslrXwf0wHKgK
-z9nxZa3131s4PqJdAG6PQ7AMDiTahYC8sRV+g3Kt7sNG/Ub/TWfjS1mjJ01t7uZq
-BS6BvYsSGJgmKXqE9dqVkQMs/zttV8LFDK+ScuAArL/ReS0g1OUdNP4S8AiTUgNn
-aqIe5ALvWnDBWfIi0sP1ZYXSHWI+sA==
-=gYvy
------END PGP SIGNATURE-----
-
---N1GIdlSm9i+YlY4t--
+>=20
+> Hi,
+>=20
+> On 08/05/2020 13:49:23+0800, Biwen Li wrote:
+> > From: Biwen Li <biwen.li@nxp.com>
+> >
+> > Add uie_unsupported property to drop warning as follows:
+> >     - $ hwclock.util-linux
+> >       hwclock.util-liux: select() /dev/rtc0
+> >       to wait for clock tick timed out
+> >
+> > My case:
+> >     - RTC ds1374's INT pin is connected to VCC on T4240RDB,
+> >       then the RTC cannot inform cpu about the alarm
+> >       interrupt
+> >
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> >  drivers/rtc/rtc-ds1374.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/rtc/rtc-ds1374.c b/drivers/rtc/rtc-ds1374.c index
+> > 9c51a12cf70f..e530e887a17e 100644
+> > --- a/drivers/rtc/rtc-ds1374.c
+> > +++ b/drivers/rtc/rtc-ds1374.c
+> > @@ -651,6 +651,10 @@ static int ds1374_probe(struct i2c_client *client,
+> >  	if (ret)
+> >  		return ret;
+> >
+> > +	if (of_property_read_bool(client->dev.of_node,
+> > +						 "uie_unsupported"))
+> > +		ds1374->rtc->uie_unsupported =3D true;
+> > +
+>=20
+> This is not how this is supposed to work, either the RTC support uie or d=
+on't, it is
+> not board dependent and certainly doesn't require an
+> (undocumented) DT property.
+Okay, got it. Thanks.
+>=20
+> >  #ifdef CONFIG_RTC_DRV_DS1374_WDT
+> >  	save_client =3D client;
+> >  	ret =3D misc_register(&ds1374_miscdev);
+> > --
+> > 2.17.1
+> >
+>=20
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
