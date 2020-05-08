@@ -2,107 +2,108 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4251CC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB90EC47257
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE2D218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63BF208CA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:15:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgEHKPA convert rfc822-to-8bit (ORCPT
+        id S1727103AbgEHKPr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 06:15:00 -0400
-Received: from relay-2.mailobj.net ([213.182.54.5]:57668 "EHLO
-        relay-2.mailobj.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgEHKPA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:15:00 -0400
-X-Greylist: delayed 513 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 May 2020 06:14:59 EDT
-Received: from v-1.localdomain (v-1.in.mailobj.net [192.168.90.191])
-        by relay-2.mailobj.net (Postfix) with SMTP id 9444E1260;
-        Fri,  8 May 2020 12:06:24 +0200 (CEST)
-Received: by ip-25.net-c.com [213.182.54.25] with ESMTP
-        Fri,  8 May 2020 12:06:54 +0200 (CEST)
-X-EA-Auth: JUxpYiSKTpkM9V+rU9V0BU8epqnXhebRD8yjIF7jR1pZKnJA2GA5WdqvQBqCGcWMtdmrVddBC9U8ArbU/gIAaADoMi9lxTmxhCg4+3N3sF0=
-Message-ID: <f9413ee5ca2fb0d85015f8b5988cbc61418e50f0.camel@mailoo.org>
-Subject: Re: [PATCH v3 0/2] Add Qualcomm MSM8939 GCC binding and driver
-From:   Vincent Knecht <vincent.knecht@mailoo.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bryan O'Donoghue <pure.logic@nexus-software.ie>,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        shawn.guo@linaro.org, p.zabel@pengutronix.de,
-        Konrad Dybcio <konradybcio@gmail.com>
-Date:   Fri, 08 May 2020 12:06:23 +0200
-In-Reply-To: <90cda746-2caa-cb79-9304-17a97886f1fc@linaro.org>
-References: <20200423103406.481289-1-bryan.odonoghue@linaro.org>
-         <e9d181a9-938c-a69b-8325-2aabeefd0934@nexus-software.ie>
-         <90cda746-2caa-cb79-9304-17a97886f1fc@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Fri, 8 May 2020 06:15:47 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41496 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgEHKPr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:15:47 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1A11D80307C7;
+        Fri,  8 May 2020 10:15:44 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Wxdbd-7H0-MF; Fri,  8 May 2020 13:15:43 +0300 (MSK)
+Date:   Fri, 8 May 2020 13:15:41 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Mark Brown <broonie@kernel.org>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
+Message-ID: <20200508101541.e3yxaocuilaiyutg@mobilestation>
+References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Le jeudi 07 mai 2020 à 17:06 +0100, Bryan O'Donoghue a écrit :
-> On 07/05/2020 16:57, Bryan O'Donoghue wrote:
-> > On 23/04/2020 11:34, Bryan O'Donoghue wrote:
-> > > V3:
-> > > This update removes the old clock name arrays which I forgot to prune in
-> > > the previous V2.
-> > > 
-> > > git diff bod/clk-next+msm8939 bod/clk-next+msm8939-v2.1
-> > 
-> > I should have mentioned.
-> > 
-> > If you want to test this you'll need to do the following to your 
-> > msm8939.dtsi
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8939.dtsi 
-> > b/arch/arm64/boot/dts/qcom/msm8939.dtsi
-> > index 996425a70014..2d54ad7f99b6 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8939.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8939.dtsi
-> > @@ -673,6 +673,10 @@ gcc: clock-controller@1800000 {
-> >                          reg = <0x1800000 0x80000>;
-> > +                       clock-names = "xo",
-> > +                                     "sleep_clk";
-> > +                       clocks = <&xo_board>,
-> > +                                <&sleep_clk>;
-> >                  };
-> > 
-> > "xo" and "sleep_clk" names can be resolved.
-> > 
-> > ---
-> > bod
+On Fri, May 08, 2020 at 01:03:11PM +0300, Andy Shevchenko wrote:
+> On Fri, May 8, 2020 at 12:37 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > This SPI-controller is a part of the Baikal-T1 System Controller and
+> > is based on the DW APB SSI IP-core, but with very limited resources:
+> > no IRQ, no DMA, only a single native chip-select and just 8 bytes Tx/Rx
+> > FIFO available. In order to provide a transparent initial boot code
+> > execution this controller is also utilized by an vendor-specific block,
+> > which provides an CS0 SPI flash direct mapping interface. Since both
+> > direct mapping and SPI controller normal utilization are mutual exclusive
+> > only a one of these interfaces can be used to access an external SPI
+> > slave device. Taking into account the peculiarities of the controller
+> > registers and physically mapped SPI flash access, very limited resources
+> > and seeing the normal usecase of the controller is to access an external
+> > SPI-nor flash, we decided to create a dedicated SPI driver for it.
 > 
-> and this...
+> It seems a lot of code.
+> Why can't you use spi-dw-mmio.c et al.?
+
+I said above why. Even though the registers set is similar It's too specific
+to be integrated into the generic DW SSI driver.
+
+-Sergey
+
 > 
-> clocks {
->      xo_board: xo_board {
->          compatible = "fixed-clock";
->          #clock-cells = <0>;
->          clock-frequency = <19200000>;
->      };
+> > The driver provides callbacks for native messages-based SPI interface,
+> > SPI-memory and direct mapping read operations. Due to not having any
+> > asynchronous signaling interface provided by the core we have no choice
+> > but to implement a polling-based data transmission/reception algorithm.
+> > In addition to that in order to bypass the automatic native chip-select
+> > toggle the driver disables the local interrupts during the memory-based
+> > transfers if no complementary GPIO-based chip-select detected in the
+> > platform.
 > 
->      sleep_clk: sleep_clk {
->          compatible = "fixed-clock";
->          #clock-cells = <0>;
->          clock-frequency = <32768>;
->      };
-> };
 > 
-
-Thank you, works for me over v5.7-rc2 with an Alcatel Idol 3 (5.5").
-
-Tested-by: Vincent Knecht <vincent.knecht@mailoo.org>
-
-
-
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
