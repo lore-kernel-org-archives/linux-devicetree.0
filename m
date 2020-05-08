@@ -2,87 +2,117 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603F3C54E49
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 09:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68120C47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEB2216FD
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 09:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48239215A4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:01:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c5Jr8Bki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbgEHJ7J (ORCPT
+        id S1726627AbgEHKBP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 05:59:09 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:52557 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgEHJ7J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 05:59:09 -0400
-X-Originating-IP: 2.224.242.101
-Received: from localhost.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 35297FF80A;
-        Fri,  8 May 2020 09:59:06 +0000 (UTC)
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
-        (V4L/DVB)), libcamera-devel@lists.libcamera.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>, tfiga@google.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org
-Subject: [PATCH v10 03/13] dt-bindings: Add media properties
-Date:   Fri,  8 May 2020 12:01:48 +0200
-Message-Id: <20200508100158.3437161-4-jacopo@jmondi.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200508100158.3437161-1-jacopo@jmondi.org>
-References: <20200508100158.3437161-1-jacopo@jmondi.org>
+        Fri, 8 May 2020 06:01:15 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58504 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgEHKBP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:01:15 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 048A19e7113081;
+        Fri, 8 May 2020 05:01:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588932069;
+        bh=2JOZvdIqVLBdPCm4Zk9ICOns/DaGylLushk2AFkk0Kk=;
+        h=From:To:CC:Subject:Date;
+        b=c5Jr8BkiXrF2uCTMZjn0AML9xGM511SEyO2HfDnurKEY99naTLC6DJtPq0KHbU9vy
+         /NGSmBt5NZc8mZHza7W7OoQOOzFpXEQ2GxFU8iRg7Ejm08LEbLeYhxYVDhBMx35nRt
+         G8a4fCaD0SGrGByG1Wn8Z4vvUgIK6SBCQx+8JaOE=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048A19t1071341;
+        Fri, 8 May 2020 05:01:09 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
+ 2020 05:01:09 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 8 May 2020 05:01:09 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048A18ii102915;
+        Fri, 8 May 2020 05:01:08 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>, <devicetree@vger.kernel.org>
+CC:     Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v3 0/2] soc: ti: add k3 platforms chipid module driver
+Date:   Fri, 8 May 2020 13:00:58 +0300
+Message-ID: <20200508100100.20740-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a DT header file to contain definitions for standard media properties.
+Hi All,
 
-The file is named after:
-Documentation/devicetree/bindings/media/video-interfaces.txt
-which contains the standard media properties definitions.
+This series introduces TI K3 Multicore SoC platforms chipid module driver
+which provides identification support of the TI K3 SoCs (family, revision)
+and register this information with the SoC bus. It is available under
+/sys/devices/soc0/ for user space, and can be checked, where needed,
+in Kernel using soc_device_match().
+It is also required for introducing support for new revisions of
+K3 AM65x/J721E SoCs.
 
-Initially add three macros to define the supported 'orientation'
-property values.
+Example J721E:
+  # cat /sys/devices/soc0/{machine,family,revision}
+  Texas Instruments K3 J721E SoC
+  J721E
+  SR1.0
 
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
----
- include/dt-bindings/media/video-interfaces.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 include/dt-bindings/media/video-interfaces.h
+Example AM65x:
+  # cat /sys/devices/soc0/{machine,family,revision}
+  Texas Instruments AM654 Base Board
+  AM65X
+  SR1.0
 
-diff --git a/include/dt-bindings/media/video-interfaces.h b/include/dt-bindings/media/video-interfaces.h
-new file mode 100644
-index 0000000000000..404c697d6bd6e
---- /dev/null
-+++ b/include/dt-bindings/media/video-interfaces.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * include/dt-bindings/media/video-interfaces.h
-+ *
-+ * Copyright (C) 2020 Jacopo Mondi <jacopo@jmondi.org>
-+ */
-+
-+#ifndef __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
-+#define __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
-+
-+#define FRONT_CAMERA		<0>
-+#define BACK_CAMERA		<1>
-+#define EXTERNAL_CAMERA		<2>
-+
-+#endif /* __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__ */
---
-2.26.1
+Changes in v3:
+ - add handling of kasprintf() fail
+
+Changes in v2:
+ - pr_debug() replaced with pr_info() to show SoC info on init
+ - minor format change
+ - split series on driver and platform changes
+ - add Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+
+v2: https://lkml.org/lkml/2020/5/5/1193
+v1: https://lwn.net/Articles/818577/
+
+Grygorii Strashko (2):
+  dt-bindings: soc: ti: add binding for k3 platforms chipid module
+  soc: ti: add k3 platforms chipid module driver
+
+ .../bindings/soc/ti/k3-socinfo.yaml           |  40 +++++
+ drivers/soc/ti/Kconfig                        |  10 ++
+ drivers/soc/ti/Makefile                       |   1 +
+ drivers/soc/ti/k3-socinfo.c                   | 140 ++++++++++++++++++
+ 4 files changed, 191 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+ create mode 100644 drivers/soc/ti/k3-socinfo.c
+
+-- 
+2.17.1
 
