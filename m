@@ -2,155 +2,151 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01568C47247
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 14:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E01C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 14:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D79342173E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 14:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YgqZnB4R"
+	by mail.kernel.org (Postfix) with ESMTP id 2FF9021841
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 14:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgEHOrW (ORCPT
+        id S1727970AbgEHOva (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 10:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbgEHOrP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 10:47:15 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00430C05BD09
-        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 07:47:14 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id e26so10479392wmk.5
-        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 07:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ItCLlAEcrRObJaFc8zjZZAyKUelFuntamK73qSCmQaw=;
-        b=YgqZnB4RuOjA//ot7PQ9SM6mgul9T3GJZb2JM7reEJLe+IRa9O5JM4sxrsNjR0uFU5
-         1aINbi0xdDymbSd5NMRFOAUlhkiZJSJ5H/PBCFPow2nrWSbHP9TCNEs0b3CAEhZ0MXZm
-         9iFJA99yXpzPTA8APDAoSVseaZx4zuWd4cjJRy/zHxouAK4ksI2q606UQp9HBOGcQTI5
-         eGIf4zd7it3921mtpnBZIUzqmY9LEt97yFkyyPjm2/oDOpCMsQMexnCP9NeAmYWCvqtM
-         HxhYnwelmI7R0hy/iKmgG0GdsTXOr/iGOlui5Wd4IXLYn1PXIGySXBQzfSR5VdEsiMgN
-         VtVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ItCLlAEcrRObJaFc8zjZZAyKUelFuntamK73qSCmQaw=;
-        b=UtZtDkkmBosOoROI8M/0tUNGHNx1rjjhZ1CCE7UOw7GB1H/9xthI5pWwi7u5x6eBwg
-         qvK1ARXHUPyzfHwKNrjt6e5fyWmSWPTlOowCye+qDhpcNJ7APo0Z1usSUUkq2a9go6cA
-         cy7IxzrFxs3blkXtybrRPiG1LyzIUh8l/lJAlV+WJg8CUU5QBBn6P5BlLavmBaJ6V/gx
-         mTsvqdidPGCz+D255OAFBz5GvhKb+76REeSr6N/KPXYee8ro/ms31LjhNvkKqcAbKEL8
-         kh7ytuyzYyRif9VWPIRMIG7/OHVwUL2HF+xE3kfcPwDtQiiBFEG7FlA8kvna0hBXC5jQ
-         IrmQ==
-X-Gm-Message-State: AGi0PubHisaz6/jh09Q4xqdSAGueqrJeWsKJSx81crMkdtN5UTtxXWv8
-        T60dbHkLZCviCCm4PfVCdFPgkn893mQ=
-X-Google-Smtp-Source: APiQypJJLLVHe7P9a5jALuZCR8Qgg8gQxNUQSAW/hY0Oj3Nia5RYacq2Xq1z/snXUBGJ6do0AQO7/A==
-X-Received: by 2002:a05:600c:224a:: with SMTP id a10mr17413046wmm.174.1588949233557;
-        Fri, 08 May 2020 07:47:13 -0700 (PDT)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id w18sm3344636wro.33.2020.05.08.07.47.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 07:47:12 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Add TI tps6598x DT binding and probe
-To:     Angus Ainslie <angus@akkea.ca>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     robh+dt@kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, nikolaus.voss@loewensteinmedical.de,
-        andriy.shevchenko@linux.intel.com, garsilva@embeddedor.com,
-        keescook@chromium.org, linux-usb-owner@vger.kernel.org
-References: <20200507214733.1982696-1-bryan.odonoghue@linaro.org>
- <20200508140132.GA1264047@kuha.fi.intel.com>
- <e1f5fac00b4d574edf187f2ccd19ebe2@akkea.ca>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <f6bd2b0b-1eda-8ea4-abf2-e17131b944d4@linaro.org>
-Date:   Fri, 8 May 2020 15:47:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 8 May 2020 10:51:30 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2175 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726751AbgEHOva (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 May 2020 10:51:30 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id ED18474328E5A4274316;
+        Fri,  8 May 2020 15:51:28 +0100 (IST)
+Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
+ 15:51:28 +0100
+Date:   Fri, 8 May 2020 15:51:06 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v13 1/2] dt-bindings: proximity: provide vcnl3020 device
+ tree binding document
+Message-ID: <20200508155050.0000008e@Huawei.com>
+In-Reply-To: <20200507132600.8801-2-i.mikhaylov@yadro.com>
+References: <20200507132600.8801-1-i.mikhaylov@yadro.com>
+        <20200507132600.8801-2-i.mikhaylov@yadro.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <e1f5fac00b4d574edf187f2ccd19ebe2@akkea.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.95.97]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 08/05/2020 15:22, Angus Ainslie wrote:
-> Hi,
-> 
-> On 2020-05-08 07:01, Heikki Krogerus wrote:
->> Hi,
->>
->> On Thu, May 07, 2020 at 10:47:31PM +0100, Bryan O'Donoghue wrote:
->>> V2:
->>> - Put myself down as sole schema maintainer as suggested - Andy
->>> - Fixed whitespace typo - Andy
->>> - Removed ifdef and of_match_ptr() - Andy
->>>
->>> V1:
->>> This simple series adds DT binding yaml and a DT lookup table for the
->>> tps6598x.
->>>
->>> Its possible to use i2c id_table to match the 'compatible = 
->>> "ti,tps6598x"
->>> and probe that way, however I think it is worthwhile adding a 
->>> specific OF
->>> way of doing it and having an accompanying yaml as an example.
->>>
->>> Bryan O'Donoghue (2):
->>>   dt-bindings: usb: Add TI tps6598x device tree binding documentation
->>>   usb: typec: tps6598x: Add OF probe binding
->>>
->>>  .../devicetree/bindings/usb/ti,tps6598x.yaml  | 64 +++++++++++++++++++
->>>  drivers/usb/typec/tps6598x.c                  |  7 ++
->>>  2 files changed, 71 insertions(+)
->>>  create mode 100644 
->>> Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
->>
->> There was already a series from Angus [1] for this. The bindings
->> looked a bit different, but I think we should use these, because in
->> the DT bindings from Angus there appeared to be definitions for OF
->> graph that was not used. Or maybe I got it wrong?
->>
-> 
-> I was trying to include optional components but was not sure of the 
-> syntax so that might have been wrong.
-> 
->> Angus, is it OK if we use these patches instead the ones from you?
->>
-> 
-> Yeah these ones will work great for what we need.
-> 
-> Sorry Bryan I didn't realize there was a patch already in progress.
-> 
-> @Bryan, I'm going to send up some extcon patches for the tps6598x soon 
-> but maybe I should check and make sure you don't already have anything 
-> planned there.
-> 
-> It still needs to be retested after cleaning up but it's the top 9 
-> patches here:
-> 
-> https://source.puri.sm/angus.ainslie/linux-next/-/commits/next/extcon
+On Thu, 7 May 2020 16:25:59 +0300
+Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
 
-Makes me glad I didn't try to touch the PDO stuff :)
+> Mostly standard i2c driver with some additional led-current option
+> for vcnl3020.
+> 
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> ---
+>  .../iio/proximity/vishay,vcnl3020.yaml        | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> new file mode 100644
+> index 000000000000..408dee17cdf5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/vishay,vcnl3020.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Integrated Proximity Sensor With Infrared Emitter
+> +
+> +maintainers:
+> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> +
+> +description: |
+> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
+> +  that the infrared emitter is included in the package. It has 16-bit
+> +  resolution. It includes a signal processing IC and features standard I2C
+> +  communication interface. It features an interrupt function.
+> +
+> +  Specifications about the devices can be found at:
+> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - vishay,vcnl3020
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +  vddio-supply:
+> +    description: Regulator that provides power to the bus
+> +
+> +  vishay,led-current-microamp:
+> +    description:
+> +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
+> +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
+> +      higher than decimal 20. The drive current for the LED used in proximity
+> +      sensing.
 
-That series looks fine to me.
+This text is really confusing. Just let the enum speak for itself and leave text as
+something short like
 
-The only other modification I have is here.
+"The driver current for the LED used in proximity sensing. "
 
-https://lore.kernel.org/linux-usb/20200507215938.1983363-2-bryan.odonoghue@linaro.org/T/#u
+Units and values are clear already.
 
-which is about data-role switching.
+> +    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
+> +          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
+> +          180000, 190000, 200000]
+> +    default: 20000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        proximity@13 {
+> +              compatible = "vishay,vcnl3020";
+> +              reg = <0x13>;
+> +              vishay,led-current-microamp = <200000>;
+> +        };
+> +    };
 
----
-bod
 
