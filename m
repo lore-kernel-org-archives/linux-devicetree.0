@@ -2,117 +2,393 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F8CC47257
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 16:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CACC47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 16:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95905208CA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 16:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C465521974
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 16:57:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="UPug7ezR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgEHQZB (ORCPT
+        id S1726756AbgEHQ5i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 12:25:01 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43686 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgEHQZB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 12:25:01 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 44FF880307C7;
-        Fri,  8 May 2020 16:24:57 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id FDqnx249YwhR; Fri,  8 May 2020 19:24:56 +0300 (MSK)
-Date:   Fri, 8 May 2020 19:24:55 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Mark Brown <broonie@kernel.org>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Message-ID: <20200508162455.3cgfquqmbx7ep2zf@mobilestation>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
- <20200508101541.e3yxaocuilaiyutg@mobilestation>
- <CAHp75VcaVGHfYN1hjD5eKgpKJkpKEif8NxBGO1YF61_apv82Kg@mail.gmail.com>
+        Fri, 8 May 2020 12:57:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727810AbgEHQ5h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 12:57:37 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D2E1C061A0C
+        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 09:57:35 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x4so10884773wmj.1
+        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 09:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=vT+RaDMcO0E5H+TlMRiVwoNXnA2sts99E5j6V+Tg8As=;
+        b=UPug7ezRRUUHdTzqSRfoxD2Iq04xZBfodbQycTm0KgfLU4x6z6TU9TmT6ufh9kG2W+
+         loyuu1DiSpCnOt94ZBBvIo76ANg/RXeU9jr/A+Hk5+vMDVTh2utNwAqIgE22iIHIqADO
+         ASluyrzSegNku2TaY6GbVfKGfu9//p49URGrn1K15ILRiySiNHzL/mSVBRhdIiC0F9aN
+         XdVBj8oSrlVIhl4jkPKl5cGD8SYmbw0mOGGkA77hGMV9UwO2DnCvsQS6Aa2BdY5ngrUn
+         yed1HaWUXlcoNMu+qjVUYQWCjSBaaNv2T91VYVxDNfpFTQMOrn1lwMTuKgOf3M7nQ94V
+         PZ8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=vT+RaDMcO0E5H+TlMRiVwoNXnA2sts99E5j6V+Tg8As=;
+        b=OjPx5Y4o/HP9VMngFf6SPphyKhppJrKS55KAG043JiZRzcyy+GwKDzKG6Uu1bhpUtw
+         MClj73UvTnXbJdxrFY/kGU6mzSLCVBiQhbbrQtc7KZ0hAGFkBl38XIxyoZYDkmtomCov
+         WeCdOKRbyKyuOK5aqB0nLTPQt+cmzYU2/ZrTtQvXszXh6dkVu41G2I9RzBOUKm0Ajimp
+         c1DTimvHxrBESBoljvrLIDVe+yt0iXpHZ/l1e2bSXWAEDr6Gt3l/RnD9x8pPKrtPMvB4
+         zSe9KWq6fdK/g7kUqAzel3ttJstaOnkwjd9RlvlPavtiZfdOduV19FsCgXhdBdiJyvy8
+         g63A==
+X-Gm-Message-State: AGi0PuZU/5ountC5z16kiNgwcOMmjM01cEstRo6M7tyUzkQT5XN3Lenm
+        1uHpVF9itomd03eFZqOdmJGWJS87ZkaxS5qS
+X-Google-Smtp-Source: APiQypKna+L9sCld26+Mf5vcDVlbO1sRL+4elnUNWXQ4zRpPTP7NgoDgERq7nVdBXn2PiaNnaKdKnQ==
+X-Received: by 2002:a05:600c:201:: with SMTP id 1mr621236wmi.155.1588957053999;
+        Fri, 08 May 2020 09:57:33 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id x24sm4147295wrd.51.2020.05.08.09.57.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 09:57:33 -0700 (PDT)
+Date:   Fri, 8 May 2020 18:58:21 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
+Message-ID: <20200508165821.GA14555@x1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcaVGHfYN1hjD5eKgpKJkpKEif8NxBGO1YF61_apv82Kg@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 01:26:52PM +0300, Andy Shevchenko wrote:
-> On Fri, May 8, 2020 at 1:15 PM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > On Fri, May 08, 2020 at 01:03:11PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 8, 2020 at 12:37 PM Serge Semin
-> > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > >
-> > > > This SPI-controller is a part of the Baikal-T1 System Controller and
-> > > > is based on the DW APB SSI IP-core, but with very limited resources:
-> > > > no IRQ, no DMA, only a single native chip-select and just 8 bytes Tx/Rx
-> > > > FIFO available. In order to provide a transparent initial boot code
-> > > > execution this controller is also utilized by an vendor-specific block,
-> > > > which provides an CS0 SPI flash direct mapping interface. Since both
-> > > > direct mapping and SPI controller normal utilization are mutual exclusive
-> > > > only a one of these interfaces can be used to access an external SPI
-> > > > slave device. Taking into account the peculiarities of the controller
-> > > > registers and physically mapped SPI flash access, very limited resources
-> > > > and seeing the normal usecase of the controller is to access an external
-> > > > SPI-nor flash, we decided to create a dedicated SPI driver for it.
-> > >
-> > > It seems a lot of code.
-> > > Why can't you use spi-dw-mmio.c et al.?
-> >
-> > I said above why. Even though the registers set is similar It's too specific
-> > to be integrated into the generic DW SSI driver.
-> 
-> At least you may do at the beginning is to reuse header spi-dw.h and
-> put your stuff under
-> spi-dw-baikal.c or so. Then, look at the spi-dw.c and check what can
-> be reused (I think a lot).
+Add gpio-line-names properties to the gpio controller nodes.
+BeagleBone boards have P8 and P9 headers [0] which expose many the
+AM3358 SoC balls to stacking expansion boards called "capes", or to
+other external connections like jumper wires to a breadboard.
 
-Nah, It's not a lot, barely a few things. What is useful is the registers map
-(though it has to be shifted and most of the registers are unused), IO operations
-(two small read-write methods with questionable design) and possibly a few lines
-of config setting procedure.
+Many of the P8/P9 header pins can muxed to a gpio line.  The
+gpio-line-names describe which P8/P9 pin that line goes to and the
+default mux for that P8/P9 pin.  Some lines are not routed to the
+P8/P9 headers, but instead are dedicated to some functionality such as
+status LEDs.  The line name will indicate this.  Some line names are
+left empty as the corresponding AM3358 balls are not connected.
 
-You think I didn't had in mind to integrate this controller support into
-the generic driver or resuse something from there? If it was worth a try I would
-have done it.
+The goal is to make it easier for a user viewing the output of gpioinfo
+to determine which P8/P9 pin is connected to a line.  The output of
+gpioinfo on a BeagleBone Black will now look like this:
 
--Sergey
+gpiochip0 - 32 lines:
+	line   0:   "ethernet"       unused   input  active-high
+	line   1:   "ethernet"       unused   input  active-high
+	line   2: "P9_22 spi0_sclk" unused input active-high
+	line   3: "P9_21 spi0_d0" unused input active-high
+	line   4: "P9_18 spi0_d1" unused input active-high
+	line   5: "P9_17 spi0_cs0" unused input active-high
+	line   6:    "sd card"         "cd"   input   active-low [used]
+	line   7: "P9_42A ecappwm0" unused input active-high
+	line   8: "P8_35 hdmi"       unused   input  active-high
+	line   9: "P8_33 hdmi"       unused   input  active-high
+	line  10: "P8_31 hdmi"       unused   input  active-high
+	line  11: "P8_32 hdmi"       unused   input  active-high
+	line  12: "P9_20 i2c2_sda" unused input active-high
+	line  13: "P9_19 i2c2_scl" unused input active-high
+	line  14: "P9_26 uart1_rxd" unused input active-high
+	line  15: "P9_24 uart1_txd" unused input active-high
+	line  16:   "ethernet"       unused   input  active-high
+	line  17:   "ethernet"       unused   input  active-high
+	line  18:        "usb"       unused   input  active-high
+	line  19:       "hdmi"       unused   input  active-high
+	line  20: "P9_41B gpio" unused input active-high
+	line  21:   "ethernet"       unused   input  active-high
+	line  22: "P8_19 ehrpwm2a" unused input active-high
+	line  23: "P8_13 ehrpwm2b" unused input active-high
+	line  24:      unnamed       unused   input  active-high
+	line  25:      unnamed       unused   input  active-high
+	line  26: "P8_14 gpio"       unused   input  active-high
+	line  27: "P8_17 gpio"       unused   input  active-high
+	line  28:   "ethernet"       unused   input  active-high
+	line  29:   "ethernet"       unused   input  active-high
+	line  30: "P9_11 uart4_rxd" unused input active-high
+	line  31: "P9_13 uart4_txd" unused input active-high
+gpiochip1 - 32 lines:
+	line   0: "P8_25 emmc"       unused   input  active-high
+	line   1:       "emmc"       unused   input  active-high
+	line   2:  "P8_5 emmc"       unused   input  active-high
+	line   3:  "P8_6 emmc"       unused   input  active-high
+	line   4: "P8_23 emmc"       unused   input  active-high
+	line   5: "P8_22 emmc"       unused   input  active-high
+	line   6:  "P8_3 emmc"       unused   input  active-high
+	line   7:  "P8_4 emmc"       unused   input  active-high
+	line   8:      unnamed       unused   input  active-high
+	line   9:      unnamed       unused   input  active-high
+	line  10:      unnamed       unused   input  active-high
+	line  11:      unnamed       unused   input  active-high
+	line  12: "P8_12 gpio"       unused   input  active-high
+	line  13: "P8_11 gpio"       unused   input  active-high
+	line  14: "P8_16 gpio"       unused   input  active-high
+	line  15: "P8_15 gpio"       unused   input  active-high
+	line  16: "P9_15A gpio" unused input active-high
+	line  17: "P9_23 gpio"       unused   input  active-high
+	line  18: "P9_14 ehrpwm1a" unused input active-high
+	line  19: "P9_16 ehrpwm1b" unused input active-high
+	line  20:       "emmc"       unused   input  active-high
+	line  21:   "usr0 led" "beaglebone:green:heart" output active-high [used]
+	line  22:   "usr1 led" "beaglebone:green:mmc0" output active-high [used]
+	line  23:   "usr2 led" "beaglebone:green:usr2" output active-high [used]
+	line  24:   "usr3 led" "beaglebone:green:usr3" output active-high [used]
+	line  25:       "hdmi"  "interrupt"   input  active-high [used]
+	line  26:        "usb"       unused   input  active-high
+	line  27: "hdmi audio"     "enable"  output  active-high [used]
+	line  28: "P9_12 gpio"       unused   input  active-high
+	line  29: "P8_26 gpio"       unused   input  active-high
+	line  30: "P8_21 emmc"       unused   input  active-high
+	line  31: "P8_20 emmc"       unused   input  active-high
+gpiochip2 - 32 lines:
+	line   0: "P9_15B gpio" unused input active-high
+	line   1: "P8_18 gpio"       unused   input  active-high
+	line   2:  "P8_7 gpio"       unused   input  active-high
+	line   3:  "P8_8 gpio"       unused   input  active-high
+	line   4: "P8_10 gpio"       unused   input  active-high
+	line   5:  "P8_9 gpio"       unused   input  active-high
+	line   6: "P8_45 hdmi"       unused   input  active-high
+	line   7: "P8_46 hdmi"       unused   input  active-high
+	line   8: "P8_43 hdmi"       unused   input  active-high
+	line   9: "P8_44 hdmi"       unused   input  active-high
+	line  10: "P8_41 hdmi"       unused   input  active-high
+	line  11: "P8_42 hdmi"       unused   input  active-high
+	line  12: "P8_39 hdmi"       unused   input  active-high
+	line  13: "P8_40 hdmi"       unused   input  active-high
+	line  14: "P8_37 hdmi"       unused   input  active-high
+	line  15: "P8_38 hdmi"       unused   input  active-high
+	line  16: "P8_36 hdmi"       unused   input  active-high
+	line  17: "P8_34 hdmi"       unused   input  active-high
+	line  18:   "ethernet"       unused   input  active-high
+	line  19:   "ethernet"       unused   input  active-high
+	line  20:   "ethernet"       unused   input  active-high
+	line  21:   "ethernet"       unused   input  active-high
+	line  22: "P8_27 hdmi"       unused   input  active-high
+	line  23: "P8_29 hdmi"       unused   input  active-high
+	line  24: "P8_28 hdmi"       unused   input  active-high
+	line  25: "P8_30 hdmi"       unused   input  active-high
+	line  26:       "emmc"       unused   input  active-high
+	line  27:       "emmc"       unused   input  active-high
+	line  28:       "emmc"       unused   input  active-high
+	line  29:       "emmc"       unused   input  active-high
+	line  30:       "emmc"       unused   input  active-high
+	line  31:       "emmc"       unused   input  active-high
+gpiochip3 - 32 lines:
+	line   0:   "ethernet"       unused   input  active-high
+	line   1:   "ethernet"       unused   input  active-high
+	line   2:   "ethernet"       unused   input  active-high
+	line   3:   "ethernet"       unused   input  active-high
+	line   4:   "ethernet"       unused   input  active-high
+	line   5:       "i2c0"       unused   input  active-high
+	line   6:       "i2c0"       unused   input  active-high
+	line   7:        "emu"       unused   input  active-high
+	line   8:        "emu"       unused   input  active-high
+	line   9:   "ethernet"       unused   input  active-high
+	line  10:   "ethernet"       unused   input  active-high
+	line  11:      unnamed       unused   input  active-high
+	line  12:      unnamed       unused   input  active-high
+	line  13:        "usb"       unused   input  active-high
+	line  14: "P9_31 spi1_sclk" unused input active-high
+	line  15: "P9_29 spi1_d0" unused input active-high
+	line  16: "P9_30 spi1_d1" unused input active-high
+	line  17: "P9_28 spi1_cs0" unused input active-high
+	line  18: "P9_42B ecappwm0" unused input active-high
+	line  19: "P9_27 gpio"       unused   input  active-high
+	line  20: "P9_41A gpio" unused input active-high
+	line  21: "P9_25 gpio"       unused   input  active-high
+	line  22:      unnamed       unused   input  active-high
+	line  23:      unnamed       unused   input  active-high
+	line  24:      unnamed       unused   input  active-high
+	line  25:      unnamed       unused   input  active-high
+	line  26:      unnamed       unused   input  active-high
+	line  27:      unnamed       unused   input  active-high
+	line  28:      unnamed       unused   input  active-high
+	line  29:      unnamed       unused   input  active-high
+	line  30:      unnamed       unused   input  active-high
+	line  31:      unnamed       unused   input  active-high
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+[0] https://beagleboard.org/Support/bone101
+[1] https://beagleboard.org/capes
+
+Reviewed-by: Jason Kridner <jason@beagleboard.org>
+Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 144 ++++++++++++++++++++++
+ 1 file changed, 144 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index 6c9187bc0f17..defdf68edb58 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -397,3 +397,147 @@
+ 	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 	clock-names = "ext-clk", "int-clk";
+ };
++
++&gpio0 {
++	gpio-line-names =
++		"ethernet",
++		"ethernet",
++		"P9_22 spi0_sclk",
++		"P9_21 spi0_d0",
++		"P9_18 spi0_d1",
++		"P9_17 spi0_cs0",
++		"sd card",
++		"P9_42A ecappwm0",
++		"P8_35 hdmi",
++		"P8_33 hdmi",
++		"P8_31 hdmi",
++		"P8_32 hdmi",
++		"P9_20 i2c2_sda",
++		"P9_19 i2c2_scl",
++		"P9_26 uart1_rxd",
++		"P9_24 uart1_txd",
++		"ethernet",
++		"ethernet",
++		"usb",
++		"hdmi",
++		"P9_41B gpio",
++		"ethernet",
++		"P8_19 ehrpwm2a",
++		"P8_13 ehrpwm2b",
++		"",
++		"",
++		"P8_14 gpio",
++		"P8_17 gpio",
++		"ethernet",
++		"ethernet",
++		"P9_11 uart4_rxd",
++		"P9_13 uart4_txd";
++};
++
++&gpio1 {
++	gpio-line-names =
++		"P8_25 emmc",
++		"emmc",
++		"P8_5 emmc",
++		"P8_6 emmc",
++		"P8_23 emmc",
++		"P8_22 emmc",
++		"P8_3 emmc",
++		"P8_4 emmc",
++		"",
++		"",
++		"",
++		"",
++		"P8_12 gpio",
++		"P8_11 gpio",
++		"P8_16 gpio",
++		"P8_15 gpio",
++		"P9_15A gpio",
++		"P9_23 gpio",
++		"P9_14 ehrpwm1a",
++		"P9_16 ehrpwm1b",
++		"emmc",
++		"usr0 led",
++		"usr1 led",
++		"usr2 led",
++		"usr3 led",
++		"hdmi",
++		"usb",
++		"hdmi audio",
++		"P9_12 gpio",
++		"P8_26 gpio",
++		"P8_21 emmc",
++		"P8_20 emmc";
++};
++
++&gpio2 {
++	gpio-line-names =
++		"P9_15B gpio",
++		"P8_18 gpio",
++		"P8_7 gpio",
++		"P8_8 gpio",
++		"P8_10 gpio",
++		"P8_9 gpio",
++		"P8_45 hdmi",
++		"P8_46 hdmi",
++		"P8_43 hdmi",
++		"P8_44 hdmi",
++		"P8_41 hdmi",
++		"P8_42 hdmi",
++		"P8_39 hdmi",
++		"P8_40 hdmi",
++		"P8_37 hdmi",
++		"P8_38 hdmi",
++		"P8_36 hdmi",
++		"P8_34 hdmi",
++		"ethernet",
++		"ethernet",
++		"ethernet",
++		"ethernet",
++		"P8_27 hdmi",
++		"P8_29 hdmi",
++		"P8_28 hdmi",
++		"P8_30 hdmi",
++		"emmc",
++		"emmc",
++		"emmc",
++		"emmc",
++		"emmc",
++		"emmc";
++};
++
++&gpio3 {
++	gpio-line-names =
++		"ethernet",
++		"ethernet",
++		"ethernet",
++		"ethernet",
++		"ethernet",
++		"i2c0",
++		"i2c0",
++		"emu",
++		"emu",
++		"ethernet",
++		"ethernet",
++		"",
++		"",
++		"usb",
++		"P9_31 spi1_sclk",
++		"P9_29 spi1_d0",
++		"P9_30 spi1_d1",
++		"P9_28 spi1_cs0",
++		"P9_42B ecappwm0",
++		"P9_27 gpio",
++		"P9_41A gpio",
++		"P9_25 gpio",
++		"",
++		"",
++		"",
++		"",
++		"",
++		"",
++		"",
++		"",
++		"",
++		"";
++};
+-- 
+2.20.1
+
