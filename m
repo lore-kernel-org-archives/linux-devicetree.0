@@ -2,88 +2,113 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01474C47255
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 19:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BA7C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 20:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0E3121841
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 19:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EF7218AC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 20:32:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vPfOuJcg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgEHTon (ORCPT
+        id S1726904AbgEHUcx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 15:44:43 -0400
-Received: from mga17.intel.com ([192.55.52.151]:5925 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgEHTon (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 15:44:43 -0400
-IronPort-SDR: +JCo43J6zYH5NryhOTS7QVMhh4w8fT2akZh88a8vJM5e7/k+28gFZFVBBT/KvJZPpfH34Tff3y
- dbP0XAPH+U9g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:44:43 -0700
-IronPort-SDR: 3IRkX/kfHWSVSG1JAB9t0SfwNgiwPppn8pnGu8iPEOQRlmtSxKPMUEjU0kDUIcQxF4QYcefZ1K
- NkL3gpkFdMCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
-   d="scan'208";a="370611050"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 08 May 2020 12:44:39 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jX8vJ-005TGv-Ov; Fri, 08 May 2020 22:44:41 +0300
-Date:   Fri, 8 May 2020 22:44:41 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "wuxu.wu" <wuxu.wu@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/17] spi: dw: Discard static DW DMA slave structures
-Message-ID: <20200508194441.GB185537@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508132943.9826-6-Sergey.Semin@baikalelectronics.ru>
+        Fri, 8 May 2020 16:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726843AbgEHUcw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 16:32:52 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FBD1C061A0C;
+        Fri,  8 May 2020 13:32:51 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id s10so2614110iln.11;
+        Fri, 08 May 2020 13:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SrdiPH6OCyFVL4P0giE1gaW/T/tYTKKiFjVse2DiHdE=;
+        b=vPfOuJcgAHiet66XGJbX5lrCkQKcG7/JZIer2jOzf7M5qfsxezAK9to12i0iTWmBA9
+         KDkuB+XawbbI0IbQHoUqahMlkKyGoKyk3mol1D0C21TTthqjxv78Y/cnStOQMPgQgKDn
+         8KmNMpxAH5R7pI5BOMdYKD8LgVAiQJZGXTx9kvTQJnZ8fKJykt55zYa2mUPcEEb2LbLn
+         lzyGiOpm+C2Gp+K7D1tfhWbXYeyqS43LXaavOPSDcZMAC5FVtbq4083aJ4Y4niATim0p
+         pNi/VBinYJUXCIYpEJpL1zksuesAVtn8beW4uTI5Mj6ePWsIApn0oCM/KOIBX2iGnGPm
+         ugeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SrdiPH6OCyFVL4P0giE1gaW/T/tYTKKiFjVse2DiHdE=;
+        b=WnUAmlXr+RSlxcK+mCyE3Wh3fHOQ7ef9hq+easy0uLP2BCUnEYeRFM+2BrZhfwotni
+         vmTGlOf6WViqY7+2GEdg/GQBpps+LxTvbgLb4/ejjZAjLyfSuNoAXPh8lS10bgzb4sbO
+         /xUohpqaS7BeuZrdXDG2HcBxCUVaPls5nBvicwK69GH/R9Y6gRw2HLYWOhuOZUUGlvQl
+         NpybwNfXDhUwCcp9guecZLif56bjHZB/y5Y4LDSYGVuf+xbGgLivbGvuWeOvkJyA3ekT
+         Zeo/L1AklWEDnunROoRXm+XW3l5vbc7VmuUyEMIJi6jlYxlakh4tvDB3COv6lw3GXKZL
+         4HrA==
+X-Gm-Message-State: AGi0PuZukvMEmWdqcz6ASeav3kQgFjdqNkSeGXQX7+Z0yvzHLLtkOhVf
+        iumhhEksQJCZ3fhiyhbzDkdDYPRX/o6ye3Gy+uY=
+X-Google-Smtp-Source: APiQypLll09r7+Z6OBGxRjT/nNMNl6cyxXZI+zN/4+bWujh0sjs0E/4wnnseLP6whK1bAB+sFQFE2BnXI26lmlWMisw=
+X-Received: by 2002:a92:6c0b:: with SMTP id h11mr4452205ilc.158.1588969970482;
+ Fri, 08 May 2020 13:32:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508132943.9826-6-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200507173408.20754-5-alcooperx@gmail.com> <Pine.LNX.4.44L0.2005081444450.11470-100000@netrider.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.2005081444450.11470-100000@netrider.rowland.org>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Fri, 8 May 2020 16:32:39 -0400
+Message-ID: <CAOGqxeVmvJxqXEqymuCJRXqLH9O70Lc7GLTBdfYt_zpB6jexyA@mail.gmail.com>
+Subject: Re: [PATCH v7 4/5] usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 04:29:30PM +0300, Serge Semin wrote:
-> Having them declared is redundant since each struct dw_dma_chan has
-> the same structure embedded and the structure from the passed dma_chan
-> private pointer will be copied there as a result of the next calls
-> chain:
-> dma_request_channel() -> find_candidate() -> dma_chan_get() ->
-> device_alloc_chan_resources() = dwc_alloc_chan_resources() ->
-> dw_dma_filter().
-> So just remove the static dw_dma_chan structures and use a locally
-> declared data instance with dst_id/src_id set to the same values as
-> the static copies used to have.
+On Fri, May 8, 2020 at 2:46 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Thu, 7 May 2020, Al Cooper wrote:
+>
+> > Add a new EHCI driver for Broadcom STB SoC's. A new EHCI driver
+> > was created instead of adding support to the existing ehci platform
+> > driver because of the code required to workaround bugs in the EHCI
+> > controller. The primary workround is for a bug where the Core
+> > violates the SOF interval between the first two SOFs transmitted after
+> > resume. This only happens if the resume occurs near the end of a
+> > microframe. The fix is to intercept the echi-hcd request to complete
+> > RESUME and align it to the start of the next microframe.
+> >
+> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
+> Adding a new EHCI platform-specific driver is okay with me.  However,
+> this patch does not include most of the changes you discussed with
+> Greg.  I assume you will submit a revised version with those changes in
+> place; when you do I will Ack it.
+>
+> Alan Stern
+>
 
-I'm not against it, but you may leave if for the future (see spi/for-next).
+I mistakenly sent a partially fixed version instead of the version
+with all the fixes (git stashed). I'm sending v8 will all the fixes.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks
 
 
+
+Thanks
+Al
