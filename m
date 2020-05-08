@@ -2,175 +2,76 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D3BC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CD7C47255
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07683218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588958254;
-	bh=AmScCZpZxiRrJNvHWkz9TKJv6t/f/ZRNkLLPkkZ3I8Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=CywtGfqOxP8OHZREvN8Smf64fbVWBnkcshu81vFaRgV4fDcJ86mKFR7e6IS15iTjS
-	 akN4Pp6qdH3OFLsmmqhNT5JhZB5O/PgZv7lu8NSQDMwKU/wCkHc6ZorFqUeBV/mrhQ
-	 1jn/UAGYjDQ09qRwxicsIEsLg3UF0TwMDRzYYwxQ=
+	by mail.kernel.org (Postfix) with ESMTP id 59B1B24955
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 17:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgEHRRd (ORCPT
+        id S1726756AbgEHRUu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 13:17:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbgEHRRd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 13:17:33 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 253BE21775;
-        Fri,  8 May 2020 17:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588958252;
-        bh=AmScCZpZxiRrJNvHWkz9TKJv6t/f/ZRNkLLPkkZ3I8Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UJRtPzmVwMWVnflrX3KDmQSe9RghPB6FFqzryHss0CmhasZffpCJ6w7TrGX91nj0t
-         h1Px988c9VKfcx2bSGVHdGHjXSco6eahi9hxaDwfTOjjfnksyMZYJfddu7O5c0vD9p
-         nI3RS0gDNSuAXsGv8bG79vY/AsMZ2P8uFEfJeuJA=
-Date:   Fri, 8 May 2020 12:17:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     maz@kernel.org, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v8 2/5] PCI: Add Loongson PCI Controller support
-Message-ID: <20200508171730.GA77036@bjorn-Precision-5520>
+        Fri, 8 May 2020 13:20:50 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:59567 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbgEHRUu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 13:20:50 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BA91C240006;
+        Fri,  8 May 2020 17:20:47 +0000 (UTC)
+Date:   Fri, 8 May 2020 19:20:46 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Naga Sureshkumar Relli <nagasure@xilinx.com>
+Subject: Re: [PATCH v3 4/8] mtd: rawnand: Add nand_extract_bits()
+Message-ID: <20200508192046.0719c491@xps13>
+In-Reply-To: <20200507161212.40551eb5@xps13>
+References: <20200507110034.14736-1-miquel.raynal@bootlin.com>
+        <20200507110034.14736-5-miquel.raynal@bootlin.com>
+        <20200507134959.38bbcdc4@collabora.com>
+        <20200507161212.40551eb5@xps13>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508113414.3091532-2-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 07:34:02PM +0800, Jiaxun Yang wrote:
-> This controller can be found on Loongson-2K SoC, Loongson-3
-> systems with RS780E/LS7A PCH.
+
+Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 7 May 2020
+16:12:12 +0200:
+
+> Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 7 May
+> 2020 13:49:59 +0200:
 > 
-> The RS780E part of code was previously located at
-> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
-> driver implementation.
+> > On Thu,  7 May 2020 13:00:30 +0200
+> > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> >   
+> > > There are cases where ECC bytes are not byte-aligned. Indeed, BCH
+> > > implies using a number of ECC bits, which are not always a multiple of
+> > > 8. We then need a helper like nand_extract_bits() to extract these
+> > > syndromes from a buffer.    
+> > 
+> > Do you plan to send a patch to make the GPMI driver use this helper?  
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> I will have a look at it.
 
-> +static void system_bus_quirk(struct pci_dev *pdev)
-> +{
-> +	u16 tmp;
-> +
-> +	/* 
-> +	 * System buses on Loongson system contain garbage in BARs
-> +	 * but their decoding need to be enabled to ensure devices
-> +	 * under system buses are reachable. In most cases it should
-> +	 * be done by the firmware.
+https://lists.infradead.org/pipermail/linux-mtd/2020-May/095836.html
 
-This isn't a very satisfying explanation because devices that have
-decoding enabled can interfere with other devices in the system, and I
-can't tell whether that's a problem here.
-
-What happens when you turn on MEM/IO decoding below?  Does the device
-decode any address space?  How do we know what it is?  Is it related
-to the BAR contents?
-
-I'm a little dubious about the need for the PCI_COMMAND write because
-the previous version didn't do it (since it incorrectly wrote to
-PCI_STATUS), and I assume that version worked.
-
-> +	pdev->mmio_always_on = 1;
-> +	pdev->non_compliant_bars = 1;
-> +	/* Enable MEM & IO Decoding */
-> +	pci_read_config_word(pdev, PCI_COMMAND, &tmp);
-> +	tmp |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
-> +	pci_write_config_word(pdev, PCI_COMMAND, tmp);
-
-
-> +}
-> +
-
-Omit this blank line.
-
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS2K_APB, system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS7A_CONF, system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS7A_LPC, system_bus_quirk);
-> +
-> +static void loongson_mrrs_quirk(struct pci_dev *dev)
-> +{
-> +	struct pci_bus *bus = dev->bus;
-> +	struct pci_dev *bridge;
-> +	static const struct pci_device_id bridge_devids[] = {
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> +		{ 0, },
-> +	};
-> +
-> +
-
-Remove one of these blank lines.
-
-> +	/* look for the matching bridge */
-> +	while (!pci_is_root_bus(bus)) {
-> +		bridge = bus->self;
-> +		bus = bus->parent;
-> +		/*
-> +		 * Some Loongson PCIe ports have a h/w limitation of
-> +		 * 256 bytes maximum read request size. They can't handle
-> +		 * anything larger than this. So force this limit on
-> +		 * any devices attached under these ports.
-> +		 */
-> +		if (pci_match_id(bridge_devids, bridge)) {
-> +			if (pcie_get_readrq(dev) > 256) {
-> +				pci_info(dev, "limiting MRRS to 256\n");
-> +				pcie_set_readrq(dev, 256);
-> +			}
-> +			break;
-> +		}
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-
-> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +			       int where)
-> +{
-> +	unsigned char busnum = bus->number;
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
-> +	struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
-> +
-> +	/*
-> +	 * Do not read more than one device on the bus other than
-> +	 * the host bridge.
-
-s/host bridge/root bus/ ?
-
-IIUC, the test below assumes the root bus is bus 0, which is not
-necessarily the case.  Many other .*_map_bus() implementations have
-similar tests for devices on the root bus:
-
-  al_pcie_map_bus(...)
-  {
-    if (bus->number == cfg->busr.start) {
-
-> +	if (priv->flags & FLAG_DEV_FIX && bus->primary != 0 &&
-> +		PCI_SLOT(devfn) > 0)
-> +		return NULL;
+Done :)
