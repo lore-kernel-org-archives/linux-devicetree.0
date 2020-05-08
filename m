@@ -7,123 +7,149 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22883C47247
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBD0C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02AD2208CA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955E320708
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 10:35:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y1RvCu9e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwjUpQaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgEHK1C (ORCPT
+        id S1726746AbgEHKfT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 06:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgEHK1B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:27:01 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46469C05BD43;
-        Fri,  8 May 2020 03:27:00 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 7so5087990pjo.0;
-        Fri, 08 May 2020 03:27:00 -0700 (PDT)
+        Fri, 8 May 2020 06:35:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725825AbgEHKfS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 06:35:18 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A5AC05BD43;
+        Fri,  8 May 2020 03:35:18 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id i185so278766vki.12;
+        Fri, 08 May 2020 03:35:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DZy9pkcBOrjCjg4Qkt27IkR6JTIiM5cV3+uquhM8WpE=;
-        b=Y1RvCu9eoSCgYQeLeMRJWGSFq/GuuBWI1TSDsUK7iiTFqH94KTKwyxJsT1hTpwWcoT
-         lJ2c3P57GJQkDIhAVDbhPT3WOol41JCylmoDswHN4iZ84PMqYD+nb/wzezk+xglTBfCb
-         g+WIJ4C8KyoEs1Z5yJo6etJKvPbFzZoedopO6JL719invW2D4camVQwVlIB/khCDjp2/
-         LT1QOIqdywfL6kNoiUmzy1+x/7LbQXxKFnXMYxm7usNSBYz7wBKMmAqJwVe6FRcZ0DAq
-         IclQH+U6hOj8TAQAMJ+vWG5s6NQi8WJuUSzh103tguKXGig2/CdGi6d2QvgccyTC6Uoh
-         e7Gw==
+        bh=g1M0dnG6X/ZdLSaJc75kcj4nbxBb95KPAtfkHekjG3Y=;
+        b=rwjUpQaWLzhBubkUR3QhhSNC734GFsOjNbxX0y3QmIcvzKwwfQD2+aVBaoi08yh0qR
+         gvATQlHOwvq/YQWOxHj+yB/0n0zDaR2bAFpWJvaZYBKm9eTKbHJnTW90L8JMYSxYfCma
+         NhZ2K9EIkQeMhhgKQb04Z5L+AKgNCjodZS14PlAhl2S46xL7yBNDJIdxEZ9YkTwXwYdo
+         HaWF/a+50wkr9HAXYVN9w7fQ1+UElfIvrpYAx4iqF/D+S6QUweieE6mbUObdYDr+y8gt
+         0FkiCWy2jD7KhYusK5DHGYnqC2xiBbG9oBQZqerFrHINpLIgRMg46Vk7U4wZGy9VgOWf
+         4cfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DZy9pkcBOrjCjg4Qkt27IkR6JTIiM5cV3+uquhM8WpE=;
-        b=tUC9yS5r3SmDG5VKwZGncadzreQK76Fn0oRIUTTOtnbnX1CnIh2L3CPhhDu2uNWz/2
-         4S1hQ7bF787NJBr6QBYoRKkjSKQL4gf61vlIjpdzylav9JNm+zO8C35iFWzmTGf1hlp4
-         0+kpUfIs52ecNzpcZf9k4qe/JSpB66W7+Sg3GuGjt/eOboS3lnMdBwR/nUGwxtVNKW6L
-         RsD+oZ/88TYKrXUOMjgP1JyGlU1un0KCbHfYumGf84nJxEp84aC9t0KupJD2hR/Tbazr
-         aUFLzd0pDQnmKlVuWjM3KJPE+Y8xa3d0wkJC5JbvbU5w9mX/Kj08Di5xthHLqx1FhauZ
-         aTXA==
-X-Gm-Message-State: AGi0Pua18fsC3HNFK38gDxAWSxdC/678bl9hpRaMynFmqPsxedhmgkc0
-        cGcDEYj5L20nK+R/vWlrqvq721EPtv6wYHiV490=
-X-Google-Smtp-Source: APiQypJqDoxKMk4xvuslikRiRX8ShXnPqbto61mW3jENDen09PX1j2bdXToCAPfWo+d3kRgJCDBnTBhOzAblxyDyzr8=
-X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr5450560pjb.228.1588933619112;
- Fri, 08 May 2020 03:26:59 -0700 (PDT)
+        bh=g1M0dnG6X/ZdLSaJc75kcj4nbxBb95KPAtfkHekjG3Y=;
+        b=cSIBl5P2lZYbCTCB7ICPPj1PqMjFbkw8kLMD+F/rfELpLuHrMg0pA2uJ4+dJJiU4jm
+         X8QSAbembVcPGIqKqnYxvzUm8fGxGtE3XTpJFg0+4BVg5Ds0cV37LNhhKYY20/LZ+lNJ
+         PE1UC1Uhkrtn3ZucXUMyLgtHh3iYV2KCRDwH/XXHElKpQ68UU/S2xWmLN/MCXzHjQGG+
+         kH44xhLg3JEaRTAq+MI2wEUATZIzW28r/UF9KLuP2YcJaRY2xJGZ4Uc9q7du0b+6DJCA
+         AQ9OG3Y0RumeoBvlqktxf/ICHtHF4H0HfYTHyGR2UHzTlafQYEuKY0L5Oms005zIYnYQ
+         I5rQ==
+X-Gm-Message-State: AGi0PubDMuho+gWQtIJAtKZQYDeZxJ7OgQ9vx+yGLR0HXpX24dyVu6T5
+        WI78CKEjgwwsO1DS0J95nEbjRTd/yInlgoK0WVM=
+X-Google-Smtp-Source: APiQypJuxr9P/KgaH27GjKEizVyEI5TXONbIe2ekMNjmGWVrroekHLlyMkSERXmjpBua2nXn55i9IHzLgAfA3Cda0OQ=
+X-Received: by 2002:a1f:2f91:: with SMTP id v139mr1139060vkv.22.1588934117720;
+ Fri, 08 May 2020 03:35:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com> <20200508101541.e3yxaocuilaiyutg@mobilestation>
-In-Reply-To: <20200508101541.e3yxaocuilaiyutg@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 8 May 2020 13:26:52 +0300
-Message-ID: <CAHp75VcaVGHfYN1hjD5eKgpKJkpKEif8NxBGO1YF61_apv82Kg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+References: <20200430192746.1866325-1-paul.kocialkowski@bootlin.com>
+ <20200430192746.1866325-3-paul.kocialkowski@bootlin.com> <CACvgo51mRse3su4exyTqXYJRPPc0VqaX9+tRyKUuBPtm5Q+6XQ@mail.gmail.com>
+ <20200507201103.GH2422122@aptenodytes>
+In-Reply-To: <20200507201103.GH2422122@aptenodytes>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Fri, 8 May 2020 11:32:46 +0100
+Message-ID: <CACvgo52dMPk_KPyNYhBTDOo_+s7hJuGDNjoWun63Jj4uMidszA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] drm: Add support for the LogiCVC display controller
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
         devicetree <devicetree@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 8, 2020 at 1:15 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
+On Thu, 7 May 2020 at 21:11, Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
 >
-> On Fri, May 08, 2020 at 01:03:11PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 8, 2020 at 12:37 PM Serge Semin
-> > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > >
-> > > This SPI-controller is a part of the Baikal-T1 System Controller and
-> > > is based on the DW APB SSI IP-core, but with very limited resources:
-> > > no IRQ, no DMA, only a single native chip-select and just 8 bytes Tx/Rx
-> > > FIFO available. In order to provide a transparent initial boot code
-> > > execution this controller is also utilized by an vendor-specific block,
-> > > which provides an CS0 SPI flash direct mapping interface. Since both
-> > > direct mapping and SPI controller normal utilization are mutual exclusive
-> > > only a one of these interfaces can be used to access an external SPI
-> > > slave device. Taking into account the peculiarities of the controller
-> > > registers and physically mapped SPI flash access, very limited resources
-> > > and seeing the normal usecase of the controller is to access an external
-> > > SPI-nor flash, we decided to create a dedicated SPI driver for it.
+> Hi Emil,
+>
+> Thanks for the review!
+>
+> On Mon 04 May 20, 14:28, Emil Velikov wrote:
+> > Just had a casual quick look for custom KMS properties, since new
+> > drivers made that mistake in the past.
+> > Thanks for not including any o/
+>
+> Yeah I made sure not to include any, I know it easily gets very problematic and
+> creates disparity between drivers while needing to be kept alive even when a
+> standard way arises due to the no API breakage policy.
+>
+> The not-for-merge patch that I've sent does introduce some for the colorkey,
+> and that's why they are marked as such :)
+>
+> > I made a couple of trivial suggestions - if you agree, feel free to
+> > keep them as follow-up patches.
 > >
-> > It seems a lot of code.
-> > Why can't you use spi-dw-mmio.c et al.?
+> > On Thu, 30 Apr 2020 at 20:28, Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> wrote:
+> >
+> > > +int logicvc_of_property_parse_u32(struct device_node *of_node,
+> > > +                                 const char *name, u32 *target)
+> > > +{
+> > > +       struct logicvc_of_property *property;
+> > > +       const char *string;
+> > > +       u32 value;
+> > > +       int ret;
+> > > +
+> > > +       property = logicvc_of_property_lookup(name);
+> > > +       if (!property)
+> > > +               return -EINVAL;
+> > > +
+> > One could have the logicvc_of_properties[] entries indexed with the
+> > logicvc_of_property_parse_{u32,bool} caller, using that instead of the
+> > name string.
 >
-> I said above why. Even though the registers set is similar It's too specific
-> to be integrated into the generic DW SSI driver.
+> Do I understand correctly that you're suggesting passing each entry's
+> struct logicvc_of_property pointer to the function?
+>
+> I went for strings to make the code explicit and easy to read so I'd really
+> like to keep it that way and avoid passing things like
+> &logicvc_of_properties[4] or an index integer.
+>
+Add a some #define/enum and go to town. Example with sub-optimal names below:
 
-At least you may do at the beginning is to reuse header spi-dw.h and
-put your stuff under
-spi-dw-baikal.c or so. Then, look at the spi-dw.c and check what can
-be reused (I think a lot).
+enum foobar {
+ LVC_OF_DISP_INTF,
+ LVC_OF_DISP_CLRSPC,
+...
+};
 
--- 
-With Best Regards,
-Andy Shevchenko
+static struct logicvc_of_property logicvc_of_properties[] = {
+[LVC_OF_DISP_INTF]  = {
+               .name           = "xylon,display-interface",
+...
+       },
+[LVC_OF_DISP_CLRSPC] = {
+               .name           = "xylon,display-colorspace",
+...
+       },
+...
+}
+
+While the callers are:
+
+       ret = logicvc_of_property_parse_u32(of_node, LVC_OF_DISP_INTF,
+                                           &config->display_colorspace);
+       ret = logicvc_of_property_parse_u32(of_node, LVC_OF_DISP_CLRSPC,
+                                           &config->display_depth);
+
+-Emil
