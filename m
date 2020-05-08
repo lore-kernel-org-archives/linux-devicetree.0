@@ -2,162 +2,148 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5A3C47247
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1D8C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A35E20708
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588918893;
-	bh=dJkORNz5Fm4MD/8v8KEmOOcxIS+SN1xNk+cCv0e4La8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gme75zheh1mq0YHyrVf14B16A554s/AN9G4JGVObXM5VzHthj0bB5U4zwzfdYMltP
-	 dmTxXvGMHuWSpm5sTDvv4uvhNyXBXt+q207FUbvQ8r0968itNAK0b3jGfgpl30tQkV
-	 GZ1sSxQ8svenH8vACHNw0k5IYGOxnqq/8v8F2h34=
+	by mail.kernel.org (Postfix) with ESMTP id 77894207DD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:29:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Qyq62rRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgEHGV1 (ORCPT
+        id S1726325AbgEHG3i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 02:21:27 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44702 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbgEHGV1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 02:21:27 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a21so433224ljj.11;
-        Thu, 07 May 2020 23:21:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=l07sjg7wad11JybQiwBPplAsmA/VCV2GQr8sTEyBm88=;
-        b=C1Dt6HJA2i7OLmGNc9XeFfcM+njIJrh7SQ8MmMM0w10EYLGbB6nWl5tysAKbyh26NV
-         92Vr2fknGA27JOLMooDs/pi8KKnsaE4BJ8VLjEu3XWbuCgDKezm2PWVhZdNQT9VlF+Cr
-         e8xxoIPBQPiiPP32vzN0FV6FP2kMUjmQqt4kIXxuNJ/O1NMiyhRh68rZyxUfO85vMG3Y
-         7rEIjqd07d20ros4Bro7pnu6ce1GoDxeMYDUhLG8n1abhqKhxiK7h5EjO6DMHHYBcjqO
-         30Xp79qHVkpd6OIfZkp6oq6yP9TVUTqReasmmj5XZdnhXF6HGP8tdN1ONSzr+RMd1Gqe
-         uGtA==
-X-Gm-Message-State: AOAM532LnT/OWxDGsCuWXIkKI6J1NQMvV5HRcU++9B/lN68BdQtQcidF
-        /aD/BQBnht/6sdswbsr4/9I=
-X-Google-Smtp-Source: ABdhPJzQwccjomPZVXTofZDq7QNMtMm+acyePCPBUNykc5Wt6G9pf/ArU7L/ehrFMv9M6FmHt7FVvw==
-X-Received: by 2002:a05:651c:549:: with SMTP id q9mr624525ljp.236.1588918884533;
-        Thu, 07 May 2020 23:21:24 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id z64sm428692lfa.50.2020.05.07.23.21.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 23:21:23 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1jWwNr-0001TQ-0H; Fri, 08 May 2020 08:21:19 +0200
-Date:   Fri, 8 May 2020 08:21:19 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Lars Persson <lars.persson@axis.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Fri, 8 May 2020 02:29:38 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:61283 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726009AbgEHG3h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 02:29:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588919376; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=CF2yXGR1Cj7U8eHdFjQo7x7s1pH7cJ9xAyOsnmO0Hew=; b=Qyq62rRtDMl3NIhiQbsaISrXBUhPsl1slk3OfS9AzvqfisRya1sBdaz15/v83R+Sv/sgJxkZ
+ 6wTe0SEeyDkCxVH3sTyjOQ8+WaHFwCij4WHKb1/djoLhILKJqT3IxGcVC8MUZ82D+TxZ0IaT
+ NpfB6Cfuv88YOWlrERkp7s6Q+IE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb4fc50.7f0f278679d0-smtp-out-n01;
+ Fri, 08 May 2020 06:29:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1DDFAC43637; Fri,  8 May 2020 06:29:35 +0000 (UTC)
+Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2FD94C433D2;
+        Fri,  8 May 2020 06:29:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2FD94C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v7 0/4] ADD interconnect support for Qualcomm DWC3 driver
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Netdev <netdev@vger.kernel.org>,
-        nios2-dev@lists.rocketboards.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH net 11/16] net: ethernet: marvell: mvneta: fix fixed-link
- phydev leaks
-Message-ID: <20200508062119.GE25962@localhost>
-References: <1480357509-28074-1-git-send-email-johan@kernel.org>
- <1480357509-28074-12-git-send-email-johan@kernel.org>
- <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
- <20200507064412.GL2042@localhost>
- <20200507064734.GA798308@kroah.com>
- <20200507111312.GA1497799@kroah.com>
- <CA+G9fYu2SrkEHyAzF57xJz5WjgHv361qdL2wPqON_pGS4Vtxmw@mail.gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <20200429183542.GS4525@google.com>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <a119cf75-8bda-f380-8249-173fa426279c@codeaurora.org>
+Date:   Fri, 8 May 2020 11:59:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYu2SrkEHyAzF57xJz5WjgHv361qdL2wPqON_pGS4Vtxmw@mail.gmail.com>
+In-Reply-To: <20200429183542.GS4525@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 03:35:02AM +0530, Naresh Kamboju wrote:
-> On Thu, 7 May 2020 at 16:43, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> <trim>
-> > > >
-> > > > Greg, 3f65047c853a ("of_mdio: add helper to deregister fixed-link
-> > > > PHYs") needs to be backported as well for these.
-> > > >
-> > > > Original series can be found here:
-> > > >
-> > > >     https://lkml.kernel.org/r/1480357509-28074-1-git-send-email-johan@kernel.org
-> > >
-> > > Ah, thanks for that, I thought I dropped all of the ones that caused
-> > > build errors, but missed the above one.  I'll go take the whole series
-> > > instead.
-> >
-> > This should now all be fixed up, thanks.
-> 
-> While building kernel Image for arm architecture on stable-rc 4.4 branch
-> the following build error found.
-> 
-> of_mdio: add helper to deregister fixed-link PHYs
-> commit 3f65047c853a2a5abcd8ac1984af3452b5df4ada upstream.
-> 
-> Add helper to deregister fixed-link PHYs registered using
-> of_phy_register_fixed_link().
-> 
-> Convert the two drivers that care to deregister their fixed-link PHYs to
-> use the new helper, but note that most drivers currently fail to do so.
-> 
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> [only take helper function for 4.4.y - gregkh]
-> 
->  # make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm
-> CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
-> arm-linux-gnueabihf-gcc" O=build zImage
-> 70 #
-> 71 ../drivers/of/of_mdio.c: In function ‘of_phy_deregister_fixed_link’:
-> 72 ../drivers/of/of_mdio.c:379:2: error: implicit declaration of
-> function ‘fixed_phy_unregister’; did you mean ‘fixed_phy_register’?
-> [-Werror=implicit-function-declaration]
-> 73  379 | fixed_phy_unregister(phydev);
-> 74  | ^~~~~~~~~~~~~~~~~~~~
-> 75  | fixed_phy_register
-> 76 ../drivers/of/of_mdio.c:381:22: error: ‘struct phy_device’ has no
-> member named ‘mdio’; did you mean ‘mdix’?
-> 77  381 | put_device(&phydev->mdio.dev); /* of_phy_find_device() */
-> 78  | ^~~~
-> 79  | mdix
+Hi Felipe,
 
-Another dependency: 5bcbe0f35fb1 ("phy: fixed: Fix removal of phys.")
+Any update about landing this series.
 
-Greg, these patches are from four years ago so can't really remember if
-there are other dependencies or reasons against backporting them (the
-missing stable tags are per Dave's preference), sorry.
+Regards
 
-The cover letter also mentions another dependency, but that may just
-have been some context conflict.
+Sandeep
 
-Perhaps you better drop these unless you want to review them closer.
-
-Johan
+On 4/30/2020 12:05 AM, Matthias Kaehlcke wrote:
+> Hi Felipe,
+>
+> all patches of this series have been reviewed and there are no outstanding
+> comments, so I guess it should be ready to land?
+>
+> Thanks
+>
+> Matthias
+>
+> On Wed, Apr 01, 2020 at 10:45:41AM +0530, Sandeep Maheswaram wrote:
+>> This path series aims to add interconnect support in
+>> dwc3-qcom driver on SDM845 and SC7180 SoCs.
+>>
+>> Changes from v6 -> v7
+>>    > [PATCH 2/4] Fixed review comments from Matthias in DWC3 driver.
+>>    > Other patches remain unchanged.
+>>
+>> Changes from v5 -> v6
+>>    > [PATCH 1/4] Addressed comments from Rob.
+>>    > [PATCH 2/4] Fixed review comments from Matthias in DWC3 driver.
+>>    > [PATCH 3/4] Ignoring 80 char limit in defining interconnect paths.
+>>    > Added [PATCH 4/4] in this series. Adding interconnect nodes for SC7180.
+>>      Depends on patch https://patchwork.kernel.org/patch/11417989/.	
+>>
+>> Changes from v4 -> v5
+>>    > [PATCH 1/3] Added the interconnect properties in yaml. This patch depends
+>>      on series https://patchwork.kernel.org/cover/11372641/.
+>>    > [PATCH 2/3] Fixed review comments from Matthias in DWC3 driver.
+>>    > [PATCH 3/3] Modified as per the new interconnect nodes in sdm845. Depends
+>>      on series https://patchwork.kernel.org/cover/11372211/.
+>>
+>>
+>> Changes from v3 -> v4
+>>    > Fixed review comments from Matthias
+>>    > [PATCH 1/3] and [PATCH 3/3] remains unchanged
+>>
+>> Changes from v2 -> v3
+>>    > Fixed review comments from Matthias and Manu
+>>    > changed the functions prefix from usb_* to dwc3_qcom_*
+>>
+>> Changes since V1:
+>>    > Comments by Georgi Djakov on "[PATCH 2/3]" addressed
+>>    > [PATCH 1/3] and [PATCH 3/3] remains unchanged
+>>
+>>
+>> Sandeep Maheswaram (4):
+>>    dt-bindings: usb: qcom,dwc3: Introduce interconnect properties for
+>>      Qualcomm DWC3 driver
+>>    usb: dwc3: qcom: Add interconnect support in dwc3 driver
+>>    arm64: dts: qcom: sdm845: Add interconnect properties for USB
+>>    arm64: dts: qcom: sc7180: Add interconnect properties for USB
+>>
+>>   .../devicetree/bindings/usb/qcom,dwc3.yaml         |   8 ++
+>>   arch/arm64/boot/dts/qcom/sc7180.dtsi               |   4 +
+>>   arch/arm64/boot/dts/qcom/sdm845.dtsi               |   8 ++
+>>   drivers/usb/dwc3/dwc3-qcom.c                       | 128 ++++++++++++++++++++-
+>>   4 files changed, 146 insertions(+), 2 deletions(-)
+>>
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+>>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
