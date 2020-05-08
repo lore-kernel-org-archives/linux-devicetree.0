@@ -2,151 +2,105 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E03EC47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 12:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB01C47254
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 12:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3B3208DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 12:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588939333;
-	bh=MVgAInBlHbFucqqOMS2zpzCl41mt8McPbpWInuTvt7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iH2RsmMDUTuHsO9jDw1OI+aTADMeyaKX3+wTgSRcML3Vm9KvNGQj5746kkzFb/cTJ
-	 EIZvd6D7Lrp4vSLwrwC1gMrhcPJ20PBvV+gCdW01NkY5stdoX1t8rtT0UTlNrPpBbo
-	 FYMXyqUw+LTP2yiyQihK/dZXaUr7NM1HPue9rPcI=
+	by mail.kernel.org (Postfix) with ESMTP id 2CACD216FD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 12:16:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="HmpjRH8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgEHMCJ (ORCPT
+        id S1726690AbgEHMP5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 08:02:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgEHMCI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 08:02:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44B0B208DB;
-        Fri,  8 May 2020 12:02:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588939327;
-        bh=MVgAInBlHbFucqqOMS2zpzCl41mt8McPbpWInuTvt7A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Twetzls2F3Jeu+KmG5FUOutvjCz/WoqfrsBaX8GvAALNLGFDnKHPy8LdLPUulm0yK
-         tBOfN6D3JwamP0kQgp3199ol6mSEtcR3ZeMDY8UHhllndREBSrWk/ouW1UclYwkLr1
-         L125iRZ6ei661Ah3Bz5HYH2pfNhM462Cs2rBmyg0=
-Date:   Fri, 8 May 2020 14:02:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Lars Persson <lars.persson@axis.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Netdev <netdev@vger.kernel.org>,
-        nios2-dev@lists.rocketboards.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH net 11/16] net: ethernet: marvell: mvneta: fix fixed-link
- phydev leaks
-Message-ID: <20200508120205.GA4089177@kroah.com>
-References: <1480357509-28074-1-git-send-email-johan@kernel.org>
- <1480357509-28074-12-git-send-email-johan@kernel.org>
- <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
- <20200507064412.GL2042@localhost>
- <20200507064734.GA798308@kroah.com>
- <20200507111312.GA1497799@kroah.com>
- <CA+G9fYu2SrkEHyAzF57xJz5WjgHv361qdL2wPqON_pGS4Vtxmw@mail.gmail.com>
- <20200508062119.GE25962@localhost>
+        Fri, 8 May 2020 08:15:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726627AbgEHMP4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 08:15:56 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4373C05BD43;
+        Fri,  8 May 2020 05:15:56 -0700 (PDT)
+Received: from flygoat-x1e (unknown [IPv6:240e:e0:f181:b238:7275:17ea:845e:bb31])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 5189A2049E;
+        Fri,  8 May 2020 12:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1588940156; bh=UlB/LTQO9GDoNBWvUvxhRQdqtyIVKakesW0HTOXtYEY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HmpjRH8UIJe/LGtE/KC4xshp8rXQyfTRgfTtU/ZHHyOip/0iU/qXM8YZ7BfFEZyFZ
+         6TyU+Pv5kC/pms8VXZMRefwS8Q62sa1VRbuJ6GpguxtnMeTQn/q90m7GW7Ch640bnG
+         TZxQie1uUxnJ6m8hjCffzP5geBSOmcHc7nycjdtAxZ4Fd1ejSm/tV+sPY+QMO8zPBL
+         N5NK6i1RD9qrGTZYE+4NxDWvjxtb1f4+yuv6iwXsXcEAbssbkKFOJMHPyPhc5kbAf3
+         RR4bmSjeSHIH+H8110o8qAhgZraRnYjjPjSXeDZF4fPU5h0AN8MIPrLsxmoHZ9r4ja
+         2Lw1Daucvo8bw==
+Date:   Fri, 8 May 2020 20:15:34 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 17/20] mips: Add udelay lpj numbers adjustment
+Message-ID: <20200508201534.2a54da17@flygoat-x1e>
+In-Reply-To: <20200506174238.15385-18-Sergey.Semin@baikalelectronics.ru>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+        <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+        <20200506174238.15385-18-Sergey.Semin@baikalelectronics.ru>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200508062119.GE25962@localhost>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 08:21:19AM +0200, Johan Hovold wrote:
-> On Fri, May 08, 2020 at 03:35:02AM +0530, Naresh Kamboju wrote:
-> > On Thu, 7 May 2020 at 16:43, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > <trim>
-> > > > >
-> > > > > Greg, 3f65047c853a ("of_mdio: add helper to deregister fixed-link
-> > > > > PHYs") needs to be backported as well for these.
-> > > > >
-> > > > > Original series can be found here:
-> > > > >
-> > > > >     https://lkml.kernel.org/r/1480357509-28074-1-git-send-email-johan@kernel.org
-> > > >
-> > > > Ah, thanks for that, I thought I dropped all of the ones that caused
-> > > > build errors, but missed the above one.  I'll go take the whole series
-> > > > instead.
-> > >
-> > > This should now all be fixed up, thanks.
-> > 
-> > While building kernel Image for arm architecture on stable-rc 4.4 branch
-> > the following build error found.
-> > 
-> > of_mdio: add helper to deregister fixed-link PHYs
-> > commit 3f65047c853a2a5abcd8ac1984af3452b5df4ada upstream.
-> > 
-> > Add helper to deregister fixed-link PHYs registered using
-> > of_phy_register_fixed_link().
-> > 
-> > Convert the two drivers that care to deregister their fixed-link PHYs to
-> > use the new helper, but note that most drivers currently fail to do so.
-> > 
-> > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > Signed-off-by: David S. Miller <davem@davemloft.net>
-> > [only take helper function for 4.4.y - gregkh]
-> > 
-> >  # make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm
-> > CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
-> > arm-linux-gnueabihf-gcc" O=build zImage
-> > 70 #
-> > 71 ../drivers/of/of_mdio.c: In function ‘of_phy_deregister_fixed_link’:
-> > 72 ../drivers/of/of_mdio.c:379:2: error: implicit declaration of
-> > function ‘fixed_phy_unregister’; did you mean ‘fixed_phy_register’?
-> > [-Werror=implicit-function-declaration]
-> > 73  379 | fixed_phy_unregister(phydev);
-> > 74  | ^~~~~~~~~~~~~~~~~~~~
-> > 75  | fixed_phy_register
-> > 76 ../drivers/of/of_mdio.c:381:22: error: ‘struct phy_device’ has no
-> > member named ‘mdio’; did you mean ‘mdix’?
-> > 77  381 | put_device(&phydev->mdio.dev); /* of_phy_find_device() */
-> > 78  | ^~~~
-> > 79  | mdix
-> 
-> Another dependency: 5bcbe0f35fb1 ("phy: fixed: Fix removal of phys.")
-> 
-> Greg, these patches are from four years ago so can't really remember if
-> there are other dependencies or reasons against backporting them (the
-> missing stable tags are per Dave's preference), sorry.
-> 
-> The cover letter also mentions another dependency, but that may just
-> have been some context conflict.
-> 
-> Perhaps you better drop these unless you want to review them closer.
+On Wed, 6 May 2020 20:42:35 +0300
+<Sergey.Semin@baikalelectronics.ru> wrote:
 
-Good idea, I've dropped them all for now, sorry for the noise.
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> Loops-per-jiffies is a special number which represents a number of
+> noop-loop cycles per CPU-scheduler quantum - jiffies. As you
+> understand aside from CPU-specific implementation it depends on
+> the CPU frequency. So when a platform has the CPU frequency fixed,
+> we have no problem and the current udelay interface will work
+> just fine. But as soon as CPU-freq driver is enabled and the cores
+> frequency changes, we'll end up with distorted udelay's. In order
+> to fix this we have to accordinly adjust the per-CPU udelay_val
+> (the same as the global loops_per_jiffy) number. This can be done
+> in the CPU-freq transition event handler. We subscribe to that event
+> in the MIPS arch time-inititalization method.
+> 
+> Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 
-greg k-h
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+
+That have been absent in MIPS kernel so long!
+
+Thanks.
+> ---
+[...]
+---
+Jiaxun Yang
