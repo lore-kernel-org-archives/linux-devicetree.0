@@ -2,102 +2,106 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7ADC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA4EC47254
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02AB521974
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB8A206B9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o/TzgS8f"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n9+oTteo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgEHWxP (ORCPT
+        id S1728289AbgEHW7Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 18:53:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727878AbgEHWxP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 18:53:15 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C308EC061A0C;
-        Fri,  8 May 2020 15:53:14 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id z72so2802935wmc.2;
-        Fri, 08 May 2020 15:53:14 -0700 (PDT)
+        Fri, 8 May 2020 18:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728280AbgEHW7Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 18:59:24 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C75C05BD09
+        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 15:59:24 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id r10so1056029pgv.8
+        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 15:59:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MMrlGS3Usu2vxGof1+PJ+l2BUflCsuWc3mZfos5tvb8=;
-        b=o/TzgS8fx2y71BYwe1ZVMxzbshUJ0qg7RVghfPrQX920582rMFq7Kq1X2CAfogr+kk
-         5BlCTYWr/XkIndEtU60t/GK5Zkz8kh+5q9Y2oghH3/xu9XlNsxNxuDtspnRH51XZVWy4
-         J+zSmOSqXtN6X9+HVe+ejw8ymeocngnKhNpsAO225fpehfxgrCgF0rz8yXxgGFsRlNIg
-         1ETCLVmhKepLIhYIhDnaIqVzr9eAZhijyeOzORYeqHh+PvEswpkRSMRikSDK92Ky1K8i
-         opps1/VrkBmXPGT6VHNg2o6PwZuoHH3rT6npdw4sLKdqRNBlkxkuTWFXQWyoddDCzdS9
-         z1TQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vsTJfgywY7Yh1c9SFAQgkpGdzTCsAoe2msx951M+8gg=;
+        b=n9+oTteokcsg2gGmnR4zRXRtCjsq5CrG2/r4VvKp5PLRS6msCbvUx5BSWg8VI7PfNH
+         fzOsZRW3n3BzVqfaRQEfeYZ0ExlYzMI38EGyARXFt1+uLUQiP9Ay33UhJpvbrHKTotIb
+         LxOQG9/Gg5iz7YwU/lMlQXNVEpWwfcZUhnxWM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MMrlGS3Usu2vxGof1+PJ+l2BUflCsuWc3mZfos5tvb8=;
-        b=p4cK9DksdzX40MDdrqbfwL0Jzl10zRiyqWGFAYPJkoY7awIt4KmN6TiPegfPpfqM9+
-         nzZM/HP/CkxYkh/ASqlh+3sLleLhO98NCjrobAJReO7KGuYvz3/7x69dXNT2zL21UKm9
-         Mn97yBYga7FzlgSnnaLWFkGv11RJrl6ZssS7fNcdy3CBa6KCJkw4m/hzzYhJOCYuz9uB
-         dzYFdTbL3cgNESrGHvA82l6ITwgpCYYtbyQMD0fe3K6qD9fs/qqOuXErQhYjAx8Pyy4l
-         J0xHKXbH4X2Sk/IYOCyvg+Sd53GzulUYgK7J5c/MenBttwTB5Dir7CS3jU05kYXhaIRY
-         3H+w==
-X-Gm-Message-State: AGi0Pubfd72xrRMDfusFXhdMyQ4knbnCbQ3+xqTCvt46s429n/byttt/
-        AHjEs9ET30yGq6oUpdFevuE=
-X-Google-Smtp-Source: APiQypKudYAyXmUpgl2IgAZ0fi2GDMBEyzSbjTybQpyZpDiyC+Ad6xlbbmCtcKKA7LoyCl/fAkOYGQ==
-X-Received: by 2002:a1c:770f:: with SMTP id t15mr18057283wmi.178.1588978393519;
-        Fri, 08 May 2020 15:53:13 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id l12sm1346562wrh.20.2020.05.08.15.53.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 15:53:12 -0700 (PDT)
-Subject: Re: [PATCH v8 5/5] usb: host: Add ability to build new Broadcom STB
- USB drivers
-To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20200508211929.39020-1-alcooperx@gmail.com>
- <20200508211929.39020-6-alcooperx@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <5bd76807-ac02-5627-a3ad-f02aff3cb579@gmail.com>
-Date:   Fri, 8 May 2020 15:53:09 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vsTJfgywY7Yh1c9SFAQgkpGdzTCsAoe2msx951M+8gg=;
+        b=kboAQIYKgo4vDfR5VQAmMVtRIv4whk6YdseN5MURbo7vhf/YUZNq6qg6DiS9R6Johh
+         Mq0mltkFeEbH9y3mWNGzAznnTs50JrTy8ItCbgC9ZnLybQvlE6M71CN31mOLpd9UZERy
+         Rp9LxBHPGIzWcOu1C/eukkD3Gmc/vGFoMbcw4AEd6G3Pk0Ds6Yhb/X+LVNVIk7+pnQRH
+         MJKIy1ID7VbQbzBVI3uEBmjmo5HPodJ1Ww5G/737BvDKVydHnGXeGmjnBAZCv2iht23x
+         AHIXPbsgiauLDQE6nWeI4asjR0i/eC92Y9OVmeSRgUvOnAvcAwCkyVqG1FrUurHQXoIc
+         qLOw==
+X-Gm-Message-State: AGi0Pubg2RJ/DNCEANKMwZLNfv/4/JrYE4YaDEXzSg7EZ6e801itC6Ds
+        1uYq4vlcn289stcRyFCeTaCB5g==
+X-Google-Smtp-Source: APiQypLZztC92CaipNrfEO6dJof+q2mxxAWh+ZlB67X3GIWQuimnyFCwmWlKu1p11C9clTK29MCtRg==
+X-Received: by 2002:a62:780b:: with SMTP id t11mr5202971pfc.196.1588978763500;
+        Fri, 08 May 2020 15:59:23 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id i72sm3062874pfe.104.2020.05.08.15.59.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 15:59:23 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] dt-bindings: display: simple: Add BOE NV133FHM-N62
+Date:   Fri,  8 May 2020 15:59:01 -0700
+Message-Id: <20200508155859.2.I37c879ef4ec6d4028a3d45728bc3a58060bba175@changeid>
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+In-Reply-To: <20200508155859.1.I4d29651c0837b4095fb4951253f44036a371732f@changeid>
+References: <20200508155859.1.I4d29651c0837b4095fb4951253f44036a371732f@changeid>
 MIME-Version: 1.0
-In-Reply-To: <20200508211929.39020-6-alcooperx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This panel appears to be the same or nearly the same as the BOE
+NV133FHM-N61, but since (in the very least) it identifies itself as a
+different model in the EDID we should add a new compatible string for
+it.
 
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-On 5/8/2020 2:19 PM, Al Cooper wrote:
-> Add the build system changes needed to get the Broadcom STB XHCI,
-> EHCI and OHCI functionality working. The OHCI support does not
-> require anything unique to Broadcom so the standard ohci-platform
-> driver is being used. Also update MAINTAINERS.
-> 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+ .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+index fdd74d07f645..d6cca1479633 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+@@ -75,6 +75,8 @@ properties:
+       - boe,nv101wxmn51
+         # BOE NV133FHM-N61 13.3" FHD (1920x1080) TFT LCD Panel
+       - boe,nv133fhm-n61
++        # BOE NV133FHM-N62 13.3" FHD (1920x1080) TFT LCD Panel
++      - boe,nv133fhm-n62
+         # BOE NV140FHM-N49 14.0" FHD a-Si FT panel
+       - boe,nv140fhmn49
+         # CDTech(H.K.) Electronics Limited 4.3" 480x272 color TFT-LCD panel
 -- 
-Florian
+2.26.2.645.ge9eca65c58-goog
+
