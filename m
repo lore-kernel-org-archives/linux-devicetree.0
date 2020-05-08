@@ -2,182 +2,124 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDEBC47257
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579CFC47255
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E270221974
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391E82173E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 18:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KcHnRVg/"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="bqJnS5va"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgEHSiK (ORCPT
+        id S1727107AbgEHSje (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 14:38:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58732 "EHLO
+        Fri, 8 May 2020 14:39:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726636AbgEHSiJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 14:38:09 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D50EC05BD09
-        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 11:38:09 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id z6so1103062plk.10
-        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 11:38:09 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1726864AbgEHSje (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 14:39:34 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E289C05BD09
+        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 11:39:34 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b18so2340390ilf.2
+        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 11:39:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ws7ldR16MNM6mOMbD4L23WPec8fzXSI9QeuWBJlWUuc=;
-        b=KcHnRVg/b6jmrJZQkBFDhWz5xf6D/bqN5Fc5pP5/XoFfJBpmHhQPEJ4GghwJWpbpPh
-         3OIb7B4npB1dAcr6M+ByfNFlduxaH6frbTvtpSuxIpEHxchNf0fmI/Yg4Tfv55lKY11V
-         zpKb6nDlTgHjQ+1PXFei25kRdxq0MeT7TLC6Q=
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RGIpRsn9hXDxHTNl/QnLM0SbzmG3DHjOVcysfR1ByLg=;
+        b=bqJnS5vane6smgkAuFEEcD0f6Ycc9yf0lJgeJRU4JjUw54yjKs7BXh8x7lk1vbGGnV
+         0f+IMGeKn3Gw8E15EFVxSoihcpqVq3H2ka3HfRPYyf0OuTLXCPToeBb+OyVQEtZC7lHl
+         zuolyQtCP3X66zQBV9+hARMxLnivHPtSnxXf5rUK+0xz88gPQQ3kiIwNSw4silZ09ksy
+         iZesm817N+ct23uLjo+cnMxE5KHcCYtZJFFhLRXkIQCkpT0bZ5O/5lBtIwyt1tjgyZpr
+         XXPJFtNZ04z6cdHl7rsn9ul842f84tS91OI8taD3ChAh0ODWd61l9meBxJla50/OQul7
+         oA8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ws7ldR16MNM6mOMbD4L23WPec8fzXSI9QeuWBJlWUuc=;
-        b=QJNr7qUGt15y2mgPc0gwDU8xK5j3dlZJ+PlUMXf2FkQTz8ziuEFj1/XhfpwCLhNRca
-         Lp44PU2NqUdMBbfJcTLhN1Fk+Zq7hTF8k/NoAL/iZcHCqmgzUq7n+xDBF5B3pg8X5wJQ
-         ge6DjIZh6woXZRPMsLcOKUzAbYMKPCTmVl4COCnIG8mL1rR8o4cO28PjK6j7T4Q7X7oC
-         oUVRzxKpgQzqHR0gGGZWCWr3CP4ZC5TDb+Mv18RilVXvmYo8At08NLcLAI1A9eSYwAVe
-         vxRAfDmrh9z+x36zNLXq4MnAq2EDJ0h8+srM5+zprT31+4nngBB9MK23Wm11azpiWrJ7
-         Z/RA==
-X-Gm-Message-State: AGi0PuZ9wYWFkojwZIPeKIk/a5hBS3BTIPGhdzAcSjyvM0/VTFee/71d
-        CVfERiOYllQi7TscZPV5j3de4w==
-X-Google-Smtp-Source: APiQypIyZQDCtyw4+QXWiMgTGVJtQMhFL+Lnm7Ew/IK8cGdricQk2z0nez9p1ug61H/ltcz8br/DKA==
-X-Received: by 2002:a17:902:c194:: with SMTP id d20mr3748959pld.256.1588963088876;
-        Fri, 08 May 2020 11:38:08 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id i128sm2460589pfc.149.2020.05.08.11.38.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 11:38:08 -0700 (PDT)
-Date:   Fri, 8 May 2020 11:38:07 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org, georgi.djakov@linaro.org
-Subject: Re: [PATCH V5 5/7] tty: serial: qcom_geni_serial: Add interconnect
- support
-Message-ID: <20200508183807.GE4525@google.com>
-References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
- <1588919619-21355-6-git-send-email-akashast@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RGIpRsn9hXDxHTNl/QnLM0SbzmG3DHjOVcysfR1ByLg=;
+        b=D6Q5ITN+Tns3nYE4wQ19L4oZupVgSGjyp4DfADsWLlmI9qiUHBAlBozER03BZcHChS
+         YXYHlkLZrt10zPHZ0mjyrxFokWp0tM1yB23FSf5wxAC+yN1g3K9klj2RQGwbEpnevBPE
+         0y/lotmw/6M6ToIIZD0uS41WipJY2+gMwoQYa4ytvHVCpmw20Swl9piPWVEiKloWbxw4
+         N+WRyMHmHIwfK0bKfPjS11QXLV4NpjXdKx/DvfM/+l37F4o+VZZO+N358RVgMrrp8pv+
+         cLJXJY8/qDrmnQ7LgATyGbJW4Wthuxt2c1uipZU0TYgW+RO6MBmynI26x77fMEP6DeyO
+         SDTQ==
+X-Gm-Message-State: AGi0PubNKmQ6SygujD1HhxcAQMaXaK12ElC9RZ/ncdvoiTfWhLeV5/X8
+        7AvRhISGHMCK+nkE4dt5MBTo8pRwaBJ0I0ciSqZZCpIo
+X-Google-Smtp-Source: APiQypIK7HVLTAX4pxfdG4Np+jILsEOGqiII5aB+gQC6LJN5kcIhjqNVKZy0G/G/rBz+o1NbRC9W4C8NgLZeDmRHgVw=
+X-Received: by 2002:a92:aa07:: with SMTP id j7mr4467857ili.40.1588963173745;
+ Fri, 08 May 2020 11:39:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1588919619-21355-6-git-send-email-akashast@codeaurora.org>
+References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-6-brgl@bgdev.pl>
+ <20200505103105.1c8b0ce3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAMRc=Mf0ipaeLKhHCZaq2YeZKzi=QBAse7bEz2hHxXN5OL=ptg@mail.gmail.com>
+ <20200506101236.25a13609@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAMpxmJWckQdKvUGFDAJ1WMtD9WoGWmGe3kyKYhcfRT2nOB93xw@mail.gmail.com>
+ <20200507095315.1154a1a6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAMpxmJUEk3itZs4HujJOXUiL80kmEvGBvLF0NFc2UQoVDVTWRg@mail.gmail.com>
+ <20200507155650.0c19229e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com> <c6e12eb6-d6ea-9ba9-4559-b2eda326601f@gmail.com>
+In-Reply-To: <c6e12eb6-d6ea-9ba9-4559-b2eda326601f@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 8 May 2020 20:39:22 +0200
+Message-ID: <CAMRc=MdKjZbHFfTYV12DjMet3sXbBht+qgiViddxs9csDvrf-Q@mail.gmail.com>
+Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:03:37PM +0530, Akash Asthana wrote:
-> Get the interconnect paths for Uart based Serial Engine device
-> and vote according to the baud rate requirement of the driver.
-> 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> ---
-> Changes in V2:
->  - As per Bjorn's comment, removed se == NULL check from geni_serial_icc_get
->  - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
->  - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
->    path handle
->  - As per Matthias comment, added error handling for icc_set_bw call
-> 
-> Changes in V3:
->  - As per Matthias comment, use common library APIs defined in geni-se
->    driver for ICC functionality.
-> 
-> Changes in V4:
->  - As per Mark's comment move peak_bw guess as twice of avg_bw if
->    nothing mentioned explicitly to ICC core.
->  - As per Matthias's comment select core clock BW based on baud rate.
->    If it's less than 115200 go for GENI_DEFAULT_BW else CORE_2X_50_MHZ
-> 
-> Changes in V5:
->  - Add icc_enable/disable to power on/off call.
->  - Save some non-zero avg/peak value to ICC core by calling geni_icc_set_bw
->    from probe so that when resume/icc_enable is called NOC are running at
->    some non-zero value. No need to call icc_disable after BW vote because
->    console devices are expected to be in active state from the probe itself
->    and qcom_geni_serial_pm(STATE_OFF) will be called for non-console ones.
-> 
->  drivers/tty/serial/qcom_geni_serial.c | 31 ++++++++++++++++++++++++++++---
->  1 file changed, 28 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 8c5d97c..2a1da36 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -944,6 +944,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->  	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
->  	unsigned long clk_rate;
->  	u32 ver, sampling_rate;
-> +	unsigned int avg_bw_core;
->  
->  	qcom_geni_serial_stop_rx(uport);
->  	/* baud rate */
-> @@ -965,6 +966,16 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->  	ser_clk_cfg = SER_CLK_EN;
->  	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
->  
-> +	/*
-> +	 * Bump up BW vote on CPU and CORE path as driver supports FIFO mode
-> +	 * only.
-> +	 */
-> +	avg_bw_core = (baud > 115200) ? Bps_to_icc(CORE_2X_50_MHZ)
-> +						: GENI_DEFAULT_BW;
-> +	geni_icc_bw_init(&port->se.icc_paths[GENI_TO_CORE], avg_bw_core, 0);
-> +	geni_icc_bw_init(&port->se.icc_paths[CPU_TO_GENI], Bps_to_icc(baud), 0);
-> +	geni_icc_set_bw(&port->se);
-> +
->  	/* parity */
->  	tx_trans_cfg = readl(uport->membase + SE_UART_TX_TRANS_CFG);
->  	tx_parity_cfg = readl(uport->membase + SE_UART_TX_PARITY_CFG);
-> @@ -1202,11 +1213,14 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
->  	if (old_state == UART_PM_STATE_UNDEFINED)
->  		old_state = UART_PM_STATE_OFF;
->  
-> -	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
-> +	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF) {
-> +		geni_icc_enable(&port->se);
->  		geni_se_resources_on(&port->se);
-> -	else if (new_state == UART_PM_STATE_OFF &&
-> -			old_state == UART_PM_STATE_ON)
-> +	} else if (new_state == UART_PM_STATE_OFF &&
-> +			old_state == UART_PM_STATE_ON) {
->  		geni_se_resources_off(&port->se);
-> +		geni_icc_disable(&port->se);
-> +	}
->  }
->  
->  static const struct uart_ops qcom_geni_console_pops = {
-> @@ -1304,6 +1318,17 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->  			return -ENOMEM;
->  	}
->  
-> +	ret = geni_icc_get(&port->se, NULL);
-> +	if (ret)
-> +		return ret;
-> +	geni_icc_bw_init(&port->se.icc_paths[GENI_TO_CORE], GENI_DEFAULT_BW, 0);
-> +	geni_icc_bw_init(&port->se.icc_paths[CPU_TO_GENI], GENI_DEFAULT_BW, 0);
-> +
-> +	/* Set BW for register access */
-> +	ret = geni_icc_set_bw(&port->se);
-> +	if (ret)
-> +		return ret;
-> +
->  	port->name = devm_kasprintf(uport->dev, GFP_KERNEL,
->  			"qcom_geni_serial_%s%d",
->  			uart_console(uport) ? "console" : "uart", uport->line);
+pt., 8 maj 2020 o 07:54 Heiner Kallweit <hkallweit1@gmail.com> napisa=C5=82=
+(a):
+>
+> On 08.05.2020 00:56, Jakub Kicinski wrote:
+> > On Thu, 7 May 2020 19:03:44 +0200 Bartosz Golaszewski wrote:
+> >>> To implement Edwin's suggestion? Makes sense, but I'm no expert, let'=
+s
+> >>> also CC Heiner since he was asking about it last time.
+> >>
+> >> Yes, because taking the last bit of priv_flags from net_device seems
+> >> to be more controversial but if net maintainers are fine with that I
+> >> can simply go with the current approach.
+> >
+> > From my perspective what Edwin suggests makes sense. Apart from
+> > little use for the bit after probe, it also seems cleaner for devres
+> > to be able to recognize managed objects based on its own state.
+> >
+> What I was saying is that we should catch the case that a driver
+> author uses a device-managed register() w/o doing the same for the
+> alloc(). A core function should not assume that driver authors do
+> sane things only.
+> I don't have a strong preference how it should be done.
+> Considering what is being discussed, have a look at get_pci_dr() and
+> find_pci_dr(), they deal with managing which parts of the PCI
+> subsystem are device-managed.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Yes, I have - that's why I asked if anyone objects to me moving all
+networking devres functions into their own source file. The reason for
+that being: devres_find() needs to know the address of the release
+function, meanwhile devm_register_netdev() would have to go into
+net/core, while devm_alloc_etherdev() lives in net/ethernet.
+
+Bart
