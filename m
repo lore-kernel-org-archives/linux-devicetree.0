@@ -2,357 +2,703 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80484C47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D75DC47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 14:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E477216FD
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:52:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="J7Pjdpyx"
+	by mail.kernel.org (Postfix) with ESMTP id 3A7C320736
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 14:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgEHNwo (ORCPT
+        id S1727795AbgEHOB3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 09:52:44 -0400
-Received: from mail-bn8nam11on2058.outbound.protection.outlook.com ([40.107.236.58]:6108
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        Fri, 8 May 2020 10:01:29 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2171 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726904AbgEHNwo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 09:52:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=irZX97uMsKHrM4WXhfLH5pk9fsGCakYhwM0itrkwNoN3BQ4Ksh+M6pScyVOxcotvpim1d9Vw/hmpFIaIX4j3ZMKLmKCjQAOEV+SMiXQdpi0tcquDSoRJBqJuM8dJSK8LjR8m6sr/trG0khDvCZIa04f6xl7VzRbux2DlYnJ3vAvs5Q5ed/3oXLnXZz07mFxgU9z5RNdi9b2feGb9N4UPxgz9XtRFBbIB0Or1z09Zpnt1xvDjWYDTqGCPhWlSynuiaCGN7A/wH9VCn0EvnEYnIlqXf0/h/pwsDd/4WYZxwgvkh5QfabR4geZAb0UFwkHB84vp89uewnmNG8PKPZIkeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rz1hnqE7M59SJ8a8I2epNaWO3LY5RfMyOfH8rLid8NA=;
- b=a5Jnu5bD+fnwxLdxP7r7GMIY7mqG3Q+echB1vT0DiDdMzKhQuRJ7mY+N69fZyGdqllcOrd1dDHq5llxBRCIS+7KOuHnE4U983AgkBX7uX+liO7UcAfkHJl/urQFOuz8SKzQVCupcSVMLgA4SHFRcANbJMgxQsiu/3OHgDTZE6bxjj7aFV8HoXIrbEbDZaZ3YnBdfYXh2y6C7V11O1DT446wDSsBhVhYaEHFbIjE+V9Sk9otX3A/R/ImwL8TR3kkWmouAHQj0gkW8fPRlOlTrd+BsFNjxKAq1D0JFOSUMuSisn7o3VOpxSkzlsJxRyKmcl76GOf3kJtsVkBvphz9k3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rz1hnqE7M59SJ8a8I2epNaWO3LY5RfMyOfH8rLid8NA=;
- b=J7PjdpyxjZNaG4LdFmkmPZOHUSxVW37hb8EikI9/H/o9L6VMu2ssfMT0m5ZQT4nyUxT+/YBswAFSPppowN4tOWv9jyuyTPRe/0lL1Ic4byHFRkk/SK7/0+GM0mqAYWPHOuGRhvKxsMaUZoWqIZ35wvjm4VYLpfcm5b+NJbhQBR8=
-Received: from BY5PR02MB6867.namprd02.prod.outlook.com (2603:10b6:a03:21c::9)
- by BY5PR02MB6402.namprd02.prod.outlook.com (2603:10b6:a03:1b4::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Fri, 8 May
- 2020 13:52:36 +0000
-Received: from BY5PR02MB6867.namprd02.prod.outlook.com
- ([fe80::3049:963a:2a0d:3bff]) by BY5PR02MB6867.namprd02.prod.outlook.com
- ([fe80::3049:963a:2a0d:3bff%5]) with mapi id 15.20.2979.033; Fri, 8 May 2020
- 13:52:36 +0000
-From:   Vishal Sagar <vsagar@xilinx.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Hyun Kwon <hyunk@xilinx.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>, Rob Herring <robh@kernel.org>
-Subject: RE: [PATCH v12 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Thread-Topic: [PATCH v12 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Thread-Index: AQHWGYQ+ncypF3BGOkK21dd27jhVxaiZnlUAgAMHReA=
-Date:   Fri, 8 May 2020 13:52:36 +0000
-Message-ID: <BY5PR02MB68679AA1B7CDDC16293EEC12A7A20@BY5PR02MB6867.namprd02.prod.outlook.com>
-References: <20200423153038.106453-1-vishal.sagar@xilinx.com>
- <20200423153038.106453-2-vishal.sagar@xilinx.com>
- <20200505142302.GA19432@pendragon.ideasonboard.com>
-In-Reply-To: <20200505142302.GA19432@pendragon.ideasonboard.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: ideasonboard.com; dkim=none (message not signed)
- header.d=none;ideasonboard.com; dmarc=none action=none
- header.from=xilinx.com;
-x-originating-ip: [149.199.50.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 26d0adec-4ba0-4dac-14f6-08d7f35710e9
-x-ms-traffictypediagnostic: BY5PR02MB6402:|BY5PR02MB6402:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR02MB64021B0F8BAA6DE22D635051A7A20@BY5PR02MB6402.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 039735BC4E
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hcF4ftPDuAXuR2NaomU3J93QVJP6HVW5ke91rTFMhkfac4cPI0ffogjQmLaUWbA9xsDsfU/6/mukds3NikCWKVwkk5jRSLWXAIBTtpn4TE9U6snd+es/n/0rGMZj8166VWQEw38FrThhak0yLyPXe31mP/dsZOOfzKtjU+ozpSUwhAV1cTYSJvxr3ZMtyJLTHe9MQsIfWMQfOuLXYAaHHIJtS8pxLmSYtMcEKL03x1n8mH1S/tz8He7D3s0jQHOZeRQbw/XBb7ydPZ0fprZ9oUPpa+ZwD01XgGv3OtFk+c9XdRMs+UHlhSqBLbHvPQyESYQOW9EEJtmKI0MY0vsGJari873fOCHXfCCvcbzv6sCYSi72KZyVPI6U8sT5rNmLbL37VvOPRPHK84oM9guWGkTG1F8n+z2LwVrxVBrRwz+lMBZUgXoXAlg9dfrSy115927zFV0VUH5Ns8PbnGsW51NCiMj/HAkaWLATJmfR0XCTYOgyojRxLdlByb9lhNZ/8zfPekZTYGiwFf5sY9HWBUX4HLEgNqS5fsuXgEk+lBGICgSIJJuAIqr3huFR6pc++8M59ynvWU7FmytBlmufCVyNlMvwo8Cfz0aQPuYeQoU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR02MB6867.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(136003)(366004)(39860400002)(33430700001)(66556008)(66446008)(66476007)(71200400001)(83320400001)(83280400001)(33440700001)(83310400001)(7696005)(7416002)(6916009)(4326008)(26005)(316002)(2906002)(966005)(86362001)(186003)(478600001)(52536014)(54906003)(53546011)(64756008)(66946007)(30864003)(6506007)(76116006)(5660300002)(83300400001)(8676002)(83290400001)(33656002)(9686003)(55016002)(8936002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: QoBcdkP2gzrLyj7mHAq7RDLvs+VswEwlTsrucx9Xq5nSeyxgX6KYbHbxc4X+hI/we6HnFiR14rdJnsZCUv65Y0hWb1v2n2iWuUZzkVyBUTaOEiR8tGDpIqXodtiOjKcrNO8Majf9grclqF//xfCvrAKNph8+Ddm4lvUA5FDq1ZJi2RplPwYm5klapme3LPkyoWFiIiQRevF/hfyf9bKLoEAhkbWb5s4mDePVYyy4pbr1wXAWddN7Rwtrcs2PglwEvqiOIvHIaH7A+1WR8PK+PyDvcTTrQKrWmRqDvHEsApUi/HpAdVXpTNiMCM2tfPBzMx4Dnp+rq/sjmDZVaM7Kfl6ogj4uCySBCA1uVYF4Z7yeEVsV3ZLOo9heglk9eqa/2v9EK6PTmbuSLwEpCU71OMe7vU+EX7V1h1pLFDceA0nZJQ69O/R0pKgtZs3HCMb0wuy4lvDF/vrjH/+9xgK5H4p4ImrES8OvdWpykuzGydXb9VtH4d7Yr/Fx3KhCW1+L
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726767AbgEHOB3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 May 2020 10:01:29 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 48E5839EDB81459772AE;
+        Fri,  8 May 2020 15:01:27 +0100 (IST)
+Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
+ 15:01:26 +0100
+Date:   Fri, 8 May 2020 15:01:04 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <robh@kernel.org>,
+        <mchehab+huawei@kernel.org>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/12] iio: imu: inv_icm42600: add gyroscope IIO device
+Message-ID: <20200508150104.000010c2@Huawei.com>
+In-Reply-To: <20200507144222.20989-5-jmaneyrol@invensense.com>
+References: <20200507144222.20989-1-jmaneyrol@invensense.com>
+        <20200507144222.20989-5-jmaneyrol@invensense.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26d0adec-4ba0-4dac-14f6-08d7f35710e9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2020 13:52:36.5409
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eg2VFSs416YChCfgp0Og730oepCF+PXrppsOfbBX7Cl90KFVeNWEcxlRIpakp5d9ctbskVBZcVHk33f7hMN4Gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6402
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.95.97]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KVGhhbmtzIGZvciByZXZpZXdpbmcuDQoNCj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gRnJvbTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBp
-ZGVhc29uYm9hcmQuY29tPg0KPiBTZW50OiBUdWVzZGF5LCBNYXkgNSwgMjAyMCA3OjUzIFBNDQo+
-IFRvOiBWaXNoYWwgU2FnYXIgPHZzYWdhckB4aWxpbnguY29tPg0KPiBDYzogSHl1biBLd29uIDxo
-eXVua0B4aWxpbnguY29tPjsgbWNoZWhhYkBrZXJuZWwub3JnOw0KPiByb2JoK2R0QGtlcm5lbC5v
-cmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBoYW5zLnZlcmt1aWxAY2lzY28uY29tOyBMdWNhDQo+
-IENlcmVzb2xpIDxsdWNhQGx1Y2FjZXJlc29saS5uZXQ+OyBKYWNvcG8gTW9uZGkgPGphY29wb0Bq
-bW9uZGkub3JnPjsNCj4gTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlueC5jb20+OyBsaW51eC1t
-ZWRpYUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
-ZXJuZWwub3JnOyBEaW5lc2ggS3VtYXIgPGRpbmVzaGtAeGlsaW54LmNvbT47IFNhbmRpcCBLb3Ro
-YXJpDQo+IDxzYW5kaXBrQHhpbGlueC5jb20+OyBIeXVuIEt3b24gPGh5dW5rQHhpbGlueC5jb20+
-OyBSb2IgSGVycmluZw0KPiA8cm9iaEBrZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENI
-IHYxMiAxLzJdIG1lZGlhOiBkdC1iaW5kaW5nczogbWVkaWE6IHhpbGlueDogQWRkIFhpbGlueCBN
-SVBJDQo+IENTSS0yIFJ4IFN1YnN5c3RlbQ0KPiANCj4gSGkgVmlzaGFsLA0KPiANCj4gVGhhbmsg
-eW91IGZvciB0aGUgcGF0Y2guDQo+IA0KPiBPbiBUaHUsIEFwciAyMywgMjAyMCBhdCAwOTowMDoz
-N1BNICswNTMwLCBWaXNoYWwgU2FnYXIgd3JvdGU6DQo+ID4gQWRkIGJpbmRpbmdzIGRvY3VtZW50
-YXRpb24gZm9yIFhpbGlueCBNSVBJIENTSS0yIFJ4IFN1YnN5c3RlbS4NCj4gPg0KPiA+IFRoZSBY
-aWxpbnggTUlQSSBDU0ktMiBSeCBTdWJzeXN0ZW0gY29uc2lzdHMgb2YgYSBDU0ktMiBSeCBjb250
-cm9sbGVyLA0KPiA+IGEgRC1QSFkgaW4gUnggbW9kZSBhbmQgYSBWaWRlbyBGb3JtYXQgQnJpZGdl
-Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogVmlzaGFsIFNhZ2FyIDx2aXNoYWwuc2FnYXJAeGls
-aW54LmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogSHl1biBLd29uIDxoeXVuLmt3b25AeGlsaW54LmNv
-bT4NCj4gPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gPiBS
-ZXZpZXdlZC1ieTogTHVjYSBDZXJlc29saSA8bHVjYUBsdWNhY2VyZXNvbGkubmV0Pg0KPiA+IC0t
-LQ0KPiA+IHYxMg0KPiA+IC0gTW92ZWQgdG8geWFtbCBmb3JtYXQNCj4gPiAtIFVwZGF0ZSBDU0kt
-MiBhbmQgRC1QSFkNCj4gPiAtIE1lbnRpb24gdGhhdCBiaW5kaW5ncyBmb3IgRC1QSFkgbm90IGhl
-cmUNCj4gPiAtIHJlc2V0IC0+IHZpZGVvLXJlc2V0DQo+ID4NCj4gPiB2MTENCj4gPiAtIE1vZGlm
-eSBjb21wYXRpYmxlIHN0cmluZyBmcm9tIDQuMCB0byA1LjANCj4gPg0KPiA+IHYxMA0KPiA+IC0g
-Tm8gY2hhbmdlcw0KPiA+DQo+ID4gdjkNCj4gPiAtIEZpeCB4bG54LHZmYiBkZXNjcmlwdGlvbi4N
-Cj4gPiAtIHMvT3B0aW9uYWwvUmVxdWlyZWQgZW5kcG9pbnQgcHJvcGVydHkuDQo+ID4gLSBNb3Zl
-IGRhdGEtbGFuZXMgZGVzY3JpcHRpb24gZnJvbSBQb3J0cyB0byBlbmRwb2ludCBwcm9wZXJ0eSBz
-ZWN0aW9uLg0KPiA+DQo+ID4gdjgNCj4gPiAtIEFkZGVkIHJlc2V0LWdwaW9zIG9wdGlvbmFsIHBy
-b3BlcnR5IHRvIGFzc2VydCB2aWRlb19hcmVzZXRuDQo+ID4NCj4gPiB2Nw0KPiA+IC0gUmVtb3Zl
-ZCB0aGUgY29udHJvbCBuYW1lIGZyb20gZHQgYmluZGluZ3MNCj4gPiAtIFVwZGF0ZWQgdGhlIGV4
-YW1wbGUgZHQgbm9kZSBuYW1lIHRvIGNzaTJyeA0KPiA+DQo+ID4gdjYNCj4gPiAtIEFkZGVkICJj
-b250cm9sIiBhZnRlciBWNEwyX0NJRF9YSUxJTlhfTUlQSUNTSVNTX0FDVF9MQU5FUyBhcw0KPiA+
-IHN1Z2dlc3RlZCBieSBMdWNhDQo+ID4gLSBBZGRlZCByZXZpZXdlZCBieSBSb2IgSGVycmluZw0K
-PiA+DQo+ID4gdjUNCj4gPiAtIEluY29ycG9yYXRlZCBjb21tZW50cyBieSBMdWNhIENlcnNvbGkN
-Cj4gPiAtIFJlbW92ZWQgRFBIWSBjbG9jayBmcm9tIGRlc2NyaXB0aW9uIGFuZCBleGFtcGxlDQo+
-ID4gLSBSZW1vdmVkIGJheWVyIHBhdHRlcm4gZnJvbSBkZXZpY2UgdHJlZSBNSVBJIENTSSBJUA0K
-PiA+ICAgZG9lc24ndCBkZWFsIHdpdGggYmF5ZXIgcGF0dGVybi4NCj4gPg0KPiA+IHY0DQo+ID4g
-LSBBZGRlZCByZXZpZXdlZCBieSBIeXVuIEt3b24NCj4gPg0KPiA+IHYzDQo+ID4gLSByZW1vdmVk
-IGludGVycnVwdCBwYXJlbnQgYXMgc3VnZ2VzdGVkIGJ5IFJvYg0KPiA+IC0gcmVtb3ZlZCBkcGh5
-IGNsb2NrDQo+ID4gLSBtb3ZlZCB2ZmIgdG8gb3B0aW9uYWwgcHJvcGVydGllcw0KPiA+IC0gQWRk
-ZWQgcmVxdWlyZWQgYW5kIG9wdGlvbmFsIHBvcnQgcHJvcGVydGllcyBzZWN0aW9uDQo+ID4gLSBB
-ZGRlZCBlbmRwb2ludCBwcm9wZXJ0eSBzZWN0aW9uDQo+ID4NCj4gPiB2Mg0KPiA+IC0gdXBkYXRl
-ZCB0aGUgY29tcGF0aWJsZSBzdHJpbmcgdG8gbGF0ZXN0IHZlcnNpb24gc3VwcG9ydGVkDQo+ID4g
-LSByZW1vdmVkIERQSFkgcmVsYXRlZCBwYXJhbWV0ZXJzDQo+ID4gLSBhZGRlZCBDU0kgdjIuMCBy
-ZWxhdGVkIHByb3BlcnR5IChpbmNsdWRpbmcgVkNYIGZvciBzdXBwb3J0aW5nIHVwdG8gMTYNCj4g
-PiAgIHZpcnR1YWwgY2hhbm5lbHMpLg0KPiA+IC0gbW9kaWZpZWQgY3NpLXB4bC1mb3JtYXQgZnJv
-bSBzdHJpbmcgdG8gdW5zaWduZWQgaW50IHR5cGUgd2hlcmUgdGhlIHZhbHVlDQo+ID4gICBpcyBh
-cyBwZXIgdGhlIENTSSBzcGVjaWZpY2F0aW9uDQo+ID4gLSBEZWZpbmVkIHBvcnQgMCBhbmQgcG9y
-dCAxIGFzIHNpbmsgYW5kIHNvdXJjZSBwb3J0cy4NCj4gPiAtIFJlbW92ZWQgbWF4LWxhbmVzIHBy
-b3BlcnR5IGFzIHN1Z2dlc3RlZCBieSBSb2IgYW5kIFNha2FyaQ0KPiA+IC4uLi9iaW5kaW5ncy9t
-ZWRpYS94aWxpbngveGxueCxjc2kycnhzcy55YW1sICB8IDIxNSArKysrKysrKysrKysrKysrKysN
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIxNSBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS94aWxp
-bngveGxueCxjc2kycnhzcy55YW1sDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEveGlsaW54L3hsbngsY3NpMnJ4c3MueWFt
-bA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3hpbGlueC94
-bG54LGNzaTJyeHNzLnlhbWwNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAw
-MDAwMDAwMDAwMC4uMzY1MDg0ZTI3ZjdlDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS94aWxpbngveGxueCxjc2kycnhz
-cy55YW0NCj4gPiArKysgbA0KPiA+IEBAIC0wLDAgKzEsMjE1IEBADQo+ID4gKyMgU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKSAlWUFNTCAxLjIN
-Cj4gPiArLS0tDQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvbWVkaWEv
-eGlsaW54L3hsbngsY3NpMnJ4c3MueWFtbCMNCj4gPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRy
-ZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ID4gKw0KPiA+ICt0aXRsZTogWGlsaW54
-IE1JUEkgQ1NJLTIgUmVjZWl2ZXIgU3Vic3lzdGVtDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoN
-Cj4gPiArICAtIFZpc2hhbCBTYWdhciA8dmlzaGFsLnNhZ2FyQHhpbGlueC5jb20+DQo+ID4gKw0K
-PiA+ICtkZXNjcmlwdGlvbjogfA0KPiA+ICsgIFRoZSBYaWxpbnggTUlQSSBDU0ktMiBSZWNlaXZl
-ciBTdWJzeXN0ZW0gaXMgdXNlZCB0byBjYXB0dXJlIE1JUEkNCj4gPiArQ1NJLTINCj4gPiArICB0
-cmFmZmljIGZyb20gY29tcGxpYW50IGNhbWVyYSBzZW5zb3JzIGFuZCBzZW5kIHRoZSBvdXRwdXQg
-YXMgQVhJNA0KPiA+ICtTdHJlYW0NCj4gPiArICB2aWRlbyBkYXRhIGZvciBpbWFnZSBwcm9jZXNz
-aW5nLg0KPiA+ICsgIFRoZSBzdWJzeXN0ZW0gY29uc2lzdHMgb2YgYSBNSVBJIEQtUEhZIGluIHNs
-YXZlIG1vZGUgd2hpY2ggY2FwdHVyZXMNCj4gPiArdGhlDQo+ID4gKyAgZGF0YSBwYWNrZXRzLiBU
-aGlzIGlzIHBhc3NlZCBhbG9uZyB0aGUgTUlQSSBDU0ktMiBSeCBJUCB3aGljaA0KPiA+ICtleHRy
-YWN0cyB0aGUNCj4gPiArICBwYWNrZXQgZGF0YS4gVGhlIG9wdGlvbmFsIFZpZGVvIEZvcm1hdCBC
-cmlkZ2UgKFZGQikgY29udmVydHMgdGhpcw0KPiA+ICtkYXRhIHRvDQo+ID4gKyAgQVhJNCBTdHJl
-YW0gdmlkZW8gZGF0YS4NCj4gPiArICBGb3IgbW9yZSBkZXRhaWxzLCBwbGVhc2UgcmVmZXIgdG8g
-UEcyMzIgWGlsaW54IE1JUEkgQ1NJLTIgUmVjZWl2ZXINCj4gU3Vic3lzdGVtLg0KPiA+ICsgIFBs
-ZWFzZSBub3RlIHRoYXQgdGhpcyBiaW5kaW5ncyBpbmNsdWRlcyBvbmx5IHRoZSBNSVBJIENTSS0y
-IFJ4DQo+ID4gK2NvbnRyb2xsZXINCj4gPiArICBhbmQgVmlkZW8gRm9ybWF0IEJyaWRnZSBhbmQg
-bm90IEQtUEhZLg0KPiANCj4gSG93IHNob3VsZCB0aGUgRC1QSFkgYmUgaGFuZGxlZCwgd2hlbiBE
-UFlfRU5fUkVHX0lGIGlzIHNldCB0byB0cnVlID8NCg0KSXQgd2FzIHN1Z2dlc3RlZCBpbiB2MyB0
-byBoYXZlIGEgc2VwYXJhdGUgRC1QSFkgcGh5IGRyaXZlciB3aGljaCB3b3VsZCBiZSBpbml0aWFs
-aXplZCAvIGNvbmZpZ3VyZWQgZnJvbSBNSVBJIENTSS0yIFJ4IGRyaXZlci4NCkN1cnJlbnRseSB3
-aXRoIHRoZSBELVBIWSByZWdpc3RlciBpbnRlcmZhY2UgZW5hYmxlZCwgd2UgZG9uJ3QgaGF2ZSB0
-byByZWFsbHkgY29uZmlndXJlIGFueXRoaW5nIGJ1dCB0aGUgZm9sbG93aW5nIHBhcmFtZXRlcnMN
-CjEgLSBpbml0DQoyIC0gaHNfc2V0dGxlDQozIC0gaHNfdGltZW91dCAoSGlnaCBTcGVlZCBtb2Rl
-IHRpbWVvdXQpICANCjQgLSBlc2NfdGltZW91dCAgKEVzY2FwZSBtb2RlIHRpbWVvdXQpDQo1IC0g
-aWRlbGF5IHRhcA0KDQpUaGUgRC1QSFkgUnggY2FuIGJlIGVuYWJsZWQvZGlzYWJsZWQgYW5kIGhh
-cyBhIHNvZnQgcmVzZXQgYml0Lg0KVGhlIEhTIGFuZCBFc2NhcGUgbW9kZSB0aW1lb3V0IHJlZ2lz
-dGVycyBjYW4gYmUgZW5hYmxlZCB3aXRoIGEgZGVmYXVsdCB2YWx1ZSB2aWEgdGhlIFZpdmFkbyBJ
-UCBHVUkuDQoNClRoZSBhYm92ZSBwYXJhbWV0ZXJzIHdvdWxkIGhhdmUgdG8gYmUgcGFzc2VkIHRv
-IEQtUEhZIGRyaXZlciBhcyBjdXN0b20gY29udHJvbCB2aWEgTUlQSSBDU0ktMiBSeCBkcml2ZXIN
-CmFzIHRoZXNlIGRlcGVuZCBvbiB0aGUgc2Vuc29yIGNvbm5lY3RlZC4NClByb2JhYmx5IHRoZXNl
-IGNhbiBiZSBhIG5ldyBjb21tb24gY29udHJvbCBpbiBWNEwyIGZyYW1ld29yayBmb3IgQ1NJIFJ4
-IGNvbnRyb2xsZXJzLg0KDQo+IA0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4gPiArICBjb21w
-YXRpYmxlOg0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIC0gZW51bToNCj4gPiArICAgICAg
-ICAtIHhsbngsbWlwaS1jc2kyLXJ4LXN1YnN5c3RlbS01LjANCj4gPiArDQo+ID4gKyAgcmVnOg0K
-PiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gKyAgaW50ZXJydXB0czoNCj4gPiArICAg
-IG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICsgIGNsb2NrczoNCj4gPiArICAgIGRlc2NyaXB0aW9u
-OiBMaXN0IG9mIGNsb2NrIHNwZWNpZmllcnMNCj4gPiArICAgIGl0ZW1zOg0KPiA+ICsgICAgICAt
-IGRlc2NyaXB0aW9uOiBBWEkgTGl0ZSBjbG9jaw0KPiA+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBW
-aWRlbyBjbG9jaw0KPiA+ICsNCj4gPiArICBjbG9jay1uYW1lczoNCj4gPiArICAgIGl0ZW1zOg0K
-PiA+ICsgICAgICAtIGNvbnN0OiBsaXRlX2FjbGsNCj4gPiArICAgICAgLSBjb25zdDogdmlkZW9f
-YWNsaw0KPiA+ICsNCj4gPiArICB4bG54LGNzaS1weGwtZm9ybWF0Og0KPiA+ICsgICAgZGVzY3Jp
-cHRpb246IHwNCj4gPiArICAgICAgVGhpcyBkZW5vdGVzIHRoZSBDU0kgRGF0YSB0eXBlIHNlbGVj
-dGVkIGluIGh3IGRlc2lnbi4NCj4gPiArICAgICAgUGFja2V0cyBvdGhlciB0aGFuIHRoaXMgZGF0
-YSB0eXBlIChleGNlcHQgZm9yIFJBVzggYW5kDQo+ID4gKyAgICAgIFVzZXIgZGVmaW5lZCBkYXRh
-IHR5cGVzKSB3aWxsIGJlIGZpbHRlcmVkIG91dC4NCj4gPiArICAgICAgUG9zc2libGUgdmFsdWVz
-IGFyZSBhcyBiZWxvdyAtDQo+ID4gKyAgICAgIDB4MWUgLSBZVVY0MjI4Qg0KPiA+ICsgICAgICAw
-eDFmIC0gWVVWNDIyMTBCDQo+ID4gKyAgICAgIDB4MjAgLSBSR0I0NDQNCj4gPiArICAgICAgMHgy
-MSAtIFJHQjU1NQ0KPiA+ICsgICAgICAweDIyIC0gUkdCNTY1DQo+ID4gKyAgICAgIDB4MjMgLSBS
-R0I2NjYNCj4gPiArICAgICAgMHgyNCAtIFJHQjg4OA0KPiA+ICsgICAgICAweDI4IC0gUkFXNg0K
-PiA+ICsgICAgICAweDI5IC0gUkFXNw0KPiA+ICsgICAgICAweDJhIC0gUkFXOA0KPiA+ICsgICAg
-ICAweDJiIC0gUkFXMTANCj4gPiArICAgICAgMHgyYyAtIFJBVzEyDQo+ID4gKyAgICAgIDB4MmQg
-LSBSQVcxNA0KPiA+ICsgICAgICAweDJlIC0gUkFXMTYNCj4gPiArICAgICAgMHgyZiAtIFJBVzIw
-DQo+ID4gKyAgICBhbGxPZjoNCj4gPiArICAgICAgLSAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1s
-Iy9kZWZpbml0aW9ucy91aW50MzINCj4gPiArICAgICAgLSBlbnVtOiBbMHgxZSwgMHgxZiwgMHgy
-MCwgMHgyMSwgMHgyMiwgMHgyMywgMHgyNCwgMHgyOCwgMHgyOSwNCj4gPiArIDB4MmEsIDB4MmIs
-IDB4MmMsIDB4MmQsIDB4MmUsIDB4MmZdDQo+IA0KPiBUaGlzIGNvdWxkIGFsc28gYmUgd3JpdHRl
-bg0KPiANCj4gICAgIGFsbE9mOg0KPiAgICAgICAtICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwj
-L2RlZmluaXRpb25zL3VpbnQzMg0KPiAgICAgICAtIGFueU9mOg0KPiAgICAgICAgIC0gbWluaW11
-bTogMHgxZQ0KPiAgICAgICAgICAgbWF4aW11bTogMHgyNA0KPiAgICAgICAgIC0gbWluaW11bTog
-MHgyOA0KPiAgICAgICAgICAgbWF4aW11bTogMHgyZg0KPiANCj4gaWYgeW91IHdhbnQgdG8gbWFr
-ZSBpdCBhIGJpdCBtb3JlIGNvbXBhY3QgKGluIHRoZSBudW1iZXIgb2YgdmFsdWVzLCBub3QgdGhl
-DQo+IG51bWJlciBvZiBsaW5lcyBvYnZpb3VzbHkpLCB1cCB0byB5b3UuDQo+IA0KDQpUaGFua3Mg
-Zm9yIHNoYXJpbmcgdGhpcyBtZXRob2QuIEkgd2lsbCB1cGRhdGUgdGhpcyBpbiBuZXh0IHZlcnNp
-b24uDQoNCj4gSSB3aWxsIGFsc28gcXVvdGUgdGhlIHF1ZXN0aW9uIChhbmQgeW91ciBhbnN3ZXIp
-IGZyb20gdGhlIHByZXZpb3VzDQo+IHZlcnNpb246DQo+IA0KPiA+ID4gSXNuJ3QgdGhpcyBwcm9w
-ZXJ0eSByZXF1aXJlZCBvbmx5IHdoZW4gdGhlIFZGQiBpcyBwcmVzZW50ID8NCj4gPg0KPiA+IFRo
-aXMgd2lsbCBiZSBwcmVzZW50IGlycmVzcGVjdGl2ZSBvZiBWRkIgYmVpbmcgZW5hYmxlZC4NCj4g
-PiBXaXRoIFZGQiwgdGhlIGRhdGEgb24gdGhlIGJ1cyB3aWxsIGJlIGFzIHBlciBYaWxpbnggVUc5
-MzQgd2hpY2ggaXMgc2ltaWxhciB0bw0KPiBtZWRpYSBidXMgZm9ybWF0cy4NCj4gPg0KPiA+IFdp
-dGhvdXQgVkZCLCBpdCB3aWxsIGp1c3QgYmUgcGxhaW4gZGF0YSBhcyBpdCBjb21lcyBpbiBkYXRh
-IHBhY2tldHMuDQo+ID4gUmVmZXIgdG8gdGhlIFhpbGlueCBQRyAyMzIgIlBpeGVsIFBhY2tpbmcg
-V2hlbiBWaWRlbyBGb3JtYXQgQnJpZGdlIGlzIE5vdA0KPiBQcmVzZW50Ig0KPiA+DQo+ID4gU28g
-dGhlIGRyaXZlciBpcyBjdXJyZW50bHkgbWFkZSB0byBsb2FkIG9ubHkgaW4gY2FzZSBWRkIgaXMg
-ZW5hYmxlZC4NCj4gDQo+IEkgdW5kZXJzdGFuZCB0aGF0IHRoZSBkcml2ZXIgZG9lc24ndCBzdXBw
-b3J0IHRoZSBjYXNlIHdoZXJlIHRoZSBWRkIgaXMNCj4gZGlzYWJsZWQsIGJ1dCB0aGUgRFQgYmlu
-ZGluZ3Mgc2hvdWxkbid0IGNhcmUgYWJvdXQgdGhhdC4gVGhlIGRvY3VtZW50IG9mDQo+IHY0LjEg
-b2YgdGhlIHN1YnN5c3RlbSBzdGF0ZXMgdGhhdCB0aGUgd2lkdGggb2YgdGhlIHZpZGVvX291dCBw
-b3J0IGlzIHRoZW4NCj4gc2VsZWN0ZWQgdW5kZXIgIkNTSS0yIE9wdGlvbnMgVERBVEEgd2lkdGgi
-IChwYWdlIDExKS4gSSBob3dldmVyIGRvbid0IHN1Y2gNCj4gc3VjaCBhbiBvcHRpb24gZGVzY3Jp
-YmVkIG9uIHBhZ2VzIDU1IG9yIDU2LCBidXQgdGhlcmUncyBhbg0KPiBBWElTX1REQVRBX1dJRFRI
-IHBhcmFtZXRlciBvbiBwYWdlIDYxLg0KPiANCj4gSXMgdGhlIHBpeGVsIGZvcm1hdCByZWxldmFu
-dCB3aGVuIHRoZSBWRkIgaXMgZGlzYWJsZWQgPw0KPiANCg0KV2hlbiB0aGUgVkZCIGlzIGRpc2Fi
-bGVkLCBhbGwgc3VwcG9ydGVkIGRhdGEgdHlwZXMgd2lsbCBiZSBhbGxvd2VkIGkuZS4gbm8gZmls
-dGVyaW5nIHdpbGwgb2NjdXIuDQpCdXQgdGhlIGRhdGEgb3V0cHV0IHdpbGwgYmUgaW4gMzIvNjQg
-Yml0IFREQVRBIHdpZHRoIChubyBkZXBlbmRlbmNlIG9uIHBpeGVscyBwZXIgY2xvY2spIGFuZCAN
-CndpbGwgYWRoZXJlIHRvIHRoZSAiUmVjb21tZW5kZWQgTWVtb3J5IFN0b3JhZ2UiIHNlY3Rpb24g
-b2YgdGhlIENTSSBzcGVjLg0KSW4gdGhpcyBjYXNlIGRhdGEgYmVpbmcgc2VudCBvbiB0aGUgYnVz
-IHdvbid0IGNvbXBhcmUgdG8gd2hhdCBtZWRpYSBidXMgZm9ybWF0IGRvY3VtZW50YXRpb24gZGVz
-Y3JpYmVzLg0KDQo+ID4gKw0KPiA+ICsgIHhsbngsdmZiOg0KPiA+ICsgICAgdHlwZTogYm9vbGVh
-bg0KPiA+ICsgICAgZGVzY3JpcHRpb246IFByZXNlbnQgd2hlbiBWaWRlbyBGb3JtYXQgQnJpZGdl
-IGlzIGVuYWJsZWQgaW4gSVANCj4gPiArIGNvbmZpZ3VyYXRpb24NCj4gPiArDQo+ID4gKyAgeGxu
-eCxlbi1jc2ktdjItMDoNCj4gPiArICAgIHR5cGU6IGJvb2xlYW4NCj4gPiArICAgIGRlc2NyaXB0
-aW9uOiBQcmVzZW50IGlmIENTSSB2MiBpcyBlbmFibGVkIGluIElQIGNvbmZpZ3VyYXRpb24uDQo+
-ID4gKw0KPiA+ICsgIHhsbngsZW4tdmN4Og0KPiA+ICsgICAgdHlwZTogYm9vbGVhbg0KPiA+ICsg
-ICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAgV2hlbiBwcmVzZW50LCB0aGVyZSBhcmUgbWF4
-aW11bSAxNiB2aXJ0dWFsIGNoYW5uZWxzLCBlbHNlDQo+ID4gKyAgICAgIG9ubHkgNC4gVGhpcyBp
-cyBwcmVzZW50IG9ubHkgaWYgeGxueCxlbi1jc2ktdjItMCBpcyBwcmVzZW50Lg0KPiANCj4gVGhl
-IGxhc3Qgc2VudGVuY2Ugc2hvdWxkIGJlIHJlbW92ZWQsIGFuZCByZXBsYWNlZCB3aXRoDQo+IA0K
-PiBpZjoNCj4gICBub3Q6DQo+ICAgICByZXF1aXJlZDoNCj4gICAgICAgLSB4bG54LGVuLWNzaS12
-Mi0wDQo+IHRoZW46DQo+ICAgcHJvcGVydGllczoNCj4gICAgIHhsbngsZW4tdmN4OiBmYWxzZQ0K
-PiANCj4gKHRvIGJlIHBsYWNlZCBhZnRlciByZXF1aXJlZDogYW5kIGJlZm9yZSBhZGRpdGlvbmFs
-UHJvcGVydGllczopLg0KPiANCg0KR290IGl0LiBUaGFua3MgZm9yIHRoZSB0aXBzIG9uIFlBTUwu
-DQpJIHdpbGwgdXBkYXRlIHRoaXMgaW4gbmV4dCB2ZXJzaW9uLg0KDQo+ID4gKw0KPiA+ICsgIHhs
-bngsZW4tYWN0aXZlLWxhbmVzOg0KPiA+ICsgICAgdHlwZTogYm9vbGVhbg0KPiA+ICsgICAgZGVz
-Y3JpcHRpb246IHwNCj4gPiArICAgICAgUHJlc2VudCBpZiB0aGUgbnVtYmVyIG9mIGFjdGl2ZSBs
-YW5lcyBjYW4gYmUgcmUtY29uZmlndXJlZCBhdA0KPiA+ICsgICAgICBydW50aW1lIGluIHRoZSBQ
-cm90b2NvbCBDb25maWd1cmF0aW9uIFJlZ2lzdGVyLiBPdGhlcndpc2UgYWxsIGxhbmVzLA0KPiA+
-ICsgICAgICBhcyBzZXQgaW4gSVAgY29uZmlndXJhdGlvbiwgYXJlIGFsd2F5cyBhY3RpdmUuDQo+
-ID4gKw0KPiA+ICsgIHZpZGVvLXJlc2V0LWdwaW9zOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IE9w
-dGlvbmFsIHNwZWNpZmllciBmb3IgYSBHUElPIHRoYXQgYXNzZXJ0cyB2aWRlb19hcmVzZXRuLg0K
-PiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gKyAgcG9ydHM6DQo+ID4gKyAgICB0eXBl
-OiBvYmplY3QNCj4gPiArDQo+ID4gKyAgICBwcm9wZXJ0aWVzOg0KPiA+ICsgICAgICBwb3J0QDA6
-DQo+ID4gKyAgICAgICAgdHlwZTogb2JqZWN0DQo+ID4gKyAgICAgICAgZGVzY3JpcHRpb246IHwN
-Cj4gPiArICAgICAgICAgIElucHV0IC8gc2luayBwb3J0IG5vZGUsIHNpbmdsZSBlbmRwb2ludCBk
-ZXNjcmliaW5nIHRoZQ0KPiA+ICsgICAgICAgICAgQ1NJLTIgdHJhbnNtaXR0ZXIuDQo+ID4gKw0K
-PiA+ICsgICAgICAgIHByb3BlcnRpZXM6DQo+ID4gKyAgICAgICAgICByZWc6DQo+ID4gKyAgICAg
-ICAgICAgIGNvbnN0OiAwDQo+ID4gKw0KPiA+ICsgICAgICAgICAgZW5kcG9pbnQ6DQo+ID4gKyAg
-ICAgICAgICAgIHR5cGU6IG9iamVjdA0KPiA+ICsNCj4gPiArICAgICAgICAgICAgcHJvcGVydGll
-czoNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgZGF0YS1sYW5lczoNCj4gPiArICAgICAgICAg
-ICAgICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgICAgICAgICAgICAgIFRoaXMgaXMgcmVx
-dWlyZWQgb25seSBpbiB0aGUgc2luayBwb3J0IDAgZW5kcG9pbnQgd2hpY2gNCj4gPiArICAgICAg
-ICAgICAgICAgICAgY29ubmVjdHMgdG8gTUlQSSBDU0ktMiBzb3VyY2UgbGlrZSBzZW5zb3IuDQo+
-ID4gKyAgICAgICAgICAgICAgICAgIFRoZSBwb3NzaWJsZSB2YWx1ZXMgYXJlIC0NCj4gPiArICAg
-ICAgICAgICAgICAgICAgMSAgICAgICAtIEZvciAxIGxhbmUgZW5hYmxlZCBpbiBJUC4NCj4gPiAr
-ICAgICAgICAgICAgICAgICAgMSAyICAgICAtIEZvciAyIGxhbmVzIGVuYWJsZWQgaW4gSVAuDQo+
-ID4gKyAgICAgICAgICAgICAgICAgIDEgMiAzICAgLSBGb3IgMyBsYW5lcyBlbmFibGVkIGluIElQ
-Lg0KPiA+ICsgICAgICAgICAgICAgICAgICAxIDIgMyA0IC0gRm9yIDQgbGFuZXMgZW5hYmxlZCBp
-biBJUC4NCj4gPiArICAgICAgICAgICAgICAgIGl0ZW1zOg0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAtIGNvbnN0OiAxDQo+ID4gKyAgICAgICAgICAgICAgICAgIC0gY29uc3Q6IDINCj4gPiArICAg
-ICAgICAgICAgICAgICAgLSBjb25zdDogMw0KPiA+ICsgICAgICAgICAgICAgICAgICAtIGNvbnN0
-OiA0DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludDogdHJ1ZQ0KPiA+
-ICsNCj4gPiArICAgICAgICAgICAgcmVxdWlyZWQ6DQo+ID4gKyAgICAgICAgICAgICAgLSBkYXRh
-LWxhbmVzDQo+ID4gKyAgICAgICAgICAgICAgLSByZW1vdGUtZW5kcG9pbnQNCj4gPiArDQo+ID4g
-KyAgICAgICAgICAgIGFkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiA+ICsNCj4gPiArICAg
-ICAgICBhZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gPiArDQo+ID4gKyAgICAgIHBvcnRA
-MToNCj4gPiArICAgICAgICB0eXBlOiBvYmplY3QNCj4gPiArICAgICAgICBkZXNjcmlwdGlvbjog
-fA0KPiA+ICsgICAgICAgICAgT3V0cHV0IC8gc291cmNlIHBvcnQgbm9kZSwgZW5kcG9pbnQgZGVz
-Y3JpYmluZyBtb2R1bGVzDQo+ID4gKyAgICAgICAgICBjb25uZWN0ZWQgdGhlIENTSS0yIHJlY2Vp
-dmVyLg0KPiA+ICsNCj4gPiArICAgICAgICBwcm9wZXJ0aWVzOg0KPiA+ICsNCj4gPiArICAgICAg
-ICAgIHJlZzoNCj4gPiArICAgICAgICAgICAgY29uc3Q6IDENCj4gPiArDQo+ID4gKyAgICAgICAg
-ICBlbmRwb2ludDoNCj4gPiArICAgICAgICAgICAgdHlwZTogb2JqZWN0DQo+ID4gKw0KPiA+ICsg
-ICAgICAgICAgICBwcm9wZXJ0aWVzOg0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICByZW1vdGUt
-ZW5kcG9pbnQ6IHRydWUNCj4gPiArDQo+ID4gKyAgICAgICAgICAgIHJlcXVpcmVkOg0KPiA+ICsg
-ICAgICAgICAgICAgIC0gcmVtb3RlLWVuZHBvaW50DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICBh
-ZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gPiArDQo+ID4gKyAgICAgICAgYWRkaXRpb25h
-bFByb3BlcnRpZXM6IGZhbHNlDQo+ID4gKw0KPiA+ICtyZXF1aXJlZDoNCj4gPiArICAtIGNvbXBh
-dGlibGUNCj4gPiArICAtIHJlZw0KPiA+ICsgIC0gaW50ZXJydXB0cw0KPiA+ICsgIC0gY2xvY2tz
-DQo+ID4gKyAgLSBjbG9jay1uYW1lcw0KPiA+ICsgIC0geGxueCxjc2ktcHhsLWZvcm1hdA0KPiA+
-ICsgIC0gcG9ydHMNCj4gPiArDQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiA+
-ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQtYmlu
-ZGluZ3MvZ3Bpby9ncGlvLmg+DQo+ID4gKyAgICB4Y3NpMnJ4c3NfMTogY3NpMnJ4QGEwMDIwMDAw
-IHsNCj4gPiArICAgICAgICBjb21wYXRpYmxlID0gInhsbngsbWlwaS1jc2kyLXJ4LXN1YnN5c3Rl
-bS01LjAiOw0KPiA+ICsgICAgICAgIHJlZyA9IDwweDAgMHhhMDAyMDAwMCAweDAgMHgxMDAwMD47
-DQo+ID4gKyAgICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCj4gPiArICAgICAgICBp
-bnRlcnJ1cHRzID0gPDAgOTUgND47DQo+ID4gKyAgICAgICAgeGxueCxjc2ktcHhsLWZvcm1hdCA9
-IDwweDJhPjsNCj4gPiArICAgICAgICB4bG54LHZmYjsNCj4gPiArICAgICAgICB4bG54LGVuLWFj
-dGl2ZS1sYW5lczsNCj4gPiArICAgICAgICB4bG54LGVuLWNzaS12Mi0wOw0KPiA+ICsgICAgICAg
-IHhsbngsZW4tdmN4Ow0KPiA+ICsgICAgICAgIGNsb2NrLW5hbWVzID0gImxpdGVfYWNsayIsICJ2
-aWRlb19hY2xrIjsNCj4gPiArICAgICAgICBjbG9ja3MgPSA8Jm1pc2NfY2xrXzA+LCA8Jm1pc2Nf
-Y2xrXzE+Ow0KPiA+ICsgICAgICAgIHZpZGVvLXJlc2V0LWdwaW9zID0gPCZncGlvIDg2IEdQSU9f
-QUNUSVZFX0xPVz47DQo+ID4gKw0KPiA+ICsgICAgICAgIHBvcnRzIHsNCj4gPiArICAgICAgICAg
-ICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAgICAgICAgICNzaXplLWNlbGxzID0g
-PDA+Ow0KPiA+ICsNCj4gPiArICAgICAgICAgICAgcG9ydEAwIHsNCj4gPiArICAgICAgICAgICAg
-ICAgIC8qIFNpbmsgcG9ydCAqLw0KPiA+ICsgICAgICAgICAgICAgICAgcmVnID0gPDA+Ow0KPiA+
-ICsgICAgICAgICAgICAgICAgY3Npc3NfaW46IGVuZHBvaW50IHsNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICBkYXRhLWxhbmVzID0gPDEgMiAzIDQ+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-IC8qIE1JUEkgQ1NJLTIgQ2FtZXJhIGhhbmRsZSAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-IHJlbW90ZS1lbmRwb2ludCA9IDwmY2FtZXJhX291dD47DQo+ID4gKyAgICAgICAgICAgICAgICB9
-Ow0KPiA+ICsgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgICAgICBwb3J0QDEgew0KPiA+ICsg
-ICAgICAgICAgICAgICAgLyogU291cmNlIHBvcnQgKi8NCj4gPiArICAgICAgICAgICAgICAgIHJl
-ZyA9IDwxPjsNCj4gPiArICAgICAgICAgICAgICAgIGNzaXNzX291dDogZW5kcG9pbnQgew0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmdnByb2NfaW4+Ow0KPiA+
-ICsgICAgICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICB9
-Ow0KPiA+ICsgICAgfTsNCj4gDQo+IC0tDQo+IFJlZ2FyZHMsDQo+IA0KPiBMYXVyZW50IFBpbmNo
-YXJ0DQoNClJlZ2FyZHMNClZpc2hhbCBTYWdhcg0K
+On Thu, 7 May 2020 16:42:14 +0200
+Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
+
+> Add IIO device for gyroscope sensor with data polling interface.
+> Attributes: raw, scale, sampling_frequency, calibbias.
+> 
+> Gyroscope in low noise mode.
+> 
+> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Few trivial things and questions inline.
+
+J
+
+> ---
+>  drivers/iio/imu/inv_icm42600/inv_icm42600.h   |   4 +
+>  .../iio/imu/inv_icm42600/inv_icm42600_core.c  |   5 +
+>  .../iio/imu/inv_icm42600/inv_icm42600_gyro.c  | 549 ++++++++++++++++++
+>  3 files changed, 558 insertions(+)
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+> 
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> index 8da4c8249aed..ca41a9d6404a 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> @@ -120,6 +120,7 @@ struct inv_icm42600_suspended {
+>   *  @orientation:	sensor chip orientation relative to main hardware.
+>   *  @conf:		chip sensors configurations.
+>   *  @suspended:		suspended sensors configuration.
+> + *  @indio_gyro:	gyroscope IIO device.
+>   */
+>  struct inv_icm42600_state {
+>  	struct mutex lock;
+> @@ -131,6 +132,7 @@ struct inv_icm42600_state {
+>  	struct iio_mount_matrix orientation;
+>  	struct inv_icm42600_conf conf;
+>  	struct inv_icm42600_suspended suspended;
+> +	struct iio_dev *indio_gyro;
+>  };
+>  
+>  /* Virtual register addresses: @bank on MSB (4 upper bits), @address on LSB */
+> @@ -369,4 +371,6 @@ int inv_icm42600_debugfs_reg(struct iio_dev *indio_dev, unsigned int reg,
+>  int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+>  			    inv_icm42600_bus_setup bus_setup);
+>  
+> +int inv_icm42600_gyro_init(struct inv_icm42600_state *st);
+> +
+>  #endif
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> index 35bdf4f9d31e..151257652ce6 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> @@ -503,6 +503,11 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+>  	if (ret)
+>  		return ret;
+>  
+> +	/* create and init gyroscope iio device */
+
+'Kind' of obvious from function name?   Maybe drop the comment?
+
+> +	ret = inv_icm42600_gyro_init(st);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* setup runtime power management */
+>  	ret = pm_runtime_set_active(dev);
+>  	if (ret)
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+> new file mode 100644
+> index 000000000000..74aa2b5fa611
+> --- /dev/null
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+> @@ -0,0 +1,549 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Copyright (C) 2020 Invensense, Inc.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/mutex.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/delay.h>
+> +#include <linux/iio/iio.h>
+> +
+> +#include "inv_icm42600.h"
+> +
+> +#define INV_ICM42600_GYRO_CHAN(_modifier, _index, _ext_info)		\
+> +	{								\
+> +		.type = IIO_ANGL_VEL,					\
+> +		.modified = 1,						\
+> +		.channel2 = _modifier,					\
+> +		.info_mask_separate =					\
+> +			BIT(IIO_CHAN_INFO_RAW) |			\
+> +			BIT(IIO_CHAN_INFO_CALIBBIAS),			\
+> +		.info_mask_shared_by_type =				\
+> +			BIT(IIO_CHAN_INFO_SCALE),			\
+> +		.info_mask_shared_by_type_available =			\
+> +			BIT(IIO_CHAN_INFO_SCALE),			\
+> +		.info_mask_shared_by_all =				\
+> +			BIT(IIO_CHAN_INFO_SAMP_FREQ),			\
+> +		.info_mask_shared_by_all_available =			\
+> +			BIT(IIO_CHAN_INFO_SAMP_FREQ),			\
+> +		.scan_index = _index,					\
+> +		.scan_type = {						\
+> +			.sign = 's',					\
+> +			.realbits = 16,					\
+> +			.storagebits = 16,				\
+> +			.shift = 0,					\
+
+Shift has the 'obviously' default of 0, so normally we don't bother explicitly
+setting it to 0 like this.
+
+> +			.endianness = IIO_BE,				\
+> +		},							\
+> +		.ext_info = _ext_info,					\
+> +	}
+> +
+> +enum inv_icm42600_gyro_scan {
+> +	INV_ICM42600_GYRO_SCAN_X,
+> +	INV_ICM42600_GYRO_SCAN_Y,
+> +	INV_ICM42600_GYRO_SCAN_Z,
+> +};
+> +
+> +static const struct iio_chan_spec_ext_info inv_icm42600_gyro_ext_infos[] = {
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_ALL, inv_icm42600_get_mount_matrix),
+> +	{},
+> +};
+> +
+> +static const struct iio_chan_spec inv_icm42600_gyro_channels[] = {
+> +	INV_ICM42600_GYRO_CHAN(IIO_MOD_X, INV_ICM42600_GYRO_SCAN_X,
+> +			       inv_icm42600_gyro_ext_infos),
+> +	INV_ICM42600_GYRO_CHAN(IIO_MOD_Y, INV_ICM42600_GYRO_SCAN_Y,
+> +			       inv_icm42600_gyro_ext_infos),
+> +	INV_ICM42600_GYRO_CHAN(IIO_MOD_Z, INV_ICM42600_GYRO_SCAN_Z,
+> +			       inv_icm42600_gyro_ext_infos),
+> +};
+> +
+> +static int inv_icm42600_gyro_read_sensor(struct inv_icm42600_state *st,
+> +					 struct iio_chan_spec const *chan,
+> +					 int16_t *val)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
+> +	unsigned int reg;
+> +	__be16 data;
+> +	int ret;
+> +
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_X:
+> +		reg = INV_ICM42600_REG_GYRO_DATA_X;
+> +		break;
+> +	case IIO_MOD_Y:
+> +		reg = INV_ICM42600_REG_GYRO_DATA_Y;
+> +		break;
+> +	case IIO_MOD_Z:
+> +		reg = INV_ICM42600_REG_GYRO_DATA_Z;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	pm_runtime_get_sync(dev);
+> +	mutex_lock(&st->lock);
+> +
+> +	/* enable gyro sensor */
+> +	conf.mode = INV_ICM42600_SENSOR_MODE_LOW_NOISE;
+> +	ret = inv_icm42600_set_gyro_conf(st, &conf, NULL);
+> +	if (ret)
+> +		goto exit;
+> +
+> +	/* read gyro register data */
+> +	ret = regmap_bulk_read(st->map, reg, &data, sizeof(data));
+
+IIRC bulk reads need to be to dma safe buffers.  So typically on the stack and
+in appropriately aligned location in any containing structure.
+
+> +	if (ret)
+> +		goto exit;
+> +
+> +	*val = (int16_t)be16_to_cpu(data);
+> +	if (*val == INV_ICM42600_DATA_INVALID)
+> +		ret = -EINVAL;
+> +exit:
+> +	mutex_unlock(&st->lock);
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +	return ret;
+> +}
+> +
+> +/* IIO format int + nano */
+> +static const int inv_icm42600_gyro_scale[] = {
+> +	/* +/- 2000dps => 0.001065264 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_2000DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_2000DPS + 1] = 1065264,
+> +	/* +/- 1000dps => 0.000532632 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_1000DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_1000DPS + 1] = 532632,
+> +	/* +/- 500dps => 0.000266316 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_500DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_500DPS + 1] = 266316,
+> +	/* +/- 250dps => 0.000133158 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_250DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_250DPS + 1] = 133158,
+> +	/* +/- 125dps => 0.000066579 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_125DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_125DPS + 1] = 66579,
+> +	/* +/- 62.5dps => 0.000033290 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_62_5DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_62_5DPS + 1] = 33290,
+> +	/* +/- 31.25dps => 0.000016645 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_31_25DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_31_25DPS + 1] = 16645,
+> +	/* +/- 15.625dps => 0.000008322 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_15_625DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_15_625DPS + 1] = 8322,
+> +};
+> +
+> +static int inv_icm42600_gyro_read_scale(struct inv_icm42600_state *st,
+> +					int *val, int *val2)
+> +{
+> +	unsigned int idx;
+> +
+> +	mutex_lock(&st->lock);
+> +	idx = st->conf.gyro.fs;
+
+Seems like we shouldn't need the lock to retrieve a single value.
+Is there some odd intermediate state somewhere I'm missing?
+
+> +	mutex_unlock(&st->lock);
+> +
+> +	*val = inv_icm42600_gyro_scale[2 * idx];
+> +	*val2 = inv_icm42600_gyro_scale[2 * idx + 1];
+> +	return IIO_VAL_INT_PLUS_NANO;
+> +}
+> +
+> +static int inv_icm42600_gyro_write_scale(struct inv_icm42600_state *st,
+> +					 int val, int val2)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int idx;
+> +	struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
+> +	int ret;
+> +
+> +	for (idx = 0; idx < ARRAY_SIZE(inv_icm42600_gyro_scale); idx += 2) {
+> +		if (val == inv_icm42600_gyro_scale[idx] &&
+> +				val2 == inv_icm42600_gyro_scale[idx + 1])
+
+Alignment of code seems odd.
+
+> +			break;
+> +	}
+> +	if (idx >= ARRAY_SIZE(inv_icm42600_gyro_scale))
+> +		return -EINVAL;
+> +
+> +	/* update gyro fs */
+> +	pm_runtime_get_sync(dev);
+> +
+> +	mutex_lock(&st->lock);
+> +	conf.fs = idx / 2;
+> +	ret = inv_icm42600_set_gyro_conf(st, &conf, NULL);
+> +	mutex_unlock(&st->lock);
+> +
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +
+> +	return ret;
+> +}
+> +
+> +/* IIO format int + micro */
+> +static const int inv_icm42600_gyro_odr[] = {
+> +	/* 12.5Hz */
+> +	12, 500000,
+> +	/* 25Hz */
+> +	25, 0,
+> +	/* 50Hz */
+> +	50, 0,
+> +	/* 100Hz */
+> +	100, 0,
+> +	/* 200Hz */
+> +	200, 0,
+> +	/* 1kHz */
+> +	1000, 0,
+> +	/* 2kHz */
+> +	2000, 0,
+> +	/* 4kHz */
+> +	4000, 0,
+> +};
+> +
+> +static const int inv_icm42600_gyro_odr_conv[] = {
+> +	INV_ICM42600_ODR_12_5HZ,
+> +	INV_ICM42600_ODR_25HZ,
+> +	INV_ICM42600_ODR_50HZ,
+> +	INV_ICM42600_ODR_100HZ,
+> +	INV_ICM42600_ODR_200HZ,
+> +	INV_ICM42600_ODR_1KHZ_LN,
+> +	INV_ICM42600_ODR_2KHZ_LN,
+> +	INV_ICM42600_ODR_4KHZ_LN,
+> +};
+> +
+> +static int inv_icm42600_gyro_read_odr(struct inv_icm42600_state *st,
+> +				      int *val, int *val2)
+> +{
+> +	unsigned int odr;
+> +	unsigned int i;
+> +
+> +	mutex_lock(&st->lock);
+> +	odr = st->conf.gyro.odr;
+> +	mutex_unlock(&st->lock);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(inv_icm42600_gyro_odr_conv); ++i) {
+> +		if (inv_icm42600_gyro_odr_conv[i] == odr)
+> +			break;
+> +	}
+> +	if (i >= ARRAY_SIZE(inv_icm42600_gyro_odr_conv))
+> +		return -EINVAL;
+> +
+> +	*val = inv_icm42600_gyro_odr[2 * i];
+> +	*val2 = inv_icm42600_gyro_odr[2 * i + 1];
+> +
+> +	return IIO_VAL_INT_PLUS_MICRO;
+> +}
+> +
+> +static int inv_icm42600_gyro_write_odr(struct inv_icm42600_state *st,
+> +				       int val, int val2)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int idx;
+> +	struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
+> +	int ret;
+> +
+> +	for (idx = 0; idx < ARRAY_SIZE(inv_icm42600_gyro_odr); idx += 2) {
+> +		if (val == inv_icm42600_gyro_odr[idx] &&
+> +				val2 == inv_icm42600_gyro_odr[idx + 1])
+> +			break;
+> +	}
+> +	if (idx >= ARRAY_SIZE(inv_icm42600_gyro_odr))
+> +		return -EINVAL;
+> +
+> +	/* update gyro odr */
+> +	pm_runtime_get_sync(dev);
+> +
+> +	mutex_lock(&st->lock);
+> +	conf.odr = inv_icm42600_gyro_odr_conv[idx / 2];
+> +	ret = inv_icm42600_set_gyro_conf(st, &conf, NULL);
+> +	mutex_unlock(&st->lock);
+> +
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int inv_icm42600_gyro_read_offset(struct inv_icm42600_state *st,
+> +					 struct iio_chan_spec const *chan,
+> +					 int16_t *val)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int reg;
+> +	uint8_t data[2];
+> +	int ret;
+> +
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_X:
+> +		reg = INV_ICM42600_REG_OFFSET_USER0;
+> +		break;
+> +	case IIO_MOD_Y:
+> +		reg = INV_ICM42600_REG_OFFSET_USER1;
+> +		break;
+> +	case IIO_MOD_Z:
+> +		reg = INV_ICM42600_REG_OFFSET_USER3;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	pm_runtime_get_sync(dev);
+> +
+> +	/* read gyro offset data */
+> +	mutex_lock(&st->lock);
+> +	ret = regmap_bulk_read(st->map, reg, &data, sizeof(data));
+> +	mutex_unlock(&st->lock);
+> +	if (ret)
+> +		goto exit;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_X:
+> +		*val = (int16_t)(((data[1] & 0x0F) << 8) | data[0]);
+
+This doesn't look right for negative values.  You would be better
+off with a sign extend of the 12 bit value.
+
+> +		break;
+> +	case IIO_MOD_Y:
+> +		*val = (int16_t)(((data[0] & 0xF0) << 4) | data[1]);
+> +		break;
+> +	case IIO_MOD_Z:
+> +		*val = (int16_t)(((data[1] & 0x0F) << 8) | data[0]);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +exit:
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +	return ret;
+> +}
+> +
+> +static int inv_icm42600_gyro_write_offset(struct inv_icm42600_state *st,
+> +					  struct iio_chan_spec const *chan,
+> +					  int val)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int reg, regval;
+> +	uint8_t data[2];
+> +	int ret;
+> +
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_X:
+> +		reg = INV_ICM42600_REG_OFFSET_USER0;
+> +		break;
+> +	case IIO_MOD_Y:
+> +		reg = INV_ICM42600_REG_OFFSET_USER1;
+> +		break;
+> +	case IIO_MOD_Z:
+> +		reg = INV_ICM42600_REG_OFFSET_USER3;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* value is limited to 12 bits signed */
+> +	if (val < -2048 || val > 2047)
+> +		return -EINVAL;
+
+Perhaps worth an available callback to give the range?
+
+> +
+> +	pm_runtime_get_sync(dev);
+> +	mutex_lock(&st->lock);
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_X:
+> +		/* OFFSET_USER1 register is shared */
+> +		ret = regmap_read(st->map, INV_ICM42600_REG_OFFSET_USER1,
+> +				  &regval);
+> +		if (ret)
+> +			goto out_unlock;
+> +		data[0] = val & 0xFF;
+> +		data[1] = (regval & 0xF0) | ((val & 0xF00) >> 8);
+> +		break;
+> +	case IIO_MOD_Y:
+> +		/* OFFSET_USER1 register is shared */
+> +		ret = regmap_read(st->map, INV_ICM42600_REG_OFFSET_USER1,
+> +				  &regval);
+> +		if (ret)
+> +			goto out_unlock;
+> +		data[0] = ((val & 0xF00) >> 4) | (regval & 0x0F);
+> +		data[1] = val & 0xFF;
+> +		break;
+> +	case IIO_MOD_Z:
+> +		/* OFFSET_USER4 register is shared */
+> +		ret = regmap_read(st->map, INV_ICM42600_REG_OFFSET_USER4,
+> +				  &regval);
+> +		if (ret)
+> +			goto out_unlock;
+> +		data[0] = val & 0xFF;
+> +		data[1] = (regval & 0xF0) | ((val & 0xF00) >> 8);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		goto out_unlock;
+> +	}
+> +
+> +	ret = regmap_bulk_write(st->map, reg, data, sizeof(data));
+> +
+> +out_unlock:
+> +	mutex_unlock(&st->lock);
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +	return ret;
+> +}
+> +
+> +static int inv_icm42600_gyro_read_raw(struct iio_dev *indio_dev,
+> +				      struct iio_chan_spec const *chan,
+> +				      int *val, int *val2, long mask)
+> +{
+> +	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+> +	int16_t data;
+> +	int ret;
+> +
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = inv_icm42600_gyro_read_sensor(st, chan, &data);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		*val = data;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		return inv_icm42600_gyro_read_scale(st, val, val2);
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		return inv_icm42600_gyro_read_odr(st, val, val2);
+> +	case IIO_CHAN_INFO_CALIBBIAS:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+
+I'm curious.  Why can't we read back a calibration offset whilst doing
+buffered capture?
+
+> +		ret = inv_icm42600_gyro_read_offset(st, chan, &data);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		*val = data;
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int inv_icm42600_gyro_read_avail(struct iio_dev *indio_dev,
+> +					struct iio_chan_spec const *chan,
+> +					const int **vals,
+> +					int *type, int *length, long mask)
+> +{
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*vals = inv_icm42600_gyro_scale;
+> +		*type = IIO_VAL_INT_PLUS_NANO;
+> +		*length = ARRAY_SIZE(inv_icm42600_gyro_scale);
+> +		return IIO_AVAIL_LIST;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		*vals = inv_icm42600_gyro_odr;
+> +		*type = IIO_VAL_INT_PLUS_MICRO;
+> +		*length = ARRAY_SIZE(inv_icm42600_gyro_odr);
+> +		return IIO_AVAIL_LIST;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int inv_icm42600_gyro_write_raw(struct iio_dev *indio_dev,
+> +				       struct iio_chan_spec const *chan,
+> +				       int val, int val2, long mask)
+> +{
+> +	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+> +	int ret;
+> +
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = inv_icm42600_gyro_write_scale(st, val, val2);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		return ret;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		return inv_icm42600_gyro_write_odr(st, val, val2);
+> +	case IIO_CHAN_INFO_CALIBBIAS:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = inv_icm42600_gyro_write_offset(st, chan, val);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		return ret;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int inv_icm42600_gyro_write_raw_get_fmt(struct iio_dev *indio_dev,
+> +					       struct iio_chan_spec const *chan,
+> +					       long mask)
+> +{
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		return IIO_VAL_INT_PLUS_NANO;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	case IIO_CHAN_INFO_CALIBBIAS:
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info inv_icm42600_gyro_info = {
+> +	.read_raw = inv_icm42600_gyro_read_raw,
+> +	.read_avail = inv_icm42600_gyro_read_avail,
+> +	.write_raw = inv_icm42600_gyro_write_raw,
+> +	.write_raw_get_fmt = inv_icm42600_gyro_write_raw_get_fmt,
+> +	.debugfs_reg_access = inv_icm42600_debugfs_reg,
+> +};
+> +
+> +int inv_icm42600_gyro_init(struct inv_icm42600_state *st)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	const char *name;
+> +	struct iio_dev *indio_dev;
+> +
+> +	name = devm_kasprintf(dev, GFP_KERNEL, "%s-gyro", st->name);
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, 0);
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	iio_device_set_drvdata(indio_dev, st);
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->name = name;
+> +	indio_dev->info = &inv_icm42600_gyro_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = inv_icm42600_gyro_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(inv_icm42600_gyro_channels);
+> +
+> +	st->indio_gyro = indio_dev;
+> +	return devm_iio_device_register(dev, st->indio_gyro);
+> +}
+
+
