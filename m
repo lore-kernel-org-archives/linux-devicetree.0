@@ -2,206 +2,739 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF72BC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 08:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91827C47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 09:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAFA6208DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 08:50:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nRq9rVQv"
+	by mail.kernel.org (Postfix) with ESMTP id 67C8C216FD
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 09:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgEHIuJ (ORCPT
+        id S1726689AbgEHJDE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 04:50:09 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41720 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgEHIuI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 04:50:08 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0488nxZa022814;
-        Fri, 8 May 2020 03:49:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588927799;
-        bh=nFghFOfFxxTQ0U6s3YjWv+wmzQW14b3h6ZM7+7LguQ8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nRq9rVQvhSzEtW3DpM1hJjaVNLQNbQ66OBRQ76f/JyVisfgiGFsK3IOaZJ+kwVzro
-         62egDJ2whOl9LRDdPo0Eofem9QUXH2046gi9+1W7ZRQutIi0iZIg66A7iAVTRjDjLq
-         y211NVuc9bTuzJZCRzzkQyu/HOolPW8YpUGZx7vE=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0488nx3R088070
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 8 May 2020 03:49:59 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
- 2020 03:49:59 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 8 May 2020 03:49:59 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0488nuw1112647;
-        Fri, 8 May 2020 03:49:57 -0500
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Rob Herring <robh@kernel.org>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
- <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
- <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
- <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
- <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
- <cf9c2dcc-57e8-cfa0-e3b4-55ff5113341f@ti.com>
- <da933b0d-ee17-5bca-3763-1d73c7ed6bfc@ti.com> <20200507202658.GA29938@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <f22cca60-40a8-571d-d5fa-50d05281cc3f@ti.com>
-Date:   Fri, 8 May 2020 14:19:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 8 May 2020 05:03:04 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:58424 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgEHJDD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 05:03:03 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 52E5E2002C;
+        Fri,  8 May 2020 11:02:54 +0200 (CEST)
+Date:   Fri, 8 May 2020 11:02:47 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     dillon.minfei@gmail.com
+Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, thierry.reding@gmail.com,
+        airlied@linux.ie, daniel@ffwll.ch, mturquette@baylibre.com,
+        sboyd@kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] drm/panel: add panel driver for Ilitek ili9341
+ panels
+Message-ID: <20200508090247.GA11575@ravnborg.org>
+References: <1588911194-12433-1-git-send-email-dillon.minfei@gmail.com>
+ <1588911194-12433-6-git-send-email-dillon.minfei@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200507202658.GA29938@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588911194-12433-6-git-send-email-dillon.minfei@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=f00rTkaq7gsWSwZchSUA:9
+        a=V3FauXp4hO1YZiWc:21 a=DYt0V8K-_OyiRC18:21 a=CjuIK1q_8ugA:10
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Dillon.
 
-On 5/8/2020 1:56 AM, Rob Herring wrote:
-> On Wed, May 06, 2020 at 08:52:13AM +0530, Kishon Vijay Abraham I wrote:
->> Hi Robin,
->>
->> On 5/4/2020 6:23 PM, Kishon Vijay Abraham I wrote:
->>> Hi Robin,
->>>
->>> On 5/4/2020 4:24 PM, Robin Murphy wrote:
->>>> On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
->>>>> Hi Robin,
->>>>>
->>>>> On 5/1/2020 9:24 PM, Robin Murphy wrote:
->>>>>> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
->>>>>>> [+Robin - to check on dma-ranges intepretation]
->>>>>>>
->>>>>>> I would need RobH and Robin to review this.
->>>>>>>
->>>>>>> Also, An ACK from Tom is required - for the whole series.
->>>>>>>
->>>>>>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
->>>>>>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->>>>>>>> property to configure the number of bits passed through from PCIe
->>>>>>>> address to internal address in Inbound Address Translation register.
->>>>>>>>
->>>>>>>> However standard PCI dt-binding already defines "dma-ranges" to
->>>>>>>> describe the address range accessible by PCIe controller. Parse
->>>>>>>> "dma-ranges" property to configure the number of bits passed
->>>>>>>> through from PCIe address to internal address in Inbound Address
->>>>>>>> Translation register.
->>>>>>>>
->>>>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>>>>> ---
->>>>>>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->>>>>>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>>>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>>>>> index 9b1c3966414b..60f912a657b9 100644
->>>>>>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>>>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>>>>>        struct device *dev = rc->pcie.dev;
->>>>>>>>        struct platform_device *pdev = to_platform_device(dev);
->>>>>>>>        struct device_node *np = dev->of_node;
->>>>>>>> +    struct of_pci_range_parser parser;
->>>>>>>>        struct pci_host_bridge *bridge;
->>>>>>>>        struct list_head resources;
->>>>>>>> +    struct of_pci_range range;
->>>>>>>>        struct cdns_pcie *pcie;
->>>>>>>>        struct resource *res;
->>>>>>>>        int ret;
->>>>>>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>>>>>        rc->max_regions = 32;
->>>>>>>>        of_property_read_u32(np, "cdns,max-outbound-regions",
->>>>>>>> &rc->max_regions);
->>>>>>>>    -    rc->no_bar_nbits = 32;
->>>>>>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
->>>>>>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
->>>>>>>> +        if (of_pci_range_parser_one(&parser, &range))
->>>>>>>> +            rc->no_bar_nbits = ilog2(range.size);
->>>>>>
->>>>>> You probably want "range.pci_addr + range.size" here just in case the bottom of
->>>>>> the window is ever non-zero. Is there definitely only ever a single inbound
->>>>>> window to consider?
->>>>>
->>>>> Cadence IP has 3 inbound address translation registers, however we use only 1
->>>>> inbound address translation register to map the entire 32 bit or 64 bit address
->>>>> region.
->>>>
->>>> OK, if anything that further strengthens the argument for deprecating a single
->>>> "number of bits" property in favour of ranges that accurately describe the
->>>> window(s). However it also suggests that other users in future might have some
->>>> expectation that specifying "dma-ranges" with up to 3 entries should work to
->>>> allow a more restrictive inbound configuration. Thus it would be desirable to
->>>> make the code a little more robust here - even if we don't support multiple
->>>> windows straight off, it would still be better to implement it in a way that
->>>> can be cleanly extended later, and at least say something if more ranges are
->>>> specified rather than just silently ignoring them.
->>>
->>> I looked at this further in the Cadence user doc. The three inbound ATU entries
->>> are for BAR0, BAR1 in RC configuration space and the third one is for NO MATCH
->>> BAR when there is no matching found in RC BARs. Right now we always configure
->>> the NO MATCH BAR. Would it be possible describe at BAR granularity in dma-ranges?
->>
->> I was thinking if I could use something like
->> dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x00000 0x0>, //For BAR0 IB mapping
->> 	     <0x02000000 0x0 0x0 0x0 0x0 0x00000 0x0>, //For BAR1 IB mapping
->> 	     <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>; //NO MATCH BAR
->>
->> This way the driver can tell the 1st tuple is for BAR0, 2nd is for BAR1 and
->> last is for NO MATCH. In the above case both BAR0 and BAR1 is just empty and
->> doesn't have valid values as we use only the NO MATCH BAR.
->>
->> However I'm not able to use for_each_of_pci_range() in Cadence driver to get
->> the configuration for each BAR, since the for loop gets invoked only once since
->> of_pci_range_parser_one() merges contiguous addresses.
+Patch submissions starts to look fine.
+
+On Fri, May 08, 2020 at 12:13:14PM +0800, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
 > 
-> NO_MATCH_BAR could just be the last entry no matter how many? Who cares 
-> if they get merged? Maybe each BAR has max size and dma-ranges could 
-> exceed that, but if so you have to handle that and split them again.
+> This is a driver for 320x240 TFT panels, accepting a rgb input
+> streams that get adapted and scaled to the panel.
+This driver is, I suppose, prepared to be a driver for ILI9341 based
+panles, and as such not for a fixed resolution.
+I expect (hope) we in the future will see more panels added.
 
-Each of RP_BAR0, RP_BAR1 and RP_NO_BAR has separate register to be configured.
-If they get merged, we'll loose info on which of the registers to be
-configured. Cadence IP specifies maximum size of BAR0 as 256GB, maximum size of
-BAR1 as 2 GB. However when I specify dma-ranges like below and use
-for_each_of_pci_range(&parser, &range), the first range itself is 258.
 
-dma-ranges = <0x02000000 0x00 0x0 0x00 0x0 0x40 0x00000000>, /* BAR0 256 GB */
-	     <0x02000000 0x40 0x0 0x40 0x0 0x00 0x80000000>; /* BAR1 2 GB */
+Some things to fix, see comments in the follwoing.
+
+	Sam
+
 > 
->> Do you think I should extend the flags cell to differentiate between BAR0, BAR1
->> and NO MATCH BAR? Can you suggest any other alternatives?
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> ---
+>  drivers/gpu/drm/panel/Kconfig                |   8 +
+>  drivers/gpu/drm/panel/Makefile               |   1 +
+>  drivers/gpu/drm/panel/panel-ilitek-ili9341.c | 561 +++++++++++++++++++++++++++
+>  3 files changed, 570 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
 > 
-> If you just have 1 region, then just 1 entry makes sense to me. Why 
-> can't you use BAR0 in that case?
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index a1723c1..e42692c 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -95,6 +95,14 @@ config DRM_PANEL_ILITEK_IL9322
+>  	  Say Y here if you want to enable support for Ilitek IL9322
+>  	  QVGA (320x240) RGB, YUV and ITU-T BT.656 panels.
+>  
+> +config DRM_PANEL_ILITEK_IL9341
+ILI9341 - so the config name matches the name of the driver IC.
 
-Well, Cadence has specified a max size for each BAR. I think we could specify a
-single region (48 bits in my case) in dma-ranges and let the driver decide how
-to split it among BAR0, BAR1 and NO_MATCH_BAR?
+> +	tristate "Ilitek ILI9341 240x320 QVGA panels"
+> +	depends on OF && SPI
+> +	select REGMAP
+> +	help
+> +	  Say Y here if you want to enable support for Ilitek IL9341
+> +	  QVGA (240x320) RGB panels.
+See comment to the changelog, the driver is more generic - I assume.
+So the wording here can be improved to express this.
 
-Thanks
-Kishon
+> +
+>  config DRM_PANEL_ILITEK_ILI9881C
+>  	tristate "Ilitek ILI9881C-based panels"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index 96a883c..d123543 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -8,6 +8,7 @@ obj-$(CONFIG_DRM_PANEL_ELIDA_KD35T133) += panel-elida-kd35t133.o
+>  obj-$(CONFIG_DRM_PANEL_FEIXIN_K101_IM2BA02) += panel-feixin-k101-im2ba02.o
+>  obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) += panel-feiyang-fy07024di26a30d.o
+>  obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) += panel-ilitek-ili9322.o
+> +obj-$(CONFIG_DRM_PANEL_ILITEK_IL9341) += panel-ilitek-ili9341.o
+>  obj-$(CONFIG_DRM_PANEL_ILITEK_ILI9881C) += panel-ilitek-ili9881c.o
+>  obj-$(CONFIG_DRM_PANEL_INNOLUX_P079ZCA) += panel-innolux-p079zca.o
+>  obj-$(CONFIG_DRM_PANEL_JDI_LT070ME05000) += panel-jdi-lt070me05000.o
+> diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> new file mode 100644
+> index 0000000..ec22d80
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> @@ -0,0 +1,561 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Ilitek ILI9341 TFT LCD drm_panel driver.
+> + *
+> + * This panel can be configured to support:
+> + * - 16-bit parallel RGB interface
+The interface to ILI9341 is SPI, and the interface between the ILI9341
+and the panel is more of an itnernal thing. Or did I get this worng?
+
+> + *
+> + * Copyright (C) 2020 Dillon Min <dillon.minfei@gmail.com>
+> + * Derived from drivers/drm/gpu/panel/panel-ilitek-ili9322.c
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#include <video/mipi_display.h>
+> +#include <video/of_videomode.h>
+> +#include <video/videomode.h>
+> +
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_print.h>
+> +
+> +#define DEFAULT_SPI_SPEED	10000000
+> +
+
+Please use same case for hex numbers in the driver.
+My personal preferences is lower-case.
+
+> +#define ILI9341_SLEEP_OUT            0x11   /* Sleep out register */
+> +#define ILI9341_GAMMA                0x26   /* Gamma register */
+> +#define ILI9341_DISPLAY_OFF          0x28   /* Display off register */
+> +#define ILI9341_DISPLAY_ON           0x29   /* Display on register */
+> +#define ILI9341_COLUMN_ADDR          0x2A   /* Colomn address register */
+> +#define ILI9341_PAGE_ADDR            0x2B   /* Page address register */
+> +#define ILI9341_GRAM                 0x2C   /* GRAM register */
+> +#define ILI9341_MAC                  0x36   /* Memory Access Control register*/
+> +#define ILI9341_PIXEL_FORMAT         0x3A   /* Pixel Format register */
+> +#define ILI9341_WDB                  0x51   /* Write Brightness Display
+> +					     * register
+> +					     */
+> +#define ILI9341_WCD                  0x53   /* Write Control Display
+> +					     * register
+> +					     */
+> +#define ILI9341_RGB_INTERFACE        0xB0   /* RGB Interface Signal Control */
+> +#define ILI9341_FRC                  0xB1   /* Frame Rate Control register */
+> +#define ILI9341_BPC                  0xB5   /* Blanking Porch Control
+> +					     * register
+> +					     */
+> +#define ILI9341_DFC                  0xB6   /* Display Function Control
+> +					     * register
+> +					     */
+> +#define ILI9341_POWER1               0xC0   /* Power Control 1 register */
+> +#define ILI9341_POWER2               0xC1   /* Power Control 2 register */
+> +#define ILI9341_VCOM1                0xC5   /* VCOM Control 1 register */
+> +#define ILI9341_VCOM2                0xC7   /* VCOM Control 2 register */
+> +#define ILI9341_POWERA               0xCB   /* Power control A register */
+> +#define ILI9341_POWERB               0xCF   /* Power control B register */
+> +#define ILI9341_PGAMMA               0xE0   /* Positive Gamma Correction
+> +					     * register
+> +					     */
+> +#define ILI9341_NGAMMA               0xE1   /* Negative Gamma Correction
+> +					     * register
+> +					     */
+> +#define ILI9341_DTCA                 0xE8   /* Driver timing control A */
+> +#define ILI9341_DTCB                 0xEA   /* Driver timing control B */
+> +#define ILI9341_POWER_SEQ            0xED   /* Power on sequence register */
+> +#define ILI9341_3GAMMA_EN            0xF2   /* 3 Gamma enable register */
+> +#define ILI9341_INTERFACE            0xF6   /* Interface control register */
+> +#define ILI9341_PRC                  0xF7   /* Pump ratio control register */
+> +
+
+All the following should be const.
+Can any of the below be replaces by DEFINED constants?
+> +static u8 ili9341_cmd0[] = {0xc3, 0x08, 0x50};
+> +static u8 ili9341_powerb[] = {0x00, 0xc1, 0x30};
+> +static u8 ili9341_power_seq[] = {0x64, 0x03, 0x12, 0x81};
+> +static u8 ili9341_dtca[] = {0x85, 0x00, 0x78};
+> +static u8 ili9341_powera[] = {0x39, 0x2c, 0x00, 0x34, 0x02};
+> +static u8 ili9341_prc[] = {0x20};
+> +static u8 ili9341_dtcb[] = {0x00, 0x00};
+> +static u8 ili9341_frc[] = {0x00, 0x1b};
+> +static u8 ili9341_dfc1[] = {0x0a, 0xa2};
+> +static u8 ili9341_power1[] = {0x10};
+> +static u8 ili9341_power2[] = {0x10};
+> +static u8 ili9341_vcom1[] = {0x45, 0x15};
+> +static u8 ili9341_vcom2[] = {0x90};
+> +static u8 ili9341_mac[] = {0xc8};
+> +static u8 ili9341_gamma_en[] = {0x00};
+> +static u8 ili9341_rgb_intr[] = {0xc2};
+> +static u8 ili9341_dfc2[] = {0x0a, 0xa7, 0x27, 0x04};
+> +static u8 ili9341_column_addr[] = {0x00, 0x00, 0x00, 0xef};
+> +static u8 ili9341_page_addr[] = {0x00, 0x00, 0x01, 0x3f};
+> +static u8 ili9341_intr[] = {0x01, 0x00, 0x06};
+> +static u8 ili9341_gamma[] = {0x01};
+> +static u8 ili9341_pgamma[] = {0x0f, 0x29, 0x24, 0x0c, 0x0e, 0x09, 0x4e, 0x78,
+> +				0x3c, 0x09, 0x13, 0x05,	0x17, 0x11, 0x00};
+> +static u8 ili9341_ngamma[] = {0x00, 0x16, 0x1b, 0x04, 0x11, 0x07, 0x31, 0x33,
+> +				0x42, 0x05, 0x0c, 0x0a, 0x28, 0x2f, 0x0f};
+> +
+> +/**
+> + * enum ili9341_input - the format of the incoming signal to the panel
+> + *
+> + * The panel can be connected to various input streams and four of them can
+> + * be selected by electronic straps on the display. However it is possible
+> + * to select another mode or override the electronic default with this
+> + * setting.
+> + */
+> +enum ili9341_input {
+> +	ILI9341_INPUT_PRGB_THROUGH = 0x0,
+> +	ILI9341_INPUT_PRGB_ALIGNED = 0x1,
+> +	ILI9341_INPUT_UNKNOWN = 0xf,
+> +};
+> +
+> +/**
+> + * struct ili9341_config - the system specific ILI9341 configuration
+> + * @width_mm: physical panel width [mm]
+> + * @height_mm: physical panel height [mm]
+> + * @input: the input/entry type used in this system, if this is set to
+> + * ILI9341_INPUT_UNKNOWN the driver will try to figure it out by probing
+> + * the hardware
+> + * @dclk_active_high: data/pixel clock active high, data will be clocked
+> + * in on the rising edge of the DCLK (this is usually the case).
+> + * @de_active_high: DE (data entry) is active high
+> + * @hsync_active_high: HSYNC is active high
+> + * @vsync_active_high: VSYNC is active high
+> + */
+> +struct ili9341_config {
+> +	u32 width_mm;
+> +	u32 height_mm;
+> +	enum ili9341_input input;
+> +	bool dclk_active_high;
+> +	bool de_active_high;
+> +	bool hsync_active_high;
+> +	bool vsync_active_high;
+> +};
+> +
+> +struct ili9341 {
+> +	struct device *dev;
+> +	const struct ili9341_config *conf;
+> +	struct drm_panel panel;
+> +	struct regmap *regmap;
+> +	struct gpio_desc *reset_gpio;
+> +	struct gpio_desc *dc_gpio;
+> +	enum ili9341_input input;
+
+> +	struct videomode vm;
+videomode is not used. So drop this field and drop the include files
+that are no logner needed.
+
+> +};
+> +
+> +static inline struct ili9341 *panel_to_ili9341(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct ili9341, panel);
+> +}
+> +
+> +int ili9341_spi_transfer(struct spi_device *spi, u32 speed_hz,
+> +			  u8 bpw, const void *buf, size_t len)
+> +{
+> +	size_t max_chunk = spi_max_transfer_size(spi);
+> +	struct spi_transfer tr = {
+const?
+
+> +		.bits_per_word = bpw,
+> +		.speed_hz = speed_hz,
+> +		.len = len,
+> +	};
+> +	struct spi_message m;
+> +	size_t chunk;
+> +	int ret;
+> +
+> +	spi_message_init_with_transfers(&m, &tr, 1);
+> +
+> +	while (len) {
+> +		chunk = min(len, max_chunk);
+> +
+> +		tr.tx_buf = buf;
+> +		tr.len = chunk;
+> +		buf += chunk;
+> +		len -= chunk;
+> +
+> +		ret = spi_sync(spi, &m);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+> +static int ili9341_regmap_spi_write(void *context, const void *data,
+> +				    size_t count)
+> +{
+> +	struct device *dev = context;
+> +	struct spi_device *spi = to_spi_device(dev);
+> +	struct ili9341 *ili = spi_get_drvdata(spi);
+> +	int ret = 0;
+> +
+> +	gpiod_set_value_cansleep(ili->dc_gpio, 0);
+> +
+> +	ret = ili9341_spi_transfer(spi, DEFAULT_SPI_SPEED, 8, data+0, 1);
+> +	if (ret || count == 1 ||
+> +			((u8 *)data)[0] == ILI9341_GRAM ||
+> +			((u8 *)data)[0] == ILI9341_DISPLAY_ON ||
+> +			((u8 *)data)[0] == ILI9341_SLEEP_OUT ||
+> +			((u8 *)data)[0] == ILI9341_DISPLAY_OFF)
+> +		return ret;
+> +
+> +	gpiod_set_value_cansleep(ili->dc_gpio, 1);
+> +
+> +	return ili9341_spi_transfer(spi, DEFAULT_SPI_SPEED, 8, data+1, count-1);
+> +}
+> +
+> +static int ili9341_regmap_spi_read(void *context, const void *reg,
+> +				   size_t reg_size, void *val, size_t val_size)
+> +{
+> +	return 0;
+> +}
+Is this function really needed? If not delete it.
+
+> +
+> +static struct regmap_bus ili9341_regmap_bus = {
+> +	.write = ili9341_regmap_spi_write,
+> +	.read = ili9341_regmap_spi_read,
+> +	.reg_format_endian_default = REGMAP_ENDIAN_BIG,
+> +	.val_format_endian_default = REGMAP_ENDIAN_BIG,
+> +};
+> +
+> +static bool ili9341_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	return false;
+> +}
+Is this function really nedded? If not delete it.
+
+> +
+> +static bool ili9341_writeable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	/* Just register 0 is read-only */
+> +	if (reg == 0x00)
+> +		return false;
+> +	return true;
+> +}
+> +
+> +static const struct regmap_config ili9341_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = 0xff,
+> +	.cache_type = REGCACHE_RBTREE,
+> +	.volatile_reg = ili9341_volatile_reg,
+> +	.writeable_reg = ili9341_writeable_reg,
+> +};
+> +
+
+No error checks - consider something like:
+
+static int bulk_write(struct ili9341 *ili, u8 reg, const u8[] data, int len)
+{
+	int err = ili->err;
+
+	if (!err) {
+		err = regmap_bulk_write(ili->regmap, reg, data, len);
+		if (err) {
+			dev_err(...);
+			ili->err = err;
+		}
+	}
+
+	return err;
+}
+
+Then you can use this in the following, and make this more readable.
+
+> +static int ili9341_init(struct drm_panel *panel, struct ili9341 *ili)
+> +{
+> +	regmap_bulk_write(ili->regmap, 0xca,
+> +					ili9341_cmd0, sizeof(ili9341_cmd0));
+> +	regmap_bulk_write(ili->regmap, ILI9341_POWERB,
+> +				ili9341_powerb, sizeof(ili9341_powerb));
+> +	regmap_bulk_write(ili->regmap, ILI9341_POWER_SEQ,
+> +				ili9341_power_seq, sizeof(ili9341_power_seq));
+> +	regmap_bulk_write(ili->regmap, ILI9341_DTCA,
+> +				ili9341_dtca, sizeof(ili9341_dtca));
+> +	regmap_bulk_write(ili->regmap, ILI9341_POWERA,
+> +				ili9341_powera, sizeof(ili9341_powera));
+> +	regmap_write(ili->regmap, ILI9341_PRC, ili9341_prc[0]);
+> +	regmap_bulk_write(ili->regmap, ILI9341_DTCB,
+> +				ili9341_dtcb, sizeof(ili9341_dtcb));
+> +	regmap_bulk_write(ili->regmap, ILI9341_FRC,
+> +				ili9341_frc, sizeof(ili9341_frc));
+> +	regmap_bulk_write(ili->regmap, ILI9341_DFC,
+> +				ili9341_dfc1, sizeof(ili9341_dfc1));
+> +	regmap_write(ili->regmap, ILI9341_POWER1, ili9341_power1[0]);
+> +	regmap_write(ili->regmap, ILI9341_POWER2, ili9341_power2[0]);
+> +	regmap_bulk_write(ili->regmap, ILI9341_VCOM1,
+> +				ili9341_vcom1, sizeof(ili9341_vcom1));
+> +	regmap_write(ili->regmap, ILI9341_VCOM2, ili9341_vcom2[0]);
+> +	regmap_write(ili->regmap, ILI9341_MAC, ili9341_mac[0]);
+> +	regmap_write(ili->regmap, ILI9341_3GAMMA_EN, ili9341_gamma_en[0]);
+> +	regmap_write(ili->regmap, ILI9341_RGB_INTERFACE, ili9341_rgb_intr[0]);
+> +	regmap_bulk_write(ili->regmap, ILI9341_DFC,
+> +				ili9341_dfc2, sizeof(ili9341_dfc2));
+> +
+> +	/* colomn address set */
+> +	regmap_bulk_write(ili->regmap, ILI9341_COLUMN_ADDR,
+> +			ili9341_column_addr, sizeof(ili9341_column_addr));
+> +
+> +	/* Page Address Set */
+> +	regmap_bulk_write(ili->regmap, ILI9341_PAGE_ADDR,
+> +				ili9341_page_addr, sizeof(ili9341_page_addr));
+> +	regmap_bulk_write(ili->regmap, ILI9341_INTERFACE,
+> +				ili9341_intr, sizeof(ili9341_intr));
+> +	regmap_write(ili->regmap, ILI9341_GRAM, 0);
+> +	msleep(200);
+> +
+> +	regmap_write(ili->regmap, ILI9341_GAMMA, ili9341_gamma[0]);
+> +	regmap_bulk_write(ili->regmap, ILI9341_PGAMMA,
+> +				ili9341_pgamma, sizeof(ili9341_pgamma));
+> +	regmap_bulk_write(ili->regmap, ILI9341_NGAMMA,
+> +				ili9341_ngamma, sizeof(ili9341_ngamma));
+> +	regmap_write(ili->regmap, ILI9341_SLEEP_OUT, 0);
+> +	msleep(200);
+> +
+> +	regmap_write(ili->regmap, ILI9341_DISPLAY_ON, 0);
+> +
+> +	/* GRAM start writing */
+> +	regmap_write(ili->regmap, ILI9341_GRAM, 0);
+> +
+> +	dev_info(ili->dev, "initialized display\n");
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * This power-on sequence if from the datasheet, page 57.
+> + */
+> +static int ili9341_power_on(struct ili9341 *ili)
+> +{
+> +	/* Assert RESET */
+> +	gpiod_set_value(ili->reset_gpio, 1);
+> +
+> +	msleep(20);
+> +
+> +	/* De-assert RESET */
+> +	gpiod_set_value(ili->reset_gpio, 0);
+> +
+> +	msleep(10);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ili9341_power_off(struct ili9341 *ili)
+> +{
+
+	Assert reset?
+
+> +	return 0;
+> +}
+> +
+> +static int ili9341_disable(struct drm_panel *panel)
+> +{
+> +	struct ili9341 *ili = panel_to_ili9341(panel);
+> +	int ret;
+> +
+> +	ret = regmap_write(ili->regmap, ILI9341_DISPLAY_OFF, 0);
+> +	if (ret) {
+> +		dev_err(ili->dev, "unable to go to standby mode\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ili9341_unprepare(struct drm_panel *panel)
+> +{
+> +	struct ili9341 *ili = panel_to_ili9341(panel);
+> +
+> +	return ili9341_power_off(ili);
+> +}
+> +
+> +static int ili9341_prepare(struct drm_panel *panel)
+> +{
+> +	struct ili9341 *ili = panel_to_ili9341(panel);
+> +	int ret;
+> +
+> +	ret = ili9341_power_on(ili);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = ili9341_init(panel, ili);
+> +	if (ret < 0)
+> +		ili9341_unprepare(panel);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ili9341_enable(struct drm_panel *panel)
+> +{
+> +	struct ili9341 *ili = panel_to_ili9341(panel);
+> +	int ret;
+> +
+> +	ret = regmap_write(ili->regmap, ILI9341_DISPLAY_ON, 0);
+> +	if (ret) {
+> +		dev_err(ili->dev, "unable to enable panel\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/* This is the only mode listed for parallel RGB in the datasheet */
+> +static const struct drm_display_mode prgb_320x240_mode = {
+> +	.clock = 6100,
+> +	.hdisplay = 240,
+> +	.hsync_start = 240 + 10,
+> +	.hsync_end = 240 + 10 + 10,
+> +	.htotal = 280,
+> +	.vdisplay = 320,
+> +	.vsync_start = 320 + 4,
+> +	.vsync_end = 320 + 4 + 2,
+> +	.vtotal = 328,
+> +	.vrefresh = 60,
+> +	.flags = 0,
+> +};
+> +
+> +static int ili9341_get_modes(struct drm_panel *panel,
+> +				struct drm_connector *connector)
+> +{
+> +	struct ili9341 *ili = panel_to_ili9341(panel);
+> +	struct drm_device *drm = connector->dev;
+> +	struct drm_display_mode *mode;
+> +	struct drm_display_info *info;
+> +
+> +	info = &connector->display_info;
+> +	info->width_mm = ili->conf->width_mm;
+> +	info->height_mm = ili->conf->height_mm;
+> +	if (ili->conf->dclk_active_high)
+> +		info->bus_flags |= DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE;
+> +	else
+> +		info->bus_flags |= DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE;
+> +
+> +	if (ili->conf->de_active_high)
+> +		info->bus_flags |= DRM_BUS_FLAG_DE_HIGH;
+> +	else
+> +		info->bus_flags |= DRM_BUS_FLAG_DE_LOW;
+> +
+> +	switch (ili->input) {
+> +	case ILI9341_INPUT_PRGB_THROUGH:
+> +	case ILI9341_INPUT_PRGB_ALIGNED:
+> +		mode = drm_mode_duplicate(drm, &prgb_320x240_mode);
+> +		break;
+> +	default:
+> +		mode = NULL;
+> +		break;
+> +	}
+> +	if (!mode) {
+> +		DRM_ERROR("bad mode or failed to add mode\n");
+> +		return -EINVAL;
+> +	}
+> +	drm_mode_set_name(mode);
+> +	/*
+> +	 * This is the preferred mode because most people are going
+> +	 * to want to use the display with VGA type graphics.
+> +	 */
+> +	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> +
+> +	/* Set up the polarity */
+> +	if (ili->conf->hsync_active_high)
+> +		mode->flags |= DRM_MODE_FLAG_PHSYNC;
+> +	else
+> +		mode->flags |= DRM_MODE_FLAG_NHSYNC;
+> +	if (ili->conf->vsync_active_high)
+> +		mode->flags |= DRM_MODE_FLAG_PVSYNC;
+> +	else
+> +		mode->flags |= DRM_MODE_FLAG_NVSYNC;
+> +
+> +	mode->width_mm = ili->conf->width_mm;
+> +	mode->height_mm = ili->conf->height_mm;
+> +	drm_mode_probed_add(connector, mode);
+> +
+> +	return 1; /* Number of modes */
+> +}
+> +
+> +static const struct drm_panel_funcs ili9341_drm_funcs = {
+> +	.disable = ili9341_disable,
+> +	.unprepare = ili9341_unprepare,
+> +	.prepare = ili9341_prepare,
+> +	.enable = ili9341_enable,
+> +	.get_modes = ili9341_get_modes,
+> +};
+> +
+> +static int ili9341_probe(struct spi_device *spi)
+> +{
+> +	struct device *dev = &spi->dev;
+> +	struct ili9341 *ili;
+> +	const struct regmap_config *regmap_config;
+> +	int ret;
+> +
+> +	ili = devm_kzalloc(dev, sizeof(struct ili9341), GFP_KERNEL);
+> +	if (!ili)
+> +		return -ENOMEM;
+> +
+> +	spi_set_drvdata(spi, ili);
+> +
+> +	ili->dev = dev;
+> +	/*
+> +	 * Every new incarnation of this display must have a unique
+> +	 * data entry for the system in this driver.
+> +	 */
+> +	ili->conf = of_device_get_match_data(dev);
+> +	if (!ili->conf) {
+> +		dev_err(dev, "missing device configuration\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ili->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ili->reset_gpio)) {
+> +		dev_err(dev, "failed to get RESET GPIO\n");
+> +		return PTR_ERR(ili->reset_gpio);
+> +	}
+> +
+> +	ili->dc_gpio = devm_gpiod_get_optional(dev, "dc", GPIOD_OUT_LOW);
+> +	if (IS_ERR(ili->dc_gpio)) {
+> +		dev_err(dev, "failed to get DC GPIO\n");
+> +		return PTR_ERR(ili->dc_gpio);
+> +	}
+> +
+> +	spi->bits_per_word = 8;
+> +	ret = spi_setup(spi);
+> +	if (ret < 0) {
+> +		dev_err(dev, "spi setup failed.\n");
+> +		return ret;
+> +	}
+> +
+> +	regmap_config = &ili9341_regmap_config;
+> +
+> +	ili->regmap = devm_regmap_init(dev, &ili9341_regmap_bus, dev,
+> +				       regmap_config);
+> +	if (IS_ERR(ili->regmap)) {
+> +		dev_err(dev, "failed to allocate register map\n");
+> +		return PTR_ERR(ili->regmap);
+> +	}
+> +
+> +	ili->input = ili->conf->input;
+> +
+> +	drm_panel_init(&ili->panel, dev, &ili9341_drm_funcs,
+> +		       DRM_MODE_CONNECTOR_DPI);
+> +
+> +	return drm_panel_add(&ili->panel);
+> +}
+> +
+> +static int ili9341_remove(struct spi_device *spi)
+> +{
+> +	struct ili9341 *ili = spi_get_drvdata(spi);
+> +
+> +	ili9341_power_off(ili);
+> +	drm_panel_remove(&ili->panel);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * The Stm32f429-disco board has a panel ili9341 connected to ltdc controller
+> + */
+> +static const struct ili9341_config ili9341_data = {
+This should be named "disco" something as this is m32f429-disco
+specific.
+
+> +	.width_mm = 65,
+> +	.height_mm = 50,
+> +	.input = ILI9341_INPUT_PRGB_THROUGH,
+> +	.dclk_active_high = true,
+> +	.de_active_high = false,
+> +	.hsync_active_high = false,
+> +	.vsync_active_high = false,
+> +};
+> +
+> +static const struct of_device_id ili9341_of_match[] = {
+> +	{
+> +		.compatible = "stm32f429,ltdc-panel",
+> +		.data = &ili9341_data,
+> +	},
+
+
+> +	{
+> +		.compatible = "ilitek,ili9341",
+> +		.data = NULL,
+This part is wrong, as ilitek,ili9341 is just the generic part.
+Only the first entry is relevant.
+
+
+> +	},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ili9341_of_match);
+> +
+> +static struct spi_driver ili9341_driver = {
+> +	.probe = ili9341_probe,
+> +	.remove = ili9341_remove,
+> +	.driver = {
+> +		.name = "panel-ilitek-ili9341",
+> +		.of_match_table = ili9341_of_match,
+> +	},
+> +};
+> +module_spi_driver(ili9341_driver);
+> +
+> +MODULE_AUTHOR("Dillon Min <dillon.minfei@gmail.com>");
+> +MODULE_DESCRIPTION("ILI9341 LCD panel driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
