@@ -2,122 +2,251 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83896C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 05:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5007C47247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5661D20870
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 05:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F21208D6
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 06:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1VwBxCB"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="oSH49vor"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgEHFyg (ORCPT
+        id S1726009AbgEHGVH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 01:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52146 "EHLO
+        Fri, 8 May 2020 02:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgEHFyg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 01:54:36 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F8DC05BD43;
-        Thu,  7 May 2020 22:54:36 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 188so8939745wmc.2;
-        Thu, 07 May 2020 22:54:36 -0700 (PDT)
+        with ESMTP id S1726906AbgEHGVG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 02:21:06 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4099BC05BD09
+        for <devicetree@vger.kernel.org>; Thu,  7 May 2020 23:21:05 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id x6so451978vso.1
+        for <devicetree@vger.kernel.org>; Thu, 07 May 2020 23:21:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cBuXlY0lPbTzvqFi3J9oIqLP+OF/m7YpRIj6GR1Gj+U=;
-        b=K1VwBxCBXCfE4HZYWiqihZRJtx8ctP1mVKfq1o6aCJtu/K2DwQN6yjel0+96+k0mcG
-         0uuiGrKz4zsQBMXrSSEoq364xNTJ0XfUyV8v85i/bpTYtVg9HOLeugf599IF0IqQbtQ0
-         HFuvcYQomO1LBbkbc814Hmv+6PqZ8vuzbej4nEQDUqXoysFOc58ddm3QesuV+2jOOEki
-         fJy7J3YgVTkYXJsIaZHg+NAtJmVDKvdUCxK1SIi+tER4fIclIQXInU9RVQAgG+SaECXp
-         2NEaDBLaPWFmApTkZQjPaOAgRMoh6nbkR85XVuxIcheeDeBQLR48s6gZdmQ+i1xfKWoY
-         EByg==
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6h/obNnnEZhT6LDrvH8on5B3r/VAZCrcQ4Cyme0zGnc=;
+        b=oSH49vor9tmu2EDmgcD+AGJElCeP1SVieVMd1DNQd7eMewrS+ObKVUDIpr6pMx6Q01
+         CF8sIqIG2A4kW0s4oGQ9HNxIZV98DVZJcAL/lKfx8Z+a79FcOCTPBluy9juCgnWPcoLb
+         Iv0XkDZheHmLwaZdwAcUnP2OsiwdYwe7WYoN9wsistJ61/xySzCZJ94P8Bqh//EBXjk4
+         ajcSHoOykKhAyXC5gqnn0xpVRBWKt/EoKCp88eHmq3VvrcSs4ZVwLt4lQGaYfHwXjtQQ
+         kkPqzaP6kj5KY7/Nzn0f/XigimBUqB4TDKQc7QIVTNUMuoTuPVwlIjl9ip1UNO/9W7To
+         2QVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cBuXlY0lPbTzvqFi3J9oIqLP+OF/m7YpRIj6GR1Gj+U=;
-        b=iKtH28/jAlYFNEUvovXt+m0ZK3pq0rUxU1dqgAb33jmxdFZ+n5HG/TAEW/2BWTjVF9
-         wxPyOphoSWlbSDbk7frDYrOP6jKcORBWFCTJUcdud/9NHxDxqPeUn0xFRkmSZQ2Msm4F
-         yv+hUzWQK8rWPjOZfGxLKck4EqtqNXKiQePjt/10Niz4cp9ePSmHq8Xmi85kHtoITS9m
-         G7OV4c9jwLtCEQgGNWBq9S5e5EWtXjYN3e9N1sxiGneKC0g7ypqjv89nSgRvkrALfCsh
-         n4XHzJiesSTiUSQlG+urstJZ75L9oOUcJRRG1ywDNQArGJIXQdKLSvxTiFCbPEtB0tmE
-         pEDg==
-X-Gm-Message-State: AGi0PuZX7SZTEICcrDLu24QEBZ49nBsEqM4hz5kd1s03tgvqhy1Z/2A5
-        1Qyxrs28g9JIRa/KpH8q1sw=
-X-Google-Smtp-Source: APiQypJN3BPfHFPyK3WDkQRQQXzBNgHR1dVgfWeEuUZhd4lAzK8YcVD4LeyB6dzQUvulSYABR4hCgg==
-X-Received: by 2002:a1c:5f46:: with SMTP id t67mr15219360wmb.156.1588917274753;
-        Thu, 07 May 2020 22:54:34 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f28:5200:e838:acb:794:1ab9? (p200300EA8F285200E8380ACB07941AB9.dip0.t-ipconnect.de. [2003:ea:8f28:5200:e838:acb:794:1ab9])
-        by smtp.googlemail.com with ESMTPSA id o6sm1177075wrw.63.2020.05.07.22.54.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 22:54:34 -0700 (PDT)
-Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
-To:     Jakub Kicinski <kuba@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org
-References: <20200505140231.16600-1-brgl@bgdev.pl>
- <20200505140231.16600-6-brgl@bgdev.pl>
- <20200505103105.1c8b0ce3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAMRc=Mf0ipaeLKhHCZaq2YeZKzi=QBAse7bEz2hHxXN5OL=ptg@mail.gmail.com>
- <20200506101236.25a13609@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAMpxmJWckQdKvUGFDAJ1WMtD9WoGWmGe3kyKYhcfRT2nOB93xw@mail.gmail.com>
- <20200507095315.1154a1a6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAMpxmJUEk3itZs4HujJOXUiL80kmEvGBvLF0NFc2UQoVDVTWRg@mail.gmail.com>
- <20200507155650.0c19229e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <c6e12eb6-d6ea-9ba9-4559-b2eda326601f@gmail.com>
-Date:   Fri, 8 May 2020 07:54:28 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6h/obNnnEZhT6LDrvH8on5B3r/VAZCrcQ4Cyme0zGnc=;
+        b=bhNGfcgkhDxaNMc5U1XgkIMkWZcQ2dr380KDizPUdTJMQJflQ5UETrNLvgT7VbBRfB
+         JXrLOvFZa9uqviTZGJLFtOmGL3w6HAREITB4lFpPueMsgWeAUwISquk5RRV2gwncsqsA
+         8zHtXBDXpT0tqcGkUTkluapnngEY7P+mgWrUNIxdrNK6y+gQXNtMETpyaN39TsvzJyET
+         fGC4R5VEAhwUdakOoY88c82/MM0Eys/Dezw9QryuptAvln94PGSU6cpgVdaOc0zUlo27
+         WoR9gQjDWnsAF1BIT6MBqO/Q0RbTxKHkUkwxbO3btbLXns8f/5x+UK46AFdzfr/UWD8P
+         EsxA==
+X-Gm-Message-State: AGi0PuZq7UubgHi6PDne3QawHntrSa6dzz9kQefwuRq7oFOOsdokNpO8
+        sNkOy0/0YmcOBv4Oa6YszRiXQH9yIuznz1dDq7Xptg==
+X-Google-Smtp-Source: APiQypISlS9O+asHHWIQvjKlhDe9f3hTQxQeSW6nkwWuEJDA9Op9TFse2BOyOE6akZ7MOC/4HY14ZOr+1O0rEB+Jv/8=
+X-Received: by 2002:a67:7f0a:: with SMTP id a10mr675528vsd.147.1588918864109;
+ Thu, 07 May 2020 23:21:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200507155650.0c19229e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+ <20200427072342.5499-1-jian-hong@endlessm.com> <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
+ <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com> <20200507172158.cybtakpo6cxv6wcs@gilmour.lan>
+In-Reply-To: <20200507172158.cybtakpo6cxv6wcs@gilmour.lan>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Fri, 8 May 2020 14:20:13 +0800
+Message-ID: <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-i2c@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 08.05.2020 00:56, Jakub Kicinski wrote:
-> On Thu, 7 May 2020 19:03:44 +0200 Bartosz Golaszewski wrote:
->>> To implement Edwin's suggestion? Makes sense, but I'm no expert, let's
->>> also CC Heiner since he was asking about it last time.  
->>
->> Yes, because taking the last bit of priv_flags from net_device seems
->> to be more controversial but if net maintainers are fine with that I
->> can simply go with the current approach.
-> 
-> From my perspective what Edwin suggests makes sense. Apart from
-> little use for the bit after probe, it also seems cleaner for devres 
-> to be able to recognize managed objects based on its own state.
-> 
-What I was saying is that we should catch the case that a driver
-author uses a device-managed register() w/o doing the same for the
-alloc(). A core function should not assume that driver authors do
-sane things only.
-I don't have a strong preference how it should be done.
-Considering what is being discussed, have a look at get_pci_dr() and
-find_pci_dr(), they deal with managing which parts of the PCI
-subsystem are device-managed.
+Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=888=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:22=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Mon, May 04, 2020 at 02:35:08PM +0800, Jian-Hong Pan wrote:
+> > Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B44=E6=9C=8829=
+=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8812:21=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > >
+> > > Hi,
+> > >
+> > > On Mon, Apr 27, 2020 at 03:23:42PM +0800, Jian-Hong Pan wrote:
+> > > > Hi Maxime,
+> > > >
+> > > > Thanks for your V2 patch series!  I'm testing it.
+> > > >
+> > > > This patch series is applied upon mainline kernel 5.7-rc2 cleanly a=
+nd built.
+> > > > System can boot into console text mode, but no graphic UI.
+> > > >
+> > > > Get the error in vc5_hdmi_phy_init(), and full dmesg is at [1]:
+> > > >
+> > > > [    5.587543] vc4_hdmi fef00700.hdmi: Unknown register ID 46
+> > > > [    5.587700] debugfs: Directory 'fef00700.hdmi' with parent 'vc4-=
+hdmi' already present!
+> > > > [    5.588070] vc4_hdmi fef00700.hdmi: vc4-hdmi-hifi <-> fef00700.h=
+dmi mapping ok
+> > > > [    5.588076] vc4_hdmi fef00700.hdmi: ASoC: no DMI vendor name!
+> > > > [    5.588263] vc4-drm gpu: bound fef00700.hdmi (ops vc4_hdmi_ops)
+> > > > [    5.588299] vc4_hdmi fef05700.hdmi: Unknown register ID 46
+> > > > [    5.588373] debugfs: Directory 'vc4-hdmi' with parent 'asoc' alr=
+eady present!
+> > > > [    5.588673] vc4_hdmi fef05700.hdmi: vc4-hdmi-hifi <-> fef05700.h=
+dmi mapping ok
+> > > > [    5.588677] vc4_hdmi fef05700.hdmi: ASoC: no DMI vendor name!
+> > > > [    5.588809] vc4-drm gpu: bound fef05700.hdmi (ops vc4_hdmi_ops)
+> > > > [    5.588854] vc4-drm gpu: bound fe806000.vec (ops vc4_vec_ops)
+> > > > [    5.588897] vc4-drm gpu: bound fe004000.txp (ops vc4_txp_ops)
+> > > > [    5.588934] vc4-drm gpu: bound fe400000.hvs (ops vc4_hvs_ops)
+> > > > [    5.588990] vc4-drm gpu: bound fe206000.pixelvalve (ops vc4_crtc=
+_ops)
+> > > > [    5.589030] vc4-drm gpu: bound fe207000.pixelvalve (ops vc4_crtc=
+_ops)
+> > > > [    5.589074] vc4-drm gpu: bound fe20a000.pixelvalve (ops vc4_crtc=
+_ops)
+> > > > [    5.589106] vc4-drm gpu: bound fe216000.pixelvalve (ops vc4_crtc=
+_ops)
+> > > > [    5.589145] vc4-drm gpu: bound fec12000.pixelvalve (ops vc4_crtc=
+_ops)
+> > > > [    5.589294] checking generic (3e513000 6d8c00) vs hw (0 ffffffff=
+ffffffff)
+> > > > [    5.589297] fb0: switching to vc4drmfb from simple
+> > > > [    5.589433] Console: switching to colour dummy device 80x25
+> > > > [    5.589481] [drm] Supports vblank timestamp caching Rev 2 (21.10=
+.2013).
+> > > > [    5.589816] [drm] Initialized vc4 0.0.0 20140616 for gpu on mino=
+r 0
+> > > > [    5.601079] ------------[ cut here ]------------
+> > > > [    5.601095] WARNING: CPU: 2 PID: 127 at drivers/gpu/drm/vc4/vc4_=
+hdmi_phy.c:413 vc5_hdmi_phy_init+0x7ac/0x2078
+> > > > [    5.601097] Modules linked in:
+> > > > [    5.601103] CPU: 2 PID: 127 Comm: kworker/2:1 Not tainted 5.7.0-=
+rc2-00091-ga181df59a930 #7
+> > > > [    5.601105] Hardware name: Raspberry Pi 4 Model B (DT)
+> > > > [    5.601112] Workqueue: events deferred_probe_work_func
+> > > > [    5.601116] pstate: 20000005 (nzCv daif -PAN -UAO)
+> > > > [    5.601119] pc : vc5_hdmi_phy_init+0x7ac/0x2078
+> > > > [    5.601123] lr : vc4_hdmi_encoder_enable+0x1b8/0x1ac0
+> > > > [    5.601124] sp : ffff80001217b410
+> > > > [    5.601126] x29: ffff80001217b410 x28: ffff0000ec6370f0
+> > > > [    5.601129] x27: ffff0000f650d400 x26: 000000008a500000
+> > > > [    5.601132] x25: ffff8000113b4ac0 x24: 0000000000002060
+> > > > [    5.601135] x23: 000000000a500000 x22: 0000000000000300
+> > > > [    5.601137] x21: 0000000008d9ee20 x20: ffff0000ec535080
+> > > > [    5.601140] x19: 000000010989e7c0 x18: 0000000000000000
+> > > > [    5.601142] x17: 0000000000000001 x16: 0000000000005207
+> > > > [    5.601145] x15: 00004932ad293c92 x14: 0000000000000137
+> > > > [    5.601147] x13: ffff800010015000 x12: 0000000000000001
+> > > > [    5.601150] x11: 0000000000000001 x10: 0000000000000000
+> > > > [    5.601152] x9 : 0000000000000000 x8 : ffff800010015038
+> > > > [    5.601154] x7 : 0000000000000001 x6 : ffff80001217b368
+> > > > [    5.601157] x5 : 0000000000000000 x4 : 000000000000004c
+> > > > [    5.601159] x3 : 0000000000000000 x2 : ffff8000113b4ac0
+> > > > [    5.601162] x1 : ffff8000120c5f44 x0 : 00000000dc8984ff
+> > > > [    5.601164] Call trace:
+> > > > [    5.601169]  vc5_hdmi_phy_init+0x7ac/0x2078
+> > > > [    5.601172]  vc4_hdmi_encoder_enable+0x1b8/0x1ac0
+> > > > [    5.601176]  drm_atomic_helper_commit_modeset_enables+0x224/0x24=
+8
+> > > > [    5.601179]  vc4_atomic_complete_commit+0x400/0x558
+> > > > [    5.601182]  vc4_atomic_commit+0x1e0/0x200
+> > > > [    5.601185]  drm_atomic_commit+0x4c/0x60
+> > > > [    5.601190]  drm_client_modeset_commit_atomic.isra.0+0x17c/0x238
+> > > > [    5.601192]  drm_client_modeset_commit_locked+0x5c/0x198
+> > > > [    5.601195]  drm_client_modeset_commit+0x30/0x58
+> > > > [    5.601201]  drm_fb_helper_restore_fbdev_mode_unlocked+0x78/0xe0
+> > > > [    5.601204]  drm_fb_helper_set_par+0x30/0x68
+> > > > [    5.601208]  fbcon_init+0x3d4/0x598
+> > > > [    5.601212]  visual_init+0xb0/0x108
+> > > > [    5.601214]  do_bind_con_driver+0x1d0/0x3a8
+> > > > [    5.601217]  do_take_over_console+0x144/0x208
+> > > > [    5.601219]  do_fbcon_takeover+0x68/0xd8
+> > > > [    5.601222]  fbcon_fb_registered+0x100/0x118
+> > > > [    5.601226]  register_framebuffer+0x1f4/0x338
+> > > > [    5.601229]  __drm_fb_helper_initial_config_and_unlock+0x2f8/0x4=
+a0
+> > > > [    5.601232]  drm_fbdev_client_hotplug+0xd4/0x1b0
+> > > > [    5.601235]  drm_fbdev_generic_setup+0xb0/0x130
+> > > > [    5.601238]  vc4_drm_bind+0x184/0x1a0
+> > > > [    5.601241]  try_to_bring_up_master+0x168/0x1c8
+> > > > [    5.601244]  __component_add+0xa4/0x170
+> > > > [    5.601246]  component_add+0x14/0x20
+> > > > [    5.601248]  vc4_vec_dev_probe+0x20/0x30
+> > > > [    5.601252]  platform_drv_probe+0x54/0xa8
+> > > > [    5.601254]  really_probe+0xd8/0x320
+> > > > [    5.601256]  driver_probe_device+0x58/0xf0
+> > > > [    5.601258]  __device_attach_driver+0x84/0xc8
+> > > > [    5.601263]  bus_for_each_drv+0x78/0xc8
+> > > > [    5.601265]  __device_attach+0xe4/0x140
+> > > > [    5.601267]  device_initial_probe+0x14/0x20
+> > > > [    5.601269]  bus_probe_device+0x9c/0xa8
+> > > > [    5.601271]  deferred_probe_work_func+0x74/0xb0
+> > > > [    5.601276]  process_one_work+0x1bc/0x338
+> > > > [    5.601279]  worker_thread+0x1f8/0x428
+> > > > [    5.601282]  kthread+0x138/0x158
+> > > > [    5.601286]  ret_from_fork+0x10/0x1c
+> > > > [    5.601288] ---[ end trace cfba0996218c3f3d ]---
+> > >
+> > > Thanks for testing!
+> > >
+> > > Do you have a bit more details regarding your setup? Was it connected=
+ to an
+> > > external display?
+> >
+> > Yes, the HDMI cable is connected to HDMI0 port on RPi 4.
+> >
+> > > If so, do you know the resolution it was trying to setup?
+> >
+> > According to the log, I think it is 1920x1080:
+> > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
+> > HDMI-1 connected
+> > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
+> > HDMI-2 disconnected
+> > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
+> > Composite-1 disconnected
+> > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Using
+> > exact sizes for initial modes
+> > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
+> > HDMI-1 using initial mode 1920x1080 +0+0
+> >
+> > https://gist.github.com/starnight/45e1468bfa0426a54d2fb4a9269cfb94
+>
+> It looks to be fairly standard then, and I'm testing on the same resoluti=
+on so
+> it should be alright.
+>
+> Given from your log, it looks like you're running as arm64 though, while =
+I stuck
+> with arm32, so it could be the explanation.
+
+Yes, I build it as arm64.
+
+> Can you share your config.txt and .config so that I can try to reproduce =
+it
+> here?
+
+Here is the config
+https://gist.github.com/starnight/320b757441b6769c36160704b401c98b
+
+Thanks,
+Jian-Hong Pan
