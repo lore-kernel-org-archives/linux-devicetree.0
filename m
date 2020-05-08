@@ -2,151 +2,97 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E01C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 14:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86516C54E4B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 15:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF9021841
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 14:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6442A24954
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 15:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgEHOva (ORCPT
+        id S1728306AbgEHPm0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 10:51:30 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2175 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726751AbgEHOva (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 10:51:30 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id ED18474328E5A4274316;
-        Fri,  8 May 2020 15:51:28 +0100 (IST)
-Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
- 15:51:28 +0100
-Date:   Fri, 8 May 2020 15:51:06 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v13 1/2] dt-bindings: proximity: provide vcnl3020 device
- tree binding document
-Message-ID: <20200508155050.0000008e@Huawei.com>
-In-Reply-To: <20200507132600.8801-2-i.mikhaylov@yadro.com>
-References: <20200507132600.8801-1-i.mikhaylov@yadro.com>
-        <20200507132600.8801-2-i.mikhaylov@yadro.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 8 May 2020 11:42:26 -0400
+Received: from elvis.franken.de ([193.175.24.41]:44977 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgEHPmX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 May 2020 11:42:23 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jX58n-0005J7-00; Fri, 08 May 2020 17:42:21 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 106BCC041B; Fri,  8 May 2020 17:40:46 +0200 (CEST)
+Date:   Fri, 8 May 2020 17:40:46 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 19/20] mips: cevt-r4k: Update the r4k-clockevent
+ frequency in sync with CPU
+Message-ID: <20200508154045.GA22247@alpha.franken.de>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-20-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.95.97]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506174238.15385-20-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 7 May 2020 16:25:59 +0300
-Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+On Wed, May 06, 2020 at 08:42:37PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
+> index 17a9cbb8b3df..f5b72fb7d5ee 100644
+> --- a/arch/mips/kernel/cevt-r4k.c
+> +++ b/arch/mips/kernel/cevt-r4k.c
+> @@ -8,6 +8,7 @@
+>   */
+>  #include <linux/clockchips.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/cpufreq.h>
+>  #include <linux/percpu.h>
+>  #include <linux/smp.h>
+>  #include <linux/irq.h>
+> @@ -250,6 +251,49 @@ unsigned int __weak get_c0_compare_int(void)
+>  	return MIPS_CPU_IRQ_BASE + cp0_compare_irq;
+>  }
+>  
+> +#ifdef CONFIG_CPU_FREQ
+> +
+> +static unsigned long mips_ref_freq;
+> +
+> +static int cpufreq_callback(struct notifier_block *nb,
+> +			    unsigned long val, void *data)
 
-> Mostly standard i2c driver with some additional led-current option
-> for vcnl3020.
-> 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> ---
->  .../iio/proximity/vishay,vcnl3020.yaml        | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
-> new file mode 100644
-> index 000000000000..408dee17cdf5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/vishay,vcnl3020.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Integrated Proximity Sensor With Infrared Emitter
-> +
-> +maintainers:
-> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> +
-> +description: |
-> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
-> +  that the infrared emitter is included in the package. It has 16-bit
-> +  resolution. It includes a signal processing IC and features standard I2C
-> +  communication interface. It features an interrupt function.
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - vishay,vcnl3020
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Regulator that provides power to the sensor
-> +
-> +  vddio-supply:
-> +    description: Regulator that provides power to the bus
-> +
-> +  vishay,led-current-microamp:
-> +    description:
-> +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
-> +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
-> +      higher than decimal 20. The drive current for the LED used in proximity
-> +      sensing.
+please prefix function names with r4k_ to make them different from
+the other ones you implemented in kernel/time.c. I know they are
+static, but keeping different names makes looking at crashes easier.
 
-This text is really confusing. Just let the enum speak for itself and leave text as
-something short like
-
-"The driver current for the LED used in proximity sensing. "
-
-Units and values are clear already.
-
-> +    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
-> +          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
-> +          180000, 190000, 200000]
-> +    default: 20000
+> +	struct cpufreq_freqs *freq = data;
+> +	struct clock_event_device *cd;
+> +	unsigned long rate;
+> +	int cpu;
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        proximity@13 {
-> +              compatible = "vishay,vcnl3020";
-> +              reg = <0x13>;
-> +              vishay,led-current-microamp = <200000>;
-> +        };
-> +    };
+> +	if (!mips_ref_freq)
+> +		mips_ref_freq = freq->old;
 
+isn't this the same as mips_hpt_frequency ?
 
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
