@@ -2,222 +2,123 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57784C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB38AC47257
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1F920708
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57582070B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 13:47:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m6+WB7dk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgEHNob (ORCPT
+        id S1728488AbgEHNrD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 09:44:31 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2170 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727088AbgEHNob (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 09:44:31 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 384B7706140CDC0BEBAF;
-        Fri,  8 May 2020 14:44:29 +0100 (IST)
-Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
- 14:44:28 +0100
-Date:   Fri, 8 May 2020 14:44:06 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <robh@kernel.org>,
-        <mchehab+huawei@kernel.org>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 02/12] iio: imu: inv_icm42600: add I2C driver for
- inv_icm42600 driver
-Message-ID: <20200508144406.00006b8c@Huawei.com>
-In-Reply-To: <20200507144222.20989-3-jmaneyrol@invensense.com>
-References: <20200507144222.20989-1-jmaneyrol@invensense.com>
-        <20200507144222.20989-3-jmaneyrol@invensense.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.95.97]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+        Fri, 8 May 2020 09:47:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728481AbgEHNrC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 09:47:02 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9790CC05BD43
+        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 06:47:01 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id i15so1907980wrx.10
+        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 06:47:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ie6+UuDf+byXPXqX2PqIi5x7CCl0W8NA5IcDm5qQXXA=;
+        b=m6+WB7dkD5OY5SUi5lv4lAQ0mBcKHk146e1QwqFyiJLMV7m2seti2PPWrL7Mtg7jPO
+         fXjmH/Vnwq/PvdNM4rnRQR2Tdqjfrj3LFUvE//ja5RmUll82j+lwt5OjJNUex+3tSuvB
+         vdD4nx5w3ghYDD5wcoyKT9xS1a8iGCzZbYjXujuK8CbZnH5rGkqLhUfHhQC2/gQThxjY
+         noNtQ/LLD6fvKiZkWu0yqgqC2AfhxNQmPFSnGMZNEjjDAEFNrPpG9xyYEcjTe4HXV4OU
+         iv5bKD2VV9yDVTDx2E3g6Hze2Njrn0R7oUPj520tNshk0RmsY+buEld6wKdQOZL7oXfA
+         vJbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ie6+UuDf+byXPXqX2PqIi5x7CCl0W8NA5IcDm5qQXXA=;
+        b=UwkTdRme1zyPtQ4OSSN4P/f9vyPMCQVPlzKB+es2nkmb4ZEeobyZbhGt90rF3caC94
+         9V7+gqJr6IqUc9kkOsXw+aaWoqk7gjj5bcRslyzh8jXLbP/iXwiUjBMjEFA1as7nw9UP
+         THnfIHQhMWIMSaPlnIGLxg7zmAgx9mCgzQiLA93CKaWVPA4d33zxWhDfpIWJfh8G/TJv
+         pFnKoYOotN0NfnuZnGH1hCjeuBXN0yE6N01zQt+C6R5af1YcLsLmDXMMJldcDjYZFXbA
+         28/Vb3e6Ic13dnZAd5hMStFvathvc84E/YlJQ24CSopM6lazt9MCG85v7lX/EaQZzjlb
+         mD0A==
+X-Gm-Message-State: AGi0PuYLX3dDOEaNjXWBE3+DbKHZRxRy4Vw6EZpZd7sfzCSDe2t9xP0w
+        x6KzKw9xnMNLWCACW8azthBqQQ==
+X-Google-Smtp-Source: APiQypIPzHLCqcPpkTXMRiOcVbMkzFJd/j8pltNsJ1oUqIBWiQl4ZEevMtSVlfhwuPrcT/Rvkqk3Xg==
+X-Received: by 2002:a5d:6b86:: with SMTP id n6mr3018508wrx.113.1588945620266;
+        Fri, 08 May 2020 06:47:00 -0700 (PDT)
+Received: from lmecxl0524.home (2a01cb058702ff00bc4b798f4f30d41e.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:bc4b:798f:4f30:d41e])
+        by smtp.gmail.com with ESMTPSA id p7sm3189464wrf.31.2020.05.08.06.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 06:46:59 -0700 (PDT)
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org, fabrice.gasnier@st.com,
+        alexandre.torgue@st.com, mcoquelin.stm32@gmail.com,
+        robh+dt@kernel.org, srinivas.kandagatla@linaro.org,
+        Etienne Carriere <etienne.carriere@st.com>
+Subject: [PATCH] dt-bindings: nvmem: stm32: new property for data access
+Date:   Fri,  8 May 2020 15:45:27 +0200
+Message-Id: <20200508134527.26555-1-etienne.carriere@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 7 May 2020 16:42:12 +0200
-Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
+From: Etienne Carriere <etienne.carriere@st.com>
 
-> Add I2C driver for InvenSense ICM-426xxx devices.
-> 
-> Configure bus signal slew rates as indicated in the datasheet.
-> 
-> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Some incoherent rambling inline. + a few comments
+Introduce boolean property st,non-secure-otp for OTP data located
+in a factory programmed area that only secure firmware can access
+by default and that shall be reachable from the non-secure world.
 
-Jonathan
+Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+---
+ .../bindings/nvmem/st,stm32-romem.yaml          | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-> ---
->  .../iio/imu/inv_icm42600/inv_icm42600_i2c.c   | 117 ++++++++++++++++++
->  1 file changed, 117 insertions(+)
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> 
-> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> new file mode 100644
-> index 000000000000..b61f993beacf
-> --- /dev/null
-> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> @@ -0,0 +1,117 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2020 InvenSense, Inc.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of_device.h>
-
-Why?  Looks like you need the table and the device property stuff neither
-of which are in that file.
-
-linux/mod_devicetable.h
-linux/property.h
-
-
-> +
-> +#include "inv_icm42600.h"
-> +
-> +static int inv_icm42600_i2c_bus_setup(struct inv_icm42600_state *st)
-> +{
-> +	unsigned int mask, val;
-> +	int ret;
-> +
-> +	/* setup interface registers */
-> +	mask = INV_ICM42600_INTF_CONFIG6_MASK;
-> +	val = INV_ICM42600_INTF_CONFIG6_I3C_EN;
-> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG6,
-> +				 mask, val);
-
-I'd put the values inline where they are simple like these rather than
-using local variables.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	mask = INV_ICM42600_INTF_CONFIG4_I3C_BUS_ONLY;
-> +	val = 0;
-> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG4,
-> +				 mask, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* set slew rates for I2C and SPI */
-> +	mask = INV_ICM42600_DRIVE_CONFIG_I2C_MASK |
-> +	       INV_ICM42600_DRIVE_CONFIG_SPI_MASK;
-> +	val = INV_ICM42600_DRIVE_CONFIG_I2C(INV_ICM42600_SLEW_RATE_12_36NS) |
-> +	      INV_ICM42600_DRIVE_CONFIG_SPI(INV_ICM42600_SLEW_RATE_12_36NS);
-> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_DRIVE_CONFIG,
-> +				 mask, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* disable SPI bus */
-> +	mask = INV_ICM42600_INTF_CONFIG0_UI_SIFS_CFG_MASK;
-> +	val = INV_ICM42600_INTF_CONFIG0_UI_SIFS_CFG_SPI_DIS;
-> +	return regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG0,
-> +				  mask, val);
-> +}
-> +
-> +static int inv_icm42600_probe(struct i2c_client *client,
-> +			      const struct i2c_device_id *id)
-> +{
-> +	const void *match;
-> +	enum inv_icm42600_chip chip;
-> +	struct regmap *regmap;
-> +
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_I2C_BLOCK))
-> +		return -ENOTSUPP;
-> +
-> +	match = device_get_match_data(&client->dev);
-
-Hmm. Annoyingly if one were to call the of specific option
-of i2c_of_match_device it would handle the old style i2c match just fine without
-needing special handling.  However, it would fail to handle PRP0001 ACPI.
-
-Rather feels like there should be something similar for
-device_get_match_data so we could use the probe_new version of i2c device
-probing.
-
-Oh well. I guess thats a separate question for another day ;)
-
-Mind you can we actually probe this driver via the sysfs route?
-If not why do we need to handle the non firmware case at all?
+diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
+index d84deb4774a4..c11c99f085d7 100644
+--- a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
++++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
+@@ -24,6 +24,18 @@ properties:
+       - st,stm32f4-otp
+       - st,stm32mp15-bsec
  
-> +	if (match)
-> +		chip = (enum inv_icm42600_chip)match;
-> +	else if (id)
-> +		chip = (enum inv_icm42600_chip)id->driver_data;
-> +	else
-> +		return -EINVAL;
-> +
-> +	regmap = devm_regmap_init_i2c(client, &inv_icm42600_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	return inv_icm42600_core_probe(regmap, chip,
-> +				       inv_icm42600_i2c_bus_setup);
-> +}
-> +
-> +static const struct of_device_id inv_icm42600_of_matches[] = {
-> +	{
-> +		.compatible = "invensense,icm42600",
-> +		.data = (void *)INV_CHIP_ICM42600,
-> +	}, {
-> +		.compatible = "invensense,icm42602",
-> +		.data = (void *)INV_CHIP_ICM42602,
-> +	}, {
-> +		.compatible = "invensense,icm42605",
-> +		.data = (void *)INV_CHIP_ICM42605,
-> +	}, {
-> +		.compatible = "invensense,icm42622",
-> +		.data = (void *)INV_CHIP_ICM42622,
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, inv_icm42600_of_matches);
-> +
-> +static const struct i2c_device_id inv_icm42600_ids[] = {
-> +	{"icm42600", INV_CHIP_ICM42600},
-> +	{"icm42602", INV_CHIP_ICM42602},
-> +	{"icm42605", INV_CHIP_ICM42605},
-> +	{"icm42622", INV_CHIP_ICM42622},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, inv_icm42600_ids);
-> +
-> +static struct i2c_driver inv_icm42600_driver = {
-> +	.probe = inv_icm42600_probe,
-> +	.id_table = inv_icm42600_ids,
-> +	.driver = {
-> +		.of_match_table = inv_icm42600_of_matches,
-> +		.name = "inv-icm42600-i2c",
-> +		.pm = &inv_icm42600_pm_ops,
-> +	},
-> +};
-> +module_i2c_driver(inv_icm42600_driver);
-> +
-> +MODULE_AUTHOR("InvenSense, Inc.");
-> +MODULE_DESCRIPTION("InvenSense ICM-426xx I2C driver");
-> +MODULE_LICENSE("GPL");
-
++patternProperties:
++  "^.*@[0-9a-f]+$":
++    type: object
++
++    properties:
++      st,non-secure-otp:
++        description: |
++          This property explicits a factory programmed area that both secure
++          and non-secure worlds can access. It is needed when, by default, the
++          related area can only be reached by the secure world.
++        type: boolean
++
+ required:
+   - "#address-cells"
+   - "#size-cells"
+@@ -41,6 +53,11 @@ examples:
+       calib@22c {
+         reg = <0x22c 0x2>;
+       };
++
++      mac_addr@e4 {
++        reg = <0xe4 0x8>;
++        st,non-secure-otp;
++      };
+     };
+ 
+ ...
+-- 
+2.17.1
 
