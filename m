@@ -2,95 +2,150 @@ Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15008C47255
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 21:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F12C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBDED21655
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 21:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91033218AC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=securessvsmail.xyz header.i=@securessvsmail.xyz header.b="paHqxgQj";
-	dkim=pass (1024-bit key) header.d=securessvsmail.xyz header.i=@securessvsmail.xyz header.b="paHqxgQj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OG6y8Q3C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgEHV5n (ORCPT
+        id S1727944AbgEHWAe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 17:57:43 -0400
-Received: from freas.net ([62.173.152.33]:37802 "EHLO host.securessvsmail.xyz"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727774AbgEHV5n (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 May 2020 17:57:43 -0400
-X-Greylist: delayed 560 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 May 2020 17:57:42 EDT
-Received: from securessvsmail.xyz (2rt7.w.time4vps.cloud [89.40.10.200])
-        by host.securessvsmail.xyz (Postfix) with ESMTPA id 37886301229CB
-        for <devicetree@vger.kernel.org>; Sat,  9 May 2020 00:47:38 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 host.securessvsmail.xyz 37886301229CB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=securessvsmail.xyz;
-        s=default; t=1588974458;
-        bh=TOUrQtNA/9Lcm9zkDMeg72zVB746Q4FAPUpPflwTIWQ=;
-        h=Reply-To:From:To:Subject:Date:From;
-        b=paHqxgQjXZiCXq/A4MXTcb0uL2k2C/Yz2UWLg8/nGLUccU2oZdPB9ZjpxQDrkZkH6
-         AyVaL9a0/eStbq3+yv0oHXwpviYnEQMCX71UMi0wa2Zd0vSouCQNrDmBH9emWclM6o
-         fPiAtBz3b8BRyshBkIrqORFa/rOILnj7Y8DsTEZw=
-DKIM-Filter: OpenDKIM Filter v2.11.0 host.securessvsmail.xyz 37886301229CB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=securessvsmail.xyz;
-        s=default; t=1588974458;
-        bh=TOUrQtNA/9Lcm9zkDMeg72zVB746Q4FAPUpPflwTIWQ=;
-        h=Reply-To:From:To:Subject:Date:From;
-        b=paHqxgQjXZiCXq/A4MXTcb0uL2k2C/Yz2UWLg8/nGLUccU2oZdPB9ZjpxQDrkZkH6
-         AyVaL9a0/eStbq3+yv0oHXwpviYnEQMCX71UMi0wa2Zd0vSouCQNrDmBH9emWclM6o
-         fPiAtBz3b8BRyshBkIrqORFa/rOILnj7Y8DsTEZw=
-Reply-To: labdellatif@securesvsmail.com
-From:   Laghouili <labdellatif@securessvsmail.xyz>
-To:     devicetree@vger.kernel.org
-Subject: Collaboration
-Date:   08 May 2020 22:47:38 +0100
-Message-ID: <20200508224738.8287794E93112D67@securessvsmail.xyz>
-Mime-Version: 1.0
+        Fri, 8 May 2020 18:00:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727882AbgEHWAe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 18:00:34 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0313AC061A0C;
+        Fri,  8 May 2020 15:00:34 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g13so3632579wrb.8;
+        Fri, 08 May 2020 15:00:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=xOmnLWYGmk7Cao6x1GQJnELOggocIQqrtI1UISSIhY4=;
+        b=OG6y8Q3CTyvuqWZwebHQsVYGxzT1iEbIw7ZjLiavNWd6O1qC5eT9mYaa5IXA2e6OuD
+         UIWP8uhnVLbtyTZYxhg25tXLfX3ZA05OUeuEGgHLaNCMSqYTaPfRQ2R52EE1mkPVHp+E
+         CaQ7pt4ZSamjkDc1B5hdb3Mzq05xKzyQKN/njw6lTrmM6h3hLV2qOpTGCEMbHoYJYkaZ
+         9vTdSYzHCokzC756OXOveAOFrBOJHn0biiNV56d4BAmHyhG/MKEk5gUkrOBb55IAHbR5
+         snbB3hkG2JCbJ17Ih2L6dymj1XE3e5+FPxOV65uPNgS27sXk/cgcNcfpE4aVsioKoyV5
+         HBrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=xOmnLWYGmk7Cao6x1GQJnELOggocIQqrtI1UISSIhY4=;
+        b=M2e0ZkQFJPJKRYDln4vGaVGePsE3KsfIdIVwp3DMwny/8xcFqd/GBanPobX9XhiVTZ
+         /psov2w1ODD5mUUp30LifKlYNgB2XhuvbasTK6dlWRKWDDWdh9RcgqNDRDuuxh8ZCjYE
+         r0dkkEZmR3BuUcYS9A7IkZCt1ZNjUijuGnklLhTgh4bdzNaytpD1aSfXvkwlUXTStPU4
+         9i5971OXr9Wxm4dmfRBzz6em/xxpQ7ChIY1RrGgnFbRTBJqq0w+O0U+NKQpvEPj6KaEo
+         EHotnIvUnvigav++vJ1Vrhuc9yCTSOvKyTZOCGBsbc6z4LeKNVtACKD91x+1N4eBWuCB
+         4SnQ==
+X-Gm-Message-State: AGi0Pub7aWROfepxskfyLzjWGXRAaOjdoRXUJ1LUwd1vBY16FVtEXdJ7
+        H2kCGZQzhs3DWndtdqtiECs=
+X-Google-Smtp-Source: APiQypLFC+sCfhEPJQKEKeZiSHIpA2zKXjg8olq2UWaEJD0i4oV9iZ7WIyEaXgleFcD72u8wfu9FfA==
+X-Received: by 2002:adf:e9d0:: with SMTP id l16mr4945242wrn.69.1588975232479;
+        Fri, 08 May 2020 15:00:32 -0700 (PDT)
+Received: from AnsuelXPS (host186-254-dynamic.3-87-r.retail.telecomitalia.it. [87.3.254.186])
+        by smtp.gmail.com with ESMTPSA id q2sm3419042wrx.60.2020.05.08.15.00.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 May 2020 15:00:31 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Rob Herring'" <robh@kernel.org>
+Cc:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200430220619.3169-1-ansuelsmth@gmail.com> <20200430220619.3169-10-ansuelsmth@gmail.com> <20200507181314.GA21663@bogus>
+In-Reply-To: <20200507181314.GA21663@bogus>
+Subject: R: [PATCH v3 09/11] PCI: qcom: add ipq8064 rev2 variant and set tx term offset
+Date:   Sat, 9 May 2020 00:00:29 +0200
+Message-ID: <012d01d62584$17658bd0$4630a370$@gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQH0plL6ngkayUAAEEU7BifA9vEwhgKDdr3rAmN2QquoOn3wEA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello there,
+> On Fri, May 01, 2020 at 12:06:16AM +0200, Ansuel Smith wrote:
+> > From: Sham Muthayyan <smuthayy@codeaurora.org>
+> >
+> > Add tx term offset support to pcie qcom driver need in some revision of
+> > the ipq806x SoC.
+> > Ipq8064 have tx term offset set to 7.
+> > Ipq8064-v2 revision and ipq8065 have the tx term offset set to 0.
+> >
+> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
+> b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index da8058fd1925..372d2c8508b5 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -45,6 +45,9 @@
+> >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+> >
+> >  #define PCIE20_PARF_PHY_CTRL			0x40
+> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(12,
+> 16)
+> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+> > +
+> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
+> >  #define PHY_REFCLK_SSP_EN			BIT(16)
+> >  #define PHY_REFCLK_USE_PAD			BIT(12)
+> > @@ -118,6 +121,7 @@ struct qcom_pcie_resources_2_1_0 {
+> >  	u32 tx_swing_full;
+> >  	u32 tx_swing_low;
+> >  	u32 rx0_eq;
+> > +	u8 phy_tx0_term_offset;
+> >  };
+> >
+> >  struct qcom_pcie_resources_1_0_0 {
+> > @@ -318,6 +322,11 @@ static int
+> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+> >  	if (IS_ERR(res->ext_reset))
+> >  		return PTR_ERR(res->ext_reset);
+> >
+> > +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-ipq8064"))
+> > +		res->phy_tx0_term_offset = 7;
+> 
+> Based on my other comments, you'll want to turn this into match data.
+> 
 
-I am Laghouili Abdellatif. I am contacting you because I have a=20
-proposal that I think may be interested in. I represent the=20
-interest of my brother in-law who was a minister in the Syrian=20
-Government. As you probably know, there is a lot of crisis going=20
-on currently in Syria and my brother in-law has fallen out with=20
-the ruling Junta and the president because of his foreign=20
-policies and the senseless war and killings that has been going=20
-on for a while. Everybody in Syria is fed up and want a change=20
-but the president is too powerfull and he simply kills anyone=20
-that tries to oppose him. My brother in-law belives that he is at=20
-risk and he is now very scared for the safety of his family=20
-especially his kids. In order to ensure that his family is taken=20
-care of and protected incase anything happens to him, he has=20
-asked me to help him find a foreign investor who can help him=20
-accommodate and invest 100 MUSD privately that he has secured in=20
-Europe. He wants these funds safely invested so that the future=20
-and safety of his family can be secured.
+I don't understand what you mean here. I really can't think of another way
+to set this only for qcom,pci-ipq8064 as ipq8064-v2 and apq8064 use the
+same get resource function. Should I create a different get_resources for
+the other 2 device?
+ 
+> > +	else
+> > +		res->phy_tx0_term_offset = 0;
+> > +
 
-I am contacting you with the hope that you will be interested in=20
-helping us. We need your help to accommodate the funds in the=20
-banking system in your country and also invest it in a lucrative=20
-projects that will yeild good profits. We will handle all the=20
-logistics involved in the movement of the funds to you. The funds=20
-is already in Europe so you have nothing to worry about because=20
-this transaction will be executed in a legal way. My brother in-
-law has also promised to compensate you for your help. He wants=20
-this to be done discretely so I will be acting as his eyes and=20
-ears during the course of this transaction.
-
-If this proposal interests you, please kindly respond so that I=20
-can give you more details.
-
-Regards,
-
-Laghouili.
