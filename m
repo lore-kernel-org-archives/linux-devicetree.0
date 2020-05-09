@@ -2,114 +2,96 @@ Return-Path: <SRS0=JYCW=6X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F953C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 03:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 347F7C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 06:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBBB021974
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 03:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE8424957
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 06:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njmdmu/o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V65Vusn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgEIDSO (ORCPT
+        id S1728625AbgEIG62 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 23:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728421AbgEIDSO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 23:18:14 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB81C061A0C;
-        Fri,  8 May 2020 20:18:12 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y25so2000069pfn.5;
-        Fri, 08 May 2020 20:18:12 -0700 (PDT)
+        Sat, 9 May 2020 02:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728471AbgEIG62 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 02:58:28 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55915C061A0C;
+        Fri,  8 May 2020 23:58:29 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x10so1716279plr.4;
+        Fri, 08 May 2020 23:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=zzJCC69wo4d+308QEV5gjkekcxD2iqQ/9p1JPveRTkA=;
-        b=njmdmu/oDmlDhvjpaoG+P9T5eIShCdBkEG0nTzCSLP+xwYW+whiw2yvxZfH5RUAxHP
-         uc4+e0Kxj37xj6l6eFhPdkfWS3Hx5geToWAXIH76IcSnGYfwcMPnw/zxnqglqz9sA+Qt
-         1AgcwGIVKUMRAyILk5apYTQ5fPf+Qc0UB1dlKIzdEAzdf/GvsgoDySSyyqL5EeopGBjw
-         FJ2iLX3VNZvZXgaCY4fpJ+hnoF248TuxXOJwyUQye2hcoAofjJeQKm/CVO73CxVAUFK0
-         2iBY7o0xku8/H/hGBNcOZfrmgP0tetYVDF1woW8Ai83qqMOGvRxmlFL7di6v+Tzzi32C
-         2oUQ==
+        bh=N1XFUN54hBaoHoMSJaUUq6Q1IPBGgMS/vAMXMj1l0PA=;
+        b=V65Vusn384Pmmz/0XBFGNr9uPszlOINvkAcu4/LApGat2SGIwwG/jL0M2kqQcHSdda
+         m4z/u+rvsRrQAduhbxUBtw4nfEyLLqIlSUXZPMplgw578oBsUs0IO0hrusxqSRJBhNHx
+         CgmAHNOoiyoP83f9cnbG+icrlTT3egq2IvLV14G/pr3veaVGh9p941naMItqscEIrKFZ
+         Dew+AVyGB+kHtlc9e5Fcq2AbzEJvXx2/S6NmpKAgfhn1051N1RNNWuql3OAbhcFsc6dN
+         GYQEKnVST/zODUJhHA0FmMywXIkTy4lKjlNMhW04OkgFdXzFbEGO6bM3CMPUXSyGM3cv
+         eSsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zzJCC69wo4d+308QEV5gjkekcxD2iqQ/9p1JPveRTkA=;
-        b=qNtjCou26xOAjPP9smxuyDge8AwgFplHqmaIC8YP5tXvKCtRokAPAIrzROeWVVrCkP
-         htTuj6ogjqdM0UGbYL2sMwEL40bHMX4QzN842nvtAEUZlPSmuA9m+CqKXOawPmJTAUAl
-         XTqdjSRvokHdm0KcySUYjCPDde5WUS4JUrU2P7rF7Ageo1sND/02U2A0ZBPgRlIptI3N
-         wXxjxAu6q5hNrwLgUZ0IXrCxSMUm8rSnsuPwHTHUtRNNU2LCtzXMNmexzpMinI8riWcU
-         topO6oaYnNGs3ErDmCBea090xBaFMwPiNv5fGnFKD1neDWGldZQvx67+uiqYM9Mfy4CR
-         i6qQ==
-X-Gm-Message-State: AGi0PuYLIGvkn8ftxaU+8RVEQH7Q35jy3EFwMRqioDDWE2Fd0YmEiPin
-        pDMr051HLf54XEAmbog7Axr1q9M4
-X-Google-Smtp-Source: APiQypJkAC0n3gvoXXV0efJrhOQSNYN+H5GDw3dyc2NlKep//fT8F1LF9A72TusOtQrlbVT+XzlFmQ==
-X-Received: by 2002:a63:150:: with SMTP id 77mr4558840pgb.136.1588994292345;
-        Fri, 08 May 2020 20:18:12 -0700 (PDT)
-Received: from localhost.localdomain ([2001:2d8:eb61:15a8:d5fe:3ea6:5791:c8e8])
-        by smtp.gmail.com with ESMTPSA id a22sm2413872pga.28.2020.05.08.20.18.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 20:18:11 -0700 (PDT)
-From:   Steve Lee <steves.lee.maxim@gmail.com>
-X-Google-Original-From: Steve Lee <steves.lee@maximintegrated.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     steves.lee.maxim@gmail.com, steves.lee@maximintegrated.com
-Subject: [PATCH 1/2] dt-bindings: Added device tree binding for max98390
-Date:   Sat,  9 May 2020 12:17:37 +0900
-Message-Id: <20200509031737.8937-1-steves.lee@maximintegrated.com>
-X-Mailer: git-send-email 2.17.1
+        bh=N1XFUN54hBaoHoMSJaUUq6Q1IPBGgMS/vAMXMj1l0PA=;
+        b=Dl/a0piNPut0nVN9w4554xc+B0jui9GeR2XLBTncNxfwsMUlg6sN8wfVj5aY+dcrrC
+         cwoqADcUbXp5xNoXQSmtK+9T/tPjcq4f8zeEF3o9PTOC5JEk/2WySquOV+apMzJl7Hez
+         EZpcW9O3DdyxWyZnrt9EnXvNbVc2NNTRw7RhUyBU4r74fQiRgb0SH7vAam60HfTC68gJ
+         b3HdJGmu1+FtGR5tAfhkO9oibZWlQknHko2QmQbpDW7rj52zza+hy63AQX6NW2HXnfdw
+         /yX9s0xFPvSzlOAxgjnrqzmuqVx0pJGlL2NIL2P94xMK6DYklRtkAZ6RE4tk7Z8+602f
+         DGfw==
+X-Gm-Message-State: AGi0PuayCmqLKOrD3QFCFoBVTmXszQ4ezHqGzaNvJXQC/ezZHvWAOtzD
+        HmEBSUc/7h3os9eJAoo9/C0=
+X-Google-Smtp-Source: APiQypIGGgi4Y9M4smu76bcyFb/AGERt/4tIhOrijyH+H1PZ/GAjppEWMMv3hPG7Q+ZrsRCkwTJbfQ==
+X-Received: by 2002:a17:90a:a78f:: with SMTP id f15mr9977822pjq.120.1589007508826;
+        Fri, 08 May 2020 23:58:28 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
+        by smtp.gmail.com with ESMTPSA id w192sm3811572pff.126.2020.05.08.23.58.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 May 2020 23:58:28 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, broonie@kernel.org, p.zabel@pengutronix.de
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, dillonhua@gmail.com,
+        dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH 0/3] Enable l3gd20 on stm32f429-disco board
+Date:   Sat,  9 May 2020 14:58:20 +0800
+Message-Id: <1589007503-9523-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
----
- .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
+From: dillon min <dillon.minfei@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
-new file mode 100644
-index 000000000000..147dfd88cd3b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/max98390.txt
-@@ -0,0 +1,26 @@
-+Maxim Integrated MAX98390 Speaker Amplifier
-+
-+This device supports I2C.
-+
-+Required properties:
-+
-+ - compatible : "maxim,max98390"
-+
-+ - reg : the I2C address of the device.
-+
-+Optional properties:
-+
-+ - maxim,temperature_calib
-+   u32. The calculated temperature data was measured while doing the calibration. Data calibration : Temp / 100 * 2^12
-+
-+ - maxim,r0_calib
-+   u32. This is r0 calibration data which was measured in factory mode.
-+
-+Example:
-+
-+codec: max98390@38 {
-+   compatible = "maxim,max98390";
-+   reg = <0x38>;
-+   maxim,temperature_calib = <1024>;
-+   maxim,r0_calib = <0x224050>;
-+};
+This patchset is for enable l3gd20 on stm32f429-disco board
+has following changes:
+
+1, enable spi5 controller on stm32f429-disco (dts)
+2, add spi5 pinmap for stm32f429-disco	(dts)
+3, add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+
+
+dillon min (3):
+  ARM: dts: stm32: Add pin map for spi5 on stm32f429-disco board
+  ARM: dts: stm32: enable l3gd20 on stm32429-disco board
+  spi: stm32: Add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 17 +++++++++++++++++
+ arch/arm/boot/dts/stm32f429-disco.dts  | 24 ++++++++++++++++++++++++
+ drivers/spi/spi-stm32.c                | 29 +++++++++++++++++++++++++----
+ 3 files changed, 66 insertions(+), 4 deletions(-)
+
 -- 
-2.17.1
+2.7.4
 
