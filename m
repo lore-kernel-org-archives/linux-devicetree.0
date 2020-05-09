@@ -7,101 +7,121 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20568C47255
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 12:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0B4C47247
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 12:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F345024954
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 12:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAC321473
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 12:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQoyld5O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKc+TMdV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgEIMEi (ORCPT
+        id S1728365AbgEIMLo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 May 2020 08:04:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
+        Sat, 9 May 2020 08:11:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726600AbgEIMEi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 08:04:38 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F315EC061A0C;
-        Sat,  9 May 2020 05:04:37 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ms17so5473816pjb.0;
-        Sat, 09 May 2020 05:04:37 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1726782AbgEIMLn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 08:11:43 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6422DC061A0C;
+        Sat,  9 May 2020 05:11:43 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id h12so6062976pjz.1;
+        Sat, 09 May 2020 05:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wUpvglT7RVI0VhxUEBL660l9QrPqkvdcztJEgEYZgVE=;
-        b=NQoyld5OELIut/6UkNs1QRfi9i+epuoVHUKNHesyhNiHwyCgMz2dsk95CM2YAjdiPb
-         OZhokEcTwLonbVkoSEHArg5P11YL0pYA7FrqZ5Ea6n7pS8ZFYaRk/a4CrGJN24wjf+sT
-         6RVOq4a9iM5M9plD78kt081Z9pD3ZlqQqqb9ibpDiCEzXfhTKChPdU+g8X02t/Jtgxdj
-         iqqIDP79VMLiTWKUI1mPtfu7uKlTsNaJRGGZTyYs61iZLUmBUC0HkymmOUxIBJtsGoE1
-         tAjtALvt8Uwo82olkqA+E8DUC9qhhlv0TRtkv1bkkP/dYmiN0vTUUvvnAmdZ57tDvUjU
-         Fhhg==
+        bh=/wlJFZjwuM81Jh/anwiOMAgeJWfW7ajnVCis2G3dl9k=;
+        b=dKc+TMdVfruQ8XRDND37cvnLytXndIhsz15FSm3KMnB9sjom5WRjcOrEvJU+yPeS5m
+         uLGz8hq/6wUQa1UkJ6D9OOEWccrMgIgPRCSIg41TqPjfkTuKUC0Ehrb+iO1d1/2GLrOm
+         /fKTPoievZIameK2E1CPZF8ocqWO3Z/8TRLiqbEGadpMGPJn0yM6uLIs+CgTu4DUWr7y
+         eICNRW91C5opv2i6zQ/H16dMo5H6yMCP35TW1giskIX62HHVkbyL2rmiTQ+sX9p12pPZ
+         Jah2nAq0kBHiHiaNOja7ue0FFq5bhpEQjX4Ou6kmfYW07JR8EQFVw7saNPEW96vRu0/p
+         8Rcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wUpvglT7RVI0VhxUEBL660l9QrPqkvdcztJEgEYZgVE=;
-        b=GAwP5H6ciMIPEGzVn+qj0QpuWr3N7m/coVjcLHfjpNl5El6cy8C5ho2+a9SefevO+J
-         zQUq7sDld5bTuZ6MeANrai0eFwtPbQrU5e3A7izhuZ37kK0b8vQQ2I3CknUuXwV0HSYf
-         S/0cNmNfGHpvzRPEpERGxAAw0lzWOQL+6PmZlsyjM73tkSvaqewWWsUuF1m10jfrKQZ6
-         Ve17gY3/XBFYIzxEauUfLEJOMzWkiOTz1Ol7ptXzBNPtSDRS9uMtiPSUpvUMWLnEO2fp
-         ponzYiRF0ikAtW8Oc1B9aqKc1N+Qv+XXz6+SAGNVDFmSLF8sgi2JJaeLYU1JYvOpPYxk
-         zYrA==
-X-Gm-Message-State: AGi0Pua1QMtVckhkRxodc7X58Kkiu5F/cg7974Ahp/tcxpScfPSsPCT2
-        xqI1C1p/x8ICWwklHYGMzl3PQvF/p8vyupQKJeQ=
-X-Google-Smtp-Source: APiQypI0HEt+PVZf/6IcEtjlof5jsVdsR0hAD/QMKEx2hKai3zkGEHMgEwx0que30ynyNsOLHyxo3+JbdKXsfI5mkvA=
-X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr11395860pjb.228.1589025877306;
- Sat, 09 May 2020 05:04:37 -0700 (PDT)
+        bh=/wlJFZjwuM81Jh/anwiOMAgeJWfW7ajnVCis2G3dl9k=;
+        b=hBSOicqiMoRvQ1+95fkuDEIgq954Ssij6PrQLa2WsiDEGxpO/m6OCYqr/YLIK0PAhL
+         9Z+ScU431BFPewKX2WzmbLkb0Oy8Dy2JHC22QJlhItxp0tFvEPHkoL44ONNZR2ukhQn8
+         GM78JBbnJ+8uQGl5tOUW+q35ij9PKW2VYWKoOAgGktu7lm3JZDuQSQdoPI8JjTzKsQOa
+         FBQhRkzZAM77Q/+8+m0kNzZi+zpkg01akDdrQXFJXyIVoX5iv9ciBJ1mSBzZpH/vrS7M
+         339HsfyYA72cpUg+C0OlHatXNxC4OPQXHuHmEkPxgu2LslWbPI+sg02baWTVWmYmWje9
+         +Q2w==
+X-Gm-Message-State: AGi0PualsD2RU/X9pST9Rw80C4HX1EAELEXi8gcTxHS47/7haxh8Vlyl
+        M/AnUdY0EHZN4bu4sUBvD5eCH38/8mqpoDE5SxzGgzfq
+X-Google-Smtp-Source: APiQypI4sdcR01RdvjwOkHbMaSexjDF1WdE/GFMDiJPbhE1E1Lit7yy20vvFbGNhhAxdgjUqXNuG191HfxC7kMjnnGw=
+X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr11427305pjb.228.1589026302658;
+ Sat, 09 May 2020 05:11:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200508211929.39020-5-alcooperx@gmail.com> <Pine.LNX.4.44L0.2005082035460.2445-100000@netrider.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2005082035460.2445-100000@netrider.rowland.org>
+References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org> <1588919619-21355-3-git-send-email-akashast@codeaurora.org>
+In-Reply-To: <1588919619-21355-3-git-send-email-akashast@codeaurora.org>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 9 May 2020 15:04:26 +0300
-Message-ID: <CAHp75VfV8SwKG5aX-POce5aHCoqCHdnfpxzq6C6buJ_TaSacsg@mail.gmail.com>
-Subject: Re: [PATCH v8 4/5] usb: ehci: Add new EHCI driver for Broadcom STB SoC's
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
+Date:   Sat, 9 May 2020 15:11:31 +0300
+Message-ID: <CAHp75Vdjz7RBbyPwZwvNq5njwb_Jc76U=3pDpswmoFCFaGtNAQ@mail.gmail.com>
+Subject: Re: [PATCH V5 2/7] soc: qcom-geni-se: Add interconnect support to fix
+ earlycon crash
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, agross@kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, mgautam@codeaurora.org,
+        linux-arm-msm@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 9, 2020 at 3:47 AM Alan Stern <stern@rowland.harvard.edu> wrote:
-> On Fri, 8 May 2020, Al Cooper wrote:
+On Fri, May 8, 2020 at 9:34 AM Akash Asthana <akashast@codeaurora.org> wrote:
+>
+> QUP core clock is shared among all the SE drivers present on particular
+> QUP wrapper, the system will reset(unclocked access) if earlycon used after
+> QUP core clock is put to 0 from other SE drivers before real console comes
+> up.
+>
+> As earlycon can't vote for it's QUP core need, to fix this add ICC
+> support to common/QUP wrapper driver and put vote for QUP core from
+> probe on behalf of earlycon and remove vote during earlycon exit call.
 
 ...
 
-> > +     irq = platform_get_irq(pdev, 0);
-> > +     if (irq <= 0)
-> > +             return irq;
->
-> I don't want to get involved in the question of whether or not 0 is a
-> valid IRQ number.  The consensus has gone back and forth over the
-> years, and it just doesn't seem important.
->
-> However, as Sergei points out, if 0 is going to be regarded as an
-> invalid value then we shouldn't return 0 from the probe function here.
+> +       for_each_child_of_node(parent, child) {
 
-The most of the drivers rely on the fact that on platforms where it's
-the case (yes, we have you-know-which architecture has some legacy
-stuff there) request_irq() will fail anyway.
+> +               if (of_device_is_compatible(child, "qcom,geni-se-qup")) {
 
-> I'll leave the decision on how to handle this matter up to Greg.  :-)
+if (!...)
+ continue;
 
-Me too.
+will save you a readability of the loop body.
+
+Or...
+
+> +                       wrapper = platform_get_drvdata(of_find_device_by_node(
+> +                                       child));
+
+...leave this on one line
+
+> +                       icc_put(wrapper->to_core.path);
+> +                       wrapper->to_core.path = NULL;
+> +               }
+
+And here is the question, what do you want to do if you find more
+devices with the same compatible string?
+
+> +       }
 
 -- 
 With Best Regards,
