@@ -2,158 +2,114 @@ Return-Path: <SRS0=JYCW=6X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92845C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 02:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F953C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 03:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637C321974
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 02:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBBB021974
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 03:18:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rhIBt31i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njmdmu/o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgEICZF (ORCPT
+        id S1728655AbgEIDSO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 22:25:05 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:46730 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728158AbgEICZF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 22:25:05 -0400
-X-UUID: 61921461918f4312bde53252be353eb5-20200509
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=e29juNg1HoLgK0xyBynVp9fscLLhjBSGEnzupie2VT4=;
-        b=rhIBt31iLdtua2tySLIdKgbRcGoOVZ7Ou7vuN2PoLJXfmD1nM0gev8YqQYdZqTRZjzi/3JW88Yus9sbtBhdwBLD1vZSnC/t509jd7vi96Hl9wZfJ0b/QglHANm4SxeVCTOAKv6A1+6Y5jMKJagIJTQSMyBnyiOJqqSS5XZl8/7o=;
-X-UUID: 61921461918f4312bde53252be353eb5-20200509
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 198893934; Sat, 09 May 2020 10:25:01 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 9 May
- 2020 10:24:55 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 9 May 2020 10:24:54 +0800
-Message-ID: <1588991026.8804.235.camel@mhfsdcap03>
-Subject: Re: [V5, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     Tomasz Figa <tfiga@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Cao Bing Bu" <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg 
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        "Shengnan Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=A3=E7=94=B7=29?=" 
-        <shengnan.wang@mediatek.com>
-Date:   Sat, 9 May 2020 10:23:46 +0800
-In-Reply-To: <20200508211319.GJ9190@paasikivi.fi.intel.com>
-References: <20200502161727.30463-1-dongchun.zhu@mediatek.com>
-         <20200502161727.30463-3-dongchun.zhu@mediatek.com>
-         <20200506151352.GZ9190@paasikivi.fi.intel.com>
-         <1588855524.8804.168.camel@mhfsdcap03>
-         <20200507131220.GC9190@paasikivi.fi.intel.com>
-         <CAAFQd5DO9FGx9OF2RpcSprg0oLiVuS90w2qLAHCOSc3w6tKUWw@mail.gmail.com>
-         <1588907288.8804.188.camel@mhfsdcap03>
-         <20200508211319.GJ9190@paasikivi.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 3BBB81766EA864AEE615CDE2A4B27D9C91784377AC6494691DAE4A17F0C047FD2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Fri, 8 May 2020 23:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728421AbgEIDSO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 23:18:14 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB81C061A0C;
+        Fri,  8 May 2020 20:18:12 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y25so2000069pfn.5;
+        Fri, 08 May 2020 20:18:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zzJCC69wo4d+308QEV5gjkekcxD2iqQ/9p1JPveRTkA=;
+        b=njmdmu/oDmlDhvjpaoG+P9T5eIShCdBkEG0nTzCSLP+xwYW+whiw2yvxZfH5RUAxHP
+         uc4+e0Kxj37xj6l6eFhPdkfWS3Hx5geToWAXIH76IcSnGYfwcMPnw/zxnqglqz9sA+Qt
+         1AgcwGIVKUMRAyILk5apYTQ5fPf+Qc0UB1dlKIzdEAzdf/GvsgoDySSyyqL5EeopGBjw
+         FJ2iLX3VNZvZXgaCY4fpJ+hnoF248TuxXOJwyUQye2hcoAofjJeQKm/CVO73CxVAUFK0
+         2iBY7o0xku8/H/hGBNcOZfrmgP0tetYVDF1woW8Ai83qqMOGvRxmlFL7di6v+Tzzi32C
+         2oUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zzJCC69wo4d+308QEV5gjkekcxD2iqQ/9p1JPveRTkA=;
+        b=qNtjCou26xOAjPP9smxuyDge8AwgFplHqmaIC8YP5tXvKCtRokAPAIrzROeWVVrCkP
+         htTuj6ogjqdM0UGbYL2sMwEL40bHMX4QzN842nvtAEUZlPSmuA9m+CqKXOawPmJTAUAl
+         XTqdjSRvokHdm0KcySUYjCPDde5WUS4JUrU2P7rF7Ageo1sND/02U2A0ZBPgRlIptI3N
+         wXxjxAu6q5hNrwLgUZ0IXrCxSMUm8rSnsuPwHTHUtRNNU2LCtzXMNmexzpMinI8riWcU
+         topO6oaYnNGs3ErDmCBea090xBaFMwPiNv5fGnFKD1neDWGldZQvx67+uiqYM9Mfy4CR
+         i6qQ==
+X-Gm-Message-State: AGi0PuYLIGvkn8ftxaU+8RVEQH7Q35jy3EFwMRqioDDWE2Fd0YmEiPin
+        pDMr051HLf54XEAmbog7Axr1q9M4
+X-Google-Smtp-Source: APiQypJkAC0n3gvoXXV0efJrhOQSNYN+H5GDw3dyc2NlKep//fT8F1LF9A72TusOtQrlbVT+XzlFmQ==
+X-Received: by 2002:a63:150:: with SMTP id 77mr4558840pgb.136.1588994292345;
+        Fri, 08 May 2020 20:18:12 -0700 (PDT)
+Received: from localhost.localdomain ([2001:2d8:eb61:15a8:d5fe:3ea6:5791:c8e8])
+        by smtp.gmail.com with ESMTPSA id a22sm2413872pga.28.2020.05.08.20.18.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 20:18:11 -0700 (PDT)
+From:   Steve Lee <steves.lee.maxim@gmail.com>
+X-Google-Original-From: Steve Lee <steves.lee@maximintegrated.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     steves.lee.maxim@gmail.com, steves.lee@maximintegrated.com
+Subject: [PATCH 1/2] dt-bindings: Added device tree binding for max98390
+Date:   Sat,  9 May 2020 12:17:37 +0900
+Message-Id: <20200509031737.8937-1-steves.lee@maximintegrated.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgU2FrYXJpLA0KDQpPbiBTYXQsIDIwMjAtMDUtMDkgYXQgMDA6MTMgKzAzMDAsIFNha2FyaSBB
-aWx1cyB3cm90ZToNCj4gSGkgRG9uZ2NodW4sDQo+IA0KPiBPbiBGcmksIE1heSAwOCwgMjAyMCBh
-dCAxMTowODowOEFNICswODAwLCBEb25nY2h1biBaaHUgd3JvdGU6DQo+ID4gSGkgU2FrYXJpLCBU
-b21hc3osDQo+ID4gDQo+ID4gVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KPiA+IA0KPiA+IE9uIFRo
-dSwgMjAyMC0wNS0wNyBhdCAxNTo0NiArMDIwMCwgVG9tYXN6IEZpZ2Egd3JvdGU6DQo+ID4gPiBI
-aSBTYWthcmksIERvbmdjaHVuLA0KPiA+ID4gDQo+ID4gPiBPbiBUaHUsIE1heSA3LCAyMDIwIGF0
-IDM6MTIgUE0gU2FrYXJpIEFpbHVzDQo+ID4gPiA8c2FrYXJpLmFpbHVzQGxpbnV4LmludGVsLmNv
-bT4gd3JvdGU6DQo+ID4gPiA+DQo+ID4gPiA+IEhJIERvbmdjaHVuLA0KPiA+ID4gPg0KPiA+ID4g
-PiBPbiBUaHUsIE1heSAwNywgMjAyMCBhdCAwODo0NToyNFBNICswODAwLCBEb25nY2h1biBaaHUg
-d3JvdGU6DQo+ID4gPiA+ID4gSGkgU2FrYXJpLA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gVGhhbmtz
-IGZvciB0aGUgcmV2aWV3Lg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gT24gV2VkLCAyMDIwLTA1LTA2
-IGF0IDE4OjEzICswMzAwLCBTYWthcmkgQWlsdXMgd3JvdGU6DQo+ID4gPiA+ID4gPiBIaSBEb25n
-Y2h1biwNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBPbiBTdW4sIE1heSAwMywgMjAyMCBhdCAx
-MjoxNzoyN0FNICswODAwLCBEb25nY2h1biBaaHUgd3JvdGU6DQo+ID4gPiA+ID4gPiA+IEFkZCBh
-IFY0TDIgc3ViLWRldmljZSBkcml2ZXIgZm9yIERXOTc2OCB2b2ljZSBjb2lsIG1vdG9yLCBwcm92
-aWRpbmcNCj4gPiA+ID4gPiA+ID4gY29udHJvbCB0byBzZXQgdGhlIGRlc2lyZWQgZm9jdXMgdmlh
-IElJQyBzZXJpYWwgaW50ZXJmYWNlLg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBEb25nY2h1biBaaHUgPGRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20+DQo+ID4g
-PiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gPiAgTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAg
-fCAgIDEgKw0KPiA+ID4gPiA+ID4gPiAgZHJpdmVycy9tZWRpYS9pMmMvS2NvbmZpZyAgfCAgMTEg
-KysNCj4gPiA+ID4gPiA+ID4gIGRyaXZlcnMvbWVkaWEvaTJjL01ha2VmaWxlIHwgICAxICsNCj4g
-PiA+ID4gPiA+ID4gIGRyaXZlcnMvbWVkaWEvaTJjL2R3OTc2OC5jIHwgNDQwICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gPiA+ID4gPiAgNCBmaWxl
-cyBjaGFuZ2VkLCA0NTMgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPiA+ID4gPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvbWVkaWEvaTJjL2R3OTc2OC5jDQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gPiA+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTDQo+ID4gPiA+ID4g
-PiA+IGluZGV4IDhkNzJjNDEuLmM5MmRjOTkgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+IC0tLSBhL01B
-SU5UQUlORVJTDQo+ID4gPiA+ID4gPiA+ICsrKyBiL01BSU5UQUlORVJTDQo+ID4gPiA+ID4gPiA+
-IEBAIC01MTU3LDYgKzUxNTcsNyBAQCBMOiAgbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnDQo+
-ID4gPiA+ID4gPiA+ICBTOiAgICAgICBNYWludGFpbmVkDQo+ID4gPiA+ID4gPiA+ICBUOiAgICAg
-ICBnaXQgZ2l0Oi8vbGludXh0di5vcmcvbWVkaWFfdHJlZS5naXQNCj4gPiA+ID4gPiA+ID4gIEY6
-ICAgICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dv
-b24sZHc5NzY4LnlhbWwNCj4gPiA+ID4gPiA+ID4gK0Y6ICAgICAgIGRyaXZlcnMvbWVkaWEvaTJj
-L2R3OTc2OC5jDQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICBET05HV09PTiBEVzk4MDcg
-TEVOUyBWT0lDRSBDT0lMIERSSVZFUg0KPiA+ID4gPiA+ID4gPiAgTTogICAgICAgU2FrYXJpIEFp
-bHVzIDxzYWthcmkuYWlsdXNAbGludXguaW50ZWwuY29tPg0KPiA+ID4gPiA+ID4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9tZWRpYS9pMmMvS2NvbmZpZyBiL2RyaXZlcnMvbWVkaWEvaTJjL0tjb25m
-aWcNCj4gPiA+ID4gPiA+ID4gaW5kZXggMTI1ZDU5Ni4uNmEzZjlkYSAxMDA2NDQNCj4gPiA+ID4g
-PiA+ID4gLS0tIGEvZHJpdmVycy9tZWRpYS9pMmMvS2NvbmZpZw0KPiA+ID4gPiA+ID4gPiArKysg
-Yi9kcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnDQo+ID4gPiA+ID4gPiA+IEBAIC0xMDQwLDYgKzEw
-NDAsMTcgQEAgY29uZmlnIFZJREVPX0RXOTcxNA0KPiA+ID4gPiA+ID4gPiAgICAgY2FwYWJpbGl0
-eS4gVGhpcyBpcyBkZXNpZ25lZCBmb3IgbGluZWFyIGNvbnRyb2wgb2YNCj4gPiA+ID4gPiA+ID4g
-ICAgIHZvaWNlIGNvaWwgbW90b3JzLCBjb250cm9sbGVkIHZpYSBJMkMgc2VyaWFsIGludGVyZmFj
-ZS4NCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gK2NvbmZpZyBWSURFT19EVzk3NjgNCj4g
-PiA+ID4gPiA+ID4gKyB0cmlzdGF0ZSAiRFc5NzY4IGxlbnMgdm9pY2UgY29pbCBzdXBwb3J0Ig0K
-PiA+ID4gPiA+ID4gPiArIGRlcGVuZHMgb24gSTJDICYmIFZJREVPX1Y0TDIgJiYgTUVESUFfQ09O
-VFJPTExFUg0KPiA+ID4gPiA+ID4gPiArIGRlcGVuZHMgb24gVklERU9fVjRMMl9TVUJERVZfQVBJ
-DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gUGxlYXNlIGNoZWNrIGhvdyB0aGlzIHdvcmtzIGlu
-IHRoZSBtZWRpYSB0cmVlIG1hc3RlciBicmFuY2ggbm93IC0tLSBpdCdzDQo+ID4gPiA+ID4gPiBs
-YXJnZWx5IHNlbGVjdCBiYXNlZC4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBU
-aGUgYWN0dWF0b3IgZHJpdmVyIHVzZXMgc29tZSBzdHJ1Y3R1cmVzIHRoYXQgcmVxdWlyZSB0aGUN
-Cj4gPiA+ID4gPiBWSURFT19WNEwyX1NVQkRFVl9BUEkgY29kZSwgc28gaGVyZSB3ZSBhZGQgVklE
-RU9fVjRMMl9TVUJERVZfQVBJDQo+ID4gPiA+ID4gZGVwZW5kZW5jeSB0byBhdm9pZCBwb3NzaWJs
-ZSBidWlsZCBlcnJvciB3aGVuIGl0J3Mgbm90IGVuYWJsZWQuDQo+ID4gPiA+DQo+ID4gPiA+IFBs
-ZWFzZSBtYWtlIHN1cmUgdGhpcyB3b3JrcyB3aXRoIGN1cnJlbnQgbWVkaWEgdHJlZSBtYXN0ZXIu
-IFJpZ2h0IG5vdyBpdA0KPiA+ID4gPiBkb2VzIG5vdC4NCj4gPiA+ID4NCj4gPiA+IA0KPiA+ID4g
-RG9uZ2NodW4sIGFzIFNha2FyaSBzYWlkLCBwbGVhc2UgbWFrZSBzdXJlIHRvIGJhc2UgdGhlIHBh
-dGNoZXMgb24gdGhlDQo+ID4gPiBtYXN0ZXIgYnJhbmNoIG9mIHRoZSBtZWRpYSB0cmVlLg0KPiA+
-ID4gKGh0dHBzOi8vZ2l0LmxpbnV4dHYub3JnL21lZGlhX3RyZWUuZ2l0LykuIFRoZSBhcHByb2Fj
-aCBmb3IgS2NvbmZpZw0KPiA+ID4gZGVwZW5kZW5jeSBzZWxlY3Rpb24gdGhlcmUgc2VlbXMgdG8g
-aGF2ZSBjaGFuZ2VkIHJlY2VudGx5Lg0KPiA+ID4gDQo+ID4gDQo+ID4gSSBzZWFyY2hlZCB0aGUg
-cGF0Y2hlcyBvbiB0aGUgbWVkaWEgdHJlZSBtYXN0ZXIgYnJhbmNoLg0KPiA+IEl0IHNlZW1zIHRo
-YXQgd2UgbmVlZCB0byByZW1vdmUgdGhlIFZJREVPX1Y0TDJfU1VCREVWX0FQSSBkZXBlbmRlbmN5
-IGluDQo+ID4gS2NvbmZpZywgYW5kIGFkZCAjaWZkZWYgQ09ORklHX1ZJREVPX1Y0TDJfU1VCREVW
-X0FQSSB0byBpbmNsdWRlDQo+ID4gdjRsMi1zdWJkZXYgY29kZS4NCj4gPiBUaGUgY2hhbmdlIG1h
-aW5seSBpcyB0byBtYWtlIGJ1aWxkIHBhc3MsIGFuZCBkb24ndCByZXR1cm4gRU5PVFRZIGlmDQo+
-ID4gU1VCREVWX0FQSSBpcyBub3Qgc2V0Lg0KPiA+IEFtIEkgcmlnaHQ/DQo+IA0KPiBQbGVhc2Ug
-c2VlIEtjb25maWcgZW50cmllcyBmb3Igb3RoZXIgc2ltaWxhciBkcml2ZXJzIGZyb20gRG9uZ3dv
-b24uDQo+IA0KDQpTb3JyeSBmb3IgdGhlIG1pc3Rha2UgOi0pDQpKdXN0IGZvdW5kIHRoZSBjdXJy
-ZW50IG1lZGlhIHRyZWUgbWFzdGVyIGJyYW5jaCBjb2RlLi4uDQpJIHdvdWxkIHVwZGF0ZSBLY29u
-ZmlnIGVudHJpZXMgaW4gbmV4dCByZWxlYXNlIGJ5IHJlZmVycmluZyB0bzoNCmh0dHBzOi8vZ2l0
-LmxpbnV4dHYub3JnL21lZGlhX3RyZWUuZ2l0L3RyZWUvZHJpdmVycy9tZWRpYS9pMmMvS2NvbmZp
-Zw0KDQouLi4NCg0K
+Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+---
+ .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
+new file mode 100644
+index 000000000000..147dfd88cd3b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/max98390.txt
+@@ -0,0 +1,26 @@
++Maxim Integrated MAX98390 Speaker Amplifier
++
++This device supports I2C.
++
++Required properties:
++
++ - compatible : "maxim,max98390"
++
++ - reg : the I2C address of the device.
++
++Optional properties:
++
++ - maxim,temperature_calib
++   u32. The calculated temperature data was measured while doing the calibration. Data calibration : Temp / 100 * 2^12
++
++ - maxim,r0_calib
++   u32. This is r0 calibration data which was measured in factory mode.
++
++Example:
++
++codec: max98390@38 {
++   compatible = "maxim,max98390";
++   reg = <0x38>;
++   maxim,temperature_calib = <1024>;
++   maxim,r0_calib = <0x224050>;
++};
+-- 
+2.17.1
 
