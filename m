@@ -4,176 +4,188 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED33C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 08:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1D2C47257
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 08:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65EE82495A
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 08:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C7D24957
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 08:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgEIISj (ORCPT
+        id S1727838AbgEIIX5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 May 2020 04:18:39 -0400
-Received: from v6.sk ([167.172.42.174]:48982 "EHLO v6.sk"
+        Sat, 9 May 2020 04:23:57 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:42004 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgEIISi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 May 2020 04:18:38 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id CC517610B4;
-        Sat,  9 May 2020 08:18:06 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [RESEND PATCH v2 3/3] phy: Add USB HSIC PHY driver for Marvell MMP3 SoC
-Date:   Sat,  9 May 2020 10:17:54 +0200
-Message-Id: <20200509081754.474787-4-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200509081754.474787-1-lkundrak@v3.sk>
-References: <20200509081754.474787-1-lkundrak@v3.sk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727812AbgEIIX5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 May 2020 04:23:57 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 925031A028B;
+        Sat,  9 May 2020 10:23:54 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 349F91A015F;
+        Sat,  9 May 2020 10:23:50 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BB55D40285;
+        Sat,  9 May 2020 16:23:44 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: reset: Convert i.MX7 reset to json-schema
+Date:   Sat,  9 May 2020 16:14:37 +0800
+Message-Id: <1589012077-12088-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add PHY driver for the HSICs found on Marvell MMP3 SoC. The driver is
-rather straightforward -- the PHY essentially just needs to be enabled.
+Convert the i.MX7 reset binding to DT schema format using json-schema.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since v1:
-- Explicitely cast drvdata pointer to make sparse happy
+ .../devicetree/bindings/reset/fsl,imx7-src.txt     | 56 -------------------
+ .../devicetree/bindings/reset/fsl,imx7-src.yaml    | 64 ++++++++++++++++++++++
+ 2 files changed, 64 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
 
- drivers/phy/marvell/Kconfig         | 12 +++++
- drivers/phy/marvell/Makefile        |  1 +
- drivers/phy/marvell/phy-mmp3-hsic.c | 82 +++++++++++++++++++++++++++++
- 3 files changed, 95 insertions(+)
- create mode 100644 drivers/phy/marvell/phy-mmp3-hsic.c
-
-diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
-index 8f6273c837ec..6c96f2bf5266 100644
---- a/drivers/phy/marvell/Kconfig
-+++ b/drivers/phy/marvell/Kconfig
-@@ -116,3 +116,15 @@ config PHY_MMP3_USB
- 	  The PHY driver will be used by Marvell udc/ehci/otg driver.
- 
- 	  To compile this driver as a module, choose M here.
-+
-+config PHY_MMP3_HSIC
-+	tristate "Marvell MMP3 USB HSIC PHY Driver"
-+	depends on MACH_MMP3_DT || COMPILE_TEST
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support Marvell MMP3 USB HSIC PHY driver for
-+	  Marvell MMP3 SoC. This driver will be used my the Marvell EHCI
-+	  driver to initialize the interface to internal USB HSIC
-+	  components on MMP3-based boards.
-+
-+	  To compile this driver as a module, choose M here.
-diff --git a/drivers/phy/marvell/Makefile b/drivers/phy/marvell/Makefile
-index 5a106b1549f4..7f296ef02829 100644
---- a/drivers/phy/marvell/Makefile
-+++ b/drivers/phy/marvell/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
- obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
- obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
- obj-$(CONFIG_PHY_MMP3_USB)		+= phy-mmp3-usb.o
-+obj-$(CONFIG_PHY_MMP3_HSIC)		+= phy-mmp3-hsic.o
- obj-$(CONFIG_PHY_MVEBU_A3700_COMPHY)	+= phy-mvebu-a3700-comphy.o
- obj-$(CONFIG_PHY_MVEBU_A3700_UTMI)	+= phy-mvebu-a3700-utmi.o
- obj-$(CONFIG_PHY_MVEBU_A38X_COMPHY)	+= phy-armada38x-comphy.o
-diff --git a/drivers/phy/marvell/phy-mmp3-hsic.c b/drivers/phy/marvell/phy-mmp3-hsic.c
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+deleted file mode 100644
+index e10502d..0000000
+--- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
++++ /dev/null
+@@ -1,56 +0,0 @@
+-Freescale i.MX7 System Reset Controller
+-======================================
+-
+-Please also refer to reset.txt in this directory for common reset
+-controller binding usage.
+-
+-Required properties:
+-- compatible:
+-	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
+-	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
+-	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
+-	- For i.MX8MN SoCs should be "fsl,imx8mn-src", "fsl,imx8mq-src", "syscon"
+-	- For i.MX8MP SoCs should be "fsl,imx8mp-src", "syscon"
+-- reg: should be register base and length as documented in the
+-  datasheet
+-- interrupts: Should contain SRC interrupt
+-- #reset-cells: 1, see below
+-
+-example:
+-
+-src: reset-controller@30390000 {
+-     compatible = "fsl,imx7d-src", "syscon";
+-     reg = <0x30390000 0x2000>;
+-     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+-     #reset-cells = <1>;
+-};
+-
+-
+-Specifying reset lines connected to IP modules
+-==============================================
+-
+-The system reset controller can be used to reset various set of
+-peripherals. Device nodes that need access to reset lines should
+-specify them as a reset phandle in their corresponding node as
+-specified in reset.txt.
+-
+-Example:
+-
+-	pcie: pcie@33800000 {
+-
+-		...
+-
+-		resets = <&src IMX7_RESET_PCIEPHY>,
+-			 <&src IMX7_RESET_PCIE_CTRL_APPS_EN>;
+-		reset-names = "pciephy", "apps";
+-
+-		...
+-        };
+-
+-
+-For list of all valid reset indices see
+-<dt-bindings/reset/imx7-reset.h> for i.MX7,
+-<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
+-<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM and
+-<dt-bindings/reset/imx8mq-reset.h> for i.MX8MN and
+-<dt-bindings/reset/imx8mp-reset.h> for i.MX8MP
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
 new file mode 100644
-index 000000000000..47c1e8894939
+index 0000000..ad254ba
 --- /dev/null
-+++ b/drivers/phy/marvell/phy-mmp3-hsic.c
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2020 Lubomir Rintel <lkundrak@v3.sk>
-+ */
++++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/fsl,imx7-src.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
++title: Freescale i.MX7 System Reset Controller
 +
-+#define HSIC_CTRL	0x08
-+#define HSIC_ENABLE	BIT(7)
-+#define PLL_BYPASS	BIT(4)
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
 +
-+static int mmp3_hsic_phy_init(struct phy *phy)
-+{
-+	void __iomem *base = (void __iomem *)phy_get_drvdata(phy);
-+	u32 hsic_ctrl;
++description: |
++  The system reset controller can be used to reset various set of
++  peripherals. Device nodes that need access to reset lines should
++  specify them as a reset phandle in their corresponding node as
++  specified in reset.txt.
 +
-+	hsic_ctrl = readl_relaxed(base + HSIC_CTRL);
-+	hsic_ctrl |= HSIC_ENABLE;
-+	hsic_ctrl |= PLL_BYPASS;
-+	writel_relaxed(hsic_ctrl, base + HSIC_CTRL);
++  For list of all valid reset indices see
++    <dt-bindings/reset/imx7-reset.h> for i.MX7,
++    <dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
++    <dt-bindings/reset/imx8mq-reset.h> for i.MX8MM and
++    <dt-bindings/reset/imx8mq-reset.h> for i.MX8MN and
++    <dt-bindings/reset/imx8mp-reset.h> for i.MX8MP
 +
-+	return 0;
-+}
++properties:
++  compatible:
++    items:
++      - enum:
++        - fsl,imx7d-src
++        - fsl,imx8mq-src
++        - fsl,imx8mm-src
++        - fsl,imx8mn-src
++        - fsl,imx8mp-src
++      - const: syscon
 +
-+static const struct phy_ops mmp3_hsic_phy_ops = {
-+	.init		= mmp3_hsic_phy_init,
-+	.owner		= THIS_MODULE,
-+};
++  reg:
++    maxItems: 1
 +
-+static const struct of_device_id mmp3_hsic_phy_of_match[] = {
-+	{ .compatible = "marvell,mmp3-hsic-phy", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, mmp3_hsic_phy_of_match);
++  interrupts:
++    maxItems: 1
 +
-+static int mmp3_hsic_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct phy_provider *provider;
-+	struct resource *resource;
-+	void __iomem *base;
-+	struct phy *phy;
++  '#reset-cells':
++    const: 1
 +
-+	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, resource);
-+	if (IS_ERR(base)) {
-+		dev_err(dev, "failed to remap PHY regs\n");
-+		return PTR_ERR(base);
-+	}
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#reset-cells'
 +
-+	phy = devm_phy_create(dev, NULL, &mmp3_hsic_phy_ops);
-+	if (IS_ERR(phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(phy);
-+	}
++additionalProperties: false
 +
-+	phy_set_drvdata(phy, (void *)base);
-+	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(provider)) {
-+		dev_err(dev, "failed to register PHY provider\n");
-+		return PTR_ERR(provider);
-+	}
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
 +
-+	return 0;
-+}
++    reset-controller@30390000 {
++        compatible = "fsl,imx7d-src", "syscon";
++        reg = <0x30390000 0x2000>;
++        interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++        #reset-cells = <1>;
++    };
 +
-+static struct platform_driver mmp3_hsic_phy_driver = {
-+	.probe		= mmp3_hsic_phy_probe,
-+	.driver		= {
-+		.name	= "mmp3-hsic-phy",
-+		.of_match_table = mmp3_hsic_phy_of_match,
-+	},
-+};
-+module_platform_driver(mmp3_hsic_phy_driver);
-+
-+MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-+MODULE_DESCRIPTION("Marvell MMP3 USB HSIC PHY Driver");
-+MODULE_LICENSE("GPL");
++...
 -- 
-2.26.2
+2.7.4
 
