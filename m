@@ -2,142 +2,209 @@ Return-Path: <SRS0=JYCW=6X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752E4C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 13:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493E0C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 13:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C519214D8
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 13:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D0E214D8
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 13:44:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fMcZW0Xd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgEINMV (ORCPT
+        id S1726942AbgEINoV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 May 2020 09:12:21 -0400
-Received: from fieber.vanmierlo.com ([84.243.197.177]:36179 "EHLO
-        kerio9.vanmierlo.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726370AbgEINMV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 09:12:21 -0400
-X-Footer: dmFubWllcmxvLmNvbQ==
-Received: from roundcube.vanmierlo.com ([192.168.37.37])
-        (authenticated user m.brock@vanmierlo.com)
-        by kerio9.vanmierlo.com (Kerio Connect 9.2.12 patch 1) with ESMTPA;
-        Sat, 9 May 2020 14:41:38 +0200
+        Sat, 9 May 2020 09:44:21 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:59244 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726782AbgEINoV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 09:44:21 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 26CF130D;
+        Sat,  9 May 2020 15:44:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1589031858;
+        bh=7ujcB1XiyYpi6kSKrCO4PkwZ8y4r1hWPfytMfvnyY4U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fMcZW0Xdwz+2i/Y1YD/XzxevPo9t5tFUqBQrZl8MQUQquRHgWOpZHE1KoxEhfQMxT
+         FoG0ZMRMprkb2BVaQaMm0+f0BY5fuTPWYbRY3wuJxBg+KQCMzAR8FH+i20YZaCz/Vv
+         k83pJTzCERFtUCglPJMmGagn3gFxbRHKpSakbFFo=
+Date:   Sat, 9 May 2020 16:44:10 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     srk@48.io
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        Sean Cross <xobs@kosagi.com>
+Subject: Re: [PATCH 1/2] dt-bindings: it6251: add bindings for IT6251
+ LVDS-to-eDP bridge
+Message-ID: <20200509134410.GA5946@pendragon.ideasonboard.com>
+References: <20200509111732.26102-1-srk@48.io>
+ <20200509111732.26102-2-srk@48.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 09 May 2020 14:41:38 +0200
-From:   Maarten Brock <m.brock@vanmierlo.com>
-To:     Daniel Mack <daniel@zonque.org>
-Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org, jslaby@suse.com,
-        pascal.huerst@gmail.com, linux-serial-owner@vger.kernel.org
-Subject: Re: [PATCH 3/4] sc16is7xx: Always use falling edge IRQ
-In-Reply-To: <20200508143757.2609740-4-daniel@zonque.org>
-References: <20200508143757.2609740-1-daniel@zonque.org>
- <20200508143757.2609740-4-daniel@zonque.org>
-Message-ID: <d36a13cdeafd5fe35f662644b1c285c0@vanmierlo.com>
-X-Sender: m.brock@vanmierlo.com
-User-Agent: Roundcube Webmail/1.3.3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200509111732.26102-2-srk@48.io>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-08 16:37, Daniel Mack wrote:
-> The driver currently only uses IRQF_TRIGGER_FALLING if the probing
-> happened without a device-tree setup. The device however will always
-> generate falling edges on its IRQ line, so let's use that flag in
-> all cases.
+Hi Richard,
 
-Would it not be wise to also select IRQF_SHARED?
+Thank you for the patch.
 
-Which leads me to a more generic question: Is there a general method to 
-tell
-in the device tree that an interrupt line is shared?
-
+On Sat, May 09, 2020 at 01:17:31PM +0200, srk@48.io wrote:
+> From: Marek Vasut <marex@denx.de>
 > 
-> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
+> 
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Signed-off-by: Richard Marko <srk@48.io>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Sean Cross <xobs@kosagi.com>
+> Cc: devicetree@vger.kernel.org
+> To: dri-devel@lists.freedesktop.org
 > ---
->  drivers/tty/serial/sc16is7xx.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
+>  .../bindings/display/bridge/ite,it6251.yaml   | 97 +++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
 > 
-> diff --git a/drivers/tty/serial/sc16is7xx.c 
-> b/drivers/tty/serial/sc16is7xx.c
-> index e4025b8566a4..0997a5cac02a 100644
-> --- a/drivers/tty/serial/sc16is7xx.c
-> +++ b/drivers/tty/serial/sc16is7xx.c
-> @@ -1185,7 +1185,7 @@ static int
-> sc16is7xx_gpio_direction_output(struct gpio_chip *chip,
-> 
->  static int sc16is7xx_probe(struct device *dev,
->  			   const struct sc16is7xx_devtype *devtype,
-> -			   struct regmap *regmap, int irq, unsigned long flags)
-> +			   struct regmap *regmap, int irq)
->  {
->  	struct sched_param sched_param = { .sched_priority = MAX_RT_PRIO / 2 
-> };
->  	unsigned long freq = 0, *pfreq = dev_get_platdata(dev);
-> @@ -1318,7 +1318,7 @@ static int sc16is7xx_probe(struct device *dev,
-> 
->  	/* Setup interrupt */
->  	ret = devm_request_irq(dev, irq, sc16is7xx_irq,
-> -			       flags, dev_name(dev), s);
-> +			       IRQF_TRIGGER_FALLING, dev_name(dev), s);
->  	if (!ret)
->  		return 0;
-> 
-> @@ -1392,7 +1392,6 @@ static struct regmap_config regcfg = {
->  static int sc16is7xx_spi_probe(struct spi_device *spi)
->  {
->  	const struct sc16is7xx_devtype *devtype;
-> -	unsigned long flags = 0;
->  	struct regmap *regmap;
->  	int ret;
-> 
-> @@ -1413,14 +1412,13 @@ static int sc16is7xx_spi_probe(struct 
-> spi_device *spi)
->  		const struct spi_device_id *id_entry = spi_get_device_id(spi);
-> 
->  		devtype = (struct sc16is7xx_devtype *)id_entry->driver_data;
-> -		flags = IRQF_TRIGGER_FALLING;
->  	}
-> 
->  	regcfg.max_register = (0xf << SC16IS7XX_REG_SHIFT) |
->  			      (devtype->nr_uart - 1);
->  	regmap = devm_regmap_init_spi(spi, &regcfg);
-> 
-> -	return sc16is7xx_probe(&spi->dev, devtype, regmap, spi->irq, flags);
-> +	return sc16is7xx_probe(&spi->dev, devtype, regmap, spi->irq);
->  }
-> 
->  static int sc16is7xx_spi_remove(struct spi_device *spi)
-> @@ -1459,7 +1457,6 @@ static int sc16is7xx_i2c_probe(struct i2c_client 
-> *i2c,
->  			       const struct i2c_device_id *id)
->  {
->  	const struct sc16is7xx_devtype *devtype;
-> -	unsigned long flags = 0;
->  	struct regmap *regmap;
-> 
->  	if (i2c->dev.of_node) {
-> @@ -1468,14 +1465,13 @@ static int sc16is7xx_i2c_probe(struct 
-> i2c_client *i2c,
->  			return -ENODEV;
->  	} else {
->  		devtype = (struct sc16is7xx_devtype *)id->driver_data;
-> -		flags = IRQF_TRIGGER_FALLING;
->  	}
-> 
->  	regcfg.max_register = (0xf << SC16IS7XX_REG_SHIFT) |
->  			      (devtype->nr_uart - 1);
->  	regmap = devm_regmap_init_i2c(i2c, &regcfg);
-> 
-> -	return sc16is7xx_probe(&i2c->dev, devtype, regmap, i2c->irq, flags);
-> +	return sc16is7xx_probe(&i2c->dev, devtype, regmap, i2c->irq);
->  }
-> 
->  static int sc16is7xx_i2c_remove(struct i2c_client *client)
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
+> new file mode 100644
+> index 000000000000..8daa44a30fa1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/ite,it6251.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ITE IT6251 LVDS-to-eDP bridge bindings
+> +
+> +maintainers:
+> +  - Marek Vasut <marex@denx.de>
+> +  - Richard Marko <srk@48.io>
+> +
+> +description: |
+> +  The IT6251 is a high-performance single-chip
+> +  De-SSC LVDS to DisplayPort converter.
+> +  Combined with LVDS receiver and DisplayPort Transmitter,
+> +  the IT6251 supports LVDS input and DisplayPort 1.1a
+> +  output by conversion function.
 
+You could reflow this to the 80 columns limit. It also sounds like
+marketing material copied from the datasheet, with "by conversion
+function" likely a bad translation.
+
+> +
+> +properties:
+> +  compatible:
+> +    const: ite,it6251
+> +
+> +  reg:
+> +    items:
+> +      - description: I2C address of the bridge
+> +      - description: I2C address of the LVDS part
+> +
+> +  reg-names:
+> +    items:
+> +      - const: bridge
+> +      - const: lvds
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description: |
+> +         Video port for eDP output (typically panel).
+> +
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          Video port for LVDS input.
+
+We traditionally use port 0 for the input and port 1 for the output. I'd
+rather do the same here to remain consistent, and allow generic code to
+operate on this device.
+
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +    additionalProperties: false
+> +
+> +  power-supply: true
+
+There are multiple power supplies for the chip, shouldn't we have
+multiple properties ? I would also name the properties according to the
+supply name.
+
+The chip has an HPD input. I would recommend already documenting an
+optional boolean no-hpd property to report when the HPD input is not
+connected.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - power-supply
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    it6251@5c {
+> +      compatible = "ite,it6251";
+> +      reg = <0x5c>, <0x5e>;
+> +      reg-names = "bridge", "lvds";
+> +      power-supply = <&reg_display>;
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+> +          bridge_out_edp0: endpoint {
+> +            remote-endpoint = <&panel_in_edp0>;
+> +          };
+> +        };
+> +
+> +        port@1 {
+> +          reg = <1>;
+> +          bridge_in_lvds0: endpoint {
+> +            remote-endpoint = <&lvds0_out>;
+> +          };
+> +        };
+> +      };
+> +    };
+
+-- 
+Regards,
+
+Laurent Pinchart
