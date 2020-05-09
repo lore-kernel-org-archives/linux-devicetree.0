@@ -2,120 +2,178 @@ Return-Path: <SRS0=JYCW=6X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96766C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 08:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED33C28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 08:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 770CC24966
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 08:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65EE82495A
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 08:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgEIISZ (ORCPT
+        id S1727839AbgEIISj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 May 2020 04:18:25 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:50171 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgEIISY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 04:18:24 -0400
-X-Originating-IP: 212.216.150.148
-Received: from uno.localdomain (a-ur1-85.tin.it [212.216.150.148])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id BFCD140002;
-        Sat,  9 May 2020 08:18:19 +0000 (UTC)
-Date:   Sat, 9 May 2020 10:21:32 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh@kernel.org>, tfiga@google.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v10 03/13] dt-bindings: Add media properties
-Message-ID: <20200509082132.zpojrdqcleb2dgp2@uno.localdomain>
-References: <20200508100158.3437161-1-jacopo@jmondi.org>
- <20200508100158.3437161-4-jacopo@jmondi.org>
- <c09f2875-b9ca-8154-0491-3c5da1dc0c10@xs4all.nl>
+        Sat, 9 May 2020 04:18:39 -0400
+Received: from v6.sk ([167.172.42.174]:48982 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727803AbgEIISi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 May 2020 04:18:38 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id CC517610B4;
+        Sat,  9 May 2020 08:18:06 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [RESEND PATCH v2 3/3] phy: Add USB HSIC PHY driver for Marvell MMP3 SoC
+Date:   Sat,  9 May 2020 10:17:54 +0200
+Message-Id: <20200509081754.474787-4-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200509081754.474787-1-lkundrak@v3.sk>
+References: <20200509081754.474787-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c09f2875-b9ca-8154-0491-3c5da1dc0c10@xs4all.nl>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hans,
+Add PHY driver for the HSICs found on Marvell MMP3 SoC. The driver is
+rather straightforward -- the PHY essentially just needs to be enabled.
 
-On Fri, May 08, 2020 at 01:04:24PM +0200, Hans Verkuil wrote:
-> On 08/05/2020 12:01, Jacopo Mondi wrote:
-> > Add a DT header file to contain definitions for standard media properties.
-> >
-> > The file is named after:
-> > Documentation/devicetree/bindings/media/video-interfaces.txt
-> > which contains the standard media properties definitions.
-> >
-> > Initially add three macros to define the supported 'orientation'
-> > property values.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
->
-> For v11 just move this to the end of the series since it is an independent
-> patch.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Ack, I can leave it out as well, since I have no users if not a local
-one for testing.
+---
+Changes since v1:
+- Explicitely cast drvdata pointer to make sparse happy
 
->
-> > ---
-> >  include/dt-bindings/media/video-interfaces.h | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >  create mode 100644 include/dt-bindings/media/video-interfaces.h
-> >
-> > diff --git a/include/dt-bindings/media/video-interfaces.h b/include/dt-bindings/media/video-interfaces.h
-> > new file mode 100644
-> > index 0000000000000..404c697d6bd6e
-> > --- /dev/null
-> > +++ b/include/dt-bindings/media/video-interfaces.h
-> > @@ -0,0 +1,15 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * include/dt-bindings/media/video-interfaces.h
-> > + *
-> > + * Copyright (C) 2020 Jacopo Mondi <jacopo@jmondi.org>
-> > + */
-> > +
-> > +#ifndef __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
-> > +#define __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
-> > +
-> > +#define FRONT_CAMERA		<0>
-> > +#define BACK_CAMERA		<1>
-> > +#define EXTERNAL_CAMERA		<2>
->
-> Wouldn't it be better to say CAMERA_FRONT (i.e. swap the words) or
-> even CAMERA_ORIENTATION_FRONT?
+ drivers/phy/marvell/Kconfig         | 12 +++++
+ drivers/phy/marvell/Makefile        |  1 +
+ drivers/phy/marvell/phy-mmp3-hsic.c | 82 +++++++++++++++++++++++++++++
+ 3 files changed, 95 insertions(+)
+ create mode 100644 drivers/phy/marvell/phy-mmp3-hsic.c
 
-Once I wrote
-                orientation = CAMERA_FRONT;
+diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
+index 8f6273c837ec..6c96f2bf5266 100644
+--- a/drivers/phy/marvell/Kconfig
++++ b/drivers/phy/marvell/Kconfig
+@@ -116,3 +116,15 @@ config PHY_MMP3_USB
+ 	  The PHY driver will be used by Marvell udc/ehci/otg driver.
+ 
+ 	  To compile this driver as a module, choose M here.
++
++config PHY_MMP3_HSIC
++	tristate "Marvell MMP3 USB HSIC PHY Driver"
++	depends on MACH_MMP3_DT || COMPILE_TEST
++	select GENERIC_PHY
++	help
++	  Enable this to support Marvell MMP3 USB HSIC PHY driver for
++	  Marvell MMP3 SoC. This driver will be used my the Marvell EHCI
++	  driver to initialize the interface to internal USB HSIC
++	  components on MMP3-based boards.
++
++	  To compile this driver as a module, choose M here.
+diff --git a/drivers/phy/marvell/Makefile b/drivers/phy/marvell/Makefile
+index 5a106b1549f4..7f296ef02829 100644
+--- a/drivers/phy/marvell/Makefile
++++ b/drivers/phy/marvell/Makefile
+@@ -3,6 +3,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+ obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
+ obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
+ obj-$(CONFIG_PHY_MMP3_USB)		+= phy-mmp3-usb.o
++obj-$(CONFIG_PHY_MMP3_HSIC)		+= phy-mmp3-hsic.o
+ obj-$(CONFIG_PHY_MVEBU_A3700_COMPHY)	+= phy-mvebu-a3700-comphy.o
+ obj-$(CONFIG_PHY_MVEBU_A3700_UTMI)	+= phy-mvebu-a3700-utmi.o
+ obj-$(CONFIG_PHY_MVEBU_A38X_COMPHY)	+= phy-armada38x-comphy.o
+diff --git a/drivers/phy/marvell/phy-mmp3-hsic.c b/drivers/phy/marvell/phy-mmp3-hsic.c
+new file mode 100644
+index 000000000000..47c1e8894939
+--- /dev/null
++++ b/drivers/phy/marvell/phy-mmp3-hsic.c
+@@ -0,0 +1,82 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2020 Lubomir Rintel <lkundrak@v3.sk>
++ */
++
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++
++#define HSIC_CTRL	0x08
++#define HSIC_ENABLE	BIT(7)
++#define PLL_BYPASS	BIT(4)
++
++static int mmp3_hsic_phy_init(struct phy *phy)
++{
++	void __iomem *base = (void __iomem *)phy_get_drvdata(phy);
++	u32 hsic_ctrl;
++
++	hsic_ctrl = readl_relaxed(base + HSIC_CTRL);
++	hsic_ctrl |= HSIC_ENABLE;
++	hsic_ctrl |= PLL_BYPASS;
++	writel_relaxed(hsic_ctrl, base + HSIC_CTRL);
++
++	return 0;
++}
++
++static const struct phy_ops mmp3_hsic_phy_ops = {
++	.init		= mmp3_hsic_phy_init,
++	.owner		= THIS_MODULE,
++};
++
++static const struct of_device_id mmp3_hsic_phy_of_match[] = {
++	{ .compatible = "marvell,mmp3-hsic-phy", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, mmp3_hsic_phy_of_match);
++
++static int mmp3_hsic_phy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct phy_provider *provider;
++	struct resource *resource;
++	void __iomem *base;
++	struct phy *phy;
++
++	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, resource);
++	if (IS_ERR(base)) {
++		dev_err(dev, "failed to remap PHY regs\n");
++		return PTR_ERR(base);
++	}
++
++	phy = devm_phy_create(dev, NULL, &mmp3_hsic_phy_ops);
++	if (IS_ERR(phy)) {
++		dev_err(dev, "failed to create PHY\n");
++		return PTR_ERR(phy);
++	}
++
++	phy_set_drvdata(phy, (void *)base);
++	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	if (IS_ERR(provider)) {
++		dev_err(dev, "failed to register PHY provider\n");
++		return PTR_ERR(provider);
++	}
++
++	return 0;
++}
++
++static struct platform_driver mmp3_hsic_phy_driver = {
++	.probe		= mmp3_hsic_phy_probe,
++	.driver		= {
++		.name	= "mmp3-hsic-phy",
++		.of_match_table = mmp3_hsic_phy_of_match,
++	},
++};
++module_platform_driver(mmp3_hsic_phy_driver);
++
++MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
++MODULE_DESCRIPTION("Marvell MMP3 USB HSIC PHY Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.26.2
 
-I realized that it was nicer to have
-
-                orientation = FRONT_CAMERA:
-
-I'll stop bikeshedding though and wait for other comments to see if
-this can be included or not.
-
->
-> Regards,
->
-> 	Hans
->
-> > +
-> > +#endif /* __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__ */
-> > --
-> > 2.26.1
-> >
->
