@@ -2,41 +2,39 @@ Return-Path: <SRS0=JYCW=6X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF604C47247
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 11:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2FFC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 11:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99B7E20A8B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 11:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 748A421473
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 11:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=48.io header.i=@48.io header.b="cYEODrpR"
+	dkim=pass (1024-bit key) header.d=48.io header.i=@48.io header.b="q8enCW2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgEIL1D (ORCPT
+        id S1728375AbgEIL1B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 May 2020 07:27:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728359AbgEIL1C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 07:27:02 -0400
-Received: from pruto.48.io (48.io [IPv6:2a01:430:17:1::ffff:361])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B4B9C061A0C;
-        Sat,  9 May 2020 04:27:02 -0700 (PDT)
+        Sat, 9 May 2020 07:27:01 -0400
+Received: from 48.io ([37.205.10.103]:60552 "EHLO pruto.48.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727993AbgEIL1B (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 May 2020 07:27:01 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by pruto.48.io (Postfix) with ESMTPSA id 7F64194A35;
-        Sat,  9 May 2020 13:18:42 +0200 (CEST)
-DMARC-Filter: OpenDMARC Filter v1.3.2 pruto.48.io 7F64194A35
+        by pruto.48.io (Postfix) with ESMTPSA id 762B694C91;
+        Sat,  9 May 2020 13:18:43 +0200 (CEST)
+DMARC-Filter: OpenDMARC Filter v1.3.2 pruto.48.io 762B694C91
 Authentication-Results: pruto.48.io; dmarc=none (p=none dis=none) header.from=48.io
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=48.io; s=default;
-        t=1589023122; bh=rQmJ3VZbaNqR1Alm9ewytRFpWRVzT3bSjw86Qk2N+54=;
-        h=From:To:Cc:Subject:Date;
-        b=cYEODrpRKCVHjb09MmTrrjw7uMeQ7CpwSZt+CPRFqhFbsVaf4pU0q5NvWPWHYU6xJ
-         QywQWnnRsmlsnsI9D089FXG68rV4mJ+kax4ObiNIXLQqhddvpSQX/4Ijl6fiXdGFAo
-         ehBA/Jlkctf6It+4KEUL/zzurg3sJPD+v+m22g7g=
+        t=1589023123; bh=O95HQb+eKrzYJGAAvZyUidtJu6EvpStYBMsCe/HsdKU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=q8enCW2WkGcEePXOd74RmgJr5ty06CgzIPc/4f2O5gCz0EQOrEjY50bpsTO/ox2Ex
+         kSsNPis7cxIrSCLNbPHmd8uV3MCdLMITivVjWKmlBxYLI90W1/v7CAan77DfFq8lWa
+         ANlf83W31t0rb8U2CmGxopPxjDal5TKNF7Kfx0f8=
 From:   srk@48.io
 To:     Andrzej Hajda <a.hajda@samsung.com>
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
@@ -48,14 +46,15 @@ Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Lubomir Rintel <lkundrak@v3.sk>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Richard Marko <srk@48.io>,
-        Marek Vasut <marex@denx.de>, Sean Cross <xobs@kosagi.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        linux-kernel@vger.kernel.org, Sean Cross <xobs@kosagi.com>,
+        Richard Marko <srk@48.io>, Shawn Guo <shawnguo@kernel.org>,
         Fabio Estevam <fabio.estevam@nxp.com>,
         Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 0/2] Novena laptop panel
-Date:   Sat,  9 May 2020 13:18:32 +0200
-Message-Id: <20200509111834.26335-1-srk@48.io>
+Subject: [PATCH 2/2] drm/panel: simple: Add Innolux N133HSE panel support
+Date:   Sat,  9 May 2020 13:18:34 +0200
+Message-Id: <20200509111834.26335-3-srk@48.io>
+In-Reply-To: <20200509111834.26335-1-srk@48.io>
+References: <20200509111834.26335-1-srk@48.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -63,39 +62,68 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Richard Marko <srk@48.io>
+From: Sean Cross <xobs@kosagi.com>
 
-Contains updated patches I've received from Marek with the following
-changes:
+The Innolux N133HSE panel is a 13.3" 1920x1080 panel that contains an
+integrated backlight, and connects via eDP.
 
-- yaml docs migration
-- fixed Fabios email
-- panel commit split into two according to checkpatch request
-- added connector for panel
+It is used in the Kosagi Novena.
 
-Last review also requested more details for panel like timings and
-bus format but these are marked as TBD (timings) in panel datasheet
-and the bridge datasheet is not helpful either.
-
-Tested on a Kosagi Novena laptop with imx6 display controller.
-
-Based on v5.7-rc2, applies to drm-misc-next 5e6ed29d72d2
-
-CC: Marek Vasut <marex@denx.de>
-Cc: Sean Cross <xobs@kosagi.com>
+Signed-off-by: Sean Cross <xobs@kosagi.com>
+Signed-off-by: Richard Marko <srk@48.io>
 Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Cc: Thierry Reding <thierry.reding@gmail.com>
+To: dri-devel@lists.freedesktop.org
+---
+ drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-Sean Cross (2):
-  dt-bindings: n133hse-ea1: Add Innolux N133HSE panel
-  drm/panel: simple: Add Innolux N133HSE panel support
-
- .../bindings/display/panel/panel-simple.yaml  |  2 ++
- drivers/gpu/drm/panel/panel-simple.c          | 27 +++++++++++++++++++
- 2 files changed, 29 insertions(+)
-
-base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 3ad828eaefe1..c8a93771d398 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1906,6 +1906,30 @@ static const struct panel_desc innolux_n116bge = {
+ 	},
+ };
+ 
++static const struct drm_display_mode innolux_n133hse_ea1_mode = {
++	.clock = 138500,
++	.hdisplay = 1920,
++	.hsync_start = 1920 + 46,
++	.hsync_end = 1920 + 46 + 30,
++	.htotal = 1920 + 46 + 30 + 84,
++	.vdisplay = 1080,
++	.vsync_start = 1080 + 2,
++	.vsync_end = 1080 + 2 + 4,
++	.vtotal = 1080 + 2 + 4 + 26,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc innolux_n133hse_ea1 = {
++	.modes = &innolux_n133hse_ea1_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 293,
++		.height = 165,
++	},
++	.connector_type = DRM_MODE_CONNECTOR_eDP,
++};
++
+ static const struct drm_display_mode innolux_n156bge_l21_mode = {
+ 	.clock = 69300,
+ 	.hdisplay = 1366,
+@@ -3577,6 +3601,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "innolux,n116bge",
+ 		.data = &innolux_n116bge,
++	}, {
++		.compatible = "innolux,n133hse-ea1",
++		.data = &innolux_n133hse_ea1,
+ 	}, {
+ 		.compatible = "innolux,n156bge-l21",
+ 		.data = &innolux_n156bge_l21,
 -- 
 2.25.1
 
