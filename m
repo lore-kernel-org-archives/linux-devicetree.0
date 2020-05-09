@@ -2,89 +2,86 @@ Return-Path: <SRS0=JYCW=6X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C95C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 18:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C0CC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 20:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C8E208E4
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 18:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0UrUCUi"
+	by mail.kernel.org (Postfix) with ESMTP id 582D6214D8
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 20:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgEISf1 (ORCPT
+        id S1728578AbgEIUAz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 May 2020 14:35:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727787AbgEISfZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 14:35:25 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A79F6C061A0C;
-        Sat,  9 May 2020 11:35:24 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id d16so4157443edq.7;
-        Sat, 09 May 2020 11:35:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=utUg+njPE1R78ibsKG63T1N43ZIUmqNveGR52jnUI1c=;
-        b=n0UrUCUiYUufwg68km1Zk/XTBqLkxN7YNzPhw7YD5CC9FSMdO/4Me0UnvTh4DVY22l
-         975HXTVf/njdTs4t4gn4B+3wBxpLzXQa5xLBEwERg74NC/R8Ob8nWqKnM8zlGRrkKG1l
-         rjzze9yNW0ZPmY6B0ehS7oiqxfOeUPBYNx0QerSHqciFL/fBYmCOKmvZqcjZfgMDrkE0
-         BksKzEKmd1yAnQ/YF4OLzEJuEH2ABG8agdVfG1M++BiAHOYMLNOfCfFsXpOIQI3vNrGf
-         LEpLgOUPnREPEY3zS4aCLrwjwewCyV5a7NVxGMdl0CU/oOUWJd8MA99a0vVlPFJLtNUy
-         wb+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=utUg+njPE1R78ibsKG63T1N43ZIUmqNveGR52jnUI1c=;
-        b=BPWi9QZAHHIR1gVweR+pqq9vloR8kP+MJG+DlQVAb3xEOXiqYGKq0YW2lkc5C2wAv2
-         Z6PSxaV+JQtxRGAhO7+/YYo9wCo1Qt3nfDHlbp0KhGZ8Ab1gq7QWmgxrgUCi8/WAaMNS
-         KL1rElE6hB2Ek7mZRN4H3i7MQr8XqTxATadqyiKpmQI0QUNadhvjnG+3oF6khjOGNorY
-         3Wtw7q5+ra+hR71k9HxG1u/2e38vQjLohQDMxuhko08vqxcapyf192V5Qmlg7NldnsrB
-         ahGtMEGoOfmfbHFsyzlfFkL/nO8XtV8eio2mg7l9n107f1Jr5wvmIRkRFTYWqcA45Nm7
-         g2ZA==
-X-Gm-Message-State: AGi0PuaDyHJT/fKfoFyhnVH9dcnzRUJOwrkLP90krvDhZKT0Jx+PHLnE
-        SnOmVdQUp8AEmrHKZrhR/aBqjT15B0RTyIhBHUQ=
-X-Google-Smtp-Source: APiQypKcDsrlf52ien88Tvw4J/n6MWoqk4eQg25WolLAm5L6tIYO9yQtvjjLKsoe0bV542rP9Hm42Tfch5r9JTLIZdY=
-X-Received: by 2002:a05:6402:1a46:: with SMTP id bf6mr7000136edb.44.1589049323195;
- Sat, 09 May 2020 11:35:23 -0700 (PDT)
+        Sat, 9 May 2020 16:00:55 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:59988 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbgEIUAz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 16:00:55 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id B831B804C8;
+        Sat,  9 May 2020 22:00:52 +0200 (CEST)
+Date:   Sat, 9 May 2020 22:00:51 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, robdclark@chromium.org,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: display: simple: Add BOE NV133FHM-N62
+Message-ID: <20200509200051.GB30802@ravnborg.org>
+References: <20200508155859.1.I4d29651c0837b4095fb4951253f44036a371732f@changeid>
+ <20200508155859.2.I37c879ef4ec6d4028a3d45728bc3a58060bba175@changeid>
 MIME-Version: 1.0
-References: <20200509103956.26038-3-hui.song_1@nxp.com> <20200509103956.26038-2-hui.song_1@nxp.com>
- <20200509153315.GR208718@lunn.ch> <20200509172724.GG1551@shell.armlinux.org.uk>
- <CABHD4K_tPkCherpY5zUtxV1wcKc=7aj3ayr9yxG-sLFZeMf3Dw@mail.gmail.com>
- <20200509181845.GH1551@shell.armlinux.org.uk> <20200509182647.GI1551@shell.armlinux.org.uk>
-In-Reply-To: <20200509182647.GI1551@shell.armlinux.org.uk>
-From:   Amit Tomer <amittomer25@gmail.com>
-Date:   Sun, 10 May 2020 00:04:46 +0530
-Message-ID: <CABHD4K8jwLxcfLeeiAQpsEVfafV5DutFOWukj2WJaKKU0gPjUw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] armv8: gpio: add gpio feature
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Hui Song <hui.song_1@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jiafei.pan@nxp.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508155859.2.I37c879ef4ec6d4028a3d45728bc3a58060bba175@changeid>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=cm27Pg_UAAAA:8 a=KCbFThoRF98PNkAbFwoA:9
+        a=CjuIK1q_8ugA:10 a=xmb-EsYY8bH0VWELuYED:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Oh, and... u-boot@linux.nxdi.nxp.com bounces because that domain is
-> not resolvable - I guess that is internal to NXP, and this patch
-> should have remained within NXP and not been posted publically.
+On Fri, May 08, 2020 at 03:59:01PM -0700, Douglas Anderson wrote:
+> This panel appears to be the same or nearly the same as the BOE
+> NV133FHM-N61, but since (in the very least) it identifies itself as a
+> different model in the EDID we should add a new compatible string for
+> it.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Applied this and the next patch to drm-misc-next.
 
- Yeah, realized it just after sending my reply. It is for internal NXP list.
- Had it been for open source U-boot, Author would have chosen
- "u-boot@lists.denx.de" ?
+Thanks,
+	Sam
 
-But, I still believe Author did it unknowingly and we all should be
-easy on him/her.
-
-Thanks
--Amit
+> ---
+> 
+>  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> index fdd74d07f645..d6cca1479633 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> @@ -75,6 +75,8 @@ properties:
+>        - boe,nv101wxmn51
+>          # BOE NV133FHM-N61 13.3" FHD (1920x1080) TFT LCD Panel
+>        - boe,nv133fhm-n61
+> +        # BOE NV133FHM-N62 13.3" FHD (1920x1080) TFT LCD Panel
+> +      - boe,nv133fhm-n62
+>          # BOE NV140FHM-N49 14.0" FHD a-Si FT panel
+>        - boe,nv140fhmn49
+>          # CDTech(H.K.) Electronics Limited 4.3" 480x272 color TFT-LCD panel
+> -- 
+> 2.26.2.645.ge9eca65c58-goog
