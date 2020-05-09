@@ -2,83 +2,107 @@ Return-Path: <SRS0=JYCW=6X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F309C28CBC
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 11:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20568C47255
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 12:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D25F24956
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 11:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F345024954
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 12:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Oc4KF42B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQoyld5O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgEIL1i (ORCPT
+        id S1727093AbgEIMEi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 May 2020 07:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45920 "EHLO
+        Sat, 9 May 2020 08:04:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727980AbgEIL1i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 07:27:38 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1892C061A0C;
-        Sat,  9 May 2020 04:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YUdChrOZQNPx7l/p1mjJOCHERADDlB8MQg4GwZPVIJI=; b=Oc4KF42B3UBTaTTeKm0O8iDlY
-        BxrB2iSGe8nhReKz/aLMlNyR+IkQ8zQ6tXmmjSOdlqrONefjvAO1GQRKzZptDBMtJS8uLaTVrkjQQ
-        NnaIKY+vcVZRs5gAT1XtUOxskcn9GThB54Xf1MOHeyw1AFkMyyucZYIfJQNHKq8XjetID6psBur7s
-        ulKyC98yB8Au9WlSlDmgmckLzEj+H4vLxHIUQRdkUyLs7giCsXydRFzs8YHMeYsgpaAx9oUJ7c7Af
-        6PiNdckPz1KifuC2ivsulw/9Ik0YTZXPR/+QfSdkadBizG/ozlmrg8RmdlNLhrQaglDXtpgJIL0Nn
-        S7mKGKy5g==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:37982)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jXNdg-0003eW-Au; Sat, 09 May 2020 12:27:28 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jXNdd-0002nq-Vf; Sat, 09 May 2020 12:27:26 +0100
-Date:   Sat, 9 May 2020 12:27:25 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     jagdish.gediya@nxp.com, priyanka.jain@nxp.com,
-        pramod.kumar_1@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] gpio: mpc8xxx: support fsl-layerscape platform.
-Message-ID: <20200509112725.GA1551@shell.armlinux.org.uk>
-References: <20200509103537.22865-1-hui.song_1@nxp.com>
+        by vger.kernel.org with ESMTP id S1726600AbgEIMEi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 08:04:38 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F315EC061A0C;
+        Sat,  9 May 2020 05:04:37 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ms17so5473816pjb.0;
+        Sat, 09 May 2020 05:04:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wUpvglT7RVI0VhxUEBL660l9QrPqkvdcztJEgEYZgVE=;
+        b=NQoyld5OELIut/6UkNs1QRfi9i+epuoVHUKNHesyhNiHwyCgMz2dsk95CM2YAjdiPb
+         OZhokEcTwLonbVkoSEHArg5P11YL0pYA7FrqZ5Ea6n7pS8ZFYaRk/a4CrGJN24wjf+sT
+         6RVOq4a9iM5M9plD78kt081Z9pD3ZlqQqqb9ibpDiCEzXfhTKChPdU+g8X02t/Jtgxdj
+         iqqIDP79VMLiTWKUI1mPtfu7uKlTsNaJRGGZTyYs61iZLUmBUC0HkymmOUxIBJtsGoE1
+         tAjtALvt8Uwo82olkqA+E8DUC9qhhlv0TRtkv1bkkP/dYmiN0vTUUvvnAmdZ57tDvUjU
+         Fhhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wUpvglT7RVI0VhxUEBL660l9QrPqkvdcztJEgEYZgVE=;
+        b=GAwP5H6ciMIPEGzVn+qj0QpuWr3N7m/coVjcLHfjpNl5El6cy8C5ho2+a9SefevO+J
+         zQUq7sDld5bTuZ6MeANrai0eFwtPbQrU5e3A7izhuZ37kK0b8vQQ2I3CknUuXwV0HSYf
+         S/0cNmNfGHpvzRPEpERGxAAw0lzWOQL+6PmZlsyjM73tkSvaqewWWsUuF1m10jfrKQZ6
+         Ve17gY3/XBFYIzxEauUfLEJOMzWkiOTz1Ol7ptXzBNPtSDRS9uMtiPSUpvUMWLnEO2fp
+         ponzYiRF0ikAtW8Oc1B9aqKc1N+Qv+XXz6+SAGNVDFmSLF8sgi2JJaeLYU1JYvOpPYxk
+         zYrA==
+X-Gm-Message-State: AGi0Pua1QMtVckhkRxodc7X58Kkiu5F/cg7974Ahp/tcxpScfPSsPCT2
+        xqI1C1p/x8ICWwklHYGMzl3PQvF/p8vyupQKJeQ=
+X-Google-Smtp-Source: APiQypI0HEt+PVZf/6IcEtjlof5jsVdsR0hAD/QMKEx2hKai3zkGEHMgEwx0que30ynyNsOLHyxo3+JbdKXsfI5mkvA=
+X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr11395860pjb.228.1589025877306;
+ Sat, 09 May 2020 05:04:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509103537.22865-1-hui.song_1@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200508211929.39020-5-alcooperx@gmail.com> <Pine.LNX.4.44L0.2005082035460.2445-100000@netrider.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.2005082035460.2445-100000@netrider.rowland.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 9 May 2020 15:04:26 +0300
+Message-ID: <CAHp75VfV8SwKG5aX-POce5aHCoqCHdnfpxzq6C6buJ_TaSacsg@mail.gmail.com>
+Subject: Re: [PATCH v8 4/5] usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 09, 2020 at 06:35:35PM +0800, Hui Song wrote:
-> From: "hui.song" <hui.song_1@nxp.com>
-> 
-> Make the MPC8XXX gpio driver to support the fsl-layerscape.
-> 
-> Signed-off-by: hui.song <hui.song_1@nxp.com>
-> ---
->  drivers/gpio/mpc8xxx_gpio.c | 59 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
+On Sat, May 9, 2020 at 3:47 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+> On Fri, 8 May 2020, Al Cooper wrote:
 
-What project are these for?  There is no such file in the kernel tree.
+...
 
-I think you've sent these patches to the wrong people and mailing lists.
+> > +     irq = platform_get_irq(pdev, 0);
+> > +     if (irq <= 0)
+> > +             return irq;
+>
+> I don't want to get involved in the question of whether or not 0 is a
+> valid IRQ number.  The consensus has gone back and forth over the
+> years, and it just doesn't seem important.
+>
+> However, as Sergei points out, if 0 is going to be regarded as an
+> invalid value then we shouldn't return 0 from the probe function here.
+
+The most of the drivers rely on the fact that on platforms where it's
+the case (yes, we have you-know-which architecture has some legacy
+stuff there) request_irq() will fail anyway.
+
+> I'll leave the decision on how to handle this matter up to Greg.  :-)
+
+Me too.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+With Best Regards,
+Andy Shevchenko
