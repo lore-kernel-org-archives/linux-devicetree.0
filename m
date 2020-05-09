@@ -2,127 +2,104 @@ Return-Path: <SRS0=JYCW=6X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0B4C47247
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C7DC28CBC
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 12:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAAC321473
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 12:11:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKc+TMdV"
+	by mail.kernel.org (Postfix) with ESMTP id BD3A220820
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 12:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbgEIMLo (ORCPT
+        id S1727051AbgEIMwE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 May 2020 08:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726782AbgEIMLn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 08:11:43 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6422DC061A0C;
-        Sat,  9 May 2020 05:11:43 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id h12so6062976pjz.1;
-        Sat, 09 May 2020 05:11:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/wlJFZjwuM81Jh/anwiOMAgeJWfW7ajnVCis2G3dl9k=;
-        b=dKc+TMdVfruQ8XRDND37cvnLytXndIhsz15FSm3KMnB9sjom5WRjcOrEvJU+yPeS5m
-         uLGz8hq/6wUQa1UkJ6D9OOEWccrMgIgPRCSIg41TqPjfkTuKUC0Ehrb+iO1d1/2GLrOm
-         /fKTPoievZIameK2E1CPZF8ocqWO3Z/8TRLiqbEGadpMGPJn0yM6uLIs+CgTu4DUWr7y
-         eICNRW91C5opv2i6zQ/H16dMo5H6yMCP35TW1giskIX62HHVkbyL2rmiTQ+sX9p12pPZ
-         Jah2nAq0kBHiHiaNOja7ue0FFq5bhpEQjX4Ou6kmfYW07JR8EQFVw7saNPEW96vRu0/p
-         8Rcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/wlJFZjwuM81Jh/anwiOMAgeJWfW7ajnVCis2G3dl9k=;
-        b=hBSOicqiMoRvQ1+95fkuDEIgq954Ssij6PrQLa2WsiDEGxpO/m6OCYqr/YLIK0PAhL
-         9Z+ScU431BFPewKX2WzmbLkb0Oy8Dy2JHC22QJlhItxp0tFvEPHkoL44ONNZR2ukhQn8
-         GM78JBbnJ+8uQGl5tOUW+q35ij9PKW2VYWKoOAgGktu7lm3JZDuQSQdoPI8JjTzKsQOa
-         FBQhRkzZAM77Q/+8+m0kNzZi+zpkg01akDdrQXFJXyIVoX5iv9ciBJ1mSBzZpH/vrS7M
-         339HsfyYA72cpUg+C0OlHatXNxC4OPQXHuHmEkPxgu2LslWbPI+sg02baWTVWmYmWje9
-         +Q2w==
-X-Gm-Message-State: AGi0PualsD2RU/X9pST9Rw80C4HX1EAELEXi8gcTxHS47/7haxh8Vlyl
-        M/AnUdY0EHZN4bu4sUBvD5eCH38/8mqpoDE5SxzGgzfq
-X-Google-Smtp-Source: APiQypI4sdcR01RdvjwOkHbMaSexjDF1WdE/GFMDiJPbhE1E1Lit7yy20vvFbGNhhAxdgjUqXNuG191HfxC7kMjnnGw=
-X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr11427305pjb.228.1589026302658;
- Sat, 09 May 2020 05:11:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org> <1588919619-21355-3-git-send-email-akashast@codeaurora.org>
-In-Reply-To: <1588919619-21355-3-git-send-email-akashast@codeaurora.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 9 May 2020 15:11:31 +0300
-Message-ID: <CAHp75Vdjz7RBbyPwZwvNq5njwb_Jc76U=3pDpswmoFCFaGtNAQ@mail.gmail.com>
-Subject: Re: [PATCH V5 2/7] soc: qcom-geni-se: Add interconnect support to fix
- earlycon crash
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, agross@kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, mgautam@codeaurora.org,
-        linux-arm-msm@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>
+        Sat, 9 May 2020 08:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgEIMwE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 08:52:04 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6716C061A0C;
+        Sat,  9 May 2020 05:52:03 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 13BBF2A2CA6
+Message-ID: <458fcdc1d934c12a81a3bd9728cdca9cd2ad874c.camel@collabora.com>
+Subject: Re: [PATCH v2 7/9] media: MAINTAINERS: rkisp1: add path to
+ dt-bindings
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, kernel@collabora.com,
+        dafna.hirschfeld@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, kishon@ti.com
+Date:   Sat, 09 May 2020 09:51:49 -0300
+In-Reply-To: <9a95d227-9592-2c5c-fe6d-dff9b84f4292@xs4all.nl>
+References: <20200403161538.1375908-1-helen.koike@collabora.com>
+         <20200403161538.1375908-8-helen.koike@collabora.com>
+         <9a95d227-9592-2c5c-fe6d-dff9b84f4292@xs4all.nl>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 8, 2020 at 9:34 AM Akash Asthana <akashast@codeaurora.org> wrote:
->
-> QUP core clock is shared among all the SE drivers present on particular
-> QUP wrapper, the system will reset(unclocked access) if earlycon used after
-> QUP core clock is put to 0 from other SE drivers before real console comes
-> up.
->
-> As earlycon can't vote for it's QUP core need, to fix this add ICC
-> support to common/QUP wrapper driver and put vote for QUP core from
-> probe on behalf of earlycon and remove vote during earlycon exit call.
+Hi Hans,
 
-...
+On Fri, 2020-04-17 at 09:18 +0200, Hans Verkuil wrote:
+> On 03/04/2020 18:15, Helen Koike wrote:
+> > The Rockchip ISP bindings was moved out of staging.
+> > Update MAINTAINERS file with the new path.
+> 
+> Shouldn't there be a reference to Documentation/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml
+> as well in MAINTAINERS?
+> 
 
-> +       for_each_child_of_node(parent, child) {
+Indeed, and I can take care of that later. I was planning to move
+this PHY driver out of staging, but was waiting on patches 4 and 5
+of this series.
 
-> +               if (of_device_is_compatible(child, "qcom,geni-se-qup")) {
+They seem fine, would you mind picking them?
 
-if (!...)
- continue;
+Thanks!
+Ezequiel
 
-will save you a readability of the loop body.
+> Regards,
+> 
+> 	Hans
+> 
+> > Suggested-by: Johan Jonker <jbx6244@gmail.com>
+> > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > ---
+> > 
+> > V2:
+> > - This is a new patch in the series
+> > ---
+> >  MAINTAINERS | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index d66ac41ef5872..726044b84cf23 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -14303,6 +14303,7 @@ M:	Helen Koike <helen.koike@collabora.com>
+> >  L:	linux-media@vger.kernel.org
+> >  S:	Maintained
+> >  F:	drivers/staging/media/rkisp1/
+> > +F:	Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >  
+> >  ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+> >  M:	Jacob Chen <jacob-chen@iotwrt.com>
+> > 
+> 
+> 
 
-Or...
 
-> +                       wrapper = platform_get_drvdata(of_find_device_by_node(
-> +                                       child));
-
-...leave this on one line
-
-> +                       icc_put(wrapper->to_core.path);
-> +                       wrapper->to_core.path = NULL;
-> +               }
-
-And here is the question, what do you want to do if you find more
-devices with the same compatible string?
-
-> +       }
-
--- 
-With Best Regards,
-Andy Shevchenko
