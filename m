@@ -1,107 +1,235 @@
-Return-Path: <SRS0=pmuo=6W=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=JYCW=6X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA4EC47254
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF39C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 00:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB8A206B9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 May 2020 22:59:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n9+oTteo"
+	by mail.kernel.org (Postfix) with ESMTP id 7784124953
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 May 2020 00:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgEHW7Z (ORCPT
+        id S1727984AbgEIAat (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 May 2020 18:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728280AbgEHW7Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 18:59:24 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C75C05BD09
-        for <devicetree@vger.kernel.org>; Fri,  8 May 2020 15:59:24 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id r10so1056029pgv.8
-        for <devicetree@vger.kernel.org>; Fri, 08 May 2020 15:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vsTJfgywY7Yh1c9SFAQgkpGdzTCsAoe2msx951M+8gg=;
-        b=n9+oTteokcsg2gGmnR4zRXRtCjsq5CrG2/r4VvKp5PLRS6msCbvUx5BSWg8VI7PfNH
-         fzOsZRW3n3BzVqfaRQEfeYZ0ExlYzMI38EGyARXFt1+uLUQiP9Ay33UhJpvbrHKTotIb
-         LxOQG9/Gg5iz7YwU/lMlQXNVEpWwfcZUhnxWM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vsTJfgywY7Yh1c9SFAQgkpGdzTCsAoe2msx951M+8gg=;
-        b=kboAQIYKgo4vDfR5VQAmMVtRIv4whk6YdseN5MURbo7vhf/YUZNq6qg6DiS9R6Johh
-         Mq0mltkFeEbH9y3mWNGzAznnTs50JrTy8ItCbgC9ZnLybQvlE6M71CN31mOLpd9UZERy
-         Rp9LxBHPGIzWcOu1C/eukkD3Gmc/vGFoMbcw4AEd6G3Pk0Ds6Yhb/X+LVNVIk7+pnQRH
-         MJKIy1ID7VbQbzBVI3uEBmjmo5HPodJ1Ww5G/737BvDKVydHnGXeGmjnBAZCv2iht23x
-         AHIXPbsgiauLDQE6nWeI4asjR0i/eC92Y9OVmeSRgUvOnAvcAwCkyVqG1FrUurHQXoIc
-         qLOw==
-X-Gm-Message-State: AGi0Pubg2RJ/DNCEANKMwZLNfv/4/JrYE4YaDEXzSg7EZ6e801itC6Ds
-        1uYq4vlcn289stcRyFCeTaCB5g==
-X-Google-Smtp-Source: APiQypLZztC92CaipNrfEO6dJof+q2mxxAWh+ZlB67X3GIWQuimnyFCwmWlKu1p11C9clTK29MCtRg==
-X-Received: by 2002:a62:780b:: with SMTP id t11mr5202971pfc.196.1588978763500;
-        Fri, 08 May 2020 15:59:23 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id i72sm3062874pfe.104.2020.05.08.15.59.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 15:59:23 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] dt-bindings: display: simple: Add BOE NV133FHM-N62
-Date:   Fri,  8 May 2020 15:59:01 -0700
-Message-Id: <20200508155859.2.I37c879ef4ec6d4028a3d45728bc3a58060bba175@changeid>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-In-Reply-To: <20200508155859.1.I4d29651c0837b4095fb4951253f44036a371732f@changeid>
-References: <20200508155859.1.I4d29651c0837b4095fb4951253f44036a371732f@changeid>
+        Fri, 8 May 2020 20:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727878AbgEIAat (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 May 2020 20:30:49 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAFE7C061A0C;
+        Fri,  8 May 2020 17:30:48 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id A551E2A33C2
+Received: by earth.universe (Postfix, from userid 1000)
+        id 5EC5C3C08C6; Sat,  9 May 2020 02:30:45 +0200 (CEST)
+Date:   Sat, 9 May 2020 02:30:45 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: power: reset: Convert
+ syscon-reboot-mode to DT schema
+Message-ID: <20200509003045.3mi7cfey6cmlidul@earth.universe>
+References: <20200507233846.11548-1-Sergey.Semin@baikalelectronics.ru>
+ <20200507233846.11548-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ur4wzzx455z2lgxp"
+Content-Disposition: inline
+In-Reply-To: <20200507233846.11548-2-Sergey.Semin@baikalelectronics.ru>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This panel appears to be the same or nearly the same as the BOE
-NV133FHM-N61, but since (in the very least) it identifies itself as a
-different model in the EDID we should add a new compatible string for
-it.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+--ur4wzzx455z2lgxp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index fdd74d07f645..d6cca1479633 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -75,6 +75,8 @@ properties:
-       - boe,nv101wxmn51
-         # BOE NV133FHM-N61 13.3" FHD (1920x1080) TFT LCD Panel
-       - boe,nv133fhm-n61
-+        # BOE NV133FHM-N62 13.3" FHD (1920x1080) TFT LCD Panel
-+      - boe,nv133fhm-n62
-         # BOE NV140FHM-N49 14.0" FHD a-Si FT panel
-       - boe,nv140fhmn49
-         # CDTech(H.K.) Electronics Limited 4.3" 480x272 color TFT-LCD panel
--- 
-2.26.2.645.ge9eca65c58-goog
+On Fri, May 08, 2020 at 02:38:44AM +0300, Serge Semin wrote:
+> Modern device tree bindings are supposed to be created as YAML-files
+> in accordance with dt-schema. This commit replaces SYSCON reboot-mode
+> legacy bare text bindings with YAML file. As before the bindings file
+> states that the corresponding dts node is supposed to be compatible
+> "syscon-reboot-mode" device and necessarily have an offset property
+> to determine which register from the regmap is supposed to keep the
+> mode on reboot.
+>=20
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Richard Fontana <rfontana@redhat.com>
+> Cc: Kate Stewart <kstewart@linuxfoundation.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-mips@vger.kernel.org
+> ---
 
+Thanks, I queued this patch to power-supply's for-next branch. For the other
+two patches I will wait for Rob's feedback.
+
+-- Sebastian
+
+>  .../power/reset/syscon-reboot-mode.txt        | 35 ------------
+>  .../power/reset/syscon-reboot-mode.yaml       | 55 +++++++++++++++++++
+>  2 files changed, 55 insertions(+), 35 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-=
+reboot-mode.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-=
+reboot-mode.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-=
+mode.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode=
+=2Etxt
+> deleted file mode 100644
+> index f7ce1d8af04a..000000000000
+> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+> +++ /dev/null
+> @@ -1,35 +0,0 @@
+> -SYSCON reboot mode driver
+> -
+> -This driver gets reboot mode magic value form reboot-mode driver
+> -and stores it in a SYSCON mapped register. Then the bootloader
+> -can read it and take different action according to the magic
+> -value stored.
+> -
+> -This DT node should be represented as a sub-node of a "syscon", "simple-=
+mfd"
+> -node.
+> -
+> -Required properties:
+> -- compatible: should be "syscon-reboot-mode"
+> -- offset: offset in the register map for the storage register (in bytes)
+> -
+> -Optional property:
+> -- mask: bits mask of the bits in the register to store the reboot mode m=
+agic value,
+> -  default set to 0xffffffff if missing.
+> -
+> -The rest of the properties should follow the generic reboot-mode descrip=
+tion
+> -found in reboot-mode.txt
+> -
+> -Example:
+> -	pmu: pmu@20004000 {
+> -		compatible =3D "rockchip,rk3066-pmu", "syscon", "simple-mfd";
+> -		reg =3D <0x20004000 0x100>;
+> -
+> -		reboot-mode {
+> -			compatible =3D "syscon-reboot-mode";
+> -			offset =3D <0x40>;
+> -			mode-normal =3D <BOOT_NORMAL>;
+> -			mode-recovery =3D <BOOT_RECOVERY>;
+> -			mode-bootloader =3D <BOOT_FASTBOOT>;
+> -			mode-loader =3D <BOOT_BL_DOWNLOAD>;
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-=
+mode.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mod=
+e.yaml
+> new file mode 100644
+> index 000000000000..9b1ffceefe3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.ya=
+ml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/reset/syscon-reboot-mode.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic SYSCON reboot mode driver
+> +
+> +maintainers:
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +description: |
+> +  This driver gets reboot mode magic value from reboot-mode driver
+> +  and stores it in a SYSCON mapped register. Then the bootloader
+> +  can read it and take different action according to the magic
+> +  value stored. The SYSCON mapped register is retrieved from the
+> +  parental dt-node plus the offset. So the SYSCON reboot-mode node
+> +  should be represented as a sub-node of a "syscon", "simple-mfd" node.
+> +
+> +properties:
+> +  compatible:
+> +    const: syscon-reboot-mode
+> +
+> +  mask:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Update only the register bits defined by the mask (32 b=
+it)
+> +
+> +  offset:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Offset in the register map for the mode register (in by=
+tes)
+> +
+> +patternProperties:
+> +  "^mode-.+":
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Vendor-specific mode value written to the mode register
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - offset
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/soc/rockchip,boot-mode.h>
+> +
+> +    reboot-mode {
+> +      compatible =3D "syscon-reboot-mode";
+> +      offset =3D <0x40>;
+> +      mode-normal =3D <BOOT_NORMAL>;
+> +      mode-recovery =3D <BOOT_RECOVERY>;
+> +      mode-bootloader =3D <BOOT_FASTBOOT>;
+> +      mode-loader =3D <BOOT_BL_DOWNLOAD>;
+> +    };
+> +...
+> --=20
+> 2.25.1
+>=20
+
+--ur4wzzx455z2lgxp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl61+awACgkQ2O7X88g7
++pqzEA/+Op6qhzk78p5C+O+Dmu3nhHxsCMWMYu8TJI/RtuiicengIHySqfmjR2HM
+CSleCh6877cDg5pdedah1nn5XU44+Rm5nEl7focIWuyunCsRoQlYUj6/PfFCCbTg
+E1JdE4/PyB4CNQLuAcADP1dQLJXjTOWvxGGjjRV+kSAKzMAMJuTuMCLWdo9Cewvf
+qf6w5lyxaskfUIO9wgMR6qe/8XiqBgEJ1Es4XfFaiotNpC9ED82lQj79rgCuofJc
+K+il2gJqYkFlUQqgjlxb98M6Rrbin6xKtx/kq7SvoKoorjLom10g2EA4DEu7sIVN
+hvMcfJjFt/n5qEUDEqflNTVZ04/Xzp7hB9GUEA60MgjPSIfxWT97Fxf69GbQFpOO
+1DSYoUl5cHaMRalhTZYydrHiaKb6NQyikGBvGuw3kprgHvbGhakLZshzGRyzSSBl
+f1dFJyrD3bKiqFNTZGEGl5qVIlspEnmAHJJL7bZJBxerTdQbtFts5gFz3iXHX2t4
+p0XPnmLUCC1aX6w0QarCQVX78JHjd5F1sIRh1fwZAipN07GiqHln+f/MQbQXmMIa
+WIYYEvI6q7W7lcBCQiXvKF1/OXca4lP9wA1jr+2MteMo7Il9nyUDcOeZ1SgKDdkU
+JcfBD3mq5mUQodaePmY4O54ut+3rxL2rsEMtG6Zd3Sq/asjbkbg=
+=FC4l
+-----END PGP SIGNATURE-----
+
+--ur4wzzx455z2lgxp--
