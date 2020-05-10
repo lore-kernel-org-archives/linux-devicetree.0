@@ -6,30 +6,26 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABF1C35280
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 07:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC1CC35280
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 07:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEAE32082E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 07:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0396208E4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 07:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgEJHCf (ORCPT
+        id S1727095AbgEJHDT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 03:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725830AbgEJHCf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 10 May 2020 03:02:35 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10874C061A0C
-        for <devicetree@vger.kernel.org>; Sun, 10 May 2020 00:02:35 -0700 (PDT)
+        Sun, 10 May 2020 03:03:19 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36196 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbgEJHDT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 03:03:19 -0400
 Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7F1902A013A;
-        Sun, 10 May 2020 08:02:33 +0100 (BST)
-Date:   Sun, 10 May 2020 09:02:30 +0200
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 89A162A013A;
+        Sun, 10 May 2020 08:03:17 +0100 (BST)
+Date:   Sun, 10 May 2020 09:03:14 +0200
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -43,7 +39,7 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Naga Sureshkumar Relli <nagasure@xilinx.com>
 Subject: Re: [PATCH v4 7/8] mtd: rawnand: arasan: Add new Arasan NAND
  controller
-Message-ID: <20200510090230.1ba6f6d7@collabora.com>
+Message-ID: <20200510090314.10426b6e@collabora.com>
 In-Reply-To: <20200508171339.8052-8-miquel.raynal@bootlin.com>
 References: <20200508171339.8052-1-miquel.raynal@bootlin.com>
         <20200508171339.8052-8-miquel.raynal@bootlin.com>
@@ -60,39 +56,22 @@ X-Mailing-List: devicetree@vger.kernel.org
 On Fri,  8 May 2020 19:13:38 +0200
 Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> +static int anfc_len_to_steps(struct nand_chip *chip, unsigned int len)
+> +static int anfc_exec_op(struct nand_chip *chip,
+> +			const struct nand_operation *op,
+> +			bool check_only)
 > +{
-> +	unsigned int steps = 1, pktsize = len;
+> +	int ret;
 > +
-> +	while (pktsize > ANFC_MAX_PKT_SIZE) {
-> +		steps *= 2;
-> +		pktsize = DIV_ROUND_UP(len, steps);
-> +	}
+> +	if (check_only)
+> +		return nand_op_parser_exec_op(chip, &anfc_op_parser, op,
+> +					      check_only);
 
-
-Same here, you shouldn't have a round_up() but instead complain if
-"len != pkt_size * steps"
-
-	if (len % 4)
-		return -ENOTSUPP;
-
-	if (len < ANFC_MAX_PKT_SIZE)
-		return len;
-
-	for (steps = 2; steps < ANFC_MAX_STEPS; steps *= 2) {
-		pkt_size = len / steps;
-		if (pkt_size <= ANFC_MAX_PKT_SIZE)
-			break;
-	}
-
-	if (pkt_size * steps != len)
-		return -ENOTSUPP;
-
-	return pkt_size;
+You should also check the DATA_IN/OUT size here ^.
 
 > +
-> +	if (steps > ANFC_MAX_STEPS)
-> +		return -ENOTSUPP;
+> +	ret = anfc_select_target(chip, op->cs);
+> +	if (ret)
+> +		return ret;
 > +
-> +	return steps;
+> +	return nand_op_parser_exec_op(chip, &anfc_op_parser, op, check_only);
 > +}
