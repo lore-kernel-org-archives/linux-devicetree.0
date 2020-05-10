@@ -2,186 +2,155 @@ Return-Path: <SRS0=AC3K=6Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587ADC54E8C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 18:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF28BC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 18:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36BE62082E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 18:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D542082E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 18:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="ZgVFZrzA"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Nv0ml0j4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgEJSMJ (ORCPT
+        id S1729204AbgEJSop (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 14:12:09 -0400
-Received: from gproxy9-pub.mail.unifiedlayer.com ([69.89.20.122]:60021 "EHLO
-        gproxy9-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728385AbgEJSMI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 10 May 2020 14:12:08 -0400
-Received: from cmgw15.unifiedlayer.com (unknown [10.9.0.15])
-        by gproxy9.mail.unifiedlayer.com (Postfix) with ESMTP id 100271E1077
-        for <devicetree@vger.kernel.org>; Sun, 10 May 2020 12:12:04 -0600 (MDT)
-Received: from md-in-79.webhostbox.net ([43.225.55.182])
-        by cmsmtp with ESMTP
-        id XqQjjWd5RrO3uXqQljCdfn; Sun, 10 May 2020 12:12:04 -0600
-X-Authority-Reason: nr=8
-X-Authority-Analysis: v=2.3 cv=bfZFrtHB c=1 sm=1 tr=0
- a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10:nop_charset_1
- a=sTwFKg_x9MkA:10:nop_rcvd_month_year
- a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
- a=VwQbUJbxAAAA:8 a=9eRCeKCxr6mOf_OUt6IA:9 a=GWRvtodc5lQpLaii:21
- a=Ohp1ws75Cw8cpDCh:21 a=QEXdDO2ut3YA:10:nop_charset_2
- a=sfIEtMYjypgA:10:uccc_2email_address a=rsP06fVo5MYu2ilr0aT5:22
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:References:Cc:To:Subject:From:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=OvLi804xCZ6xtXakpo4loaLqT7X+ucK02sepeBhNHRc=; b=ZgVFZrzARaLCKT1J2MrUDfTHMZ
-        /AeJZZOhwqb3sV4v62yJfJshPH5O0iLuSvlLqVSIv2jM4ZkN7nVvxtZELcHsyXEgf0A2sTFniHx4g
-        Z//8AagL4UWfTNswCZq/MKJlB9PTwwu8lhvrpryK9/0wDjAUuZFNfKlnUlc0uBdqcRhBrs62FmMBc
-        PQMSKqHPAvSQaPAN6a2KfleljZfeJyl7x9ja6UFyo9kq9PeFYNiT5+AwyChfiicuAQFEBMUUVmzY3
-        4xqPuDrjc51FVooYPbl6M5fvVubB5XvtsaggrYjsO1hQZ+HtHlsJVa8yRk6vtzNNW1rMCTXHmDfTm
-        4G/UUvHw==;
-Received: from p5dcfef04.dip0.t-ipconnect.de ([93.207.239.4]:43660 helo=[192.168.0.104])
-        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <saravanan@linumiz.com>)
-        id 1jXqQi-00045H-HA; Sun, 10 May 2020 18:12:00 +0000
-From:   Saravanan Sekar <saravanan@linumiz.com>
-Subject: Re: [PATCH v2 3/4] iio: accel: wsen-itds accel documentation
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, broonie@kernel.org, lgirdwood@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-References: <20200429133943.18298-1-saravanan@linumiz.com>
- <20200429133943.18298-4-saravanan@linumiz.com>
- <20200503130103.16a92131@archlinux>
-Message-ID: <9e7b0365-deed-a647-ec36-b4e6ccfa2ae4@linumiz.com>
-Date:   Sun, 10 May 2020 20:11:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 10 May 2020 14:44:45 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:46352 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728763AbgEJSoo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 May 2020 14:44:44 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id A219D412CE;
+        Sun, 10 May 2020 18:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:x-mailer:message-id:date:date:subject
+        :subject:from:from:received:received:received; s=mta-01; t=
+        1589136278; x=1590950679; bh=Y8ncxAHxYQ7dUTn0QRP7qhuOrDOLrwwgS2f
+        jFe3ygmk=; b=Nv0ml0j4BAJU3eG9TnFdMlFzAumNknka6LPeLCJF7L3pWD7uvJ8
+        61lKfZaa9cTJWcail8ikykFbHC9YcCi90itP8t/CUWn7NRUv0/DyF4Q5Ua4xFWTk
+        xZXz8OVBR86xdJK81Setcwtaaf/twb7E8sslrGZfLa0vY8tOLe2u+9Ak=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tUNVBjqoqJSc; Sun, 10 May 2020 21:44:38 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id A49BE412C5;
+        Sun, 10 May 2020 21:44:37 +0300 (MSK)
+Received: from localhost.dev.yadro.com (10.199.3.114) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Sun, 10 May 2020 21:44:39 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v14 1/2] dt-bindings: proximity: provide vcnl3020 device tree binding document
+Date:   Sun, 10 May 2020 21:45:36 +0300
+Message-ID: <20200510184537.10335-2-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200510184537.10335-1-i.mikhaylov@yadro.com>
+References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
 MIME-Version: 1.0
-In-Reply-To: <20200503130103.16a92131@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - linumiz.com
-X-BWhitelist: no
-X-Source-IP: 93.207.239.4
-X-Source-L: No
-X-Exim-ID: 1jXqQi-00045H-HA
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: p5dcfef04.dip0.t-ipconnect.de ([192.168.0.104]) [93.207.239.4]:43660
-X-Source-Auth: saravanan@linumiz.com
-X-Email-Count: 8
-X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.3.114]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jonathan,
+Mostly standard i2c driver with some additional led-current option
+for vcnl3020.
 
-On 03/05/20 2:01 pm, Jonathan Cameron wrote:
-> On Wed, 29 Apr 2020 15:39:42 +0200
-> Saravanan Sekar<saravanan@linumiz.com>  wrote:
->
->> Add documentation about device operating mode and output data range
->> supported according to operating mode
->>
->> Signed-off-by: Saravanan Sekar<saravanan@linumiz.com>
->> ---
->>   .../ABI/testing/sysfs-bus-iio-wsen-itds       | 23 +++++++++++++++++++
->>   1 file changed, 23 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
->> new file mode 100644
->> index 000000000000..5979f2b8aa1a
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
->> @@ -0,0 +1,23 @@
->> +What:		/sys/bus/iio/devices/iio\:device0/in_accel_samp_freq_available
->> +KernelVersion:	5.7
->> +Contact:	linux-iio@vger.kernel.org
->> +Description:
->> +		Reading gives range of sample frequencies available for current operating mode
->> +		after one data has generated.
-> This is standard ABI so should be the main docs, not here.
-> It also takes absolute precedence over the power modes (as mentioned below, no
-> standard userspace will be able to use those).  So if the frequency is
-> only available in high perf mode, then we change to high perf mode.
->
->> +
->> +		Access: Read
->> +		Valid values: represented in Hz
->> +		- range [12.5, 1600] for high permormance mode
->> +		- range [1.6, 200] for normal/low power mode
->> +
->> +What:		/sys/bus/iio/devices/iio\:device0/operating_mode
->> +KernelVersion:	5.7
->> +Contact:	linux-iio@vger.kernel.org
->> +Description:
->> +		Represents the device operating mode. High performance mode gives high output
->> +		data rate and low noise compared to normal mode. Normal mode consumes less
->> +		current.  In single shot device enters to lowpower after one data has
->> +		generated.
->> +
->> +		Access: Read, Write
->> +		Valid values: "lowpower", "normal", "high_perf", "single_shot"
-> The issue with these sort of 'mode' interface is almost no userspace will ever use them.
-> They are too unpredictable across different types of devices.
-I don't understand how can we assume or say no one will use this. The 
-device supports multiple features
-and my understanding is driver should support according to device, not 
-reverse. This is more or
-less device specific and no sure idea about bring all the device in one 
-umbrella.
-> Some of these should also not be exposed to userspace anyway as they are about 'how'
-> you are using the driver.  For example, if you aren't doing triggered capture then
-> single_shot is almost always the correct option. Annoyingly I see high performance
-> mode gives lower noise...
->
-> So no need to expose single_shot to userspace.
->
-> For the others we are just looking at different power vs speed and accuracy trade offs.
-> Those are better exposed by what they effect.  Here the big control for that is
-> sampling frequency.
->
-> So if we assume the user is never going to touch this control (if it's even there)
-> then we probably want to assume they want the best possible accuracy for whatever
-> frequency they are running at.  So transition across the modes to provide that.
->
-> Should we ever support low power mode?  It sounds nice on paper, but in reality
-> userspace won't use so I suspect we should just drop it - certainly in an initial
-> patch submission (as it will hold up acceptance).  Even if we did support
-> it, as mentioned above ABI controls will take precedence so we are looking
-> at a 'hint' not a control of mode.
->
-> ABI is a pain, and we will put a lot of effort into not expanding it unless
-> there is a good usecase plus no way of mapping to existing ABI.
-Obviously without any reason or requirement device manufacture won't 
-come-up these kind of feature.
-I will change the driver as you don't accept at least for initial version.
+Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+---
+ .../iio/proximity/vishay,vcnl3020.yaml        | 62 +++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
 
-
-Thanks,
-Saravanan
+diff --git a/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+new file mode 100644
+index 000000000000..f0101ed67435
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/proximity/vishay,vcnl3020.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Integrated Proximity Sensor With Infrared Emitter
++
++maintainers:
++  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
++
++description: |
++  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
++  that the infrared emitter is included in the package. It has 16-bit
++  resolution. It includes a signal processing IC and features standard I2C
++  communication interface. It features an interrupt function.
++
++  Specifications about the devices can be found at:
++  https://www.vishay.com/docs/84150/vcnl3020.pdf
++
++properties:
++  compatible:
++    enum:
++      - vishay,vcnl3020
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vdd-supply:
++    description: Regulator that provides power to the sensor
++
++  vddio-supply:
++    description: Regulator that provides power to the bus
++
++  vishay,led-current-microamp:
++    description:
++      The driver current for the LED used in proximity sensing.
++    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
++          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
++          180000, 190000, 200000]
++    default: 20000
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        proximity@13 {
++              compatible = "vishay,vcnl3020";
++              reg = <0x13>;
++              vishay,led-current-microamp = <200000>;
++        };
++    };
+-- 
+2.21.1
 
