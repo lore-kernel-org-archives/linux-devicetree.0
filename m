@@ -2,115 +2,138 @@ Return-Path: <SRS0=AC3K=6Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719FBC54E49
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 08:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F65C54E8A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 09:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F10220731
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 08:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE2C208E4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 09:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgEJIyA (ORCPT
+        id S1727114AbgEJJu2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 04:54:00 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:37963 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgEJIx7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 04:53:59 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8C273240006;
-        Sun, 10 May 2020 08:53:55 +0000 (UTC)
-Date:   Sun, 10 May 2020 10:53:54 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>
-Subject: Re: [PATCH v4 7/8] mtd: rawnand: arasan: Add new Arasan NAND
- controller
-Message-ID: <20200510105354.2a6725a8@xps13>
-In-Reply-To: <20200510104145.7d53a58b@collabora.com>
-References: <20200508171339.8052-1-miquel.raynal@bootlin.com>
-        <20200508171339.8052-8-miquel.raynal@bootlin.com>
-        <20200510090230.1ba6f6d7@collabora.com>
-        <20200510103547.7399eba3@xps13>
-        <20200510104145.7d53a58b@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 10 May 2020 05:50:28 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:45878 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgEJJu2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 05:50:28 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id CE7A18030875;
+        Sun, 10 May 2020 09:50:24 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id OfwJvFjXcLcw; Sun, 10 May 2020 12:50:24 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>, <linux-mips@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 01/12] scripts/dtc: check: Add 10bit/slave i2c reg flags support
+Date:   Sun, 10 May 2020 12:50:07 +0300
+Message-ID: <20200510095019.20981-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+Recently the I2C-controllers slave interface support was added to the
+kernel I2C subsystem. In this case Linux can be used as, for example,
+a I2C EEPROM machine. See [1] for details. Other than instantiating
+the EEPROM-slave device from user-space there is a way to declare the
+device in dts. In this case firstly the I2C bus controller must support
+the slave interface. Secondly I2C-slave sub-node of that controller
+must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+declared in [2]). That flag is declared as (1 << 30), which when set
+makes dtc unhappy about too big address set for a I2C-slave:
 
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Sun, 10 May
-2020 10:41:45 +0200:
+Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
 
-> On Sun, 10 May 2020 10:35:47 +0200
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> 
-> > Hi Boris,
-> > 
-> > Boris Brezillon <boris.brezillon@collabora.com> wrote on Sun, 10 May
-> > 2020 09:02:30 +0200:
-> >   
-> > > On Fri,  8 May 2020 19:13:38 +0200
-> > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > >     
-> > > > +static int anfc_len_to_steps(struct nand_chip *chip, unsigned int len)
-> > > > +{
-> > > > +	unsigned int steps = 1, pktsize = len;
-> > > > +
-> > > > +	while (pktsize > ANFC_MAX_PKT_SIZE) {
-> > > > +		steps *= 2;
-> > > > +		pktsize = DIV_ROUND_UP(len, steps);
-> > > > +	}      
-> > > 
-> > > 
-> > > Same here, you shouldn't have a round_up() but instead complain if
-> > > "len != pkt_size * steps"
-> > > 
-> > > 	if (len % 4)
-> > > 		return -ENOTSUPP;    
-> > 
-> > This is not possible, we need unaligned accesses for NAND detection.  
-> 
-> Duh, this really calls for a comment saying how wrong this is and how
-> it should be fixed (discussions we had about data size constraints and
-> the 'can-issue-more' flag on data_in/out instructions).
+Similar problem would have happened if we had set the 10-bit address
+flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
 
-Agreed, I'll add a comment there :/
+In order to fix the problem we suggest to alter the I2C-bus reg-check
+algorithm, so one would be aware of the upper bits set. Normally if no
+flag specified, the 7-bit address is expected in the "reg"-property.
+If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
 
-> 
-> >   
-> > > 
-> > > 	if (len < ANFC_MAX_PKT_SIZE)
-> > > 		return len;
-> > > 
-> > > 	for (steps = 2; steps < ANFC_MAX_STEPS; steps *= 2) {
-> > > 		pkt_size = len / steps;
-> > > 		if (pkt_size <= ANFC_MAX_PKT_SIZE)
-> > > 			break;
-> > > 	}
-> > > 
-> > > 	if (pkt_size * steps != len)
-> > > 		return -ENOTSUPP;
-> > > 
-> > > 	return pkt_size;    
-> > 
-> > The rest looks fine, I will change it and also add these checks in  
-> > ->exec_op() check_nonly path.    
-> 
+[1] Documentation/i2c/slave-interface.rst
+[2] include/dt-bindings/i2c/i2c.h
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org
+---
+ scripts/dtc/checks.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+index 4b3c486f1399..6321fc5b7404 100644
+--- a/scripts/dtc/checks.c
++++ b/scripts/dtc/checks.c
+@@ -1028,6 +1028,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 	const char *unitname = get_unitname(node);
+ 	char unit_addr[17];
+ 	uint32_t reg = 0;
++	uint32_t addr;
+ 	int len;
+ 	cell_t *cells = NULL;
+ 
+@@ -1044,17 +1045,21 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 	}
+ 
+ 	reg = fdt32_to_cpu(*cells);
+-	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
++	addr = reg & 0x3FFFFFFFU;
++	snprintf(unit_addr, sizeof(unit_addr), "%x", addr);
+ 	if (!streq(unitname, unit_addr))
+ 		FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
+ 		     unit_addr);
+ 
+ 	for (len = prop->val.len; len > 0; len -= 4) {
+ 		reg = fdt32_to_cpu(*(cells++));
+-		if (reg > 0x3ff)
++		addr = reg & 0x3FFFFFFFU;
++		if ((reg & (1 << 31)) && addr > 0x3ff)
+ 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
+-				  reg);
+-
++				  addr);
++		else if (!(reg & (1 << 31)) && addr > 0x7f)
++			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\"",
++				  addr);
+ 	}
+ }
+ WARNING(i2c_bus_reg, check_i2c_bus_reg, NULL, &reg_format, &i2c_bus_bridge);
+-- 
+2.25.1
+
