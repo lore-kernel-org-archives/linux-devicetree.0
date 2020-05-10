@@ -2,133 +2,132 @@ Return-Path: <SRS0=AC3K=6Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CDEC54E8D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 22:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5816FC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 22:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2A0720708
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 22:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3EF20725
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 22:34:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="gEu2+Loq"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SdcvbjcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbgEJWRZ (ORCPT
+        id S1729286AbgEJWe4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 18:17:25 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:53989 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729342AbgEJWRZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 18:17:25 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id BFD26891B0;
-        Mon, 11 May 2020 10:17:17 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1589149037;
-        bh=SrgIz+PJYHKXN8CEOXRS3rQhCzXZZWj0itaj5yb73VI=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=gEu2+LoqCppAt8TRqOphp/vqL/bORRCpyc75HO2xMe7P2uzzetrCirReJdLrP72hg
-         BRzJ+9E/PAS0mct2NLJ1JVpaifeXxb31Kg7soOOdDCggCh6POqPVPD8JqNDfX9BcFN
-         sx9J8tVPeiuTZZxcS4g5bQjZJBMaZvdLug6iBmpNMJNx3/0eda8V9+NaC45gFIrPzD
-         34UD/8Ope365T8ynddyjKfiIzmWerkDn2wsl8pVNEqiVf91kqEySmfr65jplqgOmmG
-         qUUxMQihQsB+BHsA3TcWnQxj2cjmp6DAU6lcY0I6815ZZ6YDKEuuKexPyBjPjfEadW
-         l1O+ZjQJQaYEg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5eb87d6e0001>; Mon, 11 May 2020 10:17:18 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Mon, 11 May 2020 10:17:17 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Mon, 11 May 2020 10:17:17 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        "Ralf Baechle" <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Miquel Raynal" <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        "Chuanhong Guo" <gch981213@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Eddie James" <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Thread-Topic: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Thread-Index: AQHWJR1LjfOM6n85g0qPl2lemRFsA6idRtCAgAJndYCAAW/cAA==
-Date:   Sun, 10 May 2020 22:17:16 +0000
-Message-ID: <740f1569-d8d3-606a-73a8-f9feeb20e06f@alliedtelesis.co.nz>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <20200508113751.GD4820@sirena.org.uk>
- <20200510002039.hwahqasnnceowskz@mobilestation>
-In-Reply-To: <20200510002039.hwahqasnnceowskz@mobilestation>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F0C745804143EC40B042AF8A4CCB7FE5@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 10 May 2020 18:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729270AbgEJWe4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 May 2020 18:34:56 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A97C061A0C;
+        Sun, 10 May 2020 15:34:55 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id g16so6327033eds.1;
+        Sun, 10 May 2020 15:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B3Liuw5jPj3QJFxFHfKfy7ZMc74PTLZnt3p5YASlDKM=;
+        b=SdcvbjcF3JdGMCmXQKjJC4VrtNbyZL7JnFCg8ME3uRhjoiXwEB15CrSZnQME4J2DD2
+         DxO4QSlh81F3TWn9aryJtCbHpShD922IGnJbIUvodcpjRjZLGr+jYf2kaVsme2IXDLbY
+         4rDOHXaVnxiGBT4BqaQ8kI/nbf5iEGKYqTLSMz9cVTfRW+HNuhVcado+L3P1sCjh8SB5
+         rMEASJykb5AlP1LYw0dBugwJWhrgwISrTmI+VLnQC02LFbbzw4WoeRl2c3TUDuWrEqJJ
+         1dRey1jKhuUMz+aWUWNgJbUMfAtTbiJvPvHBorrsnrosXO1eItyzVsBZo99mbhd15P+C
+         pjzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B3Liuw5jPj3QJFxFHfKfy7ZMc74PTLZnt3p5YASlDKM=;
+        b=ljX5q4qh/yih1Cb4Q6sw7LdvWuhRUrxj8l7yc5ofA4EEHe3sav9tnD9nxvCq3SMJbP
+         LzUw8Djs9us96lVlSZFP+asp/oJfMPAdDX0mkhhxXDvOBnwlZ8bDF0S9jN561Xy3kc84
+         cvYBIZFBsNLoP4y8FQKhX8x2DfZnB98A1U/XlbCBRnFc9+HxXI9U7P7MaH9qQD4FQ3sL
+         lcDlb0Y8+vh9uR4VfK7IGwNniQgdFgF/nl7/Vzo9QDtwP/yVg8K+V7ibAj3sstrI3Rl5
+         SkUonmChdIjpZWy8SEM6h6XmOtUO3IqBIyfwIzIbPCgBoQQLIxq/g9mAnsam4m7Ev6si
+         OyFw==
+X-Gm-Message-State: AGi0PuasnAEaJNmkcsehYIBM+lKrwLcS+mqQ5u2QY1sjY2L5UNGUl0fe
+        u+PJcrKVPhvt8hCO4hNG1iYLSj6otlQNddjo6W1DueXD
+X-Google-Smtp-Source: APiQypJ0tOvAq/50pHoDwoV21V2Mrg8Ij7Mm0ejwS/L8ZfwzanfGxs+5RSeqRK/m+QrXGsgES5F7n8SL3G6ccbzOAtg=
+X-Received: by 2002:a50:fc06:: with SMTP id i6mr10603747edr.110.1589150094277;
+ Sun, 10 May 2020 15:34:54 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
+ <20200429201644.1144546-3-martin.blumenstingl@googlemail.com>
+ <20200501210942.GA27082@bogus> <CAFBinCDmps-Nd-HokSa5P7=bR+o3nuwxsS_eiH9A6CCYywpabQ@mail.gmail.com>
+In-Reply-To: <CAFBinCDmps-Nd-HokSa5P7=bR+o3nuwxsS_eiH9A6CCYywpabQ@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 11 May 2020 00:34:43 +0200
+Message-ID: <CAFBinCDiQ3_ti60tQd3PMVM89oaMQcSKODMQ1Wr66P1SHWEZ5A@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 02/11] dt-bindings: net: dwmac-meson: Document the
+ "timing-adjustment" clock
+To:     Rob Herring <robh@kernel.org>, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com,
+        linux-amlogic@lists.infradead.org, jianxin.pan@amlogic.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiAxMC8wNS8yMCAxMjoyMCBwbSwgU2VyZ2UgU2VtaW4gd3JvdGU6DQo+IE9uIEZyaSwgTWF5
-IDA4LCAyMDIwIGF0IDEyOjM3OjUxUE0gKzAxMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo8c25pcD4N
-Cj4+PiArCXdyaXRlbChCSVQocmVxLT5jcyksIGJzLT5yZWdzICsgQkNfU1BJX1NFUik7DQo+Pj4g
-KwlpZiAocmVxLT5jc19ncGlvZCkgew0KPj4+ICsJCWdwaW9kX3NldF92YWx1ZV9jYW5zbGVlcChy
-ZXEtPmNzX2dwaW9kLA0KPj4+ICsJCQkJCSAhIShicy0+Y2ZnLm1vZGUgJiBTUElfQ1NfSElHSCkp
-Ow0KPj4gSWYgeW91IGhhdmUgYSBHUElPIGNoaXAgc2VsZWN0IHlvdSBzaG91bGQganVzdCBsZXQg
-dGhlIGNvcmUgbWFuYWdlIGl0DQo+PiB0aHJvdWdoIGNzX2dwaW9kIHJhdGhlciB0aGFuIG9wZW4g
-Y29kaW5nLg0KPiBPZiBjb3Vyc2UgSSBrbm93IHRoaXMsIGFuZCBub3JtYWxseSBJIHdvdWxkIGhh
-dmUgb21pdHRlZCB0aGUgR1BJTyBtYW51YWwNCj4gYXNzZXJ0aW9uIChob3BlZnVsbHkgc29vbiBt
-eSBoYW5kcyBnZXQgdG8gbWVyZ2luZyB0aGUgQVg5OTEwMCBkcml2ZXIgSSd2ZQ0KPiBkZXZlbG9w
-ZWQgc29tZSB0aW1lIGFnbykuIFRoZSB0aGluZyBpcyB0aGF0IHRoaXMgQmFpa2FsLVQxIFN5c3Rl
-bSBTU0kgZGV2aWNlDQo+IGRyaXZlciBoYXMgYmVlbiBpbml0aWFsbHkgd3JpdHRlbiBiZWZvcmUg
-Y29tbWl0IDA1NzY2MDUwZDViZCAoInNwaTogc3BpLW1lbToNCj4gZmFsbGJhY2sgdG8gdXNpbmcg
-dHJhbnNmZXJzIHdoZW4gQ1MgZ3Bpb3MgYXJlIHVzZWQiKS4gU28gYXNzZXJ0aW5nIEdQSU8gQ1Mg
-aGFkDQo+IGJlZW4gcmVxdWlyZWQgdG8gaW5pdGlhdGUgdGhlIFNQSSBtZW1vcnkgY29tbXVuaWNh
-dGlvbnMgc2VlaW5nIHRoZSBnZW5lcmljDQo+IHNwaV9tZW1fZXhlY19vcCgpIGRvZXNuJ3QgZG8g
-dGhpcy4gTWFudWFsIEdQSU8gbWFuaXB1bGF0aW9uIGlzIGluZGVlZCByZWR1bmRhbnQNCj4gZm9y
-IHRoZSBjdXJyZW50IFNQSS1tZW0gb3AgZXhlY3V0aW9uIHByb2NlZHVyZS4NCj4NCj4gU2Vjb25k
-bHkgdGhlIG1lc3NhZ2Ugb2YgdGhhdCBjb21taXQgc3RhdGVzICJEZXZpY2VzIHdpdGggY2hpcCBz
-ZWxlY3RzIGRyaXZlbg0KPiB2aWEgR1BJTyBhcmUgbm90IGNvbXBhdGlibGUgd2l0aCB0aGUgc3Bp
-LW1lbSBvcGVyYXRpb25zLiIgSSBmaW5kIHRoaXMgc3RhdGVtZW50DQo+IHF1ZXN0aW9uYWJsZSwg
-YmVjYXVzZSBmb3IgaW5zdGFuY2UgdGhpcyBkZXZpY2Ugc3VwcG9ydHMgbWVtb3J5IG9wZXJhdGlv
-bnMgd2l0aA0KPiBHUElPLWRyaXZlbiBDUy4gVGhvdWdoIGluIGN1cnJlbnQgaW1wbGVtZW50YXRp
-b24gdGhlIGRyaXZlciBmYWxsYmFjayB0byB1c2luZyBub3JtYWwNCj4gcHVzaC1wdWxsIElPIG1v
-ZGUgaWYgR1BJTyBDUyBpcyB1dGlsaXplZCBhcyBzYWZlciBvbmUuIEJ1dCBldmVuIGluIHRoaXMg
-Y2FzZQ0KPiBpdCdzIGJldHRlciB0aGFuIHNwbGl0dGluZyB0aGUgbWVtb3J5IG9wZXJhdGlvbnMg
-dXAgaW50byB0aGUgdHJhbnNmZXJzLCB3aGljaCBpcw0KPiBkZXZlbG9wZWQgaW4gdGhlIHNwaV9t
-ZW1fZXhlY19vcCgpIG1ldGhvZC4NCk9uIHRoaXMgc3BlY2lmaWMgYml0LiBNeSB1c2UtY2FzZSBm
-b3IgMDU3NjYwNTBkNWJkIHdhcyBhIFNQSSBjb250cm9sbGVyIA0KdGhhdCBzdXBwb3J0ZWQgZGly
-ZWN0IG1lbSBhY2Nlc3NlcyBidXQgYSBoYXJkd2FyZSBkZXNpZ24gdGhhdCByZXF1aXJlZCBhIA0K
-R1BJTyBDUy4gU28geWVzIEkgcHJvYmFibHkgc2hvdWxkIGhhdmUgcXVhbGlmaWVkIGl0IGFzIF9z
-b21lXyBkZXZpY2VzLg0KPiBTbyBpbiB0aGlzIG1hdHRlciBteSBxdWVzdGlvbiBpczogaG93IHRv
-IG1vZGlmeSB0aGUgU1BJLW1lbSBpbnRlcmZhY2Ugc28gdGhlDQo+IFNQSS1tZW1vcnkgb3BlcmF0
-aW9ucyB3b3VsZCBhbHNvIHdvcmsgd2l0aCBHUElPIGRyaXZlbiBDUz8gU29tZSBhZGRpdGlvbmFs
-IGZsYWcNCj4gbWlnaHQgd29yay4uLg==
+Hello Rob,
+
+On Fri, May 1, 2020 at 11:53 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Rob,
+>
+> On Fri, May 1, 2020 at 11:09 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Wed, 29 Apr 2020 22:16:35 +0200, Martin Blumenstingl wrote:
+> > > The PRG_ETHERNET registers can add an RX delay in RGMII mode. This
+> > > requires an internal re-timing circuit whose input clock is called
+> > > "timing adjustment clock". Document this clock input so the clock can be
+> > > enabled as needed.
+> > >
+> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > > ---
+> > >  .../devicetree/bindings/net/amlogic,meson-dwmac.yaml   | 10 +++++++---
+> > >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: Additional items are not allowed ([4294967295] was unexpected)
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: [[4294967295], [4294967295], [4294967295], [4294967295]] is too long
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: Additional items are not allowed ([4294967295] was unexpected)
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: [[4294967295], [4294967295], [4294967295], [4294967295]] is too long
+> I am seeing this on my own build machine as well, but only for the .yaml example
+> The .dts example does not emit this warning
+I found out what's going on here:
+- I built these patches against the net-next tree (including dt_binding_check)
+- and against linux-next (also including dt_binding_check)
+
+Your tree contains commit f22531438ff42c ("dt-bindings: net: dwmac:
+increase 'maxItems' for 'clocks', 'clock-names' properties") [0].
+The net-next tree doesn't have that commit but linux-next does.
+So when I run dt_binding_check with this series applied on top of
+linux-next all warnings/errors are gone.
+However when I run dt_binding_check with this series applied on top of
+net-next I get the same errors as you.
+The reason is that the additional patch in your tree increases the
+maximum number of clocks from three to five. With this patch the
+Amlogic DWMAC glue needs (up to) four clock inputs.
+
+I have to re-send this series anyways due to a bug in another patch.
+Please let me know how to make your bot happy when when I re-send the patches.
+
+
+Thank you!
+Martin
+
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=f22531438ff42ce568f81e346428461c71dea9e2
