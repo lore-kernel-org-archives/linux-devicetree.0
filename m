@@ -2,194 +2,178 @@ Return-Path: <SRS0=AC3K=6Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0A2C54E8C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 12:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F358C54E4B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 15:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA18208CA
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 12:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDD120735
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 15:13:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSwcXsCX"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oQl+AW3Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbgEJMlp (ORCPT
+        id S1729051AbgEJPNp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 08:41:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728360AbgEJMlo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 10 May 2020 08:41:44 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711A7C061A0C;
-        Sun, 10 May 2020 05:41:44 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id l19so6468710lje.10;
-        Sun, 10 May 2020 05:41:44 -0700 (PDT)
+        Sun, 10 May 2020 11:13:45 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:43639 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728360AbgEJPNo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 11:13:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NAU0BK+VVegmur9qw286jHjw2JuJhlP5IclMrk1t5Fc=;
-        b=LSwcXsCXLUbmLEmiAoiY7Sc91AKsxo1qaLqtbW+OyVlysutWwkoKTk9DLVx+3XhQw+
-         g1zrwvZ3Uv9NcD6FuZZqutd186rpIJjQzmMiMOSHAkA1jznx5tYQx4bqhtD0cidTFRlM
-         YDxqTu7pByJje6EJLTWKVM4n5imLwczIPB38Qzfg8cJybUY6G0ySqle0WIA8pwf+RKNV
-         gFPklHCzrtnZT24cyLtbZUxm0wYBWUjht+20HsFdllSC3afFnNHbExLuUV5mC+XyRwvF
-         EhSYBZSBl4WF3OX4royuQqZeIzdE3aUOnDzSw8r1oFRR7+FNT5EAkaEoDnihR+PfO/q4
-         w7tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NAU0BK+VVegmur9qw286jHjw2JuJhlP5IclMrk1t5Fc=;
-        b=cgTZC4BfrPJkqkpEMoUPMT+c9axGeW5tmz19Yd2aklDx2yr+EDtRukIUQH9aj6pZ5Y
-         faxn5Uh7j/InwucAd0604Ddso+7nOUuEtsnYGFomJEnI8u7/4QtRlV9eHi5BylEbBAiU
-         OMmIm+ECdqtOBN5WApAaRh5wwRFL99A8gxa6h2UG+IOtLp8Cu+OuxgQnUVx4TtpNNJPD
-         cJUUEvpV+pKgnqVwukzhdJpcq52lAeUim+pJrqQSUTzIDSJWW5SSy+o+vyjorlCAEM73
-         VI61asCiKfLWdsPqjqFYnsbcf4gpgbnlvVBqtXpxtt0hFhqXEAE0vr/u0QF5m9qH4JhD
-         V0Yg==
-X-Gm-Message-State: AOAM530BEMr/mwA82Cd2AXvkiL+WjS8av0geeLm1tzadZAvcml149E8q
-        9y4+dlLp56q3Zv5BzQ4XxaoIscBx
-X-Google-Smtp-Source: ABdhPJxqYQXvLDdFvpl/hPS6GiSgWb9asphcJPLfMewADBnX1GCD9/pMZuHoMO8sjg2/4kXlE8bNAw==
-X-Received: by 2002:a2e:3208:: with SMTP id y8mr7245503ljy.282.1589114502953;
-        Sun, 10 May 2020 05:41:42 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id m11sm7136611lfo.55.2020.05.10.05.41.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 05:41:42 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v8 3/3] arm64: dts: meson: add support for the Smartlabs SML-5442TW
-Date:   Sun, 10 May 2020 12:41:29 +0000
-Message-Id: <20200510124129.31575-4-christianshewitt@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1589123624; x=1620659624;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=/lx9IMGD8OSpcKaP41yqeupdgWSyQSZIGmwGMoAhdCg=;
+  b=oQl+AW3YH3ZBWLLp4npDWf1UrBmcxvmsll5muXZafEvZ2GS6CZLiHa6Y
+   dZiFj3VDou7s6t9U7WCiAh4lNpq5ifawp3/zmtTXjsufnY/rfn72qcxcr
+   +ys88e0FMwnC0G+ibEKL9yc7CDfUyU0JkMF0KMowzoeBDd54YNTx7Snyo
+   0=;
+IronPort-SDR: +W8UwZhm0Fx7/mRtYUUkxX8eD4DLs/LEYmrt/nZnrm+KmWQQFDAzSIO3mf/bD+mmJUIXwbsaU0
+ WNegxKNnJ/GA==
+X-IronPort-AV: E=Sophos;i="5.73,376,1583193600"; 
+   d="scan'208";a="43758773"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 10 May 2020 15:13:42 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id EF549A17F0;
+        Sun, 10 May 2020 15:13:41 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 10 May 2020 15:13:41 +0000
+Received: from u8a88181e7b2355.ant.amazon.com (10.43.161.174) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 10 May 2020 15:13:32 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
+        <james.morse@arm.com>, <rrichter@marvell.com>, <hhhawa@amazon.com>,
+        <robh+dt@kernel.org>, <frowand.list@gmail.com>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <eitan@amazon.com>
+Subject: [PATCH v10 0/3] Introduce Amazon's Annapurna Labs L1/L2 EDAC drivers
+Date:   Sun, 10 May 2020 18:13:07 +0300
+Message-ID: <20200510151310.17372-1-hhhawa@amazon.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200510124129.31575-1-christianshewitt@gmail.com>
-References: <20200510124129.31575-1-christianshewitt@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.174]
+X-ClientProxiedBy: EX13D27UWB002.ant.amazon.com (10.43.161.167) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Smartlabs SML-5442TW is based on the Amlogic P231 reference design
-but with the following differences:
+This series introduce Amazon's Annapurna Labs L1/L2 EDAC drivers.
 
-- The Yellow and Blue LEDs are available but disabled
-- The Red and Green LEDs are used to signal off/on status
-- uart_AO can be accessed after opening the case; soldered pins exist
-- QCA9377 instead of the usual Ampak/Broadcom module
+Alpine SoCs supports L1 and L2 single bit correction and two bits detection
+capability based on ARM implementation.
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/Makefile          |  1 +
- .../dts/amlogic/meson-gxl-s905d-sml5442tw.dts | 80 +++++++++++++++++++
- 2 files changed, 81 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
+The CPU cores in the SoC are the same and all of them support ECC.
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index eef0045320f2..6cf8c4ac0390 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -27,6 +27,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-phicomm-n1.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-sml5442tw.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-p241.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-tx3-mini.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
-new file mode 100644
-index 000000000000..0b95e9ecbef0
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
-@@ -0,0 +1,80 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) Christian Hewitt <christianshewitt@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxl-s905d.dtsi"
-+#include "meson-gx-p23x-q20x.dtsi"
-+#include <dt-bindings/leds/common.h>
-+
-+/ {
-+	compatible = "smartlabs,sml5442tw", "amlogic,s905d", "amlogic,meson-gxl";
-+	model = "SmartLabs SML-5442TW";
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		yellow {
-+			color = <LED_COLOR_ID_YELLOW>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio_ao GPIOAO_6 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		blue {
-+			color = <LED_COLOR_ID_BLUE>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio GPIODV_28 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		green {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		red {
-+			color = <LED_COLOR_ID_RED>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio GPIODV_27 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&ethmac {
-+	status = "okay";
-+	phy-mode = "rmii";
-+	phy-handle = <&internal_phy>;
-+};
-+
-+&i2c_A {
-+	status = "okay";
-+	pinctrl-0 = <&i2c_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&internal_phy {
-+	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+/* This is connected to the Bluetooth module: */
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+
-+	bluetooth {
-+		compatible = "qcom,qca9377-bt";
-+		enable-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
-+		clocks = <&wifi32k>;
-+		clock-names = "lpo";
-+	};
-+};
+Changes since v9:
+-----------------
+- Fix include order (asm/ includes after linux/)
+- Update local variables declaration order
+- Use private structure in al_l1_edac driver.
+- Add missing platform_driver_unregister(), in init() function.
+- Commit message updates.
+
+Changes since v8:
+-----------------
+- Fix Kconfig dependency, to be depends ARM64 in any case (for compile
+  test also), as the driver use arm64 sysreg functions.
+  Reported-by: kbuild test robot <lkp@intel.com>
+
+Changes since v7:
+-----------------
+- Add missing <linux/platform_device.h> include
+- Use new APIs edac_device_handle_{ue/ce}_count
+- Add lock around edac_device_handle_{ue/ce}_count
+- Check retrun value of of_find_node_by_path
+- Remove the goto with single usage and restructuring the code
+- Add of_node_put for L2 cache of_node
+
+Changes since v6:
+-----------------
+- Add ARM64 dependency
+- Add COMPILE_TEST
+
+Changes since v5:
+-----------------
+- Use top-level machine compatible to bind the EDAC device
+- Remove DT bindings
+- Add initcall to create platform device and register the edac driver
+- follow 'next-level-cache' phandle to create CPU topology for L2 driver
+- Change the driver to be tristate
+- Move register read to function flow
+- EXPORT_SYMBOL_GPL of_find_next_cache_node
+
+Changes since v4:
+-----------------
+- Added include for cpumask.h in al_l2_edac.c
+- Fix RAMID error print according to ARM TRM
+- Use for_each_possible_cpu() to parse information for DT.
+- Add missing of_node_put() call.
+
+Changes since v3:
+-----------------
+- Added include for smp.h sysreg.h
+- Use scnprintf instead of snprintf
+- Move write_sysreg_s after valid check to minimize the window between
+read/write.
+- Use IS_ERR_OR_NULL instead of IS_ERR, because
+edac_device_alloc_ctl_info may return NULL.
+
+Changes since v2:
+-----------------
+- Use BIT for single bit instead of GENMASK
+- Use BIT_ULL and GENMASK_ULL for 64bit vector
+- Fix the mod_name/ctrl_name.
+
+Changes since v1:
+-----------------
+- Split into two drivers
+- Get cpu-mask according to l2-cache handler from devicetree
+- Remove parameter casting
+- Use GENMASK() in bit mask
+- Use FIELD_GET()
+- Update define description PLRU_RAM -> PF_RAM
+- Use sys_reg() and read_sysreg_s()
+- Remove all write/read wrappers
+- Check fatal field to set if the error correctable or not
+- Remove un-relevant information from error prints.
+- Update smp_call_function_single() call function to wait
+- remove usage of get_online_cpus/put_online_cpus
+- Use on_each_cpu() and smp_call_function_any() instead of loop with for_each_cpu.
+- use buffer for error prints and pass to edac API
+- Remove edac_op_state set
+- Add for loop to report on repeated errors of the same type
+- Fix error name of the TLB to be L2_TLB as written in ARM TRM
+- Minor change in Kconfig
+- Minor changes in commit message
+
+
+Hanna Hawa (3):
+  edac: Introduce Amazon's Annapurna Labs L1 EDAC driver
+  of: EXPORT_SYMBOL_GPL of_find_next_cache_node
+  edac: Introduce Amazon's Annapurna Labs L2 EDAC driver
+
+ MAINTAINERS               |  10 ++
+ drivers/edac/Kconfig      |  16 +++
+ drivers/edac/Makefile     |   2 +
+ drivers/edac/al_l1_edac.c | 213 +++++++++++++++++++++++++++++
+ drivers/edac/al_l2_edac.c | 273 ++++++++++++++++++++++++++++++++++++++
+ drivers/of/base.c         |   1 +
+ 6 files changed, 515 insertions(+)
+ create mode 100644 drivers/edac/al_l1_edac.c
+ create mode 100644 drivers/edac/al_l2_edac.c
+
 -- 
 2.17.1
 
