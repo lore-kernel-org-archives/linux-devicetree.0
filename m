@@ -2,414 +2,268 @@ Return-Path: <SRS0=AC3K=6Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F43C54E8A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 15:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B48BC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 16:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB10A214DB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 15:14:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qkhP8o4S"
+	by mail.kernel.org (Postfix) with ESMTP id 652B620801
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 16:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbgEJPO1 (ORCPT
+        id S1729136AbgEJQR0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 11:14:27 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:40345 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbgEJPO1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 11:14:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589123665; x=1620659665;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=jyOV8Qtekjuu0IbgyISmqBbnqo3UTXfwP0nwBzl8CjY=;
-  b=qkhP8o4SvSSOREo4VL9in4biGjJkTvT9jxzta4I1jpndSfZ2Y51evcZl
-   Of1LU4BS4EIcwCJJYGkYb/5jHsZmTBkyt22GG+OWFgjLC/WVarbX1z/wB
-   JL/BlpipKAvOPm4MWufpjOyZroOJ+swAiVFRpVEdLjfD0RP3L+Aoh1mlh
-   4=;
-IronPort-SDR: g3We26b57BcUsRV4qTGv5W3rwcI7ZuGTnF7gyPp7Z7p4mRBkLXarmV8uk+sbgQ6zJ8eCVSswSq
- GM+hKEsW3K8g==
-X-IronPort-AV: E=Sophos;i="5.73,376,1583193600"; 
-   d="scan'208";a="29539957"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 10 May 2020 15:14:11 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com (Postfix) with ESMTPS id E9D68A2415;
-        Sun, 10 May 2020 15:14:09 +0000 (UTC)
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sun, 10 May 2020 15:14:08 +0000
-Received: from u8a88181e7b2355.ant.amazon.com (10.43.161.174) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sun, 10 May 2020 15:13:59 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
-        <james.morse@arm.com>, <rrichter@marvell.com>, <hhhawa@amazon.com>,
-        <robh+dt@kernel.org>, <frowand.list@gmail.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
-        <jonnyc@amazon.com>, <hanochu@amazon.com>, <eitan@amazon.com>
-Subject: [PATCH v10 3/3] edac: Introduce Amazon's Annapurna Labs L2 EDAC driver
-Date:   Sun, 10 May 2020 18:13:10 +0300
-Message-ID: <20200510151310.17372-4-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200510151310.17372-1-hhhawa@amazon.com>
-References: <20200510151310.17372-1-hhhawa@amazon.com>
+        Sun, 10 May 2020 12:17:26 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40310 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgEJQRZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 12:17:25 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id F2C1A2A04D1
+Received: by earth.universe (Postfix, from userid 1000)
+        id 63E943C08C7; Sun, 10 May 2020 18:17:21 +0200 (CEST)
+Date:   Sun, 10 May 2020 18:17:21 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-pm@vger.kernel.org, robh@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
+Message-ID: <20200510161721.257vprq6rqp64wu5@earth.universe>
+References: <20200507183013.27261-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.174]
-X-ClientProxiedBy: EX13D27UWB002.ant.amazon.com (10.43.161.167) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eleyscz72hdifi3z"
+Content-Disposition: inline
+In-Reply-To: <20200507183013.27261-1-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Introduce Amazon's Annapurna Labs L2 EDAC driver to detect and report L2
-errors.
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
----
- MAINTAINERS               |   5 +
- drivers/edac/Kconfig      |   8 ++
- drivers/edac/Makefile     |   1 +
- drivers/edac/al_l2_edac.c | 273 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 287 insertions(+)
- create mode 100644 drivers/edac/al_l2_edac.c
+--eleyscz72hdifi3z
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a3ec6a1f7cae..da86c13e2719 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -806,6 +806,11 @@ M:	Hanna Hawa <hhhawa@amazon.com>
- S:	Maintained
- F:	drivers/edac/al_l1_edac.c
- 
-+AMAZON ANNAPURNA LABS L2 EDAC
-+M:	Hanna Hawa <hhhawa@amazon.com>
-+S:	Maintained
-+F:	drivers/edac/al_l2_edac.c
-+
- AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
- M:	Talel Shenhar <talel@amazon.com>
- S:	Maintained
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index ba280e9c37b3..501e4ccc15ea 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -82,6 +82,14 @@ config EDAC_AL_L1
- 	  for Amazon's Annapurna Labs SoCs.
- 	  This driver detects errors of L1 caches.
- 
-+config EDAC_AL_L2
-+	tristate "Amazon's Annapurna Labs L2 EDAC"
-+	depends on ARM64 && (ARCH_ALPINE || COMPILE_TEST)
-+	help
-+	  Support for L2 error detection and correction
-+	  for Amazon's Annapurna Labs SoCs.
-+	  This driver detects errors of L2 caches.
-+
- config EDAC_AMD64
- 	tristate "AMD64 (Opteron, Athlon64)"
- 	depends on AMD_NB && EDAC_DECODE_MCE
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 5ceea270856c..9ea32bb97362 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -23,6 +23,7 @@ edac_mce_amd-y				:= mce_amd.o
- obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
- 
- obj-$(CONFIG_EDAC_AL_L1)		+= al_l1_edac.o
-+obj-$(CONFIG_EDAC_AL_L2)		+= al_l2_edac.o
- obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
- obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
- obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
-new file mode 100644
-index 000000000000..c22efacc4114
---- /dev/null
-+++ b/drivers/edac/al_l2_edac.c
-@@ -0,0 +1,273 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/cpumask.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/smp.h>
-+#include <asm/sysreg.h>
-+
-+#include "edac_device.h"
-+#include "edac_module.h"
-+
-+#define DRV_NAME				"al_l2_edac"
-+
-+/* Same bit assignments of L2MERRSR_EL1 in ARM CA57/CA72 */
-+#define ARM_CA57_L2MERRSR_EL1			sys_reg(3, 1, 15, 2, 3)
-+#define ARM_CA57_L2MERRSR_RAMID			GENMASK(30, 24)
-+#define  ARM_CA57_L2_TAG_RAM			0x10
-+#define  ARM_CA57_L2_DATA_RAM			0x11
-+#define  ARM_CA57_L2_SNOOP_RAM			0x12
-+#define  ARM_CA57_L2_DIRTY_RAM			0x14
-+#define  ARM_CA57_L2_INC_PF_RAM			0x18
-+#define ARM_CA57_L2MERRSR_VALID			BIT(31)
-+#define ARM_CA57_L2MERRSR_REPEAT		GENMASK_ULL(39, 32)
-+#define ARM_CA57_L2MERRSR_OTHER			GENMASK_ULL(47, 40)
-+#define ARM_CA57_L2MERRSR_FATAL			BIT_ULL(63)
-+
-+#define AL_L2_EDAC_MSG_MAX			256
-+
-+struct al_l2_cache {
-+	cpumask_t cluster_cpus;
-+	struct list_head list_node;
-+	struct device_node *of_node;
-+};
-+
-+struct al_l2_edac {
-+	struct list_head l2_caches;
-+	spinlock_t lock;
-+};
-+
-+static struct platform_device *edac_l2_device;
-+
-+static void l2merrsr_read_status(void *arg)
-+{
-+	struct edac_device_ctl_info *edac_dev = arg;
-+	u32 ramid, repeat, other, fatal;
-+	char msg[AL_L2_EDAC_MSG_MAX];
-+	struct al_l2_edac *al_l2;
-+	int cpu, space, count;
-+	u64 val;
-+	char *p;
-+
-+	al_l2 = edac_dev->pvt_info;
-+
-+	val = read_sysreg_s(ARM_CA57_L2MERRSR_EL1);
-+	if (!(FIELD_GET(ARM_CA57_L2MERRSR_VALID, val)))
-+		return;
-+
-+	write_sysreg_s(0, ARM_CA57_L2MERRSR_EL1);
-+
-+	cpu = smp_processor_id();
-+	ramid = FIELD_GET(ARM_CA57_L2MERRSR_RAMID, val);
-+	repeat = FIELD_GET(ARM_CA57_L2MERRSR_REPEAT, val);
-+	other = FIELD_GET(ARM_CA57_L2MERRSR_OTHER, val);
-+	fatal = FIELD_GET(ARM_CA57_L2MERRSR_FATAL, val);
-+
-+	space = sizeof(msg);
-+	p = msg;
-+	count = scnprintf(p, space, "CPU%d L2 %serror detected", cpu,
-+			  (fatal) ? "Fatal " : "");
-+	p += count;
-+	space -= count;
-+
-+	switch (ramid) {
-+	case ARM_CA57_L2_TAG_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Tag RAM'");
-+		break;
-+	case ARM_CA57_L2_DATA_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Data RAM'");
-+		break;
-+	case ARM_CA57_L2_SNOOP_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Snoop Tag RAM'");
-+		break;
-+	case ARM_CA57_L2_DIRTY_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Dirty RAM'");
-+		break;
-+	case ARM_CA57_L2_INC_PF_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 internal metadata'");
-+		break;
-+	default:
-+		count = scnprintf(p, space, " RAMID='unknown'");
-+		break;
-+	}
-+
-+	p += count;
-+	space -= count;
-+
-+	count = scnprintf(p, space,
-+			  " repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)",
-+			  repeat, other, val);
-+
-+	spin_lock(&al_l2->lock);
-+	if (fatal)
-+		edac_device_handle_ue_count(edac_dev, repeat, 0, 0, msg);
-+	else
-+		edac_device_handle_ce_count(edac_dev, repeat, 0, 0, msg);
-+	spin_unlock(&al_l2->lock);
-+}
-+
-+static void al_l2_edac_check(struct edac_device_ctl_info *edac_dev)
-+{
-+	struct al_l2_edac *al_l2 = edac_dev->pvt_info;
-+	struct al_l2_cache *l2_cache;
-+
-+	list_for_each_entry(l2_cache, &al_l2->l2_caches, list_node)
-+		smp_call_function_any(&l2_cache->cluster_cpus,
-+				      al_l2_edac_l2merrsr_read_status,
-+				      edac_dev, 1);
-+}
-+
-+static int al_l2_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev;
-+	struct device *dev = &pdev->dev;
-+	struct al_l2_cache *l2_cache;
-+	struct al_l2_edac *al_l2;
-+	int ret, i;
-+
-+	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2), DRV_NAME, 1, "L",
-+					      1, 2, NULL, 0,
-+					      edac_device_alloc_index());
-+	if (!edac_dev)
-+		return -ENOMEM;
-+
-+	al_l2 = edac_dev->pvt_info;
-+	edac_dev->edac_check = al_l2_edac_check;
-+	edac_dev->dev = dev;
-+	edac_dev->mod_name = DRV_NAME;
-+	edac_dev->dev_name = dev_name(dev);
-+	edac_dev->ctl_name = "L2_cache";
-+	platform_set_drvdata(pdev, edac_dev);
-+
-+	spin_lock_init(&al_l2->lock);
-+	INIT_LIST_HEAD(&al_l2->l2_caches);
-+
-+	for_each_possible_cpu(i) {
-+		struct device_node *cpu;
-+		struct device_node *cpu_cache;
-+		bool found = false;
-+
-+		cpu = of_get_cpu_node(i, NULL);
-+		if (!cpu)
-+			continue;
-+
-+		cpu_cache = of_find_next_cache_node(cpu);
-+		list_for_each_entry(l2_cache, &al_l2->l2_caches, list_node) {
-+			if (l2_cache->of_node == cpu_cache) {
-+				found = true;
-+				break;
-+			}
-+		}
-+
-+		if (found) {
-+			cpumask_set_cpu(i, &l2_cache->cluster_cpus);
-+			of_node_put(cpu_cache);
-+		} else {
-+			l2_cache = devm_kzalloc(dev, sizeof(*l2_cache),
-+						GFP_KERNEL);
-+			l2_cache->of_node = cpu_cache;
-+			list_add(&l2_cache->list_node, &al_l2->l2_caches);
-+			cpumask_set_cpu(i, &l2_cache->cluster_cpus);
-+		}
-+
-+		of_node_put(cpu);
-+	}
-+
-+	list_for_each_entry(l2_cache, &al_l2->l2_caches, list_node)
-+		of_node_put(l2_cache->of_node);
-+
-+	if (list_empty(&al_l2->l2_caches)) {
-+		dev_err(dev, "L2 Cache list is empty for EDAC device\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	ret = edac_device_add_device(edac_dev);
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	dev_err(dev, "Failed to add L2 edac device (%d)\n", ret);
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return ret;
-+}
-+
-+static int al_l2_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-+
-+	edac_device_del_device(edac_dev->dev);
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id al_l2_edac_of_match[] = {
-+	/*
-+	 * "al,alpine-v2", and "amazon,al-alpine-v3" are machine compatible
-+	 * strings which have Cortex-A57/A72 configured with this support,
-+	 * and access to L2MERRSR_EL1 register is enabled in firmware.
-+	 */
-+	{ .compatible = "al,alpine-v2" },
-+	{ .compatible = "amazon,al-alpine-v3" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, al_l2_edac_of_match);
-+
-+static struct platform_driver al_l2_edac_driver = {
-+	.probe = al_l2_edac_probe,
-+	.remove = al_l2_edac_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+};
-+
-+static int __init al_l2_init(void)
-+{
-+	struct device_node *root;
-+	int ret;
-+
-+	root = of_find_node_by_path("/");
-+	if (!root) {
-+		pr_debug("Can't find root node!\n");
-+		return 0;
-+	}
-+
-+	if (!of_match_node(al_l2_edac_of_match, root))
-+		return 0;
-+
-+	ret = platform_driver_register(&al_l2_edac_driver);
-+	if (ret) {
-+		pr_err("Failed to register %s (%d)\n", DRV_NAME, ret);
-+		return ret;
-+	}
-+
-+	edac_l2_device = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
-+	if (IS_ERR(edac_l2_device)) {
-+		pr_err("Failed to register EDAC AL L2 platform device\n");
-+		platform_driver_unregister(&al_l2_edac_driver);
-+		return PTR_ERR(edac_l2_device);
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit al_l2_exit(void)
-+{
-+	platform_device_unregister(edac_l2_device);
-+	platform_driver_unregister(&al_l2_edac_driver);
-+}
-+
-+module_init(al_l2_init);
-+module_exit(al_l2_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
-+MODULE_DESCRIPTION("Amazon's Annapurna Lab's L2 EDAC Driver");
--- 
-2.17.1
+Hi Dan,
 
+On Thu, May 07, 2020 at 01:30:13PM -0500, Dan Murphy wrote:
+> Convert the bq27xxx.txt to yaml format
+>=20
+> CC: Pali Roh=E1r <pali@kernel.org>
+> CC: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+
+This needs is missing the power-supplies property. The N900 DT
+contains a bq27200 referencing the charger, so it should fail the DT
+check without the property being listed here.
+
+>  .../bindings/power/supply/bq27xxx.txt         | 56 ------------
+>  .../bindings/power/supply/bq27xxx.yaml        | 86 +++++++++++++++++++
+>  2 files changed, 86 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xx=
+x.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xx=
+x.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b=
+/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+> deleted file mode 100644
+> index 4fa8e08df2b6..000000000000
+> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+> +++ /dev/null
+> @@ -1,56 +0,0 @@
+> -TI BQ27XXX fuel gauge family
+> -
+> -Required properties:
+> -- compatible: contains one of the following:
+> - * "ti,bq27200" - BQ27200
+> - * "ti,bq27210" - BQ27210
+> - * "ti,bq27500" - deprecated, use revision specific property below
+> - * "ti,bq27510" - deprecated, use revision specific property below
+> - * "ti,bq27520" - deprecated, use revision specific property below
+> - * "ti,bq27500-1" - BQ27500/1
+> - * "ti,bq27510g1" - BQ27510-g1
+> - * "ti,bq27510g2" - BQ27510-g2
+> - * "ti,bq27510g3" - BQ27510-g3
+> - * "ti,bq27520g1" - BQ27520-g1
+> - * "ti,bq27520g2" - BQ27520-g2
+> - * "ti,bq27520g3" - BQ27520-g3
+> - * "ti,bq27520g4" - BQ27520-g4
+> - * "ti,bq27521" - BQ27521
+> - * "ti,bq27530" - BQ27530
+> - * "ti,bq27531" - BQ27531
+> - * "ti,bq27541" - BQ27541
+> - * "ti,bq27542" - BQ27542
+> - * "ti,bq27546" - BQ27546
+> - * "ti,bq27742" - BQ27742
+> - * "ti,bq27545" - BQ27545
+> - * "ti,bq27411" - BQ27411
+> - * "ti,bq27421" - BQ27421
+> - * "ti,bq27425" - BQ27425
+> - * "ti,bq27426" - BQ27426
+> - * "ti,bq27441" - BQ27441
+> - * "ti,bq27621" - BQ27621
+> -- reg: integer, I2C address of the fuel gauge.
+> -
+> -Optional properties:
+> -- monitored-battery: phandle of battery characteristics node
+> -    The fuel gauge uses the following battery properties:
+> -    + energy-full-design-microwatt-hours
+> -    + charge-full-design-microamp-hours
+> -    + voltage-min-design-microvolt
+> -  Both or neither of the *-full-design-*-hours properties must be set.
+> -  See Documentation/devicetree/bindings/power/supply/battery.txt
+> -
+> -Example:
+> -
+> -	bat: battery {
+> -		compatible =3D "simple-battery";
+> -		voltage-min-design-microvolt =3D <3200000>;
+> -		energy-full-design-microwatt-hours =3D <5290000>;
+> -		charge-full-design-microamp-hours =3D <1430000>;
+> -	};
+> -
+> -	bq27510g3: fuel-gauge@55 {
+> -		compatible =3D "ti,bq27510g3";
+> -		reg =3D <0x55>;
+> -		monitored-battery =3D <&bat>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml =
+b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+> new file mode 100644
+> index 000000000000..54f497c291f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+> @@ -0,0 +1,86 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2020 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: TI BQ27XXX fuel gauge family
+> +
+> +maintainers:
+> +  - Pali Roh=E1r <pali@kernel.org>
+> +  - Andrew F. Davis <afd@ti.com>
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +description: |
+> +  Support various Texas Instruments fuel gauge devices that share similar
+> +  register maps and power supply properties
+
+allOf:
+  - $ref: power-supply.yaml#
+
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,bq27200 - BQ27200
+> +      - ti,bq27210 - BQ27210
+> +      - ti,bq27500 - deprecated, use revision specific property below
+> +      - ti,bq27510 - deprecated, use revision specific property below
+> +      - ti,bq27520 - deprecated, use revision specific property below
+
+There is a deprecated property ("deprecated: true"), but IDK how to
+apply it to specific compatible values. Maybe Rob can help out here.
+Otherwise it's not a blocker, since the conversion is still an
+improvement without having explicit deprecation marks :)
+
+> +      - ti,bq27500-1 - BQ27500/1
+> +      - ti,bq27510g1 - BQ27510-g1
+> +      - ti,bq27510g2 - BQ27510-g2
+> +      - ti,bq27510g3 - BQ27510-g3
+> +      - ti,bq27520g1 - BQ27520-g1
+> +      - ti,bq27520g2 - BQ27520-g2
+> +      - ti,bq27520g3 - BQ27520-g3
+> +      - ti,bq27520g4 - BQ27520-g4
+> +      - ti,bq27521 - BQ27521
+> +      - ti,bq27530 - BQ27530
+> +      - ti,bq27531 - BQ27531
+> +      - ti,bq27541 - BQ27541
+> +      - ti,bq27542 - BQ27542
+> +      - ti,bq27546 - BQ27546
+> +      - ti,bq27742 - BQ27742
+> +      - ti,bq27545 - BQ27545
+> +      - ti,bq27411 - BQ27411
+> +      - ti,bq27421 - BQ27421
+> +      - ti,bq27425 - BQ27425
+> +      - ti,bq27426 - BQ27426
+> +      - ti,bq27441 - BQ27441
+> +      - ti,bq27621 - BQ27621
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: integer, I2C address of the fuel gauge.
+> +
+> +  monitored-battery:
+> +    description: |
+> +       phandle of battery characteristics node.
+> +       The fuel gauge uses the following battery properties:
+> +       - energy-full-design-microwatt-hours
+> +       - charge-full-design-microamp-hours
+> +       - voltage-min-design-microvolt
+> +       Both or neither of the *-full-design-*-hours properties must be s=
+et.
+> +       See Documentation/devicetree/bindings/power/supply/battery.txt
+
+power-supplies: true
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +      bat: battery {
+> +        compatible =3D "simple-battery";
+> +        voltage-min-design-microvolt =3D <3200000>;
+> +        energy-full-design-microwatt-hours =3D <5290000>;
+> +        charge-full-design-microamp-hours =3D <1430000>;
+> +      };
+> +
+> +      bq27510g3: fuel-gauge@55 {
+> +        compatible =3D "ti,bq27510g3";
+> +        reg =3D <0x55>;
+> +        monitored-battery =3D <&bat>;
+> +      };
+> +    };
+
+Otherwise looks good to me.
+
+-- Sebastian
+
+--eleyscz72hdifi3z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl64KQsACgkQ2O7X88g7
++pqdzA/5AQ8k1elDdtykmTF+LhZ1lSdxfrzg0iZ97kdNdO8zHnXU+3bUXrUAPKUl
+NFL1XFjNQVUvekFOXMb1ZI4wn0gtQN8IHaPG1aexFXHhvmh0pn8fqlQ64nMX1jp0
+vo/UkC5RpyqP9sszO5+VUXTS3TUiTKN/A3JeDAqr0jGIFGUZRI/cE3BPkHO9/r3/
+nUfFmpPFOH7phlj9TOYzOAqdZlqg93Bu8CLBNJnBpykqhAyirSBX2ELaN3ytAUYd
+bYamQmRMzC3MCN554MaeX6et1FGH+3X8XjamV81jlax3sllE/+jVhG9JMZb4IGrw
+BB7fCJCYmF5rYzEK0CG1ttmZSu0JboYYVYKpxem6xBS2MwSNX3n8heXYhfA/sw/T
+mt3VaJyB7rzyu52yhq8fKcaUx83B6hs4sFzzaO4BIIdydqSobMQ2/Iyc+qE1sjj+
+flj4hbXaksv+P7ncBv9Jny5mKQPfIxgoyyVbRcWZvX5NPIuQVpldkC0LxmDiDKWr
+aTZBLIAT34LAtSRMrtI+o+tyErypYngRR4uER2QDGKcPRtuNYyDH/ANRSNg6Efsy
+LSBkAMI8x9KVUaAGXvJ6KMoeIV5VVUg4UuqN36Rd65cnbnoYBBuZF9SBRMHFh20u
+XmmtbTo3rTToAU3JGhxZUMC/npcMgjS5QW+IALr1jH8+c8icTDc=
+=VmQV
+-----END PGP SIGNATURE-----
+
+--eleyscz72hdifi3z--
