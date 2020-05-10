@@ -2,268 +2,186 @@ Return-Path: <SRS0=AC3K=6Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B48BC38A2A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 16:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587ADC54E8C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 18:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 652B620801
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 16:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36BE62082E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 18:12:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="ZgVFZrzA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbgEJQR0 (ORCPT
+        id S1729095AbgEJSMJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 12:17:26 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40310 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgEJQRZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 12:17:25 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id F2C1A2A04D1
-Received: by earth.universe (Postfix, from userid 1000)
-        id 63E943C08C7; Sun, 10 May 2020 18:17:21 +0200 (CEST)
-Date:   Sun, 10 May 2020 18:17:21 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-pm@vger.kernel.org, robh@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
-Message-ID: <20200510161721.257vprq6rqp64wu5@earth.universe>
-References: <20200507183013.27261-1-dmurphy@ti.com>
+        Sun, 10 May 2020 14:12:09 -0400
+Received: from gproxy9-pub.mail.unifiedlayer.com ([69.89.20.122]:60021 "EHLO
+        gproxy9-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728385AbgEJSMI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 May 2020 14:12:08 -0400
+Received: from cmgw15.unifiedlayer.com (unknown [10.9.0.15])
+        by gproxy9.mail.unifiedlayer.com (Postfix) with ESMTP id 100271E1077
+        for <devicetree@vger.kernel.org>; Sun, 10 May 2020 12:12:04 -0600 (MDT)
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+        by cmsmtp with ESMTP
+        id XqQjjWd5RrO3uXqQljCdfn; Sun, 10 May 2020 12:12:04 -0600
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.3 cv=bfZFrtHB c=1 sm=1 tr=0
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10:nop_charset_1
+ a=sTwFKg_x9MkA:10:nop_rcvd_month_year
+ a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
+ a=VwQbUJbxAAAA:8 a=9eRCeKCxr6mOf_OUt6IA:9 a=GWRvtodc5lQpLaii:21
+ a=Ohp1ws75Cw8cpDCh:21 a=QEXdDO2ut3YA:10:nop_charset_2
+ a=sfIEtMYjypgA:10:uccc_2email_address a=rsP06fVo5MYu2ilr0aT5:22
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:References:Cc:To:Subject:From:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=OvLi804xCZ6xtXakpo4loaLqT7X+ucK02sepeBhNHRc=; b=ZgVFZrzARaLCKT1J2MrUDfTHMZ
+        /AeJZZOhwqb3sV4v62yJfJshPH5O0iLuSvlLqVSIv2jM4ZkN7nVvxtZELcHsyXEgf0A2sTFniHx4g
+        Z//8AagL4UWfTNswCZq/MKJlB9PTwwu8lhvrpryK9/0wDjAUuZFNfKlnUlc0uBdqcRhBrs62FmMBc
+        PQMSKqHPAvSQaPAN6a2KfleljZfeJyl7x9ja6UFyo9kq9PeFYNiT5+AwyChfiicuAQFEBMUUVmzY3
+        4xqPuDrjc51FVooYPbl6M5fvVubB5XvtsaggrYjsO1hQZ+HtHlsJVa8yRk6vtzNNW1rMCTXHmDfTm
+        4G/UUvHw==;
+Received: from p5dcfef04.dip0.t-ipconnect.de ([93.207.239.4]:43660 helo=[192.168.0.104])
+        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <saravanan@linumiz.com>)
+        id 1jXqQi-00045H-HA; Sun, 10 May 2020 18:12:00 +0000
+From:   Saravanan Sekar <saravanan@linumiz.com>
+Subject: Re: [PATCH v2 3/4] iio: accel: wsen-itds accel documentation
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, broonie@kernel.org, lgirdwood@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+References: <20200429133943.18298-1-saravanan@linumiz.com>
+ <20200429133943.18298-4-saravanan@linumiz.com>
+ <20200503130103.16a92131@archlinux>
+Message-ID: <9e7b0365-deed-a647-ec36-b4e6ccfa2ae4@linumiz.com>
+Date:   Sun, 10 May 2020 20:11:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eleyscz72hdifi3z"
-Content-Disposition: inline
-In-Reply-To: <20200507183013.27261-1-dmurphy@ti.com>
+In-Reply-To: <20200503130103.16a92131@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 93.207.239.4
+X-Source-L: No
+X-Exim-ID: 1jXqQi-00045H-HA
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: p5dcfef04.dip0.t-ipconnect.de ([192.168.0.104]) [93.207.239.4]:43660
+X-Source-Auth: saravanan@linumiz.com
+X-Email-Count: 8
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Jonathan,
 
---eleyscz72hdifi3z
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 03/05/20 2:01 pm, Jonathan Cameron wrote:
+> On Wed, 29 Apr 2020 15:39:42 +0200
+> Saravanan Sekar<saravanan@linumiz.com>  wrote:
+>
+>> Add documentation about device operating mode and output data range
+>> supported according to operating mode
+>>
+>> Signed-off-by: Saravanan Sekar<saravanan@linumiz.com>
+>> ---
+>>   .../ABI/testing/sysfs-bus-iio-wsen-itds       | 23 +++++++++++++++++++
+>>   1 file changed, 23 insertions(+)
+>>   create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+>> new file mode 100644
+>> index 000000000000..5979f2b8aa1a
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+>> @@ -0,0 +1,23 @@
+>> +What:		/sys/bus/iio/devices/iio\:device0/in_accel_samp_freq_available
+>> +KernelVersion:	5.7
+>> +Contact:	linux-iio@vger.kernel.org
+>> +Description:
+>> +		Reading gives range of sample frequencies available for current operating mode
+>> +		after one data has generated.
+> This is standard ABI so should be the main docs, not here.
+> It also takes absolute precedence over the power modes (as mentioned below, no
+> standard userspace will be able to use those).  So if the frequency is
+> only available in high perf mode, then we change to high perf mode.
+>
+>> +
+>> +		Access: Read
+>> +		Valid values: represented in Hz
+>> +		- range [12.5, 1600] for high permormance mode
+>> +		- range [1.6, 200] for normal/low power mode
+>> +
+>> +What:		/sys/bus/iio/devices/iio\:device0/operating_mode
+>> +KernelVersion:	5.7
+>> +Contact:	linux-iio@vger.kernel.org
+>> +Description:
+>> +		Represents the device operating mode. High performance mode gives high output
+>> +		data rate and low noise compared to normal mode. Normal mode consumes less
+>> +		current.  In single shot device enters to lowpower after one data has
+>> +		generated.
+>> +
+>> +		Access: Read, Write
+>> +		Valid values: "lowpower", "normal", "high_perf", "single_shot"
+> The issue with these sort of 'mode' interface is almost no userspace will ever use them.
+> They are too unpredictable across different types of devices.
+I don't understand how can we assume or say no one will use this. The 
+device supports multiple features
+and my understanding is driver should support according to device, not 
+reverse. This is more or
+less device specific and no sure idea about bring all the device in one 
+umbrella.
+> Some of these should also not be exposed to userspace anyway as they are about 'how'
+> you are using the driver.  For example, if you aren't doing triggered capture then
+> single_shot is almost always the correct option. Annoyingly I see high performance
+> mode gives lower noise...
+>
+> So no need to expose single_shot to userspace.
+>
+> For the others we are just looking at different power vs speed and accuracy trade offs.
+> Those are better exposed by what they effect.  Here the big control for that is
+> sampling frequency.
+>
+> So if we assume the user is never going to touch this control (if it's even there)
+> then we probably want to assume they want the best possible accuracy for whatever
+> frequency they are running at.  So transition across the modes to provide that.
+>
+> Should we ever support low power mode?  It sounds nice on paper, but in reality
+> userspace won't use so I suspect we should just drop it - certainly in an initial
+> patch submission (as it will hold up acceptance).  Even if we did support
+> it, as mentioned above ABI controls will take precedence so we are looking
+> at a 'hint' not a control of mode.
+>
+> ABI is a pain, and we will put a lot of effort into not expanding it unless
+> there is a good usecase plus no way of mapping to existing ABI.
+Obviously without any reason or requirement device manufacture won't 
+come-up these kind of feature.
+I will change the driver as you don't accept at least for initial version.
 
-Hi Dan,
 
-On Thu, May 07, 2020 at 01:30:13PM -0500, Dan Murphy wrote:
-> Convert the bq27xxx.txt to yaml format
->=20
-> CC: Pali Roh=E1r <pali@kernel.org>
-> CC: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
+Thanks,
+Saravanan
 
-This needs is missing the power-supplies property. The N900 DT
-contains a bq27200 referencing the charger, so it should fail the DT
-check without the property being listed here.
-
->  .../bindings/power/supply/bq27xxx.txt         | 56 ------------
->  .../bindings/power/supply/bq27xxx.yaml        | 86 +++++++++++++++++++
->  2 files changed, 86 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xx=
-x.txt
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xx=
-x.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b=
-/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> deleted file mode 100644
-> index 4fa8e08df2b6..000000000000
-> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> +++ /dev/null
-> @@ -1,56 +0,0 @@
-> -TI BQ27XXX fuel gauge family
-> -
-> -Required properties:
-> -- compatible: contains one of the following:
-> - * "ti,bq27200" - BQ27200
-> - * "ti,bq27210" - BQ27210
-> - * "ti,bq27500" - deprecated, use revision specific property below
-> - * "ti,bq27510" - deprecated, use revision specific property below
-> - * "ti,bq27520" - deprecated, use revision specific property below
-> - * "ti,bq27500-1" - BQ27500/1
-> - * "ti,bq27510g1" - BQ27510-g1
-> - * "ti,bq27510g2" - BQ27510-g2
-> - * "ti,bq27510g3" - BQ27510-g3
-> - * "ti,bq27520g1" - BQ27520-g1
-> - * "ti,bq27520g2" - BQ27520-g2
-> - * "ti,bq27520g3" - BQ27520-g3
-> - * "ti,bq27520g4" - BQ27520-g4
-> - * "ti,bq27521" - BQ27521
-> - * "ti,bq27530" - BQ27530
-> - * "ti,bq27531" - BQ27531
-> - * "ti,bq27541" - BQ27541
-> - * "ti,bq27542" - BQ27542
-> - * "ti,bq27546" - BQ27546
-> - * "ti,bq27742" - BQ27742
-> - * "ti,bq27545" - BQ27545
-> - * "ti,bq27411" - BQ27411
-> - * "ti,bq27421" - BQ27421
-> - * "ti,bq27425" - BQ27425
-> - * "ti,bq27426" - BQ27426
-> - * "ti,bq27441" - BQ27441
-> - * "ti,bq27621" - BQ27621
-> -- reg: integer, I2C address of the fuel gauge.
-> -
-> -Optional properties:
-> -- monitored-battery: phandle of battery characteristics node
-> -    The fuel gauge uses the following battery properties:
-> -    + energy-full-design-microwatt-hours
-> -    + charge-full-design-microamp-hours
-> -    + voltage-min-design-microvolt
-> -  Both or neither of the *-full-design-*-hours properties must be set.
-> -  See Documentation/devicetree/bindings/power/supply/battery.txt
-> -
-> -Example:
-> -
-> -	bat: battery {
-> -		compatible =3D "simple-battery";
-> -		voltage-min-design-microvolt =3D <3200000>;
-> -		energy-full-design-microwatt-hours =3D <5290000>;
-> -		charge-full-design-microamp-hours =3D <1430000>;
-> -	};
-> -
-> -	bq27510g3: fuel-gauge@55 {
-> -		compatible =3D "ti,bq27510g3";
-> -		reg =3D <0x55>;
-> -		monitored-battery =3D <&bat>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml =
-b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-> new file mode 100644
-> index 000000000000..54f497c291f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-> @@ -0,0 +1,86 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2020 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI BQ27XXX fuel gauge family
-> +
-> +maintainers:
-> +  - Pali Roh=E1r <pali@kernel.org>
-> +  - Andrew F. Davis <afd@ti.com>
-> +  - Sebastian Reichel <sre@kernel.org>
-> +
-> +description: |
-> +  Support various Texas Instruments fuel gauge devices that share similar
-> +  register maps and power supply properties
-
-allOf:
-  - $ref: power-supply.yaml#
-
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,bq27200 - BQ27200
-> +      - ti,bq27210 - BQ27210
-> +      - ti,bq27500 - deprecated, use revision specific property below
-> +      - ti,bq27510 - deprecated, use revision specific property below
-> +      - ti,bq27520 - deprecated, use revision specific property below
-
-There is a deprecated property ("deprecated: true"), but IDK how to
-apply it to specific compatible values. Maybe Rob can help out here.
-Otherwise it's not a blocker, since the conversion is still an
-improvement without having explicit deprecation marks :)
-
-> +      - ti,bq27500-1 - BQ27500/1
-> +      - ti,bq27510g1 - BQ27510-g1
-> +      - ti,bq27510g2 - BQ27510-g2
-> +      - ti,bq27510g3 - BQ27510-g3
-> +      - ti,bq27520g1 - BQ27520-g1
-> +      - ti,bq27520g2 - BQ27520-g2
-> +      - ti,bq27520g3 - BQ27520-g3
-> +      - ti,bq27520g4 - BQ27520-g4
-> +      - ti,bq27521 - BQ27521
-> +      - ti,bq27530 - BQ27530
-> +      - ti,bq27531 - BQ27531
-> +      - ti,bq27541 - BQ27541
-> +      - ti,bq27542 - BQ27542
-> +      - ti,bq27546 - BQ27546
-> +      - ti,bq27742 - BQ27742
-> +      - ti,bq27545 - BQ27545
-> +      - ti,bq27411 - BQ27411
-> +      - ti,bq27421 - BQ27421
-> +      - ti,bq27425 - BQ27425
-> +      - ti,bq27426 - BQ27426
-> +      - ti,bq27441 - BQ27441
-> +      - ti,bq27621 - BQ27621
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: integer, I2C address of the fuel gauge.
-> +
-> +  monitored-battery:
-> +    description: |
-> +       phandle of battery characteristics node.
-> +       The fuel gauge uses the following battery properties:
-> +       - energy-full-design-microwatt-hours
-> +       - charge-full-design-microamp-hours
-> +       - voltage-min-design-microvolt
-> +       Both or neither of the *-full-design-*-hours properties must be s=
-et.
-> +       See Documentation/devicetree/bindings/power/supply/battery.txt
-
-power-supplies: true
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +      bat: battery {
-> +        compatible =3D "simple-battery";
-> +        voltage-min-design-microvolt =3D <3200000>;
-> +        energy-full-design-microwatt-hours =3D <5290000>;
-> +        charge-full-design-microamp-hours =3D <1430000>;
-> +      };
-> +
-> +      bq27510g3: fuel-gauge@55 {
-> +        compatible =3D "ti,bq27510g3";
-> +        reg =3D <0x55>;
-> +        monitored-battery =3D <&bat>;
-> +      };
-> +    };
-
-Otherwise looks good to me.
-
--- Sebastian
-
---eleyscz72hdifi3z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl64KQsACgkQ2O7X88g7
-+pqdzA/5AQ8k1elDdtykmTF+LhZ1lSdxfrzg0iZ97kdNdO8zHnXU+3bUXrUAPKUl
-NFL1XFjNQVUvekFOXMb1ZI4wn0gtQN8IHaPG1aexFXHhvmh0pn8fqlQ64nMX1jp0
-vo/UkC5RpyqP9sszO5+VUXTS3TUiTKN/A3JeDAqr0jGIFGUZRI/cE3BPkHO9/r3/
-nUfFmpPFOH7phlj9TOYzOAqdZlqg93Bu8CLBNJnBpykqhAyirSBX2ELaN3ytAUYd
-bYamQmRMzC3MCN554MaeX6et1FGH+3X8XjamV81jlax3sllE/+jVhG9JMZb4IGrw
-BB7fCJCYmF5rYzEK0CG1ttmZSu0JboYYVYKpxem6xBS2MwSNX3n8heXYhfA/sw/T
-mt3VaJyB7rzyu52yhq8fKcaUx83B6hs4sFzzaO4BIIdydqSobMQ2/Iyc+qE1sjj+
-flj4hbXaksv+P7ncBv9Jny5mKQPfIxgoyyVbRcWZvX5NPIuQVpldkC0LxmDiDKWr
-aTZBLIAT34LAtSRMrtI+o+tyErypYngRR4uER2QDGKcPRtuNYyDH/ANRSNg6Efsy
-LSBkAMI8x9KVUaAGXvJ6KMoeIV5VVUg4UuqN36Rd65cnbnoYBBuZF9SBRMHFh20u
-XmmtbTo3rTToAU3JGhxZUMC/npcMgjS5QW+IALr1jH8+c8icTDc=
-=VmQV
------END PGP SIGNATURE-----
-
---eleyscz72hdifi3z--
