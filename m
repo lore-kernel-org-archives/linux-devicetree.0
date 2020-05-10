@@ -2,99 +2,191 @@ Return-Path: <SRS0=AC3K=6Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E033C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 19:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1BEC38A2A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 20:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1DCA20801
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 19:58:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUzjo9sL"
+	by mail.kernel.org (Postfix) with ESMTP id A7EDE20725
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 20:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgEJT6a (ORCPT
+        id S1728873AbgEJUI4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 15:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36742 "EHLO
+        Sun, 10 May 2020 16:08:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728071AbgEJT6a (ORCPT
+        by vger.kernel.org with ESMTP id S1728630AbgEJUIz (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 10 May 2020 15:58:30 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056A1C061A0C;
-        Sun, 10 May 2020 12:58:29 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id f23so2862959pgj.4;
-        Sun, 10 May 2020 12:58:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=uZKTxfpf4WQr90XnNhuD3ishpnxGhqgOmhIo+H3Laqk=;
-        b=AUzjo9sLPuAvRnXdzPT3Kc8NUOsQm0jfrAF2blkwHrYFPsROHcqXpscXzY8hV4qEMz
-         LpLZXkSZeY/9Owsl0ForKL4OFUhfLlR76RI6fXK1tFpU9j4F6nkvqZ13XRPmNAIEf2my
-         dKhvYfa43cJZQHGmKS5f5n65SwkGFJWgxqA1LKrRFhWGdFDz8zcOVGa0M0/9ZguD8YvL
-         kW6bPJtRgvIyxTzKJD+Xv0H89DXWsPw/HHxrLedaD2VIgmBIME5gIjEsK4pZeSYv0OTK
-         iE38BK0zmG0sZpOym6T4S5W+K+s5lKPmmPf1IWkkjO/AQXUWTaHjAvl9DSd8MCDWbacH
-         sLxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uZKTxfpf4WQr90XnNhuD3ishpnxGhqgOmhIo+H3Laqk=;
-        b=Y0xFsx4ZmuXyQNhA+n7DT/73hWWpGMMmYY2KYcGr2z9BJDY/y+5a+TRJCidjhWFsQi
-         exinOYgNRM93IlevkAbFBgxGzxg5JI0A2wFbbHhIPNjyQm6Eedo3xjxSWOSm4HfAvpCh
-         OwSg/+YbSeG7zXvYM5394zm+ku7mIvprmDRW8CyQhLqtJ6WYyB5yxB25a2vIsa6wJxzq
-         LuuUGZoZHJzjwZ5W/QURIiuQ1346YuvRRYEeLfES5dYXksEWhg1zv/0sM6f0cZMmXE2q
-         i6W96TEoxjKfsnCUezBRtfKIYhIfCyuE4Us+9gOmhNasKlLQtOfGjzfQzfX7QYIPd07S
-         48UQ==
-X-Gm-Message-State: AOAM532LQXDbv+3eJtXpvcGcmbu7uA7R+IGSO/eBgtd0NopdrCy3cHAy
-        KDfhFGgvYKx2Ae1iqta87XI=
-X-Google-Smtp-Source: ABdhPJw467vS/5Fwn2AHn/9SElCumBSYBKYSMDLeemhy0DbS1zmRMM9peKvlD8YgUaRsNutWVKj56Q==
-X-Received: by 2002:a63:3342:: with SMTP id z63mr1479172pgz.49.1589140709345;
-        Sun, 10 May 2020 12:58:29 -0700 (PDT)
-Received: from pr0gr4m-ubuntu.localdomain ([1.240.193.107])
-        by smtp.googlemail.com with ESMTPSA id u9sm7320289pfn.197.2020.05.10.12.58.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 May 2020 12:58:28 -0700 (PDT)
-From:   l4stpr0gr4m@gmail.com
-To:     trivial@kernel.org
-Cc:     nsaenzjulienne@suse.de, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kangmin Park <l4stpr0gr4m@gmail.com>
-Subject: [PATCH] docs/devicetree/i2c: brcm,bcm2835: fix node id in example
-Date:   Mon, 11 May 2020 04:58:21 +0900
-Message-Id: <1589140701-7516-1-git-send-email-l4stpr0gr4m@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 10 May 2020 16:08:55 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60DCAC061A0C;
+        Sun, 10 May 2020 13:08:55 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 2423B2A0428
+Received: by earth.universe (Postfix, from userid 1000)
+        id D95943C08C7; Sun, 10 May 2020 22:08:51 +0200 (CEST)
+Date:   Sun, 10 May 2020 22:08:51 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] power: supply: max17040: Set rcomp value
+Message-ID: <20200510200851.zam6m37bkr36s5cr@earth.universe>
+References: <20200504221300.3153-1-xc-racer2@live.ca>
+ <BN6PR04MB066057B881DEFC0C48208589A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="e235tnurht72quji"
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB066057B881DEFC0C48208589A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Kangmin Park <l4stpr0gr4m@gmail.com>
 
-This is a trivial patch to fix node id to match the reg in example.
+--e235tnurht72quji
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Kangmin Park <l4stpr0gr4m@gmail.com>
----
- Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
-index c9a6587..a8a35df 100644
---- a/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
-@@ -13,7 +13,7 @@ Recommended properties:
- 
- Example:
- 
--i2c@20205000 {
-+i2c@7e205000 {
- 	compatible = "brcm,bcm2835-i2c";
- 	reg = <0x7e205000 0x1000>;
- 	interrupts = <2 21>;
--- 
-2.7.4
+On Mon, May 04, 2020 at 03:13:00PM -0700, Jonathan Bakker wrote:
+> According to the datasheet (1), the rcomp parameter can
+> vary based on the typical operating temperature and the
+> battery chemistry.  If provided, make sure we set it after
+> we reset the chip on boot.
+>=20
+> 1) https://datasheets.maximintegrated.com/en/ds/MAX17040-MAX17041.pdf
+>=20
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> ---
+>  drivers/power/supply/max17040_battery.c | 33 +++++++++++++++++++++----
+>  1 file changed, 28 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supp=
+ly/max17040_battery.c
+> index 48aa44665e2f..f66e2fdc0a8a 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/init.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/mutex.h>
+> +#include <linux/property.h>
+>  #include <linux/err.h>
+>  #include <linux/i2c.h>
+>  #include <linux/delay.h>
+> @@ -31,6 +32,8 @@
+> =20
+>  #define MAX17040_ATHD_MASK		0xFFC0
+>  #define MAX17040_ATHD_DEFAULT_POWER_UP	4
+> +#define MAX17040_RCOMP_MASK		0xFF
+> +#define MAX17040_RCOMP_DEFAULT_POWER_UP	0x97
 
+Why is this 8 bits? Quote from the datasheet, that you linked:
+
+=BBRCOMP is a 16-bit value used to compensate the ModelGauge algorithm=AB
+
+-- Sebastian
+
+>  struct max17040_chip {
+>  	struct i2c_client		*client;
+> @@ -48,6 +51,8 @@ struct max17040_chip {
+>  	int status;
+>  	/* Low alert threshold from 32% to 1% of the State of Charge */
+>  	u32 low_soc_alert;
+> +	/* Optimization for specific chemistries */
+> +	u8 rcomp_value;
+>  };
+> =20
+>  static int max17040_get_property(struct power_supply *psy,
+> @@ -119,6 +124,20 @@ static int max17040_set_low_soc_alert(struct i2c_cli=
+ent *client, u32 level)
+>  	return ret;
+>  }
+> =20
+> +static int max17040_set_rcomp(struct i2c_client *client, u32 val)
+> +{
+> +	int ret;
+> +	u16 data;
+> +
+> +	data =3D max17040_read_reg(client, MAX17040_RCOMP);
+> +	/* clear the rcomp val and set MSb 8 bits */
+> +	data &=3D MAX17040_RCOMP_MASK;
+> +	data |=3D val << 8;
+> +	ret =3D max17040_write_reg(client, MAX17040_RCOMP, data);
+> +
+> +	return ret;
+> +}
+> +
+>  static void max17040_get_vcell(struct i2c_client *client)
+>  {
+>  	struct max17040_chip *chip =3D i2c_get_clientdata(client);
+> @@ -190,8 +209,14 @@ static int max17040_get_of_data(struct max17040_chip=
+ *chip)
+>  				 "maxim,alert-low-soc-level",
+>  				 &chip->low_soc_alert);
+> =20
+> -	if (chip->low_soc_alert <=3D 0 || chip->low_soc_alert >=3D 33)
+> +	if (chip->low_soc_alert <=3D 0 || chip->low_soc_alert >=3D 33) {
+> +		dev_err(&client->dev,
+> +			"failed: low SOC alert OF data out of bounds\n");
+>  		return -EINVAL;
+> +	}
+> +
+> +	chip->rcomp_value =3D MAX17040_RCOMP_DEFAULT_POWER_UP;
+> +	device_property_read_u8(dev, "maxim,rcomp-value", &chip->rcomp_value);
+> =20
+>  	return 0;
+>  }
+> @@ -289,11 +314,8 @@ static int max17040_probe(struct i2c_client *client,
+>  	chip->client =3D client;
+>  	chip->pdata =3D client->dev.platform_data;
+>  	ret =3D max17040_get_of_data(chip);
+> -	if (ret) {
+> -		dev_err(&client->dev,
+> -			"failed: low SOC alert OF data out of bounds\n");
+> +	if (ret)
+>  		return ret;
+> -	}
+> =20
+>  	i2c_set_clientdata(client, chip);
+>  	psy_cfg.drv_data =3D chip;
+> @@ -307,6 +329,7 @@ static int max17040_probe(struct i2c_client *client,
+> =20
+>  	max17040_reset(client);
+>  	max17040_get_version(client);
+> +	max17040_set_rcomp(client, chip->rcomp_value);
+> =20
+>  	/* check interrupt */
+>  	if (client->irq && of_device_is_compatible(client->dev.of_node,
+> --=20
+> 2.20.1
+>=20
+
+--e235tnurht72quji
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl64X04ACgkQ2O7X88g7
++ppYjQ//YN3aFhfEGqdAisLQAbkCIpO3pIh25PNJN42FyGzOhJgTLwi/sJtNuuIT
+sEyr51xKNCwWM+DnVHYOJDD8qO57G+K2/EzfaLIIhL/aYs+alPbR+yjuQQmI3iMu
+eAu8Od72pkLEglov3sjHt4bJD3PO5KTA+2ZzEeTBU6+FxLPERG2tiIk75rDczrJm
+OKKDDtonamgIcrenh4qkpo8dScMF+4g2ZR8nTXzGwCeyfqmZADd7HKum8Jmx1w4T
+MSEZHGWEbf2eru1J/1W0ekj/tT4fnqnNBhKc2I6fe1a5M9ue10AN0qOtTZXAo+we
+1uPw1WtoPwjMb8Nx8xqekjDJx+Cyfm2KYgc+VJbS1kkKiks3c+vQe321QbmDqvmK
+AVYvRj1B1GKzsnJH75mYBgUOFLxwpxuA1KZ+eN2JGbo5lX9pYgpJbkehA/91JJdR
+nxzK1B1SNycQTFyWv6HuMPW/MX5YXqU0mxQg/aK3BNTt4Ld9FKN2tW0Bu7sl6kUl
+aRQdgoUKhTFV6/GBzbMQd/3gJXrXGGOH08XnpeBLM2578H/QatqnoaEVwe8Ra/90
+Ol4Cv7pePOHubkFi2CixFQCNRYDx7ziGsgNU6isz9tlxbWu2rwOjBLIhYBuop5js
+TYmIH76hXPwqXk3P8JPFVroyGli61DDW9KSteY/tE9RlvEzHzM4=
+=XXzC
+-----END PGP SIGNATURE-----
+
+--e235tnurht72quji--
