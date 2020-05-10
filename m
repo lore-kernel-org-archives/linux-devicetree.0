@@ -8,64 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA618C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 19:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E033C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 19:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9FB82080C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 19:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DCA20801
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 19:58:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjOXiyWP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUzjo9sL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgEJTiT (ORCPT
+        id S1728630AbgEJT6a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 15:38:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33618 "EHLO
+        Sun, 10 May 2020 15:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729032AbgEJTiS (ORCPT
+        by vger.kernel.org with ESMTP id S1728071AbgEJT6a (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 10 May 2020 15:38:18 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6CD0C061A0C;
-        Sun, 10 May 2020 12:38:18 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x77so3734118pfc.0;
-        Sun, 10 May 2020 12:38:18 -0700 (PDT)
+        Sun, 10 May 2020 15:58:30 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056A1C061A0C;
+        Sun, 10 May 2020 12:58:29 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id f23so2862959pgj.4;
+        Sun, 10 May 2020 12:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=wyNT5+0GWB8vIh2xGMxe4qbl2cO09ZqT42SZ6diOFEY=;
-        b=PjOXiyWPu0oqWeHrYCDi3X1QwA+GDLa4e5lvrQFPnjyyRPZVydFCQJ6a0dVGD/Q8Ub
-         BQEUz4VIh6s8xVWZiDVC0vLTaWS9m5GA4QEvgcwkO+5ca8DapHnVtPCyBg79zqZLzAby
-         jbhwc7Lv01pdzFiXd1NLfXhp1x3ctp4qQhRPmGxwQYeBkiPhuANO2fyQb4M49jqO8Ph9
-         aGNKXG9bTCwh1K8l7i8hnvQaJDzd1AojVYHtb8zSGGwp81/0CfhFHq7whn+yxQQBGJt3
-         pXlN7tTM/TUc1qatcrelmcrEmiwnmcWUmq0hk45/HdDqF82Jo44biznLMLchIUbnY8cL
-         dUcg==
+        bh=uZKTxfpf4WQr90XnNhuD3ishpnxGhqgOmhIo+H3Laqk=;
+        b=AUzjo9sLPuAvRnXdzPT3Kc8NUOsQm0jfrAF2blkwHrYFPsROHcqXpscXzY8hV4qEMz
+         LpLZXkSZeY/9Owsl0ForKL4OFUhfLlR76RI6fXK1tFpU9j4F6nkvqZ13XRPmNAIEf2my
+         dKhvYfa43cJZQHGmKS5f5n65SwkGFJWgxqA1LKrRFhWGdFDz8zcOVGa0M0/9ZguD8YvL
+         kW6bPJtRgvIyxTzKJD+Xv0H89DXWsPw/HHxrLedaD2VIgmBIME5gIjEsK4pZeSYv0OTK
+         iE38BK0zmG0sZpOym6T4S5W+K+s5lKPmmPf1IWkkjO/AQXUWTaHjAvl9DSd8MCDWbacH
+         sLxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wyNT5+0GWB8vIh2xGMxe4qbl2cO09ZqT42SZ6diOFEY=;
-        b=Y1BJgvFa5dcgooSLp0aInmmrMgk0wbtP4XeH7iSqrKIlswMKb8KbYSHmsvXx+c0qIU
-         /gO4ZCefG/4n1fDIfoJWYqpY0VcjYVHcvPrtfFhfZvo2IW+rTO2XrCfyhjATuiaNKEut
-         yVq9vT73EnXZELDw33XOTIL5MXoD1R9cBjJPItt1orTpQB9ZD4+ChSCojvbWeD28gFFZ
-         F6Cql5t1Fgaroqlm5WSQDhrtjbW1OkttRrKrx25xbIqpBLMF5IKa8VNv1JTCOfHoSafb
-         lDv9Ol7YeZQbpKAXlyYD6VF8CNx2mWe1i6x/au176E9vhVo23ZpBa+EY54aEpzyC8Ler
-         39Jw==
-X-Gm-Message-State: AGi0PuY+IByWMvnk6oCVZo9FT+qU14O5O+qFzXHp3oVMpkaouLxzBtFH
-        Nk/2EB0/A/ayhDhPXxe0W7s=
-X-Google-Smtp-Source: APiQypJN9G/92uguALDte7otm85YggaP4mvYV6ytD0Ep4efg2S5xrxeFas4aCwEjMLIwtZBsT7eYiQ==
-X-Received: by 2002:aa7:8f2c:: with SMTP id y12mr13741489pfr.80.1589139498093;
-        Sun, 10 May 2020 12:38:18 -0700 (PDT)
+        bh=uZKTxfpf4WQr90XnNhuD3ishpnxGhqgOmhIo+H3Laqk=;
+        b=Y0xFsx4ZmuXyQNhA+n7DT/73hWWpGMMmYY2KYcGr2z9BJDY/y+5a+TRJCidjhWFsQi
+         exinOYgNRM93IlevkAbFBgxGzxg5JI0A2wFbbHhIPNjyQm6Eedo3xjxSWOSm4HfAvpCh
+         OwSg/+YbSeG7zXvYM5394zm+ku7mIvprmDRW8CyQhLqtJ6WYyB5yxB25a2vIsa6wJxzq
+         LuuUGZoZHJzjwZ5W/QURIiuQ1346YuvRRYEeLfES5dYXksEWhg1zv/0sM6f0cZMmXE2q
+         i6W96TEoxjKfsnCUezBRtfKIYhIfCyuE4Us+9gOmhNasKlLQtOfGjzfQzfX7QYIPd07S
+         48UQ==
+X-Gm-Message-State: AOAM532LQXDbv+3eJtXpvcGcmbu7uA7R+IGSO/eBgtd0NopdrCy3cHAy
+        KDfhFGgvYKx2Ae1iqta87XI=
+X-Google-Smtp-Source: ABdhPJw467vS/5Fwn2AHn/9SElCumBSYBKYSMDLeemhy0DbS1zmRMM9peKvlD8YgUaRsNutWVKj56Q==
+X-Received: by 2002:a63:3342:: with SMTP id z63mr1479172pgz.49.1589140709345;
+        Sun, 10 May 2020 12:58:29 -0700 (PDT)
 Received: from pr0gr4m-ubuntu.localdomain ([1.240.193.107])
-        by smtp.googlemail.com with ESMTPSA id fh18sm21513639pjb.0.2020.05.10.12.38.15
+        by smtp.googlemail.com with ESMTPSA id u9sm7320289pfn.197.2020.05.10.12.58.26
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 May 2020 12:38:17 -0700 (PDT)
+        Sun, 10 May 2020 12:58:28 -0700 (PDT)
 From:   l4stpr0gr4m@gmail.com
 To:     trivial@kernel.org
-Cc:     michal.simek@xilinx.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     nsaenzjulienne@suse.de, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kangmin Park <l4stpr0gr4m@gmail.com>
-Subject: [PATCH] docs/devicetree: mailbox: fix trivial typo
-Date:   Mon, 11 May 2020 04:38:11 +0900
-Message-Id: <1589139491-6301-1-git-send-email-l4stpr0gr4m@gmail.com>
+Subject: [PATCH] docs/devicetree/i2c: brcm,bcm2835: fix node id in example
+Date:   Mon, 11 May 2020 04:58:21 +0900
+Message-Id: <1589140701-7516-1-git-send-email-l4stpr0gr4m@gmail.com>
 X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -74,26 +75,26 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Kangmin Park <l4stpr0gr4m@gmail.com>
 
-Fix node id typo in example
+This is a trivial patch to fix node id to match the reg in example.
 
 Signed-off-by: Kangmin Park <l4stpr0gr4m@gmail.com>
 ---
- Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt | 2 +-
+ Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-index 4438432..ad76edc 100644
---- a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-+++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-@@ -87,7 +87,7 @@ Example:
- 		ranges;
+diff --git a/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
+index c9a6587..a8a35df 100644
+--- a/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
+@@ -13,7 +13,7 @@ Recommended properties:
  
- 		/* APU<->RPU0 IPI mailbox controller */
--		ipi_mailbox_rpu0: mailbox@ff90400 {
-+		ipi_mailbox_rpu0: mailbox@ff990400 {
- 			reg = <0xff990400 0x20>,
- 			      <0xff990420 0x20>,
- 			      <0xff990080 0x20>,
+ Example:
+ 
+-i2c@20205000 {
++i2c@7e205000 {
+ 	compatible = "brcm,bcm2835-i2c";
+ 	reg = <0x7e205000 0x1000>;
+ 	interrupts = <2 21>;
 -- 
 2.7.4
 
