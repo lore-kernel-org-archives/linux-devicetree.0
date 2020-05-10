@@ -2,161 +2,108 @@ Return-Path: <SRS0=AC3K=6Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2CFC54E8A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 08:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F219AC54E49
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 08:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 869EA20820
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 08:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB71B208E4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 08:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgEJIhk convert rfc822-to-8bit (ORCPT
+        id S1725994AbgEJIlu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 04:37:40 -0400
-Received: from tarvos.retrosnub.co.uk ([93.93.130.7]:48340 "EHLO
-        tarvos.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgEJIhk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 04:37:40 -0400
-X-Greylist: delayed 589 seconds by postgrey-1.27 at vger.kernel.org; Sun, 10 May 2020 04:37:38 EDT
-Received: from [192.168.0.10] (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by tarvos.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id DD222C03DA;
-        Sun, 10 May 2020 09:27:47 +0100 (BST)
-Date:   Sat, 09 May 2020 16:44:04 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <61e9c83b910b3df44291a49b5587b772d4145036.camel@yadro.com>
-References: <20200507132600.8801-1-i.mikhaylov@yadro.com> <20200507132600.8801-2-i.mikhaylov@yadro.com> <20200508155050.0000008e@Huawei.com> <61e9c83b910b3df44291a49b5587b772d4145036.camel@yadro.com>
+        Sun, 10 May 2020 04:41:50 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36952 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgEJIlu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 04:41:50 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5F8AC2A139F;
+        Sun, 10 May 2020 09:41:48 +0100 (BST)
+Date:   Sun, 10 May 2020 10:41:45 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Naga Sureshkumar Relli <nagasure@xilinx.com>
+Subject: Re: [PATCH v4 7/8] mtd: rawnand: arasan: Add new Arasan NAND
+ controller
+Message-ID: <20200510104145.7d53a58b@collabora.com>
+In-Reply-To: <20200510103547.7399eba3@xps13>
+References: <20200508171339.8052-1-miquel.raynal@bootlin.com>
+        <20200508171339.8052-8-miquel.raynal@bootlin.com>
+        <20200510090230.1ba6f6d7@collabora.com>
+        <20200510103547.7399eba3@xps13>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v13 1/2] dt-bindings: proximity: provide vcnl3020 device tree binding document
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Message-ID: <DC81C6F6-5510-4477-B9D2-29CB3DBCA9F3@jic23.retrosnub.co.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sun, 10 May 2020 10:35:47 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
+> Hi Boris,
+> 
+> Boris Brezillon <boris.brezillon@collabora.com> wrote on Sun, 10 May
+> 2020 09:02:30 +0200:
+> 
+> > On Fri,  8 May 2020 19:13:38 +0200
+> > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> >   
+> > > +static int anfc_len_to_steps(struct nand_chip *chip, unsigned int len)
+> > > +{
+> > > +	unsigned int steps = 1, pktsize = len;
+> > > +
+> > > +	while (pktsize > ANFC_MAX_PKT_SIZE) {
+> > > +		steps *= 2;
+> > > +		pktsize = DIV_ROUND_UP(len, steps);
+> > > +	}    
+> > 
+> > 
+> > Same here, you shouldn't have a round_up() but instead complain if
+> > "len != pkt_size * steps"
+> > 
+> > 	if (len % 4)
+> > 		return -ENOTSUPP;  
+> 
+> This is not possible, we need unaligned accesses for NAND detection.
 
-On 9 May 2020 11:38:46 BST, Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->On Fri, 2020-05-08 at 15:51 +0100, Jonathan Cameron wrote:
->> On Thu, 7 May 2020 16:25:59 +0300
->> Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->> 
->> > Mostly standard i2c driver with some additional led-current option
->> > for vcnl3020.
->> > 
->> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
->> > ---
->> >  .../iio/proximity/vishay,vcnl3020.yaml        | 65
->+++++++++++++++++++
->> >  1 file changed, 65 insertions(+)
->> >  create mode 100644
->> >
->Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
->> > 
->> > diff --git
->> >
->a/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
->> >
->b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
->> > new file mode 100644
->> > index 000000000000..408dee17cdf5
->> > --- /dev/null
->> > +++
->b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
->> > @@ -0,0 +1,65 @@
->> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> > +%YAML 1.2
->> > +---
->> > +$id:
->http://devicetree.org/schemas/iio/proximity/vishay,vcnl3020.yaml#
->> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> > +
->> > +title: Integrated Proximity Sensor With Infrared Emitter
->> > +
->> > +maintainers:
->> > +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
->> > +
->> > +description: |
->> > +  The VCNL3020 is a fully integrated proximity sensor. Fully
->integrated
->> > means
->> > +  that the infrared emitter is included in the package. It has
->16-bit
->> > +  resolution. It includes a signal processing IC and features
->standard I2C
->> > +  communication interface. It features an interrupt function.
->> > +
->> > +  Specifications about the devices can be found at:
->> > +  https://www.vishay.com/docs/84150/vcnl3020.pdf
->> > +
->> > +properties:
->> > +  compatible:
->> > +    enum:
->> > +      - vishay,vcnl3020
->> > +
->> > +  reg:
->> > +    maxItems: 1
->> > +
->> > +  interrupts:
->> > +    maxItems: 1
->> > +
->> > +  vdd-supply:
->> > +    description: Regulator that provides power to the sensor
->> > +
->> > +  vddio-supply:
->> > +    description: Regulator that provides power to the bus
->> > +
->> > +  vishay,led-current-microamp:
->> > +    description:
->> > +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0
->mA,
->> > +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for
->values
->> > +      higher than decimal 20. The drive current for the LED used
->in
->> > proximity
->> > +      sensing.
->> 
->> This text is really confusing. Just let the enum speak for itself and
->leave
->> text as
->> something short like
->> 
->> "The driver current for the LED used in proximity sensing. "
->> 
->> Units and values are clear already.
->> 
->
->Jonathan, just to double check, for preventing further problems with
->misunderstanding, is that what you want?
->
->  vishay,led-current-microamp:
->    description:
->        The driver current for the LED used in proximity sensing.
->
->    enum: [0..200000] <- just for shortening
->    default: 20000
->
->Thanks.
+Duh, this really calls for a comment saying how wrong this is and how
+it should be fixed (discussions we had about data size constraints and
+the 'can-issue-more' flag on data_in/out instructions).
 
-Yes
+> 
+> > 
+> > 	if (len < ANFC_MAX_PKT_SIZE)
+> > 		return len;
+> > 
+> > 	for (steps = 2; steps < ANFC_MAX_STEPS; steps *= 2) {
+> > 		pkt_size = len / steps;
+> > 		if (pkt_size <= ANFC_MAX_PKT_SIZE)
+> > 			break;
+> > 	}
+> > 
+> > 	if (pkt_size * steps != len)
+> > 		return -ENOTSUPP;
+> > 
+> > 	return pkt_size;  
+> 
+> The rest looks fine, I will change it and also add these checks in
+> ->exec_op() check_nonly path.  
 
-J
-
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
