@@ -2,537 +2,1031 @@ Return-Path: <SRS0=AC3K=6Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ACEC54E7E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 00:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03D6C54E7E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 04:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D13120735
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 00:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E752137B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 May 2020 04:04:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqWwYDGr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgEJAU5 (ORCPT
+        id S1725828AbgEJEE0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 May 2020 20:20:57 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45404 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgEJAU5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 May 2020 20:20:57 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 240F68030875;
-        Sun, 10 May 2020 00:20:43 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7DxagPb0Fvtz; Sun, 10 May 2020 03:20:41 +0300 (MSK)
-Date:   Sun, 10 May 2020 03:20:39 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Message-ID: <20200510002039.hwahqasnnceowskz@mobilestation>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <20200508113751.GD4820@sirena.org.uk>
+        Sun, 10 May 2020 00:04:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59010 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgEJEE0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 00:04:26 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B22C061A0C;
+        Sat,  9 May 2020 21:04:26 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id n11so5267328ilj.4;
+        Sat, 09 May 2020 21:04:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NFGUrRHVRBZqxgUnXFdXEUjce2fH5vtH195ampR5PEA=;
+        b=QqWwYDGrBO6PLB4Gqmp22QfAboa1XVZsMal0iw3IUXOdq5LAc6iUXhLtq8Ywx1+i/f
+         8f/4sQ9xHoO9orc9X/IhdtXYi9TEcrDFxt5QBUFQHqRcxMlnWFip3shgz42o1AxMKH9v
+         wpMpPDO+qNgEmrTkHC58lVEeRyglGwXcTAhg7J/Vs4uMNDWWr5qUBRBBdr5XTacNoxlb
+         xgWqxRUHBqFO858Q+oEzCeQtoT7XlwHhnwNWQ5AnH5C5+7HNFkMupCjb9UPgFijyre+V
+         Sx7cX9QLY5/Jq0Fp0uN0De/AbpEhkXR7/BZtWLfxd9l7gzbH1O8/D4lQNQiYuv408Z+A
+         BKdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NFGUrRHVRBZqxgUnXFdXEUjce2fH5vtH195ampR5PEA=;
+        b=OzMEY/vH5zt/AN5JVE/hqwWCSH/GUIAbPqozYr0VWt90nGR8csGbIoZXggTx6CA6Ni
+         WQ2sKLMAaRGXALJHCgx5W1rHL7VhWoc5HI8oVcYciW3sLDxzQIhdWU8RxhYtQXlblXbv
+         A1GD7A1gvrlkM17jka58xcDUe8+FyT0dgz6kqKIoC1WgwIFgcktOhERKSsBPHk/Bkm9A
+         zBJg5R8aEyAqBP01M931WKcrvRdFVX9ESvoyR1MYnmn+zlkUGvaMJQd4U69nBQOS3KPW
+         aZIcGkFDmwh2s7eTsVKaAUv3/vxOducvvY94bx/m9HPj23fIo/eXWgTVKCSg25AyYSnk
+         yqmg==
+X-Gm-Message-State: AGi0PuZZCJaQMHsAaLpu7RgIsWiJXDBnu5gMiThdv6/o+1/VPjRUOVM9
+        IcI0v0EqJ0yjeqA4vNLJZ1JyMnP7gPAurOxhyl4=
+X-Google-Smtp-Source: APiQypJHvmTcEhe1NDXmQGxKQLWv3DQIDB1K9KIG5hF9BPFEiZxg67rOfaCIvDz1dqlCZ1IGAwrTAradFsOdiVsxOj8=
+X-Received: by 2002:a05:6e02:589:: with SMTP id c9mr3767891ils.271.1589083465133;
+ Sat, 09 May 2020 21:04:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200508113751.GD4820@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <1588911194-12433-1-git-send-email-dillon.minfei@gmail.com>
+ <1588911194-12433-6-git-send-email-dillon.minfei@gmail.com>
+ <20200508090247.GA11575@ravnborg.org> <CAL9mu0LcT3pPiM6PdJRvAJRMbXY6KACF1wNg8yOS-6D8aq6AeA@mail.gmail.com>
+ <20200509200654.GC30802@ravnborg.org>
+In-Reply-To: <20200509200654.GC30802@ravnborg.org>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Sun, 10 May 2020 12:04:13 +0800
+Message-ID: <CAL9mu0KTYG6V9=0sz-3-8PfThDEDFdw08SvNsW8VtcVTXK16mA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] drm/panel: add panel driver for Ilitek ili9341 panels
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     mcoquelin.stm32@gmail.com,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        devicetree@vger.kernel.org, airlied@linux.ie,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org,
+        thierry.reding@gmail.com, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:37:51PM +0100, Mark Brown wrote:
-> On Fri, May 08, 2020 at 12:36:21PM +0300, Serge Semin wrote:
-> 
-> Your CC list on this series is *very* wide - are you sure that this is
-> relevant to everyone you're sending things to?  Kernel developers often
-> get a lot of mail meaning that extra mail can become a bit overwhelming
-> and cause things to get lost in the noise.
+Sam Ravnborg <sam@ravnborg.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=8810=E6=97=A5=
+=E5=91=A8=E6=97=A5 =E4=B8=8A=E5=8D=884:06=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi Dillon.
+>
+> On Fri, May 08, 2020 at 06:13:43PM +0800, dillon min wrote:
+> > Hi Sam,
+> >
+> >   Thanks for your comments, i will rework this panel driver after l3gd2=
+0
+> > patch submission.
+> >
+> > Sam Ravnborg <sam@ravnborg.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=888=E6=97=
+=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=885:02=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > > Hi Dillon.
+> > >
+> > > Patch submissions starts to look fine.
+> > >
+> > > On Fri, May 08, 2020 at 12:13:14PM +0800, dillon.minfei@gmail.com wro=
+te:
+> > > > From: dillon min <dillon.minfei@gmail.com>
+> > > >
+> > > > This is a driver for 320x240 TFT panels, accepting a rgb input
+> > > > streams that get adapted and scaled to the panel.
+> > > This driver is, I suppose, prepared to be a driver for ILI9341 based
+> > > panles, and as such not for a fixed resolution.
+> > > I expect (hope) we in the future will see more panels added.
+> > >
+> > > As i checked ili9341 datasheets, this panel just support 240x320
+> > resolution only.  if i'm wrong , please correct me. thanks
+> > https://cdn-shop.adafruit.com/datasheets/ILI9341.pdf
+> >
+> > This panel can support 9 different kinds of interface , "3/4-line Seria=
+l
+> > Interface" have been supported by tiny/ili9341.c. i was verified it
+> > but the performance on stm32f4 is very low.
+> It had somehow escaped my mind we already have a driver for ili9341
+> based panels.
+> And we do not want onyl one driver for this IC.
+> So please extent the current driver to match your panel as well as
+> the original panel.
+> And then also extend the current binding for ili9341, which
+> you may have to convert to DT Schema in the process.
+>
+> This is more work now but when it is done we end up with a much better
+> solution than if we introduce an additional driver for ili9341.
+>
+> Sorry for not catching this in the inital review.
+>
+>         Sam
+>
+>
+Hi Sam,
 
-MIPS folks are here since Baikal-T1 is a MIPS-based chip and this patchset
-is a part of the campaign of integrating the SoC support into the kernel.
-With Lee and Miquel we discussed the dirmap support in the framework of another
-patchset. Rob and devicetree-list are CC'ed due to having the bindings tree
-updated. Then a series of folks who recently submitted the biggest updates into
-the spi subsystems so might have valuable comments for this driver as well. So
-yes, I am sure.
+Yes, it's should be more reasonable to support different interface of
+a panel in one driver.
+i will add mipi dpi & dbi support to this panel in one driver just
+like panel-simple.c(dpi & dsi)
 
-> 
-> > This SPI-controller is a part of the Baikal-T1 System Controller and
-> > is based on the DW APB SSI IP-core, but with very limited resources:
-> > no IRQ, no DMA, only a single native chip-select and just 8 bytes Tx/Rx
-> > FIFO available. In order to provide a transparent initial boot code
-> > execution this controller is also utilized by an vendor-specific block,
-> > which provides an CS0 SPI flash direct mapping interface. Since both
-> > direct mapping and SPI controller normal utilization are mutual exclusive
-> > only a one of these interfaces can be used to access an external SPI
-> > slave device. Taking into account the peculiarities of the controller
-> > registers and physically mapped SPI flash access, very limited resources
-> > and seeing the normal usecase of the controller is to access an external
-> > SPI-nor flash, we decided to create a dedicated SPI driver for it.
-> 
-> My overall impression reading this is that there could be a lot more
-> reliance on both generic functionality and as Andy suggested the spi-dw
-> driver - the headers seem easy for example.  As far as I can tell the
-> main things this is adding compared to spi-dw are the dirmap code and
-> the IRQ disabling around the PIO on the FIFO both of which seem like
-> relatively small additions which it should be possible to accomodate
-> within spi-dw.  For example the driver could have multiple transfer
-> functions and pick a different one with the interrupt disabling when
-> running on this hardware.
+one question, what to do next:
+1 should i just add code to tiny/ili9341.c to support mipi dpi.
+   which means remove panel/panel-ilitek-ili9341.c
+2 merge tiny/ili9341.c mipi dbi support to panel/panel-ilitek-ili9341.c ,
+   which means remove tiny/ili9341.c after this work done.
 
-dirmap and IRQs disabling isn't all they have different. Please see my answer to
-you in the cover-letter thread and the comments below in this email.
+to extend dts binding for different interface. Ie.
 
-> 
-> > --- /dev/null
-> > +++ b/drivers/spi/spi-bt1-sys.c
-> > @@ -0,0 +1,873 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-> 
-> Please make the entire comment a C++ one so things look a bit cleaner
-> and more intentional.
+original:
+164 static const struct of_device_id ili9341_of_match[] =3D {
+165         { .compatible =3D "adafruit,yx240qv29" },
+166         { }
+167 };
+168 MODULE_DEVICE_TABLE(of, ili9341_of_match);
+169
+170 static const struct spi_device_id ili9341_id[] =3D {
+171         { "yx240qv29", 0 },
+172         { }
+173 };
+174 MODULE_DEVICE_TABLE(spi, ili9341_id);
 
-This has been unexpected. It's first time I see such a requirement.
-Anyway ok. I'll fix it. Is it ok to have the C-style comments in the header
-file?
-* It isn't included by any assembly so from this point of view C++ style
-* shall also work there.
+i want to extend of_device_id and spi_device_id for driver to identify
+dpi or dbi in probe.
+"adafruit,yx240qv29" is for users who use original tiny drm driver
+mipi dbi compatible
 
-> 
-> > +	writel(BIT(req->cs), bs->regs + BC_SPI_SER);
-> > +	if (req->cs_gpiod) {
-> > +		gpiod_set_value_cansleep(req->cs_gpiod,
-> > +					 !!(bs->cfg.mode & SPI_CS_HIGH));
-> 
-> If you have a GPIO chip select you should just let the core manage it
-> through cs_gpiod rather than open coding.
+for panel's parallel mcu and parallel rgb interface.
+static const struct of_device_id ili9341_of_match[] =3D {
+         { .compatible =3D "adafruit,yx240qv29" },
+         { .compatible =3D "ili9341,parallel-mcu" },
+         { .compatible =3D "ili9341,parallel-rgb" },
+         { }
+};
+static const struct spi_device_id ili9341_id[] =3D {
+         { "yx240qv29", 0 },
+         { "parallel-mcu", 0 },
+         { "parallel-rgb", 0 },
+         { }
+};
+static int ili9341_probe(struct spi_device *spi)
+{
+       ...
+      const struct spi_device_id *id =3D spi_get_device_id(spi);
+      if (!strcmp(id->name, "yx240qv29")) {
+          mipi dbi register
+      } else if (!strcmp(id->name, "parallel-rgb") ||
+                   !strcmp(id->name, "parallel-mcu") {
+         mipi dpi register
+      } else {
+        failed handle
+     }
+     ....
+}
 
-Of course I know this, and normally I would have omitted the GPIO manual
-assertion (hopefully soon my hands get to merging the AX99100 driver I've
-developed some time ago). The thing is that this Baikal-T1 System SSI device
-driver has been initially written before commit 05766050d5bd ("spi: spi-mem:
-fallback to using transfers when CS gpios are used"). So asserting GPIO CS had
-been required to initiate the SPI memory communications seeing the generic
-spi_mem_exec_op() doesn't do this. Manual GPIO manipulation is indeed redundant
-for the current SPI-mem op execution procedure.
+if this is a good idea to extend dts binding ?
 
-Secondly the message of that commit states "Devices with chip selects driven
-via GPIO are not compatible with the spi-mem operations." I find this statement
-questionable, because for instance this device supports memory operations with
-GPIO-driven CS. Though in current implementation the driver fallback to using normal
-push-pull IO mode if GPIO CS is utilized as safer one. But even in this case
-it's better than splitting the memory operations up into the transfers, which is
-developed in the spi_mem_exec_op() method.
+thanks,
 
-So in this matter my question is: how to modify the SPI-mem interface so the
-SPI-memory operations would also work with GPIO driven CS? Some additional flag
-might work...
+best regards.
 
-Thirdly what about dirmap operations? If we got a GPIO driven CS then due to
-lacking any CS manipulation in spi_mem_dirmap_read() method we wouldn't have
-been able to make the direct mapping working without manual setting the GPIO.
-So the same question here. How to work this around and justify your requirement?
-Until the question is answered and we come up with reasonable solution in order
-to have the SPI-mem/dirmap interface working together with GPIO CS support I have
-to leave the manual GPIO manipulation.
-
-> 
-> > +	} else if (!req->dirmap) {
-> > +		local_irq_save(bs->cfg.flags);
-> > +		preempt_disable();
-> > +	}
-> 
-
-> This is obviously not great, especially for larger transfers.
-
-Don't tell me about this. But this is the only way to make the controller
-working with all the weird stuff it has got.
-
-> It would
-> be a lot easier to review and manage this if the IRQ disabling was done
-> around the transfers in a single function rather than separately, that
-> way everything is next to each other and it's clearer that we're doing
-> this for the minimum time and didn't miss anything.  Right now it's hard
-> to tell if everything is joined up.
-
-Hm, this is questionable. If it wasn't joined up I wouldn't have the driver
-working. Anyway I see your point and from a different angle of view this might be
-better to move this operations to the bs_exec_mem_op() method. But if you insist
-on implementing the full SPI-message interface support even for native CS, I'd
-leave it here to avoid the code duplication, since the IRQs disabling workaround
-should be also used there.
-
-> 
-> > +static void bs_update_cfg(struct bt1_spi *bs, struct spi_transfer *xfer)
-> > +{
-> 
-> This has exactly one caller, perhaps it could just be inlined there?  I
-> think this applies to some of the other internal functions.
-
-I don't want to inline methods just because they are used in a single place. This
-might worsen readability and in this case it will. Currently the transfer_one()
-method is consistent with self-explanatory methods: update config, push-pull
-bytes/words, check status. This also applies to the rest of the code. I can
-consider some improvements/optimizations in this matter though, but embedding
-the functions isn't one of them. Moreover the compiler does the static
-methods inlining automatically as soon as it sees they are called just once.
-
-> 
-> > +static int bs_check_status(struct bt1_spi *bs)
-> > +{
-> 
-> It's not obvious from the name that this function will busy wait rather
-> than just reading some status registers.
-
-What do you suggest then? Renaming? Splitting up? If renaming, then what name do
-you prefer? Something like bs_check_completion()?
-
-> 
-> > +	/*
-> > +	 * Spin around the BUSY-state bit waiting for the controller to finish
-> > +	 * all the requested IO-operations.
-> > +	 */
-> > +	do {
-> > +		data = readl(bs->regs + BC_SPI_SR);
-> > +	} while ((data & BC_SPI_SR_BUSY) || !(data & BC_SPI_SR_TFE));
-> 
-> We could use a timeout or something here in case something goes wrong,
-> as things stand we could end up spinning for ever.
-
-Ok. readl_poll_timeout_atomic() shall do the trick.
-
-> 
-> It's also not clear to me why we only check for over/underrun before we
-> do the busy wait, especially a RX overrun could happen and cause us to
-> loose data while things are finishing up.
-
-In fact this busy-wait loop is relevant for the Tx-only operations. So here we
-are waiting for the controller to push the rest of the data from FIFO to the
-bus. This is necessary so the next IO operation wouldn't clear the FIFO up by
-disabling the controller at the bs_set_cfg() method. The busy-wait loop shall
-not cause any overruns (because Rx is turned off). If Tx/Rx overrun happened
-it must have happened before and only If either the IO algorithm couldn't keep
-up with data being pushed out/pulled in to/from the FIFOs (SPI bus is too fast
-while MMIO operations are too slow or for some other case) or I messed
-something up with the IO algorithm implementation.
-
-Anyway in order to prevent such question from future code readers I'll move the
-busy-wait loop in the beginning of the function.
-
-> 
-> > +	while (txlen || rxlen) {
-> > +		cnt = BC_SPI_FIFO_LVL - __raw_readl(bs->regs + BC_SPI_TXFLR);
-> > +		cnt = min(cnt, txlen);
-> > +		txlen -= cnt;
-> > +		while (cnt--) {
-> > +			data = src ? *src++ : 0xFF;
-> > +			__raw_writel(data, bs->regs + BC_SPI_DR);
-> > +		}
-> 
-> It's more typical to write zeros when there's no data.
-
-Ok.
-
-> 
-> > +static int bs_exec_mem_op(struct spi_mem *mem,
-> > +			  const struct spi_mem_op *op)
-> > +{
-> 
-> It's not clear to me that this hardware actually supports spi_mem in
-> hardware?
-
-SPI-mem operations are implemented by means of the EEPROM-read and Tx-only
-modes of the controller.
- 
-> 
-> > +	if (!bs->cfg.cs_gpiod) {
-> > +		bs_push_bytes(bs, cmd, len);
-> > +
-> > +		if (op->data.dir == SPI_MEM_DATA_IN)
-> > +			ret = bs_pull_bytes(bs, op->data.buf.in,
-> > +					    op->data.nbytes);
-> > +	} else {
-> > +		bs_pp_bytes(bs, cmd, NULL, len);
-> > +
-> > +		if (op->data.dir == SPI_MEM_DATA_IN)
-> > +			bs_pp_bytes(bs, NULL, op->data.buf.in,
-> > +				    op->data.nbytes);
-> > +	}
-> 
-
-> The actual transfers here are done using the same PIO functions as
-> everything else as far as I can see which makes me wonder what this
-> spi_mem implementation is adding over the standard SPI flash support.
-
-No, if no GPIO CS is supplied the memory read operation is performed by means of
-the EEPROM-read mode of the DW SSI controller (Write command is written to the
-Tx FIFO and read data length - to the CTRLR1 register). The memory write
-operation utilizes the Tx-only mode (just push data to the Tx FIFO, controller
-discards all incoming data). See bs_set_cfg() for details.
-
-If GPIO CS is utilized then we fallback to the normal push-pull methods because
-first it's safer this way, second it's still better than handling multiple SPI
-transfers.
-
-BTW The EEPROM/Tx-only modes are required to be utilized for the controller on
-our SoC in order to support the SPI bus operations with highest frequencies.
-Due to relatively slow APB bus performance we have to minimize MMIO operation
-per a single byte read/write. This is another reason why we had to create a
-dedicated driver for this controller.
-
-> I've not checked but if we need this to get the dirmap support to kick
-> in then we should fix this by making the core not have that requirement.
-
-No, dirmap is implemented by means of dedicated sub-block of the boot
-controller, which does all of the IO by itself (though the controller config
-still has to be accordingly setup including CS or GPIO CS). We just read a
-ready SPI-flash data from a dedicated MMIO space.
-
-> 
-> > +static void bs_copy_from_map(void *to, void __iomem *from, size_t len)
-> > +{
-> > +	size_t shift, chunk;
-> > +	u32 data;
-> 
-> This feels like something that is likely to be suitable for a generic
-> implementation?  Indeed I'd kind of expect that the architecture
-> memcpy_to/fromio() would try to copy aligned blocks since it's usually
-> going to perform better (which I assume is why this function is doing
-> it).
-
-MIPS memcpy_to/fromio don't do this. They expect the MMIO space can be read in
-a same way as normal memory space. It's our controller "feature", that MMIO can
-be only accessible by lw/sw instructions. So I had no choice but to implement the
-aligned read/write operations by myself here. AFAICS this won't be suitable for
-the generic implementation due to the alignment restriction and the controller
-setups, which are supposed to be performed before accessing the dirmap MMIO.
-
-> 
-> > +	if (shift) {
-> > +		chunk = min_t(size_t, 4 - shift, len);
-> > +		data = readl_relaxed(from - shift);
-> > +		memcpy(to, &data + shift, chunk);
-> 
-> It's a little unclear what we're actually doing though - we read a data
-> address from the hardware?
-
-As I've written in the comment:
- * We split the copying up into the next three stages: unaligned head,
- * aligned body, unaligned tail.
-here we do the unaligned head read operation. I read data from an aligned
-address, then copy the requested part to the output buffer.
-
-> 
-> > +static int bs_prepare_message(struct spi_controller *ctrl,
-> > +			      struct spi_message *msg)
-> > +{
-> > +	struct bt1_spi *bs = spi_controller_get_devdata(ctrl);
-> > +	struct spi_transfer *xfer;
-> > +	struct bt1_spi_cfg req;
-> > +
-> > +	/*
-> > +	 * Currently the driver doesn't support the generic messages-based
-> > +	 * SPI interface with pure native chip-select signal. This is due
-> > +	 * to the automatic native chip-select toggle peculiarity described
-> > +	 * in the comment of the bs_set_cfg() method. Alas we can't use the
-> > +	 * IRQ-disable-based boost approach here since the native queue-based
-> > +	 * SPI messages transfer method can sleep waiting for the
-> > +	 * transfers/CS-change delays.
-> > +	 */
-> > +	if (!msg->spi->cs_gpiod)
-> > +		return -ENOTSUPP;
-> 
-> This seems a bit much - we can validate that the message doesn't contain
-> any delays (which is going to be the overwhelming majority of devices)
-> or multiple transfers and reject just those transfers we can't support.
-> Multiple transfers are an issue with this hardware but you could
-> implement support in the core for coalescing them into single transfers,
-> this isn't the only hardware with automatic chip select handling that
-> can't cope with scatter/gather so it would be a useful thing to have.
-
-As I said in the commit message to the binding this controller is nearly always
-connected to an external SPI flash (I'd say always, because Baikal-T1 is fully
-functional only when initially booted from an SPI flash). At least I don't know
-any hardware using this interface differently (I've worked with all devices with
-Baikal-T1 SoC on board). In current driver implementation the SPI-mem operations
-covers the native CS case while the prepare_message()/transfer_one()/unprepare_message()
-are used when GPIO-driven CS is available (due to the commit 05766050d5bd I had
-to implement it). So I didn't want to over-complicate the driver just to support
-some virtual hardware before it's really necessary.
-
-> 
-> > +	/*
-> > +	 * Collect the controller configuration common for all transfers and
-> > +	 * specific to the very first one.
-> > +	 */
-> > +	xfer = list_first_entry(&msg->transfers, typeof(*xfer), transfer_list);
-> > +	req.dirmap = false;
-> > +	req.cs = msg->spi->chip_select;
-> > +	req.cs_gpiod = msg->spi->cs_gpiod;
-> > +	req.flags = 0;
-> > +	req.mode = msg->spi->mode;
-> > +	req.tmode = BC_SPI_CTRL0_TMOD_TR;
-> > +	req.ndf = 0;
-> > +	req.dfs = xfer->bits_per_word;
-> > +	req.freq = xfer->speed_hz;
-> > +
-> > +	bs_set_cfg(bs, &req);
-> 
-> It's not clear to me what the benefit is in this indirection through
-> req?
-
-Config request is useful to collect the controller configs in a single
-structure from different objects like normal SPI transfers, SPI-mem
-operations or dirmaps. The config structure is then uniformly translated
-into the controller setting by the bs_set_cfg() method. 
-
-> 
-> > +static int bs_transfer_one(struct spi_controller *ctrl, struct spi_device *spi,
-> > +			   struct spi_transfer *xfer)
-> > +{
-> > +	struct bt1_spi *bs = spi_controller_get_devdata(ctrl);
-> > +
-> > +	bs_update_cfg(bs, xfer);
-> > +
-> > +	if (bs->cfg.dfs <= 8)
-> > +		bs_pp_bytes(bs, xfer->tx_buf, xfer->rx_buf, xfer->len);
-> > +	else
-> > +		bs_pp_words(bs, xfer->tx_buf, xfer->rx_buf, xfer->len / 2);
-> 
-> This will have issues with transfers with an odd number of bytes won't
-> it?
-
-No, it won't. Transfers with bits per word greater than 8 should have even
-number of bytes seeing the len field is supposed to have the buffers length in
-bytes:
-
- * In-memory data values are always in native CPU byte order, translated
- * from the wire byte order (big-endian except with SPI_LSB_FIRST).  So
- * for example when bits_per_word is sixteen, buffers are 2N bytes long
- * (@len = 2N) and hold N sixteen bit words in CPU byte order.
- *
- * When the word size of the SPI transfer is not a power-of-two multiple
- * of eight bits, those in-memory words include extra bits.  In-memory
- * words are always seen by protocol drivers as right-justified, so the
- * undefined (rx) or unused (tx) bits are always the most significant bits.
-
-The controller expects exactly the same interpretation of right-justified data
-when its length isn't not power of 2 including the extra bits.
-
-> 
-> > +static struct bt1_spi *bs_create_data(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct bt1_spi *bs;
-> 
-> As with some of the other functions this has exactly one caller and
-> barely any content in it, just inline it.
-
-As I said before. I don't see this being necessary.
-
-> 
-> > +	bs->dev = dev;
-> > +	bs->pdev = pdev;
-> 
-> Do you really need to separately save these (and is there a context
-> where you have the driver data but not the device anyway)?
-
-Even if I don't, having a device pointer around in the private data is a
-matter of convenience. It's either referencing the controller/mem pointers
-cascade to get it, which may look bulky like &mem->controller->dev and having
-an additional argument passed to the sub-functions and in some cases allocating
-pointers on the stack; or to prevent all of these complications I just save the
-device structure pointer in the private data, so to use it when I need to print
-an error or allocate dev-res, etc.
-
-Regarding the platform_device pointer. Well I've defined it in the private data
-for the same reason. Though it's used much less than generic device pointer, so
-I can discard it.
-
-> 
-> > +#ifdef CONFIG_DEBUG_FS
-> > +
-> > +#define BC_SPI_DBGFS_REG(_name, _off)	\
-> > +{					\
-> > +	.name = _name,			\
-> > +	.offset = _off			\
-> > +}
-> 
-> Perhaps consider regmap_mmio?
-
-For multiple reasons no. First of all I need a direct access to the DR register
-and I need to do this as fast as possible due to relatively slow APB
-bus. The same concern is regarding the controller configs setting. Secondly
-everywhere in the driver I use the normal read/write methods and there is no
-need in even a basic regmap-update function. So an additional abstraction like
-regmap would be unnecessary complication. Thirdly the access to the registers
-is always done from a thread-safe context anyway (except DebugFS read operations).
-Fourthly due to the dirmap access the DW SSI registers can be unavailable at the
-moment of the dirmap read method invocation, that's why I need a mutual exclusive
-control around the operations concerning the registers. Due to this the regmap_mmio
-won't work here and I would have to implement my own accessors. There might be
-another problems, so using regmap isn't a good idea.
-
-> 
-> > +static int bs_dbgfs_open_regs(struct inode *inode, struct file *file)
-> > +{
-> > +	struct bt1_spi *bs = inode->i_private;
-> > +	int ret;
-> > +
-> > +	ret = single_open(file, bs_dbgfs_show_regs, bs);
-> > +	if (!ret) {
-> > +		mutex_lock(&bs->ctrl->io_mutex);
-> 
-> Holding a mutex over the entire time that a file is open is not good,
-> it's also not clear to me what this mutex is supposed to be protecting
-> given that it's only referenced in these debugfs functions.
-
-Hm, it's io_mutex protecting the SPI IO operation to be thread-safe. See:
-spi_mem_access_start()/spi_mem_access_end();
-__spi_pump_messages();
-
-By locking the mutex here I make sure the DebugFS registers dump operation won't
-interfere the IO operations like dirmap, which make the registers unavailable
-for normal MMIO-based access.
-
-> 
-> > +		writel(BC_CSR_SPI_RDA, bs->regs + BC_CSR);
-> 
-> Whatever this write is doing we never seem to undo it?
-
-Here I switch on the DW APB SSI registers to be available for normal
-readl/writel accesses. It's not a problem to leave the mode on, since
-bs_set_cfg() will do a proper config anyway.
-
-
-Wow, what a thorough review...
-
--Sergey
+Dillon
+> >
+> > currently, i just have stm32f429-disco in hands, with 18-bit parallel r=
+gb
+> > bus connected on this board. reference to panel-ilitek-ili9322 and
+> > panel-ilitek-ili9881 driver, i have some plan to rewrite this driver.
+> >
+> > 1 add your below comments in.
+> > 2 use dc-gpio, reset-gpio, rgb-interface-bits from dts to config panel
+> > interface.
+> > 3 drop regmap, porting drm_mipi_dbi's mipi_dbi_command to config panel
+> > paramter. like tiny/ili9341.c
+> > 4 support rgb-16, rgb-18 interface.
+> > 5 use optional regulator or power gpio to control panel's power, as pan=
+el
+> > power is always on for my board, so i can't test this part. could i add=
+ the
+> > code which can't be tested?
+> > 6 support rotation in panel config (currently , i rotate the screen by
+> > kernel cmdline paramter)
+> >
+> > if you have any other common panel configuration should be add , please
+> > inform me.
+> >
+> > thanks.
+> >
+> > >
+> > > Some things to fix, see comments in the follwoing.
+> > >
+> > >         Sam
+> > >
+> > > >
+> > > > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > > > ---
+> > > >  drivers/gpu/drm/panel/Kconfig                |   8 +
+> > > >  drivers/gpu/drm/panel/Makefile               |   1 +
+> > > >  drivers/gpu/drm/panel/panel-ilitek-ili9341.c | 561
+> > > +++++++++++++++++++++++++++
+> > > >  3 files changed, 570 insertions(+)
+> > > >  create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> > > >
+> > > > diff --git a/drivers/gpu/drm/panel/Kconfig
+> > > b/drivers/gpu/drm/panel/Kconfig
+> > > > index a1723c1..e42692c 100644
+> > > > --- a/drivers/gpu/drm/panel/Kconfig
+> > > > +++ b/drivers/gpu/drm/panel/Kconfig
+> > > > @@ -95,6 +95,14 @@ config DRM_PANEL_ILITEK_IL9322
+> > > >         Say Y here if you want to enable support for Ilitek IL9322
+> > > >         QVGA (320x240) RGB, YUV and ITU-T BT.656 panels.
+> > > >
+> > > > +config DRM_PANEL_ILITEK_IL9341
+> > > ILI9341 - so the config name matches the name of the driver IC.
+> > >
+> > > > +     tristate "Ilitek ILI9341 240x320 QVGA panels"
+> > > > +     depends on OF && SPI
+> > > > +     select REGMAP
+> > > > +     help
+> > > > +       Say Y here if you want to enable support for Ilitek IL9341
+> > > > +       QVGA (240x320) RGB panels.
+> > > See comment to the changelog, the driver is more generic - I assume.
+> > > So the wording here can be improved to express this.
+> > >
+> > > Add support RGB 16bits and RGB 18bits bus only ?
+> >
+> > > > +
+> > > >  config DRM_PANEL_ILITEK_ILI9881C
+> > > >       tristate "Ilitek ILI9881C-based panels"
+> > > >       depends on OF
+> > > > diff --git a/drivers/gpu/drm/panel/Makefile
+> > > b/drivers/gpu/drm/panel/Makefile
+> > > > index 96a883c..d123543 100644
+> > > > --- a/drivers/gpu/drm/panel/Makefile
+> > > > +++ b/drivers/gpu/drm/panel/Makefile
+> > > > @@ -8,6 +8,7 @@ obj-$(CONFIG_DRM_PANEL_ELIDA_KD35T133) +=3D
+> > > panel-elida-kd35t133.o
+> > > >  obj-$(CONFIG_DRM_PANEL_FEIXIN_K101_IM2BA02) +=3D
+> > > panel-feixin-k101-im2ba02.o
+> > > >  obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) +=3D
+> > > panel-feiyang-fy07024di26a30d.o
+> > > >  obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) +=3D panel-ilitek-ili9322.o
+> > > > +obj-$(CONFIG_DRM_PANEL_ILITEK_IL9341) +=3D panel-ilitek-ili9341.o
+> > > >  obj-$(CONFIG_DRM_PANEL_ILITEK_ILI9881C) +=3D panel-ilitek-ili9881c=
+.o
+> > > >  obj-$(CONFIG_DRM_PANEL_INNOLUX_P079ZCA) +=3D panel-innolux-p079zca=
+.o
+> > > >  obj-$(CONFIG_DRM_PANEL_JDI_LT070ME05000) +=3D panel-jdi-lt070me050=
+00.o
+> > > > diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> > > b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> > > > new file mode 100644
+> > > > index 0000000..ec22d80
+> > > > --- /dev/null
+> > > > +++ b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> > > > @@ -0,0 +1,561 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > > +/*
+> > > > + * Ilitek ILI9341 TFT LCD drm_panel driver.
+> > > > + *
+> > > > + * This panel can be configured to support:
+> > > > + * - 16-bit parallel RGB interface
+> > > The interface to ILI9341 is SPI, and the interface between the ILI934=
+1
+> > > and the panel is more of an itnernal thing. Or did I get this worng?
+> > >
+> > > SPI is for register configuration.  RGB parallel for data transfer
+> >
+> > > + *
+> > > > + * Copyright (C) 2020 Dillon Min <dillon.minfei@gmail.com>
+> > > > + * Derived from drivers/drm/gpu/panel/panel-ilitek-ili9322.c
+> > > > + */
+> > > > +
+> > > > +#include <linux/bitops.h>
+> > > > +#include <linux/gpio/consumer.h>
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/of_device.h>
+> > > > +#include <linux/regmap.h>
+> > > > +#include <linux/regulator/consumer.h>
+> > > > +#include <linux/spi/spi.h>
+> > > > +
+> > > > +#include <video/mipi_display.h>
+> > > > +#include <video/of_videomode.h>
+> > > > +#include <video/videomode.h>
+> > > > +
+> > > > +#include <drm/drm_modes.h>
+> > > > +#include <drm/drm_panel.h>
+> > > > +#include <drm/drm_print.h>
+> > > > +
+> > > > +#define DEFAULT_SPI_SPEED    10000000
+> > > > +
+> > >
+> > > Please use same case for hex numbers in the driver.
+> > > My personal preferences is lower-case.
+> > >
+> > > in next patch, spi speed will be configured by dts, not hardcode here=
+.
+> > below register address will change to lower-case hex numbers.
+> >
+> >
+> > > > +#define ILI9341_SLEEP_OUT            0x11   /* Sleep out register =
+*/
+> > > > +#define ILI9341_GAMMA                0x26   /* Gamma register */
+> > > > +#define ILI9341_DISPLAY_OFF          0x28   /* Display off registe=
+r */
+> > > > +#define ILI9341_DISPLAY_ON           0x29   /* Display on register=
+ */
+> > > > +#define ILI9341_COLUMN_ADDR          0x2A   /* Colomn address regi=
+ster
+> > > */
+> > > > +#define ILI9341_PAGE_ADDR            0x2B   /* Page address regist=
+er */
+> > > > +#define ILI9341_GRAM                 0x2C   /* GRAM register */
+> > > > +#define ILI9341_MAC                  0x36   /* Memory Access Contr=
+ol
+> > > register*/
+> > > > +#define ILI9341_PIXEL_FORMAT         0x3A   /* Pixel Format regist=
+er */
+> > > > +#define ILI9341_WDB                  0x51   /* Write Brightness Di=
+splay
+> > > > +                                          * register
+> > > > +                                          */
+> > > > +#define ILI9341_WCD                  0x53   /* Write Control Displ=
+ay
+> > > > +                                          * register
+> > > > +                                          */
+> > > > +#define ILI9341_RGB_INTERFACE        0xB0   /* RGB Interface Signa=
+l
+> > > Control */
+> > > > +#define ILI9341_FRC                  0xB1   /* Frame Rate Control
+> > > register */
+> > > > +#define ILI9341_BPC                  0xB5   /* Blanking Porch Cont=
+rol
+> > > > +                                          * register
+> > > > +                                          */
+> > > > +#define ILI9341_DFC                  0xB6   /* Display Function Co=
+ntrol
+> > > > +                                          * register
+> > > > +                                          */
+> > > > +#define ILI9341_POWER1               0xC0   /* Power Control 1 reg=
+ister
+> > > */
+> > > > +#define ILI9341_POWER2               0xC1   /* Power Control 2 reg=
+ister
+> > > */
+> > > > +#define ILI9341_VCOM1                0xC5   /* VCOM Control 1 regi=
+ster
+> > > */
+> > > > +#define ILI9341_VCOM2                0xC7   /* VCOM Control 2 regi=
+ster
+> > > */
+> > > > +#define ILI9341_POWERA               0xCB   /* Power control A reg=
+ister
+> > > */
+> > > > +#define ILI9341_POWERB               0xCF   /* Power control B reg=
+ister
+> > > */
+> > > > +#define ILI9341_PGAMMA               0xE0   /* Positive Gamma Corr=
+ection
+> > > > +                                          * register
+> > > > +                                          */
+> > > > +#define ILI9341_NGAMMA               0xE1   /* Negative Gamma Corr=
+ection
+> > > > +                                          * register
+> > > > +                                          */
+> > > > +#define ILI9341_DTCA                 0xE8   /* Driver timing contr=
+ol A
+> > > */
+> > > > +#define ILI9341_DTCB                 0xEA   /* Driver timing contr=
+ol B
+> > > */
+> > > > +#define ILI9341_POWER_SEQ            0xED   /* Power on sequence
+> > > register */
+> > > > +#define ILI9341_3GAMMA_EN            0xF2   /* 3 Gamma enable regi=
+ster
+> > > */
+> > > > +#define ILI9341_INTERFACE            0xF6   /* Interface control
+> > > register */
+> > > > +#define ILI9341_PRC                  0xF7   /* Pump ratio control
+> > > register */
+> > > > +
+> > >
+> > > All the following should be const.
+> > >
+> > ok
+> >
+> >
+> > > Can any of the below be replaces by DEFINED constants?
+> > > > +static u8 ili9341_cmd0[] =3D {0xc3, 0x08, 0x50};
+> > > > +static u8 ili9341_powerb[] =3D {0x00, 0xc1, 0x30};
+> > > > +static u8 ili9341_power_seq[] =3D {0x64, 0x03, 0x12, 0x81};
+> > > > +static u8 ili9341_dtca[] =3D {0x85, 0x00, 0x78};
+> > > > +static u8 ili9341_powera[] =3D {0x39, 0x2c, 0x00, 0x34, 0x02};
+> > > > +static u8 ili9341_prc[] =3D {0x20};
+> > > > +static u8 ili9341_dtcb[] =3D {0x00, 0x00};
+> > > > +static u8 ili9341_frc[] =3D {0x00, 0x1b};
+> > > > +static u8 ili9341_dfc1[] =3D {0x0a, 0xa2};
+> > > > +static u8 ili9341_power1[] =3D {0x10};
+> > > > +static u8 ili9341_power2[] =3D {0x10};
+> > > > +static u8 ili9341_vcom1[] =3D {0x45, 0x15};
+> > > > +static u8 ili9341_vcom2[] =3D {0x90};
+> > > > +static u8 ili9341_mac[] =3D {0xc8};
+> > > > +static u8 ili9341_gamma_en[] =3D {0x00};
+> > > > +static u8 ili9341_rgb_intr[] =3D {0xc2};
+> > > > +static u8 ili9341_dfc2[] =3D {0x0a, 0xa7, 0x27, 0x04};
+> > > > +static u8 ili9341_column_addr[] =3D {0x00, 0x00, 0x00, 0xef};
+> > > > +static u8 ili9341_page_addr[] =3D {0x00, 0x00, 0x01, 0x3f};
+> > > > +static u8 ili9341_intr[] =3D {0x01, 0x00, 0x06};
+> > > > +static u8 ili9341_gamma[] =3D {0x01};
+> > > > +static u8 ili9341_pgamma[] =3D {0x0f, 0x29, 0x24, 0x0c, 0x0e, 0x09=
+, 0x4e,
+> > > 0x78,
+> > > > +                             0x3c, 0x09, 0x13, 0x05, 0x17, 0x11, 0=
+x00};
+> > > > +static u8 ili9341_ngamma[] =3D {0x00, 0x16, 0x1b, 0x04, 0x11, 0x07=
+, 0x31,
+> > > 0x33,
+> > > > +                             0x42, 0x05, 0x0c, 0x0a, 0x28, 0x2f, 0=
+x0f};
+> > > > +
+> > > > +/**
+> > > > + * enum ili9341_input - the format of the incoming signal to the p=
+anel
+> > > > + *
+> > > > + * The panel can be connected to various input streams and four of=
+ them
+> > > can
+> > > > + * be selected by electronic straps on the display. However it is
+> > > possible
+> > > > + * to select another mode or override the electronic default with =
+this
+> > > > + * setting.
+> > > > + */
+> > > > +enum ili9341_input {
+> > > > +     ILI9341_INPUT_PRGB_THROUGH =3D 0x0,
+> > > > +     ILI9341_INPUT_PRGB_ALIGNED =3D 0x1,
+> > > > +     ILI9341_INPUT_UNKNOWN =3D 0xf,
+> > > > +};
+> > > > +
+> > > > +/**
+> > > > + * struct ili9341_config - the system specific ILI9341 configurati=
+on
+> > > > + * @width_mm: physical panel width [mm]
+> > > > + * @height_mm: physical panel height [mm]
+> > > > + * @input: the input/entry type used in this system, if this is se=
+t to
+> > > > + * ILI9341_INPUT_UNKNOWN the driver will try to figure it out by p=
+robing
+> > > > + * the hardware
+> > > > + * @dclk_active_high: data/pixel clock active high, data will be c=
+locked
+> > > > + * in on the rising edge of the DCLK (this is usually the case).
+> > > > + * @de_active_high: DE (data entry) is active high
+> > > > + * @hsync_active_high: HSYNC is active high
+> > > > + * @vsync_active_high: VSYNC is active high
+> > > > + */
+> > > > +struct ili9341_config {
+> > > > +     u32 width_mm;
+> > > > +     u32 height_mm;
+> > > > +     enum ili9341_input input;
+> > > > +     bool dclk_active_high;
+> > > > +     bool de_active_high;
+> > > > +     bool hsync_active_high;
+> > > > +     bool vsync_active_high;
+> > > > +};
+> > > > +
+> > > > +struct ili9341 {
+> > > > +     struct device *dev;
+> > > > +     const struct ili9341_config *conf;
+> > > > +     struct drm_panel panel;
+> > > > +     struct regmap *regmap;
+> > > > +     struct gpio_desc *reset_gpio;
+> > > > +     struct gpio_desc *dc_gpio;
+> > > > +     enum ili9341_input input;
+> > >
+> > > > +     struct videomode vm;
+> > > videomode is not used. So drop this field and drop the include files
+> > > that are no logner needed.
+> > >
+> > > ok
+> >
+> > > > +};
+> > > > +
+> > > > +static inline struct ili9341 *panel_to_ili9341(struct drm_panel *p=
+anel)
+> > > > +{
+> > > > +     return container_of(panel, struct ili9341, panel);
+> > > > +}
+> > > > +
+> > > > +int ili9341_spi_transfer(struct spi_device *spi, u32 speed_hz,
+> > > > +                       u8 bpw, const void *buf, size_t len)
+> > > > +{
+> > > > +     size_t max_chunk =3D spi_max_transfer_size(spi);
+> > > > +     struct spi_transfer tr =3D {
+> > > const?
+> > >
+> > > ok
+> >
+> > > > +             .bits_per_word =3D bpw,
+> > > > +             .speed_hz =3D speed_hz,
+> > > > +             .len =3D len,
+> > > > +     };
+> > > > +     struct spi_message m;
+> > > > +     size_t chunk;
+> > > > +     int ret;
+> > > > +
+> > > > +     spi_message_init_with_transfers(&m, &tr, 1);
+> > > > +
+> > > > +     while (len) {
+> > > > +             chunk =3D min(len, max_chunk);
+> > > > +
+> > > > +             tr.tx_buf =3D buf;
+> > > > +             tr.len =3D chunk;
+> > > > +             buf +=3D chunk;
+> > > > +             len -=3D chunk;
+> > > > +
+> > > > +             ret =3D spi_sync(spi, &m);
+> > > > +             if (ret)
+> > > > +                     return ret;
+> > > > +     }
+> > > > +     return 0;
+> > > > +}
+> > > > +static int ili9341_regmap_spi_write(void *context, const void *dat=
+a,
+> > > > +                                 size_t count)
+> > > > +{
+> > > > +     struct device *dev =3D context;
+> > > > +     struct spi_device *spi =3D to_spi_device(dev);
+> > > > +     struct ili9341 *ili =3D spi_get_drvdata(spi);
+> > > > +     int ret =3D 0;
+> > > > +
+> > > > +     gpiod_set_value_cansleep(ili->dc_gpio, 0);
+> > > > +
+> > > > +     ret =3D ili9341_spi_transfer(spi, DEFAULT_SPI_SPEED, 8, data+=
+0, 1);
+> > > > +     if (ret || count =3D=3D 1 ||
+> > > > +                     ((u8 *)data)[0] =3D=3D ILI9341_GRAM ||
+> > > > +                     ((u8 *)data)[0] =3D=3D ILI9341_DISPLAY_ON ||
+> > > > +                     ((u8 *)data)[0] =3D=3D ILI9341_SLEEP_OUT ||
+> > > > +                     ((u8 *)data)[0] =3D=3D ILI9341_DISPLAY_OFF)
+> > > > +             return ret;
+> > > > +
+> > > > +     gpiod_set_value_cansleep(ili->dc_gpio, 1);
+> > > > +
+> > > > +     return ili9341_spi_transfer(spi, DEFAULT_SPI_SPEED, 8, data+1=
+,
+> > > count-1);
+> > > > +}
+> > > > +
+> > > > +static int ili9341_regmap_spi_read(void *context, const void *reg,
+> > > > +                                size_t reg_size, void *val, size_t
+> > > val_size)
+> > > > +{
+> > > > +     return 0;
+> > > > +}
+> > > Is this function really needed? If not delete it.
+> > >
+> > > regmap will be drop in next patch.
+> >
+> > > > +
+> > > > +static struct regmap_bus ili9341_regmap_bus =3D {
+> > > > +     .write =3D ili9341_regmap_spi_write,
+> > > > +     .read =3D ili9341_regmap_spi_read,
+> > > > +     .reg_format_endian_default =3D REGMAP_ENDIAN_BIG,
+> > > > +     .val_format_endian_default =3D REGMAP_ENDIAN_BIG,
+> > > > +};
+> > > > +
+> > > > +static bool ili9341_volatile_reg(struct device *dev, unsigned int =
+reg)
+> > > > +{
+> > > > +     return false;
+> > > > +}
+> > > Is this function really nedded? If not delete it.
+> > >
+> > > > +
+> > > > +static bool ili9341_writeable_reg(struct device *dev, unsigned int=
+ reg)
+> > > > +{
+> > > > +     /* Just register 0 is read-only */
+> > > > +     if (reg =3D=3D 0x00)
+> > > > +             return false;
+> > > > +     return true;
+> > > > +}
+> > > > +
+> > > > +static const struct regmap_config ili9341_regmap_config =3D {
+> > > > +     .reg_bits =3D 8,
+> > > > +     .val_bits =3D 8,
+> > > > +     .max_register =3D 0xff,
+> > > > +     .cache_type =3D REGCACHE_RBTREE,
+> > > > +     .volatile_reg =3D ili9341_volatile_reg,
+> > > > +     .writeable_reg =3D ili9341_writeable_reg,
+> > > > +};
+> > > > +
+> > >
+> > > No error checks - consider something like:
+> > >
+> > > static int bulk_write(struct ili9341 *ili, u8 reg, const u8[] data, i=
+nt
+> > > len)
+> > > {
+> > >         int err =3D ili->err;
+> > >
+> > >         if (!err) {
+> > >                 err =3D regmap_bulk_write(ili->regmap, reg, data, len=
+);
+> > >                 if (err) {
+> > >                         dev_err(...);
+> > >                         ili->err =3D err;
+> > >                 }
+> > >         }
+> > >
+> > >         return err;
+> > > }
+> > >
+> > > Then you can use this in the following, and make this more readable.
+> > >
+> > > ok, thanks for detail guide.
+> >
+> >
+> > > > +static int ili9341_init(struct drm_panel *panel, struct ili9341 *i=
+li)
+> > > > +{
+> > > > +     regmap_bulk_write(ili->regmap, 0xca,
+> > > > +                                     ili9341_cmd0,
+> > > sizeof(ili9341_cmd0));
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_POWERB,
+> > > > +                             ili9341_powerb, sizeof(ili9341_powerb=
+));
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_POWER_SEQ,
+> > > > +                             ili9341_power_seq,
+> > > sizeof(ili9341_power_seq));
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_DTCA,
+> > > > +                             ili9341_dtca, sizeof(ili9341_dtca));
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_POWERA,
+> > > > +                             ili9341_powera, sizeof(ili9341_powera=
+));
+> > > > +     regmap_write(ili->regmap, ILI9341_PRC, ili9341_prc[0]);
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_DTCB,
+> > > > +                             ili9341_dtcb, sizeof(ili9341_dtcb));
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_FRC,
+> > > > +                             ili9341_frc, sizeof(ili9341_frc));
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_DFC,
+> > > > +                             ili9341_dfc1, sizeof(ili9341_dfc1));
+> > > > +     regmap_write(ili->regmap, ILI9341_POWER1, ili9341_power1[0]);
+> > > > +     regmap_write(ili->regmap, ILI9341_POWER2, ili9341_power2[0]);
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_VCOM1,
+> > > > +                             ili9341_vcom1, sizeof(ili9341_vcom1))=
+;
+> > > > +     regmap_write(ili->regmap, ILI9341_VCOM2, ili9341_vcom2[0]);
+> > > > +     regmap_write(ili->regmap, ILI9341_MAC, ili9341_mac[0]);
+> > > > +     regmap_write(ili->regmap, ILI9341_3GAMMA_EN, ili9341_gamma_en=
+[0]);
+> > > > +     regmap_write(ili->regmap, ILI9341_RGB_INTERFACE,
+> > > ili9341_rgb_intr[0]);
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_DFC,
+> > > > +                             ili9341_dfc2, sizeof(ili9341_dfc2));
+> > > > +
+> > > > +     /* colomn address set */
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_COLUMN_ADDR,
+> > > > +                     ili9341_column_addr, sizeof(ili9341_column_ad=
+dr));
+> > > > +
+> > > > +     /* Page Address Set */
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_PAGE_ADDR,
+> > > > +                             ili9341_page_addr,
+> > > sizeof(ili9341_page_addr));
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_INTERFACE,
+> > > > +                             ili9341_intr, sizeof(ili9341_intr));
+> > > > +     regmap_write(ili->regmap, ILI9341_GRAM, 0);
+> > > > +     msleep(200);
+> > > > +
+> > > > +     regmap_write(ili->regmap, ILI9341_GAMMA, ili9341_gamma[0]);
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_PGAMMA,
+> > > > +                             ili9341_pgamma, sizeof(ili9341_pgamma=
+));
+> > > > +     regmap_bulk_write(ili->regmap, ILI9341_NGAMMA,
+> > > > +                             ili9341_ngamma, sizeof(ili9341_ngamma=
+));
+> > > > +     regmap_write(ili->regmap, ILI9341_SLEEP_OUT, 0);
+> > > > +     msleep(200);
+> > > > +
+> > > > +     regmap_write(ili->regmap, ILI9341_DISPLAY_ON, 0);
+> > > > +
+> > > > +     /* GRAM start writing */
+> > > > +     regmap_write(ili->regmap, ILI9341_GRAM, 0);
+> > > > +
+> > > > +     dev_info(ili->dev, "initialized display\n");
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +/*
+> > > > + * This power-on sequence if from the datasheet, page 57.
+> > > > + */
+> > > > +static int ili9341_power_on(struct ili9341 *ili)
+> > > > +{
+> > > > +     /* Assert RESET */
+> > > > +     gpiod_set_value(ili->reset_gpio, 1);
+> > > > +
+> > > > +     msleep(20);
+> > > > +
+> > > > +     /* De-assert RESET */
+> > > > +     gpiod_set_value(ili->reset_gpio, 0);
+> > > > +
+> > > > +     msleep(10);
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int ili9341_power_off(struct ili9341 *ili)
+> > > > +{
+> > >
+> > >         Assert reset?
+> > > will add reset-pin control here.
+> > >
+> >
+> >
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int ili9341_disable(struct drm_panel *panel)
+> > > > +{
+> > > > +     struct ili9341 *ili =3D panel_to_ili9341(panel);
+> > > > +     int ret;
+> > > > +
+> > > > +     ret =3D regmap_write(ili->regmap, ILI9341_DISPLAY_OFF, 0);
+> > > > +     if (ret) {
+> > > > +             dev_err(ili->dev, "unable to go to standby mode\n");
+> > > > +             return ret;
+> > > > +     }
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int ili9341_unprepare(struct drm_panel *panel)
+> > > > +{
+> > > > +     struct ili9341 *ili =3D panel_to_ili9341(panel);
+> > > > +
+> > > > +     return ili9341_power_off(ili);
+> > > > +}
+> > > > +
+> > > > +static int ili9341_prepare(struct drm_panel *panel)
+> > > > +{
+> > > > +     struct ili9341 *ili =3D panel_to_ili9341(panel);
+> > > > +     int ret;
+> > > > +
+> > > > +     ret =3D ili9341_power_on(ili);
+> > > > +     if (ret < 0)
+> > > > +             return ret;
+> > > > +
+> > > > +     ret =3D ili9341_init(panel, ili);
+> > > > +     if (ret < 0)
+> > > > +             ili9341_unprepare(panel);
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +static int ili9341_enable(struct drm_panel *panel)
+> > > > +{
+> > > > +     struct ili9341 *ili =3D panel_to_ili9341(panel);
+> > > > +     int ret;
+> > > > +
+> > > > +     ret =3D regmap_write(ili->regmap, ILI9341_DISPLAY_ON, 0);
+> > > > +     if (ret) {
+> > > > +             dev_err(ili->dev, "unable to enable panel\n");
+> > > > +             return ret;
+> > > > +     }
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +/* This is the only mode listed for parallel RGB in the datasheet =
+*/
+> > > > +static const struct drm_display_mode prgb_320x240_mode =3D {
+> > > > +     .clock =3D 6100,
+> > > > +     .hdisplay =3D 240,
+> > > > +     .hsync_start =3D 240 + 10,
+> > > > +     .hsync_end =3D 240 + 10 + 10,
+> > > > +     .htotal =3D 280,
+> > > > +     .vdisplay =3D 320,
+> > > > +     .vsync_start =3D 320 + 4,
+> > > > +     .vsync_end =3D 320 + 4 + 2,
+> > > > +     .vtotal =3D 328,
+> > > > +     .vrefresh =3D 60,
+> > > > +     .flags =3D 0,
+> > > > +};
+> > > > +
+> > > > +static int ili9341_get_modes(struct drm_panel *panel,
+> > > > +                             struct drm_connector *connector)
+> > > > +{
+> > > > +     struct ili9341 *ili =3D panel_to_ili9341(panel);
+> > > > +     struct drm_device *drm =3D connector->dev;
+> > > > +     struct drm_display_mode *mode;
+> > > > +     struct drm_display_info *info;
+> > > > +
+> > > > +     info =3D &connector->display_info;
+> > > > +     info->width_mm =3D ili->conf->width_mm;
+> > > > +     info->height_mm =3D ili->conf->height_mm;
+> > > > +     if (ili->conf->dclk_active_high)
+> > > > +             info->bus_flags |=3D DRM_BUS_FLAG_PIXDATA_DRIVE_POSED=
+GE;
+> > > > +     else
+> > > > +             info->bus_flags |=3D DRM_BUS_FLAG_PIXDATA_DRIVE_NEGED=
+GE;
+> > > > +
+> > > > +     if (ili->conf->de_active_high)
+> > > > +             info->bus_flags |=3D DRM_BUS_FLAG_DE_HIGH;
+> > > > +     else
+> > > > +             info->bus_flags |=3D DRM_BUS_FLAG_DE_LOW;
+> > > > +
+> > > > +     switch (ili->input) {
+> > > > +     case ILI9341_INPUT_PRGB_THROUGH:
+> > > > +     case ILI9341_INPUT_PRGB_ALIGNED:
+> > > > +             mode =3D drm_mode_duplicate(drm, &prgb_320x240_mode);
+> > > > +             break;
+> > > > +     default:
+> > > > +             mode =3D NULL;
+> > > > +             break;
+> > > > +     }
+> > > > +     if (!mode) {
+> > > > +             DRM_ERROR("bad mode or failed to add mode\n");
+> > > > +             return -EINVAL;
+> > > > +     }
+> > > > +     drm_mode_set_name(mode);
+> > > > +     /*
+> > > > +      * This is the preferred mode because most people are going
+> > > > +      * to want to use the display with VGA type graphics.
+> > > > +      */
+> > > > +     mode->type =3D DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED=
+;
+> > > > +
+> > > > +     /* Set up the polarity */
+> > > > +     if (ili->conf->hsync_active_high)
+> > > > +             mode->flags |=3D DRM_MODE_FLAG_PHSYNC;
+> > > > +     else
+> > > > +             mode->flags |=3D DRM_MODE_FLAG_NHSYNC;
+> > > > +     if (ili->conf->vsync_active_high)
+> > > > +             mode->flags |=3D DRM_MODE_FLAG_PVSYNC;
+> > > > +     else
+> > > > +             mode->flags |=3D DRM_MODE_FLAG_NVSYNC;
+> > > > +
+> > > > +     mode->width_mm =3D ili->conf->width_mm;
+> > > > +     mode->height_mm =3D ili->conf->height_mm;
+> > > > +     drm_mode_probed_add(connector, mode);
+> > > > +
+> > > > +     return 1; /* Number of modes */
+> > > > +}
+> > > > +
+> > > > +static const struct drm_panel_funcs ili9341_drm_funcs =3D {
+> > > > +     .disable =3D ili9341_disable,
+> > > > +     .unprepare =3D ili9341_unprepare,
+> > > > +     .prepare =3D ili9341_prepare,
+> > > > +     .enable =3D ili9341_enable,
+> > > > +     .get_modes =3D ili9341_get_modes,
+> > > > +};
+> > > > +
+> > > > +static int ili9341_probe(struct spi_device *spi)
+> > > > +{
+> > > > +     struct device *dev =3D &spi->dev;
+> > > > +     struct ili9341 *ili;
+> > > > +     const struct regmap_config *regmap_config;
+> > > > +     int ret;
+> > > > +
+> > > > +     ili =3D devm_kzalloc(dev, sizeof(struct ili9341), GFP_KERNEL)=
+;
+> > > > +     if (!ili)
+> > > > +             return -ENOMEM;
+> > > > +
+> > > > +     spi_set_drvdata(spi, ili);
+> > > > +
+> > > > +     ili->dev =3D dev;
+> > > > +     /*
+> > > > +      * Every new incarnation of this display must have a unique
+> > > > +      * data entry for the system in this driver.
+> > > > +      */
+> > > > +     ili->conf =3D of_device_get_match_data(dev);
+> > > > +     if (!ili->conf) {
+> > > > +             dev_err(dev, "missing device configuration\n");
+> > > > +             return -ENODEV;
+> > > > +     }
+> > > > +
+> > > > +     ili->reset_gpio =3D devm_gpiod_get_optional(dev, "reset",
+> > > GPIOD_OUT_HIGH);
+> > > > +     if (IS_ERR(ili->reset_gpio)) {
+> > > > +             dev_err(dev, "failed to get RESET GPIO\n");
+> > > > +             return PTR_ERR(ili->reset_gpio);
+> > > > +     }
+> > > > +
+> > > > +     ili->dc_gpio =3D devm_gpiod_get_optional(dev, "dc", GPIOD_OUT=
+_LOW);
+> > > > +     if (IS_ERR(ili->dc_gpio)) {
+> > > > +             dev_err(dev, "failed to get DC GPIO\n");
+> > > > +             return PTR_ERR(ili->dc_gpio);
+> > > > +     }
+> > > > +
+> > > > +     spi->bits_per_word =3D 8;
+> > > > +     ret =3D spi_setup(spi);
+> > > > +     if (ret < 0) {
+> > > > +             dev_err(dev, "spi setup failed.\n");
+> > > > +             return ret;
+> > > > +     }
+> > > > +
+> > > > +     regmap_config =3D &ili9341_regmap_config;
+> > > > +
+> > > > +     ili->regmap =3D devm_regmap_init(dev, &ili9341_regmap_bus, de=
+v,
+> > > > +                                    regmap_config);
+> > > > +     if (IS_ERR(ili->regmap)) {
+> > > > +             dev_err(dev, "failed to allocate register map\n");
+> > > > +             return PTR_ERR(ili->regmap);
+> > > > +     }
+> > > > +
+> > > > +     ili->input =3D ili->conf->input;
+> > > > +
+> > > > +     drm_panel_init(&ili->panel, dev, &ili9341_drm_funcs,
+> > > > +                    DRM_MODE_CONNECTOR_DPI);
+> > > > +
+> > > > +     return drm_panel_add(&ili->panel);
+> > > > +}
+> > > > +
+> > > > +static int ili9341_remove(struct spi_device *spi)
+> > > > +{
+> > > > +     struct ili9341 *ili =3D spi_get_drvdata(spi);
+> > > > +
+> > > > +     ili9341_power_off(ili);
+> > > > +     drm_panel_remove(&ili->panel);
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +/*
+> > > > + * The Stm32f429-disco board has a panel ili9341 connected to ltdc
+> > > controller
+> > > > + */
+> > > > +static const struct ili9341_config ili9341_data =3D {
+> > > This should be named "disco" something as this is m32f429-disco
+> > > specific.
+> > >
+> > > ok
+> >
+> > > > +     .width_mm =3D 65,
+> > > > +     .height_mm =3D 50,
+> > > > +     .input =3D ILI9341_INPUT_PRGB_THROUGH,
+> > > > +     .dclk_active_high =3D true,
+> > > > +     .de_active_high =3D false,
+> > > > +     .hsync_active_high =3D false,
+> > > > +     .vsync_active_high =3D false,
+> > > > +};
+> > > > +
+> > > > +static const struct of_device_id ili9341_of_match[] =3D {
+> > > > +     {
+> > > > +             .compatible =3D "stm32f429,ltdc-panel",
+> > > > +             .data =3D &ili9341_data,
+> > > > +     },
+> > >
+> > >
+> > > > +     {
+> > > > +             .compatible =3D "ilitek,ili9341",
+> > > > +             .data =3D NULL,
+> > > This part is wrong, as ilitek,ili9341 is just the generic part.
+> > > Only the first entry is relevant.
+> > >
+> > >
+> > > ok
+> >
+> > > > +     },
+> > > > +     { }
+> > > > +};
+> > > > +MODULE_DEVICE_TABLE(of, ili9341_of_match);
+> > > > +
+> > > > +static struct spi_driver ili9341_driver =3D {
+> > > > +     .probe =3D ili9341_probe,
+> > > > +     .remove =3D ili9341_remove,
+> > > > +     .driver =3D {
+> > > > +             .name =3D "panel-ilitek-ili9341",
+> > > > +             .of_match_table =3D ili9341_of_match,
+> > > > +     },
+> > > > +};
+> > > > +module_spi_driver(ili9341_driver);
+> > > > +
+> > > > +MODULE_AUTHOR("Dillon Min <dillon.minfei@gmail.com>");
+> > > > +MODULE_DESCRIPTION("ILI9341 LCD panel driver");
+> > > > +MODULE_LICENSE("GPL v2");
+> > > > --
+> > > > 2.7.4
+> > >
+>
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
