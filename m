@@ -2,96 +2,162 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFD2C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 06:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B1DC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 538092080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 06:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604FD206F5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:01:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XgEvgHZH"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZDxkmJ7n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgEKGC1 (ORCPT
+        id S1726287AbgEKHBA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 02:02:27 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:63895 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725916AbgEKGC1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 02:02:27 -0400
-X-UUID: bcf760d93a5643c68a53d6605df7a878-20200511
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=KXbgKqeV1jVjM680D36sEteF5YwDhnYQQbhiljtwUfA=;
-        b=XgEvgHZHesGhebPzMCYukgw1TLEmPm8Yjvynb3rikJ0PItXUNPlk/p0YMex37B/wfkJveNcwB0e3Wh9ek5WElssz4/qNkvLQ443NiDlGE2srSZ7IvdGKpeHomWdAtWSEjJlCS1R6S7WKwCZUHHdli2PfIbZnczFh1iUtLrr4rcs=;
-X-UUID: bcf760d93a5643c68a53d6605df7a878-20200511
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1432146354; Mon, 11 May 2020 14:02:24 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 11 May 2020 14:00:50 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 11 May 2020 14:00:50 +0800
-Message-ID: <1589176850.21832.7.camel@mtksdaap41>
-Subject: Re: [PATCH v14 01/11] dt-bindings: mediatek: Add property to mt8183
- smi-common
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-CC:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "Rob Herring" <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>
-Date:   Mon, 11 May 2020 14:00:50 +0800
-In-Reply-To: <7165ec9f-03ca-3020-2c34-246465094c46@collabora.com>
-References: <1588752963-19934-1-git-send-email-weiyi.lu@mediatek.com>
-         <1588752963-19934-2-git-send-email-weiyi.lu@mediatek.com>
-         <7165ec9f-03ca-3020-2c34-246465094c46@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 11 May 2020 03:01:00 -0400
+Received: from mail-bn8nam12on2053.outbound.protection.outlook.com ([40.107.237.53]:6127
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbgEKHBA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 03:01:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GAK8C7PHBa9Xdun5+9K46dCBZvLlZLRumyfXW+Vtvoyxf3ZyneXQ6YzNgnvVy+DuebkFGgjbMS+UIXZhUfieJPoRplMwQehMCtYvHFXH2PzR5QhW0RYaDAcU4+1dsorc4S1k2S+IPVPvOTmKLiEsnHj8wPamqn0Q39xSd9XfBivRO1mFrGU7EoIIM3UeviyIHke5lweGOzKNxac1AsZFZwKMzb2uOFOa5nWFr32SVoAorAJzie7Oy8QxaVl2hjL1Ay/5gO4PLyFZmbJ+SLAMkgLnczzsxFg+tVguhj3zMJZbeEhgLjBhYZtkecGGpEc7NEhsXpM1D3QhqVsMLXnDeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a3Ckiqvd9dr8S1u+LbV00oHkDXwHQWOZNVQWYz/w1Eg=;
+ b=DORYrJVJhZuKeY4nDEO74GcIeZyhmBagMa1jQgUyFeoFV0R5QjjR4qT9F7zUK/0bjmS8WA1E4VjvPfPuLzRyMnIT5cfl70DwjEMA5PYvz03u+63Fvcz/tSqLCqdJ0zoPvMXuRQn9XVA+nXKZgHpBHmvO4Ku91KC29LOnWwhH59J/uAX8KtxQrr3AwDY2iKWTOrhDqOBxFrCdDu0MsMbQvJGqakgfXcscMEaEBkowilpc3qrVfJXCKn/1Pf9iZJdCIvWRtpGs6+nvjJAV8pTDi8DZltiERaclI2+raoahUlvRBic26/96tsN0iRzQob4nB+pyGe8CBJIXMiT5SSvJ9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=lists.infradead.org
+ smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a3Ckiqvd9dr8S1u+LbV00oHkDXwHQWOZNVQWYz/w1Eg=;
+ b=ZDxkmJ7nW9MzTMoETgZNUovDupiAu8eeHcN8yJb6Xm0NzOvDK+wTlMdMzZNwwsOLwmnIUzl8+B272mF8ap1/2Ew6uenQXeQXqF2GKSauBkRFD5aPQk0R0LS5pUm2CLWDfMKJQnm1yfqCFTNAKMcdH0be4Yd7nLqeJeT/tMf4wf0=
+Received: from BL0PR02CA0025.namprd02.prod.outlook.com (2603:10b6:207:3c::38)
+ by BY5PR02MB6995.namprd02.prod.outlook.com (2603:10b6:a03:238::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Mon, 11 May
+ 2020 07:00:56 +0000
+Received: from BL2NAM02FT013.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:207:3c:cafe::38) by BL0PR02CA0025.outlook.office365.com
+ (2603:10b6:207:3c::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend
+ Transport; Mon, 11 May 2020 07:00:56 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT013.mail.protection.outlook.com (10.152.77.19) with Microsoft SMTP
+ Server id 15.20.2979.29 via Frontend Transport; Mon, 11 May 2020 07:00:55
+ +0000
+Received: from [149.199.38.66] (port=42995 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jY2Qa-0005lM-QM; Mon, 11 May 2020 00:00:40 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jY2Qp-0002iH-DH; Mon, 11 May 2020 00:00:55 -0700
+Received: from [172.30.17.109]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jY2Qg-0002Yn-Hv; Mon, 11 May 2020 00:00:46 -0700
+Subject: Re: [PATCH] docs/devicetree: mailbox: fix trivial typo
+To:     l4stpr0gr4m@gmail.com, trivial@kernel.org
+Cc:     michal.simek@xilinx.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1589139491-6301-1-git-send-email-l4stpr0gr4m@gmail.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <9b69ccff-fc5f-e19e-90a5-f51816d84ab5@xilinx.com>
+Date:   Mon, 11 May 2020 09:00:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: E8D7064CEC30C202B634F9239908F66108878567A329A3426389968E2E92D1EB2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1589139491-6301-1-git-send-email-l4stpr0gr4m@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(396003)(346002)(376002)(39860400002)(46966005)(33430700001)(31686004)(316002)(82740400003)(478600001)(9786002)(5660300002)(47076004)(8936002)(2906002)(44832011)(81166007)(26005)(426003)(70586007)(70206006)(31696002)(33440700001)(2616005)(15650500001)(356005)(8676002)(336012)(4326008)(82310400002)(186003)(36756003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 719a3049-b034-49ee-4a07-08d7f5790d45
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6995:
+X-Microsoft-Antispam-PRVS: <BY5PR02MB699578C0D963E7F8C58820FEC6A10@BY5PR02MB6995.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 04004D94E2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oyeC/y5vJg4yjH1vUqH1KdPpFig+FGmdymoMozlfw/2rBmgZKFY2x4VuZ9QceszsVx2BkG4+8LTidWFQrtAdFCNmNOlULG7EodCyjLTkxXa2r/ny8sUauErixkGmhETQF+dU94kMnTJvZQomixOFVgfkAAOQOuBr4h07inNrEBcj+uD4ffHeOfr1JEGY6cdIRZjQQf7AE9wvPZcBp70tM/ahPdVd2n7TVKt24K0DYZyHFpurxFzTG1RSAC0IlogwmYGb3x6i3CmSWrUjqvutWEjTg85n3QPtDt8zPBnJtiTCITWJRbmQczQsIMc6YsUygnk1pqBZPmTERsP20wgsFFC1Yi1Wn96GVDzo5Yn9fPx6jCzAuJ4NWloRa67HtvqtuGSUomiuV+xvrhm1zZQCPctat1UBu1jQD7kq85Ek++RIHxFKWRRo81gPe705naYENQFWWFTqKOpeD8lyOt0SGID1WhZIUgnrS4gDbYjpV95BlRqKuUytiFOFCCww3zizFqYlMtZSlGj9e9giur6g1ZdAEMfQrSiXuvpgtxEKcH0B0e2S8+9g2p/YAJQPSVzmmHtjegalLSHRhdB8pAbgmwoKszLyfo6uB081DijwrZI=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 07:00:55.8447
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 719a3049-b034-49ee-4a07-08d7f5790d45
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6995
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiBXZWQsIDIwMjAtMDUtMDYgYXQgMjI6NTkgKzAyMDAsIEVucmljIEJhbGxldGJvIGkgU2Vy
-cmEgd3JvdGU6DQo+IEhpIFdlaXlpLA0KPiANCj4gVGhhbmsgeW91IGZvciB5b3VyIHBhdGNoLiBE
-b24ndCBmb3JnZXQgdG8gY2MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPiwNCj4gb3RoZXJ3
-aXNlIHRoaXMgcGF0Y2ggY291bGQgYmUgc2lsZW50bHkgaWdub3JlZC4NCj4gDQoNClRoYW5rIHlv
-dSBmb3IgcmVtaW5kaW5nIQ0KDQo+IE9uIDYvNS8yMCAxMDoxNSwgV2VpeWkgTHUgd3JvdGU6DQo+
-ID4gRm9yIHNjcHN5cyBkcml2ZXIgdXNpbmcgcmVnbWFwIGJhc2VkIHN5c2NvbiBkcml2ZXIgQVBJ
-Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlaXlpIEx1IDx3ZWl5aS5sdUBtZWRpYXRlay5j
-b20+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9s
-bGVycy9tZWRpYXRlayxzbWktY29tbW9uLnR4dCAgICAgIHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hh
-bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVycy9t
-ZWRpYXRlayxzbWktY29tbW9uLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZW1vcnktY29udHJvbGxlcnMvbWVkaWF0ZWssc21pLWNvbW1vbi50eHQNCj4gPiBpbmRleCBi
-NDc4YWRlLi4wMTc0NGVjIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbWVkaWF0ZWssc21pLWNvbW1vbi50eHQNCj4g
-PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xs
-ZXJzL21lZGlhdGVrLHNtaS1jb21tb24udHh0DQo+ID4gQEAgLTIwLDcgKzIwLDcgQEAgUmVxdWly
-ZWQgcHJvcGVydGllczoNCj4gPiAgCSJtZWRpYXRlayxtdDI3MTItc21pLWNvbW1vbiINCj4gPiAg
-CSJtZWRpYXRlayxtdDc2MjMtc21pLWNvbW1vbiIsICJtZWRpYXRlayxtdDI3MDEtc21pLWNvbW1v
-biINCj4gPiAgCSJtZWRpYXRlayxtdDgxNzMtc21pLWNvbW1vbiINCj4gPiAtCSJtZWRpYXRlayxt
-dDgxODMtc21pLWNvbW1vbiINCj4gPiArCSJtZWRpYXRlayxtdDgxODMtc21pLWNvbW1vbiIsICJz
-eXNjb24iDQo+ID4gIC0gcmVnIDogdGhlIHJlZ2lzdGVyIGFuZCBzaXplIG9mIHRoZSBTTUkgYmxv
-Y2suDQo+ID4gIC0gcG93ZXItZG9tYWlucyA6IGEgcGhhbmRsZSB0byB0aGUgcG93ZXIgZG9tYWlu
-IG9mIHRoaXMgbG9jYWwgYXJiaXRlci4NCj4gPiAgLSBjbG9ja3MgOiBNdXN0IGNvbnRhaW4gYW4g
-ZW50cnkgZm9yIGVhY2ggZW50cnkgaW4gY2xvY2stbmFtZXMuDQo+ID4gDQoNCg0K
+On 10. 05. 20 21:38, l4stpr0gr4m@gmail.com wrote:
+> From: Kangmin Park <l4stpr0gr4m@gmail.com>
+> 
+> Fix node id typo in example
 
+I think it is more than typo. It is incorrect unit-address which doesn't
+match the first address specified in the reg property of the node.
+
+Here is line from dt binding spec.
+"The unit-address must match the first address specified in the
+reg property of the node."
+
+
+
+> 
+> Signed-off-by: Kangmin Park <l4stpr0gr4m@gmail.com>
+
+IIRC subject should start with dt-bindings:
+
+
+> ---
+>  Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> index 4438432..ad76edc 100644
+> --- a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> @@ -87,7 +87,7 @@ Example:
+>  		ranges;
+>  
+>  		/* APU<->RPU0 IPI mailbox controller */
+> -		ipi_mailbox_rpu0: mailbox@ff90400 {
+> +		ipi_mailbox_rpu0: mailbox@ff990400 {
+>  			reg = <0xff990400 0x20>,
+>  			      <0xff990420 0x20>,
+>  			      <0xff990080 0x20>,
+> 
+
+Change is correct.
+
+With nits above applied please add my
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+
+Thanks,
+Michal
