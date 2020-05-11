@@ -2,114 +2,98 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B56AC47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FEAC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E51F220643
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:18:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="KIf/Q0XY"
+	by mail.kernel.org (Postfix) with ESMTP id C3B48206D5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589232050;
+	bh=iv289DyJMDZwVnc3KZeBumI3G/jnsRKeLd8vshgVCf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z7QmiZHxHmI+38jw9NJxbb6tYFV0ujK3fgfgvekOVqs8rLlTvzwKz9RlJt+u6fXP6
+	 53uFqit5tV0bh8KvrLeM1UXT82e5HknU8PYwTKO8DEv5qQXud97L1RYj1dNRW+J4V5
+	 f4MZPtwt8RcM/4rh1klKU2GboeuLjldXIRZvGwgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbgEKVSq (ORCPT
+        id S1725810AbgEKVUu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 17:18:46 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:56962 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgEKVSq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:18:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 4C7D927E05BE;
-        Mon, 11 May 2020 23:18:44 +0200 (CEST)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id G8nyLIkWJSJN; Mon, 11 May 2020 23:18:44 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id F29C427E05D1;
-        Mon, 11 May 2020 23:18:43 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu F29C427E05D1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1589231924;
-        bh=5x0ABVhNlbMdXxTh8MHf7m0UxlvKT+zK8VMupqi0OrQ=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=KIf/Q0XYPkwtMMwUl0i5C7J9SW9h7qBmtdctchQe8r0GJU93fsNBloc/GsIuCxpZ2
-         V+GQpTSRZfKLfWvAnV6Hl6d5UARPDp2o9li9QwGCLI8YBV1JQIYh2p/aFAB3VQtv9n
-         AyJ5qbKPoZJxbvPD7YBdp1Beb7l90cPf2HSxGH9I=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Iv3WE6goo6xJ; Mon, 11 May 2020 23:18:43 +0200 (CEST)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id DE47927E05BE;
-        Mon, 11 May 2020 23:18:43 +0200 (CEST)
-Date:   Mon, 11 May 2020 23:18:43 +0200 (CEST)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <1306795191.2034071.1589231923729.JavaMail.zimbra@kalray.eu>
-Subject: reserved_mem and early builtin device tree usage
+        Mon, 11 May 2020 17:20:50 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:34328 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725355AbgEKVUu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:20:50 -0400
+Received: by mail-oo1-f67.google.com with SMTP id s139so1309525oos.1;
+        Mon, 11 May 2020 14:20:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wpZ8Z2HbipIJu9qv1JxM/GBZFY/WCkbQWVqJwdqtSag=;
+        b=qDZliZ+iPzvUKUfjjV9jiky6JsDx5PM4ms0VBdPaiGTyhkX+W4SwVSo4ZC2gdviYG9
+         GFsFUh2QfvGy5QWdua5fa2+vp1owLgMDP1uPebW8kf+FFvPFb3aaDIeycJelEp/b9MZJ
+         4UOSxDdoOv1pmIlRX9yFS8yrRjz8DK3ERwYbSUkutyOUVl81lA1oeEwZjs7sCIUfpwbr
+         5ObISaU9Nz6v1+NNv4rwo+1j58VqK4ZErhBwfR0PyLjC48CAYOUrpiQG78JUk5bJyc2L
+         FWzt6jZbtI53STUAoXwjSSkqtE1I1QdUT6/0nc3r6gQOB05v2wf8SYe3gNpqVeZuOxP3
+         LayQ==
+X-Gm-Message-State: AGi0Pub5Lk+Eb6XOa+K3OcPwRwPobHiTQ7ZfG2z10sss2GSs1nVDKCBj
+        gZAVfaEPVCk8w8LIpcxrwA==
+X-Google-Smtp-Source: APiQypI6KnlaeO1Yh0UWBD8XnJ6hSVXpqxOM5EEmjFaHTRG4YNRZTlr/VBxQK1119F3/KE+/5tpirQ==
+X-Received: by 2002:a4a:9413:: with SMTP id h19mr10875976ooi.52.1589232049084;
+        Mon, 11 May 2020 14:20:49 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t15sm3140462oov.32.2020.05.11.14.20.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 14:20:47 -0700 (PDT)
+Received: (nullmailer pid 31409 invoked by uid 1000);
+        Mon, 11 May 2020 21:20:47 -0000
+Date:   Mon, 11 May 2020 16:20:47 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jeff Chase <jnchase@google.com>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        hverkuil-cisco@xs4all.nl, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: Add ch7322 as a trivial device
+Message-ID: <20200511212047.GA21845@bogus>
+References: <20200424053819.220276-1-jnchase@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC81 (Linux)/8.8.15_GA_3895)
-Thread-Index: 2Sdjv+NE14cZ7kqfvsgX2/nahmnvvQ==
-Thread-Topic: reserved_mem and early builtin device tree usage
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424053819.220276-1-jnchase@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Apr 24, 2020 at 01:38:18AM -0400, Jeff Chase wrote:
+> The ch7322 is a Chrontel CEC controller.
+> 
+> Signed-off-by: Jeff Chase <jnchase@google.com>
+> ---
+>  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+> index 4165352a590a..ec2ddc6cdf9a 100644
+> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> @@ -48,6 +48,8 @@ properties:
+>            - capella,cm32181
+>              # CM3232: Ambient Light Sensor
+>            - capella,cm3232
+> +            # CH7322: HDMI-CEC Controller
+> +          - chrontel,ch7322
 
-I'm currently experiencing a bug during the port of the kernel on
-a new architecture and after looking at other architectures, I
-suspect the problem might be there too. my question is about
-reserved memories and usage of early device tree.
+I don't think this qualifies as a trivial device. It has HPDI, OE and 
+reset signals all likely hooked up to GPIOs. You might not have those 
+hooked up for s/w control, but someone will.
 
-From what I understand, when reserved memory is initialized using
-early_init_fdt_scan_reserved_mem, the reserved memories are
-created using some pointers inside the early dt (mainly the names).
-If this early device tree is located into the init section (when
-using a builtin dtb for instance), this section will be discarded
-(when calling free_initmem_default) and memset with a zero/poison
-value. So all pointers which are referencing the early dt will be
-invalid. This will clobber all the "names" of the reserved memory
-entries. As a side effect, all drivers using of_reserved_mem_lookup
-after the init section has been freed will always failed because
-the search is based on the name of the reserved mem.
+And I'd assume if you had multiple instances, they will need to be 
+associated with each connector.
 
-I also said that it might be present on other architectures because
-the usual function call I found is the following:
-- early_init_dt_scan
-- early_init_fdt_reserve_self (only reserve memory in memblock)
-- early_init_fdt_scan_reserved_mem
-- unflatten_and_copy_device_tree
-- free_initmem_default
-- potential calls to of_reserved_mem_lookup
-
-Which (if the device tree is builtin in init section) will lead
-to the result I described before.=20
-
-So my question is about the legit usage of pointers referencing
-the early dtb. If is it ok to use such pointers, this means that
-the early dtb must always be available and that when using a
-builtin dtb, then it should probably be copied early before
-using it for scan operations with unflatten_and_copy_device_tree.
-
-However, since the scan of the reserved mem nodes is required to
-avoid allocating in reserved memory, unflatten_and_copy_device_tree
-should probably not be called before early_init_fdt_scan_reserved_mem
-since it allocates data. So this is a bit of the snake biting its
-tail and thus, early dt pointers should probably not be used.
-
-Is my understanding correct ? Or have I missed something since it
-seems to haven't been noticed on other architectures ?
-
-Thanks & regards,
-
-Cl=C3=A9ment
+Rob
