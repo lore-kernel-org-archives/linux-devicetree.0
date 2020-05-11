@@ -2,188 +2,135 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A078AC54E4B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2B8C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE5820720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:28:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T8egdX65"
+	by mail.kernel.org (Postfix) with ESMTP id 83543206DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731466AbgEKT2j (ORCPT
+        id S1731233AbgEKTdC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 15:28:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731348AbgEKT2i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 15:28:38 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73455C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 12:28:38 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t16so4336529plo.7
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 12:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mmxsKTmzzbLv6+3T1G9FHUh6tg9h/CmFldk9hKJlhm8=;
-        b=T8egdX65u6oP3Lu9rCh6tg1hlvtDznfgBRlFiL+LAgjhOHKwiDaKpayHklBvpvm5FY
-         8OwuooaZ/rrjIpmUIBACOW5JZ7mc17/9DyMcW2FVmFgqM6kgeZqi3ECob+LrfUbH3AsC
-         TQv2oClapf16ImftRlU15/F6HY4Ip6gU83Yo1EsumBsvHYYklNqyZp+sMbZjTxZyPb6Y
-         PpwyGka6AjHwY2vbewEqIIP6kl4OLn6fggxETQ+WQaWy74MJu2lHNaPk+GeVbhpaU4zU
-         HZkt5mA+GDw39HYmOafQB9ZamJ88gcGhY0Bnu1xzj6caMuDgSedaxfvqN4uxUwolLeR9
-         bZ4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mmxsKTmzzbLv6+3T1G9FHUh6tg9h/CmFldk9hKJlhm8=;
-        b=HegyQVL1BjHIuESmhTzJbxUHya3bDTcCkY9HyzPCyw3v9W/tgIUyi2v2i17MUKlb7z
-         q98TObZhhn+jluXj4ZrEbR08dQPGg9oDETNYglMGRHF0z2erGKtrY47KmNPPh8uwKEz2
-         Gw4xSs8T8GhrDamlF3mcgdLOR1039I19ZFlWdf7Z7ytD3vM4JGUy0z0m6c+uGSWTFptW
-         9ze4zOJWwv/3DkJ9ZejKHVcbmKbvCe7F6sTzqO4kKlBr3bGb3MkA6y4IaxtVUAsCxjzw
-         kcf5It2BM5K35iW91yeLviutUqv4O8KWGY+bzvFJx+FfknLDYuic+jmxx4g070kAdCjs
-         MlAg==
-X-Gm-Message-State: AGi0PubZ43/G9s7OmaPOZ5fKe4eHtmETQjZWJRqcROWsXKzTZshHZnzD
-        os5hvNVjaJfjg2QGXRHSDUc09A==
-X-Google-Smtp-Source: APiQypILvvBPZ7bf15t3ZrOp+xi4m+cNa1GdeI7W4qsrfWcwPBK7cP1kV7woQcKPUjV8D+rNcXi72w==
-X-Received: by 2002:a17:902:9a06:: with SMTP id v6mr16279880plp.286.1589225317828;
-        Mon, 11 May 2020 12:28:37 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y25sm8987977pgc.63.2020.05.11.12.28.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 12:28:37 -0700 (PDT)
-Date:   Mon, 11 May 2020 12:29:30 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, evgreen@chromium.org,
-        ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] arm64: dts: qcom: sc7180: Update Q6V5 MSS node
-Message-ID: <20200511192930.GD2166963@builder.lan>
-References: <20200421143228.8981-1-sibis@codeaurora.org>
- <20200421143228.8981-8-sibis@codeaurora.org>
+        Mon, 11 May 2020 15:33:02 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49834 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729453AbgEKTdB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 15:33:01 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 45FF1803080A;
+        Mon, 11 May 2020 19:32:58 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Q65asuHJMWNf; Mon, 11 May 2020 22:32:57 +0300 (MSK)
+Date:   Mon, 11 May 2020 22:32:55 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+ <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200421143228.8981-8-sibis@codeaurora.org>
+In-Reply-To: <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 21 Apr 07:32 PDT 2020, Sibi Sankar wrote:
+On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
+> On Mon, May 11, 2020 at 4:48 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
+> > > On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
+> > >
+> > > > Alas linearizing the SPI messages won't help in this case because the DW DMA
+> > > > driver will split it into the max transaction chunks anyway.
+> > >
+> > > That sounds like you need to also impose a limit on the maximum message
+> > > size as well then, with that you should be able to handle messages up
+> > > to whatever that limit is.  There's code for that bit already, so long
+> > > as the limit is not too low it should be fine for most devices and
+> > > client drivers can see the limit so they can be updated to work with it
+> > > if needed.
+> >
+> > Hmm, this might work. The problem will be with imposing such limitation through
+> > the DW APB SSI driver. In order to do this I need to know:
+> > 1) Whether multi-block LLP is supported by the DW DMA controller.
+> > 2) Maximum DW DMA transfer block size.
+> > Then I'll be able to use this information in the can_dma() callback to enable
+> > the DMA xfers only for the safe transfers. Did you mean something like this when
+> > you said "There's code for that bit already" ? If you meant the max_dma_len
+> > parameter, then setting it won't work, because it just limits the SG items size
+> > not the total length of a single transfer.
+> >
+> > So the question is of how to export the multi-block LLP flag from DW DMAc
+> > driver. Andy?
+> 
+> I'm not sure I understand why do you need this being exported. Just
+> always supply SG list out of single entry and define the length
+> according to the maximum segment size (it's done IIRC in SPI core).
 
-> Add TCSR node and update MSS node to support MSA based Modem boot on
-> SC7180 SoCs.
-> 
+Finally I see your point. So you suggest to feed the DMA engine with SG list
+entries one-by-one instead of sending all of them at once in a single
+dmaengine_prep_slave_sg() -> dmaengine_submit() -> dma_async_issue_pending()
+session. Hm, this solution will work, but there is an issue. There is no
+guarantee, that Tx and Rx SG lists are symmetric, consisting of the same
+number of items with the same sizes. It depends on the Tx/Rx buffers physical
+address alignment and their offsets within the memory pages. Though this
+problem can be solved by making the Tx and Rx SG lists symmetric. I'll have
+to implement a clever DMA IO loop, which would extract the DMA
+addresses/lengths from the SG entries and perform the single-buffer DMA 
+transactions with the DMA buffers of the same length.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Regarding noLLP being exported. Obviously I intended to solve the problem in a
+generic way since the problem is common for noLLP DW APB SSI/DW DMAC combination.
+In order to do this we need to know whether the multi-block LLP feature is
+unsupported by the DW DMA controller. We either make such info somehow exported
+from the DW DMA driver, so the DMA clients (like Dw APB SSI controller driver)
+could be ready to work around the problem; or just implement a flag-based quirk
+in the DMA client driver, which would be enabled in the platform-specific basis
+depending on the platform device actually detected (for instance, a specific
+version of the DW APB SSI IP). AFAICS You'd prefer the later option. 
 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
+Regarding SPI core toggling CS. It is irrelevant to this problem, since DMA
+transactions are implemented within a single SPI transfer so the CS won't be
+touched by the SPI core while we are working wht the xfer descriptor. Though
+the problem with DW APB SSI native CS automatic toggling will persist anyway
+no matter whether the multi-block LLPs are supported on not.
+
+-Sergey
+
 > 
-> V2:
->  * use memory-region to reference mba/mpss regions [Bjorn]
->  * overload the base remoteproc_mpss node wherever possible [Bjorn]
-> 
-> Depends on the following bindings:
-> iommus: https://patchwork.kernel.org/patch/11499603/
-> spare-regs: https://patchwork.kernel.org/patch/11491425/
-> 
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28 +++++++++++++++++++++----
->  2 files changed, 31 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 5405cde1a32ef..08f1f04cca734 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -309,6 +309,13 @@ &qupv3_id_1 {
->  	status = "okay";
->  };
->  
-> +&remoteproc_mpss {
-> +	status = "okay";
-> +	compatible = "qcom,sc7180-mss-pil";
-> +	iommus = <&apps_smmu 0x460 0x1>, <&apps_smmu 0x444 0x3>;
-> +	memory-region = <&mba_mem &mpss_mem>;
-> +};
-> +
->  &sdhc_1 {
->  	status = "okay";
->  
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 94cead96eade0..5e2618eb1b7fa 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -932,6 +932,11 @@ tcsr_mutex_regs: syscon@1f40000 {
->  			reg = <0 0x01f40000 0 0x40000>;
->  		};
->  
-> +		tcsr_regs: syscon@1fc0000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x01fc0000 0 0x40000>;
-> +		};
-> +
->  		tlmm: pinctrl@3500000 {
->  			compatible = "qcom,sc7180-pinctrl";
->  			reg = <0 0x03500000 0 0x300000>,
-> @@ -1325,7 +1330,8 @@ pinconf-sd-cd {
->  
->  		remoteproc_mpss: remoteproc@4080000 {
->  			compatible = "qcom,sc7180-mpss-pas";
-> -			reg = <0 0x04080000 0 0x4040>;
-> +			reg = <0 0x04080000 0 0x4040>, <0 0x04180000 0 0x48>;
-> +			reg-names = "qdsp6", "rmb";
->  
->  			interrupts-extended = <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
->  					      <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> @@ -1336,19 +1342,33 @@ remoteproc_mpss: remoteproc@4080000 {
->  			interrupt-names = "wdog", "fatal", "ready", "handover",
->  					  "stop-ack", "shutdown-ack";
->  
-> -			clocks = <&rpmhcc RPMH_CXO_CLK>;
-> -			clock-names = "xo";
-> +			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-> +				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
-> +				 <&gcc GCC_MSS_NAV_AXI_CLK>,
-> +				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
-> +				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
-> +				 <&rpmhcc RPMH_CXO_CLK>;
-> +			clock-names = "iface", "bus", "nav", "snoc_axi",
-> +				      "mnoc_axi", "xo";
->  
->  			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
->  					<&rpmhpd SC7180_CX>,
-> +					<&rpmhpd SC7180_MX>,
->  					<&rpmhpd SC7180_MSS>;
-> -			power-domain-names = "load_state", "cx", "mss";
-> +			power-domain-names = "load_state", "cx", "mx", "mss";
->  
->  			memory-region = <&mpss_mem>;
->  
->  			qcom,smem-states = <&modem_smp2p_out 0>;
->  			qcom,smem-state-names = "stop";
->  
-> +			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
-> +				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
-> +			reset-names = "mss_restart", "pdc_reset";
-> +
-> +			qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
-> +			qcom,spare-regs = <&tcsr_regs 0xb3e4>;
-> +
->  			status = "disabled";
->  
->  			glink-edge {
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> With Best Regards,
+> Andy Shevchenko
