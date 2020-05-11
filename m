@@ -2,138 +2,84 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C636C54E8D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789FDC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8532075E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:35:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6TUd2jE"
+	by mail.kernel.org (Postfix) with ESMTP id 4BE3D206D9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589232970;
+	bh=C5qvE3kgt/mT1IpKt6MxV+u1Rrra7P91vAU/+cbudBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x1x3bX6NfzSVnIMQKZBDEF/Guc0lRcIpZIdD6yyCMlcxtK3uLoKIeUuNNbXDU8+wo
+	 UGz7I3LBWMbMnl66/N2xOumpAafWQR+Ha/2owcrtzcEQlMzKoXYCzp8f5UmuijboM6
+	 KDmdd1C5Dht9pj8/MroF0JAg0Zkq18cLlw8BVT8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725904AbgEKVfh (ORCPT
+        id S1726067AbgEKVgK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 17:35:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725860AbgEKVfg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 17:35:36 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5126CC061A0C;
-        Mon, 11 May 2020 14:35:36 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f18so11221573lja.13;
-        Mon, 11 May 2020 14:35:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fYJkLNV120eh6j9XZEAijsb1unZiMgZ34U7xH85m09s=;
-        b=e6TUd2jEZN5MfVmrTCY58XKUvyZLG3kIpYwRSkhy4nHFSYWtfncPDWC9br1e5MOZzQ
-         uUOMqQn9raMq9mQXggKII9sECrVTJCrGvGGzzvGOhgYan10woqRsqIIrABexKospKj3B
-         cCxfTBI/jS6ucT3l0xJP0V0Q/5aSU4XCk9YuZOOMK8j2XmLyqzmO8QdvBTsjSxhM9YsL
-         MSI/acv2GdVFa+vdmrJNftsuHZ2g0y1lhogHt6KX48MUJd7sCy3S1QBId6ke2AoEEorr
-         bqO7dIHF+mr/fhXHVq8t6nPWkikUNR0gSwBSP0zBIgjjGxHvE2LBf2pbou8QMN5Iawdo
-         QVsA==
+        Mon, 11 May 2020 17:36:10 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39822 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgEKVgJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:36:09 -0400
+Received: by mail-oi1-f194.google.com with SMTP id b18so16449101oic.6;
+        Mon, 11 May 2020 14:36:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fYJkLNV120eh6j9XZEAijsb1unZiMgZ34U7xH85m09s=;
-        b=cgwnnNAy4D+YCFMfwltlneWfoS44sHvz7AiD9TzuYNEw56tSntKOaxJjuWhj5TW/RF
-         7P1BD9IBdI/cGxP/zvHLk0WA1UG+0njwDbvq7BJKlHVWEYVpD3SgW5ckRwaSB2Hrf2OL
-         5Py1urjNRr+9WwFKJT90WR9Wh7+L2RhUx35wJRg3P1VfEHPgvsOtp2Iru0zn/Sj0IsWp
-         q8I5fSZg8ZyhvaqEhqe9U49n91q0RX9sGLjywIVEpAAnQIWAzZNbRQHobUVTAssuJk9R
-         zzqLa1ZeeBt3a4e3JemKVEpTf+WsiCvk/77pbrE41vCZ3+wwZPpQMnuLDujJUqpeVlAs
-         xI9Q==
-X-Gm-Message-State: AOAM530ux1G9F7ddoLm/kAuAuYsvsU6ppm6w+Px/rdWhykZJDSJeh2oF
-        EdcgeJ9hamhEsbhPGKVcYJs=
-X-Google-Smtp-Source: ABdhPJyFHiB0xr+CkXOcmAFcyDvbJir3HL6j/bBjATnZzqDS/avlkEaI1AplLwAszR8XVdGM0UC8ig==
-X-Received: by 2002:a2e:7d12:: with SMTP id y18mr11868247ljc.211.1589232934836;
-        Mon, 11 May 2020 14:35:34 -0700 (PDT)
-Received: from mobilestation ([95.79.139.244])
-        by smtp.gmail.com with ESMTPSA id m22sm10751538lji.75.2020.05.11.14.35.33
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FjgEarEiw8gpO2P3GZKZGo+NkDIbuBcwR3XmcT/vJlk=;
+        b=h7JJI4o8NGt17jIa461sTF3Fj4DESPITolNAOjGbs6TjlQ6Qu8eHPfhhaRvxFSiW5I
+         DKe8AfWTcVnKwvh+K0B/mrbgfX0MEpx9MMDhBv8gNCexQc1fp4swHonhWCkGfYgtv9rH
+         jFHvLwwXDgvQ9TSHX624tU/ruQuoFbjlMHV5sLe30sv6rJDA1l1H1F1KYM0nH6PD1uJI
+         bSPtF1PDlpc3Lux8mq+/BryZWBF/0XIXWCcKl/Zg+Xb3DVa07Sl3+elZSRKyQQk16Gdv
+         dXbNI09xlnmjrBvLpRz7pSKiQPFiEo1TU7NrGBJcV8KJJIne33fDRo4Hb7jSzJJIY+yu
+         4IXw==
+X-Gm-Message-State: AGi0PuaNJSHkT6klxYTAWEfgeUhYnNLBSXvk90jfQ5m0Ke3PeTF26nt0
+        J3YGYZ+qivFOGDap6VmUHQ==
+X-Google-Smtp-Source: APiQypJVxHvagye2SWlcA4PbLnWPYs5aNGR2f4pg1Hg11puPuSBuWPVLc2xQed2Ra6zvS+x6U10Cgg==
+X-Received: by 2002:aca:b6c2:: with SMTP id g185mr21124643oif.156.1589232967266;
+        Mon, 11 May 2020 14:36:07 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r21sm2935693otg.67.2020.05.11.14.36.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 14:35:33 -0700 (PDT)
-Date:   Tue, 12 May 2020 00:35:31 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200511213531.wnywlljiulvndx6s@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
- <20200508111242.GH185537@smile.fi.intel.com>
- <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
- <20200511210138.GN185537@smile.fi.intel.com>
+        Mon, 11 May 2020 14:36:06 -0700 (PDT)
+Received: (nullmailer pid 20619 invoked by uid 1000);
+        Mon, 11 May 2020 21:36:05 -0000
+Date:   Mon, 11 May 2020 16:36:05 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] include: dt-bindings: rockchip: mark RK_GPIO defines as
+ deprecated
+Message-ID: <20200511213605.GA14679@bogus>
+References: <20200424151105.18736-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511210138.GN185537@smile.fi.intel.com>
+In-Reply-To: <20200424151105.18736-1-jbx6244@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
-> On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
-> > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
-> > > > This array property is used to indicate the maximum burst transaction
-> > > > length supported by each DMA channel.
-> > > 
-> > > > +  snps,max-burst-len:
-> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > > +    description: |
-> > > > +      Maximum length of burst transactions supported by hardware.
-> > > > +      It's an array property with one cell per channel in units of
-> > > > +      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH (data-width) field.
-> > > > +    items:
-> > > > +      maxItems: 8
-> > > > +      items:
-> > > 
-> > > > +        enum: [4, 8, 16, 32, 64, 128, 256]
-> > > 
-> > > Isn't 1 allowed?
-> > 
-> > Burst length of 1 unit is supported, but in accordance with Data Book the MAX
-> > burst length is limited to be equal to a value from the set I submitted. So the
-> > max value can be either 4, or 8, or 16 and so on.
-> 
-> Hmm... It seems you mistakenly took here DMAH_CHx_MAX_MULT_SIZE pre-silicon
-> configuration parameter instead of runtime as described in Table 26:
-> CTLx.SRC_MSIZE and DEST_MSIZE Decoding.
+On Fri, Apr 24, 2020 at 05:11:05PM +0200, Johan Jonker wrote:
+> The defines RK_GPIO0, RK_GPIO1, RK_GPIO2, RK_GPIO3,
+> RK_GPIO4 and RK_GPIO6 are no longer used. Mark them as
+> "deprecated" to prevent that someone start using them again.
 
-No. You misunderstood what I meant. We shouldn't use a runtime parameters values
-here. Why would we? Property "snps,max-burst-len" matches DMAH_CHx_MAX_MULT_SIZE
-config parameter. See a comment to the "SRC_MSIZE" and "DEST_MSIZE" fields of the
-registers. You'll find out that their maximum value is determined by the
-DMAH_CHx_MAX_MULT_SIZE parameter, which must belong to the set [4, 8, 16, 32, 64,
-128, 256]. So no matter how you synthesize the DW DMAC block you'll have at least
-4x max burst length supported.
+What changed exactly? The binding changed, or just using raw 0-6 instead 
+of the defines? 
 
--Sergey
+If there's not anything using these in tree, just delete them.
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+It is still used in the binding doc.
+
+Rob
