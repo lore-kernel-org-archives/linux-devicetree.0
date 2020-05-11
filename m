@@ -2,92 +2,141 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1B6C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B329C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3365206E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:14:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589224445;
-	bh=C+efllGB64LlwO0bZELxETxfugAhOvgex2PuihJOBXY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R+Q1iEduFd3suvQb2TmbSShcw+/bB+Adr9VuQzJDlET56x6YPYeM19SI5kin6Vimk
-	 alxCYiG9zKzkTvU4zBoPpOaK6qWfhfe51OXuW+Zj4XUaPCCPSTvO4OtMiSpfJOc/Yd
-	 R2AFmbJ2wum8t82t9OYAhZyJUIhQ6bghiYCUwDhs=
+	by mail.kernel.org (Postfix) with ESMTP id 16CF0206E6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:15:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QRIMqbF5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgEKTOE (ORCPT
+        id S1731243AbgEKTPi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 15:14:04 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:47089 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728613AbgEKTOE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 15:14:04 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z25so8467655otq.13;
-        Mon, 11 May 2020 12:14:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wNn4fc0E16EiaSAUNCtewx4D1R6LPFSQyRyI9dTz69o=;
-        b=kLa58h1FzZDx0o0GzIqUQC3jknf8VYw21i3k1/rOfFDo1RHT4MbYxTPb1XTI+ACYQI
-         tMQONOZ5g/NvS15jv8UUAmWFqn929FbPjkMYGNy1PhWGqQI15CXT40n6O3kaAMTwY3TJ
-         +e6MbWtmW6CzTh51WvaOCo5Xy2/qMO6V7nkibsL4FvdJpmWS7dAd55Si78lhCj4AWMqB
-         +BH7yenS9Y9o01/hhiCa6saK4fMlJJlJTuFRo2Hq6WEJCZ2qy3h0Luiv2ofYeEo9H5N1
-         lGpu9mn+i/DZVgdajix9do4x9ns1/pfTxkaEoNcaSVp9TGZFFbZGxT60QQiyMQL3ecRw
-         w30w==
-X-Gm-Message-State: AGi0PuawZzopREUgQxlIhA7+GLblln44SsvvmmokEHxUG7MFeZJDN5Hr
-        tK06GlrTPPnKMBOfkm5bNKh1mPA=
-X-Google-Smtp-Source: APiQypKnRs/hqEpuVQwu5GZFBmNaww0uawtrQmdDEhSWNWNikthbPZn7Zu4Lnqg3pmdycZ5aKUE5ug==
-X-Received: by 2002:a05:6830:20d8:: with SMTP id z24mr14338525otq.74.1589224442995;
-        Mon, 11 May 2020 12:14:02 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a22sm2852977otf.42.2020.05.11.12.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 12:14:02 -0700 (PDT)
-Received: (nullmailer pid 27182 invoked by uid 1000);
-        Mon, 11 May 2020 19:14:00 -0000
-Date:   Mon, 11 May 2020 14:14:00 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: at24: add microchip,24lc[0-9]+ to the
- compatible pattern
-Message-ID: <20200511191400.GA27107@bogus>
-References: <20200422141836.1964676-1-yamada.masahiro@socionext.com>
+        Mon, 11 May 2020 15:15:38 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35722 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728613AbgEKTPi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 15:15:38 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04BJFZNf083357;
+        Mon, 11 May 2020 14:15:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589224535;
+        bh=i3l1grILIbxc03pyhfwIusQdRfYWPfn5hdnAbv7xGzw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QRIMqbF5Jue8dYveT0mJj8JkwiOMW3yewVqcZtzlL7XYiQcg2jxMw0fHBVbwXHXHn
+         spp0E7TO0OMq0zksJd5IIKLjfrq7KgeVKY9f4f7VWLxSiDdGfbjojZI89IjY95YZbr
+         L7fuius7nMy3/X0cBiAiOs5p7OZ1nikRCrRqBekc=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04BJFZHA077175
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 May 2020 14:15:35 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
+ May 2020 14:15:34 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 11 May 2020 14:15:34 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04BJFVuO003772;
+        Mon, 11 May 2020 14:15:34 -0500
+Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+References: <20200507183013.27261-1-dmurphy@ti.com>
+ <20200510161721.257vprq6rqp64wu5@earth.universe>
+ <fb9b240e-9bfe-1295-6fc4-700d886ea7c9@ti.com>
+ <20200511143241.nmkti7meahvj2swt@earth.universe>
+ <8674289c-038d-d811-4786-322d66072527@ti.com>
+ <20200511145700.lnytcr747snnolya@earth.universe>
+ <57e2495d-ec06-53ff-c2b5-10062da2848f@ti.com>
+ <20200511153055.7u7afdcpcfbsmswq@earth.universe>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <767f3083-45ae-9198-0a25-6beddc7e0c03@ti.com>
+Date:   Mon, 11 May 2020 14:06:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422141836.1964676-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200511153055.7u7afdcpcfbsmswq@earth.universe>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 22 Apr 2020 23:18:36 +0900, Masahiro Yamada wrote:
-> arch/arm/boot/dts/uniphier-ref-daughter.dtsi has
-> 
->   compatible = "microchip,24lc128", "atmel,24c128";
-> 
-> and 'make ARCH=arm dtbs_check' warns this:
-> 
->   eeprom@50: compatible: ['microchip,24lc128', 'atmel,24c128'] is not valid under any of the given schemas (Possible causes of the failure)
-> 
-> Microchip 24LC128 is the device used on this board, and I see it in
-> https://www.microchip.com/wwwproducts/en/24LC128
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  Documentation/devicetree/bindings/eeprom/at24.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Sebastian
 
-Applied, thanks!
+On 5/11/20 10:30 AM, Sebastian Reichel wrote:
+> Hi,
+>
+> On Mon, May 11, 2020 at 09:55:11AM -0500, Dan Murphy wrote:
+>> On 5/11/20 9:57 AM, Sebastian Reichel wrote:
+>>> On Mon, May 11, 2020 at 09:29:59AM -0500, Dan Murphy wrote:
+>>>> On 5/11/20 9:32 AM, Sebastian Reichel wrote:
+>>>>> On Mon, May 11, 2020 at 07:25:06AM -0500, Dan Murphy wrote:
+>>>>>> On 5/10/20 11:17 AM, Sebastian Reichel wrote:
+>>>>>>> This needs is missing the power-supplies property. The N900 DT
+>>>>>>> contains a bq27200 referencing the charger, so it should fail the DT
+>>>>>>> check without the property being listed here.
+>>>>>> Hmm.  I ran the dt checker specifically on the binding and it did not fail.
+>>>>>> Unless I need to build some other DTs as well.
+>>>>>> Either I will have the power-supplies property
+>>>>> I just tried it myself. The problem is the way you are specifying
+>>>>> the compatible strings. This is the parsing result:
+>>>>>
+>>>>> enum: ['ti,bq27200 - BQ27200', 'ti,bq27210 - BQ27210', 'ti,bq27500 - deprecated,
+>>>>>          use revision specific property below', ...
+>>>>>
+>>>>> You can see this in Documentation/devicetree/bindings/processed-schema.yaml, which
+>>>>> is generated by running the check. The compatible comments need a # as separation
+>>>>> character like this to generate proper bindings:
+>>>>>
+>>>>> properties:
+>>>>>      compatible:
+>>>>>        enum:
+>>>>>          - ti,bq27200 # BQ27200
+>>>>>          - ti,bq27210 # BQ27210
+>>>>>          - ti,bq27500 # deprecated, use revision specific property below
+>>>> Well honestly not sure why we need the comment either. These are pretty
+>>>> self explanatory maybe we should just remove the additional comments
+>>> Fine with me.
+>> Ack
+>>>> Any consideration on just removing the deprecated values?
+>>> Let's keep them with their comment for now. Removing them should
+>>> start with marking them as depracated in the binding and generating
+>>> a runtime warning in the driver, so that people become aware of the
+>>> problem. At least for ti,bq27500 we have mainline users At least for
+>>> ti,bq27500 we have mainline users.
+>> There are only 2 dts files that have this reference unless we are not sure
+>> which device is actually in use.
+> DT is considered ABI and one is supposed to be able to boot a new
+> kernel with an old DT. It's not enough to just update the in-tree
+> dts files. I suppose we can consider removing support for the old
+> compatible values after having the warning being printed for some
+> time and the mainline users being converted to the new binding.
+
+Yes I know. I may have said that before.
+
+After looking at the driver and how this is all stitched together I 
+think I am just going to stick to the DT conversion as is.
+
+I will make the basic changes for conversion but any changes to the 
+compatibles should be done later.
+
+Dan
+
+
+> -- Sebastian
