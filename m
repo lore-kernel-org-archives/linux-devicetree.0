@@ -2,203 +2,161 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F696C54E4B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 10:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA07C54E8E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 10:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36D392075E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 10:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3DD2080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 10:20:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Ixjdwi4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgEKKPP (ORCPT
+        id S1728968AbgEKKUg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 06:15:15 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:41358 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbgEKKPP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 06:15:15 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 5D1762001E;
-        Mon, 11 May 2020 12:15:09 +0200 (CEST)
-Date:   Mon, 11 May 2020 12:15:08 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     srk@48.io
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, Marek Vasut <marex@denx.de>,
-        devicetree@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Lubomir Rintel <lkundrak@v3.sk>,
+        Mon, 11 May 2020 06:20:36 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:37225 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727093AbgEKKUg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 06:20:36 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id Y5XyjA9BJhEkrY5Y0jG36T; Mon, 11 May 2020 12:20:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1589192432; bh=v30NtQeC3gcqtHWLR4991ZFdZBLF0lN/Kr3HY4BLSBM=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Ixjdwi4vvoUnq6c9t9ekk+1Yb9LC1cc83KBF4VN/A6ZiggC55CMPHDNVaDPyPhVXN
+         JOiDS9s4EK8Jlvudao3wwN9ItlcFJcHrVbwF7HX8e1ccO0l9/zSses+CNrQI3BuEap
+         tpv5uZ2OG1ms/i5oMJ44I9j4wVfExxQqQrMMS5TxRKQGRJUowkqUoa5eN/P5RD2rOi
+         UWeD5mC8t2ZZH2fa60uz8Prvl9QKCbW6JOI8roxkEbL3ZM8VrnfwJmbsdMjW7HGdEa
+         jUwfPTRLTMz1xwbvfM6w5OQAfc3hZezBrVGwUFjT7E85QweAxCj47qMClPARWC6pAU
+         HIqBNkHkXroaQ==
+Subject: Re: [PATCH v8 4/4] media: i2c: Add RDACM20 driver
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        sakari.ailus@iki.fi, Hyun Kwon <hyunk@xilinx.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sean Cross <xobs@kosagi.com>
-Subject: Re: [PATCH 1/2] dt-bindings: it6251: add bindings for IT6251
- LVDS-to-eDP bridge
-Message-ID: <20200511101508.GA7971@ravnborg.org>
-References: <20200509111732.26102-1-srk@48.io>
- <20200509111732.26102-2-srk@48.io>
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Rob Herring <robh@kernel.org>
+References: <20200417103424.5875-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200417103424.5875-5-kieran.bingham+renesas@ideasonboard.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <9542009f-7290-eec4-3190-9fc8dad6f214@xs4all.nl>
+Date:   Mon, 11 May 2020 12:20:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509111732.26102-2-srk@48.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=YpGV6msqAAAA:8 a=e5mUnYsNAAAA:8
-        a=gEfo2CItAAAA:8 a=_yH9q9Z6AjBviL3TOqQA:9 a=rbfOVJjzkGrPOjLs:21
-        a=2oGGWDTR31z2Z5qq:21 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=7Sa5D-Tva0wx0rmpRu8Y:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+In-Reply-To: <20200417103424.5875-5-kieran.bingham+renesas@ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfJEY/valHly88FpnjoxOAXAEx4SvJ8hiONrbmS6097U1wDlDWti5PkSctG0PxjuILKrfyat1/KEOHklkxtfynxOQTVAgF3+kCjeYyI5gPEWaD/KKABZY
+ F9tJB7c6iwzIACKI5JgaeWl/fcOyOa7FhKcL++ZATjbLTQPQoznEXrS3lpTGmxMrUTZSPJuzzMJ5L+OmYlYVWQcOllVusIWU+PDUIhMrVSXkJtojB1aAatIX
+ 2cTq12lyF56EAKbpxQROGFU/2Ts30t2V1qkxuCJuufHCZi+I2R4Cy8R6bpvZeBVWZnwnVRh6y0k29WcEkos31aaFzpavhR/bRjhZVFj5d7f8E4Sib0c8tQDp
+ 0bwiStvj7UxrKLjmz3DnWAPGkHkg6pWLxZ6yyb6DGjktqfSECqpc612W4v8arqicCkpgVWROH4mose9I6XHer8EhbO1a0W5cRSbdpKKB3/Vx88NIHa412RE6
+ 3BycoYIVPz73E7OVefgDWa7vqRyBTJCcRvpPSkM8ehjBIkibhymcscLYH0M2Tx5mpaVkSp9fgPJ4jsK/xibBLXiz6mPPfEWY/2ZqUa2+i93O4DuVLDQHrr0+
+ GuC7SKjvf5QfGoZsJPfY1Kd+DigRcAFW4Zr4fYamfnfhwFrGE8YwhPpBjROn74AfazT12tEwEg6ERd/3PanjL0IDhdqqK5Wr6YH/EG3u552tTZoj6GOEy7+C
+ Z38Qd5AKsRKopC//UrQ1RSo9BM7+WWFuACxeroHKzsGOouBac91Ci6gdVSobbE7yNhCptK4AT63oBZNUYeCKWMB5C1GBaiiRMMhVAK7N4MevjHbTtke57aYG
+ W07bZD8ifZVAydfo8aCnwpGh9Jd68W6QiYX9+CLHPf3oEaAsKttno71H3e+Gj2OHpr71GatvFToxT3c6fffmS23/vx7N/SntnjP+/oB7YykV6ffkUYfUn1RE
+ bx1wpBXBR/Uq6HTIjGlqVeKrd7I=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Richard/Marek.
-
-On Sat, May 09, 2020 at 01:17:31PM +0200, srk@48.io wrote:
-> From: Marek Vasut <marex@denx.de>
+On 17/04/2020 12:34, Kieran Bingham wrote:
+> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > 
-> Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
-
-Looks good, just a few comments in the following.
-
-	Sam
+> The RDACM20 is a GMSL camera supporting 1280x800 resolution images
+> developed by IMI based on an Omnivision 10635 sensor and a Maxim MAX9271
+> GMSL serializer.
 > 
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> Signed-off-by: Richard Marko <srk@48.io>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Sean Cross <xobs@kosagi.com>
-> Cc: devicetree@vger.kernel.org
-> To: dri-devel@lists.freedesktop.org
+> The GMSL link carries power, control (I2C) and video data over a
+> single coax cable.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
 > ---
->  .../bindings/display/bridge/ite,it6251.yaml   | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
+
+<snip>
+
+> diff --git a/drivers/media/i2c/rdacm20.c b/drivers/media/i2c/rdacm20.c
 > new file mode 100644
-> index 000000000000..8daa44a30fa1
+> index 000000000000..37786998878b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/ite,it6251.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/drivers/media/i2c/rdacm20.c
+> @@ -0,0 +1,668 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * IMI RDACM20 GMSL Camera Driver
+> + *
+> + * Copyright (C) 2017-2020 Jacopo Mondi
+> + * Copyright (C) 2017-2020 Kieran Bingham
+> + * Copyright (C) 2017-2019 Laurent Pinchart
+> + * Copyright (C) 2017-2019 Niklas Söderlund
+> + * Copyright (C) 2016 Renesas Electronics Corporation
+> + * Copyright (C) 2015 Cogent Embedded, Inc.
+> + */
 > +
-> +title: ITE IT6251 LVDS-to-eDP bridge bindings
+> +/*
+> + * The camera is made of an Omnivision OV10635 sensor connected to a Maxim
+> + * MAX9271 GMSL serializer.
+> + */
 > +
-> +maintainers:
-> +  - Marek Vasut <marex@denx.de>
-> +  - Richard Marko <srk@48.io>
+> +#include <linux/delay.h>
+> +#include <linux/fwnode.h>
+> +#include <linux/init.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/videodev2.h>
 > +
-> +description: |
-> +  The IT6251 is a high-performance single-chip
-> +  De-SSC LVDS to DisplayPort converter.
-> +  Combined with LVDS receiver and DisplayPort Transmitter,
-> +  the IT6251 supports LVDS input and DisplayPort 1.1a
-> +  output by conversion function.
+> +#include <media/v4l2-async.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-subdev.h>
 > +
-> +properties:
-> +  compatible:
-> +    const: ite,it6251
+> +#include "max9271.h"
 > +
-> +  reg:
-> +    items:
-> +      - description: I2C address of the bridge
-> +      - description: I2C address of the LVDS part
+> +#define OV10635_I2C_ADDRESS		0x30
 > +
-> +  reg-names:
-> +    items:
-> +      - const: bridge
-> +      - const: lvds
+> +#define OV10635_SOFTWARE_RESET		0x0103
+> +#define OV10635_PID			0x300a
+> +#define OV10635_VER			0x300b
+> +#define OV10635_SC_CMMN_SCCB_ID		0x300c
+> +#define OV10635_SC_CMMN_SCCB_ID_SELECT	BIT(0)
+> +#define OV10635_VERSION			0xa635
 > +
-> +  ports:
-> +    type: object
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        description: |
-> +         Video port for eDP output (typically panel).
-port@0 is in most (all?) cases input today.
-Take for example a look at: toshiba,tc358768.yaml
-Could we do the same here?
+> +#define OV10635_WIDTH			1280
+> +#define OV10635_HEIGHT			800
+> +#define OV10635_FORMAT			MEDIA_BUS_FMT_UYVY8_2X8
 
-> +
-> +      port@1:
-> +        type: object
-> +        description: |
-> +          Video port for LVDS input.
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +    additionalProperties: false
-> +
-> +  power-supply: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - power-supply
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-Add an extra level named "i2c" like we do in other bridge examples.
-> +    it6251@5c {
-My personal preference is 4 spaces for indent.
-But 2 spaces is also fine.
+This OV10635_FORMAT define was very confusing when I reviewed this code.
 
-> +      compatible = "ite,it6251";
-> +      reg = <0x5c>, <0x5e>;
-> +      reg-names = "bridge", "lvds";
-> +      power-supply = <&reg_display>;
-> +
-> +      ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        port@0 {
-> +          reg = <0>;
-> +          bridge_out_edp0: endpoint {
-> +            remote-endpoint = <&panel_in_edp0>;
-> +          };
-> +        };
-> +
-> +        port@1 {
-> +          reg = <1>;
-> +          bridge_in_lvds0: endpoint {
-> +            remote-endpoint = <&lvds0_out>;
-> +          };
-> +        };
-> +      };
-> +    };
+Please just use MEDIA_BUS_FMT_UYVY8_2X8 directly instead of introducing
+an alias. While reviewing I thought for a moment that OV10635_FORMAT was
+somehow a new mediabus format that was added elsewhere. I had to dig into
+the code to figure out that it really was an alias.
 
-End with a line containing only "..."
+Regards,
 
-This is an optional end-marker.
-See lvds-codec.yaml for an example.
+	Hans
 
-	Sam
