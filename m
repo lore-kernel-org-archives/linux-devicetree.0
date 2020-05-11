@@ -2,190 +2,102 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD528C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 12:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2960AC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 12:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B18D0206F5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 12:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0072620746
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 12:07:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nijYdYWK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbgEKMHJ (ORCPT
+        id S1728531AbgEKMH5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 08:07:09 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52294 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728531AbgEKMHJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 08:07:09 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A8132200BA6;
-        Mon, 11 May 2020 14:07:06 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F004F20025F;
-        Mon, 11 May 2020 14:07:01 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 195BF402A7;
-        Mon, 11 May 2020 20:06:56 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        andrew.smirnov@gmail.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] dt-bindings: reset: Convert i.MX7 reset to json-schema
-Date:   Mon, 11 May 2020 19:57:42 +0800
-Message-Id: <1589198262-21372-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 11 May 2020 08:07:57 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:3457 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727873AbgEKMH5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 08:07:57 -0400
+X-UUID: 2b1d2213b8f043dba6a23fbf1278bda7-20200511
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vMipxxyx4vvbm6f5PGT2B9rTKQUVPBjJU6zHZu06PhY=;
+        b=nijYdYWKJk1lzibIVt030yqGOvFax/1AxuCU4dnlCz1eTIQp9rhRPGj1G390+fSzgtzOZRF0CuVjULyhUffyV3kbsL6BSV7UdjVL6TBQTZ6WOJMb3/hy65sJWYUIDMmyKrA+0U0DooE3Kpyd1ac9uBkFsdaMoATLZkTNX33QycU=;
+X-UUID: 2b1d2213b8f043dba6a23fbf1278bda7-20200511
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 813659591; Mon, 11 May 2020 20:07:49 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 11 May
+ 2020 20:07:49 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 11 May 2020 20:07:47 +0800
+Message-ID: <1589198795.8804.276.camel@mhfsdcap03>
+Subject: Re: [V8, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <mchehab@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
+        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
+        <bingbu.cao@intel.com>, <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
+Date:   Mon, 11 May 2020 20:06:35 +0800
+In-Reply-To: <20200511093308.GF185537@smile.fi.intel.com>
+References: <20200509080627.23222-1-dongchun.zhu@mediatek.com>
+         <20200509080627.23222-3-dongchun.zhu@mediatek.com>
+         <20200511093308.GF185537@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 1C8EC2EFA9EA89E9356A83C33519571046D31C38383666B09EF4913B1E4D0A3F2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX7 reset binding to DT schema format using json-schema.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Improve description;
-	- Remove i.MX8MM and i.MX8MN compatible, they use i.MX8MQ's compatible;
-	- Keep original author as maintainer;
-	- Remove unnecessary "..." at the end of file.
----
- .../devicetree/bindings/reset/fsl,imx7-src.txt     | 56 ---------------------
- .../devicetree/bindings/reset/fsl,imx7-src.yaml    | 58 ++++++++++++++++++++++
- 2 files changed, 58 insertions(+), 56 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
- create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
-
-diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-deleted file mode 100644
-index e10502d..0000000
---- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--Freescale i.MX7 System Reset Controller
--======================================
--
--Please also refer to reset.txt in this directory for common reset
--controller binding usage.
--
--Required properties:
--- compatible:
--	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
--	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
--	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
--	- For i.MX8MN SoCs should be "fsl,imx8mn-src", "fsl,imx8mq-src", "syscon"
--	- For i.MX8MP SoCs should be "fsl,imx8mp-src", "syscon"
--- reg: should be register base and length as documented in the
--  datasheet
--- interrupts: Should contain SRC interrupt
--- #reset-cells: 1, see below
--
--example:
--
--src: reset-controller@30390000 {
--     compatible = "fsl,imx7d-src", "syscon";
--     reg = <0x30390000 0x2000>;
--     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
--     #reset-cells = <1>;
--};
--
--
--Specifying reset lines connected to IP modules
--==============================================
--
--The system reset controller can be used to reset various set of
--peripherals. Device nodes that need access to reset lines should
--specify them as a reset phandle in their corresponding node as
--specified in reset.txt.
--
--Example:
--
--	pcie: pcie@33800000 {
--
--		...
--
--		resets = <&src IMX7_RESET_PCIEPHY>,
--			 <&src IMX7_RESET_PCIE_CTRL_APPS_EN>;
--		reset-names = "pciephy", "apps";
--
--		...
--        };
--
--
--For list of all valid reset indices see
--<dt-bindings/reset/imx7-reset.h> for i.MX7,
--<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
--<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM and
--<dt-bindings/reset/imx8mq-reset.h> for i.MX8MN and
--<dt-bindings/reset/imx8mp-reset.h> for i.MX8MP
-diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
-new file mode 100644
-index 0000000..b1a71c1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/reset/fsl,imx7-src.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX7 System Reset Controller
-+
-+maintainers:
-+  - Andrey Smirnov <andrew.smirnov@gmail.com>
-+
-+description: |
-+  The system reset controller can be used to reset various set of
-+  peripherals. Device nodes that need access to reset lines should
-+  specify them as a reset phandle in their corresponding node as
-+  specified in reset.txt.
-+
-+  For list of all valid reset indices see
-+    <dt-bindings/reset/imx7-reset.h> for i.MX7,
-+    <dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ, i.MX8MM and i.MX8MN,
-+    <dt-bindings/reset/imx8mp-reset.h> for i.MX8MP.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - fsl,imx7d-src
-+        - fsl,imx8mq-src
-+        - fsl,imx8mp-src
-+      - const: syscon
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - '#reset-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    reset-controller@30390000 {
-+        compatible = "fsl,imx7d-src", "syscon";
-+        reg = <0x30390000 0x2000>;
-+        interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+        #reset-cells = <1>;
-+    };
--- 
-2.7.4
+SGkgQW5keSwNCg0KVGhhbmtzIGZvciB0aGUga2luZGx5IHJldmlldy4NCg0KT24gTW9uLCAyMDIw
+LTA1LTExIGF0IDEyOjMzICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6DQo+IE9uIFNhdCwg
+TWF5IDA5LCAyMDIwIGF0IDA0OjA2OjI3UE0gKzA4MDAsIERvbmdjaHVuIFpodSB3cm90ZToNCj4g
+PiBBZGQgYSBWNEwyIHN1Yi1kZXZpY2UgZHJpdmVyIGZvciBPVjAyQTEwIGltYWdlIHNlbnNvci4N
+Cj4gDQo+IC4uLg0KPiANCj4gPiArI2RlZmluZSBPVjAyQTEwX0lEKF9tc2IsIF9sc2IpCQkJCSgo
+X21zYikgPDwgOCB8IChfbHNiKSkNCj4gDQo+IEhvdyBvZnRlbiBkbyB5b3UgdXNlIHRoaXMgbWFj
+cm8/DQo+IA0KDQpKdXN0IG9uY2UuDQpJIHdvdWxkIHRyeSB0byB1c2UgdGhlIG1hY3JvIGZ1bmN0
+aW9uIGRpcmVjdGx5IGluIG5leHQgcmVsZWFzZS4NCg0KPiAuLi4NCj4gDQo+ID4gK3N0YXRpYyBp
+bnQgb3YwMmExMF9yZWFkX3NtYnVzKHN0cnVjdCBvdjAyYTEwICpvdjAyYTEwLCB1bnNpZ25lZCBj
+aGFyIHJlZywNCj4gPiArCQkJICAgICAgdW5zaWduZWQgY2hhciAqdmFsKQ0KPiA+ICt7DQo+ID4g
+KwlzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gdjRsMl9nZXRfc3ViZGV2ZGF0YSgmb3YwMmEx
+MC0+c3ViZGV2KTsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gaTJjX3NtYnVz
+X3JlYWRfYnl0ZV9kYXRhKGNsaWVudCwgcmVnKTsNCj4gDQo+ID4gKw0KPiANCj4gRXh0cmEgYmxh
+bmsgbGluZS4NCj4gDQoNClRoYW5rcyBmb3IgdGhlIGNhcmVmdWxseSByZW1pbmRlci4NClRoaXMg
+ZXJyb3IgY2FuIGVhc2lseSBiZSBuZWdsZWN0ZWQuDQpJIHdvdWxkIHJlbW92ZSBpdCBpbiBuZXh0
+IHJlbGVhc2UuDQoNCj4gPiArCWlmIChyZXQgPCAwKQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4g
+Kw0KPiA+ICsJKnZhbCA9ICh1bnNpZ25lZCBjaGFyKXJldDsNCj4gPiArDQo+ID4gKwlyZXR1cm4g
+MDsNCj4gPiArfQ0KPiANCj4gLi4uDQo+IA0KPiA+ICtzdGF0aWMgaW50IG92MDJhMTBfZW50aXR5
+X2luaXRfY2ZnKHN0cnVjdCB2NGwyX3N1YmRldiAqc2QsDQo+ID4gKwkJCQkgICBzdHJ1Y3QgdjRs
+Ml9zdWJkZXZfcGFkX2NvbmZpZyAqY2ZnKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgdjRsMl9zdWJk
+ZXZfZm9ybWF0IGZtdCA9IHsNCj4gDQo+ID4gKwkJLndoaWNoID0gY2ZnID8gVjRMMl9TVUJERVZf
+Rk9STUFUX1RSWQ0KPiA+ICsJCQkgICAgIDogVjRMMl9TVUJERVZfRk9STUFUX0FDVElWRSwNCj4g
+DQo+IEkgdGhpbmsgaXQgd291bGQgYmUgZmluZSB0byBoYXZlIGl0IG9uIG9uZSBsaW5lLg0KPiAN
+Cg0KR290IGl0Lg0KRml4ZWQgaW4gbmV4dCByZWxlYXNlLg0KDQo+ID4gKwkJLmZvcm1hdCA9IHsN
+Cj4gPiArCQkJLndpZHRoID0gMTYwMCwNCj4gPiArCQkJLmhlaWdodCA9IDEyMDAsDQo+ID4gKwkJ
+fQ0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlvdjAyYTEwX3NldF9mbXQoc2QsIGNmZywgJmZtdCk7
+DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gDQo+IC4uLg0KPiANCj4gPiArCWlm
+ICghcmV0KSB7DQo+ID4gKwkJaWYgKHJvdGF0aW9uID09IDE4MCkgew0KPiANCj4gaWYgKGEpIHsN
+Cj4gCWlmIChiKSB7DQo+IAkJLi4uDQo+IAl9DQo+IH0NCj4gDQo+ID09DQo+IA0KPiBpZiAoYSAm
+JiBiKSB7DQo+IAkuLi4NCj4gfQ0KPiANCg0KVGhhbmtzIGZvciB0aGUgcmVtaW5kZXIgOi0pDQpO
+ZXh0IHJlbGVhc2Ugd291bGQgdXNlOg0KaWYgKCFyZXQgJiYgcm90YXRpb24gPT0gMTgwKSB7DQoJ
+Li4uDQp9DQoNCj4gPiArCQkJb3YwMmExMC0+dXBzaWRlX2Rvd24gPSB0cnVlOw0KPiA+ICsJCQlv
+djAyYTEwLT5mbXQuY29kZSA9IE1FRElBX0JVU19GTVRfU1JHR0IxMF8xWDEwOw0KPiA+ICsJCX0N
+Cj4gPiArCX0NCj4gDQoNCg==
 
