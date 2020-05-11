@@ -2,620 +2,129 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6042FC54E8E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 11:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02184C54E4B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 11:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39879206F9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 11:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D03E8206B9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 11:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="aqsQeAtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgEKLGl (ORCPT
+        id S1727873AbgEKLJC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 07:06:41 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49134 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbgEKLGl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 07:06:41 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: rcn)
-        with ESMTPSA id 924712A0CB2
-From:   =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-To:     laurent.pinchart@ideasonboard.com
-Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, geert+renesas@glider.be,
-        robh+dt@kernel.org, xuwei5@hisilicon.com
-Subject: [PATCH v2 6/6] dt-bindings: drm: bridge: adi,adv7511.txt: convert to yaml
-Date:   Mon, 11 May 2020 13:06:11 +0200
-Message-Id: <20200511110611.3142-7-ricardo.canuelo@collabora.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
-References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
+        Mon, 11 May 2020 07:09:02 -0400
+Received: from mail-eopbgr1320123.outbound.protection.outlook.com ([40.107.132.123]:22006
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727093AbgEKLJB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 07:09:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l+U8BH0VII6srA4X5/ngIhe59Gfb9iRtrl0QE4jCpc5q/lUSVHV3CZvv++euVJHP8OQZKCb9xWvltSUXDAk28CtY/7yPicEwwg5f3TwORE5kF8QoA884k1TI04+aUwYjqUmxl38PuKVIUL75ulr/j+2aEEwqjWVvP2gZBdAEoetWBeXZcG1kWuM3/yk664VlK5HIOZyT+MD1mGHKN3EMyl+IjfbLyojd0oHK3P3jblmWwNnwXCuRBLigFqhzTa7kqvF4STuXINMkuRH0dRrVcW02q1BkgvXZmCOcZrNA8X2cBilGjy95ICHKreW+rCpZ7OhWnV2Th4n/EQA00Nq5sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7VT3e3XRC0nVLa/MuiXnEryOeMhi3eZwrr8XwFYKGn8=;
+ b=YEStM9YwiZjpCcijHOnFc7u/eLWQReDqs89go5QMPO8PDEL46yALkvHY5THft0CRmLvlZ66rnP0U0lXlaXmkJYw8qaRDm5HezOhVwwYkuzeha4Eqyb2H66t3f9L3uMehwFvZU9TbEeT9wKbjaszbP/IQZhlQgX8/Gx1r4UYuMCPI1z9wkoJCjnMCWf1hDY3AqDf+QvsxAeIxeKeVAEotU2gC8EGjbcTFeES4uzNrxNmh/hPfOvwXeQaCVhA9/sncPPLosHZuyoxRW34fUQrqoCcgFy0NQdfB95qUczUZH3s6PQIi8c6Qt7+wNsKLELCT+p6sBUHpFRyZQWSoWJVFkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7VT3e3XRC0nVLa/MuiXnEryOeMhi3eZwrr8XwFYKGn8=;
+ b=aqsQeAtAhSBB2P6S5hb0TDN1xuojSU3oEPXNaQgWCU3m6/wpqu69cPNn5VFpFgAzKW5mUeeP6YOxEpuvECp4LYC1gK6cdOEJG5eygJ9klmzUyJkzQv0Ybhes/y22sQm1v9T+zbFwEDgFj4ofnm7HE1RtQxAj6EoXlfsvoptQwBQ=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (20.178.142.214) by
+ TY2PR01MB3819.jpnprd01.prod.outlook.com (20.178.142.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2979.27; Mon, 11 May 2020 11:08:56 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::2da1:bdb7:9089:7f43]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::2da1:bdb7:9089:7f43%3]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 11:08:55 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Al Cooper <alcooperx@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: RE: [PATCH v8 1/5] usb: xhci: Change the XHCI link order in the
+ Makefile
+Thread-Topic: [PATCH v8 1/5] usb: xhci: Change the XHCI link order in the
+ Makefile
+Thread-Index: AQHWJX5wxwwSBar7Y0yDjv9LdsbElaiiu9NQ
+Date:   Mon, 11 May 2020 11:08:55 +0000
+Message-ID: <TY2PR01MB3692CE6A245BE2C06AC4694CD8A10@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <20200508211929.39020-1-alcooperx@gmail.com>
+ <20200508211929.39020-2-alcooperx@gmail.com>
+In-Reply-To: <20200508211929.39020-2-alcooperx@gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7ed6cc13-a65f-4b82-ef0f-08d7f59bb274
+x-ms-traffictypediagnostic: TY2PR01MB3819:
+x-microsoft-antispam-prvs: <TY2PR01MB38193047C425611B32A11AC0D8A10@TY2PR01MB3819.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 04004D94E2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bB4Ghsq0jEBv6Mqms5PP5QMs1B9yMUu/lm/FU89EOb+mq4Je64J8HEEd1fXELLSofbdlX5eE0zaADjUYny8k4dz80xdOBzFYtELlXn0fSfHEWn8yBfKf17r/Dz1FrPgyr6XjTPV4OPBVh2t5gJj3Yhojf0Vdi0ls+vjqYtYXBYqKbVFsga/UBTJampDGON85xCMuMfwlduEAwh5IV7l7WIUsFEdAVh72m5STyXzBAwj52F+DwWeweLDf0gtSa9fyBwIG9kQj2adg/myyXhEDI9z34Ur0iedNdjS2RdUHJA7EcqOy+Xbsp89Yl1iGmi1CPwp2oraQqUtTaDRDUR4Z57hHg+2b019xJYecqaJUzA0JtN+yiUPqQeudVTrhze1UDlc/AeU+UEvO/V/vwyauaJPTwUENCAL34aDmtpPSG+hRgZKtjGBRu23qm6s+IquoPceT5nWBsviPaqG/0mwK7eV9SpGP7WLxPe+ltf236Im06Usn/bNVNsxT4MGqn7dHUwYRAxI2S7ggJ2Em7ABysA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(396003)(376002)(366004)(33430700001)(33440700001)(55016002)(86362001)(9686003)(7416002)(66446008)(66556008)(4326008)(66476007)(316002)(64756008)(76116006)(66946007)(33656002)(5660300002)(71200400001)(6506007)(54906003)(186003)(26005)(110136005)(7696005)(55236004)(2906002)(8936002)(4744005)(52536014)(8676002)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 0NkEVRwWvrzRMvrqhYsJbWrtmqT21GPPxoofCjZsfNKVUIqyJzL7Q6kai5Iskss7T/5y1Ie6/QrwGgnzIIXJfFUfaknj9niSnrOLJxnLkfwmYpGx1F52VdcenOq4r7fBoTwAQ6r1NeYfOt+rzjNcmEl+/BkkkCqW0u2fqqu7t/RLQmHB0J9flGP/YgqmQC4NNJoVn73T30LCeBpe8CwEemxzV0YEJI4KHwosYqaru+ayKKJyVhBHZDDihfdKEH8AvVTzYC9zOTDOuNUy+SZuisTBabZihuSk4OpVThrzJoF0VMg5GOCmHHIAxHo2T1+mZqC0tgZsGgbMOMSvm3WsBT8qoTHgA25AUG1jgifgZw8Krp4WzLcRjiAZK5YCEcbo+0ou4M7gtNeLtZDi29nF/1qT/pO7gJHRgQfguEPLIf/Rh8AnIDxblG2CwCiAfFjpNC19yQnW3B3gYlwuB9rDpSlkFNXoHHhcb+DlxwMlDAYP9cyN95ZjlwO1dJ0ILVQC
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ed6cc13-a65f-4b82-ef0f-08d7f59bb274
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 11:08:55.7079
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: POB2uXoQrTfLfcy0V8wdG/jZZ48wjb27hS6lyroJFYyj/zRQPQFSkCDYOAuHJuTe05C9dIi3oo1/kE+vND2ADme2v1vCpqhS2J3FOZipSaYnOQbT5+1ARAzeSpXufY1Q
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB3819
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the ADV7511/11w/13/33/35 DT bindings to json-schema. The
-original binding has been split into two files: adi,adv7511.yaml for
-ADV7511/11W/13 and adi,adv7533.yaml for ADV7533/35.
+Hi Al,
 
-Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
----
- .../bindings/display/bridge/adi,adv7511.txt   | 143 -----------
- .../bindings/display/bridge/adi,adv7511.yaml  | 230 ++++++++++++++++++
- .../bindings/display/bridge/adi,adv7533.yaml  | 166 +++++++++++++
- 3 files changed, 396 insertions(+), 143 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
- create mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7511.yaml
- create mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7533.yaml
+> From: Al Cooper, Sent: Saturday, May 9, 2020 6:19 AM
+>=20
+> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
+> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
+> devices and OHCI handles <2.0 devices. Currently the Makefile
+> has XHCI linking at the bottom which will result in the XHIC driver
+> initalizing after the EHCI and OHCI drivers and any installed 3.0
+> device will be seen as a 2.0 device. Moving the XHCI linking
+> above the EHCI and OHCI linking fixes the issue.
+>=20
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-deleted file mode 100644
-index 659523f538bf..000000000000
---- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-+++ /dev/null
-@@ -1,143 +0,0 @@
--Analog Devices ADV7511(W)/13/33/35 HDMI Encoders
--------------------------------------------------
--
--The ADV7511, ADV7511W, ADV7513, ADV7533 and ADV7535 are HDMI audio and video
--transmitters compatible with HDMI 1.4 and DVI 1.0. They support color space
--conversion, S/PDIF, CEC and HDCP. ADV7533/5 supports the DSI interface for input
--pixels, while the others support RGB interface.
--
--Required properties:
--
--- compatible: Should be one of:
--		"adi,adv7511"
--		"adi,adv7511w"
--		"adi,adv7513"
--		"adi,adv7533"
--		"adi,adv7535"
--
--- reg: I2C slave addresses
--  The ADV7511 internal registers are split into four pages exposed through
--  different I2C addresses, creating four register maps. Each map has it own
--  I2C address and acts as a standard slave device on the I2C bus. The main
--  address is mandatory, others are optional and revert to defaults if not
--  specified.
--
--
--The ADV7511 supports a large number of input data formats that differ by their
--color depth, color format, clock mode, bit justification and random
--arrangement of components on the data bus. The combination of the following
--properties describe the input and map directly to the video input tables of the
--ADV7511 datasheet that document all the supported combinations.
--
--- adi,input-depth: Number of bits per color component at the input (8, 10 or
--  12).
--- adi,input-colorspace: The input color space, one of "rgb", "yuv422" or
--  "yuv444".
--- adi,input-clock: The input clock type, one of "1x" (one clock cycle per
--  pixel), "2x" (two clock cycles per pixel), "ddr" (one clock cycle per pixel,
--  data driven on both edges).
--
--The following input format properties are required except in "rgb 1x" and
--"yuv444 1x" modes, in which case they must not be specified.
--
--- adi,input-style: The input components arrangement variant (1, 2 or 3), as
--  listed in the input format tables in the datasheet.
--- adi,input-justification: The input bit justification ("left", "evenly",
--  "right").
--
--- avdd-supply: A 1.8V supply that powers up the AVDD pin on the chip.
--- dvdd-supply: A 1.8V supply that powers up the DVDD pin on the chip.
--- pvdd-supply: A 1.8V supply that powers up the PVDD pin on the chip.
--- dvdd-3v-supply: A 3.3V supply that powers up the pin called DVDD_3V
--  on the chip.
--- bgvdd-supply: A 1.8V supply that powers up the BGVDD pin. This is
--  needed only for ADV7511.
--
--The following properties are required for ADV7533 and ADV7535:
--
--- adi,dsi-lanes: Number of DSI data lanes connected to the DSI host. It should
--  be one of 1, 2, 3 or 4.
--- a2vdd-supply: 1.8V supply that powers up the A2VDD pin on the chip.
--- v3p3-supply: A 3.3V supply that powers up the V3P3 pin on the chip.
--- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can be
--  either 1.2V or 1.8V for ADV7533 but only 1.8V for ADV7535.
--
--Optional properties:
--
--- interrupts: Specifier for the ADV7511 interrupt
--- pd-gpios: Specifier for the GPIO connected to the power down signal
--
--- adi,clock-delay: Video data clock delay relative to the pixel clock, in ps
--  (-1200 ps .. 1600 ps). Defaults to no delay.
--- adi,embedded-sync: The input uses synchronization signals embedded in the
--  data stream (similar to BT.656). Defaults to separate H/V synchronization
--  signals.
--- adi,disable-timing-generator: Only for ADV7533 and ADV7535. Disables the
--  internal timing generator. The chip will rely on the sync signals in the
--  DSI data lanes, rather than generate its own timings for HDMI output.
--- clocks: from common clock binding: reference to the CEC clock.
--- clock-names: from common clock binding: must be "cec".
--- reg-names : Names of maps with programmable addresses.
--	It can contain any map needing a non-default address.
--	Possible maps names are : "main", "edid", "cec", "packet"
--
--Required nodes:
--
--The ADV7511 has two video ports. Their connections are modelled using the OF
--graph bindings specified in Documentation/devicetree/bindings/graph.txt.
--
--- Video port 0 for the RGB, YUV or DSI input. In the case of ADV7533/5, the
--  remote endpoint phandle should be a reference to a valid mipi_dsi_host device
--  node.
--- Video port 1 for the HDMI output
--- Audio port 2 for the HDMI audio input
--
--
--Example
---------
--
--	adv7511w: hdmi@39 {
--		compatible = "adi,adv7511w";
--		/*
--		 * The EDID page will be accessible on address 0x66 on the I2C
--		 * bus. All other maps continue to use their default addresses.
--		 */
--		reg = <0x39>, <0x66>;
--		reg-names = "main", "edid";
--		interrupt-parent = <&gpio3>;
--		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
--		clocks = <&cec_clock>;
--		clock-names = "cec";
--
--		adi,input-depth = <8>;
--		adi,input-colorspace = "rgb";
--		adi,input-clock = "1x";
--		adi,input-style = <1>;
--		adi,input-justification = "evenly";
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			port@0 {
--				reg = <0>;
--				adv7511w_in: endpoint {
--					remote-endpoint = <&dpi_out>;
--				};
--			};
--
--			port@1 {
--				reg = <1>;
--				adv7511_out: endpoint {
--					remote-endpoint = <&hdmi_connector_in>;
--				};
--			};
--
--			port@2 {
--				reg = <2>;
--				codec_endpoint: endpoint {
--					remote-endpoint = <&i2s0_cpu_endpoint>;
--				};
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.yaml b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.yaml
-new file mode 100644
-index 000000000000..a306adba105f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.yaml
-@@ -0,0 +1,233 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/adi,adv7511.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADV7511/11W/13 HDMI Encoders
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+
-+description: |
-+  The ADV7511, ADV7511W and ADV7513 are HDMI audio and video
-+  transmitters compatible with HDMI 1.4 and DVI 1.0. They support color
-+  space conversion, S/PDIF, CEC and HDCP. They support RGB input
-+  interface.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adv7511
-+      - adi,adv7511w
-+      - adi,adv7513
-+
-+  reg:
-+    description: |
-+      I2C slave addresses.
-+
-+      The ADV7511/11W/13 internal registers are split into four pages
-+      exposed through different I2C addresses, creating four register
-+      maps. Each map has it own I2C address and acts as a standard slave
-+      device on the I2C bus. The main address is mandatory, others are
-+      optional and revert to defaults if not specified.
-+    minItems: 1
-+    maxItems: 4
-+
-+  reg-names:
-+    description:
-+      Names of maps with programmable addresses. It can contain any map
-+      needing a non-default address.
-+    minItems: 1
-+    items:
-+      - const: main
-+      - const: edid
-+      - const: cec
-+      - const: packet
-+
-+  clocks:
-+    description: Reference to the CEC clock.
-+    maxItems: 1
-+
-+  clock-names:
-+    const: cec
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  pd-gpios:
-+    description: GPIO connected to the power down signal.
-+    maxItems: 1
-+
-+  avdd-supply:
-+    description: A 1.8V supply that powers up the AVDD pin.
-+
-+  dvdd-supply:
-+    description: A 1.8V supply that powers up the DVDD pin.
-+
-+  pvdd-supply:
-+    description: A 1.8V supply that powers up the PVDD pin.
-+
-+  dvdd-3v-supply:
-+    description: A 3.3V supply that powers up the DVDD_3V pin.
-+
-+  bgvdd-supply:
-+    description: A 1.8V supply that powers up the BGVDD pin.
-+
-+  adi,input-depth:
-+    description: Number of bits per color component at the input.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 8, 10, 12 ]
-+
-+  adi,input-colorspace:
-+    description: Input color space.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/string
-+      - enum: [ rgb, yuv422, yuv444 ]
-+
-+  adi,input-clock:
-+    description: |
-+      Input clock type.
-+        "1x": one clock cycle per pixel
-+        "2x": two clock cycles per pixel
-+        "dd": one clock cycle per pixel, data driven on both edges
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/string
-+      - enum: [ 1x, 2x, dd ]
-+
-+  adi,clock-delay:
-+    description:
-+      Video data clock delay relative to the pixel clock, in ps
-+      (-1200ps .. 1600 ps).
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - default: 0
-+
-+  adi,embedded-sync:
-+    description:
-+      The input uses synchronization signals embedded in the data
-+      stream (similar to BT.656). Defaults to 0 (separate H/V
-+      synchronization signals).
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 0, 1 ]
-+      - default: 0
-+
-+  adi,input-style:
-+    description:
-+      Input components arrangement variant as listed in the input
-+      format tables in the datasheet.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 1, 2, 3 ]
-+
-+  adi,input-justification:
-+    description: Input bit justification.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/string
-+      - enum: [ left, evenly, right ]
-+
-+  ports:
-+    description:
-+      The ADV7511(W)/13 has two video ports and one audio port. This node
-+      models their connections as documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+      Documentation/devicetree/bindings/graph.txt
-+    type: object
-+    properties:
-+      port@0:
-+        description: Video port for the RGB, YUV or DSI input.
-+        type: object
-+
-+      port@1:
-+        description: Video port for the HDMI output.
-+        type: object
-+
-+      port@2:
-+        description: Audio port for the HDMI output.
-+        type: object
-+
-+# adi,input-colorspace and adi,input-clock are required except in
-+# "rgb 1x" and "yuv444 1x" modes, in which case they must not be
-+# specified.
-+if:
-+  not:
-+    properties:
-+      adi,input-colorspace:
-+        contains:
-+          enum: [ rgb, yuv444 ]
-+      adi,input-clock:
-+        contains:
-+          const: 1x
-+
-+then:
-+  required:
-+    - adi,input-style
-+    - adi,input-justification
-+
-+else:
-+  properties:
-+    adi,input-style: false
-+    adi,input-justification: false
-+
-+
-+required:
-+  - compatible
-+  - reg
-+  - ports
-+  - adi,input-depth
-+  - adi,input-colorspace
-+  - adi,input-clock
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    adv7511w: hdmi@39 {
-+        compatible = "adi,adv7511w";
-+        /*
-+         * The EDID page will be accessible on address 0x66 on the I2C
-+         * bus. All other maps continue to use their default addresses.
-+         */
-+        reg = <0x39>, <0x66>;
-+        reg-names = "main", "edid";
-+        interrupt-parent = <&gpio3>;
-+        interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
-+        clocks = <&cec_clock>;
-+        clock-names = "cec";
-+
-+        adi,input-depth = <8>;
-+        adi,input-colorspace = "yuv422";
-+        adi,input-clock = "1x";
-+
-+        adi,input-style = <3>;
-+        adi,input-justification = "right";
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            port@0 {
-+                reg = <0>;
-+                adv7511w_in: endpoint {
-+                    remote-endpoint = <&dpi_out>;
-+                };
-+            };
-+
-+            port@1 {
-+                reg = <1>;
-+                adv7511_out: endpoint {
-+                    remote-endpoint = <&hdmi_connector_in>;
-+                };
-+            };
-+
-+            port@2 {
-+                reg = <2>;
-+                codec_endpoint: endpoint {
-+                    remote-endpoint = <&i2s0_cpu_endpoint>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7533.yaml b/Documentation/devicetree/bindings/display/bridge/adi,adv7533.yaml
-new file mode 100644
-index 000000000000..dfcc63dfc5c5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7533.yaml
-@@ -0,0 +1,166 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/adi,adv7533.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADV7533/35 HDMI Encoders
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+
-+description: |
-+  The ADV7533 and ADV7535 are HDMI audio and video transmitters
-+  compatible with HDMI 1.4 and DVI 1.0. They support color space
-+  conversion, S/PDIF, CEC and HDCP. They support DSI for input pixels.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adv7533
-+      - adi,adv7535
-+
-+  reg:
-+    description: |
-+      I2C slave addresses.
-+
-+      The ADV7533/35 internal registers are split into four pages
-+      exposed through different I2C addresses, creating four register
-+      maps. Each map has it own I2C address and acts as a standard slave
-+      device on the I2C bus. The main address is mandatory, others are
-+      optional and revert to defaults if not specified.
-+    minItems: 1
-+    maxItems: 4
-+
-+  reg-names:
-+    description:
-+      Names of maps with programmable addresses. It can contain any map
-+      needing a non-default address.
-+    minItems: 1
-+    items:
-+      - const: main
-+      - const: edid
-+      - const: cec
-+      - const: packet
-+
-+  clocks:
-+    description: Reference to the CEC clock.
-+    maxItems: 1
-+
-+  clock-names:
-+    const: cec
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  pd-gpios:
-+    description: GPIO connected to the power down signal.
-+    maxItems: 1
-+
-+  avdd-supply:
-+    description: A 1.8V supply that powers up the AVDD pin.
-+
-+  dvdd-supply:
-+    description: A 1.8V supply that powers up the DVDD pin.
-+
-+  pvdd-supply:
-+    description: A 1.8V supply that powers up the PVDD pin.
-+
-+  a2vdd-supply:
-+    description: A 1.8V supply that powers up the A2VDD pin.
-+
-+  v3p3-supply:
-+    description: A 3.3V supply that powers up the V3P3 pin.
-+
-+  v1p2-supply:
-+    description:
-+      A supply that powers up the V1P2 pin. It can be either 1.2V
-+      or 1.8V for ADV7533 but only 1.8V for ADV7535.
-+
-+  adi,disable-timing-generator:
-+    description:
-+      Disables the interal timing generator. The chip will rely on the
-+      sync signals in the DSI data lanes, rather than generate its own
-+      timings for HDMI output.
-+    type: boolean
-+
-+  adi,dsi-lanes:
-+    description: Number of DSI data lanes connected to the DSI host.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 1, 2, 3, 4 ]
-+
-+  ports:
-+    description:
-+      The ADV7533/35 has two video ports and one audio port. This node
-+      models their connections as documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+      Documentation/devicetree/bindings/graph.txt
-+    type: object
-+    properties:
-+      port@0:
-+        description:
-+          Video port for the RGB, YUV or DSI input. The remote endpoint
-+          phandle should be a reference to a valid mipi_dsi_host_device.
-+        type: object
-+
-+      port@1:
-+        description: Video port for the HDMI output.
-+        type: object
-+
-+      port@2:
-+        description: Audio port for the HDMI output.
-+        type: object
-+
-+required:
-+  - compatible
-+  - reg
-+  - ports
-+  - adi,dsi-lanes
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    adv7533: hdmi@39 {
-+        compatible = "adi,adv7533";
-+        /*
-+         * The EDID page will be accessible on address 0x66 on the I2C
-+         * bus. All other maps continue to use their default addresses.
-+         */
-+        reg = <0x39>, <0x66>;
-+        reg-names = "main", "edid";
-+        interrupt-parent = <&gpio3>;
-+        interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
-+        clocks = <&cec_clock>;
-+        clock-names = "cec";
-+        adi,dsi-lanes = <4>;
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            port@0 {
-+                reg = <0>;
-+                adv7511w_in: endpoint {
-+                    remote-endpoint = <&dpi_out>;
-+                };
-+            };
-+
-+            port@1 {
-+                reg = <1>;
-+                adv7511_out: endpoint {
-+                    remote-endpoint = <&hdmi_connector_in>;
-+                };
-+            };
-+
-+            port@2 {
-+                reg = <2>;
-+                codec_endpoint: endpoint {
-+                    remote-endpoint = <&i2s0_cpu_endpoint>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.18.0
+I tested on my environment (r8a77951 and r8a77961) and then
+I didn't detect any regression. So,
+
+Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
 
