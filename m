@@ -7,24 +7,23 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D61C54E4B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF5AC54E8F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C73DB206DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D962206DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731721AbgEKU3X (ORCPT
+        id S1728283AbgEKU33 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 16:29:23 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:35205 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgEKU3X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:29:23 -0400
-X-Originating-IP: 91.224.148.103
+        Mon, 11 May 2020 16:29:29 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:59927 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgEKU32 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:29:28 -0400
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 64582C0005;
-        Mon, 11 May 2020 20:29:18 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 0E9B7200009;
+        Mon, 11 May 2020 20:29:25 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Christophe Kerello <christophe.kerello@st.com>,
         miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
@@ -33,27 +32,27 @@ To:     Christophe Kerello <christophe.kerello@st.com>,
 Cc:     marex@denx.de, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v4 02/10] mtd: rawnand: stm32_fmc2: remove useless inline comments
-Date:   Mon, 11 May 2020 22:29:16 +0200
-Message-Id: <20200511202916.15174-1-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v4 01/10] mtd: rawnand: stm32_fmc2: manage all errors cases at probe time
+Date:   Mon, 11 May 2020 22:29:25 +0200
+Message-Id: <20200511202925.15250-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1588756279-17289-3-git-send-email-christophe.kerello@st.com>
+In-Reply-To: <1588756279-17289-2-git-send-email-christophe.kerello@st.com>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 2d3d54bf1294f6290e55841e52bfbe6b9e65704b
+X-linux-mtd-patch-commit: 71d1f1d5958fe15c1f12f0ecc5aa18ebe2073e31
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2020-05-06 at 09:11:11 UTC, Christophe Kerello wrote:
-> Remove inline comments that are useless since function label are
-> self explanatory.
+On Wed, 2020-05-06 at 09:11:10 UTC, Christophe Kerello wrote:
+> This patch defers its probe when the expected reset control is not
+> yet ready. This patch also handles properly all errors cases at probe
+> time.
 > 
 > Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
