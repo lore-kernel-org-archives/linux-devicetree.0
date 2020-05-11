@@ -2,65 +2,82 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE08C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69007C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B1620661
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E50F20661
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731690AbgEKUjG convert rfc822-to-8bit (ORCPT
+        id S1730020AbgEKUlU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 16:39:06 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:42189 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729801AbgEKUjG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:39:06 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id B7F22240006;
-        Mon, 11 May 2020 20:39:01 +0000 (UTC)
-Date:   Mon, 11 May 2020 22:39:00 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
-        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-Subject: Re: [PATCH v4 04/10] mtd: rawnand: stm32_fmc2: cleanup
-Message-ID: <20200511223900.030fe5f4@xps13>
-In-Reply-To: <1588756279-17289-5-git-send-email-christophe.kerello@st.com>
-References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
-        <1588756279-17289-5-git-send-email-christophe.kerello@st.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Mon, 11 May 2020 16:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgEKUlT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:41:19 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A865BC061A0C;
+        Mon, 11 May 2020 13:41:19 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0599311F5F667;
+        Mon, 11 May 2020 13:41:17 -0700 (PDT)
+Date:   Mon, 11 May 2020 13:41:17 -0700 (PDT)
+Message-Id: <20200511.134117.1336222619714836904.davem@davemloft.net>
+To:     brgl@bgdev.pl
+Cc:     robh+dt@kernel.org, matthias.bgg@gmail.com, john@phrozen.org,
+        sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com, kuba@kernel.org,
+        arnd@arndb.de, fparent@baylibre.com, hkallweit1@gmail.com,
+        edwin.peer@broadcom.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        stephane.leprovost@mediatek.com, pedro.tsai@mediatek.com,
+        andrew.perepech@mediatek.com, bgolaszewski@baylibre.com
+Subject: Re: [PATCH v2 05/14] net: core: provide priv_to_netdev()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200511150759.18766-6-brgl@bgdev.pl>
+References: <20200511150759.18766-1-brgl@bgdev.pl>
+        <20200511150759.18766-6-brgl@bgdev.pl>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 11 May 2020 13:41:18 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 11 May 2020 17:07:50 +0200
 
-Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
-11:11:13 +0200:
-
-> This patch renames functions and local variables.
-> This cleanup is done to get all functions starting by stm32_fmc2_nfc
-> in the FMC2 raw NAND driver when all functions will start by
-> stm32_fmc2_ebi in the FMC2 EBI driver.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Appropriate amount of extra memory for private data is allocated at
+> the end of struct net_device. We have a helper - netdev_priv() - that
+> returns its address but we don't have the reverse: a function which
+> given the address of the private data, returns the address of struct
+> net_device.
+> 
+> This has caused many drivers to store the pointer to net_device in
+> the private data structure, which basically means storing the pointer
+> to a structure in this very structure.
+> 
+> This patch proposes to add priv_to_netdev() - a helper which converts
+> the address of the private data to the address of the associated
+> net_device.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Applied to nand/next as well but for an unknown reason I had to do it
-by hand because the patch would not apply.
+Sorry, please don't do this.  We had this almost two decades ago and
+explicitly removed it intentionally.
 
-Thanks,
-Miquèl
+Store the back pointer in your software state just like everyone else
+does.
