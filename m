@@ -2,141 +2,225 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B329C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7593BC54E4B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16CF0206E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA2820736
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:24:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QRIMqbF5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AG7MZsX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbgEKTPi (ORCPT
+        id S1731266AbgEKTY1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 15:15:38 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35722 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728613AbgEKTPi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 15:15:38 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04BJFZNf083357;
-        Mon, 11 May 2020 14:15:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589224535;
-        bh=i3l1grILIbxc03pyhfwIusQdRfYWPfn5hdnAbv7xGzw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QRIMqbF5Jue8dYveT0mJj8JkwiOMW3yewVqcZtzlL7XYiQcg2jxMw0fHBVbwXHXHn
-         spp0E7TO0OMq0zksJd5IIKLjfrq7KgeVKY9f4f7VWLxSiDdGfbjojZI89IjY95YZbr
-         L7fuius7nMy3/X0cBiAiOs5p7OZ1nikRCrRqBekc=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04BJFZHA077175
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 May 2020 14:15:35 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
- May 2020 14:15:34 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 11 May 2020 14:15:34 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04BJFVuO003772;
-        Mon, 11 May 2020 14:15:34 -0500
-Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-References: <20200507183013.27261-1-dmurphy@ti.com>
- <20200510161721.257vprq6rqp64wu5@earth.universe>
- <fb9b240e-9bfe-1295-6fc4-700d886ea7c9@ti.com>
- <20200511143241.nmkti7meahvj2swt@earth.universe>
- <8674289c-038d-d811-4786-322d66072527@ti.com>
- <20200511145700.lnytcr747snnolya@earth.universe>
- <57e2495d-ec06-53ff-c2b5-10062da2848f@ti.com>
- <20200511153055.7u7afdcpcfbsmswq@earth.universe>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <767f3083-45ae-9198-0a25-6beddc7e0c03@ti.com>
-Date:   Mon, 11 May 2020 14:06:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 11 May 2020 15:24:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729453AbgEKTY1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 15:24:27 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A23C061A0C;
+        Mon, 11 May 2020 12:24:27 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u16so20645037wmc.5;
+        Mon, 11 May 2020 12:24:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uxtARxCkPHWXnqT8lNpH00A1Ut0N5U8vfZ7iT6ckY1E=;
+        b=AG7MZsX4ZOvpaULyOTIRKeZi/M6nLPWkPou4BnwRwJjZZDbwmwc2GN+LFtRg6wIESO
+         vDwFcsA0F9F8GADGT963+l1vut2xgX7EXRxhHkCv6hTX5WfGbNkIvpOrqt1P8oTzAJz/
+         m5qsiNAMDXCrGhAu62TssTPTyLX86ziIjlYQYM28Z3sLDG7euOQE0FHm9wmb/jvmSBPV
+         KXJj34jfWOCW4evwPoBU2tc+6EDIbrbGKo00RF3+ioMJPD8pnCrwjacGigLPWEAZQdRO
+         mH1+73oEcvkmFLleEXiquqHS2lIN9MqN2mLm+NJaK2yDyzE4nh5a5CG9TexWJG6o0TWy
+         oyoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uxtARxCkPHWXnqT8lNpH00A1Ut0N5U8vfZ7iT6ckY1E=;
+        b=Xg9hdysoE3KkZu0il9CNMK/6vq58uuFuFfbnAaXAWc6JBt288Qsv91C+xXts9OP/7q
+         PMH6XmpApW2M8+Km+gEVJ+8sHozwRLRiiy9OJpNnjYMrptuRTC0ei9BNdB45R5XY5qhJ
+         12lu9Xhcrfcb99LZI+WGAnVq0nwHH9f7Hccp/Dy1x+D3gSpa5mfjpCI2gFiF1MJ3qQRa
+         uGdJssDVfAeq6Sf30FnacLVI7xUdZIBHCpQmbXQsMgrNcQ/f3HJNYji/DOjff6YefXhA
+         rI1I+6layG3SicCvEAY1B/g1wuoRwaAPOrkHOevyYdskMt66SIyThVEc4ymKiL//njDT
+         cVqQ==
+X-Gm-Message-State: AGi0PuasNtS1aIYhDjCKo0p/fkATtl09lFy/vMjDvBUDI5fmhD5LRMJk
+        8uaTTutH7tmxJRfRV20QC5Q=
+X-Google-Smtp-Source: APiQypJW5vvk30z5iWdY0hSQCc1Ykgc7TXvbdxesRiVaoSvVocTszQuT5j6sF6kDtbT7WU3aCncc9w==
+X-Received: by 2002:a1c:6402:: with SMTP id y2mr33787682wmb.116.1589225065733;
+        Mon, 11 May 2020 12:24:25 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id p4sm8187632wrq.31.2020.05.11.12.24.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 12:24:25 -0700 (PDT)
+Subject: Re: [PATCH v2 09/14] net: ethernet: mtk-eth-mac: new driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200511150759.18766-1-brgl@bgdev.pl>
+ <20200511150759.18766-10-brgl@bgdev.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <dab80587-a196-e0ab-ae97-f8e5cc4a71d4@gmail.com>
+Date:   Mon, 11 May 2020 12:24:20 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200511153055.7u7afdcpcfbsmswq@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200511150759.18766-10-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sebastian
-
-On 5/11/20 10:30 AM, Sebastian Reichel wrote:
-> Hi,
->
-> On Mon, May 11, 2020 at 09:55:11AM -0500, Dan Murphy wrote:
->> On 5/11/20 9:57 AM, Sebastian Reichel wrote:
->>> On Mon, May 11, 2020 at 09:29:59AM -0500, Dan Murphy wrote:
->>>> On 5/11/20 9:32 AM, Sebastian Reichel wrote:
->>>>> On Mon, May 11, 2020 at 07:25:06AM -0500, Dan Murphy wrote:
->>>>>> On 5/10/20 11:17 AM, Sebastian Reichel wrote:
->>>>>>> This needs is missing the power-supplies property. The N900 DT
->>>>>>> contains a bq27200 referencing the charger, so it should fail the DT
->>>>>>> check without the property being listed here.
->>>>>> Hmm.  I ran the dt checker specifically on the binding and it did not fail.
->>>>>> Unless I need to build some other DTs as well.
->>>>>> Either I will have the power-supplies property
->>>>> I just tried it myself. The problem is the way you are specifying
->>>>> the compatible strings. This is the parsing result:
->>>>>
->>>>> enum: ['ti,bq27200 - BQ27200', 'ti,bq27210 - BQ27210', 'ti,bq27500 - deprecated,
->>>>>          use revision specific property below', ...
->>>>>
->>>>> You can see this in Documentation/devicetree/bindings/processed-schema.yaml, which
->>>>> is generated by running the check. The compatible comments need a # as separation
->>>>> character like this to generate proper bindings:
->>>>>
->>>>> properties:
->>>>>      compatible:
->>>>>        enum:
->>>>>          - ti,bq27200 # BQ27200
->>>>>          - ti,bq27210 # BQ27210
->>>>>          - ti,bq27500 # deprecated, use revision specific property below
->>>> Well honestly not sure why we need the comment either. These are pretty
->>>> self explanatory maybe we should just remove the additional comments
->>> Fine with me.
->> Ack
->>>> Any consideration on just removing the deprecated values?
->>> Let's keep them with their comment for now. Removing them should
->>> start with marking them as depracated in the binding and generating
->>> a runtime warning in the driver, so that people become aware of the
->>> problem. At least for ti,bq27500 we have mainline users At least for
->>> ti,bq27500 we have mainline users.
->> There are only 2 dts files that have this reference unless we are not sure
->> which device is actually in use.
-> DT is considered ABI and one is supposed to be able to boot a new
-> kernel with an old DT. It's not enough to just update the in-tree
-> dts files. I suppose we can consider removing support for the old
-> compatible values after having the warning being printed for some
-> time and the mainline users being converted to the new binding.
-
-Yes I know. I may have said that before.
-
-After looking at the driver and how this is all stitched together I 
-think I am just going to stick to the DT conversion as is.
-
-I will make the basic changes for conversion but any changes to the 
-compatibles should be done later.
-
-Dan
 
 
-> -- Sebastian
+On 5/11/2020 8:07 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> This adds the driver for the MediaTek Ethernet MAC used on the MT8* SoC
+> family. For now we only support full-duplex.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+
+[snip]
+
+> +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
+> +				 struct mtk_mac_ring_desc_data *desc_data)
+> +{
+> +	struct mtk_mac_ring_desc *desc = &ring->descs[ring->tail];
+> +	unsigned int status;
+> +
+> +	/* Let the device release the descriptor. */
+> +	dma_rmb();
+> +	status = desc->status;
+> +
+> +	if (!(status & MTK_MAC_DESC_BIT_COWN))
+> +		return -1;
+> +
+> +	desc_data->len = status & MTK_MAC_DESC_MSK_LEN;
+> +	desc_data->flags = status & ~MTK_MAC_DESC_MSK_LEN;
+> +	desc_data->dma_addr = desc->data_ptr;
+> +	desc_data->skb = ring->skbs[ring->tail];
+> +
+> +	desc->data_ptr = 0;
+> +	desc->status = MTK_MAC_DESC_BIT_COWN;
+> +	if (status & MTK_MAC_DESC_BIT_EOR)
+> +		desc->status |= MTK_MAC_DESC_BIT_EOR;
+
+Don't you need a dma_wmb() for the device to observe the new descriptor
+here?
+
+[snip]
+
+> +static void mtk_mac_dma_unmap_tx(struct mtk_mac_priv *priv,
+> +				 struct mtk_mac_ring_desc_data *desc_data)
+> +{
+> +	struct device *dev = mtk_mac_get_dev(priv);
+> +
+> +	return dma_unmap_single(dev, desc_data->dma_addr,
+> +				desc_data->len, DMA_TO_DEVICE);
+
+If you stored a pointer to the sk_buff you transmitted, then you would
+need an expensive read to the descriptor to determine the address and
+length, and you would also not be at the mercy of the HW putting
+incorrect values there.
+
+sp
+> +static void mtk_mac_dma_init(struct mtk_mac_priv *priv)
+> +{
+> +	struct mtk_mac_ring_desc *desc;
+> +	unsigned int val;
+> +	int i;
+> +
+> +	priv->descs_base = (struct mtk_mac_ring_desc *)priv->ring_base;
+> +
+> +	for (i = 0; i < MTK_MAC_NUM_DESCS_TOTAL; i++) {
+> +		desc = &priv->descs_base[i];
+> +
+> +		memset(desc, 0, sizeof(*desc));
+> +		desc->status = MTK_MAC_DESC_BIT_COWN;
+> +		if ((i == MTK_MAC_NUM_TX_DESCS - 1) ||
+> +		    (i == MTK_MAC_NUM_DESCS_TOTAL - 1))
+> +			desc->status |= MTK_MAC_DESC_BIT_EOR;
+> +	}
+> +
+> +	mtk_mac_ring_init(&priv->tx_ring, priv->descs_base, 0);
+> +	mtk_mac_ring_init(&priv->rx_ring,
+> +			  priv->descs_base + MTK_MAC_NUM_TX_DESCS,
+> +			  MTK_MAC_NUM_RX_DESCS);
+> +
+> +	/* Set DMA pointers. */
+> +	val = (unsigned int)priv->dma_addr;
+
+You would probably add a WARN_ON() or something that catches the upper
+32-bits of the dma_addr being set, see my comment about the DMA mask
+setting.
+
+[snip]
+
+> +static void mtk_mac_tx_complete_all(struct mtk_mac_priv *priv)
+> +{
+> +	struct net_device *ndev = priv_to_netdev(priv);
+> +	struct mtk_mac_ring *ring = &priv->tx_ring;
+> +	int ret;
+> +
+> +	for (;;) {
+> +		mtk_mac_lock(priv);
+> +
+> +		if (!mtk_mac_ring_descs_available(ring)) {
+> +			mtk_mac_unlock(priv);
+> +			break;
+> +		}
+> +
+> +		ret = mtk_mac_tx_complete_one(priv);
+> +		if (ret) {
+> +			mtk_mac_unlock(priv);
+> +			break;
+> +		}
+> +
+> +		if (netif_queue_stopped(ndev))
+> +			netif_wake_queue(ndev);
+> +
+> +		mtk_mac_unlock(priv);
+> +	}
+
+Where do you increment the net_device statistics to indicate the bytes
+and packets transmitted?
+
+[snip]
+
+> +	mtk_mac_set_mode_rmii(priv);
+> +
+> +	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+
+Your code assumes that DMA addresses are not going to be >= 4GB so you
+should be checking this function's return code and abort here otherwise
+your driver will fail in surprisingly difficult ways to debug.
+-- 
+Florian
