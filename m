@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F06C54E8E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCCCC54E8D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B29EC20643
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD55820643
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="TS/jxxw2"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="lGEfjqd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbgEKPJP (ORCPT
+        id S1729766AbgEKPJW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 11:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45662 "EHLO
+        Mon, 11 May 2020 11:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730327AbgEKPIc (ORCPT
+        by vger.kernel.org with ESMTP id S1730298AbgEKPI3 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 11:08:32 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EAE1C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 08:08:31 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id n5so4804911wmd.0
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 08:08:31 -0700 (PDT)
+        Mon, 11 May 2020 11:08:29 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33352C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 08:08:28 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 50so10880891wrc.11
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 08:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=85LArQ1FkfasqQwvTGBUsmFOdZ74xT3FAzPREvSXT3E=;
-        b=TS/jxxw2AM8c/MW/14NfrNB+SUbDqKCeR6Tz9KN+jE/qC/yYIXQFmcqxM1np2Xwhd1
-         6HzzHOawVFx9Avhhy9m+y8TIrHmrRiIGgsdRGMba4aTqK1P3Std1fQ15kyhU37lGQ4Gd
-         /blU29VDw8JrGSg8cn8jWRHVrLGz1I02RRR881foQUGlY83hYx6HEVM8++7zYk9AB2gK
-         kCA8E+nT8RvG/vdg9BjOvynD4T+aWghR+0uibegwQAvlB7FNBaDmFNw22bU9G5Dh38Sa
-         blrzdx+xnrmAR8BnZBhhos2friW6xXn07zxAXVWX+4YWhBxExBXWL9JMoRRwyxerZJMn
-         S1+w==
+        bh=TLMq2XwRgUC25FFpg44rE1jATuYcYABivRm1tKC5XTM=;
+        b=lGEfjqd/Aqo91nNbYHQC/XXhvPNRro/VrpfSU0EKrgUiO5UJ0lZXxyaNjy0vwymwSb
+         uxwP22CTUu7BkW2bIoeK3qhHOwvoFsYhIhZngMUlHLW4GZlrj2EaI2Od7rJuyEum2hPJ
+         mOOddMd5+KhA4BsHVTsFc1TO02ZsDR/PDJsjrmcYeCSNntHIyaYLDAKJYR4kDyHYUkdo
+         fa8cnqPq4/GDF/sZDgDOT2ZTLehxieagSqPBErq+zM756mvMYXQKGiraMxfd2vT4/Pq4
+         A/Z1mAM/jRHFEXGLC9eB34BPWmePWBU9/Ou4b7W0qT+98gs2/rruU5IXXYcZJR3Y5Amy
+         Dh+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=85LArQ1FkfasqQwvTGBUsmFOdZ74xT3FAzPREvSXT3E=;
-        b=oE6yse/KmQ9y/QPo9fX1P8OmckKtUgn+lazhcvWuMTr2uDuP3JRliNY9PYO6UC+yap
-         +6cUQM+3Csvx93hiUZBkTfmvem1P8ZtiTaVQIsB7y6V/223y0xxOSXr9h458aLxcgm+G
-         KEPHRRqi499P3P6m76GxJ7A2pxYvSWTc3SEi/l9ne7FZSNVp9S/8lRfdArvcnTCVM62h
-         UqQo0gUVpm08xFn8VINDNSQ7efLJZ+XrbBKHIGF2fRdh1SHAhJoPaF/C1lPqaiovXWXM
-         N32Qzk+7PMclHjm9GtP73uRWaEiIAHv/a2xIsSxFHmNazbKmYxPsVGRu90xBZia82jPO
-         YOsA==
-X-Gm-Message-State: AGi0PuYqPCMbVG9joNGQQ9eZx2Bo+ASDHFUwDPqgpyC7It7UxXhW0EN8
-        C4Z/aADpP4egrdKl6VXtCwadTQ==
-X-Google-Smtp-Source: APiQypIUoY5y9pMCyWMprTL71A7BiL4tQc7BbrlTT1FoaZIkxIS6pMCmPRg9IsmwTOLUcwtTuQxL3g==
-X-Received: by 2002:a1c:abc3:: with SMTP id u186mr31368123wme.42.1589209710040;
-        Mon, 11 May 2020 08:08:30 -0700 (PDT)
+        bh=TLMq2XwRgUC25FFpg44rE1jATuYcYABivRm1tKC5XTM=;
+        b=GLxwizuksejC6/2hSNgJtcQkX7yo45s/eyTs9hznIB9z9ylDrwhMj45NlaMeEEX0LB
+         Sc3L1LMWTwtqyKqRtVjz1loYgxLMbGXSRu4dOZ3YifXp0snKaG/FMOD1JR02QnnYLU3I
+         mSrzm0BImRxwheft9daE+Uxm/pZoA7xfWyJI7joOUHubRLyMBzqvdLGbPdmbsNml4QGJ
+         R2lYs+TrFHjBUGhwALTJLXBKO+w55oJI0mNIVpocoq3itx2kA1uu076l5xGJdaORi9ce
+         T0W62uJmDhEj1eCyMajJk4qAWf2m5oqAkKyrKXi5pkdMZ7kQwfkAxJ3LS3m1/phe56r3
+         MKDw==
+X-Gm-Message-State: AGi0Pua9ucZVJxRStiwWYX3cEVYHa4si4sAbsTZtcfEAZp4ojFg76XRk
+        C8a02a6S43a6gSu95UtCg1djHw==
+X-Google-Smtp-Source: APiQypLrstV08k3pPp3S+tVHPnE3B6GnlgxYC6jtUQXLXJtg4uaQOjgd0DZV0NaM/PAy80Q8A9SMbg==
+X-Received: by 2002:a5d:4801:: with SMTP id l1mr18746418wrq.235.1589209706975;
+        Mon, 11 May 2020 08:08:26 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.28
+        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 08:08:29 -0700 (PDT)
+        Mon, 11 May 2020 08:08:26 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -78,9 +78,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 07/14] net: devres: define a separate devres structure for devm_alloc_etherdev()
-Date:   Mon, 11 May 2020 17:07:52 +0200
-Message-Id: <20200511150759.18766-8-brgl@bgdev.pl>
+Subject: [PATCH v2 05/14] net: core: provide priv_to_netdev()
+Date:   Mon, 11 May 2020 17:07:50 +0200
+Message-Id: <20200511150759.18766-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200511150759.18766-1-brgl@bgdev.pl>
 References: <20200511150759.18766-1-brgl@bgdev.pl>
@@ -93,64 +93,48 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Not using a proxy structure to store struct net_device doesn't save
-anything in terms of compiled code size or memory usage but significantly
-decreases the readability of the code with all the pointer casting.
+Appropriate amount of extra memory for private data is allocated at
+the end of struct net_device. We have a helper - netdev_priv() - that
+returns its address but we don't have the reverse: a function which
+given the address of the private data, returns the address of struct
+net_device.
 
-Define struct net_device_devres and use it in devm_alloc_etherdev_mqs().
+This has caused many drivers to store the pointer to net_device in
+the private data structure, which basically means storing the pointer
+to a structure in this very structure.
+
+This patch proposes to add priv_to_netdev() - a helper which converts
+the address of the private data to the address of the associated
+net_device.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- net/devres.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ include/linux/netdevice.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/net/devres.c b/net/devres.c
-index c1465d9f9019..b97b0c5a8216 100644
---- a/net/devres.c
-+++ b/net/devres.c
-@@ -7,30 +7,34 @@
- #include <linux/etherdevice.h>
- #include <linux/netdevice.h>
- 
--static void devm_free_netdev(struct device *dev, void *res)
-+struct net_device_devres {
-+	struct net_device *ndev;
-+};
-+
-+static void devm_free_netdev(struct device *dev, void *this)
- {
--	free_netdev(*(struct net_device **)res);
-+	struct net_device_devres *res = this;
-+
-+	free_netdev(res->ndev);
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 130a668049ab..933c6808a87f 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -2249,6 +2249,18 @@ static inline void *netdev_priv(const struct net_device *dev)
+ 	return (char *)dev + ALIGN(sizeof(struct net_device), NETDEV_ALIGN);
  }
  
- struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
- 					   unsigned int txqs, unsigned int rxqs)
- {
--	struct net_device **dr;
--	struct net_device *netdev;
-+	struct net_device_devres *dr;
- 
- 	dr = devres_alloc(devm_free_netdev, sizeof(*dr), GFP_KERNEL);
- 	if (!dr)
- 		return NULL;
- 
--	netdev = alloc_etherdev_mqs(sizeof_priv, txqs, rxqs);
--	if (!netdev) {
-+	dr->ndev = alloc_etherdev_mqs(sizeof_priv, txqs, rxqs);
-+	if (!dr->ndev) {
- 		devres_free(dr);
- 		return NULL;
- 	}
- 
--	*dr = netdev;
- 	devres_add(dev, dr);
- 
--	return netdev;
-+	return dr->ndev;
- }
- EXPORT_SYMBOL(devm_alloc_etherdev_mqs);
++/**
++ *	priv_to_netdev - get the net_device from private data
++ *	@priv: net_device private data
++ *
++ * Get the address of network device associated with this private data.
++ */
++static inline struct net_device *priv_to_netdev(void *priv)
++{
++	priv = (char *)priv - ALIGN(sizeof(struct net_device), NETDEV_ALIGN);
++	return (struct net_device *)priv;
++}
++
+ /* Set the sysfs physical device reference for the network logical device
+  * if set prior to registration will cause a symlink during initialization.
+  */
 -- 
 2.25.0
 
