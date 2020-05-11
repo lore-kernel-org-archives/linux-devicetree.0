@@ -2,98 +2,97 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2950BC54E8D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE94C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 159522075E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E872070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:27:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589221641;
+	bh=fHt6NotIDbjyuRjKWVZLSLEFQGGAmUaBGRfmc2CnhE8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XAeib7jwBYI2fzc8BfAI3Irj1tsViidYSd9cuVS8v39AeDxsH0OxDrrk06zz70ca2
+	 OQvZFJHyDMujcGMovljYNpyjlUi+zwb+ttc9Zrvgo+chs91q0SQALxcoBdU+X1xl8j
+	 vlC+ka8unVmxqP9rDdylosYBF+R/KcErSuXcHp48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbgEKSZl (ORCPT
+        id S1731110AbgEKS1U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 14:25:41 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:49720 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729678AbgEKSZl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 14:25:41 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4B329803080A;
-        Mon, 11 May 2020 18:25:38 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Vze97ONxmtmJ; Mon, 11 May 2020 21:25:36 +0300 (MSK)
-Date:   Mon, 11 May 2020 21:25:35 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511182535.uvijbdjreqw2zsfc@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
- <20200511174800.GM8216@sirena.org.uk>
+        Mon, 11 May 2020 14:27:20 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36587 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731027AbgEKS1U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 14:27:20 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t3so8365126otp.3;
+        Mon, 11 May 2020 11:27:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=CIBx1VjiCxtA0AYvNLauEJB36ppdEW439Ed+xOZ8GOI=;
+        b=Gb69kHsweaCXKzYjnW2W6Q+BQD4RVpcEAPXGeoP+f5KOpmQ9HtjdX6pfOZkoXIzKwn
+         vQM3I6R76KDGvawrrUlgjet5msI4sTRjaYFgpWdmP8cuH1ANRwdAMMZnsv1zX+G1cIN5
+         lM1fdZ92ax9yw++6a3ZATi56Sk1aMUQKrMWoS2k/uFfLu/y4msBElNF+wPVybfke7Uef
+         NS8dYwW6/XqZLuTAO9k9kdNZW0jAmcP5Mlup96LwrAg21sFBjD3hqhNICrqH3ehNKF7G
+         uPCJSxgTJC2YKkzXTTLsXEFBYoAUlTGQoxte31A06SqzyTF29i9YMxNfvQYlYrgWhEbQ
+         DEWw==
+X-Gm-Message-State: AGi0PuaR/hquCl98HBO0pfZl8e9PTjOMMH1+DN4q3NRGIiDwpNdYuchE
+        tPR4wXXteoN09fIEKZ4Ltg==
+X-Google-Smtp-Source: APiQypIS1s3puareZxlhadJ1/IfeGfhmFMCEV1g0UAvrkDW9+LMJYWL0VuUAU8L4Cp1evliUtjvKFQ==
+X-Received: by 2002:a05:6830:2158:: with SMTP id r24mr14045090otd.65.1589221638203;
+        Mon, 11 May 2020 11:27:18 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f73sm2839119otf.53.2020.05.11.11.27.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 11:27:17 -0700 (PDT)
+Received: (nullmailer pid 20786 invoked by uid 1000);
+        Mon, 11 May 2020 18:24:23 -0000
+Date:   Mon, 11 May 2020 13:24:23 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     Jason Cooper <jason@lakedaemon.net>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 7/9] dt-bindings: PCI: aardvark: describe new
+ properties
+Message-ID: <20200511182423.GA20142@bogus>
+References: <20200421111701.17088-1-marek.behun@nic.cz>
+ <20200421111701.17088-8-marek.behun@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200511174800.GM8216@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200421111701.17088-8-marek.behun@nic.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 11, 2020 at 06:48:00PM +0100, Mark Brown wrote:
-> On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
-> > On Mon, May 11, 2020 at 4:48 PM Serge Semin
+On Tue, 21 Apr 2020 13:16:59 +0200, Marek Behún wrote:
+> Document the possibility to reference a PHY and reset-gpios and to set
+> max-link-speed property.
 > 
-> > > So the question is of how to export the multi-block LLP flag from DW DMAc
-> > > driver. Andy?
+> Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/pci/aardvark-pci.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> > I'm not sure I understand why do you need this being exported. Just
-> > always supply SG list out of single entry and define the length
-> > according to the maximum segment size (it's done IIRC in SPI core).
-> 
-> If there's a limit from the dmaengine it'd be a bit cleaner to export
-> the limit from the DMA engine (and it'd help with code reuse for clients
-> that might work with other DMA controllers without needing to add custom
-> compatibles for those instantiations).
 
-Right. I've already posted a patch which exports the max segment size from the
-DW DMA controller driver. The SPI core will get the limit in the spi_map_buf()
-method by calling the dma_get_max_seg_size() function. The problem I
-described concerns of how to determine whether to apply the solution Andy
-suggested, since normally if DW DMA controller has true multi-block LLP
-supported the workaround isn't required. So in order to solve the problem in a
-generic way the easiest way would be to somehow get the noLLP flag from the DW
-DMAC private data and select a one-by-one SG entries submission algorithm
-instead of the normal one... On the other hand we could just implement a
-flag-based quirks in the DW APB SSI driver and determine whether the LLP
-problem exists for the platform-specific DW APB SSI controller.
-
--Sergey
-
+Reviewed-by: Rob Herring <robh@kernel.org>
