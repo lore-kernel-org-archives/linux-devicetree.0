@@ -2,224 +2,267 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 372B0C38A2A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 02:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A18C38A2A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 03:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09FD5208CA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 02:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A3A208CA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 03:13:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="bPTKb6Hz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgEKClb (ORCPT
+        id S1727834AbgEKDM6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 22:41:31 -0400
-Received: from mail-bn8nam11olkn2024.outbound.protection.outlook.com ([40.92.20.24]:24192
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726013AbgEKClb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 10 May 2020 22:41:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jkFpbmOzAcrmVE2pVeazgKAlhzzslPo6tSmqoOHh0MVsLyR0DFhgsNyk2KEaI0n/lydvg/fdvu0nsf001Bp6/h+ncuuP3aSKMRdyCmjTdzWrREjZedN1mXTZovkxOEG0fSpN/LIsUEkytcz1QtDdvN8+qH/z0iryb9WcMEVC+9A2uvn7gWxbmOurWuCuiUxtskBis7j0EoobbLe8Nn1fRw9BzWdoSxqZ75IpfbxZ3shhqKCTHtA57f5ybSQL5KBRz/AlwXXuNQ4Wq17WpzBmQzn6BSlvSuxFjOpgzJbYfPfEFnnPFRX8syRVu7D94LMq5hDhKZSKVtQNwI/A0e/5XA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7HVq+8NKAvqaKsv71Xui8b7ThIO7O0xlXODyWJD3Bm8=;
- b=D/3muWuS7JvdYJrgUwxvMHUlDtCXZUYjiDb1sTd0DOKva+RTxM7JX7hb5Q8P0cfvc7M+slKL8IXExMCArj7HUN34AzNHkYgwUFlaWfJ63t1vcBqnJ/AFsbgXGoZbFw1y3LiEcRZAXNzlMtA4LwVzcnlvr+Htjzq6q/+sOeL5Vuvj7yXlM45Amd/U6dAXURcYnFDE6s+Rz9RoNQaPtW/pSi2+g4AJ1vXN+6E2Fx8Mjotj+x0+l8TZwlfs+JAeQgn1twSPn1i9IkbDH9In1XwISBQlb7dL23GRsGmi8XVtblmb0P1AOfdjLW6BTXgDDhUrdwn8qV/DflvYMewn4RPvMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from CO1NAM11FT004.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:3861::47) by
- CO1NAM11HT088.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::310)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Mon, 11 May
- 2020 02:41:27 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:3861::51) by CO1NAM11FT004.mail.protection.outlook.com
- (2a01:111:e400:3861::345) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend
- Transport; Mon, 11 May 2020 02:41:27 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:A60277B37A69857AA09DF6BD1815EB0CBE43B645E0807D9BAB85DC2778AEC8A6;UpperCasedChecksum:11ABE59EBCDFB19BA91C6E007C71B2E7FD5A655EB0F1191EB2E7511D457CEEF5;SizeAsReceived:8285;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 02:41:26 +0000
-Subject: Re: [PATCH 3/3] power: supply: max17040: Set rcomp value
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-References: <20200504221300.3153-1-xc-racer2@live.ca>
- <BN6PR04MB066057B881DEFC0C48208589A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200510200851.zam6m37bkr36s5cr@earth.universe>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB06603F40894AD514E24E6BF8A3A10@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Sun, 10 May 2020 19:41:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200510200851.zam6m37bkr36s5cr@earth.universe>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MWHPR14CA0004.namprd14.prod.outlook.com
- (2603:10b6:300:ae::14) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <eb476907-c456-3cd3-2dd3-e0da44825b4d@live.ca>
+        Sun, 10 May 2020 23:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726661AbgEKDM5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 May 2020 23:12:57 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A691FC061A0E
+        for <devicetree@vger.kernel.org>; Sun, 10 May 2020 20:12:57 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id s11so4656116vsq.13
+        for <devicetree@vger.kernel.org>; Sun, 10 May 2020 20:12:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wD8LqIUSTHmx07hI69udebSQ//EWpWh/2EL/wbwVZVM=;
+        b=bPTKb6Hz4T1T3ZIBaNsHbJBY9spZ48z9FK9D5PFgSOZexloi5nfRV+frjMiQMJV9AF
+         6d870yDSK2GjuOrwf+qwOBo55lxBv5CqM/EgvHI2Nkkuu4poM6dcqNuJG7a4/BI8Ceta
+         731NMxceOt18AoWB4W9iMCluvqfH80mLyLOQ4SI1vGxKv1xER+z2AHF/U+0xTvEavBO6
+         2Rd7SbkX3joAt6sAkZAJ2wg2/HEQPim3ELhF5kYPDa/gv7Va2sSNn7JBM9vdZYpj9uCx
+         F0OWjXNRoaDixUUJBw5Joa4twv9Wco/qvZO9IePBkON9Pk1CHX0AIijACMH1NYU+lPAB
+         1kOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wD8LqIUSTHmx07hI69udebSQ//EWpWh/2EL/wbwVZVM=;
+        b=oKwVaGOuSzPiDiYee60gbRyRoJSFRJ41Wq9iNYw9n7pVvj0m4O6nfHXcBeRo7DBPpJ
+         jTPj8asb11X0FEJD/OkeFJKDelyvyJ/e89wlSRZxaSL4vRdIHJg3rS/lC57BOGKKujjm
+         aa+3cq71ulRpqqD0dcjN/FF1YZXZezAyQ3Dnq0M1zrMUTr80yVE9Rfuaw/GrCMnwSWkk
+         3N8Mr9R9AyZUVqw8FmJChL6MbIwGxJZrTGe7YgfbbGLyDsjJOmtcxONotZvsxianeyBI
+         HyICHhbyOGcOcI/iX6nlufeHifD9eADAc9M+yAw2MO/r5d3khL3A9OdLUg6jCwDaGZr5
+         UGLw==
+X-Gm-Message-State: AGi0PubprSw2TfM5vgstrGy8lV7dbswdGzosfpNwWPChUq2fkJc0+Hew
+        BQSlYJ5aeXGaRa9UAM2p8JJvvLB0quIh8H+0lQSRgJDmNMvkUg==
+X-Google-Smtp-Source: APiQypJP1/nLwbTc/RZGN8unEAO0lP5H7D7NY0XZUzlVAayGsxKwX4kpz0BpS7Iing2tP0GZhbCubV15JmcaQAzsUDI=
+X-Received: by 2002:a67:407:: with SMTP id 7mr9030175vse.95.1589166776348;
+ Sun, 10 May 2020 20:12:56 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR14CA0004.namprd14.prod.outlook.com (2603:10b6:300:ae::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Mon, 11 May 2020 02:41:22 +0000
-X-Microsoft-Original-Message-ID: <eb476907-c456-3cd3-2dd3-e0da44825b4d@live.ca>
-X-TMN:  [znEavWOxicV2w16oTe5S7oQMFi9b8uJZ+IpL1nsuCDaIgUNsjyyiO3EXsBEkL+8H]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 6a0ec689-4cb8-4e75-a3d1-08d7f554cb69
-X-MS-TrafficTypeDiagnostic: CO1NAM11HT088:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mwCMOpyaHTRJUUYEoNxhqunYUFrA5fWrqm7m2UEQA3DBllD/NUsR8frgfuVp/uFyijQsDLtH95wuzHnMoiZ8GHpOwuHN4cWQx4X6xUiNun58A4gcrMI593ZswyQXUtoYC0nEYHDoJ+glU2hFEJc+LQslX4J6wgDlGQ3926Rf6CJvhlCTn3RxL97rdLwBqzsoUqxQO4+D+AemSJcvfFFqOYE70xPXdI513mJw5EwoR2TCLKeIWEtCK4xQfdOmyQx2
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: bqwQa1hxP7v4wkJIag6KC5IZpfBAwgNw0nRrKJssfkZ7l0B1Cn0BDrfQdXTz7RXsGTPnmFjg9wyRjBoX4hJKuXAlPZDrkkPs8/nCsBXLkcw4xaZe0qiHNulQ3I5uB/wrn5obD3mEbEiQV0jf+Q3tPcg9r/l+R33rvZ3ciXMzmF6iMU8V4zvfHyJ2XUyO7LkhP+mom0s/3f/AcXJrX3mokg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a0ec689-4cb8-4e75-a3d1-08d7f554cb69
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 02:41:26.7965
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT088
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+ <20200427072342.5499-1-jian-hong@endlessm.com> <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
+ <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
+ <20200507172158.cybtakpo6cxv6wcs@gilmour.lan> <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
+In-Reply-To: <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Mon, 11 May 2020 11:12:05 +0800
+Message-ID: <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-i2c@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Jian-Hong Pan <jian-hong@endlessm.com> =E6=96=BC 2020=E5=B9=B45=E6=9C=888=
+=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=882:20=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=888=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:22=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > On Mon, May 04, 2020 at 02:35:08PM +0800, Jian-Hong Pan wrote:
+> > > Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B44=E6=9C=8829=
+=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8812:21=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Mon, Apr 27, 2020 at 03:23:42PM +0800, Jian-Hong Pan wrote:
+> > > > > Hi Maxime,
+> > > > >
+> > > > > Thanks for your V2 patch series!  I'm testing it.
+> > > > >
+> > > > > This patch series is applied upon mainline kernel 5.7-rc2 cleanly=
+ and built.
+> > > > > System can boot into console text mode, but no graphic UI.
+> > > > >
+> > > > > Get the error in vc5_hdmi_phy_init(), and full dmesg is at [1]:
+> > > > >
+> > > > > [    5.587543] vc4_hdmi fef00700.hdmi: Unknown register ID 46
+> > > > > [    5.587700] debugfs: Directory 'fef00700.hdmi' with parent 'vc=
+4-hdmi' already present!
+> > > > > [    5.588070] vc4_hdmi fef00700.hdmi: vc4-hdmi-hifi <-> fef00700=
+.hdmi mapping ok
+> > > > > [    5.588076] vc4_hdmi fef00700.hdmi: ASoC: no DMI vendor name!
+> > > > > [    5.588263] vc4-drm gpu: bound fef00700.hdmi (ops vc4_hdmi_ops=
+)
+> > > > > [    5.588299] vc4_hdmi fef05700.hdmi: Unknown register ID 46
+> > > > > [    5.588373] debugfs: Directory 'vc4-hdmi' with parent 'asoc' a=
+lready present!
+> > > > > [    5.588673] vc4_hdmi fef05700.hdmi: vc4-hdmi-hifi <-> fef05700=
+.hdmi mapping ok
+> > > > > [    5.588677] vc4_hdmi fef05700.hdmi: ASoC: no DMI vendor name!
+> > > > > [    5.588809] vc4-drm gpu: bound fef05700.hdmi (ops vc4_hdmi_ops=
+)
+> > > > > [    5.588854] vc4-drm gpu: bound fe806000.vec (ops vc4_vec_ops)
+> > > > > [    5.588897] vc4-drm gpu: bound fe004000.txp (ops vc4_txp_ops)
+> > > > > [    5.588934] vc4-drm gpu: bound fe400000.hvs (ops vc4_hvs_ops)
+> > > > > [    5.588990] vc4-drm gpu: bound fe206000.pixelvalve (ops vc4_cr=
+tc_ops)
+> > > > > [    5.589030] vc4-drm gpu: bound fe207000.pixelvalve (ops vc4_cr=
+tc_ops)
+> > > > > [    5.589074] vc4-drm gpu: bound fe20a000.pixelvalve (ops vc4_cr=
+tc_ops)
+> > > > > [    5.589106] vc4-drm gpu: bound fe216000.pixelvalve (ops vc4_cr=
+tc_ops)
+> > > > > [    5.589145] vc4-drm gpu: bound fec12000.pixelvalve (ops vc4_cr=
+tc_ops)
+> > > > > [    5.589294] checking generic (3e513000 6d8c00) vs hw (0 ffffff=
+ffffffffff)
+> > > > > [    5.589297] fb0: switching to vc4drmfb from simple
+> > > > > [    5.589433] Console: switching to colour dummy device 80x25
+> > > > > [    5.589481] [drm] Supports vblank timestamp caching Rev 2 (21.=
+10.2013).
+> > > > > [    5.589816] [drm] Initialized vc4 0.0.0 20140616 for gpu on mi=
+nor 0
+> > > > > [    5.601079] ------------[ cut here ]------------
+> > > > > [    5.601095] WARNING: CPU: 2 PID: 127 at drivers/gpu/drm/vc4/vc=
+4_hdmi_phy.c:413 vc5_hdmi_phy_init+0x7ac/0x2078
+> > > > > [    5.601097] Modules linked in:
+> > > > > [    5.601103] CPU: 2 PID: 127 Comm: kworker/2:1 Not tainted 5.7.=
+0-rc2-00091-ga181df59a930 #7
+> > > > > [    5.601105] Hardware name: Raspberry Pi 4 Model B (DT)
+> > > > > [    5.601112] Workqueue: events deferred_probe_work_func
+> > > > > [    5.601116] pstate: 20000005 (nzCv daif -PAN -UAO)
+> > > > > [    5.601119] pc : vc5_hdmi_phy_init+0x7ac/0x2078
+> > > > > [    5.601123] lr : vc4_hdmi_encoder_enable+0x1b8/0x1ac0
+> > > > > [    5.601124] sp : ffff80001217b410
+> > > > > [    5.601126] x29: ffff80001217b410 x28: ffff0000ec6370f0
+> > > > > [    5.601129] x27: ffff0000f650d400 x26: 000000008a500000
+> > > > > [    5.601132] x25: ffff8000113b4ac0 x24: 0000000000002060
+> > > > > [    5.601135] x23: 000000000a500000 x22: 0000000000000300
+> > > > > [    5.601137] x21: 0000000008d9ee20 x20: ffff0000ec535080
+> > > > > [    5.601140] x19: 000000010989e7c0 x18: 0000000000000000
+> > > > > [    5.601142] x17: 0000000000000001 x16: 0000000000005207
+> > > > > [    5.601145] x15: 00004932ad293c92 x14: 0000000000000137
+> > > > > [    5.601147] x13: ffff800010015000 x12: 0000000000000001
+> > > > > [    5.601150] x11: 0000000000000001 x10: 0000000000000000
+> > > > > [    5.601152] x9 : 0000000000000000 x8 : ffff800010015038
+> > > > > [    5.601154] x7 : 0000000000000001 x6 : ffff80001217b368
+> > > > > [    5.601157] x5 : 0000000000000000 x4 : 000000000000004c
+> > > > > [    5.601159] x3 : 0000000000000000 x2 : ffff8000113b4ac0
+> > > > > [    5.601162] x1 : ffff8000120c5f44 x0 : 00000000dc8984ff
+> > > > > [    5.601164] Call trace:
+> > > > > [    5.601169]  vc5_hdmi_phy_init+0x7ac/0x2078
+> > > > > [    5.601172]  vc4_hdmi_encoder_enable+0x1b8/0x1ac0
+> > > > > [    5.601176]  drm_atomic_helper_commit_modeset_enables+0x224/0x=
+248
+> > > > > [    5.601179]  vc4_atomic_complete_commit+0x400/0x558
+> > > > > [    5.601182]  vc4_atomic_commit+0x1e0/0x200
+> > > > > [    5.601185]  drm_atomic_commit+0x4c/0x60
+> > > > > [    5.601190]  drm_client_modeset_commit_atomic.isra.0+0x17c/0x2=
+38
+> > > > > [    5.601192]  drm_client_modeset_commit_locked+0x5c/0x198
+> > > > > [    5.601195]  drm_client_modeset_commit+0x30/0x58
+> > > > > [    5.601201]  drm_fb_helper_restore_fbdev_mode_unlocked+0x78/0x=
+e0
+> > > > > [    5.601204]  drm_fb_helper_set_par+0x30/0x68
+> > > > > [    5.601208]  fbcon_init+0x3d4/0x598
+> > > > > [    5.601212]  visual_init+0xb0/0x108
+> > > > > [    5.601214]  do_bind_con_driver+0x1d0/0x3a8
+> > > > > [    5.601217]  do_take_over_console+0x144/0x208
+> > > > > [    5.601219]  do_fbcon_takeover+0x68/0xd8
+> > > > > [    5.601222]  fbcon_fb_registered+0x100/0x118
+> > > > > [    5.601226]  register_framebuffer+0x1f4/0x338
+> > > > > [    5.601229]  __drm_fb_helper_initial_config_and_unlock+0x2f8/0=
+x4a0
+> > > > > [    5.601232]  drm_fbdev_client_hotplug+0xd4/0x1b0
+> > > > > [    5.601235]  drm_fbdev_generic_setup+0xb0/0x130
+> > > > > [    5.601238]  vc4_drm_bind+0x184/0x1a0
+> > > > > [    5.601241]  try_to_bring_up_master+0x168/0x1c8
+> > > > > [    5.601244]  __component_add+0xa4/0x170
+> > > > > [    5.601246]  component_add+0x14/0x20
+> > > > > [    5.601248]  vc4_vec_dev_probe+0x20/0x30
+> > > > > [    5.601252]  platform_drv_probe+0x54/0xa8
+> > > > > [    5.601254]  really_probe+0xd8/0x320
+> > > > > [    5.601256]  driver_probe_device+0x58/0xf0
+> > > > > [    5.601258]  __device_attach_driver+0x84/0xc8
+> > > > > [    5.601263]  bus_for_each_drv+0x78/0xc8
+> > > > > [    5.601265]  __device_attach+0xe4/0x140
+> > > > > [    5.601267]  device_initial_probe+0x14/0x20
+> > > > > [    5.601269]  bus_probe_device+0x9c/0xa8
+> > > > > [    5.601271]  deferred_probe_work_func+0x74/0xb0
+> > > > > [    5.601276]  process_one_work+0x1bc/0x338
+> > > > > [    5.601279]  worker_thread+0x1f8/0x428
+> > > > > [    5.601282]  kthread+0x138/0x158
+> > > > > [    5.601286]  ret_from_fork+0x10/0x1c
+> > > > > [    5.601288] ---[ end trace cfba0996218c3f3d ]---
+> > > >
+> > > > Thanks for testing!
+> > > >
+> > > > Do you have a bit more details regarding your setup? Was it connect=
+ed to an
+> > > > external display?
+> > >
+> > > Yes, the HDMI cable is connected to HDMI0 port on RPi 4.
+> > >
+> > > > If so, do you know the resolution it was trying to setup?
+> > >
+> > > According to the log, I think it is 1920x1080:
+> > > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
+> > > HDMI-1 connected
+> > > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
+> > > HDMI-2 disconnected
+> > > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
+> > > Composite-1 disconnected
+> > > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Using
+> > > exact sizes for initial modes
+> > > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
+> > > HDMI-1 using initial mode 1920x1080 +0+0
+> > >
+> > > https://gist.github.com/starnight/45e1468bfa0426a54d2fb4a9269cfb94
+> >
+> > It looks to be fairly standard then, and I'm testing on the same resolu=
+tion so
+> > it should be alright.
+> >
+> > Given from your log, it looks like you're running as arm64 though, whil=
+e I stuck
+> > with arm32, so it could be the explanation.
+>
+> Yes, I build it as arm64.
+>
+> > Can you share your config.txt and .config so that I can try to reproduc=
+e it
+> > here?
+>
+> Here is the config
+> https://gist.github.com/starnight/320b757441b6769c36160704b401c98b
 
-On 2020-05-10 1:08 p.m., Sebastian Reichel wrote:
-> Hi,
-> 
-> On Mon, May 04, 2020 at 03:13:00PM -0700, Jonathan Bakker wrote:
->> According to the datasheet (1), the rcomp parameter can
->> vary based on the typical operating temperature and the
->> battery chemistry.  If provided, make sure we set it after
->> we reset the chip on boot.
->>
->> 1) https://datasheets.maximintegrated.com/en/ds/MAX17040-MAX17041.pdf
->>
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->> ---
->>  drivers/power/supply/max17040_battery.c | 33 +++++++++++++++++++++----
->>  1 file changed, 28 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
->> index 48aa44665e2f..f66e2fdc0a8a 100644
->> --- a/drivers/power/supply/max17040_battery.c
->> +++ b/drivers/power/supply/max17040_battery.c
->> @@ -10,6 +10,7 @@
->>  #include <linux/init.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/mutex.h>
->> +#include <linux/property.h>
->>  #include <linux/err.h>
->>  #include <linux/i2c.h>
->>  #include <linux/delay.h>
->> @@ -31,6 +32,8 @@
->>  
->>  #define MAX17040_ATHD_MASK		0xFFC0
->>  #define MAX17040_ATHD_DEFAULT_POWER_UP	4
->> +#define MAX17040_RCOMP_MASK		0xFF
->> +#define MAX17040_RCOMP_DEFAULT_POWER_UP	0x97
-> 
-> Why is this 8 bits? Quote from the datasheet, that you linked:
-> 
-> »RCOMP is a 16-bit value used to compensate the ModelGauge algorithm«
+Here is the only one line in config.txt:
+enable_uart=3D1
 
-Well, the driver also supports the max17043 (datasheet at https://datasheets.maximintegrated.com/en/ds/MAX17043-MAX17044.pdf
-here the register is named CONFIG), by the maxim,max77836-battery compatible.  The bottom 8 bits are for the alert config,
-and I'm presuming it's the same on the max17040 (the vendor kernel for the device I'm testing on only sets the top 8 bits
-and leaves the rest at 0).
+Actually, we make the Raspberry Pi's firmware bring up U-Boot, then
+U-Boot boots kernel.
 
-If there's a better way of doing it (ie maybe explicitly making it a 16 bit value and checking if the bottom 8 bits are
-set when the compatible is maxim,max77836-battery), then I'm happy to do it that way.
-
-Thanks,
-Jonathan
-
-> 
-> -- Sebastian
-> 
->>  struct max17040_chip {
->>  	struct i2c_client		*client;
->> @@ -48,6 +51,8 @@ struct max17040_chip {
->>  	int status;
->>  	/* Low alert threshold from 32% to 1% of the State of Charge */
->>  	u32 low_soc_alert;
->> +	/* Optimization for specific chemistries */
->> +	u8 rcomp_value;
->>  };
->>  
->>  static int max17040_get_property(struct power_supply *psy,
->> @@ -119,6 +124,20 @@ static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
->>  	return ret;
->>  }
->>  
->> +static int max17040_set_rcomp(struct i2c_client *client, u32 val)
->> +{
->> +	int ret;
->> +	u16 data;
->> +
->> +	data = max17040_read_reg(client, MAX17040_RCOMP);
->> +	/* clear the rcomp val and set MSb 8 bits */
->> +	data &= MAX17040_RCOMP_MASK;
->> +	data |= val << 8;
->> +	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
->> +
->> +	return ret;
->> +}
->> +
->>  static void max17040_get_vcell(struct i2c_client *client)
->>  {
->>  	struct max17040_chip *chip = i2c_get_clientdata(client);
->> @@ -190,8 +209,14 @@ static int max17040_get_of_data(struct max17040_chip *chip)
->>  				 "maxim,alert-low-soc-level",
->>  				 &chip->low_soc_alert);
->>  
->> -	if (chip->low_soc_alert <= 0 || chip->low_soc_alert >= 33)
->> +	if (chip->low_soc_alert <= 0 || chip->low_soc_alert >= 33) {
->> +		dev_err(&client->dev,
->> +			"failed: low SOC alert OF data out of bounds\n");
->>  		return -EINVAL;
->> +	}
->> +
->> +	chip->rcomp_value = MAX17040_RCOMP_DEFAULT_POWER_UP;
->> +	device_property_read_u8(dev, "maxim,rcomp-value", &chip->rcomp_value);
->>  
->>  	return 0;
->>  }
->> @@ -289,11 +314,8 @@ static int max17040_probe(struct i2c_client *client,
->>  	chip->client = client;
->>  	chip->pdata = client->dev.platform_data;
->>  	ret = max17040_get_of_data(chip);
->> -	if (ret) {
->> -		dev_err(&client->dev,
->> -			"failed: low SOC alert OF data out of bounds\n");
->> +	if (ret)
->>  		return ret;
->> -	}
->>  
->>  	i2c_set_clientdata(client, chip);
->>  	psy_cfg.drv_data = chip;
->> @@ -307,6 +329,7 @@ static int max17040_probe(struct i2c_client *client,
->>  
->>  	max17040_reset(client);
->>  	max17040_get_version(client);
->> +	max17040_set_rcomp(client, chip->rcomp_value);
->>  
->>  	/* check interrupt */
->>  	if (client->irq && of_device_is_compatible(client->dev.of_node,
->> -- 
->> 2.20.1
->>
+Jian-Hong Pan
