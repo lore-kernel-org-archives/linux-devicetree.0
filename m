@@ -2,97 +2,107 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE94C47255
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C393BC54E8E
 	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28E872070B
+	by mail.kernel.org (Postfix) with ESMTP id A630920720
 	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1589221641;
-	bh=fHt6NotIDbjyuRjKWVZLSLEFQGGAmUaBGRfmc2CnhE8=;
+	bh=p7TJOerby5k4tbx58LtZ+CxFJ3+tZGe4j+7PLouv3eE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XAeib7jwBYI2fzc8BfAI3Irj1tsViidYSd9cuVS8v39AeDxsH0OxDrrk06zz70ca2
-	 OQvZFJHyDMujcGMovljYNpyjlUi+zwb+ttc9Zrvgo+chs91q0SQALxcoBdU+X1xl8j
-	 vlC+ka8unVmxqP9rDdylosYBF+R/KcErSuXcHp48=
+	b=CG4Ih2mklfSPrQe2ueVCWd/o2iy/53oY4jlrQ0SDJlAJirc474R0OK51HX/0SAVyM
+	 sJOtjrtxf545nsHhCA6rFpvepXreZOpCs6+KuQ9BnAUHhEnPSm2GAUgb4FoN6jvjNT
+	 CTbiljxiq6d5NWU08JZL0YZ52hnh3EGn2wxnu9yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbgEKS1U (ORCPT
+        id S1731112AbgEKS1V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 14:27:20 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36587 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731027AbgEKS1U (ORCPT
+        Mon, 11 May 2020 14:27:21 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37202 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731028AbgEKS1U (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 14:27:20 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t3so8365126otp.3;
-        Mon, 11 May 2020 11:27:18 -0700 (PDT)
+Received: by mail-oi1-f193.google.com with SMTP id r25so15965797oij.4;
+        Mon, 11 May 2020 11:27:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=CIBx1VjiCxtA0AYvNLauEJB36ppdEW439Ed+xOZ8GOI=;
-        b=Gb69kHsweaCXKzYjnW2W6Q+BQD4RVpcEAPXGeoP+f5KOpmQ9HtjdX6pfOZkoXIzKwn
-         vQM3I6R76KDGvawrrUlgjet5msI4sTRjaYFgpWdmP8cuH1ANRwdAMMZnsv1zX+G1cIN5
-         lM1fdZ92ax9yw++6a3ZATi56Sk1aMUQKrMWoS2k/uFfLu/y4msBElNF+wPVybfke7Uef
-         NS8dYwW6/XqZLuTAO9k9kdNZW0jAmcP5Mlup96LwrAg21sFBjD3hqhNICrqH3ehNKF7G
-         uPCJSxgTJC2YKkzXTTLsXEFBYoAUlTGQoxte31A06SqzyTF29i9YMxNfvQYlYrgWhEbQ
-         DEWw==
-X-Gm-Message-State: AGi0PuaR/hquCl98HBO0pfZl8e9PTjOMMH1+DN4q3NRGIiDwpNdYuchE
-        tPR4wXXteoN09fIEKZ4Ltg==
-X-Google-Smtp-Source: APiQypIS1s3puareZxlhadJ1/IfeGfhmFMCEV1g0UAvrkDW9+LMJYWL0VuUAU8L4Cp1evliUtjvKFQ==
-X-Received: by 2002:a05:6830:2158:: with SMTP id r24mr14045090otd.65.1589221638203;
-        Mon, 11 May 2020 11:27:18 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VnDVXODMrSuBUynBLZ2vD//e4JWl2ZZnhBhHzSJKxpk=;
+        b=P3MrAuGfnnd0DZdgtPEZEgjlQj5hkgFyOJShojWU4oE60S3lOBTe6Xyl8UWwBDLkpz
+         p0WCShPpddttyBKgtubu6hSmwVyktVjJevT6tbDH2LnCCuzVJTA+NGFWZPFgLF1+L7SX
+         o4SVLLU8THVKcCYh50hDoPtOp/rbyEDYKuRl1kVXNMAi0Hs+AsfsLMWCLh/Nphkx+Lj+
+         nooJVomxRWnzwKqT1XTGYjvgtZXWY4ipKwId70CwedCeY0gw6thNeVLsg8dS8Z9rxNdC
+         BqPW+r+dUgt4wM9m97ClfTdeBoAdajRloTcm/QrEk35GqncwwUyRSgZFDhIBhKBKHKXd
+         aw+A==
+X-Gm-Message-State: AGi0Pua5kiF0gRPOp2K+0rCOnYGqnzHijsO/9TczWlkfiGIDrKdjtK0/
+        Q5NOMigYlgCuxVTJ9sp+Bw==
+X-Google-Smtp-Source: APiQypJjhFM4wDlm69yPql7xC9Gfrg0xTT+8CFFRWUQT66HfRY0DoEtoUmKzUox2WFQNwSKROeUGEQ==
+X-Received: by 2002:a05:6808:3d4:: with SMTP id o20mr19556684oie.47.1589221639554;
+        Mon, 11 May 2020 11:27:19 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f73sm2839119otf.53.2020.05.11.11.27.16
+        by smtp.gmail.com with ESMTPSA id f25sm536810ooj.20.2020.05.11.11.27.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 11:27:17 -0700 (PDT)
-Received: (nullmailer pid 20786 invoked by uid 1000);
-        Mon, 11 May 2020 18:24:23 -0000
-Date:   Mon, 11 May 2020 13:24:23 -0500
+        Mon, 11 May 2020 11:27:18 -0700 (PDT)
+Received: (nullmailer pid 23990 invoked by uid 1000);
+        Mon, 11 May 2020 15:26:49 -0000
+Date:   Mon, 11 May 2020 10:26:49 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     Jason Cooper <jason@lakedaemon.net>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 7/9] dt-bindings: PCI: aardvark: describe new
- properties
-Message-ID: <20200511182423.GA20142@bogus>
-References: <20200421111701.17088-1-marek.behun@nic.cz>
- <20200421111701.17088-8-marek.behun@nic.cz>
+To:     Angus Ainslie <angus@akkea.ca>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: usb: ti,tps6598x: add dt binding doc
+Message-ID: <20200511152649.GA23481@bogus>
+References: <20200506191718.2144752-1-angus@akkea.ca>
+ <20200506191718.2144752-3-angus@akkea.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200421111701.17088-8-marek.behun@nic.cz>
+In-Reply-To: <20200506191718.2144752-3-angus@akkea.ca>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Apr 2020 13:16:59 +0200, Marek Behún wrote:
-> Document the possibility to reference a PHY and reset-gpios and to set
-> max-link-speed property.
+On Wed,  6 May 2020 12:17:18 -0700, Angus Ainslie wrote:
+> Document the tps6598x driver
 > 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Angus Ainslie <angus@akkea.ca>
 > ---
->  Documentation/devicetree/bindings/pci/aardvark-pci.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  .../devicetree/bindings/usb/ti,tps6598x.yaml  | 75 +++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml: maintainers:0: None is not of type 'string'
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/usb/ti,tps6598x.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/usb/ti,tps6598x.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml: ignoring, error in schema: maintainers: 0
+warning: no schema found in file: ./Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml: ignoring, error in schema: maintainers: 0
+warning: no schema found in file: ./Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1284704
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
