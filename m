@@ -2,82 +2,132 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69007C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61429C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E50F20661
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCFA20736
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589229934;
+	bh=W/eBcc72ZFFxVDPIxtsiK4NEYht1c5e9oR3ITvdxHIo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=flCzBNnVohbMcPJ/Tn7es6v9V4Pec4sRH1vsL6Grzd3QAoP6BszjYBdYkfUFRW1Nw
+	 1U1DAYurvtRtAc6mVmC7lBNEJl+MAOXxSd8gCNqRBfdgKwxyy512i3Gpl/LLhtGoL/
+	 EqlXT0eBhfCeDkxX2y1AUg68uH4aYxDM/jugooz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbgEKUlU (ORCPT
+        id S1731773AbgEKUpd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 16:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgEKUlT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:41:19 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A865BC061A0C;
-        Mon, 11 May 2020 13:41:19 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0599311F5F667;
-        Mon, 11 May 2020 13:41:17 -0700 (PDT)
-Date:   Mon, 11 May 2020 13:41:17 -0700 (PDT)
-Message-Id: <20200511.134117.1336222619714836904.davem@davemloft.net>
-To:     brgl@bgdev.pl
-Cc:     robh+dt@kernel.org, matthias.bgg@gmail.com, john@phrozen.org,
-        sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com, kuba@kernel.org,
-        arnd@arndb.de, fparent@baylibre.com, hkallweit1@gmail.com,
-        edwin.peer@broadcom.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Mon, 11 May 2020 16:45:33 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41203 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731636AbgEKUpc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:45:32 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 63so1339932oto.8;
+        Mon, 11 May 2020 13:45:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8HYjnhh8Bu8XYDVDKIXasgsrQoeCjoEU/+GLZVp6VL4=;
+        b=uXcM4p4xBbOwgs+INZ2/puw0lKenm4NLcwzj0XpH1V6Z2gLm87nl7V7ROaI7/zCg5L
+         lQqvbe46Qr20HiPLrkrEt4+lDtkB+COd+1BZ27JPepw+e2POEXGxgA7dwcd7ZFfvJtB5
+         8Mzg5TXhLNFNuU+E7rq1HCRrYWniPTnrQU3SeVodUfmO/qvp+RUDFwj/UNtNINXGbrE5
+         S0s2bc2ec0OyLe04sWorBgVRXOm+viVoPj2YiJvWynfSdD3WuXhJGiDON+gVUHYW8FvL
+         G4RTaPyLx/88r+CG/D6PJTlWMHysbk0us/T/zhYKT0hn1XzOtfr33w1kO03BPzzDSq0d
+         uJfQ==
+X-Gm-Message-State: AGi0Pualo8+1VHIsPCUPHX4SHJlUe/8Fv2PRkkiC5GHRCcneN/4Ii5i1
+        OSy8EfNO9ZftsExpT9zdZg==
+X-Google-Smtp-Source: APiQypKrHjG2YQsNuUzJ0MXv21zFdiAFCnjL4QWURbbEGJWV5Y68QNrIXfpv8r9brDsrOsEu41aYVA==
+X-Received: by 2002:a9d:6ac8:: with SMTP id m8mr14284404otq.262.1589229931484;
+        Mon, 11 May 2020 13:45:31 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n24sm263926otr.35.2020.05.11.13.45.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 13:45:30 -0700 (PDT)
+Received: (nullmailer pid 14771 invoked by uid 1000);
+        Mon, 11 May 2020 20:45:29 -0000
+Date:   Mon, 11 May 2020 15:45:29 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        stephane.leprovost@mediatek.com, pedro.tsai@mediatek.com,
-        andrew.perepech@mediatek.com, bgolaszewski@baylibre.com
-Subject: Re: [PATCH v2 05/14] net: core: provide priv_to_netdev()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200511150759.18766-6-brgl@bgdev.pl>
-References: <20200511150759.18766-1-brgl@bgdev.pl>
-        <20200511150759.18766-6-brgl@bgdev.pl>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 11 May 2020 13:41:18 -0700 (PDT)
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 08/16] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200511204529.GA3518@bogus>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-9-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423174543.17161-9-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 11 May 2020 17:07:50 +0200
+On Thu, Apr 23, 2020 at 07:45:35PM +0200, Michael Walle wrote:
+> This adds support for the PWM controller of the sl28cpld board
+> management controller. This is part of a multi-function device driver.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  drivers/pwm/Kconfig        |  10 ++
+>  drivers/pwm/Makefile       |   1 +
+>  drivers/pwm/pwm-sl28cpld.c | 203 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 214 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-sl28cpld.c
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Appropriate amount of extra memory for private data is allocated at
-> the end of struct net_device. We have a helper - netdev_priv() - that
-> returns its address but we don't have the reverse: a function which
-> given the address of the private data, returns the address of struct
-> net_device.
-> 
-> This has caused many drivers to store the pointer to net_device in
-> the private data structure, which basically means storing the pointer
-> to a structure in this very structure.
-> 
-> This patch proposes to add priv_to_netdev() - a helper which converts
-> the address of the private data to the address of the associated
-> net_device.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Sorry, please don't do this.  We had this almost two decades ago and
-explicitly removed it intentionally.
+> +static const struct of_device_id sl28cpld_pwm_of_match[] = {
+> +	{ .compatible = "kontron,sl28cpld-pwm" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sl28cpld_pwm_of_match);
+> +
+> +static const struct platform_device_id sl28cpld_pwm_id_table[] = {
+> +	{"sl28cpld-gpio"},
 
-Store the back pointer in your software state just like everyone else
-does.
+copy-n-paste error?
+
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(platform, sl28cpld_pwm_id_table);
+> +
+> +static struct platform_driver sl28cpld_pwm_driver = {
+> +	.probe = sl28cpld_pwm_probe,
+> +	.remove	= sl28cpld_pwm_remove,
+> +	.id_table = sl28cpld_pwm_id_table,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = sl28cpld_pwm_of_match,
+> +	},
+> +};
+> +module_platform_driver(sl28cpld_pwm_driver);
+> +
+> +MODULE_DESCRIPTION("sl28cpld PWM Driver");
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.20.1
+> 
