@@ -2,145 +2,143 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF452C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C017C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9863020752
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589225285;
-	bh=39w9StLGOIwcyTm9UjM1O9IN15ACSYkM1DsvPUsoD/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jJs2zoY4iv+raR4xhRN5L5tpLwDQ7HFLTDD1zjIouMTg0RAFNwcNvt2TzNksvaDOY
-	 frHbYWPjiwxuq8AAspTnEb1kdO1mtu6s+c/EMc49/anZqBXfvheEYoGz2shPfuxqFF
-	 511IXJspDI/5seA7xkh2IBMV/pE+FS3Eo7C0KlxY=
+	by mail.kernel.org (Postfix) with ESMTP id 8008D2075E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 19:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sfGBcaJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbgEKT2F (ORCPT
+        id S1731417AbgEKT2S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 15:28:05 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:42238 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731041AbgEKT2E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 15:28:04 -0400
-Received: by mail-oo1-f65.google.com with SMTP id a83so383996oob.9;
-        Mon, 11 May 2020 12:28:04 -0700 (PDT)
+        Mon, 11 May 2020 15:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731406AbgEKT2R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 15:28:17 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B77C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 12:28:17 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q24so8259569pjd.1
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 12:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SWP2X2+azRyixrjWTJYqW45Td6DT0R10Lg/kNNX7rQU=;
+        b=sfGBcaJAVbA0yCwLUwwt/T6iRz+IEXOpy/ZZTCYfyGa/rx+1MFRKy2zZciZtQoD/7c
+         YXyl6J2vMthSGMl2uhBetDDrggS6aUMUHzUUEyp9taZhklrs6E+AHINYyUj1I9eiF65n
+         DI0cXimOZva3DrLFtGLOUID6tScG//Z5XvaIs9psFN93f5DNY9f4/ArxBd9LwyWlEOiV
+         Lr6NoGMwiCDjyd1pjRxvmAw754CG7BnYtfvJiK5X3zEpdZ8NsKXiNCTkWPiE2hceRdRi
+         yLT0vKxsBbH15fMwluRfuKTXq79QYWUixK1N+KNGEIeqD7SQzqc+C6dMzhwkw9EpGafQ
+         QCWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Emf4N/7dlv5y0nf57uZJUU2fdy2hoXmMKpVjXqXIJnw=;
-        b=PaoxMhLZ6A+CwO41EyxPlZquzVLoeujqodWX6an5ILlza+iFxAv8pyLlK9g9T3S3df
-         kqRVSutiIPmVlElaqaoH3SfmjkPcErSsMZw/bRceRRsWrAFyWWoTqKuahQXZTByCzvbP
-         k04o35T3wtNp9mKNtBj25N6yD971tqY0a0qfNJlDECD1k9XahxFTB7m431tNR2b+QDTO
-         41/U5KdMiWWRer6i59KmJ/gZOa1zEJn+rp9KbN+XRmEdFEYwBrGdbCEYCrbyhqWvf+mm
-         M47JByf5BGSrrOvMi+FaGHK++3PCyzjSVyXs/le38PgfGuSnqE8YparKWI+DA9iB+txN
-         qWMg==
-X-Gm-Message-State: AGi0PuZIR7hqdPob/yIs+//D47WxTs0InjN8eYjyaAuElCv1NO7sJ1pN
-        jE2bo8CP6YD/nR3Y2oQmUA==
-X-Google-Smtp-Source: APiQypLpZUlZA09Gp153soJvjjPccTy0M0+x7Bh2/sf1+5RWavVxkFH7hU+ErykOaetTP/Uu0yMDeg==
-X-Received: by 2002:a4a:254f:: with SMTP id v15mr6119240ooe.17.1589225282244;
-        Mon, 11 May 2020 12:28:02 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 64sm2885440otb.14.2020.05.11.12.28.01
+         :mime-version:content-disposition:in-reply-to;
+        bh=SWP2X2+azRyixrjWTJYqW45Td6DT0R10Lg/kNNX7rQU=;
+        b=H0HeorcxliTAnUB/lc1A/hckSPgDVvmGfmBJnbx7xbwbB4lboQ2UcZDHUS8kAy8wj7
+         liNjEV4TJ8bnJy7nTC3ROOjDWUxwNFh1pO/gTqjTgjtWJK5oOjlgiKq4TTuUcissT1+s
+         2Qspbe7O4ghWU4sAJnHMHv2aZ/HoOHM5i2HPSnZg87lFVSbqr8gPMk7ZosCiDHA8ANRS
+         YxD4CQFgBJCdsazWTrvgLebowL7PottwxDGhDD7e4bq3hCTT8+YrcLltcK+0Fv2fh548
+         mJKx7lQI51F01MiHy26tNqQ5cOKzgKRfViohjLuMdyPiqNQ34S77O6T7AZV/vSQUeYBc
+         2xRg==
+X-Gm-Message-State: AGi0PubQ/ghLNFf0tVxaVTxB7tuOGfrRh7ljWfBoBQAq1TFmqFgEzzi/
+        B1I7HrBruriWHij0VrPXQB2EqA==
+X-Google-Smtp-Source: APiQypIr4WjwzqF01mqiFbRCkzXFDcsV8vJ6bRcKT9P0+wyECmYt6TgczN9wRKV2kYBT/QbSNs6vZg==
+X-Received: by 2002:a17:90b:3588:: with SMTP id mm8mr22957368pjb.202.1589225296927;
+        Mon, 11 May 2020 12:28:16 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id fu12sm10800758pjb.20.2020.05.11.12.28.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 12:28:01 -0700 (PDT)
-Received: (nullmailer pid 14321 invoked by uid 1000);
-        Mon, 11 May 2020 19:28:00 -0000
-Date:   Mon, 11 May 2020 14:28:00 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, heikki.krogerus@linux.intel.com,
-        twawrzynczak@chromium.org, Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-Message-ID: <20200511192800.GA28762@bogus>
-References: <20200422222242.241699-1-pmalani@chromium.org>
+        Mon, 11 May 2020 12:28:16 -0700 (PDT)
+Date:   Mon, 11 May 2020 12:29:09 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     robh+dt@kernel.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, evgreen@chromium.org,
+        ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 6/7] arm64: dts: qcom: sc7180: Add Q6V5 MSS node
+Message-ID: <20200511192909.GC2166963@builder.lan>
+References: <20200421143228.8981-1-sibis@codeaurora.org>
+ <20200421143228.8981-7-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422222242.241699-1-pmalani@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200421143228.8981-7-sibis@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 03:22:39PM -0700, Prashant Malani wrote:
-> Add properties for mode, orientation and USB data role switches for
-> Type C connectors. When available, these will allow the Type C connector
-> class port driver to configure the various switches according to USB PD
-> information (like orientation, alt mode etc.) provided by the Chrome OS
-> EC controller.
+On Tue 21 Apr 07:32 PDT 2020, Sibi Sankar wrote:
+
+> This patch adds Q6V5 MSS PAS remoteproc node for SC7180 SoCs.
 > 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  .../bindings/chrome/google,cros-ec-typec.yaml | 27 ++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 ++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> index 6d7396ab8bee..b5814640aa32 100644
-> --- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -21,7 +21,21 @@ properties:
->      const: google,cros-ec-typec
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 65c14a6d13fef..94cead96eade0 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1323,6 +1323,42 @@ pinconf-sd-cd {
+>  			};
+>  		};
 >  
->    connector:
-> -    $ref: /schemas/connector/usb-connector.yaml#
-> +    allOf:
-> +      - $ref: /schemas/connector/usb-connector.yaml#
-> +      - type: object
-> +        properties:
-
-These don't seem CrOS EC specific, so why document them as such. 
-
-> +          mode-switch:
-> +            description: Reference to a DT node for the USB Type C Multiplexer
-> +              controlling the data lines routing for this connector.
-
-This is for alternate mode muxing I presume.
-
-We already have a mux-control binding. Why not use that here?
-
+> +		remoteproc_mpss: remoteproc@4080000 {
+> +			compatible = "qcom,sc7180-mpss-pas";
+> +			reg = <0 0x04080000 0 0x4040>;
 > +
-> +          orientation-switch:
-> +            description: Reference to a DT node for the USB Type C orientation
-> +              switch for this connector.
-
-What's in this node?
-
+> +			interrupts-extended = <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
+> +					      <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +					      <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +					      <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +					      <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
+> +					      <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "wdog", "fatal", "ready", "handover",
+> +					  "stop-ack", "shutdown-ack";
 > +
-> +          usb-role-switch:
-> +            description: Reference to a DT node for the USB Data role switch
-> +              for this connector.
->  
->  required:
->    - compatible
-> @@ -49,6 +63,17 @@ examples:
->              data-role = "dual";
->              try-power-role = "source";
->            };
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +			clock-names = "xo";
 > +
-> +          connector@1 {
-> +            compatible = "usb-c-connector";
-> +            reg = <1>;
-> +            power-role = "dual";
-> +            data-role = "host";
-> +            try-power-role = "source";
-> +            mode-switch = <&typec_mux>;
-> +            orientation-switch = <&typec_orientation_switch>;
-> +            usb-role-switch = <&typec_mux>;
-> +          };
->          };
->        };
->      };
+> +			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
+> +					<&rpmhpd SC7180_CX>,
+> +					<&rpmhpd SC7180_MSS>;
+> +			power-domain-names = "load_state", "cx", "mss";
+> +
+> +			memory-region = <&mpss_mem>;
+> +
+> +			qcom,smem-states = <&modem_smp2p_out 0>;
+> +			qcom,smem-state-names = "stop";
+> +
+> +			status = "disabled";
+> +
+> +			glink-edge {
+> +				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
+> +				label = "modem";
+> +				qcom,remote-pid = <1>;
+> +				mboxes = <&apss_shared 12>;
+> +			};
+> +		};
+> +
+>  		sdhc_2: sdhci@8804000 {
+>  			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+>  			reg = <0 0x08804000 0 0x1000>;
 > -- 
-> 2.26.1.301.g55bc3eb7cb9-goog
-> 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
