@@ -2,118 +2,190 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49216C54E8D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 11:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD528C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 12:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29137208DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 11:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18D0206F5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 12:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbgEKL7c convert rfc822-to-8bit (ORCPT
+        id S1729135AbgEKMHJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 07:59:32 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:39149 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729929AbgEKL7b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 07:59:31 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 50DF220006;
-        Mon, 11 May 2020 11:59:28 +0000 (UTC)
-Date:   Mon, 11 May 2020 13:59:26 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
-        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-Subject: Re: [PATCH v4 10/10] mtd: rawnand: stm32_fmc2: get resources from
- parent node
-Message-ID: <20200511135926.3e5c622d@xps13>
-In-Reply-To: <3377adc6-3e5e-b9b7-12be-c7aa44bfac82@st.com>
-References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
-        <1588756279-17289-11-git-send-email-christophe.kerello@st.com>
-        <20200511111855.48216940@xps13>
-        <3377adc6-3e5e-b9b7-12be-c7aa44bfac82@st.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Mon, 11 May 2020 08:07:09 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52294 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728531AbgEKMHJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 08:07:09 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A8132200BA6;
+        Mon, 11 May 2020 14:07:06 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F004F20025F;
+        Mon, 11 May 2020 14:07:01 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 195BF402A7;
+        Mon, 11 May 2020 20:06:56 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        andrew.smirnov@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2] dt-bindings: reset: Convert i.MX7 reset to json-schema
+Date:   Mon, 11 May 2020 19:57:42 +0800
+Message-Id: <1589198262-21372-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Christophe,
+Convert the i.MX7 reset binding to DT schema format using json-schema.
 
-Christophe Kerello <christophe.kerello@st.com> wrote on Mon, 11 May
-2020 12:21:03 +0200:
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- Improve description;
+	- Remove i.MX8MM and i.MX8MN compatible, they use i.MX8MQ's compatible;
+	- Keep original author as maintainer;
+	- Remove unnecessary "..." at the end of file.
+---
+ .../devicetree/bindings/reset/fsl,imx7-src.txt     | 56 ---------------------
+ .../devicetree/bindings/reset/fsl,imx7-src.yaml    | 58 ++++++++++++++++++++++
+ 2 files changed, 58 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
 
-> Hi Miquel,
-> 
-> On 5/11/20 11:18 AM, Miquel Raynal wrote:
-> > Hi Christophe,
-> > 
-> > Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
-> > 11:11:19 +0200:
-> >   
-> >> FMC2 EBI support has been added. Common resources (registers base
-> >> and clock) are now shared between the 2 drivers. It means that the
-> >> common resources should now be found in the parent device when EBI
-> >> node is available.
-> >>
-> >> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >> ---  
-> > 
-> > [...]
-> >   
-> >> +
-> >> +static bool stm32_fmc2_nfc_check_for_parent(struct platform_device *pdev)
-> >> +{
-> >> +	u32 i;
-> >> +	int nb_resources = 0;
-> >> +
-> >> +	/* Count the number of resources in reg property */
-> >> +	for (i = 0; i < pdev->num_resources; i++) {
-> >> +		struct resource *res = &pdev->resource[i];
-> >> +
-> >> +		if (resource_type(res) == IORESOURCE_MEM)
-> >> +			nb_resources++;
-> >> +	}
-> >> +
-> >> +	/* Each CS needs 3 resources defined (data, cmd and addr) */
-> >> +	if (nb_resources % 3)
-> >> +		return false;
-> >> +
-> >> +	return true;
-> >> +}  
-> > 
-> > This function looks fragile. Why not just checking the compatible
-> > string of the parent node?
-> >   
-> 
-> Yes, it is another way to check that we have an EBI parent node.
-> 
-> In this implementation, I was checking the number of reg tuples.
-> In case we have 6, it means that the register base address is defined in the parent node (EBI node).
-> In case we have 7, it means that the register base address is defined in the current node (NFC node).
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+deleted file mode 100644
+index e10502d..0000000
+--- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
++++ /dev/null
+@@ -1,56 +0,0 @@
+-Freescale i.MX7 System Reset Controller
+-======================================
+-
+-Please also refer to reset.txt in this directory for common reset
+-controller binding usage.
+-
+-Required properties:
+-- compatible:
+-	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
+-	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
+-	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
+-	- For i.MX8MN SoCs should be "fsl,imx8mn-src", "fsl,imx8mq-src", "syscon"
+-	- For i.MX8MP SoCs should be "fsl,imx8mp-src", "syscon"
+-- reg: should be register base and length as documented in the
+-  datasheet
+-- interrupts: Should contain SRC interrupt
+-- #reset-cells: 1, see below
+-
+-example:
+-
+-src: reset-controller@30390000 {
+-     compatible = "fsl,imx7d-src", "syscon";
+-     reg = <0x30390000 0x2000>;
+-     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+-     #reset-cells = <1>;
+-};
+-
+-
+-Specifying reset lines connected to IP modules
+-==============================================
+-
+-The system reset controller can be used to reset various set of
+-peripherals. Device nodes that need access to reset lines should
+-specify them as a reset phandle in their corresponding node as
+-specified in reset.txt.
+-
+-Example:
+-
+-	pcie: pcie@33800000 {
+-
+-		...
+-
+-		resets = <&src IMX7_RESET_PCIEPHY>,
+-			 <&src IMX7_RESET_PCIE_CTRL_APPS_EN>;
+-		reset-names = "pciephy", "apps";
+-
+-		...
+-        };
+-
+-
+-For list of all valid reset indices see
+-<dt-bindings/reset/imx7-reset.h> for i.MX7,
+-<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
+-<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM and
+-<dt-bindings/reset/imx8mq-reset.h> for i.MX8MN and
+-<dt-bindings/reset/imx8mp-reset.h> for i.MX8MP
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
+new file mode 100644
+index 0000000..b1a71c1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/fsl,imx7-src.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX7 System Reset Controller
++
++maintainers:
++  - Andrey Smirnov <andrew.smirnov@gmail.com>
++
++description: |
++  The system reset controller can be used to reset various set of
++  peripherals. Device nodes that need access to reset lines should
++  specify them as a reset phandle in their corresponding node as
++  specified in reset.txt.
++
++  For list of all valid reset indices see
++    <dt-bindings/reset/imx7-reset.h> for i.MX7,
++    <dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ, i.MX8MM and i.MX8MN,
++    <dt-bindings/reset/imx8mp-reset.h> for i.MX8MP.
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - fsl,imx7d-src
++        - fsl,imx8mq-src
++        - fsl,imx8mp-src
++      - const: syscon
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  '#reset-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#reset-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    reset-controller@30390000 {
++        compatible = "fsl,imx7d-src", "syscon";
++        reg = <0x30390000 0x2000>;
++        interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++        #reset-cells = <1>;
++    };
+-- 
+2.7.4
 
-Yes, I understand what you are doing, but I kind of dislike the logic.
-Relying on the number of reg tuples is something that can be done (I
-used it myself one time), but I think this is more a hack that you do
-when you have no other way to differentiate. I guess the proper way
-would be to look at the parent's compatible. If it matches what you
-expect, then you can store the dev->of_node->parent->dev somewhere in
-your controller's structure and then use it to initialize the clock and
-regmap. This way you don't have to move anything else in the probe path.
-
-
-Thanks,
-Miquèl
