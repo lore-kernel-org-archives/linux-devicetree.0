@@ -2,81 +2,132 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC39C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 23:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A00C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 23:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D99920714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 23:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F1B2075E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 23:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589238339;
-	bh=ebxSEPhPoT6znp/xAMrvjEzxTayg+GYc9BOyEzk4xPM=;
+	s=default; t=1589238778;
+	bh=x8x3DhB8f5kbUfakzncJcuvtoDFk8v6tNoBbHJVN20I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Eu9aAB2xj/wg2/RKDHdFHhuTxntnDilW5/H8Wo9r0aeThRleIZW0Hzanmx8nWjzMx
-	 2Ca/eVYyoqvGZW4aNivorVItvt0Bb91rdXjmquCWoLkmv7oXUAQjm+duw9dg3J1FVu
-	 6JO77vuiYgOtaasBDwvGqrOjfpmDXPFRoA5CX6x0=
+	b=Btm9AoS6/9fG3u9+9mL9qNxSG5Q91S0VFKhAAyq+ISUbXd+dTtnB14+RHfRkuqzfN
+	 r5FlUIwowr1Xi9liWqZ0lp0SUtSLy65WCjuBzBGnoCfHdAeBgbvFKfsgCMzBrG9FI0
+	 dn7x3Z402nEQgqru5KSFFS7BoAVH1K4eMxDqWRn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgEKXFj (ORCPT
+        id S1725881AbgEKXM6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 19:05:39 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36551 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgEKXFi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 19:05:38 -0400
-Received: by mail-oi1-f193.google.com with SMTP id x7so15730423oic.3;
-        Mon, 11 May 2020 16:05:38 -0700 (PDT)
+        Mon, 11 May 2020 19:12:58 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:46431 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgEKXM6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 19:12:58 -0400
+Received: by mail-oo1-f67.google.com with SMTP id x16so2324336oop.13;
+        Mon, 11 May 2020 16:12:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uQPtZnlk6tVZCxmnEPskW6TpGbRAQgAZrpD/f0dkcoA=;
-        b=PW9hOHLMeomgn1/vgqpawvQr2qXknAgCe6u64YyLAdSgHMiJJRWTcsafZrmfTX3/GD
-         Q+XK/4F80PI3Gca+beYJbBIl4uA5Bk/jad4J4ucuWE3ojoP34kt2DIF5IFyCuwzT6y/s
-         A/lVcXBVikkyljv/CdKxxUp0kJ+qjWAAK7TOVL3Z5wMdRhmIo20d7WE6cG/3OWOPGqPs
-         tKZiWyTZ8BYGnwInLdQrJm/jTVDq7LEOvcfeORmFGELS/b+E3UCd89UK7E5UPHJpviki
-         TLZS/Y3NaGnBTPwULN/aAah6b891zbJ87psLOkaIckJdTPtc1/8wwYMfS6495fAswqCq
-         xOHg==
-X-Gm-Message-State: AGi0PuYAD5kN/qeLOYx8wCgT/ZkLyd9Cu5EZ195AzwBC8vXQ2vAVijVg
-        9xfSVkuV3KjUPHLBX6kOmQ==
-X-Google-Smtp-Source: APiQypKnBJSyR/IWwACxzGz7RWmKQhCKJO8hffRYERtZ/2ymbdXAqGeJp/Hg0+RfGyBC13R2O6Y9tw==
-X-Received: by 2002:aca:4e10:: with SMTP id c16mr21483560oib.140.1589238338044;
-        Mon, 11 May 2020 16:05:38 -0700 (PDT)
+        bh=YDsjgW4MArlBA1SB+uZg3khyj2WK0GRuGD4JKeBynv8=;
+        b=OvD1PtAqLFZSYqeXOJRIw1+jVbfNsbD9Ze/zWqKiTzrL3NYbehegJ5bvNMkKG3vYKp
+         bCJdRr9BQZ5BxgMXV4pd1eM6YuWL+Pz7XrDuYcEe+AkC9+RF9tWHfcDFMCOwy6nUIbAy
+         mo4mSevWP61/sxq89y09eky+53ju2goCLCY3n6Gh1YpVDAIEj9Fftd8fxB8UiGyw4zVq
+         nu0wMqxKDOB0Iwr8MeYx7sHMdl2T+W4coDaH5wtRWPLsWXKAhmulIps/aotWHa65fVg+
+         t4eoqpy8LhHnYGvGXOAO64D93s67s2Z/aBmebicgO8V90jpPoVr422BC36pxrdW3r/Z4
+         6jTA==
+X-Gm-Message-State: AGi0PubbRzk+Tyh4NUYMF7hoKyLxo/MS8szh1CzsV2MMv7L+udSZYICf
+        ZYVGWKy9itWyM5Vf2RSc3g==
+X-Google-Smtp-Source: APiQypJYcIJELa5zMY/ISbRUVZAa+Q7Ic4+PGG1ZB0L0pvzkPLwl0FKURFdszYQ9BrNGvh3O0VOGQw==
+X-Received: by 2002:a4a:af0d:: with SMTP id w13mr3249600oon.77.1589238776873;
+        Mon, 11 May 2020 16:12:56 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t10sm3152164oou.38.2020.05.11.16.05.36
+        by smtp.gmail.com with ESMTPSA id m65sm2138476oib.49.2020.05.11.16.12.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 16:05:37 -0700 (PDT)
-Received: (nullmailer pid 23889 invoked by uid 1000);
-        Mon, 11 May 2020 23:05:36 -0000
-Date:   Mon, 11 May 2020 18:05:36 -0500
+        Mon, 11 May 2020 16:12:56 -0700 (PDT)
+Received: (nullmailer pid 11706 invoked by uid 1000);
+        Mon, 11 May 2020 23:12:55 -0000
+Date:   Mon, 11 May 2020 18:12:55 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: aoss: Add SM8250 compatible
-Message-ID: <20200511230536.GA23509@bogus>
-References: <20200427054202.2822144-1-bjorn.andersson@linaro.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: leds: common: Drop enumeration for
+ linux,default-triggers
+Message-ID: <20200511231255.GA24112@bogus>
+References: <20200427073132.29997-1-wens@kernel.org>
+ <20200427073132.29997-2-wens@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200427054202.2822144-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200427073132.29997-2-wens@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 26 Apr 2020 22:42:02 -0700, Bjorn Andersson wrote:
-> Add SM8250 compatible to the qcom_aoss binding and driver.
+On Mon, Apr 27, 2020 at 03:31:30PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 1 +
->  drivers/soc/qcom/qcom_aoss.c                                 | 1 +
->  2 files changed, 2 insertions(+)
-> 
+> The bindings currently list a very small subset of valid triggers for
+> LEDs. Since many drivers or subsystems in Linux register custom
+> triggers, the list would become very hard to maintain.
 
-Acked-by: Rob Herring <robh@kernel.org>
+The idea was we'll consolidate around standardized names and that new 
+users should use 'function' instead.
+
+There was discussion around this when adding 'function'.
+
+> 
+> Instead, just drop the list and allow free form strings.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  .../devicetree/bindings/leds/common.yaml      | 21 +------------------
+>  1 file changed, 1 insertion(+), 20 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
+> index 4c270fde4567..3b3cdab3fc15 100644
+> --- a/Documentation/devicetree/bindings/leds/common.yaml
+> +++ b/Documentation/devicetree/bindings/leds/common.yaml
+> @@ -79,26 +79,7 @@ properties:
+>      description:
+>        This parameter, if present, is a string defining the trigger assigned to
+>        the LED.
+> -    allOf:
+> -      - $ref: /schemas/types.yaml#definitions/string
+> -    enum:
+> -        # LED will act as a back-light, controlled by the framebuffer system
+> -      - backlight
+> -        # LED will turn on (but for leds-gpio see "default-state" property in
+> -        # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
+> -      - default-on
+> -        # LED "double" flashes at a load average based rate
+> -      - heartbeat
+> -        # LED indicates disk activity
+> -      - disk-activity
+> -        # LED indicates IDE disk activity (deprecated), in new implementations
+> -        # use "disk-activity"
+> -      - ide-disk
+> -        # LED flashes at a fixed, configurable rate
+> -      - timer
+> -        # LED alters the brightness for the specified duration with one software
+> -        # timer (requires "led-pattern" property)
+> -      - pattern
+> +    $ref: /schemas/types.yaml#definitions/string
+>  
+>    led-pattern:
+>      description: |
+> -- 
+> 2.26.0
+> 
