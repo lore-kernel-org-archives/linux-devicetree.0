@@ -2,117 +2,98 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B08DC54E8D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 17:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB28C54E8D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 17:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC8D8206D7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 17:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589219288;
-	bh=wMEMJYTv7QV0ECsZmoOg8Kr2JK7/KvfUPQh00brbquI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m0oX6Oh8CCj7ipqN2qEJJRfuwqPx/4SdKFpxDEIUIFGSriIn4mm/4bkT66J+nIBHW
-	 d/yXxc5WiYhLsvrikFGAPaIAt5wtzRDn3tWlI0PdMUFewb3TD9nL7Umw1mtSdN+X2m
-	 nA4z8caxC0FdIXRHGA+BeKOi2YPjOJa8higwERWU=
+	by mail.kernel.org (Postfix) with ESMTP id 2FBFA206D9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 17:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jq6yCf1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbgEKRsE (ORCPT
+        id S1730909AbgEKR6Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 13:48:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgEKRsD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 13:48:03 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0F2F206D6;
-        Mon, 11 May 2020 17:48:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589219283;
-        bh=wMEMJYTv7QV0ECsZmoOg8Kr2JK7/KvfUPQh00brbquI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NHW97AiwEUgFPiC2JXkXrlrBnms7ixFyLSl/kfMXK3WJWFNSOMDf8lEPJKfCVQLS/
-         OBkZcgbGx5PgH4HODCmGlO6+3EHYA3AAe3Zwyc1fRUn0X9MfIi1w/PmP+qQV8dU06h
-         k+i6kgGtq6xyeDdbEM0jlxTYkob9FnLUT3fwYu2Q=
-Date:   Mon, 11 May 2020 18:48:00 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511174800.GM8216@sirena.org.uk>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
+        Mon, 11 May 2020 13:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727051AbgEKR6Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 13:58:16 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20CC7C061A0C;
+        Mon, 11 May 2020 10:58:16 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id u5so2295854pgn.5;
+        Mon, 11 May 2020 10:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ewo7Y6chWzahC/8uHySmz/oT41IZaTGhAlBYldBBuQw=;
+        b=jq6yCf1on4G5aYtuEuUT/5x8AgA/e10+UJpR66YTZ4xAqONxQ20Wqo6dB0mTU3RA0/
+         Q7maQBYjHAob1exPPkrXB9qTztnAn+6RfvganSez2vkpn+bRVbMAMckoVvpQH2rSgsGO
+         T6+/SgZ5o4c2WSLcYBxZdvgHi5uZeXTUfGqWbyXeVo/ufD6SXJi3fZ6+nP7c9RfOW8bi
+         SFfda5RcmXkiYqVW71RiQWTuU6mog+W8c9SNEnYHBLZXjnyzFPQFwE20whMXa2Ef8PQa
+         wWjaBA+7JGdyrugFUBDeH12/MWEzdFxOle/bmlumskblHLzdAytaP+iY7L6kGoCrBlbB
+         XvzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ewo7Y6chWzahC/8uHySmz/oT41IZaTGhAlBYldBBuQw=;
+        b=NLTUsu4AXzH4Dzj8sYuMikAlj1hG1zZyzK8UtgT+IkdKXWYN27PdJXoLNk9+d8uiRS
+         FJ0TNvSNtcxPgYRWOLhN7j6Zj9BJsAoMO30VjDMK7qonEvNqE+8VhnqkqO1s4XPq7qLR
+         8MDy5y8vLQJohY4+pYHVHaBP6UUQjrx+R9w7xWrMBvv8SFemTfV7urXtw9gJs12b8qPl
+         Q803UND51/drOnqDCyXL143d5Eg1b9kDw96WgthuQvY8zDd8HVXifD4F9C3ePWxoi0cw
+         3eqrrqKQiveK70rRokgK9cT4Q+uaDRZXNFZwvHvmsIdvB4Yg93E4R53lj992XNlwq1AI
+         Lrtw==
+X-Gm-Message-State: AGi0PuZvyA+LRScPYUxW3y8hEe3Zg91h8Qxob6g6+1geQf0C+qxh1xmH
+        ZGJ6TO7lUDYR3JZajbd4aOY=
+X-Google-Smtp-Source: APiQypLgJTSjPkJBquxFQkWlJ+oMPfi2kDwo3EYV9AIu9TpKlNo6XUHoSBwNEVpvrBx26HqJOliHrg==
+X-Received: by 2002:a65:5cc2:: with SMTP id b2mr15377905pgt.7.1589219895468;
+        Mon, 11 May 2020 10:58:15 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id h8sm9687544pfo.143.2020.05.11.10.58.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 10:58:14 -0700 (PDT)
+Date:   Mon, 11 May 2020 10:58:12 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, kernel@collabora.com
+Subject: Re: [PATCH 1/6] tty/sysrq: Remove linux,sysrq-reset-seq
+Message-ID: <20200511175812.GT89269@dtor-ws>
+References: <20200511135918.8203-1-andrzej.p@collabora.com>
+ <20200511135918.8203-2-andrzej.p@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iAzLNm1y1mIRgolD"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
-X-Cookie: TANSTAAFL
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200511135918.8203-2-andrzej.p@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Andrzej,
 
---iAzLNm1y1mIRgolD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, May 11, 2020 at 03:59:13PM +0200, Andrzej Pietrasiewicz wrote:
+> Nobody in the tree uses linux,sysrq-reset-seq in Device Tree source files.
+> Remove the corresponding code.
 
-On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
-> On Mon, May 11, 2020 at 4:48 PM Serge Semin
+Unlike platform data, we do not require or even expect that all DT users
+be present in mainline, so absence if references to a feature in kernel
+can not serve as justification for removal. Consider the fact that we
+support DT-style binding in ACPI (which is BIOS/firmware).
 
-> > So the question is of how to export the multi-block LLP flag from DW DMAc
-> > driver. Andy?
+That said, I am not against removing this support, but we need to make
+sure that Android (where this came from) does not use this anymore.
 
-> I'm not sure I understand why do you need this being exported. Just
-> always supply SG list out of single entry and define the length
-> according to the maximum segment size (it's done IIRC in SPI core).
+Thanks.
 
-If there's a limit from the dmaengine it'd be a bit cleaner to export
-the limit from the DMA engine (and it'd help with code reuse for clients
-that might work with other DMA controllers without needing to add custom
-compatibles for those instantiations).
-
---iAzLNm1y1mIRgolD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65j9AACgkQJNaLcl1U
-h9CW7Qf/WGO8TNWVzyUGl/3wXiPWSDeKL6mPAy3EcUtkcXRuUnK07U+BAtkYT7c/
-R+5/XKdntnpIGjzQAZRmYkJEh6Jxjjh+AIep/mWOMTF/DsyI1SD5wqKiFbTtm3oS
-TtVssPbTrfMQBa4TygfXjr5eTTLaShLK4Jn9S2sWSwk+Exhsu2BJfCBPYJkZO1Vr
-dA0mvt6Yka80WEMDnSa5iVsScFre0+x/9aMRLEFnHfbZz1QLj9XrjMXJo3zB21zn
-t3ZvfPlgjq0bCGCwpxS87A8Iti565Ot9EK3z6TzFW4t+jxm9EVsSMFrbw1/0JU94
-HWu8ra8zI8sxBaQXhFl2HPANU0bAPg==
-=hNqm
------END PGP SIGNATURE-----
-
---iAzLNm1y1mIRgolD--
+-- 
+Dmitry
