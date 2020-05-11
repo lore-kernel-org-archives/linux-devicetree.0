@@ -2,102 +2,115 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2960AC47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 12:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CBEC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 12:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0072620746
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 12:07:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nijYdYWK"
+	by mail.kernel.org (Postfix) with ESMTP id A30F4207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 12:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgEKMH5 (ORCPT
+        id S1729309AbgEKMZC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 08:07:57 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:3457 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727873AbgEKMH5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 08:07:57 -0400
-X-UUID: 2b1d2213b8f043dba6a23fbf1278bda7-20200511
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vMipxxyx4vvbm6f5PGT2B9rTKQUVPBjJU6zHZu06PhY=;
-        b=nijYdYWKJk1lzibIVt030yqGOvFax/1AxuCU4dnlCz1eTIQp9rhRPGj1G390+fSzgtzOZRF0CuVjULyhUffyV3kbsL6BSV7UdjVL6TBQTZ6WOJMb3/hy65sJWYUIDMmyKrA+0U0DooE3Kpyd1ac9uBkFsdaMoATLZkTNX33QycU=;
-X-UUID: 2b1d2213b8f043dba6a23fbf1278bda7-20200511
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 813659591; Mon, 11 May 2020 20:07:49 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 11 May
- 2020 20:07:49 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 11 May 2020 20:07:47 +0800
-Message-ID: <1589198795.8804.276.camel@mhfsdcap03>
-Subject: Re: [V8, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <mchehab@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
-        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
-        <bingbu.cao@intel.com>, <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
-Date:   Mon, 11 May 2020 20:06:35 +0800
-In-Reply-To: <20200511093308.GF185537@smile.fi.intel.com>
-References: <20200509080627.23222-1-dongchun.zhu@mediatek.com>
-         <20200509080627.23222-3-dongchun.zhu@mediatek.com>
-         <20200511093308.GF185537@smile.fi.intel.com>
+        Mon, 11 May 2020 08:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727913AbgEKMZC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 08:25:02 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80F7C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 05:25:01 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 79A402A117C
+Message-ID: <28fa96d51523448656c71656dc80177d08c481ed.camel@collabora.com>
+Subject: Re: [PATCH v2 3/6] ARM: dts: zynq: add port definitions to
+ hdmi-tx@39
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, geert+renesas@glider.be,
+        robh+dt@kernel.org, xuwei5@hisilicon.com,
+        Ricardo =?ISO-8859-1?Q?Ca=F1uelo?= 
+        <ricardo.canuelo@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Date:   Mon, 11 May 2020 09:24:49 -0300
+In-Reply-To: <20200511110611.3142-4-ricardo.canuelo@collabora.com>
+References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
+         <20200511110611.3142-4-ricardo.canuelo@collabora.com>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 1C8EC2EFA9EA89E9356A83C33519571046D31C38383666B09EF4913B1E4D0A3F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQW5keSwNCg0KVGhhbmtzIGZvciB0aGUga2luZGx5IHJldmlldy4NCg0KT24gTW9uLCAyMDIw
-LTA1LTExIGF0IDEyOjMzICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6DQo+IE9uIFNhdCwg
-TWF5IDA5LCAyMDIwIGF0IDA0OjA2OjI3UE0gKzA4MDAsIERvbmdjaHVuIFpodSB3cm90ZToNCj4g
-PiBBZGQgYSBWNEwyIHN1Yi1kZXZpY2UgZHJpdmVyIGZvciBPVjAyQTEwIGltYWdlIHNlbnNvci4N
-Cj4gDQo+IC4uLg0KPiANCj4gPiArI2RlZmluZSBPVjAyQTEwX0lEKF9tc2IsIF9sc2IpCQkJCSgo
-X21zYikgPDwgOCB8IChfbHNiKSkNCj4gDQo+IEhvdyBvZnRlbiBkbyB5b3UgdXNlIHRoaXMgbWFj
-cm8/DQo+IA0KDQpKdXN0IG9uY2UuDQpJIHdvdWxkIHRyeSB0byB1c2UgdGhlIG1hY3JvIGZ1bmN0
-aW9uIGRpcmVjdGx5IGluIG5leHQgcmVsZWFzZS4NCg0KPiAuLi4NCj4gDQo+ID4gK3N0YXRpYyBp
-bnQgb3YwMmExMF9yZWFkX3NtYnVzKHN0cnVjdCBvdjAyYTEwICpvdjAyYTEwLCB1bnNpZ25lZCBj
-aGFyIHJlZywNCj4gPiArCQkJICAgICAgdW5zaWduZWQgY2hhciAqdmFsKQ0KPiA+ICt7DQo+ID4g
-KwlzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gdjRsMl9nZXRfc3ViZGV2ZGF0YSgmb3YwMmEx
-MC0+c3ViZGV2KTsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gaTJjX3NtYnVz
-X3JlYWRfYnl0ZV9kYXRhKGNsaWVudCwgcmVnKTsNCj4gDQo+ID4gKw0KPiANCj4gRXh0cmEgYmxh
-bmsgbGluZS4NCj4gDQoNClRoYW5rcyBmb3IgdGhlIGNhcmVmdWxseSByZW1pbmRlci4NClRoaXMg
-ZXJyb3IgY2FuIGVhc2lseSBiZSBuZWdsZWN0ZWQuDQpJIHdvdWxkIHJlbW92ZSBpdCBpbiBuZXh0
-IHJlbGVhc2UuDQoNCj4gPiArCWlmIChyZXQgPCAwKQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4g
-Kw0KPiA+ICsJKnZhbCA9ICh1bnNpZ25lZCBjaGFyKXJldDsNCj4gPiArDQo+ID4gKwlyZXR1cm4g
-MDsNCj4gPiArfQ0KPiANCj4gLi4uDQo+IA0KPiA+ICtzdGF0aWMgaW50IG92MDJhMTBfZW50aXR5
-X2luaXRfY2ZnKHN0cnVjdCB2NGwyX3N1YmRldiAqc2QsDQo+ID4gKwkJCQkgICBzdHJ1Y3QgdjRs
-Ml9zdWJkZXZfcGFkX2NvbmZpZyAqY2ZnKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgdjRsMl9zdWJk
-ZXZfZm9ybWF0IGZtdCA9IHsNCj4gDQo+ID4gKwkJLndoaWNoID0gY2ZnID8gVjRMMl9TVUJERVZf
-Rk9STUFUX1RSWQ0KPiA+ICsJCQkgICAgIDogVjRMMl9TVUJERVZfRk9STUFUX0FDVElWRSwNCj4g
-DQo+IEkgdGhpbmsgaXQgd291bGQgYmUgZmluZSB0byBoYXZlIGl0IG9uIG9uZSBsaW5lLg0KPiAN
-Cg0KR290IGl0Lg0KRml4ZWQgaW4gbmV4dCByZWxlYXNlLg0KDQo+ID4gKwkJLmZvcm1hdCA9IHsN
-Cj4gPiArCQkJLndpZHRoID0gMTYwMCwNCj4gPiArCQkJLmhlaWdodCA9IDEyMDAsDQo+ID4gKwkJ
-fQ0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlvdjAyYTEwX3NldF9mbXQoc2QsIGNmZywgJmZtdCk7
-DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gDQo+IC4uLg0KPiANCj4gPiArCWlm
-ICghcmV0KSB7DQo+ID4gKwkJaWYgKHJvdGF0aW9uID09IDE4MCkgew0KPiANCj4gaWYgKGEpIHsN
-Cj4gCWlmIChiKSB7DQo+IAkJLi4uDQo+IAl9DQo+IH0NCj4gDQo+ID09DQo+IA0KPiBpZiAoYSAm
-JiBiKSB7DQo+IAkuLi4NCj4gfQ0KPiANCg0KVGhhbmtzIGZvciB0aGUgcmVtaW5kZXIgOi0pDQpO
-ZXh0IHJlbGVhc2Ugd291bGQgdXNlOg0KaWYgKCFyZXQgJiYgcm90YXRpb24gPT0gMTgwKSB7DQoJ
-Li4uDQp9DQoNCj4gPiArCQkJb3YwMmExMC0+dXBzaWRlX2Rvd24gPSB0cnVlOw0KPiA+ICsJCQlv
-djAyYTEwLT5mbXQuY29kZSA9IE1FRElBX0JVU19GTVRfU1JHR0IxMF8xWDEwOw0KPiA+ICsJCX0N
-Cj4gPiArCX0NCj4gDQoNCg==
+(Adding Michal)
+
+On Mon, 2020-05-11 at 13:06 +0200, Ricardo Cañuelo wrote:
+> Define a 'ports' node for 'adv7511: hdmi-tx@39' to make it compliant with
+> the adi,adv7511 DT binding.
+> 
+> This fills the minimum requirements to meet the binding requirements,
+> remote endpoints are not defined.
+> 
+> Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+> ---
+>  arch/arm/boot/dts/zynq-zc702.dts | 10 ++++++++++
+>  arch/arm/boot/dts/zynq-zc706.dts | 10 ++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+> index 27cd6cb52f1b..79fd236edded 100644
+> --- a/arch/arm/boot/dts/zynq-zc702.dts
+> +++ b/arch/arm/boot/dts/zynq-zc702.dts
+> @@ -135,6 +135,16 @@
+>  				adi,input-clock = "1x";
+>  				adi,input-style = <3>;
+>  				adi,input-justification = "right";
+> +				ports {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					port@0 {
+> +						reg = <0>;
+> +					};
+> +					port@1 {
+> +						reg = <1>;
+> +					};
+> +				};
+>  			};
+>  		};
+>  
+> diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
+> index 77943c16d33f..99fa51ba6e93 100644
+> --- a/arch/arm/boot/dts/zynq-zc706.dts
+> +++ b/arch/arm/boot/dts/zynq-zc706.dts
+> @@ -93,6 +93,16 @@
+>  				adi,input-clock = "1x";
+>  				adi,input-style = <3>;
+>  				adi,input-justification = "evenly";
+> +				ports {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					port@0 {
+> +						reg = <0>;
+> +					};
+> +					port@1 {
+> +						reg = <1>;
+> +					};
+> +				};
+>  			};
+>  		};
+>  
+> -- 
+> 2.18.0
+> 
+> 
+
 
