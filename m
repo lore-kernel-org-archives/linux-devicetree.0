@@ -2,28 +2,28 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB89AC54E92
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 14:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5CEC54E95
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 14:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8456F20820
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 14:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04FE720708
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 14:05:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbgEKOF0 (ORCPT
+        id S1729680AbgEKOFb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 10:05:26 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43019 "EHLO
+        Mon, 11 May 2020 10:05:31 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:51909 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729279AbgEKOF0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 10:05:26 -0400
+        with ESMTP id S1730348AbgEKOFb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 10:05:31 -0400
 X-Originating-IP: 78.193.40.249
 Received: from localhost (unknown [78.193.40.249])
         (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A0EDD20008;
-        Mon, 11 May 2020 14:05:22 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 61BBE2000E;
+        Mon, 11 May 2020 14:05:28 +0000 (UTC)
 From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
 To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -36,10 +36,12 @@ Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         linux-input@vger.kernel.org, devicetree@vger.kernel.org,
         linux-iio@vger.kernel.org,
         Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: [PATCH v4 0/5] Microchip TCB Capture driver
-Date:   Mon, 11 May 2020 16:05:00 +0200
-Message-Id: <20200511140505.1649111-1-kamel.bouhara@bootlin.com>
+Subject: [PATCH v4 3/5] dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
+Date:   Mon, 11 May 2020 16:05:03 +0200
+Message-Id: <20200511140505.1649111-4-kamel.bouhara@bootlin.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200511140505.1649111-1-kamel.bouhara@bootlin.com>
+References: <20200511140505.1649111-1-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -47,68 +49,80 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Here is a new counter driver to support Microchip TCB capture devices.
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Each SoC has two TCB blocks, each one including three independent
-channels.The following series adds support for two counter modes:
-increase and quadrature decoder.
+The sama5d2 TC block TIMER_CLOCK1 is different from the at91sam9x5 one.
+Instead of being MCK / 2, it is the TCB GCLK.
 
-As for the atmel clocksource and pwm, the counter driver needs to fill
-some tcb capabilities in order to operate with the right configuration.
-This is achieved in first patch of this series.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+---
+ .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 36 +++++++++++++++----
+ 1 file changed, 30 insertions(+), 6 deletions(-)
 
-Please feel free to comment.
+diff --git a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+index 4b683151265e..38403760f64d 100644
+--- a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
++++ b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+@@ -19,6 +19,7 @@ properties:
+       - enum:
+           - atmel,at91rm9200-tcb
+           - atmel,at91sam9x5-tcb
++          - atmel,sama5d2-tcb
+       - const: simple-mfd
+       - const: syscon
 
-Cheers,
+@@ -38,12 +39,6 @@ properties:
+       t1_clk and t2_clk if a clock per channel is available.
+     minItems: 2
+     maxItems: 4
+-    items:
+-      enum:
+-        - t0_clk
+-        - t1_clk
+-        - t2_clk
+-        - slow_clk
 
-Changes in v4:
- - Use existing binding to document capture mode of the Microchip TCBs.
+   clocks:
+     minItems: 2
+@@ -72,6 +67,35 @@ patternProperties:
+       - compatible
+       - reg
 
-Changes in v3:
- - Updated the brand name: s/atmel/microchip/.
- - Added missing kernel doc for new elements introduced in structure
-   atmel_tcb_config.
- - Removed useless blank line
- - Added an explicit clock removing path using devm_add_action_or_reset
-
-Changes in v2:
- - Fixed first patch not applying on mainline
- - Updated return code to -EINVAL when user is requesting qdec mode on
-   a counter device not supporting it.
- - Added an error case returning -EINVAL when action edge is performed
-   in
-   qdec mode.
- - Removed no need to explicity setting ops to NULL from static struct
-   as
-   it is the default value.
- - Changed confusing code by using snprintf for the sake of clarity.
- - Changed code to use ARRAY_SIZE so that future reviewers will know
-   that num_counts matches what's in the atmel_tc_count array without
-   having to check so themselves.
- - Fixed errors reported by dt_binding_check
-
-Alexandre Belloni (2):
-  dt-bindings: atmel-tcb: convert bindings to json-schema
-  dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
-
-Kamel Bouhara (3):
-  ARM: at91: add atmel tcb capabilities
-  dt-bindings: counter: microchip-tcb-capture counter
-  counter: Add microchip TCB capture counter
-
- .../devicetree/bindings/mfd/atmel-tcb.txt     |  56 ---
- .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 172 ++++++++
- drivers/counter/Kconfig                       |  11 +
- drivers/counter/Makefile                      |   1 +
- drivers/counter/microchip-tcb-capture.c       | 397 ++++++++++++++++++
- include/soc/at91/atmel_tcb.h                  |   5 +
- 6 files changed, 586 insertions(+), 56 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
- create mode 100644 Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
- create mode 100644 drivers/counter/microchip-tcb-capture.c
-
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: atmel,sama5d2-tcb
++    then:
++      properties:
++        clocks:
++          minItems: 3
++          maxItems: 3
++        clock-names:
++          items:
++            - const: t0_clk
++            - const: gclk
++            - const: slow_clk
++    else:
++      properties:
++        clocks:
++          minItems: 2
++          maxItems: 4
++        clock-names:
++          items:
++            enum:
++              - t0_clk
++              - t1_clk
++              - t2_clk
++              - slow_clk
++
+ required:
+   - compatible
+   - reg
 --
 2.25.0
 
