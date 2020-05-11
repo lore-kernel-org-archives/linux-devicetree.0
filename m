@@ -2,143 +2,88 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A046C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8EAC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3FA82075E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CC72075E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQCg4mUX"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="f6xUb0CZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbgEKJGB (ORCPT
+        id S1726287AbgEKJJK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 05:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45462 "EHLO
+        Mon, 11 May 2020 05:09:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgEKJGA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 05:06:00 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB0E0C061A0C;
-        Mon, 11 May 2020 02:06:00 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id r2so7709249ilo.6;
-        Mon, 11 May 2020 02:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KXPQ8oL1xKkz5N/1TA82hvXaOeCuVTJr1m04oqy4j94=;
-        b=QQCg4mUX+wQSt9HJ5j0qgOn36rHY+87ZROvttm9Pa4pxhRgqIoB+DGF613qUhKHRQt
-         H7L2MAbI9i0x6oxqXk8aB9lVAJuhwZPxftcdY+6+Hxe3SF9yVatTdtd5zdBTcAiYpEZ7
-         0cXXftjo38Hv1w15ZeWjTTLAKEtl6DQVyksD1tXQ5u8lO86y9szmheVmCsODRIQXUfQb
-         ssgeZsR+jpJd9xGQALPQg/ZzfnATi+JPXIqUidFbf3WSZDHQ3MCybXqws+iEsv1rS4wW
-         Os+41ItdlZu00mg0xVudeuIg834QhX9wM4Q+DCodtzjvjTjlAryTAJduavjzUy44zZib
-         +UhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KXPQ8oL1xKkz5N/1TA82hvXaOeCuVTJr1m04oqy4j94=;
-        b=oz/YdI+1fkIG+SsXvVxWcp/QbBAgSl6En3C3oKBGZaQ/S2C4kCa03LbXldpt/Ir7ia
-         PsUY1M8HVCv6pAVmV2wKoLpTu4nIf/6fy+dS0KG3eq/6XOQpiUalnoq2wUw9mBh0LUnD
-         81amw3NSBj+vTcMXyJsEEyzThDeWAQAH4L6svMet6Xa/E1YWLfezna91qdE0Pr/p7kyH
-         5GpMUu2D8OK3IPW7jkO7monOC3d8QwDWM80b8SL/m81D8eMks/S2Z4M9lMdcSbdWpZ4w
-         jXQMaxVsIEvwV3svhjt4aNUFBD3s0pQJG8AokJjk1+PXIc9dS1mBR0dHHVKdBcj5wxyu
-         iMTA==
-X-Gm-Message-State: AGi0PubLAiCPATRE6Nt1jVpfrmz+enhvDNwxHpGLqGLoB6LvyAEW3TuC
-        qYi3el3d9V/2GwCYOg0yjffuFfvQo35RmDYJSLc=
-X-Google-Smtp-Source: APiQypLnjwDCTOoTp7cg995FVjGSfRMddjPCiRtwufCtIHvwd/5nPCOyL6yw+XfWN/gd71cdELN5CvnqJnAptBslxQQ=
-X-Received: by 2002:a92:607:: with SMTP id x7mr13744092ilg.218.1589187959912;
- Mon, 11 May 2020 02:05:59 -0700 (PDT)
+        with ESMTP id S1725790AbgEKJJJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 05:09:09 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AD2AC061A0C;
+        Mon, 11 May 2020 02:09:09 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3349023E50;
+        Mon, 11 May 2020 11:08:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1589188146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nYiBpFWVppKd294LTd9vUa0KsvmfWdjfxWQ8LrUsrj4=;
+        b=f6xUb0CZa5gRppVvuuzdVssw51YwDLUpFH/2hOk7zy3nS2DkjuGw35aY4HcwiTiCA8kfj/
+        QakS1wGwxdbCdCvps1WmznVZDb41Ew5+Lt9dNoejGoj304qs5dJBxhfo5VOfncp3MUfz2e
+        dCPI1ovbk7PVarPmfEmMEdswWVgPXEA=
 MIME-Version: 1.0
-References: <1589007503-9523-1-git-send-email-dillon.minfei@gmail.com>
- <1589007503-9523-3-git-send-email-dillon.minfei@gmail.com> <404e7f47-9c0f-44b1-aedb-a8d3af832d40@st.com>
-In-Reply-To: <404e7f47-9c0f-44b1-aedb-a8d3af832d40@st.com>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Mon, 11 May 2020 17:05:23 +0800
-Message-ID: <CAL9mu0+5T3q8V8Ng_1jfPGfBxDWzgd7T1hzcdUXj23-rEtOgfg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: stm32: enable l3gd20 on stm32429-disco board
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
-        Mark Brown <broonie@kernel.org>, p.zabel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Hua Dillon <dillonhua@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 11 May 2020 11:08:59 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, Peng Ma <peng.ma@nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: dma: fsl-edma: fix ls1028a-edma
+ compatible
+In-Reply-To: <20200413141830.GA4722@dragon>
+References: <20200306205403.29881-1-michael@walle.cc>
+ <20200413141830.GA4722@dragon>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <de4a40b03858930c15724302b3bf7bd0@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Alexandre,
+Hi Shawn Guo,
 
-Thanks for review.
+Am 2020-04-13 16:18, schrieb Shawn Guo:
+> On Fri, Mar 06, 2020 at 09:54:02PM +0100, Michael Walle wrote:
+>> The bootloader will fix up the IOMMU entries only on nodes with the
+>> compatible "fsl,vf610-edma". Thus make this compatible string 
+>> mandatory
+>> for the ls1028a-edma.
+>> 
+>> While at it, fix the "fsl,fsl," typo.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> Fixes: d8c1bdb5288d ("dt-bindings: dma: fsl-edma: add new 
+>> fsl,fsl,ls1028a-edma")
+> 
+> Applied both.  Will try to send for 5.7-rc inclusion.
 
-On Mon, May 11, 2020 at 3:17 PM Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
->
-> Hi
->
-> On 5/9/20 8:58 AM, dillon.minfei@gmail.com wrote:
-> > From: dillon min <dillon.minfei@gmail.com>
-> >
-> > Enable l3gd20 on stm32429-disco board.
->
-> You could add some words about l3gd20
-ok, thanks, i will add some description about l3gd20.
->
-> >
-> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> > ---
-> >   arch/arm/boot/dts/stm32f429-disco.dts | 24 ++++++++++++++++++++++++
-> >   1 file changed, 24 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-> > index 30c0f67..d365358 100644
-> > --- a/arch/arm/boot/dts/stm32f429-disco.dts
-> > +++ b/arch/arm/boot/dts/stm32f429-disco.dts
-> > @@ -49,6 +49,8 @@
-> >   #include "stm32f429.dtsi"
-> >   #include "stm32f429-pinctrl.dtsi"
-> >   #include <dt-bindings/input/input.h>
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/gpio/gpio.h>
-> >
-> >   / {
-> >       model = "STMicroelectronics STM32F429i-DISCO board";
-> > @@ -127,3 +129,25 @@
-> >       pinctrl-names = "default";
-> >       status = "okay";
-> >   };
-> > +
-> > +&spi5 {
-> > +     status = "okay";
-> > +     pinctrl-0 = <&spi5_pins>;
-> > +     pinctrl-names = "default";
-> > +     #address-cells = <1>;
-> > +     #size-cells = <0>;
-> > +     cs-gpios = <&gpioc 1 GPIO_ACTIVE_LOW>;
-> > +     dmas = <&dma2 3 2 0x400 0x0>,
-> > +            <&dma2 4 2 0x400 0x0>;
-> > +     dma-names = "rx", "tx";
->
-> Insert blank line here.
-ok
->
-> > +     l3gd20: l3gd20@0 {
-> > +             compatible = "st,l3gd20-gyro";
-> > +             spi-max-frequency = <10000000>;
-> > +             st,drdy-int-pin = <2>;
-> > +             interrupt-parent = <&gpioa>;
-> > +             interrupts = <1 IRQ_TYPE_EDGE_RISING>,
-> > +                             <2 IRQ_TYPE_EDGE_RISING>;
-> > +             reg = <0>;
-> > +             status = "okay";
-> > +     };
-> > +};
-> >
+Are there any news on the inclusion? Unfortunately, I also forgot the 
+fixes
+tag on patch 2/2, so it won't end up in v5.7.x.
+
+-michael
