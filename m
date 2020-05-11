@@ -2,128 +2,125 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04C6C54E8D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 14:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD20BC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 14:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5E2720675
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 14:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9CA206DD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 14:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgEKO5E (ORCPT
+        id S1729439AbgEKO7R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 10:57:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726068AbgEKO5E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 10:57:04 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33409C061A0C;
-        Mon, 11 May 2020 07:57:04 -0700 (PDT)
+        Mon, 11 May 2020 10:59:17 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52402 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727019AbgEKO7Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 10:59:16 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 19A532A1856
-Received: by earth.universe (Postfix, from userid 1000)
-        id 01FF53C08C6; Mon, 11 May 2020 16:57:00 +0200 (CEST)
-Date:   Mon, 11 May 2020 16:57:00 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-pm@vger.kernel.org, robh@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
-Message-ID: <20200511145700.lnytcr747snnolya@earth.universe>
-References: <20200507183013.27261-1-dmurphy@ti.com>
- <20200510161721.257vprq6rqp64wu5@earth.universe>
- <fb9b240e-9bfe-1295-6fc4-700d886ea7c9@ti.com>
- <20200511143241.nmkti7meahvj2swt@earth.universe>
- <8674289c-038d-d811-4786-322d66072527@ti.com>
+        (Authenticated sender: rcn)
+        with ESMTPSA id 67E002A1873
+Date:   Mon, 11 May 2020 16:59:11 +0200
+From:   Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To:     robh+dt@kernel.org
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>, robh+dt@kernel.org,
+        kernel@collabora.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net,
+        laurent.pinchart@ideasonboard.com
+Subject: Re: [RFC PATCH] dt-bindings: display: ti,tfp410.txt: convert to yaml
+Message-ID: <20200511145911.2yv3aepofxqwdsju@rcn-XPS-13-9360>
+Mail-Followup-To: robh+dt@kernel.org,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@collabora.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net,
+        laurent.pinchart@ideasonboard.com
+References: <20200428092048.14939-1-ricardo.canuelo@collabora.com>
+ <3e377c73-25a3-a7b3-0604-41c54d70039e@ti.com>
+ <20200506155320.GC15206@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lpudqiluygphtdpr"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8674289c-038d-d811-4786-322d66072527@ti.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200506155320.GC15206@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20171215
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
---lpudqiluygphtdpr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What's your opinion on this?
 
-Hi,
+Some context: It's about bindings that define signed integer properties
+with range checks that go below and above zero. The schema checker fails
+because, apparently, it interprets every cell value as an uint32, which
+makes the range check fail for negative numbers.
 
-On Mon, May 11, 2020 at 09:29:59AM -0500, Dan Murphy wrote:
-> On 5/11/20 9:32 AM, Sebastian Reichel wrote:
-> > On Mon, May 11, 2020 at 07:25:06AM -0500, Dan Murphy wrote:
-> > > On 5/10/20 11:17 AM, Sebastian Reichel wrote:
-> > > > This needs is missing the power-supplies property. The N900 DT
-> > > > contains a bq27200 referencing the charger, so it should fail the DT
-> > > > check without the property being listed here.
-> > > Hmm.=A0 I ran the dt checker specifically on the binding and it did n=
-ot fail.
-> > > Unless I need to build some other DTs as well.
-> > > Either I will have the power-supplies property
-> > I just tried it myself. The problem is the way you are specifying
-> > the compatible strings. This is the parsing result:
-> >=20
-> > enum: ['ti,bq27200 - BQ27200', 'ti,bq27210 - BQ27210', 'ti,bq27500 - de=
-precated,
-> >        use revision specific property below', ...
-> >=20
-> > You can see this in Documentation/devicetree/bindings/processed-schema.=
-yaml, which
-> > is generated by running the check. The compatible comments need a # as =
-separation
-> > character like this to generate proper bindings:
-> >=20
-> > properties:
-> >    compatible:
-> >      enum:
-> >        - ti,bq27200 # BQ27200
-> >        - ti,bq27210 # BQ27210
-> >        - ti,bq27500 # deprecated, use revision specific property below
->=20
-> Well honestly not sure why we need the comment either.=A0These are pretty
-> self explanatory maybe we should just remove the additional comments
+On mié 06-05-2020 18:53:20, Laurent Pinchart wrote:
+> Hi Tomi,
+> 
+> On Tue, Apr 28, 2020 at 12:49:28PM +0300, Tomi Valkeinen wrote:
+> > On 28/04/2020 12:20, Ricardo Cañuelo wrote:
+> > 
+> > > 2) The definition of ti,deskew in the original binding seems to be
+> > > tailored to the current driver and the way it's defined may not be very
+> > > DT-friendly.
+> > > 
+> > >    This parameter maps to a 3-bit field in a hardware register that takes
+> > >    a value from 0 to 7, so the [-4, 3] range described for this would map
+> > >    to [000, 111]: -4 -> 000, -3 -> 001, -2 -> 010, ... 3 -> 111.
+> > > 
+> > >    Then, the driver parses the parameter (unsigned) and casts it to a
+> > >    signed integer to get a number in the [-4, 3] range.
+> > 
+> > Interestingly the current example has ti,deskew = <4>...
+> > 
+> > >    A vendor-specific property must have a type definition in json-schema,
+> > >    so if I translate the original bindings semantics directly, I should
+> > >    define ti,deskew as an int32, but this makes dt_binding_check fail if
+> > >    the property has a negative value in the example because of the
+> > >    internal representation of cells as unsigned integers:
+> > > 
+> > >       ti,deskew:0:0: 4294967293 is greater than the maximum of 2147483647
+> > 
+> > I don't quite understand this. We cannot have negative numbers in dts files? Or we can, but 
+> > dt_binding_check doesn't handle them correctly? Or that int32 is not supported in yaml bindings?
+> > 
+> > >    So I can think of two solutions to this:
+> > > 
+> > >    a) Keep the ti,deskew property as an uint32 and document the valid
+> > >    range ([-4, 3]) in the property description (this is what this patch
+> > >    does currently).
+> > > 
+> > >    b) Redefine this property to be closer to the datasheet description
+> > >    (ie. unsigned integers from 0 to 7) and adapt the driver accordingly.
+> > >    This would also let us define its range properly using minimum and
+> > >    maximum properties for it.
+> > > 
+> > >    I think (b) is the right thing to do but I want to know your
+> > >    opinion. Besides, I don't have this hardware at hand and if I updated
+> > >    the driver I wouldn't be able to test it.
+> > 
+> > I don't think anyone has used deskew property, so I guess changing it is not out of the question.
+> > 
+> > Laurent, did you have a board that needs deskew when you added it to tfp410?
+> 
+> I didn't if I remember correctly, I just mapped it to the hardware
+> features. The hardware register indeed takes a value between 0 and 7,
+> and that is mapped to [-4,3] x t(STEP). I don't mind either option.
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
 
-Fine with me.
+I haven't found any examples of yaml bindings defining signed integer
+properties such as this, what's the norm in this case? Do you agree with
+any of the proposed solutions? Do you have a better suggestion?
 
-> Any consideration on just removing the deprecated values?
-
-Let's keep them with their comment for now. Removing them should
-start with marking them as depracated in the binding and generating
-a runtime warning in the driver, so that people become aware of the
-problem. At least for ti,bq27500 we have mainline users At least for
-ti,bq27500 we have mainline users.
-
--- Sebastian
-
---lpudqiluygphtdpr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl65Z7cACgkQ2O7X88g7
-+ppqdA//cnVvZhzbdTYQtJef4RbEImz6Dpb4yaZQRsYl/Kvnht05IlpKVHdUeuMm
-i7TpqGuLK3s4PRLXERKcwT1wcr3glgES2anoxu6lobL1fojvABRjoBr+uleByPH6
-QKh87h4Ink/IcPvoJ1Ce0wOZ+9gBrXVjUjylKaLKtq536sz2HTqavd3JAMN1FDeO
-YRalhlyvoWBz8e0EigqdiIvxlihn+VKvDJSO2pzRcEHFdrJPvlt5whEUtZnNMo4Y
-+GzfXEY1ycU8kgJ3LXZNBdvGUivfABZpj3T/tuWPp81xB6s+Cfrh0/Qh9WcJ7bx8
-jeNcesEqoURB2SDIqx6arAYt8+jHm4Pz/azqTP6zOpNGpEWunVdU/VkoCicirw6P
-zXmxVkpwLuQfb3TOD/DHwg66AcIBa8ZRMWrTxZXKb5XMrITbFq2Yn8Z0KFaa0ffC
-AgA7SsqRxBgfsVQF/867+10O54bzlRhDkBZJN0G/m6+hTIg1C5xu7f3Full4u8XC
-oXzRU06DTLdAXHW40DBNaGF8/yMUAkYZ3RKc2aP+c/HRm3PEOlYb/wYBwdTVb7FF
-Yzspxp5CpZUXsIpekoae+RXw72uqhDNMdoni6v90JfZ2Ior90OGuyiB55cSCW1at
-xHl5rOK5HtyXPefmsn+MbrC+JAloYaCHuQ3OF/5tRUOaDOtIuOs=
-=oLwa
------END PGP SIGNATURE-----
-
---lpudqiluygphtdpr--
+Thanks,
+Ricardo
