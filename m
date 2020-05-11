@@ -4,104 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EF2C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AD4C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54AA320752
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458D22075E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589229305;
-	bh=wZu2QvR91WC41QmzoIY8JNxlOBqCk1UY+9nOgrl0Y6Y=;
+	s=default; t=1589229433;
+	bh=Pn2zUfF0qCvsMbElgulD25WB6dAqYvgnBxsr+9EBd8s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UDD3Kcqt9F5qaoe24v3KpSdoDX6gsvJZ2TFoHZEtuVapx6FPYr2iQDm2fdebs5GRW
-	 jOWg9PtWWSpFa4D0V6wUW02EE1xxgWLFZFmSwgs39bucekkllsdEqqUjgjR6MxE7+9
-	 ZGpbZeWvIUbX2yZJP68wbi3NpiWW29Hr7zGPqGOs=
+	b=I4EBnpyJvi3i6JDwGDtZ85SVfzlD8/nOiYF+sGcPwNaerylFu5fdceasAJVZ4Vx9f
+	 bkEw834hdYXDTrcu3kVloVRKH6fadAL9vJK4vN8KdkDCi+fV6pL1ri23ifLnFe7K05
+	 WGuFgNsASc9Dl8UnR3ipQRklWtbjwnGAcUsB3RrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbgEKUfF (ORCPT
+        id S1731561AbgEKUhM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 16:35:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43341 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgEKUfE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:35:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id j16so16281447oih.10;
-        Mon, 11 May 2020 13:35:03 -0700 (PDT)
+        Mon, 11 May 2020 16:37:12 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37512 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgEKUhM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:37:12 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r25so16315926oij.4;
+        Mon, 11 May 2020 13:37:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xPfARJBDe31edRqTmB22eqqJ1jCXSCt4soTep9+eCZE=;
-        b=I3feRbee1STlb3Rm82R2kiNQj+ZBEHmm5dfpcX0CGR32SIzX3MEBRcYiC+WFuLk8eo
-         ZZKAmlyK/kUcZ2K1TyQntfaGIP46H1wKL2nQ4LqSlmRFNOXWSS6ceAiMJy02a2g6iBQ9
-         YDTdvAGeFYIEQ243RGt5YXfM66y4bcSxwy9vL5o066SZbkvH5JBhneU5IyKH/ymgT+8y
-         fsGjdcKN940bS+/XJ62nD9oRvPpyb4rgPOJtjy6PBWU0Lr04pDi5DYwBqDYK/qkXBKnH
-         dQvquvJgDKQInlbusEpYRcf5C411lG9BhU/X6rmKtdVd3fPhRuQ+pNSR6EntiUCCsbR8
-         tAjQ==
-X-Gm-Message-State: AGi0PuZUrCLP/Nx+RwYfy5lD5+6gRkDg/Tm9WkE5brEj4LelOc+UkGVp
-        DnrxKhkArVk3iHePTsA2d5oDEGc=
-X-Google-Smtp-Source: APiQypLhCz0Iweh6mDeRxFs1JldCYPCWFDZ/eWcgs5VYLylwJuEA3ROhRph1lzQha6aqqe17WNMHUA==
-X-Received: by 2002:aca:5643:: with SMTP id k64mr19984093oib.152.1589229303517;
-        Mon, 11 May 2020 13:35:03 -0700 (PDT)
+        bh=RkbTa/wh/hD8xEtN2/6MKeivff6GdSpulILvCa3y2XE=;
+        b=sazM1NrkhS8LT/Ee3CtH/Q7fmZDB5jkmBq4OlUWdRsO0ZnpqFD3cl763RXdC927ZF5
+         C+RcI6I7W8tdSoXbaLR5L0UXTBZVkM36DqszURvr/+RKkHxBU+pzs2EyVSy9icO14FCQ
+         et8pjZqXrVStCVzJ29vCbumTARh1Dy+xRzBIF/CTJAlcT5Ocej6BAjaWC+sYma73eYYX
+         HWN6NTzRczbguZ2+NFLZ/VYo6ukL2h+fu8IBJIKAxK9oDq1UEQbblPcXBO4udkqxYLIM
+         wWAwTSs2S1iMpEXbf9KBAxFlyYIeAkWMvM7/GKNob6RZ7D5T2N8lUCUaUqhcMWJdxRWA
+         kgxw==
+X-Gm-Message-State: AGi0PuYODoCV6UhMQ+Xd9Uh5R7CLLIg980s5401OZVxOJTnV4RhDlxh+
+        HMtHPTJwfU2/2Rjt53a+uw==
+X-Google-Smtp-Source: APiQypJOatYXUqC0AlrPf2F1LBluMtnPS0NwyyV8HibPhPTgxaoFlJlzDWst6CjUBakGP5I3PFs/zQ==
+X-Received: by 2002:a05:6808:6d0:: with SMTP id m16mr22076469oih.33.1589229431254;
+        Mon, 11 May 2020 13:37:11 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y25sm1875229oto.29.2020.05.11.13.35.02
+        by smtp.gmail.com with ESMTPSA id v17sm4888402oif.51.2020.05.11.13.37.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 13:35:02 -0700 (PDT)
-Received: (nullmailer pid 32429 invoked by uid 1000);
-        Mon, 11 May 2020 20:35:01 -0000
-Date:   Mon, 11 May 2020 15:35:01 -0500
+        Mon, 11 May 2020 13:37:10 -0700 (PDT)
+Received: (nullmailer pid 3363 invoked by uid 1000);
+        Mon, 11 May 2020 20:37:09 -0000
+Date:   Mon, 11 May 2020 15:37:09 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        shawn.guo@linaro.org, p.zabel@pengutronix.de
-Subject: Re: [PATCH v3 2/2] clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock
- Controller
-Message-ID: <20200511203501.GA29988@bogus>
-References: <20200423103406.481289-1-bryan.odonoghue@linaro.org>
- <20200423103406.481289-3-bryan.odonoghue@linaro.org>
+To:     David Heidelberg <david@ixit.cz>
+Cc:     Scott Liu <scott.liu@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/1] dt-bindings: input: touchscreen: elants_i2c: convert
+ to YAML
+Message-ID: <20200511203709.GA3143@bogus>
+References: <20200423173253.711725-1-david@ixit.cz>
+ <20200423173253.711725-2-david@ixit.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200423103406.481289-3-bryan.odonoghue@linaro.org>
+In-Reply-To: <20200423173253.711725-2-david@ixit.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:34:06AM +0100, Bryan O'Donoghue wrote:
-> This patch adds support for the MSM8939 GCC. The MSM8939 is based on the
-> MSM8916. MSM8939 is compatible in several ways with MSM8916 but, has
-> additional functional blocks added which require additional PLL sources. In
-> some cases functional blocks from the MSM8916 have different clock sources
-> or different supported frequencies.
+On Thu, 23 Apr 2020 19:32:53 +0200, David Heidelberg wrote:
+> Convert elants_i2c.txt DT binding to YAML and put into correct directory.
 > 
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: David Heidelberg <david@ixit.cz>
 > ---
->  drivers/clk/qcom/Kconfig                     |    8 +
->  drivers/clk/qcom/Makefile                    |    1 +
->  drivers/clk/qcom/gcc-msm8939.c               | 3999 ++++++++++++++++++
+>  .../devicetree/bindings/input/elants_i2c.txt  | 34 ---------
+>  .../input/touchscreen/elan,elants_i2c.yaml    | 69 +++++++++++++++++++
+>  2 files changed, 69 insertions(+), 34 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/input/elants_i2c.txt
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/elan,elants_i2c.yaml
+> 
 
->  include/dt-bindings/clock/qcom,gcc-msm8939.h |   27 +
->  include/dt-bindings/reset/qcom,gcc-msm8939.h |   10 +
-
-These go in patch 1.
-
->  5 files changed, 4045 insertions(+)
->  create mode 100644 drivers/clk/qcom/gcc-msm8939.c
+Reviewed-by: Rob Herring <robh@kernel.org>
