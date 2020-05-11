@@ -2,124 +2,175 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E904DC47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 03:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E7CC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 06:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE98720644
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 03:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4EB20708
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 06:01:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EjLINloi"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CxhbECJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgEKDRx (ORCPT
+        id S1727873AbgEKGB2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 23:17:53 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4435 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbgEKDRx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 23:17:53 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb8c3d30001>; Sun, 10 May 2020 20:17:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 10 May 2020 20:17:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 10 May 2020 20:17:52 -0700
-Received: from [10.19.66.205] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 11 May
- 2020 03:17:49 +0000
-Subject: Re: [PATCH V2 6/8] phy: tegra: xusb: Add support for charger detect
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
- <1586939108-10075-7-git-send-email-nkristam@nvidia.com>
- <20200428105510.GH3592148@ulmo>
- <ea0f5906-4681-8b84-a55a-e959ce40aece@nvidia.com>
- <20200504155029.GB614153@ulmo>
-X-Nvconfidentiality: public
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-Message-ID: <229333de-8dd6-2d09-c8ad-99afdcec703f@nvidia.com>
-Date:   Mon, 11 May 2020 08:49:37 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 11 May 2020 02:01:28 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:23353 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725916AbgEKGB2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 02:01:28 -0400
+X-UUID: b61c04c5b12344e49c21ac34383928c8-20200511
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=dAyYAdHMIpZ/6SM5RLDr2tB/daH+XXcNJM3j7jHXEJo=;
+        b=CxhbECJsxZgqTWZoSR3SMjcF9M1aJwByXjcBBRoch8knE0S929+L/ygFSQSM/KDp38GyY7m7YFZXigikHQrZelr9jkdUHiljm4PFBLXw2+EvDg+bgjaGzoFG9+hLI9Pa9LXg61Via+OA7gbXdwxWS55hqcQf2ZCZIHn89cfGgtA=;
+X-UUID: b61c04c5b12344e49c21ac34383928c8-20200511
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1813594231; Mon, 11 May 2020 14:01:21 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 11 May 2020 14:01:20 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 11 May 2020 14:01:19 +0800
+Message-ID: <1589176880.21832.8.camel@mtksdaap41>
+Subject: Re: [PATCH v14 02/11] dt-bindings: soc: Add MT8183 power dt-bindings
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+CC:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "Rob Herring" <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        <srv_heupstream@mediatek.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Fan Chen <fan.chen@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 11 May 2020 14:01:20 +0800
+In-Reply-To: <30046b88-0fb7-5506-7460-bf0fba320c3d@collabora.com>
+References: <1588752963-19934-1-git-send-email-weiyi.lu@mediatek.com>
+         <1588752963-19934-3-git-send-email-weiyi.lu@mediatek.com>
+         <30046b88-0fb7-5506-7460-bf0fba320c3d@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200504155029.GB614153@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589167059; bh=dhOCrrvTkzHB+DWGZHHMWxRBnVmIB3xIwhi9oro8Ae4=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=EjLINloir2HvrF0Xcs//fNNihRZi7fY12ShF48GOmR2ek7FpdH28Fd56VuOqH90Ea
-         eMgsFlP41Y3N4fqJBLDkoL/tOZiTQtp2RAYh1WXI5DZD5GnI6TH6P0HUH8j9QcTEui
-         uZgYjpVwQDhYs2dC/KOyG9pIgErQaf4Wj3moctX+6r+GWdo8yeIghs+CR56oKe4mgI
-         LvwhEC6Ox9J0FS58SL4NFlyEQ988BzhxYj3012lFzQkHdWN3UpKvrQjxA3EPrd1pNR
-         PpwckUh4jC8DUv7pSArMHGjGtTMOUv7H9uFVzsML82zs3J7hd+dQQ0yoS9SMRUEcIv
-         GUmi4oW+StK/Q==
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+DQpPbiBXZWQsIDIwMjAtMDUtMDYgYXQgMjM6MDAgKzAyMDAsIEVucmljIEJhbGxldGJvIGkgU2Vy
+cmEgd3JvdGU6DQo+IEhpIFdlaXlpLA0KPiANCj4gVGhhbmsgeW91IGZvciB5b3VyIHBhdGNoLiBZ
+b3Ugc2hvdWxkIGNjIGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnLCBvdGhlcndpc2UNCj4gdGhp
+cyBwYXRjaCBtaWdodCBiZSBpZ25vcmVkLg0KPiANCg0KR290IGl0Lg0KDQo+IE9uIDYvNS8yMCAx
+MDoxNSwgV2VpeWkgTHUgd3JvdGU6DQo+ID4gQWRkIHBvd2VyIGR0LWJpbmRpbmdzIG9mIE1UODE4
+MyBhbmQgaW50cm9kdWNlcyAiQkFTSUMiIGFuZA0KPiA+ICJTVUJTWVMiIGNsb2NrIHR5cGVzIGlu
+IGJpbmRpbmcgZG9jdW1lbnQuDQo+ID4gVGhlICJCQVNJQyIgdHlwZSBpcyBjb21wYXRpYmxlIHRv
+IHRoZSBvcmlnaW5hbCBwb3dlciBjb250cm9sIHdpdGgNCj4gPiBjbG9jayBuYW1lIFthLXpdK1sw
+LTldKiwgZS5nLiBtbSwgdnB1MS4NCj4gPiBUaGUgIlNVQlNZUyIgdHlwZSBpcyB1c2VkIGZvciBi
+dXMgcHJvdGVjdGlvbiBjb250cm9sIHdpdGggY2xvY2sNCj4gPiBuYW1lIFthLXpdKy1bMC05XSss
+IGUuZy4gaXNwLTAsIGNhbS0xLg0KPiA+IEFuZCBhZGQgYW4gb3B0aW9uYWwgc21pLWNvbW0gcHJv
+cGVydHkgZm9yIHBoYW5kbGUgdG8gc21pLWNvbW1vbg0KPiA+IGNvbnRyb2xsZXIuDQo+ID4gDQo+
+ID4gU2lnbmVkLW9mZi1ieTogV2VpeWkgTHUgPHdlaXlpLmx1QG1lZGlhdGVrLmNvbT4NCj4gPiAt
+LS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3NjcHN5cy50eHQg
+ICAgfCAyMSArKysrKysrKysrKysrKy0tLQ0KPiA+ICBpbmNsdWRlL2R0LWJpbmRpbmdzL3Bvd2Vy
+L210ODE4My1wb3dlci5oICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysNCj4g
+PiAgMiBmaWxlcyBjaGFuZ2VkLCA0NCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9wb3dlci9tdDgxODMtcG93
+ZXIuaA0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvc29jL21lZGlhdGVrL3NjcHN5cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3Mvc29jL21lZGlhdGVrL3NjcHN5cy50eHQNCj4gPiBpbmRleCAyYmMzNjc3Li41NDI0
+ZTY2IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b2MvbWVkaWF0ZWsvc2Nwc3lzLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvc2Nwc3lzLnR4dA0KPiA+IEBAIC0xNSw2ICsxNSw3IEBA
+IHBvd2VyL3Bvd2VyLWRvbWFpbi55YW1sLiBJdCBwcm92aWRlcyB0aGUgcG93ZXIgZG9tYWlucyBk
+ZWZpbmVkIGluDQo+ID4gIC0gaW5jbHVkZS9kdC1iaW5kaW5ncy9wb3dlci9tdDI3MDEtcG93ZXIu
+aA0KPiA+ICAtIGluY2x1ZGUvZHQtYmluZGluZ3MvcG93ZXIvbXQyNzEyLXBvd2VyLmgNCj4gPiAg
+LSBpbmNsdWRlL2R0LWJpbmRpbmdzL3Bvd2VyL210NzYyMi1wb3dlci5oDQo+ID4gKy0gaW5jbHVk
+ZS9kdC1iaW5kaW5ncy9wb3dlci9tdDgxODMtcG93ZXIuaA0KPiA+ICANCj4gPiAgUmVxdWlyZWQg
+cHJvcGVydGllczoNCj4gPiAgLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgb25lIG9mOg0KPiA+IEBA
+IC0yNywxMiArMjgsMTYgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgCS0gIm1lZGlhdGVr
+LG10NzYyM2Etc2Nwc3lzIjogRm9yIE1UNzYyM0EgU29DDQo+ID4gIAktICJtZWRpYXRlayxtdDc2
+Mjktc2Nwc3lzIiwgIm1lZGlhdGVrLG10NzYyMi1zY3BzeXMiOiBGb3IgTVQ3NjI5IFNvQw0KPiA+
+ICAJLSAibWVkaWF0ZWssbXQ4MTczLXNjcHN5cyINCj4gPiArCS0gIm1lZGlhdGVrLG10ODE4My1z
+Y3BzeXMiDQo+ID4gIC0gI3Bvd2VyLWRvbWFpbi1jZWxsczogTXVzdCBiZSAxDQo+ID4gIC0gcmVn
+OiBBZGRyZXNzIHJhbmdlIG9mIHRoZSBTQ1BTWVMgdW5pdA0KPiA+ICAtIGluZnJhY2ZnOiBtdXN0
+IGNvbnRhaW4gYSBwaGFuZGxlIHRvIHRoZSBpbmZyYWNmZyBjb250cm9sbGVyDQo+ID4gLS0gY2xv
+Y2ssIGNsb2NrLW5hbWVzOiBjbG9ja3MgYWNjb3JkaW5nIHRvIHRoZSBjb21tb24gY2xvY2sgYmlu
+ZGluZy4NCj4gPiAtICAgICAgICAgICAgICAgICAgICAgIFRoZXNlIGFyZSBjbG9ja3Mgd2hpY2gg
+aGFyZHdhcmUgbmVlZHMgdG8gYmUNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgIGVuYWJsZWQg
+YmVmb3JlIGVuYWJsaW5nIGNlcnRhaW4gcG93ZXIgZG9tYWlucy4NCj4gPiArLSBjbG9jaywgY2xv
+Y2stbmFtZXM6IENsb2NrcyBhY2NvcmRpbmcgdG8gdGhlIGNvbW1vbiBjbG9jayBiaW5kaW5nLg0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgU29tZSBTb0NzIGhhdmUgdG8gZ3JvdXBzIG9mIGNs
+b2Nrcy4NCj4gPiArICAgICAgICAgICAgICAgICAgICAgIEJBU0lDIGNsb2NrcyBuZWVkIHRvIGJl
+IGVuYWJsZWQgYmVmb3JlIGVuYWJsaW5nIHRoZQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+Y29ycmVzcG9uZGluZyBwb3dlciBkb21haW4uDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICBT
+VUJTWVMgY2xvY2tzIG5lZWQgdG8gYmUgZW5hYmxlZCBiZWZvcmUgcmVsZWFzaW5nIHRoZQ0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgYnVzIHByb3RlY3Rpb24uDQo+ID4gIAlSZXF1aXJlZCBj
+bG9ja3MgZm9yIE1UMjcwMSBvciBNVDc2MjM6ICJtbSIsICJtZmciLCAiZXRoaWYiDQo+ID4gIAlS
+ZXF1aXJlZCBjbG9ja3MgZm9yIE1UMjcxMjogIm1tIiwgIm1mZyIsICJ2ZW5jIiwgImpwZ2RlYyIs
+ICJhdWRpbyIsICJ2ZGVjIg0KPiA+ICAJUmVxdWlyZWQgY2xvY2tzIGZvciBNVDY3NjU6IE1VWDog
+Im1tIiwgIm1mZyINCj4gPiBAQCAtNDMsNiArNDgsMTUgQEAgUmVxdWlyZWQgcHJvcGVydGllczoN
+Cj4gPiAgCVJlcXVpcmVkIGNsb2NrcyBmb3IgTVQ3NjIyIG9yIE1UNzYyOTogImhpZl9zZWwiDQo+
+ID4gIAlSZXF1aXJlZCBjbG9ja3MgZm9yIE1UNzYyM0E6ICJldGhpZiINCj4gPiAgCVJlcXVpcmVk
+IGNsb2NrcyBmb3IgTVQ4MTczOiAibW0iLCAibWZnIiwgInZlbmMiLCAidmVuY19sdCINCj4gPiAr
+CVJlcXVpcmVkIGNsb2NrcyBmb3IgTVQ4MTgzOiBCQVNJQzogImF1ZGlvIiwgIm1mZyIsICJtbSIs
+ICJjYW0iLCAiaXNwIiwNCj4gPiArCQkJCQkgICAidnB1IiwgInZwdTEiLCAidnB1MiIsICJ2cHUz
+Ig0KPiA+ICsJCQkJICAgIFNVQlNZUzogIm1tLTAiLCAibW0tMSIsICJtbS0yIiwgIm1tLTMiLA0K
+PiA+ICsJCQkJCSAgICAibW0tNCIsICJtbS01IiwgIm1tLTYiLCAibW0tNyIsDQo+ID4gKwkJCQkJ
+ICAgICJtbS04IiwgIm1tLTkiLCAiaXNwLTAiLCAiaXNwLTEiLA0KPiA+ICsJCQkJCSAgICAiY2Ft
+LTAiLCAiY2FtLTEiLCAiY2FtLTIiLCAiY2FtLTMiLA0KPiA+ICsJCQkJCSAgICAiY2FtLTQiLCAi
+Y2FtLTUiLCAiY2FtLTYiLCAidnB1LTAiLA0KPiA+ICsJCQkJCSAgICAidnB1LTEiLCAidnB1LTIi
+LCAidnB1LTMiLCAidnB1LTQiLA0KPiA+ICsJCQkJCSAgICAidnB1LTUiDQo+ID4gIA0KPiA+ICBP
+cHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICAtIHZkZWMtc3VwcGx5OiBQb3dlciBzdXBwbHkgZm9y
+IHRoZSB2ZGVjIHBvd2VyIGRvbWFpbg0KPiA+IEBAIC01NSw2ICs2OSw3IEBAIE9wdGlvbmFsIHBy
+b3BlcnRpZXM6DQo+ID4gIC0gbWZnX2FzeW5jLXN1cHBseTogUG93ZXIgc3VwcGx5IGZvciB0aGUg
+bWZnX2FzeW5jIHBvd2VyIGRvbWFpbg0KPiA+ICAtIG1mZ18yZC1zdXBwbHk6IFBvd2VyIHN1cHBs
+eSBmb3IgdGhlIG1mZ18yZCBwb3dlciBkb21haW4NCj4gPiAgLSBtZmctc3VwcGx5OiBQb3dlciBz
+dXBwbHkgZm9yIHRoZSBtZmcgcG93ZXIgZG9tYWluDQo+ID4gKy0gc21pX2NvbW06IGEgcGhhbmRs
+ZSB0byB0aGUgc21pLWNvbW1vbiBjb250cm9sbGVyDQo+IA0KPiANCj4gSSB0aGluayB0aGF0IGlu
+IGRldmljZS10cmVlIGh5cGhlbiBhcmUgcHJlZmVycmVkIGFuZCBraW5kIG9mIGEgbXVzdCBmb3Ig
+bmV3DQo+IHByb3BlcnRpZXMsIGFsc28gSSB0aGluayB5b3Ugc2hvdWxkIHByZWZpeCB0aGlzIHBy
+b3BlcnR5IHdpdGggIm1lZGlhdGVrLCIuIENhbiBJDQo+IHN1Z2dlc3QgeW91IHRvIHVzZSAibWVk
+aWF0ZWssc21pIiBsaWtlIGlzIGRvbmUgaW4gdGhlIG1lZGlhdGVrLHNtaS1sYXJiIGJpbmRpbmc/
+DQo+IEFGQUlDUyBpcyB0aGUgc2FtZSBwaGFuZGxlIHJpZ2h0Pw0KPiANCj4gRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVycy9tZWRpYXRlayxzbWktbGFy
+Yi50eHQ6DQo+IC0gbWVkaWF0ZWssc21pIDogYSBwaGFuZGxlIHRvIHRoZSBzbWlfY29tbW9uIG5v
+ZGUuDQo+IA0KDQpUaGFua3MsIEknbGwgZm9sbG93IHlvdXIgc3VnZ2VzdGlvbiBpbiBuZXh0IHZl
+cnNpb24uDQoNCj4gDQo+ID4gIA0KPiA+ICBFeGFtcGxlOg0KPiA+ICANCj4gPiBkaWZmIC0tZ2l0
+IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9wb3dlci9tdDgxODMtcG93ZXIuaCBiL2luY2x1ZGUvZHQt
+YmluZGluZ3MvcG93ZXIvbXQ4MTgzLXBvd2VyLmgNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0K
+PiA+IGluZGV4IDAwMDAwMDAuLmQ2YjI1ZjgNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIv
+aW5jbHVkZS9kdC1iaW5kaW5ncy9wb3dlci9tdDgxODMtcG93ZXIuaA0KPiA+IEBAIC0wLDAgKzEs
+MjYgQEANCj4gPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi8NCj4gPiAr
+LyoNCj4gPiArICogQ29weXJpZ2h0IChjKSAyMDE4IE1lZGlhVGVrIEluYy4NCj4gDQo+IFlvdSBw
+cm9iYWJseSB3YW50IHRvIHVwZGF0ZSB0aGUgY29weXJpZ2h0IHRvIDIwMjAuDQo+IA0KDQpUaGFu
+a3MsIEknbGwgZml4IGl0Lg0KDQo+ID4gKyAqIEF1dGhvcjogV2VpeWkgTHUgPHdlaXlpLmx1QG1l
+ZGlhdGVrLmNvbT4NCj4gPiArICovDQo+ID4gKw0KPiA+ICsjaWZuZGVmIF9EVF9CSU5ESU5HU19Q
+T1dFUl9NVDgxODNfUE9XRVJfSA0KPiA+ICsjZGVmaW5lIF9EVF9CSU5ESU5HU19QT1dFUl9NVDgx
+ODNfUE9XRVJfSA0KPiA+ICsNCj4gPiArI2RlZmluZSBNVDgxODNfUE9XRVJfRE9NQUlOX0FVRElP
+CTANCj4gPiArI2RlZmluZSBNVDgxODNfUE9XRVJfRE9NQUlOX0NPTk4JMQ0KPiA+ICsjZGVmaW5l
+IE1UODE4M19QT1dFUl9ET01BSU5fTUZHX0FTWU5DCTINCj4gPiArI2RlZmluZSBNVDgxODNfUE9X
+RVJfRE9NQUlOX01GRwkJMw0KPiA+ICsjZGVmaW5lIE1UODE4M19QT1dFUl9ET01BSU5fTUZHX0NP
+UkUwCTQNCj4gPiArI2RlZmluZSBNVDgxODNfUE9XRVJfRE9NQUlOX01GR19DT1JFMQk1DQo+ID4g
+KyNkZWZpbmUgTVQ4MTgzX1BPV0VSX0RPTUFJTl9NRkdfMkQJNg0KPiA+ICsjZGVmaW5lIE1UODE4
+M19QT1dFUl9ET01BSU5fRElTUAk3DQo+ID4gKyNkZWZpbmUgTVQ4MTgzX1BPV0VSX0RPTUFJTl9D
+QU0JCTgNCj4gPiArI2RlZmluZSBNVDgxODNfUE9XRVJfRE9NQUlOX0lTUAkJOQ0KPiA+ICsjZGVm
+aW5lIE1UODE4M19QT1dFUl9ET01BSU5fVkRFQwkxMA0KPiA+ICsjZGVmaW5lIE1UODE4M19QT1dF
+Ul9ET01BSU5fVkVOQwkxMQ0KPiA+ICsjZGVmaW5lIE1UODE4M19QT1dFUl9ET01BSU5fVlBVX1RP
+UAkxMg0KPiA+ICsjZGVmaW5lIE1UODE4M19QT1dFUl9ET01BSU5fVlBVX0NPUkUwCTEzDQo+ID4g
+KyNkZWZpbmUgTVQ4MTgzX1BPV0VSX0RPTUFJTl9WUFVfQ09SRTEJMTQNCj4gPiArDQo+ID4gKyNl
+bmRpZiAvKiBfRFRfQklORElOR1NfUE9XRVJfTVQ4MTgzX1BPV0VSX0ggKi8NCj4gPiANCj4gDQo+
+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IExpbnV4
+LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQu
+b3JnDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+bWVkaWF0ZWsNCg0KDQo=
 
-
-On 04-05-2020 21:20, Thierry Reding wrote:
-> 
-> On Mon, May 04, 2020 at 02:32:51PM +0530, Nagarjuna Kristam wrote:
->>> On 28-04-2020 16:25, Thierry Reding wrote:
->>>> On Wed, Apr 15, 2020 at 01:55:06PM +0530, Nagarjuna Kristam wrote:
-> [...]
->>>> diff --git a/drivers/phy/tegra/xusb-tegra-cd.c b/drivers/phy/tegra/xusb-tegra-cd.c
->>>> +static void tegra_xusb_padctl_utmi_pad_dcd(struct tegra_xusb_padctl *padctl,
->>>> +					      u32 index)
->>>> +{
->>>> +	u32 value;
->>>> +	int dcd_timeout_ms = 0;
->>>> +	bool ret = false;
->>>> +
->>>> +	/* Turn on IDP_SRC */
->>>> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->>>> +	value |= OP_I_SRC_EN;
->>>> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->>>> +
->>>> +	/* Turn on D- pull-down resistor */
->>>> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->>>> +	value |= USBON_RPD_OVRD_VAL;
->>>> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->>>> +
->>>> +	/* Wait for TDCD_DBNC */
->>>> +	usleep_range(10000, 120000);
->>>   From the comment this looks like we're waiting for some hardware
->>> condition. Can we somehow obtain this rather than implementing a fixed
->>> sleep? Especially since the range here is so large.
->>>
->> As per data sheet we need to wait for 10 micro seconds as settle time.
-> Okay, so TDCD_DBNC is a value that comes from a timing diagram in a
-> datasheet? Seems fine to leave it as-is then. Perhaps add parentheses
-> and mention which exact datasheet that's from, and perhaps which figure
-> so that people can more easily reference it. Provided there is a
-> publicly available datasheet, of course.
-> 
-Will update reference to table in the data sheet where these values are 
-recommended. ITs part of BC 1.2 spec from USB.
-
-> Actually, one other thing: If the data sheet says to wait 10 us, why do
-> you use an upper range of 120 us? Shouldn't a range of 10-20 us be good
-> enough?
-> Yes, will reduce it to 20ms.
-
--Nagarjuna
