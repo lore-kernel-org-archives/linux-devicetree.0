@@ -2,96 +2,112 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0B7C54E93
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38283C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88D522070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:27:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589221677;
-	bh=i6rT7pl3y5+c7jnQO1HiG2tm/O2Q7yeQE9ybHkbIVYw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E00BEYXV9DxID2VcNg2A0AwUA/JU314739UWABr8iGLINe/CN00mJZ1xzhJG7k1GW
-	 S/wvpHaAgZLZv7vtHvv4rg878PFjyF+gjss/Z0jGJe/6AbO+3xS9mhWoH5+zW51qIo
-	 zv/HGhP9mCn7KqVra2JP2ypWxhEjUsrDn3u4QcaM=
+	by mail.kernel.org (Postfix) with ESMTP id 1823820736
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:29:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nREcErpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgEKS1z (ORCPT
+        id S1729727AbgEKS3d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 14:27:55 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43139 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731152AbgEKS1e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 14:27:34 -0400
-Received: by mail-oi1-f195.google.com with SMTP id j16so15937733oih.10;
-        Mon, 11 May 2020 11:27:33 -0700 (PDT)
+        Mon, 11 May 2020 14:29:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729673AbgEKS3d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 14:29:33 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E89BCC061A0C;
+        Mon, 11 May 2020 11:29:31 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f7so5113445pfa.9;
+        Mon, 11 May 2020 11:29:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=H4KxnQZj7MMF+XFizw+0KM4p3VPjuRnYCCVLLa+bQEU=;
+        b=nREcErpP1OJWWHKl6ghnKOeW2GKGIh6MCXUIDRhGjtgd0VYJTGnpHPnP9lR6nVsxJP
+         UWa3W0KAtUslzNajPouGKgHUuKK7CHW4wDRq5zmbTi4+30s4qkl6UK5zo3H1gyd2V20b
+         fixwqV43MdJD2QQ8bxQvNBSgiF6cStXyHmQvDze+mwo6q4bpfwSzr57xSJzzxo0KxkLS
+         yF/n+HqgY4C1GY9oh9Y4dq3RVZgmsDJN2DY5BsAfvoIo8e6IdpCGou+c5GdYOXLLgkaB
+         QiWa0RXlR8KvT2uPvPziSPBjBXa4/plss/Az/m4Me3Vcn3r/I8zxqg2glPhm5VuWtG6V
+         3eUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ht1Yf4e3ictsVLLZDtTllL6POw3JDfrc6LvgmlTwd+o=;
-        b=mAYz3DgRHLLxHH9EjPJ9fuWZExW19xggotQ6nRqwQC66QRf17sPxmjsPYML2o1L2V4
-         jTN5Y9FMgVUU6Hvjove4sH1lJVNsa88OFJhOurp3AHXI7UPWo9OO7yYuUDf+EAhqjHsC
-         1bNoJ3q3GArSB/rCSAJxur6MBXSojzgwLdZevQ5+YXI96x03O21q+vtMPVdncIqY8whQ
-         dzvyYfZULYovvJUkDpq75ADvR3/QKvh6IL/OSJwRMOzNGQo/L483RU4G1KiK++9H82nh
-         aDFydlcDDR/C+vVig82noUMk2mg+PAWeyjVXqzV63CMsqtxWUXL68eR0Ro/kkshxjmEa
-         DU/w==
-X-Gm-Message-State: AGi0PuZZK1lCSIvZ9Kvzi8VXcfWW5UdvjZZmvuG9+OjbII6WlfpLYU+c
-        uOWSQ3GjjYmWBLYwt4M+Wg==
-X-Google-Smtp-Source: APiQypJJVdhVDIiyV5MQ9hMeG4fzb2BeRMre1Xb8Vy85SfElqigqNr0E3HRoq3Ps/CZug9SB6xEXZg==
-X-Received: by 2002:aca:acd0:: with SMTP id v199mr19934761oie.82.1589221653219;
-        Mon, 11 May 2020 11:27:33 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n16sm2980243oop.23.2020.05.11.11.27.32
+         :mime-version:content-disposition:in-reply-to;
+        bh=H4KxnQZj7MMF+XFizw+0KM4p3VPjuRnYCCVLLa+bQEU=;
+        b=Rj5kIgsxn9eAoMQP0PwWspiWDy3kXSz52+r/KDFCG0V9w+mdK8czUarweXTPrIHSv5
+         aHSVFKuDLDtW3TitisvABW2jhnWxkGImp3yaL+X6bWowrJ9f/hooOk4FTf9FfiVJVXLR
+         a0j7p5jKh1mui9yuAg6R6gaNrKAntXebZGUafN/z7BuL1d2IHQhI9CajK7FAHe7age5i
+         2VJgDD6APBqtOiWYgSedQLPEvRqlpaZebO8iwr1r3uoh51Ua1Op2hzquC8Gbhj+z1jr3
+         c8Ry1tLrxO068Uha/WRtp/iKM/Dul8ZobWO8SHxUW6ufztVSGfZGykyYt3cKUGl7ErS8
+         kHGg==
+X-Gm-Message-State: AGi0PuarkXtd9s83QI9nfZDlNqeEFjWEkcm/5S8feD1vq/c7MzJCXD+o
+        9HSoD/hHP/5GwfX17qK5azI=
+X-Google-Smtp-Source: APiQypLioLOYpTUjlKnMPx3S4Dgj8UBE8iQJGVmCsArVCnPKl5V2exwha0LsAKBoWoN0GjWyML4zWw==
+X-Received: by 2002:a63:5663:: with SMTP id g35mr15553849pgm.356.1589221771093;
+        Mon, 11 May 2020 11:29:31 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id j35sm8472856pgl.74.2020.05.11.11.29.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 11:27:32 -0700 (PDT)
-Received: (nullmailer pid 26196 invoked by uid 1000);
-        Mon, 11 May 2020 17:20:08 -0000
-Date:   Mon, 11 May 2020 12:20:08 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     libcamera-devel@lists.libcamera.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        devicetree@vger.kernel.org, pavel@ucw.cz, tfiga@google.com,
-        "open list:MEDIA INPUT INFRASTRUCTURE V4L/DVB" 
-        <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v10 01/13] dt-bindings: video-interfaces: Document
- 'orientation' property
-Message-ID: <20200511172008.GA25628@bogus>
-References: <20200508100158.3437161-1-jacopo@jmondi.org>
- <20200508100158.3437161-2-jacopo@jmondi.org>
+        Mon, 11 May 2020 11:29:30 -0700 (PDT)
+Date:   Mon, 11 May 2020 11:29:28 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        kernel@collabora.com
+Subject: Re: [PATCH 6/6] tty/sysrq: Add configurable handler to execute a
+ compound action
+Message-ID: <20200511182928.GV89269@dtor-ws>
+References: <20200511135918.8203-1-andrzej.p@collabora.com>
+ <20200511135918.8203-7-andrzej.p@collabora.com>
+ <20200511162113.GC2221063@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508100158.3437161-2-jacopo@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200511162113.GC2221063@kroah.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  8 May 2020 12:01:46 +0200, Jacopo Mondi wrote:
-> Add the 'orientation' device property, used to specify the device mounting
-> position. The property is particularly meaningful for mobile devices
-> with a well defined usage orientation.
+On Mon, May 11, 2020 at 06:21:13PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, May 11, 2020 at 03:59:18PM +0200, Andrzej Pietrasiewicz wrote:
+> > Some userland might want to execute e.g. 'w' (show blocked tasks), followed
+> > by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
+> > upon a single magic SysRq. Or one might want to execute the famous "Raising
+> > Elephants Is So Utterly Boring" action. This patch adds a configurable
+> > handler, triggered with 'C', for this exact purpose. The user specifies the
+> > composition of the compound action using syntax similar to getopt, where
+> > each letter corresponds to an individual action and a colon followed by a
+> > number corresponds to a delay of that many milliseconds, e.g.:
+> > 
+> > ws:1000c
+> > 
+> > or
+> > 
+> > r:100eis:1000ub
 > 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
->  .../devicetree/bindings/media/video-interfaces.txt    | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
+> Cute, but why?  Who needs/wants this type of thing?
 
+On Chrome OS the first time user presses SysRq-X it will try to kill
+chrome (and that will cause crash to get uploaded if user consented).
+The 2nd time within 5 seconds the same combo is pressed, it will dump
+blocked tasks in syslog and try to sync and then panic. On panic the
+device will reboot, logs will be scraped from pstore, and uploaded for
+analysis.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Thanks.
 
-If a tag was not added on purpose, please state why and what changed.
-
+-- 
+Dmitry
