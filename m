@@ -2,125 +2,141 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4287CC47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF01C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D63B20722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7D420736
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:05:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aBdUYVv5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPKzgpl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbgEKPEJ (ORCPT
+        id S1730128AbgEKPFH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 11:04:09 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38156 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729439AbgEKPEJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 11:04:09 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04BF46RQ021721;
-        Mon, 11 May 2020 10:04:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589209446;
-        bh=PaHM7ncRDAEeXG4G61hU0xZ07/k9Q++S5viFtly/yvY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aBdUYVv5/S69k7u1l/tYskoGTZuUF/9VtRtxiZXl8RrwNk6CVOgPDv4SvHgwL6KxC
-         VVqCbJz1jRdwEpB20Beb63Zmi2kvVM1Z/9N17sJF7SgJGoih78A+zrVCUFih8Oagpw
-         4lFLpCf6mwNvQse64wxJYv1zTZSgQLp85IF7Ui9o=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04BF46fI069574;
-        Mon, 11 May 2020 10:04:06 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
- May 2020 10:04:05 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 11 May 2020 10:04:05 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04BF44HX084827;
-        Mon, 11 May 2020 10:04:04 -0500
-Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-References: <20200507183013.27261-1-dmurphy@ti.com>
- <20200510161721.257vprq6rqp64wu5@earth.universe>
- <fb9b240e-9bfe-1295-6fc4-700d886ea7c9@ti.com>
- <20200511143241.nmkti7meahvj2swt@earth.universe>
- <8674289c-038d-d811-4786-322d66072527@ti.com>
- <20200511145700.lnytcr747snnolya@earth.universe>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <57e2495d-ec06-53ff-c2b5-10062da2848f@ti.com>
-Date:   Mon, 11 May 2020 09:55:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200511145700.lnytcr747snnolya@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 11 May 2020 11:05:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728090AbgEKPFH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 11:05:07 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5920DC061A0C
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 08:05:07 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a7so7937490pju.2
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 08:05:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ihuf7frb146tYEK8HG0xGK1ErUJGbIsIWcyrfSF6Hdo=;
+        b=ZPKzgpl3pT9jy6kyIPt/XjKgPouRFLhdel90rozXGL93vNMmJabHabpuvXUhmL6eoI
+         QoB43KnX02epvjmWQTYoXco2CjmOeSmNgECOYiH0VU4z3XAFYsKPdXdtzcnT9MtTUzoK
+         FzAyhUTKvDnhbUuv/m2sEZJKA0sq2rZJOD+vuBu9MXMmxL2ryc7qaBNCENH7dCTrVRgU
+         OQOoKjPiCWubAKtgbNoF9affc5IVYXDoda2GSqsYLjJbGkHfBHur1ZhdYaXi0WrlMLYY
+         1PHFZetHmcyMG+P3w34PDR9GwZ206DZZzjbBvRLmEL/sJ3susz/h2nfqABSBtMztjinO
+         wX6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ihuf7frb146tYEK8HG0xGK1ErUJGbIsIWcyrfSF6Hdo=;
+        b=Lh2EQ7j8M3cJKwl4ZR64zMZz6XYilovOVUOCSbeaCKiGkCVLWoe3HU2rH2zxYsn542
+         a8yDbJsyXj6BKuiDQviHIzisgfOGDz/QY6AuxLxb7ljINNIPDBDXiO6oNCZYmc8JVdaL
+         lIVtd2gqMpPxGTsgh0O5naXynnkETIAvHMutfIho3OX0wTKEosWCtqg7EnusvEs3J03e
+         dnoTcMxiB0UN7zFkSvGP1/t8r1aBN7ZKUQRcdJuJhyeb1l6b8YURloOMzUT1iosA5zhP
+         AyI/LTU9lHRsrDGhRlDaB+5P5Vz+jEIOlwG1XOG15udIIT6iyKjYYUnTt1a9q+mVuqwj
+         Wt1Q==
+X-Gm-Message-State: AGi0PuYnBQeWm6rbL6Nys7ZhDW2rjxLGLfuK4hY+PrO2/Zijsi1fRUkT
+        BhTwgC/w7GmKqaGt5D1IpaQ=
+X-Google-Smtp-Source: APiQypKrebweybPanlhUHTouzsIflvpNdK0IXCls7WXBwT+Kfihw26PQYUQFiG/gwxAKil5rbrX9/g==
+X-Received: by 2002:a17:902:968a:: with SMTP id n10mr16334033plp.259.1589209506831;
+        Mon, 11 May 2020 08:05:06 -0700 (PDT)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id 19sm10084933pjl.52.2020.05.11.08.05.05
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Mon, 11 May 2020 08:05:05 -0700 (PDT)
+From:   qiwuchen55@gmail.com
+To:     robh+dt@kernel.org, frowand.list@gmail.com
+Cc:     devicetree@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
+Subject: [PATCH] drivers/of: keep description of function consistent with function name
+Date:   Mon, 11 May 2020 23:04:57 +0800
+Message-Id: <1589209497-13945-1-git-send-email-qiwuchen55@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sebastian
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-On 5/11/20 9:57 AM, Sebastian Reichel wrote:
-> Hi,
->
-> On Mon, May 11, 2020 at 09:29:59AM -0500, Dan Murphy wrote:
->> On 5/11/20 9:32 AM, Sebastian Reichel wrote:
->>> On Mon, May 11, 2020 at 07:25:06AM -0500, Dan Murphy wrote:
->>>> On 5/10/20 11:17 AM, Sebastian Reichel wrote:
->>>>> This needs is missing the power-supplies property. The N900 DT
->>>>> contains a bq27200 referencing the charger, so it should fail the DT
->>>>> check without the property being listed here.
->>>> Hmm.  I ran the dt checker specifically on the binding and it did not fail.
->>>> Unless I need to build some other DTs as well.
->>>> Either I will have the power-supplies property
->>> I just tried it myself. The problem is the way you are specifying
->>> the compatible strings. This is the parsing result:
->>>
->>> enum: ['ti,bq27200 - BQ27200', 'ti,bq27210 - BQ27210', 'ti,bq27500 - deprecated,
->>>         use revision specific property below', ...
->>>
->>> You can see this in Documentation/devicetree/bindings/processed-schema.yaml, which
->>> is generated by running the check. The compatible comments need a # as separation
->>> character like this to generate proper bindings:
->>>
->>> properties:
->>>     compatible:
->>>       enum:
->>>         - ti,bq27200 # BQ27200
->>>         - ti,bq27210 # BQ27210
->>>         - ti,bq27500 # deprecated, use revision specific property below
->> Well honestly not sure why we need the comment either. These are pretty
->> self explanatory maybe we should just remove the additional comments
-> Fine with me.
-Ack
->
->> Any consideration on just removing the deprecated values?
-> Let's keep them with their comment for now. Removing them should
-> start with marking them as depracated in the binding and generating
-> a runtime warning in the driver, so that people become aware of the
-> problem. At least for ti,bq27500 we have mainline users At least for
-> ti,bq27500 we have mainline users.
+Currently, there are some descriptions of function not
+consistent with function name, fixing them will make
+the code more readable.
 
-There are only 2 dts files that have this reference unless we are not 
-sure which device is actually in use.
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+---
+ drivers/of/fdt.c             |  2 +-
+ drivers/of/of_reserved_mem.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-Dan
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 2cdf64d..a86392a 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -471,7 +471,7 @@ void *of_fdt_unflatten_tree(const unsigned long *blob,
+ static u32 of_fdt_crc32;
+ 
+ /**
+- * res_mem_reserve_reg() - reserve all memory described in 'reg' property
++ * __reserved_mem_reserve_reg() - reserve all memory described in 'reg' property
+  */
+ static int __init __reserved_mem_reserve_reg(unsigned long node,
+ 					     const char *uname)
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 1a84bc0..6f6fea3 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -46,7 +46,7 @@ static int __init early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+ }
+ 
+ /**
+- * res_mem_save_node() - save fdt node for second pass initialization
++ * fdt_reserved_mem_save_node() - save fdt node for second pass initialization
+  */
+ void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
+ 				      phys_addr_t base, phys_addr_t size)
+@@ -68,8 +68,8 @@ void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
+ }
+ 
+ /**
+- * res_mem_alloc_size() - allocate reserved memory described by 'size', 'align'
+- *			  and 'alloc-ranges' properties
++ * __reserved_mem_alloc_size() - allocate reserved memory described by
++ *	'size', 'align'  and 'alloc-ranges' properties.
+  */
+ static int __init __reserved_mem_alloc_size(unsigned long node,
+ 	const char *uname, phys_addr_t *res_base, phys_addr_t *res_size)
+@@ -165,7 +165,7 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
+ 	__used __section(__reservedmem_of_table_end);
+ 
+ /**
+- * res_mem_init_node() - call region specific reserved memory init code
++ * __reserved_mem_init_node() - call region specific reserved memory init code
+  */
+ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+ {
+@@ -232,7 +232,7 @@ static void __init __rmem_check_for_overlap(void)
+ }
+ 
+ /**
+- * fdt_init_reserved_mem - allocate and init all saved reserved memory regions
++ * fdt_init_reserved_mem() - allocate and init all saved reserved memory regions
+  */
+ void __init fdt_init_reserved_mem(void)
+ {
+-- 
+1.9.1
 
-
-> -- Sebastian
