@@ -4,156 +4,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CABC54E8E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 08:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204C5C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 08:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B68E4207DD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 08:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E78214DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 08:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YFyWS89N"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="J53Pnaa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgEKI2X (ORCPT
+        id S1728776AbgEKIh6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 04:28:23 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:62830 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728344AbgEKI2X (ORCPT
+        Mon, 11 May 2020 04:37:58 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:33531 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728562AbgEKIh6 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 04:28:23 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B8S0Bg010988;
-        Mon, 11 May 2020 10:28:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=ARKtW82Ju4foRRG5jzp6GKL8UxrRXVO/KxZ4yej17EA=;
- b=YFyWS89NgLXHX4OBgXe4bdHZ0ZrWu3Se8fTc63Y7Y7DZ1QCCq3Hd6g+I9JYmYYTEmEcY
- oMDyhNRAzcGcsj4jrNNcl5qEQy/W4P0iBT84tCCw894FoqHhLIHhDIRgoeCOLz/jMwOa
- xdIXW8pRnV/jgNccj3k6tzeSOlvLjCCn3FDmVpcu6DYota4vSFCdOHMfZVviRLnYONC9
- uXwtKcj+BW8RSD/0e733l81RcgUU1B4R8EuolGkDqpLbsJZ8yjTXzHcWfGaaoQ0LW2hC
- mn/9z3mAQ86o5V+xQgSZmyAFm/nNwJXG6aJ7ygfyA3RrRhk7tZNSYmxOcAwFJAC9DWsU jQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30wj01sa7x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 10:28:11 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6D58A10002A;
-        Mon, 11 May 2020 10:28:06 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5B1482B27B5;
-        Mon, 11 May 2020 10:28:06 +0200 (CEST)
-Received: from [10.131.226.156] (10.75.127.47) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 11 May
- 2020 10:28:04 +0200
-Subject: Re: [PATCH 2/4] i2c: addition of client reg/unreg callbacks
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@kernel.org>,
-        <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
- <1588657871-14747-3-git-send-email-alain.volmat@st.com>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <a68f47ca-47e1-a293-f4ad-a5104c9ee620@st.com>
-Date:   Mon, 11 May 2020 10:28:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 May 2020 04:37:58 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id Y3wcj9SbXhEkrY3wdjFaWQ; Mon, 11 May 2020 10:37:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1589186274; bh=ZJdufNdhciwh1k1owFxPLJAjjfhKcGHDCjZ8YaoNOfw=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=J53Pnaa2C8Qc8PqGr2lJIqcjRUegc4X5XjVtX0pQYKK+ujkQrn6MkrUo7Q79W7o3e
+         /dCKquZ3agsORd8OgWVsh77n8+PuFWzKcyTUMCjXrDrfOKCIslAqZ3KGwLu4WF7Wbw
+         kxpZkeZsmiSW9y+6G310V48QdNWOWrnNzTC42o7cj3k/Dxq40If6XKuqrIKW8pY0g7
+         pYVe39htQ539V3bJscO2vlxLYL1LBmF3mZNNgkezuyCr/IjcquapXPCqy077KMuuAZ
+         5CH+1WCNQYndhkWR9QoGylPlqngLG95+jZHkyYMk4mvGjCEon47JDF8tb0JJfpbjPp
+         n8txd/MZy0crA==
+Subject: Re: [PATCH v8 08/14] media: platform: Change case for improving code
+ quality
+To:     Xia Jiang <xia.jiang@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com,
+        senozhatsky@chromium.org, mojahsu@chromium.org,
+        drinkcat@chromium.org, maoguang.meng@mediatek.com,
+        sj.huang@mediatek.com
+References: <20200403094033.8288-1-xia.jiang@mediatek.com>
+ <20200403094033.8288-9-xia.jiang@mediatek.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <4b8cc41e-5171-0d48-f588-96e4212ab22c@xs4all.nl>
+Date:   Mon, 11 May 2020 10:37:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <1588657871-14747-3-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200403094033.8288-9-xia.jiang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_03:2020-05-11,2020-05-11 signatures=0
+X-CMAE-Envelope: MS4wfCniNJXgaQ7H+AmqfcLoiP98kKWKQEaV/jbXSnIYOkR8vskmncR5OJ/uqGJ3HFjrkBEbl7ZZZOPsIsa5suNEXos4M10ba5UpXYLPr8P+CkcQcEuy2y1m
+ O+AvikV2+3xBYvhQua4+dkBeI75eMwjaIXK3+ySsRCjmhbM0PEFbaHdnsNNAm6N1DngHm3Y8D0yi/2jKVBxa1RBhNXSAyRxj5S0JWpnXQIMYaYovnMkQZo5p
+ HjwrSsdHzQsJsGJs2ct4gUDz7AhGpZieipIY9Ra+r89dhM9WWcrPRlP78eBobWM/wGo7cZhfhESAs6iSZCdon/1rR5O0Oy5xH3cOD7EpcvAcbw58Lp5D9BGo
+ KwSyinqY58RPVe43j1J4NMyTm+uSfbKEJtEa2TBUFArOr/EUlBRSdkSqlFFEuRP2ZY5Wc7U/PulCR4dN0Ok0ZInEL+Sv7wNbnBucivKqn2yw2n1FcvlKa7Hs
+ Nipdkr/GjraGZyDNL+y/wKctU2O3LBIqYQ0alxEJf9IEShRsV5Glt4FiToHtJzqwqpXf9JaeKv/mSO7a9A9WMzevv3hX1YI4/K6gyUoTwnsKrzctoUTmTRjn
+ 1VbnjBLODYGklJILTxmex44HqD14pQzLjKSEAr3nADpBRxGqUZYSgnMzH6CwJAKiZ4Kv76xzM18uHWF4Uy6ouZPFfFc6B+tc94MG+j92nJEmZrsTQx6KiFWW
+ yaHhqFn+Gl3/5tRvOJbS6lulowOGjwhbUsgeB2mCs2RlOpME1a8KYbj2vorhcTpcezzjiqwRYDvHFQURYUFUH06XXpRil5P0FJPIEgbKk6PMryWPNRgrduMC
+ m1XwA76LVljvrt8C3l+E+WNIBRi1kcXshN+lBL4yi2RTS32T5e2jelQekik9fcqxrSztskycMooBAxTwfwDm5ErvLyLLd//tajrB0AJF
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi all,
+On 03/04/2020 11:40, Xia Jiang wrote:
+> Change register offset hex numberals from upercase to lowercase.
 
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Typos:
 
-Thanks
+numberals -> numerals
 
-On 5/5/20 7:51 AM, Alain Volmat wrote:
-> Addition of two callbacks reg_client and unreg_client that can be
-> implemented by adapter drivers in order to take action whenever a
-> client is being registered to it.
+upercase -> uppercase
+
+Regards,
+
+	Hans
+
 > 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
 > ---
->  drivers/i2c/i2c-core-base.c | 11 +++++++++++
->  include/linux/i2c.h         |  6 ++++++
->  2 files changed, 17 insertions(+)
+> v8: no changes
+> ---
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 2e4560671183..4c84c6264314 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -319,6 +319,12 @@ static int i2c_device_probe(struct device *dev)
->  	if (!client)
->  		return 0;
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h
+> index 94db04e9cdb6..2945da842dfa 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h
+> @@ -20,29 +20,29 @@
+>  #define BIT_INQST_MASK_ALLIRQ		0x37
 >  
-> +	if (client->adapter->algo->reg_client) {
-> +		status = client->adapter->algo->reg_client(client);
-> +		if (status)
-> +			return status;
-> +	}
-> +
->  	driver = to_i2c_driver(dev->driver);
->  
->  	client->irq = client->init_irq;
-> @@ -417,6 +423,8 @@ static int i2c_device_probe(struct device *dev)
->  put_sync_adapter:
->  	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
->  		pm_runtime_put_sync(&client->adapter->dev);
-> +	if (client->adapter->algo->reg_client)
-> +		client->adapter->algo->unreg_client(client);
->  
->  	return status;
->  }
-> @@ -445,6 +453,9 @@ static int i2c_device_remove(struct device *dev)
->  	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
->  		pm_runtime_put(&client->adapter->dev);
->  
-> +	if (client->adapter->algo->unreg_client)
-> +		client->adapter->algo->unreg_client(client);
-> +
->  	return status;
->  }
->  
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index 45d36ba4826b..61b838caf454 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -509,6 +509,8 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
->   *   so e.g. PMICs can be accessed very late before shutdown. Optional.
->   * @functionality: Return the flags that this algorithm/adapter pair supports
->   *   from the ``I2C_FUNC_*`` flags.
-> + * @reg_client: Callback informing that a new client is being registered
-> + * @unreg_client: Callback informing that a client is being removed
->   * @reg_slave: Register given client to I2C slave mode of this adapter
->   * @unreg_slave: Unregister given client from I2C slave mode of this adapter
->   *
-> @@ -545,6 +547,10 @@ struct i2c_algorithm {
->  	/* To determine what the adapter supports */
->  	u32 (*functionality)(struct i2c_adapter *adap);
->  
-> +	/* To inform the adapter of the probe/remove of a client */
-> +	int (*reg_client)(struct i2c_client *client);
-> +	void (*unreg_client)(struct i2c_client *client);
-> +
->  #if IS_ENABLED(CONFIG_I2C_SLAVE)
->  	int (*reg_slave)(struct i2c_client *client);
->  	int (*unreg_slave)(struct i2c_client *client);
+>  #define JPGDEC_REG_RESET		0x0090
+> -#define JPGDEC_REG_BRZ_FACTOR		0x00F8
+> -#define JPGDEC_REG_DU_NUM		0x00FC
+> +#define JPGDEC_REG_BRZ_FACTOR		0x00f8
+> +#define JPGDEC_REG_DU_NUM		0x00fc
+>  #define JPGDEC_REG_DEST_ADDR0_Y		0x0140
+>  #define JPGDEC_REG_DEST_ADDR0_U		0x0144
+>  #define JPGDEC_REG_DEST_ADDR0_V		0x0148
+> -#define JPGDEC_REG_DEST_ADDR1_Y		0x014C
+> +#define JPGDEC_REG_DEST_ADDR1_Y		0x014c
+>  #define JPGDEC_REG_DEST_ADDR1_U		0x0150
+>  #define JPGDEC_REG_DEST_ADDR1_V		0x0154
+>  #define JPGDEC_REG_STRIDE_Y		0x0158
+> -#define JPGDEC_REG_STRIDE_UV		0x015C
+> +#define JPGDEC_REG_STRIDE_UV		0x015c
+>  #define JPGDEC_REG_IMG_STRIDE_Y		0x0160
+>  #define JPGDEC_REG_IMG_STRIDE_UV	0x0164
+> -#define JPGDEC_REG_WDMA_CTRL		0x016C
+> +#define JPGDEC_REG_WDMA_CTRL		0x016c
+>  #define JPGDEC_REG_PAUSE_MCU_NUM	0x0170
+> -#define JPGDEC_REG_OPERATION_MODE	0x017C
+> +#define JPGDEC_REG_OPERATION_MODE	0x017c
+>  #define JPGDEC_REG_FILE_ADDR		0x0200
+> -#define JPGDEC_REG_COMP_ID		0x020C
+> +#define JPGDEC_REG_COMP_ID		0x020c
+>  #define JPGDEC_REG_TOTAL_MCU_NUM	0x0210
+>  #define JPGDEC_REG_COMP0_DATA_UNIT_NUM	0x0224
+> -#define JPGDEC_REG_DU_CTRL		0x023C
+> +#define JPGDEC_REG_DU_CTRL		0x023c
+>  #define JPGDEC_REG_TRIG			0x0240
+>  #define JPGDEC_REG_FILE_BRP		0x0248
+> -#define JPGDEC_REG_FILE_TOTAL_SIZE	0x024C
+> +#define JPGDEC_REG_FILE_TOTAL_SIZE	0x024c
+>  #define JPGDEC_REG_QT_ID		0x0270
+>  #define JPGDEC_REG_INTERRUPT_STATUS	0x0274
+>  #define JPGDEC_REG_STATUS		0x0278
 > 
+
