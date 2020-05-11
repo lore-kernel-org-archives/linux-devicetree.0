@@ -2,123 +2,92 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8764EC54E4B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A97C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFE3206E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9582620736
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589228881;
+	bh=Nz6bTgIxUAn7rUabLhD1q1zn78Zqka5bB1ueKi/F2BQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XuNJnVJbd0qX9HpE0MlsYmQmCHurx2/EpJ8cFGJoqDymRxRtT3p4roOGwYjrIjIOo
+	 MrwzP+GCdFWhCGA8Prx0Pb184HUdWdglABOxXr5+6BGZob+uZ0D1sPADIVZOZAhDux
+	 viWNW79HdAQBhbp04u4juoEP0uQdPwhw/OOoBfmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731659AbgEKUZb (ORCPT
+        id S1731624AbgEKU2B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 16:25:31 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:49996 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbgEKUZb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:25:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 22DA38030807;
-        Mon, 11 May 2020 20:25:29 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id fAOOpsCg5Nu4; Mon, 11 May 2020 23:25:27 +0300 (MSK)
-Date:   Mon, 11 May 2020 23:25:25 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        <soc@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        <devicetree@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>,
-        <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: memory: Add Baikal-T1 L2-cache
- Control Block binding
-Message-ID: <20200511202525.2qg472f5spkeajia@mobilestation>
-References: <20200306130731.938808030702@mail.baikalelectronics.ru>
- <20200507230705.6468-1-Sergey.Semin@baikalelectronics.ru>
- <20200507230705.6468-2-Sergey.Semin@baikalelectronics.ru>
- <20200511153804.GA7015@bogus>
+        Mon, 11 May 2020 16:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727873AbgEKU2A (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 16:28:00 -0400
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B0AC20752;
+        Mon, 11 May 2020 20:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589228880;
+        bh=Nz6bTgIxUAn7rUabLhD1q1zn78Zqka5bB1ueKi/F2BQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BHozvJi5BG8Yx/0T1MOrqp/qMMQOQIlc2yfH0wPjmH/W9fNac63HYVSf2O8XDHI56
+         3nbcJXGDJMUfQtOuLBmNgCjEWHwTdwnZL8xE0ahfvEX2w7PaV36yNitkgO9OuD0ZZe
+         GyJmzLOxCr5+zPeCvxtUMeNbWYv6ICCl1TxnndHs=
+Received: by mail-oo1-f46.google.com with SMTP id b3so544907oob.0;
+        Mon, 11 May 2020 13:28:00 -0700 (PDT)
+X-Gm-Message-State: AGi0PuawI/I9uFwl4pQ+ACBzoIGhoHPaYr/0cPag8xnzNcDfJGWFXJV0
+        hHuDwFNv/o+PFpCMNGB+/GArWh/xac77DilcBg==
+X-Google-Smtp-Source: APiQypLSBJzRE+cCsGihwUlGGjWJH9/vO5uxkoJWXIl2XNbr12Oy6bpN1iK3mElpqX8cGoxAID5e8vKZk15IV0bTy4E=
+X-Received: by 2002:a4a:9285:: with SMTP id i5mr14814535ooh.50.1589228879703;
+ Mon, 11 May 2020 13:27:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200511153804.GA7015@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200418170703.1583-1-digetx@gmail.com> <20200418170703.1583-2-digetx@gmail.com>
+ <20200506163237.GA19296@ravnborg.org>
+In-Reply-To: <20200506163237.GA19296@ravnborg.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 11 May 2020 15:27:47 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+xU4p+CQ=xzvgcktCo9i=SfHajMgbZ1DKOVzo+hCYdCw@mail.gmail.com>
+Message-ID: <CAL_Jsq+xU4p+CQ=xzvgcktCo9i=SfHajMgbZ1DKOVzo+hCYdCw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] of_graph: add of_graph_get_local_port()
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:38:04AM -0500, Rob Herring wrote:
-> On Fri, 8 May 2020 02:07:03 +0300, Serge Semin wrote:
-> > There is a single register provided by the SoC system controller,
-> > which can be used to tune the L2-cache RAM up. It only provides a way
-> > to change the L2-RAM access latencies. So aside from "be,bt1-l2-ctl"
-> > compatible string the device node can be optionally equipped with the
-> > properties of Tag/Data/WS latencies.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Olof Johansson <olof@lixom.net>
-> > Cc: Boris Brezillon <bbrezillon@kernel.org>
-> > Cc: Paul Cercueil <paul@crapouillou.net>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: soc@kernel.org
-> > 
-> > ---
-> > 
-> > Changelog v2:
-> > - Move driver to the memory subsystem.
-> > - Use dual GPL/BSD license.
-> > - Use single lined copyright header.
-> > - Move "allOf" restrictions to the root level of the properties.
-> > - Discard syscon compatible string and reg property.
-> > - The DT node is supposed to be a child of the Baikal-T1 system controller
-> >   node.
-> > ---
-> >  .../memory-controllers/baikal,bt1-l2-ctl.yaml | 59 +++++++++++++++++++
-> >  1 file changed, 59 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
-> > 
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> [nip] ...
+On Wed, May 6, 2020 at 11:32 AM Sam Ravnborg <sam@ravnborg.org> wrote:
 >
-> See https://patchwork.ozlabs.org/patch/1285665
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
+> Hi Dmitry
+>
+> On Sat, Apr 18, 2020 at 08:06:58PM +0300, Dmitry Osipenko wrote:
+> > In some case, like a DRM display code for example, it's useful to silently
+> > check whether port node exists at all in a device-tree before proceeding
+> > with parsing the graph.
+> >
+> > This patch adds of_graph_get_local_port() which returns pointer to a local
+> > port node, or NULL if graph isn't specified in a device-tree for a given
+> > device node.
+> >
+> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Nice little helper function.
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+>
+> Rob - OK to commit to drm-misc-next?
 
-The problem is due to an absent vendor prefix in the test kernel source tree
-environment. As I said in the cover-letter the new vendor prefix will be added
-in the framework of the next patchset:
-https://lkml.org/lkml/2020/5/6/1047
+Yes, that's why I gave my R-by.
 
-Rob, please review that patchset first, merge in the corresponding patch from
-there and test this binding out then.
-
--Sergey
-
+Rob
