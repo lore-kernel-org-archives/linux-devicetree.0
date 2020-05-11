@@ -2,142 +2,126 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD30C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C495C54E8D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E141E207DD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D02207DD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:33:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DdwExHro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbgEKJdL (ORCPT
+        id S1729535AbgEKJdN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 05:33:11 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33548 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729529AbgEKJdK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 05:33:10 -0400
-IronPort-SDR: RgQtd9rP8233Y9yvMg3fk7LOgvTrZrjafupW2FIBOxq+nkzUuzrV6GqmComyJexjd5ZtYF4gg1
- fN3iQOjCQtRg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 02:33:10 -0700
-IronPort-SDR: ONYW+QqYbjMLn1MDFmvWENe6egF5WQnYr3Nj7Te1ktN7xBvPMhyHdGCfc/X9xjhrYEJUEWRnwl
- KL4sexatOzeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,379,1583222400"; 
-   d="scan'208";a="371171194"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 11 May 2020 02:33:06 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jY4o8-005vQO-I5; Mon, 11 May 2020 12:33:08 +0300
-Date:   Mon, 11 May 2020 12:33:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V8, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
-Message-ID: <20200511093308.GF185537@smile.fi.intel.com>
-References: <20200509080627.23222-1-dongchun.zhu@mediatek.com>
- <20200509080627.23222-3-dongchun.zhu@mediatek.com>
+        Mon, 11 May 2020 05:33:13 -0400
+Received: from mail-eopbgr00068.outbound.protection.outlook.com ([40.107.0.68]:25615
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729305AbgEKJdM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 05:33:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nUe4h8jb4mlTBoBWfvkHIVG6uukxOlbGgg5pziXUOy/e9giTFumemSIM/bNhhtTzyx52mDjoc79OJI3diliRFIJLASYonhS8h0BT2zOgSM5O1S5C16qNs4H5tzOFaIYjiZlESehE/Qbboz2elVYsX0wcUXkOhngKEbGWk99oNVF7+AFCyfmPenbVN7o4sYThrHUjqD//Hq8N+hcJhydpaEUWRFk89grQ51w79bztGOYBYxcYPIcs0GxW23qhiuqwDkBjh2kGLRFC+Eb5utG3ng5MiFYEyDe9QU9nLD9BDOkcI4KjJIp9++bSgXZomVxOcXI+w+TI/JquFVJlLsnejg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5jxJdGqHBF995O2koMhPVubVtg1S3gV8z8tbdE75gTs=;
+ b=Dr6Ei1i3YJW53NQK/Zxc9pbm2UKMAyoPxP8UIWmFUkMEMibrO/uzK4hrAZjHYOedPfJcpMF+YVJmEYYEcferum+lf9nXm34cIvlbrRmf+5cescjPSUnexlN3fc/gAFc/euayzFiJzVD8UjPY2wadS22Xrm3wSMDzMflaX7Hm4MJpMdH8lx1wIs8QyQjzPVyHRnGTda6BZhV9143wMeKKsYlz9hp1iFoLvHIQrOSJLomY8rmlzeqduE4cAbFP70QhhWCZCqgZyfdAbzsQlWPBoZ3da4WjOZKZ3zernQaEw6wPRhG2JC4QqKOdy9fYWg/kpvhx/XnG304DjRrOHuw6ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5jxJdGqHBF995O2koMhPVubVtg1S3gV8z8tbdE75gTs=;
+ b=DdwExHroUUn4/ECM9AGoyvnyfQsr2/X89oS0JSai9kTV1A9jHK2fagmKCU1b92muul9WdT8OG41HifvH9JOaYEvtBjW4IW7Bhd4pHZAWC1fTZNybl7011Z65vRwdWVuDs4uqKgDUyRQByTOd+g6nSsNnQwL81/apHot2uS+SqCE=
+Authentication-Results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6637.eurprd04.prod.outlook.com (2603:10a6:803:126::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Mon, 11 May
+ 2020 09:33:08 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 09:33:08 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     s.hauer@pengutronix.de, vkoul@kernel.org, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        festevam@gmail.com, dan.j.williams@intel.com, mark.rutland@arm.com,
+        catalin.marinas@arm.com
+Cc:     will.deacon@arm.com, l.stach@pengutronix.de,
+        martin.fuzzey@flowbird.group, kernel@pengutronix.de,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v7 RESEND 09/13] spi: imx: add new i.mx6ul compatible name in binding doc
+Date:   Tue, 12 May 2020 01:32:32 +0800
+Message-Id: <1589218356-17475-10-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
+References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0141.apcprd06.prod.outlook.com
+ (2603:1096:1:1f::19) To VE1PR04MB6638.eurprd04.prod.outlook.com
+ (2603:10a6:803:119::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509080627.23222-3-dongchun.zhu@mediatek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR06CA0141.apcprd06.prod.outlook.com (2603:1096:1:1f::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2979.27 via Frontend Transport; Mon, 11 May 2020 09:33:02 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8dfb31ab-c213-4c48-138c-08d7f58e5046
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6637:|VE1PR04MB6637:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB66373E2F5D22CEE902A9DF0089A10@VE1PR04MB6637.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-Forefront-PRVS: 04004D94E2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: A1hlF/VuvGy7erhmQ2HiDqqqE+1VOUGVqhfxrrP5FWYjOzEKAb+kwmKhB1hbakAoiO7z5e44AE38YLHsZwIV2Q5YKEe5IA7sFqdR/qzTmr0oWPNozFBL4PaekuDOlQOCcNMF8r9quEHZR245LF8WZk4MfiwQmcfpo7J8K5HofFQ0tflj46Ckr1MsWMD3I6VgDUQ5+sRwbO4HXf3+QxQ3Y+CRHxURkClUQ9D69f+mAUHblzrHfC61++kZB64w6k8+c9WTdc97GkDDiQOPpmpWn3gUpgxdcmnKzKY5mSS0OPSZfCNBMfpRyjky3Xhy8+FS44imzL0VRkfyl7tGc+m4n1ttjkqWxfsrh1ZS0BwU8qD5L8uL7ZCN1ZMVXAFroSqyXg8kQfgabFtd1a+2dJtdOhMVupugTg4DvFv6tuAx3ggUrl9xxsqfotY5roVesKcv0xvcDk7Wpg8JTRcN5371Qm9Y4ZBtw6cEANvtoWCTI6QF7oW1lRU73x1uY9lL8fKCDEE0R3IFPAzA9LUZyh6mIw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(346002)(396003)(366004)(33430700001)(8936002)(26005)(52116002)(6506007)(16526019)(2616005)(186003)(956004)(6666004)(6512007)(7416002)(5660300002)(2906002)(4326008)(6486002)(33440700001)(66476007)(8676002)(66946007)(66556008)(478600001)(86362001)(316002)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: t4Aje8EXEeUbFm7IukMZVnqPGhal59RwhDd3whRFEwCkC3Kpb4K//pnvsXM52qxyf2fvIBkvPZHGr1My3LxaKiLhvxcNEmRYcwWq8QsC7ycv1Z3MOcdExtx/OBv7nXHc05hberLxTjtZAhlkKC0Mld82rPVRCAPBtCxPbtmR9cTE6QBwzUq8x9E5cOXg5ZtNUEMK855ScwMrOUACZpcvo/TbkpiO4SSXe2fkLNcyWiVqUMDUIWmpnTBB3t4aOhrJzrULQZ6tOXlS8kYmnU0h/RcxfMpOnvCfO/Wie/lFHS+BpzVQxNPUhQjTo4/Ol7No4eyx18OEE45pUWdAQqsi+rezHOb66VSKkx03YWweHWSx8PYYA0ayf99sEheP/8SYE2JeWaxh0Y6Xj8LXx78LaVQf6TqXYhDE5AZkuWN8Ka/DwTnHc0OmKt0mL6rXqIMRKWxax1lOybZt9aN6xyLHZefhlqNGJkqG7EHawKKoKOY=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8dfb31ab-c213-4c48-138c-08d7f58e5046
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 09:33:08.1383
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: F++7PwSzV+tFowILnxoF6iagp12PdNHLbeSzDHnfSRnNQRvP78lKrbR10im7zSvYS23indmeb11W6ClpQse5Hw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6637
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 09, 2020 at 04:06:27PM +0800, Dongchun Zhu wrote:
-> Add a V4L2 sub-device driver for OV02A10 image sensor.
+ERR009165 fixed from i.mx6ul, add its compatible name in binding doc.
 
-...
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +#define OV02A10_ID(_msb, _lsb)				((_msb) << 8 | (_lsb))
-
-How often do you use this macro?
-
-...
-
-> +static int ov02a10_read_smbus(struct ov02a10 *ov02a10, unsigned char reg,
-> +			      unsigned char *val)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	int ret;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, reg);
-
-> +
-
-Extra blank line.
-
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val = (unsigned char)ret;
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int ov02a10_entity_init_cfg(struct v4l2_subdev *sd,
-> +				   struct v4l2_subdev_pad_config *cfg)
-> +{
-> +	struct v4l2_subdev_format fmt = {
-
-> +		.which = cfg ? V4L2_SUBDEV_FORMAT_TRY
-> +			     : V4L2_SUBDEV_FORMAT_ACTIVE,
-
-I think it would be fine to have it on one line.
-
-> +		.format = {
-> +			.width = 1600,
-> +			.height = 1200,
-> +		}
-> +	};
-> +
-> +	ov02a10_set_fmt(sd, cfg, &fmt);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +	if (!ret) {
-> +		if (rotation == 180) {
-
-if (a) {
-	if (b) {
-		...
-	}
-}
-
-==
-
-if (a && b) {
-	...
-}
-
-> +			ov02a10->upside_down = true;
-> +			ov02a10->fmt.code = MEDIA_BUS_FMT_SRGGB10_1X10;
-> +		}
-> +	}
-
+diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+index 33bc58f..0a529ba 100644
+--- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
++++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+@@ -10,6 +10,7 @@ Required properties:
+   - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
+   - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
+   - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
++  - "fsl,imx6ul-ecspi" for SPI compatible with the one integrated on i.MX6UL and later Soc
+   - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8MQ
+   - "fsl,imx8mm-ecspi" for SPI compatible with the one integrated on i.MX8MM
+   - "fsl,imx8mn-ecspi" for SPI compatible with the one integrated on i.MX8MN
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.7.4
 
