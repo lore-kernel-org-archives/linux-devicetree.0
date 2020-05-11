@@ -2,102 +2,83 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4411C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 10:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AE1C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 10:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 843A7206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 10:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589194166;
-	bh=15islGkeDrYc/THLIgzaeQ3iuhszhWj2T2ccvUjSv+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w2ene8ZEbnaAH0mUv10AJqj6fCFqab72FpBi7r1SM5d2cwtcbsvxrpR8xDssFI69N
-	 HPqUw1AvfxbQOwNN98cGegAX+kaA1z98iuooS+oymxSpzjqXlv12MVuGU4qoqAsaiH
-	 PSq7dva+f49mOaXRIMLV85KBcJzcGfdOzugwSg34=
+	by mail.kernel.org (Postfix) with ESMTP id A945D206D5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 10:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgEKKt0 (ORCPT
+        id S1729544AbgEKKwx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 06:49:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45892 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 06:52:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:56220 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgEKKtZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 06:49:25 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A621F206D5;
-        Mon, 11 May 2020 10:49:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589194165;
-        bh=15islGkeDrYc/THLIgzaeQ3iuhszhWj2T2ccvUjSv+Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zf0CyIb35SsbLV8ORJUAwSCDMQY+UUxtoEUkcW8pZXArWQWhPNKat6tarU4oD/il1
-         KqX/CtZ66hNsE3k8Xi6oZRL4J2Zw2gBm3vf/CfdsmOxs0pCkpuSlSDHztYqOmZbZ/K
-         3c1g0EHonSsBJxXDY6m7m5MkbnnX9Fl6mC93Tbfc=
-Date:   Mon, 11 May 2020 11:49:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, nishakumari@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        rnayak@codeaurora.org
-Subject: Re: [v2 4/4] regulator: qcom: labibb: Add SC interrupt handling
-Message-ID: <20200511104922.GD8216@sirena.org.uk>
-References: <20200508204200.13481-1-sumit.semwal@linaro.org>
- <20200508204200.13481-5-sumit.semwal@linaro.org>
+        id S1729086AbgEKKww (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 06:52:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CF811FB;
+        Mon, 11 May 2020 03:52:52 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CEFAA3F305;
+        Mon, 11 May 2020 03:52:50 -0700 (PDT)
+Date:   Mon, 11 May 2020 11:52:48 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        "open list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 0/4] PCI: brcmstb: Some minor fixes/features
+Message-ID: <20200511105248.GB24954@e121166-lin.cambridge.arm.com>
+References: <20200507201544.43432-1-james.quinlan@broadcom.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NKoe5XOeduwbEQHU"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508204200.13481-5-sumit.semwal@linaro.org>
-X-Cookie: TANSTAAFL
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200507201544.43432-1-james.quinlan@broadcom.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, May 07, 2020 at 04:15:39PM -0400, Jim Quinlan wrote:
+> v3 -- A change was submitted to [1] to make 'aspm-no-l0s' a general
+>       property for PCIe devices.  As such, the STB PCIe YAML  file
+>       merely notes that it may be used.
+> 
+> v2 -- Dropped commit concerning CRS.
+>    -- Chanded new prop 'brcm,aspm-en-l0s' to 'aspm-no-l0s'.
+>    -- Capitalize first letter in commit subject line; spelling.
+> 
+> v1 -- original
+> 
+> [1] https://github.com/devicetree-org/dt-schema/blob/master/schemas/pci/pci-bus.yaml
+> 
+> Jim Quinlan (4):
+>   PCI: brcmstb: Don't clk_put() a managed clock
+>   PCI: brcmstb: Fix window register offset from 4 to 8
+>   dt-bindings: PCI: brcmstb: New prop 'aspm-no-l0s'
+>   PCI: brcmstb: Disable L0s component of ASPM if requested
+> 
+>  .../bindings/pci/brcm,stb-pcie.yaml           |  2 ++
+>  drivers/pci/controller/pcie-brcmstb.c         | 19 +++++++++++++++----
+>  2 files changed, 17 insertions(+), 4 deletions(-)
 
---NKoe5XOeduwbEQHU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to pci/brcmstb, thanks !
 
-On Sat, May 09, 2020 at 02:12:00AM +0530, Sumit Semwal wrote:
-
-> +static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
-> +{
-> +	int ret, count;
-> +	u16 reg;
-> +	u8 sc_err_mask;
-> +	unsigned int val;
-> +	struct labibb_regulator *labibb_reg = (struct labibb_regulator *)_reg;
-> +	bool in_sc_err, reg_en, scp_done = false;
-> +
-> +	if (irq == labibb_reg->sc_irq)
-> +		reg = labibb_reg->base + REG_LABIBB_STATUS1;
-> +	else
-> +		return IRQ_HANDLED;
-
-Why would we be registering the interrupt handler when it's not valid?
-
---NKoe5XOeduwbEQHU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65LbEACgkQJNaLcl1U
-h9A8Wgf+NWKmlAAltMsGck9iS25HVb+wWUuXPnOZWCe13+DjXCuc7QDmqpRwjzLy
-aYXbTXmU+6GCZHfZbazTY7bZzsq8NG8DhZ2Gzwuoh2PcUuKwBvFNuhX8rwAB5W4a
-d73uCvaIxfFjxbB0Xgkjw1QF89ijTK8N+uemNHs7wtLW8LxoPKO/37ajwTLWYqNf
-aDg44Y1e7PkhfGoGB2IiIZq/srn6TOYJmcK3FojllvVQEBi/Xsu2K40HSK+r2L8S
-xlHe++6Hf7byPabmH7VBLAU+YvhtxRBSfW6TrMFnCFNlczK+sIJhKJhmA4EJ+3Zc
-ixVK6i/oJptEZkUH0OVtgFd/UQe6ig==
-=FTe5
------END PGP SIGNATURE-----
-
---NKoe5XOeduwbEQHU--
+Lorenzo
