@@ -2,325 +2,195 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C97C54E8D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC26C54E8E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B85FB20720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6559C20720
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589221645;
-	bh=xamqHBgS81p3GoqraB0aV0zsgftmcqKIbGLe1qHSuPk=;
+	s=default; t=1589221646;
+	bh=lDHar79Z4HHKrJBGwuXzy0YNiwMg8sKm3v01RezBD+Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a00RQGwnB+55PcpyclUDhZsmtGCkahlj77BTtTDBearwh1fsxvSNbzyNZ9OjIOgWG
-	 5dgNpde+9qlf7Co80zWcD/WVpuKPNy7HmlOJ2SuzUJLGD7borjkmxG74WT/wAVZhk+
-	 DHCXV2qEikveIurOg0ArpauUrPH9jJIk1X6yVZYg=
+	b=Gk4L9d/7rAzQd2KCYqyLNOgXKo+y9ogtsO1fQxbgUTquiPWkSYD2cQb9RcIRniygV
+	 mkUaOe4fQPJTQGnqVZkAoPlY26LKLVI5QlNuLkvdg01UKnrc3OY5fvoBjy7j7uZkCj
+	 SsQzJnyOPDYoQgd8L1fzaQOQjtKa09oVX3lhYyBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731133AbgEKS1Y (ORCPT
+        id S1731138AbgEKS10 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 14:27:24 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41244 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731028AbgEKS1Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 14:27:24 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 19so15950496oiy.8;
-        Mon, 11 May 2020 11:27:22 -0700 (PDT)
+        Mon, 11 May 2020 14:27:26 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44601 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729772AbgEKS1Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 14:27:25 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j4so8344924otr.11;
+        Mon, 11 May 2020 11:27:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qXhlH20xl+SARUCA4rhfAEYWxQyu62FZrWp9XsKvGVg=;
-        b=e4Rb9XxCdT0obAPmNTHn4umD2mfoY40cCYe5oX+Fogf8bJvKveLkBdsLEc+0kAXCEe
-         HJR9wJyMHxHdqQhWciX1gpwtltlFoNZqXEQMOSgwWvXRMGACbYzcM7At2snPM6n+EHDw
-         av5d8dsHEKQ8nA12lSPTwi8IH18Z7HjKxEuQVRNzcv6HaQD6tblLa9WoZpu5kxe6Oxo2
-         G4g6wBioHcMVxfZ8kEgf5BJOisdFLsnF+NpQyA+VZM6ItqZrtQFLtn1Oxcky6+6bxMBn
-         Z7/0miPLXNOyZi2jUrAFQlm9AxjPzC7XtAK4iJJ3L47urLCfnusrxoC4yPtE1tiBRzGL
-         tzzg==
-X-Gm-Message-State: AGi0PuYgCEXFzDnyS9Y3uIVNeiKJ1VM4kXZ2ISVbnQATHz0YTS/ZHDxW
-        Yf11jH48flKFMPWtcKHSQA==
-X-Google-Smtp-Source: APiQypKs3Fghjq4SPEnasGGKQrJQnDjXMHnsE2wETrSBrc6VCtFD/eACI9dYBaqhcmfSSj7fJPaitA==
-X-Received: by 2002:a05:6808:30b:: with SMTP id i11mr19891919oie.124.1589221642433;
-        Mon, 11 May 2020 11:27:22 -0700 (PDT)
+        bh=0hPBkYeKIiodMWs/enk89cPCGVXGgMcnp/mkphaKHR0=;
+        b=O6XgTj/V8prOCbfC1OnEO1b0FUTmpFXhSNlc8/KS/DG3awquhhvln+DUAAzrSijyIx
+         Vx/RjdRGPBaIvgOpuzgPwBcw0VH7M0WilzlfLtclP/Vmc2RwqgLD/FTw3Fr6Oh8+3uPq
+         PKS6XYjNYUCMmlO0mON27H1v1Dbrl8cqfYFrnFvoQ4aa3ZdKLdrlWBB/DDmGJ0FIc8Ir
+         xvwQCMhB9zjt+GI0pyV/cIhIB1hzz02Q+GqzxbaxfsaYf0T/afYKx+M0LKlwdpXa6Zw1
+         tPAWZQWWeb+x7DcFKjFLc5FstuN4rS6nofXUpd71HkONqXruv8lIhednHmLB+Dnk3qVU
+         NzPg==
+X-Gm-Message-State: AGi0Puatv+PTp7RUA8IMxHZXNwT1vtFl8tjz+4JuBkUZSgdIQRZH4EnJ
+        h+N0vu9zMX2ifqsF5m7CGA==
+X-Google-Smtp-Source: APiQypKkLLpfS5uFZ7qDGesr8w1obstysUYqHlic1hxCJgCQLeL+ae1OZe/dsWHP/TD49Qm1gGUNpg==
+X-Received: by 2002:a9d:7858:: with SMTP id c24mr13282165otm.163.1589221644004;
+        Mon, 11 May 2020 11:27:24 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r67sm4754220oie.19.2020.05.11.11.27.21
+        by smtp.gmail.com with ESMTPSA id e91sm2834465otb.40.2020.05.11.11.27.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 11:27:21 -0700 (PDT)
-Received: (nullmailer pid 9052 invoked by uid 1000);
-        Mon, 11 May 2020 16:02:07 -0000
-Date:   Mon, 11 May 2020 11:02:07 -0500
+        Mon, 11 May 2020 11:27:23 -0700 (PDT)
+Received: (nullmailer pid 6693 invoked by uid 1000);
+        Mon, 11 May 2020 15:37:12 -0000
+Date:   Mon, 11 May 2020 10:37:12 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
-        mark.rutland@arm.com, sakari.ailus@linux.intel.com,
-        drinkcat@chromium.org, tfiga@chromium.org, matthias.bgg@gmail.com,
-        bingbu.cao@intel.com, srv_heupstream@mediatek.com,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V8, 1/2] media: dt-bindings: media: i2c: Document OV02A10
- bindings
-Message-ID: <20200511160207.GA32476@bogus>
-References: <20200509080627.23222-1-dongchun.zhu@mediatek.com>
- <20200509080627.23222-2-dongchun.zhu@mediatek.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v5 1/2] dt-bindings: mtd: Add YAML for Nand Flash
+ Controller support
+Message-ID: <20200511153712.GA25497@bogus>
+References: <20200507001537.4034-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200507001537.4034-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200509080627.23222-2-dongchun.zhu@mediatek.com>
+In-Reply-To: <20200507001537.4034-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 09, 2020 at 04:06:26PM +0800, Dongchun Zhu wrote:
-> Add DT bindings documentation for Omnivision OV02A10 image sensor.
+On Thu, May 07, 2020 at 08:15:36AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Add YAML file for dt-bindings to support NAND Flash Controller
+> on Intel's Lightning Mountain SoC.
+
+The $subject should some how reflect this is for this SoC.
+
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > ---
->  .../bindings/media/i2c/ovti,ov02a10.yaml           | 184 +++++++++++++++++++++
->  MAINTAINERS                                        |   7 +
->  2 files changed, 191 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
+>  .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 85 ++++++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
+> diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
 > new file mode 100644
-> index 0000000..5468d1b
+> index 000000000000..69b592ae62f4
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
-> @@ -0,0 +1,184 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (c) 2020 MediaTek Inc.
+> +++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+> @@ -0,0 +1,85 @@
+> +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/media/i2c/ovti,ov02a10.yaml#
+> +$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Omnivision OV02A10 CMOS Sensor Device Tree Bindings
+> +title: Intel LGM SoC NAND Controller Device Tree Bindings
+> +
+> +allOf:
+> +  - $ref: "nand-controller.yaml"
 > +
 > +maintainers:
-> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-> +
-> +description: |-
-> +  The Omnivision OV02A10 is a low-cost, high performance, 1/5-inch, 2 megapixel
-> +  image sensor, which is the latest production derived from Omnivision's CMOS
-> +  image sensor technology. Ihis chip supports high frame rate speeds up to 30fps
-> +  @ 1600x1200 (UXGA) resolution transferred over a 1-lane MIPI interface. The
-> +  sensor output is available via CSI-2 serial data output.
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > +
 > +properties:
 > +  compatible:
-> +    const: ovti,ov02a10
+> +    const: intel,lgm-nand-controller
 > +
 > +  reg:
-> +    description: I2C device address
-
-Drop this. Nothing specific to this device.
-
 > +    maxItems: 1
 > +
 > +  clocks:
-> +    items:
-> +      - description: top mux camtg clock
-> +      - description: devider clock
-
-typo
-
-> +
-> +  clock-names:
-> +    items:
-> +      - const: eclk
-> +      - const: freq_mux
-> +
-> +  clock-frequency:
-> +    description:
-> +      Frequency of the eclk clock in Hertz.
-> +
-> +  dovdd-supply:
-> +    description:
-> +      Definition of the regulator used as interface power supply.
-> +
-> +  avdd-supply:
-> +    description:
-> +      Definition of the regulator used as analog power supply.
-> +
-> +  dvdd-supply:
-> +    description:
-> +      Definition of the regulator used as digital power supply.
-> +
-> +  powerdown-gpios:
 > +    maxItems: 1
 > +
-> +  reset-gpios:
-> +    maxItems: 1
+> +  dmas:
+> +    maxItems: 2
 > +
-> +  rotation:
-> +    description:
-> +      Definition of the sensor's placement, valid values are 0 and 180.
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +      - enum:
-> +          - 0    # Sensor Mounted Upright (default)
-> +          - 180  # Sensor Mounted Upside Down
+> +  dma-names:
+> +    enum:
+> +      - rx
+> +      - tx
 > +
-> +  ovti,mipi-tx-speed:
-> +    description:
-> +      Indication of MIPI transmission speed select, which is to control D-PHY
-> +      timing setting by adjusting MIPI clock voltage to improve the clock
-> +      driver capability.
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +      - enum:
-> +          - 0    #  20MHz -  30MHz
-> +          - 1    #  30MHz -  50MHz
-> +          - 2    #  50MHz -  75MHz
-> +          - 3    #  75MHz - 100MHz
-> +          - 4    # 100MHz - 130MHz (suggested)
-> +          - 5    # Manual
+> +  pinctrl-names: true
 > +
-> +  # See ../video-interfaces.txt for details
-> +  port:
+> +patternProperties:
+> +  "^pinctrl-[0-9]+$": true
+
+Don't need the pinctrl properties. The tooling adds them.
+
+> +
+> +  "^nand@[a-f0-9]+$":
 > +    type: object
-> +    additionalProperties: false
-> +    description:
-> +      A node containing an output port node with an endpoint definition
-> +      as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-
-No need for repeating a generic description of a common property.
-
-> +
 > +    properties:
-> +      endpoint:
-> +        type: object
+> +      reg:
+> +        minimum: 0
+> +        maximum: 7
 > +
-> +        properties:
-> +          data-lanes:
-> +            description: |-
-> +              The driver only supports 1-lane operation.
-
-What the driver supports is not relevant.
-
-> +            items:
-> +              - const: 1
-> +              - const: 2
-> +              - const: 3
-> +              - const: 4
+> +      nand-ecc-mode: true
 > +
-> +          clock-noncontinuous:
-> +            type: boolean
-> +            description: |-
-> +              MIPI CSI-2 clock is non-continuous if this property is present,
-> +              otherwise it's continuous.
-
-Assume this has a common definition, so just need:
-
-clock-noncontinuous: true
-
+> +      nand-ecc-algo:
+> +        const: hw
 > +
-> +          link-frequencies:
-> +            allOf:
-> +              - $ref: /schemas/types.yaml#/definitions/uint64-array
-> +            description:
-> +              Allowed data bus frequencies. 39000000 Hz is supported by
-> +              the driver.
-
-This too is a common property.
-
-Though 39000000 looks like a constraint. However, what the driver 
-supports is not relevant.
-
-> +
-> +        required:
-> +          - link-frequencies
-> +
-> +    required:
-> +      - endpoint
+> +    additionalProperties: false
 > +
 > +required:
 > +  - compatible
 > +  - reg
 > +  - clocks
 > +  - clock-names
-> +  - clock-frequency
-> +  - dovdd-supply
-> +  - avdd-supply
-> +  - dvdd-supply
-> +  - powerdown-gpios
-> +  - reset-gpios
-> +  - port
+> +  - dmas
 > +
 > +additionalProperties: false
 > +
 > +examples:
 > +  - |
+> +    #include <dt-bindings/clock/intel,lgm-clk.h>
+
+Is this applied somewhere? It's missing in my check and will break the 
+build.
+
+> +    nand-controller@e0f00000 {
+> +      compatible = "intel,nand-controller";
+> +      reg = <0xe0f00000 0x100>,
+> +            <0xe1000000 0x300>,
+> +            <0xe1400000 0x8000>,
+> +            <0xe1c00000 0x1000>;
+> +      reg-names = "ebunand", "hsnand", "nand_cs0", "nand_cs1";
+> +      clocks = <&cgu0 LGM_GCLK_EBU>;
+> +      dma-names = "tx", "rx";
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      #clock-cells = <1>;
 > +
-> +    #include <dt-bindings/clock/mt8183-clk.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c {
-> +        clock-frequency = <400000>;
+> +      nand@0 {
+> +        reg = <0>;
+> +        nand-on-flash-bbt;
 > +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        ov02a10: camera-sensor@3d {
-> +            compatible = "ovti,ov02a10";
-> +            reg = <0x3d>;
-> +            pinctrl-names = "default";
-> +            pinctrl-0 = <&clk_24m_cam>;
-> +
-> +            clocks = <&topckgen CLK_TOP_MUX_CAMTG>,
-> +                     <&topckgen CLK_TOP_UNIVP_192M_D8>;
-> +            clock-names = "eclk", "freq_mux";
-> +            clock-frequency = <24000000>;
-> +
-> +            rotation = <180>;
-> +            ovti,mipi-tx-speed = <3>;
-> +
-> +            dovdd-supply = <&mt6358_vcamio_reg>;
-> +            avdd-supply = <&mt6358_vcama1_reg>;
-> +            dvdd-supply = <&mt6358_vcn18_reg>;
-> +
-> +            powerdown-gpios = <&pio 107 GPIO_ACTIVE_LOW>;
-> +            reset-gpios = <&pio 109 GPIO_ACTIVE_HIGH>;
-> +
-> +            port {
-> +                wcam_out: endpoint {
-> +                    remote-endpoint = <&mipi_in_wcam>;
-> +                    data-lanes = <1>;
-
-This doesn't match the schema which says this should be 4 entries.
-
-> +                    clock-noncontinuous;
-> +                    link-frequencies = /bits/ 64 <390000000>;
-> +                };
-> +            };
-> +        };
+> +        #size-cells = <1>;
+> +      };
 > +    };
 > +
 > +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e64e5db..63a2335 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12389,6 +12389,13 @@ M:	Harald Welte <laforge@gnumonks.org>
->  S:	Maintained
->  F:	drivers/char/pcmcia/cm4040_cs.*
->  
-> +OMNIVISION OV02A10 SENSOR DRIVER
-> +M:	Dongchun Zhu <dongchun.zhu@mediatek.com>
-> +L:	linux-media@vger.kernel.org
-> +S:	Maintained
-> +T:	git git://linuxtv.org/media_tree.git
-> +F:	Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
-> +
->  OMNIVISION OV13858 SENSOR DRIVER
->  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
->  L:	linux-media@vger.kernel.org
 > -- 
-> 2.9.2
+> 2.11.0
+> 
