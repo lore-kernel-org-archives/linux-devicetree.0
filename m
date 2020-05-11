@@ -2,193 +2,128 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_RED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA72C54E8F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 17:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5377C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 17:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6278520746
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 17:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3EE3206D7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 17:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589219058;
+	bh=TyqQgXbRU7CHTNnWXo92tDp4bkKKH+QHCcrcrAeZ0Xg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZDyKY7JxoFAUI/5maBi0XiXYNzFhNKUURIBepSlShDTheAmNHBWbVkrxOxWilzXRN
+	 JvVdI3bVAxmFYCcVpG9XAi3CyCvcMvaC4nONNtYL/963eCXOaYJo/Me793EokyG6em
+	 SIvbSI5Jm+ne17ok9npNdRFur3GmYQe2mv8QZy3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbgEKRbG (ORCPT
+        id S1726891AbgEKRoS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 13:31:06 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2188 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729698AbgEKRbG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 13:31:06 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 1BBEFD5F880730EEF03C;
-        Mon, 11 May 2020 18:31:04 +0100 (IST)
-Received: from localhost (10.47.24.74) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 11 May
- 2020 18:31:03 +0100
-Date:   Mon, 11 May 2020 18:30:38 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Saravanan Sekar <saravanan@linumiz.com>
-CC:     Jonathan Cameron <jic23@kernel.org>, <robh+dt@kernel.org>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v2 3/4] iio: accel: wsen-itds accel documentation
-Message-ID: <20200511183038.000031cf@Huawei.com>
-In-Reply-To: <9e7b0365-deed-a647-ec36-b4e6ccfa2ae4@linumiz.com>
-References: <20200429133943.18298-1-saravanan@linumiz.com>
-        <20200429133943.18298-4-saravanan@linumiz.com>
-        <20200503130103.16a92131@archlinux>
-        <9e7b0365-deed-a647-ec36-b4e6ccfa2ae4@linumiz.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 11 May 2020 13:44:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgEKRoS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 13:44:18 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A81E206D6;
+        Mon, 11 May 2020 17:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589219057;
+        bh=TyqQgXbRU7CHTNnWXo92tDp4bkKKH+QHCcrcrAeZ0Xg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M5M0yr01sJrjR4NQQHjYco8Zm2A79QvQoS+JgFLzt3UtWZozf/K5RaXdDLDwpsV4n
+         wQ4Llyx/KGkvcaEaZuIe/aT5WnmIVgxYInVSxRkj1xyI6x7VQqYBwTQcCt1+Wq38K2
+         eFbuTzTTMJ7pHQiH04ug7PF5ar1YT8bmqKYk6agc=
+Date:   Mon, 11 May 2020 18:44:14 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511174414.GL8216@sirena.org.uk>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.24.74]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="W/+CTqSGWdiRg+8j"
+Content-Disposition: inline
+In-Reply-To: <20200511134502.hjbu5evkiuh75chr@mobilestation>
+X-Cookie: TANSTAAFL
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 10 May 2020 20:11:55 +0200
-Saravanan Sekar <saravanan@linumiz.com> wrote:
 
-> Hi Jonathan,
-> 
-> On 03/05/20 2:01 pm, Jonathan Cameron wrote:
-> > On Wed, 29 Apr 2020 15:39:42 +0200
-> > Saravanan Sekar<saravanan@linumiz.com>  wrote:
-> >  
-> >> Add documentation about device operating mode and output data range
-> >> supported according to operating mode
-> >>
-> >> Signed-off-by: Saravanan Sekar<saravanan@linumiz.com>
-> >> ---
-> >>   .../ABI/testing/sysfs-bus-iio-wsen-itds       | 23 +++++++++++++++++++
-> >>   1 file changed, 23 insertions(+)
-> >>   create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-> >>
-> >> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-> >> new file mode 100644
-> >> index 000000000000..5979f2b8aa1a
-> >> --- /dev/null
-> >> +++ b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-> >> @@ -0,0 +1,23 @@
-> >> +What:		/sys/bus/iio/devices/iio\:device0/in_accel_samp_freq_available
-> >> +KernelVersion:	5.7
-> >> +Contact:	linux-iio@vger.kernel.org
-> >> +Description:
-> >> +		Reading gives range of sample frequencies available for current operating mode
-> >> +		after one data has generated.  
-> > This is standard ABI so should be the main docs, not here.
-> > It also takes absolute precedence over the power modes (as mentioned below, no
-> > standard userspace will be able to use those).  So if the frequency is
-> > only available in high perf mode, then we change to high perf mode.
-> >  
-> >> +
-> >> +		Access: Read
-> >> +		Valid values: represented in Hz
-> >> +		- range [12.5, 1600] for high permormance mode
-> >> +		- range [1.6, 200] for normal/low power mode
-> >> +
-> >> +What:		/sys/bus/iio/devices/iio\:device0/operating_mode
-> >> +KernelVersion:	5.7
-> >> +Contact:	linux-iio@vger.kernel.org
-> >> +Description:
-> >> +		Represents the device operating mode. High performance mode gives high output
-> >> +		data rate and low noise compared to normal mode. Normal mode consumes less
-> >> +		current.  In single shot device enters to lowpower after one data has
-> >> +		generated.
-> >> +
-> >> +		Access: Read, Write
-> >> +		Valid values: "lowpower", "normal", "high_perf", "single_shot"  
-> > The issue with these sort of 'mode' interface is almost no userspace will ever use them.
-> > They are too unpredictable across different types of devices.  
-> I don't understand how can we assume or say no one will use this. The 
-> device supports multiple features
-> and my understanding is driver should support according to device, not 
-> reverse.
+--W/+CTqSGWdiRg+8j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The aim of a subsystem and an ABI definition for such is to 'unify' and provide standard
-ways of doing things.  It is against that 'standard' that userspace code will generally
-be written.  So every time we define custom ABI for a device, we have basically written
-something that the vast majority of userspace code will never use.  The only exception
-is code written for a particular device.
+On Mon, May 11, 2020 at 04:45:02PM +0300, Serge Semin wrote:
+> On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
 
-So we have two options for features like this:
+> > That sounds like you need to also impose a limit on the maximum message
+> > size as well then, with that you should be able to handle messages up
+> > to whatever that limit is.  There's code for that bit already, so long
+> > as the limit is not too low it should be fine for most devices and
+> > client drivers can see the limit so they can be updated to work with it
+> > if needed.
 
-1) Map them to existing ABI wherever possible - ensure the code people have written
-   already for userspace will do what they would expect.  Here it's a case of providing
-   'reasonable' configuration for the full range of sampling frequencies.  That may
-   miss some corners that are optimal but we may have to live with that.
+> Hmm, this might work. The problem will be with imposing such limitation through
+> the DW APB SSI driver. In order to do this I need to know:
 
-2) Define new ABI that is 'generic' so that future user space code can use it.
-   The problem with power modes is they are extremely device specific, so this second
-   option is one we have never succeeded with.  In theory you could define a set of
-   modes, but they would need to fully describing.  As in you would need a record that
-   tells userspace every characteristic that is affected by each mode.
-   To put it bluntly software doesn't read data sheets.  (nor for that matter to
-   most userspace code developers :)
+> 1) Whether multi-block LLP is supported by the DW DMA controller.
+> 2) Maximum DW DMA transfer block size.
 
-> This is more or
-> less device specific and no sure idea about bring all the device in one 
-> umbrella.
+There is a constraint enumeration interface in the DMA API which you
+should be able to extend for this if it doesn't already support what you
+need.
 
-We have existing userspace code - quite a bit of it.  That code should work for your device.
-It doesn't know about your own magic interface, so it won't use it.
-That's the point of standardization around one interface, we want it to work.
-Note that the only way we make that happen is to review new ABI very carefully
-and often block it entirely.
+> Then I'll be able to use this information in the can_dma() callback to enable
+> the DMA xfers only for the safe transfers. Did you mean something like this when
+> you said "There's code for that bit already" ? If you meant the max_dma_len
+> parameter, then setting it won't work, because it just limits the SG items size
+> not the total length of a single transfer.
 
-> > Some of these should also not be exposed to userspace anyway as they are about 'how'
-> > you are using the driver.  For example, if you aren't doing triggered capture then
-> > single_shot is almost always the correct option. Annoyingly I see high performance
-> > mode gives lower noise...
-> >
-> > So no need to expose single_shot to userspace.
-> >
-> > For the others we are just looking at different power vs speed and accuracy trade offs.
-> > Those are better exposed by what they effect.  Here the big control for that is
-> > sampling frequency.
-> >
-> > So if we assume the user is never going to touch this control (if it's even there)
-> > then we probably want to assume they want the best possible accuracy for whatever
-> > frequency they are running at.  So transition across the modes to provide that.
-> >
-> > Should we ever support low power mode?  It sounds nice on paper, but in reality
-> > userspace won't use so I suspect we should just drop it - certainly in an initial
-> > patch submission (as it will hold up acceptance).  Even if we did support
-> > it, as mentioned above ABI controls will take precedence so we are looking
-> > at a 'hint' not a control of mode.
-> >
-> > ABI is a pain, and we will put a lot of effort into not expanding it unless
-> > there is a good usecase plus no way of mapping to existing ABI.  
-> Obviously without any reason or requirement device manufacture won't 
-> come-up these kind of feature.
+You can set max_transfer_size and/or max_message_size in the SPI driver
+- you should be able to do this on probe.
 
-Agreed, there are clear reasons for doing this, but until we understand the
-target use case it is very hard to have a discussion about how an ABI will
-be expanded.
+--W/+CTqSGWdiRg+8j
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> I will change the driver as you don't accept at least for initial version.
+-----BEGIN PGP SIGNATURE-----
 
-Great.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65ju0ACgkQJNaLcl1U
+h9BWuwf9GYDZfT9SEAR6UO5jhJk6RWwFsHU3BhxdAnvDK/l2K93uI+11WQq2An8H
+yiMiIaTllJPZmNs7mg1+lxpT1gRmKbmoXqb3DFml9K4gKxVJMXoIAPyhTL6wLqaV
+wiCzkwszsZsVvzFiQyPNAau0qzkaOC+wHPr8PUiEFxZIRUxEsThin07HXK7X0APj
+7LoKnOaB28MWVN/ezndCECaxoOgexp8LZ6jhVMMg/Kpd8UMCaJwB8yEz80uBFL+q
+mglQQesF6cb/dQZcynpOyCWm2dZhnCdd5yvyHWH1d2rVbcfi3xoTq+tWfPMLbW12
+45bciv1TxBU7iqLX1sF/YYO33YIO1Q==
+=HGPI
+-----END PGP SIGNATURE-----
 
-Thanks,
-
-Jonathan
-
-
-> 
-> 
-> Thanks,
-> Saravanan
-> 
-
-
+--W/+CTqSGWdiRg+8j--
