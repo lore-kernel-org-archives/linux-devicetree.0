@@ -2,147 +2,191 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1C8C54E8F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE9DC54E8D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60B042078A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5A8208D5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589231645;
+	bh=+EShsCcJe7SdAZFXp0CPRr5WXi4stanehnT05JfiETQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WQZEKcFDKwLjukUsgcV56sactm6s89N8j682hsPmirTtCMi+tYYcsDLtAHLkdLNRi
+	 ywOdtYiw5xvs6Lm8EdRFIH0thSqiDytUkpT2sLT2bO89dNX7tOiX69yl0GmrZqOsru
+	 NXQkfKgcwrL6+mhAyhiOEGZZsG9JGNwP2Ra983Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbgEKVID (ORCPT
+        id S1725904AbgEKVOF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 17:08:03 -0400
-Received: from mga11.intel.com ([192.55.52.93]:44557 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728046AbgEKVID (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 17:08:03 -0400
-IronPort-SDR: Rcp3EDn6fhm2vgJ2fBeDsP/fyMxSfzxOJAyrSHednMDgsRs7lQJg5Mp0cX/mtKyzCNuMTkBAFg
- uz2zkaNdteKA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 14:08:01 -0700
-IronPort-SDR: t4AxqHHHkr6vBGqkbBrHjdrapcTu7uZg3Ts+CnG9/CbtCyLSWH4X/mHEA7plgOTYMvOs51mUzw
- YYCBa3V3UedA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
-   d="scan'208";a="251264806"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 11 May 2020 14:07:58 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jYFea-0063GS-Rm; Tue, 12 May 2020 00:08:00 +0300
-Date:   Tue, 12 May 2020 00:08:00 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511210800.GP185537@smile.fi.intel.com>
-References: <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
- <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
- <20200511210714.GO185537@smile.fi.intel.com>
+        Mon, 11 May 2020 17:14:05 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44808 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725355AbgEKVOE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:14:04 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j4so8770821otr.11;
+        Mon, 11 May 2020 14:14:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HdAuOfdZA600kVwfN3f7G2AtZ+Xb7Hh7BuebX0KzsAE=;
+        b=jQf22+dyNr+Np4elOVlxvcJ7OHHtfxN+m9Gjh4+5+tHMHj2nineMh+6XuSMC2nYYDW
+         fsYjpzLIiwY+F96Lx39xSVYl6Y+VViv/trHBP+f3jyZRogmuu/DhgOmA7Vop7X3xkwZ/
+         yZWBFzh4AdpAqOhLBIXlvDrIqRZGZWnjXewITi5jvN4/Fa+fX+9JmYRMqXCVs5q5yECf
+         D9DBNq3bJd+vVRG0sXlzI8zCrxGrlkEu8p0Hn76y3VBsLVHBjnGBioHPog+7P8RUZccP
+         VSohNJn/g8syyCzkRlXu9XzLqvb8ZSyTSZ0uztmE0D9c9GIoPaBzLP6t9bHvRqh16Em9
+         t+RQ==
+X-Gm-Message-State: AGi0PuYSGSjNmYzhA/gUeysOVxR338WMATEr/I0rJBzpcrZhXoBCBNMK
+        N4DZFFVoO2QjoQdInwIMTw==
+X-Google-Smtp-Source: APiQypKIP9UgQDUWZjuB+VBbVoiTW/wp1xETY9x89lhBnQtgOkr+ezeDT4hcpLFrxd2JxPUQjERcxQ==
+X-Received: by 2002:a05:6830:1449:: with SMTP id w9mr10291024otp.230.1589231641881;
+        Mon, 11 May 2020 14:14:01 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 61sm2946252otp.13.2020.05.11.14.14.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 14:14:01 -0700 (PDT)
+Received: (nullmailer pid 21700 invoked by uid 1000);
+        Mon, 11 May 2020 21:13:59 -0000
+Date:   Mon, 11 May 2020 16:13:59 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200511211359.GB3518@bogus>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-6-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511210714.GO185537@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200423174543.17161-6-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:07:14AM +0300, Andy Shevchenko wrote:
-> On Mon, May 11, 2020 at 10:32:55PM +0300, Serge Semin wrote:
-> > On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
-> > > On Mon, May 11, 2020 at 4:48 PM Serge Semin
-> > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > >
-> > > > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
-> > > > > On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
-> > > > >
-> > > > > > Alas linearizing the SPI messages won't help in this case because the DW DMA
-> > > > > > driver will split it into the max transaction chunks anyway.
-> > > > >
-> > > > > That sounds like you need to also impose a limit on the maximum message
-> > > > > size as well then, with that you should be able to handle messages up
-> > > > > to whatever that limit is.  There's code for that bit already, so long
-> > > > > as the limit is not too low it should be fine for most devices and
-> > > > > client drivers can see the limit so they can be updated to work with it
-> > > > > if needed.
-> > > >
-> > > > Hmm, this might work. The problem will be with imposing such limitation through
-> > > > the DW APB SSI driver. In order to do this I need to know:
-> > > > 1) Whether multi-block LLP is supported by the DW DMA controller.
-> > > > 2) Maximum DW DMA transfer block size.
-> > > > Then I'll be able to use this information in the can_dma() callback to enable
-> > > > the DMA xfers only for the safe transfers. Did you mean something like this when
-> > > > you said "There's code for that bit already" ? If you meant the max_dma_len
-> > > > parameter, then setting it won't work, because it just limits the SG items size
-> > > > not the total length of a single transfer.
-> > > >
-> > > > So the question is of how to export the multi-block LLP flag from DW DMAc
-> > > > driver. Andy?
-> > > 
-> > > I'm not sure I understand why do you need this being exported. Just
-> > > always supply SG list out of single entry and define the length
-> > > according to the maximum segment size (it's done IIRC in SPI core).
-> > 
-> > Finally I see your point. So you suggest to feed the DMA engine with SG list
-> > entries one-by-one instead of sending all of them at once in a single
-> > dmaengine_prep_slave_sg() -> dmaengine_submit() -> dma_async_issue_pending()
-> > session. Hm, this solution will work, but there is an issue. There is no
-> > guarantee, that Tx and Rx SG lists are symmetric, consisting of the same
-> > number of items with the same sizes. It depends on the Tx/Rx buffers physical
-> > address alignment and their offsets within the memory pages. Though this
-> > problem can be solved by making the Tx and Rx SG lists symmetric. I'll have
-> > to implement a clever DMA IO loop, which would extract the DMA
-> > addresses/lengths from the SG entries and perform the single-buffer DMA 
-> > transactions with the DMA buffers of the same length.
-> > 
-> > Regarding noLLP being exported. Obviously I intended to solve the problem in a
-> > generic way since the problem is common for noLLP DW APB SSI/DW DMAC combination.
-> > In order to do this we need to know whether the multi-block LLP feature is
-> > unsupported by the DW DMA controller. We either make such info somehow exported
-> > from the DW DMA driver, so the DMA clients (like Dw APB SSI controller driver)
-> > could be ready to work around the problem; or just implement a flag-based quirk
-> > in the DMA client driver, which would be enabled in the platform-specific basis
-> > depending on the platform device actually detected (for instance, a specific
-> > version of the DW APB SSI IP). AFAICS You'd prefer the later option. 
+On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
+> This patch adds core support for the board management controller found
+> on the SMARC-sAL28 board. It consists of the following functions:
+>  - watchdog
+>  - GPIO controller
+>  - PWM controller
+>  - fan sensor
+>  - interrupt controller
 > 
-> So, we may extend the struct of DMA parameters to tell the consumer amount of entries (each of which is no longer than maximum segment size) it can afford:
-> - 0: Auto (DMA driver handles any cases itself)
-> - 1: Only single entry
-> - 2: Up to two...
+> At the moment, this controller is used on the Kontron SMARC-sAL28 board.
+> 
+> Please note that the MFD driver is defined as bool in the Kconfig
+> because the next patch will add interrupt support.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  drivers/mfd/Kconfig    |  19 +++++
+>  drivers/mfd/Makefile   |   2 +
+>  drivers/mfd/sl28cpld.c | 153 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 174 insertions(+)
+>  create mode 100644 drivers/mfd/sl28cpld.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 0a59249198d3..be0c8d93c526 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -2060,5 +2060,24 @@ config SGI_MFD_IOC3
+>  	  If you have an SGI Origin, Octane, or a PCI IOC3 card,
+>  	  then say Y. Otherwise say N.
+>  
+> +config MFD_SL28CPLD
+> +	bool "Kontron sl28 core driver"
+> +	depends on I2C=y
+> +	depends on OF
+> +	select REGMAP_I2C
+> +	select MFD_CORE
+> +	help
+> +	  This option enables support for the board management controller
+> +	  found on the Kontron sl28 CPLD. You have to select individual
+> +	  functions, such as watchdog, GPIO, etc, under the corresponding menus
+> +	  in order to enable them.
+> +
+> +	  Currently supported boards are:
+> +
+> +		Kontron SMARC-sAL28
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called sl28cpld.
+> +
+>  endmenu
+>  endif
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index f935d10cbf0f..9bc38863b9c7 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -259,3 +259,5 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
+>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>  
+>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> +
+> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
+> diff --git a/drivers/mfd/sl28cpld.c b/drivers/mfd/sl28cpld.c
+> new file mode 100644
+> index 000000000000..1e5860cc7ffc
+> --- /dev/null
+> +++ b/drivers/mfd/sl28cpld.c
+> @@ -0,0 +1,153 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * MFD core for the sl28cpld.
+> + *
+> + * Copyright 2019 Kontron Europe GmbH
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/regmap.h>
+> +
+> +#define SL28CPLD_VERSION	0x03
+> +#define SL28CPLD_WATCHDOG_BASE	0x04
+> +#define SL28CPLD_HWMON_FAN_BASE	0x0b
+> +#define SL28CPLD_PWM0_BASE	0x0c
+> +#define SL28CPLD_PWM1_BASE	0x0e
+> +#define SL28CPLD_GPIO0_BASE	0x10
+> +#define SL28CPLD_GPIO1_BASE	0x15
+> +#define SL28CPLD_GPO_BASE	0x1a
+> +#define SL28CPLD_GPI_BASE	0x1b
+> +#define SL28CPLD_INTC_BASE	0x1c
 
-It will left implementation details (or i.o.w. obstacles or limitation) why DMA
-can't do otherwise.
+If you want to use 'reg' in the binding, these are the numbers you 
+should be using rather than making up numbering!
 
--- 
-With Best Regards,
-Andy Shevchenko
+However, I still don't think you need any child nodes. All the data in 
+the DT binding is right here in the driver already. There's no advantage 
+to putting child nodes in DT, because this driver still has to be 
+updated if you add more nodes.
 
-
+Rob
