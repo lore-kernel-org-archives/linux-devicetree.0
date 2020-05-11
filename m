@@ -2,124 +2,92 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03FAC54E8D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B15C54E4B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1CCD20720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:34:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="hxsG5anG";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="hxsG5anG"
+	by mail.kernel.org (Postfix) with ESMTP id 24D03206DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589223071;
+	bh=9J7M4Hd1lcMIKr+8f03BJpOtYXdgALrfsNMubS9rz/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QWh0Zd2AT38oSLpUuPE0eE5x8iyd2duFUEW22763dJePl0j74saMT4pMFQ31GB+OQ
+	 0AJWAXVNhTLPOkfROEK9rtfKEjwfex03IfnA6ENMYXSiO9W38Utvk/oYh7Uo8hgZLH
+	 eg1LZ64Jfdd3AWhM6weO5XLzXqaUBqIoAgfiFAoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgEKSeD (ORCPT
+        id S1729685AbgEKSvH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 14:34:03 -0400
-Received: from node.akkea.ca ([192.155.83.177]:44280 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729727AbgEKSeC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 14:34:02 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id B56664E2006;
-        Mon, 11 May 2020 18:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1589222042; bh=Da5qJJ8kOejzlzfFl55mNbToDs7NIQyVvZRPEpDqiF8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=hxsG5anG1wA42sngp2H698FK6UEzs3lX5Vw+hgOEhQlPvGzbysPJ7x55dJCqCiuTx
-         ImT+BESYeU0KPFXnEeqdPEGczcJFOFK91Wph/WbOJwPytkR9hAsWpzVVT1QoyXV/pm
-         fT9ZCsgEB0JCUnf3bfq/J5gtDI8T8E7THNkYmbEA=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7UqCcZzt97cR; Mon, 11 May 2020 18:34:02 +0000 (UTC)
-Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
-        by node.akkea.ca (Postfix) with ESMTPSA id 393E04E2003;
-        Mon, 11 May 2020 18:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1589222042; bh=Da5qJJ8kOejzlzfFl55mNbToDs7NIQyVvZRPEpDqiF8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=hxsG5anG1wA42sngp2H698FK6UEzs3lX5Vw+hgOEhQlPvGzbysPJ7x55dJCqCiuTx
-         ImT+BESYeU0KPFXnEeqdPEGczcJFOFK91Wph/WbOJwPytkR9hAsWpzVVT1QoyXV/pm
-         fT9ZCsgEB0JCUnf3bfq/J5gtDI8T8E7THNkYmbEA=
+        Mon, 11 May 2020 14:51:07 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45000 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729661AbgEKSvH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 14:51:07 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j4so8409369otr.11;
+        Mon, 11 May 2020 11:51:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kE5/Go6t2fYGvoXtO9HkWgvHFtqFj74OSf+x9Glf+U8=;
+        b=UjZSYw4RSv+TpNcr0pTQrHpT/aFHcX2Idooxt6BBtneGl17MTpstYmDCesutGWFs4E
+         Rdu6GMJp9K4J3MA9YzxgDfn95uUWvaIQ50neusqdJ1ymMeuLzdkAjIarS9dqYV0JlJ0D
+         66kpTqhMNYptELLPUGwp6T23lJS2D3x/8MQAVgT6Yr/CZ8wUZQ7aikql7H620+6GY4mE
+         v+y8EEXZ1SYa7DtR1fKYxt4KaoPSFox6LfgiuEd5ewn9M/MrroeIV8u3mHcvvS92bSqj
+         tM7uoKXpD9nSZTLtaVOVNPxB9ZdFdoi3fZEoM6PVrP+EBx3qQDTzrXDrw/sNH9kQKb67
+         IJHA==
+X-Gm-Message-State: AGi0PuaUyBJ7/weP7U+zxzskrOtkZX4i3Tgi8EzIfrVR9eslWYENBVYX
+        Ttb9Y+BhBpDBmp0hksoi6R6qHMo=
+X-Google-Smtp-Source: APiQypIRsow20DA+OFWNNQtxZ4M+f9YRd4zN3KlQ4rWozGy8h57PD0s4/z5hpOktemuW1PcKm94mMw==
+X-Received: by 2002:a9d:19af:: with SMTP id k44mr13367362otk.80.1589223065262;
+        Mon, 11 May 2020 11:51:05 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k84sm4766130oib.10.2020.05.11.11.51.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 11:51:04 -0700 (PDT)
+Received: (nullmailer pid 25902 invoked by uid 1000);
+        Mon, 11 May 2020 18:51:03 -0000
+Date:   Mon, 11 May 2020 13:51:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     amit.kucheria@verdurent.com, rui.zhang@intel.com,
+        s.hauer@pengutronix.de, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, shawnguo@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com, festevam@gmail.com, kernel@pengutronix.de,
+        robh+dt@kernel.org, daniel.lezcano@linaro.org
+Subject: Re: [PATCH V3] dt-bindings: thermal: Convert i.MX8MM to json-schema
+Message-ID: <20200511185103.GA25293@bogus>
+References: <1587477544-20052-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 May 2020 11:34:02 -0700
-From:   Angus Ainslie <angus@akkea.ca>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: usb: ti,tps6598x: add dt binding doc
-In-Reply-To: <20200511152649.GA23481@bogus>
-References: <20200506191718.2144752-1-angus@akkea.ca>
- <20200506191718.2144752-3-angus@akkea.ca> <20200511152649.GA23481@bogus>
-Message-ID: <ebad030b623cd8f4e2e400e78d679be4@akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587477544-20052-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Tue, 21 Apr 2020 21:59:04 +0800, Anson Huang wrote:
+> Convert the i.MX8MM thermal binding to DT schema format using json-schema
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V2:
+> 	- drop unnecessary description for reg/clocks;
+> 	- improve compatible;
+> 	- use thermal-sensor as node name.
+> ---
+>  .../devicetree/bindings/thermal/imx8mm-thermal.txt | 15 ------
+>  .../bindings/thermal/imx8mm-thermal.yaml           | 58 ++++++++++++++++++++++
+>  2 files changed, 58 insertions(+), 15 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+>  create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+> 
 
-On 2020-05-11 08:26, Rob Herring wrote:
-> On Wed,  6 May 2020 12:17:18 -0700, Angus Ainslie wrote:
->> Document the tps6598x driver
->> 
->> Signed-off-by: Angus Ainslie <angus@akkea.ca>
->> ---
->>  .../devicetree/bindings/usb/ti,tps6598x.yaml  | 75 
->> +++++++++++++++++++
->>  1 file changed, 75 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
->> 
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml:
-> maintainers:0: None is not of type 'string'
-> Documentation/devicetree/bindings/Makefile:12: recipe for target
-> 'Documentation/devicetree/bindings/usb/ti,tps6598x.example.dts' failed
-> make[1]: ***
-> [Documentation/devicetree/bindings/usb/ti,tps6598x.example.dts] Error
-> 1
-> make[1]: *** Waiting for unfinished jobs....
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml:
-> ignoring, error in schema: maintainers: 0
-> warning: no schema found in file:
-> ./Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml:
-> ignoring, error in schema: maintainers: 0
-> warning: no schema found in file:
-> ./Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
-> Makefile:1300: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
-> 
-> See https://patchwork.ozlabs.org/patch/1284704
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install
-> git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-
-I think the consesus was to use this one instead.
-
-https://lore.kernel.org/lkml/20200507122352.1773661-2-bryan.odonoghue@linaro.org/
-
-Thanks
-Angus
-
+Applied, thanks!
