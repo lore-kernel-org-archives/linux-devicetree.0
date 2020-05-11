@@ -2,132 +2,164 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05765C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 11:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0468AC54E4B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 11:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF36520722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 11:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C4B20736
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 11:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="e3vzpO9L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B11Pm6i3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgEKLQ3 (ORCPT
+        id S1730009AbgEKL1l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 07:16:29 -0400
-Received: from mail-eopbgr30074.outbound.protection.outlook.com ([40.107.3.74]:54259
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726068AbgEKLQ2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 07:16:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l9NZ5UaD+p+aVKsDd0of3Wpquf8N7Ma5LCwQ6qgcy6RJd4iHX0/q6+5ugS4S56Iia7yD4jCRyANEPyTzdryxOtLUmlXL9ZtizbQqdJuoYxgsHGxAqB4ZoV95RcNbJYvRCKIPUXeN3hH1wxF/XT2jCCkco48bvt/FTkfjUjDE158Gc16IY1v+cxJC3Xfvwr6nUqPMGTqFMuEeQ9pm76ACEPMh2Rt133yEg8LvuJiuI590nR25ODJPhJzTFkxCiUUvukA+xtnPiFjmy9bilLPpV2MmCm6Lug4QBS85NoMNZqx3zMBkgHI+2/kd4voIIhptFKoaVttw7UBedME6bhfoxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qenBc9Pexn/0UqftHkM+2gP6cZ7+lEhBohMfn9bK1Uw=;
- b=lMidS5ZVHSTF5yDiTrCni0p/FhONnRedjug+wpiV582kHxs7OueLdSKqDSf8/Ca1THHnbFxic/IUFvcSNNxqRkqfOezJR4TZ0wCZyC2Tuo7/P68jokb0jP+Nl1diCtvQMB4ldcXmt6mvdDTJGUwB0BC1L5nei8qlq/8AKUyEwmSyq3hgn3YnOiR/VvJWZiswpAIAsxnyHx0gvyRnhSjrzMOnm4NU4pop8lIvz5rJK2MNUgorLikRuFSK41GMm83tAvWUFdrnnTqv94UTaAaX4NeQ+oLHcNPG/wh2cuKM47pIK+0c8h9wtvWIjPp9omlJJx9GSp84YL/Up4NoluX88Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qenBc9Pexn/0UqftHkM+2gP6cZ7+lEhBohMfn9bK1Uw=;
- b=e3vzpO9LV0B92Ii1z/UuoUqthXrl98c0rMYQcOvqSNZ7s2Ub5fhR179qVs5qcGgaeTqdbQU/z8NBONBCcqbSlyO7H2ZPaYAkh3JVSJs0vcIHDXgmQqO2jk9o1m6MFFXBv1PCFwW4vt4RDvhEbSWnCUzL6k0nx+AgbssdD8TV7fs=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB4150.eurprd04.prod.outlook.com (2603:10a6:209:43::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Mon, 11 May
- 2020 11:16:24 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 11:16:24 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] dt-bindings: reset: Convert i.MX7 reset to json-schema
-Thread-Topic: [PATCH] dt-bindings: reset: Convert i.MX7 reset to json-schema
-Thread-Index: AQHWJdsuI+RtHYyd5EydI3B2US1zJqiivf5g
-Date:   Mon, 11 May 2020 11:16:24 +0000
-Message-ID: <AM6PR04MB4966E5E547A29199B84936A180A10@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1589012077-12088-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1589012077-12088-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f0e341fb-e3b6-4077-6baf-08d7f59cbe0e
-x-ms-traffictypediagnostic: AM6PR04MB4150:|AM6PR04MB4150:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB41508C4B20CDD982029632AF80A10@AM6PR04MB4150.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 04004D94E2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qgFKjBeVLR8RXnbzE6hBBeA9Ap05a4mRxXOiketvjcooKe7ctWhiAY7pQjzySdXrhRvjhq9ZpxOJYL8bTHda6NEWdrdFfuDQwnc8gAP/JfFeRI7w04K/wGk9V9HFLq4Gur3R8TAPU9umguq3mdN7YsleTAgiatEerrrk94KTB8uskUT7zlknXN4Wv+QoptKt/R8GdSmu5woLXHKGfcm527/kcxnX57SAdu900C0NWVKa9i5OZBu9pC7uvejNYIVdMLjwHZXWdGM/ph8rlo6CHmy2Yi/1wYiTGh0sEvJwHA2myUBh/lSfMfymqJLG6agApuHLLJiBfSmIuECsGTwZmIkC052xNc9Fy1v/kDZ+pCQ7dVZ6j+INbieE3r62EMfzw6gif6dkcQXDFpoE6g4sLCflJkVNtvvoibAC8VdhL8n9Rb15VzW7+YE8o3tumDzaa5yZG1wR+4pmcVcFbbsvVkZkhMA4nXxUkPPsLbf86Dt5VUO0YLuyuIJHXBju3GBi2a586LikKom8eUcQdkR13+cqyq75ZtTpxrpduO+EZ40=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(376002)(39860400002)(136003)(33430700001)(55016002)(4326008)(5660300002)(52536014)(8936002)(478600001)(76116006)(66476007)(66946007)(33440700001)(64756008)(66556008)(66446008)(33656002)(71200400001)(110136005)(9686003)(86362001)(6506007)(316002)(44832011)(2906002)(8676002)(26005)(7696005)(186003)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: r6J9uiNRwfJH9UMHMtCtPDt76iOVxq5NF2MV/mbQ6k/nsoWYWTtvNn/D4OjJzY0dkeEttXfiT0v2vNARsWXbStEJi/DklVhkX+Cb4V/hX9o8NvUw3C6oKf2n6t0b36tdRiMS/+ai3IO3kXxB6bIAy5cj8ovPyexs8Xj01teV2h+7KxH1k8HK705dn1ueZqyHDuc4G59/XgFHhQy3ELFM6JjzzbmiNhwIA+24LBK/+eYIbwCdHXi+zwLtM5FKrkO2pOwDtwobUJGOnTxLThjp0unvKAxUVj5Ke/pR//a87+EG90k9Bl1GJSkanthR+U0eMf79sTSPh/79mjEAlsDA/ljwqSiwoXxbiMme248Qzjq/x5kvYo8JdACW1OteQABIA2ZxSK9+Qju8ZK6EJ+glgdgTXrCOSIklTcQZNK9e+KsrAGYkNnCbXe5OnW48olVPe6W2gHo/7CrSQmKZW45FsG4JYTw122go71nzN75uz9c=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 11 May 2020 07:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729493AbgEKL1j (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 07:27:39 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76313C061A0C;
+        Mon, 11 May 2020 04:27:39 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w20so9056886ljj.0;
+        Mon, 11 May 2020 04:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vaB9hU9OmyfFXTQp3Ro8TCS0oJ1JBGJMlLHsQD/icQs=;
+        b=B11Pm6i378UfISHZsNk0nzMTp1ytpuFElTXChP5p5rfSBHgFXSvuIWdO9AuSII/v4L
+         JoXj8tmU64Sov4ttXUk+utPGxHIq+UsAHzKdC+xfO2pyjaQgU0B8FNCNM1tEE5a6a+Bb
+         lVLbbKB5+Drtgyu+Cx6j2yuv4R6xL3Vx83M/2VTvQGYK5L9CGr8jRyKNLN/TGYcESVrg
+         fPnZvzpHrNC2Ub7OaStzqBPbwrPL5nuRFb5OH615K8cpdmSNBoRfCYqnn1LNnamAJLVa
+         ymOntHstg1G1B2aaxiJSR7DHWzSbohQ93hZO8PTB8Ync9/qLg3Qkf7TZJn0VuMhti5DF
+         Dd4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vaB9hU9OmyfFXTQp3Ro8TCS0oJ1JBGJMlLHsQD/icQs=;
+        b=bZM+bRI+7C56Qk/3OEBJDXT1zdT5k4hXmGVEBEKW+V9gmrBFO5/983DT74rBf1otrz
+         cEGENfIqXj4jLT6z5k0Lr3En3oIAwN398ctLP1sGSJ+u27lYnwiiCoUe0DGGnjimTDKI
+         pYnKTk6UOC2ws3d2kL0wjcPxW1cWaX78cq795Uxt4FD1wyUE5BiRH06/ZPSkG09DNjEC
+         msk4hz0ffuiCkabO39oKDOioPu+tk8HneyhaO785bu3yZP5L4z39OM4fRsffTLk80cAa
+         ngMKL6TYjJ5rxNSgI2c8C55x/SSoVNSDdNXIBinLphQZCCcRcYKsiLdPM4/4rhLmR8qd
+         hLwA==
+X-Gm-Message-State: AOAM5311qEGiTP2WhYGiptTeoOcN8pwvkj/Me6Iroufp8PL/ATD6pjSk
+        pFBd7cYrhVoYKJFrm5BlKH0n/FLzvtuEuZYqmIk=
+X-Google-Smtp-Source: ABdhPJxjS7B69iERkJXybN1FRa7Oxd7PZfUVSfeSeQJxEpGjVNnxZ1aHys/mj0Ck3Q4insH6zi+f+AQGU7gf0xFawuI=
+X-Received: by 2002:a2e:b6d3:: with SMTP id m19mr6903929ljo.43.1589196457920;
+ Mon, 11 May 2020 04:27:37 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0e341fb-e3b6-4077-6baf-08d7f59cbe0e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 11:16:24.7844
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wAuQ2TFp5+vzmDyHbK5ITZ6zLSoq4zUXS1IMSysSAvx8z2b4jO/+OZnD4yeDdSXAcN1RYTCzOZ8lXi5EcTuu7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4150
+References: <20200510102330.66715-1-tali.perry1@gmail.com> <20200510102330.66715-3-tali.perry1@gmail.com>
+ <20200511091759.GE185537@smile.fi.intel.com>
+In-Reply-To: <20200511091759.GE185537@smile.fi.intel.com>
+From:   Tali Perry <tali.perry1@gmail.com>
+Date:   Mon, 11 May 2020 14:28:50 +0300
+Message-ID: <CAHb3i=tERsM+gwmQN1+vjnML9o5NxRK=uBokEUsd-Ljyje4s3A@mail.gmail.com>
+Subject: Re: [PATCH v10 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     ofery@google.com, Brendan Higgins <brendanhiggins@google.com>,
+        avifishman70@gmail.com, Tomer Maimon <tmaimon77@gmail.com>,
+        kfting@nuvoton.com, Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Wy4uLl0NCg0KPiArDQo+ICttYWludGFpbmVyczoNCj4gKyAgLSBBbnNvbiBIdWFuZyA8QW5zb24u
-SHVhbmdAbnhwLmNvbT4NCj4gKw0KPiArZGVzY3JpcHRpb246IHwNCj4gKyAgVGhlIHN5c3RlbSBy
-ZXNldCBjb250cm9sbGVyIGNhbiBiZSB1c2VkIHRvIHJlc2V0IHZhcmlvdXMgc2V0IG9mDQo+ICsg
-IHBlcmlwaGVyYWxzLiBEZXZpY2Ugbm9kZXMgdGhhdCBuZWVkIGFjY2VzcyB0byByZXNldCBsaW5l
-cyBzaG91bGQNCj4gKyAgc3BlY2lmeSB0aGVtIGFzIGEgcmVzZXQgcGhhbmRsZSBpbiB0aGVpciBj
-b3JyZXNwb25kaW5nIG5vZGUgYXMNCj4gKyAgc3BlY2lmaWVkIGluIHJlc2V0LnR4dC4NCj4gKw0K
-PiArICBGb3IgbGlzdCBvZiBhbGwgdmFsaWQgcmVzZXQgaW5kaWNlcyBzZWUNCj4gKyAgICA8ZHQt
-YmluZGluZ3MvcmVzZXQvaW14Ny1yZXNldC5oPiBmb3IgaS5NWDcsDQo+ICsgICAgPGR0LWJpbmRp
-bmdzL3Jlc2V0L2lteDhtcS1yZXNldC5oPiBmb3IgaS5NWDhNUSBhbmQNCj4gKyAgICA8ZHQtYmlu
-ZGluZ3MvcmVzZXQvaW14OG1xLXJlc2V0Lmg+IGZvciBpLk1YOE1NIGFuZA0KPiArICAgIDxkdC1i
-aW5kaW5ncy9yZXNldC9pbXg4bXEtcmVzZXQuaD4gZm9yIGkuTVg4TU4gYW5kDQoNCkhvdyBhYm91
-dCBjb21iaW5lIGFib3ZlIHRocmVlIGl0ZW1zPw0KDQo+ICsgICAgPGR0LWJpbmRpbmdzL3Jlc2V0
-L2lteDhtcC1yZXNldC5oPiBmb3IgaS5NWDhNUA0KPiArDQo+ICtwcm9wZXJ0aWVzOg0KPiArICBj
-b21wYXRpYmxlOg0KPiArICAgIGl0ZW1zOg0KPiArICAgICAgLSBlbnVtOg0KPiArICAgICAgICAt
-IGZzbCxpbXg3ZC1zcmMNCj4gKyAgICAgICAgLSBmc2wsaW14OG1xLXNyYw0KPiArICAgICAgICAt
-IGZzbCxpbXg4bW0tc3JjDQo+ICsgICAgICAgIC0gZnNsLGlteDhtbi1zcmMNCj4gKyAgICAgICAg
-LSBmc2wsaW14OG1wLXNyYw0KPiArICAgICAgLSBjb25zdDogc3lzY29uDQo+ICsNCj4gKyAgcmVn
-Og0KPiArICAgIG1heEl0ZW1zOiAxDQo+ICsNCj4gKyAgaW50ZXJydXB0czoNCj4gKyAgICBtYXhJ
-dGVtczogMQ0KPiArDQo+ICsgICcjcmVzZXQtY2VsbHMnOg0KPiArICAgIGNvbnN0OiAxDQo+ICsN
-Cj4gK3JlcXVpcmVkOg0KPiArICAtIGNvbXBhdGlibGUNCj4gKyAgLSByZWcNCj4gKyAgLSBpbnRl
-cnJ1cHRzDQo+ICsgIC0gJyNyZXNldC1jZWxscycNCj4gKw0KPiArYWRkaXRpb25hbFByb3BlcnRp
-ZXM6IGZhbHNlDQo+ICsNCj4gK2V4YW1wbGVzOg0KPiArICAtIHwNCj4gKyAgICAjaW5jbHVkZSA8
-ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KPiArDQo+ICsgICAg
-cmVzZXQtY29udHJvbGxlckAzMDM5MDAwMCB7DQo+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiZnNs
-LGlteDdkLXNyYyIsICJzeXNjb24iOw0KPiArICAgICAgICByZWcgPSA8MHgzMDM5MDAwMCAweDIw
-MDA+Ow0KPiArICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODkgSVJRX1RZUEVfTEVWRUxf
-SElHSD47DQo+ICsgICAgICAgICNyZXNldC1jZWxscyA9IDwxPjsNCj4gKyAgICB9Ow0KPiArDQo+
-ICsuLi4NCg0KSXMgdGhpcyByZXF1aXJlZD8NCg0KUmVnYXJkcw0KQWlzaGVuZw0KDQo+IC0tDQo+
-IDIuNy40DQoNCg==
+On Mon, May 11, 2020 at 12:18 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Sun, May 10, 2020 at 01:23:29PM +0300, Tali Perry wrote:
+> > Add Nuvoton NPCM BMC I2C controller driver.
+>
+> Some cosmetic changes needs to be done.
+>
+
+Thanks for the review and the comments.
+Will fix all, have a few questions (below)
+
+> ...
+>
+> > +/*
+> > + * Nuvoton NPCM7xx I2C Controller driver
+> > + *
+> > + * Copyright (C) 2020 Nuvoton Technologies tali.perry@nuvoton.com
+> > + */
+>
+> So, entire file has C99 comment style, but this and few other places.
+> Any reason of inconsistency?
+>
+> ...
+>
+> > +#if IS_ENABLED(CONFIG_DEBUG_FS)
+>
+> Why?
+
+We wanted to add an optional feature to track i2c slave status.
+the NPCM has 16 channels handling multiple devices each. Some of the devices
+are polled periodically, and might power down.
+The user wanted to implement a health monitoring option
+to occasionally check the status of the buses (how many timeouts, recovery etc.)
+This feature is optional and depends on CONFIG_DEBUG_FS The counters are exposed
+to user through the file system.
+
+....
+
+> ...
+>
+> > +#define I2C_NUM_OF_ADDR 10
+>
+> Is it 10-bit address support or what?
+>
+
+No, the NPCM has an option to respond to multiple slave addresses
+(10 own slave addresses)
+
+
+
+...
+
+> > +     // Repeat the following sequence until SDA is released
+> > +     do {
+> > +             // Issue a single SCL toggle
+> > +             iowrite8(NPCM_I2CCST_TGSCL, bus->reg + NPCM_I2CCST);
+> > +             udelay(20);
+> > +             // If SDA line is inactive (high), stop
+> > +             if (npcm_i2c_get_SDA(_adap)) {
+> > +                     done = true;
+> > +                     status = 0;
+> > +             }
+> > +     } while (!done && iter--);
+>
+> readx_poll_timeout() ?
+
+Not exactly, readx_poll_timeout includes only a read operation, here there is a
+write in the middle. (iowrite8)
+
+
+>
+> ...
+>
+
+
+...
+
+
+Thanks!
+Tali Perry
+Nuvoton Technologies
