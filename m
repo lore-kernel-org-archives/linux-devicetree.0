@@ -2,29 +2,28 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7ECC47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B237FC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9688207DD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAD920720
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:22:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgEKJTC (ORCPT
+        id S1726287AbgEKJWn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 05:19:02 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34897 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgEKJTC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 05:19:02 -0400
-X-Originating-IP: 91.224.148.103
+        Mon, 11 May 2020 05:22:43 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:48493 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgEKJWm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 05:22:42 -0400
 Received: from xps13 (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D6943FF80B;
-        Mon, 11 May 2020 09:18:57 +0000 (UTC)
-Date:   Mon, 11 May 2020 11:18:55 +0200
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D238124000F;
+        Mon, 11 May 2020 09:22:38 +0000 (UTC)
+Date:   Mon, 11 May 2020 11:22:37 +0200
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Christophe Kerello <christophe.kerello@st.com>
 Cc:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
@@ -33,17 +32,15 @@ Cc:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <devicetree@vger.kernel.org>, <marex@denx.de>
-Subject: Re: [PATCH v4 10/10] mtd: rawnand: stm32_fmc2: get resources from
- parent node
-Message-ID: <20200511111855.48216940@xps13>
-In-Reply-To: <1588756279-17289-11-git-send-email-christophe.kerello@st.com>
+Subject: Re: [PATCH v4 00/10] add STM32 FMC2 EBI controller driver
+Message-ID: <20200511112237.20751831@xps13>
+In-Reply-To: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
 References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
-        <1588756279-17289-11-git-send-email-christophe.kerello@st.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -52,104 +49,66 @@ X-Mailing-List: devicetree@vger.kernel.org
 Hi Christophe,
 
 Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
-11:11:19 +0200:
+11:11:09 +0200:
 
-> FMC2 EBI support has been added. Common resources (registers base
-> and clock) are now shared between the 2 drivers. It means that the
-> common resources should now be found in the parent device when EBI
-> node is available.
+> The FMC2 functional block makes the interface with: synchronous and
+> asynchronous static devices (such as PSNOR, PSRAM or other memory-mapped
+> peripherals) and NAND flash memories.
+> Its main purposes are:
+>   - to translate AXI transactions into the appropriate external device
+>     protocol
+>   - to meet the access time requirements of the external devices
+> All external devices share the addresses, data and control signals with the
+> controller. Each external device is accessed by means of a unique Chip
+> Select. The FMC2 performs only one access at a time to an external device.
 > 
-> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> ---
+> Changes in v4:
+>  - bindings:
+>    - fix filename: st,stm32-fmc2-ebi.yaml
+> 
+> Changes in v3:
+>  - NAND:
+>    - rename labels used on errors
+>    - add in the commit log the reason to increase FMC2_TIMEOUT_MS (patch 3)
+>    - add Miquel reviewed-by tag (patches 2/4/5/9)
+>  - EBI:
+>    - move in memory folder
+>    - merge MFD and BUS drivers to avoid a MFD driver
+>  - bindings:
+>    - pattern name has been modified
+>    - vendor properties have been modified
+>      - s/_/-/
+>      - add unit suffix (-ns) on timing properties
+> 
+> Christophe Kerello (10):
+>   mtd: rawnand: stm32_fmc2: manage all errors cases at probe time
+>   mtd: rawnand: stm32_fmc2: remove useless inline comments
+>   mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS for timeouts
+>   mtd: rawnand: stm32_fmc2: cleanup
+>   mtd: rawnand: stm32_fmc2: use FIELD_PREP/FIELD_GET macros
+>   dt-bindings: mtd: update STM32 FMC2 NAND controller documentation
+>   dt-bindings: memory-controller: add STM32 FMC2 EBI controller
+>     documentation
+>   memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
+>   mtd: rawnand: stm32_fmc2: use regmap APIs
+>   mtd: rawnand: stm32_fmc2: get resources from parent node
+> 
+>  .../memory-controllers/st,stm32-fmc2-ebi.yaml      |  261 +++++
+>  .../bindings/mtd/st,stm32-fmc2-nand.yaml           |   19 +-
+>  drivers/memory/Kconfig                             |   10 +
+>  drivers/memory/Makefile                            |    1 +
+>  drivers/memory/stm32-fmc2-ebi.c                    | 1206 ++++++++++++++++++++
+>  drivers/mtd/nand/raw/Kconfig                       |    1 +
+>  drivers/mtd/nand/raw/stm32_fmc2_nand.c             | 1176 ++++++++++---------
+>  7 files changed, 2061 insertions(+), 613 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
+>  create mode 100644 drivers/memory/stm32-fmc2-ebi.c
+> 
 
-[...]
+I'm fine with the preparation patches 1-5 but the other patches need
+Rob's hack and probably more changes. If it's fine with you I can apply
+these patches for the next merge window and let more time to work on
+the last 5.
 
-> +
-> +static bool stm32_fmc2_nfc_check_for_parent(struct platform_device *pdev)
-> +{
-> +	u32 i;
-> +	int nb_resources = 0;
-> +
-> +	/* Count the number of resources in reg property */
-> +	for (i = 0; i < pdev->num_resources; i++) {
-> +		struct resource *res = &pdev->resource[i];
-> +
-> +		if (resource_type(res) == IORESOURCE_MEM)
-> +			nb_resources++;
-> +	}
-> +
-> +	/* Each CS needs 3 resources defined (data, cmd and addr) */
-> +	if (nb_resources % 3)
-> +		return false;
-> +
-> +	return true;
-> +}
-
-This function looks fragile. Why not just checking the compatible
-string of the parent node?
-
-> +
->  static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -1824,8 +1865,8 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
->  	struct resource *res;
->  	struct mtd_info *mtd;
->  	struct nand_chip *chip;
-> -	void __iomem *mmio;
->  	int chip_cs, mem_region, ret, irq;
-> +	int num_region = 1;
->  
->  	nfc = devm_kzalloc(dev, sizeof(*nfc), GFP_KERNEL);
->  	if (!nfc)
-> @@ -1834,23 +1875,19 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
->  	nfc->dev = dev;
->  	nand_controller_init(&nfc->base);
->  	nfc->base.ops = &stm32_fmc2_nfc_controller_ops;
-> +	nfc->has_parent = stm32_fmc2_nfc_check_for_parent(pdev);
-> +	if (nfc->has_parent)
-> +		num_region = 0;
->  
->  	ret = stm32_fmc2_nfc_parse_dt(nfc);
->  	if (ret)
->  		return ret;
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	mmio = devm_ioremap_resource(dev, res);
-> -	if (IS_ERR(mmio))
-> -		return PTR_ERR(mmio);
-> -
-> -	nfc->regmap = devm_regmap_init_mmio(dev, mmio, &stm32_fmc2_regmap_cfg);
-> -	if (IS_ERR(nfc->regmap))
-> -		return PTR_ERR(nfc->regmap);
-> -
-> -	nfc->io_phys_addr = res->start;
-> +	ret = stm32_fmc2_nfc_set_regmap_clk(pdev, nfc);
-> +	if (ret)
-> +		return ret;
-
-Are you sure this driver sill works without the EBI block?
-
-This change looks suspect.
-
->  
-> -	for (chip_cs = 0, mem_region = 1; chip_cs < FMC2_MAX_CE;
-> +	for (chip_cs = 0, mem_region = num_region; chip_cs < FMC2_MAX_CE;
->  	     chip_cs++, mem_region += 3) {
->  		if (!(nfc->cs_assigned & BIT(chip_cs)))
->  			continue;
-> @@ -1888,10 +1925,6 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
->  
->  	init_completion(&nfc->complete);
->  
-> -	nfc->clk = devm_clk_get(dev, NULL);
-> -	if (IS_ERR(nfc->clk))
-> -		return PTR_ERR(nfc->clk);
-> -
-
-Same here
-
->  	ret = clk_prepare_enable(nfc->clk);
->  	if (ret) {
->  		dev_err(dev, "can not enable the clock\n");
-
+Thanks,
+Miquèl
