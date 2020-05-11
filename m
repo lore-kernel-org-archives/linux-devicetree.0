@@ -7,186 +7,251 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBF3C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED62C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 22:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB742070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B596F206E6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 22:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589234040;
-	bh=NybVwlbZAgihutmTRbk9zfGmqRkOobx2M2Ug4CviCbA=;
+	s=default; t=1589235479;
+	bh=MBHatxwDoIyD6uh00m5HuFdutrrX84YoaJnOUAb+G2w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T60vNSZdcKBOtlZ0NZBhR6CkVeG7Z1671Y38GdQiNsH11XgTDy3zFzF7j8DMMUrYc
-	 /1e+huOWze72z6uaMxRmKzbEvQEeYcF/ShG2SmYxwv8cACp9VmILNyTuavmvmEOEqq
-	 BiL3TkJJ1mEpeDggUdRDBLU316UxH/SKAoR7f7m0=
+	b=ldTHa/gY1KM6kRYphJcsoUbg0AycBWDbpfu1k5f96SIi/etvSjXY/dlmIVZIBmFrG
+	 jqH8IFIK/q93xQVZpRFMoPcbETf/9mlESf0v/QNttabFeohcPnCaUrFck1ggUX0dKJ
+	 GV2o8ZkVk2H4QZLUnNidzrwecjme5366OXsU/ACY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgEKVx7 (ORCPT
+        id S1725836AbgEKWR7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 17:53:59 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39870 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgEKVx7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:53:59 -0400
-Received: by mail-oi1-f193.google.com with SMTP id b18so16488172oic.6;
-        Mon, 11 May 2020 14:53:58 -0700 (PDT)
+        Mon, 11 May 2020 18:17:59 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34596 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgEKWR7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 18:17:59 -0400
+Received: by mail-oi1-f195.google.com with SMTP id c12so15546950oic.1;
+        Mon, 11 May 2020 15:17:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0ubMO0r62e5onOySJqGesT8p9B144ksRv5675Ou87bY=;
-        b=Sdy9+dPhsO7BIn7P1zUyAGHyjZ5QSUXQktOC0zFz/w1xcqXp65LqzEIVmBT1qTRe3k
-         pjYC8A4czZXbZeGjNkLyAwvv9D7/XTjAbb9LxbaCz6hzv3R55fsSfZsAbyj8BaJfn6lB
-         IfPP6VzGMm15QddsG5ruWE2gygUk/8p4jkm+AFQufpouwPRIXiZHpURUHAgWXwYW5/81
-         /x/KGGL0KOi2Xwc65MyrIAg4SwL28O/9S2pfaWB2VDHY29d9nxfJ4iUn0vcQvbSmUmRb
-         +FurjC49yPAhl2e2rf5Cc/qX/koC3ZCkR2LjHpEUJx/oJ6CZ+WIIx3A6ZV8eKy+M7bU4
-         +BGA==
-X-Gm-Message-State: AGi0PuYXo9yXXC5VYBjQV219dycFObJGqApJaX3O0y+qone1aDmwKaLi
-        bQ+GfQSdipgRQKx4Cc8k7A==
-X-Google-Smtp-Source: APiQypKTWYog9AvtQJGmnBIzegGaPpE9c3rLxOtAgfNAuYpid5nsuXMu9KfWZd9qeFqn0mDIYG0vlg==
-X-Received: by 2002:aca:d585:: with SMTP id m127mr21345315oig.27.1589234038378;
-        Mon, 11 May 2020 14:53:58 -0700 (PDT)
+        bh=rzMFWA1ZnkRS4Q0DpZb1ZXl62uf9QCHFsi7YkKI8qTU=;
+        b=km+W7YWfycC8pxYRBgv6wEkz4Wyj6O7RG5MPn07qseLUQs0MVY2LdFYBIXlZJbAnZW
+         /96FjHaP0lDWbifuWaQQp95O+Sw9GLi+ubmFMGeEvTbBFwW7G7q9mjMjPPbHZmX+LZYi
+         zXWEX70wwZOK28I/NaeZYHuUrXuJMyFwcI50ZdyhlFDtn2OOzeJOuYflNqvHWZPoG/Ni
+         81TLCL7rsQ1Abh2B/X4dkbrvTNuX/HsstmXkcHZkQ9NhdcajeltXMk+HNURaMXodJ4q0
+         zbY94GorhSSQlpsWE85N5avxVB6JcThtwkAh9c3z3uj67elHQohNYT0xxXNTNgK57luF
+         YRqw==
+X-Gm-Message-State: AGi0PuaR05QfRhTwHe14B9fIbqYtCb9b9n9InwzOAw9oaC03vcBdhvi8
+        b5XzRDFK1F0it0CFxBM4cw==
+X-Google-Smtp-Source: APiQypK0TZHCKyJ3o83UAgu+4BaXew5kyfHBthWDWkDub8PJ/mLJuKeKeozKHpokZfteZCSegTZxMA==
+X-Received: by 2002:aca:cc15:: with SMTP id c21mr22407701oig.120.1589235477409;
+        Mon, 11 May 2020 15:17:57 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s69sm2974728otb.4.2020.05.11.14.53.44
+        by smtp.gmail.com with ESMTPSA id t13sm2995644otr.43.2020.05.11.15.17.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 14:53:45 -0700 (PDT)
-Received: (nullmailer pid 13339 invoked by uid 1000);
-        Mon, 11 May 2020 21:53:43 -0000
-Date:   Mon, 11 May 2020 16:53:43 -0500
+        Mon, 11 May 2020 15:17:56 -0700 (PDT)
+Received: (nullmailer pid 14664 invoked by uid 1000);
+        Mon, 11 May 2020 22:17:55 -0000
+Date:   Mon, 11 May 2020 17:17:55 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        linux-crypto@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCHv2 1/7] dt-bindings: crypto: Add TI SA2UL crypto
- accelerator documentation
-Message-ID: <20200511215343.GA10123@bogus>
-References: <20200424164430.3288-1-t-kristo@ti.com>
- <20200424164430.3288-2-t-kristo@ti.com>
+To:     Ben Levinsky <ben.levinsky@xilinx.com>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org,
+        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
+        mark.rutland@arm.com, linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jason Wu <j.wu@xilinx.com>,
+        Wendy Liang <jliang@xilinx.com>
+Subject: Re: [PATCH v4 4/5] dt-bindings: remoteproc: Add documentation for
+ ZynqMP R5 rproc bindings
+Message-ID: <20200511221755.GA13585@bogus>
+References: <1587749770-15082-1-git-send-email-ben.levinsky@xilinx.com>
+ <1587749770-15082-5-git-send-email-ben.levinsky@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200424164430.3288-2-t-kristo@ti.com>
+In-Reply-To: <1587749770-15082-5-git-send-email-ben.levinsky@xilinx.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 07:44:24PM +0300, Tero Kristo wrote:
-> From: Keerthy <j-keerthy@ti.com>
+On Fri, Apr 24, 2020 at 10:36:09AM -0700, Ben Levinsky wrote:
+> Add binding for ZynqMP R5 OpenAMP.
 > 
-> The Security Accelerator Ultra Lite (SA2UL) subsystem provides hardware
-> cryptographic acceleration for the following use cases:
+> Represent the RPU domain resources in one device node. Each RPU
+> processor is a subnode of the top RPU domain node.
+
+This needs to be sorted out as part of the system DT effort that Xilinx 
+is working on. I can't see this binding co-existing with it.
+
 > 
-> * Encryption and authentication for secure boot
-> * Encryption and authentication of content in applications
->   requiring DRM (digital rights management) and
->   content/asset protection
-> 
-> SA2UL provides support for number of different cryptographic algorithms
-> including SHA1, SHA256, SHA512, AES, 3DES, and various combinations of
-> the previous for AEAD use.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> [t-kristo@ti.com: converted documentation to yaml]
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
+> Signed-off-by: Jason Wu <j.wu@xilinx.com>
+> Signed-off-by: Wendy Liang <jliang@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
->  .../devicetree/bindings/crypto/ti,sa2ul.yaml  | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
+> Changes since v2:
+> - update zynqmp_r5 yaml parsing to not raise warnings for extra
+>   information in children of R5 node. The warning "node has a unit
+>   name, but no reg or ranges property" will still be raised though 
+>   as this particular node is needed to describe the
+>   '#address-cells' and '#size-cells' information.
+> Changes since 3:
+> - remove warning '/example-0/rpu@ff9a0000/r5@0:
+>   node has a unit name, but no reg or ranges property'
+>   by adding reg to r5 node.
+> ---
 > 
-> diff --git a/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml b/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
+>  .../remoteproc/xilinx,zynqmp-r5-remoteproc.yaml    | 127 +++++++++++++++++++++
+>  1 file changed, 127 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
 > new file mode 100644
-> index 000000000000..27bb3a7e2b87
+> index 0000000..41520b6
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
+> @@ -0,0 +1,127 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/crypto/ti,sa2ul.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +$id: "http://devicetree.org/schemas/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +title: K3 SoC SA2UL crypto module
+> +title: Xilinx R5 remote processor controller bindings
+> +
+> +description:
+> +  This document defines the binding for the remoteproc component that loads and
+> +  boots firmwares on the Xilinx Zynqmp and Versal family chipset.
 > +
 > +maintainers:
-> +  - Tero Kristo <t-kristo@ti.com>
+> +  - Ed Mooring <ed.mooring@xilinx.com>
+> +  - Ben Levinsky <ben.levinsky@xilinx.com>
 > +
 > +properties:
 > +  compatible:
-> +    enum:
-> +      - ti,j721e-sa2ul
-> +      - ti,am654-sa2ul
+> +    const: "xlnx,zynqmp-r5-remoteproc-1.0"
 > +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    items:
-> +      - description: TX DMA Channel
-> +      - description: RX DMA Channel #1
-> +      - description: RX DMA Channel #2
-> +
-> +  dma-names:
-> +    items:
-> +      - const: tx
-> +      - const: rx1
-> +      - const: rx2
-> +
-> +  dma-coherent: true
-> +
-> +  "#address-cells":
-> +    const: 2
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  ranges:
+> +  core_conf:
 > +    description:
-> +      Address translation for the possible RNG child node for SA2UL
+> +      R5 core configuration (valid string - split or lock-step)
+> +    maxItems: 1
 > +
-> +patternProperties:
-> +  "^rng@[a-lf0-9]+$":
+> +  interrupts:
+> +    description:
+> +      Interrupt mapping for remoteproc IPI. It is required if the
+> +      user uses the remoteproc driver with the RPMsg kernel driver.
+> +    maxItems: 6
+> +
+> +  memory-region:
+> +    maxItems: 4
+> +    minItems: 4
+> +  pnode-id:
+> +    maxItems: 1
 
-a-l?
+What is this?
 
+> +  mboxes:
+> +    maxItems: 2
+> +  mbox-names:
+> +    maxItems: 2
+> +
+> +  r5@0:
 > +    type: object
-> +    description:
-> +      Child RNG node for SA2UL
-
-Does this child node have a binding?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - power-domains
-> +  - dmas
-> +  - dma-names
-> +  - dma-coherent
-> +
-> +additionalProperties: false
-> +
+> +    required:
+> +        - '#address-cells'
+> +        - '#size-cells'
+> +        - pnode-id
 > +examples:
 > +  - |
-> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +     reserved-memory {
+> +          #address-cells = <1>;
+> +          #size-cells = <1>;
+> +          ranges;
+> +          rpu0vdev0vring0: rpu0vdev0vring0@3ed40000 {
+> +               no-map;
+> +               reg = <0x3ed40000 0x4000>;
+> +          };
+> +          rpu0vdev0vring1: rpu0vdev0vring1@3ed44000 {
+> +               no-map;
+> +               reg = <0x3ed44000 0x4000>;
+> +          };
+> +          rpu0vdev0buffer: rpu0vdev0buffer@3ed48000 {
+> +               no-map;
+> +               reg = <0x3ed48000 0x100000>;
+> +          };
+> +          rproc_0_reserved: rproc@3ed000000 {
+> +               no-map;
+> +               reg = <0x3ed00000 0x40000>;
+> +          };
+> +     };
+> +     rpu: rpu@ff9a0000 {
+> +          compatible = "xlnx,zynqmp-r5-remoteproc-1.0";
+> +          #address-cells = <1>;
+> +          #size-cells = <1>;
+> +          ranges;
+> +          core_conf = "split";
+
+If split, then where is the 2nd core?
+
+> +          reg = <0xFF9A0000 0x10000>;
+> +          r5_0: r5@0 {
+
+Unit-addresses are based on 'reg' values.
+
+> +               ranges;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               reg = <0xFF9A0100 0x1000>;
+> +               memory-region = <&rproc_0_reserved>, <&rpu0vdev0buffer>, <&rpu0vdev0vring0>, <&rpu0vdev0vring1>;
+> +               pnode-id = <0x7>;
+> +               mboxes = <&ipi_mailbox_rpu0 0>, <&ipi_mailbox_rpu0 1>;
+> +               mbox-names = "tx", "rx";
+> +               tcm_0_a: tcm_0@0 {
+> +                    #address-cells = <1>;
+> +                    #size-cells = <1>;
+> +                    reg = <0xFFE00000 0x10000>;
+> +                    pnode-id = <0xf>;
+
+These nodes probably need some sort of compatible. And don't the TCMs 
+have different addresses for R5 vs. the A cores?
+
+> +               };
+> +               tcm_0_b: tcm_0@1 {
+> +                    #address-cells = <2>;
+> +                    #size-cells = <2>;
+> +                    reg = <0xFFE20000 0x10000>;
+> +                    pnode-id = <0x10>;
+> +               };
+> +          };
+> +     };
 > +
-> +    main_crypto: crypto@4e00000 {
-> +        compatible = "ti,j721-sa2ul";
-> +        reg = <0x0 0x4e00000 0x0 0x1200>;
-> +        power-domains = <&k3_pds 264 TI_SCI_PD_EXCLUSIVE>;
-> +        dmas = <&main_udmap 0xc000>, <&main_udmap 0x4000>,
-> +               <&main_udmap 0x4001>;
-> +        dma-names = "tx", "rx1", "rx2";
-> +        dma-coherent;
-> +    };
+> +
+> +     zynqmp_ipi1 {
+> +          compatible = "xlnx,zynqmp-ipi-mailbox";
+> +          interrupt-parent = <&gic>;
+> +          interrupts = <0 29 4>;
+> +          xlnx,ipi-id = <7>;
+> +          #address-cells = <1>;
+> +          #size-cells = <1>;
+> +          ranges;
+> +
+> +          /* APU<->RPU0 IPI mailbox controller */
+> +          ipi_mailbox_rpu0: mailbox@ff90000 {
+> +               reg = <0xff990600 0x20>,
+> +                     <0xff990620 0x20>,
+> +                     <0xff9900c0 0x20>,
+> +                     <0xff9900e0 0x20>;
+> +               reg-names = "local_request_region",
+> +                        "local_response_region",
+> +                        "remote_request_region",
+> +                        "remote_response_region";
+> +               #mbox-cells = <1>;
+> +               xlnx,ipi-id = <1>;
+> +          };
+> +     };
+> +
+> +...
 > -- 
-> 2.17.1
+> 2.7.4
 > 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
