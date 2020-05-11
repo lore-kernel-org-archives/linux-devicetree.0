@@ -2,98 +2,90 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FEAC47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B08C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3B48206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91FF8206D5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589232050;
-	bh=iv289DyJMDZwVnc3KZeBumI3G/jnsRKeLd8vshgVCf8=;
+	s=default; t=1589232092;
+	bh=cj+gY25YFYSlSakLvNyyvLbwApYrU33TjY+R4pY9Nxw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z7QmiZHxHmI+38jw9NJxbb6tYFV0ujK3fgfgvekOVqs8rLlTvzwKz9RlJt+u6fXP6
-	 53uFqit5tV0bh8KvrLeM1UXT82e5HknU8PYwTKO8DEv5qQXud97L1RYj1dNRW+J4V5
-	 f4MZPtwt8RcM/4rh1klKU2GboeuLjldXIRZvGwgM=
+	b=hv1aNpQpzFhDycnLeTXCJC/RasOpIuhnB6DxszILKJGQnM5dkwIF+He10rejN4bkf
+	 0ltr+6RzXlTnJUcVT9PLxl6i0p88KR0cAu5cFEp9491mLUqC0W/Td4O34yFKuiQEnP
+	 cEqpy9gQ+31Ogp9vtksEyz3jhHTCyJf8eptQW9aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725810AbgEKVUu (ORCPT
+        id S1725810AbgEKVVc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 17:20:50 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:34328 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgEKVUu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:20:50 -0400
-Received: by mail-oo1-f67.google.com with SMTP id s139so1309525oos.1;
-        Mon, 11 May 2020 14:20:49 -0700 (PDT)
+        Mon, 11 May 2020 17:21:32 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:39054 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgEKVVc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:21:32 -0400
+Received: by mail-oo1-f66.google.com with SMTP id c83so2265799oob.6;
+        Mon, 11 May 2020 14:21:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wpZ8Z2HbipIJu9qv1JxM/GBZFY/WCkbQWVqJwdqtSag=;
-        b=qDZliZ+iPzvUKUfjjV9jiky6JsDx5PM4ms0VBdPaiGTyhkX+W4SwVSo4ZC2gdviYG9
-         GFsFUh2QfvGy5QWdua5fa2+vp1owLgMDP1uPebW8kf+FFvPFb3aaDIeycJelEp/b9MZJ
-         4UOSxDdoOv1pmIlRX9yFS8yrRjz8DK3ERwYbSUkutyOUVl81lA1oeEwZjs7sCIUfpwbr
-         5ObISaU9Nz6v1+NNv4rwo+1j58VqK4ZErhBwfR0PyLjC48CAYOUrpiQG78JUk5bJyc2L
-         FWzt6jZbtI53STUAoXwjSSkqtE1I1QdUT6/0nc3r6gQOB05v2wf8SYe3gNpqVeZuOxP3
-         LayQ==
-X-Gm-Message-State: AGi0Pub5Lk+Eb6XOa+K3OcPwRwPobHiTQ7ZfG2z10sss2GSs1nVDKCBj
-        gZAVfaEPVCk8w8LIpcxrwA==
-X-Google-Smtp-Source: APiQypI6KnlaeO1Yh0UWBD8XnJ6hSVXpqxOM5EEmjFaHTRG4YNRZTlr/VBxQK1119F3/KE+/5tpirQ==
-X-Received: by 2002:a4a:9413:: with SMTP id h19mr10875976ooi.52.1589232049084;
-        Mon, 11 May 2020 14:20:49 -0700 (PDT)
+        bh=BuN92xQKE1O2gCcfAoLZqAomgXd8adBPnCrmK9Ay5OI=;
+        b=LmI/i3qQU1bAxWt7iSzv/cMoueAmtftdbjh/4qyJNRujK48UhYsWNjn6R+75JM6e2s
+         wvQyaSzQ+p/XCLGeGkjh8SKn5y38sEOfYiAPEMzWpwbndqJZdLLKCogU3DHDILj/N5+u
+         b285AsjmUEBcvY8X9ljkcPYJVGzbqEgHkYsxDgsCWtR5VEE5jQxUIzpF2A8heDJAaf+j
+         T/hs63Hxe272MRuW1dYB+/TjHROS56mIF0ZBsNo5iQmZlxfuOsaLTjtp/j/hozXFYjPT
+         NAUXWyQtaThRN4QDU/rYbcOpQiZQr+Rq86udUeQeYTP6jflahm8gxs1haWRBDh03KaTO
+         HT0g==
+X-Gm-Message-State: AGi0PuZsZm46d3paUfrhERGap3i4iAEVhXJ/subgcGp7UyLX8BN8o5xc
+        KV/BnBpQgPw1qJL1sF9WRQ==
+X-Google-Smtp-Source: APiQypLnylkh5RtyKnJucQVNptDtrvSqg94sFVspZqr+nL1wlN/fvMFck/XbwCiTrWyJMEwAhkexgA==
+X-Received: by 2002:a4a:86cd:: with SMTP id y13mr6631353ooh.87.1589232090833;
+        Mon, 11 May 2020 14:21:30 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t15sm3140462oov.32.2020.05.11.14.20.47
+        by smtp.gmail.com with ESMTPSA id 85sm4919969oie.17.2020.05.11.14.21.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 14:20:47 -0700 (PDT)
-Received: (nullmailer pid 31409 invoked by uid 1000);
-        Mon, 11 May 2020 21:20:47 -0000
-Date:   Mon, 11 May 2020 16:20:47 -0500
+        Mon, 11 May 2020 14:21:30 -0700 (PDT)
+Received: (nullmailer pid 32549 invoked by uid 1000);
+        Mon, 11 May 2020 21:21:29 -0000
+Date:   Mon, 11 May 2020 16:21:29 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Jeff Chase <jnchase@google.com>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: Add ch7322 as a trivial device
-Message-ID: <20200511212047.GA21845@bogus>
-References: <20200424053819.220276-1-jnchase@google.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: spi: Convert UniPhier SPI controller to
+ json-schema
+Message-ID: <20200511212129.GA32453@bogus>
+References: <1587720562-15293-1-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200424053819.220276-1-jnchase@google.com>
+In-Reply-To: <1587720562-15293-1-git-send-email-hayashi.kunihiko@socionext.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 01:38:18AM -0400, Jeff Chase wrote:
-> The ch7322 is a Chrontel CEC controller.
+On Fri, 24 Apr 2020 18:29:22 +0900, Kunihiko Hayashi wrote:
+> Convert UniPhier SPI controller binding to DT schema format.
 > 
-> Signed-off-by: Jeff Chase <jnchase@google.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  2 files changed, 4 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> index 4165352a590a..ec2ddc6cdf9a 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> @@ -48,6 +48,8 @@ properties:
->            - capella,cm32181
->              # CM3232: Ambient Light Sensor
->            - capella,cm3232
-> +            # CH7322: HDMI-CEC Controller
-> +          - chrontel,ch7322
+> Changes since v1:
+> - Put "#address-cells" and "#size-cells" into the required list
+> 
+>  .../bindings/spi/socionext,uniphier-spi.yaml       | 57 ++++++++++++++++++++++
+>  .../devicetree/bindings/spi/spi-uniphier.txt       | 28 -----------
+>  2 files changed, 57 insertions(+), 28 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-uniphier.txt
+> 
 
-I don't think this qualifies as a trivial device. It has HPDI, OE and 
-reset signals all likely hooked up to GPIOs. You might not have those 
-hooked up for s/w control, but someone will.
-
-And I'd assume if you had multiple instances, they will need to be 
-associated with each connector.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
