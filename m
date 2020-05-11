@@ -2,138 +2,129 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F40C54E8E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C86C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 101222080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:17:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yxOsCse5"
+	by mail.kernel.org (Postfix) with ESMTP id 0EDA5207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgEKHRg (ORCPT
+        id S1726071AbgEKHVU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 03:17:36 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:28800 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725790AbgEKHRg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 03:17:36 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B78D68004239;
-        Mon, 11 May 2020 09:17:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=7EjOxTddIIOGD46hGzyLSFcZQlrJHNVdlCjYIFYnon4=;
- b=yxOsCse5c5VAFj9hUoZ/WDw5yoX4uYk9bARejnXCNca0T9dxLT/ZukAlETjjliEtMiRC
- v9GOvjRa2bZ0KbgBJeswfSRkCZC+yyIVW5WHWyzxEDIda6A+u+qnK0S9X++1VRTJvQ1p
- wdWuEkRuM9DU0L8SQdLCKnCmqQEL1BOn15XuZduKUAVv5cE9Ew2ddTIt+LvtdcYZa4iU
- xf8MuUntXrTgGc6YHIe+SJ4YyII+uXs3j16vXJb3NsPFhAD5QY71icyWZfxDdIrHjqkR
- 7t35lFn/G2nAJI+5iNv7/uuP9/JuqCXFmMYz7EtpTBv7G3rbv1wC1+wMgXehEn/JVxhF qw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30whn98tuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 09:17:15 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AE992100034;
-        Mon, 11 May 2020 09:17:11 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 96B222AC585;
-        Mon, 11 May 2020 09:17:11 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 11 May
- 2020 09:17:06 +0200
-Subject: Re: [PATCH 2/3] ARM: dts: stm32: enable l3gd20 on stm32429-disco
- board
-To:     <dillon.minfei@gmail.com>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <broonie@kernel.org>,
-        <p.zabel@pengutronix.de>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <dillonhua@gmail.com>
-References: <1589007503-9523-1-git-send-email-dillon.minfei@gmail.com>
- <1589007503-9523-3-git-send-email-dillon.minfei@gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <404e7f47-9c0f-44b1-aedb-a8d3af832d40@st.com>
-Date:   Mon, 11 May 2020 09:16:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 11 May 2020 03:21:20 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25604 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbgEKHVU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 03:21:20 -0400
+IronPort-SDR: VF9qGIVBWIkuyHFYhqoUXSfqqu0i4zjzTVlM9D6Dr2JJfvBM0Dr2YwMu+AT2tJSTfhbUfuXwpi
+ SN0pGHQjp4zw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 00:21:20 -0700
+IronPort-SDR: q/E831QAP5/ndS2HAoNAZCjSs9P5FqSUd95vcbenzQjRGUN9N3dbSMKwhqxOUcuyKEsTMos/VF
+ 930gvM8uvOxQ==
+X-IronPort-AV: E=Sophos;i="5.73,378,1583222400"; 
+   d="scan'208";a="265068343"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 00:21:17 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id D505D207FE; Mon, 11 May 2020 10:21:14 +0300 (EEST)
+Date:   Mon, 11 May 2020 10:21:14 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh@kernel.org>, tfiga@google.com, pavel@ucw.cz,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v10 03/13] dt-bindings: Add media properties
+Message-ID: <20200511072114.GC11272@paasikivi.fi.intel.com>
+References: <20200508100158.3437161-1-jacopo@jmondi.org>
+ <20200508100158.3437161-4-jacopo@jmondi.org>
+ <c09f2875-b9ca-8154-0491-3c5da1dc0c10@xs4all.nl>
+ <20200509082132.zpojrdqcleb2dgp2@uno.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <1589007503-9523-3-git-send-email-dillon.minfei@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_02:2020-05-11,2020-05-11 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200509082132.zpojrdqcleb2dgp2@uno.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
+Hi Jacopo, Hans,
 
-On 5/9/20 8:58 AM, dillon.minfei@gmail.com wrote:
-> From: dillon min <dillon.minfei@gmail.com>
+On Sat, May 09, 2020 at 10:21:32AM +0200, Jacopo Mondi wrote:
+> Hi Hans,
 > 
-> Enable l3gd20 on stm32429-disco board.
-
-You could add some words about l3gd20
-
+> On Fri, May 08, 2020 at 01:04:24PM +0200, Hans Verkuil wrote:
+> > On 08/05/2020 12:01, Jacopo Mondi wrote:
+> > > Add a DT header file to contain definitions for standard media properties.
+> > >
+> > > The file is named after:
+> > > Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > which contains the standard media properties definitions.
+> > >
+> > > Initially add three macros to define the supported 'orientation'
+> > > property values.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> >
+> > For v11 just move this to the end of the series since it is an independent
+> > patch.
 > 
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> ---
->   arch/arm/boot/dts/stm32f429-disco.dts | 24 ++++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
+> Ack, I can leave it out as well, since I have no users if not a local
+> one for testing.
 > 
-> diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-> index 30c0f67..d365358 100644
-> --- a/arch/arm/boot/dts/stm32f429-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f429-disco.dts
-> @@ -49,6 +49,8 @@
->   #include "stm32f429.dtsi"
->   #include "stm32f429-pinctrl.dtsi"
->   #include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/gpio/gpio.h>
->   
->   / {
->   	model = "STMicroelectronics STM32F429i-DISCO board";
-> @@ -127,3 +129,25 @@
->   	pinctrl-names = "default";
->   	status = "okay";
->   };
-> +
-> +&spi5 {
-> +	status = "okay";
-> +	pinctrl-0 = <&spi5_pins>;
-> +	pinctrl-names = "default";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	cs-gpios = <&gpioc 1 GPIO_ACTIVE_LOW>;
-> +	dmas = <&dma2 3 2 0x400 0x0>,
-> +	       <&dma2 4 2 0x400 0x0>;
-> +	dma-names = "rx", "tx";
-
-Insert blank line here.
-
-> +	l3gd20: l3gd20@0 {
-> +		compatible = "st,l3gd20-gyro";
-> +		spi-max-frequency = <10000000>;
-> +		st,drdy-int-pin = <2>;
-> +		interrupt-parent = <&gpioa>;
-> +		interrupts = <1 IRQ_TYPE_EDGE_RISING>,
-> +				<2 IRQ_TYPE_EDGE_RISING>;
-> +		reg = <0>;
-> +		status = "okay";
-> +	};
-> +};
+> >
+> > > ---
+> > >  include/dt-bindings/media/video-interfaces.h | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > >  create mode 100644 include/dt-bindings/media/video-interfaces.h
+> > >
+> > > diff --git a/include/dt-bindings/media/video-interfaces.h b/include/dt-bindings/media/video-interfaces.h
+> > > new file mode 100644
+> > > index 0000000000000..404c697d6bd6e
+> > > --- /dev/null
+> > > +++ b/include/dt-bindings/media/video-interfaces.h
+> > > @@ -0,0 +1,15 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > +/*
+> > > + * include/dt-bindings/media/video-interfaces.h
+> > > + *
+> > > + * Copyright (C) 2020 Jacopo Mondi <jacopo@jmondi.org>
+> > > + */
+> > > +
+> > > +#ifndef __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
+> > > +#define __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
+> > > +
+> > > +#define FRONT_CAMERA		<0>
+> > > +#define BACK_CAMERA		<1>
+> > > +#define EXTERNAL_CAMERA		<2>
+> >
+> > Wouldn't it be better to say CAMERA_FRONT (i.e. swap the words) or
+> > even CAMERA_ORIENTATION_FRONT?
 > 
+> Once I wrote
+>                 orientation = CAMERA_FRONT;
+> 
+> I realized that it was nicer to have
+> 
+>                 orientation = FRONT_CAMERA:
+> 
+> I'll stop bikeshedding though and wait for other comments to see if
+> this can be included or not.
+
+I'd be in favour of having "CAMERA" first. That gives it a nice prefix.
+
+-- 
+Kind regards,
+
+Sakari Ailus
