@@ -2,176 +2,135 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF92C54E4B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B8DC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 10:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D88E02063A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 09:33:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VOPTMp3k"
+	by mail.kernel.org (Postfix) with ESMTP id A5EAA20731
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 10:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbgEKJdf (ORCPT
+        id S1727093AbgEKKGx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 05:33:35 -0400
-Received: from mail-eopbgr130049.outbound.protection.outlook.com ([40.107.13.49]:30439
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729572AbgEKJde (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 05:33:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MhMWncHtYtflvtOkWxFoSCRc5tVNuXimGuxhtt6fyjAv+X6cq74vFvWrSipUdOLoCY1YGRcXyPxwjZ8im1p+q5DujDDbF5OuOt/RdHQpoJ0MWiOh0V7FuHrJPii4EX561U4TXbDFo9Qu/+tsjB7GQxLwXB9gI2ZkIf2pDB8aafMQ19KMWL0uZUcp654EpyOWecfCxKG5eV7dWZhvUnafkE8vCaDn9SMQQA1qpz/Tap6YYWOCOoDrbONcuqwELIJLpqeXjjGW5nGNaQeh86MQrzgYhsAPXjUx5vZMfHHg1xkU8evLdZZdf9QNk/fjfPkOIwM6S64P01O1fscVv2SLuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WEoEhyBGFSr+T0WmOOJnN6+RjSQtavc5N5PmyRlXha4=;
- b=S7EZFAvJ8yathjmhdTKFTHYQIkRMFaY2antZsHk33s7z+byuhszHd8I6JRHkHlkpgmKVZqX6Xkie3F9QOitd7BN5ben8ld1+6ao/Z6KV6fNp9OObpD/mHMhaVjsiL6Ftk/Z1yphE6ex/IDDlu5uMj4IW5rCrA22HDY+FmQ8AfFK821u1k2TvE3nE0/GB9LETfBZIFN/IBQrrEGrwrb6qKEoeDXencA2jokc3n7Jkata9ob2fjUzK5H6/eUIAt6wpl/dQvu4pYJQiDxaWwGkSJFUqEkrmLzQg0bk971qJBit2nOlWmAICsOr2R28Hetnyiin9p3pLx7drNyNdtzEWDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WEoEhyBGFSr+T0WmOOJnN6+RjSQtavc5N5PmyRlXha4=;
- b=VOPTMp3kRzeI9Al29ixpd0VhBn8fofs3l3lmmSP8fVWSH2HDOAI/Y+EkTk5gu79GSWKP6wtIEhI6QYP/d51AsZciSFcfwGvkJh4thxeJGaVTQbs9OcUQJMYA3dH0B2cSVAPThux35aK3YxaAkPsa4+WMEcUa4TQ6VGb3DjRetRA=
-Authentication-Results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6733.eurprd04.prod.outlook.com (2603:10a6:803:11e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
- 2020 09:33:30 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 09:33:30 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     s.hauer@pengutronix.de, vkoul@kernel.org, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
-        festevam@gmail.com, dan.j.williams@intel.com, mark.rutland@arm.com,
-        catalin.marinas@arm.com
-Cc:     will.deacon@arm.com, l.stach@pengutronix.de,
-        martin.fuzzey@flowbird.group, kernel@pengutronix.de,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v7 RESEND 13/13] dmaengine: imx-sdma: add uart rom script
-Date:   Tue, 12 May 2020 01:32:36 +0800
-Message-Id: <1589218356-17475-14-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
-References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0141.apcprd06.prod.outlook.com
- (2603:1096:1:1f::19) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Mon, 11 May 2020 06:06:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:5438 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725983AbgEKKGx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 06:06:53 -0400
+IronPort-SDR: e5/RS5bBSf+CjFQFdqYKKgPH/Kg6mXiswhDenjuf/XJ0zMaZpAvxoWUkHEdiOEmo7pnqTC0SIf
+ iJcyAXuavUHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 03:06:52 -0700
+IronPort-SDR: WD55mJq6LC6VU99cffrXnEEvX1vMeS+4vEwmvyZ1HE5zL4Mscw9lUqUCHpDdrCfhFPPMeadb7B
+ uj2FHreMbwAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,379,1583222400"; 
+   d="scan'208";a="286224031"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 11 May 2020 03:06:52 -0700
+Received: from [10.215.144.121] (ekotax-MOBL.gar.corp.intel.com [10.215.144.121])
+        by linux.intel.com (Postfix) with ESMTP id 7BEFE5803C5;
+        Mon, 11 May 2020 03:06:49 -0700 (PDT)
+Subject: Re: [PATCH v7 3/3] phy: intel: Add driver support for ComboPhy
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, lee.jones@linaro.org, arnd@arndb.de,
+        robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+References: <cover.1588230494.git.eswara.kota@linux.intel.com>
+ <af8a7d7025990d22f6062953247cf80e64c6fd2f.1588230494.git.eswara.kota@linux.intel.com>
+ <20200504072923.GN1375924@vkoul-mobl>
+ <f12e76ac-e0fd-4afa-e1cd-2b90f175adfd@linux.intel.com>
+ <20200504092034.GS1375924@vkoul-mobl>
+ <0de7ba47-bc98-9267-46b4-230a86151c2d@linux.intel.com>
+ <20200505052122.GW1375924@vkoul-mobl>
+ <dd259c37-d273-44d3-c095-8618264e3a19@linux.intel.com>
+Message-ID: <1ceebf17-ea95-b3ac-9b93-42a974a0d715@linux.intel.com>
+Date:   Mon, 11 May 2020 18:06:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR06CA0141.apcprd06.prod.outlook.com (2603:1096:1:1f::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2979.27 via Frontend Transport; Mon, 11 May 2020 09:33:24 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bd6facc5-5efb-4906-7e82-08d7f58e5d65
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6733:|VE1PR04MB6733:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB673391F1A575D7EA68B59B1189A10@VE1PR04MB6733.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 04004D94E2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mdo5vcFbc9L2x6E13sHg5pWwqTUFVcnG72FKPcbN5GsPPfDxcpQye31HwwILK28on7/5fCYUia1ppwmq93l6haHrC8Ba+glSJns6oXz9boopEEvv0bkRq+LX21Ueq/+btY/2iEhRfxhYl+rZOslnSiCYlmSCpYP6/DkxELZuFwOWo88lR5L7mrfrRuEBMcIWPpCrHru+PCG8T2h+LyYgneHijZ3UyQB3niRs3XsXPhbP6i0dKXFLlRZ5Xl+9XQ1N1hXBDj4u7DUSQftq64+o6ZyHLgDMUvvUYhsOArYLmZsr2uRhBj8s70DDRSK0PiL5gfkmqgSNqo72YmYWkpxfQKfS/Cw2C0lMQxoXnPMkkjDgzEKvmKYldDfdGmLHM/+/0yaL/aLcVkPesCZ2eCksQlbkej6M683u8PbdU5ObK4NC1ExbxThy1axrBym+nWqV7sw/ithmkGPT9whcXxFIPAZI/gpMpwhzeMvEeMtyq7YQKRrfPLTNx7TynW7J1aKZnNrvipblwN/S2PRBV6gsSD2fU8nuO+dcW098cJOUEyVPSoRbfo9FqyEQWYt8mQfU5IN7AOYe7NMrzcACr0V+eehSsMTyk04g52sV/AVIQzk=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(366004)(39860400002)(396003)(33430700001)(5660300002)(66556008)(956004)(2616005)(7416002)(4326008)(6666004)(52116002)(478600001)(8936002)(86362001)(8676002)(966005)(26005)(33440700001)(66946007)(6486002)(6506007)(66476007)(36756003)(2906002)(316002)(6512007)(186003)(16526019);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: /5fYM0WG0rhdYvy5a68mOObDswZoTwPJJaPzlgJXYUSwjAHQ3SXStlRQiVB6MdsP5qevJCDmM/dy0WnkKGx4KyYIqjTdc3lsxLTuFnlnKYF0x22RsMDHhcqH/L3JvbVWOL5OEYzb5G37TbuZuDRBSJI6iaeeyCNqILMbLb5StE8QsizIf7ngpX0EMATR6nEs2o6y43A5PMNnCQbPpUW9njhgABMBWyWPU4U7xvjyQGlXHUIb6Dp81KUDMbYIvHv/GvgRFZGfHljijOOnUMfX7Zbiy4g3bsvMpA6jD7JHypYYas1ybTEpMtvom/fQ86B0wyb0ycdFPGlJHnit2WBNtQ4nN880DhpOsHJ4phEU23CPHvucqM16O0VYCrqdOt1iH0Oad4dwVxVZ9baAJ73gqrNwobwQIdPiLVO8L1SWxbFbfK1OxBs7gJ5gIjGwdORhVHcohI3MD8u4UhvM+QZhhOHn3BDP3cSztYq1VeChMOI=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd6facc5-5efb-4906-7e82-08d7f58e5d65
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 09:33:29.9427
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XHDmzgnnD+saW92bZ4h8R6UC2D0j3SpLlICtzvg4/8i/ZZFWC6RohYS5AlzYL9OUmISeK9yoxOOhF+FxNirC2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6733
+In-Reply-To: <dd259c37-d273-44d3-c095-8618264e3a19@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For the compatibility of NXP internal legacy kernel before 4.19 which
-is based on uart ram script and upstreaming kernel based on uart rom
-script, add both uart ram/rom script in latest sdma firmware. By default
-uart rom script used.
-Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
-back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
+Hi Vinod,
 
-rom script:
-        uart_2_mcu_addr
-	uartsh_2_mcu_addr /* through spba bus */
-am script:
-	uart_2_mcu_ram_addr
-	uartsh_2_mcu_ram_addr /* through spba bus */
+On 5/5/2020 3:54 PM, Dilip Kota wrote:
+>
+> On 5/5/2020 1:21 PM, Vinod Koul wrote:
+>> On 04-05-20, 17:32, Dilip Kota wrote:
+>>> On 5/4/2020 5:20 PM, Vinod Koul wrote:
+>>>> On 04-05-20, 16:26, Dilip Kota wrote:
+>>>>> On 5/4/2020 3:29 PM, Vinod Koul wrote:
+>>>>>> On 30-04-20, 15:15, Dilip Kota wrote:
+>>>>>>
+>>>>>>> +                      u32 mask, u32 val)
+>>>>>>> +{
+>>>>>>> +    u32 reg_val;
+>>>>>>> +
+>>>>>>> +    reg_val = readl(base + reg);
+>>>>>>> +    reg_val &= ~mask;
+>>>>>>> +    reg_val |= FIELD_PREP(mask, val);
+>>>>>>> +    writel(reg_val, base + reg);
+>>>>>> bypassing regmap here... why?
+>>>>> It is not regmap address, one of the below two addresses are 
+>>>>> passed to this
+>>>>> function.
+>>>> okay, perhaps add a comment somewhere that regmap is not used for this
+>>>> base?
+>>> I dont see a need of adding a comment, describing don't do regmap here.
+>> Driver uses regmap except here, which seems odd hence explanation
+>> required for this.
+> During the driver Probe, the register phandles are stored in regmap 
+> datatype variables and PHY core addresses are stored in iomem datatype.
+> Since then, regmap access is performed for the regmap datatype 
+> variables and readl/writel access is performed on the iomem datatype 
+> variables. And nowhere in the driver iomem datatype address are 
+> converted to regmap address and performed regmap access.
+>
+> Driver is not doing any 'regmap_init' on any physical address. Driver 
+> is getting the register address phandle from the device tree node and 
+> performing the regmap access.
+> ret = fwnode_property_get_reference_args(fwnode, "intel,syscfg", NULL, 
+> 1, 0, &ref);
+> [...]
+> cbphy->syscfg = device_node_to_regmap(to_of_node(ref.fwnode));
+>
+> [...]
+> ret = fwnode_property_get_reference_args(fwnode, "intel,hsio", NULL, 
+> 1, 0, &ref);
+> [...]
+>
+> cbphy->hsiocfg = device_node_to_regmap(to_of_node(ref.fwnode));
+>
+> [...]
+> cbphy->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
+>  [...]
+> cbphy->cr_base = devm_platform_ioremap_resource_byname(pdev, "core");
+>
+> The DT parsing logic in the driver is explaining why the PHY driver 
+> should do regmap access and to whom should be done. For this reason i 
+> am a bit puzzled to what more is needed to explain in the comments and 
+> where to add it.
+> Please let me know your view.
+>
+Gentle Reminder!
+Could you please update on this.
 
-Please get latest sdma firmware from the below and put them into the path
-(/lib/firmware/imx/sdma/):
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-/tree/imx/sdma
+Regards,
+Dilip
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/imx-sdma.c                     | 4 ++--
- include/linux/platform_data/dma-imx-sdma.h | 8 ++++++--
- 2 files changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 9d49aaf..01422e7 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1718,8 +1718,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
- 
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
- 
- static void sdma_add_scripts(struct sdma_engine *sdma,
- 		const struct sdma_script_start_addrs *addr)
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-index 30e676b..e12d2e8 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
- 	s32 per_2_firi_addr;
- 	s32 mcu_2_firi_addr;
- 	s32 uart_2_per_addr;
--	s32 uart_2_mcu_addr;
-+	s32 uart_2_mcu_ram_addr;
- 	s32 per_2_app_addr;
- 	s32 mcu_2_app_addr;
- 	s32 per_2_per_addr;
- 	s32 uartsh_2_per_addr;
--	s32 uartsh_2_mcu_addr;
-+	s32 uartsh_2_mcu_ram_addr;
- 	s32 per_2_shp_addr;
- 	s32 mcu_2_shp_addr;
- 	s32 ata_2_mcu_addr;
-@@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
- 	s32 mcu_2_ecspi_addr;
-+	s32 mcu_2_sai_addr;
-+	s32 sai_2_mcu_addr;
-+	s32 uart_2_mcu_addr;
-+	s32 uartsh_2_mcu_addr;
- 	/* End of v3 array */
- 	s32 mcu_2_zqspi_addr;
- 	/* End of v4 array */
--- 
-2.7.4
-
+> Regards,
+> Dilip
