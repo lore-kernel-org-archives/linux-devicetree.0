@@ -2,196 +2,114 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E57C54E8D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B56AC47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFBF20661
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51F220643
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:18:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="KIf/Q0XY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725860AbgEKVQ1 (ORCPT
+        id S1725836AbgEKVSq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 17:16:27 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50200 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgEKVQ1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:16:27 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4D1C7803080A;
-        Mon, 11 May 2020 21:16:24 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JINjVi3KOE_z; Tue, 12 May 2020 00:16:23 +0300 (MSK)
-Date:   Tue, 12 May 2020 00:16:22 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
- parameter
-Message-ID: <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
- <20200508112152.GI185537@smile.fi.intel.com>
+        Mon, 11 May 2020 17:18:46 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:56962 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725355AbgEKVSq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:18:46 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 4C7D927E05BE;
+        Mon, 11 May 2020 23:18:44 +0200 (CEST)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id G8nyLIkWJSJN; Mon, 11 May 2020 23:18:44 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id F29C427E05D1;
+        Mon, 11 May 2020 23:18:43 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu F29C427E05D1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1589231924;
+        bh=5x0ABVhNlbMdXxTh8MHf7m0UxlvKT+zK8VMupqi0OrQ=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=KIf/Q0XYPkwtMMwUl0i5C7J9SW9h7qBmtdctchQe8r0GJU93fsNBloc/GsIuCxpZ2
+         V+GQpTSRZfKLfWvAnV6Hl6d5UARPDp2o9li9QwGCLI8YBV1JQIYh2p/aFAB3VQtv9n
+         AyJ5qbKPoZJxbvPD7YBdp1Beb7l90cPf2HSxGH9I=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Iv3WE6goo6xJ; Mon, 11 May 2020 23:18:43 +0200 (CEST)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id DE47927E05BE;
+        Mon, 11 May 2020 23:18:43 +0200 (CEST)
+Date:   Mon, 11 May 2020 23:18:43 +0200 (CEST)
+From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <1306795191.2034071.1589231923729.JavaMail.zimbra@kalray.eu>
+Subject: reserved_mem and early builtin device tree usage
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200508112152.GI185537@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC81 (Linux)/8.8.15_GA_3895)
+Thread-Index: 2Sdjv+NE14cZ7kqfvsgX2/nahmnvvQ==
+Thread-Topic: reserved_mem and early builtin device tree usage
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:21:52PM +0300, Andy Shevchenko wrote:
-> +Cc (Vineet, for information you probably know)
-> 
-> On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
-> > Maximum block size DW DMAC configuration corresponds to the max segment
-> > size DMA parameter in the DMA core subsystem notation. Lets set it with a
-> > value specific to the probed DW DMA controller. It shall help the DMA
-> > clients to create size-optimized SG-list items for the controller. This in
-> > turn will cause less dw_desc allocations, less LLP reinitializations,
-> > better DMA device performance.
-> 
-> Thank you for the patch.
-> My comments below.
-> 
-> ...
-> 
-> > +		/*
-> > +		 * Find maximum block size to be set as the DMA device maximum
-> > +		 * segment size. By doing so we'll have size optimized SG-list
-> > +		 * items for the channels with biggest block size. This won't
-> > +		 * be a problem for the rest of the channels, since they will
-> > +		 * still be able to split the requests up by allocating
-> > +		 * multiple DW DMA LLP descriptors, which they would have done
-> > +		 * anyway.
-> > +		 */
-> > +		if (dwc->block_size > block_size)
-> > +			block_size = dwc->block_size;
-> >  	}
-> >  
-> >  	/* Clear all interrupts on all channels. */
-> > @@ -1220,6 +1233,10 @@ int do_dma_probe(struct dw_dma_chip *chip)
-> >  			     BIT(DMA_MEM_TO_MEM);
-> >  	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-> >  
-> > +	/* Block size corresponds to the maximum sg size */
-> > +	dw->dma.dev->dma_parms = &dw->dma_parms;
-> > +	dma_set_max_seg_size(dw->dma.dev, block_size);
-> > +
-> >  	err = dma_async_device_register(&dw->dma);
-> >  	if (err)
-> >  		goto err_dma_register;
-> 
-> Yeah, I have locally something like this and I didn't dare to upstream because
-> there is an issue. We have this information per DMA controller, while we
-> actually need this on per DMA channel basis.
-> 
-> Above will work only for synthesized DMA with all channels having same block
-> size. That's why above conditional is not needed anyway.
+Hi,
 
-Hm, I don't really see why the conditional isn't needed and this won't work. As
-you can see in the loop above Initially I find a maximum of all channels maximum
-block sizes and use it then as a max segment size parameter for the whole device.
-If the DW DMA controller has the same max block size of all channels, then it
-will be found. If the channels've been synthesized with different block sizes,
-then the optimization will work for the one with greatest block size. The SG
-list entries of the channels with lesser max block size will be split up
-by the DW DMAC driver, which would have been done anyway without
-max_segment_size being set. Here we at least provide the optimization for the
-channels with greatest max block size.
+I'm currently experiencing a bug during the port of the kernel on
+a new architecture and after looking at other architectures, I
+suspect the problem might be there too. my question is about
+reserved memories and usage of early device tree.
 
-I do understand that it would be good to have this parameter setup on per generic
-DMA channel descriptor basis. But DMA core and device descriptor doesn't provide
-such facility, so setting at least some justified value is a good idea.
+From what I understand, when reserved memory is initialized using
+early_init_fdt_scan_reserved_mem, the reserved memories are
+created using some pointers inside the early dt (mainly the names).
+If this early device tree is located into the init section (when
+using a builtin dtb for instance), this section will be discarded
+(when calling free_initmem_default) and memset with a zero/poison
+value. So all pointers which are referencing the early dt will be
+invalid. This will clobber all the "names" of the reserved memory
+entries. As a side effect, all drivers using of_reserved_mem_lookup
+after the init section has been freed will always failed because
+the search is based on the name of the reserved mem.
 
-> 
-> OTOH, I never saw the DesignWare DMA to be synthesized differently (I remember
-> that Intel Medfield has interesting settings, but I don't remember if DMA
-> channels are different inside the same controller).
-> 
-> Vineet, do you have any information that Synopsys customers synthesized DMA
-> controllers with different channel characteristics inside one DMA IP?
+I also said that it might be present on other architectures because
+the usual function call I found is the following:
+- early_init_dt_scan
+- early_init_fdt_reserve_self (only reserve memory in memblock)
+- early_init_fdt_scan_reserved_mem
+- unflatten_and_copy_device_tree
+- free_initmem_default
+- potential calls to of_reserved_mem_lookup
 
-AFAICS the DW DMAC channels can be synthesized with different max block size.
-The IP core supports such configuration. So we can't assume that such DMAC
-release can't be found in a real hardware just because we've never seen one.
-No matter what Vineet will have to say in response to your question.
+Which (if the device tree is builtin in init section) will lead
+to the result I described before.=20
 
-> 
-> ...
-> 
-> >  #include <linux/bitops.h>
-> 
-> > +#include <linux/device.h>
-> 
-> Isn't enough to supply
-> 
-> struct device;
-> 
-> ?
+So my question is about the legit usage of pointers referencing
+the early dtb. If is it ok to use such pointers, this means that
+the early dtb must always be available and that when using a
+builtin dtb, then it should probably be copied early before
+using it for scan operations with unflatten_and_copy_device_tree.
 
-It's "struct device_dma_parameters" and I'd prefer to include the header file.
+However, since the scan of the reserved mem nodes is required to
+avoid allocating in reserved memory, unflatten_and_copy_device_tree
+should probably not be called before early_init_fdt_scan_reserved_mem
+since it allocates data. So this is a bit of the snake biting its
+tail and thus, early dt pointers should probably not be used.
 
-> 
-> >  #include <linux/interrupt.h>
-> >  #include <linux/dmaengine.h>
-> 
-> Also this change needs a separate patch I suppose.
+Is my understanding correct ? Or have I missed something since it
+seems to haven't been noticed on other architectures ?
 
-Ah, just discovered there is no need in adding the dma_parms here because since
-commit 7c8978c0837d ("driver core: platform: Initialize dma_parms for platform
-devices") the dma_params pointer is already initialized. The same thing is done
-for the PCI device too.
+Thanks & regards,
 
--Sergey
-
-> 
-> ...
-> 
-> > -	struct dma_device	dma;
-> > -	char			name[20];
-> > -	void __iomem		*regs;
-> > -	struct dma_pool		*desc_pool;
-> > -	struct tasklet_struct	tasklet;
-> > +	struct dma_device		dma;
-> > +	struct device_dma_parameters	dma_parms;
-> > +	char				name[20];
-> > +	void __iomem			*regs;
-> > +	struct dma_pool			*desc_pool;
-> > +	struct tasklet_struct		tasklet;
-> >  
-> >  	/* channels */
-> > -	struct dw_dma_chan	*chan;
-> > -	u8			all_chan_mask;
-> > -	u8			in_use;
-> > +	struct dw_dma_chan		*chan;
-> > +	u8				all_chan_mask;
-> > +	u8				in_use;
-> 
-> Please split formatting fixes into a separate patch.
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Cl=C3=A9ment
