@@ -2,79 +2,130 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DB8C54E8D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 16:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C03C54E8D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 16:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F24B42070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 16:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154BA206D7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 16:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589214581;
+	bh=8csVDA0D9z9jtZUTy5qoiG/d2QehN3l9NvwT7lCR40Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hJ499rM8UDuaCOTfJEmrzJ8Eu9I3yf8SA9U7SQd/0FkH25w7T+rTatAdV/jwHzz2J
+	 4g0pYdIjhAQq79BDMh9zZ9OIi4Qg1vaqXDenQ/zFC4WW+OGPYBrItisvYgG8AV/Pxd
+	 sDHyeUWYmrUKyGFp8CVzc2nH5/NPm6JYukm3EjV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbgEKQ0b (ORCPT
+        id S1730713AbgEKQ3k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 12:26:31 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:48750 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729463AbgEKQ0b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 12:26:31 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Mon, 11 May 2020 12:29:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730711AbgEKQ3k (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 12:29:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 24955804E0;
-        Mon, 11 May 2020 18:26:24 +0200 (CEST)
-Date:   Mon, 11 May 2020 18:26:22 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     robh+dt@kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        kernel@collabora.com, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net,
-        laurent.pinchart@ideasonboard.com
-Subject: Re: [RFC PATCH] dt-bindings: display: ti,tfp410.txt: convert to yaml
-Message-ID: <20200511162622.GA19798@ravnborg.org>
-References: <20200428092048.14939-1-ricardo.canuelo@collabora.com>
- <3e377c73-25a3-a7b3-0604-41c54d70039e@ti.com>
- <20200506155320.GC15206@pendragon.ideasonboard.com>
- <20200511145911.2yv3aepofxqwdsju@rcn-XPS-13-9360>
+        by mail.kernel.org (Postfix) with ESMTPSA id 089D920714;
+        Mon, 11 May 2020 16:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589214579;
+        bh=8csVDA0D9z9jtZUTy5qoiG/d2QehN3l9NvwT7lCR40Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zm47HiMNNv65glLD4nueb3/VG5CUosakOhKxvFx4sUg6tyM/atlR/0wnYx7gGPcZj
+         r6bH9W4hFmNIH0BPj7lu/TrQ825Uy8OAryo4G2R1go8xNiS1LfESbdlGPxEX3ZGZOL
+         AdJUG886ti5hwpI2mUYQOxJTpaKzdVaKGsCtQ0sI=
+Date:   Mon, 11 May 2020 18:18:01 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        kernel@collabora.com
+Subject: Re: [PATCH 3/6] tty/sysrq: Allow configurable SysRq key
+Message-ID: <20200511161801.GA2221063@kroah.com>
+References: <20200511135918.8203-1-andrzej.p@collabora.com>
+ <20200511135918.8203-4-andrzej.p@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200511145911.2yv3aepofxqwdsju@rcn-XPS-13-9360>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=8nJEP1OIZ-IA:10 a=_bxB9wg1tD68s7t2c6IA:9 a=wPNLvfGTeEIA:10
+In-Reply-To: <20200511135918.8203-4-andrzej.p@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ricardo.
-
-On Mon, May 11, 2020 at 04:59:11PM +0200, Ricardo Cañuelo wrote:
-> Hi Rob,
+On Mon, May 11, 2020 at 03:59:15PM +0200, Andrzej Pietrasiewicz wrote:
+> There are existing machines which don't have SysRq key, e.g. chromebooks.
+> This patch allows configuring which key acts as SysRq. The value is passed
+> with sysrq's module parameter.
 > 
-> What's your opinion on this?
-
-I'm not Rob, but anyway.
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> ---
+>  drivers/tty/sysrq.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
 > 
-> Some context: It's about bindings that define signed integer properties
-> with range checks that go below and above zero. The schema checker fails
-> because, apparently, it interprets every cell value as an uint32, which
-> makes the range check fail for negative numbers.
-> 
-> > > >    b) Redefine this property to be closer to the datasheet description
-> > > >    (ie. unsigned integers from 0 to 7) and adapt the driver accordingly.
-> > > >    This would also let us define its range properly using minimum and
-> > > >    maximum properties for it.
-> > > > 
-> > > >    I think (b) is the right thing to do but I want to know your
-> > > >    opinion. Besides, I don't have this hardware at hand and if I updated
-> > > >    the driver I wouldn't be able to test it.
+> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> index 93202fc24308..ebad9799fdc0 100644
+> --- a/drivers/tty/sysrq.c
+> +++ b/drivers/tty/sysrq.c
+> @@ -604,6 +604,7 @@ EXPORT_SYMBOL(handle_sysrq);
+>  
+>  #ifdef CONFIG_INPUT
+>  static int sysrq_reset_downtime_ms;
+> +static unsigned short sysrq_key = KEY_SYSRQ;
+>  
+>  /* Simple translation table for the SysRq keys */
+>  static const unsigned char sysrq_xlate[KEY_CNT] =
+> @@ -735,10 +736,10 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+>  
+>  		/* Simulate press and release of Alt + SysRq */
+>  		input_inject_event(handle, EV_KEY, alt_code, 1);
+> -		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
+> +		input_inject_event(handle, EV_KEY, sysrq_key, 1);
+>  		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
+>  
+> -		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
+> +		input_inject_event(handle, EV_KEY, sysrq_key, 0);
+>  		input_inject_event(handle, EV_KEY, alt_code, 0);
+>  		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
+>  
+> @@ -770,6 +771,7 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
+>  		}
+>  		break;
+>  
+> +key_sysrq:
+>  	case KEY_SYSRQ:
+>  		if (value == 1 && sysrq->alt != KEY_RESERVED) {
+>  			sysrq->active = true;
+> @@ -790,11 +792,15 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
+>  		 * triggering print screen function.
+>  		 */
+>  		if (sysrq->active)
+> -			clear_bit(KEY_SYSRQ, sysrq->handle.dev->key);
+> +			clear_bit(sysrq_key, sysrq->handle.dev->key);
+>  
+>  		break;
+>  
+>  	default:
+> +		/* handle non-default sysrq key */
+> +		if (code == sysrq_key)
+> +			goto key_sysrq;
+> +
+>  		if (sysrq->active && value && value != 2) {
+>  			sysrq->need_reinject = false;
+>  			__handle_sysrq(sysrq_xlate[code], true);
+> @@ -995,6 +1001,8 @@ module_param_array_named(reset_seq, sysrq_reset_seq, sysrq_reset_seq,
+>  
+>  module_param_named(sysrq_downtime_ms, sysrq_reset_downtime_ms, int, 0644);
+>  
+> +module_param(sysrq_key, ushort, 0644);
 
-Based on the discussions option b) above seems like the best compromise.
+No documentation of this new module parameter?
 
-	Sam
+:(
+
