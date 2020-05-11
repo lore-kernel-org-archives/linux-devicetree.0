@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C142DC47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F06C54E8E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4D920643
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29EC20643
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 15:09:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="yQRdWTUU"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="TS/jxxw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgEKPIi (ORCPT
+        id S1730589AbgEKPJP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 11:08:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45690 "EHLO
+        Mon, 11 May 2020 11:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730300AbgEKPIg (ORCPT
+        by vger.kernel.org with ESMTP id S1730327AbgEKPIc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 11:08:36 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC984C05BD0A
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 08:08:35 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id 50so10881475wrc.11
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 08:08:35 -0700 (PDT)
+        Mon, 11 May 2020 11:08:32 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EAE1C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 08:08:31 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id n5so4804911wmd.0
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 08:08:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=A3BhZ5w2nZuK3+ZudhXc+00fKQMrXVNQ6trbR5U2M5Y=;
-        b=yQRdWTUUY8BtpgYf0O6+JxCpTQQ7YY5DMoBHZh8lfcBtgFmcmYRFvaqU5qMeGhFDWm
-         CDpXAd4jp+N5aZunI52e7jbDLHpfUyC9o5by8J/55R1jm0qIu1qYfQvBHJO+tNsKWB1p
-         AolpfCzCBQBM2ESWJvao6fiQ/CS9fG2NadGPhDtw4J3JQ2dJL7QuxIM/MknGHbUu5wIv
-         wZY8Yr8s+nmwW5TODaI1j7Uq9uLSRlxnSfYy5+qg50Ah1fgmd50NMNW6QYL9yX70K7E/
-         yGbZ1CcIgQcQCmmebj6kZ2+Yp5FhiwtSlR45BZow7MfGMl2dI+79rr2j+m0UEUkUaGdI
-         +pjA==
+        bh=85LArQ1FkfasqQwvTGBUsmFOdZ74xT3FAzPREvSXT3E=;
+        b=TS/jxxw2AM8c/MW/14NfrNB+SUbDqKCeR6Tz9KN+jE/qC/yYIXQFmcqxM1np2Xwhd1
+         6HzzHOawVFx9Avhhy9m+y8TIrHmrRiIGgsdRGMba4aTqK1P3Std1fQ15kyhU37lGQ4Gd
+         /blU29VDw8JrGSg8cn8jWRHVrLGz1I02RRR881foQUGlY83hYx6HEVM8++7zYk9AB2gK
+         kCA8E+nT8RvG/vdg9BjOvynD4T+aWghR+0uibegwQAvlB7FNBaDmFNw22bU9G5Dh38Sa
+         blrzdx+xnrmAR8BnZBhhos2friW6xXn07zxAXVWX+4YWhBxExBXWL9JMoRRwyxerZJMn
+         S1+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=A3BhZ5w2nZuK3+ZudhXc+00fKQMrXVNQ6trbR5U2M5Y=;
-        b=dmnfpwic9hP792lqw+LnRy2kNFveVRkv0iRKOamx4+LAh+9mUkXRwMoSF3BSu6meON
-         X2oGZHqlyyK9mmG7DQMcf/0z/6QKokssKlT37ewIfKkQ0El+6mdWwzAFgeEoq7qYPKYw
-         AFHXShWYYP2oX5bBkLHqTTngvkI9qyHXDMsbNj/X3U5Za9Aa/1QQ883XbWchlL8+mDlM
-         LA6zlaSnMajRUazORZ/wYpWR4e1SJPYgRmZxUZWO5ydynz4cgBs9N1oHfCAl8CAHGxvy
-         rRg5UE8p/UjwtHXg94uRIX5vhRhb/A/K6wAXwzq5t8cXczNqRJ3iG0+GsKpybkNAXdJE
-         reDg==
-X-Gm-Message-State: AGi0PubjS1vaod8nFUF8Evj3Bzzu+Tn5KhJd5srLcNN6gUN91ybPOgtA
-        MY4mb/TblC5rvKZPgIKV0sv5xQ==
-X-Google-Smtp-Source: APiQypLYCrKbbP67ZuW6k/GvCnVZzqnJrj+rFWSiKDfJIOmzuY0m86IY8Y+0AfqHvjKqDVcpGVV22Q==
-X-Received: by 2002:a5d:4f06:: with SMTP id c6mr20552983wru.12.1589209714391;
-        Mon, 11 May 2020 08:08:34 -0700 (PDT)
+        bh=85LArQ1FkfasqQwvTGBUsmFOdZ74xT3FAzPREvSXT3E=;
+        b=oE6yse/KmQ9y/QPo9fX1P8OmckKtUgn+lazhcvWuMTr2uDuP3JRliNY9PYO6UC+yap
+         +6cUQM+3Csvx93hiUZBkTfmvem1P8ZtiTaVQIsB7y6V/223y0xxOSXr9h458aLxcgm+G
+         KEPHRRqi499P3P6m76GxJ7A2pxYvSWTc3SEi/l9ne7FZSNVp9S/8lRfdArvcnTCVM62h
+         UqQo0gUVpm08xFn8VINDNSQ7efLJZ+XrbBKHIGF2fRdh1SHAhJoPaF/C1lPqaiovXWXM
+         N32Qzk+7PMclHjm9GtP73uRWaEiIAHv/a2xIsSxFHmNazbKmYxPsVGRu90xBZia82jPO
+         YOsA==
+X-Gm-Message-State: AGi0PuYqPCMbVG9joNGQQ9eZx2Bo+ASDHFUwDPqgpyC7It7UxXhW0EN8
+        C4Z/aADpP4egrdKl6VXtCwadTQ==
+X-Google-Smtp-Source: APiQypIUoY5y9pMCyWMprTL71A7BiL4tQc7BbrlTT1FoaZIkxIS6pMCmPRg9IsmwTOLUcwtTuQxL3g==
+X-Received: by 2002:a1c:abc3:: with SMTP id u186mr31368123wme.42.1589209710040;
+        Mon, 11 May 2020 08:08:30 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.33
+        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 08:08:33 -0700 (PDT)
+        Mon, 11 May 2020 08:08:29 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -78,9 +78,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 10/14] ARM64: dts: mediatek: add pericfg syscon to mt8516.dtsi
-Date:   Mon, 11 May 2020 17:07:55 +0200
-Message-Id: <20200511150759.18766-11-brgl@bgdev.pl>
+Subject: [PATCH v2 07/14] net: devres: define a separate devres structure for devm_alloc_etherdev()
+Date:   Mon, 11 May 2020 17:07:52 +0200
+Message-Id: <20200511150759.18766-8-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200511150759.18766-1-brgl@bgdev.pl>
 References: <20200511150759.18766-1-brgl@bgdev.pl>
@@ -93,30 +93,64 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This adds support for the PERICFG register range as a syscon. This will
-soon be used by the MediaTek Ethernet MAC driver for NIC configuration.
+Not using a proxy structure to store struct net_device doesn't save
+anything in terms of compiled code size or memory usage but significantly
+decreases the readability of the code with all the pointer casting.
+
+Define struct net_device_devres and use it in devm_alloc_etherdev_mqs().
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8516.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/devres.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8516.dtsi b/arch/arm64/boot/dts/mediatek/mt8516.dtsi
-index 2f8adf042195..8cedaf74ae86 100644
---- a/arch/arm64/boot/dts/mediatek/mt8516.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8516.dtsi
-@@ -191,6 +191,11 @@ infracfg: infracfg@10001000 {
- 			#clock-cells = <1>;
- 		};
+diff --git a/net/devres.c b/net/devres.c
+index c1465d9f9019..b97b0c5a8216 100644
+--- a/net/devres.c
++++ b/net/devres.c
+@@ -7,30 +7,34 @@
+ #include <linux/etherdevice.h>
+ #include <linux/netdevice.h>
  
-+		pericfg: pericfg@10003050 {
-+			compatible = "mediatek,mt8516-pericfg", "syscon";
-+			reg = <0 0x10003050 0 0x1000>;
-+		};
+-static void devm_free_netdev(struct device *dev, void *res)
++struct net_device_devres {
++	struct net_device *ndev;
++};
 +
- 		apmixedsys: apmixedsys@10018000 {
- 			compatible = "mediatek,mt8516-apmixedsys", "syscon";
- 			reg = <0 0x10018000 0 0x710>;
++static void devm_free_netdev(struct device *dev, void *this)
+ {
+-	free_netdev(*(struct net_device **)res);
++	struct net_device_devres *res = this;
++
++	free_netdev(res->ndev);
+ }
+ 
+ struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
+ 					   unsigned int txqs, unsigned int rxqs)
+ {
+-	struct net_device **dr;
+-	struct net_device *netdev;
++	struct net_device_devres *dr;
+ 
+ 	dr = devres_alloc(devm_free_netdev, sizeof(*dr), GFP_KERNEL);
+ 	if (!dr)
+ 		return NULL;
+ 
+-	netdev = alloc_etherdev_mqs(sizeof_priv, txqs, rxqs);
+-	if (!netdev) {
++	dr->ndev = alloc_etherdev_mqs(sizeof_priv, txqs, rxqs);
++	if (!dr->ndev) {
+ 		devres_free(dr);
+ 		return NULL;
+ 	}
+ 
+-	*dr = netdev;
+ 	devres_add(dev, dr);
+ 
+-	return netdev;
++	return dr->ndev;
+ }
+ EXPORT_SYMBOL(devm_alloc_etherdev_mqs);
 -- 
 2.25.0
 
