@@ -2,146 +2,119 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E291C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014CFC54E8E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 08:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 545A12080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8A420A8B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 08:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="a9kB4Tqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725790AbgEKHrR (ORCPT
+        id S1729051AbgEKIZi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 03:47:17 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:53102 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbgEKHrR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 03:47:17 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 65F4220080;
-        Mon, 11 May 2020 09:47:10 +0200 (CEST)
-Date:   Mon, 11 May 2020 09:47:08 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     srk@48.io
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sean Cross <xobs@kosagi.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] drm/panel: simple: Add Innolux N133HSE panel support
-Message-ID: <20200511074708.GA2759@ravnborg.org>
-References: <20200509111834.26335-1-srk@48.io>
- <20200509111834.26335-3-srk@48.io>
+        Mon, 11 May 2020 04:25:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728772AbgEKIZh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 04:25:37 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED92C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 01:25:37 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id r17so3679943lff.9
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 01:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WDxg1DeZ8sJ0XodxOs3Lm7xIglVAG2LNLkzOH+NSeUw=;
+        b=a9kB4Tqs2dCfJPVXLW7rIUKcpadFGS95KUujA0Gg0bh3yvN04Iz5hXJvAqcYo0Fo0S
+         e2r7UnavF1g1b/yQKVtxwTj7QwPbAZ4neNiZ+DiFmEf1XD98zE76t0mSXo8oAcg+X3xe
+         l+jRZpz/1I1nC+f0b95Q4F33TiK5C7hQ9tkUIklIWnGk6+TMkp4h1ffCL9jUxWSQEeok
+         /l5ckU8tbMHVzxKLO7uOVNcKFbKJS/tFAODjz+tXLPwLtLlAvjsEsKOjCOyYnJ5jZ41z
+         yWY4QOs6wuj7Z5j0d/7twGR1B7bJocqwEe4xr1rhP/AdovuJq9xM0J1y/TbQuZnAcZOS
+         WtMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WDxg1DeZ8sJ0XodxOs3Lm7xIglVAG2LNLkzOH+NSeUw=;
+        b=Kudot7Oec0f/QU7o2p5jDlF7CnPyrnuCVLplpaKb4a2XixV/rsPDIh6whxUdoIjJ2P
+         rO8JULKPWYxhxnB6dXCxiMWqx1g50y0fbbQp/La/TpcamwIxYL65KhjF8/VFhTfuvRpx
+         cQisZhBnmq+XGSLI4YyAQo87apZ7Yj1el8r/05aIwNd+bl/vVA01D/blUWBNFQ3TWYMy
+         DNZvk83dyrgrPckN1dQyeD+fVvpc9Bb552KQ6SBjjTyI9uGhVJJMsTrtiQCE3lSm9YUa
+         ia6ObAsKG1O8PdoXVusq5+6NoR6CrAgdMMW3/J8+TMPrO/JXmIEmojY4jzuYwSB4ygT0
+         MwCw==
+X-Gm-Message-State: AOAM532FsVN4vVUvtn7yYAo15qOBeuSlh+JgYZDKhF+A+AWCjqaKJVON
+        8T2M/uV/pCt1LEV/CPY1GjAPn6fWYNQF/A==
+X-Google-Smtp-Source: ABdhPJwG0Z0oAyGtpSM5Xhb1unFN6lqX0CQnA/utE93CSThdYjV3Swfvkr8C4tDKnBb/YXkFbUWqSA==
+X-Received: by 2002:a19:e013:: with SMTP id x19mr1639311lfg.49.1589185536031;
+        Mon, 11 May 2020 01:25:36 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:482:2677:ba:b682:3c24:214e? ([2a00:1fa0:482:2677:ba:b682:3c24:214e])
+        by smtp.gmail.com with ESMTPSA id s27sm9101690ljo.80.2020.05.11.01.25.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 01:25:35 -0700 (PDT)
+Subject: Re: [PATCH v2 2/7] dt-bindings: watchdog: dw-wdt: Support devices
+ with asynch clocks
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-mips@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200306132758.703FC8030704@mail.baikalelectronics.ru>
+ <20200510105807.880-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510105807.880-3-Sergey.Semin@baikalelectronics.ru>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <f065ff5f-af86-4293-b208-766e41699436@cogentembedded.com>
+Date:   Mon, 11 May 2020 11:25:31 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509111834.26335-3-srk@48.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=YpGV6msqAAAA:8 a=VwQbUJbxAAAA:8 a=8AirrxEcAAAA:8
-        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=grMRCvxJCDGD2aPsybUA:9
-        a=CjuIK1q_8ugA:10 a=7Sa5D-Tva0wx0rmpRu8Y:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=ST-jHhOKWsTCqRlWije3:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200510105807.880-3-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Richard.
+Hello!
 
-On Sat, May 09, 2020 at 01:18:34PM +0200, srk@48.io wrote:
-> From: Sean Cross <xobs@kosagi.com>
-> 
-> The Innolux N133HSE panel is a 13.3" 1920x1080 panel that contains an
-> integrated backlight, and connects via eDP.
-> 
-> It is used in the Kosagi Novena.
+On 10.05.2020 13:58, Serge Semin wrote:
 
-Thanks for the patch.
+> DW Watchdog IP core can be synthesised with asynchronous timer/APB
+> clocks support (WDT_ASYNC_CLK_MODE_ENABLE == 1). In this case
+> a separate clock signal is supposed to be used to feed watchdog timer
+> and APB interface of the device. Lets along with the watchdog timer
+                                        ^ verb missing? or comma?
 
+> reference clock expect to have the optional APB3 bu interface clock
+> sepcified in a DW WDT dt node.
 
-> 
-> Signed-off-by: Sean Cross <xobs@kosagi.com>
-> Signed-off-by: Richard Marko <srk@48.io>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> To: dri-devel@lists.freedesktop.org
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 3ad828eaefe1..c8a93771d398 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1906,6 +1906,30 @@ static const struct panel_desc innolux_n116bge = {
->  	},
->  };
->  
-> +static const struct drm_display_mode innolux_n133hse_ea1_mode = {
-> +	.clock = 138500,
-> +	.hdisplay = 1920,
-> +	.hsync_start = 1920 + 46,
-> +	.hsync_end = 1920 + 46 + 30,
-> +	.htotal = 1920 + 46 + 30 + 84,
-> +	.vdisplay = 1080,
-> +	.vsync_start = 1080 + 2,
-> +	.vsync_end = 1080 + 2 + 4,
-> +	.vtotal = 1080 + 2 + 4 + 26,
-> +	.vrefresh = 60,
-> +};
-> +
-> +static const struct panel_desc innolux_n133hse_ea1 = {
-> +	.modes = &innolux_n133hse_ea1_mode,
-> +	.num_modes = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 293,
-> +		.height = 165,
-> +	},
-> +	.connector_type = DRM_MODE_CONNECTOR_eDP,
-Please include .bus_format and .bus_flags info too.
+    Specified.
 
-We are relying more and more on this type of info so we need it to be
-present.
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: linux-mips@vger.kernel.org
+[...]
 
-	Sam
-
-
-
-> +};
-> +
->  static const struct drm_display_mode innolux_n156bge_l21_mode = {
->  	.clock = 69300,
->  	.hdisplay = 1366,
-> @@ -3577,6 +3601,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "innolux,n116bge",
->  		.data = &innolux_n116bge,
-> +	}, {
-> +		.compatible = "innolux,n133hse-ea1",
-> +		.data = &innolux_n133hse_ea1,
->  	}, {
->  		.compatible = "innolux,n156bge-l21",
->  		.data = &innolux_n156bge_l21,
-> -- 
-> 2.25.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+MBR, Sergei
