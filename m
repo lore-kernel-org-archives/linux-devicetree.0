@@ -2,132 +2,146 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BB0C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E291C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0EDC207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ZWq9BdqO"
+	by mail.kernel.org (Postfix) with ESMTP id 545A12080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 07:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725790AbgEKH2C (ORCPT
+        id S1725790AbgEKHrR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 03:28:02 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:56463 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728425AbgEKH2B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 03:28:01 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id Y2qzjxHritKAsY2r0jnQb4; Mon, 11 May 2020 09:27:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1589182079; bh=djFYuodzN4n71AJy/ln34i1tOSfwYHOl2CIsBKilu2g=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=ZWq9BdqOaAblLRg+t/bVIpo8mW/NtldKPrpfGt6uTLxWx4wqwz85DWUeu0dJTdBnB
-         Q9O3zOpyTzaUN0uPLmDXgvZWA4DrA25Fl1ULSf+AfBydN21hGRdbD2R0qtW6aaqXD0
-         WY0/bIy4nENa6xCc1qbEpos27RELjDnsncS0ayiKB0v/uapvp4PbFaiuIybrvskWAp
-         zjlXzjvJ1/iBduAYULZF6cfz/WkF+pqutUNvVy9V8684eTeJfNsfN9qD7jo5cFv/7H
-         IIIGj3mWchf+57FjY6DlpzlSdZysgVSEldAbuZt6xgesI4AomOCXTDT6lNL3uao3+5
-         WJ6eNlwxg/Q5Q==
-Subject: Re: [PATCH v11 13/13] dt-bindings: Add media properties
-To:     Jacopo Mondi <jacopo@jmondi.org>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     tfiga@google.com, pavel@ucw.cz, devicetree@vger.kernel.org
-References: <20200509090456.3496481-1-jacopo@jmondi.org>
- <20200509090456.3496481-14-jacopo@jmondi.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <6a8add4e-c1f6-bd08-8928-3c8884eeda2c@xs4all.nl>
-Date:   Mon, 11 May 2020 09:27:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 11 May 2020 03:47:17 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:53102 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbgEKHrR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 03:47:17 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 65F4220080;
+        Mon, 11 May 2020 09:47:10 +0200 (CEST)
+Date:   Mon, 11 May 2020 09:47:08 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     srk@48.io
+Cc:     Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Sean Cross <xobs@kosagi.com>, Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 2/2] drm/panel: simple: Add Innolux N133HSE panel support
+Message-ID: <20200511074708.GA2759@ravnborg.org>
+References: <20200509111834.26335-1-srk@48.io>
+ <20200509111834.26335-3-srk@48.io>
 MIME-Version: 1.0
-In-Reply-To: <20200509090456.3496481-14-jacopo@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfIeiB9Ead4aZl4KJTvWnhlmpMLPgM5Y3oDscyguEHliG8TMHRc+79DqIOQIikfhxtqF8mmh9MxNnSzGbmrkDtuKJBTo4F80Syfrv/3oVnt+t1ZzwwMA6
- EMboqN0CJ2H9jq4dMyli6kanivlpzNiIz+T+RGRmyTVW37v+vJ4e+Ve6SCqR3uKvzs2EFYs9vtCCJqX/H1ISq3zuAje05mTQxHBH3Rt51YgAABYcGcDShuat
- nQsXe9JROuF70Im1EtTcOzmXxufCEFDBDnXaLy3wOPkMgu/wtk7LDYImzMCbUwZ8nrSwwtIJz1ZiTovOoUkrIdks4ZEDsb5X/bKQ0r/0egOSRivS9kgAl1ew
- vuw6FJR5XXdqikrrbExfo6YYpPLKNd6vcELdo7Oj7cprEGTgG/oeQi+lQvvuNdS4s+TFZqTHcSu4DlxJlfPmDDLFtvqLjTtGAvycbYJgzVJmTK/ggjY77YYh
- ud7eDe8O9pDpalSr/l14CQOKrrYlwhkhq23XGdVKcGs83czbXNJNefpe/D/vWNriJ6VVKeCDXvrw0Cn74JwkTTVUJ1C1MNutBvKFf3B9wnjU6JG1GnV52dSG
- pmyHoojaLSWJHbdCxBlxFycc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200509111834.26335-3-srk@48.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=YpGV6msqAAAA:8 a=VwQbUJbxAAAA:8 a=8AirrxEcAAAA:8
+        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=grMRCvxJCDGD2aPsybUA:9
+        a=CjuIK1q_8ugA:10 a=7Sa5D-Tva0wx0rmpRu8Y:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=ST-jHhOKWsTCqRlWije3:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 09/05/2020 11:04, Jacopo Mondi wrote:
-> Add a DT header file to contain definitions for standard media properties.
+Hi Richard.
+
+On Sat, May 09, 2020 at 01:18:34PM +0200, srk@48.io wrote:
+> From: Sean Cross <xobs@kosagi.com>
 > 
-> The file is named after:
-> Documentation/devicetree/bindings/media/video-interfaces.txt
-> which contains the standard media properties definitions.
+> The Innolux N133HSE panel is a 13.3" 1920x1080 panel that contains an
+> integrated backlight, and connects via eDP.
 > 
-> Initially add three macros to define the supported 'orientation'
-> property values.
+> It is used in the Kosagi Novena.
+
+Thanks for the patch.
+
+
 > 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> Signed-off-by: Sean Cross <xobs@kosagi.com>
+> Signed-off-by: Richard Marko <srk@48.io>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> To: dri-devel@lists.freedesktop.org
 > ---
+>  drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> I currently don't have users in mainline for this, I understand this implies
-> this is probably not going to be accepted. At the same time we don't have a
-> common place for media-related definitions, which support properties defined in
-> video-interfaces.txt
-> 
-> I leave it here at the end of the series for discussions, but I'm fine dropping
-> it from the series.
-> 
-> Thanks
->   j
-> 
-> ---
->  include/dt-bindings/media/video-interfaces.h | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 include/dt-bindings/media/video-interfaces.h
-> 
-> diff --git a/include/dt-bindings/media/video-interfaces.h b/include/dt-bindings/media/video-interfaces.h
-> new file mode 100644
-> index 0000000000000..404c697d6bd6e
-> --- /dev/null
-> +++ b/include/dt-bindings/media/video-interfaces.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * include/dt-bindings/media/video-interfaces.h
-> + *
-> + * Copyright (C) 2020 Jacopo Mondi <jacopo@jmondi.org>
-> + */
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 3ad828eaefe1..c8a93771d398 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -1906,6 +1906,30 @@ static const struct panel_desc innolux_n116bge = {
+>  	},
+>  };
+>  
+> +static const struct drm_display_mode innolux_n133hse_ea1_mode = {
+> +	.clock = 138500,
+> +	.hdisplay = 1920,
+> +	.hsync_start = 1920 + 46,
+> +	.hsync_end = 1920 + 46 + 30,
+> +	.htotal = 1920 + 46 + 30 + 84,
+> +	.vdisplay = 1080,
+> +	.vsync_start = 1080 + 2,
+> +	.vsync_end = 1080 + 2 + 4,
+> +	.vtotal = 1080 + 2 + 4 + 26,
+> +	.vrefresh = 60,
+> +};
 > +
-> +#ifndef __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
-> +#define __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
+> +static const struct panel_desc innolux_n133hse_ea1 = {
+> +	.modes = &innolux_n133hse_ea1_mode,
+> +	.num_modes = 1,
+> +	.bpc = 8,
+> +	.size = {
+> +		.width = 293,
+> +		.height = 165,
+> +	},
+> +	.connector_type = DRM_MODE_CONNECTOR_eDP,
+Please include .bus_format and .bus_flags info too.
+
+We are relying more and more on this type of info so we need it to be
+present.
+
+	Sam
+
+
+
+> +};
 > +
-> +#define FRONT_CAMERA		<0>
-> +#define BACK_CAMERA		<1>
-> +#define EXTERNAL_CAMERA		<2>
-
-Uh, shouldn't that be 0, 1 and 2 instead of <0>, <1> and <2> ?
-
-I'm skipping this patch for the PR.
-
-Regards,
-
-	Hans
-
-> +
-> +#endif /* __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__ */
-> --
-> 2.26.1
+>  static const struct drm_display_mode innolux_n156bge_l21_mode = {
+>  	.clock = 69300,
+>  	.hdisplay = 1366,
+> @@ -3577,6 +3601,9 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "innolux,n116bge",
+>  		.data = &innolux_n116bge,
+> +	}, {
+> +		.compatible = "innolux,n133hse-ea1",
+> +		.data = &innolux_n133hse_ea1,
+>  	}, {
+>  		.compatible = "innolux,n156bge-l21",
+>  		.data = &innolux_n156bge_l21,
+> -- 
+> 2.25.1
 > 
-
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
