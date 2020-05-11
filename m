@@ -2,128 +2,252 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09F6C54E8E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 02:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C841C54E8F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 02:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B998E2184D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 02:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7B3206D7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 02:14:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j/N0e4ZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgEKCKb (ORCPT
+        id S1729449AbgEKCOC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 May 2020 22:10:31 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:47822 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729075AbgEKCKb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 22:10:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3F8068030809;
-        Mon, 11 May 2020 02:10:20 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DIUJtZOGJa0j; Mon, 11 May 2020 05:10:19 +0300 (MSK)
-Date:   Mon, 11 May 2020 05:10:16 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511021016.wptcgnc3iq3kadgz@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200508115334.GE4820@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Sun, 10 May 2020 22:14:02 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:52034 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729407AbgEKCN7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 10 May 2020 22:13:59 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200511021355epoutp0318a6ead68a01dfc186f48fa0743192eb~N14rzmiYf2233822338epoutp03M
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 02:13:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200511021355epoutp0318a6ead68a01dfc186f48fa0743192eb~N14rzmiYf2233822338epoutp03M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589163235;
+        bh=kDIy4u6dKypJDeZVrGE9ZKceZgeyPXJh8PvB97xxnQM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j/N0e4ZJOxdfce1QxDUkeKwgvZ82q3uEcyVKOoK5bCXp4FPaVxrQZzgvG3kZIbUGC
+         3OmCVzGH4B62qRf5V0AIcI2YxRIe0thmS6k4EWJLOeruyg6CLFebkCVniBhsaNNiBi
+         lSJrNS27Nhi0Ev8jWF7DCLzzhSls5GYcUXwfFPTA=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200511021354epcas5p308719ba70e90ce1f09f9c4c5e63ca496~N14rXE55D1506415064epcas5p3D;
+        Mon, 11 May 2020 02:13:54 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AC.9E.23569.2E4B8BE5; Mon, 11 May 2020 11:13:54 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200511021354epcas5p1a3f7fe0cf17e7ecc586aaf29eb0d2d7f~N14rBqvJx1717517175epcas5p1N;
+        Mon, 11 May 2020 02:13:54 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200511021354epsmtrp257f1a9a5a4c6fbae7c643c380b6034a7~N14rAUzqM1467414674epsmtrp2Q;
+        Mon, 11 May 2020 02:13:54 +0000 (GMT)
+X-AuditID: b6c32a4a-3b1ff70000005c11-ee-5eb8b4e2123b
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BF.54.25866.2E4B8BE5; Mon, 11 May 2020 11:13:54 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200511021352epsmtip2002c8385977cb91f9bc2d00ec0aa7749~N14o8G-Gb0135501355epsmtip20;
+        Mon, 11 May 2020 02:13:52 +0000 (GMT)
+From:   Alim Akhtar <alim.akhtar@samsung.com>
+To:     robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
+        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v8 03/10] scsi: ufs: add quirk to enable host controller
+ without hce
+Date:   Mon, 11 May 2020 07:30:24 +0530
+Message-Id: <20200511020031.25730-4-alim.akhtar@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200511020031.25730-1-alim.akhtar@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42LZdlhTS/fRlh1xBu379SwezNvGZvHy51U2
+        i0/rl7FazD9yjtXi/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
+        sXTrTUYHXo/Lfb1MHptWdbJ5bF5S79Fycj+Lx8ent1g8+rasYvT4vEnOo/1AN1MARxSXTUpq
+        TmZZapG+XQJXxqwXh9gKNshVNDV+YWpgPCXRxcjJISFgIrFv4ktWEFtIYDejxMNPfF2MXED2
+        J0aJyfO3sEI4nxklbv04xw7TcenVahaIxC5Gibs//rJDOC1MEufXnWEBqWIT0Ja4O30LE4gt
+        IiAsceRbGyOIzSxwg0niwUoXEFtYIEziybz9bF2MHBwsAqoS2/fmgYR5BWwk2i5/YYVYJi+x
+        esMBZhCbU8BWYlrDdrDFEgK9HBL/X/UxQxS5SPRse8sGYQtLvDq+BepSKYnP7/aCzZcQyJbo
+        2WUMEa6RWDrvGAuEbS9x4MocFpASZgFNifW79CGu5JPo/f2ECaKTV6KjTQiiWlWi+d1VqE5p
+        iYnd3VBXekisvH2cCRIKExgl2pa/ZpvAKDsLYeoCRsZVjJKpBcW56anFpgVGeanlesWJucWl
+        eel6yfm5mxjByUTLawfjwwcf9A4xMnEwHmKU4GBWEuFdnrsjTog3JbGyKrUoP76oNCe1+BCj
+        NAeLkjhvUuOWOCGB9MSS1OzU1ILUIpgsEwenVAPTEmMWl0WfHn9hvz7x+tWvfh1+c17zihrk
+        Fvefyd5qKDNR+9fyNS03Wjw2e508fMvdTuKqkHdVjRy3T9mbdCtGhs3lrMbmPZFP808/ZJsd
+        ffVBpH52rlKdbb3wQ9mc7VkaLN8cVghtE2XlK9t/Skmu9UedsOlZ9b/PPx9Jjdp4Tna94ozD
+        T2yDwyrvqeVpGScVmy1l5jYp+NnPaRBu61SiJ/rp7KTFpU3fNn25uVH/8ZfaPToz1a1W3fv4
+        lKFa3+XxgmPHLp3NlDbKkvm/4/u0puPzfna+LEnaHaRcdkO/44C7YOfTcxeY7hXEOk/XX99v
+        8otNUsrzt03K2tlCspyVJsd4Hz3pk73+WdPy3TIlluKMREMt5qLiRACudnnQlQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsWy7bCSvO6jLTviDPqOSVg8mLeNzeLlz6ts
+        Fp/WL2O1mH/kHKvF+fMb2C1ubjnKYrHp8TVWi8u75rBZzDi/j8mi+/oONovlx/8xWfzfs4Pd
+        YunWm4wOvB6X+3qZPDat6mTz2Lyk3qPl5H4Wj49Pb7F49G1ZxejxeZOcR/uBbqYAjigum5TU
+        nMyy1CJ9uwSujFkvDrEVbJCraGr8wtTAeEqii5GTQ0LAROLSq9UsXYxcHEICOxglZkz+yA6R
+        kJa4vnEClC0ssfLfc3aIoiYmiSlzjjKCJNgEtCXuTt/CBGKLABUd+dYGFmcWeMYkcephKYgt
+        LBAisbZ7KXMXIwcHi4CqxPa9eSBhXgEbibbLX1gh5stLrN5wgBnE5hSwlZjWsJ0FxBYCqpmx
+        aTPrBEa+BYwMqxglUwuKc9Nziw0LjPJSy/WKE3OLS/PS9ZLzczcxgoNZS2sH455VH/QOMTJx
+        MB5ilOBgVhLhXZ67I06INyWxsiq1KD++qDQntfgQozQHi5I479dZC+OEBNITS1KzU1MLUotg
+        skwcnFINTG4Pv1z1vJl6h1fj+5zSJbWnex4ynDjV/tFz363Esy0teWtKFr74u3Hz16XnjBpW
+        fSifNDHCurZ91uflE4IeuCYrXlfLt1w8ge3PbEGzHemsG40WP9u8JSPli9YrqexfZpt/uFpM
+        y7zfXllfz2naErA6Jny5S1nHpdbLzYsOvvXVf/1lw/Kw6hdzpkmHvLaYwDsx509szSSrUKOl
+        3yTkOxZ4JTf/zzw97c3HjbJdYslzbYWMPEoYVnjaO9ziLz1dmT1Fbc+B7+INbZq+Ntfcy/0s
+        j+ekJu7UWOe59tylluUcVX1zDwkfvLNz3pq58y7K3rt1umSXflghoyWHHbvHtNlblWvXn5vZ
+        y7uSc0eF3AUlluKMREMt5qLiRAAK4Xpw1QIAAA==
+X-CMS-MailID: 20200511021354epcas5p1a3f7fe0cf17e7ecc586aaf29eb0d2d7f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200511021354epcas5p1a3f7fe0cf17e7ecc586aaf29eb0d2d7f
+References: <20200511020031.25730-1-alim.akhtar@samsung.com>
+        <CGME20200511021354epcas5p1a3f7fe0cf17e7ecc586aaf29eb0d2d7f@epcas5p1.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Mark
+Some host controllers don't support host controller enable via HCE.
 
-On Fri, May 08, 2020 at 12:53:34PM +0100, Mark Brown wrote:
-> On Fri, May 08, 2020 at 02:26:04PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 08, 2020 at 01:53:02PM +0300, Serge Semin wrote:
-> 
-> > > Multi-block support provides a way to map the kernel-specific SG-table so
-> > > the DW DMA device would handle it as a whole instead of handling the
-> > > SG-list items or so called LLP block items one by one. So if true LLP
-> > > list isn't supported by the DW DMA engine, then soft-LLP mode will be
-> > > utilized to load and execute each LLP-block one by one. A problem may
-> > > happen for multi-block DMA slave transfers, when the slave device buffers
-> > > (for example Tx and Rx FIFOs) depend on each other and have size smaller
-> > > than the block size. In this case writing data to the DMA slave Tx buffer
-> > > may cause the Rx buffer overflow if Rx DMA channel is paused to
-> > > reinitialize the DW DMA controller with a next Rx LLP item. In particular
-> > > We've discovered this problem in the framework of the DW APB SPI device
-> 
-> > Mark, do we have any adjustment knobs in SPI core to cope with this?
-> 
-> Frankly I'm not sure I follow what the issue is - is an LLP block item
-> different from a SG list entry?  As far as I can tell the problem is
-> that the DMA controller does not support chaining transactions together
-> and possibly also has a limit on the transfer size?  Or possibly some
-> issue with the DMA controller locking the CPU out of the I/O bus for
-> noticable periods?  I can't really think what we could do about that if
-> the issue is transfer sizes, that just seems like hardware which is
-> never going to work reliably.  If the issue is not being able to chain
-> transfers then possibly an option to linearize messages into a single
-> transfer as suggested to cope with PIO devices with ill considered
-> automated chip select handling, though at some point you have to worry
-> about the cost of the memcpy() vs the cost of just doing PIO.
+Reviewed-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+---
+ drivers/scsi/ufs/ufshcd.c | 76 +++++++++++++++++++++++++++++++++++++--
+ drivers/scsi/ufs/ufshcd.h |  6 ++++
+ 2 files changed, 80 insertions(+), 2 deletions(-)
 
-The problem is that our version of DW DMA controller can't automatically walk
-over the chained SG list (in the DW DMA driver the SG list is mapped into a
-chain of LLP items, which length is limited to the max transfer length supported
-by the controller). In order to cope with such devices the DW DMA driver
-manually (in IRQ handler) reloads the next SG/LLP item in the chain when a
-previous one is finished. This causes a problem in the generic DW SSI driver
-because normally the Tx DMA channel finishes working before the Rx DMA channel.
-So the DW DMA driver will reload the next Tx SG/LLP item and will start the Tx
-transaction while the Rx DMA finish IRQ is still pending. This most of the time
-causes the Rx FIFO overrun and obviously data loss.
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 0e9704da58bd..ee30ed6cc805 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -3534,6 +3534,52 @@ static int ufshcd_dme_link_startup(struct ufs_hba *hba)
+ 			"dme-link-startup: error code %d\n", ret);
+ 	return ret;
+ }
++/**
++ * ufshcd_dme_reset - UIC command for DME_RESET
++ * @hba: per adapter instance
++ *
++ * DME_RESET command is issued in order to reset UniPro stack.
++ * This function now deal with cold reset.
++ *
++ * Returns 0 on success, non-zero value on failure
++ */
++static int ufshcd_dme_reset(struct ufs_hba *hba)
++{
++	struct uic_command uic_cmd = {0};
++	int ret;
++
++	uic_cmd.command = UIC_CMD_DME_RESET;
++
++	ret = ufshcd_send_uic_cmd(hba, &uic_cmd);
++	if (ret)
++		dev_err(hba->dev,
++			"dme-reset: error code %d\n", ret);
++
++	return ret;
++}
++
++/**
++ * ufshcd_dme_enable - UIC command for DME_ENABLE
++ * @hba: per adapter instance
++ *
++ * DME_ENABLE command is issued in order to enable UniPro stack.
++ *
++ * Returns 0 on success, non-zero value on failure
++ */
++static int ufshcd_dme_enable(struct ufs_hba *hba)
++{
++	struct uic_command uic_cmd = {0};
++	int ret;
++
++	uic_cmd.command = UIC_CMD_DME_ENABLE;
++
++	ret = ufshcd_send_uic_cmd(hba, &uic_cmd);
++	if (ret)
++		dev_err(hba->dev,
++			"dme-reset: error code %d\n", ret);
++
++	return ret;
++}
+ 
+ static inline void ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba)
+ {
+@@ -4251,7 +4297,7 @@ static inline void ufshcd_hba_stop(struct ufs_hba *hba, bool can_sleep)
+ }
+ 
+ /**
+- * ufshcd_hba_enable - initialize the controller
++ * ufshcd_hba_execute_hce - initialize the controller
+  * @hba: per adapter instance
+  *
+  * The controller resets itself and controller firmware initialization
+@@ -4260,7 +4306,7 @@ static inline void ufshcd_hba_stop(struct ufs_hba *hba, bool can_sleep)
+  *
+  * Returns 0 on success, non-zero value on failure
+  */
+-int ufshcd_hba_enable(struct ufs_hba *hba)
++static int ufshcd_hba_execute_hce(struct ufs_hba *hba)
+ {
+ 	int retry;
+ 
+@@ -4308,6 +4354,32 @@ int ufshcd_hba_enable(struct ufs_hba *hba)
+ 
+ 	return 0;
+ }
++
++int ufshcd_hba_enable(struct ufs_hba *hba)
++{
++	int ret;
++
++	if (hba->quirks & UFSHCI_QUIRK_BROKEN_HCE) {
++		ufshcd_set_link_off(hba);
++		ufshcd_vops_hce_enable_notify(hba, PRE_CHANGE);
++
++		/* enable UIC related interrupts */
++		ufshcd_enable_intr(hba, UFSHCD_UIC_MASK);
++		ret = ufshcd_dme_reset(hba);
++		if (!ret) {
++			ret = ufshcd_dme_enable(hba);
++			if (!ret)
++				ufshcd_vops_hce_enable_notify(hba, POST_CHANGE);
++			if (ret)
++				dev_err(hba->dev,
++					"Host controller enable failed with non-hce\n");
++		}
++	} else {
++		ret = ufshcd_hba_execute_hce(hba);
++	}
++
++	return ret;
++}
+ EXPORT_SYMBOL_GPL(ufshcd_hba_enable);
+ 
+ static int ufshcd_disable_tx_lcc(struct ufs_hba *hba, bool peer)
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 53096642f9a8..f8d08cb9caf7 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -529,6 +529,12 @@ enum ufshcd_quirks {
+ 	 * that the interrupt aggregation timer and counter are reset by s/w.
+ 	 */
+ 	UFSHCI_QUIRK_SKIP_RESET_INTR_AGGR		= 1 << 7,
++
++	/*
++	 * This quirks needs to be enabled if host controller cannot be
++	 * enabled via HCE register.
++	 */
++	UFSHCI_QUIRK_BROKEN_HCE				= 1 << 8,
+ };
+ 
+ enum ufshcd_caps {
+-- 
+2.17.1
 
-Alas linearizing the SPI messages won't help in this case because the DW DMA
-driver will split it into the max transaction chunks anyway.
-
-> 
-> > > working in conjunction with DW DMA. Since there is no comprehensive way to
-> > > fix it right now lets at least print a warning for the first found
-> > > multi-blockless DW DMAC channel. This shall point a developer to the
-> > > possible cause of the problem if one would experience a sudden data loss.
-> 
-> I thought from the description of the SPI driver I just reviewed that
-> this hardware didn't have DMA?  Or are there separate blocks in the
-> hardware that have a more standard instantiation of the DesignWare SPI
-> controller with DMA attached?
-
-You are right. Baikal-T1's got three SPI interfaces. Two of them are normal
-DW APB SSI interfaces with 64 bytes FIFO, DMA, IRQ, their registers are
-mapped in a dedicated memory space with no stuff like SPI flash direct mapping,
-and the third one is the embedded into the System Boot Controller DW APB SSI
-with all the peculiarities and complications I've described in the
-corresponding patchset. Here in this patch I am talking about the former
-ones.
-
--Sergey
