@@ -2,112 +2,106 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38283C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14222C54E8D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1823820736
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:29:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nREcErpP"
+	by mail.kernel.org (Postfix) with ESMTP id F24F32078E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 18:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgEKS3d (ORCPT
+        id S1729846AbgEKScv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 14:29:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729673AbgEKS3d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 14:29:33 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E89BCC061A0C;
-        Mon, 11 May 2020 11:29:31 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id f7so5113445pfa.9;
-        Mon, 11 May 2020 11:29:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H4KxnQZj7MMF+XFizw+0KM4p3VPjuRnYCCVLLa+bQEU=;
-        b=nREcErpP1OJWWHKl6ghnKOeW2GKGIh6MCXUIDRhGjtgd0VYJTGnpHPnP9lR6nVsxJP
-         UWa3W0KAtUslzNajPouGKgHUuKK7CHW4wDRq5zmbTi4+30s4qkl6UK5zo3H1gyd2V20b
-         fixwqV43MdJD2QQ8bxQvNBSgiF6cStXyHmQvDze+mwo6q4bpfwSzr57xSJzzxo0KxkLS
-         yF/n+HqgY4C1GY9oh9Y4dq3RVZgmsDJN2DY5BsAfvoIo8e6IdpCGou+c5GdYOXLLgkaB
-         QiWa0RXlR8KvT2uPvPziSPBjBXa4/plss/Az/m4Me3Vcn3r/I8zxqg2glPhm5VuWtG6V
-         3eUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H4KxnQZj7MMF+XFizw+0KM4p3VPjuRnYCCVLLa+bQEU=;
-        b=Rj5kIgsxn9eAoMQP0PwWspiWDy3kXSz52+r/KDFCG0V9w+mdK8czUarweXTPrIHSv5
-         aHSVFKuDLDtW3TitisvABW2jhnWxkGImp3yaL+X6bWowrJ9f/hooOk4FTf9FfiVJVXLR
-         a0j7p5jKh1mui9yuAg6R6gaNrKAntXebZGUafN/z7BuL1d2IHQhI9CajK7FAHe7age5i
-         2VJgDD6APBqtOiWYgSedQLPEvRqlpaZebO8iwr1r3uoh51Ua1Op2hzquC8Gbhj+z1jr3
-         c8Ry1tLrxO068Uha/WRtp/iKM/Dul8ZobWO8SHxUW6ufztVSGfZGykyYt3cKUGl7ErS8
-         kHGg==
-X-Gm-Message-State: AGi0PuarkXtd9s83QI9nfZDlNqeEFjWEkcm/5S8feD1vq/c7MzJCXD+o
-        9HSoD/hHP/5GwfX17qK5azI=
-X-Google-Smtp-Source: APiQypLioLOYpTUjlKnMPx3S4Dgj8UBE8iQJGVmCsArVCnPKl5V2exwha0LsAKBoWoN0GjWyML4zWw==
-X-Received: by 2002:a63:5663:: with SMTP id g35mr15553849pgm.356.1589221771093;
-        Mon, 11 May 2020 11:29:31 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id j35sm8472856pgl.74.2020.05.11.11.29.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 11:29:30 -0700 (PDT)
-Date:   Mon, 11 May 2020 11:29:28 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        kernel@collabora.com
-Subject: Re: [PATCH 6/6] tty/sysrq: Add configurable handler to execute a
- compound action
-Message-ID: <20200511182928.GV89269@dtor-ws>
-References: <20200511135918.8203-1-andrzej.p@collabora.com>
- <20200511135918.8203-7-andrzej.p@collabora.com>
- <20200511162113.GC2221063@kroah.com>
+        Mon, 11 May 2020 14:32:51 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49770 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729727AbgEKScv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 14:32:51 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3A2FD803088B;
+        Mon, 11 May 2020 18:32:48 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id P1N1qOkT7GET; Mon, 11 May 2020 21:32:47 +0300 (MSK)
+Date:   Mon, 11 May 2020 21:32:47 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511183247.y6cfss22pe67nouf@mobilestation>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+ <20200511174414.GL8216@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200511162113.GC2221063@kroah.com>
+In-Reply-To: <20200511174414.GL8216@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 11, 2020 at 06:21:13PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, May 11, 2020 at 03:59:18PM +0200, Andrzej Pietrasiewicz wrote:
-> > Some userland might want to execute e.g. 'w' (show blocked tasks), followed
-> > by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
-> > upon a single magic SysRq. Or one might want to execute the famous "Raising
-> > Elephants Is So Utterly Boring" action. This patch adds a configurable
-> > handler, triggered with 'C', for this exact purpose. The user specifies the
-> > composition of the compound action using syntax similar to getopt, where
-> > each letter corresponds to an individual action and a colon followed by a
-> > number corresponds to a delay of that many milliseconds, e.g.:
-> > 
-> > ws:1000c
-> > 
-> > or
-> > 
-> > r:100eis:1000ub
+On Mon, May 11, 2020 at 06:44:14PM +0100, Mark Brown wrote:
+> On Mon, May 11, 2020 at 04:45:02PM +0300, Serge Semin wrote:
+> > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
 > 
-> Cute, but why?  Who needs/wants this type of thing?
+> > > That sounds like you need to also impose a limit on the maximum message
+> > > size as well then, with that you should be able to handle messages up
+> > > to whatever that limit is.  There's code for that bit already, so long
+> > > as the limit is not too low it should be fine for most devices and
+> > > client drivers can see the limit so they can be updated to work with it
+> > > if needed.
+> 
+> > Hmm, this might work. The problem will be with imposing such limitation through
+> > the DW APB SSI driver. In order to do this I need to know:
+> 
+> > 1) Whether multi-block LLP is supported by the DW DMA controller.
+> > 2) Maximum DW DMA transfer block size.
+> 
+> There is a constraint enumeration interface in the DMA API which you
+> should be able to extend for this if it doesn't already support what you
+> need.
 
-On Chrome OS the first time user presses SysRq-X it will try to kill
-chrome (and that will cause crash to get uploaded if user consented).
-The 2nd time within 5 seconds the same combo is pressed, it will dump
-blocked tasks in syslog and try to sync and then panic. On panic the
-device will reboot, logs will be scraped from pstore, and uploaded for
-analysis.
+Yes, that's max segment size.
 
-Thanks.
+> 
+> > Then I'll be able to use this information in the can_dma() callback to enable
+> > the DMA xfers only for the safe transfers. Did you mean something like this when
+> > you said "There's code for that bit already" ? If you meant the max_dma_len
+> > parameter, then setting it won't work, because it just limits the SG items size
+> > not the total length of a single transfer.
+> 
+> You can set max_transfer_size and/or max_message_size in the SPI driver
+> - you should be able to do this on probe.
 
--- 
-Dmitry
+Thanks for the explanation. Max segment size being set to the DMA controller generic
+device should work well. There is no need in setting the transfer and messages
+size limitations. Besides I don't really see the
+max_transfer_size/max_message_size callbacks utilized in the SPI core. These
+functions are called in the spi-mem.c driver only. Do I miss something?
+
+-Sergey
+
