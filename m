@@ -2,107 +2,191 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5512C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBF3C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C13D32070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB742070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 21:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589233886;
-	bh=mIX8+ZWIlcrWQmNEU8YSmxnQ/kJltPPYq8FzooAxJCk=;
+	s=default; t=1589234040;
+	bh=NybVwlbZAgihutmTRbk9zfGmqRkOobx2M2Ug4CviCbA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H8gzQcH3X2Mp4oWiZt9VHljtz0HNwcLhhaI9lqPDNqcMFhDQx9mWjFk1TMTby2APJ
-	 Ejf4ysyChJPbnGBqtsETrBsGuSBz7h96Quh4AqOCTkpQisiXJpuLNbWsKVqnBsbaHM
-	 UvE7zRwk5K2sZk5pdoK0TIdqvz4fYSflytDagr84=
+	b=T60vNSZdcKBOtlZ0NZBhR6CkVeG7Z1671Y38GdQiNsH11XgTDy3zFzF7j8DMMUrYc
+	 /1e+huOWze72z6uaMxRmKzbEvQEeYcF/ShG2SmYxwv8cACp9VmILNyTuavmvmEOEqq
+	 BiL3TkJJ1mEpeDggUdRDBLU316UxH/SKAoR7f7m0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgEKVv0 (ORCPT
+        id S1726067AbgEKVx7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 17:51:26 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43682 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgEKVvZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:51:25 -0400
-Received: by mail-oi1-f196.google.com with SMTP id j16so16461043oih.10;
-        Mon, 11 May 2020 14:51:25 -0700 (PDT)
+        Mon, 11 May 2020 17:53:59 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39870 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgEKVx7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 17:53:59 -0400
+Received: by mail-oi1-f193.google.com with SMTP id b18so16488172oic.6;
+        Mon, 11 May 2020 14:53:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DfyKKTmDjv9m+OiuNuIy9KTZuQJffzzNH09317cH/0o=;
-        b=FNnTV69nvjC6QlxzJgaEnIj8pEGHR2K8UqsliyTW63qrstL5AKVCP3znU8C0T6o20i
-         Aj69fcL0NEEk1e0MHxwPTyEK7A7FS+W8HRA57AqDh25NzwMJFAXeLy+O1lv5ZdYhse5A
-         nmdP+GRvEhzh6QsjL1lgAZA46tz2IOlrUNaRB0Msh71dsqIthso1r1hBtUvFEwTHlBDA
-         kSuOYmwSnb2cRxjR+08YiPfAuXMIN9LCooXZwj/UBN27XP1oYU3/ROlHd0S1i5Ea17YX
-         a5wPSUz5889kmqnqo4hVtSkASh/99xb1bmJFK5KUvcGKrdFSa73OptCJlknXycL2KUlS
-         imUw==
-X-Gm-Message-State: AGi0PuYNSHseogJyDSE+8rzc8aaSSTCgzFgNt+ePuuJDnAZm//cYdRU+
-        NTs2VKmcUOBo6Jn5UvgVYw==
-X-Google-Smtp-Source: APiQypIGO0kmzMcw63VT/1hO5t2+X0q9f/ugFKCDUdcjKV1R0yK1FpsrF1KOJWEqlHyg4ULtacbphw==
-X-Received: by 2002:aca:dcd4:: with SMTP id t203mr19764116oig.72.1589233884866;
-        Mon, 11 May 2020 14:51:24 -0700 (PDT)
+        bh=0ubMO0r62e5onOySJqGesT8p9B144ksRv5675Ou87bY=;
+        b=Sdy9+dPhsO7BIn7P1zUyAGHyjZ5QSUXQktOC0zFz/w1xcqXp65LqzEIVmBT1qTRe3k
+         pjYC8A4czZXbZeGjNkLyAwvv9D7/XTjAbb9LxbaCz6hzv3R55fsSfZsAbyj8BaJfn6lB
+         IfPP6VzGMm15QddsG5ruWE2gygUk/8p4jkm+AFQufpouwPRIXiZHpURUHAgWXwYW5/81
+         /x/KGGL0KOi2Xwc65MyrIAg4SwL28O/9S2pfaWB2VDHY29d9nxfJ4iUn0vcQvbSmUmRb
+         +FurjC49yPAhl2e2rf5Cc/qX/koC3ZCkR2LjHpEUJx/oJ6CZ+WIIx3A6ZV8eKy+M7bU4
+         +BGA==
+X-Gm-Message-State: AGi0PuYXo9yXXC5VYBjQV219dycFObJGqApJaX3O0y+qone1aDmwKaLi
+        bQ+GfQSdipgRQKx4Cc8k7A==
+X-Google-Smtp-Source: APiQypKTWYog9AvtQJGmnBIzegGaPpE9c3rLxOtAgfNAuYpid5nsuXMu9KfWZd9qeFqn0mDIYG0vlg==
+X-Received: by 2002:aca:d585:: with SMTP id m127mr21345315oig.27.1589234038378;
+        Mon, 11 May 2020 14:53:58 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m19sm2498144otj.81.2020.05.11.14.51.22
+        by smtp.gmail.com with ESMTPSA id s69sm2974728otb.4.2020.05.11.14.53.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 14:51:23 -0700 (PDT)
-Received: (nullmailer pid 10023 invoked by uid 1000);
-        Mon, 11 May 2020 21:51:22 -0000
-Date:   Mon, 11 May 2020 16:51:22 -0500
+        Mon, 11 May 2020 14:53:45 -0700 (PDT)
+Received: (nullmailer pid 13339 invoked by uid 1000);
+        Mon, 11 May 2020 21:53:43 -0000
+Date:   Mon, 11 May 2020 16:53:43 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     linux-pm@vger.kernel.org, nm@ti.com, saravanak@google.com,
-        rjw@rjwysocki.net, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, vincent.guittot@linaro.org,
-        vireshk@kernel.org, rnayak@codeaurora.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org, sibis@codeaurora.org,
-        robh+dt@kernel.org, jcrouse@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/7] dt-bindings: opp: Introduce opp-peak-kBps and
- opp-avg-kBps bindings
-Message-ID: <20200511215122.GA9964@bogus>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-2-georgi.djakov@linaro.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        linux-crypto@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCHv2 1/7] dt-bindings: crypto: Add TI SA2UL crypto
+ accelerator documentation
+Message-ID: <20200511215343.GA10123@bogus>
+References: <20200424164430.3288-1-t-kristo@ti.com>
+ <20200424164430.3288-2-t-kristo@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200424155404.10746-2-georgi.djakov@linaro.org>
+In-Reply-To: <20200424164430.3288-2-t-kristo@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Apr 2020 18:53:58 +0300, Georgi Djakov wrote:
-> From: Saravana Kannan <saravanak@google.com>
+On Fri, Apr 24, 2020 at 07:44:24PM +0300, Tero Kristo wrote:
+> From: Keerthy <j-keerthy@ti.com>
 > 
-> Interconnects often quantify their performance points in terms of
-> bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) to
-> allow specifying Bandwidth OPP tables in DT.
+> The Security Accelerator Ultra Lite (SA2UL) subsystem provides hardware
+> cryptographic acceleration for the following use cases:
 > 
-> opp-peak-kBps is a required property that replaces opp-hz for Bandwidth OPP
-> tables.
+> * Encryption and authentication for secure boot
+> * Encryption and authentication of content in applications
+>   requiring DRM (digital rights management) and
+>   content/asset protection
 > 
-> opp-avg-kBps is an optional property that can be used in Bandwidth OPP
-> tables.
+> SA2UL provides support for number of different cryptographic algorithms
+> including SHA1, SHA256, SHA512, AES, 3DES, and various combinations of
+> the previous for AEAD use.
 > 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> [t-kristo@ti.com: converted documentation to yaml]
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 > ---
-> v7:
-> * I have dropped Rob's Reviewed-by, because of the minor change below:
-> * In order to store the bandwidth values for multiple paths, the
-> opp-peak-kBps and opp-avg-kBps are now defined as arrays of integers,
-> instead of just integers.
-> * Improved wording (Viresh)
+>  .../devicetree/bindings/crypto/ti,sa2ul.yaml  | 76 +++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
 > 
-> v6: https://lore.kernel.org/r/20191207002424.201796-2-saravanak@google.com
-> 
->  Documentation/devicetree/bindings/opp/opp.txt | 20 ++++++++++++++++---
->  .../devicetree/bindings/property-units.txt    |  4 ++++
->  2 files changed, 21 insertions(+), 3 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml b/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
+> new file mode 100644
+> index 000000000000..27bb3a7e2b87
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/crypto/ti,sa2ul.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: K3 SoC SA2UL crypto module
+> +
+> +maintainers:
+> +  - Tero Kristo <t-kristo@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,j721e-sa2ul
+> +      - ti,am654-sa2ul
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    items:
+> +      - description: TX DMA Channel
+> +      - description: RX DMA Channel #1
+> +      - description: RX DMA Channel #2
+> +
+> +  dma-names:
+> +    items:
+> +      - const: tx
+> +      - const: rx1
+> +      - const: rx2
+> +
+> +  dma-coherent: true
+> +
+> +  "#address-cells":
+> +    const: 2
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  ranges:
+> +    description:
+> +      Address translation for the possible RNG child node for SA2UL
+> +
+> +patternProperties:
+> +  "^rng@[a-lf0-9]+$":
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+a-l?
+
+> +    type: object
+> +    description:
+> +      Child RNG node for SA2UL
+
+Does this child node have a binding?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - power-domains
+> +  - dmas
+> +  - dma-names
+> +  - dma-coherent
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +
+> +    main_crypto: crypto@4e00000 {
+> +        compatible = "ti,j721-sa2ul";
+> +        reg = <0x0 0x4e00000 0x0 0x1200>;
+> +        power-domains = <&k3_pds 264 TI_SCI_PD_EXCLUSIVE>;
+> +        dmas = <&main_udmap 0xc000>, <&main_udmap 0x4000>,
+> +               <&main_udmap 0x4001>;
+> +        dma-names = "tx", "rx1", "rx2";
+> +        dma-coherent;
+> +    };
+> -- 
+> 2.17.1
+> 
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
