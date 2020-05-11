@@ -2,92 +2,123 @@ Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B01EC54E8D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8764EC54E4B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6049420720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFE3206E6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 20:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731305AbgEKUFc (ORCPT
+        id S1731659AbgEKUZb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 16:05:32 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:49948 "EHLO
+        Mon, 11 May 2020 16:25:31 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49996 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729572AbgEKUFc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:05:32 -0400
+        with ESMTP id S1728283AbgEKUZb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 16:25:31 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9901C8030807;
-        Mon, 11 May 2020 20:05:29 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 22DA38030807;
+        Mon, 11 May 2020 20:25:29 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TaAw1Br-ho0e; Mon, 11 May 2020 23:05:29 +0300 (MSK)
-Date:   Mon, 11 May 2020 23:05:28 +0300
+        with ESMTP id fAOOpsCg5Nu4; Mon, 11 May 2020 23:25:27 +0300 (MSK)
+Date:   Mon, 11 May 2020 23:25:25 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
 CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        <soc@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Olof Johansson <olof@lixom.net>,
+        <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Boris Brezillon <bbrezillon@kernel.org>,
         Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
- <20200508111242.GH185537@smile.fi.intel.com>
+        <devicetree@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>,
+        <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: memory: Add Baikal-T1 L2-cache
+ Control Block binding
+Message-ID: <20200511202525.2qg472f5spkeajia@mobilestation>
+References: <20200306130731.938808030702@mail.baikalelectronics.ru>
+ <20200507230705.6468-1-Sergey.Semin@baikalelectronics.ru>
+ <20200507230705.6468-2-Sergey.Semin@baikalelectronics.ru>
+ <20200511153804.GA7015@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200508111242.GH185537@smile.fi.intel.com>
+In-Reply-To: <20200511153804.GA7015@bogus>
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
-> On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
-> > This array property is used to indicate the maximum burst transaction
-> > length supported by each DMA channel.
+On Mon, May 11, 2020 at 10:38:04AM -0500, Rob Herring wrote:
+> On Fri, 8 May 2020 02:07:03 +0300, Serge Semin wrote:
+> > There is a single register provided by the SoC system controller,
+> > which can be used to tune the L2-cache RAM up. It only provides a way
+> > to change the L2-RAM access latencies. So aside from "be,bt1-l2-ctl"
+> > compatible string the device node can be optionally equipped with the
+> > properties of Tag/Data/WS latencies.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Olof Johansson <olof@lixom.net>
+> > Cc: Boris Brezillon <bbrezillon@kernel.org>
+> > Cc: Paul Cercueil <paul@crapouillou.net>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: soc@kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v2:
+> > - Move driver to the memory subsystem.
+> > - Use dual GPL/BSD license.
+> > - Use single lined copyright header.
+> > - Move "allOf" restrictions to the root level of the properties.
+> > - Discard syscon compatible string and reg property.
+> > - The DT node is supposed to be a child of the Baikal-T1 system controller
+> >   node.
+> > ---
+> >  .../memory-controllers/baikal,bt1-l2-ctl.yaml | 59 +++++++++++++++++++
+> >  1 file changed, 59 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+> > 
 > 
-> > +  snps,max-burst-len:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +    description: |
-> > +      Maximum length of burst transactions supported by hardware.
-> > +      It's an array property with one cell per channel in units of
-> > +      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH (data-width) field.
-> > +    items:
-> > +      maxItems: 8
-> > +      items:
 > 
-> > +        enum: [4, 8, 16, 32, 64, 128, 256]
+> My bot found errors running 'make dt_binding_check' on your patch:
 > 
-> Isn't 1 allowed?
+> [nip] ...
+>
+> See https://patchwork.ozlabs.org/patch/1285665
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
+> 
 
-Burst length of 1 unit is supported, but in accordance with Data Book the MAX
-burst length is limited to be equal to a value from the set I submitted. So the
-max value can be either 4, or 8, or 16 and so on.
+The problem is due to an absent vendor prefix in the test kernel source tree
+environment. As I said in the cover-letter the new vendor prefix will be added
+in the framework of the next patchset:
+https://lkml.org/lkml/2020/5/6/1047
+
+Rob, please review that patchset first, merge in the corresponding patch from
+there and test this binding out then.
 
 -Sergey
 
-> 
-> > +        default: 256
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
