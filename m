@@ -4,87 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A91C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 22:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FE4C47255
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 22:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5F64206E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 22:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A4F206E6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 22:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589235827;
-	bh=PB7X/7iqZi9EnPJLEwX2aXz19tcZnl108oXOwniojk4=;
+	s=default; t=1589235919;
+	bh=Y5IYBjAv2oKyFLUXQHlgvPhtx0/8/xS0jgkUwY7Mn0s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KPNb+GewBYsdM0wMj7w9HpN/1hLgIyLBI2nOSgTd/XNBYbUbkmVxoP43cnYn5WFFf
-	 1BVniA8MsejO1qXG/Zy8zPGiY78bWPftcmjWuZC146PmVAex6SVisby5rVnDZPcx+P
-	 CLjE9TQp5pacbGiZdqOwoiU3lgLjiuyrD7GNUm04=
+	b=wqkBPF+2t9i93wdNH7uBv5tN1O2fXhPSuw0rD1/u8PH9D++INIfIk+03wIOXtev0+
+	 wm/2XIFo1Ir0CmmDPLWjHK3smawFYEaX6LCdieTFpvTmzQmsWcCJ9mpjGExulQ4Og3
+	 xoeHo+thw5Q1XcLrdZByYPzXeDLdeQ0A4WruauTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725877AbgEKWXr (ORCPT
+        id S1725881AbgEKWZT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 18:23:47 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:45450 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgEKWXr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 18:23:47 -0400
-Received: by mail-oo1-f68.google.com with SMTP id p123so1141499oop.12;
-        Mon, 11 May 2020 15:23:46 -0700 (PDT)
+        Mon, 11 May 2020 18:25:19 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42188 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgEKWZT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 18:25:19 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i13so16558988oie.9;
+        Mon, 11 May 2020 15:25:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zxe0EOA/XjsvCOYJGRvTEs/nb3qiG6nQGta6RrJq/Uw=;
-        b=EG71JIYEpOFSGCNU16DeBd9VCXlcMDRa9UE+R5iG1BNungU7q0i6FD+F858DoGPo2e
-         u7iJFAIW0jTNyBQBBgD222Kt8iafyPEIFGfHgg7W9rcE5iaptSLc2se88+5bkDfdmorr
-         jve2z7MHIITgS6P1MgkibEk8VKleOy60En6x/V3+uXawe0dgf4oZpxXiSSreiIrh/hLO
-         MQwEGPSl7Opt3vlrv75buEyYPM83u8lxBcabDKtWvK7hZnOre0FMoIbAngrPL+eWaBXs
-         mUv0tyOaKMke9nBwDdUIb1Meap2mHkU6kDVGPUEabTMy1T2kKCVMmhnMljObsvohTTp8
-         Nw5w==
-X-Gm-Message-State: AGi0PuZFhfrApLujmJvme0oKNCI1mMGWPPxA5Z2FYz3SAyhUK2AB0SbI
-        w/0NPo4qur6ZGQvIhAG2oQ==
-X-Google-Smtp-Source: APiQypLob/eP2oKEsV9pAwQJ50RcvSlTU8e85Wr858uT15YTqIwZKcW9krLHTwT1SrrSTo37eUE+gw==
-X-Received: by 2002:a4a:8c0e:: with SMTP id u14mr15209996ooj.72.1589235826324;
-        Mon, 11 May 2020 15:23:46 -0700 (PDT)
+        bh=N73zBrwIBmYpG8/mtE42ByaDIOPbOcw7oUrz+Oif3Eo=;
+        b=KsHC6pWVhMc3u3KWFX6jvW1WDMh8Z99+WwXbH+nd1H0NwcxlkOGUiAyWfut8HRBgsw
+         fnSiDI6tHI6C4iey8wn/5x1xm+cp4WX8hW5QOJ5y60tmADj+E3x4az0M2qwjcZSWRE7k
+         DryQVJ2UF2a+41suDkIzRyACs2Iiz2oqAp4u6JzsQV/ewwuDHyuHoRWljaAMnnSQrIGL
+         s9DtKpvmykO8Ai952V16B1MS3Wc38U4CJaCZCtHVOSXgY1dqwyTfaOvISWTyZSgspnLV
+         RZBC/IpqIw2DQFI1NmmYvo5fSwzKyB1dssmDpf57Sb4F6SqQyHr7MCSh2WiyxQpuSgWK
+         4hrQ==
+X-Gm-Message-State: AGi0PuYUELogYsDnM0NsPFePybKdj6FD2+izAS7FGsfy3F0UE+SqJgY8
+        mI00BkbEthsSOb+Jr8WRql9v0Kc=
+X-Google-Smtp-Source: APiQypIdxF+D8MOPQ2d/giDq1zA7n3B31P983KHIrpVlUv9jtqc3f9KpvrzKWtblGovXNsvgE8KCzA==
+X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr22304882oie.152.1589235918092;
+        Mon, 11 May 2020 15:25:18 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l24sm2959923otf.59.2020.05.11.15.23.45
+        by smtp.gmail.com with ESMTPSA id g94sm2982774otg.74.2020.05.11.15.25.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 15:23:45 -0700 (PDT)
-Received: (nullmailer pid 22894 invoked by uid 1000);
-        Mon, 11 May 2020 22:23:44 -0000
-Date:   Mon, 11 May 2020 17:23:44 -0500
+        Mon, 11 May 2020 15:25:17 -0700 (PDT)
+Received: (nullmailer pid 25383 invoked by uid 1000);
+        Mon, 11 May 2020 22:25:16 -0000
+Date:   Mon, 11 May 2020 17:25:16 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Add ENE KB3930 Embedded
- Controller binding
-Message-ID: <20200511222344.GA22834@bogus>
-References: <20200424221123.106527-1-lkundrak@v3.sk>
- <20200424221123.106527-2-lkundrak@v3.sk>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        heiko@sntech.de, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, airlied@linux.ie
+Subject: Re: [PATCH] dt-bindings: gpu: add power-domains #cooling-cells to
+ arm, mali-bifrost.yaml
+Message-ID: <20200511222516.GA25294@bogus>
+References: <20200425154037.21083-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200424221123.106527-2-lkundrak@v3.sk>
+In-Reply-To: <20200425154037.21083-1-jbx6244@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 25 Apr 2020 00:11:22 +0200, Lubomir Rintel wrote:
-> Add binding document for the ENE KB3930 Embedded Controller.
+On Sat, 25 Apr 2020 17:40:37 +0200, Johan Jonker wrote:
+> A test with the command below gives this error:
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> arch/arm64/boot/dts/rockchip/px30-evb.dt.yaml: gpu@ff400000:
+> '#cooling-cells', 'power-domains'
+> do not match any of the regexes: 'pinctrl-[0-9]+'
 > 
+> With the conversion to yaml it also filters things
+> in a node that are used by other drivers like
+> '#cooling-cells' and 'power-domains'
+> for Rockchip px30 gpu nodes,
+> so add them to 'arm,mali-bifrost.yaml'.
+> 
+> make ARCH=arm64 dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpu/
+> arm,mali-bifrost.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
-> Changes since v1:
-> - Addressed binding validation failure
-> 
->  .../devicetree/bindings/mfd/ene-kb3930.yaml   | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+>  Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
