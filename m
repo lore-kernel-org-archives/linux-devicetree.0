@@ -2,129 +2,92 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E53EC54E8E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9871FC54E8B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53023206A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78ED720714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgELJIF (ORCPT
+        id S1728085AbgELJQE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 05:08:05 -0400
-Received: from mga12.intel.com ([192.55.52.136]:40872 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbgELJIF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 05:08:05 -0400
-IronPort-SDR: C6eIVAzKrKUdAjWa4LxTUXAN9hAYi/2yMG73h0gScD+45i5hE4+CukNgg1veYTv7oM348Y0Zf4
- j/GaWXogP7tg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 02:08:05 -0700
-IronPort-SDR: tK8Y1hj8lywcychMAVWY2TQBVdiHUmt66zVihP/hHXEbPQEzpNav1j/mL8IDsfr+cdnbEG0t44
- teUKiXogRV6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,383,1583222400"; 
-   d="scan'208";a="265443794"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 12 May 2020 02:08:01 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jYQtQ-00694C-A8; Tue, 12 May 2020 12:08:04 +0300
-Date:   Tue, 12 May 2020 12:08:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200512090804.GR185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
- <20200508111242.GH185537@smile.fi.intel.com>
- <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
- <20200511210138.GN185537@smile.fi.intel.com>
- <20200511213531.wnywlljiulvndx6s@mobilestation>
+        Tue, 12 May 2020 05:16:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33106 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbgELJQE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 05:16:04 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id A85DB2A1F30
+Subject: Re: [PATCH 6/6] tty/sysrq: Add configurable handler to execute a
+ compound action
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        kernel@collabora.com
+References: <20200511135918.8203-1-andrzej.p@collabora.com>
+ <20200511135918.8203-7-andrzej.p@collabora.com>
+ <20200511162113.GC2221063@kroah.com> <20200511182928.GV89269@dtor-ws>
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Message-ID: <e286f6ae-e4cb-ab13-c652-daf91fe1af7a@collabora.com>
+Date:   Tue, 12 May 2020 11:15:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511213531.wnywlljiulvndx6s@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200511182928.GV89269@dtor-ws>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
-> On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
-> > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
-> > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
-> > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
-> > > > > This array property is used to indicate the maximum burst transaction
-> > > > > length supported by each DMA channel.
-> > > > 
-> > > > > +  snps,max-burst-len:
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > > > +    description: |
-> > > > > +      Maximum length of burst transactions supported by hardware.
-> > > > > +      It's an array property with one cell per channel in units of
-> > > > > +      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH (data-width) field.
-> > > > > +    items:
-> > > > > +      maxItems: 8
-> > > > > +      items:
-> > > > 
-> > > > > +        enum: [4, 8, 16, 32, 64, 128, 256]
-> > > > 
-> > > > Isn't 1 allowed?
-> > > 
-> > > Burst length of 1 unit is supported, but in accordance with Data Book the MAX
-> > > burst length is limited to be equal to a value from the set I submitted. So the
-> > > max value can be either 4, or 8, or 16 and so on.
-> > 
-> > Hmm... It seems you mistakenly took here DMAH_CHx_MAX_MULT_SIZE pre-silicon
-> > configuration parameter instead of runtime as described in Table 26:
-> > CTLx.SRC_MSIZE and DEST_MSIZE Decoding.
+Hi,
+
+W dniu 11.05.2020 o 20:29, Dmitry Torokhov pisze:
+> On Mon, May 11, 2020 at 06:21:13PM +0200, Greg Kroah-Hartman wrote:
+>> On Mon, May 11, 2020 at 03:59:18PM +0200, Andrzej Pietrasiewicz wrote:
+>>> Some userland might want to execute e.g. 'w' (show blocked tasks), followed
+>>> by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
+>>> upon a single magic SysRq. Or one might want to execute the famous "Raising
+>>> Elephants Is So Utterly Boring" action. This patch adds a configurable
+>>> handler, triggered with 'C', for this exact purpose. The user specifies the
+>>> composition of the compound action using syntax similar to getopt, where
+>>> each letter corresponds to an individual action and a colon followed by a
+>>> number corresponds to a delay of that many milliseconds, e.g.:
+>>>
+>>> ws:1000c
+>>>
+>>> or
+>>>
+>>> r:100eis:1000ub
+>>
+>> Cute, but why?  Who needs/wants this type of thing?
+
+Surely things that can be done in userspace should be done there.
+So we would envision an input daemon which reacts to a predefined
+combination of keys. That said, it is not unimaginable to think of
+userspace being dead enough (e.g. due to memory pressure) to be unable
+to complete such a compound action. In other words userspace not being
+able to do it is a good reason for putting the code in the kernel.
+
+Dmitry has given a use case where such a compound action is needed.
+
+Andrzej
+
 > 
-> No. You misunderstood what I meant. We shouldn't use a runtime parameters values
-> here. Why would we?
-
-Because what we describe in the DTS is what user may do to the hardware. In
-some cases user might want to limit this to 1, how to achieve that?
-
-Rob, is there any clarification that schema describes only synthesized values?
-Or i.o.w. shall we allow user to setup whatever hardware supports at run time?
-
-> Property "snps,max-burst-len" matches DMAH_CHx_MAX_MULT_SIZE
-> config parameter.
-
-Why? User should have a possibility to ask whatever hardware supports at run time.
-
-> See a comment to the "SRC_MSIZE" and "DEST_MSIZE" fields of the
-> registers. You'll find out that their maximum value is determined by the
-> DMAH_CHx_MAX_MULT_SIZE parameter, which must belong to the set [4, 8, 16, 32, 64,
-> 128, 256]. So no matter how you synthesize the DW DMAC block you'll have at least
-> 4x max burst length supported.
-
-That's true.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> On Chrome OS the first time user presses SysRq-X it will try to kill
+> chrome (and that will cause crash to get uploaded if user consented).
+> The 2nd time within 5 seconds the same combo is pressed, it will dump
+> blocked tasks in syslog and try to sync and then panic. On panic the
+> device will reboot, logs will be scraped from pstore, and uploaded for
+> analysis.
+> 
+> Thanks.
+> 
 
