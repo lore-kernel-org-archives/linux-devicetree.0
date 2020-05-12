@@ -2,113 +2,141 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE6EC54E4A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD418C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E45420733
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD5D206DD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:59:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eF4UZfPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgELJqF (ORCPT
+        id S1728416AbgELJ7J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 05:46:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50442 "EHLO
+        Tue, 12 May 2020 05:59:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726193AbgELJqF (ORCPT
+        by vger.kernel.org with ESMTP id S1725889AbgELJ7G (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 05:46:05 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF1AC061A0C;
-        Tue, 12 May 2020 02:46:05 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id BA06B2A1D4E
-Subject: Re: [PATCH 3/6] tty/sysrq: Allow configurable SysRq key
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, kernel@collabora.com
-References: <20200511135918.8203-1-andrzej.p@collabora.com>
- <20200511135918.8203-4-andrzej.p@collabora.com>
- <20200511180145.GU89269@dtor-ws>
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Message-ID: <51cd1a5d-70b8-de1f-cf9e-1c4182012ba5@collabora.com>
-Date:   Tue, 12 May 2020 11:46:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 05:59:06 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66848C061A0C
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 02:59:04 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id h26so10035609lfg.6
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 02:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WXd5QHwJ1tPi5716Xcmxn3FGS3giieue5uSgZlXtiWg=;
+        b=eF4UZfPdwxY2kcJ3SbBcXESksctSLMe0oyp3Dqb6rpox9rfOdE5TWSXlhLeZ7WVuJu
+         K9EZyurUt4GoHXQGQJ/s/OIEAI31LdtzoB4OLI3c504mIW9b3C07x0rNyN/WpEEkui5z
+         VayR7QZBrGhhSxZ7mnv/UaXebyvcd/obTk6ROY/uR8l1vWjvlXye4pt4sY7vBX1vTxHl
+         lQlCW8H2SUcm6avA6W8stsSGIosReXoSyNmTLwiN8IH+JEk8cfxsp0MNEE4UFeELbKri
+         KVXEW3tiDJ6y1cjGXzsEfdg4CZr29OfRHfERGPeFut8XyeYZP8PWMVEK0wlzjsF6ZOtf
+         WWuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WXd5QHwJ1tPi5716Xcmxn3FGS3giieue5uSgZlXtiWg=;
+        b=FP5y85sWBKd4DvJDJQ7ELcKSekIyAmtFHqsrWXLS1H1xqbOwjsJlTScJYM7imyjqKz
+         V5QR9iYbn8lTxjHjm9llIpJuRktqClohojMPmAt/wlvGN1pX4sBmbLAUT8cPrQ9JyORN
+         5RQDNIj8As3kG7R4tp/DyGuyY1L5UsDvryT8mhZg5tHl7/R7Nc6l0GE+HpFSVGsHXQl4
+         B0DplOkAd8lEmKqqVFOh9efli9MbX6oyiMb+UWyEag/MCcEWk8hrUE7ZI80z1TG1MwHj
+         O7c3UVVbw5P2jINbwosNC9EvqyQNQKIg+MQRBAHJ4e2Q65ggqR9esWrrtY50g5YsBuNW
+         wjLg==
+X-Gm-Message-State: AOAM533mmuYzUnu2cvZN5mEGGgmxb6ibx2n3BIctoh1qmmNAp4b8bgRI
+        CBke4pM7V0/X+9lqa6nQpR/D11wGD34jwd8kXjnWyA==
+X-Google-Smtp-Source: ABdhPJyBq7To18Sh0+GIDcFRF81NKkhoFYKeSr+78ZnK/tfcB+M6Xqf+HgiWU5Chhbq4xITdhpfrF18M/MgtiTWvtZ0=
+X-Received: by 2002:ac2:555b:: with SMTP id l27mr14203108lfk.170.1589277541973;
+ Tue, 12 May 2020 02:59:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200511180145.GU89269@dtor-ws>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200508134527.26555-1-etienne.carriere@linaro.org> <CAL_JsqJVaWDYZWwRwotSQyaL5bOugM3judxipS9oKveV3FdK8w@mail.gmail.com>
+In-Reply-To: <CAL_JsqJVaWDYZWwRwotSQyaL5bOugM3judxipS9oKveV3FdK8w@mail.gmail.com>
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+Date:   Tue, 12 May 2020 11:58:50 +0200
+Message-ID: <CAN5uoS8GzbFyQq=kjZuxNwBDJ8cn9q-sq8C=VLN5UWWD0HXWaA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: nvmem: stm32: new property for data access
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Etienne Carriere <etienne.carriere@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Hello Rob,
 
-W dniu 11.05.2020 o 20:01, Dmitry Torokhov pisze:
-> Hi Andrzej,
-> 
-> On Mon, May 11, 2020 at 03:59:15PM +0200, Andrzej Pietrasiewicz wrote:
->> There are existing machines which don't have SysRq key, e.g. chromebooks.
->> This patch allows configuring which key acts as SysRq. The value is passed
->> with sysrq's module parameter.
->>
->> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
->> ---
->>   drivers/tty/sysrq.c | 14 +++++++++++---
->>   1 file changed, 11 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
->> index 93202fc24308..ebad9799fdc0 100644
->> --- a/drivers/tty/sysrq.c
->> +++ b/drivers/tty/sysrq.c
->> @@ -604,6 +604,7 @@ EXPORT_SYMBOL(handle_sysrq);
->>   
->>   #ifdef CONFIG_INPUT
->>   static int sysrq_reset_downtime_ms;
->> +static unsigned short sysrq_key = KEY_SYSRQ;
->>   
->>   /* Simple translation table for the SysRq keys */
->>   static const unsigned char sysrq_xlate[KEY_CNT] =
->> @@ -735,10 +736,10 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
->>   
->>   		/* Simulate press and release of Alt + SysRq */
->>   		input_inject_event(handle, EV_KEY, alt_code, 1);
->> -		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
->> +		input_inject_event(handle, EV_KEY, sysrq_key, 1);
->>   		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
->>   
->> -		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
->> +		input_inject_event(handle, EV_KEY, sysrq_key, 0);
->>   		input_inject_event(handle, EV_KEY, alt_code, 0);
->>   		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
-> 
-> Unfortunately this means that if I connect my external keyboard to
-> chromebook SysRq there will stop working, which is not great. If we want
-> to support this we need to figure out how to make this handling
-> per-device.
 
-I see your point.
+On Tue, 12 May 2020 at 03:51, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, May 8, 2020 at 8:47 AM Etienne Carriere
+> <etienne.carriere@linaro.org> wrote:
+> >
+> > From: Etienne Carriere <etienne.carriere@st.com>
+> >
+> > Introduce boolean property st,non-secure-otp for OTP data located
+> > in a factory programmed area that only secure firmware can access
+> > by default and that shall be reachable from the non-secure world.
+> >
+> > Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+> > ---
+> >  .../bindings/nvmem/st,stm32-romem.yaml          | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
+> > index d84deb4774a4..c11c99f085d7 100644
+> > --- a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
+> > +++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
+> > @@ -24,6 +24,18 @@ properties:
+> >        - st,stm32f4-otp
+> >        - st,stm32mp15-bsec
+> >
+> > +patternProperties:
+> > +  "^.*@[0-9a-f]+$":
+> > +    type: object
+> > +
+> > +    properties:
+> > +      st,non-secure-otp:
+> > +        description: |
+> > +          This property explicits a factory programmed area that both secure
+> > +          and non-secure worlds can access. It is needed when, by default, the
+> > +          related area can only be reached by the secure world.
+> > +        type: boolean
+> > +
+> >  required:
+> >    - "#address-cells"
+> >    - "#size-cells"
+> > @@ -41,6 +53,11 @@ examples:
+> >        calib@22c {
+> >          reg = <0x22c 0x2>;
+> >        };
+> > +
+> > +      mac_addr@e4 {
+> > +        reg = <0xe4 0x8>;
+> > +        st,non-secure-otp;
+>
+> This fails validation. You need to drop 'additionalProperties' in nvmem.yaml.
 
-So what you envision is SysRq key being configured for each input device
-separately. I can see these problems:
+My apologies. I guess I did not test `dt_binding_check` on this change.
+I'll send a v2.
 
-- How to attach such a configuration information to each specific
-device instance? It is easy if done framework-wise, but gets messy
-if done per-device. And we are talking per-device rather than per-driver.
+Regards,
+Etienne
 
-- If a user has multiple USB keyboards connected (possibly through a cascade
-of hubs), how would they know which key is valid for which keyboard?
-
-Wouldn't it be better if such a piece of configuration were valid for the
-whole system instead of per-device?
-
-Andrzej
+>
+> Rob
