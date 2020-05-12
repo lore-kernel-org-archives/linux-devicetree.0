@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13B4C54E8F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A03CC54E8E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80358206D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97FE206D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="scW+/E3V"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lbhHhuyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbgELMyI (ORCPT
+        id S1729964AbgELMyV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 08:54:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51548 "EHLO
+        Tue, 12 May 2020 08:54:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729970AbgELMyI (ORCPT
+        by vger.kernel.org with ESMTP id S1730011AbgELMyR (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 08:54:08 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E5BC061A0E
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:54:06 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id h17so6342852wrc.8
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:54:06 -0700 (PDT)
+        Tue, 12 May 2020 08:54:17 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA43C05BD0D
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:54:13 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id i15so15191307wrx.10
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:54:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3LiHGYQJdrfKidREPKcP85nvhchSzlTD7vf2JY+btAU=;
-        b=scW+/E3VOhb7ANMkVGJAkt7I46OvXaM5bUd9N0yFWjWVfeIAu2lIjkgtUMGJUGqT2v
-         o87Z65cKvS6wBr1IJmeiic/ITKuZXfTMO3Lrvxc+/WHFSUoyB3/mx0JGmHF+vOoXEUs2
-         rHpa0IRoHt2Epz3mA1yq70MMy1zH25WqxYc0aOfgnhc7UqNR8SVfQ2uPac0T6QUdzCGs
-         PlYJ3NC9syl5LHu9dZstEPrZLF7cd70ILMfQDuoG1KDEUlQSpD7WVvDF3Yh7rF8t0Oc4
-         lnXedUVI+mIg2DOvSe5eL9UBRK16w9fSAzbzQ+nAG3nbu7hrkh8Fu5IvXKUNoKZCwCAN
-         4E/A==
+        bh=DiGkcP4eFfexy4SQNg7ufjBEY09YfamROxya/IRuOvI=;
+        b=lbhHhuyOPtBdd3q/gIrXbLMkzPLkug63EWPG7QItNwgksACc7MSj/9kF1UPQ8MLJqh
+         unxRTRIW1DyZxi2DdzBndiS1VPS62K39G9g8zOpKDjNfZbU47NFi6qoTXe1K9wkyrUS/
+         DlJJxWVA3GKMxyWwBnDpZwuudkuOYYk762HkMYAvvUaso/D+8paTno94nFhGa/kn3FlL
+         NcfHo42OmU9PCgj51w+Axe4g/w5EGoa69wsjmd0tSFkBF9ZCZpqaNqiD/+xJ8DDYSxbT
+         XzMtZEv2QGvk8VdHoxSUgZOr9n5N6drn6eUY8W0MFprKVglnYkSkBnDkYDwm0998PhHQ
+         uxlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3LiHGYQJdrfKidREPKcP85nvhchSzlTD7vf2JY+btAU=;
-        b=pPt9HIsLN7CuXIcVpREVi1uTJRJN/QiWC1fHd/e2FkAF4QMY39nHfjfOJmk1iM2VoP
-         Gxjbg1a/p6zleqqB449UOYHKhLR7xlsT7MCl+f+Vhv9kIokG7KVDoQz6IurWTUQykX95
-         QaZXKxK75gO4LNSjS9wJmQ7YLM2JBG8psi4AUttr9Ebxbk2weYeAmhei/QHCWCUo98tc
-         lxhtRgLJNouCVopDMizVeU4bf9N8EXxCNg6oA5ggLb/HXMYThPAuisEGwYzO2geXVrga
-         ZLONROD9NVm/v5LqzaWX906eEbHkGvAIhmkTSdSyCumGLTy4mk947WIxs2yrkhgBy+2R
-         IkEQ==
-X-Gm-Message-State: AGi0PuYrfT9NRl6ix7aVHVeLOkPdLacBL25m8G5/S+XOiyHOHCgvkser
-        yQfOFbOOmPIsGCbtsiGHFESobA==
-X-Google-Smtp-Source: APiQypLWnsIijAZkCoIPv0Yw0p6DgOwRj7KRO6OOZp0lKCb8xAu9CIukABYCZLAyYnm8VEBr1P0w2w==
-X-Received: by 2002:adf:b30f:: with SMTP id j15mr26775441wrd.394.1589288045298;
-        Tue, 12 May 2020 05:54:05 -0700 (PDT)
+        bh=DiGkcP4eFfexy4SQNg7ufjBEY09YfamROxya/IRuOvI=;
+        b=Kol5nHk1Hdcpru+2OxyiWMexiRrWQRwDjvN4h6jxZ0zBIiqxTWdzBe5S3l5ZuVckqM
+         CeXJotKyUTokveOKTBJFQQ3mpsiHnygNbpHizJ0+UBz8xSBtbMdx/GxwOCFzhfdNgJxW
+         I3268PXSD+ybwKG0LZc7T03mZ8lbYlIdaVVV7Jq+TqTR87gk4Hda4tEPsAMe6y8vKsGN
+         AsFOYchoCqw7b+qI+I/79IHmiVOeWtmbpJB42fCWVXiNdKQP7NXFMDszY/m9bHOb+95Y
+         sLGmFEXg/cvTaFyTklFgIvSYQRflUrZeKZGDfhBA3P0mjmFXBjS57rL2L2ILpkihZ8ct
+         UD7w==
+X-Gm-Message-State: AOAM532ea4LdxNpsmj2j7ryxq9MYNNMPTkl1MuNMMFuPaCO2rlXcen9v
+        rFsCTNCOqiDJGtyi8S75PMxisg==
+X-Google-Smtp-Source: ABdhPJxcybAIvGXBrRlxlNGIKrgxSDZXtYzJGmC8jFI2UV/YzTeoWr1beziqnC7jrJDlyfrzn/I/bQ==
+X-Received: by 2002:a5d:4491:: with SMTP id j17mr2147301wrq.41.1589288052058;
+        Tue, 12 May 2020 05:54:12 -0700 (PDT)
 Received: from localhost.localdomain (212-39-89-66.ip.btc-net.bg. [212.39.89.66])
-        by smtp.googlemail.com with ESMTPSA id n13sm2433938wrs.2.2020.05.12.05.54.03
+        by smtp.googlemail.com with ESMTPSA id n13sm2433938wrs.2.2020.05.12.05.54.09
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 05:54:04 -0700 (PDT)
+        Tue, 12 May 2020 05:54:11 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
         saravanak@google.com, sibis@codeaurora.org, mka@chromium.org
@@ -67,9 +67,9 @@ Cc:     robh+dt@kernel.org, rnayak@codeaurora.org,
         jcrouse@codeaurora.org, evgreen@chromium.org,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, georgi.djakov@linaro.org
-Subject: [PATCH v8 06/10] OPP: Update the bandwidth on OPP frequency changes
-Date:   Tue, 12 May 2020 15:53:23 +0300
-Message-Id: <20200512125327.1868-7-georgi.djakov@linaro.org>
+Subject: [PATCH v8 09/10] dt-bindings: interconnect: Add interconnect-tags bindings
+Date:   Tue, 12 May 2020 15:53:26 +0300
+Message-Id: <20200512125327.1868-10-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200512125327.1868-1-georgi.djakov@linaro.org>
 References: <20200512125327.1868-1-georgi.djakov@linaro.org>
@@ -80,47 +80,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-If the OPP bandwidth values are populated, we want to switch also the
-interconnect bandwidth in addition to frequency and voltage.
+From: Sibi Sankar <sibis@codeaurora.org>
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Add interconnect-tags bindings to enable passing of optional
+tag information to the interconnect framework.
+
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
 v8:
-* Picked reviewed-by tags.
+* New patch, picked from here:
+  https://lore.kernel.org/r/20200504202243.5476-10-sibis@codeaurora.org
 
- drivers/opp/core.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/interconnect/interconnect.txt        | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index a3dd0bc9b9f6..b4cc4b12d57b 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -808,7 +808,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 	unsigned long freq, old_freq, temp_freq;
- 	struct dev_pm_opp *old_opp, *opp;
- 	struct clk *clk;
--	int ret;
-+	int ret, i;
+diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+index 6f5d23a605b7..c1a226a934e5 100644
+--- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
++++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+@@ -55,6 +55,11 @@ interconnect-names : List of interconnect path name strings sorted in the same
+ 			 * dma-mem: Path from the device to the main memory of
+ 			            the system
  
- 	opp_table = _find_opp_table(dev);
- 	if (IS_ERR(opp_table)) {
-@@ -909,6 +909,17 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 			dev_err(dev, "Failed to set required opps: %d\n", ret);
- 	}
- 
-+	if (!ret && opp_table->paths) {
-+		for (i = 0; i < opp_table->path_count; i++) {
-+			ret = icc_set_bw(opp_table->paths[i],
-+					 opp->bandwidth[i].avg,
-+					 opp->bandwidth[i].peak);
-+			if (ret)
-+				dev_err(dev, "Failed to set bandwidth[%d]: %d\n",
-+					i, ret);
-+		}
-+	}
++interconnect-tags : List of interconnect path tags sorted in the same order as the
++		    interconnects property. Consumers can append a specific tag to
++		    the path and pass this information to the interconnect framework
++		    to do aggregation based on the attached tag.
 +
- put_opp:
- 	dev_pm_opp_put(opp);
- put_old_opp:
+ Example:
+ 
+ 	sdhci@7864000 {
