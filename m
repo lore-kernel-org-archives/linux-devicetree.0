@@ -2,103 +2,121 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB9AC54E4B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 06:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19828C54E8B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 07:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1F320733
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 06:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED37C206D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 07:03:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhsgIyTP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725823AbgELG73 convert rfc822-to-8bit (ORCPT
+        id S1726067AbgELHDo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 02:59:29 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50805 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbgELG73 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 02:59:29 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A607E20006;
-        Tue, 12 May 2020 06:59:24 +0000 (UTC)
-Date:   Tue, 12 May 2020 08:59:22 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
-        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-Subject: Re: [PATCH v4 04/10] mtd: rawnand: stm32_fmc2: cleanup
-Message-ID: <20200512085922.3fc3e4dd@xps13>
-In-Reply-To: <49c51a13-96a1-0241-f4d1-c5ff7d52921d@st.com>
-References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
-        <1588756279-17289-5-git-send-email-christophe.kerello@st.com>
-        <20200511223900.030fe5f4@xps13>
-        <49c51a13-96a1-0241-f4d1-c5ff7d52921d@st.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Tue, 12 May 2020 03:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbgELHDo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 03:03:44 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A3BC061A0C;
+        Tue, 12 May 2020 00:03:44 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t7so5006473plr.0;
+        Tue, 12 May 2020 00:03:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=mipxNW7wlMfxMGzhO28Zqov8GTbtGeGtVOGitUJWy1g=;
+        b=jhsgIyTPnDqRWSwbXSvTHyprY40KS9vAbW6rcrOxqvOdnjjSCNpBTwLTElgpNEzgCv
+         B/hU4Z8wkqrvGJHq59AS0U9JQ6yXrwGMFmB8kBkBvf7nXAqmNJ0jZaejbMa5GQZuvEBS
+         eLoZmX4dAQxHnMwTz0F++g+Q9cMlfwGAGLMmpOWVa6HNkUWlnh6e16A5ZPiiELLtULyY
+         z563mUjwWwpWancdRnp0L6fRRlwklxrRA5iRY5cvzd2FlBcT9lSknFeoiEuJJfdTgctn
+         X/bMM/ECf64aLI5IcgeQibHurIkmnmOFetTDvjvalW3B8d+rNzxbwXeZHB3ykoTPHH3C
+         BXeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mipxNW7wlMfxMGzhO28Zqov8GTbtGeGtVOGitUJWy1g=;
+        b=UFr7yaIu0YjZIBuRKLeuhVtj51nywKQxPcmurcM7ayCMbA3aq8ZC/QGhDRfzymoO9y
+         /Yl447E8IvjnUrOgYjbslZTYyZvYRA9P6adjABWMVH86X1b1VioJAmhPFsYhh7KnCZbq
+         n55YbyQDarYIL/5xAIOVxz1SQvfDphatVfSheNVUxChdNLnJdZoowIAXcPYY5l582h+g
+         jqzm8jGA38enQVLhauUbsPtHU2sInyiyy4cb8RoohInKCrwiOFTXw95adXWk+uAQHeVf
+         7wqMbdlyeVwHcfZOAs+BBa5JOqj/hbtUGpNVMLSWq4HCJFT7Tl8HOlKklQuA5OZU+N6o
+         7QpA==
+X-Gm-Message-State: AGi0PuanuOCLTGecuwhgUMTRhHkBvby+Vmsc0R4AjWCIt3IzcYcT91fb
+        s+E8bWpfya+feAs4pohjOYjdBK1zo/U=
+X-Google-Smtp-Source: APiQypKGhdYXmj/mC8uQ3bBGAeu+OpMtK+0m3u5lxy4OVl4GniR0xQaSDQxS0oHIcUIBNStrnMsqkg==
+X-Received: by 2002:a17:90a:db53:: with SMTP id u19mr25689708pjx.41.1589267023718;
+        Tue, 12 May 2020 00:03:43 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
+        by smtp.gmail.com with ESMTPSA id 62sm11016369pfu.181.2020.05.12.00.03.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 May 2020 00:03:43 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, thierry.reding@gmail.com,
+        sam@ravnborg.org, airlied@linux.ie, daniel@ffwll.ch,
+        mturquette@baylibre.com, sboyd@kernel.org
+Cc:     devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillon.minfei@gmail.com
+Subject: [PATCH v3 0/5] Enable ilitek ili9341 on stm32f429-disco board
+Date:   Tue, 12 May 2020 15:03:32 +0800
+Message-Id: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Christophe,
+From: dillon min <dillon.minfei@gmail.com>
 
-Christophe Kerello <christophe.kerello@st.com> wrote on Tue, 12 May
-2020 08:49:54 +0200:
+This patchset has following changes:
 
-> Hi Miquel,
-> 
-> On 5/11/20 10:39 PM, Miquel Raynal wrote:
-> > 
-> > Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
-> > 11:11:13 +0200:
-> >   
-> >> This patch renames functions and local variables.
-> >> This cleanup is done to get all functions starting by stm32_fmc2_nfc
-> >> in the FMC2 raw NAND driver when all functions will start by
-> >> stm32_fmc2_ebi in the FMC2 EBI driver.
-> >>
-> >> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>  
-> > 
-> > Applied to nand/next as well but for an unknown reason I had to do it
-> > by hand because the patch would not apply.
-> > 
-> > Thanks,
-> > Miquèl
-> >   
-> This is strange, I can apply this patch on my tree without any conflicts.
-> There is a compilation issue line 1301.
-> 
-> @@ -1302,44 +1298,45 @@ static void stm32_fmc2_write_data(struct nand_chip *chip, const void *buf,
-> 
->   	if (force_8bit && chip->options & NAND_BUSWIDTH_16)
->   		/* Reconfigure bus width to 16-bit */
-> -		stm32_fmc2_set_buswidth_16(fmc2, true);
-> +		stm32_fmc2_nfc_set_buswidth_16(nfc, true);
->   }
-> 
-> I will rebase on top of nand/next today to check that there is no issues with the driver.
+V3:
+    merge original tiny/ili9341.c driver to panel/panel-ilitek-ili9341.c
+    to support serial spi & parallel rgb interface in one driver.
+    update ilitek,ili9341.yaml dts binding documentation.
+    update stm32f429-disco dts binding
 
-I had to do some changes manually, maibe I missed this one, but I don't
-remember touching this helper.
+V2: 
+    verify ilitek,ili9341.yaml with make O=../linux-stm32 dt_binding_check
+    DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
+    ilitek,ili9341.yaml
 
-Anyway, I just dropped the two last patches of your series, please
-reba&se now on nand/next and just resend patches 4 and 5.
+V1:
+    add ili9341 drm panel driver
+    add ltdc, spi5 controller for stm32f429-disco
+    add ltdc, spi5 pin map for stm32f429-disco
+    add docs about ili9341
+    fix ltdc driver loading hang in clk set rate bug
 
-Also, while at it, would you mind changing the commit title to
-something more meaningful? "cleanup" is a bit vague and not very
-accurate. Maybe something like "Cosmetic change to use nfc instead of
-fmc2 where relevant".
+dillon min (5):
+  ARM: dts: stm32: Add pin map for ltdc, spi5 on stm32f429-disco board
+  dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+  ARM: dts: stm32: enable ltdc binding with ili9341 on stm32429-disco
+    board
+  clk: stm32: Fix stm32f429 ltdc driver loading hang in clk set rate.
+    keep ltdc     clk running after kernel startup
+  drm/panel: Add ilitek ili9341 driver
 
-Thanks,
-Miquèl
+ .../bindings/display/panel/ilitek,ili9341.yaml     |  68 ++
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |  67 ++
+ arch/arm/boot/dts/stm32f429-disco.dts              |  39 ++
+ drivers/clk/clk-stm32f4.c                          |   5 +-
+ drivers/gpu/drm/panel/Kconfig                      |  12 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 700 +++++++++++++++++++++
+ 7 files changed, 890 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+
+-- 
+2.7.4
+
