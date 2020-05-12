@@ -2,84 +2,167 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B542BCA90AF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB411C2D0F7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91B3D206CC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B08920722
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589301497;
-	bh=cphcUYST00oaRsfCQHAkJjxh25yMpbNWhWOsledJB8Q=;
+	s=default; t=1589301756;
+	bh=TlHW4sUWB+UQdhwy8c08XqJQzVn0h6BiRrfn0riWAi0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zMASjdAG9I1h60XNEvaekDFDRvoH0ZpwL0W7drYKt2lEsPUy8uwqOkKNM5x9qHSNY
-	 cQKr6IsdiOFTA2OJDxy/vAKuuzk0HEry79cdSsDqBr6VBkMHj1TTmC1w/gPX76NyVO
-	 LpEDbGJfMp9SNwrLOflKLhBj38Z5PsceVZ/hKq44=
+	b=F0CkSxulIMMPXLxX4TXlcgi8UbDWNnH7wT+a1Ro/BFxmi6cy84rtE0LVME4PpkTzl
+	 LhwRi4YPqH97BusiY5pvrk7GvtFY8V1U0/JR+xHoprWl8I8pXK6XTa71fr6b0WuH1w
+	 5e7273WXRfnyR01RYZ/dIKi+eve5eE9A+3+dCXEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbgELQiR (ORCPT
+        id S1725987AbgELQmg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 12:38:17 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37581 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgELQiR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 12:38:17 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r25so18774436oij.4;
-        Tue, 12 May 2020 09:38:15 -0700 (PDT)
+        Tue, 12 May 2020 12:42:36 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34162 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgELQmf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 12:42:35 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c12so17791388oic.1;
+        Tue, 12 May 2020 09:42:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KeYFuchHUV4oG06etMyeWZGVdFDkZmCFlBwg/KVFhKU=;
-        b=SAt1UeBxLzNYJdgUvd6eiGityBwAvJ+YoQgfTHv1Lz8w0FpF3UiUa3xaBrY2n6ZXlX
-         js3Iusop16pk3IniX7nlxX8NMm5S7Yowt4KbrvBJiI1+Baz9nXw+VyjdJWB/GE6NQRqM
-         Eq6Sx6gK8HWex7CcK/8g1wQwk2Eflq2SuOGFmjAfAxVMOpS/Ej7fURzlM1VUv5z0FTiR
-         0zW1aRfxyvnLeYg/ED1Wex6BFwd4rWhJaq2bbXZcVAQ/jQ5lG2i5Z89hM7W7GtFB+Ks3
-         VtTU4Xw7YUNbGWhMfFjFSDth6cimxrKnuMOYEc6bFIebXi1sZ8OHrxtMqLiJu6wrCIbV
-         ynNA==
-X-Gm-Message-State: AGi0PubTO3BSVoz/FgCzXCSCoh0aUs0R4u9fJB53B1zUlRyCnaxnvAM6
-        Um6OS9CTNKDNEWANJuCheA==
-X-Google-Smtp-Source: APiQypKIND1xo73jiriB4lL8f7Yv7R7T6ZKHMlotm4ARjozaBncOmDZy+ZFpBOhARLLZciwC/lXy8A==
-X-Received: by 2002:aca:3cc6:: with SMTP id j189mr20111395oia.137.1589301494954;
-        Tue, 12 May 2020 09:38:14 -0700 (PDT)
+        bh=t/zxT6QcAzvwsaSRHiVgR4FzAsz6oEzW+dxiDwnz3LY=;
+        b=V8oZ6EO7dn95giiU8SaXZLlPOdN2ZX1jm4pV1xsaV1+MnJelhdrjHP2gxhLeTokRON
+         u/fzuxCCUNMXj2UztB10MLvBDj/lKSD0HMD2zbcBFvmnDYv8O2oesHJc6nJihuAxuiZY
+         vpBAqjmG1+HKkH9Z65OzwsM8CU/RXroBD+5ntLIGZf8EJjQtHlOKn2+tWKcRIsOI3NnR
+         xc0L1HvZSS9mwvNTiNeaqWwAEGZBuDLPlPImS6AjMnJ2LJUczIS8ozna4DaGXhjMsRsh
+         LnvT8pZoYD9Uym9/mr5cJ8l34mdce9d4udub+dSImYCzmeqFYEOrbw/OGtNSgRasT95i
+         SZWg==
+X-Gm-Message-State: AGi0PuYBR0q2b+Ac+zjoHGWyqSs3nrT6QN8qwjABD9lEudSkxNFTPavx
+        SWclyFy3j0jWadIhrhUPSQ==
+X-Google-Smtp-Source: APiQypKnl8Q8RS5Ndc4MZqjXTedwdk2Q2Fe9QuS5IhFBnwb7YWQd+ESdSPYpBtyFypUbRpSr8flg2g==
+X-Received: by 2002:aca:ba05:: with SMTP id k5mr23382003oif.35.1589301754747;
+        Tue, 12 May 2020 09:42:34 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 34sm144510otq.67.2020.05.12.09.38.13
+        by smtp.gmail.com with ESMTPSA id c25sm3536777otp.50.2020.05.12.09.42.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 09:38:14 -0700 (PDT)
-Received: (nullmailer pid 12285 invoked by uid 1000);
-        Tue, 12 May 2020 16:38:13 -0000
-Date:   Tue, 12 May 2020 11:38:13 -0500
+        Tue, 12 May 2020 09:42:34 -0700 (PDT)
+Received: (nullmailer pid 18148 invoked by uid 1000);
+        Tue, 12 May 2020 16:42:33 -0000
+Date:   Tue, 12 May 2020 11:42:33 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     Xiubo.Lee@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, tiwai@suse.com, lgirdwood@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        festevam@gmail.com, timur@kernel.org, perex@perex.cz,
-        nicoleotsuka@gmail.com, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 3/3] ASoC: fsl_esai: Add new compatible string for imx8qm
-Message-ID: <20200512163813.GA12151@bogus>
-References: <cover.1588320655.git.shengjiu.wang@nxp.com>
- <307a82c80c27b807165e1f532dd9aecbad9b2eae.1588320656.git.shengjiu.wang@nxp.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     maz@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] dt-bindings: interrupt-controller: Add Loongson
+ HTVEC
+Message-ID: <20200512164233.GB12151@bogus>
+References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
+ <20200501092139.2988670-1-jiaxun.yang@flygoat.com>
+ <20200501092139.2988670-2-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <307a82c80c27b807165e1f532dd9aecbad9b2eae.1588320656.git.shengjiu.wang@nxp.com>
+In-Reply-To: <20200501092139.2988670-2-jiaxun.yang@flygoat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  1 May 2020 16:12:06 +0800, Shengjiu Wang wrote:
-> Add new compatible string "fsl,imx8qm-esai" in the binding document.
+On Fri, May 01, 2020 at 05:21:33PM +0800, Jiaxun Yang wrote:
+> Add binding for Loongson-3 HyperTransport Interrupt Vector Controller.
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  Documentation/devicetree/bindings/sound/fsl,esai.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../interrupt-controller/loongson,htvec.yaml  | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+> new file mode 100644
+> index 000000000000..547a80c89eba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,htvec.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Loongson-3 HyperTransport Interrupt Vector Controller
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
 
-Acked-by: Rob Herring <robh@kernel.org>
+Don't need this. It's already applied to any node named 
+'interrupt-controller'.
+
+> +
+> +description: |
+
+Can drop '|' if you don't need formatting.
+
+> +  This interrupt controller is found in the Loongson-3 family of chips for
+> +  receiving vectorized interrupts from PCH's interrupt controller.
+> +
+> +properties:
+> +  compatible:
+> +    const: loongson,htvec-1.0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 4
+> +    description: |
+> +      Four parent interrupts that receive chained interrupts.
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+
+Add:
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    htvec: interrupt-controller@1fb000080 {
+
+Unit-address doesn't match reg.
+
+> +      compatible = "loongson,htvec-1.0";
+> +      reg = <0xfb000080 0x40>;
+> +      interrupt-controller;
+> +      #interrupt-cells = <1>;
+> +
+> +      interrupt-parent = <&liointc>;
+> +      interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
+> +                    <25 IRQ_TYPE_LEVEL_HIGH>,
+> +                    <26 IRQ_TYPE_LEVEL_HIGH>,
+> +                    <27 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +...
+> -- 
+> 2.26.0.rc2
+> 
