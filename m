@@ -2,134 +2,107 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D321C54E4A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 15:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A228C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 15:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D087206D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 15:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37AD420673
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 15:07:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJ9H2eVu"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ccmZgk3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbgELPAm (ORCPT
+        id S1728047AbgELPHD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 11:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbgELPAm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 11:00:42 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564F8C061A0C;
-        Tue, 12 May 2020 08:00:42 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k19so5486889pll.9;
-        Tue, 12 May 2020 08:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VGLGSTcVeBfvS+Xc677uifViDuw5g0GT7tsHPQPjttc=;
-        b=IJ9H2eVuU84NMXD4CyvIoc6owHhQmsSaPlKl992UWfp0tMGpIC3djlIdJaFIz4iXwi
-         PQYKPF51TWF/8pY0AQYUMzhcg/sdxu6K2KORfpmO6NX7MwdkasgemrArk11tTa/ApE3g
-         vgQ/UlK1SnREpjm9AU5lBPsALjJakDjJodcJi0veiaqVDkaKRZQbZSkbtxsa0OP+EeeM
-         niVY19TdLl8d4eGgaLLTWdmOwv3LnJbUwV5mAGNMOMf76bF4W/51aXqvC5LuiYiCJ/u5
-         Eebt4vlE2WBb61lCGFtxym604edWYz1z+0Zntky69YpqgBT3G2235aUY3VpOhm/5Ukb3
-         3TsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=VGLGSTcVeBfvS+Xc677uifViDuw5g0GT7tsHPQPjttc=;
-        b=FN5VpwnwJ6qTdBpf81TnSxabsTvoFh4U/+g9C0se2XHIcH2qkYJXsh/8rwmv4PXQj9
-         5EUkavSk7RWMVSuGTvmHRc0YD8io//YgNr89JltXRFxCy6ihaRxBY/8HmLYUD+jvl2jP
-         zwnFrl8ADYKRTVLB7p08gyFn77KvsZeQqGv3B5/O+6ofOcrjsiurY1AhKhhDrebDH4Ei
-         7jn0ojH2CZv+QFh/1TLvJUbxFuQfOq4fBXecmfxbbTrF13dI6lrMQ05QRZ6hipK+ql42
-         0CU9yAPT8MfuDFV+aRcnG60czNdfRiqD30kX9Wb3jxqrarpC2E9JwpySFg3r5i1ysC5F
-         AReg==
-X-Gm-Message-State: AGi0PuZABKMGQ9KA/oUxZB+luSumSFLWQx6kRb0ZWy5Owe73PTqxxjJo
-        m3iLufASVkOSBv7N+fKnZX9xmw4bnr0=
-X-Google-Smtp-Source: APiQypIJjeyHdHpiwG+qHKfYSDOn/QCTXWSDO6Fj0NctMoV9b4jaJNvOzuh/NAYaxIW1Kkt4kKtpDw==
-X-Received: by 2002:a17:90a:e38c:: with SMTP id b12mr30629444pjz.102.1589295641575;
-        Tue, 12 May 2020 08:00:41 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id c2sm8359779pgj.93.2020.05.12.08.00.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 08:00:40 -0700 (PDT)
-From:   Al Cooper <alcooperx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v10 1/5] usb: xhci: Change the XHCI link order in the Makefile
-Date:   Tue, 12 May 2020 11:00:15 -0400
-Message-Id: <20200512150019.25903-2-alcooperx@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200512150019.25903-1-alcooperx@gmail.com>
-References: <20200512150019.25903-1-alcooperx@gmail.com>
+        Tue, 12 May 2020 11:07:03 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:59786 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726610AbgELPHC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 11:07:02 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CF1em8023749;
+        Tue, 12 May 2020 10:06:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=D95AZ6qA+hhDwF46fVfOwPe7tq0kH/15sfSGGHy9jgU=;
+ b=ccmZgk3pRYxdkno8BKHE8OcQdAoymYQY3W6ZE7F/fujlj20yQPrwh4pP2dtjiJkXcutE
+ x+GxD06zsgc6CaVgBMTIOvF/Z6/XxdenPHp/+kRBpi6AO33AokRqx2+LpmiIvr6QOXYy
+ XBB2m8pf6cYvpRCP0W9crGdAHax63YcmEK+YB4huDNu+PXAc91G22eljg2qrEAbUS3Q+
+ NksC13mFuPm+kHLn6A6FQw71M7XKBvVZ2FsPiM/+vA0tfR1Vo/vY3cp1/x0bS+1zD3o6
+ F812NA1qNYa4cERbBZqJ1cDHMwgm236TKA1n4VQCYvE1Ghzc6tM9C/rErlJRKhJ+5gs5 Yw== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 30wrxq5009-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 12 May 2020 10:06:37 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 12 May
+ 2020 16:06:36 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Tue, 12 May 2020 16:06:36 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 73E972C6;
+        Tue, 12 May 2020 15:06:36 +0000 (UTC)
+Date:   Tue, 12 May 2020 15:06:36 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <lee.jones@linaro.org>, <broonie@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <jdelvare@suse.com>,
+        <linux@roeck-us.net>, <linus.walleij@linaro.org>,
+        <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v2 5/5] mfd: lochnagar: Move binding over to dtschema
+Message-ID: <20200512150636.GD71940@ediswmail.ad.cirrus.com>
+References: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
+ <20200504154757.17519-5-ckeepax@opensource.cirrus.com>
+ <20200512134949.GA14057@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200512134949.GA14057@bogus>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ bulkscore=0 priorityscore=1501 suspectscore=0 spamscore=0 clxscore=1015
+ malwarescore=0 mlxscore=0 mlxlogscore=986 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005120114
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
-on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
-devices and OHCI handles <2.0 devices. Currently the Makefile
-has XHCI linking at the bottom which will result in the XHIC driver
-initalizing after the EHCI and OHCI drivers and any installed 3.0
-device will be seen as a 2.0 device. Moving the XHCI linking
-above the EHCI and OHCI linking fixes the issue.
+On Tue, May 12, 2020 at 08:49:49AM -0500, Rob Herring wrote:
+> On Mon, May 04, 2020 at 04:47:57PM +0100, Charles Keepax wrote:
+> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > ---
+> > 
+> > Changes since v1:
+> >  - Removed contains on the compatible
+> >  - Moved all sub-nodes into here directly only using $ref for properties
+> >  - As the regulator binding only contained subnodes that file is now deleted
+> >  - Removed some pointless descriptions
+> > 
+> > A little nervous about the amount of clock and regulator stuff this
+> > pulls into the MFD file, any comments on that welcome? Would it be worth
+> > looking into something along the lines of the definitions stuff to keep
+> > some of that out in the clock and regulator bindings?
+> 
+> It's fine like this. Other than my comments on patch 3, looks fine. 
+> Respin and I'll apply.
+> 
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/usb/host/Makefile | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+Groovy thanks for the reviews.
 
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index b191361257cc..a7f0b8ff7179 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -37,6 +37,16 @@ endif
- 
- obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
- 
-+# NOTE: BRCMSTB systems require that xhci driver be linked before the
-+# ehci/ohci drivers because they share a port and need the XHCI driver
-+# to come up first to properly enumerate 3.0 devices.
-+obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
-+obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-+obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
-+obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
-+obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
-+obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
-+
- obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
- obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
- obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
-@@ -69,12 +79,6 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
- 
- obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
- obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
--obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
--obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
--obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
--obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
--obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
--obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
- obj-$(CONFIG_USB_SL811_HCD)	+= sl811-hcd.o
- obj-$(CONFIG_USB_SL811_CS)	+= sl811_cs.o
- obj-$(CONFIG_USB_U132_HCD)	+= u132-hcd.o
--- 
-2.17.1
-
+Thanks,
+Charles
