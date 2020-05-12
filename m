@@ -2,98 +2,99 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6262CC54E8B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60671C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC5420736
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589288205;
-	bh=cPsBmJJP+6Qh3Vr+QAI5Nhxpl2klgoaErTdBEfzdb3A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YhO7EhMydYfCO+DSFiAz3Y3K2f4N3pctVpwsH3Z+1j2j65Ph6nFFowEvTr5g3LOoV
-	 Gd6YpLv6rNpVWEFAvFw6HZBMS9aEf6QU6yZqi4hAu21bOb3iuu+FhfWoY05MCDHTr0
-	 YjIFPcr9q18Ell0/G2gozS2nmf01E+WX4v3HId6Y=
+	by mail.kernel.org (Postfix) with ESMTP id 333CA206CC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:07:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ikt+LOB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbgELM4o (ORCPT
+        id S1727783AbgELNHM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 08:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgELM4o (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 08:56:44 -0400
-Received: from localhost (p54B332DE.dip0.t-ipconnect.de [84.179.50.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 850FC206D3;
-        Tue, 12 May 2020 12:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589288204;
-        bh=cPsBmJJP+6Qh3Vr+QAI5Nhxpl2klgoaErTdBEfzdb3A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ibwhBXiYDwV9QFOHLmZFFBH+jOyNvDQbE8vRWjcP+eN8gp8AOyC1qSCKJpB9zTxGx
-         DRc3mHF0NjU/ZBpacfA5XfGyN4eKkhAOeZJd5eqw2s2EmcpMAInkBdj+57TdXoB/GZ
-         EoTOiondY6Zr0rtu0nfGAPKtskQaTFYXKkH/kgYw=
-Date:   Tue, 12 May 2020 14:56:41 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: eeprom: at24: Fix list of page sizes for
- writing
-Message-ID: <20200512125641.GA13516@ninjato>
-References: <20200512122450.20205-1-geert+renesas@glider.be>
+        Tue, 12 May 2020 09:07:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725923AbgELNHM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 09:07:12 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED0E7C061A0E
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 06:07:11 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id s9so10508270lfp.1
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 06:07:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SYjGwEqwJi4TpJx+ELjK3LcgOeRjatzjbSESVJciwRM=;
+        b=ikt+LOB0DjgrTfnRpL4B2H5QWFHR2SH8zrWJJEuOs3OvpZJ5CtIyIqyhDIkxgVAzPT
+         hR6y7D+ifa6SEIa2dpKznZ6SkxtuSwXCqnIkxPbj7pfACVVvKx9MDjTCRoMhvcTgrUmj
+         gCCuqfO4KhpygE+aCGaEUPI90nzxzmqTSz6ot7paRvhESEhZrtjHj+gfekmBZvjCasxC
+         vQEA1SJfjCge0QUVukY7MFfSt8KOgZIAm35FryDwf7XS/95nXuKZqgdWUs9DE7i9ab1O
+         Mpd+gXHEZKTHktPRVBD+xGi6bjW1tdcmWu7b44IQAP0sVz6650JxnFMIe7p0+tO6dhmk
+         GciQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SYjGwEqwJi4TpJx+ELjK3LcgOeRjatzjbSESVJciwRM=;
+        b=iAasnjXr4YSqJ9HxlYNokn0qo4agJeJaoSTBpLxLDkNyTxKAXKWqzY461ooclfuEWO
+         ZROtNT9TYW7mfq9PRMJ/I32ex5Kvzmb/iktBLggKMoXOmBl3P6sJSd772ogABCWV5/OY
+         h97SYelN2I99VbdDMFzVefNEhXlMMo9Mk6DTo/2a9XsjRSn2GevgYeEDYA6yNZY0Gn+o
+         IiJ/NKg4k2eSHQHrsw0oJrkp39+0WRaHXTSSIL1gjNq4rSh0kpHh9X7CMRf26HWHW1kR
+         FgVwnQqVonMIQx8TARso2WmdWSS93H8b4D4LTCn5Li3Mi/0Ui+di2x+9CTpSUg33HWuu
+         C0zQ==
+X-Gm-Message-State: AOAM530M+wE1miXFGndHOfimtvBznWicxplWAOD+fZgBE8IKsvkVwuz4
+        TOpfKWFkc0PzR+MyAahBczZ4578r/a5xRET7h6LbzA==
+X-Google-Smtp-Source: ABdhPJx7a9QY2omkKlC/zH0ZVmVYVJmI9DQqmgoG//tzBF2K3jVYW0SFtjof8OK67Ca+0O0KBL6AoUAH3Zy6ftjdu6M=
+X-Received: by 2002:ac2:5e70:: with SMTP id a16mr14689641lfr.77.1589288830292;
+ Tue, 12 May 2020 06:07:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
-Content-Disposition: inline
-In-Reply-To: <20200512122450.20205-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200504154757.17519-1-ckeepax@opensource.cirrus.com> <20200504154757.17519-3-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20200504154757.17519-3-ckeepax@opensource.cirrus.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 12 May 2020 15:06:59 +0200
+Message-ID: <CACRpkdYSzdUgZgA6jtdP3K9bWTF=-whkQCr=bKkr_Z0VXywdkA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] pinctrl: lochnagar: Move binding over to dtschema
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, patches@opensource.cirrus.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, May 4, 2020 at 5:48 PM Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
 
---ZGiS0Q5IWpPtfppv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>
+> Changes since v1:
+>  - Moved sub-node into MFD file leaving just the properties in here
+>  - Removed contains on the compatible
+>  - Added a required -pins suffix for pinmux/ctrl nodes
+>  - Added some extra blank lines for readability
 
-On Tue, May 12, 2020 at 02:24:47PM +0200, Geert Uytterhoeven wrote:
-> "258" is an odd power-of-two ;-)
+Backed out v1 since I see there is some discussion on these still (sorry for
+missing this).
 
-Geez, you got two additional for free, Geert ;)
+I'll hold this off until there is consensus.
 
-> Obviously this is a typo, and the intended value is "256".
-
-Obviously.
-
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-
---ZGiS0Q5IWpPtfppv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl66nQUACgkQFA3kzBSg
-KbYQ9BAAsuHP4dwKs2aleW0gb7U53oIvcbFwy0rSjBmVkldgihRfBx5Tu2hI9Lfb
-Whxarj5wOBXk/WPiT1ReJ0NW22S5QcXuHp8oWeqDAWHoe0s1Yx5X2qa88/xA1PzL
-w9DL3TdufvugzDjYgnEqyM+LuEklkma1HGOU8QVYD2s/ol2KtKM4k0v9y10TnLPr
-nw9vJFEd3CMC3Dnw+dh121r+LjQ0mv8+HpwRyLoTB8IRs/2vhryb0795VeFCZgYs
-WxuakNEDDoraOwehY8cQ9m7nkQFRMD3h6LpbQbiWBih+lflcsl9ZcOarGroo0gRz
-G3Wr3pdXR5+ZaGLzAysKfGTHtUGMMqhmaL4KpXJhI1EjHCmr1jm960Dc027fvc4l
-itYNzKdJYIuaxUU/sQmKowP0kd68iGl2M5IBy9snHEfjDqkyTT3aiJZ8vsjGKMuT
-hfwNHlU7FBTeJVo0zVgm7zeFxMLnOsC1pWrswyaVKBSpBtluRATKXEXExp7RJyC3
-E/xQgpmK/AiPLT/5BYMDdfb0b3AzBS3GRN2nk4pNMvxinXVQZYyce9AqWmTi4+UC
-+74RI0yqaFWdDNwdi5uPOEGcmQu+xJpxgM49xzXkSum2v0RbGFbH5wQVbjwAHMi/
-KdLM8OMTz6oibAytH3W3TBeSbp7HSmw3hICNNcoYECpP/8zhMIA=
-=Tjw4
------END PGP SIGNATURE-----
-
---ZGiS0Q5IWpPtfppv--
+Yours,
+Linus Walleij
