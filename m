@@ -5,26 +5,26 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5191FC54E4A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5919C54E8F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28E3D206F5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA92A2078A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbgELOPn (ORCPT
+        id S1730338AbgELOPq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 10:15:43 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:48550 "EHLO
+        Tue, 12 May 2020 10:15:46 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:48554 "EHLO
         herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727859AbgELOPn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 10:15:43 -0400
+        with ESMTP id S1730219AbgELOPq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 10:15:46 -0400
 Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 04CEFKPD011258;
-        Tue, 12 May 2020 17:15:20 +0300
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 04CEF9ug011240;
+        Tue, 12 May 2020 17:15:09 +0300
 Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 23E4A639BE; Tue, 12 May 2020 17:15:20 +0300 (IDT)
+        id 75925639BE; Tue, 12 May 2020 17:15:09 +0300 (IDT)
 From:   amirmizi6@gmail.com
 To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
         oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
@@ -37,10 +37,11 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
         Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
         shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v8 6/8] verify TPM_STS register is valid after  locality request
-Date:   Tue, 12 May 2020 17:14:29 +0300
-Message-Id: <20200512141431.83833-7-amirmizi6@gmail.com>
+        Amir Mizinski <amirmizi6@gmail.com>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>
+Subject: [PATCH v8 1/8] tpm: tpm_tis: Make implementation of read16, read32 and write32 optional
+Date:   Tue, 12 May 2020 17:14:24 +0300
+Message-Id: <20200512141431.83833-2-amirmizi6@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200512141431.83833-1-amirmizi6@gmail.com>
 References: <20200512141431.83833-1-amirmizi6@gmail.com>
@@ -53,41 +54,144 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Amir Mizinski <amirmizi6@gmail.com>
 
-Issue could result when the TPM does not update TPM_STS register after
-a locality request (TPM_STS Initial value = 0xFF) and a TPM_STS register
-read occurs (tpm_tis_status(chip)).
+Only tpm_tis can use memory-mapped I/O, which is truly mapped into
+the kernel's memory space. Therefore, using ioread16/ioread32/iowrite32
+turns into a straightforward pointer dereference.
+Every other driver requires more complicated operations to read more than
+one byte at a time and will just fall back to read_bytes/write_bytes.
+Therefore, move this common code out of tpm_tis_spi and into tpm_tis_core
+so that it is used automatically when low-level drivers do not implement
+the specialized methods.
 
-Checking the next condition("if ((status & TPM_STS_COMMAND_READY) == 0)"),
-the status will be at 0xFF and will be considered, wrongly, in "Ready"
-state (by checking only one bit). However, at this moment the TPM is, in
-fact, in "Idle" state and remains in "Idle" state because
-"tpm_tis_ready(chip);" was not executed.
-
+Co-developed-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+Signed-off-by: Alexander Steffen <Alexander.Steffen@infineon.com>
 Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- drivers/char/tpm/tpm_tis_core.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/char/tpm/tpm_tis_core.h     | 38 +++++++++++++++++++++++++++++++---
+ drivers/char/tpm/tpm_tis_spi_main.c | 41 -------------------------------------
+ 2 files changed, 35 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index f71ecd8..196cd28 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -222,8 +222,14 @@ static int request_locality(struct tpm_chip *chip, int l)
- 	} else {
- 		/* wait for burstcount */
- 		do {
--			if (check_locality(chip, l))
-+			if (check_locality(chip, l)) {
-+				if (wait_for_tpm_stat_result(chip, TPM_STS_GO,
-+							     0, chip->timeout_c,
-+							     &priv->int_queue,
-+							     false) < 0)
-+					return -ETIME;
- 				return l;
-+			}
- 			tpm_msleep(TPM_TIMEOUT);
- 		} while (time_before(jiffies, stop));
- 	}
+diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+index 7337819..d06c65b 100644
+--- a/drivers/char/tpm/tpm_tis_core.h
++++ b/drivers/char/tpm/tpm_tis_core.h
+@@ -122,13 +122,35 @@ static inline int tpm_tis_read8(struct tpm_tis_data *data, u32 addr, u8 *result)
+ static inline int tpm_tis_read16(struct tpm_tis_data *data, u32 addr,
+ 				 u16 *result)
+ {
+-	return data->phy_ops->read16(data, addr, result);
++	__le16 result_le;
++	int rc;
++
++	if (data->phy_ops->read16)
++		return data->phy_ops->read16(data, addr, result);
++
++	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
++				       (u8 *)&result_le);
++	if (!rc)
++		*result = le16_to_cpu(result_le);
++
++	return rc;
+ }
+ 
+ static inline int tpm_tis_read32(struct tpm_tis_data *data, u32 addr,
+ 				 u32 *result)
+ {
+-	return data->phy_ops->read32(data, addr, result);
++	__le32 result_le;
++	int rc;
++
++	if (data->phy_ops->read32)
++		return data->phy_ops->read32(data, addr, result);
++
++	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
++				       (u8 *)&result_le);
++	if (!rc)
++		*result = le32_to_cpu(result_le);
++
++	return rc;
+ }
+ 
+ static inline int tpm_tis_write_bytes(struct tpm_tis_data *data, u32 addr,
+@@ -145,7 +167,17 @@ static inline int tpm_tis_write8(struct tpm_tis_data *data, u32 addr, u8 value)
+ static inline int tpm_tis_write32(struct tpm_tis_data *data, u32 addr,
+ 				  u32 value)
+ {
+-	return data->phy_ops->write32(data, addr, value);
++	__le32 value_le;
++	int rc;
++
++	if (data->phy_ops->write32)
++		return data->phy_ops->write32(data, addr, value);
++
++	value_le = cpu_to_le32(value);
++	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
++					(u8 *)&value_le);
++
++	return rc;
+ }
+ 
+ static inline bool is_bsw(void)
+diff --git a/drivers/char/tpm/tpm_tis_spi_main.c b/drivers/char/tpm/tpm_tis_spi_main.c
+index d1754fd..95fef9d 100644
+--- a/drivers/char/tpm/tpm_tis_spi_main.c
++++ b/drivers/char/tpm/tpm_tis_spi_main.c
+@@ -152,44 +152,6 @@ static int tpm_tis_spi_write_bytes(struct tpm_tis_data *data, u32 addr,
+ 	return tpm_tis_spi_transfer(data, addr, len, NULL, value);
+ }
+ 
+-int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
+-{
+-	__le16 result_le;
+-	int rc;
+-
+-	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
+-				       (u8 *)&result_le);
+-	if (!rc)
+-		*result = le16_to_cpu(result_le);
+-
+-	return rc;
+-}
+-
+-int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
+-{
+-	__le32 result_le;
+-	int rc;
+-
+-	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
+-				       (u8 *)&result_le);
+-	if (!rc)
+-		*result = le32_to_cpu(result_le);
+-
+-	return rc;
+-}
+-
+-int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
+-{
+-	__le32 value_le;
+-	int rc;
+-
+-	value_le = cpu_to_le32(value);
+-	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
+-					(u8 *)&value_le);
+-
+-	return rc;
+-}
+-
+ int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
+ 		     int irq, const struct tpm_tis_phy_ops *phy_ops)
+ {
+@@ -205,9 +167,6 @@ int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
+ static const struct tpm_tis_phy_ops tpm_spi_phy_ops = {
+ 	.read_bytes = tpm_tis_spi_read_bytes,
+ 	.write_bytes = tpm_tis_spi_write_bytes,
+-	.read16 = tpm_tis_spi_read16,
+-	.read32 = tpm_tis_spi_read32,
+-	.write32 = tpm_tis_spi_write32,
+ };
+ 
+ static int tpm_tis_spi_probe(struct spi_device *dev)
 -- 
 2.7.4
 
