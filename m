@@ -2,70 +2,103 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0661BC2D0F7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D9CCA90AF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E25E320736
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DCA7206F5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589300979;
+	bh=3d503rEnrQlmVr866ZPQoKe91PbqWA5B0K8eCi6d+h8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CWMn4G4L22KVFEyF6jfu3aBzUFwm3FJd/4IQetGJjB/2qMCofvVs1k2Hl5fLvqQND
+	 5zQmxZqDidLIMo+YcC0p+7SVE0R3bj5qnYn8WSrCSi8TWAKpz2E6vjDImrm2i90iOn
+	 sbhyvTsnRZbEt+6iycfkB9XSYhVDjEw9WJM4cry0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgELQDE (ORCPT
+        id S1727096AbgELQ3i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 12:03:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46808 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 12:29:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgELQDE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 12:03:04 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1725554AbgELQ3i (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 12:29:38 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66EDF2054F;
-        Tue, 12 May 2020 16:03:02 +0000 (UTC)
-Date:   Tue, 12 May 2020 12:03:01 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
-Message-ID: <20200512120301.44ed15fe@gandalf.local.home>
-In-Reply-To: <20200512155207.GF17734@linux-b0ei>
-References: <20200506211523.15077-1-keescook@chromium.org>
-        <20200512131655.GE17734@linux-b0ei>
-        <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
-        <20200512155207.GF17734@linux-b0ei>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55A23206CC;
+        Tue, 12 May 2020 16:29:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589300977;
+        bh=3d503rEnrQlmVr866ZPQoKe91PbqWA5B0K8eCi6d+h8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TzkHsJD9TKt1uTGXxBVK8qQwaO2x5Vkdd6IgJpZaAHgSH8RakzYlSg9F+tf/r4aED
+         mzrR1Z4ivV7xC7YQYKyZdTKwZhXhaKLfVKfzLzPrVHKi0KEwuhQ/+ykrHyQO1Zqzwg
+         YgYyfKpjVIrFF0JI8dxRZWp7nrgnVkIinisfTq1k=
+Date:   Tue, 12 May 2020 17:29:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 07/11] ASoC: mmp-sspa: Prepare/unprepare the clocks
+Message-ID: <20200512162935.GJ5110@sirena.org.uk>
+References: <20200511210134.1224532-1-lkundrak@v3.sk>
+ <20200511210134.1224532-8-lkundrak@v3.sk>
+ <20200512124520.GH5110@sirena.org.uk>
+ <20200512153654.GB604838@furthur.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="x0KprKst+ZOYEj2z"
+Content-Disposition: inline
+In-Reply-To: <20200512153654.GB604838@furthur.local>
+X-Cookie: The only perfect science is hind-sight.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 May 2020 17:52:07 +0200
-Petr Mladek <pmladek@suse.com> wrote:
 
-> I know that there is the "do not break existing userspace" rule. The
-> question is if there is any user and if it is worth it.
+--x0KprKst+ZOYEj2z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If you break user space, and nobody is around to notice it, did you really
-break it?
+On Tue, May 12, 2020 at 05:36:54PM +0200, Lubomir Rintel wrote:
+> On Tue, May 12, 2020 at 01:45:20PM +0100, Mark Brown wrote:
 
-The answer is "No" ;-)
+> > This fix should've been earlier in the series so it could be sent as a
+> > fix.
 
--- Steve
+> I'll order it earlier on v2.
+
+> However, there's not much of a point in picking this patch alone,
+> because the driver is certainly not used anywhere and very likely
+> doesn't even work to any sensible extent without the rest of the
+> series.
+
+Well, I've already applied everything except the DT patches for that
+reason - it's just worth pointing out for future reference.
+
+--x0KprKst+ZOYEj2z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl66zu4ACgkQJNaLcl1U
+h9Aq3Af/XxOVbeB+Ka1Fx53Uc5Q7nUyY8DTdZHXv04vHSuKsFwz8dizJreQsaqkr
+Etk4+e/aCd0Uso/rFVLzRQWv6MerNvjv8pQtUOEqqc+2P4X9uIc1UTdnQZCP/bN6
+7DX8KQoP7gPLG8hFdyDC0OBdIaZLAm4FZkn82A3mqs/OVA4Qu07ikOYW3Ry64oTc
+/22zS3mA2jx4sLMpS/shHJviypaD8bw0AXK5FsThoYNRsRG23PP4omFqh5elL8uY
+x7qwVfrg9SvLZ0B7q3phDcgUwtVYEQPwSyPMqRtiLMRwDhP81D0g4dZajuU0CXMd
+xWC+u4Nm3Xw3VBO0IUq2Jo6Fp7yPNg==
+=lL11
+-----END PGP SIGNATURE-----
+
+--x0KprKst+ZOYEj2z--
