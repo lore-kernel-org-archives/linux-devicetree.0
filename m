@@ -2,104 +2,111 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA80C2D0FB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B01C2D0F8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3B120753
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589324998;
-	bh=21shcGboZ/UI67vsNX5V9akXKBR0/nMcHkMB8JizcQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kqg/MOPe8gHqiKBEMFc+GBwLMXKrc0FNwiRASnmNk3gH4LwaBGOKzP8ETp6Q1B1Hh
-	 M2U+8iHDusF5Xm1IJTq+g/8Lb+gLH3axFVH7IUY7Jmx6ZXy8yX52ttgh84yyqzYD1a
-	 f9C53kQA/Ka0+Qq/SV5N11ly9KgvNXjw/HoNZaf8=
+	by mail.kernel.org (Postfix) with ESMTP id A451A20753
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:24:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FUMFvFyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbgELXJ6 (ORCPT
+        id S1727104AbgELXYL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 19:09:58 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40806 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELXJ6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 19:09:58 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v128so2972117oia.7;
-        Tue, 12 May 2020 16:09:57 -0700 (PDT)
+        Tue, 12 May 2020 19:24:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbgELXYK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 19:24:10 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB1BC061A0C
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 16:24:10 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id s37so5893850ybe.13
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 16:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/u4atMFlBmLtwnSTMgMCyabi/w8j3iTCGwRJskabUDQ=;
+        b=FUMFvFyjoY5VlbhYA9rjNaJMt+/kRqiJvdjU8f/dcnmZ5RZh2+QgVU8DfaWiULoOCW
+         XPd2H5H8qIDmEqp5e/bpmkxzAepnCV1VFhTrWF+3VAvuef1c3Ty6QX1dLhH+Pj/VZIM/
+         EaIkMy2EevAj1mRnJJshNV56xmonJ3SL8jlEKq2PMMpl0h0EFctkKeVAFCMZXE8OCler
+         5a3UPBxJwucuQcZpYZ6Iz2rU3MlxNRIu3JqfpdeTMx4JjOSKOtJ/tWAY+iiZwNiBK5UM
+         +oDEIngTzcaD//Xe5yqEjSQVXlEf3ThtGlADepvyHCAGRhVhyJE4nL2XKU1uedBG0y22
+         2u+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TjYd3leSKKn51ZfY7qRcr7llrPytDm0GdCIEZD2j8C0=;
-        b=YOcW1N/aZdkNavfBhDLaPPKkCJpdD0SC0EMMo/CW1nENoZkg5aEIo6bYvKbmffD4X1
-         CpySzjC7Hel/chlTNGwzBwd7jlrviOHs7IsRRZO05yzYV5/la3SjrgUdraxs2srAo0JN
-         k+fvGe+iAMogHhPoKpduAbzlJVIYQdSLVCbNf683JQIUWbE9bexnLH4MAn2E05/CUW5Z
-         WvJ/umlU21AIS6KAs4eT3QmxF8ZZgsatauhezwgjsy1wlsKSQey3AtK7KYSIs40HEJP+
-         lkl0WK8ajuJ6QWWvGUjAxrsWCd2OY/kzjyTDj/YfbbsCBKdjhLxQLjeM/JPSw/QRdS8u
-         v5CQ==
-X-Gm-Message-State: AGi0PuZAWZFjJXhhxZ3Q5uBdtblrrex3FIgWhfSO8TgzGargqS/EtK9X
-        JamKUDjbk+VJpRBS8NVx560jTW2OnA==
-X-Google-Smtp-Source: APiQypIp6z6XpDyeSpU/MQIh4PPKcXp8UTWOTpvjD0Pwk05Fb3joF3Y1t4vigT4+SMH68vOz8q6/qQ==
-X-Received: by 2002:aca:c68b:: with SMTP id w133mr23020989oif.27.1589324996924;
-        Tue, 12 May 2020 16:09:56 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 34sm385316otq.67.2020.05.12.16.09.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 16:09:56 -0700 (PDT)
-Received: (nullmailer pid 16218 invoked by uid 1000);
-        Tue, 12 May 2020 23:09:54 -0000
-Date:   Tue, 12 May 2020 18:09:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
-        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
-        tao.li@vivo.com, christophe.leroy@c-s.fr,
-        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
-        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [RFC][PATCH 1/2] Add a layer of abstraction to use the memory
- reserved by device tree for ima buffer pass.
-Message-ID: <20200512230954.GB2654@bogus>
-References: <20200504203829.6330-1-prsriva@linux.microsoft.com>
- <20200504203829.6330-2-prsriva@linux.microsoft.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/u4atMFlBmLtwnSTMgMCyabi/w8j3iTCGwRJskabUDQ=;
+        b=Snyd/+gYtgrWrlt7rKDvL6xjo+o2oUt6GULrsm5fFgkKdfhMmAlHmJpUwxu2UB42Wi
+         w3XYUrlfzrRnjZ3m8zni6jpd4ocohSDLCrU4Da5efahTWLNusLmZ5D06KMos186A2jTq
+         rYQrizjlRX2MImsPJCzRhNU+HGkjx8nGJFQncQQzDtiJtcEHXnJdm4br3GriU4JB2FGZ
+         w8hB9fACPCGfC/V0H15Wgg6in9W5LT5GCy2tVodjiCPM0Ti70B6CD0K3FZxvp9crimq4
+         nLJyLvXdrK4ROBq2+3FNoghpm1yAxqVloH+BeBI9PUbJn36+Rc58sxKT8r9xoijrBITY
+         Xw6w==
+X-Gm-Message-State: AGi0PuacQ4Hz9tg0OB4qhNLB9+snRRCg6mr1a/KlvbYpD+OTzjQEdoY2
+        d9OcuowWMGOsutgarO3PNp4eHkDpkWFuhVrcCsQfwA==
+X-Google-Smtp-Source: APiQypJsh1XuLI/Or+Cuxml34jfZWIFEC2vOt3BCpxxZ5Z8CSRquQEhUPx0qqlzhIuvjXww3sdCPdkWC8bA4V5hfgzE=
+X-Received: by 2002:a25:ba8f:: with SMTP id s15mr39075879ybg.34.1589325849314;
+ Tue, 12 May 2020 16:24:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504203829.6330-2-prsriva@linux.microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200424053819.220276-1-jnchase@google.com> <20200511212047.GA21845@bogus>
+In-Reply-To: <20200511212047.GA21845@bogus>
+From:   Jeff Chase <jnchase@google.com>
+Date:   Tue, 12 May 2020 19:23:57 -0400
+Message-ID: <CALTkaQ1syQDYw9afNbU5GGGG2=-u4ByTAc3w6xhL_F6F=EBOzA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Add ch7322 as a trivial device
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 04, 2020 at 01:38:28PM -0700, Prakhar Srivastava wrote:
-> Introduce a device tree layer for to read and store ima buffer
-> from the reserved memory section of a device tree.
+On Mon, May 11, 2020 at 5:20 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Apr 24, 2020 at 01:38:18AM -0400, Jeff Chase wrote:
+> > The ch7322 is a Chrontel CEC controller.
+> >
+> > Signed-off-by: Jeff Chase <jnchase@google.com>
+> > ---
+> >  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+> >  2 files changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+> > index 4165352a590a..ec2ddc6cdf9a 100644
+> > --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> > +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> > @@ -48,6 +48,8 @@ properties:
+> >            - capella,cm32181
+> >              # CM3232: Ambient Light Sensor
+> >            - capella,cm3232
+> > +            # CH7322: HDMI-CEC Controller
+> > +          - chrontel,ch7322
+>
+> I don't think this qualifies as a trivial device. It has HPDI, OE and
+> reset signals all likely hooked up to GPIOs. You might not have those
+> hooked up for s/w control, but someone will.
+>
+> And I'd assume if you had multiple instances, they will need to be
+> associated with each connector.
+>
+> Rob
 
-But why do I need 'a layer of abstraction'? I don't like them.
+Thank you for looking at this. Taking a step back for a moment, I am
+developing this driver for an x86/ACPI platform on which I also
+control the firmware. Is there a preference between using an ACPI ID
+and a devicetree compatible id? I am trying to find out if the vendor
+already has an ACPI ID for this device. If I find and use that should
+I still add a compatible id anyways?
 
-> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> ---
->  drivers/of/Kconfig  |   6 ++
->  drivers/of/Makefile |   1 +
->  drivers/of/of_ima.c | 165 ++++++++++++++++++++++++++++++++++++++++++++
-
-Who are the users of this code and why does it need to be here? Most 
-code for specific bindings are not in drivers/of/ but with the user. It 
-doesn't sound like there's more than 1 user.
-
->  include/linux/of.h  |  34 +++++++++
->  4 files changed, 206 insertions(+)
->  create mode 100644 drivers/of/of_ima.c
+Jeff
