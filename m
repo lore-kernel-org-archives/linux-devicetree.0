@@ -2,132 +2,104 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8753C2D0F7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 20:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6DAC2D0FA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 20:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9650620747
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 20:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0700F20740
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 20:26:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QoxeALWt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JE/V+wE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgELU0P (ORCPT
+        id S1726081AbgELU0s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 16:26:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37202 "EHLO
+        Tue, 12 May 2020 16:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725950AbgELU0O (ORCPT
+        by vger.kernel.org with ESMTP id S1729215AbgELU0r (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 16:26:14 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D4BBC05BD0D
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 13:26:13 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id a4so6712373pgc.0
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 13:26:13 -0700 (PDT)
+        Tue, 12 May 2020 16:26:47 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB8ADC05BD0A
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 13:26:47 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id 145so6910926pfw.13
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 13:26:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Hf8u/FwaVvgqSOEmZzk2sCNjlpK0lHpr3UPDWazaR2Y=;
-        b=QoxeALWt+Phg1Y5xvPvc+yC7kf1URW8QNGvYGTgTMMk4y+joJOQE4ELuLbGz/AH6Wx
-         qyMEEw/soOeEyWq/iR9/lTFpmGOAM5E4u8JIG8A0y9so1cosGrif3WovUtsasZ1xgtUu
-         oDLD6aEF7Fz4y/PlZVTNm7Jr6PrDzNzYyiErKAqJulvMkw1tMvxrHCP2xHmjd3IPu+Ft
-         OffkO1M6BYxqWTwoLBAwVM6U/15XwO/YMM+LXMZAsew1ZO7e5apTnqnhdYN4Iqo4jwSE
-         aeWfJ0rg5hcJnDmeW4Rb7UKX66yFSrcvN+hzLIXwXlEThvrYsBAjS5kOJwhaBlC1brr+
-         YyGA==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=H1+2swSK0ijtdladJlvxa7bbEzZPqsR62nbBx9yOv3g=;
+        b=JE/V+wE1UITbWdIxoFhww9gWKZXunG95YOlUyT/vk3cKWXiI7WS4hSgNdGFYXXeWq4
+         qbOqyh6cY6JFc4Ex7PSmIGIeMoXilx3K1YD1zTSnxGNYkBKxlRfntW38VgCWgbQcsm+k
+         b/iBEbYxUFXZLSqtef+YbXCHzwcFceN52RCCE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Hf8u/FwaVvgqSOEmZzk2sCNjlpK0lHpr3UPDWazaR2Y=;
-        b=phR8pPVduTN/i890XIL1kcscaMu6QyOohY7yJkseaXc9cCKE5SlgRBOnML35wvFWXL
-         mcxWWmKkCK5kGwrmSIDIVV6TyHW1v5Bmf5huz4/fLm5Lv71Xb3Xb4iDKsqtUrff7DhA7
-         1Btw4hzQQSX2+UJcotq6B92TiwQOR/Xf2adtdf46oAuLEwVcyxQEAM/GXbdfuXVMDxSF
-         O6r6XQIbzjdKQZUgXpV3oSx6e7u3R14bamZSdISlpZLo2aQ+ihdt+0xdVphQiqM5uyxk
-         dZeSam7xNk8Ng+BSgU4CDG6x2nZNmw4xGxpq/8AG1mocqhMC6+gxG+E5V13WIjDUx6Fy
-         QHsg==
-X-Gm-Message-State: AGi0PuYA6a7yoHPyMS1sF8gxRpuwy3Q19mNcveuFKuVaYiiEb9K2t2TL
-        zTnA54z/3CD4AgJta8CHZYy6hQ==
-X-Google-Smtp-Source: APiQypKvP4JTRPU10Z/QlH/qaxqh9uVfwanejPjs00mSq7UCRg1PX40Nu6fqh0g8byS2KINrwXw8Tg==
-X-Received: by 2002:a63:180a:: with SMTP id y10mr22641316pgl.204.1589315172346;
-        Tue, 12 May 2020 13:26:12 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r26sm13066527pfq.75.2020.05.12.13.26.11
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=H1+2swSK0ijtdladJlvxa7bbEzZPqsR62nbBx9yOv3g=;
+        b=Wboy1W1ZXAHdAKiWh2E1eMcpT0Y50vxT48ntVwLmXwCzgrqrFqHn4GNtJ357HHs3yq
+         /4cMjB5CGQDPcHNSUm1N26/3BrDfvabBZGSpdg+gL37pQmwQnUDo4FZAKnaNjASs+aSZ
+         bzyV8TDrtlerqafsSP149ff59d5S6KESJshPsKzww/AdLKb+REgjlta16o59gHtTsVfS
+         IK51P1t9y7nWexOdh2ETowfeQuhUsCBj6AjSxg5zJnXLiniG/iroPULxAkG3gP2mglAB
+         i3WmbX13PhL+bCYe7YQtdhaQ6t+yNukngto3k3k+hlg2eC1BlXKYMXWBBLC9hUQXYFcu
+         EJIA==
+X-Gm-Message-State: AGi0PuZPTYGfPzV5AlwsWEzV94HkjtJMmVGEkVo8ykTJTfOEZQEoB4be
+        LU8tXeQMaLFw6UXqrMsfp7Ofs6mGiII=
+X-Google-Smtp-Source: APiQypLe8sd80AjBjKfNOmw9eKS5QoYDfT462qPcJ4ychbs6jqUvUTNFyPQJKYLB8FBDLFHSBXQeyQ==
+X-Received: by 2002:a63:4f0f:: with SMTP id d15mr20990453pgb.339.1589315207257;
+        Tue, 12 May 2020 13:26:47 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id w69sm12692970pff.168.2020.05.12.13.26.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 13:26:11 -0700 (PDT)
-Date:   Tue, 12 May 2020 13:24:39 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 8/8] arm64: dts: ipq6018: Add a53 pll and apcs clock
-Message-ID: <20200512202439.GK2165@builder.lan>
-References: <1588573224-3038-1-git-send-email-sivaprak@codeaurora.org>
- <1588573224-3038-9-git-send-email-sivaprak@codeaurora.org>
+        Tue, 12 May 2020 13:26:46 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588573224-3038-9-git-send-email-sivaprak@codeaurora.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200422090443.12529-1-harigovi@codeaurora.org>
+References: <20200422090443.12529-1-harigovi@codeaurora.org>
+Subject: Re: [v1] drm/bridge: ensure bridge suspend happens during PM sleep
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org,
+        dianders@chromium.org
+To:     Harigovindan P <harigovi@codeaurora.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
+Date:   Tue, 12 May 2020 13:26:45 -0700
+Message-ID: <158931520588.215346.14524550377627605126@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun 03 May 23:20 PDT 2020, Sivaprakash Murugesan wrote:
+The subject is not specific enough. I'd expect it to be something like:
 
-> add support for apps pll and apcs clock.
-> 
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+drm/bridge: ti-sn65dsi86: ensure bridge suspend happens during PM sleep
+
+Quoting Harigovindan P (2020-04-22 02:04:43)
+> ti-sn65dsi86 bridge is enumerated as a runtime device.
+>=20
+> Adding sleep ops to force runtime_suspend when PM suspend is
+> requested on the device.
+>=20
+> This change needs to be taken along with the series:
+> https://patchwork.kernel.org/patch/11494309/
+
+Why? It doesn't seem like it should be required to go along with a qcom
+specific driver patch.
+
+>=20
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 > ---
->  arch/arm64/boot/dts/qcom/ipq6018.dtsi | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> index 1aa8d85..af2ceeb 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> @@ -294,12 +294,22 @@
->  		};
->  
->  		apcs_glb: mailbox@b111000 {
-> -			compatible = "qcom,ipq8074-apcs-apps-global";
-> -			reg = <0x0b111000 0xc>;
-> -
-> +			compatible = "qcom,ipq6018-apcs-apps-global";
-> +			reg = <0x0b111000 0x1000>;
 
-My documentation states that IPQ8074 indeed has this block at
-0x0b111000, but IPQ6018 it's at 0x6b111000. Can you confirm this is
-correct? Same with the pll below.
+Besides the subject:
 
-Apart from that the patch looks good.
-
-Regards,
-Bjorn
-
-> +			#clock-cells = <1>;
-> +			clocks = <&apsspll>, <&xo>;
-> +			clock-names = "pll", "xo";
->  			#mbox-cells = <1>;
->  		};
->  
-> +		apsspll: clock@b116000 {
-> +			compatible = "qcom,ipq-apss-pll";
-> +			reg = <0x0b116000 0x40>;
-> +			#clock-cells = <0>;
-> +			clocks = <&xo>;
-> +			clock-names = "xo";
-> +		};
-> +
->  		timer {
->  			compatible = "arm,armv8-timer";
->  			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
