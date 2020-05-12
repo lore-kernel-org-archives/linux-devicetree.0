@@ -2,292 +2,87 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CEBC47255
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 02:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BFDC47255
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 02:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEB420675
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 02:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15011206D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 02:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589248890;
-	bh=rSe+I3B389aDXd1BJNpJ2TUH9gHPelozj9Un2tmxTlQ=;
+	s=default; t=1589249028;
+	bh=Muu4VhhqVZDslhmbfFL8Lp1SgYdkj3IilxcG/iL08Xs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BLBnGB9pPKPpkA4mVtTD/YWt75ISGGlcoIdhn7HfapGzSI6dU16V5lGfpL30qu2DN
-	 3XFjNsBJitYHNw0GpOu3HZLxDV9DeaB4yFaajXvjN04XPbDgN6wQ1bP66S5zfcOG66
-	 8A5LfT9r5gOmcu47xkBLJWO+2swHCurNm8VSS5as=
+	b=IwNZV3/rHkjN1BZDddrGwpy4ur+Hg1kRg49n9yYTzXTFsb/7q7kntnWXnxqrzPAoH
+	 8/MIRRDBhydNnChT1Jn+M82IYorKS/qmeVvKEyr2lQOv9WMiQXYWFCR2+3PtMB1SfJ
+	 HgRokaIA8IpggbNZCuRDt6PDFdTY0wrC/0VJ9gSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgELCB3 (ORCPT
+        id S1728348AbgELCDr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 22:01:29 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45748 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgELCB3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 22:01:29 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k133so16736039oih.12;
-        Mon, 11 May 2020 19:01:28 -0700 (PDT)
+        Mon, 11 May 2020 22:03:47 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36176 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728536AbgELCDr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 22:03:47 -0400
+Received: by mail-oi1-f193.google.com with SMTP id x7so16035351oic.3;
+        Mon, 11 May 2020 19:03:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=czrIsdP31tdcxDtB1xe4T17Dg1vLDkIDYdtdygiUTRo=;
-        b=MNwXB6tjvtR2LoarcSdmXUtD8jQoeuwk5DvKSQ0idPhpti5RCW366AW+k8BgNsq9Cm
-         70BOa95/KJilI0O2lumqCEER5B/OE5ebWP0uW9y+5OZWPoByvjKIxacdzDjMjG4GmEo5
-         MZe3gDVms/2DKXffLNeRV4/BxAK2KtfdmA+BXafXvvhLbrLZbmpwbDVz+9LNDtGmUvo4
-         PYY0Uq9LFg6ikZn603R11bzh7FD8LDZnkU08PRvKIVOzVSoKhRs6QFO6vcv74i2tYfQN
-         o6zma0G+FgVKloTqFo/Y3sjykqkUIctCX9zNjTmhcJnA3+zs0QofVPphgLcHG9KiCcRT
-         uHtg==
-X-Gm-Message-State: AGi0PuZazfsqsgdNps31KiaGA9Kxt0oYZM0/FDKTSRMKVJ4xauJ0FCI0
-        pETsB2Z7Z9Te+r9TXH7dDw==
-X-Google-Smtp-Source: APiQypLgYcOz8qrWFrjJhzlHKPYHwX9/yN/oW9ISWgjWp+EMSVnfdHDAulPu0L/QF7egHog7BK6v9A==
-X-Received: by 2002:aca:4e10:: with SMTP id c16mr21922126oib.140.1589248887866;
-        Mon, 11 May 2020 19:01:27 -0700 (PDT)
+        bh=SKTqH2487aYveoMwIVxq6ys5R52y2QbI8FHInFwCoT4=;
+        b=k4x6ooGN2IKYwWa8FW/wGpdAB5FHc4+p4rQp0oii0ZHAvuLnFSO62TfxsJiS281rgv
+         1pid3ULANe6vvZqfCJwWGszsnslngbaMwQjNRSAaW5vNEoKoH5lYI0bGtCRMR91eEYBL
+         5jMGv+8tOQUwndjNzbG/7sH9PJtYtqQCbYrf+cKMNTsKTm5mte0pFB543oPQiR4y/Lox
+         DFEVBI9uchgtnhCcj+BWc+g/693k9mw4UcVs9aL5QSW54SNOIB/pIJosfNlllAE7rk6/
+         /kkhcz8TefaPaQRpC55vP9IPigRafNR7XmFNugYy9k+UMSRHCvMjdG3xO3DFu3DfpheQ
+         vIHw==
+X-Gm-Message-State: AGi0PuayLfJZeJYAfDRdZUO3qWbiWaH0vhXG7WzgaQqsPwQmbebo+Or5
+        j/ywFN2Dv090H4IY8sBiOQ==
+X-Google-Smtp-Source: APiQypKThoh2f0v295jotzN8wWr1UIn40NjN0R+gI2MP9rKPJO9N+mWi5TbzOR3yOCKuun401ZoJVw==
+X-Received: by 2002:aca:ba05:: with SMTP id k5mr21268052oif.35.1589249025962;
+        Mon, 11 May 2020 19:03:45 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 60sm3120813oth.38.2020.05.11.19.01.26
+        by smtp.gmail.com with ESMTPSA id i196sm5230653oib.8.2020.05.11.19.03.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 19:01:27 -0700 (PDT)
-Received: (nullmailer pid 26411 invoked by uid 1000);
-        Tue, 12 May 2020 02:01:26 -0000
-Date:   Mon, 11 May 2020 21:01:26 -0500
+        Mon, 11 May 2020 19:03:44 -0700 (PDT)
+Received: (nullmailer pid 29821 invoked by uid 1000);
+        Tue, 12 May 2020 02:03:44 -0000
+Date:   Mon, 11 May 2020 21:03:44 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
+Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] dt-bindings: net: Convert UniPhier AVE4 controller
- to json-schema
-Message-ID: <20200512020126.GA22178@bogus>
-References: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] dt-bindings: phy: Convert UniPhier PCIe-PHY
+ controller to json-schema
+Message-ID: <20200512020344.GA29755@bogus>
+References: <1588055690-13200-1-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1588055690-13200-1-git-send-email-hayashi.kunihiko@socionext.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 03:31:22PM +0900, Kunihiko Hayashi wrote:
-> Convert the UniPhier AVE4 controller binding to DT schema format.
-> This changes phy-handle property to required.
+On Tue, 28 Apr 2020 15:34:48 +0900, Kunihiko Hayashi wrote:
+> Convert the UniPhier PCIe-PHY controller to DT schema format.
 > 
 > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  .../bindings/net/socionext,uniphier-ave4.txt       |  64 ------------
->  .../bindings/net/socionext,uniphier-ave4.yaml      | 109 +++++++++++++++++++++
->  MAINTAINERS                                        |   2 +-
->  3 files changed, 110 insertions(+), 65 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
->  create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
+>  .../bindings/phy/socionext,uniphier-pcie-phy.yaml  | 77 ++++++++++++++++++++++
+>  .../devicetree/bindings/phy/uniphier-pcie-phy.txt  | 36 ----------
+>  2 files changed, 77 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/socionext,uniphier-pcie-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/uniphier-pcie-phy.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-> deleted file mode 100644
-> index 4e85fc4..0000000
-> --- a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-> +++ /dev/null
-> @@ -1,64 +0,0 @@
-> -* Socionext AVE ethernet controller
-> -
-> -This describes the devicetree bindings for AVE ethernet controller
-> -implemented on Socionext UniPhier SoCs.
-> -
-> -Required properties:
-> - - compatible: Should be
-> -	- "socionext,uniphier-pro4-ave4" : for Pro4 SoC
-> -	- "socionext,uniphier-pxs2-ave4" : for PXs2 SoC
-> -	- "socionext,uniphier-ld11-ave4" : for LD11 SoC
-> -	- "socionext,uniphier-ld20-ave4" : for LD20 SoC
-> -	- "socionext,uniphier-pxs3-ave4" : for PXs3 SoC
-> - - reg: Address where registers are mapped and size of region.
-> - - interrupts: Should contain the MAC interrupt.
-> - - phy-mode: See ethernet.txt in the same directory. Allow to choose
-> -	"rgmii", "rmii", "mii", or "internal" according to the PHY.
-> -	The acceptable mode is SoC-dependent.
-> - - phy-handle: Should point to the external phy device.
-> -	See ethernet.txt file in the same directory.
-> - - clocks: A phandle to the clock for the MAC.
-> -	For Pro4 SoC, that is "socionext,uniphier-pro4-ave4",
-> -	another MAC clock, GIO bus clock and PHY clock are also required.
-> - - clock-names: Should contain
-> -	- "ether", "ether-gb", "gio", "ether-phy" for Pro4 SoC
-> -	- "ether" for others
-> - - resets: A phandle to the reset control for the MAC. For Pro4 SoC,
-> -	GIO bus reset is also required.
-> - - reset-names: Should contain
-> -	- "ether", "gio" for Pro4 SoC
-> -	- "ether" for others
-> - - socionext,syscon-phy-mode: A phandle to syscon with one argument
-> -	that configures phy mode. The argument is the ID of MAC instance.
-> -
-> -The MAC address will be determined using the optional properties
-> -defined in ethernet.txt.
-> -
-> -Required subnode:
-> - - mdio: A container for child nodes representing phy nodes.
-> -         See phy.txt in the same directory.
-> -
-> -Example:
-> -
-> -	ether: ethernet@65000000 {
-> -		compatible = "socionext,uniphier-ld20-ave4";
-> -		reg = <0x65000000 0x8500>;
-> -		interrupts = <0 66 4>;
-> -		phy-mode = "rgmii";
-> -		phy-handle = <&ethphy>;
-> -		clock-names = "ether";
-> -		clocks = <&sys_clk 6>;
-> -		reset-names = "ether";
-> -		resets = <&sys_rst 6>;
-> -		socionext,syscon-phy-mode = <&soc_glue 0>;
-> -		local-mac-address = [00 00 00 00 00 00];
-> -
-> -		mdio {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			ethphy: ethphy@1 {
-> -				reg = <1>;
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
-> new file mode 100644
-> index 0000000..fd31e87
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
-> @@ -0,0 +1,109 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/socionext,uniphier-ave4.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Socionext AVE ethernet controller
-> +
-> +maintainers:
-> +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> +
-> +description: |
-> +  This describes the devicetree bindings for AVE ethernet controller
-> +  implemented on Socionext UniPhier SoCs.
-> +
-> +allOf:
-> +  - $ref: ethernet-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - socionext,uniphier-pro4-ave4
-> +      - socionext,uniphier-pxs2-ave4
-> +      - socionext,uniphier-ld11-ave4
-> +      - socionext,uniphier-ld20-ave4
-> +      - socionext,uniphier-pxs3-ave4
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  phy-mode:
-> +    $ref: ethernet-controller.yaml#/properties/phy-mode
-> +
-> +  phy-handle:
-> +    $ref: ethernet-controller.yaml#/properties/phy-handle
 
-No need for these $ref, the 1st reference did this. Just:
-
-phy-mode: true
-
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - items:          # for Pro4
-> +        - const: gio
-> +        - const: ether
-> +        - const: ether-gb
-> +        - const: ether-phy
-> +      - const: ether    # for others
-> +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  reset-names:
-> +    oneOf:
-> +      - items:          # for Pro4
-> +        - const: gio
-> +        - const: ether
-> +      - const: ether    # for others
-> +
-> +  socionext,syscon-phy-mode:
-> +    $ref: /schemas/types.yaml#definitions/phandle-array
-> +    description:
-> +      A phandle to syscon with one argument that configures phy mode.
-> +      The argument is the ID of MAC instance.
-> +
-> +  mdio:
-> +    $ref: mdio.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - phy-mode
-> +  - phy-handle
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +  - mdio
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    ether: ethernet@65000000 {
-> +        compatible = "socionext,uniphier-ld20-ave4";
-> +                reg = <0x65000000 0x8500>;
-> +                interrupts = <0 66 4>;
-> +                phy-mode = "rgmii";
-> +                phy-handle = <&ethphy>;
-> +                clock-names = "ether";
-> +                clocks = <&sys_clk 6>;
-> +                reset-names = "ether";
-> +                resets = <&sys_rst 6>;
-> +                socionext,syscon-phy-mode = <&soc_glue 0>;
-> +
-> +                mdio {
-> +                        #address-cells = <1>;
-> +                        #size-cells = <0>;
-> +
-> +                        ethphy: ethernet-phy@1 {
-> +                                reg = <1>;
-> +                        };
-> +                };
-> +        };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a1558eb..0ee65e2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15590,7 +15590,7 @@ SOCIONEXT (SNI) AVE NETWORK DRIVER
->  M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->  L:	netdev@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-> +F:	Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
->  F:	drivers/net/ethernet/socionext/sni_ave.c
->  
->  SOCIONEXT (SNI) NETSEC NETWORK DRIVER
-> -- 
-> 2.7.4
-> 
+Applied, thanks!
