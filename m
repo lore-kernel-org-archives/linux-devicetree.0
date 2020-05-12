@@ -2,85 +2,107 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB6DC54E8D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C8FC54E8D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9EA7206B8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E4F206B8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589295464;
+	bh=1/hPsfcZs5Y8EjeVEzoycUhidXcnl2B8kam/Bd6wXXg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BPzF4Xhn6vwDxBhsY1BotO8+fbQ2/dgLKxSm5QIv+yrRT1AICTWmwOCJfVTJE1SoI
+	 Wwg4mtlvXRqYW54BCGIA/kJHCfP4UNnrpbhkfyq1r1+RlbmObMBff0uvyDTNsREvfB
+	 BugkeC5/3dpMP2HKF68KscZJwdV3HIHHjmKzEKl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgELO5C (ORCPT
+        id S1727958AbgELO5n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 10:57:02 -0400
-Received: from muru.com ([72.249.23.125]:54038 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgELO5C (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 10:57:02 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C3C078047;
-        Tue, 12 May 2020 14:57:49 +0000 (UTC)
-Date:   Tue, 12 May 2020 07:56:57 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Keerthy <j-keerthy@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        devicetree@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Adam Ford <aford173@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        linux-clk@vger.kernel.org, linux-omap@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 02/15] dt-bindings: timer: add ti, dmtimer compatible for
- for system timers
-Message-ID: <20200512145657.GH37466@atomide.com>
-References: <20200429215402.18125-1-tony@atomide.com>
- <20200429215402.18125-3-tony@atomide.com>
- <20200512145215.GA23423@bogus>
+        Tue, 12 May 2020 10:57:43 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43765 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727912AbgELO5n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 10:57:43 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i22so1859981oik.10;
+        Tue, 12 May 2020 07:57:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0RjlmR6YuJe5OFTdNqr/waaHWAV5lpqikYC4DfnGsDg=;
+        b=pr6MKC9GgJBdwIC7i4YNF05bQvQmjsUlayk2pWP2UNW1Q8TnPgva1GD4JiMqqEn88r
+         jIBq/7HsLr526WqCF8giU9Yzff750GZT4oEL9DtVmBJ+H35ND5OsxEZr61X6+8BzfWLh
+         YtnmS34FRvh3m4W+RvUaGLdTYyqIB7aGwOnhMmf/KQU9YW6OQUWbDmJX1c48pc9LpUbE
+         Yd3FuDhuLI4D3ZdhC9mzqGfp1mOEdctpptzaKWB6T+RIQNZgokM/mqeZg9RUAT4ayaq4
+         3DdrJ8f5NxTnaAgN4/iVlCVc3JqALXU3SJ4CJijTyWCwpka8BcWMAqv2+5XcTmpLUt7g
+         y2ew==
+X-Gm-Message-State: AGi0PuZNoPjL7QdSaYjywzP1pWnqdo+197oaK6oANkHWer661kwfCLJP
+        43H5e2DPZD9LLgZtyiKyEQ==
+X-Google-Smtp-Source: APiQypK611Fjk8XOJF2hXT2tzKw9uv0/tp3+vM3Z12fb7KSgcfstQYqV42iyNBPHT0pWjJ1kOCMV3A==
+X-Received: by 2002:aca:816:: with SMTP id 22mr22840562oii.51.1589295462251;
+        Tue, 12 May 2020 07:57:42 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m27sm220241oom.22.2020.05.12.07.57.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 07:57:41 -0700 (PDT)
+Received: (nullmailer pid 4113 invoked by uid 1000);
+        Tue, 12 May 2020 14:57:40 -0000
+Date:   Tue, 12 May 2020 09:57:40 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V4 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+ json-schema
+Message-ID: <20200512145740.GB25671@bogus>
+References: <1588207921-20604-1-git-send-email-Anson.Huang@nxp.com>
+ <158865854354.11125.10611865219975766594@swboyd.mtv.corp.google.com>
+ <DB3PR0402MB39164125CABC889C5DEE5D8AF5A70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512145215.GA23423@bogus>
+In-Reply-To: <DB3PR0402MB39164125CABC889C5DEE5D8AF5A70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Rob Herring <robh@kernel.org> [200512 14:53]:
-> On Wed, 29 Apr 2020 14:53:49 -0700, Tony Lindgren wrote:
-> > The TI dual-mode timer can be used for both clocksource and clockevent
-> > system timers. We need a way to specify which dual-mode timers are
-> > reserved for system timers as there are multiple instances available
-> > that may require a board specific configuration.
-> > 
-> > Let's add a generic compatible "ti,dmtimer" that TIMER_OF_DECLARE can
-> > use as suggested by Daniel Lezcano <daniel.lezcano@linaro.org>.
-> > 
-> > Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > ---
-> >  Documentation/devicetree/bindings/timer/ti,timer.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
+On Tue, May 05, 2020 at 11:32:42AM +0000, Anson Huang wrote:
+> Hi, Stephen
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> 
+> > Subject: Re: [PATCH V4 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+> > json-schema
+> > 
+> > Quoting Anson Huang (2020-04-29 17:51:57)
+> > > Convert the i.MX6Q clock binding to DT schema format using json-schema.
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > 
+> > Please send a cover letter next time. Who is going to apply these patches? I
+> > hope Rob? If you need an acked-by feel free to have mine!
+> 
+> OK, will have a cover letter next time for patch series.
+> 
+> Hi, Rob
+> 	Are you going to apply this patch series? If no, can you advise who can apply it, thanks.
 
-Looks like this is no longer needed with v3 set in the repost
-thread:
+Yes, respin fixing interrupts in all the patches.
 
-"[PATCHv3 00/14] Update omaps to use drivers/clocksource timers"
-
-It now does detection for the preferred system timers based on
-the various timer features like you suggested.
-
-Regards,
-
-Tony
+Rob
