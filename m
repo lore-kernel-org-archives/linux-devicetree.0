@@ -2,136 +2,119 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64390C54E8F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E643BC54E4A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8032075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CA2206F5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:13:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O/qLDBHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbgELOI0 (ORCPT
+        id S1730254AbgELONB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 10:08:26 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:53740 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgELOI0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 10:08:26 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 995FB803088B;
-        Tue, 12 May 2020 14:08:22 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Wa5K0fYbgNer; Tue, 12 May 2020 17:08:21 +0300 (MSK)
-Date:   Tue, 12 May 2020 17:08:20 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200512140820.ssjv6pl7busqqi3t@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
- <20200508114153.GK185537@smile.fi.intel.com>
+        Tue, 12 May 2020 10:13:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729921AbgELONA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 10:13:00 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD5EC061A0E
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 07:13:00 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mq3so9586480pjb.1
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 07:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ci7zKqD3gUAa4Ry13dacSM6dlpd7qZR1mlqQSLUNRDM=;
+        b=O/qLDBHjTmJNZ4W1E9Qf7I7qcg6eamfI+POItL7/mej0hX6DhjCfNdMtun9tUeSSL5
+         3uEIkG+olE6RavA7Nz6gumINI0osXMpGfmZrF7Gi3IpxFqn7Fw4dAjRCi9HFxVoMkh0s
+         WW74dtEp/Xndy66Sv0QFQVHgnWj8v9lY6LMdjDuz3qftrnH2zIE5CPU270kQ2uTCRX+E
+         TJHyVDv+EQNnGK9lX1K0yW+sxwyYPbL1DvuYShy+ufo09thN1vq59owk018ZJp0wC/5T
+         gX5sU79An1C83AYAqkLxM8me/QqZMV9bcCKGoV6CF38FfIl/iXAXND6KrmrxHiFjV2YQ
+         A14A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ci7zKqD3gUAa4Ry13dacSM6dlpd7qZR1mlqQSLUNRDM=;
+        b=qruGtUgn/romYbwhj3vs3fEJn3l2wn3aNWnafcgBBKvulnJnLqzAPLUssOOQ44UcSx
+         W+69Mi88LwMdtNjL1WGDgJXwWWqtXZQipwzygC+0Xq+UaUCTTRtvl6mcSmiLD/0Yk2p0
+         uiQ3jyyPq2b1ZYgweqB7Vzd7+FVW2eQml5MzTFuBrEU+cmgEF91zqi1usbO7++dY8nZz
+         pKHZHU3sfNdZW2SDctsBmusqZ7BZz9YKmx/UJV/Vopx4d7ryHbS2kgburnn5unyfr6pI
+         BX3NJVedSgy0hCao66g1Z+0GfdMOif8UMo3ZSBmo6grz5Cf6aKsMm1GAhS29C5KvA+L+
+         iwDw==
+X-Gm-Message-State: AGi0PuZSzo3bmdncmyi6QkOWoJ7BOWxs1BBvH3utQoDvoF9GWquKaW5R
+        g66AT9o9z16T6tVOvvQZjFCzl1Ifsw==
+X-Google-Smtp-Source: APiQypJezn/TnyFOdcX7SBPrI3c2aWKI1uXvAlkdhblYFd0FY2muiujKh7MlqChB350C0ASDPTLqiA==
+X-Received: by 2002:a17:90b:34c:: with SMTP id fh12mr26385247pjb.134.1589292779836;
+        Tue, 12 May 2020 07:12:59 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6007:2f23:5151:5dd:ea86:4678])
+        by smtp.gmail.com with ESMTPSA id 141sm12422236pfz.171.2020.05.12.07.12.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 May 2020 07:12:59 -0700 (PDT)
+Date:   Tue, 12 May 2020 19:42:35 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     matthias.bgg@gmail.com, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        adamboardman@gmail.com
+Subject: Re: [PATCH 0/4] Add I2C controller support for MT6797 SoC
+Message-ID: <20200512141235.GG5526@Mani-XPS-13-9360>
+References: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508114153.GK185537@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
-> On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
-> > IP core of the DW DMA controller may be synthesized with different
-> > max burst length of the transfers per each channel. According to Synopsis
-> > having the fixed maximum burst transactions length may provide some
-> > performance gain. At the same time setting up the source and destination
-> > multi size exceeding the max burst length limitation may cause a serious
-> > problems. In our case the system just hangs up. In order to fix this
-> > lets introduce the max burst length platform config of the DW DMA
-> > controller device and don't let the DMA channels configuration code
-> > exceed the burst length hardware limitation. Depending on the IP core
-> > configuration the maximum value can vary from channel to channel.
-> > It can be detected either in runtime from the DWC parameter registers
-> > or from the dedicated dts property.
+Hi Matthias,
+
+On Sat, Feb 22, 2020 at 09:54:40PM +0530, Manivannan Sadhasivam wrote:
+> Hello,
 > 
-> I'm wondering what can be the scenario when your peripheral will ask something
-> which is not supported by DMA controller?
-
-I may misunderstood your statement, because seeing your activity around my
-patchsets including the SPI patchset and sometimes very helpful comments,
-this question answer seems too obvious to see you asking it.
-
-No need to go far for an example. See the DW APB SSI driver. Its DMA module
-specifies the burst length to be 16, while not all of ours channels supports it.
-Yes, originally it has been developed for the Intel Midfield SPI, but since I
-converted the driver into a generic code we can't use a fixed value. For instance
-in our hardware only two DMA channels of total 16 are capable of bursting up to
-16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
-burst length. While there are two SPI interfaces, each of which need to have two
-DMA channels for communications. So I need four channels in total to allocate to
-provide the DMA capability for all interfaces. In order to set the SPI controller
-up with valid optimized parameters the max-burst-length is required. Otherwise we
-can end up with buffers overrun/underrun.
-
+> This patchset adds I2C controller support for Mediatek MT6797 SoC. There
+> are a total of 8 I2C controllers in this SoC (2 being shared) and they are
+> same as the controllers present in MT6577 SoC. Hence, the driver support is
+> added with DT fallback method.
 > 
-> Peripheral needs to supply a lot of configuration parameters specific to the
-> DMA controller in use (that's why we have struct dw_dma_slave).
-> So, seems to me the feasible approach is supply correct data in the first place.
-
-How to supply a valid data if clients don't know the DMA controller limitations
-in general?
-
+> As per the datasheet, there are controllers with _imm prefix like i2c2_imm
+> and i2c3_imm. These appears to be in different memory regions but sharing
+> the same pins with i2c2 and i2c3 respectively. Since there is no clear
+> evidence of what they really are, I've adapted the numbering/naming scheme
+> from the downstream code by Mediatek.
 > 
-> If you have specific channels to acquire then you probably need to provide a
-> custom xlate / filter functions. Because above seems a bit hackish workaround
-> of dynamic channel allocation mechanism.
-
-No, I don't have a specific channel to acquire and in general you may use any
-returned from the DMA subsystem (though some platforms may need a dedicated
-channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
-channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
-their DMA settings must properly and optimally configured. It can be only done
-if you know the DMA controller parameters like max burst length, max block-size,
-etc.
-
-So no. The change proposed by this patch isn't workaround, but a useful feature,
-moreover expected to be supported by the generic DMA subsystem.
-
+> This patchset has been tested on 96Boards X20 development board.
 > 
-> But let's see what we can do better. Since maximum is defined on the slave side
-> device, it probably needs to define minimum as well, otherwise it's possible
-> that some hardware can't cope underrun bursts.
 
-There is no need to define minimum if such limit doesn't exists except a
-natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
-added such capability into the generic DMA subsystem so far.
+Looks like this series has slipped through the cracks...
 
--Sergey
+Thanks,
+Mani
 
+> Thanks,
+> Mani
 > 
-> Vinod, what do you think?
+> Manivannan Sadhasivam (4):
+>   dt-bindings: i2c: Document I2C controller binding for MT6797 SoC
+>   arm64: dts: mediatek: Add I2C support for MT6797 SoC
+>   arm64: dts: mediatek: Enable I2C support for 96Boards X20 Development
+>     board
+>   arm64: dts: mediatek: Switch to SPDX license identifier for MT6797 SoC
+> 
+>  .../devicetree/bindings/i2c/i2c-mt65xx.txt    |   1 +
+>  .../boot/dts/mediatek/mt6797-x20-dev.dts      |  49 ++++
+>  arch/arm64/boot/dts/mediatek/mt6797.dtsi      | 229 +++++++++++++++++-
+>  3 files changed, 271 insertions(+), 8 deletions(-)
 > 
 > -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
+> 2.17.1
 > 
