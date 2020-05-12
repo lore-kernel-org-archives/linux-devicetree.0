@@ -2,99 +2,100 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A023EC54E8E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CFDC54E8E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 713B0206CC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E3720730
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589291722;
-	bh=tbYwsxxFH7NTBWJxzR5FbnWW0Mb7ngTz5vmyRkLFepo=;
+	s=default; t=1589291892;
+	bh=Gydc74HwInmPnu49WDK1F7TD00UY8LxN2CDeqsTFXKE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l1CKAyLnvOdLpTB0i0l+MuErm+zqcWc3FutnK4WR4/V7Cx+8gMgT3xT6XIuNSZwnD
-	 XWZmUcfYnkAZjLi/Pidc9Eyom217KLbHCOBxDbtneRHIfOlOL0qJSuQ+GehLghhXCT
-	 QvKUclirIZme7Sro5R98Ij4Xvvey5ojDzbp0XPO8=
+	b=WTzei5OMvPa1GQ5amys8+2nIs9jlEPsQXnx1Aa666lH4XtVHj2l2mDN+iUUoG2w3W
+	 TG1pkeXIUYeLTYpX7bw5mjVcQGm2B0Jtz9vW3uPNDdKbqGGVOd7a+UZi8duwblZeIO
+	 p+tFEd7ecOkgkr/1cCmoNqnERiu9GXLoYgTuUj0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbgELNzW (ORCPT
+        id S1729408AbgELN6K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 09:55:22 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34650 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729336AbgELNzV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 09:55:21 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 72so10560406otu.1;
-        Tue, 12 May 2020 06:55:21 -0700 (PDT)
+        Tue, 12 May 2020 09:58:10 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34298 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgELN6K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 09:58:10 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c12so17272249oic.1;
+        Tue, 12 May 2020 06:58:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=khg2FYARhLY8jqsBiK9GfQxfbP399NswSSMlCJ79cLM=;
-        b=fdt4dCi+9JHwU6QYCXD707nyx9WyWLk8TVC506x3oH2VaZ1Wv/t1qFCUaB6jjmFV33
-         VEey+YQhbckwbLfOYnK6lzkYOO57/7AxxxIUchgwRxg9dPH/T5bAZF3QukXm0jFMI9hx
-         r/NPFY/aDvFNYFlnYI6QoRWd/KgbIhLIPRLJWdf0wZRN11URfCwyDTUOf7PH9OCLbKUM
-         tWpUcKCpT9tqvetzd0qk2ZR2eFzbnzrLSs3+t+faCUSFCkNK5K9p4ORY+GlIoYnRRL6Y
-         LyEuIKV9xGUut8jisWn8krAKj9w6QzVPcvte3HpzdPVuKjUlq75u4F2vBZJ0WO+faUkH
-         akyQ==
-X-Gm-Message-State: AGi0PuZzzyGY1VL5QXockgblvC0WcLdLOgjlqVkKtCQs7lsfWY277ezK
-        7ljkkLLAagjBbEQqlCSgNQ==
-X-Google-Smtp-Source: APiQypKVsMAlzHWT4/uwIBYqnJvQSdDTmKbo3XbCiLwbvxcmGGslzIJ4I5g3PCFGhGT1be+4rgh52g==
-X-Received: by 2002:a9d:7e99:: with SMTP id m25mr3878487otp.45.1589291720627;
-        Tue, 12 May 2020 06:55:20 -0700 (PDT)
+        bh=CZM7qY/VR2Qz31TeWcm/jF7dQ7HT5V2CZiGyP+g6mHI=;
+        b=YTL7/SRbdD5qU592/VwWfQZsKh+QA3LQx0FEGja1jMCV2Oe8Zl+UEXI6IBIhdNU4Ae
+         Y/dIshK0U1/SExFRrY8kyB8FNHCYaZ4Jk5HNBvPi49/hOSTtfelF1fdPaFGoYWT0U6dG
+         52kOG2xaxVtLCeV5NlsPzGY8uj8lpGRgIh9494uWM0ZtBg7YZyM7Aim7rgHd/9pbpYgo
+         RRtwk11TQTCU60l42Qy1USp7Aak6tOhIcHWMdsPri6GByzeHHnsfk7NkUyzGKuodbY3u
+         HXXd2vZF0O5NwiDFHOi3W8tIMgtJugppPTxmW5b2Ee3pejeR9HNavl75hn+OqCpkLxnG
+         6xJQ==
+X-Gm-Message-State: AGi0PubZycblm+h5nHPNZM/he2MFOPK5oJwyNmUcg6xl07JZQswmbyfD
+        ZXCDtr+yVRNws+TS/T0mvg==
+X-Google-Smtp-Source: APiQypIwmkbnX5Sb2oV1hGg6uEJnYAI3+wIEqPQG7uo2hEE2JbCsnecwxKCCPVRQz2cG8d7amOSAvw==
+X-Received: by 2002:aca:4386:: with SMTP id q128mr22953082oia.150.1589291888011;
+        Tue, 12 May 2020 06:58:08 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i127sm2764595oih.38.2020.05.12.06.55.19
+        by smtp.gmail.com with ESMTPSA id u197sm5325693oie.7.2020.05.12.06.58.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 06:55:19 -0700 (PDT)
-Received: (nullmailer pid 26214 invoked by uid 1000);
-        Tue, 12 May 2020 13:55:19 -0000
-Date:   Tue, 12 May 2020 08:55:19 -0500
+        Tue, 12 May 2020 06:58:06 -0700 (PDT)
+Received: (nullmailer pid 2669 invoked by uid 1000);
+        Tue, 12 May 2020 13:58:05 -0000
+Date:   Tue, 12 May 2020 08:58:05 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     mka@chromium.org, linux-arm-msm@vger.kernel.org,
-        robh+dt@kernel.org, agross@kernel.org, devicetree@vger.kernel.org,
-        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        stanimir.varbanov@linaro.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: media: venus: Add an optional power domain
- for perf voting
-Message-ID: <20200512135519.GA24061@bogus>
-References: <1589281966-13436-1-git-send-email-rnayak@codeaurora.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-clk@vger.kernel.org, p.zabel@pengutronix.de,
+        vincent.knecht@mailoo.org, devicetree@vger.kernel.org,
+        shawn.guo@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, konradybcio@gmail.com,
+        sboyd@kernel.org, mturquette@baylibre.com,
+        linux-kernel@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Subject: Re: [PATCH v4 1/2] clk: qcom: Add DT bindings for MSM8939 GCC
+Message-ID: <20200512135805.GA2022@bogus>
+References: <20200512115023.2856617-1-bryan.odonoghue@linaro.org>
+ <20200512115023.2856617-2-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589281966-13436-1-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <20200512115023.2856617-2-bryan.odonoghue@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 May 2020 16:42:46 +0530, Rajendra Nayak wrote:
-> Add an optional power domain which when specified can be used for
-> setting the performance state of Venus.
+On Tue, 12 May 2020 12:50:22 +0100, Bryan O'Donoghue wrote:
+> Add compatible strings and the include files for the MSM8939 GCC.
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Tested-by: Vincent Knecht <vincent.knecht@mailoo.org>
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 > ---
->  Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 4 +++-
->  Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/clock/qcom,gcc.yaml   |   3 +
+>  include/dt-bindings/clock/qcom,gcc-msm8939.h  | 206 ++++++++++++++++++
+>  include/dt-bindings/reset/qcom,gcc-msm8939.h  | 110 ++++++++++
+>  3 files changed, 319 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8939.h
+>  create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8939.h
 > 
 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.example.dt.yaml: video-codec@aa00000: power-domain-names: ['venus', 'vcodec0', 'vcodec1'] is too short
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/qcom,sc7180-venus.example.dt.yaml: video-codec@aa00000: power-domain-names: ['venus', 'vcodec0'] is too short
-
-See https://patchwork.ozlabs.org/patch/1288381
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
