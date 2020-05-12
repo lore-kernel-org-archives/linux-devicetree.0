@@ -2,147 +2,141 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0A2C2D0F6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 18:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DC0C2D0F7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 18:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5B820740
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 18:31:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gDUFaFlE"
+	by mail.kernel.org (Postfix) with ESMTP id 34AEB207BC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 18:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725987AbgELSbf (ORCPT
+        id S1728039AbgELScE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 14:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELSbe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 14:31:34 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C1F1C061A0F
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 11:31:33 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k7so4956908pjs.5
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 11:31:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QKf9/bN8jZZ+ZdzJpzOFdEI84H5DxqoBmWFl996xEY8=;
-        b=gDUFaFlEc+Bhi0kyh8PtqUgEeFYc2JmqV7M3z7pqlJtlZ9IRxBw5dgyrvyhO1J8SeH
-         STgTcRZJ7EajbXvGUul2w+3pP46ge9/02LLAfMSZ4HDSj33g2V1vm2Yr5r4nN9XOXn2X
-         m2w8x3LKIyt1kT9JPc2n62zIsfnRX3rzLK6E40SQWia1WMdTp4Z1ZWiSkf7jqXPvagwh
-         OJGtyMv+9oW2cA/FzZD/FJK2aOaJI2GOk7khoeKSQykI6iW9ZdShiXYWIFHZPKYQ7smt
-         5eHozoAG/ZKJu0eMi0hS2mrljfb2WMdkOVk4WYSTMn2EW4tk9pxEiuych04NTdJS6K7a
-         Ax4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QKf9/bN8jZZ+ZdzJpzOFdEI84H5DxqoBmWFl996xEY8=;
-        b=SsAFLLbycGxUdSnsx7pQHOkIzsSwEosnq6P56ZWjuB4clbbC6fTApd+9tOL2B8RS2A
-         pJP2ER05q/xDeKk+eQUOJIJMWzpIv7Ux11axPF9WuR3NcGMEJmxnOqUulLMFDiJV8tY5
-         UlamDylWxI5Zaw4oXA+836mGFVj2fDcEjPgZ7QlCclJLm/xEPusz20HUJeC004eJirYr
-         2jg35ZXqKpBosmWo5xgsfTVNH0DD6yWeugZhVDnfP+E2T0BPoYrasZBt8RJgYztJz961
-         LikSoMV+UT5mpdG3aQ1MK2gyJ9GOnth65mgj33qjsakibSuxL7Hh0SXe3yQ+GGNMG/gC
-         5Ljg==
-X-Gm-Message-State: AGi0PuZgSjru1lQrrxNjja9BoW82YwYmCLJwkMaTGWR/pF+eJJiXk7ft
-        FPHKvEiqacsudo0p+PaI676gNg==
-X-Google-Smtp-Source: APiQypI/80ewoDZ1pgekzNtGJ1ATxkZycc3BsQgegneVCFfiS5U94dvzij/2nds+LYkkBKjbo3DLIg==
-X-Received: by 2002:a17:90b:23c7:: with SMTP id md7mr29041429pjb.165.1589308292554;
-        Tue, 12 May 2020 11:31:32 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d35sm10939027pgd.29.2020.05.12.11.31.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 11:31:31 -0700 (PDT)
-Date:   Tue, 12 May 2020 11:29:59 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Michael Srba <Michael.Srba@seznam.cz>
-Subject: Re: [PATCH 3/4] arm64: dts: qcom: msm8916-samsung-a2015: Add
- touchscreen regulator
-Message-ID: <20200512182959.GJ57962@builder.lan>
-References: <20200426140642.204395-1-stephan@gerhold.net>
- <20200426140642.204395-4-stephan@gerhold.net>
+        Tue, 12 May 2020 14:32:04 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:54620 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELScE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 14:32:04 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AE8F7803088B;
+        Tue, 12 May 2020 18:32:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yUvchHa_njd1; Tue, 12 May 2020 21:32:00 +0300 (MSK)
+Date:   Tue, 12 May 2020 21:31:59 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        SoC Team <soc@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Olof Johansson <olof@lixom.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        <devicetree@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: memory: Add Baikal-T1 L2-cache
+ Control Block binding
+Message-ID: <20200512183159.p5wvvozlvyz64rle@mobilestation>
+References: <20200306130731.938808030702@mail.baikalelectronics.ru>
+ <20200507230705.6468-1-Sergey.Semin@baikalelectronics.ru>
+ <20200507230705.6468-2-Sergey.Semin@baikalelectronics.ru>
+ <20200511153804.GA7015@bogus>
+ <20200511202525.2qg472f5spkeajia@mobilestation>
+ <CAL_JsqJEZF5xkNGGiBy5rgUFfg=hWp6qi=tzFW84cGD9m-p5SA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200426140642.204395-4-stephan@gerhold.net>
+In-Reply-To: <CAL_JsqJEZF5xkNGGiBy5rgUFfg=hWp6qi=tzFW84cGD9m-p5SA@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun 26 Apr 07:06 PDT 2020, Stephan Gerhold wrote:
-
-> A3U and A5U both use an extra touchscreen LDO regulator
-> that provides 3.3V for the touch screen controller.
+On Mon, May 11, 2020 at 05:37:41PM -0500, Rob Herring wrote:
+> On Mon, May 11, 2020 at 3:25 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > On Mon, May 11, 2020 at 10:38:04AM -0500, Rob Herring wrote:
+> > > On Fri, 8 May 2020 02:07:03 +0300, Serge Semin wrote:
+> > > > There is a single register provided by the SoC system controller,
+> > > > which can be used to tune the L2-cache RAM up. It only provides a way
+> > > > to change the L2-RAM access latencies. So aside from "be,bt1-l2-ctl"
+> > > > compatible string the device node can be optionally equipped with the
+> > > > properties of Tag/Data/WS latencies.
+> > > >
+> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > > Cc: Paul Burton <paulburton@kernel.org>
+> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > > > Cc: Olof Johansson <olof@lixom.net>
+> > > > Cc: Boris Brezillon <bbrezillon@kernel.org>
+> > > > Cc: Paul Cercueil <paul@crapouillou.net>
+> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > > Cc: linux-mips@vger.kernel.org
+> > > > Cc: soc@kernel.org
+> > > >
+> > > > ---
+> > > >
+> > > > Changelog v2:
+> > > > - Move driver to the memory subsystem.
+> > > > - Use dual GPL/BSD license.
+> > > > - Use single lined copyright header.
+> > > > - Move "allOf" restrictions to the root level of the properties.
+> > > > - Discard syscon compatible string and reg property.
+> > > > - The DT node is supposed to be a child of the Baikal-T1 system controller
+> > > >   node.
+> > > > ---
+> > > >  .../memory-controllers/baikal,bt1-l2-ctl.yaml | 59 +++++++++++++++++++
+> > > >  1 file changed, 59 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+> > > >
+> > >
+> > >
+> > > My bot found errors running 'make dt_binding_check' on your patch:
+> > >
+> > > [nip] ...
+> > >
+> > > See https://patchwork.ozlabs.org/patch/1285665
+> > >
+> > > If you already ran 'make dt_binding_check' and didn't see the above
+> > > error(s), then make sure dt-schema is up to date:
+> > >
+> > > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> > >
+> > > Please check and re-submit.
+> > >
+> >
+> > The problem is due to an absent vendor prefix in the test kernel source tree
+> > environment. As I said in the cover-letter the new vendor prefix will be added
+> > in the framework of the next patchset:
+> > https://lkml.org/lkml/2020/5/6/1047
+> >
+> > Rob, please review that patchset first, merge in the corresponding patch from
+> > there and test this binding out then.
 > 
-> Add it as fixed regulator to the common include.
+> Did you read the part about a 'bot'? My bot doesn't read cover letters
+> and I only occasionally do. Do you want to write me a script that can
+> do this?
+
+A script, that would read a cover-letter for you? =)
+Anyway I wasn't talking to the bot, but to you explaining why the problem
+happened and of how to solve it. I didn't mean to blame you or the 'bot'
+for not reading the letter. Sorry, if it seemed like I did.
+
+-Sergey
+
 > 
-> Cc: Michael Srba <Michael.Srba@seznam.cz>
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> ---
->  .../qcom/msm8916-samsung-a2015-common.dtsi    | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-> index 43c5e0f882f1..67a286422a13 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-> @@ -138,6 +138,19 @@ hall-sensor {
->  		};
->  	};
->  
-> +	reg_vdd_tsp: regulator-vdd-tsp {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vdd_tsp";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpio = <&msmgpio 73 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&tsp_en_default>;
-> +	};
-> +
->  	i2c-muic {
->  		compatible = "i2c-gpio";
->  		sda-gpios = <&msmgpio 105 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-> @@ -195,6 +208,18 @@ pinconf {
->  			bias-disable;
->  		};
->  	};
-> +
-> +	tsp_en_default: tsp_en_default {
-
-Node names should not include '_', so this line should be
-	tsp_en_default: tsp-en-default {
-
-I fixed this up in both patch 3 and 4 and applied the series.
-
-Thanks,
-Bjorn
-
-> +		pinmux {
-> +			function = "gpio";
-> +			pins = "gpio73";
-> +		};
-> +		pinconf {
-> +			pins = "gpio73";
-> +			drive-strength = <2>;
-> +			bias-disable;
-> +		};
-> +	};
->  };
->  
->  &smd_rpm_regulators {
-> -- 
-> 2.26.2
-> 
+> Rob
