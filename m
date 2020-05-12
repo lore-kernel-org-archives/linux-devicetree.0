@@ -2,101 +2,110 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289C0C54E4A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C2EC54E8B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 000EE2072B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7DA206CC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:22:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AHrNZT7U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fRMfmTqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgELMCu (ORCPT
+        id S1729378AbgELMWN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 08:02:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgELMCt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 08:02:49 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0B5C061A0C
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:02:49 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 8so7615816lfp.4
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:02:49 -0700 (PDT)
+        Tue, 12 May 2020 08:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729336AbgELMWN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 08:22:13 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D179C061A0F
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:22:12 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id o14so12311795ljp.4
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:22:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Lext7JJwzoW0/UxTIqMqP+ZnyTLemfiC1Guac74bUBk=;
-        b=AHrNZT7U55JnEquIWVWAKVppYEhj8DWQlg7uan0Bvf1x9FZvHjyBdNOstxxKt6dayw
-         SqZmVtuFoz/wSHPPx+LNTF9urxI1jVFxkJBvMz04nRJDTbR6RTE66SYBN13Z8sy/7Eay
-         hQkb/9m62+XIRpvLYRN/3blwEK6zSN5Q9UBJxBina607c/OZMn1qARID//pXiqgsIe6u
-         HEnymo3TUXFPTd94Sp6d17U8Ub3PQQrS965KF33RLItN4mRAw1Cu0BmkEJQ1WHidx22s
-         HbbqQungotmuSWQ96p1UW/jpgpk7/hgw2tzIJHpWhLkaf77ei1w3p4bpD0XV4BQ/VxEa
-         pzLg==
+        bh=6rE0fPu5jCjuTK0cRn6PVF83ctsvQUR9eqdpVEWEcp8=;
+        b=fRMfmTqU/svnwd/DeHQpZqANKDRENpPQrFnFCdA6XrC7CAjuUBlWO5WlHhJX1VdFZx
+         GMq8lToALBRe4c2J8T+QxKo9JnROag//KysTHoivaIxpklZerMhBClnLLRGkf6GTvxAZ
+         HkmO3moxLpKmk6A6rO8oP7BDRG8DnImZgtRVlxbihuFkbxwz1Ua1Vkr2ST+iiVDtsiMz
+         +M1+jQ3zq3lb0Xi3P6DDhvioJsSDIiVLJW6i37AU92QD1VUuBYzTzk/eg8zmrLXxDlHD
+         ODaToJfeFvwuXa2LV7sZKRly/f9mFOUS9o9v8dILxoPCrjdsYLDHOnR6njLXYMKzYGwc
+         5uhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Lext7JJwzoW0/UxTIqMqP+ZnyTLemfiC1Guac74bUBk=;
-        b=Uv2KOtt/HHJ5DA3UqzbYdOFvRCf2JH1zb3LHaQoBPOLPJMqe4Gy9+HQlAzGaWW5mZu
-         O3HE37rkK84qUv0/yJPjc/tl73f5VHHrhGwHyU2Oj61fHfZ7DPSSc6QXJ0OO+cC2PVbQ
-         k8tK9RprQaV2UBlzx4tA1di5u/vn1sXIAG9fVKtCdkW06vBVbk8EaZn/XwW514pvfgIB
-         v7+Ivogl3Y+xvEwV07Syhm02ti1PqaSsSCjJvvNKUgYneInp5dMVkgkTaY2KjyqS6CDT
-         PbT76/xf+Xo4tB5p2Rc6blKt36+bxJF1PHM9KaFjkfodphffD/lIWW6jP5eKjXhVqw6A
-         D3Iw==
-X-Gm-Message-State: AOAM533twASA+rFHt10v3e/N5J9g00Q0vHJid06HK4rTndS4yIHGQUYL
-        kVzrTtR2SXSNa9HQVYoRTo34UozIgiZHCLQ70SSXQA==
-X-Google-Smtp-Source: ABdhPJzo7NWlWIkZPrVRUnHMxtPzZnHYqSFfMyggszoIWIf5ZsymS3tqfDN91Hsnym3QaEEpGy9pwTuwELKGkE4bNtM=
-X-Received: by 2002:ac2:414c:: with SMTP id c12mr14173516lfi.47.1589284967861;
- Tue, 12 May 2020 05:02:47 -0700 (PDT)
+        bh=6rE0fPu5jCjuTK0cRn6PVF83ctsvQUR9eqdpVEWEcp8=;
+        b=MVvCO/9hHv/GFN39ZMDIaTyT+c9kot/Ju5DhH637wSLGtp9pD2jGrOLtmSlPKGbPuK
+         ibpFeOGNDS+LbrVZYfWBNwmvpkduB0zWqxLVR+zvrPOdc+iM7KLXqrAaN+tqgGGXJpoa
+         A3OXAyEG0/KzFkvRoaEEAUmxZLtK1BJvxpQ7mvQog48Y0mlFgv4nvdQpTeFG3fiEg1aI
+         3VxRE4E0VBC6MasbbZuw9Z6qFFxalDeJVkg5w2GpMjdUCMQD1K6q1zAVIF+hi16XXqht
+         WPba05P1kDFK8+8asaJCAxw5+m81jNJ3USusH89NBLdy3YGd0JIgFgwwzRzJaxSHFSsW
+         82zw==
+X-Gm-Message-State: AOAM530RmOS6dWMYCh4dgafdnL1jQEcQc1Z2xGfn+cL2YWLObzy7kgVo
+        W/fv06OdFgD5ZHVNLOwseWjhd6lbKjovO3s0OwYxlZg1
+X-Google-Smtp-Source: ABdhPJwIPX2HNFOXh8yU8/OwdxhhRENdd70ug7z8dIHFgzX2fvXuP4+XvRAkuMUcWF3Sb2fH8n4awGxwbFbw77QNBx8=
+X-Received: by 2002:a2e:9c97:: with SMTP id x23mr1647314lji.39.1589286131013;
+ Tue, 12 May 2020 05:22:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <85b8dc9e6288270bbfdf55f1c156dba160293f01.1588239081.git.michal.simek@xilinx.com>
-In-Reply-To: <85b8dc9e6288270bbfdf55f1c156dba160293f01.1588239081.git.michal.simek@xilinx.com>
+References: <20200430194617.197510-1-dianders@chromium.org>
+ <20200430124442.v4.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid> <CAD=FV=WHoxdr++f7Y_NO=VnrnEPkP=+WS5u3j_5ifEjekhBWcA@mail.gmail.com>
+In-Reply-To: <CAD=FV=WHoxdr++f7Y_NO=VnrnEPkP=+WS5u3j_5ifEjekhBWcA@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 May 2020 14:02:36 +0200
-Message-ID: <CACRpkdZzTgkeqGdBbUW4XrH_q9DAG_uaOQ5icRtmzinN7oEzUg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: vendor-prefixes: Add U-Boot bootloader prefix
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
-        U-Boot Mailing List <u-boot@lists.denx.de>,
-        Tom Rini <trini@konsulko.com>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
+Date:   Tue, 12 May 2020 14:22:00 +0200
+Message-ID: <CACRpkdb22QrOcJXrR1je9Cf8S9LnKCcnQ92ML2xQhncraKC1Pw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Rob Clark <robdclark@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 11:31 AM Michal Simek <michal.simek@xilinx.com> wrote:
+On Thu, May 7, 2020 at 4:39 PM Doug Anderson <dianders@chromium.org> wrote:
 
-> List U-Boot project in vendor prefixes.
+> One suggestion that came off-list is to change the code to make the
+> numbering match up better with the datasheet.  Right now if you want
+> GPIO 2 you have to refer to it like:
 >
-> For more information take a look at:
-> https://en.wikipedia.org/wiki/Das_U-Boot
-> Source code is available here:
-> https://gitlab.denx.de/u-boot/u-boot
+> hpd-gpios = <&sn65dsi86_bridge 1 GPIO_ACTIVE_HIGH>;
 >
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->
-> The patch was created based on discussion with Rob
-> https://lore.kernel.org/linux-devicetree/CAL_Jsq+ehJSK7sjqmKtWOVjr-QZ3LDB+ywCO85uF8WJ+cB=AAw@mail.gmail.com/
+> That's because the code right now numbers things starting at 0 even if
+> the datasheet numbers things starting at 1.
 
-Makes sense.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+This is the hallmark of mixed-mode IC engineers at work.
+They are at heart analog IC designers so of course they
+enumerate everything starting at 1.
+
+Digital IC designers are like programmers and start on 0.
+
+Never the twain shall meet...
 
 Yours,
 Linus Walleij
