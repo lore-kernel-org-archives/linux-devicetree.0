@@ -4,111 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 652D7C47255
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A4CC54E8D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42EC32070B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A26020757
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589248423;
-	bh=D2/Dzv5xPSDflurwBGXfs/h5PSeZ7OMcq06S+wsPV6w=;
+	s=default; t=1589248515;
+	bh=8mEqijePArbehERSkArx/+MHGXL2rEYD0X2QrKHVcII=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PUYXtylQNEyIqRYd6uV3d4PZRT5oG0+PfAUF4lYncxcG9TLjIbFV4Zg9Kr1JwTlXP
-	 goI3Ukyl4kDZsnvHJg7bQ0lOr0psxXEz0MaErkgg9azHO3T5XSnHyEJ4+m/+MdHS5L
-	 YXJk8Bp+CFM+xL4N0vePkUh87Poj4Kuee6E92Gcg=
+	b=GbSRm9GYYYgdDABBe1WK2wGuooNSbeFrwJ02EwlITzPkPIEsAvWkBcHX1fVbrlagf
+	 98o+M3YTu9qVaXwAii1mWXGtfDQvKXDnfkimkWn8TmFYMupp82Vx0XP0NrXAab54wm
+	 eYd7InFIfElYoasfaL5vjVNDOqVtWWFglvzDg2uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgELBxk (ORCPT
+        id S1727942AbgELBzO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 21:53:40 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42755 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgELBxj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 21:53:39 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m18so9240060otq.9;
-        Mon, 11 May 2020 18:53:38 -0700 (PDT)
+        Mon, 11 May 2020 21:55:14 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37879 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgELBzN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 21:55:13 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z17so9278110oto.4;
+        Mon, 11 May 2020 18:55:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=daFGYc0o3GvaIjPzR6/Udzzo+tWkkyO8hcjap5qbb9s=;
-        b=rAPYIyvPktcQBkvsNMQPf03clZxcHy2Ni04E6qIkzy4uSyBTh31u1KCoIiTqR099pC
-         03UK55XaqerqRx+4FAThgoy+5KyxRyvlR7mG0WbCoj9vh1NKsGuP5lFXiifxCuoVHbC1
-         cDyq0IdtrnBpRaKzLMHX3yCGB9UmRX/sN7mRHILRHnrodMM4//fT5yiHDD/kWQBvcxrz
-         SqDaZkf+OnvYGoI+sfzK18bhZYwUFLmx9NtSRS8I2/u32LBSNLFsnryy1H5oXuI03KGl
-         Ps2jXMQtJPaLnoP6lQ17uAhKvWReIA91OqEZ7mtB1dHw9oEdbj1iYK4BXlU+w+4jxpBW
-         HGpg==
-X-Gm-Message-State: AGi0PuZGiMWLTJG4enFLHDThbrQdBc6ZlTwJrkAHaNuPiYUqc0JY14Qs
-        WuxNPibtuSxOqC9bpjURuQ==
-X-Google-Smtp-Source: APiQypIxgXqdx3cx31SCjMZl/t8jJMjD1vREWgFc4w7UpMQFE2oKD32mY52N/woXbeBeF4cYmIRKnA==
-X-Received: by 2002:a9d:5cc1:: with SMTP id r1mr14040732oti.329.1589248418475;
-        Mon, 11 May 2020 18:53:38 -0700 (PDT)
+        bh=AiCoW3O58ru21ZOnNKb6RDGHeHYWQXHsIR7tZCS+sHM=;
+        b=Sz6y/aqIZdomq7tfrYIofWcdoeyjjiPEAR1h7lPbxZAiVn9EAx1KIH+7g3ml2RkOk8
+         M0RLGcDxxVDZNbpsUNCmHyNPRd40i+tF9imaKLWuZSKEwXvw1tif5YNY5sWsm8rGYWjh
+         nF8/KSAfbH9H1eaZPwnkvZJZD/CZN4/QIWFnpIRhpnjNUze/E+Y8kgkR8KUwnpOmtRKg
+         7WuNxJuIFyGFaGDNXL61NBCR6IdvUTffvdB6yvwg0h0dT4JMVMz01iZ5vLs+ZnaKrISy
+         6b+wgWbvh94lHFe93+DZxtVO0Zcsa3LTZelTTCfRBRL+DAc0b7Bz381I+onFRcI9SNhm
+         ND4A==
+X-Gm-Message-State: AGi0Pub6JS1yQYKxUcwl777uGpS367X2cmp7SipI2eK0SRpbRkfgh5tp
+        N33PjDGknVxa1AM3pJj1BA==
+X-Google-Smtp-Source: APiQypJoPZyNv2xAcVy4mUw2XjOqoLdXsa9RO5P1ix63KAwt1m5ZukW5aGU1fy3z0MvvoPnCaiUjFA==
+X-Received: by 2002:a9d:4b07:: with SMTP id q7mr2391552otf.372.1589248512008;
+        Mon, 11 May 2020 18:55:12 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l21sm3263751ooq.18.2020.05.11.18.53.37
+        by smtp.gmail.com with ESMTPSA id i81sm84561oif.26.2020.05.11.18.55.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 18:53:37 -0700 (PDT)
-Received: (nullmailer pid 14764 invoked by uid 1000);
-        Tue, 12 May 2020 01:53:36 -0000
-Date:   Mon, 11 May 2020 20:53:36 -0500
+        Mon, 11 May 2020 18:55:11 -0700 (PDT)
+Received: (nullmailer pid 17008 invoked by uid 1000);
+        Tue, 12 May 2020 01:55:10 -0000
+Date:   Mon, 11 May 2020 20:55:10 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>, devicetree@vger.kernel.org,
-        mka@chromium.org, Jonathan.Cameron@huawei.com,
-        linux-arm-msm-owner@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, agross@kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        bjorn.andersson@linaro.org, smohanad@codeaurora.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        aghayal@codeaurora.org, kgunda@codeaurora.org,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V3 2/4] iio: adc: Add PMIC7 ADC bindings
-Message-ID: <20200512015336.GA14725@bogus>
-References: <1587993846-30773-1-git-send-email-jprakash@codeaurora.org>
- <1587993846-30773-3-git-send-email-jprakash@codeaurora.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] dt-bindings: gpio: rcar: Convert to json-schema
+Message-ID: <20200512015510.GA16909@bogus>
+References: <20200427192259.27978-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587993846-30773-3-git-send-email-jprakash@codeaurora.org>
+In-Reply-To: <20200427192259.27978-1-geert+renesas@glider.be>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 27 Apr 2020 18:54:03 +0530, Jishnu Prakash wrote:
-> Add documentation for PMIC7 ADC peripheral.
-> For the PMIC7-type PMICs, ADC peripheral is present in HW for the
-> following PMICs: PMK8350, PM8350, PM8350b, PMR735a and PMR735b.
-> Of these, only the ADC peripheral on PMK8350 is exposed directly to SW.
-> If SW needs to communicate with ADCs on other PMICs, it specifies the
-> PMIC to PMK8350 through the newly added SID register and communication
-> between PMK8350 ADC and other PMIC ADCs is carried out through
-> PBS(Programmable Boot Sequence) at the firmware level.
+On Mon, 27 Apr 2020 21:22:59 +0200, Geert Uytterhoeven wrote:
+> Convert the Renesas General-Purpose Input/Output Ports (GPIO) Device
+> Tree binding documentation to json-schema.
 > 
-> In addition, add definitions for ADC channels and virtual channel
-> definitions (combination of ADC channel number and PMIC SID number)
-> per PMIC, to be used by ADC clients for PMIC7.
+> Drop the deprecated "renesas,gpio-rcar" compatible value.
+> Document missing properties.
+> Drop the first example, as it doesn't add much value.
 > 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 38 ++++++++--
->  include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h    | 67 ++++++++++++++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h   | 88 ++++++++++++++++++++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h   | 46 +++++++++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h   | 28 +++++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h   | 28 +++++++
->  include/dt-bindings/iio/qcom,spmi-vadc.h           | 78 ++++++++++++++++++-
->  7 files changed, 366 insertions(+), 7 deletions(-)
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
+>  .../bindings/gpio/renesas,gpio-rcar.txt       |  94 ------------
+>  .../bindings/gpio/renesas,rcar-gpio.yaml      | 143 ++++++++++++++++++
+>  2 files changed, 143 insertions(+), 94 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
