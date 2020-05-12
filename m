@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1FAC54E8B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 07:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367ACC54E4B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 07:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B09D5206B7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 07:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C57F2075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 07:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jy5RVRx/"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ckBD9Rn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbgELHel (ORCPT
+        id S1729143AbgELHev (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 03:34:41 -0400
-Received: from mail-eopbgr60046.outbound.protection.outlook.com ([40.107.6.46]:5862
+        Tue, 12 May 2020 03:34:51 -0400
+Received: from mail-eopbgr60063.outbound.protection.outlook.com ([40.107.6.63]:46131
         "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725933AbgELHek (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 03:34:40 -0400
+        id S1729105AbgELHes (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 03:34:48 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mszTq3E29/3pNGAnmkoLpuXyfzPSs4OgLNK6PEiMFGmQEmHTvx2YtOnwSn6FiaQtBhaD/Hf57Rd6f51mUXqsvQrGjAp4che4SLuaYLuIs8tIvBvdO0HASotgyt1IuxVp5Hnj+b/sdUlVaTtjDevND8gHiXfPVXs3D0ZtzcPsFJ2mqI7ekYmlXAwweCJVf4OTJxiv9LHSOwCeA+fYAFnEQVUhwesysXRlwCjsVOwNmI2YJ2WsyWClFMLugFtTMGshX+b5BxkAxPn1OemrVi8k/NE7FybSt0kZH958atvDAkcuClpjgpM2GyFoRnB0U9qAsZq5xAFAYmjYtpwzZr7/jQ==
+ b=IoEVtvLIAmUuYT7w/KEoXjGC8LZVhy6FhGzHDQZNwfetg7nM5nrT0Ed7BgKmi/GzgfsA+ZSEhLCIX3XSDnMf4BInm5xrXchmkgxgwf1DwydyyE4W9j74E9Z6b/x2R2wV5nAsTvHWfC3r7xwJMBcdYyfmYLXw2czVdnzOxRWg8eothAaGJM70n8V4ShNcgIcvVwIZVV0whqP4T/zBa95K2UvFzmvMsQAejBNMK0a7/Ch0lJPlf7I8HT7MhfbChCszFX5LAW/JTo+QWg8Yu57NP5HF3/1sMX4mgsa3PmNd4UzAbs9GiGJHfaLdXM2UIrcbu2pX8CMaYi+KmOZwsxn1Xg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=44Oo81Knbm15i+C/H7U5LenIqnpYDiODtbQVZRNXUPc=;
- b=aBHehRVt2F80fZ5LEU5bcjx+a2fUESeqXtc2pxeulnP51eCLsxkkI226MmKo8BA9IgzHtHhnwduGuJVT8hj7q/e52VPu9Cfsgv65BDpSDjvI1KiNmI5Q1nXKFiOQIdepyGNvo5V/P5ySKm3565pIeN+OJfVyth9zChEh0ntfSgM25xbjk6GI4zkI+55YMy3V86+SXFNqMIIuoVjlYeUWDtG6CdPAI+Mnc2k88Kw6thff9HR5SUXU+o0CdR5cQYZYYYE0M18xPXjeZBHh1u5X0qLW6zH+xV3cLCkg1HEeP6YLwzw5FhhzL90+FbB3zR08QYl9guiQuIaROCcmr9cp4g==
+ bh=UbE94RXXb1PGc57/+DWQQG3Qm5eLZrZMgFVcM//jU8s=;
+ b=JMnTHZ4B/ETda53Osu1G+WxbZRrPVMsOXBTWlCjm+WIBlPhO0dbYKtSFawCxakiBaThNMzjLubyZ7UViEbeyrc/P1TtOl5rUunV2ESUw+zd1NVFFxQxHxeOqZGDcolQJ5J2RmYY1Gi9AMnGnLgmxq+PahajOkxmsabIvC4bClB7hVbOQfUc5mtSJZ3+ojRWsz2FVsIjwyAfpuFXy/hnLiDcnzCgnEAAHjDab6yJO1qPU1ZIXJAaHOcU/6YRheG/Qvzm8vBi3H0//Q1CFe5FPV8b0KbiHjgNbp5BRFV0ufI+jwCOg4P5tQyamxyOJzd42bFKIx4A/zt6LwHJ8kwz56A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=44Oo81Knbm15i+C/H7U5LenIqnpYDiODtbQVZRNXUPc=;
- b=Jy5RVRx/1trALVNodLDJyhZAtiCRMs7rgH8/0JGNzKYUkSBGFqY6IhIecOt/Ur21ARL1a/W/agc2awb9aZtcwjcAl0i2zdbsmJvT/9S1CANHjaEJUJvWLda+Kh8VVPNg/s2Ifc2BLVf16kpIBGWSNdvamq3sUFEtRGDv1FMxLSc=
+ bh=UbE94RXXb1PGc57/+DWQQG3Qm5eLZrZMgFVcM//jU8s=;
+ b=ckBD9Rn+BKeqivtp3sRYbYQ7FL7rlJTaD/jEP5H1LqwCOdBM4L1o14JZsiK6732IORdJN9OF7sIzoEflDLv9Z83Y31du72y+TDUTsA1T1Q8mHWQVUwkpOXNA1NbnYIDJLxB8JoGC2vMLa0dEHF1cwW9CiZfWKv5P60karHKB9y4=
 Authentication-Results: huawei.com; dkim=none (message not signed)
  header.d=none;huawei.com; dmarc=none action=none header.from=nxp.com;
 Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
  by DB8PR04MB5882.eurprd04.prod.outlook.com (2603:10a6:10:ae::32) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Tue, 12 May
- 2020 07:34:36 +0000
+ 2020 07:34:44 +0000
 Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
  ([fe80::2924:94ba:2206:216e]) by DB8PR04MB6795.eurprd04.prod.outlook.com
  ([fe80::2924:94ba:2206:216e%6]) with mapi id 15.20.2979.033; Tue, 12 May 2020
- 07:34:36 +0000
+ 07:34:43 +0000
 From:   Joakim Zhang <qiangqing.zhang@nxp.com>
 To:     john.garry@huawei.com, will@kernel.org, mark.rutland@arm.com,
         robh+dt@kernel.org, shawnguo@kernel.org
 Cc:     linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier for userspace
-Date:   Tue, 12 May 2020 15:31:13 +0800
-Message-Id: <20200512073115.14177-2-qiangqing.zhang@nxp.com>
+Subject: [PATCH V1 RESEND 3/3] arch: arm64: imx8mq/m/n: remove unused compatible string
+Date:   Tue, 12 May 2020 15:31:15 +0800
+Message-Id: <20200512073115.14177-4-qiangqing.zhang@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
 References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
@@ -65,128 +65,84 @@ X-ClientProxiedBy: SG2PR0401CA0006.apcprd04.prod.outlook.com
  (2603:10a6:10:fa::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.71) by SG2PR0401CA0006.apcprd04.prod.outlook.com (2603:1096:3:1::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Tue, 12 May 2020 07:34:32 +0000
+Received: from localhost.localdomain (119.31.174.71) by SG2PR0401CA0006.apcprd04.prod.outlook.com (2603:1096:3:1::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Tue, 12 May 2020 07:34:40 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [119.31.174.71]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 41e6c064-8749-4b2d-6e5e-08d7f646eb58
+X-MS-Office365-Filtering-Correlation-Id: 7fdc86f4-99f9-46c6-4405-08d7f646f016
 X-MS-TrafficTypeDiagnostic: DB8PR04MB5882:|DB8PR04MB5882:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB8PR04MB5882036B36DA7F49F1DEC3F6E6BE0@DB8PR04MB5882.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
+X-Microsoft-Antispam-PRVS: <DB8PR04MB5882012F7180F45186CBB5E8E6BE0@DB8PR04MB5882.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:626;
 X-Forefront-PRVS: 0401647B7F
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: V7j2e3ToSKLgoDYJH0ew0h06BGs6+783hwkeWxIbL9JZhJtl/J7om9vU+SDTYlC3ln1aKXzfnmnXkYsegb8c7lfPl3YG83cYbWyBdamdm2m/Ag6E6lQ60yzzzzVmNBlELccc4ZZ3IqQqARMcakid9uMfNbY5hdMmZ2YvC0nbE78EOFHaC3mGm1t0jqGGm1sQ7Qy0eJM3ZZrsSFwO7UTJsjm6DzB2jlYnpdXKf7zSP/bE77Mnsh3KIXACVrJpmswGcGJAmHgG5e+xJC5T9JmYxiomuuG2noW/NcHlb2WFaz4gITTmRHDHFMQCd82uPY/JAT3bihTv4Gu5j2ypQDdCfCTPReiN/oj5cnTrkQ6QDajuBTrtqhKDQGyB9VtesLaRb+DDzAnhqJBufJe0giTDIS6BRqgtSPMAFhVv+qcexcGdJXS8trc2d9DNoHk4nMqg6voPYJF0XRgC886G3nTlGsaf/VqEnFbLv3uZf25qbZGC/k1YoSKGgbdVKpiPYZhobYeC1+gusg8WgGKFzb8LcGPi/an2Ck8UI0cbp33g0slbbKK9rgtEovSHYmVL/JN3
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(366004)(33430700001)(8676002)(69590400007)(33440700001)(5660300002)(66476007)(36756003)(66946007)(1076003)(8936002)(66556008)(186003)(4326008)(86362001)(16526019)(6666004)(26005)(956004)(316002)(478600001)(2616005)(6512007)(6506007)(2906002)(52116002)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: VWlXaO5dcmc97vzzgRLwKJMqKuEd0a2BNdl7av+byX57CKs1gsix3vOJnAdekw3pPv6GpMeJfP0g0dGmLGDH2Wtc0QLoPaByCKdpTDeV5rPDKQf7lOAbE2bAM5gB/4iWyII15sFV5Ps37sESHYKdGWJxsEfYMyoz7xGALE/lX86NBF3nZ0s+PK/HPm5YeYRWJP59lixZK+1FHYnQdmHXeSli4ePn20YSZ5EjoHY4S6EK9wT6TZmmCLx1kOANVzom0E5M3f+I3IBULq58XBrUi0L6KXEoERZ25HLbUg9WPfs6qPZuFL6gHsuUX2cB0I6deVMy0mOWZ68uQOiPdEkBEURDTQEwiEHIEnQU0GWtA2g1sL89Z4V6uwE61k3JzBXRIvz3a7D5a2e5a2uqM9HHDJMw+8QpFOC+DWgPmF79VQnQtT2b1Lcr97Cg3z2VxH2kAHKkdz1vDn4OO1pj+HONVYaT9jx04Qn0TrP+aj8I3Bs=
+X-Microsoft-Antispam-Message-Info: LxdisFZZWnAvbv0wDdR5nUNbJvQv3PJnIsAuvYzXSyr5ek8Z6ubYQTU8T2ZnUteqdwN853YkNZ99PdLNBb1leKSbbRliKcuzL9uApd7VkKd52hghgCuNFWK6e9hBlMt1dLxcYdf62FIMQ3Oz4NFWEIQsfgNUixyww2qfyK55sLx5C73RcPySnwJ4RE1XDz7iHOZ5x/zqqjeWAN7XLrX5r+DxMeBEwb9ncDc4Vol4qSmvIcHzjpqvoeUht3FAYCe6K+geuMeAtCBZInQz2/4QLPPA9kWlKiGDNTjLj1LeXCCnffqZUzh4FQJKh0mUi8E0nDZEg8S0DZ2yxtJWWGab30R3HIZ1O9+N3epDUnrWDweHLTUJFpHJRUbYnFJDjQTRzWfqnrDBHnIQiPCgpmjlRBke62EWOmvWsdcPDJ27LiYLmPRlX8+UEb6G4f+beNUpB0BpnI+FcDrImArTqsp0mD7JoArh63pgjJqEWB4VGZl/wypeCzcvEi5VwDorJgOrhyFxzRohtaO9icL/Q6pnXGF++XH5xqI99QXWVGiGwXzMJMXnKQXfQo7NCcsFtkGAFUfGBrRx0rM85FpqYpkXwA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(366004)(33430700001)(8676002)(69590400007)(33440700001)(5660300002)(66476007)(36756003)(66946007)(1076003)(8936002)(66556008)(186003)(4326008)(86362001)(16526019)(6666004)(26005)(956004)(316002)(478600001)(2616005)(6512007)(6506007)(2906002)(52116002)(6486002)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: R39mFwyfNWpk6xH0RJcAAWZu3vdyGNwnjfuNooEgWgz5VpphGhhgQMwhQcRnE7Fnk2gP7939/pYcPy8HkaTmY9oY5D3sWibvMoCn7GFU3mjgN75Yh+8qH7mNge3aqLSIDvIey5klCEFPqKpfvKGJz6wSM5EjWX1A5oZ8X1beS6qgr3aqjsSEC1QwNqGQsEXk36mNvD0E6u6OWhgH1rS5IPxy8hzeOLKbQS8DP63BdoaxO2ez31tiQHkowtETOTE3aJdeAN5vkqMutUf9CgSRNr2L6gnnPlFmSckTgDxCK2Gy7ggh3rNKHLw9T5efLn9G2rBUFIa06TPqaPcTKzvW58oFPm8EVVua2ltHZ82MBFkqA45U6QqBaGsrrHKxIbbs9R2Q1i+LjTABOsFFX26mIFRID96bKq1/L8g1QK1t8guch0gH0ThISVpkDK9+E800IFnVKzkY2+Iw7ibT+Fi42i6qK7ECe0D/X8MAhsGJCkD3Pwa2FMAFLkhylnbS55kn
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41e6c064-8749-4b2d-6e5e-08d7f646eb58
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2020 07:34:36.4159
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7fdc86f4-99f9-46c6-4405-08d7f646f016
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2020 07:34:43.9029
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: K5h+bCJSreKyvhbEvzimvc3CSYaZ8M2ClSqCWkT3669mU9GKo4hb8t2FX9+al+u+CblINKQT5D8yxgTyxQW2Wg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: VxLfpfQNUWUrD/ux8UjFMbmsDUHQUpSA4UxCB+smJE33QEtaFaoD5S2oVTpYp27UqWaMUOa5tyf9C6uD4snitw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5882
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The DDR Perf for i.MX8 is a system PMU whose axi id would different from
-SoC to SoC. Need expose system PMU identifier for userspace which refer
-to /sys/bus/event_source/devices/<PMU DEVICE>/identifier.
+Remove the unused compatible string.
 
-Reviewed-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 ---
- drivers/perf/fsl_imx8_ddr_perf.c | 45 +++++++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi | 2 +-
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index 95dca2cb5265..88addbffbbd0 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -50,21 +50,38 @@ static DEFINE_IDA(ddr_ida);
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 1e5e11592f7b..136a6653252c 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -894,7 +894,7 @@
+ 		};
  
- struct fsl_ddr_devtype_data {
- 	unsigned int quirks;    /* quirks needed for different DDR Perf core */
-+	const char *identifier;	/* system PMU identifier for userspace */
- };
+ 		ddr-pmu@3d800000 {
+-			compatible = "fsl,imx8mm-ddr-pmu", "fsl,imx8m-ddr-pmu";
++			compatible = "fsl,imx8mm-ddr-pmu";
+ 			reg = <0x3d800000 0x400000>;
+ 			interrupt-parent = <&gic>;
+ 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index a44b5438e842..76c8db04b4f7 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -793,7 +793,7 @@
+ 		};
  
--static const struct fsl_ddr_devtype_data imx8_devtype_data;
-+static const struct fsl_ddr_devtype_data imx8_devtype_data = {
-+	.identifier = "i.MX8",
-+};
-+
-+static const struct fsl_ddr_devtype_data imx8mq_devtype_data = {
-+	.quirks = DDR_CAP_AXI_ID_FILTER,
-+	.identifier = "i.MX8MQ",
-+};
-+
-+static const struct fsl_ddr_devtype_data imx8mm_devtype_data = {
-+	.quirks = DDR_CAP_AXI_ID_FILTER,
-+	.identifier = "i.MX8MM",
-+};
+ 		ddr-pmu@3d800000 {
+-			compatible = "fsl,imx8mn-ddr-pmu", "fsl,imx8m-ddr-pmu";
++			compatible = "fsl,imx8mn-ddr-pmu";
+ 			reg = <0x3d800000 0x400000>;
+ 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 6a1e83922c71..970ffcc664b8 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -1213,7 +1213,7 @@
+ 		};
  
--static const struct fsl_ddr_devtype_data imx8m_devtype_data = {
-+static const struct fsl_ddr_devtype_data imx8mn_devtype_data = {
- 	.quirks = DDR_CAP_AXI_ID_FILTER,
-+	.identifier = "i.MX8MN",
- };
- 
- static const struct fsl_ddr_devtype_data imx8mp_devtype_data = {
- 	.quirks = DDR_CAP_AXI_ID_FILTER_ENHANCED,
-+	.identifier = "i.MX8MP",
- };
- 
- static const struct of_device_id imx_ddr_pmu_dt_ids[] = {
- 	{ .compatible = "fsl,imx8-ddr-pmu", .data = &imx8_devtype_data},
--	{ .compatible = "fsl,imx8m-ddr-pmu", .data = &imx8m_devtype_data},
-+	{ .compatible = "fsl,imx8mq-ddr-pmu", .data = &imx8mq_devtype_data},
-+	{ .compatible = "fsl,imx8mm-ddr-pmu", .data = &imx8mm_devtype_data},
-+	{ .compatible = "fsl,imx8mn-ddr-pmu", .data = &imx8mn_devtype_data},
- 	{ .compatible = "fsl,imx8mp-ddr-pmu", .data = &imx8mp_devtype_data},
- 	{ /* sentinel */ }
- };
-@@ -84,6 +101,27 @@ struct ddr_pmu {
- 	int id;
- };
- 
-+static ssize_t ddr_perf_identifier_show(struct device *dev,
-+					struct device_attribute *attr,
-+					char *page)
-+{
-+	struct ddr_pmu *pmu = dev_get_drvdata(dev);
-+
-+	return sprintf(page, "%s\n", pmu->devtype_data->identifier);
-+}
-+
-+static struct device_attribute ddr_perf_identifier_attr =
-+	__ATTR(identifier, 0444, ddr_perf_identifier_show, NULL);
-+
-+static struct attribute *ddr_perf_identifier_attrs[] = {
-+	&ddr_perf_identifier_attr.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group ddr_perf_identifier_attr_group = {
-+	.attrs = ddr_perf_identifier_attrs,
-+};
-+
- enum ddr_perf_filter_capabilities {
- 	PERF_CAP_AXI_ID_FILTER = 0,
- 	PERF_CAP_AXI_ID_FILTER_ENHANCED,
-@@ -237,6 +275,7 @@ static const struct attribute_group *attr_groups[] = {
- 	&ddr_perf_format_attr_group,
- 	&ddr_perf_cpumask_attr_group,
- 	&ddr_perf_filter_cap_attr_group,
-+	&ddr_perf_identifier_attr_group,
- 	NULL,
- };
- 
+ 		ddr-pmu@3d800000 {
+-			compatible = "fsl,imx8mq-ddr-pmu", "fsl,imx8m-ddr-pmu";
++			compatible = "fsl,imx8mq-ddr-pmu";
+ 			reg = <0x3d800000 0x400000>;
+ 			interrupt-parent = <&gic>;
+ 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.17.1
 
