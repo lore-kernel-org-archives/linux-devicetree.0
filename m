@@ -2,84 +2,73 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA94C54E4A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BD8C54E8D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C8C206A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:45:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589294750;
-	bh=DoH/X5aDtvSMxDWJGqC48xOlxwJOdg4XriiP8/OQL7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Or80O8DbWbWbfnEK1dfhjKi0Hz7xjmOyr9CjJ+JcCG5jujna2Zddf6bmDYq1mBzdf
-	 VIxFbDnFeXQUrHAWlMie9FAk3mw29sZnxqHS6MsgpIf/rRRhTr0T1T08wzy6CLp1F9
-	 f7SYaw8sHyokEPDWV058Ri8ZSO/AHZTRlMMM/RUU=
+	by mail.kernel.org (Postfix) with ESMTP id EB366206A5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgELOpt (ORCPT
+        id S1730329AbgELOso (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 10:45:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46815 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbgELOpt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 10:45:49 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z25so10651878otq.13;
-        Tue, 12 May 2020 07:45:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XYysbw64UkCclCYgM2OGMnJLATIny63RyaD7MCp3KWY=;
-        b=QJYGF8tW9ZukY2gkx2g2/RVwvADh1GrD8UlVhHy9LUc7fsbWpnNK0ihQX6k7bg+PuO
-         174b3w3NGSByrKgL3Fo2/e4TbTsn3TpZ93BduCVqIgQNbsE8ixyh0zsrwsUjDr8Waao+
-         qFobxbwQcJ0HH/YHBSG0XgRL9XxicntETEkbl64ipopQKoarYwOteQcLPk87QrzJOmE4
-         rSQCLvbG8H1pb9Evuu7Vj0lxG6q8nJCFpPiMfLrfnKTDAoJmgRx+hssLP4wlhLBaeMEg
-         cYcfyk35eOq10G9rjP9HJkQmoAdpA1irgdoW3L49Uj3QuIur9zRIbXhJyQnrheV4RGlD
-         tUcg==
-X-Gm-Message-State: AGi0PuZQ+4IM7chEewjs9C14+GmwAWJjCA6aXIUx7pEN90MplfjYb5+C
-        ekqYLPZFOSHW6UDw2DVXyQ==
-X-Google-Smtp-Source: APiQypLRGe0NVHMWRSwEojjjgvnlc6nzTgMEhuo7RsnCK7kq1DAeK9fk+yuKCGhkNMIq7L2fX3NANQ==
-X-Received: by 2002:a9d:7a98:: with SMTP id l24mr17726019otn.79.1589294748487;
-        Tue, 12 May 2020 07:45:48 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id x186sm1026630ooa.4.2020.05.12.07.45.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 07:45:47 -0700 (PDT)
-Received: (nullmailer pid 8681 invoked by uid 1000);
-        Tue, 12 May 2020 14:45:46 -0000
-Date:   Tue, 12 May 2020 09:45:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Saravanan Sekar <saravanan@linumiz.com>
-Cc:     robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        knaack.h@gmx.de, pmeerw@pmeerw.net, jic23@kernel.org,
-        broonie@kernel.org, lars@metafoo.de, lgirdwood@gmail.com
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: add document bindings for
- wsen-itds accel sensor
-Message-ID: <20200512144546.GA7376@bogus>
-References: <20200429133943.18298-1-saravanan@linumiz.com>
- <20200429133943.18298-2-saravanan@linumiz.com>
+        Tue, 12 May 2020 10:48:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35678 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730211AbgELOsn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 10:48:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0E9E4ACC3;
+        Tue, 12 May 2020 14:48:44 +0000 (UTC)
+From:   Mian Yousaf Kaukab <ykaukab@suse.de>
+To:     swarren@wwwdotorg.org, robh+dt@kernel.org, robin.murphy@arm.com
+Cc:     devicetree@vger.kernel.org, talho@nvidia.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, afaerber@suse.de,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        Mian Yousaf Kaukab <ykaukab@suse.de>
+Subject: [PATCH 3/4] arm64: tegra186: add reserved-only flag in sysram node
+Date:   Tue, 12 May 2020 16:48:02 +0200
+Message-Id: <20200512144803.24344-3-ykaukab@suse.de>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200512144803.24344-1-ykaukab@suse.de>
+References: <20200512144803.24344-1-ykaukab@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429133943.18298-2-saravanan@linumiz.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 29 Apr 2020 15:39:40 +0200, Saravanan Sekar wrote:
-> Add device tree binding information for wsen-itds accel sensor driver.
-> 
-> Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
-> ---
->  .../bindings/iio/accel/we,wsen-itds.yaml      | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
-> 
+bpmp driver has reserved regions in sysram. Since sysram is only used
+by the bpmp driver, add ‘reserved-only’ flag to the sysram node so
+that only regions used by the bpmp driver are remapped. Other regions
+of the sysram may not be accessible to the kernel and a speculative
+access to them can cause SError.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+---
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+index 58100fb9cd8b..07ce7e7b270c 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+@@ -1219,6 +1219,7 @@ sysram@30000000 {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges = <0 0x0 0x0 0x30000000 0x0 0x50000>;
++		reserved-only;
+ 
+ 		cpu_bpmp_tx: shmem@4e000 {
+ 			compatible = "nvidia,tegra186-bpmp-shmem";
+-- 
+2.25.0
+
