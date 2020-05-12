@@ -2,110 +2,73 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C2EC54E8B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184A4C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA7DA206CC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:22:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fRMfmTqU"
+	by mail.kernel.org (Postfix) with ESMTP id F1DF3206CC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgELMWN (ORCPT
+        id S1727859AbgELMYx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 08:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
+        Tue, 12 May 2020 08:24:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729336AbgELMWN (ORCPT
+        by vger.kernel.org with ESMTP id S1727783AbgELMYx (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 08:22:13 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D179C061A0F
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:22:12 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id o14so12311795ljp.4
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6rE0fPu5jCjuTK0cRn6PVF83ctsvQUR9eqdpVEWEcp8=;
-        b=fRMfmTqU/svnwd/DeHQpZqANKDRENpPQrFnFCdA6XrC7CAjuUBlWO5WlHhJX1VdFZx
-         GMq8lToALBRe4c2J8T+QxKo9JnROag//KysTHoivaIxpklZerMhBClnLLRGkf6GTvxAZ
-         HkmO3moxLpKmk6A6rO8oP7BDRG8DnImZgtRVlxbihuFkbxwz1Ua1Vkr2ST+iiVDtsiMz
-         +M1+jQ3zq3lb0Xi3P6DDhvioJsSDIiVLJW6i37AU92QD1VUuBYzTzk/eg8zmrLXxDlHD
-         ODaToJfeFvwuXa2LV7sZKRly/f9mFOUS9o9v8dILxoPCrjdsYLDHOnR6njLXYMKzYGwc
-         5uhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6rE0fPu5jCjuTK0cRn6PVF83ctsvQUR9eqdpVEWEcp8=;
-        b=MVvCO/9hHv/GFN39ZMDIaTyT+c9kot/Ju5DhH637wSLGtp9pD2jGrOLtmSlPKGbPuK
-         ibpFeOGNDS+LbrVZYfWBNwmvpkduB0zWqxLVR+zvrPOdc+iM7KLXqrAaN+tqgGGXJpoa
-         A3OXAyEG0/KzFkvRoaEEAUmxZLtK1BJvxpQ7mvQog48Y0mlFgv4nvdQpTeFG3fiEg1aI
-         3VxRE4E0VBC6MasbbZuw9Z6qFFxalDeJVkg5w2GpMjdUCMQD1K6q1zAVIF+hi16XXqht
-         WPba05P1kDFK8+8asaJCAxw5+m81jNJ3USusH89NBLdy3YGd0JIgFgwwzRzJaxSHFSsW
-         82zw==
-X-Gm-Message-State: AOAM530RmOS6dWMYCh4dgafdnL1jQEcQc1Z2xGfn+cL2YWLObzy7kgVo
-        W/fv06OdFgD5ZHVNLOwseWjhd6lbKjovO3s0OwYxlZg1
-X-Google-Smtp-Source: ABdhPJwIPX2HNFOXh8yU8/OwdxhhRENdd70ug7z8dIHFgzX2fvXuP4+XvRAkuMUcWF3Sb2fH8n4awGxwbFbw77QNBx8=
-X-Received: by 2002:a2e:9c97:: with SMTP id x23mr1647314lji.39.1589286131013;
- Tue, 12 May 2020 05:22:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200430194617.197510-1-dianders@chromium.org>
- <20200430124442.v4.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid> <CAD=FV=WHoxdr++f7Y_NO=VnrnEPkP=+WS5u3j_5ifEjekhBWcA@mail.gmail.com>
-In-Reply-To: <CAD=FV=WHoxdr++f7Y_NO=VnrnEPkP=+WS5u3j_5ifEjekhBWcA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 May 2020 14:22:00 +0200
-Message-ID: <CACRpkdb22QrOcJXrR1je9Cf8S9LnKCcnQ92ML2xQhncraKC1Pw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Rob Clark <robdclark@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 12 May 2020 08:24:53 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7E1CC061A0C
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:24:52 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:81a0:190c:7969:2334])
+        by albert.telenet-ops.be with bizsmtp
+        id doQr220065045R206oQrsU; Tue, 12 May 2020 14:24:51 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jYTxr-0005yf-4w; Tue, 12 May 2020 14:24:51 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jYTxr-0005Gh-1o; Tue, 12 May 2020 14:24:51 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: eeprom: at24: Fix list of page sizes for writing
+Date:   Tue, 12 May 2020 14:24:47 +0200
+Message-Id: <20200512122450.20205-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 7, 2020 at 4:39 PM Doug Anderson <dianders@chromium.org> wrote:
+"258" is an odd power-of-two ;-)
+Obviously this is a typo, and the intended value is "256".
 
-> One suggestion that came off-list is to change the code to make the
-> numbering match up better with the datasheet.  Right now if you want
-> GPIO 2 you have to refer to it like:
->
-> hpd-gpios = <&sn65dsi86_bridge 1 GPIO_ACTIVE_HIGH>;
->
-> That's because the code right now numbers things starting at 0 even if
-> the datasheet numbers things starting at 1.
+Fixes: 7f3bf4203774013b ("dt-bindings: at24: convert the binding document to yaml")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/eeprom/at24.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is the hallmark of mixed-mode IC engineers at work.
-They are at heart analog IC designers so of course they
-enumerate everything starting at 1.
+diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
+index d77bc475fd148d99..4cee72d5331877a8 100644
+--- a/Documentation/devicetree/bindings/eeprom/at24.yaml
++++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+@@ -124,7 +124,7 @@ properties:
+       may result in data loss! If not specified, a safety value of
+       '1' is used which will be very slow.
+     $ref: /schemas/types.yaml#/definitions/uint32
+-    enum: [1, 8, 16, 32, 64, 128, 258]
++    enum: [1, 8, 16, 32, 64, 128, 256]
+     default: 1
+ 
+   read-only:
+-- 
+2.17.1
 
-Digital IC designers are like programmers and start on 0.
-
-Never the twain shall meet...
-
-Yours,
-Linus Walleij
