@@ -2,97 +2,199 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8392BC54E8D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 15:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D76C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 15:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49C83206CC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 15:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589296959;
-	bh=iF4dJRuB21LIXN6iVYRJcMZkL42avp4j5BAkshvXR/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rcx5gZcDdsoAsTV4OWq+QuunOHtZmdxr1hHx0BPoMExm8agIiVH43wDlIdHnCkrbj
-	 H1BEFeL4mUZZd38yAr6x8CwBhnkCUjZ2dCiz7gAwWmX4Imc2epjLvwgx6VBJoQT6tg
-	 7zfOyxe/kddiOMT9Y/5tTQXP7C/xHYlz6fO049Qw=
+	by mail.kernel.org (Postfix) with ESMTP id 6D1FF206CC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 15:24:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="L+T/oTmt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgELPWj (ORCPT
+        id S1730609AbgELPYY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 11:22:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45133 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbgELPWi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 11:22:38 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e20so10773355otk.12;
-        Tue, 12 May 2020 08:22:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=crvW1wkR5IWkksI8W3C6iRy0ehBffjx8IBLSGWcoQM8=;
-        b=dLAMIHKe4eUpl9tfdYr1O0dBAWZgjv5HYMAnd9zGdKTXJeK+wvSr2SlTGxR9YuptPr
-         M18XO2zAX2KalmJS8I37dv5iP2v9W4BMrLe1jrQJ3SSka2iDsRelFUmjTnOEooyLC3qG
-         E+hX1FQ2b4CiaKAsImDg+Oh2usoIC9RNKIIYHSAMVVmQ/VzJ/DHp7Qnhb+q35ZaQsx5G
-         VzuBkcS38QE5N2Ynrd7vcIJ6xnH7HrAQZYvIC0Io++ht9fOMsXoNpPZICt8unp2IA+Nf
-         iBN1NHx7jGDSrkbX0PMTXwSkOjtwdd/Bk+VQJ1VshMAXIYEAYlqLYg9Y2EycEB710cRr
-         t7yQ==
-X-Gm-Message-State: AGi0Pubhhs0mXKbTLx8/RRXOyBg16noZFtSPue0htR9Aamb47zy+RugA
-        3NpZq9YDmOp7Ovl0Egvf6Q==
-X-Google-Smtp-Source: APiQypLH4wU5XHQdt32BSEDzlFepPDtzW7cSlDiNpAvMrv1nUJSIWfF5N7K/M/oYbh3FNhDcGgxK1g==
-X-Received: by 2002:a9d:73d1:: with SMTP id m17mr15366430otk.330.1589296957579;
-        Tue, 12 May 2020 08:22:37 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d10sm629312ote.10.2020.05.12.08.22.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 08:22:36 -0700 (PDT)
-Received: (nullmailer pid 5179 invoked by uid 1000);
-        Tue, 12 May 2020 15:22:35 -0000
-Date:   Tue, 12 May 2020 10:22:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        git@xilinx.com, devicetree@vger.kernel.org,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>, u-boot@lists.denx.de,
-        monstr@monstr.eu, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Tom Rini <trini@konsulko.com>
-Subject: Re: [PATCH] dt-bindings: vendor-prefixes: Add U-Boot bootloader
- prefix
-Message-ID: <20200512152235.GA4997@bogus>
-References: <85b8dc9e6288270bbfdf55f1c156dba160293f01.1588239081.git.michal.simek@xilinx.com>
+        Tue, 12 May 2020 11:24:24 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:37482 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726300AbgELPYX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 11:24:23 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CFIae5000767;
+        Tue, 12 May 2020 10:24:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=PODMain02222019;
+ bh=R876TaLuvENQfw7hHUL+esaIQkLeVGHIvM+NnGt1qYA=;
+ b=L+T/oTmtcFmxnBm55LBFKRJ3rNQ4DslhVm+bzcWnJljMTbwFq/DKFaBGeM/4Xkfx51LD
+ AneDe0WSmjpiKeHMw9nRs5FVOtXjQZAACgjW65k+INEXhmbl/lJlSAlahwgu21OSkKez
+ YNaGUtAPk+yH+Vv6L/aisigr5oO/i4nbrehGqeo9C7kRKy8BcJa68fwgnqRute3LxX5q
+ BQV1trPXCcsv64JJ0TJHYbLn65b8d69lpp3C3odb64uQA9hfWhY2yc8mxG9SdntLJfWc
+ 23GX+av74qxkVD5q1lSs3/cEgoGwEpGMUu/3+n6iFvkwzHyv8bUV7DqnjLeMrDcaNoVv ww== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 30wsx3msj9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 12 May 2020 10:24:01 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 12 May
+ 2020 16:23:59 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Tue, 12 May 2020 16:23:59 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 296982C8;
+        Tue, 12 May 2020 15:23:59 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <jdelvare@suse.com>,
+        <linux@roeck-us.net>, <linus.walleij@linaro.org>
+CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: [PATCH 2/5] ASoC: lochnagar: Move binding over to dtschema
+Date:   Tue, 12 May 2020 16:23:55 +0100
+Message-ID: <20200512152359.11839-2-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
+References: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85b8dc9e6288270bbfdf55f1c156dba160293f01.1588239081.git.michal.simek@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 adultscore=0 priorityscore=1501 suspectscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 clxscore=1015 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005120116
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Apr 2020 11:31:27 +0200, Michal Simek wrote:
-> List U-Boot project in vendor prefixes.
-> 
-> For more information take a look at:
-> https://en.wikipedia.org/wiki/Das_U-Boot
-> Source code is available here:
-> https://gitlab.denx.de/u-boot/u-boot
-> 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> 
-> The patch was created based on discussion with Rob
-> https://lore.kernel.org/linux-devicetree/CAL_Jsq+ehJSK7sjqmKtWOVjr-QZ3LDB+ywCO85uF8WJ+cB=AAw@mail.gmail.com/
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
 
-Applied, thanks!
+No changes since v2.
+
+Thanks,
+Charles
+
+ .../devicetree/bindings/sound/cirrus,lochnagar.txt | 39 ----------------
+ .../bindings/sound/cirrus,lochnagar.yaml           | 52 ++++++++++++++++++++++
+ 2 files changed, 52 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+deleted file mode 100644
+index 41ae2699f07a9..0000000000000
+--- a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
++++ /dev/null
+@@ -1,39 +0,0 @@
+-Cirrus Logic Lochnagar Audio Development Board
+-
+-Lochnagar is an evaluation and development board for Cirrus Logic
+-Smart CODEC and Amp devices. It allows the connection of most Cirrus
+-Logic devices on mini-cards, as well as allowing connection of
+-various application processor systems to provide a full evaluation
+-platform.  Audio system topology, clocking and power can all be
+-controlled through the Lochnagar, allowing the device under test
+-to be used in a variety of possible use cases.
+-
+-This binding document describes the binding for the audio portion
+-of the driver.
+-
+-This binding must be part of the Lochnagar MFD binding:
+-  [4] ../mfd/cirrus,lochnagar.txt
+-
+-Required properties:
+-
+-  - compatible : One of the following strings:
+-                 "cirrus,lochnagar2-soundcard"
+-
+-  - #sound-dai-cells : Must be set to 1.
+-
+-  - clocks : Contains an entry for each entry in clock-names.
+-  - clock-names : Must include the following clocks:
+-      "mclk" Master clock source for the sound card, should normally
+-      be set to LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar
+-      clock driver.
+-
+-Example:
+-
+-lochnagar-sc {
+-	compatible = "cirrus,lochnagar2-soundcard";
+-
+-	#sound-dai-cells = <1>;
+-
+-	clocks = <&lochnagar_clk LOCHNAGAR_SOUNDCARD_MCLK>;
+-	clock-names = "mclk";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+new file mode 100644
+index 0000000000000..cea612d3d4a7d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/cirrus,lochnagar.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cirrus Logic Lochnagar Audio Development Board
++
++maintainers:
++  - patches@opensource.cirrus.com
++
++description: |
++  Lochnagar is an evaluation and development board for Cirrus Logic
++  Smart CODEC and Amp devices. It allows the connection of most Cirrus
++  Logic devices on mini-cards, as well as allowing connection of various
++  application processor systems to provide a full evaluation platform.
++  Audio system topology, clocking and power can all be controlled through
++  the Lochnagar, allowing the device under test to be used in a variety of
++  possible use cases.
++
++  This binding document describes the binding for the audio portion of the
++  driver.
++
++  This binding must be part of the Lochnagar MFD binding:
++    [1] ../mfd/cirrus,lochnagar.yaml
++
++properties:
++  compatible:
++    enum:
++      - cirrus,lochnagar2-soundcard
++
++  '#sound-dai-cells':
++    description:
++      The first cell indicating the audio interface.
++    const: 1
++
++  clocks:
++    description:
++      Master clock source for the sound card, should normally be set to
++      LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar clock driver.
++    maxItems: 1
++
++  clock-names:
++    const: mclk
++
++required:
++  - compatible
++  - '#sound-dai-cells'
++  - clocks
++  - clock-names
++
++additionalProperties: false
+-- 
+2.11.0
+
