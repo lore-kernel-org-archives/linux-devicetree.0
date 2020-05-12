@@ -2,124 +2,146 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBC5C54E8E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97EAC54E8F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8DE8206F5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88901206DD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="H7zv+pIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbgELNQ7 (ORCPT
+        id S1729982AbgELN0Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 09:16:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48918 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgELNQ7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 09:16:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 12F75AC64;
-        Tue, 12 May 2020 13:17:00 +0000 (UTC)
-Date:   Tue, 12 May 2020 15:16:55 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
-        sashal@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
-Message-ID: <20200512131655.GE17734@linux-b0ei>
-References: <20200506211523.15077-1-keescook@chromium.org>
+        Tue, 12 May 2020 09:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729899AbgELN0W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 09:26:22 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844E5C061A0E
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 06:26:20 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y16so8202556wrs.3
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 06:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Lm/JhSU6WIUD9liaClHiq2/rbC+K/Ls1HtNWMD1Nn2A=;
+        b=H7zv+pIKMn1DFXWX7wYhzX5b9gbDPxAk9SE9ltGb5WnBojjIrTWGwZ7FVO7YXf1AoR
+         COZHSxtOlkVLwcmTh97ohzAq4n9C7J6uHa4n4D27rkj+w/kfYeWrBD3lktPkCBd7OyNK
+         O8P/pCK5xonSvWm29SHHyKomqkG8A+B7SHPE0Hdxxub08pQdFMBOAnAQGaUN+jnC5W1I
+         DAw62gdKYZhW3y6Pzrg+noXMZ4eeW1RZlY/S2D9py4Eofn7OiX980AilKycW3g3jxVMX
+         STxvCkdIKo7Txkpgq0z0bR0Ka58vlC02RDjsUwtAdg3aW0j9ktnqbckm4J6OXV57CjW8
+         0RSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Lm/JhSU6WIUD9liaClHiq2/rbC+K/Ls1HtNWMD1Nn2A=;
+        b=NscKYIVvmSwQkCi1gNlUk+qWoz8Em09GiDK/6FGWGotmSDuQQMevWZpDQC5gvWminW
+         EmtbMzY7WhUHmPsO9iX5XSY/k+pFfM5UqWXDe94RGUy4zKc0eKDicNUwLdBPfgLT9J8E
+         oJV2g4duzrs0zuBIF1zCRPnHiZ6Qy7C/N06eDUVCpunMQjQRXYzE9YVxbMNtzxAa1XqO
+         cQ5vbEhVV+FDVvInz/N1010dc+f8CJVTsf53pbKyTMFl5ZdBNXTthQioddFbp58X76Wt
+         pacs8dRRvDwCvaFWNu8IhNb3FkKjEsaX+F4/OoF8+gyGuwztwhLVYxIhSy08Sra5ubJT
+         rveQ==
+X-Gm-Message-State: AGi0PuYZjLIxL1Qw3PXmfsENf/f/cC0MpMfSSFADcs6qz+nrwqmW4IyM
+        KFOC054lXsg5Iwi3I1GVKMqJBA==
+X-Google-Smtp-Source: APiQypIMA843k3ZGcFq05wJywOzCbRuZBo362vVj3No/BJt89ev1hi92yc4IMHltKbZdcHKKO8Tw5g==
+X-Received: by 2002:a5d:4d0f:: with SMTP id z15mr24948754wrt.411.1589289979092;
+        Tue, 12 May 2020 06:26:19 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
+        by smtp.gmail.com with ESMTPSA id g15sm14441844wro.71.2020.05.12.06.26.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 06:26:18 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     lee.jones@linaro.org, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        srinivas.kandagatla@linaro.org, devicetree@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/6] dt-bindings: mfd: add Khadas Microcontroller bindings
+Date:   Tue, 12 May 2020 15:26:08 +0200
+Message-Id: <20200512132613.31507-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200512132613.31507-1-narmstrong@baylibre.com>
+References: <20200512132613.31507-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506211523.15077-1-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 2020-05-06 14:15:17, Kees Cook wrote:
-> Hi!
-> 
-> This is my stab at rearranging a few things based on Pavel's series. Most
-> things remain the same; I just tweaked how defaults are arranged and
-> detected and expanded the wording in a few places. Pavel, how does this
-> v3 look to you?
-> 
-> Pavel's original cover letter:
-> 
-> pstore /mnt/console-ramoops-0 outputs only messages below the console
-> loglevel, and our console loglevel is set to 3 due to slowness of
-> serial console. Which means only errors and worse types of messages
-> are recorded. There is no way to have different log levels for
-> different consoles.
-> 
-> This patch series adds a new option to ramoops: max_reason that enables
-> it to collect kmdesg dumps for other reasons beside oops and panics.
+This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
+boards.
 
-I was a bit confused by the above explanation. It talks about two
-different numbering schemes:
+It has multiple boot control features like password check, power-on
+options, power-off control and system FAN control on recent boards.
 
-   + console loglevels: emerg, alert, crit, err, warning, ...
-   + dump reason: panic, oops, emerg, restart, halt, poweroff
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/mfd/khadas,mcu.yaml   | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
 
-This difference and also the jump from consoles to ramoops is far from
-obvious.
+diff --git a/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml b/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+new file mode 100644
+index 000000000000..a3b976f101e8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/khadas,mcu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Khadas on-board Microcontroller Device Tree Bindings
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++
++description: |
++  Khadas embeds a microcontroller on their VIM and Edge boards adding some
++  system feature as PWM Fan control (for VIM2 rev14 or VIM3), User memory
++  storage, IR/Key resume control, system power LED control and more.
++
++properties:
++  compatible:
++    enum:
++      - khadas,mcu # MCU revision is discoverable
++
++  "#cooling-cells": # Only needed for boards having FAN control feature
++    const: 2
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      khadas_mcu: system-controller@18 {
++        compatible = "khadas,mcu";
++        reg = <0x18>;
++        #cooling-cells = <2>;
++      };
++    };
+-- 
+2.22.0
 
-My understanding is the following:
-
-It is not possible to set loglevel per console. The global value must
-be set by the slowest one. This prevents seeing all messages even
-on fast consoles.
-
-Alternative solution is to dump all messages using ramoops. The
-problem is that it currently works only during Oops and panic
-situation. This is solved by this patchset.
-
-
-OK, I personally see this as two separate problems:
-
-   1. Missing support to set loglevel per console.
-   2. Missing support to dump messages for other reasons.
-
-I would remove the paragraph about console log levels completely.
-It is your reason to use ramoops. But it is not reason to modify
-the logic about max_reason.
-
-
-Now, the max_reason logic makes sense only when all the values
-have some ordering. Is this the case?
-
-I see it as two distinct sets:
-
-   + panic, oops, emerg: describe how critical is an error situation
-   + restart, halt, poweroff: describe behavior when the system goes down
-
-Let's say that panic is more critical than oops. Is restart more
-critical than halt?
-
-If you want the dump during restart. Does it mean that you want it
-also during emergency situation?
-
-My fear is that this patchset is going to introduce user interface
-(max_reason) with a weird logic. IMHO, max_reason is confusing even
-in the code and we should not spread this to users.
-
-Is there any reason why the existing printk.always_kmsg_dump option
-is not enough for you?
-
-Best Regards,
-Petr
