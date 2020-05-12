@@ -2,118 +2,86 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A39C2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADD8C2D0F8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1E8E2492B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54D520575
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589321143;
-	bh=j1vAY40L3awDVf4d2kZXDZQndql+swIvtvfOxztyeV0=;
+	s=default; t=1589321278;
+	bh=No4kbYaXldA5tizhkpmKcVEaJ0wo8Q9EmAEZ4v8Fifw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sOioePcEtFL6nEgO2H3qKROz5XkTJgUW6IeChZEntZqGEhAgXYAsaQ6x3bUu3HG93
-	 bGQDgQ5ysjFtJy91+ol1N0u1VzjyHPKuuLM0XwBbZB66PhOu3kBg6pal8EBzaZT4Oo
-	 QWSIARTY0fpzT4fsglt6wtv190NWwducmln0XqpY=
+	b=094KVPvkZDthX+PiqGHMfVT7dznUTEH2zNOLgCmBHUJwhz2wzp1+cBhtIkPna6luH
+	 keUkr1/LAKYD6NrlakED/11QTwC8+b9fJ3iF6RYiUuPeVx3rHbUcMuWDCBsct+tHSC
+	 LVPIf3suTcw+Q3z3qlC5oyllzN6LPRxL1hgrlyww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbgELWFk (ORCPT
+        id S1728362AbgELWH6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 18:05:40 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46975 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728313AbgELWFk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 18:05:40 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z25so11812214otq.13;
-        Tue, 12 May 2020 15:05:39 -0700 (PDT)
+        Tue, 12 May 2020 18:07:58 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:44012 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbgELWH6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 18:07:58 -0400
+Received: by mail-oo1-f67.google.com with SMTP id u190so3055655ooa.10
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 15:07:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=1spzLK4cm4ekL4dQmE1+GWlhRjCGCTHWPWuSdcartNU=;
-        b=E9kSd8ITWbesdZd2DQf/v3P49EXiZCJIOyJbxI8ay3VPzivr50F1HRm5jvR5zCo38H
-         P+ErtMqTP3Aq/gvGPrtHxFPO6gH2bLMcTHIsFJaYYb1Cooh7TIhH1ut8ZA181cEN/N3r
-         gx4QgJl0B/3brrAyYnwY6PySNM9cW9ZlhbdJzKJSajQyfYykQW3J/QSiBGNbH007XOvn
-         XxxiXp+lhQ9MlEf2PiSfL9eXOSJQtobMhncj881XV9W5cArkvZoDmcLXiWdAcAq2zZXG
-         oMVOKzdBN/FiwRQo9qq4Nsvl0IRFHzLYva05KXbcsagVAdpYoWz/ie8wij1HeV14XxAt
-         YGOA==
-X-Gm-Message-State: AGi0PuYS3FTVmPta8kuxYNIY3RN5GtNcLI0976XWtkvITlS7bPob/2dX
-        Y0vA5SmnTcNIgTY57N3JpA==
-X-Google-Smtp-Source: APiQypJZNwnsVvEn4yecESFGLnDDq4EBQLMVQoLrm7Afo3/qUJ8VPojy/Bqb85BUsmx+ciYyevsr9A==
-X-Received: by 2002:a9d:7608:: with SMTP id k8mr4965628otl.233.1589321139244;
-        Tue, 12 May 2020 15:05:39 -0700 (PDT)
+        bh=NUOOwHrOXVk6Cd6HoRlhRUSWIWKAqZFM78FnF22feM0=;
+        b=a+a2Plcb4tz4clYmXBpfQ/knfglp7MlPTZabd4Ym0k6ppxig08KTbjRn+L7XLr5dE3
+         lfypGRlvoLDkzitkTxjYZZPRsVCo+QUJMgvAxsKBf40Y/x8jikQZkHyjzoajOM/FkzOp
+         zAiGOiLkzGIv+cnds2t0M8ZWsIaXMmDhkEsYtwXsWWv5o6o5ADGGJiQNM0pXmOtI2LDy
+         qYQlYXN5A+jX6+Z/3It0k852XQD1PTXTvKXLaWnFFR7cEZbRXoK6YkNbZrax4eJ5swGq
+         CPNRZbMxFsVNGsvIKui8Tmf1K3/xenszNPqS6JUrmTsPKR+8aPGcIXq2fGNg+U/Z9aAO
+         Nlag==
+X-Gm-Message-State: AGi0Puaktyx2aJHnANsy+acKc3XVMEZbjtO5JkIS+9jBn8Sco7lopchl
+        k2jHRoAQCcCqQdyejuuhMA==
+X-Google-Smtp-Source: APiQypL9TW4TGt20w5Jple5Aqf1zZMKRE0HhZ/U3Jxjl239/1alxIU/5DUa3XmaHc6UgYt7WD1pjEQ==
+X-Received: by 2002:a4a:3ed6:: with SMTP id t205mr7688147oot.51.1589321277493;
+        Tue, 12 May 2020 15:07:57 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 95sm3802450otf.72.2020.05.12.15.05.38
+        by smtp.gmail.com with ESMTPSA id s125sm5705132oib.9.2020.05.12.15.07.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:05:38 -0700 (PDT)
-Received: (nullmailer pid 16849 invoked by uid 1000);
-        Tue, 12 May 2020 22:05:37 -0000
-Date:   Tue, 12 May 2020 17:05:37 -0500
+        Tue, 12 May 2020 15:07:56 -0700 (PDT)
+Received: (nullmailer pid 20180 invoked by uid 1000);
+        Tue, 12 May 2020 22:07:56 -0000
+Date:   Tue, 12 May 2020 17:07:56 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-clk@vger.kernel.org, aford@beaconembedded.com,
-        charles.stevens@logicpd.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 2/3] clk: vc5: Enable addition output configurations
- of the Versaclock
-Message-ID: <20200512220537.GA14318@bogus>
-References: <20200502122126.188001-1-aford173@gmail.com>
- <20200502122126.188001-2-aford173@gmail.com>
+To:     Vesa =?iso-8859-1?B?SuTkc2tlbORpbmVu?= 
+        <vesa.jaaskelainen@vaisala.com>
+Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: vendor-prefixes: Add Vaisala
+Message-ID: <20200512220756.GA20129@bogus>
+References: <20200503093355.46964-1-vesa.jaaskelainen@vaisala.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200502122126.188001-2-aford173@gmail.com>
+In-Reply-To: <20200503093355.46964-1-vesa.jaaskelainen@vaisala.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 02, 2020 at 07:21:25AM -0500, Adam Ford wrote:
-> The existing driver is expecting the Versaclock to be pre-programmed,
-> and only sets the output frequency.  Unfortunately, not all devices
-> are pre-programmed, and the Versaclock chip has more options beyond
-> just the frequency.
+On Sun,  3 May 2020 12:33:55 +0300, Vesa J‰‰skel‰inen wrote:
+> Vaisala Oyj is a company based in Finland and also has subsidiaries in other
+> countries. Vaisala develops, manufactures and markets innovative products and
+> services for environmental and industrial measurement.
 > 
-> This patch enables the following additional features:
+> https://www.vaisala.com/
 > 
->    - Programmable voltage: 1.8V, 2.5V, or 3.3V‚Äã
->    - Slew Percentage of normal: 85%, 90%, or 100%
->    - Output Type: LVPECL, CMOS, HCSL, or LVDS
+> Signed-off-by: Vesa J‰‰skel‰inen <vesa.jaaskelainen@vaisala.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-
-> diff --git a/include/dt-bindings/clk/versaclock.h b/include/dt-bindings/clk/versaclock.h
-> new file mode 100644
-> index 000000000000..c6a6a0946564
-> --- /dev/null
-> +++ b/include/dt-bindings/clk/versaclock.h
-
-Belongs in binding patch.
-
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/* This file defines field values used by the versaclock 6 family
-> + * for defining output type
-> + */
-> +
-> +#define VC5_LVPECL	0
-> +#define VC5_CMOS	1
-> +#define VC5_HCSL33	2
-> +#define VC5_LVDS	3
-> +#define VC5_CMOS2	4
-> +#define VC5_CMOSD	5
-> +#define VC5_HCSL25	6
-> -- 
-> 2.25.1
-> 
+Applied, thanks!
