@@ -2,195 +2,136 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE55C54E4A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64390C54E8F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB2C120722
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:04:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="C0o6ejLn"
+	by mail.kernel.org (Postfix) with ESMTP id 4C8032075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbgELOE7 (ORCPT
+        id S1728283AbgELOI0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 10:04:59 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:39034 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729921AbgELOE7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 10:04:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589292297; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=InNQndDpm42OcpQN7tWNfV3b6ZrAOQwNSMr11BkCV6A=; b=C0o6ejLn3gbdgs+ycO52VZ4KbOtPq5pf+YF9n3CGpriZJFtN/NcGwnOu9Kvhz/ATa5h7DX/j
- oTXGbbC2a/j7usyrWYrTKfhf2DPrjkakD4+oVOFnUZtM0aRsRbvACvXq+rPx2s+miImukXoO
- HhmaP/9XlTvPunom23IOxV8HeGw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebaacb1.7f7d5de420d8-smtp-out-n01;
- Tue, 12 May 2020 14:03:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4D8B1C43636; Tue, 12 May 2020 14:03:28 +0000 (UTC)
-Received: from [192.168.1.100] (unknown [27.59.216.88])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD951C43637;
-        Tue, 12 May 2020 14:03:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD951C43637
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V5 1/7] soc: qcom: geni: Support for ICC voting
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org, georgi.djakov@linaro.org
-References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
- <1588919619-21355-2-git-send-email-akashast@codeaurora.org>
- <20200508171352.GA4525@google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <88ac8c5c-d3fe-103e-af0a-0e4a96f4c7db@codeaurora.org>
-Date:   Tue, 12 May 2020 19:32:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 12 May 2020 10:08:26 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:53740 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgELOI0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 10:08:26 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 995FB803088B;
+        Tue, 12 May 2020 14:08:22 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Wa5K0fYbgNer; Tue, 12 May 2020 17:08:21 +0300 (MSK)
+Date:   Tue, 12 May 2020 17:08:20 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
+ config
+Message-ID: <20200512140820.ssjv6pl7busqqi3t@mobilestation>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
+ <20200508114153.GK185537@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200508171352.GA4525@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200508114153.GK185537@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
+> On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
+> > IP core of the DW DMA controller may be synthesized with different
+> > max burst length of the transfers per each channel. According to Synopsis
+> > having the fixed maximum burst transactions length may provide some
+> > performance gain. At the same time setting up the source and destination
+> > multi size exceeding the max burst length limitation may cause a serious
+> > problems. In our case the system just hangs up. In order to fix this
+> > lets introduce the max burst length platform config of the DW DMA
+> > controller device and don't let the DMA channels configuration code
+> > exceed the burst length hardware limitation. Depending on the IP core
+> > configuration the maximum value can vary from channel to channel.
+> > It can be detected either in runtime from the DWC parameter registers
+> > or from the dedicated dts property.
+> 
+> I'm wondering what can be the scenario when your peripheral will ask something
+> which is not supported by DMA controller?
 
-On 5/8/2020 10:43 PM, Matthias Kaehlcke wrote:
-> Hi Akash,
->
-> note: my comments below are clearly entering bikeshed territory. Please
-> take what you agree with and feel free to ignore the rest.
->
-> On Fri, May 08, 2020 at 12:03:33PM +0530, Akash Asthana wrote:
->> Add necessary macros and structure variables to support ICC BW
->> voting from individual SE drivers.
->>
->> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
->> ---
->> Changes in V2:
->>   - As per Bjorn's comment dropped enums for ICC paths, given the three
->>     paths individual members
->>
->> Changes in V3:
->>   - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
->>   - Add geni_icc_path structure in common header
->>
->> Changes in V4:
->>   - As per Bjorn's comment print error message in geni_icc_get if return
->>     value is not -EPROBE_DEFER.
->>   - As per Bjorn's comment remove NULL on path before calling icc_set_bw
->>     API.
->>   - As per Bjorn's comment drop __func__ print.
->>   - As per Matthias's comment, make ICC path a array instead of individual
->>     member entry in geni_se struct.
->>
->> Note: I have ignored below check patch suggestion because it was throwing
->>        compilation error as 'icc_ddr' is not compile time comstant.
->>
->> WARNING: char * array declaration might be better as static const
->>   - FILE: drivers/soc/qcom/qcom-geni-se.c:726:
->>   - const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
->>
->> Changes in V5:
->>   - As per Matthias's comment defined enums for ICC paths.
->>   - Integrate icc_enable/disable with power on/off call for driver.
->>   - As per Matthias's comment added icc_path_names array to print icc path name
->>     in failure case.
->>   - As per Georgi's suggestion assume peak_bw = avg_bw if not mentioned.
->>
->>   drivers/soc/qcom/qcom-geni-se.c | 92 +++++++++++++++++++++++++++++++++++++++++
->>   include/linux/qcom-geni-se.h    | 42 +++++++++++++++++++
->>   2 files changed, 134 insertions(+)
->>
->> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
->> index 7d622ea..63403bf 100644
->> --- a/drivers/soc/qcom/qcom-geni-se.c
->> +++ b/drivers/soc/qcom/qcom-geni-se.c
->> @@ -92,6 +92,9 @@ struct geni_wrapper {
->>   	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
->>   };
->>   
->> +static const char * const icc_path_names[] = {"qup-core", "qup-config",
->> +								"qup-memory"};
-> nit: the indentation is a bit odd. I would align it either with "qup-core" or
-> at a tab stop nearby.
-ok
->
->> +
->>   #define QUP_HW_VER_REG			0x4
->>   
->>   /* Common SE registers */
->> @@ -720,6 +723,95 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
->>   }
->>   EXPORT_SYMBOL(geni_se_rx_dma_unprep);
->>   
->> +int geni_icc_get(struct geni_se *se, const char *icc_ddr)
->> +{
->> +	int i, icc_err;
-> nit: the 'icc_' prefix doesn't add value here, just 'err' would be less
-> 'noisy' IMO.
-ok
->
->> +	const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
-> nit: you could avoid repeating the first to strings by referencing
-> icc_path_names[GENI_TO_CORE] and icc_path_names[CPU_TO_GENI]. Not sure
-> if it's really better, it avoids the redundant names, but is slightly
-> less readable.
-I thought of that but current implementation looks neater to me.
->
->> +
->> +	for (i = 0; i < ARRAY_SIZE(se->icc_paths); i++) {
->> +		if (!icc_names[i])
->> +			continue;
->> +
->> +		se->icc_paths[i].path = devm_of_icc_get(se->dev, icc_names[i]);
->> +		if (IS_ERR(se->icc_paths[i].path))
->> +			goto icc_get_failure;
-> nit: since there is only a single label it isn't really necessary to be so
-> precise. 'goto err' is very common in the kernel, 'err_icc_get' would be
-> another alternative.
-okay
->
->> +	}
->> +
->> +	return 0;
->> +
->> +icc_get_failure:
->> +	icc_err = PTR_ERR(se->icc_paths[i].path);
->> +	if (icc_err != -EPROBE_DEFER)
->> +		dev_err_ratelimited(se->dev, "Failed to get ICC path:%s, ret:%d\n",
-> All the logs in this patch result in something like "... path:qup-core, ret:42".
-> For humans I think it is more intuitive to parse "... path 'qup-core': 42".
+I may misunderstood your statement, because seeing your activity around my
+patchsets including the SPI patchset and sometimes very helpful comments,
+this question answer seems too obvious to see you asking it.
 
-ok
+No need to go far for an example. See the DW APB SSI driver. Its DMA module
+specifies the burst length to be 16, while not all of ours channels supports it.
+Yes, originally it has been developed for the Intel Midfield SPI, but since I
+converted the driver into a generic code we can't use a fixed value. For instance
+in our hardware only two DMA channels of total 16 are capable of bursting up to
+16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
+burst length. While there are two SPI interfaces, each of which need to have two
+DMA channels for communications. So I need four channels in total to allocate to
+provide the DMA capability for all interfaces. In order to set the SPI controller
+up with valid optimized parameters the max-burst-length is required. Otherwise we
+can end up with buffers overrun/underrun.
 
-Thanks for review and feedback
+> 
+> Peripheral needs to supply a lot of configuration parameters specific to the
+> DMA controller in use (that's why we have struct dw_dma_slave).
+> So, seems to me the feasible approach is supply correct data in the first place.
 
-Regards,
+How to supply a valid data if clients don't know the DMA controller limitations
+in general?
 
-Akash
+> 
+> If you have specific channels to acquire then you probably need to provide a
+> custom xlate / filter functions. Because above seems a bit hackish workaround
+> of dynamic channel allocation mechanism.
 
->
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+No, I don't have a specific channel to acquire and in general you may use any
+returned from the DMA subsystem (though some platforms may need a dedicated
+channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
+channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
+their DMA settings must properly and optimally configured. It can be only done
+if you know the DMA controller parameters like max burst length, max block-size,
+etc.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+So no. The change proposed by this patch isn't workaround, but a useful feature,
+moreover expected to be supported by the generic DMA subsystem.
+
+> 
+> But let's see what we can do better. Since maximum is defined on the slave side
+> device, it probably needs to define minimum as well, otherwise it's possible
+> that some hardware can't cope underrun bursts.
+
+There is no need to define minimum if such limit doesn't exists except a
+natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
+added such capability into the generic DMA subsystem so far.
+
+-Sergey
+
+> 
+> Vinod, what do you think?
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
