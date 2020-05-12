@@ -2,146 +2,102 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97EAC54E8F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F40C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88901206DD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:26:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="H7zv+pIK"
+	by mail.kernel.org (Postfix) with ESMTP id 1DB5E206D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589290416;
+	bh=JMbnZNV5GWBEG81bTe/hzlYpxatVV1xl1pAlF1csQRA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lNw3eYLFo/Po+hXDiuPjwtw+Bhf00C2QlECUEqftJj/ndfTIv5YDzJ48PTTlGIfVC
+	 rgrjmOb8fQ/MLCLipmy7bJrDMYa8LS0dPcT4xPTaoU+Q4CvFwoxQqgRPjVveDX174/
+	 rezsrSzxrrTIse98dmAUAFROtCzjI6h5xBg9TCQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgELN0Y (ORCPT
+        id S1727859AbgELNdf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 09:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729899AbgELN0W (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 09:26:22 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844E5C061A0E
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 06:26:20 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id y16so8202556wrs.3
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 06:26:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Lm/JhSU6WIUD9liaClHiq2/rbC+K/Ls1HtNWMD1Nn2A=;
-        b=H7zv+pIKMn1DFXWX7wYhzX5b9gbDPxAk9SE9ltGb5WnBojjIrTWGwZ7FVO7YXf1AoR
-         COZHSxtOlkVLwcmTh97ohzAq4n9C7J6uHa4n4D27rkj+w/kfYeWrBD3lktPkCBd7OyNK
-         O8P/pCK5xonSvWm29SHHyKomqkG8A+B7SHPE0Hdxxub08pQdFMBOAnAQGaUN+jnC5W1I
-         DAw62gdKYZhW3y6Pzrg+noXMZ4eeW1RZlY/S2D9py4Eofn7OiX980AilKycW3g3jxVMX
-         STxvCkdIKo7Txkpgq0z0bR0Ka58vlC02RDjsUwtAdg3aW0j9ktnqbckm4J6OXV57CjW8
-         0RSw==
+        Tue, 12 May 2020 09:33:35 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46550 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbgELNdf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 09:33:35 -0400
+Received: by mail-oi1-f196.google.com with SMTP id c124so17978195oib.13;
+        Tue, 12 May 2020 06:33:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Lm/JhSU6WIUD9liaClHiq2/rbC+K/Ls1HtNWMD1Nn2A=;
-        b=NscKYIVvmSwQkCi1gNlUk+qWoz8Em09GiDK/6FGWGotmSDuQQMevWZpDQC5gvWminW
-         EmtbMzY7WhUHmPsO9iX5XSY/k+pFfM5UqWXDe94RGUy4zKc0eKDicNUwLdBPfgLT9J8E
-         oJV2g4duzrs0zuBIF1zCRPnHiZ6Qy7C/N06eDUVCpunMQjQRXYzE9YVxbMNtzxAa1XqO
-         cQ5vbEhVV+FDVvInz/N1010dc+f8CJVTsf53pbKyTMFl5ZdBNXTthQioddFbp58X76Wt
-         pacs8dRRvDwCvaFWNu8IhNb3FkKjEsaX+F4/OoF8+gyGuwztwhLVYxIhSy08Sra5ubJT
-         rveQ==
-X-Gm-Message-State: AGi0PuYZjLIxL1Qw3PXmfsENf/f/cC0MpMfSSFADcs6qz+nrwqmW4IyM
-        KFOC054lXsg5Iwi3I1GVKMqJBA==
-X-Google-Smtp-Source: APiQypIMA843k3ZGcFq05wJywOzCbRuZBo362vVj3No/BJt89ev1hi92yc4IMHltKbZdcHKKO8Tw5g==
-X-Received: by 2002:a5d:4d0f:: with SMTP id z15mr24948754wrt.411.1589289979092;
-        Tue, 12 May 2020 06:26:19 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
-        by smtp.gmail.com with ESMTPSA id g15sm14441844wro.71.2020.05.12.06.26.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XFGIuD/Xpph/hs6mOp9w9FUA6ja/tEq9l8yoFeXouFw=;
+        b=r9B6R8S6kgQwCodDMIwZ6wYjNrhVUktFMLj2tD26erdxGFuyf+fAQwV5zOEwQr3Xq0
+         rfsqy55qAjB+8F05QsgBhNPzhW0aiouGfTQaUxiC1AuV21pSM82TezPGn1zQ8kJWT2eq
+         wXFn1Sh7fttbgAUkHhIlHlGLmOjG/BpqE6DSSq1bi8QhO/0HQnwUPcLGv+QuN3LrC5Rn
+         +z9LXzajhNszqqYfmjF/BLBKDhnZ5HEJYtCZgBh+SRlVzXg1xFKFDprMQ2H6Iq8cy5Xb
+         PvnaepgfOEhxM1Iqrv/MaYIfPIaJ3jiyR1rcBtGLR5dyZRoDdIG3cP++Eqqr3EoeiXYT
+         LkPA==
+X-Gm-Message-State: AGi0PubytIQw4HV3IwbXeX+7ID0zTzHF64InYt7KVcCpshdqIaBbiAlk
+        rI0sNYWHVBT7XAv/FdeUsQ==
+X-Google-Smtp-Source: APiQypKbHwhW843vidRVikJDKSgfpX/YNavionaQgpuXcxU4nOF/+zAbaPV8eIuwpBpb9BxWfvo/gQ==
+X-Received: by 2002:aca:50c6:: with SMTP id e189mr1692952oib.34.1589290413774;
+        Tue, 12 May 2020 06:33:33 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g10sm3630958oou.31.2020.05.12.06.33.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 06:26:18 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     lee.jones@linaro.org, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        srinivas.kandagatla@linaro.org, devicetree@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 1/6] dt-bindings: mfd: add Khadas Microcontroller bindings
-Date:   Tue, 12 May 2020 15:26:08 +0200
-Message-Id: <20200512132613.31507-2-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200512132613.31507-1-narmstrong@baylibre.com>
-References: <20200512132613.31507-1-narmstrong@baylibre.com>
+        Tue, 12 May 2020 06:33:32 -0700 (PDT)
+Received: (nullmailer pid 27973 invoked by uid 1000);
+        Tue, 12 May 2020 13:33:30 -0000
+Date:   Tue, 12 May 2020 08:33:30 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, patches@opensource.cirrus.com
+Subject: Re: [PATCH v2 3/5] pinctrl: lochnagar: Move binding over to dtschema
+Message-ID: <20200512133330.GA23637@bogus>
+References: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
+ <20200504154757.17519-3-ckeepax@opensource.cirrus.com>
+ <CACRpkdYSzdUgZgA6jtdP3K9bWTF=-whkQCr=bKkr_Z0VXywdkA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYSzdUgZgA6jtdP3K9bWTF=-whkQCr=bKkr_Z0VXywdkA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
-boards.
+On Tue, May 12, 2020 at 03:06:59PM +0200, Linus Walleij wrote:
+> On Mon, May 4, 2020 at 5:48 PM Charles Keepax
+> <ckeepax@opensource.cirrus.com> wrote:
+> 
+> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > ---
+> >
+> > Changes since v1:
+> >  - Moved sub-node into MFD file leaving just the properties in here
+> >  - Removed contains on the compatible
+> >  - Added a required -pins suffix for pinmux/ctrl nodes
+> >  - Added some extra blank lines for readability
+> 
+> Backed out v1 since I see there is some discussion on these still (sorry for
+> missing this).
+> 
+> I'll hold this off until there is consensus.
 
-It has multiple boot control features like password check, power-on
-options, power-off control and system FAN control on recent boards.
+The whole series needs to go in together.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/mfd/khadas,mcu.yaml   | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
-
-diff --git a/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml b/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
-new file mode 100644
-index 000000000000..a3b976f101e8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/khadas,mcu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Khadas on-board Microcontroller Device Tree Bindings
-+
-+maintainers:
-+  - Neil Armstrong <narmstrong@baylibre.com>
-+
-+description: |
-+  Khadas embeds a microcontroller on their VIM and Edge boards adding some
-+  system feature as PWM Fan control (for VIM2 rev14 or VIM3), User memory
-+  storage, IR/Key resume control, system power LED control and more.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - khadas,mcu # MCU revision is discoverable
-+
-+  "#cooling-cells": # Only needed for boards having FAN control feature
-+    const: 2
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      khadas_mcu: system-controller@18 {
-+        compatible = "khadas,mcu";
-+        reg = <0x18>;
-+        #cooling-cells = <2>;
-+      };
-+    };
--- 
-2.22.0
-
+Rob
