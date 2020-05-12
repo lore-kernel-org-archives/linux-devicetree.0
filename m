@@ -2,240 +2,118 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92818C54E8B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 06:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88291C54E4B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 06:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB5E20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 06:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC962098B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 06:50:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="NvN3bHID"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WGIsw95l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgELGfc (ORCPT
+        id S1726247AbgELGuW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 02:35:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725536AbgELGfc (ORCPT
+        Tue, 12 May 2020 02:50:22 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5742 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725823AbgELGuW (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 02:35:32 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7576BC061A0C
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 23:35:32 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id i19so12622122ioh.12
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 23:35:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hmqc9TQ9Quh7+US/Jmh4IXg0bVpfrPAKCJNshFYSv+Q=;
-        b=NvN3bHIDGwK+p0qEwYf7zjtLlsxm2ceG5S0GYtDcV8aLAqcsJfqOTGl1gkyIlhzl56
-         Z9+A/IMEvGy4ZRM0/h9CnkQShR6M/HA4DFloyhf88t+b64r/X4SaOrgaUi+rdf2GGmha
-         cvaSBe+ut2HCvfoRg2GMxsWf6PqOgRKYk0l6PWeo1znnU/k7z8yLPqV2DkosG+22KThS
-         +pXuvun5l0Uwje9BpaVzjG2kJpbk1JW2IVBJFyar1BKa7F61PvPqDdP1c4wfHS485XIc
-         MlKgocOGFtkGz3BKYGLQ6g5TKWxZpOJYjdJlC9flK8333jlQOL1oOx4rRvibwF2SEbz1
-         RWdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hmqc9TQ9Quh7+US/Jmh4IXg0bVpfrPAKCJNshFYSv+Q=;
-        b=fqj6tVEtp7hslcsHxt/Ck7SpBFZXnPPwMKlU82EUji4FERTuHglZlWzRGIMoOSFNMN
-         h4OPkbmHbbPffCeuG6I7MIGFIpwdbjXjd1O529ZhtX0cNbV7B+b4Wse0kLJQlucQl3Qe
-         R0z2luYodKVYOYftNQVgBby1iMkrevinZYTRvQHqC7PMPg31s0pyb+7uU6/rwADBPflH
-         l+Qn/d+42R9OWtrWntd+7jR0+ClRDBJusdens8Cf3Vmoq0piy5+47VlLw8bYtG4AUimL
-         uhbh0YpY5KdsFvOL8p/nGxc1RHBfMDalU3gyCAplt8HmakM0nnc5uatgJPaEhi8KyZLJ
-         8DKQ==
-X-Gm-Message-State: AGi0PuZob6PmFHHtDNi3o59f8wJg9BHJ/BlHvsNdC9h5Do8H9yGS/ND3
-        gzKqWWw1yl7qudpeRMDG8tS7q6dJLif15tTn8rTDew==
-X-Google-Smtp-Source: APiQypLWnzw4EWWNr1vmFUqwTdjDAprfuZXfBBKAg6Df7mrHkghpjwc+KH+GGaVrIhljRYARBkWpEGcIU/MDkPlDt6c=
-X-Received: by 2002:a05:6638:68f:: with SMTP id i15mr19299578jab.136.1589265331761;
- Mon, 11 May 2020 23:35:31 -0700 (PDT)
+        Tue, 12 May 2020 02:50:22 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04C6mDFD014173;
+        Tue, 12 May 2020 08:49:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=iEKjer/AUZHyZOt8W1uqSZTqu50DObD4a45HBZNn1gg=;
+ b=WGIsw95lqD0h3WMhec/jt5cW8wF8MlhfrFKGP/m06rYBvMAlXVCoO0WSKxYFbboKoxmZ
+ D0rtymgEp5jsRaZcCf1ON6ck6FQb1fhal73CUajnkQRUvvhEbqQJEMlPA/iVdUALLAw7
+ JeQrggkQ81PpYnIfDJHkGbVBehC0DcdJbsTYtgcVFE4Yk9lBkIAom7oXKfJ2G8ZNQm0c
+ U/mMkY9GHTTVaOMCp+UtVazLUAg0REwjobdpNhBPNmqiK7FUZbfonJZKZ6sdYPswEyMU
+ ra6sXeG8e8tlvbALus+swRodDS9Fsvk2kjSTQxCRX5uB9AdGv1INMl0TJ4eCzMxWX8DZ BA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30whn9ekuy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 May 2020 08:49:58 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D6295100034;
+        Tue, 12 May 2020 08:49:57 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B8BCD221A49;
+        Tue, 12 May 2020 08:49:57 +0200 (CEST)
+Received: from [10.211.13.100] (10.75.127.46) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 12 May
+ 2020 08:49:56 +0200
+Subject: Re: [PATCH v4 04/10] mtd: rawnand: stm32_fmc2: cleanup
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+CC:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
+ <1588756279-17289-5-git-send-email-christophe.kerello@st.com>
+ <20200511223900.030fe5f4@xps13>
+From:   Christophe Kerello <christophe.kerello@st.com>
+Message-ID: <49c51a13-96a1-0241-f4d1-c5ff7d52921d@st.com>
+Date:   Tue, 12 May 2020 08:49:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20200511150759.18766-1-brgl@bgdev.pl> <20200511150759.18766-10-brgl@bgdev.pl>
- <dab80587-a196-e0ab-ae97-f8e5cc4a71d4@gmail.com>
-In-Reply-To: <dab80587-a196-e0ab-ae97-f8e5cc4a71d4@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 12 May 2020 08:35:21 +0200
-Message-ID: <CAMRc=MeAMHs3jYh5KpbO5pAqO_cTmc71US_aVAFqRpNBnEYVMg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/14] net: ethernet: mtk-eth-mac: new driver
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200511223900.030fe5f4@xps13>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-12_01:2020-05-11,2020-05-12 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pon., 11 maj 2020 o 21:24 Florian Fainelli <f.fainelli@gmail.com> napisa=C5=
-=82(a):
->
->
->
-> On 5/11/2020 8:07 AM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > This adds the driver for the MediaTek Ethernet MAC used on the MT8* SoC
-> > family. For now we only support full-duplex.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
->
-> [snip]
->
-> > +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
-> > +                              struct mtk_mac_ring_desc_data *desc_data=
-)
-> > +{
-> > +     struct mtk_mac_ring_desc *desc =3D &ring->descs[ring->tail];
-> > +     unsigned int status;
-> > +
-> > +     /* Let the device release the descriptor. */
-> > +     dma_rmb();
-> > +     status =3D desc->status;
-> > +
-> > +     if (!(status & MTK_MAC_DESC_BIT_COWN))
-> > +             return -1;
-> > +
-> > +     desc_data->len =3D status & MTK_MAC_DESC_MSK_LEN;
-> > +     desc_data->flags =3D status & ~MTK_MAC_DESC_MSK_LEN;
-> > +     desc_data->dma_addr =3D desc->data_ptr;
-> > +     desc_data->skb =3D ring->skbs[ring->tail];
-> > +
-> > +     desc->data_ptr =3D 0;
-> > +     desc->status =3D MTK_MAC_DESC_BIT_COWN;
-> > +     if (status & MTK_MAC_DESC_BIT_EOR)
-> > +             desc->status |=3D MTK_MAC_DESC_BIT_EOR;
->
-> Don't you need a dma_wmb() for the device to observe the new descriptor
-> here?
->
+Hi Miquel,
 
-HW has released the descriptor (set the COWN bit) and I just clear all
-other bits here really. Yeah, I guess it won't hurt to make sure.
+On 5/11/20 10:39 PM, Miquel Raynal wrote:
+> 
+> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
+> 11:11:13 +0200:
+> 
+>> This patch renames functions and local variables.
+>> This cleanup is done to get all functions starting by stm32_fmc2_nfc
+>> in the FMC2 raw NAND driver when all functions will start by
+>> stm32_fmc2_ebi in the FMC2 EBI driver.
+>>
+>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+>> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> 
+> Applied to nand/next as well but for an unknown reason I had to do it
+> by hand because the patch would not apply.
+> 
+> Thanks,
+> Miquèl
+> 
+This is strange, I can apply this patch on my tree without any conflicts.
+There is a compilation issue line 1301.
 
-> [snip]
->
-> > +static void mtk_mac_dma_unmap_tx(struct mtk_mac_priv *priv,
-> > +                              struct mtk_mac_ring_desc_data *desc_data=
-)
-> > +{
-> > +     struct device *dev =3D mtk_mac_get_dev(priv);
-> > +
-> > +     return dma_unmap_single(dev, desc_data->dma_addr,
-> > +                             desc_data->len, DMA_TO_DEVICE);
->
-> If you stored a pointer to the sk_buff you transmitted, then you would
-> need an expensive read to the descriptor to determine the address and
-> length, and you would also not be at the mercy of the HW putting
-> incorrect values there.
->
+@@ -1302,44 +1298,45 @@ static void stm32_fmc2_write_data(struct 
+nand_chip *chip, const void *buf,
 
-You mean store the mapped addresses? Yeah I can do that but I'll still
-need to read the descriptor memory to verify it was released by HW.
+  	if (force_8bit && chip->options & NAND_BUSWIDTH_16)
+  		/* Reconfigure bus width to 16-bit */
+-		stm32_fmc2_set_buswidth_16(fmc2, true);
++		stm32_fmc2_nfc_set_buswidth_16(nfc, true);
+  }
 
-> sp
-> > +static void mtk_mac_dma_init(struct mtk_mac_priv *priv)
-> > +{
-> > +     struct mtk_mac_ring_desc *desc;
-> > +     unsigned int val;
-> > +     int i;
-> > +
-> > +     priv->descs_base =3D (struct mtk_mac_ring_desc *)priv->ring_base;
-> > +
-> > +     for (i =3D 0; i < MTK_MAC_NUM_DESCS_TOTAL; i++) {
-> > +             desc =3D &priv->descs_base[i];
-> > +
-> > +             memset(desc, 0, sizeof(*desc));
-> > +             desc->status =3D MTK_MAC_DESC_BIT_COWN;
-> > +             if ((i =3D=3D MTK_MAC_NUM_TX_DESCS - 1) ||
-> > +                 (i =3D=3D MTK_MAC_NUM_DESCS_TOTAL - 1))
-> > +                     desc->status |=3D MTK_MAC_DESC_BIT_EOR;
-> > +     }
-> > +
-> > +     mtk_mac_ring_init(&priv->tx_ring, priv->descs_base, 0);
-> > +     mtk_mac_ring_init(&priv->rx_ring,
-> > +                       priv->descs_base + MTK_MAC_NUM_TX_DESCS,
-> > +                       MTK_MAC_NUM_RX_DESCS);
-> > +
-> > +     /* Set DMA pointers. */
-> > +     val =3D (unsigned int)priv->dma_addr;
->
-> You would probably add a WARN_ON() or something that catches the upper
-> 32-bits of the dma_addr being set, see my comment about the DMA mask
-> setting.
->
+I will rebase on top of nand/next today to check that there is no issues 
+with the driver.
 
-Can it still happen if I check the return value of dma_set_mask_and_coheren=
-t()?
-
-> [snip]
->
-> > +static void mtk_mac_tx_complete_all(struct mtk_mac_priv *priv)
-> > +{
-> > +     struct net_device *ndev =3D priv_to_netdev(priv);
-> > +     struct mtk_mac_ring *ring =3D &priv->tx_ring;
-> > +     int ret;
-> > +
-> > +     for (;;) {
-> > +             mtk_mac_lock(priv);
-> > +
-> > +             if (!mtk_mac_ring_descs_available(ring)) {
-> > +                     mtk_mac_unlock(priv);
-> > +                     break;
-> > +             }
-> > +
-> > +             ret =3D mtk_mac_tx_complete_one(priv);
-> > +             if (ret) {
-> > +                     mtk_mac_unlock(priv);
-> > +                     break;
-> > +             }
-> > +
-> > +             if (netif_queue_stopped(ndev))
-> > +                     netif_wake_queue(ndev);
-> > +
-> > +             mtk_mac_unlock(priv);
-> > +     }
->
-> Where do you increment the net_device statistics to indicate the bytes
-> and packets transmitted?
->
-
-I don't. I use the counters provided by HW for that.
-
-> [snip]
->
-> > +     mtk_mac_set_mode_rmii(priv);
-> > +
-> > +     dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
->
-> Your code assumes that DMA addresses are not going to be >=3D 4GB so you
-> should be checking this function's return code and abort here otherwise
-> your driver will fail in surprisingly difficult ways to debug.
-
-Sure, thanks.
-
-Bart
+Regards,
+Christophe Kerello.
