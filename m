@@ -2,150 +2,145 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180E0C2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 21:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EB0C2D0FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 21:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA23E20769
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 21:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689EF24927
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 21:47:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jkxjg0T2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbgELVr2 (ORCPT
+        id S1731567AbgELVr4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 17:47:28 -0400
-Received: from muru.com ([72.249.23.125]:54252 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731415AbgELVr1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 17:47:27 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 9029E81C1;
-        Tue, 12 May 2020 21:48:15 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>
-Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: [PATCH 2/6] dt-bindings: serdev: ngsm: Add binding for serdev-ngsm
-Date:   Tue, 12 May 2020 14:47:09 -0700
-Message-Id: <20200512214713.40501-3-tony@atomide.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200512214713.40501-1-tony@atomide.com>
-References: <20200512214713.40501-1-tony@atomide.com>
+        Tue, 12 May 2020 17:47:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731560AbgELVr4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 17:47:56 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9005C061A0C
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 14:47:55 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id l73so949645pjb.1
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 14:47:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Uv52gchuUhEIM8QP1BdGMzRp2+Ut2TatOyzveq7OlWs=;
+        b=jkxjg0T2haVmUpTShuETFu1Wq++3MwjgbyneltOHIfk8XQsJNKxt922t1Ytvkm8wYD
+         RuA4OJxZWBa/vXJiaIIZHvY9Y6cbdCyREuLDwkiTLEgkpxB1w1x5Blst/fjWuwf3ERc/
+         bjUma8IUpfYR5TD4vtu6DAmnX6ipRd9lYuxZ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Uv52gchuUhEIM8QP1BdGMzRp2+Ut2TatOyzveq7OlWs=;
+        b=qnkTah3HNK48gSZPpIDVu30JsarqnOzrUfTz59UW/XuwNTnaicnsys2qIw/SstHRL+
+         Vj+W595NBCXlbL9nv66Ke05GWl4y5JxHcmIKD2PC7+kumbSaHTpZvyC6DGmYhWuikI+Z
+         FEAVn20Q/KN5IdjpDHoKxRRJfaIc6r3WyqSrLDjQMX5jvKmFV6zMRoSrBFmPusMFlwe+
+         qFLXin+L0fCS7/aTl/eDaX0mSLa3cXL3ynKtQ49EetUDhCMc7h+yJs5QkUNXUOE/LWeY
+         Dghymsokt9toi093ky2jJoU17+WMx1ny/67HA2b5R/Gz/he635GQqyn620ue2qgP7j3U
+         ZHWQ==
+X-Gm-Message-State: AGi0Pua6KIaOyT7op6gHeI6H0tLST6pjo7qWOerKeU7b9a++xbFUQBfg
+        DEQ6JqMMxvWQT0VJLV7B1oT62w==
+X-Google-Smtp-Source: APiQypJrjYK11lvG/VkCX0mmTLzIKKq0JSP9JmFg20XkcRaUfiuly0oHj8otgh7EUG0Oi/xXtpM8GA==
+X-Received: by 2002:a17:90b:957:: with SMTP id dw23mr31666614pjb.101.1589320075184;
+        Tue, 12 May 2020 14:47:55 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 135sm12786295pfu.125.2020.05.12.14.47.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 14:47:54 -0700 (PDT)
+Date:   Tue, 12 May 2020 14:47:53 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
+        saravanak@google.com, sibis@codeaurora.org, robh+dt@kernel.org,
+        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
+        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 08/10] cpufreq: dt: Validate all interconnect paths
+Message-ID: <20200512214753.GJ4525@google.com>
+References: <20200512125327.1868-1-georgi.djakov@linaro.org>
+ <20200512125327.1868-9-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200512125327.1868-9-georgi.djakov@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a binding document for a generic serdev-ngsm driver that can be
-used to bring up TS 27.010 line discipline with Linux n_gsm support
-on a serial port.
+Hi Georgi,
 
-As the Motorola Mapphone modems require some custom handling, they
-are handled with a separate compatible.
+On Tue, May 12, 2020 at 03:53:25PM +0300, Georgi Djakov wrote:
+> Currently when we check for the available resources, we assume that there
+> is only one interconnect path, but in fact it could be more than one. Do
+> some validation to determine the number of paths and verify if each one
+> of them is available.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> v8:
+> * New patch.
+> 
+>  drivers/cpufreq/cpufreq-dt.c | 49 ++++++++++++++++++++++++++++++++----
+>  1 file changed, 44 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+> index 4ecef3257532..3dd28c2c1633 100644
+> --- a/drivers/cpufreq/cpufreq-dt.c
+> +++ b/drivers/cpufreq/cpufreq-dt.c
+> @@ -91,12 +91,54 @@ static const char *find_supply_name(struct device *dev)
+>  	return name;
+>  }
+>  
+> +static int find_icc_paths(struct device *dev)
+> +{
+> +	struct device_node *np;
+> +	struct icc_path **paths;
+> +	int i, count, num_paths;
+> +	int ret = 0;
+> +
+> +	np = of_node_get(dev->of_node);
+> +	if (!np)
+> +		return 0;
+> +
+> +	count = of_count_phandle_with_args(np, "interconnects",
+> +					   "#interconnect-cells");
+> +	of_node_put(np);
+> +	if (count < 0)
+> +		return 0;
+> +
+> +	/* two phandles when #interconnect-cells = <1> */
+> +	if (count % 2) {
+> +		dev_err(dev, "%s: Invalid interconnects values\n", __func__);
+> +		return -EINVAL;
+> +	}
+> +
+> +	num_paths = count / 2;
+> +	paths = kcalloc(num_paths, sizeof(*paths), GFP_KERNEL);
+> +	if (!paths)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_paths; i++) {
+> +		paths[i] = of_icc_get_by_index(dev, i);
+> +		ret = PTR_ERR_OR_ZERO(paths[i]);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	while (i--)
+> +		icc_put(paths[i]);
 
-Let's also add vendor string for ETSI as we're using a ETSI 3GPP
-TS 27.010 standard.
-
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- .../bindings/serdev/serdev-ngsm.yaml          | 64 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
- 2 files changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-
-diff --git a/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-new file mode 100644
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serdev/serdev-ngsm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic serdev-ngsm TS 27.010 driver
-+
-+maintainers:
-+  - Tony Lindgren <tony@atomide.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - etsi,3gpp-ts27010-adaption1
-+      - motorola,mapphone-mdm6600-serial
-+
-+  ttymask:
-+    $ref: /schemas/types.yaml#/definitions/uint64
-+    description: Mask of the TS 27.010 channel TTY interfaces to start (64 bit)
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: motorola,mapphone-mdm6600-serial
-+    then:
-+      properties:
-+        phys:
-+          $ref: /schemas/types.yaml#/definitions/phandle-array
-+          description: USB PHY needed for shared GPIO PM wake-up pins
-+          maxItems: 1
-+
-+        phy-names:
-+          description: Name of the USB PHY
-+          const: usb
-+
-+      required:
-+        - phys
-+        - phy-names
-+
-+required:
-+  - compatible
-+  - ttymask
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    modem {
-+      compatible = "motorola,mapphone-mdm6600-serial";
-+      ttymask = <0 0x00001fee>;
-+      phys = <&fsusb1_phy>;
-+      phy-names = "usb";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -323,6 +323,8 @@ patternProperties:
-     description: Espressif Systems Co. Ltd.
-   "^est,.*":
-     description: ESTeem Wireless Modems
-+  "^etsi,.*":
-+    description: ETSI
-   "^ettus,.*":
-     description: NI Ettus Research
-   "^eukrea,.*":
--- 
-2.26.2
+Since the function only does a validation and throws the paths away
+afterwards you don't really need the dynamic allocation and 'icc_put'
+loop. Just have a single 'struct icc_path' pointer and call icc_put()
+inside the for loop.
