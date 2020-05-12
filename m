@@ -2,204 +2,133 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA12C2D0FA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF2FC2D0FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 155FC24927
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DmFTUbcv"
+	by mail.kernel.org (Postfix) with ESMTP id 5C97620659
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589322815;
+	bh=nL8KMXMcA+4gwiHl0CUoXIGHseXbgvlaf4N32o/2bMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u4r/NPlqJ8NVxyuIjzLjI/OJPlXF6KoqYsat2yKZUwWEVjc//N5Ye3WuuC161faWd
+	 vJpv5xL0jprP3qLkSe1zJBcY67/29osQGBD9v0gN2AFrEVy8NiSpvI6P+O7Bhrr4oo
+	 x3n50ZwjD+nj1ujC4v4AogBlA+7iksHDotcEvq6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731966AbgELWYi (ORCPT
+        id S1726031AbgELWde (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 18:24:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731626AbgELWYg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 18:24:36 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4743BC061A0C;
-        Tue, 12 May 2020 15:24:36 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id n5so10956031wmd.0;
-        Tue, 12 May 2020 15:24:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=82waVPteXNHi6dIMJjBHDsDaBtBSu7S6EIvE49VbcSw=;
-        b=DmFTUbcvToPTVYCRVDW43Z7IyVVLKKuT1TGww9/gk5Wh5IroV3203wAuadVGzJaPr7
-         JCtrqtORsykQi4ipexGAEWp6cNhLT8vVWOxuYDBec2u6ArFBZkl+QHR5CZPYtXffwjwt
-         300YUx7oOEG/xNLsqihJxLtlu/IybZhOZ+oWGhN28/+Adj0D2sAHPzwmWW7jZ0YJ74bD
-         n55xLzUU0xqvNj+0+JlQPJ96nKYRytPFCYxKP/AEOqgnav3R7n4MoCJd4WdJu6rwBv77
-         ffQdUzMu41HGnMtNsaVvdll/6AcmdaY5AyEGEA63mZL5q7N/ScaGAedzRhK0TqDPTrrx
-         7t0w==
+        Tue, 12 May 2020 18:33:34 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42836 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELWde (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 18:33:34 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m18so11857462otq.9;
+        Tue, 12 May 2020 15:33:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=82waVPteXNHi6dIMJjBHDsDaBtBSu7S6EIvE49VbcSw=;
-        b=A2l+ICy2rdfZHiNDVlIB1zFawHdzddyDNQCax9vDchTl5+IwKJvwAEhIqcqrH8/9t7
-         YS5oC0/JhYmBjoA9o21tdk3vUGL7wq81w787GWJkrJ7MLTbohKwFA7wsPPRufYMXHR2g
-         grIUeX72bWH989B3LhYhLB4K+SzHYVLkb+x1u7dsqM8DTMB9YV2naHc+ZOHDkXvMUItD
-         jyo7Fkkzzzjfx2dtk5NCQIDZdBnqKNByAlikFSDBrssO6a7YAEGKzPafQJbHQq0wRa5N
-         9cOrQvDIvMdHSFmAn3TnHn+RnzfrC2BDdXqicVoj23fj8LqMIglbKjC4ix0cC5UiNU4w
-         aWvg==
-X-Gm-Message-State: AGi0PuZ05HL6sgV/BEnqP7YhSNYNix1T75XfHg44AW+G9ZnYfS2hOv/0
-        C2YsZm2q8rmLDcWBDXiCHmvlGCT9
-X-Google-Smtp-Source: APiQypKIkp1CdypfQ0uEU9JOwaNCNbhKwWqoio9mMWBOIpnVePAlV/V6DFbSxBPtHQyPfeOIwuVXdg==
-X-Received: by 2002:a7b:cd04:: with SMTP id f4mr37887601wmj.3.1589322274910;
-        Tue, 12 May 2020 15:24:34 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137132E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3713:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id b2sm21758758wrm.30.2020.05.12.15.24.33
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=y+bYEHG5+H41i0k9IKvYB5czzxQ6apM29KdhUZ9VKVw=;
+        b=LiOQxStM01MH4NI9nUxIRfG791lM9xS8/X8MMpP2um7Vd+pDE7gqNzWHf/MwZ8H77G
+         9VCbwhcBeKcCIQ1Ic2dyH9zwpEUhb50Yw3u47dytNwpYeV19kSsotcHJ/MpovhzGbI8m
+         7fOOJZJVetj97gZxF8zSR5KY9fRZN0ce5uzGxzB7HVlNDxTrG2xFL6tkKma0vc3FNK76
+         xM50yqaToB5wBZMY7sPj6Mq/sBazCnde+bMN8OpQJa0XvH4BmBKMDgXfE29U1G9Q154z
+         TsGt8PWrirqadx30b+qi98gckJFC9xUXf4ArKSHB/xEWW74LJU/dUhESJCSlZu1pXK6m
+         UhHw==
+X-Gm-Message-State: AGi0PubAz451tZMB0ynIuAFIP/02QnUKY/1EJhFznLGMrWHsFbL49BuN
+        1xXG3baMPfs7VnYBWUOuZQ==
+X-Google-Smtp-Source: APiQypJ0QgJBXdaoUzcntJkXYpa7uIVyzsVMP96rgaq721CYrNfs2z6IEGTEW8h4iS6VdvsJIoVFEg==
+X-Received: by 2002:a9d:39b6:: with SMTP id y51mr17894918otb.368.1589322811717;
+        Tue, 12 May 2020 15:33:31 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 10sm3750640oto.80.2020.05.12.15.33.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:24:34 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     kishon@ti.com, robh+dt@kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
-Cc:     narmstrong@baylibre.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hexdump0815@googlemail.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Thomas Graichen <thomas.graichen@gmail.com>
-Subject: [PATCH v2 1/6] dt-bindings: phy: meson8b-usb2: Convert to json-schema
-Date:   Wed, 13 May 2020 00:24:19 +0200
-Message-Id: <20200512222424.549351-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200512222424.549351-1-martin.blumenstingl@googlemail.com>
-References: <20200512222424.549351-1-martin.blumenstingl@googlemail.com>
+        Tue, 12 May 2020 15:33:31 -0700 (PDT)
+Received: (nullmailer pid 25179 invoked by uid 1000);
+        Tue, 12 May 2020 22:33:29 -0000
+Date:   Tue, 12 May 2020 17:33:29 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-renesas-soc@vger.kernel.org, sakari.ailus@iki.fi,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Hyun Kwon <hyunk@xilinx.com>
+Subject: Re: [PATCH v9 1/4] dt-bindings: media: i2c: Add bindings for Maxim
+ Integrated MAX9286
+Message-ID: <20200512223329.GA23701@bogus>
+References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200512155105.1068064-2-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200512155105.1068064-2-kieran.bingham+renesas@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that we have the DT validation in place, let's convert the device
-tree bindings for the Amlogic Meson8, Meson8b, Meson8m2 and GXBB USB2
-PHY over to a YAML schema.
+On Tue, 12 May 2020 16:51:02 +0100, Kieran Bingham wrote:
+> From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> 
+> The MAX9286 deserializes video data received on up to 4 Gigabit
+> Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using up
+> to 4 data lanes.
+> 
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> ---
+> 
+> v7:
+>  - Collect Rob's RB tag
+>  - Remove redundant maxItems from remote-endpoints
+>  - Fix SPDX licence tag
+> 
+>  .../bindings/media/i2c/maxim,max9286.yaml     | 287 ++++++++++++++++++
+>  1 file changed, 287 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+> 
 
-While here, also add the fallback compatible string
-"amlogic,meson-gxbb-usb2-phy" which is already used in
-arch/arm/boot/dts/meson{,8,8b}.dtsi.
 
-Tested-by: Thomas Graichen <thomas.graichen@gmail.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- .../phy/amlogic,meson8b-usb2-phy.yaml         | 63 +++++++++++++++++++
- .../bindings/phy/meson8b-usb2-phy.txt         | 28 ---------
- 2 files changed, 63 insertions(+), 28 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml
-new file mode 100644
-index 000000000000..0bd4ce39525a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/amlogic,meson8b-usb2-phy.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic Meson8, Meson8b, Meson8m2 and GXBB USB2 PHY
-+
-+maintainers:
-+  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - amlogic,meson8-usb2-phy
-+              - amlogic,meson8b-usb2-phy
-+          - const: amlogic,meson-mx-usb2-phy
-+      - const: amlogic,meson-gxbb-usb2-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: usb_general
-+      - const: usb
-+
-+  resets:
-+    minItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  phy-supply:
-+    description:
-+      Phandle to a regulator that provides power to the PHY. This
-+      regulator will be managed during the PHY power on/off sequence.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - "#phy-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    usb-phy@c0000000 {
-+      compatible = "amlogic,meson-gxbb-usb2-phy";
-+      reg = <0xc0000000 0x20>;
-+      resets = <&reset_usb_phy>;
-+      clocks = <&clk_usb_general>, <&reset_usb>;
-+      clock-names = "usb_general", "usb";
-+      phy-supply = <&usb_vbus>;
-+      #phy-cells = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
-deleted file mode 100644
-index d81d73aea608..000000000000
---- a/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* Amlogic Meson8, Meson8b and GXBB USB2 PHY
--
--Required properties:
--- compatible:	Depending on the platform this should be one of:
--	"amlogic,meson8-usb2-phy"
--	"amlogic,meson8b-usb2-phy"
--	"amlogic,meson-gxbb-usb2-phy"
--- reg:		The base address and length of the registers
--- #phys-cells:	should be 0 (see phy-bindings.txt in this directory)
--- clocks:	phandle and clock identifier for the phy clocks
--- clock-names:	"usb_general" and "usb"
--
--Optional properties:
--- resets:	reference to the reset controller
--- phy-supply:	see phy-bindings.txt in this directory
--
--
--Example:
--
--usb0_phy: usb-phy@c0000000 {
--	compatible = "amlogic,meson-gxbb-usb2-phy";
--	#phy-cells = <0>;
--	reg = <0x0 0xc0000000 0x0 0x20>;
--	resets = <&reset RESET_USB_OTG>;
--	clocks = <&clkc CLKID_USB>, <&clkc CLKID_USB0>;
--	clock-names = "usb_general", "usb";
--	phy-supply = <&usb_vbus>;
--};
--- 
-2.26.2
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml: properties: {'enum': ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'if', 'items', 'maxItems', 'maximum', 'minItems', 'minimum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'propertyNames', 'required', 'then', 'unevaluatedProperties']} is not allowed for 'additionalProperties'
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/i2c/maxim,max9286.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/media/i2c/maxim,max9286.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1288573
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
