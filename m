@@ -2,306 +2,125 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12D1C54E8B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D415C54E8B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA9A20753
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:35:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kPYZo8tf"
+	by mail.kernel.org (Postfix) with ESMTP id 2710520736
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbgELMfU (ORCPT
+        id S1727859AbgELMfx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 08:35:20 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42016 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgELMfT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 08:35:19 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04CCZCXQ082202;
-        Tue, 12 May 2020 07:35:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589286912;
-        bh=iBMEw7nsKPVUTPKVo22uLFQeStZXsi7jLhH8IXRwqGw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=kPYZo8tfvygXF3xiGxCq6Mhs6o+/fOoxUQgiYfRF1OIfFK8cBF3zldZH10IB/5CqO
-         iKJs5D8qcTxDeoiB7IsttXrf7i/+QhBoTfuNpy970nIC4S2JGqBPAUOPJUqVTbqKLu
-         qYYROXpk9BBJgUgpA3HxrCK+Kpl2GnyV5+uheYrk=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04CCZC4M127523
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 May 2020 07:35:12 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
- May 2020 07:35:11 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 12 May 2020 07:35:11 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04CCZALq068829;
-        Tue, 12 May 2020 07:35:11 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
-CC:     Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v4 2/2] soc: ti: add k3 platforms chipid module driver
-Date:   Tue, 12 May 2020 15:34:49 +0300
-Message-ID: <20200512123449.16517-3-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200512123449.16517-1-grygorii.strashko@ti.com>
-References: <20200512123449.16517-1-grygorii.strashko@ti.com>
+        Tue, 12 May 2020 08:35:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2792 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbgELMfx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 08:35:53 -0400
+IronPort-SDR: ZW9YklmNTR0YgwAp6NFA+PvUJVaiXkolqsMYXFZBVzYRyhHWLlBWg8UygSQoAHCY99oXsG8lqz
+ Utwl3/DlxHCg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 05:35:52 -0700
+IronPort-SDR: LhFEIQ/w6qJjoAx9cR1EgbDS61a0cyLOb9Dv0WHWw9jPq/uobO/v5xW/xvgrKEOdoi800UDk0q
+ hkj+aStjuSfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,383,1583222400"; 
+   d="scan'208";a="251451800"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 12 May 2020 05:35:49 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jYU8V-006Cdk-Rh; Tue, 12 May 2020 15:35:51 +0300
+Date:   Tue, 12 May 2020 15:35:51 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
+ parameter
+Message-ID: <20200512123551.GX185537@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
+ <20200508112152.GI185537@smile.fi.intel.com>
+ <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Texas Instruments K3 Multicore SoC platforms have chipid module which
-is represented by CTRLMMR_xxx_JTAGID register and contains information
-about SoC id and revision.
- Bits:
-  31-28 VARIANT Device variant
-  27-12 PARTNO  Part number
-  11-1  MFG     Indicates TI as manufacturer (0x17)
-  1             Always 1
+On Tue, May 12, 2020 at 12:16:22AM +0300, Serge Semin wrote:
+> On Fri, May 08, 2020 at 02:21:52PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
+> > > Maximum block size DW DMAC configuration corresponds to the max segment
+> > > size DMA parameter in the DMA core subsystem notation. Lets set it with a
+> > > value specific to the probed DW DMA controller. It shall help the DMA
+> > > clients to create size-optimized SG-list items for the controller. This in
+> > > turn will cause less dw_desc allocations, less LLP reinitializations,
+> > > better DMA device performance.
 
-This patch adds corresponding driver to identify the TI K3 SoC family and
-revision, and registers this information with the SoC bus. It is available
-under /sys/devices/soc0/ for user space, and can be checked, where needed,
-in Kernel using soc_device_match().
+> > Yeah, I have locally something like this and I didn't dare to upstream because
+> > there is an issue. We have this information per DMA controller, while we
+> > actually need this on per DMA channel basis.
+> > 
+> > Above will work only for synthesized DMA with all channels having same block
+> > size. That's why above conditional is not needed anyway.
+> 
+> Hm, I don't really see why the conditional isn't needed and this won't work. As
+> you can see in the loop above Initially I find a maximum of all channels maximum
+> block sizes and use it then as a max segment size parameter for the whole device.
+> If the DW DMA controller has the same max block size of all channels, then it
+> will be found. If the channels've been synthesized with different block sizes,
+> then the optimization will work for the one with greatest block size. The SG
+> list entries of the channels with lesser max block size will be split up
+> by the DW DMAC driver, which would have been done anyway without
+> max_segment_size being set. Here we at least provide the optimization for the
+> channels with greatest max block size.
+> 
+> I do understand that it would be good to have this parameter setup on per generic
+> DMA channel descriptor basis. But DMA core and device descriptor doesn't provide
+> such facility, so setting at least some justified value is a good idea.
+> 
+> > 
+> > OTOH, I never saw the DesignWare DMA to be synthesized differently (I remember
+> > that Intel Medfield has interesting settings, but I don't remember if DMA
+> > channels are different inside the same controller).
+> > 
+> > Vineet, do you have any information that Synopsys customers synthesized DMA
+> > controllers with different channel characteristics inside one DMA IP?
+> 
+> AFAICS the DW DMAC channels can be synthesized with different max block size.
+> The IP core supports such configuration. So we can't assume that such DMAC
+> release can't be found in a real hardware just because we've never seen one.
+> No matter what Vineet will have to say in response to your question.
 
-Identification is done by:
-- checking MFG to be TI ID
- - retrieving Device variant (revision)
- - retrieving Part number and convert it to the family
- - retrieving machine from DT "/model"
+My point here that we probably can avoid complications till we have real
+hardware where it's different. As I said I don't remember a such, except
+*maybe* Intel Medfield, which is quite outdated and not supported for wider
+audience anyway.
 
-Example J721E:
-  # cat /sys/devices/soc0/{machine,family,revision}
-  Texas Instruments K3 J721E SoC
-  J721E
-  SR1.0
-
-Example AM65x:
-  # cat /sys/devices/soc0/{machine,family,revision}
-  Texas Instruments AM654 Base Board
-  AM65X
-  SR1.0
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-Reviewed-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/soc/ti/Kconfig      |  10 +++
- drivers/soc/ti/Makefile     |   1 +
- drivers/soc/ti/k3-socinfo.c | 152 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 163 insertions(+)
- create mode 100644 drivers/soc/ti/k3-socinfo.c
-
-diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-index 4486e055794c..e192fb788836 100644
---- a/drivers/soc/ti/Kconfig
-+++ b/drivers/soc/ti/Kconfig
-@@ -91,6 +91,16 @@ config TI_K3_RINGACC
- 	  and a consumer. There is one RINGACC module per NAVSS on TI AM65x SoCs
- 	  If unsure, say N.
- 
-+config TI_K3_SOCINFO
-+	bool
-+	depends on ARCH_K3 || COMPILE_TEST
-+	select SOC_BUS
-+	select MFD_SYSCON
-+	help
-+	  Include support for the SoC bus socinfo for the TI K3 Multicore SoC
-+	  platforms to provide information about the SoC family and
-+	  variant to user space.
-+
- endif # SOC_TI
- 
- config TI_SCI_INTA_MSI_DOMAIN
-diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
-index bec827937a5f..1110e5c98685 100644
---- a/drivers/soc/ti/Makefile
-+++ b/drivers/soc/ti/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
- obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
- obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
- obj-$(CONFIG_TI_K3_RINGACC)		+= k3-ringacc.o
-+obj-$(CONFIG_TI_K3_SOCINFO)		+= k3-socinfo.o
-diff --git a/drivers/soc/ti/k3-socinfo.c b/drivers/soc/ti/k3-socinfo.c
-new file mode 100644
-index 000000000000..af0ba5288e58
---- /dev/null
-+++ b/drivers/soc/ti/k3-socinfo.c
-@@ -0,0 +1,152 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * TI K3 SoC info driver
-+ *
-+ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
-+ */
-+
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/regmap.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/sys_soc.h>
-+
-+#define CTRLMMR_WKUP_JTAGID_REG		0
-+/*
-+ * Bits:
-+ *  31-28 VARIANT	Device variant
-+ *  27-12 PARTNO	Part number
-+ *  11-1  MFG		Indicates TI as manufacturer (0x17)
-+ *  1			Always 1
-+ */
-+#define CTRLMMR_WKUP_JTAGID_VARIANT_SHIFT	(28)
-+#define CTRLMMR_WKUP_JTAGID_VARIANT_MASK	GENMASK(31, 28)
-+
-+#define CTRLMMR_WKUP_JTAGID_PARTNO_SHIFT	(12)
-+#define CTRLMMR_WKUP_JTAGID_PARTNO_MASK		GENMASK(27, 12)
-+
-+#define CTRLMMR_WKUP_JTAGID_MFG_SHIFT		(1)
-+#define CTRLMMR_WKUP_JTAGID_MFG_MASK		GENMASK(11, 1)
-+
-+#define CTRLMMR_WKUP_JTAGID_MFG_TI		0x17
-+
-+static const struct k3_soc_id {
-+	unsigned int id;
-+	const char *family_name;
-+} k3_soc_ids[] = {
-+	{ 0xBB5A, "AM65X" },
-+	{ 0xBB64, "J721E" },
-+};
-+
-+static int
-+k3_chipinfo_partno_to_names(unsigned int partno,
-+			    struct soc_device_attribute *soc_dev_attr)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(k3_soc_ids); i++)
-+		if (partno == k3_soc_ids[i].id) {
-+			soc_dev_attr->family = k3_soc_ids[i].family_name;
-+			return 0;
-+		}
-+
-+	return -EINVAL;
-+}
-+
-+static int k3_chipinfo_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct soc_device_attribute *soc_dev_attr;
-+	struct device *dev = &pdev->dev;
-+	struct soc_device *soc_dev;
-+	struct regmap *regmap;
-+	u32 partno_id;
-+	u32 variant;
-+	u32 jtag_id;
-+	u32 mfg;
-+	int ret;
-+
-+	regmap = device_node_to_regmap(node);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	ret = regmap_read(regmap, CTRLMMR_WKUP_JTAGID_REG, &jtag_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	mfg = (jtag_id & CTRLMMR_WKUP_JTAGID_MFG_MASK) >>
-+	       CTRLMMR_WKUP_JTAGID_MFG_SHIFT;
-+
-+	if (mfg != CTRLMMR_WKUP_JTAGID_MFG_TI) {
-+		dev_err(dev, "Invalid MFG SoC\n");
-+		return -ENODEV;
-+	}
-+
-+	variant = (jtag_id & CTRLMMR_WKUP_JTAGID_VARIANT_MASK) >>
-+		  CTRLMMR_WKUP_JTAGID_VARIANT_SHIFT;
-+	variant++;
-+
-+	partno_id = (jtag_id & CTRLMMR_WKUP_JTAGID_PARTNO_MASK) >>
-+		 CTRLMMR_WKUP_JTAGID_PARTNO_SHIFT;
-+
-+	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-+	if (!soc_dev_attr)
-+		return -ENOMEM;
-+
-+	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "SR%x.0", variant);
-+	if (!soc_dev_attr->revision) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	ret = k3_chipinfo_partno_to_names(partno_id, soc_dev_attr);
-+	if (ret) {
-+		dev_err(dev, "Unknown SoC JTAGID[0x%08X]\n", jtag_id);
-+		ret = -ENODEV;
-+		goto err_free_rev;
-+	}
-+
-+	node = of_find_node_by_path("/");
-+	of_property_read_string(node, "model", &soc_dev_attr->machine);
-+	of_node_put(node);
-+
-+	soc_dev = soc_device_register(soc_dev_attr);
-+	if (IS_ERR(soc_dev)) {
-+		ret = PTR_ERR(soc_dev);
-+		goto err_free_rev;
-+	}
-+
-+	dev_info(dev, "Family:%s rev:%s JTAGID[0x%08x] Detected\n",
-+		 soc_dev_attr->family,
-+		 soc_dev_attr->revision, jtag_id);
-+
-+	return 0;
-+
-+err_free_rev:
-+	kfree(soc_dev_attr->revision);
-+err:
-+	kfree(soc_dev_attr);
-+	return ret;
-+}
-+
-+static const struct of_device_id k3_chipinfo_of_match[] = {
-+	{ .compatible = "ti,am654-chipid", },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver k3_chipinfo_driver = {
-+	.driver = {
-+		.name = "k3-chipinfo",
-+		.of_match_table = k3_chipinfo_of_match,
-+	},
-+	.probe = k3_chipinfo_probe,
-+};
-+
-+static int __init k3_chipinfo_init(void)
-+{
-+	return platform_driver_register(&k3_chipinfo_driver);
-+}
-+subsys_initcall(k3_chipinfo_init);
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
