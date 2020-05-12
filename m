@@ -2,78 +2,66 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5F4C2D0FB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 20:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3FFC2D0F7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 20:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB4DE20784
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 20:42:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="PTmxPWiw"
+	by mail.kernel.org (Postfix) with ESMTP id DFCF420747
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 20:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589316347;
+	bh=Lh87sBVirmETvaVLhodSRgK38hbyc/iavSjxAunQF04=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rzEPUzCOYoyCfhcZtO4KDyXxPG4gmrFqcSgErzQlyzjCvhhv7I2mJEMoVKrUNGboX
+	 ttCmNNO9VEpCcbyXsjEwPSMjf3A2D34YNsSZiLb4z8Qmf6WkLVHjvlcPfuDa989EC7
+	 Pp1xaPfp8x0hT0wqhrapcWkCe9UJ7AmRr+zLTNnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgELUmL (ORCPT
+        id S1727825AbgELUpq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 16:42:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725950AbgELUmK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 16:42:10 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A861EC061A0C;
-        Tue, 12 May 2020 13:42:09 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y16so10399474wrs.3;
-        Tue, 12 May 2020 13:42:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/MZ64ZWZPbBAmbiWuLigvdZwA3g/awfq0AQNrERjSW4=;
-        b=PTmxPWiwDZDGYCjKZ8QYcYteajpWaoU+FHqh/Fd/j3e9FugQqZvJxkat1mTzhWlUj0
-         p4uyInI8YT1FaBaYoEYGy5Am22fVXXHnwLx8CbzMTrI/FWjTdnNdETF3FWZF89SAw4G9
-         zhwiMuUMcneIuaZIBnJPsRrJBtBffgsVUzX8DJZuhXQWptPErwfDJfMzI4V8c1WezEiU
-         qsf99zj1r2EsldSuO36gnrU6Lb62C4LkeMWpj7tUHFCqR8efmGBbJK5Sg6r/7r1DUrjA
-         k+9gojzChGBsAQwlYdd8D5FYe2KrsGQcF9Kplcqq5v8XSs+nR9Wz/nfnp5Nw4WOWjGHm
-         92Ug==
+        Tue, 12 May 2020 16:45:46 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40815 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726324AbgELUpq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 16:45:46 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v128so2652597oia.7;
+        Tue, 12 May 2020 13:45:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/MZ64ZWZPbBAmbiWuLigvdZwA3g/awfq0AQNrERjSW4=;
-        b=q5fxUTbiKVdBEckZ/yhBvNJ/8FJGA2UnwjSWmo5ZoBpwWbgPoP2H4GIghmuKm3rtkc
-         5yL/kjYfSU/VuRZCovOcZ9veiFEvTdOfIPPH0SI6lA5klzFf+j3YY3q9FU9viVYFZG5p
-         He6NVG6r7Mzlt21q9AD2v+L481VCs7ar1TGpk7A5oNpftOy+JQXP6Y9kxJSAxBGi6Vwy
-         1ts9lI/3GeC2NrShcAqkKBIBhANn6n0748buH5uWsUEixqfm+ISMbkM5WVBsUyoT8RHH
-         D/YI6VOKpAu+8IvvJp3R5M4/d3fTr5nWmU/Haoa1xSFIZKXve0reRub/e+eBb6nerhvU
-         er2g==
-X-Gm-Message-State: AGi0PuYJrig3UfimYyuZm14uE9kEtIm+KaCrS0IGK+QK72wZzE2NDTzH
-        CNHXwPb2ayLD+0/pzlBTgao=
-X-Google-Smtp-Source: APiQypKSqwokjgO1sG2iKMzr92VhmMH+KtjvFcAiHoJtsyLNUFs5UEumQH1xlmtwzSpwIe8Ap1/X2w==
-X-Received: by 2002:a5d:448e:: with SMTP id j14mr14850805wrq.261.1589316128310;
-        Tue, 12 May 2020 13:42:08 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137132E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3713:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id a24sm32813210wmb.24.2020.05.12.13.42.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bZ3SlC6IjAo3rRznak2yB2vjG0WklLB9HsgMaXr/3G8=;
+        b=ZepMXdQ/WnfBObbFd/B6M9to3Ob8Ol7WtpC39VYHjN4V7bsZEZexDAhDER0b0BbVTw
+         tHVIlA39IsnB5NgjrHBUtMO85bLadeGNJ4FD4BVDr3seuP6HkbG6qt0/JuaNw9bc6U3V
+         14bnQ3rB3FFAXvXNz+1w1xMAL4ZDecKlbC2kD7RCam5xRcl8EZUzdZVG8zKrF9Ut3IY6
+         f3UjfUTRBHiCNtKr1+/xYvz8LBGG0hBoOvHSNj+M+DqAOIBWCpGQLlWZFTw0JjGAsG7z
+         AchaYC9Vfh1f2EJvfZ5I/xPuOZgQ2dB0AbqHwAksFuXVQvO88t2A3u98QBDH4ELTptvS
+         CcQA==
+X-Gm-Message-State: AGi0Pubs2xELuMteQV/fKsLd2nq1GMHPAlCwpsuMhU1J6KxhvSJjv6j3
+        QVfU0NFWduUSdidFOv8PvOeuOQBqUA==
+X-Google-Smtp-Source: APiQypKV6dUHk4u2TZZM9pj4FNgtVQv7pL7PiPyGyXG2CpXKT8zCVpKHis+rnBPSF2vegPnG8W7f6g==
+X-Received: by 2002:aca:488c:: with SMTP id v134mr12366530oia.103.1589316344975;
+        Tue, 12 May 2020 13:45:44 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id k8sm3943792ood.24.2020.05.12.13.45.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 13:42:07 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
-        ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, jianxin.pan@amlogic.com,
-        linux-kernel@vger.kernel.org, yinxin_1989@aliyun.com,
-        linux-arm-kernel@lists.infradead.org, lnykww@gmail.com,
-        linux.amoon@gmail.com, jbrunet@baylibre.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v7 1/2] dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
-Date:   Tue, 12 May 2020 22:41:46 +0200
-Message-Id: <20200512204147.504087-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200512204147.504087-1-martin.blumenstingl@googlemail.com>
-References: <20200512204147.504087-1-martin.blumenstingl@googlemail.com>
+        Tue, 12 May 2020 13:45:44 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH 1/5] spi: dt-bindings: sifive: Add missing 2nd register region
+Date:   Tue, 12 May 2020 15:45:39 -0500
+Message-Id: <20200512204543.22090-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -81,94 +69,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This documents the devicetree bindings for the SDHC MMC host controller
-found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
-bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
-HS200 mode (up to 100MHz clock). It embeds an internal clock controller
-which outputs four clocks (mod_clk, sd_clk, tx_clk and rx_clk) and is
-fed by four external input clocks (clkin[0-3]). "pclk" is the module
-register clock, it has to be enabled to access the registers.
+The 'reg' description and example have a 2nd register region for memory
+mapped flash, but the schema says there is only 1 region. Fix this.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: linux-spi@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   | 68 +++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+Please ack, dependency for patch 5.
 
-diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
-new file mode 100644
-index 000000000000..7a386a5b8fcb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/amlogic,meson-mx-sdhc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amlogic Meson SDHC controller Device Tree Bindings
-+
-+allOf:
-+  - $ref: "mmc-controller.yaml"
-+
-+maintainers:
-+  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+
-+description: |
-+  The SDHC MMC host controller on Amlogic SoCs provides an eMMC and MMC
-+  card interface with 1/4/8-bit bus width.
-+  It supports eMMC spec 4.4x/4.5x including HS200 (up to 100MHz clock).
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - amlogic,meson8-sdhc
-+        - amlogic,meson8b-sdhc
-+        - amlogic,meson8m2-sdhc
-+      - const: amlogic,meson-mx-sdhc
-+
-+  reg:
+ Documentation/devicetree/bindings/spi/spi-sifive.yaml | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.yaml b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
+index 28040598bfae..fb583e57c1f2 100644
+--- a/Documentation/devicetree/bindings/spi/spi-sifive.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
+@@ -32,11 +32,10 @@ properties:
+       https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
+ 
+   reg:
+-    maxItems: 1
+-
+-    description:
+-      Physical base address and size of SPI registers map
+-      A second (optional) range can indicate memory mapped flash
 +    minItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+
-+  clocks:
-+    minItems: 5
-+
-+  clock-names:
 +    items:
-+      - const: clkin0
-+      - const: clkin1
-+      - const: clkin2
-+      - const: clkin3
-+      - const: pclk
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    sdhc: mmc@8e00 {
-+      compatible = "amlogic,meson8-sdhc", "amlogic,meson-mx-sdhc";
-+      reg = <0x8e00 0x42>;
-+      interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
-+      clocks = <&xtal>,
-+               <&fclk_div4>,
-+               <&fclk_div3>,
-+               <&fclk_div5>,
-+               <&sdhc_pclk>;
-+      clock-names = "clkin0", "clkin1", "clkin2", "clkin3", "pclk";
-+    };
++      - description: SPI registers region
++      - description: Memory mapped flash region
+ 
+   interrupts:
+     maxItems: 1
 -- 
-2.26.2
+2.20.1
 
