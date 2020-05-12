@@ -2,158 +2,160 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D158C54E4B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 07:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA483C54E4B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 07:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F657206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 07:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D9A2075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 07:14:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="c/AU81xd"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="nejanEoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbgELHJN (ORCPT
+        id S1728890AbgELHOJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 03:09:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgELHJM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 03:09:12 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D24DC061A0E
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 00:09:12 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u16so21986080wmc.5
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 00:09:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=ne4G1hw7iuZLuKwIvm4TOsEkgQyVcIP6lOJe9NG9OX0=;
-        b=c/AU81xdLryWPyTaVh0+eW0JsKLbkkiWgEN20UkCWXLyadejFKrluqrbp8vt2dQyQX
-         Q75VgyKXGQuVcsPkfs60ki1+4JY/BvC3BK38fko2EvEXHYClK1B3oLQ/brM1S/ZydJr0
-         /i1t81irAJaH4BkX9o3oIZoq1eiUg5QUbtazxL/OqXBKPFrPWsIqlPNg0Db6a7wTkSji
-         eaQCMIiYzTmzCVSvqYKOwTeOuWZmLBO1b0+xVhEUl0tKJtE5k2wEyl9MnbPXLAUhpLSz
-         UlWsQmoTfk6f1C3So6RcyBMhQvFjTub6Ap8yp0Mk0DQDrZQgMLfsb7H1J+GrzJx99h6O
-         QbAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=ne4G1hw7iuZLuKwIvm4TOsEkgQyVcIP6lOJe9NG9OX0=;
-        b=cvJV1a82Duq6aLt26rdHPKPv2yGi0D71ZzuiMP2Rp36X97wItBnP30viCTauon82TG
-         60aE7G6xkoYADJ62dPNl4lzGXdqDLw8ooyYta5AWbRqt/eU2kknx2mxA/iVcZ5WPGvGC
-         gCpSVRC3xHkNWIk08HKnIgVORt6XsH2NgjPzI5B+nmq6KwESmWcga+kQk6U+crYL6cAO
-         OmOye1tphybeG3iE5E7zCckriWEGDDKlC4kSNYxhDCAX6efpA5gaRFgY5r7elYHKO9Zu
-         b2sYzMyu+2bU2hl56w69UPzCeQ1sNQ6r/ezStbmQGERMFrBj39yWWqxNSSbQjiBLUpq6
-         OFrg==
-X-Gm-Message-State: AGi0PuZj7vE0flNGDu9gD9HqAEDXFAt3xZhag3PAYpEbKsglgE0t4DLu
-        1pHc397TqSU1RPTqOysyys57kA==
-X-Google-Smtp-Source: APiQypL3S59Ppn7G1AX6lM0+lpoyv3dcIFbr+mUAxlZbBRTqgnNBSaJUmfVNj9b+buv6l1BlzJK5vg==
-X-Received: by 2002:a05:600c:2c0f:: with SMTP id q15mr38502498wmg.185.1589267350798;
-        Tue, 12 May 2020 00:09:10 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id i17sm30353895wml.23.2020.05.12.00.09.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 00:09:09 -0700 (PDT)
-References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com> <20200428210229.703309-3-martin.blumenstingl@googlemail.com> <1jlfmdi9uw.fsf@starbuckisacylon.baylibre.com> <CAPDyKFoEh8qKYFONo1SHnvwhDwjUa5bMnnT1Kbu8=4rd=T-8Kg@mail.gmail.com> <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com> <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com> <1j1rnygye6.fsf@starbuckisacylon.baylibre.com> <CAFBinCAPGwb4YKJvUSyvzSC7hpVO0z-Ju_pBWx-06QzYXc0orw@mail.gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list\:ARM\/Amlogic Meson..." 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-mmc\@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yinxin_1989@aliyun.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH v6 2/2] mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
-In-reply-to: <CAFBinCAPGwb4YKJvUSyvzSC7hpVO0z-Ju_pBWx-06QzYXc0orw@mail.gmail.com>
-Date:   Tue, 12 May 2020 09:09:08 +0200
-Message-ID: <1j1rnpfx4b.fsf@starbuckisacylon.baylibre.com>
+        Tue, 12 May 2020 03:14:09 -0400
+Received: from mail-mw2nam12on2040.outbound.protection.outlook.com ([40.107.244.40]:51348
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727113AbgELHOI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 03:14:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iULbymmpKXpOPETZaaJMqTU07DCrSvA5KDlB5nZ0kw+toKP7ZMnBqCPGmH2wpZ9vhzFusZBylN4Z4pRt/clD5RtPyYmFwOjQ63EuSD+1JlRObPycJeS7cRGCgUulodMKqoYPLyoLU0tZ8OH/Wt76q16JUkq0vCbhL+2tYuxVABe3wLG7VEqJlywBHK0vCk8tGtqxEeLvnPLoMVN7OpW6JTveuV1L5vXqH96nD0FbW1cXDa94QHF12m+iMP9O838fz2sMXITx6r99EAZz6Z4JQCDXDXFxAr0ID++jCNbk9jC8HKQ6arhAlkcQMsJx6vWVMy/SfbqBby8w/I2Isb7KPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VPWdSXfnsfe2H+gOjKZguoOzM9XcQhYJWAYbyYnGYoY=;
+ b=QLRACDEuBJ6SIhLInAmTGlPOHuafrFvIb6+wwliI/VBn5/ZVCzdlCxVnIYjzDtbNQkbztecZLGHP4TkXVC39zJ1n/d6XSMKeue9gW2yCRaFB/DuNeQr8KOqbAdBmG8pggQxFcXpdFoC6X/5+suO9dhyB5Hpaz1R9aixPMdOxpuGIKmYvOOz1Q36/4UZO/5BRmzzthv/ImIqA5IZaGoxXRNbpcEPLnMR5Hy02TKgNd7Nr7/yuUitC+xt3fAU8xnva+EBKgrGX5bjGw58Thgl6NRwQoQEY75/EKFZY8zUiV3Li5drGMr20lBEiTCIIwALYPYBGHG+7Go0KrijaZSKDcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VPWdSXfnsfe2H+gOjKZguoOzM9XcQhYJWAYbyYnGYoY=;
+ b=nejanEoiRmtM6csyyL2WaA+BeWeFY9ak6Dcf2erGrj1KXRJV0r2+fZDNWPB72Ww+NgzFqBk2pFi2hy35wpvw2L/iznb7Ad6tcAB1eqUKjslWmN3KbvLqJ3eoSsGmqWJONEp0/WOZQSQicApEgNMbuxe4Kc+vGLg7SfOKWLn5IjM=
+Received: from BYAPR13MB2614.namprd13.prod.outlook.com (2603:10b6:a03:b4::12)
+ by BYAPR13MB2280.namprd13.prod.outlook.com (2603:10b6:a02:ca::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.12; Tue, 12 May
+ 2020 07:14:05 +0000
+Received: from BYAPR13MB2614.namprd13.prod.outlook.com
+ ([fe80::c0fc:30a3:5e5f:c2b6]) by BYAPR13MB2614.namprd13.prod.outlook.com
+ ([fe80::c0fc:30a3:5e5f:c2b6%7]) with mapi id 15.20.3000.013; Tue, 12 May 2020
+ 07:14:04 +0000
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [RFC PATCH 4/4] dt-bindings: net: phy: extend dt binding for
+ VSC8541 ethernet-phy
+Thread-Topic: [RFC PATCH 4/4] dt-bindings: net: phy: extend dt binding for
+ VSC8541 ethernet-phy
+Thread-Index: AQHWHU6PhAi/mddOO0+ZyvrzPnD5f6ijytgAgABSCNA=
+Date:   Tue, 12 May 2020 07:14:04 +0000
+Message-ID: <BYAPR13MB261430FAAEB02E9926EEB93F99BE0@BYAPR13MB2614.namprd13.prod.outlook.com>
+References: <1588072608-7747-1-git-send-email-sagar.kadam@sifive.com>
+ <1588072608-7747-5-git-send-email-sagar.kadam@sifive.com>
+ <20200512021204.GA12999@bogus>
+In-Reply-To: <20200512021204.GA12999@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=sifive.com;
+x-originating-ip: [116.74.152.191]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 29e8fc81-1ff0-40e4-2685-08d7f6440dfb
+x-ms-traffictypediagnostic: BYAPR13MB2280:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR13MB2280C788C4F4D03555EDDB9099BE0@BYAPR13MB2280.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 0401647B7F
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR13MB2614.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39850400004)(136003)(396003)(346002)(366004)(376002)(33430700001)(66946007)(52536014)(55236004)(2906002)(44832011)(5660300002)(6506007)(4326008)(186003)(53546011)(26005)(76116006)(66556008)(66476007)(9686003)(8676002)(64756008)(71200400001)(7696005)(33440700001)(66446008)(316002)(55016002)(6916009)(86362001)(33656002)(54906003)(478600001)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KeHNW28ghvY0b1Q9v7xqlJIDkdrbAlTTb9zMT0x2I0fPo3QAhrvugQJAPZWEleT5ukvONU9J3ZyNCMtR2h/d1Sn9zGvnHpTo65BD2M1stWj8MfMfotYhTFbzVL5OGATBYLioHL/anBFRFv23B8PJZdijiqxyH3SqBkQ+YH7lTTXmFYcjNPNXukvj744lrCVnbmVd7tXA2ZAcQ73iC6x6mnUxcybNZm8zOxes/ePp3/lCFmDGN/Dmd6VK/WDBjSjxvJDSC1vrs3J+Rfe7n06+32nGsk/NPF4I+ByTJefScYv+iRbh4/XBtpdBzf0NV5Y8Bc908LSHcbCz9nXRfZ5BYgUCJRCh8KU5Synw3TvYLSH344saDpMiizVFy64S8yoW0cpo2sihj6mxeKPwXUS3HQaEyiEfFdX3GmQkR6uqL0plpQJspgJfdQ4SzaGwKzClJJRgKsryPdbkgTyYpWAgR6v7aX3Tmz2FokCQGvwIVDGGEhIoZGCivvlwoonm1o7Ok3ay2dQFU6Zlm+uGbROo6g==
+x-ms-exchange-antispam-messagedata: 6VRxsUFD3q+6yg+vQDPIOaen684lEy7ZAEN+aFZHOfr2aXJyzm6H8Y+VOK19we/ek0+6IeBJSbei5Pe23SLYlNy3Ohbqwt+HU+kFDnP8U3STxuhDWhYtp1iLy8qnlj9OWmAmMrimhmIshMRQRRwEdpqTRFwJyH/TZfHDPjhWN7f1ZghwN93B/3dj65Tj0zMhMJAR4Q+Dpo91egNsiqfU2VVJk9y8s/aVwVIpHWOAIYLGlcnV+JbLnCzndpLbk6L3TcsVpn8YLb49HPqx0kxtjXKOxpYmYmsRsAwz0dI8L93v1Zzifk7hb/uN+WWaiID1dCTJf+lNeJKFuAlt9pwSHmluxd9MkDTdT4ZENvch5LuJXq+d1mO7V8Dd0yoGsRc0cBoNFwIqPkQ08zGoVDBTbgtb0LnJY9qSbYG75SJBE9L2YFJOGu9AWVVKgqc5Xq9rPZuddQGhKpzYdx5r7xVIatoE8lrfP8H7+ktH8J3OznUeeyMtdlmRndep7U+o/yxo
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29e8fc81-1ff0-40e4-2685-08d7f6440dfb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2020 07:14:04.7907
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ed2TfHun4hzMi6+3mNvordfTM/ICrV6IeWgcj3tHf9uNJFX/+VjPD2idZBpkZ9fzqNQrKNeaoza6Vj7XLuYOOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR13MB2280
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello Rob,
 
-On Sun 10 May 2020 at 22:52, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
-
-> Hi Jerome,
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Tuesday, May 12, 2020 7:42 AM
+> To: Sagar Kadam <sagar.kadam@sifive.com>
+> Cc: linux-kernel@vger.kernel.org; linux-riscv@lists.infradead.org;
+> palmer@dabbelt.com; Paul Walmsley <paul.walmsley@sifive.com>;
+> atish.patra@wdc.com; devicetree@vger.kernel.org
+> Subject: Re: [RFC PATCH 4/4] dt-bindings: net: phy: extend dt binding for
+> VSC8541 ethernet-phy
+>=20
+> [External Email] Do not click links or attachments unless you recognize t=
+he
+> sender and know the content is safe
+>=20
+> On Tue, Apr 28, 2020 at 04:16:48AM -0700, Sagar Shrikant Kadam wrote:
+> > Adding a OUI (Organizationally Unique Identifier) for VSC8541-01
+> > device to dt node requires a corresponding dt-binding entry as well
+> > so that checkpatch doesn't complain with a warning:
+> >
+> > DT compatible string "ethernet-phy-id0007.0771" appears un-documented
+> >
+> > Here extend the existing dt binding of VSC8531 device to include
+> > VSC8541 device example.
+>=20
+> Checkpatch.pl is just dumb here and can be ignored. We have the regex
+> that documents this compatible. We don't need every VID/PID listed.
 >
-> On Tue, May 5, 2020 at 6:05 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> [...]
->> > 2. Keep the existing approach, with devm_clk_get(). I am fine with
->> > this as well, we can always switch to 1) later on.
->>
->> I have a problem with this approach.
->> The dt-bindings would include "#clock-cells = <1>" for a device that
->> does not actually provide and only needs it has a temporary work around.
->> Those bindings are supposed to be stable ...
-> actually I don't see a problem here because this specific MMC
-> controller has a clock controller built into it.
+Thank you for the information.=20
+We can then drop this patch to handle un-documented warning.
 
-Clock controller is a bit exagerated. It's an MMC controller with a
-composite input clock and a couple of gates. A fairly common setup.
-
-Also the property does not indicate a "clock controller" (or any number
-of clock hosted by the device) but the ability to provide clocks out of
-the device.
-
-This device does not actually provide clock externally. Your provider
-is just meant to be used internally. It is a work around using DT for
-something missing in CCF.
-
-IHMO, it is not such a big deal but since the binding are supposed to be
-stable, I'm just pointing out that it is not great.
-
-> Rob also didn't see any problem with this when he reviewed the dt-bindings
-
-Again the bindings would be fine if the component was actually providing
-the clocks, AFAIU.
-
->
->> I have proposed 2 other short term solutions, let's see how it goes
-> since I was also curious how this turns out I first implemented your
-> suggestion to use a similar clk_hw registration style as
-> dwmac-meson8b.
-> That made the code easier to read - thank you for the suggestion!
->
-> On top of that I switched from clk_hw_onecell_data to directly
-> accessing "clk_hw.clk".
-> Unfortunately the diffstat is not as great as I hoped, it saves 21
-> lines (11 in the driver code, 6 in the soc.dtsi, 5 in the dt-bindings)
-> Once devm_clk_hw_get_clk() is implemented 8 lines have to be added
-> again for error checking.
-> I attached the patch for the drivers/mmc/host/meson-mx-sdhc* parts if
-> you are curious (it'll apply only on top of my github branch, not on
-> this series).
-
-Diffstat was not my concern, TBH
-
->
-> Please let me know if you want me to submit an updated series where I
-> directly access "clk_hw.clk"
-
-I'd be happy if you did
-
-> to get the "struct clk" or if I should
-> keep clk_hw_onecell_data.
-> If it's the former then I'll also add a TODO comment for the
-> conversion to devm_clk_hw_get_clk() so it's easy to find.
->
-
-Perfect !
-
->
-> Regards,
-> Martin
-
+BR,
+Sagar Kadam
+=20
+> >
+> > Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > index 5ff37c6..774448a 100644
+> > --- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > @@ -68,3 +68,6 @@ Example:
+> >                  vsc8531,led-0-mode   =3D <LINK_1000_ACTIVITY>;
+> >                  vsc8531,led-1-mode   =3D <LINK_100_ACTIVITY>;
+> >          };
+> > +        vsc8541_0: ethernet-phy@0 {
+> > +                compatible =3D "ethernet-phy-id0007.0771";
+> > +     };
+> > --
+> > 2.7.4
+> >
