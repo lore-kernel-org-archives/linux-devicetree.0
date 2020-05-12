@@ -2,31 +2,32 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A075CC2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C781DC2D0FA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 627EE2312A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A742A2312A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="a4sGfe8T"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="KkWWh4AL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731251AbgELWWM (ORCPT
+        id S1731618AbgELWWN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 18:22:12 -0400
-Received: from vps.xff.cz ([195.181.215.36]:41428 "EHLO vps.xff.cz"
+        Tue, 12 May 2020 18:22:13 -0400
+Received: from vps.xff.cz ([195.181.215.36]:41484 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726885AbgELWWL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 18:22:11 -0400
+        id S1731049AbgELWWM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 18:22:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1589322129; bh=aksRVakqDSRMDiBOMsQEeb7cYe+KvVtawuT/m/LsMLw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=a4sGfe8TiOA9m6P1f52uIRd1Qz/6l7BIRj5HysqqXJ/uUZ2TSZAJsfW1P+lycE2Ft
-         oy+lRYEB1O8ngnLh69vYyEWq8VVZOwEbBQJzZZiu6YF8mE8gKUHUwAu0AgAGChf906
-         fPkKqov5gQFGHhdeukkosiS5Z4GHnT6xrh4SxQBY=
+        t=1589322130; bh=b9l6jhTz95HtziyiK/WtyUDqMPHpI5aFV0oYbIcE+vw=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=KkWWh4ALhc+PRFHfEh099xQOptYQQ6xhyYOjUHyfazCqou4xI1fXgKsdo4YRZc1F8
+         u4/Z8EE33aneGs6oF52UHG4xIzT9TKZ+zkK+eTsbJJTdfe2XhlTFiJYjGRjMQq9pLi
+         acGqW5S+xeMVKlMqSb2rzMY07t4WLGspQbX5FGLk=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
@@ -38,9 +39,11 @@ Cc:     Ondrej Jirman <megous@megous.com>, Luca Weiss <luca@z3ntu.xyz>,
         Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 0/4] Add support for vibrator motor for TBS A711 Tablet
-Date:   Wed, 13 May 2020 00:22:01 +0200
-Message-Id: <20200512222205.1456300-1-megous@megous.com>
+Subject: [PATCH v2 3/4] ARM: dts: sun8i-a83t-tbs-a711: Add support for the vibrator motor
+Date:   Wed, 13 May 2020 00:22:04 +0200
+Message-Id: <20200512222205.1456300-4-megous@megous.com>
+In-Reply-To: <20200512222205.1456300-1-megous@megous.com>
+References: <20200512222205.1456300-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -48,39 +51,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The tablet has a vibrator motor. This patch series exposes it via
-input subsystem (EV_FF).
+The board has a vibrator mottor. Hook it to the input subsystem.
 
-I'd like to ask input maintainers to take the patches 1 and 2.
-Patches 3 and 4 should go via the sunxi tree.
+According to the PMIC specification, LDO needs to be enabled (value 0b11)
+to achieve the specified max driving current of 150mA. We can't drive
+the motor with just GPIO mode.
 
-The change to the vibrator driver is meant to enable toggling the
-vibrator motor just via a power supply itself. There's not additional
-gpio driven switch on this tablet between the power supply for the
-motor and the motor.
+In GPIO mode the chip is probably just using the regular CMOS logic
+output circuitry (typically limited to around 20-35mA, but not specified
+in this datasheet).
 
-Please take a look.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Changes in v2:
-- Added DT ack tag
-- Add more information to the commit log (re use of LDO for the power)
-
-
-thank you and regards,
-  Ondrej Jirman
-
-Ondrej Jirman (4):
-  dt-bindings: input: gpio-vibrator: Don't require enable-gpios
-  input: gpio-vibra: Allow to use vcc-supply alone to control the
-    vibrator
-  ARM: dts: sun8i-a83t-tbs-a711: Add support for the vibrator motor
-  ARM: dts: sun8i-a83t-tbs-a711: Increase voltage on the vibrator
-
- .../devicetree/bindings/input/gpio-vibrator.yaml         | 1 -
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts                | 9 +++++++--
- drivers/input/misc/gpio-vibra.c                          | 3 ++-
- 3 files changed, 9 insertions(+), 4 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index bfc9bb277a49..a278a1e33930 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -99,6 +99,11 @@ panel_input: endpoint {
+ 		};
+ 	};
+ 
++	vibrator {
++		compatible = "gpio-vibrator";
++		vcc-supply = <&reg_ldo_io1>;
++	};
++
+ 	reg_gps: reg-gps {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "gps";
 -- 
 2.26.2
 
