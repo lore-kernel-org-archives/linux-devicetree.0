@@ -2,205 +2,312 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9904CC54E4B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 04:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68610C54E4B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 05:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF4720746
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 04:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A0820733
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 05:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UW+7t1lQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UqL+G4sv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725851AbgELErO (ORCPT
+        id S1728304AbgELFZq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 00:47:14 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50348 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbgELErO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 00:47:14 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04C4l64K097041;
-        Mon, 11 May 2020 23:47:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589258826;
-        bh=F2po6cA8J2YoKFQUHOGkUFydfctsX1xseR/bWF+m5+k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=UW+7t1lQMZmzsTZ/Rg2C8DGHJkg9uCRI3zwSxB4mSbIpavbbpJXXX3R6Ny6ETM8lf
-         qhcpaKhQb9X+k0a5gXAxh3wY8fy/98Pdg7AaHuTID3p5bZPomCQ+eFafCJBahNV6X8
-         o2DJXs8DcAmuGNxjJy7X7557i8HyQBWZjl4TXltw=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04C4l5rU082372
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 May 2020 23:47:05 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
- May 2020 23:47:05 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 11 May 2020 23:47:05 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04C4l2YK121221;
-        Mon, 11 May 2020 23:47:04 -0500
-Subject: Re: [PATCHv2 1/7] dt-bindings: crypto: Add TI SA2UL crypto
- accelerator documentation
-To:     Rob Herring <robh@kernel.org>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <linux-crypto@vger.kernel.org>, Keerthy <j-keerthy@ti.com>,
-        <devicetree@vger.kernel.org>
-References: <20200424164430.3288-1-t-kristo@ti.com>
- <20200424164430.3288-2-t-kristo@ti.com> <20200511215343.GA10123@bogus>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <53c7c7db-9357-c2fa-c792-64261489d32c@ti.com>
-Date:   Tue, 12 May 2020 07:47:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 12 May 2020 01:25:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726032AbgELFZq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 01:25:46 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 050EBC05BD09
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 22:25:46 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id m7so4889606plt.5
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 22:25:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qY4tIWDJLygZQYEHexbugEUDcuN3ImOXtPyRSj2Tmbo=;
+        b=UqL+G4svk3bMMRb1G1HJ83F+j3EPH3Vh6vnvyxepjH08v+uIeRrDEaRwEi6iY3uK/O
+         eQZdIBa2yFiAzh7ndKZerzIKrMybuDYA3tR1BgJ94Ko6EtNJVHmJfK2ZaV0sWOjPhFOT
+         7l41urSld5o73mzAeptvdKcPymsEKPm/NfZkgH59wZXQkCBzZm2yAR4eh2BCZjgKytIZ
+         jMpHkSbiWADXMwdqdVf/YZxp9doSfSplRjuLDCT9HGmGiOsRVsFDlcxP8zHd0tUQaKUV
+         47TP9BrLyQRkFjoNj387MAXQUVYlYw0CLi/ob8h5bd9e3HgCEsQwSHA3JQ/kSaZH07R8
+         SJnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qY4tIWDJLygZQYEHexbugEUDcuN3ImOXtPyRSj2Tmbo=;
+        b=oyajeXqrupOD2fgJrvYjJacIj+5nVrApOADW5LQQQQZuwmU2B491ThTxAkWY8PVtXs
+         vScu/u56UTZHmUUyxJHBiv4JJizIj8Y+gF116eUe3gkJZbLATq7U/qmS0vnyO84B8Zo3
+         UaVyERqX785o7LqvIXVG/bHtFRgWYN7aJaev/JYX7P24WYdtNB1n2YWmpBSxO0nQnYcZ
+         ngRPOdMdq9FSptR2vu6LCv8tM0VTQ+i+SHnyuF60WYwbA8v7gl6IcUD0rEdgMklpB/Ni
+         AmFcnDf7spjblYLn0l+fFm2Zd8RPoRY+yy3Qbk7FBBbH936sBQfEe24/SOMy3lQTmRiZ
+         mCtA==
+X-Gm-Message-State: AOAM533KE+hovsp5ZfMzu5tUelv/Mgv4V+b8YEuqC4UJrDCsPsFrbU7p
+        74SB3x3n5fSvUg98sS7vOhGQ/A==
+X-Google-Smtp-Source: ABdhPJxLiAh4YWUEEFs84ClWwP2pdJ/iMPgKckY4JWQXIdGqJrQGjpc5bov6yWSLe1sONjTFXGjpLg==
+X-Received: by 2002:a17:902:9f97:: with SMTP id g23mr1640890plq.30.1589261145272;
+        Mon, 11 May 2020 22:25:45 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z13sm11733513pjz.42.2020.05.11.22.25.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 22:25:44 -0700 (PDT)
+Date:   Mon, 11 May 2020 22:25:41 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [v2 4/4] regulator: qcom: labibb: Add SC interrupt handling
+Message-ID: <20200512052541.GF1302550@yoga>
+References: <20200508204200.13481-1-sumit.semwal@linaro.org>
+ <20200508204200.13481-5-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200511215343.GA10123@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508204200.13481-5-sumit.semwal@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/05/2020 00:53, Rob Herring wrote:
-> On Fri, Apr 24, 2020 at 07:44:24PM +0300, Tero Kristo wrote:
->> From: Keerthy <j-keerthy@ti.com>
->>
->> The Security Accelerator Ultra Lite (SA2UL) subsystem provides hardware
->> cryptographic acceleration for the following use cases:
->>
->> * Encryption and authentication for secure boot
->> * Encryption and authentication of content in applications
->>    requiring DRM (digital rights management) and
->>    content/asset protection
->>
->> SA2UL provides support for number of different cryptographic algorithms
->> including SHA1, SHA256, SHA512, AES, 3DES, and various combinations of
->> the previous for AEAD use.
->>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> [t-kristo@ti.com: converted documentation to yaml]
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   .../devicetree/bindings/crypto/ti,sa2ul.yaml  | 76 +++++++++++++++++++
->>   1 file changed, 76 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml b/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
->> new file mode 100644
->> index 000000000000..27bb3a7e2b87
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
->> @@ -0,0 +1,76 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/crypto/ti,sa2ul.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: K3 SoC SA2UL crypto module
->> +
->> +maintainers:
->> +  - Tero Kristo <t-kristo@ti.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ti,j721e-sa2ul
->> +      - ti,am654-sa2ul
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +  dmas:
->> +    items:
->> +      - description: TX DMA Channel
->> +      - description: RX DMA Channel #1
->> +      - description: RX DMA Channel #2
->> +
->> +  dma-names:
->> +    items:
->> +      - const: tx
->> +      - const: rx1
->> +      - const: rx2
->> +
->> +  dma-coherent: true
->> +
->> +  "#address-cells":
->> +    const: 2
->> +
->> +  "#size-cells":
->> +    const: 2
->> +
->> +  ranges:
->> +    description:
->> +      Address translation for the possible RNG child node for SA2UL
->> +
->> +patternProperties:
->> +  "^rng@[a-lf0-9]+$":
+On Fri 08 May 13:42 PDT 2020, Sumit Semwal wrote:
+
+> From: Nisha Kumari <nishakumari@codeaurora.org>
 > 
-> a-l?
-
-Ooops, thats a typo right here. Will fix that.
-
+> Add Short circuit interrupt handling and recovery for the lab and
+> ibb regulators on qcom platforms.
 > 
->> +    type: object
->> +    description:
->> +      Child RNG node for SA2UL
+> The client panel drivers need to register for REGULATOR_EVENT_OVER_CURRENT
+> notification which will be triggered on short circuit. They should
+> try to enable the regulator once, and if it doesn't get enabled,
+> handle shutting down the panel accordingly.
 > 
-> Does this child node have a binding?
-
-Yes, it is here:
-
-Documentation/devicetree/bindings/rng/omap_rng.txt.
-
-It is an old one so not converted to yaml yet though.
-
--Tero
-
+> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
 > 
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - power-domains
->> +  - dmas
->> +  - dma-names
->> +  - dma-coherent
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
->> +
->> +    main_crypto: crypto@4e00000 {
->> +        compatible = "ti,j721-sa2ul";
->> +        reg = <0x0 0x4e00000 0x0 0x1200>;
->> +        power-domains = <&k3_pds 264 TI_SCI_PD_EXCLUSIVE>;
->> +        dmas = <&main_udmap 0xc000>, <&main_udmap 0x4000>,
->> +               <&main_udmap 0x4001>;
->> +        dma-names = "tx", "rx1", "rx2";
->> +        dma-coherent;
->> +    };
->> -- 
->> 2.17.1
->>
->> --
+> --
+> v2: sumits: reworked handling to user regmap_read_poll_timeout, and handle it
+>     per-regulator instead of clearing both lab and ibb errors on either irq
+>     triggering. Also added REGULATOR_EVENT_OVER_CURRENT handling and
+>     notification to clients.
+> ---
+>  drivers/regulator/qcom-labibb-regulator.c | 103 +++++++++++++++++++++-
+>  1 file changed, 100 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
+> index a9dc7c060375..3539631c9f96 100644
+> --- a/drivers/regulator/qcom-labibb-regulator.c
+> +++ b/drivers/regulator/qcom-labibb-regulator.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  // Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>  
+> +#include <linux/interrupt.h>
+>  #include <linux/module.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of.h>
+> @@ -18,11 +19,15 @@
+>  #define REG_LABIBB_ENABLE_CTL		0x46
+>  #define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
+>  #define LABIBB_CONTROL_ENABLE		BIT(7)
+> +#define LABIBB_STATUS1_SC_DETECT_BIT	BIT(6)
+>  
+>  #define LAB_ENABLE_CTL_MASK		BIT(7)
+>  #define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
+>  
+>  #define POWER_DELAY			8000
+> +#define POLLING_SCP_DONE_INTERVAL_US	5000
+> +#define POLLING_SCP_TIMEOUT		16000
+> +
+>  
+>  struct labibb_regulator {
+>  	struct regulator_desc		desc;
+> @@ -30,6 +35,8 @@ struct labibb_regulator {
+>  	struct regmap			*regmap;
+>  	struct regulator_dev		*rdev;
+>  	u16				base;
+> +	int				sc_irq;
+> +	int				vreg_enabled;
+>  	u8				type;
+>  };
+>  
+> @@ -112,9 +119,10 @@ static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+>  		return ret;
+>  	}
+>  
+> -	if (ret)
+> +	if (ret) {
+> +		reg->vreg_enabled = 1;
+>  		return 0;
+> -
+> +	}
+>  
+>  	dev_err(reg->dev, "Can't enable %s\n", reg->desc.name);
+>  	return -EINVAL;
+> @@ -140,8 +148,10 @@ static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
+>  		return ret;
+>  	}
+>  
+> -	if (!ret)
+> +	if (!ret) {
+> +		reg->vreg_enabled = 0;
+>  		return 0;
+> +	}
+>  
+>  	dev_err(reg->dev, "Can't disable %s\n", reg->desc.name);
+>  	return -EINVAL;
+> @@ -153,6 +163,70 @@ static struct regulator_ops qcom_labibb_ops = {
+>  	.is_enabled		= qcom_labibb_regulator_is_enabled,
+>  };
+>  
+> +
+> +static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
+> +{
+> +	int ret, count;
+> +	u16 reg;
+> +	u8 sc_err_mask;
+> +	unsigned int val;
+> +	struct labibb_regulator *labibb_reg = (struct labibb_regulator *)_reg;
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+No need to explicitly typecast a void *.
+
+> +	bool in_sc_err, reg_en, scp_done = false;
+
+reg_en is unused.
+
+> +
+> +	if (irq == labibb_reg->sc_irq)
+
+When is this false?
+
+> +		reg = labibb_reg->base + REG_LABIBB_STATUS1;
+> +	else
+> +		return IRQ_HANDLED;
+> +
+> +	sc_err_mask = LABIBB_STATUS1_SC_DETECT_BIT;
+> +
+> +	ret = regmap_bulk_read(labibb_reg->regmap, reg, &val, 1);
+
+Just inline reg->base + REG_LABIBB_STATUS1 in this call.
+
+> +	if (ret < 0) {
+> +		dev_err(labibb_reg->dev, "Read failed, ret=%d\n", ret);
+> +		return IRQ_HANDLED;
+> +	}
+> +	dev_dbg(labibb_reg->dev, "%s SC error triggered! STATUS1 = %d\n",
+> +		labibb_reg->desc.name, val);
+> +
+> +	in_sc_err = !!(val & sc_err_mask);
+> +
+> +	/*
+> +	 * The SC(short circuit) fault would trigger PBS(Portable Batch
+> +	 * System) to disable regulators for protection. This would
+> +	 * cause the SC_DETECT status being cleared so that it's not
+> +	 * able to get the SC fault status.
+> +	 * Check if the regulator is enabled in the driver but
+> +	 * disabled in hardware, this means a SC fault had happened
+> +	 * and SCP handling is completed by PBS.
+> +	 */
+> +	if (!in_sc_err) {
+
+	if (!(val & LABIBB_STATUS1_SC_DETECT_BIT)) {
+
+> +
+> +		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
+> +
+> +		ret = regmap_read_poll_timeout(labibb_reg->regmap,
+> +					reg, val,
+> +					!(val & LABIBB_CONTROL_ENABLE),
+> +					POLLING_SCP_DONE_INTERVAL_US,
+> +					POLLING_SCP_TIMEOUT);
+> +
+> +		if (!ret && labibb_reg->vreg_enabled) {
+
+Wouldn't be fine to assume that if you get a short circuit IRQ the
+regulator is enabled?
+
+If you are worried about racing with a disable this won't work anyways,
+and you better enable_irq()/disable_irq() in regulator enable/disable,
+respectively.
+
+> +			dev_dbg(labibb_reg->dev,
+> +				"%s has been disabled by SCP\n",
+> +				labibb_reg->desc.name);
+> +			scp_done = true;
+> +		}
+
+If you flip the poll check around you will get here by not being in an
+short-circuit condition and you conclude that the regulator is still on;
+in which case you can just return here.
+
+That way you can drop in_sc_err and scp_done and flatten below
+conditional section.
+
+> +	}
+> +
+> +	if (in_sc_err || scp_done) {
+> +		regulator_lock(labibb_reg->rdev);
+> +		regulator_notifier_call_chain(labibb_reg->rdev,
+> +						REGULATOR_EVENT_OVER_CURRENT,
+> +						NULL);
+> +		regulator_unlock(labibb_reg->rdev);
+> +	}
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static int register_labibb_regulator(struct qcom_labibb *labibb,
+>  				const struct labibb_regulator_data *reg_data,
+>  				struct device_node *of_node)
+> @@ -181,6 +255,29 @@ static int register_labibb_regulator(struct qcom_labibb *labibb,
+>  	reg->desc.type = REGULATOR_VOLTAGE;
+>  	reg->desc.ops = &qcom_labibb_ops;
+>  
+> +	reg->sc_irq = -EINVAL;
+> +	ret = of_irq_get_byname(of_node, reg_data->irq_name);
+> +	if (ret < 0)
+> +		dev_dbg(labibb->dev,
+
+Isn't this an error?
+
+> +			"Unable to get %s, ret = %d\n",
+> +			reg_data->irq_name, ret);
+> +	else
+> +		reg->sc_irq = ret;
+> +
+> +	if (reg->sc_irq > 0) {
+> +		ret = devm_request_threaded_irq(labibb->dev,
+> +						reg->sc_irq,
+> +						NULL, labibb_sc_err_handler,
+> +						IRQF_ONESHOT |
+> +						IRQF_TRIGGER_RISING,
+
+Omit IRQF_TRIGGER_RISING and let that come from DT.
+
+> +						reg_data->irq_name, labibb);
+> +		if (ret) {
+> +			dev_err(labibb->dev, "Failed to register '%s' irq ret=%d\n",
+> +				reg_data->irq_name, ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+
+Regards,
+Bjorn
+
+>  	cfg.dev = labibb->dev;
+>  	cfg.driver_data = reg;
+>  	cfg.regmap = labibb->regmap;
+> -- 
+> 2.26.2
+> 
