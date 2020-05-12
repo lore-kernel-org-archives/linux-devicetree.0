@@ -2,111 +2,125 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B01C2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B23C2D0F8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A451A20753
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422F320731
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FUMFvFyj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWipj/rY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgELXYL (ORCPT
+        id S1727104AbgELXZJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 19:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36862 "EHLO
+        Tue, 12 May 2020 19:25:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbgELXYK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 19:24:10 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB1BC061A0C
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 16:24:10 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id s37so5893850ybe.13
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 16:24:10 -0700 (PDT)
+        with ESMTP id S1726031AbgELXZI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 19:25:08 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94FCC061A0C;
+        Tue, 12 May 2020 16:25:08 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id n11so6890378pgl.9;
+        Tue, 12 May 2020 16:25:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/u4atMFlBmLtwnSTMgMCyabi/w8j3iTCGwRJskabUDQ=;
-        b=FUMFvFyjoY5VlbhYA9rjNaJMt+/kRqiJvdjU8f/dcnmZ5RZh2+QgVU8DfaWiULoOCW
-         XPd2H5H8qIDmEqp5e/bpmkxzAepnCV1VFhTrWF+3VAvuef1c3Ty6QX1dLhH+Pj/VZIM/
-         EaIkMy2EevAj1mRnJJshNV56xmonJ3SL8jlEKq2PMMpl0h0EFctkKeVAFCMZXE8OCler
-         5a3UPBxJwucuQcZpYZ6Iz2rU3MlxNRIu3JqfpdeTMx4JjOSKOtJ/tWAY+iiZwNiBK5UM
-         +oDEIngTzcaD//Xe5yqEjSQVXlEf3ThtGlADepvyHCAGRhVhyJE4nL2XKU1uedBG0y22
-         2u+g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=FpcFfkc/yG9vq9eXWklG8CGjwtKug3YGgFN39WyeyGc=;
+        b=pWipj/rYO4TE/WgccVGCKMhCO9dOQMqbFgFILxy9bPyfdAGU1AtXDDAPLFE5d8BWYI
+         y8h0guWLroeHHFvshFPgfDBEmOBlBrNj/JhqWtissEv8GDGrkVAGwfcj/J+til5ld39Q
+         thnBvYCXu26hayF9UigwA4E9gGpRbfhzbNfY/sY6qG4jAQD+dccELCfuxT/jEOuK3mGm
+         elBCMpGuoEH9Rv6OALCkus/pHOOWd8KbSHckTf5EJDK0m38v+T6292Y/4FG6gZAmN3QS
+         UamcfP8ImTECWAyv7V7C5ACDg9cHr4B4WH7xilGOx3JOD2eacTv87TnouwuuY5P6NUZ8
+         sDtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/u4atMFlBmLtwnSTMgMCyabi/w8j3iTCGwRJskabUDQ=;
-        b=Snyd/+gYtgrWrlt7rKDvL6xjo+o2oUt6GULrsm5fFgkKdfhMmAlHmJpUwxu2UB42Wi
-         w3XYUrlfzrRnjZ3m8zni6jpd4ocohSDLCrU4Da5efahTWLNusLmZ5D06KMos186A2jTq
-         rYQrizjlRX2MImsPJCzRhNU+HGkjx8nGJFQncQQzDtiJtcEHXnJdm4br3GriU4JB2FGZ
-         w8hB9fACPCGfC/V0H15Wgg6in9W5LT5GCy2tVodjiCPM0Ti70B6CD0K3FZxvp9crimq4
-         nLJyLvXdrK4ROBq2+3FNoghpm1yAxqVloH+BeBI9PUbJn36+Rc58sxKT8r9xoijrBITY
-         Xw6w==
-X-Gm-Message-State: AGi0PuacQ4Hz9tg0OB4qhNLB9+snRRCg6mr1a/KlvbYpD+OTzjQEdoY2
-        d9OcuowWMGOsutgarO3PNp4eHkDpkWFuhVrcCsQfwA==
-X-Google-Smtp-Source: APiQypJsh1XuLI/Or+Cuxml34jfZWIFEC2vOt3BCpxxZ5Z8CSRquQEhUPx0qqlzhIuvjXww3sdCPdkWC8bA4V5hfgzE=
-X-Received: by 2002:a25:ba8f:: with SMTP id s15mr39075879ybg.34.1589325849314;
- Tue, 12 May 2020 16:24:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=FpcFfkc/yG9vq9eXWklG8CGjwtKug3YGgFN39WyeyGc=;
+        b=eucHbVcoeZKTHw4N+fONryzFzIJ6K58dJBWwPxnyam7yxTIFzkNIxc3krH9BHdQ3C3
+         mEiSt3HtAHvgHhy8CQRLMF9LGleckaGJuZPhjz4TyB94S/VnlvGnjBTGP30HtVd3RdW9
+         8uJ1yVemvKq0Zem/VSn/w8PoL+b9fME1NvckLqrhDLTaoQGIxtFhTAPatAc2EWwdnTAW
+         PUHRJEr4/OsGoU0yC/xtSnsxYOb9U/krmh2Hermfbb9DMQwpA8BB06Sx7/rd6+dqq3SP
+         VWKvzsWeLNq9wNqmAqy81cCqrTHFSYKlaB4HDuL6RiUJ79LmSh96Bqj/5e3SiEHFxdeN
+         fFog==
+X-Gm-Message-State: AOAM531TNah3Gyt+w30CfgUloAjh5yKJ5eE1U5myq86GIWCbM1RDq0l4
+        IsfvqFWaEX2A8IFF9EodjAk=
+X-Google-Smtp-Source: ABdhPJzLZlncWatTS+oNiA4vxd3oVeXcykQQb3eNLFClvMbGM8HbwrjGaxKq48Gne8Qhoh171ik1lA==
+X-Received: by 2002:a63:77c6:: with SMTP id s189mr12368295pgc.267.1589325908104;
+        Tue, 12 May 2020 16:25:08 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id m4sm94819pje.47.2020.05.12.16.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 16:25:07 -0700 (PDT)
+Date:   Tue, 12 May 2020 16:25:05 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: input: gpio-vibrator: Don't require
+ enable-gpios
+Message-ID: <20200512232505.GF89269@dtor-ws>
+References: <20200512222205.1456300-1-megous@megous.com>
+ <20200512222205.1456300-2-megous@megous.com>
+ <20200512225212.GE89269@dtor-ws>
+ <20200512230557.zvdgwhbqygc2fufv@core.my.home>
 MIME-Version: 1.0
-References: <20200424053819.220276-1-jnchase@google.com> <20200511212047.GA21845@bogus>
-In-Reply-To: <20200511212047.GA21845@bogus>
-From:   Jeff Chase <jnchase@google.com>
-Date:   Tue, 12 May 2020 19:23:57 -0400
-Message-ID: <CALTkaQ1syQDYw9afNbU5GGGG2=-u4ByTAc3w6xhL_F6F=EBOzA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add ch7322 as a trivial device
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200512230557.zvdgwhbqygc2fufv@core.my.home>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 11, 2020 at 5:20 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Apr 24, 2020 at 01:38:18AM -0400, Jeff Chase wrote:
-> > The ch7322 is a Chrontel CEC controller.
-> >
-> > Signed-off-by: Jeff Chase <jnchase@google.com>
-> > ---
-> >  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
-> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-> >  2 files changed, 4 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> > index 4165352a590a..ec2ddc6cdf9a 100644
-> > --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> > +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> > @@ -48,6 +48,8 @@ properties:
-> >            - capella,cm32181
-> >              # CM3232: Ambient Light Sensor
-> >            - capella,cm3232
-> > +            # CH7322: HDMI-CEC Controller
-> > +          - chrontel,ch7322
->
-> I don't think this qualifies as a trivial device. It has HPDI, OE and
-> reset signals all likely hooked up to GPIOs. You might not have those
-> hooked up for s/w control, but someone will.
->
-> And I'd assume if you had multiple instances, they will need to be
-> associated with each connector.
->
-> Rob
+On Wed, May 13, 2020 at 01:05:57AM +0200, Ondřej Jirman wrote:
+> On Tue, May 12, 2020 at 03:52:12PM -0700, Dmitry Torokhov wrote:
+> > On Wed, May 13, 2020 at 12:22:02AM +0200, Ondrej Jirman wrote:
+> > > It is possible to turn the motor on/off just by enabling/disabling
+> > > the vcc-supply.
+> > > 
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > > Acked-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/input/gpio-vibrator.yaml | 1 -
+> > >  1 file changed, 1 deletion(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> > > index 2384465eaa19..c700b640bd53 100644
+> > > --- a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> > > +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> > > @@ -24,7 +24,6 @@ properties:
+> > >  
+> > >  required:
+> > >    - compatible
+> > > -  - enable-gpios
+> > 
+> > Hmm we need at least one of the 2 (gpio and supply). Should we encode it
+> > in the binding?
+> 
+> Not sure how to encode either one or the other property being required, but
+> not both at once.
+> 
+> Maybe I can add a supply-vibrator compatible to the driver and binding and
+> make requirements dependent on the compatible?
 
-Thank you for looking at this. Taking a step back for a moment, I am
-developing this driver for an x86/ACPI platform on which I also
-control the firmware. Is there a preference between using an ACPI ID
-and a devicetree compatible id? I am trying to find out if the vendor
-already has an ACPI ID for this device. If I find and use that should
-I still add a compatible id anyways?
+Rob is our bindings overlord... I'll defer to him here.
 
-Jeff
+Thanks.
+
+-- 
+Dmitry
