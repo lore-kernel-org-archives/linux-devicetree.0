@@ -2,100 +2,193 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778E8CA90AF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B2DC47077
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 432B520714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589301912;
-	bh=KsnJ3Mt/qpKQdSl9UrFC2Z9oOS5Kx1O1ey9XFH0Yt2s=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=vQ/NOt9WR9aMB/Dn5/cf+/Iekv5uRIaFDGFZ7+QqzEYJWZ8oSsaA1G9JQ+3zFFsyS
-	 /zDqyKJlBTyomsfaPulW5pfXdl09zJIszeNPaR46qjGwY2BTZjVq3bvX5C2b1sy4dw
-	 TW2vDg0tGH7AhOe+L3zD+dZCIADtxJXizPEf4AP8=
+	by mail.kernel.org (Postfix) with ESMTP id 6550F20736
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:49:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="NLbfllHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgELQpL (ORCPT
+        id S1726160AbgELQts (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 12:45:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgELQpL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 12:45:11 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 859AB20722;
-        Tue, 12 May 2020 16:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589301911;
-        bh=KsnJ3Mt/qpKQdSl9UrFC2Z9oOS5Kx1O1ey9XFH0Yt2s=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=wrrkXcg8AntdueHPHgaqaJX9X8VI/WJcE6yb3/5lv7XacccuPPg7ewN14DB/X2wJa
-         BcEIXHmrAqtqFCnnZtftHkvQp1Wa4xLRtoCfmKUEcJ/xAz5/Keydl0YQ/clhhEIt8e
-         kONBjkTtjFWFsv+FFvpZFDWMhs4jeRqS+eMT68A4=
-Date:   Tue, 12 May 2020 17:45:08 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-In-Reply-To: <20200511210134.1224532-2-lkundrak@v3.sk>
-References: <20200511210134.1224532-1-lkundrak@v3.sk> <20200511210134.1224532-2-lkundrak@v3.sk>
-Subject: Re: [PATCH 01/11] ASoC: mmp-sspa: Flip SNDRV_PCM_FMTBIT_S24_3LE on
-Message-Id: <158930188456.55827.7679180677411632006.b4-ty@kernel.org>
+        Tue, 12 May 2020 12:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgELQts (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 12:49:48 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C2E0C061A0C
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 09:49:48 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id r7so11674142edo.11
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 09:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L9Ffz84NpTnCnWnvhpPQGRnbu7kH7Ow5AM96OZFEXgc=;
+        b=NLbfllHqdbdpCk1/Bgw9FHGwnQ6s1qwV6zqVTX30/Vc1qiKrY7E4SWIGScphR3PDas
+         onxHc5RRSXmFQ2oJPRscHqQWSUcN7rr/QevjRd02trYdf9sWvpbWS6K8pBmAJGBW5kHs
+         sWBqkG1mvYqOYyAT301JBf4dBiJrRcbAfrcFo21dcwnvUiEQoyd8o86ye0mc5cT1JA1l
+         MyVmynNsBuT9hYtlkguwsLR1HUu6ocOErsjHhxAGl7MPf/7fn7dpdsSDp+lLRLOXLZSS
+         PKud6putiGCj77c6U8+X9bbXZRhxEJIgrGHctbMQjqVSrlXuk0BdwJ/NETppygW8tMK7
+         TWBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L9Ffz84NpTnCnWnvhpPQGRnbu7kH7Ow5AM96OZFEXgc=;
+        b=Mw8w8qrws9jE5PAz2323vOy2nq5HUa5B23mO81SLuSTPz9fDQHs3wxwWhPpbcGK7SJ
+         K5GigmZRq0qN6th+UJ7RJANgiZJRz0YNF5zCMLSjYWGmPRal6gQRg7XzjBOgPoDKs4HT
+         aSvK+zs+KVPjyO6RexQB8GOOO6DdTlEKP5Ihsg2Ntew7Hu8U5K85jzYyvtI6+44pmY1u
+         FsSiKgCiQW6z4p/8mrvycoh2Yh3S61hVou0PQ5z7f51ioEkK4Cw3UnQITD6cdUbAhC3S
+         BQR4JiQ8ybClwToJDJeW8Ok2EwzgPDA1UgMifJgOgtL/hKhakSvrF5hmSrbGkV4Iex9V
+         n5Yg==
+X-Gm-Message-State: AOAM532pwC+6oJ+FxhxTAX3pZ0k6m0dW/+9QbR/6881kXtqV+rXAdhso
+        F34UfX8ZhA4BTyJNjyAZNXrCJjrNPRsfC3CBw+NiwQ==
+X-Google-Smtp-Source: ABdhPJxyBPyUcyG95vG5k6XKpkBx1RkzwSfulZirCBwcMy89UyffhCtaK44K3VsDtBPUo0TBwo0t3aNJBGzgmn5Ub5M=
+X-Received: by 2002:a50:ee04:: with SMTP id g4mr9918606eds.221.1589302186772;
+ Tue, 12 May 2020 09:49:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200506211523.15077-1-keescook@chromium.org> <20200512131655.GE17734@linux-b0ei>
+ <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com> <20200512155207.GF17734@linux-b0ei>
+In-Reply-To: <20200512155207.GF17734@linux-b0ei>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Tue, 12 May 2020 12:49:10 -0400
+Message-ID: <CA+CK2bC0argMNHzynedpwN6ekOg8yypN03JvmAKGWQ5Aegxh+Q@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 11 May 2020 23:01:24 +0200, Lubomir Rintel wrote:
-> The hw_params() callback handles the 3-byte format, not
-> SNDRV_PCM_FMTBIT_S24_LE.
+On Tue, May 12, 2020 at 11:52 AM Petr Mladek <pmladek@suse.com> wrote:
+>
+> On Tue 2020-05-12 10:03:44, Pavel Tatashin wrote:
+> > > OK, I personally see this as two separate problems:
+> > >
+> > >    1. Missing support to set loglevel per console.
+> > >    2. Missing support to dump messages for other reasons.
+> > >
+> > > I would remove the paragraph about console log levels completely.
+> >
+> > OK, I see your point, this paragraph can be removed, however, I think
+> > it makes it clear to understand the rationale for this change. As I
+> > understand, the per console loglevel has been proposed but were never
+> > accepted.
+>
+> The proposal was not accepted because there were more requirements:
+>
+>    + add console device into sysfs so that it can be modified there
+>    + make a reasonable backward compatible behavior
+>
+> I guess that the sysfs interface discouraged the author to continue
+> on it.
+>
+> Note that console loglevel handling is very complicated. There are
+> already four variables, see console_printk array in
+> kernel/printk/printk.c. Per console loglevel would make it even
+> more complicated.
+>
+> It is a nighmare. And introducing max_reason parameter goes the same way.
+>
+> > > Now, the max_reason logic makes sense only when all the values
+> > > have some ordering. Is this the case?
+> > >
+> > > I see it as two distinct sets:
+> > >
+> > >    + panic, oops, emerg: describe how critical is an error situation
+> > >    + restart, halt, poweroff: describe behavior when the system goes down
+> > >
+> > > Let's say that panic is more critical than oops. Is restart more
+> > > critical than halt?
+> > >
+> > > If you want the dump during restart. Does it mean that you want it
+> > > also during emergency situation?
+> > >
+> > > My fear is that this patchset is going to introduce user interface
+> > > (max_reason) with a weird logic. IMHO, max_reason is confusing even
+> > > in the code and we should not spread this to users.
+> > >
+> > > Is there any reason why the existing printk.always_kmsg_dump option
+> > > is not enough for you?
+> >
+> > printk.always_kmsg_dump is not working for me because ramoops has its
+> > own filtering based on dump_oops boolean, and ignores everything but
+> > panics and conditionally oops.
+> > max_reason makes the ramoops internal logic cleaner compared to using dump_oops.
+>
+> I see. Just to be sure. Is the main reason to add max_reason parameter
+> to keep complatibility of the deprecated dump_oops parameter? Or is
+> there any real use case for this granularity?
+>
+> I made some arecheology. ramoops.dump_oops parameter was added in 2010 by the
+> initial commit 56d611a04fb2db77334e ("char drivers: RAM oops/panic
+> logger."
+>
+> Note that the initial implementation printed Oops reason only when
+> dump_oops was set. It printed all other reasons otherwise. It seems
+> that there were only the two reasons at that time.
+>
+> Now, printk.always_kmsg_dump parameter was added later in 2012 by
+> the commit c22ab332902333f8376601 ("kmsg_dump: don't run on non-error
+> paths by default").
+>
+> IMHO, the later commit actually fixed the default behavior of ramoops.
+>
+> I wonder if anyone is actually using the ramoops.dump_oops parameter
+> in reality. I would personally make it deprecated and change the
+> default behavior to work according to printk.always_kmsg_dump parameter.
 
-Applied to
+This sounds alright to me with one slight problem. I am doing this
+work for an embedded arm64 SoC, so controlling everything via device
+tree is preferable compared to having some settings via device tree
+and others via kernel parameters, especially because the kernel
+parameters are hardcoded by firmware that we try not to update too
+often for uptime reasons.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+>
+> IMHO, ramoops.dump_oops just increases complexity and should not have
+> been introduced at all. I would try hard to avoid introducing even bigger
+> complecity and mess.
 
-Thanks!
+I agree, amoops.dump_oops should be depricated with or without
+max_reason change.
 
-[1/7] ASoC: mmp-sspa: A trivial typo fix
-      commit: e0b9024d2c8851b18b953823204278602bf73086
-[2/7] ASoC: mmp-sspa: Get rid of dma_params and phys_base
-      commit: c9aeda1c94973f835b3d1b6c785a414caaf935c3
-[3/7] ASoC: mmp-sspa: Add support for soc-generic-dmaengine-pcm
-      commit: 724da05378ba7af6e273451a2c3f565a3315a9db
-[4/7] ASoC: mmp-sspa: Remove the embedded struct ssp_device
-      commit: 3c4e89df3b45348dc0ee01a2ef1be710f7424ff7
-[5/7] ASoC: mmp-sspa: Prepare/unprepare the clocks
-      commit: 8ecdcac8792b6787ecb2341d25cb82165cf0129d
-[6/7] ASoC: mmp-sspa: Add support for the runtime power management
-      commit: 7d98cc648253c362ebfc582b11095a0e3f001896
-[7/7] ASoC: mmp-sspa: Set appropriate bus format for given bit width
-      commit: 39ec7e9b699910792468cf41a179d9930052e8ff
+>
+> I know that there is the "do not break existing userspace" rule. The
+> question is if there is any user and if it is worth it.
+>
+> > I agree, the reasons in kmsg_dump_reason do not order well  (I
+> > actually want to add another reason for kexec type reboots, and where
+> > do I put it?), so how about if we change the ordering list to
+> > bitfield/flags, and instead of max_reason provide: "reasons" bitset?
+>
+> It looks too complicated. I would really try hard to avoid the
+> parameter at all.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+OK. Should we remove max_reason from struct kmsg_dumper and also
+remove the misleading comment about kmsg_dump_reason ordering?
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Thank you,
+Pasha
