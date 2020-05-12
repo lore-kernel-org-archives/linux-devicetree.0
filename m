@@ -2,147 +2,107 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A30C54E8B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EE1C54E8B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFBA8206DD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C4BD206DD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 13:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HhvGzsjg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nePcfkZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgELNOd (ORCPT
+        id S1729936AbgELNQM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 09:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729524AbgELNOd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 09:14:33 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE05AC061A0C
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 06:14:32 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f134so9527594wmf.1
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 06:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ucIamOxWoiikiTT7OyOk1rVSeBavTDD4mVIWBfGQ0Tg=;
-        b=HhvGzsjgUcWS4ZqZpMHWKZ6oPMKgpOt/PCYx6PHdLARn1pl00Negjb8wMAe4LiENqa
-         cvvCgPgIgXvxRAOJUDj7etyWlGa4OaRWWDV3azcbY99r6J2ubJUpENBOJpwniqb2C8wv
-         0T6b/pFIazBufnzGCG7SFiHa4hg9iyktA2jRg/eSZ6txf1VRN9UDdShnlx9ifd7nqnYc
-         ymhZ7gkbtUU4kI8m2cZ0ZfpW7dwvxgFxrXVHMd5aUz2s/IVMQAJpMtz3YeYYGrY3sCFh
-         nAhUHWwBFUJaNOLcLRK1kHGfPj8bp2NROzB3CUiGno1WahODSUDWnWKNz2QwOKGnLnaF
-         I1cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ucIamOxWoiikiTT7OyOk1rVSeBavTDD4mVIWBfGQ0Tg=;
-        b=nPI1VnCFN+ekyUcY4LQKgXqKgEGPI/0hj52FvF5emFes3x8rWx6BD9UlTK2u/3wen9
-         v1q6OX3nSPVhA5wHsRpx5EWTTiC2jJSn/rrsiRsNYGRIU+xNiRCsRRkk+LylS270V1D3
-         W7q8dAPWfbi/7nAHVX4qF6i/GFOBVKyUn3PMPOsh3UctcOpJaunN2JvEr44CY7S8Sm3b
-         yIera7K0oz22u67eUniOVUOOOXHMYpB7WfCFWQ0LuJbTVb1S+wsnX/Dvwm8FMpe/KYA/
-         s1q7BwsbQUNVRYhtvgfGOvI9fNvKMrqyETnWYEpUVzmCdb3n3naX3MB+2gIIFqLuIMeK
-         fSzQ==
-X-Gm-Message-State: AGi0PuaCETGzrz4IBtXs/dxSUt4Ovg7hAW1NpjlENm/5IlvudQ0m0kQO
-        C4S7gRh67hXZryr+OiGIsA1UBQ==
-X-Google-Smtp-Source: APiQypJLgHGkWpi4Lcz/tiolMUMUWnpODhX3I8i/kPzrgclwoULRyPhWPJAIGGotuugAy+3zWXhlQQ==
-X-Received: by 2002:a1c:9e51:: with SMTP id h78mr39840046wme.177.1589289271434;
-        Tue, 12 May 2020 06:14:31 -0700 (PDT)
-Received: from lmecxl0524.home (2a01cb058702ff00bc4b798f4f30d41e.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:bc4b:798f:4f30:d41e])
-        by smtp.gmail.com with ESMTPSA id p9sm16480524wrj.29.2020.05.12.06.14.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 06:14:30 -0700 (PDT)
-From:   Etienne Carriere <etienne.carriere@linaro.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        fabrice.gasnier@st.com, alexandre.torgue@st.com,
-        mcoquelin.stm32@gmail.com, robh+dt@kernel.org,
-        srinivas.kandagatla@linaro.org,
-        Etienne Carriere <etienne.carriere@st.com>
-Subject: [PATCH v2] dt-bindings: nvmem: stm32: new property for data access
-Date:   Tue, 12 May 2020 15:13:34 +0200
-Message-Id: <20200512131334.1750-1-etienne.carriere@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 12 May 2020 09:16:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:32940 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729901AbgELNQM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 09:16:12 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04CDG3Fg031930;
+        Tue, 12 May 2020 08:16:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589289363;
+        bh=BumWFgjzJj940R4kMpydKFBlGDtIoxERn96VgXdZ9bc=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=nePcfkZ49UmdjEEneh+uNCxrM69Ja6+fA/vy6T309JixKwG2czg1QbwGHHf6NKMm4
+         M0SzhFtoMTpG3LXNSnwzGwaFD/BH/TXCaxWyNU1b3+30bJNNY9+P0zSIGW1gCZtp7T
+         BElGiiQbubKOqzFwvnBOwby3vmFjwUbr4Bq60Juk=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04CDG3Hq014807
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 08:16:03 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
+ May 2020 08:16:03 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 12 May 2020 08:16:03 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04CDFxab079268;
+        Tue, 12 May 2020 08:16:01 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/3] ASoC: ti: davinci-mcasp: Specify stream_name for playback/capture
+Date:   Tue, 12 May 2020 16:16:31 +0300
+Message-ID: <20200512131633.32668-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200512131633.32668-1-peter.ujfalusi@ti.com>
+References: <20200512131633.32668-1-peter.ujfalusi@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Etienne Carriere <etienne.carriere@st.com>
+In order to dai stream widgets to be created the stream_name must be set.
 
-Introduce boolean property st,non-secure-otp for OTP data located
-in a factory programmed area that only secure firmware can access
-by default and that shall be reachable from the non-secure world.
-
-This change also allows additional properties for NVMEM nodes that
-were forbidden prior this change.
-
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Changes since v1:
-  Change nvmem.yaml to allow additional properties in NVMEM nodes.
+ sound/soc/ti/davinci-mcasp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Link to v1:
-  https://lore.kernel.org/patchwork/patch/1239028/
-
- .../devicetree/bindings/nvmem/nvmem.yaml        |  2 --
- .../bindings/nvmem/st,stm32-romem.yaml          | 17 +++++++++++++++++
- 2 files changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.yaml b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-index 65980224d550..b459f9dba6c9 100644
---- a/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-@@ -67,8 +67,6 @@ patternProperties:
-     required:
-       - reg
- 
--    additionalProperties: false
--
- examples:
-   - |
-       #include <dt-bindings/gpio/gpio.h>
-diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-index d84deb4774a4..c11c99f085d7 100644
---- a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-@@ -24,6 +24,18 @@ properties:
-       - st,stm32f4-otp
-       - st,stm32mp15-bsec
- 
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+
-+    properties:
-+      st,non-secure-otp:
-+        description: |
-+          This property explicits a factory programmed area that both secure
-+          and non-secure worlds can access. It is needed when, by default, the
-+          related area can only be reached by the secure world.
-+        type: boolean
-+
- required:
-   - "#address-cells"
-   - "#size-cells"
-@@ -41,6 +53,11 @@ examples:
-       calib@22c {
-         reg = <0x22c 0x2>;
-       };
-+
-+      mac_addr@e4 {
-+        reg = <0xe4 0x8>;
-+        st,non-secure-otp;
-+      };
-     };
- 
- ...
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index 7a7db743dc5b..15d84493466f 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -1623,12 +1623,14 @@ static struct snd_soc_dai_driver davinci_mcasp_dai[] = {
+ 		.name		= "davinci-mcasp.0",
+ 		.probe		= davinci_mcasp_dai_probe,
+ 		.playback	= {
++			.stream_name = "IIS Playback",
+ 			.channels_min	= 1,
+ 			.channels_max	= 32 * 16,
+ 			.rates 		= DAVINCI_MCASP_RATES,
+ 			.formats	= DAVINCI_MCASP_PCM_FMTS,
+ 		},
+ 		.capture 	= {
++			.stream_name = "IIS Capture",
+ 			.channels_min 	= 1,
+ 			.channels_max	= 32 * 16,
+ 			.rates 		= DAVINCI_MCASP_RATES,
+@@ -1642,6 +1644,7 @@ static struct snd_soc_dai_driver davinci_mcasp_dai[] = {
+ 		.name		= "davinci-mcasp.1",
+ 		.probe		= davinci_mcasp_dai_probe,
+ 		.playback 	= {
++			.stream_name = "DIT Playback",
+ 			.channels_min	= 1,
+ 			.channels_max	= 384,
+ 			.rates		= DAVINCI_MCASP_RATES,
 -- 
-2.17.1
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
