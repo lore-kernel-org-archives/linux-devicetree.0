@@ -2,86 +2,78 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF08C2D0F7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 21:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6511C2D0F7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 21:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE13F20753
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 21:04:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589317441;
-	bh=aqivytCV1VWXk93uBvfqsdAKPbjk/Zja2il/5EJ6kkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wR8dqnRL/UbbOzfrNF93N3/CN1ngDKmkR3GMvQjfcZN0hQgkCt19/P2mPv+eERwN6
-	 6Im1vrbB/2uwHyfWHWtRpXYpwi/sW8sLjoUjDe6kRxzcCxDfsPf60DW0v92v/G0Qoz
-	 WuWhkTSIxDvge1lpqB6pRWmuPS99P1XgESIrxvIU=
+	by mail.kernel.org (Postfix) with ESMTP id 98C3B20740
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 21:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgELVEA (ORCPT
+        id S1726324AbgELVEp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 17:04:00 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34197 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbgELVEA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 17:04:00 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 72so11747577otu.1;
-        Tue, 12 May 2020 14:03:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SlmOp4Ja0L99f4dWfudYD8NFO8K357bjpSbWG5NFFuU=;
-        b=BLZ35eu6x7I+3knoLjTklV9bUeQCvXEKXYthlad+xm6vdDngl/5lMrYcnuuJu2ZNC/
-         O74J8q3X4X1uUB4CH5wbqutWJveJ0G1GFK3V3xGgCWZoeVMiAkgjSWzm054wpZeZLcar
-         dwKdDoaSklw7pu9qrVl/yuye6rLA2CRW55XEI/+tHfMNtYxdwggj4t2kN/d1uqWtEigU
-         8fDYag04mZps0A5nGaJyvDcOad8mkGaRS+jaPXlmxoRDO8vnoH14w8jhphmn9h9Way1a
-         ZOfjSDuv+2aJf762BAXtad7g+oJ82ixlujNyFoVCt7D0sDhGhjHH7JLrxkt2f6xtW+G5
-         e6zw==
-X-Gm-Message-State: AGi0PuYdEjmqHfgwiMkH3rguNJOV+hgPnmp5UIB9SP+D95bVfG5CtpK1
-        imoGCIbYMNptZdYkugcSp4Vn50bq6A==
-X-Google-Smtp-Source: APiQypIpJoMM+8ajeFgZmBI2vfHIZsLum9JoFijx5dPXwjtrNdAuMIu2sBIysLWIbFHg6ePwVVwG0g==
-X-Received: by 2002:a05:6830:1e1c:: with SMTP id s28mr17726799otr.207.1589317439227;
-        Tue, 12 May 2020 14:03:59 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w14sm3929257oou.46.2020.05.12.14.03.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 14:03:58 -0700 (PDT)
-Received: (nullmailer pid 24483 invoked by uid 1000);
-        Tue, 12 May 2020 21:03:57 -0000
-Date:   Tue, 12 May 2020 16:03:57 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: input: Add bindings for Azoteq
- IQS269A
-Message-ID: <20200512210357.GA24425@bogus>
-References: <1588352982-5117-1-git-send-email-jeff@labundy.com>
+        Tue, 12 May 2020 17:04:45 -0400
+Received: from muru.com ([72.249.23.125]:54202 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbgELVEp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 17:04:45 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 086118047;
+        Tue, 12 May 2020 21:05:33 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] ARM: dts: Fix wrong mdio clock for dm814x
+Date:   Tue, 12 May 2020 14:04:37 -0700
+Message-Id: <20200512210437.32635-1-tony@atomide.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588352982-5117-1-git-send-email-jeff@labundy.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  1 May 2020 12:09:41 -0500, Jeff LaBundy wrote:
-> This patch adds device tree bindings for the Azoteq IQS269A
-> capacitive touch controller.
-> 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> ---
-> Changes in v2:
->   - Removed '$ref' and 'allOf' from properties with a unit suffix
-> 
->  .../devicetree/bindings/input/iqs269a.yaml         | 581 +++++++++++++++++++++
->  1 file changed, 581 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/iqs269a.yaml
-> 
+Recent PTP-specific cpsw driver changes started exposing an issue on at
+at least j5eco-evm:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Unhandled fault: external abort on non-linefetch (0x1008) at 0xf0169004
+...
+(davinci_mdio_runtime_suspend) from [<c063f2a4>] (__rpm_callback+0x84/0x154)
+(__rpm_callback) from [<c063f394>] (rpm_callback+0x20/0x80)
+(rpm_callback) from [<c063f4f0>] (rpm_suspend+0xfc/0x6ac)
+(rpm_suspend) from [<c0640af0>] (pm_runtime_work+0x88/0xa4)
+(pm_runtime_work) from [<c0155338>] (process_one_work+0x228/0x568)
+...
+
+Let's fix the issue by using the correct the mdio clock as suggested by
+Grygorii Strashko <grygorii.strashko@ti.com>.
+
+The DM814_ETHERNET_CPGMAC0_CLKCTRL clock is the interconnect target module
+clock and managed by ti-sysc.
+
+Fixes: 6398f3478e45 ("ARM: dts: Configure interconnect target module for dm814x cpsw")
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/dm814x.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
+--- a/arch/arm/boot/dts/dm814x.dtsi
++++ b/arch/arm/boot/dts/dm814x.dtsi
+@@ -693,7 +693,7 @@ mac: ethernet@0 {
+ 
+ 					davinci_mdio: mdio@800 {
+ 						compatible = "ti,cpsw-mdio", "ti,davinci_mdio";
+-						clocks = <&alwon_ethernet_clkctrl DM814_ETHERNET_CPGMAC0_CLKCTRL 0>;
++						clocks = <&cpsw_125mhz_gclk>;
+ 						clock-names = "fck";
+ 						#address-cells = <1>;
+ 						#size-cells = <0>;
+-- 
+2.26.2
