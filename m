@@ -2,107 +2,143 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C8FC54E8D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71C1C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 15:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23E4F206B8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589295464;
-	bh=1/hPsfcZs5Y8EjeVEzoycUhidXcnl2B8kam/Bd6wXXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BPzF4Xhn6vwDxBhsY1BotO8+fbQ2/dgLKxSm5QIv+yrRT1AICTWmwOCJfVTJE1SoI
-	 Wwg4mtlvXRqYW54BCGIA/kJHCfP4UNnrpbhkfyq1r1+RlbmObMBff0uvyDTNsREvfB
-	 BugkeC5/3dpMP2HKF68KscZJwdV3HIHHjmKzEKl8=
+	by mail.kernel.org (Postfix) with ESMTP id 9E0BA20673
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 15:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aY69rB+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgELO5n (ORCPT
+        id S1727850AbgELPAk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 10:57:43 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43765 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbgELO5n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 10:57:43 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i22so1859981oik.10;
-        Tue, 12 May 2020 07:57:42 -0700 (PDT)
+        Tue, 12 May 2020 11:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgELPAj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 11:00:39 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C101FC061A0C;
+        Tue, 12 May 2020 08:00:39 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u10so5490796pls.8;
+        Tue, 12 May 2020 08:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zY6l7Pzo8dnedvQSXEa9BV0T0TX5SB1UpYlmpbsnlxo=;
+        b=aY69rB+XNQ8wwcsY3HAr+e0Ju0AYGDRXK+SLIrRK8A5Rv7FhKikttrwEJcoinFah+N
+         rvnUwzOTQ4b+4b6c+dWj1ux7ov2pTAER7MQQvNQAemGhgp3+up9tg8Q0ZgZWUheEizMA
+         WzEWlGY9yeGrO9e5G8uiQ5mZVceUhOk2iIxjWcVXs5Nj9b4TEnAYNT9SMZIsNfFmgbG5
+         RO3Zp/30tTdNgII4qgOl/vxmHojp+s6VyMZxopunLZ2yWstKzryLUe9BLP/m5ca29OT2
+         RmASSTOY06SBS8jG6Rczr8cvR4x8Mo902ymSkHDpCSXBDTQZQoGR6331UgTowMahkru3
+         Y4vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0RjlmR6YuJe5OFTdNqr/waaHWAV5lpqikYC4DfnGsDg=;
-        b=pr6MKC9GgJBdwIC7i4YNF05bQvQmjsUlayk2pWP2UNW1Q8TnPgva1GD4JiMqqEn88r
-         jIBq/7HsLr526WqCF8giU9Yzff750GZT4oEL9DtVmBJ+H35ND5OsxEZr61X6+8BzfWLh
-         YtnmS34FRvh3m4W+RvUaGLdTYyqIB7aGwOnhMmf/KQU9YW6OQUWbDmJX1c48pc9LpUbE
-         Yd3FuDhuLI4D3ZdhC9mzqGfp1mOEdctpptzaKWB6T+RIQNZgokM/mqeZg9RUAT4ayaq4
-         3DdrJ8f5NxTnaAgN4/iVlCVc3JqALXU3SJ4CJijTyWCwpka8BcWMAqv2+5XcTmpLUt7g
-         y2ew==
-X-Gm-Message-State: AGi0PuZNoPjL7QdSaYjywzP1pWnqdo+197oaK6oANkHWer661kwfCLJP
-        43H5e2DPZD9LLgZtyiKyEQ==
-X-Google-Smtp-Source: APiQypK611Fjk8XOJF2hXT2tzKw9uv0/tp3+vM3Z12fb7KSgcfstQYqV42iyNBPHT0pWjJ1kOCMV3A==
-X-Received: by 2002:aca:816:: with SMTP id 22mr22840562oii.51.1589295462251;
-        Tue, 12 May 2020 07:57:42 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m27sm220241oom.22.2020.05.12.07.57.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zY6l7Pzo8dnedvQSXEa9BV0T0TX5SB1UpYlmpbsnlxo=;
+        b=Wf94hKGgY21fiZJrkTs0sQ76xO2HSw0hPkBow9cstEjQNu3TLzFOV0MufmvAPga2bp
+         t41CpH36F3+nGGN4oaRAeHi7u+6NcLMPySE4AFFjipKybZYFxKiqQIzN8MEfZTsGLyRZ
+         /0RwKXG5TgodXeT3+Zpqmmn2JPz2H2RSuzyKa2+3g4tQk68tjnlz4wzqinpSPja984jX
+         /vdnWOYrLbC/x4/0t7QCDmutluGgUAlOdW3Oxo4/ycUqhZR0vM1yr9qt48kBp8xg91qe
+         QZhfGUJSmLsmXEsUHKCek6+uEs2vPTFvYUvSkmGbxNCkaQRD79nB75Uww94HzNR6w8mq
+         rqQQ==
+X-Gm-Message-State: AGi0PubRJNRPSpdv+y2tLzFOQ5AxUWRAZ1tVGPXtQgP6l2rIjuwCwc2B
+        2eKrryz+RBN8ogt7trbCtyFEkWQK4mM=
+X-Google-Smtp-Source: APiQypKmZjVS6pLHVWaDrSJr/frJYuIFiE/4qsGhLrwa25HuB2pW3W/srEun1TtAHe/cEWB3VZjSUQ==
+X-Received: by 2002:a17:902:c3c3:: with SMTP id j3mr20040157plj.284.1589295638750;
+        Tue, 12 May 2020 08:00:38 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id c2sm8359779pgj.93.2020.05.12.08.00.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 07:57:41 -0700 (PDT)
-Received: (nullmailer pid 4113 invoked by uid 1000);
-        Tue, 12 May 2020 14:57:40 -0000
-Date:   Tue, 12 May 2020 09:57:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V4 1/5] dt-bindings: clock: Convert i.MX6Q clock to
- json-schema
-Message-ID: <20200512145740.GB25671@bogus>
-References: <1588207921-20604-1-git-send-email-Anson.Huang@nxp.com>
- <158865854354.11125.10611865219975766594@swboyd.mtv.corp.google.com>
- <DB3PR0402MB39164125CABC889C5DEE5D8AF5A70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39164125CABC889C5DEE5D8AF5A70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 12 May 2020 08:00:38 -0700 (PDT)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v10 0/5] Add XHCI, EHCI and OHCI support for Broadcom STB SoS's
+Date:   Tue, 12 May 2020 11:00:14 -0400
+Message-Id: <20200512150019.25903-1-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 05, 2020 at 11:32:42AM +0000, Anson Huang wrote:
-> Hi, Stephen
-> 
-> 
-> > Subject: Re: [PATCH V4 1/5] dt-bindings: clock: Convert i.MX6Q clock to
-> > json-schema
-> > 
-> > Quoting Anson Huang (2020-04-29 17:51:57)
-> > > Convert the i.MX6Q clock binding to DT schema format using json-schema.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > 
-> > Please send a cover letter next time. Who is going to apply these patches? I
-> > hope Rob? If you need an acked-by feel free to have mine!
-> 
-> OK, will have a cover letter next time for patch series.
-> 
-> Hi, Rob
-> 	Are you going to apply this patch series? If no, can you advise who can apply it, thanks.
+v10 - Fix incorrect error return in ehci-brcmstb.c pointed out by
+      Alan Stern.
 
-Yes, respin fixing interrupts in all the patches.
+v9 - Fix minor typos in patch description for ehci driver.
+   - In ehci-brcm.c, use ehci_err() instead of dev_err().
+   - In ehci-brcm.c, handle zero returned from platform_get_irq()
+     by returning -EINVAL for 0 or actual return value for < 0.
 
-Rob
+v8 - The previous v7 had the wrong version of ehci-brcm.c. This time
+     really, really add the changes Greg requested.
+
+v7 - Cleanup ehci-brcm.c as requested by Greg Kroah-Hartman.
+   - Split out Makefile re-order change into a separate commit.
+
+v6 - Remove "contains:" from compatible section of
+     brcm,bcm7445-ehci.yaml as requested by Rob Herring.
+
+v5 - Use devm_platform_get_and_ioremap_resource() in ehci-brcm.c
+     as requested by Andy Shevchenko.
+   - Add pm_runtime_set_active() to ehci_resume() in ehci-brcm.c
+     as requested by Alan Stern.
+
+v4 - A few more fixes to the brcm,bcm7445-ehci.yaml dt-bindings
+     document requested by Rob Herring.
+   - Fixed ordering issue in MAINTAINERS as requested by
+     Andy Shevchenko.
+
+v3 - Addressed all of Andy Shevchenko's review comments for
+     ehci-brcm.c.
+   - Fixed the brcm,bcm7445-ehci.yaml dt-bindings document,
+     dt_binding_check now passes.
+   - Added the XHCI functionality to xhci-plat.c instead of creating
+     new brcmstb files, as suggested by Mathias Nyman.
+
+v2 - Addressed Andy Shevchenko's review comments.
+   - Fixed dt_binding_check error pointed out by Rob Herring.
+   - Removed pr_info message in ehci_brcm_init as suggested by
+     Greg Kroah-Hartman.
+
+This adds support for the XHCI, EHCI and OHCI host controllers found
+in Broadcom STB SoC's. These drivers depend on getting access to the
+new Broadcom STB USB PHY driver through a device-tree phandle and
+will fail if the driver is not available.
+
+Al Cooper (5):
+  usb: xhci: Change the XHCI link order in the Makefile
+  dt-bindings: Add Broadcom STB USB support
+  usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
+  usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+  usb: host: Add ability to build new Broadcom STB USB drivers
+
+ .../bindings/usb/brcm,bcm7445-ehci.yaml       |  59 ++++
+ .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
+ MAINTAINERS                                   |   8 +
+ drivers/usb/host/Kconfig                      |  20 ++
+ drivers/usb/host/Makefile                     |  17 +-
+ drivers/usb/host/ehci-brcm.c                  | 280 ++++++++++++++++++
+ drivers/usb/host/xhci-plat.c                  |  10 +
+ 7 files changed, 389 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+ create mode 100644 drivers/usb/host/ehci-brcm.c
+
+-- 
+2.17.1
+
