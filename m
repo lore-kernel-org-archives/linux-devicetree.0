@@ -2,86 +2,177 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6E1C47255
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 02:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DF8C47255
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 02:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA4A206A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 02:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 310F9206B7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 02:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgELCSk (ORCPT
+        id S1728073AbgELCcm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 22:18:40 -0400
-Received: from mx.socionext.com ([202.248.49.38]:44388 "EHLO mx.socionext.com"
+        Mon, 11 May 2020 22:32:42 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:59210 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbgELCSj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 22:18:39 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 12 May 2020 11:18:38 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4E8B9180BB6;
-        Tue, 12 May 2020 11:18:38 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 12 May 2020 11:18:38 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id EDACE1A01BB;
-        Tue, 12 May 2020 11:18:37 +0900 (JST)
-Received: from [10.213.31.213] (unknown [10.213.31.213])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 67C7D120133;
-        Tue, 12 May 2020 11:18:37 +0900 (JST)
-Subject: Re: [PATCH net] dt-bindings: net: Convert UniPhier AVE4 controller to
- json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
- <20200512020126.GA22178@bogus>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <600b83e2-8063-b8ca-5406-7bf854c45ab3@socionext.com>
-Date:   Tue, 12 May 2020 11:18:36 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200512020126.GA22178@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727892AbgELCcm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 22:32:42 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 285F11A0E7B;
+        Tue, 12 May 2020 04:32:40 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BE8731A0E81;
+        Tue, 12 May 2020 04:32:35 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D8E03402BC;
+        Tue, 12 May 2020 10:32:29 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: reset: Convert i.MX reset to json-schema
+Date:   Tue, 12 May 2020 10:23:14 +0800
+Message-Id: <1589250194-29441-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Convert the i.MX reset binding to DT schema format using json-schema.
 
-On 2020/05/12 11:01, Rob Herring wrote:
-> On Tue, Apr 28, 2020 at 03:31:22PM +0900, Kunihiko Hayashi wrote:
->> Convert the UniPhier AVE4 controller binding to DT schema format.
->> This changes phy-handle property to required.
->>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> ---
-
-(snip)
-
->> +  phy-mode:
->> +    $ref: ethernet-controller.yaml#/properties/phy-mode
->> +
->> +  phy-handle:
->> +    $ref: ethernet-controller.yaml#/properties/phy-handle
-> 
-> No need for these $ref, the 1st reference did this. Just:
-> 
-> phy-mode: true
-
-Okay, "phy-handle" also replaces with "true".
-I'll fix it in v2.
-
-Thank you,
-  
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Best Regards
-Kunihiko Hayashi
+ .../devicetree/bindings/reset/fsl,imx-src.txt      | 49 ------------------
+ .../devicetree/bindings/reset/fsl,imx-src.yaml     | 58 ++++++++++++++++++++++
+ 2 files changed, 58 insertions(+), 49 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
+
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
+deleted file mode 100644
+index 6ed79e6..0000000
+--- a/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
++++ /dev/null
+@@ -1,49 +0,0 @@
+-Freescale i.MX System Reset Controller
+-======================================
+-
+-Please also refer to reset.txt in this directory for common reset
+-controller binding usage.
+-
+-Required properties:
+-- compatible: Should be "fsl,<chip>-src"
+-- reg: should be register base and length as documented in the
+-  datasheet
+-- interrupts: Should contain SRC interrupt and CPU WDOG interrupt,
+-  in this order.
+-- #reset-cells: 1, see below
+-
+-example:
+-
+-src: src@20d8000 {
+-        compatible = "fsl,imx6q-src";
+-        reg = <0x020d8000 0x4000>;
+-        interrupts = <0 91 0x04 0 96 0x04>;
+-        #reset-cells = <1>;
+-};
+-
+-Specifying reset lines connected to IP modules
+-==============================================
+-
+-The system reset controller can be used to reset the GPU, VPU,
+-IPU, and OpenVG IP modules on i.MX5 and i.MX6 ICs. Those device
+-nodes should specify the reset line on the SRC in their resets
+-property, containing a phandle to the SRC device node and a
+-RESET_INDEX specifying which module to reset, as described in
+-reset.txt
+-
+-example:
+-
+-        ipu1: ipu@2400000 {
+-                resets = <&src 2>;
+-        };
+-        ipu2: ipu@2800000 {
+-                resets = <&src 4>;
+-        };
+-
+-The following RESET_INDEX values are valid for i.MX5:
+-GPU_RESET     0
+-VPU_RESET     1
+-IPU1_RESET    2
+-OPEN_VG_RESET 3
+-The following additional RESET_INDEX value is valid for i.MX6:
+-IPU2_RESET    4
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
+new file mode 100644
+index 0000000..276a533
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/fsl,imx-src.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX System Reset Controller
++
++maintainers:
++  - Philipp Zabel <p.zabel@pengutronix.de>
++
++description: |
++  The system reset controller can be used to reset the GPU, VPU,
++  IPU, and OpenVG IP modules on i.MX5 and i.MX6 ICs. Those device
++  nodes should specify the reset line on the SRC in their resets
++  property, containing a phandle to the SRC device node and a
++  RESET_INDEX specifying which module to reset, as described in
++  reset.txt
++
++  The following RESET_INDEX values are valid for i.MX5:
++    GPU_RESET     0
++    VPU_RESET     1
++    IPU1_RESET    2
++    OPEN_VG_RESET 3
++  The following additional RESET_INDEX value is valid for i.MX6:
++    IPU2_RESET    4
++
++properties:
++  compatible:
++    items:
++      - const: "fsl,imx51-src"
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++
++  '#reset-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#reset-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    src@73fd0000 {
++        compatible = "fsl,imx51-src";
++        reg = <0x73fd0000 0x4000>;
++        interrupts = <75>;
++        #reset-cells = <1>;
++    };
+-- 
+2.7.4
+
