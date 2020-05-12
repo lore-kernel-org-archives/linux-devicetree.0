@@ -1,263 +1,289 @@
-Return-Path: <SRS0=wnEW=6Z=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53E6C47255
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 23:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BB3C47255
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 00:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D51320675
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 May 2020 23:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589238958;
-	bh=0WD07eVJDccvKgwXpv29f73hxoJvwzknlIqZQ9cEYeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Oqiooko4jPErCQgWVt20Rimia0IP7r9GmE6UzwQk7e+QKuoTj226t38qRDApP1GdR
-	 Y5oB1sbTxSw6fS2Qjh3NUdEcjK07wpWr6WWL+ulL8ltmWkn0gsKiu2zP/ZMqWoRZfB
-	 vo3KiCpHVxtrkHm9CVsE+OAF5XlIdx5VoFt9G/1g=
+	by mail.kernel.org (Postfix) with ESMTP id 806B5206F5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 00:11:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A3vS9Aan"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgEKXP6 (ORCPT
+        id S1728063AbgELAL7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 19:15:58 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39429 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgEKXP5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 19:15:57 -0400
-Received: by mail-oi1-f196.google.com with SMTP id b18so16650646oic.6
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 16:15:56 -0700 (PDT)
+        Mon, 11 May 2020 20:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725836AbgELAL6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 May 2020 20:11:58 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82903C061A0E
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 17:11:58 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a5so8639794pjh.2
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 17:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=vD9bAWKm0TsbLrMap8l5gp1TwER8GEwlHBT3cJWURJ0=;
+        b=A3vS9AanzqTHedDnHkrlKHjJJPKbzJ481qfmYgNGQCT5/+iqlBJQ8sZHBLvmZMNlaD
+         U8SJxFmOP31XeFbpsNsvljK9W4vgwkNLuD5GGO5+4XEe+dkEBmfjgSxdQoVYasVbTbcS
+         2AwtXNhw9tdujY8v4Ka5SLlqc0Kb8TBgwMktWmcg+tsQgkPPzXv1JWqP6l5shhuk6rhh
+         CxECvWV+XGhzo3dUyY2fjuShqsCCl5GJNKpKigwNxdCC40PgsGNHu8qSPIUgCG28/9Kc
+         R+mCvUboHQWRekfz+AUgjpnhPf1yM8Y4oQfx1CWSaXT/gQLLI4BEMBvqFpYfTI0r8SGf
+         9XqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=WzMRJJiJS3jDKX4S6UKZJHW30saEkCLvSAVigDiDovQ=;
-        b=rSdPlTy1IdiK1tx3v5PTSSVKOvHHCjgZPzFt20VTMyMxq4SNrc8vRM2J11fnNAABGo
-         XAi5tv1KKmNnQF1judAHgfm3XHXrxur0FeF29lmMY6eWX3QjtoZ7ONHWYF1UNx9vL52O
-         pfrHlHo14Wv/ElPKpgmublPQzoBfXH2Conc9zhghq+gT9PIg6xYZ/EjrSuRLXFj+KEUZ
-         3aRvm6rv8BG36sfnmkqOJKdv/umJLtjKIz6qJ8CFok1FobNSGdHZW1BAeTteUCqhaCSC
-         stCinMh/5C2AbzFxiM3huVQcKn4eqHazWv6U1RYvwAaIBYr0rl0zm19aL4bWwm69u4rI
-         8gEw==
-X-Gm-Message-State: AGi0PuYr/+GOM0fKBr9rfH/yD+ylwfNoVgfRIiLO6iWr8NZNYFL+zmEA
-        SADIewOwNQAcNsn4nZghWLjPP54=
-X-Google-Smtp-Source: APiQypLm7tq7BIUCDIvc1psG46O7o0EE7PfK0l+06rc9tI2PZnMBjqKgzAYy/l5gUlzlKgNaz05R5Q==
-X-Received: by 2002:aca:75c3:: with SMTP id q186mr20355965oic.41.1589238956239;
-        Mon, 11 May 2020 16:15:56 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 33sm2827163otx.31.2020.05.11.16.15.54
+         :in-reply-to;
+        bh=vD9bAWKm0TsbLrMap8l5gp1TwER8GEwlHBT3cJWURJ0=;
+        b=gSaXzlJCHYINTCylYh06Bymfo1KZ0mPQ3+aLoiOmqMR8OyxG6254/SolkYY0UFn6Io
+         jJgn6HkjCCm11O4krlbA0iwTqQHzFXMUk8hMzOCMAHnmd7Pb/mN7Gv8/Dhg9d42ctR8e
+         pKaK9Y+OwSyGzxwF415xmUuYjc1moPCzb4IGyVKNa1+DGoVYOxLDTWDGYx2OUkPtUrxC
+         o+uKHaWqlv4apnvEahwZLoE+oX8X1pu11CnNbatxlFEXSgMMI00b38Uhzx3Cgn7ZUeL6
+         y83k070N32DiMZALtoIXOGBrH1DZ1Svh6Tj3rAulNFkatpy+GCInAEdLirpN3tZUqEpD
+         D7+g==
+X-Gm-Message-State: AGi0PuaRUc94/vqDCwK/D1vSKW/1O9HueWwZKj+7QEto4sj004YkN+NH
+        tjm6U2I/YX7ZpH1PwINP4zQQRA==
+X-Google-Smtp-Source: APiQypLvk6MsGJTa1A0kGWCgqM1Q16u/OrBm7JPtAl8bp704ACdBitEEa1Efs7ZN7JLMElh0x+ew5g==
+X-Received: by 2002:a17:90a:8a09:: with SMTP id w9mr24099337pjn.95.1589242317883;
+        Mon, 11 May 2020 17:11:57 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c10sm10124975pfm.50.2020.05.11.17.11.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 16:15:55 -0700 (PDT)
-Received: (nullmailer pid 18639 invoked by uid 1000);
-        Mon, 11 May 2020 23:15:54 -0000
-Date:   Mon, 11 May 2020 18:15:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Ricardo =?iso-8859-1?Q?Ca=F1uelo?= 
-        <ricardo.canuelo@collabora.com>, devicetree@vger.kernel.org,
-        kernel@collabora.com, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3] dt-bindings: display: anx7814.txt: convert to yaml
-Message-ID: <20200511231554.GA12152@bogus>
-References: <20200427100908.11809-1-ricardo.canuelo@collabora.com>
- <676aaa45-b4cb-104e-de37-2508f0ab634d@collabora.com>
+        Mon, 11 May 2020 17:11:57 -0700 (PDT)
+Date:   Mon, 11 May 2020 17:10:23 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v6 4/5] remoteproc: ingenic: Added remoteproc driver
+Message-ID: <20200512001023.GB5349@builder.lan>
+References: <20200417170040.174319-1-paul@crapouillou.net>
+ <20200417170040.174319-4-paul@crapouillou.net>
+ <20200420063714.GA1868936@builder.lan>
+ <WCA59Q.IXGX82YOG4GI2@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <676aaa45-b4cb-104e-de37-2508f0ab634d@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <WCA59Q.IXGX82YOG4GI2@crapouillou.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 03:52:44PM +0200, Enric Balletbo i Serra wrote:
-> Hi Ricardo,
-> 
-> Thank you for your patch.
-> 
-> On 27/4/20 12:09, Ricardo Cañuelo wrote:
-> > This converts the Analogix ANX7814 bridge DT binding to yaml. Port
-> > definitions and descriptions were expanded, apart from that it's a
-> > direct translation from the original binding.
-> > 
-> > Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-> > Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> > ---
-> > Changes in v3 (suggested by Sam Ravnborg):
-> >   - Rename example node i2c0 to i2c.
-> > 
-> > Changes in v2 (suggested by Enric Balletbo):
-> >   - File name change: use full compatible string.
-> >   - Binding description removed.
-> >   - #address-cells and #size-cells properties removed from ports node.
-> >   - Example node renamed: anx7814 -> bridge.
-> > 
-> > Tested with:
-> > make dt_binding_check ARCH=arm64 DT_SCHEMA_FILES=<.../analogix,anx7814.yaml>
-> > make dtbs_check ARCH=arm64 DT_SCHEMA_FILES=<.../analogix,anx7814.yaml>
-> > 
-> >  .../display/bridge/analogix,anx7814.yaml      | 124 ++++++++++++++++++
-> >  .../bindings/display/bridge/anx7814.txt       |  42 ------
-> >  2 files changed, 124 insertions(+), 42 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/display/bridge/anx7814.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
-> > new file mode 100644
-> > index 000000000000..13f0b52edefd
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
-> > @@ -0,0 +1,124 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/bridge/analogix,anx7814.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analogix ANX7814 SlimPort (Full-HD Transmitter)
-> > +
-> > +maintainers:
-> > +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - analogix,anx7808
-> > +      - analogix,anx7812
-> > +      - analogix,anx7814
-> > +      - analogix,anx7818
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: I2C address of the device.
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +    description: Should contain the INTP interrupt.
-> > +
-> > +  hpd-gpios:
-> > +    maxItems: 1
-> > +    description: Which GPIO to use for hpd.
-> > +
-> > +  pd-gpios:
-> > +    maxItems: 1
-> > +    description: Which GPIO to use for power down.
-> > +
-> > +  reset-gpios:
-> > +    maxItems: 1
-> > +    description: Which GPIO to use for reset.
-> > +
-> > +  dvdd10-supply:
-> > +    maxItems: 1
-> > +    description: Regulator for 1.0V digital core power.
-> > +
-> > +  ports:
-> > +    type: object
-> > +    description:
-> > +      A node containing input and output port nodes with endpoint
-> > +      definitions as documented in
-> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +      Documentation/devicetree/bindings/graph.txt
-> > +
-> > +    properties:
-> > +      port@0:
-> > +        type: object
-> > +        description: Video port for HDMI input.
-> > +
-> > +        properties:
-> > +          reg:
-> > +            const: 0
-> > +
-> > +      port@1:
-> > +        type: object
-> > +        description:
-> > +          Video port for SlimPort, DisplayPort, eDP or MyDP output.
-> > +
-> > +        properties:
-> > +          reg:
-> > +            const: 1
-> > +
-> > +    required:
-> > +      - port@0
-> > +      - port@1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> 
-> See below ...
-> 
-> > +  - hpd-gpios
-> > +  - pd-gpios
-> > +  - reset-gpios
-> 
-> I know that these gpio attributes were required in the old binding and the
-> driver handles these gpios as required, but assuming that we should really
-> describe the hardware _not_ the driver, strictly talking, none of these gpios
-> are really required. The same happens with the interrupt, you can left the pin
-> floating and poll the registers.
-> 
-> So I am wondering if you should remove interrupts, *-gpios from required. Maybe
-> Rob Herring can give us more light on this?
+On Tue 21 Apr 08:43 PDT 2020, Paul Cercueil wrote:
 
-Agreed.
+> Hi Bjorn,
+> 
+> Le dim. 19 avril 2020 à 23:37, Bjorn Andersson <bjorn.andersson@linaro.org>
+> a écrit :
+> > On Fri 17 Apr 10:00 PDT 2020, Paul Cercueil wrote:
+> > 
+> > >  This driver is used to boot, communicate with and load firmwares to
+> > > the
+> > >  MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
+> > >  Ingenic.
+> > > 
+> > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > >  Signed-off-by: kbuild test robot <lkp@intel.com>
+> > >  Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+> > 
+> > Please read Documentation/process/submitting-patches.rst about
+> > "Developer's Certificate of Origin".
+> > 
+> > I suspect that you incorporated review feedback on previous revisions
+> > from kbuild and Julia, this is generally omitted from the actual commit
+> > message.
+> 
+> Julia / kbuild sent a patch to fix an error in the driver, so my patch now
+> has code from Julia / kbuild. That document clearly says that I should add
+> their signed-off-by. Or what do you mean?
+> 
 
-One step further is hpd-gpios should be deprecated as it should be in a 
-connector node.
+We generally don't attribute people whom through code review affected
+the outcome, unless perhaps it's significant.
 
+But a bigger problem is that per "Developer's Certificate of Origin 1.1"
+in submitting-patches.rst, what this says is:
+
+1) You wrote the patch, in whole or in part and have the right to
+   submit it to the public kernel. I.e. (a) and (d)
+
+2) Then "kbuild test robot" claims that either it based it's
+   contribution on your work, or that it forwards the unmodified work
+   ((b) or (c)) and (d).
+
+3) Then Julia again took the contribution from "kbuild test robot" and
+   is claiming to follow either (b) or (c) - and (d).
+
+Then somehow, after Julia stated that she dealt with the patch you
+emailed it to me.
+
+In order to claim that the three of you developed the patch together you
+should add all three as "Co-developed-by:", in addition to the signed
+off by.
+
+
+But again, my recommendation is that you consider their input as "review
+feedback" and just incorporate it in the patch without any additional
+tags. You're still fulfilling the certificate of origin.
+
+Regards,
+Bjorn
+
+> > >  Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > >  ---
+> > > 
+> > >  Notes:
+> > >      v2: Remove exception for always-mapped memories
+> > >      v3: - Use clk_bulk API
+> > >      	- Move device-managed code to its own patch [3/4]
+> > >      	- Move devicetree table right above ingenic_rproc_driver
+> > >      	- Removed #ifdef CONFIG_OF around devicetree table
+> > >      	- Removed .owner = THIS_MODULE in ingenic_rproc_driver
+> > >      	- Removed useless platform_set_drvdata()
+> > >      v4: - Add fix reported by Julia
+> > >      	- Change Kconfig symbol to INGENIC_VPU_RPROC
+> > >      	- Add documentation to struct vpu
+> > >      	- disable_irq_nosync() -> disable_irq()
+> > >      v5: No change
+> > >      v6: Instead of prepare/unprepare callbacks, use PM runtime
+> > > callbacks
+> > > 
+> > >   drivers/remoteproc/Kconfig         |   8 +
+> > >   drivers/remoteproc/Makefile        |   1 +
+> > >   drivers/remoteproc/ingenic_rproc.c | 282
+> > > +++++++++++++++++++++++++++++
+> > >   3 files changed, 291 insertions(+)
+> > >   create mode 100644 drivers/remoteproc/ingenic_rproc.c
+> > > 
+> > >  diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> > >  index fbaed079b299..31da3e6c6281 100644
+> > >  --- a/drivers/remoteproc/Kconfig
+> > >  +++ b/drivers/remoteproc/Kconfig
+> > >  @@ -240,6 +240,14 @@ config STM32_RPROC
+> > > 
+> > >   	  This can be either built-in or a loadable module.
+> > > 
+> > >  +config INGENIC_VPU_RPROC
+> > 
+> > Please try to keep things alphabetically ordered.
+> > 
+> > >  +	tristate "Ingenic JZ47xx VPU remoteproc support"
+> > >  +	depends on MIPS || COMPILE_TEST
+> > >  +	help
+> > >  +	  Say y or m here to support the VPU in the JZ47xx SoCs from
+> > > Ingenic.
+> > >  +	  This can be either built-in or a loadable module.
+> > >  +	  If unsure say N.
+> > >  +
+> > >   endif # REMOTEPROC
+> > > 
+> > >   endmenu
+> > [..]
+> > >  diff --git a/drivers/remoteproc/ingenic_rproc.c
+> > > b/drivers/remoteproc/ingenic_rproc.c
+> > [..]
+> > >  +/**
+> > >  + * struct vpu - Ingenic VPU remoteproc private structure
+> > >  + * @irq: interrupt number
+> > >  + * @clks: pointers to the VPU and AUX clocks
+> > 
+> > aux_base is missing
+> > 
+> > >  + * @mem_info: array of struct vpu_mem_info, which contain the
+> > > mapping info of
+> > >  + *            each of the external memories
+> > >  + * @dev: private pointer to the device
+> > >  + */
+> > >  +struct vpu {
+> > >  +	int irq;
+> > >  +	struct clk_bulk_data clks[2];
+> > >  +	void __iomem *aux_base;
+> > >  +	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
+> > >  +	struct device *dev;
+> > >  +};
+> > [..]
+> > >  +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da,
+> > > size_t len)
+> > >  +{
+> > >  +	struct vpu *vpu = rproc->priv;
+> > >  +	void __iomem *va = NULL;
+> > >  +	unsigned int i;
+> > >  +
+> > >  +	if (len <= 0)
+> > 
+> > len can't be negative (also, does it add value to check for and fail len
+> > == 0?)
+> > 
+> > >  +		return NULL;
+> > >  +
+> > >  +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+> > >  +		const struct vpu_mem_info *info = &vpu->mem_info[i];
+> > >  +		const struct vpu_mem_map *map = info->map;
+> > >  +
+> > >  +		if (da >= map->da && (da + len) < (map->da + info->len)) {
+> > >  +			va = info->base + (da - map->da);
+> > >  +			break;
+> > >  +		}
+> > >  +	}
+> > >  +
+> > >  +	return (__force void *)va;
+> > >  +}
+> > [..]
+> > >  +static struct platform_driver ingenic_rproc_driver = {
+> > >  +	.probe = ingenic_rproc_probe,
+> > >  +	.driver = {
+> > >  +		.name = "ingenic-vpu",
+> > >  +#ifdef CONFIG_PM
+> > 
+> > Please omit the #ifdef here.
 > 
-> Other than that:
+> If I do, then the PM callbacks will be compiled in even if CONFIG_PM is
+> disabled. That means dead code and I see no reason why you would want that.
 > 
-> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> If you don't mind, I'd like to keep the #ifdef CONFIG_PM for now, until this
+> patchset is merged: https://lkml.org/lkml/2020/4/13/582
 > 
-> Thanks,
->  Enric
+> Then it would become a one-liner:
+> .pm = pm_ptr(&ingenic_rproc_pm),
 > 
-> > +  - ports
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        anx7814: bridge@38 {
-> > +            compatible = "analogix,anx7814";
-> > +            reg = <0x38>;
-> > +            interrupt-parent = <&gpio0>;
-> > +            interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
-> > +            hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
-> > +            pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
-> > +            reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
-> > +
-> > +            ports {
-> > +                #address-cells = <1>;
-> > +                #size-cells = <0>;
-> > +
-> > +                port@0 {
-> > +                    reg = <0>;
-> > +                    anx7814_in: endpoint {
-> > +                        remote-endpoint = <&hdmi0_out>;
-> > +                    };
-> > +                };
-> > +
-> > +                port@1 {
-> > +                    reg = <1>;
-> > +                    anx7814_out: endpoint {
-> > +                        remote-endpoint = <&edp_out>;
-> > +                    };
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +...
+> Cheers,
+> -Paul
+> 
+> > >  +		.pm = &ingenic_rproc_pm,
+> > >  +#endif
+> > >  +		.of_match_table = of_match_ptr(ingenic_rproc_of_matches),
+> > 
+> > Please omit the of_match_ptr()
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> > >  +	},
+> > >  +};
+> > >  +module_platform_driver(ingenic_rproc_driver);
+> > >  +
+> > >  +MODULE_LICENSE("GPL");
+> > >  +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+> > >  +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control
+> > > driver");
+> > >  --
+> > >  2.25.1
+> > > 
+> 
+> 
