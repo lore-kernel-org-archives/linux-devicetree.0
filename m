@@ -2,110 +2,104 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC7BC2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA80C2D0FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 441EE20747
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MbiVsmNq"
+	by mail.kernel.org (Postfix) with ESMTP id BD3B120753
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 23:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589324998;
+	bh=21shcGboZ/UI67vsNX5V9akXKBR0/nMcHkMB8JizcQ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kqg/MOPe8gHqiKBEMFc+GBwLMXKrc0FNwiRASnmNk3gH4LwaBGOKzP8ETp6Q1B1Hh
+	 M2U+8iHDusF5Xm1IJTq+g/8Lb+gLH3axFVH7IUY7Jmx6ZXy8yX52ttgh84yyqzYD1a
+	 f9C53kQA/Ka0+Qq/SV5N11ly9KgvNXjw/HoNZaf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbgELXF7 (ORCPT
+        id S1729942AbgELXJ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 19:05:59 -0400
-Received: from vps.xff.cz ([195.181.215.36]:42250 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbgELXF7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 19:05:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1589324757; bh=blZoiLTu+A/avnSXLStZACMQViZsw7dUh1Z6i4t2+kc=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=MbiVsmNqQbA3s6tCEZDKId9/06UVSeWvW3s2p5J+RiuGPnl2vmJ23ft11kWJu1pe3
-         9j9B+V77r87Y6tThPEuo6W7svzgEbvQaZcoaRMYtWwj9aHdsEfiTByqxM6d3r+D5xJ
-         fK5AiiQOLtJPtWhlb3tG0auFZF432GWb7dAZwNd4=
-Date:   Wed, 13 May 2020 01:05:57 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: input: gpio-vibrator: Don't require
- enable-gpios
-Message-ID: <20200512230557.zvdgwhbqygc2fufv@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Luca Weiss <luca@z3ntu.xyz>, Tomas Novotny <tomas@novotny.cz>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>
-References: <20200512222205.1456300-1-megous@megous.com>
- <20200512222205.1456300-2-megous@megous.com>
- <20200512225212.GE89269@dtor-ws>
+        Tue, 12 May 2020 19:09:58 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40806 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELXJ6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 19:09:58 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v128so2972117oia.7;
+        Tue, 12 May 2020 16:09:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TjYd3leSKKn51ZfY7qRcr7llrPytDm0GdCIEZD2j8C0=;
+        b=YOcW1N/aZdkNavfBhDLaPPKkCJpdD0SC0EMMo/CW1nENoZkg5aEIo6bYvKbmffD4X1
+         CpySzjC7Hel/chlTNGwzBwd7jlrviOHs7IsRRZO05yzYV5/la3SjrgUdraxs2srAo0JN
+         k+fvGe+iAMogHhPoKpduAbzlJVIYQdSLVCbNf683JQIUWbE9bexnLH4MAn2E05/CUW5Z
+         WvJ/umlU21AIS6KAs4eT3QmxF8ZZgsatauhezwgjsy1wlsKSQey3AtK7KYSIs40HEJP+
+         lkl0WK8ajuJ6QWWvGUjAxrsWCd2OY/kzjyTDj/YfbbsCBKdjhLxQLjeM/JPSw/QRdS8u
+         v5CQ==
+X-Gm-Message-State: AGi0PuZAWZFjJXhhxZ3Q5uBdtblrrex3FIgWhfSO8TgzGargqS/EtK9X
+        JamKUDjbk+VJpRBS8NVx560jTW2OnA==
+X-Google-Smtp-Source: APiQypIp6z6XpDyeSpU/MQIh4PPKcXp8UTWOTpvjD0Pwk05Fb3joF3Y1t4vigT4+SMH68vOz8q6/qQ==
+X-Received: by 2002:aca:c68b:: with SMTP id w133mr23020989oif.27.1589324996924;
+        Tue, 12 May 2020 16:09:56 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 34sm385316otq.67.2020.05.12.16.09.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 16:09:56 -0700 (PDT)
+Received: (nullmailer pid 16218 invoked by uid 1000);
+        Tue, 12 May 2020 23:09:54 -0000
+Date:   Tue, 12 May 2020 18:09:54 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, vincenzo.frascino@arm.com,
+        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
+        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
+        tao.li@vivo.com, christophe.leroy@c-s.fr,
+        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
+        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
+Subject: Re: [RFC][PATCH 1/2] Add a layer of abstraction to use the memory
+ reserved by device tree for ima buffer pass.
+Message-ID: <20200512230954.GB2654@bogus>
+References: <20200504203829.6330-1-prsriva@linux.microsoft.com>
+ <20200504203829.6330-2-prsriva@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512225212.GE89269@dtor-ws>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200504203829.6330-2-prsriva@linux.microsoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 03:52:12PM -0700, Dmitry Torokhov wrote:
-> On Wed, May 13, 2020 at 12:22:02AM +0200, Ondrej Jirman wrote:
-> > It is possible to turn the motor on/off just by enabling/disabling
-> > the vcc-supply.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/input/gpio-vibrator.yaml | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> > index 2384465eaa19..c700b640bd53 100644
-> > --- a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> > +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> > @@ -24,7 +24,6 @@ properties:
-> >  
-> >  required:
-> >    - compatible
-> > -  - enable-gpios
-> 
-> Hmm we need at least one of the 2 (gpio and supply). Should we encode it
-> in the binding?
+On Mon, May 04, 2020 at 01:38:28PM -0700, Prakhar Srivastava wrote:
+> Introduce a device tree layer for to read and store ima buffer
+> from the reserved memory section of a device tree.
 
-Not sure how to encode either one or the other property being required, but
-not both at once.
+But why do I need 'a layer of abstraction'? I don't like them.
 
-Maybe I can add a supply-vibrator compatible to the driver and binding and
-make requirements dependent on the compatible?
+> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> ---
+>  drivers/of/Kconfig  |   6 ++
+>  drivers/of/Makefile |   1 +
+>  drivers/of/of_ima.c | 165 ++++++++++++++++++++++++++++++++++++++++++++
 
-> Also, in the dirver code, I guess we need to switch to have regulator
-> optional (so we are not given the dummy one) and bail if neither
-> regulator nor GPIO is found.
+Who are the users of this code and why does it need to be here? Most 
+code for specific bindings are not in drivers/of/ but with the user. It 
+doesn't sound like there's more than 1 user.
 
-Though nothing bad will happen in the driver if binding will lack both
-of these. The driver will just not control any HW, so at least it's
-failsafe as is.
-
-regards,
-	o.
-
-> Thanks.
-> 
-> -- 
-> Dmitry
+>  include/linux/of.h  |  34 +++++++++
+>  4 files changed, 206 insertions(+)
+>  create mode 100644 drivers/of/of_ima.c
