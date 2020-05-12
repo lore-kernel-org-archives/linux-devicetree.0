@@ -2,124 +2,98 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959BEC2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 17:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451F3C2D0F7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 17:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC7D20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 17:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230F7205ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 17:16:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbgELRBY (ORCPT
+        id S1728229AbgELRQq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 13:01:24 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:54412 "EHLO
+        Tue, 12 May 2020 13:16:46 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:54462 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgELRBY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 13:01:24 -0400
+        with ESMTP id S1726367AbgELRQq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 13:16:46 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 33F65803080B;
-        Tue, 12 May 2020 17:01:21 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AAD07803080B;
+        Tue, 12 May 2020 17:16:43 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IZmXehCXf_Nc; Tue, 12 May 2020 20:01:20 +0300 (MSK)
-Date:   Tue, 12 May 2020 20:01:18 +0300
+        with ESMTP id nQAwNaAOJaKm; Tue, 12 May 2020 20:16:42 +0300 (MSK)
+Date:   Tue, 12 May 2020 20:16:41 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
- parameter
-Message-ID: <20200512170118.3qbtpuphtwltb7nu@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
- <20200508112152.GI185537@smile.fi.intel.com>
- <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
- <20200512123551.GX185537@smile.fi.intel.com>
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <linux-mips@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: watchdog: dw-wdt: Support devices
+ with asynch clocks
+Message-ID: <20200512171641.vfrrqo54dii2yuur@mobilestation>
+References: <20200306132758.703FC8030704@mail.baikalelectronics.ru>
+ <20200510105807.880-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510105807.880-3-Sergey.Semin@baikalelectronics.ru>
+ <f065ff5f-af86-4293-b208-766e41699436@cogentembedded.com>
+ <477b9f75-485c-3208-b58c-56a5c13e15bb@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <20200512123551.GX185537@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <477b9f75-485c-3208-b58c-56a5c13e15bb@cogentembedded.com>
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 03:35:51PM +0300, Andy Shevchenko wrote:
-> On Tue, May 12, 2020 at 12:16:22AM +0300, Serge Semin wrote:
-> > On Fri, May 08, 2020 at 02:21:52PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
-> > > > Maximum block size DW DMAC configuration corresponds to the max segment
-> > > > size DMA parameter in the DMA core subsystem notation. Lets set it with a
-> > > > value specific to the probed DW DMA controller. It shall help the DMA
-> > > > clients to create size-optimized SG-list items for the controller. This in
-> > > > turn will cause less dw_desc allocations, less LLP reinitializations,
-> > > > better DMA device performance.
-> 
-> > > Yeah, I have locally something like this and I didn't dare to upstream because
-> > > there is an issue. We have this information per DMA controller, while we
-> > > actually need this on per DMA channel basis.
-> > > 
-> > > Above will work only for synthesized DMA with all channels having same block
-> > > size. That's why above conditional is not needed anyway.
-> > 
-> > Hm, I don't really see why the conditional isn't needed and this won't work. As
-> > you can see in the loop above Initially I find a maximum of all channels maximum
-> > block sizes and use it then as a max segment size parameter for the whole device.
-> > If the DW DMA controller has the same max block size of all channels, then it
-> > will be found. If the channels've been synthesized with different block sizes,
-> > then the optimization will work for the one with greatest block size. The SG
-> > list entries of the channels with lesser max block size will be split up
-> > by the DW DMAC driver, which would have been done anyway without
-> > max_segment_size being set. Here we at least provide the optimization for the
-> > channels with greatest max block size.
-> > 
-> > I do understand that it would be good to have this parameter setup on per generic
-> > DMA channel descriptor basis. But DMA core and device descriptor doesn't provide
-> > such facility, so setting at least some justified value is a good idea.
-> > 
-> > > 
-> > > OTOH, I never saw the DesignWare DMA to be synthesized differently (I remember
-> > > that Intel Medfield has interesting settings, but I don't remember if DMA
-> > > channels are different inside the same controller).
-> > > 
-> > > Vineet, do you have any information that Synopsys customers synthesized DMA
-> > > controllers with different channel characteristics inside one DMA IP?
-> > 
-> > AFAICS the DW DMAC channels can be synthesized with different max block size.
-> > The IP core supports such configuration. So we can't assume that such DMAC
-> > release can't be found in a real hardware just because we've never seen one.
-> > No matter what Vineet will have to say in response to your question.
-> 
-> My point here that we probably can avoid complications till we have real
-> hardware where it's different. As I said I don't remember a such, except
-> *maybe* Intel Medfield, which is quite outdated and not supported for wider
-> audience anyway.
+Hello Sergei
 
-I see your point. My position is different in this matter and explained in the
-previous emails. Let's see what Viresh and Vinod think of it.
+On Mon, May 11, 2020 at 11:28:00AM +0300, Sergei Shtylyov wrote:
+> On 11.05.2020 11:25, Sergei Shtylyov wrote:
+> 
+> > > DW Watchdog IP core can be synthesised with asynchronous timer/APB
+> > > clocks support (WDT_ASYNC_CLK_MODE_ENABLE == 1). In this case
+> > > a separate clock signal is supposed to be used to feed watchdog timer
+> > > and APB interface of the device. Lets along with the watchdog timer
+> >                                         ^ verb missing? or comma?
+> 
+>    Oh, and probably "Let's" too. :-)
+> 
+> > 
+> > > reference clock expect to have the optional APB3 bu interface clock
+> > > sepcified in a DW WDT dt node.
+> > 
+> >     Specified.
+
+Thanks for noticing this. I'll just change the sentence to: "Let's update
+the DW Watchdog DT node schema so it would support the optional APB3 bus
+clock specified along with the mandatory watchdog timer reference clock."
 
 -Sergey
 
+> > 
+> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > Cc: Paul Burton <paulburton@kernel.org>
+> > > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> > > Cc: linux-mips@vger.kernel.org
+> > [...]
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> MBR, Sergei
