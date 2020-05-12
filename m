@@ -2,288 +2,102 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BB3C47255
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 00:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A61C47255
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 00:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 806B5206F5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 00:11:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A3vS9Aan"
+	by mail.kernel.org (Postfix) with ESMTP id 48A842070B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 00:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgELAL7 (ORCPT
+        id S1726415AbgELA0Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 20:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725836AbgELAL6 (ORCPT
+        Mon, 11 May 2020 20:26:16 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:40554 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725881AbgELA0Q (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 20:11:58 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82903C061A0E
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 17:11:58 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a5so8639794pjh.2
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 17:11:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vD9bAWKm0TsbLrMap8l5gp1TwER8GEwlHBT3cJWURJ0=;
-        b=A3vS9AanzqTHedDnHkrlKHjJJPKbzJ481qfmYgNGQCT5/+iqlBJQ8sZHBLvmZMNlaD
-         U8SJxFmOP31XeFbpsNsvljK9W4vgwkNLuD5GGO5+4XEe+dkEBmfjgSxdQoVYasVbTbcS
-         2AwtXNhw9tdujY8v4Ka5SLlqc0Kb8TBgwMktWmcg+tsQgkPPzXv1JWqP6l5shhuk6rhh
-         CxECvWV+XGhzo3dUyY2fjuShqsCCl5GJNKpKigwNxdCC40PgsGNHu8qSPIUgCG28/9Kc
-         R+mCvUboHQWRekfz+AUgjpnhPf1yM8Y4oQfx1CWSaXT/gQLLI4BEMBvqFpYfTI0r8SGf
-         9XqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vD9bAWKm0TsbLrMap8l5gp1TwER8GEwlHBT3cJWURJ0=;
-        b=gSaXzlJCHYINTCylYh06Bymfo1KZ0mPQ3+aLoiOmqMR8OyxG6254/SolkYY0UFn6Io
-         jJgn6HkjCCm11O4krlbA0iwTqQHzFXMUk8hMzOCMAHnmd7Pb/mN7Gv8/Dhg9d42ctR8e
-         pKaK9Y+OwSyGzxwF415xmUuYjc1moPCzb4IGyVKNa1+DGoVYOxLDTWDGYx2OUkPtUrxC
-         o+uKHaWqlv4apnvEahwZLoE+oX8X1pu11CnNbatxlFEXSgMMI00b38Uhzx3Cgn7ZUeL6
-         y83k070N32DiMZALtoIXOGBrH1DZ1Svh6Tj3rAulNFkatpy+GCInAEdLirpN3tZUqEpD
-         D7+g==
-X-Gm-Message-State: AGi0PuaRUc94/vqDCwK/D1vSKW/1O9HueWwZKj+7QEto4sj004YkN+NH
-        tjm6U2I/YX7ZpH1PwINP4zQQRA==
-X-Google-Smtp-Source: APiQypLvk6MsGJTa1A0kGWCgqM1Q16u/OrBm7JPtAl8bp704ACdBitEEa1Efs7ZN7JLMElh0x+ew5g==
-X-Received: by 2002:a17:90a:8a09:: with SMTP id w9mr24099337pjn.95.1589242317883;
-        Mon, 11 May 2020 17:11:57 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c10sm10124975pfm.50.2020.05.11.17.11.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 17:11:57 -0700 (PDT)
-Date:   Mon, 11 May 2020 17:10:23 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v6 4/5] remoteproc: ingenic: Added remoteproc driver
-Message-ID: <20200512001023.GB5349@builder.lan>
-References: <20200417170040.174319-1-paul@crapouillou.net>
- <20200417170040.174319-4-paul@crapouillou.net>
- <20200420063714.GA1868936@builder.lan>
- <WCA59Q.IXGX82YOG4GI2@crapouillou.net>
+        Mon, 11 May 2020 20:26:16 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 9795A634C87;
+        Tue, 12 May 2020 03:25:18 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jYIjW-0001lF-GJ; Tue, 12 May 2020 03:25:18 +0300
+Date:   Tue, 12 May 2020 03:25:18 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>
+Subject: Re: [PATCH v8 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200512002518.GX867@valkosipuli.retiisi.org.uk>
+References: <20200511110350.11565-1-robert.foss@linaro.org>
+ <20200511110350.11565-3-robert.foss@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <WCA59Q.IXGX82YOG4GI2@crapouillou.net>
+In-Reply-To: <20200511110350.11565-3-robert.foss@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 21 Apr 08:43 PDT 2020, Paul Cercueil wrote:
+Hi Robert,
 
-> Hi Bjorn,
+On Mon, May 11, 2020 at 01:03:49PM +0200, Robert Foss wrote:
+> Add match table, enable ov8856_probe() to support
+> both ACPI and DT modes.
 > 
-> Le dim. 19 avril 2020 à 23:37, Bjorn Andersson <bjorn.andersson@linaro.org>
-> a écrit :
-> > On Fri 17 Apr 10:00 PDT 2020, Paul Cercueil wrote:
-> > 
-> > >  This driver is used to boot, communicate with and load firmwares to
-> > > the
-> > >  MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
-> > >  Ingenic.
-> > > 
-> > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > >  Signed-off-by: kbuild test robot <lkp@intel.com>
-> > >  Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
-> > 
-> > Please read Documentation/process/submitting-patches.rst about
-> > "Developer's Certificate of Origin".
-> > 
-> > I suspect that you incorporated review feedback on previous revisions
-> > from kbuild and Julia, this is generally omitted from the actual commit
-> > message.
+> ACPI and DT modes are primarily distinguished from
+> by checking for ACPI mode and by having resource like
+> be NULL.
 > 
-> Julia / kbuild sent a patch to fix an error in the driver, so my patch now
-> has code from Julia / kbuild. That document clearly says that I should add
-> their signed-off-by. Or what do you mean?
-> 
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
 
-We generally don't attribute people whom through code review affected
-the outcome, unless perhaps it's significant.
+Applied with this small diff --- please check with checkpatch.pl on the
+next time. Thanks!
 
-But a bigger problem is that per "Developer's Certificate of Origin 1.1"
-in submitting-patches.rst, what this says is:
+diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
+index 1657e03d9a9d..4ca27675cc5a 100644
+--- a/drivers/media/i2c/ov8856.c
++++ b/drivers/media/i2c/ov8856.c
+@@ -1226,8 +1226,7 @@ static int ov8856_get_hwcfg(struct ov8856 *ov8856, struct device *dev)
+ 	if (!fwnode)
+ 		return -ENXIO;
+ 
+-	ret = fwnode_property_read_u32(fwnode, "clock-frequency",
+-		&xvclk_rate);
++	ret = fwnode_property_read_u32(fwnode, "clock-frequency", &xvclk_rate);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1244,10 +1243,11 @@ static int ov8856_get_hwcfg(struct ov8856 *ov8856, struct device *dev)
+ 	}
+ 
+ 	if (xvclk_rate != OV8856_XVCLK_19_2)
+-		dev_warn(dev, "external clock rate %d is unsupported", xvclk_rate);
++		dev_warn(dev, "external clock rate %u is unsupported",
++			 xvclk_rate);
+ 
+ 	ov8856->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+-		GPIOD_OUT_LOW);
++						     GPIOD_OUT_LOW);
+ 	if (IS_ERR(ov8856->reset_gpio))
+ 		return PTR_ERR(ov8856->reset_gpio);
+ 
+-- 
+Kind regards,
 
-1) You wrote the patch, in whole or in part and have the right to
-   submit it to the public kernel. I.e. (a) and (d)
-
-2) Then "kbuild test robot" claims that either it based it's
-   contribution on your work, or that it forwards the unmodified work
-   ((b) or (c)) and (d).
-
-3) Then Julia again took the contribution from "kbuild test robot" and
-   is claiming to follow either (b) or (c) - and (d).
-
-Then somehow, after Julia stated that she dealt with the patch you
-emailed it to me.
-
-In order to claim that the three of you developed the patch together you
-should add all three as "Co-developed-by:", in addition to the signed
-off by.
-
-
-But again, my recommendation is that you consider their input as "review
-feedback" and just incorporate it in the patch without any additional
-tags. You're still fulfilling the certificate of origin.
-
-Regards,
-Bjorn
-
-> > >  Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > >  ---
-> > > 
-> > >  Notes:
-> > >      v2: Remove exception for always-mapped memories
-> > >      v3: - Use clk_bulk API
-> > >      	- Move device-managed code to its own patch [3/4]
-> > >      	- Move devicetree table right above ingenic_rproc_driver
-> > >      	- Removed #ifdef CONFIG_OF around devicetree table
-> > >      	- Removed .owner = THIS_MODULE in ingenic_rproc_driver
-> > >      	- Removed useless platform_set_drvdata()
-> > >      v4: - Add fix reported by Julia
-> > >      	- Change Kconfig symbol to INGENIC_VPU_RPROC
-> > >      	- Add documentation to struct vpu
-> > >      	- disable_irq_nosync() -> disable_irq()
-> > >      v5: No change
-> > >      v6: Instead of prepare/unprepare callbacks, use PM runtime
-> > > callbacks
-> > > 
-> > >   drivers/remoteproc/Kconfig         |   8 +
-> > >   drivers/remoteproc/Makefile        |   1 +
-> > >   drivers/remoteproc/ingenic_rproc.c | 282
-> > > +++++++++++++++++++++++++++++
-> > >   3 files changed, 291 insertions(+)
-> > >   create mode 100644 drivers/remoteproc/ingenic_rproc.c
-> > > 
-> > >  diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> > >  index fbaed079b299..31da3e6c6281 100644
-> > >  --- a/drivers/remoteproc/Kconfig
-> > >  +++ b/drivers/remoteproc/Kconfig
-> > >  @@ -240,6 +240,14 @@ config STM32_RPROC
-> > > 
-> > >   	  This can be either built-in or a loadable module.
-> > > 
-> > >  +config INGENIC_VPU_RPROC
-> > 
-> > Please try to keep things alphabetically ordered.
-> > 
-> > >  +	tristate "Ingenic JZ47xx VPU remoteproc support"
-> > >  +	depends on MIPS || COMPILE_TEST
-> > >  +	help
-> > >  +	  Say y or m here to support the VPU in the JZ47xx SoCs from
-> > > Ingenic.
-> > >  +	  This can be either built-in or a loadable module.
-> > >  +	  If unsure say N.
-> > >  +
-> > >   endif # REMOTEPROC
-> > > 
-> > >   endmenu
-> > [..]
-> > >  diff --git a/drivers/remoteproc/ingenic_rproc.c
-> > > b/drivers/remoteproc/ingenic_rproc.c
-> > [..]
-> > >  +/**
-> > >  + * struct vpu - Ingenic VPU remoteproc private structure
-> > >  + * @irq: interrupt number
-> > >  + * @clks: pointers to the VPU and AUX clocks
-> > 
-> > aux_base is missing
-> > 
-> > >  + * @mem_info: array of struct vpu_mem_info, which contain the
-> > > mapping info of
-> > >  + *            each of the external memories
-> > >  + * @dev: private pointer to the device
-> > >  + */
-> > >  +struct vpu {
-> > >  +	int irq;
-> > >  +	struct clk_bulk_data clks[2];
-> > >  +	void __iomem *aux_base;
-> > >  +	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
-> > >  +	struct device *dev;
-> > >  +};
-> > [..]
-> > >  +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da,
-> > > size_t len)
-> > >  +{
-> > >  +	struct vpu *vpu = rproc->priv;
-> > >  +	void __iomem *va = NULL;
-> > >  +	unsigned int i;
-> > >  +
-> > >  +	if (len <= 0)
-> > 
-> > len can't be negative (also, does it add value to check for and fail len
-> > == 0?)
-> > 
-> > >  +		return NULL;
-> > >  +
-> > >  +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
-> > >  +		const struct vpu_mem_info *info = &vpu->mem_info[i];
-> > >  +		const struct vpu_mem_map *map = info->map;
-> > >  +
-> > >  +		if (da >= map->da && (da + len) < (map->da + info->len)) {
-> > >  +			va = info->base + (da - map->da);
-> > >  +			break;
-> > >  +		}
-> > >  +	}
-> > >  +
-> > >  +	return (__force void *)va;
-> > >  +}
-> > [..]
-> > >  +static struct platform_driver ingenic_rproc_driver = {
-> > >  +	.probe = ingenic_rproc_probe,
-> > >  +	.driver = {
-> > >  +		.name = "ingenic-vpu",
-> > >  +#ifdef CONFIG_PM
-> > 
-> > Please omit the #ifdef here.
-> 
-> If I do, then the PM callbacks will be compiled in even if CONFIG_PM is
-> disabled. That means dead code and I see no reason why you would want that.
-> 
-> If you don't mind, I'd like to keep the #ifdef CONFIG_PM for now, until this
-> patchset is merged: https://lkml.org/lkml/2020/4/13/582
-> 
-> Then it would become a one-liner:
-> .pm = pm_ptr(&ingenic_rproc_pm),
-> 
-> Cheers,
-> -Paul
-> 
-> > >  +		.pm = &ingenic_rproc_pm,
-> > >  +#endif
-> > >  +		.of_match_table = of_match_ptr(ingenic_rproc_of_matches),
-> > 
-> > Please omit the of_match_ptr()
-> > 
-> > Regards,
-> > Bjorn
-> > 
-> > >  +	},
-> > >  +};
-> > >  +module_platform_driver(ingenic_rproc_driver);
-> > >  +
-> > >  +MODULE_LICENSE("GPL");
-> > >  +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-> > >  +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control
-> > > driver");
-> > >  --
-> > >  2.25.1
-> > > 
-> 
-> 
+Sakari Ailus
