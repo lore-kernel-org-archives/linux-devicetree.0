@@ -2,120 +2,113 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00528C47255
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652D7C47255
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE26E20722
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42EC32070B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589248294;
-	bh=TOxJQ8useNXlHqOGQiMvp/S/nDhqTDFghznaUa0/uIg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=B9zFXRj0RYk0aHv5qnPQxkxdbZPipt6I59GXC2M8d5jpVqFnM60Wvmpe2uTQcuDC0
-	 l9NMtvIePV6ylnUDuUIvffYOHJSBgmb5sMbE52fbcFnrc1L6vBTxIyIeGDBk9Jt2Hn
-	 UzhZ1eILMpCiqYNIVOkW415rVB2If/5adPjPGNYw=
+	s=default; t=1589248423;
+	bh=D2/Dzv5xPSDflurwBGXfs/h5PSeZ7OMcq06S+wsPV6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PUYXtylQNEyIqRYd6uV3d4PZRT5oG0+PfAUF4lYncxcG9TLjIbFV4Zg9Kr1JwTlXP
+	 goI3Ukyl4kDZsnvHJg7bQ0lOr0psxXEz0MaErkgg9azHO3T5XSnHyEJ4+m/+MdHS5L
+	 YXJk8Bp+CFM+xL4N0vePkUh87Poj4Kuee6E92Gcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgELBvc (ORCPT
+        id S1728452AbgELBxk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 21:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbgELBvc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 May 2020 21:51:32 -0400
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9193A20722;
-        Tue, 12 May 2020 01:51:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589248291;
-        bh=TOxJQ8useNXlHqOGQiMvp/S/nDhqTDFghznaUa0/uIg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=p5IIt7uZkMwrIw0sfUSXF2EWssNrJlRS+SHD0jR/hO7hOYSHT/ZJyLQ4f9rlKVh3+
-         h7SkEi+TrQHofsgPWS4jpxQtRfhnJA3ubSknMIlTXAcCkcSQ0m05Tf2Y6lbsTDnBdj
-         K13Wv8z8EqcNsxZ9VuwLBz2N/+kxE8jv11ZFf+lM=
-Received: by mail-oi1-f182.google.com with SMTP id o24so16932101oic.0;
-        Mon, 11 May 2020 18:51:31 -0700 (PDT)
-X-Gm-Message-State: AGi0PubAiBuDtHo/3eEM8rRqb5e8Rj9NQvCn4csMCZh8iA3fLw0IhymY
-        Dr3VTM8bn8yC3TXwM6UUslSAgON3LZXcHSS+Ew==
-X-Google-Smtp-Source: APiQypL/XqEe5cfCkvX4wVesmS2480UqrH6RbZniT1cjmaBIpnKBFXu2MNZpbZugUwsCKTbKaMG1sKVIuRyWE3/GCoY=
-X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr22849330oie.152.1589248290884;
- Mon, 11 May 2020 18:51:30 -0700 (PDT)
+        Mon, 11 May 2020 21:53:40 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42755 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgELBxj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 21:53:39 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m18so9240060otq.9;
+        Mon, 11 May 2020 18:53:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=daFGYc0o3GvaIjPzR6/Udzzo+tWkkyO8hcjap5qbb9s=;
+        b=rAPYIyvPktcQBkvsNMQPf03clZxcHy2Ni04E6qIkzy4uSyBTh31u1KCoIiTqR099pC
+         03UK55XaqerqRx+4FAThgoy+5KyxRyvlR7mG0WbCoj9vh1NKsGuP5lFXiifxCuoVHbC1
+         cDyq0IdtrnBpRaKzLMHX3yCGB9UmRX/sN7mRHILRHnrodMM4//fT5yiHDD/kWQBvcxrz
+         SqDaZkf+OnvYGoI+sfzK18bhZYwUFLmx9NtSRS8I2/u32LBSNLFsnryy1H5oXuI03KGl
+         Ps2jXMQtJPaLnoP6lQ17uAhKvWReIA91OqEZ7mtB1dHw9oEdbj1iYK4BXlU+w+4jxpBW
+         HGpg==
+X-Gm-Message-State: AGi0PuZGiMWLTJG4enFLHDThbrQdBc6ZlTwJrkAHaNuPiYUqc0JY14Qs
+        WuxNPibtuSxOqC9bpjURuQ==
+X-Google-Smtp-Source: APiQypIxgXqdx3cx31SCjMZl/t8jJMjD1vREWgFc4w7UpMQFE2oKD32mY52N/woXbeBeF4cYmIRKnA==
+X-Received: by 2002:a9d:5cc1:: with SMTP id r1mr14040732oti.329.1589248418475;
+        Mon, 11 May 2020 18:53:38 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l21sm3263751ooq.18.2020.05.11.18.53.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 18:53:37 -0700 (PDT)
+Received: (nullmailer pid 14764 invoked by uid 1000);
+        Tue, 12 May 2020 01:53:36 -0000
+Date:   Mon, 11 May 2020 20:53:36 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>, devicetree@vger.kernel.org,
+        mka@chromium.org, Jonathan.Cameron@huawei.com,
+        linux-arm-msm-owner@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, agross@kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        bjorn.andersson@linaro.org, smohanad@codeaurora.org,
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        aghayal@codeaurora.org, kgunda@codeaurora.org,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH V3 2/4] iio: adc: Add PMIC7 ADC bindings
+Message-ID: <20200512015336.GA14725@bogus>
+References: <1587993846-30773-1-git-send-email-jprakash@codeaurora.org>
+ <1587993846-30773-3-git-send-email-jprakash@codeaurora.org>
 MIME-Version: 1.0
-References: <20200508134527.26555-1-etienne.carriere@linaro.org>
-In-Reply-To: <20200508134527.26555-1-etienne.carriere@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 11 May 2020 20:51:19 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJVaWDYZWwRwotSQyaL5bOugM3judxipS9oKveV3FdK8w@mail.gmail.com>
-Message-ID: <CAL_JsqJVaWDYZWwRwotSQyaL5bOugM3judxipS9oKveV3FdK8w@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: nvmem: stm32: new property for data access
-To:     Etienne Carriere <etienne.carriere@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Etienne Carriere <etienne.carriere@st.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587993846-30773-3-git-send-email-jprakash@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 8, 2020 at 8:47 AM Etienne Carriere
-<etienne.carriere@linaro.org> wrote:
->
-> From: Etienne Carriere <etienne.carriere@st.com>
->
-> Introduce boolean property st,non-secure-otp for OTP data located
-> in a factory programmed area that only secure firmware can access
-> by default and that shall be reachable from the non-secure world.
->
-> Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+On Mon, 27 Apr 2020 18:54:03 +0530, Jishnu Prakash wrote:
+> Add documentation for PMIC7 ADC peripheral.
+> For the PMIC7-type PMICs, ADC peripheral is present in HW for the
+> following PMICs: PMK8350, PM8350, PM8350b, PMR735a and PMR735b.
+> Of these, only the ADC peripheral on PMK8350 is exposed directly to SW.
+> If SW needs to communicate with ADCs on other PMICs, it specifies the
+> PMIC to PMK8350 through the newly added SID register and communication
+> between PMK8350 ADC and other PMIC ADCs is carried out through
+> PBS(Programmable Boot Sequence) at the firmware level.
+> 
+> In addition, add definitions for ADC channels and virtual channel
+> definitions (combination of ADC channel number and PMIC SID number)
+> per PMIC, to be used by ADC clients for PMIC7.
+> 
+> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
 > ---
->  .../bindings/nvmem/st,stm32-romem.yaml          | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-> index d84deb4774a4..c11c99f085d7 100644
-> --- a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-> +++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-> @@ -24,6 +24,18 @@ properties:
->        - st,stm32f4-otp
->        - st,stm32mp15-bsec
->
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +
-> +    properties:
-> +      st,non-secure-otp:
-> +        description: |
-> +          This property explicits a factory programmed area that both secure
-> +          and non-secure worlds can access. It is needed when, by default, the
-> +          related area can only be reached by the secure world.
-> +        type: boolean
-> +
->  required:
->    - "#address-cells"
->    - "#size-cells"
-> @@ -41,6 +53,11 @@ examples:
->        calib@22c {
->          reg = <0x22c 0x2>;
->        };
-> +
-> +      mac_addr@e4 {
-> +        reg = <0xe4 0x8>;
-> +        st,non-secure-otp;
+>  .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 38 ++++++++--
+>  include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h    | 67 ++++++++++++++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h   | 88 ++++++++++++++++++++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h   | 46 +++++++++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h   | 28 +++++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h   | 28 +++++++
+>  include/dt-bindings/iio/qcom,spmi-vadc.h           | 78 ++++++++++++++++++-
+>  7 files changed, 366 insertions(+), 7 deletions(-)
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
+> 
 
-This fails validation. You need to drop 'additionalProperties' in nvmem.yaml.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
