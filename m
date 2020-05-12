@@ -2,113 +2,93 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C27C2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4150BC2D0F8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C74AB20753
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FB5520784
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589323000;
-	bh=F8thMHFpOoTc+X+oX0gWc13vqkuqc5TqpRly24TLFBw=;
+	s=default; t=1589323276;
+	bh=7fD4j0HDLDWy+l/bqAGdwrtTkG01AdAvJfWWFc9D0/A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DsVbP0hHO6lEGtw+NdP6zgm5N2VN1HN7VDEeGjQ+nvQRv7ODrJViDaos3iEiGwmDO
-	 uvhW3yS9yOvqLkmxA+AhBbmzV9KTkeVoKLfP7qI5IOL8I891xPdE5cX7Ea7Xa6OGff
-	 TkIYsJVZZiDCqbSwaQNYUsq73pFVHqgNFjlzx5m0=
+	b=qPnKsZsrLSMO5ICyqL34cSX7LsaNSe0WD5H1qxrMzCQ+fCAZXGBUtwpcRLdup8gSd
+	 PZUDenh7LelfOvCICA2CVMyH6a9QhyWPTbZvg/Ahi+bB+tX8B0Nl31vnAD2onLfbdP
+	 ncGGgADkfa/2v+CRWYVYxIYPCFG7kK8N1sDgvGTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbgELWgk (ORCPT
+        id S1727899AbgELWlP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 18:36:40 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33447 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731446AbgELWgj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 18:36:39 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o24so19747670oic.0;
-        Tue, 12 May 2020 15:36:37 -0700 (PDT)
+        Tue, 12 May 2020 18:41:15 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33944 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbgELWlP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 18:41:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id c12so18742456oic.1;
+        Tue, 12 May 2020 15:41:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DMxDIXDzLCKt7/FZAgJOYUjlucyVAROiKIdkVoNPTcE=;
-        b=H/R0E+irhlDRdwJ860RBSH0wuZv8pxyn4hUv8y2kZyeABLjl1HLzwBrlNgIrTqlpTO
-         OVUhroObgqK0eBSCr5UgDcRSQ0p5ifNETwxRiYGLCCQs5EpNUZumeJCPZTMGhJQMC7Ui
-         Y3WBAdNrG1zvYdToXehQ3/+f+8Q67gYrvsCIDZvpwPHDvTFLBCigM+MLY0xFWRdPX9QG
-         NHOybB8WflB4tNY7HSYAexFHIaU3lN+lHjIadWm7Un4fzavtJavW/VApin6ODZiUMvLF
-         Ei5cwRNDCABcL6wPMApAEx2gJDe7r4D3Us2E+tx3wtI9M2IO4/W28uMpNIzdbkIvcfuZ
-         qGtA==
-X-Gm-Message-State: AGi0PuYyUpZN/bGSw09bDrtOggzqQ1WOVUQlw4xfUrP8nchsfYUvP06z
-        olcF6jdtzioBP+tHwSnWaQ==
-X-Google-Smtp-Source: APiQypJwnhyxtltXnPyrLYLZJfq4iQV22Gfpsa8yAlB/wGQ6opTOCR9z7OkySss3KITYFyLX2D2A0w==
-X-Received: by 2002:aca:c546:: with SMTP id v67mr23978628oif.84.1589322997255;
-        Tue, 12 May 2020 15:36:37 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=cr8pEezfGzmQ0Mn3r2/CPVqAGMkNpCECgIt4va/Dbb0=;
+        b=mQBXNX70rsYyZz1H3yki/KE9uuoBxsrFX1ChwJQK8JMULs/qkPDxEpZzc3PQN/yHYA
+         dTD7hwGS+XDjKKytIpEHe7CVtR20dIMxIa4l8Dybxgnerlx+f2A6Eik6dhsop/snfp3L
+         vhniJa/zyOaFhTwAiw8kx5L52MlJdZAB3xaWTfWKk9OuLaqkOR6utA1tL8Un7FUOUelP
+         2B3d1yca7VTJ94Oc9bPXmnN329Lli4YalUfqrqE9h49g6Z3ybWnxnzknIXyDTB2H/zrR
+         eS0UKXVfW6jkL5YUUg1JP39Ue+oGMnRvGWsQvIP7i8TF/ciLcN07qb6M7wZg09iiyOWy
+         i+Zw==
+X-Gm-Message-State: AGi0PuYgK4TvagJjIRSNnEWf7R//54X0U43VFuAOtMM9Lge9Fgg0AAPJ
+        qE7GTPmoneHnXY6pC2ILSA==
+X-Google-Smtp-Source: APiQypJ2KQOzWEjBNgc6Ql69L7UqFeBqesWncTCUO9jKM4QP6iZAAHIdEhbt+VhqH5aV59DKlW73+g==
+X-Received: by 2002:aca:fdd5:: with SMTP id b204mr26424284oii.167.1589323273009;
+        Tue, 12 May 2020 15:41:13 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h189sm853803oif.10.2020.05.12.15.36.36
+        by smtp.gmail.com with ESMTPSA id g30sm676838oiy.42.2020.05.12.15.41.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:36:36 -0700 (PDT)
-Received: (nullmailer pid 29796 invoked by uid 1000);
-        Tue, 12 May 2020 22:36:35 -0000
-Date:   Tue, 12 May 2020 17:36:35 -0500
+        Tue, 12 May 2020 15:41:12 -0700 (PDT)
+Received: (nullmailer pid 4283 invoked by uid 1000);
+        Tue, 12 May 2020 22:41:11 -0000
+Date:   Tue, 12 May 2020 17:41:11 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Ravi Kumar Bokka <rbokka@codeaurora.org>
-Cc:     rnayak@codeaurora.org, Rob Herring <robh+dt@kernel.org>,
-        saiprakash.ranjan@codeaurora.org, sparate@codeaurora.org,
-        mturney@codeaurora.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        mkurumel@codeaurora.org, linux-kernel@vger.kernel.org,
-        dhavalp@codeaurora.org, c_rbokka@codeaurora.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC v1 1/3] dt-bindings: nvmem: Add devicetree bindings for
- qfprom-efuse
-Message-ID: <20200512223635.GA29448@bogus>
-References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
- <1589307480-27508-2-git-send-email-rbokka@codeaurora.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, sre@kernel.org
+Subject: Re: [RESEND PATCH v3] dt-bindings: power: Convert bq27xxx dt to yaml
+Message-ID: <20200512224111.GA4211@bogus>
+References: <20200512191900.966-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1589307480-27508-2-git-send-email-rbokka@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200512191900.966-1-dmurphy@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 May 2020 23:47:58 +0530, Ravi Kumar Bokka wrote:
-> This patch adds dt-bindings document for qfprom-efuse controller.
+On Tue, 12 May 2020 14:19:00 -0500, Dan Murphy wrote:
+> Convert the bq27xxx.txt to yaml format
 > 
-> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> CC: Pali Rohár <pali@kernel.org>
+> CC: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  .../devicetree/bindings/nvmem/qfprom-efuse.yaml    | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml
+> 
+> v3 - Added power supply reference to yaml, fixed the deprecated compatibles,
+> I did not change any compatibles as discussed in the list these should come in
+> separate patches - https://lore.kernel.org/patchwork/patch/1237912/
+> 
+>  .../bindings/power/supply/bq27xxx.txt         | 56 ------------
+>  .../bindings/power/supply/bq27xxx.yaml        | 91 +++++++++++++++++++
+>  2 files changed, 91 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
 > 
 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml:  while scanning a block scalar
-  in "<unicode string>", line 30, column 5
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 34, column 1
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/nvmem/qfprom-efuse.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/nvmem/qfprom-efuse.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1288685
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
