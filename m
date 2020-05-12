@@ -2,118 +2,68 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CB5C54E8B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9554FC54E4A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B873520736
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:19:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mglqha6z"
+	by mail.kernel.org (Postfix) with ESMTP id 777AD20736
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 09:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729243AbgELJTu (ORCPT
+        id S1728490AbgELJWB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 05:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726024AbgELJTt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 05:19:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD24C061A0C;
-        Tue, 12 May 2020 02:19:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t40so9093817pjb.3;
-        Tue, 12 May 2020 02:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eljqxU5QjvaLul3lBAtBBOmNN4PsgBS7SMSl69Yllas=;
-        b=Mglqha6zf4yCyBuN1JhM/UvGpoJccJ0mz+FVC/tYpYCPTiXEuamRf/XY7WUy6QyNfI
-         LY1DNTH4E3eV3ddLsU6PxfXjmwgQkXShWdfg6VlQffwoJ/JJv/79gQrLI18ZDZYA9rdA
-         t765sebL8CNfI4SlkzDSYOliuKxlDN5vp9SwwNkYSQpQvc1S8u8BnKdikmDu+pjLxa3O
-         UonXJq41yRadaD4J7083xLeRG5fbyXy4/FML4a/8cjcSP8+dm7epzTVzNJVR9htmqmSv
-         fRLBlj4ZoL/IV6usCtprKQDBb9UpZCyWwecUCazD8CsARM0pGNB1bRki9TfcgNeIVTuF
-         GhmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eljqxU5QjvaLul3lBAtBBOmNN4PsgBS7SMSl69Yllas=;
-        b=SWolA+qRmi/9GSEDNndtIdttpQnz7cH7+AfDO0vRJERgNya7JShW3G/j/audzq+/lz
-         laUdloVraTA7E+pqtHwFP5T7OEfqkMzVTOVlukQ0GYszvc7tpYbBxlv2u38ouWZwx9Np
-         w8Vvv7gXnjRlDhvsm3x1l+/kMeHoLsQbgFaMBi0kp9Z7a1p6BHjXu/m2+NS7+K4NO9We
-         ybVPOS8i6/LXbJA5clHk9NIGH+j3QAlGGXyeKTfBXip+pBQohqa3IKMgOF9YANmEHyPJ
-         cQribLkj1fpTDJ25no6tzR+nWQ73kYqK5rf5hT0bZiRUpu6YnK/voadN47K39u0ViE4o
-         QxUQ==
-X-Gm-Message-State: AGi0PuZKWnbIzW2qcrQmi8JBUoG2+dTlO5WGMvfqnoxGEgzGDR0zVvc1
-        w50/C0rgp+4g8log+Tr9IYo=
-X-Google-Smtp-Source: APiQypJ9gTfQbVWhwVvBIvaeS/BnzgA7vFw4SAoPPieKhgGQanQt+xg/c333SFLbyoeyvyjH3AqW4g==
-X-Received: by 2002:a17:90a:9295:: with SMTP id n21mr26444117pjo.195.1589275189436;
-        Tue, 12 May 2020 02:19:49 -0700 (PDT)
-Received: from localhost.localdomain ([2001:2d8:308:9c7a:d5fe:3ea6:5791:c8e8])
-        by smtp.gmail.com with ESMTPSA id b16sm11546944pfp.89.2020.05.12.02.19.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 02:19:48 -0700 (PDT)
-From:   Steve Lee <steves.lee.maxim@gmail.com>
-X-Google-Original-From: Steve Lee <steves.lee@maximintegrated.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
-        steves.lee@maximintegrated.com, steves.lee.maxim@gmail.com
-Subject: [V2 PATCH 1/2] dt-bindings: Added device tree binding for max98390
-Date:   Tue, 12 May 2020 18:18:46 +0900
-Message-Id: <20200512091846.31207-1-steves.lee@maximintegrated.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 12 May 2020 05:22:01 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33148 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbgELJWB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 05:22:01 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id E913C2A18F5
+Subject: Re: [PATCH 1/6] tty/sysrq: Remove linux,sysrq-reset-seq
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, kernel@collabora.com
+References: <20200511135918.8203-1-andrzej.p@collabora.com>
+ <20200511135918.8203-2-andrzej.p@collabora.com>
+ <20200511175812.GT89269@dtor-ws>
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Message-ID: <0922f55d-f1a9-e312-8205-b324217e936e@collabora.com>
+Date:   Tue, 12 May 2020 11:21:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200511175812.GT89269@dtor-ws>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for DT binding of max98390 amplifier driver.
+Hi Dmitry,
 
-Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
----
- .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
+W dniu 11.05.2020 o 19:58, Dmitry Torokhov pisze:
+> Hi Andrzej,
+> 
+> On Mon, May 11, 2020 at 03:59:13PM +0200, Andrzej Pietrasiewicz wrote:
+>> Nobody in the tree uses linux,sysrq-reset-seq in Device Tree source files.
+>> Remove the corresponding code.
+> 
+> Unlike platform data, we do not require or even expect that all DT users
+> be present in mainline, so absence if references to a feature in kernel
+> can not serve as justification for removal. Consider the fact that we
+> support DT-style binding in ACPI (which is BIOS/firmware).
+> 
+> That said, I am not against removing this support, but we need to make
+> sure that Android (where this came from) does not use this anymore.
 
-diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
-new file mode 100644
-index 000000000000..0ddd4c6ae55e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/max98390.txt
-@@ -0,0 +1,26 @@
-+Maxim Integrated MAX98390 Speaker Amplifier
-+
-+This device supports I2C.
-+
-+Required properties:
-+
-+ - compatible : "maxim,max98390"
-+
-+ - reg : the I2C address of the device.
-+
-+Optional properties:
-+
-+- maxim,temperature_calib
-+  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
-+
-+- maxim,r0_calib
-+  u32. This is r0 calibration data which was measured in factory mode.
-+
-+Example:
-+
-+codec: max98390@38 {
-+	compatible = "maxim,max98390";
-+	reg = <0x38>;
-+	maxim,temperature_calib = <1024>;
-+	maxim,r0_calib = <100232>;
-+};
--- 
-2.17.1
+How can I do it? Can I at all?
+
+Andrzej
 
