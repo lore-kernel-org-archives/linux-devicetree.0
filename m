@@ -2,137 +2,191 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7DDC54E8E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90054C54E8E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B00020673
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F62D2075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 14:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pL400oUO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nXwB/8/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbgELOYW (ORCPT
+        id S1726946AbgELO0x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 10:24:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725929AbgELOYV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 10:24:21 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4363AC061A0C;
-        Tue, 12 May 2020 07:24:21 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id j2so1632928ilr.5;
-        Tue, 12 May 2020 07:24:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rHPCRyECAcM8k/cCdpKgX/ZG7bOYLJtrdapfMB8yHTY=;
-        b=pL400oUOmAbd00DWGg45pkmL9RaYHaSg0EMnVTCe13VpTIwWykhkyVyy+4r+WyoLVz
-         7FsIjn4CGjupx/7voxxuK4RFDbUEAxeFVMgyArXMO9PCj8M/a1980V33qwl8Ig6Sml99
-         ABgVQ7DUfri85Qk9eWeVWYWVEgDpHKjK6KzsceQqWZUK63ExHiy5Xu3KIdt0kI8rz55N
-         xnTzuNSd80B4X5LY7GXe4cpaHlCHfDe7iduvh0Qxff7utifkz+yfh4SnEfdKZispRiW2
-         3vSi6u8ZzySDWb3nq85Msah09Q8zntlB0W6pdgPvoFLvJTZvi8QUT2OyJR+QPRSRztw/
-         eELw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rHPCRyECAcM8k/cCdpKgX/ZG7bOYLJtrdapfMB8yHTY=;
-        b=Qdx/abfKtvMQPhrzLCaKvPFzrS+Sis3Uj56rLGQLWwhHb7Zjw9zt0+SjUmOwoa4mTO
-         9jByLdz2t6T7eu1IftXIXCo99Dd6YSlIrIX9jaWisv+r0e9deJG0Pi/xOX9TcieKKQ9C
-         A+F85JX0hpMToBoCSxvHb2ednjhfRA4cOfflWY367WM3XyLSs2T4zTZbwb3reiOSZQjG
-         rP4aPO9mD2lGt9uC7pT9088ldrp0W+Mky7fg9u7lWmm6nHoinpBX9xUJuMq9PMlWVJe/
-         uiRvOD3oNRVjhsCewZab/Y6G+bVDCL7lMpB4BEEDw10TAK7kKi7ABoxNTbUYN3rY+54O
-         0Ahg==
-X-Gm-Message-State: AGi0PuYwH6zKMK4oVej52KBCvCpd6l4BwiN+SPNR9R2P1+oi6rlK6WDJ
-        LCPjlSAaQfE+/0OU6TNE5IjRhVMYAXpJVKkPMDE=
-X-Google-Smtp-Source: APiQypIFGaWFT/sin8nzW7GPMz/bf3+8hyeBW5SceLin9d02vPh/G5jzdUF5gSilruEh5HwTVCfzhHp34i+OXseVuQg=
-X-Received: by 2002:a92:2904:: with SMTP id l4mr13035243ilg.159.1589293460473;
- Tue, 12 May 2020 07:24:20 -0700 (PDT)
+        Tue, 12 May 2020 10:26:53 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:59329 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728283AbgELO0w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 10:26:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589293612; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=17JUrE+s/QDDXy89Jqf85KXy7LcDgoEQ+zmjSMMCUz8=; b=nXwB/8/SlKmtwz8rEBagXY7Gmz8UELMIk6DXY7EWC0faVptV9UupcUc5MCNNqEQO9RKMEaRc
+ i3zUe71Lq7TdgLlVJv/v0mgv8Dtvd/9eplqbY3rsNVqQwsZkXYNbXashMUlxKyFIa62R/Bb2
+ boT1MdBPVX9fsTrFI8zGNq9H5Cw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebab208.7f67daffad88-smtp-out-n04;
+ Tue, 12 May 2020 14:26:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B923CC43637; Tue, 12 May 2020 14:26:16 +0000 (UTC)
+Received: from [192.168.1.100] (unknown [27.59.216.88])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4FCE1C433F2;
+        Tue, 12 May 2020 14:26:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4FCE1C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V5 1/7] soc: qcom: geni: Support for ICC voting
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org, georgi.djakov@linaro.org
+References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
+ <1588919619-21355-2-git-send-email-akashast@codeaurora.org>
+ <20200508190301.GG4525@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <adacee1f-41b3-140a-d72a-4df3c42dd2fa@codeaurora.org>
+Date:   Tue, 12 May 2020 19:56:05 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200511193643.30926-5-alcooperx@gmail.com> <Pine.LNX.4.44L0.2005111542310.11417-100000@netrider.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2005111542310.11417-100000@netrider.rowland.org>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Tue, 12 May 2020 10:24:09 -0400
-Message-ID: <CAOGqxeXSZY6-NNCvrYmurVb1q9e5_fJVdpU3EwO4vFV+hpxwvg@mail.gmail.com>
-Subject: Re: [PATCH v9 4/5] usb: ehci: Add new EHCI driver for Broadcom STB SoC's
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200508190301.GG4525@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 11, 2020 at 3:51 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Mon, 11 May 2020, Al Cooper wrote:
->
-> > Add a new EHCI driver for Broadcom STB SoC's. A new EHCI driver
-> > was created instead of adding support to the existing ehci platform
-> > driver because of the code required to work around bugs in the EHCI
-> > controller. The primary workaround is for a bug where the Core
-> > violates the SOF interval between the first two SOFs transmitted after
-> > resume. This only happens if the resume occurs near the end of a
-> > microframe. The fix is to intercept the ehci-hcd request to complete
-> > RESUME and align it to the start of the next microframe.
-> >
-> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> > ---
->
-> I hate to point this out...
->
-> > +static int ehci_brcm_probe(struct platform_device *pdev)
-> > +{
-> > +     struct device *dev = &pdev->dev;
-> > +     struct resource *res_mem;
-> > +     struct brcm_priv *priv;
-> > +     struct usb_hcd *hcd;
-> > +     int irq;
-> > +     int err;
-> > +
-> > +     err = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     irq = platform_get_irq(pdev, 0);
-> > +     if (irq <= 0)
-> > +             return irq ? irq : EINVAL;
->
-> That should be -EINVAL.
->
-> To tell the truth, I'm not sure it's worthwhile checking for irq == 0.
-> That's up to Greg to decide.
+Hi Matthias,
 
-Darn, I've been looking at this code for too long :(
-Since Greg originally requested <=, I'll fix this and send v10.
+On 5/9/2020 12:33 AM, Matthias Kaehlcke wrote:
+> On Fri, May 08, 2020 at 12:03:33PM +0530, Akash Asthana wrote:
+>> Add necessary macros and structure variables to support ICC BW
+>> voting from individual SE drivers.
+>>
+>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>> ---
+>> Changes in V2:
+>>   - As per Bjorn's comment dropped enums for ICC paths, given the three
+>>     paths individual members
+>>
+>> Changes in V3:
+>>   - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
+>>   - Add geni_icc_path structure in common header
+>>
+>> Changes in V4:
+>>   - As per Bjorn's comment print error message in geni_icc_get if return
+>>     value is not -EPROBE_DEFER.
+>>   - As per Bjorn's comment remove NULL on path before calling icc_set_bw
+>>     API.
+>>   - As per Bjorn's comment drop __func__ print.
+>>   - As per Matthias's comment, make ICC path a array instead of individual
+>>     member entry in geni_se struct.
+>>
+>> Note: I have ignored below check patch suggestion because it was throwing
+>>        compilation error as 'icc_ddr' is not compile time comstant.
+>>
+>> WARNING: char * array declaration might be better as static const
+>>   - FILE: drivers/soc/qcom/qcom-geni-se.c:726:
+>>   - const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
+>>
+>> Changes in V5:
+>>   - As per Matthias's comment defined enums for ICC paths.
+>>   - Integrate icc_enable/disable with power on/off call for driver.
+>>   - As per Matthias's comment added icc_path_names array to print icc path name
+>>     in failure case.
+>>   - As per Georgi's suggestion assume peak_bw = avg_bw if not mentioned.
+>>
+>>   drivers/soc/qcom/qcom-geni-se.c | 92 +++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/qcom-geni-se.h    | 42 +++++++++++++++++++
+>>   2 files changed, 134 insertions(+)
+>>
+>> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+>> index 7d622ea..63403bf 100644
+>> --- a/drivers/soc/qcom/qcom-geni-se.c
+>> +++ b/drivers/soc/qcom/qcom-geni-se.c
+>> @@ -92,6 +92,9 @@ struct geni_wrapper {
+>>   	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+>>   };
+>>   
+>> +static const char * const icc_path_names[] = {"qup-core", "qup-config",
+>> +								"qup-memory"};
+>> +
+>>   #define QUP_HW_VER_REG			0x4
+>>   
+>>   /* Common SE registers */
+>> @@ -720,6 +723,95 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
+>>   }
+>>   EXPORT_SYMBOL(geni_se_rx_dma_unprep);
+>>   
+>> +int geni_icc_get(struct geni_se *se, const char *icc_ddr)
+>> +{
+>> +	int i, icc_err;
+>> +	const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(se->icc_paths); i++) {
+>> +		if (!icc_names[i])
+>> +			continue;
+>> +
+>> +		se->icc_paths[i].path = devm_of_icc_get(se->dev, icc_names[i]);
+>> +		if (IS_ERR(se->icc_paths[i].path))
+>> +			goto icc_get_failure;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +icc_get_failure:
+>> +	icc_err = PTR_ERR(se->icc_paths[i].path);
+>> +	if (icc_err != -EPROBE_DEFER)
+>> +		dev_err_ratelimited(se->dev, "Failed to get ICC path:%s, ret:%d\n",
+>> +					icc_names[i], icc_err);
+>> +	return icc_err;
+>> +
+>> +}
+>> +EXPORT_SYMBOL(geni_icc_get);
+>> +
+>> +void geni_icc_bw_init(struct geni_icc_path *icc_paths, unsigned int avg_bw,
+>> +			unsigned int peak_bw)
+> I noticed that all callers of geni_icc_bw_init() pass 0 as
+> 'peak_pw' (aka peak == avg). Unless there are plans to use other
+> values for the peak bandwidth in the future it is pointless to
+> track the bandwidth(s) in two variables. And if the bandwidth is
+> tracked in a single variable this function is not needed.
 
-Thanks
-Al
+As of now we are not aware of our peak requirement(avg requirement works 
+good for us) so I am passing (peak = avg) as per Georgi's suggestion.
+
+But I wanted to make this feature more generic and keeping the 
+possibilty open that we might have to use other peak(!=0) value in future.
+
+Regards,
+
+Akash
 
 >
-> Anyway, as far as I'm concerned you can either change EINVAL to -EINVAL
-> or change the whole thing back to "if (irq < 0) return irq;".  Either
-> way, you may add:
->
-> Acked-by: Alan Stern <stern@rowland.harvard.edu>
->
-> Alan Stern
->
+>> +{
+>> +	if (!peak_bw)
+>> +		peak_bw = avg_bw;
+>> +	icc_paths->avg_bw = avg_bw;
+>> +	icc_paths->peak_bw = peak_bw;
+>> +}
+>> +EXPORT_SYMBOL(geni_icc_bw_init);
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
