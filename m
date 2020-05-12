@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B31BC2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA12C2D0FA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEC423126
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155FC24927
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:25:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="l0Q6aaZM"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DmFTUbcv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731553AbgELWY4 (ORCPT
+        id S1731966AbgELWYi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 18:24:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55810 "EHLO
+        Tue, 12 May 2020 18:24:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731982AbgELWYk (ORCPT
+        by vger.kernel.org with ESMTP id S1731626AbgELWYg (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 18:24:40 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9647C061A0C;
-        Tue, 12 May 2020 15:24:39 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l18so18023249wrn.6;
-        Tue, 12 May 2020 15:24:39 -0700 (PDT)
+        Tue, 12 May 2020 18:24:36 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4743BC061A0C;
+        Tue, 12 May 2020 15:24:36 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id n5so10956031wmd.0;
+        Tue, 12 May 2020 15:24:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uHVRsCOT9MyMisZFgSTwlSLvLYQeGqXXf2R8XWiMUgQ=;
-        b=l0Q6aaZMyvU10IB4ybnWRKE3f63txu5zwml68AOPUfCKi3ap27AmbKA2je7xoYYPYX
-         HXgjZdpYg+hbCSgdJKfruqF6k5Lm1VCHZIgR5EJ3KIXSCpY/8ioJwWuAb3OTli6eXFac
-         Y8Aw79TNWRjuNNhDbhMjA7Qmuo3f4RHVaiwY777BVjJfetkNXmOKjCXrBKpaWdaIHYvH
-         l4JyKVPQ9E1veTLB9ocMA30dlNfmUCk2JxRPs6L5E+e7vU6S09OoSz4SN/1133K+exaO
-         2x3KAiOPgffuEmcEo9Q1yrFlXM+YdaDIc5E1qZQqL65z5oE8Dtmc9sZKCiHpkdi89AZe
-         Y9nQ==
+        bh=82waVPteXNHi6dIMJjBHDsDaBtBSu7S6EIvE49VbcSw=;
+        b=DmFTUbcvToPTVYCRVDW43Z7IyVVLKKuT1TGww9/gk5Wh5IroV3203wAuadVGzJaPr7
+         JCtrqtORsykQi4ipexGAEWp6cNhLT8vVWOxuYDBec2u6ArFBZkl+QHR5CZPYtXffwjwt
+         300YUx7oOEG/xNLsqihJxLtlu/IybZhOZ+oWGhN28/+Adj0D2sAHPzwmWW7jZ0YJ74bD
+         n55xLzUU0xqvNj+0+JlQPJ96nKYRytPFCYxKP/AEOqgnav3R7n4MoCJd4WdJu6rwBv77
+         ffQdUzMu41HGnMtNsaVvdll/6AcmdaY5AyEGEA63mZL5q7N/ScaGAedzRhK0TqDPTrrx
+         7t0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uHVRsCOT9MyMisZFgSTwlSLvLYQeGqXXf2R8XWiMUgQ=;
-        b=Xk6T0jxZwsI/IC1k8NHVfU6i9WI7BlufEnYMVEO3jpvuPvbRc75F3QiQvkq2wgtGL0
-         mmq+SMufjE7H3ei9NH7K++ddx8Tm/d2g1AvfgULrlsAr1f9A2VwuiRHYeCIohi360tmZ
-         46ynxiDJ1sTJeakY0Y4rgqEp9Z3ITIoonR/C1lWTWH6w34yl7VP38D63qkszOVztcx+b
-         MfyISFXWMQJPSE9sgayVMWwQ7iZrZI/jJOzbR3lvJBg1QM6/E6IUOD9wHzwgeq5CbJRO
-         +PLTi0ABhbjifaM85Y/0IGSM5yCrjWVQpAFLKpdN+AiI3JnZ0ZdkDYmFlo0f0y2s8y6G
-         fiVA==
-X-Gm-Message-State: AGi0PubBk2FVdZ+37eAE4gHS2TRivp1u21LADhkwqRArMOxgQanJbtFm
-        VJPwci9wp2mK4kKbfu86vww=
-X-Google-Smtp-Source: APiQypLlX7OBgWwJ5Mrl6AtPKJWwIkazZXuqTvjrOxW56YG+AWsf3arrFPANxHmM2ma91CACjvd0yA==
-X-Received: by 2002:adf:c38c:: with SMTP id p12mr28947458wrf.357.1589322278537;
-        Tue, 12 May 2020 15:24:38 -0700 (PDT)
+        bh=82waVPteXNHi6dIMJjBHDsDaBtBSu7S6EIvE49VbcSw=;
+        b=A2l+ICy2rdfZHiNDVlIB1zFawHdzddyDNQCax9vDchTl5+IwKJvwAEhIqcqrH8/9t7
+         YS5oC0/JhYmBjoA9o21tdk3vUGL7wq81w787GWJkrJ7MLTbohKwFA7wsPPRufYMXHR2g
+         grIUeX72bWH989B3LhYhLB4K+SzHYVLkb+x1u7dsqM8DTMB9YV2naHc+ZOHDkXvMUItD
+         jyo7Fkkzzzjfx2dtk5NCQIDZdBnqKNByAlikFSDBrssO6a7YAEGKzPafQJbHQq0wRa5N
+         9cOrQvDIvMdHSFmAn3TnHn+RnzfrC2BDdXqicVoj23fj8LqMIglbKjC4ix0cC5UiNU4w
+         aWvg==
+X-Gm-Message-State: AGi0PuZ05HL6sgV/BEnqP7YhSNYNix1T75XfHg44AW+G9ZnYfS2hOv/0
+        C2YsZm2q8rmLDcWBDXiCHmvlGCT9
+X-Google-Smtp-Source: APiQypKIkp1CdypfQ0uEU9JOwaNCNbhKwWqoio9mMWBOIpnVePAlV/V6DFbSxBPtHQyPfeOIwuVXdg==
+X-Received: by 2002:a7b:cd04:: with SMTP id f4mr37887601wmj.3.1589322274910;
+        Tue, 12 May 2020 15:24:34 -0700 (PDT)
 Received: from localhost.localdomain (p200300F137132E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3713:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id b2sm21758758wrm.30.2020.05.12.15.24.37
+        by smtp.googlemail.com with ESMTPSA id b2sm21758758wrm.30.2020.05.12.15.24.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:24:37 -0700 (PDT)
+        Tue, 12 May 2020 15:24:34 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     kishon@ti.com, robh+dt@kernel.org, vkoul@kernel.org,
         devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
@@ -67,9 +67,9 @@ Cc:     narmstrong@baylibre.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, hexdump0815@googlemail.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Thomas Graichen <thomas.graichen@gmail.com>
-Subject: [PATCH v2 4/6] phy: amlogic: meson8b-usb2: Don't set REG_ADP_BC_ACA_ENABLE on Meson8
-Date:   Wed, 13 May 2020 00:24:22 +0200
-Message-Id: <20200512222424.549351-5-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 1/6] dt-bindings: phy: meson8b-usb2: Convert to json-schema
+Date:   Wed, 13 May 2020 00:24:19 +0200
+Message-Id: <20200512222424.549351-2-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200512222424.549351-1-martin.blumenstingl@googlemail.com>
 References: <20200512222424.549351-1-martin.blumenstingl@googlemail.com>
@@ -80,109 +80,126 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Skip setting REG_ADP_BC_ACA_ENABLE on Meson8 SoCs and polling for the
-REG_ADP_BC_ACA_PIN_FLOAT bit. The vendor also skips this part on Meson8
-SoCs.
-This fixes initialization of the host-only USB PHY on Meson8 which would
-otherwise fail with "USB ID detect failed!".
+Now that we have the DT validation in place, let's convert the device
+tree bindings for the Amlogic Meson8, Meson8b, Meson8m2 and GXBB USB2
+PHY over to a YAML schema.
 
-Fixes: 4a3449d1a0a10c ("phy: meson8b-usb2: add support for the USB PHY on Meson8 SoCs")
-Reported-by: Thomas Graichen <thomas.graichen@gmail.com>
+While here, also add the fallback compatible string
+"amlogic,meson-gxbb-usb2-phy" which is already used in
+arch/arm/boot/dts/meson{,8,8b}.dtsi.
+
 Tested-by: Thomas Graichen <thomas.graichen@gmail.com>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/phy/amlogic/phy-meson8b-usb2.c | 48 ++++++++++++++++++++------
- 1 file changed, 38 insertions(+), 10 deletions(-)
+ .../phy/amlogic,meson8b-usb2-phy.yaml         | 63 +++++++++++++++++++
+ .../bindings/phy/meson8b-usb2-phy.txt         | 28 ---------
+ 2 files changed, 63 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
 
-diff --git a/drivers/phy/amlogic/phy-meson8b-usb2.c b/drivers/phy/amlogic/phy-meson8b-usb2.c
-index 86824cc21f11..7236b8885f07 100644
---- a/drivers/phy/amlogic/phy-meson8b-usb2.c
-+++ b/drivers/phy/amlogic/phy-meson8b-usb2.c
-@@ -10,6 +10,7 @@
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
- #include <linux/phy/phy.h>
-@@ -105,12 +106,17 @@
- #define RESET_COMPLETE_TIME				500
- #define ACA_ENABLE_COMPLETE_TIME			50
- 
-+struct phy_meson8b_usb2_match_data {
-+	bool			host_enable_aca;
-+};
+diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml
+new file mode 100644
+index 000000000000..0bd4ce39525a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/amlogic,meson8b-usb2-phy.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- struct phy_meson8b_usb2_priv {
--	struct regmap		*regmap;
--	enum usb_dr_mode	dr_mode;
--	struct clk		*clk_usb_general;
--	struct clk		*clk_usb;
--	struct reset_control	*reset;
-+	struct regmap					*regmap;
-+	enum usb_dr_mode				dr_mode;
-+	struct clk					*clk_usb_general;
-+	struct clk					*clk_usb;
-+	struct reset_control				*reset;
-+	const struct phy_meson8b_usb2_match_data	*match;
- };
- 
- static const struct regmap_config phy_meson8b_usb2_regmap_conf = {
-@@ -166,7 +172,8 @@ static int phy_meson8b_usb2_power_on(struct phy *phy)
- 	regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_SOF_TOGGLE_OUT,
- 			   REG_CTRL_SOF_TOGGLE_OUT);
- 
--	if (priv->dr_mode == USB_DR_MODE_HOST) {
-+	if (priv->dr_mode == USB_DR_MODE_HOST &&
-+	    priv->match->host_enable_aca) {
- 		regmap_update_bits(priv->regmap, REG_ADP_BC,
- 				   REG_ADP_BC_ACA_ENABLE,
- 				   REG_ADP_BC_ACA_ENABLE);
-@@ -216,6 +223,10 @@ static int phy_meson8b_usb2_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
-+	priv->match = device_get_match_data(&pdev->dev);
-+	if (!priv->match)
-+		return -ENODEV;
++title: Amlogic Meson8, Meson8b, Meson8m2 and GXBB USB2 PHY
 +
- 	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
- 					     &phy_meson8b_usb2_regmap_conf);
- 	if (IS_ERR(priv->regmap))
-@@ -254,11 +265,28 @@ static int phy_meson8b_usb2_probe(struct platform_device *pdev)
- 	return PTR_ERR_OR_ZERO(phy_provider);
- }
- 
-+static const struct phy_meson8b_usb2_match_data phy_meson8_usb2_match_data = {
-+	.host_enable_aca = false,
-+};
++maintainers:
++  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 +
-+static const struct phy_meson8b_usb2_match_data phy_meson8b_usb2_match_data = {
-+	.host_enable_aca = true,
-+};
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - amlogic,meson8-usb2-phy
++              - amlogic,meson8b-usb2-phy
++          - const: amlogic,meson-mx-usb2-phy
++      - const: amlogic,meson-gxbb-usb2-phy
 +
- static const struct of_device_id phy_meson8b_usb2_of_match[] = {
--	{ .compatible = "amlogic,meson8-usb2-phy", },
--	{ .compatible = "amlogic,meson8b-usb2-phy", },
--	{ .compatible = "amlogic,meson-gxbb-usb2-phy", },
--	{ },
-+	{
-+		.compatible = "amlogic,meson8-usb2-phy",
-+		.data = &phy_meson8_usb2_match_data
-+	},
-+	{
-+		.compatible = "amlogic,meson8b-usb2-phy",
-+		.data = &phy_meson8b_usb2_match_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-gxbb-usb2-phy",
-+		.data = &phy_meson8b_usb2_match_data
-+	},
-+	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, phy_meson8b_usb2_of_match);
- 
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 2
++
++  clock-names:
++    items:
++      - const: usb_general
++      - const: usb
++
++  resets:
++    minItems: 1
++
++  "#phy-cells":
++    const: 0
++
++  phy-supply:
++    description:
++      Phandle to a regulator that provides power to the PHY. This
++      regulator will be managed during the PHY power on/off sequence.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - "#phy-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    usb-phy@c0000000 {
++      compatible = "amlogic,meson-gxbb-usb2-phy";
++      reg = <0xc0000000 0x20>;
++      resets = <&reset_usb_phy>;
++      clocks = <&clk_usb_general>, <&reset_usb>;
++      clock-names = "usb_general", "usb";
++      phy-supply = <&usb_vbus>;
++      #phy-cells = <0>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
+deleted file mode 100644
+index d81d73aea608..000000000000
+--- a/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-* Amlogic Meson8, Meson8b and GXBB USB2 PHY
+-
+-Required properties:
+-- compatible:	Depending on the platform this should be one of:
+-	"amlogic,meson8-usb2-phy"
+-	"amlogic,meson8b-usb2-phy"
+-	"amlogic,meson-gxbb-usb2-phy"
+-- reg:		The base address and length of the registers
+-- #phys-cells:	should be 0 (see phy-bindings.txt in this directory)
+-- clocks:	phandle and clock identifier for the phy clocks
+-- clock-names:	"usb_general" and "usb"
+-
+-Optional properties:
+-- resets:	reference to the reset controller
+-- phy-supply:	see phy-bindings.txt in this directory
+-
+-
+-Example:
+-
+-usb0_phy: usb-phy@c0000000 {
+-	compatible = "amlogic,meson-gxbb-usb2-phy";
+-	#phy-cells = <0>;
+-	reg = <0x0 0xc0000000 0x0 0x20>;
+-	resets = <&reset RESET_USB_OTG>;
+-	clocks = <&clkc CLKID_USB>, <&clkc CLKID_USB0>;
+-	clock-names = "usb_general", "usb";
+-	phy-supply = <&usb_vbus>;
+-};
 -- 
 2.26.2
 
