@@ -2,111 +2,166 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C7AC47255
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BEDC54E8D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB214206F5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:41:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589247698;
-	bh=h9/ZrKGcx7wVFHsrWJiyY9Z/dMX0iVbJhyGYNpYRtY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SmX0yfsyo11Z85eGYQ877wlME3aotnTMC43tcZs7XCyiNLE8w78/rlgYsoqGHRpOV
-	 DpQOQs7zIGC6krG5o/ukUhpWkAS/Yop5IdfXYsldaF4B1X2rkrTswYqcC58WZnrlY0
-	 JMq8h8tvZYXLE/fv41M9tG5SlGrmJNleUDZvtFKU=
+	by mail.kernel.org (Postfix) with ESMTP id 9059E206F5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 01:45:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z1GpKQFF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgELBli (ORCPT
+        id S1726415AbgELBpQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 May 2020 21:41:38 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35497 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgELBli (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 21:41:38 -0400
-Received: by mail-oi1-f196.google.com with SMTP id o7so16924736oif.2;
-        Mon, 11 May 2020 18:41:37 -0700 (PDT)
+        Mon, 11 May 2020 21:45:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728440AbgELBpP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 May 2020 21:45:15 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EAD2C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 18:45:14 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id l12so5401683pgr.10
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 18:45:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EzSvlPNDgC8QL7k10YiJ3iEGWBUqaT/TcSlvZ5anIbI=;
+        b=Z1GpKQFF7AJRwxu45DBLZusPUf9VrAZH9t36YQCR9/bdtM/LwWvR0hmpxb5eChwkxr
+         ZYPpknWrHs4x0/fy/4PVbHVu12DzYD8T0uT6V7WT6w+nvKNM1MFUgKiBJ/Il4FkqjlCX
+         9vHCpt6s1AFL5sEcyRKUONVy8e4zPif8so9I5Y2YSsVKojAOlhM4maBJvqvSy3ZUR5t5
+         2jPEFETY8XL3FR6C+5gG01ynTgmOSLxKlzO9B0s8PcKEm+s9ZS69yY+VN6DytgTF01NA
+         fCmovQ5o9DCOOJGJl8r7+EGAGOhFtKmdk/yWM3TqrgMUm+yRyAPsqmUWgrjKJgMAlGfW
+         Rweg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qc7aeZe8qKrHeqqbdWlSzYUTH7CM0WkR8L80HDu2Jy4=;
-        b=F3tvvfc5oHR3pf9tKZh1o2xmhx5MfrrzBIZRwv9sl858GrcOAdeppNjVxb5SLfFHLV
-         G1sKOjjaz9ITRbK75l4D9jZzn24lPtQCqe+NPV1ZAZs6JFfPgciG9efcY87kormQSy/9
-         7TT9R6XfhKa26UKEExBCKnY2lu9iGeSiIrRtGJegzDaHFagG0gG0PcsWFcLBqGyCbpT1
-         y1X0PmAkVunDcT4odpQMWVd3KZi0nn9lyTzcN8tsfrxMfSWx0r857uC+jKNdOAG3i9Cb
-         GrzZDbr8CAF5gAaP76btA2mRXG9yHvwfzAp/3SaRMb5VFoBV+YDKRsmySvVhV6eI3QLa
-         YP4A==
-X-Gm-Message-State: AGi0PuZE1CqSCQUqy4BxiozB7y1BwFFWgreyOnxQrnBinDCVdQlKZiH0
-        VVPKB6S6dhRz6SCna4j3hg==
-X-Google-Smtp-Source: APiQypLtu39AJZfEb9cdImmCaZsDHwlqCT3WzgPF/Bxr7JVZSOElTYZZjaXHg/QrGCEcZAYMLJ4VYg==
-X-Received: by 2002:aca:a90e:: with SMTP id s14mr22266347oie.80.1589247696893;
-        Mon, 11 May 2020 18:41:36 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 130sm1697610oid.43.2020.05.11.18.41.35
+         :mime-version:content-disposition:in-reply-to;
+        bh=EzSvlPNDgC8QL7k10YiJ3iEGWBUqaT/TcSlvZ5anIbI=;
+        b=Hb9sFHzE/cmKOs3B9EwidEyAOT4Dr0Fn/8rRfd2ktXLrgw64yVr9e1at+8KQNfHCpb
+         E1QzCr/QO26XGQAgmE6IuhDIT5nBa9f2zm4RiBtDscD9+F9XUXz8TfpFIa+5ehhyePQQ
+         Yn43c0WUIZfHH1bC/qDrqpu4WEVTuL5Uc1WlP4L+l56iyX52/d7uqMF7BQK+oRsFFF9w
+         WJMMRon/avuuQQEAG7J7PWa0eLsk294euES2WTFwntCAAFmR9Z1xnMlOKAEnPFyucVA8
+         6gONi846Tt7ElRq+1VcqewsdyBVV8Z9inGfCWjwjTBySzmTEbK4dBaS/HKKwi+Y56O6E
+         ElnA==
+X-Gm-Message-State: AGi0PuZWqKzTlU+7LVsbYqURopoq/pK6laRX1iPKp2VYrK+vJH3yNXQ5
+        1tT2XlRWTobrP9JvfSRERG5DgA==
+X-Google-Smtp-Source: APiQypJsZ7ZIXhfW5xJ/S5w9zLmhRM6eJ1H7SWozJ4hVlmFcnAYBLrV/n7xK+cO90AVmYEBQp8f+Mw==
+X-Received: by 2002:aa7:9802:: with SMTP id e2mr18728502pfl.213.1589247913730;
+        Mon, 11 May 2020 18:45:13 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z66sm520869pfz.141.2020.05.11.18.45.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 18:41:36 -0700 (PDT)
-Received: (nullmailer pid 15739 invoked by uid 1000);
-        Tue, 12 May 2020 01:41:35 -0000
-Date:   Mon, 11 May 2020 20:41:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Add Marvell MMP Audio Clock
- Controller binding
-Message-ID: <20200512014135.GA15336@bogus>
-References: <20200511195534.1207927-1-lkundrak@v3.sk>
- <20200511195534.1207927-2-lkundrak@v3.sk>
+        Mon, 11 May 2020 18:45:13 -0700 (PDT)
+Date:   Mon, 11 May 2020 18:43:39 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [v2 1/4] dt-bindings: regulator: Add labibb regulator
+Message-ID: <20200512014339.GE57962@builder.lan>
+References: <20200508204200.13481-1-sumit.semwal@linaro.org>
+ <20200508204200.13481-2-sumit.semwal@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511195534.1207927-2-lkundrak@v3.sk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200508204200.13481-2-sumit.semwal@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 11 May 2020 21:55:33 +0200, Lubomir Rintel wrote:
-> This describes the bindings for a controller that generates master and bit
-> clocks for the I2S interface.
+On Fri 08 May 13:41 PDT 2020, Sumit Semwal wrote:
+
+> From: Nisha Kumari <nishakumari@codeaurora.org>
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Adding the devicetree binding for labibb regulator.
+> 
+> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+
+Sorry, I missed this when we talked about it. But please rewrite this in
+yaml.
+
+> 
+> --
+> v2: updated for better compatible string and names.
 > ---
->  .../clock/marvell,mmp2-audio-clock.yaml       | 73 +++++++++++++++++++
->  .../dt-bindings/clock/marvell,mmp2-audio.h    |  8 ++
->  2 files changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
->  create mode 100644 include/dt-bindings/clock/marvell,mmp2-audio.h
+>  .../regulator/qcom-labibb-regulator.txt       | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+> new file mode 100644
+> index 000000000000..6e639d69f780
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+> @@ -0,0 +1,47 @@
+> +Qualcomm's LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost) Regulator
+> +
+> +LAB can be used as a positive boost power supply and IBB can be used as a negative
+> +boost power supply for display panels. Currently implemented for pmi8998.
+> +
+> +Main node required properties:
+> +
+> +- compatible:			Must be:
+> +				"qcom,pmi8998-lab-ibb"
+> +- #address-cells:		Must be 1
+> +- #size-cells:			Must be 0
 
+But the children doesn't have reg properties...
 
-My bot found errors running 'make dt_binding_check' on your patch:
+> +
+> +LAB subnode required properties:
+> +
+> +- interrupts:			Specify the interrupts as per the interrupt
+> +				encoding.
+> +- interrupt-names:		Interrupt names to match up 1-to-1 with
+> +				the interrupts specified in 'interrupts'
+> +				property.
 
-Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.example.dts:20:18: fatal error: dt-bindings/power/marvell,mmp2.h: No such file or directory
-         #include <dt-bindings/power/marvell,mmp2.h>
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Do specify the expected string (and given that you already have the
+lab & ibb subnodes, you don't need to include this in the string).
 
-See https://patchwork.ozlabs.org/patch/1288040
+Regards,
+Bjorn
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+> +
+> +IBB subnode required properties:
+> +
+> +- interrupts:			Specify the interrupts as per the interrupt
+> +				encoding.
+> +- interrupt-names:		Interrupt names to match up 1-to-1 with
+> +				the interrupts specified in 'interrupts'
+> +				property.
+> +
+> +Example:
+> +	pmi8998_lsid1: pmic@3 {
+> +		labibb {
+> +			compatible = "qcom,pmi8998-lab-ibb";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			lab: lab {
+> +				interrupts = <0x3 0xde 0x0 IRQ_TYPE_EDGE_RISING>;
+> +				interrupt-names = "lab-sc-err";
+> +			};
+> +
+> +			ibb: ibb {
+> +				interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>;
+> +				interrupt-names = "ibb-sc-err";
+> +			};
+> +
+> +		};
+> +	};
+> -- 
+> 2.26.2
+> 
