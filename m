@@ -2,88 +2,217 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B002CC54E4A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBF7C54E4A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B53720736
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589287876;
-	bh=HXOMNAAV5i7uryc5jqMFnXGloB/kWRu8vcUFOMkisMU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZrQKKY2mgsbvU/rdXzknna+mGeO7lPFmWnWDEJCQ7YtOuWj/W8PSDDiZh5Mh2z/MO
-	 SnAj9HwzDwhRYIilgR/yTMUFynoZ3n/bjfqyFxst2kcl6jUAj/pQ1srgXq1ExH2Gpm
-	 Zt4YOgDHKyEudrNb25MAIaotmVkl8Qb7MJtZQAVE=
+	by mail.kernel.org (Postfix) with ESMTP id 4248F20736
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 12:53:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D4cMg89y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbgELMvQ (ORCPT
+        id S1729461AbgELMxx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 08:51:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727859AbgELMvP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 08:51:15 -0400
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48D9920753;
-        Tue, 12 May 2020 12:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589287875;
-        bh=HXOMNAAV5i7uryc5jqMFnXGloB/kWRu8vcUFOMkisMU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MyTktIuf9gYyDHEdCKCEbjxi//J1qwvBN2D/FfKuWua0SBNVrk+U3zI4FyJU+tRSn
-         uf0DlYCvy8pOITWv3pNJO4unGPVWJYaQXdnz4C5Jpuuv2tI4J3YHN06au52gTHBgVA
-         OdRhiIBh25xilLIVcs5/OZnQeGS5/jiej1TnP61Q=
-Received: by mail-oi1-f177.google.com with SMTP id v128so1255645oia.7;
-        Tue, 12 May 2020 05:51:15 -0700 (PDT)
-X-Gm-Message-State: AGi0PubSqUqyxcT5lKo1OyoiF1yXanLTMcCp0Mu8U7MCxtgf57JkPeNE
-        kQqP0LXUEZnAKMMEh5KD9AcW+28wwzmcdKgHag==
-X-Google-Smtp-Source: APiQypIYDL2e2mHa7jZluV0BjNao3zn0dcuxxGE3/39KlraczebWuS2rF27T0TgdeZFNrIkXqJJqsGvz5JnqcKMT69M=
-X-Received: by 2002:aca:51c3:: with SMTP id f186mr10992380oib.147.1589287874633;
- Tue, 12 May 2020 05:51:14 -0700 (PDT)
+        Tue, 12 May 2020 08:53:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728283AbgELMxx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 08:53:53 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07CACC061A0E
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:53:53 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e1so1293023wrt.5
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 05:53:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ku6Mk/Al7SQIBJBCIdteQf7kevlDKUx0+YkyJTe4la0=;
+        b=D4cMg89ykEUGNXqfHTzDCR6YYBvlCtdWKW71BwUd9HbOBSs52YRFWqdhvUGzGF9Gvn
+         wNo8RV13CCExoSnw3n2UYWEXPT9AeZHbf933b3b6h1E41s4D3QJDC448C8vinsHTuyah
+         XZBbvAge8YIXBuIo8+dXz3SenVIcAZQxnPfCAZQu+RPMtCxTpxPiBsxuJV0IRbYWRXoj
+         hwYz1eZG3Ji2W1jUUaCXZqNC0IcSVwSrJfPgJLzz03hTJpI+FmnHxPOEXCG1RtvaKCQn
+         tkOw2+BPIc/e9uTR72LvOM6HwKe0lxvuZUhw7V27lzSrKveofBCK25bVPNeETgZYEtnX
+         oqlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ku6Mk/Al7SQIBJBCIdteQf7kevlDKUx0+YkyJTe4la0=;
+        b=hutG/XMMxkaL1625ByX5oCQKrlnaXi9i2xoDZ+KVsnufDGJvlZ+QXMYhBVgMV3C03F
+         mk92Ip/1o5dYGV7asxufkynAwg90GjUXWFpxITH2iVnDpibAfyGCQ95S6OBP/lSO++Yl
+         3mgC/47Ov954uobm8Uj+gv7b3D94IrfKl0lmu8ls76LnpZBY1hDXHfbFU5RbpI8umm3t
+         gYZO6cF3r4RWzXwGacHmwUEFHqXpiRYGDWkODhi6jpx0uWrTTsGZY5hWKjTLGlQACVpS
+         +I/c8qvj+/hKEEGFudKVsT9ctc4U1t2XOYoFJMbOV5/lRe9C6N69owpYdRoy4ANbIz+L
+         1jow==
+X-Gm-Message-State: AGi0Publj6v7jX5HbOIxBmrpJ+mY7rv8Da1WQ6QfnT/R+wMjwvM51ri2
+        r9zVfayYcZWDh5mRc7zcm6yn7Q==
+X-Google-Smtp-Source: APiQypL9YPc4HLVRC80LEbJoBfHK6TzF23U0aO/nzu0F2Fpj+PFOPai5gAhMv1nNLBXsftpFUnQjTA==
+X-Received: by 2002:adf:b30f:: with SMTP id j15mr26774429wrd.394.1589288031506;
+        Tue, 12 May 2020 05:53:51 -0700 (PDT)
+Received: from localhost.localdomain (212-39-89-66.ip.btc-net.bg. [212.39.89.66])
+        by smtp.googlemail.com with ESMTPSA id n13sm2433938wrs.2.2020.05.12.05.53.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 May 2020 05:53:50 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
+        saravanak@google.com, sibis@codeaurora.org, mka@chromium.org
+Cc:     robh+dt@kernel.org, rnayak@codeaurora.org,
+        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
+        jcrouse@codeaurora.org, evgreen@chromium.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, georgi.djakov@linaro.org
+Subject: [PATCH v8 00/10] Introduce OPP bandwidth bindings
+Date:   Tue, 12 May 2020 15:53:17 +0300
+Message-Id: <20200512125327.1868-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1589268410-17066-1-git-send-email-hayashi.kunihiko@socionext.com>
-In-Reply-To: <1589268410-17066-1-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 12 May 2020 07:51:02 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ_XKH0etPaX-qZq1t+2Z+2dhXeerCQhU5U5ypZXjr=7A@mail.gmail.com>
-Message-ID: <CAL_JsqJ_XKH0etPaX-qZq1t+2Z+2dhXeerCQhU5U5ypZXjr=7A@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] dt-bindings: net: Convert UniPhier AVE4
- controller to json-schema
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 2:27 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
->
-> Convert the UniPhier AVE4 controller binding to DT schema format.
->
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->
-> Changes since v1:
-> - Set true to phy-mode and phy-handle instead of $ref
-> - Add mac-address and local-mac-address for existing dts warning
->
->  .../bindings/net/socionext,uniphier-ave4.txt       |  64 ------------
->  .../bindings/net/socionext,uniphier-ave4.yaml      | 111 +++++++++++++++++++++
->  MAINTAINERS                                        |   2 +-
->  3 files changed, 112 insertions(+), 65 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
->  create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
+Here is a proposal to extend the OPP bindings with bandwidth based on
+a few previous discussions [1] and patchsets from me [2][3] and Saravana
+[4][5][6][7][8][9].
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Changes in v8:
+* Addressed review comments from Matthias, Sibi and Viresh.
+* Picked reviewed-by tags.
+* Picked Sibi's interconnect-tag patches into this patchset.
+
+Changes in v7: https://lore.kernel.org/r/20200424155404.10746-1-georgi.djakov@linaro.org
+* This version is combination of both patchsets by Saravana and me, based
+on [3] and [9].
+* The latest version of DT bindings from Saravana is used here, with a
+minor change of using arrays instead of single integers for opp-peak-kBps
+and opp-avg-kBps. This is needed to support multiple interconnect paths.
+* The concept of having multiple OPP tables per device has been dropped,
+as it was nacked by Viresh.
+* Various reviews comments have been addressed and some patches are
+split, and there are also some new patches. Thanks to Viresh, Sibi and
+others for providing feedback!
+
+With this version of the patchset, the CPU/GPU to DDR bandwidth scaling
+will look like this in DT:
+
+One interconnect path (no change from Saravana's v6 patches):
+
+cpu@0 {
+	operating-points-v2 = <&cpu_opp_table>;
+	interconnects = <&noc1 MASTER1 &noc2 SLAVE1>,
+};
+
+cpu_opp_table: cpu_opp_table {
+	compatible = "operating-points-v2";
+
+	opp-800000000 {
+		opp-hz = /bits/ 64 <800000000>;
+		opp-peak-kBps = <1525000>;
+		opp-avg-kBps = <457000>;
+	};
+
+	opp-998400000 {
+		opp-hz = /bits/ 64 <998400000>;
+		opp-peak-kBps = <7614000>;
+		opp-avg-kBps = <2284000>;
+	};
+};
+
+Two interconnect paths:
+
+cpu@0 {
+	operating-points-v2 = <&cpu_opp_table>;
+	interconnects = <&noc1 MASTER1 &noc2 SLAVE1>,
+			<&noc3 MASTER2 &noc4 SLAVE2>;
+};
+
+cpu_opp_table: cpu_opp_table {
+	compatible = "operating-points-v2";
+
+	opp-800000000 {
+		opp-hz = /bits/ 64 <800000000>;
+		opp-peak-kBps = <1525000 2000>;
+		opp-avg-kBps = <457000 1000>;
+	};
+
+	opp-998400000 {
+		opp-hz = /bits/ 64 <998400000>;
+		opp-peak-kBps = <7614000 4000>;
+		opp-avg-kBps = <2284000 2000>;
+	};
+};
+
+------
+
+Every functional block on a SoC can contribute to the system power
+efficiency by expressing its own bandwidth needs (to memory or other SoC
+modules). This will allow the system to save power when high throughput
+is not required (and also provide maximum throughput when needed).
+
+There are at least three ways for a device to determine its bandwidth
+needs:
+	1. The device can dynamically calculate the needed bandwidth
+based on some known variable. For example: UART (baud rate), I2C (fast
+mode, high-speed mode, etc), USB (specification version, data transfer
+type), SDHC (SD standard, clock rate, bus-width), Video Encoder/Decoder
+(video format, resolution, frame-rate)
+
+	2. There is a hardware specific value. For example: hardware
+specific constant value (e.g. for PRNG) or use-case specific value that
+is hard-coded.
+
+	3. Predefined SoC/board specific bandwidth values. For example:
+CPU or GPU bandwidth is related to the current core frequency and both
+bandwidth and frequency are scaled together.
+
+This patchset is trying to address point 3 above by extending the OPP
+bindings to support predefined SoC/board bandwidth values and adds
+support in cpufreq-dt to scale the interconnect between the CPU and the
+DDR together with frequency and voltage.
+
+[1] https://patchwork.kernel.org/patch/10577315/
+[2] https://lore.kernel.org/r/20190313090010.20534-1-georgi.djakov@linaro.org/
+[3] https://lore.kernel.org/r/20190423132823.7915-1-georgi.djakov@linaro.org/
+[4] https://lore.kernel.org/r/20190608044339.115026-1-saravanak@google.com
+[5] https://lore.kernel.org/r/20190614041733.120807-1-saravanak@google.com
+[6] https://lore.kernel.org/r/20190703011020.151615-1-saravanak@google.com
+[7] https://lore.kernel.org/r/20190726231558.175130-1-saravanak@google.com
+[8] https://lore.kernel.org/r/20190807223111.230846-1-saravanak@google.com
+[9] https://lore.kernel.org/r/20191207002424.201796-1-saravanak@google.com
+
+Georgi Djakov (6):
+  interconnect: Add of_icc_get_by_index() helper function
+  OPP: Add support for parsing interconnect bandwidth
+  OPP: Add sanity checks in _read_opp_key()
+  OPP: Update the bandwidth on OPP frequency changes
+  cpufreq: dt: Add support for interconnect bandwidth scaling
+  cpufreq: dt: Validate all interconnect paths
+
+Saravana Kannan (2):
+  dt-bindings: opp: Introduce opp-peak-kBps and opp-avg-kBps bindings
+  OPP: Add helpers for reading the binding properties
+
+Sibi Sankar (2):
+  dt-bindings: interconnect: Add interconnect-tags bindings
+  OPP: Add support for setting interconnect-tags
+
+ .../bindings/interconnect/interconnect.txt    |   5 +
+ Documentation/devicetree/bindings/opp/opp.txt |  17 +-
+ .../devicetree/bindings/property-units.txt    |   4 +
+ drivers/cpufreq/Kconfig                       |   1 +
+ drivers/cpufreq/cpufreq-dt.c                  |  54 +++++
+ drivers/interconnect/core.c                   |  72 +++++--
+ drivers/opp/Kconfig                           |   1 +
+ drivers/opp/core.c                            |  55 ++++-
+ drivers/opp/of.c                              | 189 ++++++++++++++++--
+ drivers/opp/opp.h                             |  10 +
+ include/linux/interconnect.h                  |   6 +
+ include/linux/pm_opp.h                        |  12 ++
+ 12 files changed, 380 insertions(+), 46 deletions(-)
+
