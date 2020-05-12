@@ -2,312 +2,125 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68610C54E4B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 05:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F31C54E8B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 06:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39A0820733
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 05:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD50320836
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 06:04:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UqL+G4sv"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="m7upY6SS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgELFZq (ORCPT
+        id S1728139AbgELGEv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 01:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
+        Tue, 12 May 2020 02:04:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726032AbgELFZq (ORCPT
+        by vger.kernel.org with ESMTP id S1726161AbgELGEv (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 01:25:46 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 050EBC05BD09
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 22:25:46 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id m7so4889606plt.5
-        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 22:25:45 -0700 (PDT)
+        Tue, 12 May 2020 02:04:51 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DE68C061A0E
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 23:04:51 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id f4so6176836iov.11
+        for <devicetree@vger.kernel.org>; Mon, 11 May 2020 23:04:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qY4tIWDJLygZQYEHexbugEUDcuN3ImOXtPyRSj2Tmbo=;
-        b=UqL+G4svk3bMMRb1G1HJ83F+j3EPH3Vh6vnvyxepjH08v+uIeRrDEaRwEi6iY3uK/O
-         eQZdIBa2yFiAzh7ndKZerzIKrMybuDYA3tR1BgJ94Ko6EtNJVHmJfK2ZaV0sWOjPhFOT
-         7l41urSld5o73mzAeptvdKcPymsEKPm/NfZkgH59wZXQkCBzZm2yAR4eh2BCZjgKytIZ
-         jMpHkSbiWADXMwdqdVf/YZxp9doSfSplRjuLDCT9HGmGiOsRVsFDlcxP8zHd0tUQaKUV
-         47TP9BrLyQRkFjoNj387MAXQUVYlYw0CLi/ob8h5bd9e3HgCEsQwSHA3JQ/kSaZH07R8
-         SJnw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GmXNnj8j0/DuRakjHfxnYDbYR3/p1C2Z1WRm/EsJUCQ=;
+        b=m7upY6SSbbF74mMD/6Ct02MUFC+lcQkE0M2ZSEfUwz8/zFr2LXYe+zyjsa7QHwNxLU
+         E1xtIq6cls/6Xl5PC2oNnB9MLcngcGNCboLNlcaeqdA/QhxuPYlg6fSrcTJ1yt3PhSm8
+         p4nRLQKIhwwNJhMXFsKo8spE1CkbB7rxxDxOXRA7BfDWjuXaNdcoB7xzLfrvlvITzqGj
+         GRDhl86kJpFQABV/jgrZEMNArbKiAHRlWiOkJuHnOqoDLPX8y/BKcsiIq/fZA9FWsRgS
+         M6x3a8yUDx3NluBpbUUiWoIc4eo6aHzDUy3W/pNCYGkvOGYvjt9nct4K+D71V8iCXDLZ
+         4eXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qY4tIWDJLygZQYEHexbugEUDcuN3ImOXtPyRSj2Tmbo=;
-        b=oyajeXqrupOD2fgJrvYjJacIj+5nVrApOADW5LQQQQZuwmU2B491ThTxAkWY8PVtXs
-         vScu/u56UTZHmUUyxJHBiv4JJizIj8Y+gF116eUe3gkJZbLATq7U/qmS0vnyO84B8Zo3
-         UaVyERqX785o7LqvIXVG/bHtFRgWYN7aJaev/JYX7P24WYdtNB1n2YWmpBSxO0nQnYcZ
-         ngRPOdMdq9FSptR2vu6LCv8tM0VTQ+i+SHnyuF60WYwbA8v7gl6IcUD0rEdgMklpB/Ni
-         AmFcnDf7spjblYLn0l+fFm2Zd8RPoRY+yy3Qbk7FBBbH936sBQfEe24/SOMy3lQTmRiZ
-         mCtA==
-X-Gm-Message-State: AOAM533KE+hovsp5ZfMzu5tUelv/Mgv4V+b8YEuqC4UJrDCsPsFrbU7p
-        74SB3x3n5fSvUg98sS7vOhGQ/A==
-X-Google-Smtp-Source: ABdhPJxLiAh4YWUEEFs84ClWwP2pdJ/iMPgKckY4JWQXIdGqJrQGjpc5bov6yWSLe1sONjTFXGjpLg==
-X-Received: by 2002:a17:902:9f97:: with SMTP id g23mr1640890plq.30.1589261145272;
-        Mon, 11 May 2020 22:25:45 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z13sm11733513pjz.42.2020.05.11.22.25.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 22:25:44 -0700 (PDT)
-Date:   Mon, 11 May 2020 22:25:41 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, nishakumari@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        rnayak@codeaurora.org
-Subject: Re: [v2 4/4] regulator: qcom: labibb: Add SC interrupt handling
-Message-ID: <20200512052541.GF1302550@yoga>
-References: <20200508204200.13481-1-sumit.semwal@linaro.org>
- <20200508204200.13481-5-sumit.semwal@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GmXNnj8j0/DuRakjHfxnYDbYR3/p1C2Z1WRm/EsJUCQ=;
+        b=WQawAOenavgZYw5mL17kWpbA5gEfKlHh69/0ML7wdNDUh9Nsm2uPNvZRxFUm0nuynf
+         ckMuDgC+zsGzekm2uI+SzvalZhJEZ1gR8vAsJ5cyivAVpDV12lq+IE199kjZa0fKNGIF
+         2ZE7kemh7R7hK0geYrccwSC23S/S2uKMvFAbga96dZot3KvcHOO/O47igISzLwSp4SON
+         UC5KpfKxeNCZPKzFpROeyHDbMmmiC/ie98Bi4w+ReGg01Mm+BkINWOxgrgsprFLfFsSG
+         RCn3YatiTbe3dehU7vlKFSFf0soX2zH/pKHx8CQEyHuAD3VijHkdXc6Qd/bC9si01NwK
+         vLPQ==
+X-Gm-Message-State: AGi0Pub02GO0cyTMWI7zrToKSUZH1q2hLUDOvaGIRzLGHZZ3bwkGd4+k
+        YwgNjE2ylZcvbt68Bn7Gzu661OY2J1QLz3U+39ym0g==
+X-Google-Smtp-Source: APiQypJHsy1ID5UWXbduZedwCawN698UUwnJAsyuBfNBmcx4c7aVWyTBXfSDemrrZVvNV8ztJq5Z7EWAvNiviNgU3nE=
+X-Received: by 2002:a5d:91c6:: with SMTP id k6mr18867980ior.13.1589263490440;
+ Mon, 11 May 2020 23:04:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508204200.13481-5-sumit.semwal@linaro.org>
+References: <20200511150759.18766-1-brgl@bgdev.pl> <20200511150759.18766-6-brgl@bgdev.pl>
+ <20200511.134117.1336222619714836904.davem@davemloft.net>
+In-Reply-To: <20200511.134117.1336222619714836904.davem@davemloft.net>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 12 May 2020 08:04:39 +0200
+Message-ID: <CAMRc=MdUCkgCo8UndDbhQRZt_tXJJjtR4uM2g05N5ti7Hw1f2w@mail.gmail.com>
+Subject: Re: [PATCH v2 05/14] net: core: provide priv_to_netdev()
+To:     David Miller <davem@davemloft.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 08 May 13:42 PDT 2020, Sumit Semwal wrote:
+pon., 11 maj 2020 o 22:41 David Miller <davem@davemloft.net> napisa=C5=82(a=
+):
+>
+> From: Bartosz Golaszewski <brgl@bgdev.pl>
+> Date: Mon, 11 May 2020 17:07:50 +0200
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Appropriate amount of extra memory for private data is allocated at
+> > the end of struct net_device. We have a helper - netdev_priv() - that
+> > returns its address but we don't have the reverse: a function which
+> > given the address of the private data, returns the address of struct
+> > net_device.
+> >
+> > This has caused many drivers to store the pointer to net_device in
+> > the private data structure, which basically means storing the pointer
+> > to a structure in this very structure.
+> >
+> > This patch proposes to add priv_to_netdev() - a helper which converts
+> > the address of the private data to the address of the associated
+> > net_device.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Sorry, please don't do this.  We had this almost two decades ago and
+> explicitly removed it intentionally.
+>
+> Store the back pointer in your software state just like everyone else
+> does.
 
-> From: Nisha Kumari <nishakumari@codeaurora.org>
-> 
-> Add Short circuit interrupt handling and recovery for the lab and
-> ibb regulators on qcom platforms.
-> 
-> The client panel drivers need to register for REGULATOR_EVENT_OVER_CURRENT
-> notification which will be triggered on short circuit. They should
-> try to enable the regulator once, and if it doesn't get enabled,
-> handle shutting down the panel accordingly.
-> 
-> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> 
-> --
-> v2: sumits: reworked handling to user regmap_read_poll_timeout, and handle it
->     per-regulator instead of clearing both lab and ibb errors on either irq
->     triggering. Also added REGULATOR_EVENT_OVER_CURRENT handling and
->     notification to clients.
-> ---
->  drivers/regulator/qcom-labibb-regulator.c | 103 +++++++++++++++++++++-
->  1 file changed, 100 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
-> index a9dc7c060375..3539631c9f96 100644
-> --- a/drivers/regulator/qcom-labibb-regulator.c
-> +++ b/drivers/regulator/qcom-labibb-regulator.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  // Copyright (c) 2019, The Linux Foundation. All rights reserved.
->  
-> +#include <linux/interrupt.h>
->  #include <linux/module.h>
->  #include <linux/of_irq.h>
->  #include <linux/of.h>
-> @@ -18,11 +19,15 @@
->  #define REG_LABIBB_ENABLE_CTL		0x46
->  #define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
->  #define LABIBB_CONTROL_ENABLE		BIT(7)
-> +#define LABIBB_STATUS1_SC_DETECT_BIT	BIT(6)
->  
->  #define LAB_ENABLE_CTL_MASK		BIT(7)
->  #define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
->  
->  #define POWER_DELAY			8000
-> +#define POLLING_SCP_DONE_INTERVAL_US	5000
-> +#define POLLING_SCP_TIMEOUT		16000
-> +
->  
->  struct labibb_regulator {
->  	struct regulator_desc		desc;
-> @@ -30,6 +35,8 @@ struct labibb_regulator {
->  	struct regmap			*regmap;
->  	struct regulator_dev		*rdev;
->  	u16				base;
-> +	int				sc_irq;
-> +	int				vreg_enabled;
->  	u8				type;
->  };
->  
-> @@ -112,9 +119,10 @@ static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
->  		return ret;
->  	}
->  
-> -	if (ret)
-> +	if (ret) {
-> +		reg->vreg_enabled = 1;
->  		return 0;
-> -
-> +	}
->  
->  	dev_err(reg->dev, "Can't enable %s\n", reg->desc.name);
->  	return -EINVAL;
-> @@ -140,8 +148,10 @@ static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
->  		return ret;
->  	}
->  
-> -	if (!ret)
-> +	if (!ret) {
-> +		reg->vreg_enabled = 0;
->  		return 0;
-> +	}
->  
->  	dev_err(reg->dev, "Can't disable %s\n", reg->desc.name);
->  	return -EINVAL;
-> @@ -153,6 +163,70 @@ static struct regulator_ops qcom_labibb_ops = {
->  	.is_enabled		= qcom_labibb_regulator_is_enabled,
->  };
->  
-> +
-> +static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
-> +{
-> +	int ret, count;
-> +	u16 reg;
-> +	u8 sc_err_mask;
-> +	unsigned int val;
-> +	struct labibb_regulator *labibb_reg = (struct labibb_regulator *)_reg;
+I will if you insist but would you mind sharing some details on why it
+was removed? To me it still makes more sense than storing the pointer
+to a structure in *that* structure.
 
-No need to explicitly typecast a void *.
-
-> +	bool in_sc_err, reg_en, scp_done = false;
-
-reg_en is unused.
-
-> +
-> +	if (irq == labibb_reg->sc_irq)
-
-When is this false?
-
-> +		reg = labibb_reg->base + REG_LABIBB_STATUS1;
-> +	else
-> +		return IRQ_HANDLED;
-> +
-> +	sc_err_mask = LABIBB_STATUS1_SC_DETECT_BIT;
-> +
-> +	ret = regmap_bulk_read(labibb_reg->regmap, reg, &val, 1);
-
-Just inline reg->base + REG_LABIBB_STATUS1 in this call.
-
-> +	if (ret < 0) {
-> +		dev_err(labibb_reg->dev, "Read failed, ret=%d\n", ret);
-> +		return IRQ_HANDLED;
-> +	}
-> +	dev_dbg(labibb_reg->dev, "%s SC error triggered! STATUS1 = %d\n",
-> +		labibb_reg->desc.name, val);
-> +
-> +	in_sc_err = !!(val & sc_err_mask);
-> +
-> +	/*
-> +	 * The SC(short circuit) fault would trigger PBS(Portable Batch
-> +	 * System) to disable regulators for protection. This would
-> +	 * cause the SC_DETECT status being cleared so that it's not
-> +	 * able to get the SC fault status.
-> +	 * Check if the regulator is enabled in the driver but
-> +	 * disabled in hardware, this means a SC fault had happened
-> +	 * and SCP handling is completed by PBS.
-> +	 */
-> +	if (!in_sc_err) {
-
-	if (!(val & LABIBB_STATUS1_SC_DETECT_BIT)) {
-
-> +
-> +		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
-> +
-> +		ret = regmap_read_poll_timeout(labibb_reg->regmap,
-> +					reg, val,
-> +					!(val & LABIBB_CONTROL_ENABLE),
-> +					POLLING_SCP_DONE_INTERVAL_US,
-> +					POLLING_SCP_TIMEOUT);
-> +
-> +		if (!ret && labibb_reg->vreg_enabled) {
-
-Wouldn't be fine to assume that if you get a short circuit IRQ the
-regulator is enabled?
-
-If you are worried about racing with a disable this won't work anyways,
-and you better enable_irq()/disable_irq() in regulator enable/disable,
-respectively.
-
-> +			dev_dbg(labibb_reg->dev,
-> +				"%s has been disabled by SCP\n",
-> +				labibb_reg->desc.name);
-> +			scp_done = true;
-> +		}
-
-If you flip the poll check around you will get here by not being in an
-short-circuit condition and you conclude that the regulator is still on;
-in which case you can just return here.
-
-That way you can drop in_sc_err and scp_done and flatten below
-conditional section.
-
-> +	}
-> +
-> +	if (in_sc_err || scp_done) {
-> +		regulator_lock(labibb_reg->rdev);
-> +		regulator_notifier_call_chain(labibb_reg->rdev,
-> +						REGULATOR_EVENT_OVER_CURRENT,
-> +						NULL);
-> +		regulator_unlock(labibb_reg->rdev);
-> +	}
-> +	return IRQ_HANDLED;
-> +}
-> +
->  static int register_labibb_regulator(struct qcom_labibb *labibb,
->  				const struct labibb_regulator_data *reg_data,
->  				struct device_node *of_node)
-> @@ -181,6 +255,29 @@ static int register_labibb_regulator(struct qcom_labibb *labibb,
->  	reg->desc.type = REGULATOR_VOLTAGE;
->  	reg->desc.ops = &qcom_labibb_ops;
->  
-> +	reg->sc_irq = -EINVAL;
-> +	ret = of_irq_get_byname(of_node, reg_data->irq_name);
-> +	if (ret < 0)
-> +		dev_dbg(labibb->dev,
-
-Isn't this an error?
-
-> +			"Unable to get %s, ret = %d\n",
-> +			reg_data->irq_name, ret);
-> +	else
-> +		reg->sc_irq = ret;
-> +
-> +	if (reg->sc_irq > 0) {
-> +		ret = devm_request_threaded_irq(labibb->dev,
-> +						reg->sc_irq,
-> +						NULL, labibb_sc_err_handler,
-> +						IRQF_ONESHOT |
-> +						IRQF_TRIGGER_RISING,
-
-Omit IRQF_TRIGGER_RISING and let that come from DT.
-
-> +						reg_data->irq_name, labibb);
-> +		if (ret) {
-> +			dev_err(labibb->dev, "Failed to register '%s' irq ret=%d\n",
-> +				reg_data->irq_name, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-
-Regards,
-Bjorn
-
->  	cfg.dev = labibb->dev;
->  	cfg.driver_data = reg;
->  	cfg.regmap = labibb->regmap;
-> -- 
-> 2.26.2
-> 
+Bart
