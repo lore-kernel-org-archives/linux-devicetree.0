@@ -2,88 +2,118 @@ Return-Path: <SRS0=NYOC=62=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFF3C2D0FB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A39C2D0F8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5862312B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E8E2492B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 22:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589321030;
-	bh=WF1ZOC7ddCOvDm9qPy5ZFh7ldSEKUGXz1ZFduTbexHU=;
+	s=default; t=1589321143;
+	bh=j1vAY40L3awDVf4d2kZXDZQndql+swIvtvfOxztyeV0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KHxMWR5mJKQpOZ75kkp7jmUTyj2DNYnPSVyMhcawqhnO+5CkY33p0+RoX90awWbhr
-	 XSYVB+8FuKU5TrIM0/mUPyQe5H8VKA6skCCySiF0pg31Je5Bi3w+LFgTN3WYE7zaF8
-	 oG87M6O95+x1JvhA8SeMZRHODh8QByqXc9xikrlg=
+	b=sOioePcEtFL6nEgO2H3qKROz5XkTJgUW6IeChZEntZqGEhAgXYAsaQ6x3bUu3HG93
+	 bGQDgQ5ysjFtJy91+ol1N0u1VzjyHPKuuLM0XwBbZB66PhOu3kBg6pal8EBzaZT4Oo
+	 QWSIARTY0fpzT4fsglt6wtv190NWwducmln0XqpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731581AbgELWDp (ORCPT
+        id S1729646AbgELWFk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 18:03:45 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:36227 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731370AbgELWDo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 18:03:44 -0400
-Received: by mail-oo1-f66.google.com with SMTP id z6so2147085ooz.3;
-        Tue, 12 May 2020 15:03:44 -0700 (PDT)
+        Tue, 12 May 2020 18:05:40 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46975 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbgELWFk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 18:05:40 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z25so11812214otq.13;
+        Tue, 12 May 2020 15:05:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jsnWB/RZuG/6JISv3zODzhF3cX24dCFlPTbEBhn7oxU=;
-        b=GbuakF+ugPaYSahW/kxfS8vYFTnOvfXMiplU9HM/EyrioEJh5ilPGlg8aqkJBYU0QY
-         cZTnHcYT8aXoyxmqnX0LvSdFAKatXPaWyNcAVgOFvNaX1VJwaWqAlclSt7lRmr+bX+gi
-         8A4Sgc8qQ2D9aoLwgnemI5WiOKzJB7tiUZGh4IeegP5V4wQAW/rgKHSvv3b/1RyQCcLe
-         /Kix+iQVcUuS9DPXhEm7/ZIak0o9Z0v0tWAxReEHOwAknYjsj5/mwTeO7mXqU20KLCA9
-         NjVp906erwAucnwdmv4pbapok3NpZdWWQ/W2EPh5WH7taqZy84GDs3CBk6srZ5SL74BD
-         G8ag==
-X-Gm-Message-State: AGi0PubLvtpqfjVmNMFaxVw6078GdbJgFRdF4QdWIAluQ7O/YIfiNSmJ
-        wNCZIJJDCwEbbKcDuTpzPQ==
-X-Google-Smtp-Source: APiQypLQGiX0rauKDDSSe0EY7yJ93FyTpXKE0zOptqWqXNeKHsfI9Bzl2DiMfh+5vOQd4k68p6Km5Q==
-X-Received: by 2002:a4a:6441:: with SMTP id d1mr19963201oof.10.1589321023626;
-        Tue, 12 May 2020 15:03:43 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1spzLK4cm4ekL4dQmE1+GWlhRjCGCTHWPWuSdcartNU=;
+        b=E9kSd8ITWbesdZd2DQf/v3P49EXiZCJIOyJbxI8ay3VPzivr50F1HRm5jvR5zCo38H
+         P+ErtMqTP3Aq/gvGPrtHxFPO6gH2bLMcTHIsFJaYYb1Cooh7TIhH1ut8ZA181cEN/N3r
+         gx4QgJl0B/3brrAyYnwY6PySNM9cW9ZlhbdJzKJSajQyfYykQW3J/QSiBGNbH007XOvn
+         XxxiXp+lhQ9MlEf2PiSfL9eXOSJQtobMhncj881XV9W5cArkvZoDmcLXiWdAcAq2zZXG
+         oMVOKzdBN/FiwRQo9qq4Nsvl0IRFHzLYva05KXbcsagVAdpYoWz/ie8wij1HeV14XxAt
+         YGOA==
+X-Gm-Message-State: AGi0PuYS3FTVmPta8kuxYNIY3RN5GtNcLI0976XWtkvITlS7bPob/2dX
+        Y0vA5SmnTcNIgTY57N3JpA==
+X-Google-Smtp-Source: APiQypJZNwnsVvEn4yecESFGLnDDq4EBQLMVQoLrm7Afo3/qUJ8VPojy/Bqb85BUsmx+ciYyevsr9A==
+X-Received: by 2002:a9d:7608:: with SMTP id k8mr4965628otl.233.1589321139244;
+        Tue, 12 May 2020 15:05:39 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j186sm5659962oia.31.2020.05.12.15.03.42
+        by smtp.gmail.com with ESMTPSA id 95sm3802450otf.72.2020.05.12.15.05.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:03:43 -0700 (PDT)
-Received: (nullmailer pid 14161 invoked by uid 1000);
-        Tue, 12 May 2020 22:03:42 -0000
-Date:   Tue, 12 May 2020 17:03:42 -0500
+        Tue, 12 May 2020 15:05:38 -0700 (PDT)
+Received: (nullmailer pid 16849 invoked by uid 1000);
+        Tue, 12 May 2020 22:05:37 -0000
+Date:   Tue, 12 May 2020 17:05:37 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        vkoul@kernel.org, narmstrong@baylibre.com, kishon@ti.com,
-        hexdump0815@googlemail.com, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/6] dt-bindings: phy: meson8b-usb2: Add compatible
- string for Meson8m2
-Message-ID: <20200512220341.GA14126@bogus>
-References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com>
- <20200502114752.1048500-3-martin.blumenstingl@googlemail.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-clk@vger.kernel.org, aford@beaconembedded.com,
+        charles.stevens@logicpd.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 2/3] clk: vc5: Enable addition output configurations
+ of the Versaclock
+Message-ID: <20200512220537.GA14318@bogus>
+References: <20200502122126.188001-1-aford173@gmail.com>
+ <20200502122126.188001-2-aford173@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200502114752.1048500-3-martin.blumenstingl@googlemail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200502122126.188001-2-aford173@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat,  2 May 2020 13:47:48 +0200, Martin Blumenstingl wrote:
-> The USB2 PHY on Meson8m2 is identical to the one on Meson8b but
-> different to the one on Meson8. The only known difference is that Meson8
-> does not set the ACA_ENABLE bit while Meson8b and Meson8m2 do.
-> Add an explicit compatible string for Meson8m2 so those differences can
-> be taken care of.
+On Sat, May 02, 2020 at 07:21:25AM -0500, Adam Ford wrote:
+> The existing driver is expecting the Versaclock to be pre-programmed,
+> and only sets the output frequency.  Unfortunately, not all devices
+> are pre-programmed, and the Versaclock chip has more options beyond
+> just the frequency.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  .../devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml        | 1 +
->  1 file changed, 1 insertion(+)
+> This patch enables the following additional features:
 > 
+>    - Programmable voltage: 1.8V, 2.5V, or 3.3V​
+>    - Slew Percentage of normal: 85%, 90%, or 100%
+>    - Output Type: LVPECL, CMOS, HCSL, or LVDS
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+> diff --git a/include/dt-bindings/clk/versaclock.h b/include/dt-bindings/clk/versaclock.h
+> new file mode 100644
+> index 000000000000..c6a6a0946564
+> --- /dev/null
+> +++ b/include/dt-bindings/clk/versaclock.h
+
+Belongs in binding patch.
+
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/* This file defines field values used by the versaclock 6 family
+> + * for defining output type
+> + */
+> +
+> +#define VC5_LVPECL	0
+> +#define VC5_CMOS	1
+> +#define VC5_HCSL33	2
+> +#define VC5_LVDS	3
+> +#define VC5_CMOS2	4
+> +#define VC5_CMOSD	5
+> +#define VC5_HCSL25	6
+> -- 
+> 2.25.1
+> 
