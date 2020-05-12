@@ -6,61 +6,59 @@ X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598CFCA90AF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778E8CA90AF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2587A20720
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432B520714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 May 2020 16:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589301888;
-	bh=Trwo38OmVBD2TlImzx3c+TlSZBTuSuR0SffTOf0cwTA=;
+	s=default; t=1589301912;
+	bh=KsnJ3Mt/qpKQdSl9UrFC2Z9oOS5Kx1O1ey9XFH0Yt2s=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=ByFJB9kH7K0LVhJ62mUfuuNSBzyhNlx5lw9uXxXT/Q8jlT8d3+j7PtJQm0fY/UW/u
-	 5iwyA2VekyXYukE9SyQ5LJb8SbifaUNEYaXL5uSsPc4O1TWFilgFFNq7gzw3UPLqza
-	 Vsw0VIS+HD9kJJFMOx14x/9oJH5YNn/P6K8j08/4=
+	b=vQ/NOt9WR9aMB/Dn5/cf+/Iekv5uRIaFDGFZ7+QqzEYJWZ8oSsaA1G9JQ+3zFFsyS
+	 /zDqyKJlBTyomsfaPulW5pfXdl09zJIszeNPaR46qjGwY2BTZjVq3bvX5C2b1sy4dw
+	 TW2vDg0tGH7AhOe+L3zD+dZCIADtxJXizPEf4AP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725851AbgELQor (ORCPT
+        id S1728258AbgELQpL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 12:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41458 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 12:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgELQor (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 12:44:47 -0400
+        id S1725554AbgELQpL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 12:45:11 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1198206B9;
-        Tue, 12 May 2020 16:44:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 859AB20722;
+        Tue, 12 May 2020 16:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589301887;
-        bh=Trwo38OmVBD2TlImzx3c+TlSZBTuSuR0SffTOf0cwTA=;
+        s=default; t=1589301911;
+        bh=KsnJ3Mt/qpKQdSl9UrFC2Z9oOS5Kx1O1ey9XFH0Yt2s=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=nASl9ChizvQCSHZxqM5SKnNBNtsxJze1bOhEBm/r+ek96uRhxFd21jPbl4IkHLDtY
-         g/4XQcCzQEALbK6PoUnVZG1pZ0itOTInxIIrK99bvUOF9VbhlUUi/jqwiISyUndL0j
-         EemoVeSFjbqGZkFTHccsawGsW9qlKRal6xO7BUYc=
-Date:   Tue, 12 May 2020 17:44:44 +0100
+        b=wrrkXcg8AntdueHPHgaqaJX9X8VI/WJcE6yb3/5lv7XacccuPPg7ewN14DB/X2wJa
+         BcEIXHmrAqtqFCnnZtftHkvQp1Wa4xLRtoCfmKUEcJ/xAz5/Keydl0YQ/clhhEIt8e
+         kONBjkTtjFWFsv+FFvpZFDWMhs4jeRqS+eMT68A4=
+Date:   Tue, 12 May 2020 17:45:08 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     heiko@sntech.de, Johan Jonker <jbx6244@gmail.com>
-Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20200507113238.7904-1-jbx6244@gmail.com>
-References: <20200507113238.7904-1-jbx6244@gmail.com>
-Subject: Re: [PATCH v1] ASoC: rockchip-i2s: add description for rk3308
-Message-Id: <158930188455.55827.16068992221946601782.b4-ty@kernel.org>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-clk@vger.kernel.org
+In-Reply-To: <20200511210134.1224532-2-lkundrak@v3.sk>
+References: <20200511210134.1224532-1-lkundrak@v3.sk> <20200511210134.1224532-2-lkundrak@v3.sk>
+Subject: Re: [PATCH 01/11] ASoC: mmp-sspa: Flip SNDRV_PCM_FMTBIT_S24_3LE on
+Message-Id: <158930188456.55827.7679180677411632006.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 7 May 2020 13:32:38 +0200, Johan Jonker wrote:
-> The description below is already in use for rk3308.dtsi,
-> but was somehow never added to a document, so add
-> "rockchip,rk3308-i2s", "rockchip,rk3066-i2s"
-> for i2s nodes on a rk3308 platform to rockchip-i2s.yaml.
-> One of the rk3308 i2s nodes also has a different dma layout,
-> so change that as well.
+On Mon, 11 May 2020 23:01:24 +0200, Lubomir Rintel wrote:
+> The hw_params() callback handles the 3-byte format, not
+> SNDRV_PCM_FMTBIT_S24_LE.
 
 Applied to
 
@@ -68,8 +66,20 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: rockchip-i2s: add description for rk3308
-      commit: ab436c974e08d9254999d7a84d86b1d4c1749230
+[1/7] ASoC: mmp-sspa: A trivial typo fix
+      commit: e0b9024d2c8851b18b953823204278602bf73086
+[2/7] ASoC: mmp-sspa: Get rid of dma_params and phys_base
+      commit: c9aeda1c94973f835b3d1b6c785a414caaf935c3
+[3/7] ASoC: mmp-sspa: Add support for soc-generic-dmaengine-pcm
+      commit: 724da05378ba7af6e273451a2c3f565a3315a9db
+[4/7] ASoC: mmp-sspa: Remove the embedded struct ssp_device
+      commit: 3c4e89df3b45348dc0ee01a2ef1be710f7424ff7
+[5/7] ASoC: mmp-sspa: Prepare/unprepare the clocks
+      commit: 8ecdcac8792b6787ecb2341d25cb82165cf0129d
+[6/7] ASoC: mmp-sspa: Add support for the runtime power management
+      commit: 7d98cc648253c362ebfc582b11095a0e3f001896
+[7/7] ASoC: mmp-sspa: Set appropriate bus format for given bit width
+      commit: 39ec7e9b699910792468cf41a179d9930052e8ff
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
