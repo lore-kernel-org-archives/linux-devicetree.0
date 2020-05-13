@@ -2,94 +2,87 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC5AC2D0FC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30275CA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C14322254
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92DB222E8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="DB1u96VA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbgEMNhX (ORCPT
+        id S2387936AbgEMNhf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 09:37:23 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42585 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgEMNhW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 09:37:22 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i13so21417765oie.9;
-        Wed, 13 May 2020 06:37:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=flC28VEmzcLHIWCG84LHrOxcpu2xfAtYlxFbQDCrZ4Y=;
-        b=l7BnDTwWsSzrscW6KBx4EfegGcEBd7hRXKRCIEf1hFToVjonmLrnPjzb8CaR82OBDR
-         u3GUNmVT5Yo3lDztpZRowsYgE7uYoL0X23+9f6l6g0iEHp1tZqfEjPzokR2JSLeG6mwn
-         Tsrs6N6L3D7fE3yL9PTJTMZHZkFFfIc9E/iKMyASWMI3tQ/D21KJJfd3RC48+bv7JLXa
-         bTj81TcJWyeZVCth/6C8tVseJL/iatVSVU0afCa0OAZSgdOIgykg0BpdbuT+iMICrI54
-         hRtGdWmk09hgaYn1CpN/MT+v0CMxu0jEf6dwMmI5FIVjBgvZ8jBtx8kDhq7zQ7eSXQko
-         HrYQ==
-X-Gm-Message-State: AGi0PuYkPpmPCqD0QDfWk/TUAZmhIeXAivoMjJ3SB5T7w5C28TsbB/Dc
-        9jtT+spsFdR6vfi0lOGun+RTIMA2pZp3ei/NkirIDQ==
-X-Google-Smtp-Source: APiQypJ/7jZWojdyVGEwGQBhACnaZea0Aw4UDYa/vAQCLXlR44i0X8oFoQ2i4yfDkK1keNqTqy3ODJDgK5iBdx+g8iY=
-X-Received: by 2002:aca:d50f:: with SMTP id m15mr27258950oig.54.1589377041636;
- Wed, 13 May 2020 06:37:21 -0700 (PDT)
+        Wed, 13 May 2020 09:37:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgEMNhf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 09:37:35 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCFE5C061A0C;
+        Wed, 13 May 2020 06:37:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CT8QafuNU7nLW58gRG75IH2d/SNOoLj5Pkh6RsDK2u0=; b=DB1u96VASarFExlYVvTN2K4FF
+        YcWgO4N/Pv/7rjUwfqYgwZzwFq83aUexyQlS0nCAYIIXLmIB+NxaVmv4qU+wi8Gg9CjGaX/JyUX5f
+        KfEkgGylGwbYY1gc5y+4a3myt/YWd09VH4dnEhbYWl3ZT3wAo9hJCw51Q2bm/7feFrrai2HMkHBSV
+        +rhzet+/uD9KCl+EkC/RpgUKU27k9nbKLwfvMorD16UTwETE/H3U/9TiQTJjqZsPm2BYynJ5ALsfz
+        smTKoZptXIo9MJ7w/bvIachtZYcbNozvC47ygP4FLFac2zgGFgVCjdEgoiydosTgWsg4SosQaQv7o
+        K2jOKiUZg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59948)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jYrZe-0004jS-7F; Wed, 13 May 2020 14:37:26 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jYrZb-0007oW-Ux; Wed, 13 May 2020 14:37:23 +0100
+Date:   Wed, 13 May 2020 14:37:23 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Vladimir Vid <vladimir.vid@sartura.hr>
+Subject: Re: [PATCH] i2c: pxa: implement generic i2c bus recovery
+Message-ID: <20200513133722.GJ1551@shell.armlinux.org.uk>
+References: <E1jYnlI-0002Nw-83@rmk-PC.armlinux.org.uk>
+ <20200513131843.GB499265@lunn.ch>
 MIME-Version: 1.0
-References: <20200505154944.4598-1-geert+renesas@glider.be>
-In-Reply-To: <20200505154944.4598-1-geert+renesas@glider.be>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 13 May 2020 15:37:10 +0200
-Message-ID: <CAMuHMdXuD8+5Lc5vEN2rqyBtvzb-i0gS7qcUWPtip1BGEh1VXQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: timer: renesas: tmu: Convert to json-schema
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513131843.GB499265@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 5, 2020 at 5:50 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Convert the Renesas R-Mobile/R-Car Timer Unit (TMU) Device Tree binding
-> documentation to json-schema.
->
-> Document missing properties.
-> Update the example to match reality.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed, May 13, 2020 at 03:18:43PM +0200, Andrew Lunn wrote:
+> On Wed, May 13, 2020 at 10:33:12AM +0100, Russell King wrote:
+> > Implement generic GPIO-based I2C bus recovery for the PXA I2C driver.
+> 
+> Hi Russell
+> 
+> I assume this is going to be merged via i2c? So Wolfram Sang?  He is
+> not on To: or Cc:
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+Yes, just as my other patches I've posted to the linux-i2c list that
+Wolfram has picked up.  I think he works from patchwork.
 
-> +  '#renesas,channels':
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [ 2, 3 ]
-> +      - default: 3
-
-The "allOf" is no longer needed.  Will remove for v3.
-
-> +    description:
-> +      Number of channels implemented by the timer.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+I assume Wolfram doesn't want to be Cc'd, as per the current setup in
+MAINTAINERS.  If that's not the case, MAINTAINERS needs to be fixed.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
