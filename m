@@ -2,62 +2,61 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E544C2D0FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBF9C2D0FD
 	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 00:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1081F20753
+	by mail.kernel.org (Postfix) with ESMTP id 47BFD20753
 	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 00:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vAPOs+dP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ITZ6s8nf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732081AbgEMAzy (ORCPT
+        id S1732083AbgEMAzy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 12 May 2020 20:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51014 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732083AbgEMAzb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 20:55:31 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D340C061A0E
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 17:55:31 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id b8so6137627plm.11
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 17:55:31 -0700 (PDT)
+        with ESMTP id S1732075AbgEMAza (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 20:55:30 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09655C061A0F
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 17:55:30 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t9so10382794pjw.0
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 17:55:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=etYHxN3ySLIwR6cL/4LlObYwmD9I/trb9bCtQEgj1mI=;
-        b=vAPOs+dPJoqTXGl2f0d2ZiQWsvD5qMYGMtd+J7/radx3hoV5Cz7loihgG0t9H4rOIk
-         8gjTOq0oNVGJ1Hqf8FHbsPH65BQfll79RXxraX3PsK2Ihfu2am0DaqEjyvUQwBKbWDkH
-         Uar95Zege8VgBwuYeVpv62cXlyjcp3f2rOcpWtfVXS0oEn/puAvmmd2xi//It7mgiwBV
-         /FM/3FyXRLaPT7+M1Hheq2sun/OdX0CqEW8pARly9cdfmJK4xoRmO5nyecLyLeUJ4UX5
-         FC1Te1YRPgbOUHoC7Wx4rrocswWBb/zuXUQOo9Z985yKG71rx84EfCBWoBLGyR2U2tkS
-         SYyA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+aVsTRV0Vd7AjARuX1FSoP3j3p4vMbsUynYNIWG2zcg=;
+        b=ITZ6s8nfqeBtfn0oVoLGCgrnjOV1Xy0pZ3QdECW67KsV/hkeylPh/9bZ5pY1ytrDEv
+         MYdwBAJh+8DHuXK6VaGPgTKlQozijma7VAZhrA2jziS2Wlfl2Aj0GO+oGXYBdvOHYkNI
+         1zyQX/hfzOnC2niIDuG1u0ohwO0xg+hWVawxT9+Pn0+2OOKKwn0xZv2Qvv+BXw3KPfaT
+         Ba0QGr4CYQTEmMg3MUxArtF/PEekKi386oRGyi9pXGwCAQiIgxbtoqYViHsSJgREiy1K
+         Y7ilsmDsR0Th/RdJdnf+j5yqKLOCA3bz1sKYYSDzKdxvqgerEGPd3qk7PmVJDXYSzYoI
+         zGxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=etYHxN3ySLIwR6cL/4LlObYwmD9I/trb9bCtQEgj1mI=;
-        b=lP9EPjlMbl1eCBQuhrjaLRQ04sZfXVlPQAILOplo9JIZcLQ6eb0xHyE1dry4pdqddf
-         TzL8BxIaVYMljnXsPilcJxZAcVWyapg2gDJzxLrZ6pSfCn6loV0JXj0Ovg5rzX0KQbod
-         mNJo2+ZgpXZpcaI4qPur+jw2haRrcD3fnNaXjWVOep+dsVwJB8ZBcMHZaPttQKQPUgOs
-         MeHvDJf/PCrgDFTxjSxpW4NknW5ETyw9QCjOhAosflnOeVxxNuBlfFjHtIiTTiJcg6bX
-         AaIU7N4BzX6OtaVlyOEAarnjKQLTTGeO1VboxEJHBflX27Z0cGNIcKk8ubXHSps0Bg9w
-         RbZg==
-X-Gm-Message-State: AGi0PuY1uND2I7UA9sEDM7NES0iOuuMyYFrKJu54otZgAJIdBg0Fml12
-        g3j1tbZi7Ca4onPtyl9pOCaX5g==
-X-Google-Smtp-Source: APiQypJELEN+lza7wUergSkDB14XjiFt+gaaXMuPkWE6i6Jl1gi9geM7ftxaomx0XeS0zRkZgmeGrA==
-X-Received: by 2002:a17:90a:2c08:: with SMTP id m8mr30936109pjd.102.1589331330776;
-        Tue, 12 May 2020 17:55:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+aVsTRV0Vd7AjARuX1FSoP3j3p4vMbsUynYNIWG2zcg=;
+        b=CqdXG2c9gbwvx6rOB3iopmY/sVigDJIdpCenWHHIX73AwuCc4FFj3BpN2V6T9mT7c9
+         SAANnQum6QBly41bYsYnp0asns9CGLponHB1sR9OxcDjn1Jtw/nUUx5B4wczye4bl1vq
+         JrQ/nq+gOZNC+9JYpZxZd/OscCXMosTE8wSotek+q2TTRQ4hSudkMqx9zfiQqrul4UJS
+         /kKobLySg5PP5XJISSY88IwalUQ44OdCgATpbH+9nRi7fed+zo4DhPBZHOypdMbAEuPq
+         EXbROgjtIXMiPJR9UgEwUGAtCnyFQbr3BajpMpCe1U06u7PKeQSoFH7jMJp61WAiCPp6
+         PgCw==
+X-Gm-Message-State: AGi0PuacIo7MYn6aiyL6iLm+V1wAtNi8fKk/itifhnyP3a0gmkzt65do
+        M2vn1n6TYDOdJVennjaB2ZXp9A==
+X-Google-Smtp-Source: APiQypI3O4oBkDtpKaBNHwg5f+8AZEbJC5eKmdrym5Hi5g9Mw7N4wvHIlkhR/lrQNiEANYIJvRADLA==
+X-Received: by 2002:a17:90a:da05:: with SMTP id e5mr32780994pjv.140.1589331329287;
+        Tue, 12 May 2020 17:55:29 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p2sm11057428pgh.25.2020.05.12.17.55.29
+        by smtp.gmail.com with ESMTPSA id p2sm11057428pgh.25.2020.05.12.17.55.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 17:55:30 -0700 (PDT)
+        Tue, 12 May 2020 17:55:28 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -66,12 +65,10 @@ To:     Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] dt-bindings: hwlock: qcom: Migrate binding to YAML
-Date:   Tue, 12 May 2020 17:54:38 -0700
-Message-Id: <20200513005441.1102586-2-bjorn.andersson@linaro.org>
+Subject: [PATCH 0/4] hwspinlock: qcom: Allow dropping the intermediate TCSR mutex syscon
+Date:   Tue, 12 May 2020 17:54:37 -0700
+Message-Id: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
-References: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -79,71 +76,24 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Migrate the Qualcomm TCSR mutex binding to YAML to allow validation.
+In all modern Qualcomm platforms the mutex region of the TCSR is forked
+off into its own block, all with a offset of 0 and stride of 4096.
+Update the binding to allow the hardware block to be described directly
+on the mmio bus, in addition to allowing the existing syscon based
+definition.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../bindings/hwlock/qcom-hwspinlock.yaml      | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
+Bjorn Andersson (4):
+  dt-bindings: hwlock: qcom: Migrate binding to YAML
+  dt-bindings: hwlock: qcom: Allow device on mmio bus
+  hwspinlock: qcom: Allow mmio usage in addition to syscon
+  arm64: dts: qcom: sm8250: Drop tcsr_mutex syscon
+
+ .../bindings/hwlock/qcom-hwspinlock.yaml      | 65 +++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          | 11 +--
+ drivers/hwspinlock/qcom_hwspinlock.c          | 72 ++++++++++++++-----
+ 3 files changed, 124 insertions(+), 24 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
 
-diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-new file mode 100644
-index 000000000000..71e63b52edd5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwlock/qcom-hwspinlock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Hardware Mutex Block
-+
-+maintainers:
-+  - Bjorn Andersson <bjorn.andersson@linaro.org>
-+
-+description:
-+  The hardware block provides mutexes utilized between different processors on
-+  the SoC as part of the communication protocol used by these processors.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,sfpb-mutex
-+      - qcom,tcsr-mutex
-+
-+  '#hwlock-cells':
-+    const: 1
-+
-+  syscon:
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    description:
-+      Should be a triple of phandle referencing the TCSR mutex syscon, offset
-+      of first mutex within the syscon and stride between each mutex.
-+
-+required:
-+  - compatible
-+  - '#hwlock-cells'
-+  - syscon
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+        tcsr_mutex_block: syscon@fd484000 {
-+                compatible = "syscon";
-+                reg = <0xfd484000 0x2000>;
-+        };
-+
-+        hwlock {
-+                compatible = "qcom,tcsr-mutex";
-+                syscon = <&tcsr_mutex_block 0 0x80>;
-+
-+                #hwlock-cells = <1>;
-+        };
-+...
 -- 
 2.26.2
 
