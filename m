@@ -2,124 +2,117 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4886C2D10E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 06:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBACFC2D118
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 06:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88CB22494B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 06:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A115124944
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 06:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJr212c2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IvzyYj99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgEMF5o (ORCPT
+        id S1728865AbgEMGEq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 01:57:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729216AbgEMF5e (ORCPT
+        Wed, 13 May 2020 02:04:46 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:41228 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726220AbgEMGEq (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 01:57:34 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B207DC05BD09
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 22:57:34 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t7so6408400plr.0
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 22:57:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z7kZFy6HCyxrhgKGNSyjSTuXnfPxfj+czQqHRi3u1gM=;
-        b=zJr212c2S4dtMzz93cPqS9vPSi5G7YQyOSztYFxV+YM7YSjz7mTD7iy9LEtY/3XHjB
-         CJQA/o7CJlh3wJ9QmxVCuIUK03DsCHVTURqv0fyFzxSozfeaYXyeDil6GiiH+78ov1JU
-         tOJ+Xxwm0dmYI35dwakztMpzXpDIVHts4iaOBjkYKJNMRv9nmkxqWj3eloPcbKQ+m3rA
-         yYXqdfkFO5SEX/thFBE04tpjnZCmNFdvRUFckCGqklrhnOq+f6v8WCBvXHH4tKwPIHx/
-         bIOq2O2C94ASio9RDUE4fuMlp474f7pQngoq86yC2h1r4uunP5bSc0YyfuGfHwrL25kh
-         eEjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z7kZFy6HCyxrhgKGNSyjSTuXnfPxfj+czQqHRi3u1gM=;
-        b=TdbD7MVupf5sYxkDWlDXWR6Ri0YLJSNSFNNaJI6iKxrxBpbKtcLA+6GaWjiAc2tnHT
-         Zv1ZX5z0D2OfVS7Cq1HHQH1ku5Cr7T64Rccl9P0MiwagLPdS8DkxmdoAg8pP/NWYmdty
-         UFIim/NybQ2wxqJA3Nxt6/c1HJqmmpP3NdMlL4uFArTq49IhAkXd1+5OR4b4tyvJCJ6+
-         Sienwi676XOes8/fbgBwANiIY+W6JSacQKVy9mvkMGdN6/syuHKeQFVfnprCKDkeAhmp
-         fXE3tfrux83J913IH1sz85R64LQEhCKZzoj74PUEJQfZQWfg+tI2f88Z2y6vo8oTK/oF
-         te8Q==
-X-Gm-Message-State: AGi0PuaenZZciENmeB9N9x2nXuLbFkrCTOiHn2qBzPyYeFrrvHQlUuDo
-        CoyZ7+sXy2LLF7e/lj7q4TFwDg==
-X-Google-Smtp-Source: APiQypLDvyMdeHWS/UIk3epwcBtrBMYdULAF2/nXkMJSwPEnQM79P5r56h8uTsWRBFp718+BnjFXnA==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr22486312plb.94.1589349454118;
-        Tue, 12 May 2020 22:57:34 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w192sm14131161pff.126.2020.05.12.22.57.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 22:57:33 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Wed, 13 May 2020 02:04:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589349885; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=UkD6t098TzP+r9v6wY7c61VUY/PDazOwDvlcOxcji3Y=; b=IvzyYj99+Zx14d3VZo5DmRooU/UDdo6s6GudIh8hlyy/pv4vL8iZifmr6owk5JtyESP8J1dH
+ 0E6Um3EaQh5e+aAdkxMT3JKSA0yEAdOZPLYYv/NPAVLfOHSt26J3N+ve1mQI4G9YVM9Wg+v+
+ hojGUnFTXe8/PI3TyMvC5+hqnYU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebb8dfc.7f7a119bd340-smtp-out-n03;
+ Wed, 13 May 2020 06:04:44 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 83E25C63C41; Wed, 13 May 2020 06:04:44 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F3EABC433CB;
+        Wed, 13 May 2020 06:03:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F3EABC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v5 4/5] arm64: dts: qcom: qcs404: Add IMEM and PIL info region
-Date:   Tue, 12 May 2020 22:56:40 -0700
-Message-Id: <20200513055641.1413100-5-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
-References: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v2] dt-bindings: media: venus: Add an optional power domain for perf voting
+Date:   Wed, 13 May 2020 11:33:27 +0530
+Message-Id: <1589349807-10163-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a simple-mfd representing IMEM on QCS404 and define the PIL
-relocation info region, so that post mortem tools will be able to locate
-the loaded remoteprocs.
+Add an optional power domain which when specified can be used for
+setting the performance state of Venus.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
+ Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
+ Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-Changes since v4:
-- imem is no longer compatible with "syscon"
-
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index c685a1664810..b654b802e95c 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -1097,6 +1097,21 @@ blsp2_spi0: spi@7af5000 {
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+index 764affa..ac1ed64 100644
+--- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+@@ -25,12 +25,16 @@ properties:
+     maxItems: 1
  
-+		imem@8600000 {
-+			compatible = "simple-mfd";
-+			reg = <0x08600000 0x1000>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ranges = <0 0x08600000 0x1000>;
-+
-+			pil-reloc@94c {
-+				compatible = "qcom,pil-reloc-info";
-+				reg = <0x94c 0xc8>;
-+			};
-+		};
-+
- 		intc: interrupt-controller@b000000 {
- 			compatible = "qcom,msm-qgic2";
- 			interrupt-controller;
+   power-domains:
+-    maxItems: 2
++    minItems: 2
++    maxItems: 3
+ 
+   power-domain-names:
++    minItems: 2
++    maxItems: 3
+     items:
+       - const: venus
+       - const: vcodec0
++      - const: opp-pd
+ 
+   clocks:
+     maxItems: 5
+diff --git a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+index 8552f4a..9af78cb 100644
+--- a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+@@ -25,13 +25,17 @@ properties:
+     maxItems: 1
+ 
+   power-domains:
+-    maxItems: 3
++    minItems: 3
++    maxItems: 4
+ 
+   power-domain-names:
++    minItems: 3
++    maxItems: 4
+     items:
+       - const: venus
+       - const: vcodec0
+       - const: vcodec1
++      - const: opp-pd
+ 
+   clocks:
+     maxItems: 7
 -- 
-2.26.2
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
