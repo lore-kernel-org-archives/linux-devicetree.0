@@ -2,297 +2,391 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD8FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 16:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E42C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 16:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66BD62064E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 16:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069D02054F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 16:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389348AbgEMQVH (ORCPT
+        id S1730011AbgEMQXd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 12:21:07 -0400
-Received: from disco-boy.misterjones.org ([51.254.78.96]:38078 "EHLO
-        disco-boy.misterjones.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728354AbgEMQVH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 12:21:07 -0400
-X-Greylist: delayed 2494 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 May 2020 12:21:04 EDT
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@misterjones.org>)
-        id 1jYtTi-00C1J1-Tf; Wed, 13 May 2020 16:39:27 +0100
+        Wed, 13 May 2020 12:23:33 -0400
+Received: from muru.com ([72.249.23.125]:54378 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387522AbgEMQXd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 12:23:33 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id BBF8E80E1;
+        Wed, 13 May 2020 16:24:19 +0000 (UTC)
+Date:   Wed, 13 May 2020 09:23:27 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, robh+dt@kernel.org,
+        bcousson@baylibre.com, Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v2] arm: dts: Move am33xx and am43xx mmc nodes to
+ sdhci-omap driver
+Message-ID: <20200513162327.GM37466@atomide.com>
+References: <20200512203804.9340-1-faiz_abbas@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 13 May 2020 16:39:26 +0100
-From:   Marc Zyngier <maz@misterjones.org>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Olof Johansson <olof@lixom.net>,
-        Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 06/14] arm64: dts: sparx5: Add basic cpu support
-In-Reply-To: <20200513125532.24585-7-lars.povlsen@microchip.com>
-References: <20200513125532.24585-1-lars.povlsen@microchip.com>
- <20200513125532.24585-7-lars.povlsen@microchip.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <2d230dab95ee96727a42f9c242c93c18@misterjones.org>
-X-Sender: maz@misterjones.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: lars.povlsen@microchip.com, soc@kernel.org, arnd@arndb.de, sboyd@kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, Steen.Hegelund@microchip.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, olof@lixom.net, mturquette@baylibre.com
-X-SA-Exim-Mail-From: maz@misterjones.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512203804.9340-1-faiz_abbas@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-13 13:55, Lars Povlsen wrote:
-> This adds the basic DT structure for the Microchip Sparx5 SoC, and the
-> reference boards, pcb125, pcb134 and pcb135. The two latter have a
-> NAND vs a eMMC centric variant (as a mount option),
+* Faiz Abbas <faiz_abbas@ti.com> [200512 13:39]:
+> Move mmc nodes to be compatible with the sdhci-omap driver. The following
+> modifications are required for omap_hsmmc specific properties:
 > 
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> ti,non-removable: convert to the generic mmc non-removable
+> ti,needs-special-reset:  co-opted into the sdhci-omap driver
+> ti,dual-volt: removed. Legacy property not used in am335x or am43xx
+> ti,needs-special-hs-handling: removed. Legacy property not used in am335x
+> or am43xx
+> 
+> Also since the sdhci-omap driver does not support runtime PM, explicitly
+> disable the mmc3 instance in the dtsi.
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 > ---
->  MAINTAINERS                                   |   1 +
->  arch/arm64/boot/dts/Makefile                  |   1 +
->  arch/arm64/boot/dts/microchip/Makefile        |   4 +
->  arch/arm64/boot/dts/microchip/sparx5.dtsi     | 135 ++++++++++++++++++
->  .../boot/dts/microchip/sparx5_pcb125.dts      |  17 +++
->  .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +++
->  .../dts/microchip/sparx5_pcb134_board.dtsi    |  15 ++
->  .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +++
->  .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +++
->  .../dts/microchip/sparx5_pcb135_board.dtsi    |  15 ++
->  .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +++
->  .../boot/dts/microchip/sparx5_pcb_common.dtsi |  15 ++
->  12 files changed, 271 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/microchip/Makefile
->  create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
->  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
->  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
->  create mode 100644 
-> arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
->  create mode 100644 
-> arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
->  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
->  create mode 100644 
-> arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
->  create mode 100644 
-> arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
->  create mode 100644 
-> arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1b5a18d3dbb9f..5aa28d6e39d4f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2084,6 +2084,7 @@ M:	Lars Povlsen <lars.povlsen@microchip.com>
->  M:	Steen Hegelund <Steen.Hegelund@microchip.com>
->  M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
->  L:	linux-arm-kernel@lists.infradead.org (moderated for 
-> non-subscribers)
-> +F:	arch/arm64/boot/dts/microchip/
->  N:	sparx5
->  S:	Supported
+> v2: Rebased to latest mainline where all kernel dependancies have been merged.
 > 
-> diff --git a/arch/arm64/boot/dts/Makefile 
-> b/arch/arm64/boot/dts/Makefile
-> index f19b762c008d8..9680a7f20c307 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -17,6 +17,7 @@ subdir-y += intel
->  subdir-y += lg
->  subdir-y += marvell
->  subdir-y += mediatek
-> +subdir-y += microchip
->  subdir-y += nvidia
->  subdir-y += qcom
->  subdir-y += realtek
-> diff --git a/arch/arm64/boot/dts/microchip/Makefile
-> b/arch/arm64/boot/dts/microchip/Makefile
-> new file mode 100644
-> index 0000000000000..c6e0313eea0f9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/microchip/Makefile
-> @@ -0,0 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +dtb-$(CONFIG_ARCH_SPARX5) += sparx5_pcb125.dtb
-> +dtb-$(CONFIG_ARCH_SPARX5) += sparx5_pcb134.dtb sparx5_pcb134_emmc.dtb
-> +dtb-$(CONFIG_ARCH_SPARX5) += sparx5_pcb135.dtb sparx5_pcb135_emmc.dtb
-> diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-> b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-> new file mode 100644
-> index 0000000000000..3136b4369f507
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-> @@ -0,0 +1,135 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "microchip,sparx5";
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&cpu0>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu1>;
-> +				};
-> +			};
-> +		};
-> +		cpu0: cpu@0 {
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			device_type = "cpu";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "spin-table";
+> Suspend/Resume is now supported in the sdhci-omap driver.
 
-Really? This is 2020, not 2012 any more. Surely a new platform
-boots using PSCI, and not *this*.
+Great, thanks for updating it.
 
-> +			cpu-release-addr = <0x0 0x0000fff8>;
-> +			next-level-cache = <&L2_0>;
-> +		};
-> +		cpu1: cpu@1 {
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			device_type = "cpu";
-> +			reg = <0x0 0x1>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x0000fff8>;
-> +			next-level-cache = <&L2_0>;
-> +		};
-> +		L2_0: l2-cache0 {
-> +			compatible = "cache";
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts =
-> +			<GIC_PPI 13
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			<GIC_PPI 14
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			<GIC_PPI 11
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			<GIC_PPI 10
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+Keerthy, care to test for am3 and am4?
 
-You have a GICv3. These interrupt specifiers are not the ones GICv3 
-expects.
+Regards,
 
-> +	};
-> +
-> +	clocks: clocks {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +		ahb_clk: ahb-clk {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <250000000>;
-> +		};
-> +		sys_clk: sys-clk {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <625000000>;
-> +		};
-> +	};
-> +
-> +	axi: axi@600000000 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		gic: interrupt-controller@600300000 {
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			interrupt-controller;
-> +			reg = <0x6 0x00300000 0x20000>,	/* GICD */
-> +			      <0x6 0x00340000 0x1000000>;	/* GICR */
+Tony
 
-You are missing the GICv3 compatibility interfaces (GICV/GICH), which
-are implemented by the CPUs.
 
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		uart0: serial@600100000 {
-> +			compatible = "ns16550a";
-> +			reg = <0x6 0x00100000 0x20>;
-> +			clocks = <&ahb_clk>;
-> +			reg-io-width = <4>;
-> +			reg-shift = <2>;
-> +			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@600102000 {
-> +			compatible = "ns16550a";
-> +			reg = <0x6 0x00102000 0x20>;
-> +			clocks = <&ahb_clk>;
-> +			reg-io-width = <4>;
-> +			reg-shift = <2>;
-> +			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			status = "disabled";
-> +		};
-> +
-> +		timer1: timer@600105000 {
-> +			compatible = "snps,dw-apb-timer";
-> +			reg = <0x6 0x00105000 0x1000>;
-> +			clocks = <&ahb_clk>;
-> +			clock-names = "timer";
-> +			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +	};
-> +};
-
-Where is the PMU node?
-
-Thanks,
-
-         M.
--- 
-Who you jivin' with that Cosmik Debris?
+> Tested on: am335x-evm, am335x-boneblack, am335x-sk, am335x-bone, am437x-idk,
+> am43xx-gp-evm, am43xx-epos-evm.
+> 
+>  arch/arm/boot/dts/am335x-baltos.dtsi              | 2 +-
+>  arch/arm/boot/dts/am335x-boneblack-common.dtsi    | 1 +
+>  arch/arm/boot/dts/am335x-boneblack-wireless.dts   | 1 -
+>  arch/arm/boot/dts/am335x-boneblue.dts             | 1 -
+>  arch/arm/boot/dts/am335x-bonegreen-wireless.dts   | 1 -
+>  arch/arm/boot/dts/am335x-evm.dts                  | 3 +--
+>  arch/arm/boot/dts/am335x-evmsk.dts                | 2 +-
+>  arch/arm/boot/dts/am335x-lxm.dts                  | 2 +-
+>  arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi | 2 +-
+>  arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts    | 2 +-
+>  arch/arm/boot/dts/am335x-pepper.dts               | 4 ++--
+>  arch/arm/boot/dts/am335x-phycore-som.dtsi         | 2 +-
+>  arch/arm/boot/dts/am33xx-l4.dtsi                  | 6 ++----
+>  arch/arm/boot/dts/am33xx.dtsi                     | 3 ++-
+>  arch/arm/boot/dts/am4372.dtsi                     | 3 ++-
+>  arch/arm/boot/dts/am437x-cm-t43.dts               | 2 +-
+>  arch/arm/boot/dts/am437x-gp-evm.dts               | 4 ++--
+>  arch/arm/boot/dts/am437x-l4.dtsi                  | 5 ++---
+>  arch/arm/boot/dts/am437x-sk-evm.dts               | 2 +-
+>  19 files changed, 22 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-baltos.dtsi b/arch/arm/boot/dts/am335x-baltos.dtsi
+> index 05e7b5d4a95b..04f0b1227efe 100644
+> --- a/arch/arm/boot/dts/am335x-baltos.dtsi
+> +++ b/arch/arm/boot/dts/am335x-baltos.dtsi
+> @@ -369,7 +369,7 @@
+>  &mmc2 {
+>  	status = "okay";
+>  	vmmc-supply = <&wl12xx_vmmc>;
+> -	ti,non-removable;
+> +	non-removable;
+>  	bus-width = <4>;
+>  	cap-power-off-card;
+>  	pinctrl-names = "default";
+> diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+> index 91f93bc89716..dd932220a8bf 100644
+> --- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+> +++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+> @@ -22,6 +22,7 @@
+>  	pinctrl-0 = <&emmc_pins>;
+>  	bus-width = <8>;
+>  	status = "okay";
+> +	non-removable;
+>  };
+>  
+>  &am33xx_pinmux {
+> diff --git a/arch/arm/boot/dts/am335x-boneblack-wireless.dts b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
+> index 3124d94c0b3c..e07dd7979586 100644
+> --- a/arch/arm/boot/dts/am335x-boneblack-wireless.dts
+> +++ b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
+> @@ -75,7 +75,6 @@
+>  	bus-width = <4>;
+>  	non-removable;
+>  	cap-power-off-card;
+> -	ti,needs-special-hs-handling;
+>  	keep-power-in-suspend;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mmc3_pins &wl18xx_pins>;
+> diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
+> index 5811fb8d4fdf..83f9452c9cd3 100644
+> --- a/arch/arm/boot/dts/am335x-boneblue.dts
+> +++ b/arch/arm/boot/dts/am335x-boneblue.dts
+> @@ -367,7 +367,6 @@
+>  	bus-width = <4>;
+>  	non-removable;
+>  	cap-power-off-card;
+> -	ti,needs-special-hs-handling;
+>  	keep-power-in-suspend;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mmc3_pins &wl18xx_pins>;
+> diff --git a/arch/arm/boot/dts/am335x-bonegreen-wireless.dts b/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
+> index 4092cd193b8a..609c8db687ec 100644
+> --- a/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
+> +++ b/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
+> @@ -75,7 +75,6 @@
+>  	bus-width = <4>;
+>  	non-removable;
+>  	cap-power-off-card;
+> -	ti,needs-special-hs-handling;
+>  	keep-power-in-suspend;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mmc3_pins &wl18xx_pins>;
+> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+> index 68252dab32c3..a4fc6b168a85 100644
+> --- a/arch/arm/boot/dts/am335x-evm.dts
+> +++ b/arch/arm/boot/dts/am335x-evm.dts
+> @@ -743,8 +743,7 @@
+>  	bus-width = <4>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mmc3_pins &wlan_pins>;
+> -	ti,non-removable;
+> -	ti,needs-special-hs-handling;
+> +	non-removable;
+>  	cap-power-off-card;
+>  	keep-power-in-suspend;
+>  
+> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+> index 32f515a295ee..78b6e1f594c9 100644
+> --- a/arch/arm/boot/dts/am335x-evmsk.dts
+> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
+> @@ -655,7 +655,7 @@
+>  &mmc2 {
+>  	status = "okay";
+>  	vmmc-supply = <&wl12xx_vmmc>;
+> -	ti,non-removable;
+> +	non-removable;
+>  	bus-width = <4>;
+>  	cap-power-off-card;
+>  	keep-power-in-suspend;
+> diff --git a/arch/arm/boot/dts/am335x-lxm.dts b/arch/arm/boot/dts/am335x-lxm.dts
+> index fef582852820..dbedf729205c 100644
+> --- a/arch/arm/boot/dts/am335x-lxm.dts
+> +++ b/arch/arm/boot/dts/am335x-lxm.dts
+> @@ -339,7 +339,7 @@
+>  	pinctrl-0 = <&emmc_pins>;
+>  	vmmc-supply = <&vmmcsd_fixed>;
+>  	bus-width = <8>;
+> -	ti,non-removable;
+> +	non-removable;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi b/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
+> index 6495a125c01f..4e90f9c23d2e 100644
+> --- a/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
+> +++ b/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
+> @@ -159,7 +159,7 @@
+>  	vmmc-supply = <&vmmcsd_fixed>;
+>  	bus-width = <8>;
+>  	pinctrl-0 = <&mmc1_pins_default>;
+> -	ti,non-removable;
+> +	non-removable;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts b/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts
+> index 244df9c5a537..f03e72cada41 100644
+> --- a/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts
+> +++ b/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts
+> @@ -451,7 +451,7 @@
+>  	vmmc-supply = <&vmmcsd_fixed>;
+>  	bus-width = <8>;
+>  	pinctrl-0 = <&mmc2_pins_default>;
+> -	ti,non-removable;
+> +	non-removable;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
+> index 6d7608d9377b..f9a027b47962 100644
+> --- a/arch/arm/boot/dts/am335x-pepper.dts
+> +++ b/arch/arm/boot/dts/am335x-pepper.dts
+> @@ -341,7 +341,7 @@
+>  	pinctrl-0 = <&emmc_pins>;
+>  	vmmc-supply = <&ldo3_reg>;
+>  	bus-width = <8>;
+> -	ti,non-removable;
+> +	non-removable;
+>  };
+>  
+>  &mmc3 {
+> @@ -351,7 +351,7 @@
+>  	pinctrl-0 = <&wireless_pins>;
+>  	vmmmc-supply = <&v3v3c_reg>;
+>  	bus-width = <4>;
+> -	ti,non-removable;
+> +	non-removable;
+>  	dmas = <&edma_xbar 12 0 1
+>  		&edma_xbar 13 0 2>;
+>  	dma-names = "tx", "rx";
+> diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
+> index 3d0672b53d77..7e46b4c02709 100644
+> --- a/arch/arm/boot/dts/am335x-phycore-som.dtsi
+> +++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
+> @@ -69,7 +69,7 @@
+>  	pinctrl-0 = <&emmc_pins>;
+>  	vmmc-supply = <&vmmc_reg>;
+>  	bus-width = <8>;
+> -	ti,non-removable;
+> +	non-removable;
+>  	status = "disabled";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+> index 5ed7f3c58c0f..573ff076178b 100644
+> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
+> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+> @@ -1337,10 +1337,8 @@
+>  			ranges = <0x0 0x60000 0x1000>;
+>  
+>  			mmc1: mmc@0 {
+> -				compatible = "ti,omap4-hsmmc";
+> -				ti,dual-volt;
+> +				compatible = "ti,am335-sdhci";
+>  				ti,needs-special-reset;
+> -				ti,needs-special-hs-handling;
+>  				dmas = <&edma_xbar 24 0 0
+>  					&edma_xbar 25 0 0>;
+>  				dma-names = "tx", "rx";
+> @@ -1818,7 +1816,7 @@
+>  			ranges = <0x0 0xd8000 0x1000>;
+>  
+>  			mmc2: mmc@0 {
+> -				compatible = "ti,omap4-hsmmc";
+> +				compatible = "ti,am335-sdhci";
+>  				ti,needs-special-reset;
+>  				dmas = <&edma 2 0
+>  					&edma 3 0>;
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index a35f5052d76f..3b9d4d2d35bf 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -322,10 +322,11 @@
+>  			ranges = <0x0 0x47810000 0x1000>;
+>  
+>  			mmc3: mmc@0 {
+> -				compatible = "ti,omap4-hsmmc";
+> +				compatible = "ti,am335-sdhci";
+>  				ti,needs-special-reset;
+>  				interrupts = <29>;
+>  				reg = <0x0 0x1000>;
+> +				status = "disabled";
+>  			};
+>  		};
+>  
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index dba87bfaf33e..092b3d4404f4 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -316,10 +316,11 @@
+>  			ranges = <0x0 0x47810000 0x1000>;
+>  
+>  			mmc3: mmc@0 {
+> -				compatible = "ti,omap4-hsmmc";
+> +				compatible = "ti,am437-sdhci";
+>  				ti,needs-special-reset;
+>  				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+>  				reg = <0x0 0x1000>;
+> +				status = "disabled";
+>  			};
+>  		};
+>  
+> diff --git a/arch/arm/boot/dts/am437x-cm-t43.dts b/arch/arm/boot/dts/am437x-cm-t43.dts
+> index 063113a5da2d..a6b4fca8626a 100644
+> --- a/arch/arm/boot/dts/am437x-cm-t43.dts
+> +++ b/arch/arm/boot/dts/am437x-cm-t43.dts
+> @@ -291,7 +291,7 @@
+>  	pinctrl-0 = <&emmc_pins>;
+>  	vmmc-supply = <&vmmc_3v3>;
+>  	bus-width = <8>;
+> -	ti,non-removable;
+> +	non-removable;
+>  };
+>  
+>  &spi0 {
+> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+> index 811c8cae315b..cadf47ee337f 100644
+> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
+> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+> @@ -869,7 +869,7 @@
+>  	pinctrl-names = "default", "sleep";
+>  	pinctrl-0 = <&emmc_pins_default>;
+>  	pinctrl-1 = <&emmc_pins_sleep>;
+> -	ti,non-removable;
+> +	non-removable;
+>  };
+>  
+>  &mmc3 {
+> @@ -886,7 +886,7 @@
+>  	pinctrl-1 = <&mmc3_pins_sleep>;
+>  	cap-power-off-card;
+>  	keep-power-in-suspend;
+> -	ti,non-removable;
+> +	non-removable;
+>  
+>  	#address-cells = <1>;
+>  	#size-cells = <0>;
+> diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
+> index 49c6a872052e..f4eb36d8b660 100644
+> --- a/arch/arm/boot/dts/am437x-l4.dtsi
+> +++ b/arch/arm/boot/dts/am437x-l4.dtsi
+> @@ -1086,9 +1086,8 @@
+>  			ranges = <0x0 0x60000 0x1000>;
+>  
+>  			mmc1: mmc@0 {
+> -				compatible = "ti,omap4-hsmmc";
+> +				compatible = "ti,am437-sdhci";
+>  				reg = <0x0 0x1000>;
+> -				ti,dual-volt;
+>  				ti,needs-special-reset;
+>  				dmas = <&edma 24 0>,
+>  					<&edma 25 0>;
+> @@ -1601,7 +1600,7 @@
+>  			ranges = <0x0 0xd8000 0x1000>;
+>  
+>  			mmc2: mmc@0 {
+> -				compatible = "ti,omap4-hsmmc";
+> +				compatible = "ti,am437-sdhci";
+>  				reg = <0x0 0x1000>;
+>  				ti,needs-special-reset;
+>  				dmas = <&edma 2 0>,
+> diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
+> index 25222497f828..2416597a4f5c 100644
+> --- a/arch/arm/boot/dts/am437x-sk-evm.dts
+> +++ b/arch/arm/boot/dts/am437x-sk-evm.dts
+> @@ -719,7 +719,7 @@
+>  	pinctrl-1 = <&mmc3_pins_sleep>;
+>  	cap-power-off-card;
+>  	keep-power-in-suspend;
+> -	ti,non-removable;
+> +	non-removable;
+>  
+>  	#address-cells = <1>;
+>  	#size-cells = <0>;
+> -- 
+> 2.17.1
+> 
