@@ -7,28 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1E4C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8466C433E2
 	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5048320708
+	by mail.kernel.org (Postfix) with ESMTP id 6715820829
 	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390401AbgEMS4g (ORCPT
+        id S2390404AbgEMS4g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 13 May 2020 14:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390393AbgEMS4g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 14:56:36 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED23C061A0F;
-        Wed, 13 May 2020 11:56:35 -0700 (PDT)
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51900 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390381AbgEMS4g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 14:56:36 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id 68B3D2A28F8
+        with ESMTPSA id 4724A2A0188
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 80A39480108; Wed, 13 May 2020 20:56:29 +0200 (CEST)
+        id 7203A480103; Wed, 13 May 2020 20:56:29 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,9 +33,9 @@ To:     Sebastian Reichel <sre@kernel.org>,
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1 10/19] power: supply: sbs-battery: Improve POWER_SUPPLY_PROP_TECHNOLOGY support
-Date:   Wed, 13 May 2020 20:56:06 +0200
-Message-Id: <20200513185615.508236-11-sebastian.reichel@collabora.com>
+Subject: [PATCHv1 05/19] power: supply: sbs-battery: Add TI BQ20Z65 support
+Date:   Wed, 13 May 2020 20:56:01 +0200
+Message-Id: <20200513185615.508236-6-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
 References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
@@ -50,96 +46,86 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This reads the battery chemistry from the battery chip instead
-of incorrectly hardcoding the type to be Li-Ion.
+Add support for BQ20Z65 manufacturer data to the sbs-battery
+driver. Implementation has been verified using the public TRM
+available from [0] and tested using a GE Flex 3S2P battery.
+
+[0] http://www.ti.com/lit/pdf/sluu386
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/power/supply/sbs-battery.c | 43 ++++++++++++++++++++++++++++--
- 1 file changed, 41 insertions(+), 2 deletions(-)
+ .../bindings/power/supply/sbs_sbs-battery.txt     |  1 +
+ drivers/power/supply/sbs-battery.c                | 15 ++++++++++-----
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+index 4e78e51018eb..fa5a8b516dbf 100644
+--- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+@@ -6,6 +6,7 @@ Required properties :
+      part number compatible string might be used in order to take care of
+      vendor specific registers.
+      Known <vendor>,<part-number>:
++       ti,bq20z65
+        ti,bq20z75
+ 
+ Optional properties :
 diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-index 611a11385496..b697a42d9ccf 100644
+index 6acd242eed48..a15783802ef8 100644
 --- a/drivers/power/supply/sbs-battery.c
 +++ b/drivers/power/supply/sbs-battery.c
-@@ -43,6 +43,7 @@ enum {
- 	REG_DESIGN_CAPACITY_CHARGE,
- 	REG_DESIGN_VOLTAGE_MIN,
- 	REG_DESIGN_VOLTAGE_MAX,
-+	REG_CHEMISTRY,
- 	REG_MANUFACTURER,
- 	REG_MODEL_NAME,
- };
-@@ -133,7 +134,9 @@ static const struct chip_data {
- 	[REG_MANUFACTURER] =
- 		SBS_DATA(POWER_SUPPLY_PROP_MANUFACTURER, 0x20, 0, 65535),
- 	[REG_MODEL_NAME] =
--		SBS_DATA(POWER_SUPPLY_PROP_MODEL_NAME, 0x21, 0, 65535)
-+		SBS_DATA(POWER_SUPPLY_PROP_MODEL_NAME, 0x21, 0, 65535),
-+	[REG_CHEMISTRY] =
-+		SBS_DATA(POWER_SUPPLY_PROP_TECHNOLOGY, 0x22, 0, 65535)
+@@ -149,8 +149,8 @@ static enum power_supply_property sbs_properties[] = {
+ 	POWER_SUPPLY_PROP_MODEL_NAME
  };
  
- static enum power_supply_property sbs_properties[] = {
-@@ -185,6 +188,7 @@ struct sbs_info {
+-/* Supports special manufacturer commands from TI BQ20Z75 IC. */
+-#define SBS_FLAGS_TI_BQ20Z75		BIT(0)
++/* Supports special manufacturer commands from TI BQ20Z65 and BQ20Z75 IC. */
++#define SBS_FLAGS_TI_BQ20ZX5		BIT(0)
  
- static char model_name[I2C_SMBUS_BLOCK_MAX + 1];
- static char manufacturer[I2C_SMBUS_BLOCK_MAX + 1];
-+static char chemistry[I2C_SMBUS_BLOCK_MAX + 1];
- static bool force_load;
+ struct sbs_info {
+ 	struct i2c_client		*client;
+@@ -626,7 +626,7 @@ static int sbs_get_property(struct power_supply *psy,
+ 	switch (psp) {
+ 	case POWER_SUPPLY_PROP_PRESENT:
+ 	case POWER_SUPPLY_PROP_HEALTH:
+-		if (chip->flags & SBS_FLAGS_TI_BQ20Z75)
++		if (chip->flags & SBS_FLAGS_TI_BQ20ZX5)
+ 			ret = sbs_get_ti_battery_presence_and_health(client,
+ 								     psp, val);
+ 		else
+@@ -950,7 +950,7 @@ static int sbs_suspend(struct device *dev)
+ 	if (chip->poll_time > 0)
+ 		cancel_delayed_work_sync(&chip->work);
  
- static int sbs_update_presence(struct sbs_info *chip, bool is_present)
-@@ -636,6 +640,38 @@ static int sbs_get_property_index(struct i2c_client *client,
- 	return -EINVAL;
- }
+-	if (chip->flags & SBS_FLAGS_TI_BQ20Z75) {
++	if (chip->flags & SBS_FLAGS_TI_BQ20ZX5) {
+ 		/* Write to manufacturer access with sleep command. */
+ 		ret = sbs_write_word_data(client,
+ 					  sbs_data[REG_MANUFACTURER_DATA].addr,
+@@ -970,6 +970,7 @@ static SIMPLE_DEV_PM_OPS(sbs_pm_ops, sbs_suspend, NULL);
+ #endif
  
-+static int sbs_get_chemistry(struct i2c_client *client,
-+		union power_supply_propval *val)
-+{
-+	enum power_supply_property psp = POWER_SUPPLY_PROP_TECHNOLOGY;
-+	int ret;
-+
-+	ret = sbs_get_property_index(client, psp);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = sbs_get_battery_string_property(client, ret, psp,
-+					      chemistry);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!strncasecmp(chemistry, "LION", 4))
-+		val->intval = POWER_SUPPLY_TECHNOLOGY_LION;
-+	else if (!strncasecmp(chemistry, "LiP", 3))
-+		val->intval = POWER_SUPPLY_TECHNOLOGY_LIPO;
-+	else if (!strncasecmp(chemistry, "NiCd", 4))
-+		val->intval = POWER_SUPPLY_TECHNOLOGY_NiCd;
-+	else if (!strncasecmp(chemistry, "NiMH", 4))
-+		val->intval = POWER_SUPPLY_TECHNOLOGY_NiMH;
-+	else
-+		val->intval = POWER_SUPPLY_TECHNOLOGY_UNKNOWN;
-+
-+	if (val->intval == POWER_SUPPLY_TECHNOLOGY_UNKNOWN)
-+		dev_warn(&client->dev, "Unknown chemistry: %s\n", chemistry);
-+
-+	return 0;
-+}
-+
- static int sbs_get_property(struct power_supply *psy,
- 	enum power_supply_property psp,
- 	union power_supply_propval *val)
-@@ -673,7 +709,10 @@ static int sbs_get_property(struct power_supply *psy,
- 		break;
+ static const struct i2c_device_id sbs_id[] = {
++	{ "bq20z65", 0 },
+ 	{ "bq20z75", 0 },
+ 	{ "sbs-battery", 1 },
+ 	{}
+@@ -978,9 +979,13 @@ MODULE_DEVICE_TABLE(i2c, sbs_id);
  
- 	case POWER_SUPPLY_PROP_TECHNOLOGY:
--		val->intval = POWER_SUPPLY_TECHNOLOGY_LION;
-+		ret = sbs_get_chemistry(client, val);
-+		if (ret < 0)
-+			break;
-+
- 		goto done; /* don't trigger power_supply_changed()! */
- 
- 	case POWER_SUPPLY_PROP_ENERGY_NOW:
+ static const struct of_device_id sbs_dt_ids[] = {
+ 	{ .compatible = "sbs,sbs-battery" },
++	{
++		.compatible = "ti,bq20z65",
++		.data = (void *)SBS_FLAGS_TI_BQ20ZX5,
++	},
+ 	{
+ 		.compatible = "ti,bq20z75",
+-		.data = (void *)SBS_FLAGS_TI_BQ20Z75,
++		.data = (void *)SBS_FLAGS_TI_BQ20ZX5,
+ 	},
+ 	{ }
+ };
 -- 
 2.26.2
 
