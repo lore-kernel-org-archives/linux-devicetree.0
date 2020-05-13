@@ -2,136 +2,97 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2073AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 20:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A126BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 20:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A50DF206A5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 20:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08ABA20575
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 20:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nMo2mfTP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DpjJjWPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390858AbgEMUPd (ORCPT
+        id S2390697AbgEMUYY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 16:15:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390352AbgEMUPc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 16:15:32 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C884EC061A0E
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 13:15:32 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id fu13so11465593pjb.5
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 13:15:32 -0700 (PDT)
+        Wed, 13 May 2020 16:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732650AbgEMUYX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 16:24:23 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AB52C061A0C;
+        Wed, 13 May 2020 13:24:22 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b71so1028722ilg.8;
+        Wed, 13 May 2020 13:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Gcu03BapccXbGC0ugrF7HAKsX8s/rikPdyRfZ2v+7/A=;
-        b=nMo2mfTPsCwPQuL3Wy/MlcZIMWxFkdw9LhCDLY5nhwMM21OCJKIkBr/jaFfSBwIN1Y
-         akIlzTecdhLNLgKpEWYDBQ0mN/XX7L2NRzU4azhQL5vDsth352qYFB19f+vz5xYZdL9J
-         F/FtSTYPzv3A5YmLLP2aadn9GW2+VRNqnIS0I=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/0PPB26EjKCEK4FysNGX/JGmScpUolfSHa5EDihTllg=;
+        b=DpjJjWPSkGc4uBWZSWOu3a8gE6D6kgBELTVAJpfcmJe1rw9c6mQsnxzKwM1zWR0/ep
+         P5fMP0DWk7itrunwNIy89fS79ZFHjAytH+q8pUfPM9MhERs1zJOWV7zlLf7OOSsvAF19
+         DtiOpo1mT/B0SkrptWiIV+aE8JC8gnj880EUrOE0MfzlUy38V89twiW3UMD84y0VR0hX
+         dyOZuCVuwgoZ12QiEUTSS8IBOi40/2l3zvwbFqJ3y2DmIRGRSGXXFnZbmI+P5pnpxvl3
+         kJHFFx1Zys8+ZbxEPxXWEgBBO9GIMc3agGS3DdgKeZFeppAcemofiiHSfdCoO3gGLeqk
+         ynjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Gcu03BapccXbGC0ugrF7HAKsX8s/rikPdyRfZ2v+7/A=;
-        b=R4nQyikiwRlrEhOMT0kXmoT3AhxZklEgNJsX65Emqsc81KDVa5XsbUFvCzR1mvJ5p3
-         grQgc5kpaVsxmpCVyPmm/RV8CHMWVy6COPqH+wra9COl+1KmGRkUsRfbIAKTwhppDLSi
-         LWl13NMovngIR6XQCV1iGOu5W3KSBVniW1+P6bPSx2A8VMKnqV2OV51IPGtEbhSlqvWU
-         AEd6qoA3mbVxgKAEteYBr9BmT68JBCgukI9aWIq7YVVxlKfCqudXCL45bESV2Iqj11T4
-         dfjN+huRhsD96SyzxGqIcwFgo/lkcxBcAvumQ3HUzpWnFJwEOnf2fMVrpPgPW9WcqOp5
-         LgpQ==
-X-Gm-Message-State: AGi0PubBtChTE6pkBzEK1rL2NErmd+EF4oLSu34Vy4tza2s/rIRCkS/D
-        PLmNjs3m8Pl6csHtvOfux48Qnw==
-X-Google-Smtp-Source: APiQypLWtkrar0+R60VQFnxu1If/r6w1THO5SU46GXyv2coXCgkwRIlLIk7e/Jx6iO/X9WDaTCI0SQ==
-X-Received: by 2002:a17:90a:cb86:: with SMTP id a6mr37392232pju.127.1589400932263;
-        Wed, 13 May 2020 13:15:32 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y16sm355662pfp.45.2020.05.13.13.15.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 13:15:30 -0700 (PDT)
-Date:   Wed, 13 May 2020 13:15:29 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Petr Mladek <pmladek@suse.com>, Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
-Message-ID: <202005131315.5CEA90C@keescook>
-References: <20200506211523.15077-1-keescook@chromium.org>
- <20200512131655.GE17734@linux-b0ei>
- <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
- <20200512155207.GF17734@linux-b0ei>
- <202005121111.6BECC45@keescook>
- <20200513073448.GG7340@linux-b0ei>
- <202005130045.EF013D12E@keescook>
- <CA+CK2bAPv5u1ih5y9t5FUnTyximtFCtDYXJCpuyjOyHNOkRdqw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/0PPB26EjKCEK4FysNGX/JGmScpUolfSHa5EDihTllg=;
+        b=PNj/PM/Hyok/+3kDFIpMreIuOf8otYIyQ4SHSbk3Ay8BAQ7zlxBAdJxLWd23gDIXkH
+         HstACWlY4NNjGz2++d1Msg2elZaE8XdRvyf4ItXZp8jZJJWKAVxpFmiGziscASE+amdi
+         ids1aXmHQiyjLSsLvQWIuVoO74Riqe7V2rVBNp7BKFnWkzdVodZYDc4no4eJpxns23BB
+         Swh4FCLD+ZOquguMk8srf+0z+A7sUdxxXMwoubKOzpFzJtDzJhieMjm5rdcFCynbmy0K
+         Jb7cGCcDNTsWjxcnQ+2zwEef0ooCNCCtDhkOPK7uKIPbjym3LzU5XkthNjKdOT+k0K/g
+         ckaA==
+X-Gm-Message-State: AOAM531dsFiIrk3JXs6EeGYpLv4OGPvzpGgp2/9tfzQHexr8wq237aqk
+        8zZ8XaHM5dUtVz/9Kk37DIPsH0fSRHucDV3efqQ=
+X-Google-Smtp-Source: ABdhPJxbUfrjvMOE70gMloZvlIhKbhNjJILxo1CxWouTHXmQImiYKQ7qMPsPb6ZN1UHsnym1/2QR7EQ6Tgsn6w7xjDI=
+X-Received: by 2002:a92:4b11:: with SMTP id m17mr1298260ilg.42.1589401461922;
+ Wed, 13 May 2020 13:24:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+CK2bAPv5u1ih5y9t5FUnTyximtFCtDYXJCpuyjOyHNOkRdqw@mail.gmail.com>
+References: <20200513184735.30104-1-michael.srba@seznam.cz>
+In-Reply-To: <20200513184735.30104-1-michael.srba@seznam.cz>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Wed, 13 May 2020 14:24:10 -0600
+Message-ID: <CAOCk7No9mnXwsmCZF14Hsx=oikCRe=PVcjoRsFsR5ZjftHPndw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8916: Disable coresight by default
+To:     michael.srba@seznam.cz
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 10:35:16AM -0400, Pavel Tatashin wrote:
-> > >   + reason: panic, oops, emergency, shutdown    (ordered by severity)
-> > >   + handling: restart, halt, poweroff
-> > >
-> > > Or we might just replace KMSG_DUMP_RESTART, KMSG_DUMP_HALT,
-> > > KMSG_DUMP_POWEROFF with a single KMSG_DUMP_SHUTDOWN.
-> > >
-> > > Then the max reason variable would make sense.
-> >
-> > That would work for me, yeah. Pavel, is that enough granularity for you?
-> >
-> 
-> Yes, I like the second approach: where we combine all shutdown type
-> events into a single type.
-> max_reason will have 4 levels:
-> 
->    KMSG_DUMP_PANIC,
->    KMSG_DUMP_OOPS,
->    KMSG_DUMP_EMERG,
->    KMSG_DUMP_SHUTDOWN,
-> 
-> If needed it is possible to determine from dmesg logs what kind of
-> shutdown was taken, because there is a message logged right before
-> every kmsg_dump() for these events:
-> 
-> 249   if (!cmd)
-> 250   pr_emerg("Restarting system\n");
-> 251   else
-> 252   pr_emerg("Restarting system with command '%s'\n", cmd);
-> 253   kmsg_dump(KMSG_DUMP_RESTART);
-> 
-> 276   pr_emerg("System halted\n");
-> 277   kmsg_dump(KMSG_DUMP_HALT);
-> 
-> 294   pr_emerg("Power down\n");
-> 295   kmsg_dump(KMSG_DUMP_POWEROFF);
-> 
-> Kees, I will submit a new series with these changes soon.
+On Wed, May 13, 2020 at 12:50 PM <michael.srba@seznam.cz> wrote:
+>
+> From: Michael Srba <michael.srba@seznam.cz>
+>
+> On some msm8916 devices, attempts at initializing coresight cause the boot to
+> fail. This was fixed by disabling the coresight-related nodes in the board dts
+> files. However, a cleaner approach was chosen for fixing the same issue on
+> msm8998: disabling coresight by default, and enabling it in board dts files
+> where desired.
+>
+> This patch implements the same solution for msm8916, removes now redundant
+> overwrites in board specific dts files and and enables coresight in db410c's
+> board dts in order to keep the current behavior.
+>
+> Fixes: b1fcc5702a41 ("arm64: dts: qcom: msm8916: Add CTI options")
+> Signed-off-by: Michael Srba <michael.srba@seznam.cz>
 
-Great; thanks!
-
--Kees
-
--- 
-Kees Cook
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
