@@ -2,115 +2,94 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C4BCA90AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DDACA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED2C0223E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07AA204EF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:41:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yO+lKrES"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="wgfMihJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387767AbgEMNjh (ORCPT
+        id S1733282AbgEMNls (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 09:39:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:57898 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728787AbgEMNjc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 09:39:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=hKK0PusahUIxbCyM9tysfdHvsir7N5IvBCEky0jEiNY=; b=yO+lKrESHBVdVl79yB038dn1C0
-        0RBiUREpZ6oVmSLcN/Y3XjsZA8aHMFK9vMWIIYZ0wxHZsjF/+b6rRcN8jPRcKIAn94UDiwQrnC/3k
-        kJoP0jS9KqXGzSml+Im1iUz7oLti+haAV8uVUuu8u9S731vOv78LsOU1fRMu4PRlWobw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jYrbZ-002AKi-MH; Wed, 13 May 2020 15:39:25 +0200
-Date:   Wed, 13 May 2020 15:39:25 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v1] net: phy: tja11xx: add cable-test support
-Message-ID: <20200513133925.GD499265@lunn.ch>
-References: <20200513123440.19580-1-o.rempel@pengutronix.de>
+        Wed, 13 May 2020 09:41:48 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:46432 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgEMNls (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 09:41:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589377308; x=1620913308;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Ljm8FnjZM8LY8xetHtTmei+qyvIsUSSDg5bKQj+0eQ0=;
+  b=wgfMihJE7uQWMJeESA3BI0u9CY5WRvS/0mQO6oi6o5Eg9DE6/yz/Z8dw
+   sFYu0eVwtcrCfDYVtosXO/eAkNYz1OJ3qZgmCpBueqjoY7m5yc68NGNI/
+   LMJ2rhtrpEHllVPbU9NXEgCE4COOcK3tJL6rI70wJe+d1mx3P9DGoAbX+
+   N8TrvZtMfwJ1e/k0DYf+2jJIsYIAAXmqejti4Xf91/+mXFJ7OpcrKxXqD
+   6SUhJypCrJ1QYEF6+L+y6P95WCHmTkan8XTOKs9iCdPjduq1Adjmh7qJm
+   tvTY3ma683hXwbSjGxD6CtoEvvOQqOvRrYpk7fUtVCto219wySmUbqzji
+   g==;
+IronPort-SDR: 2uLuxLcwbwuCg9ZVdYVZrouOLP901++0WbRqO6zMCR7luuHQE7Q5QuEc5Mo7b7xPMeLj8sL3sh
+ Nn3NzBQ7Hw5atCOsK68D3mDKxUKS1Mo7xIChiyL9W4eLAnxI6JIYxSFBu/NaeIV7Q5LIJpT3kf
+ 6Bd6KthtC7PUkKRXoKY/Qgliva20tyHHnAE/ES7ZeZvSdthJBsP4cW/TqudgAytiH7IVH3CLlT
+ E7tjkCJ0CevPJ52DUAajhHAMV/mMDBCt/F7bTBjXPSFCe/ztmq7ZYRhiRgls84pZ5xcwk/aW+9
+ i9U=
+X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
+   d="scan'208";a="79444197"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 06:41:47 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 May 2020 06:41:50 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 06:41:48 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>, SoC Team <soc@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] hwmon: Adding support for Microchip Sparx5 SoC
+Date:   Wed, 13 May 2020 15:41:37 +0200
+Message-ID: <20200513134140.25357-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513123440.19580-1-o.rempel@pengutronix.de>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 02:34:40PM +0200, Oleksij Rempel wrote:
-> Add initial cable testing support.
-> This PHY needs only 100usec for this test and it is recommended to run it
-> before the link is up. For now, provide at least ethtool support, so it
-> can be tested by more developers.
-> 
-> This patch was tested with TJA1102 PHY with following results:
-> - No cable, is detected as open
-> - 1m cable, with no connected other end and detected as open
-> - a 40m cable (out of spec, max lenght should be 15m) is detected as OK.
-> 
-> Current patch do not provide polarity test support. This test would
-> indicate not proper wire connection, where "+" wire of main phy is
-> connected to the "-" wire of the link partner.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  drivers/net/phy/nxp-tja11xx.c | 106 +++++++++++++++++++++++++++++++++-
->  1 file changed, 105 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-> index ca5f9d4dc57ed..8b743d25002b9 100644
-> --- a/drivers/net/phy/nxp-tja11xx.c
-> +++ b/drivers/net/phy/nxp-tja11xx.c
-> @@ -5,6 +5,7 @@
->   */
->  #include <linux/delay.h>
->  #include <linux/ethtool.h>
-> +#include <linux/ethtool_netlink.h>
->  #include <linux/kernel.h>
->  #include <linux/mdio.h>
->  #include <linux/mii.h>
-> @@ -26,6 +27,7 @@
->  #define MII_ECTRL_POWER_MODE_NO_CHANGE	(0x0 << 11)
->  #define MII_ECTRL_POWER_MODE_NORMAL	(0x3 << 11)
->  #define MII_ECTRL_POWER_MODE_STANDBY	(0xc << 11)
-> +#define MII_ECTRL_CABLE_TEST		BIT(5)
->  #define MII_ECTRL_CONFIG_EN		BIT(2)
->  #define MII_ECTRL_WAKE_REQUEST		BIT(0)
->  
-> @@ -55,6 +57,11 @@
->  #define MII_GENSTAT			24
->  #define MII_GENSTAT_PLL_LOCKED		BIT(14)
->  
-> +#define MII_EXTSTAT			25
-> +#define MII_EXTSTAT_SHORT_DETECT	BIT(8)
-> +#define MII_EXTSTAT_OPEN_DETECT		BIT(7)
-> +#define MII_EXTSTAT_POLARITY_DETECT	BIT(6)
-> +
+This is an add-on series to the main SoC Sparx5 series
+(Message-ID: <20200513125532.24585-1-lars.povlsen@microchip.com>).
 
-Do these registers all conform to the standard? Can we pull this code
-out into a library which all standards conformant PHY drivers can use?
+It is expected that the DT patches are to be taken directly by the arm-soc
+maintainers.
 
-The code itself looks O.K.
+Lars Povlsen (3):
+  dt-bindings: hwmon: Add Sparx5 temperature sensor
+  arm64: dts: sparx5: Add hwmon temperature sensor
+  hwmon: sparx5: Add Sparx5 SoC temperature driver
 
-    Andrew
+ .../bindings/hwmon/microchip,sparx5-temp.yaml |  39 +++++
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |   6 +
+ drivers/hwmon/Kconfig                         |  10 ++
+ drivers/hwmon/Makefile                        |   2 +-
+ drivers/hwmon/sparx5-temp.c                   | 154 ++++++++++++++++++
+ 5 files changed, 210 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/microchip,sparx5-temp.yaml
+ create mode 100644 drivers/hwmon/sparx5-temp.c
+
+--
+2.26.2
