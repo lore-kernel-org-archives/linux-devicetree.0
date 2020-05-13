@@ -2,90 +2,148 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232AEC2D0F6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C96C2D0F8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05581206F5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FCB207BC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589337396;
-	bh=Qb5YxbKNqO1hjR4pk5SxGUBqWRwEltCvitcnmRDfo8g=;
+	s=default; t=1589337543;
+	bh=/KF855AxEqqAUkIisYWdhkZHJvV3nQHoBNCBYWVfW5Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tmUfuSBo0eU4MkdbOjVpxmKHpZGPgnDHUOsP4UDWNHYzM8SFPn4OMxaMRuaIuSuz+
-	 9RXEChRpasM9mry/f15M18Drw70GgMEZZaCw6FczbJs7MJxjqIPB5RAUU1GkeqNsLr
-	 iXh7nbPp5nL2ZhLl5tZVsPIw3z+0AKeH6HzZ8xUI=
+	b=acbomhJZunTWxVXhiFZ8CiD0llOJcjGkXmvvmI+EZmClkFk+oK379L8nnilbAPtCz
+	 HJL440cFyh5dC9s/jj//CdZ5982ccso5lkgwHPplWIsv6gFxBfVeIeF2No1t27nhQc
+	 /f5IsQuC1afCzXOVHcheZqZN5hDZu3Xxkxua85MA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgEMCgb (ORCPT
+        id S1727805AbgEMCi6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 22:36:31 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33090 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgEMCgb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 22:36:31 -0400
-Received: by mail-ot1-f68.google.com with SMTP id v17so4318519ote.0;
-        Tue, 12 May 2020 19:36:30 -0700 (PDT)
+        Tue, 12 May 2020 22:38:58 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42682 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgEMCi6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 22:38:58 -0400
+Received: by mail-oi1-f193.google.com with SMTP id i13so20161213oie.9;
+        Tue, 12 May 2020 19:38:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7wnpVWCP9xBr9T5vBuXfOUZYJmzKN5pB5SkDibuLBzk=;
-        b=FT+1qp3jZ7RryKZn/yLsf/L3DjeWWgAnJ5VVmyKlg84ndAIFLKzbzo0LWWzQUUg/or
-         S1B3nhPLpELNMtzDYOe6jvmBSqjOaX4IwCFRK7+pTBHRz8HevysjA1OlmP5kMCxSQrqE
-         /+t6m6l+FC1eIt78Co9NOfwQZk6vqRGOSG0OxyK7uzMzcGb0FP61oowTp4X+5ysn4Tu6
-         r2BTxx4gL+Su/NaTIzVn3Q+s9Gluj13xncxFXVFOlOJe+o4RPFT92bI6P06oU12LX+6D
-         ecneM3YGOjZcYHnuqb7Capo5+h2X0dQKvNtFNPwx/oqIRggf5r59xdDNQti5RAQPiFrf
-         lZRQ==
-X-Gm-Message-State: AGi0PuZQO8LOlPfXC0DZsIG5QIrP4V/4jSsell9e57TAO21MEBQEDHkP
-        bgJ4082dGf++37deA6d7NQ==
-X-Google-Smtp-Source: APiQypKz7w9+ujTbnNAlV8a7KsmclyFkQEi30VtmO7E5fGtBxfkqysmHbHJboQKagQghmmKJ5z4EkQ==
-X-Received: by 2002:a9d:7390:: with SMTP id j16mr17748738otk.43.1589337390334;
-        Tue, 12 May 2020 19:36:30 -0700 (PDT)
+        bh=mB48QmwP9BiyH2LbdU0ZoxXeDi5pgn5seQ5bqpzznwg=;
+        b=D4JJlQDUaJd6f5n/AImjGpiK0Z/iR3yI0tUia87kuUaqkuEc2m7rlndasXIcb9V8S3
+         1RSVrTMQ+TABEJj1HByOXhcUUB9EWXrCioh6EojeAJclVt061esLikInvf5eqQ+ISGUb
+         N3M1DWUIZDVGTLch4y4kugA8qnG22/2GNDth0JDtfwVNx4rMWsVdbDwo3sb3fOMWNYzu
+         3BCvS7jdCcOV8KajVHnZYUP3NziMd9j++lXVxapQ+3bBQF+WZKMdgl1tHYQBPmJtcnHf
+         /zoDu/uMq/H2HeRFZgK/2ms/FJ5btUECd2bpc5oxOi3L7kmxYccY0iYcm8wyNK2lVPPt
+         /tXg==
+X-Gm-Message-State: AGi0Pua7/GGyRQjlkxa9GeQyafQQUkuUklpFVoao/FgeXP06/JQDaI0i
+        Q3cBRAuKAX7gVd6mBoCI2g==
+X-Google-Smtp-Source: APiQypI/fAJkeunIrrooBsca9jm5OufxdvNcX6Hy9olT8g0z8O/+ezwT5ubQzkvo5BteCx+UsEg1kA==
+X-Received: by 2002:a05:6808:a93:: with SMTP id q19mr26255041oij.6.1589337537668;
+        Tue, 12 May 2020 19:38:57 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q65sm658569oia.13.2020.05.12.19.36.29
+        by smtp.gmail.com with ESMTPSA id y22sm5733356oih.57.2020.05.12.19.38.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 19:36:29 -0700 (PDT)
-Received: (nullmailer pid 23099 invoked by uid 1000);
-        Wed, 13 May 2020 02:36:28 -0000
-Date:   Tue, 12 May 2020 21:36:28 -0500
+        Tue, 12 May 2020 19:38:56 -0700 (PDT)
+Received: (nullmailer pid 29317 invoked by uid 1000);
+        Wed, 13 May 2020 02:38:55 -0000
+Date:   Tue, 12 May 2020 21:38:55 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        netdev@vger.kernel.org, David Jander <david@protonic.nl>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v1] dt-bindings: net: nxp,tja11xx: rework validation
- support
-Message-ID: <20200513023628.GA22844@bogus>
-References: <20200505104215.8975-1-o.rempel@pengutronix.de>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 01/11] dt-bindings: add a binding document for MediaTek
+ PERICFG controller
+Message-ID: <20200513023855.GA23714@bogus>
+References: <20200505140231.16600-1-brgl@bgdev.pl>
+ <20200505140231.16600-2-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505104215.8975-1-o.rempel@pengutronix.de>
+In-Reply-To: <20200505140231.16600-2-brgl@bgdev.pl>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue,  5 May 2020 12:42:15 +0200, Oleksij Rempel wrote:
-> To properly identify this node, we need to use ethernet-phy-id0180.dc80.
-> And add missing required properties.
+On Tue, May 05, 2020 at 04:02:21PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> This adds a binding document for the PERICFG controller present on
+> MediaTek SoCs. For now the only variant supported is 'mt8516-pericfg'.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  .../devicetree/bindings/net/nxp,tja11xx.yaml  | 55 ++++++++++++-------
->  1 file changed, 35 insertions(+), 20 deletions(-)
+>  .../arm/mediatek/mediatek,pericfg.yaml        | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+> new file mode 100644
+> index 000000000000..74b2a6173ffb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+> @@ -0,0 +1,34 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/arm/mediatek/mediatek,pericfg.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: MediaTek Peripheral Configuration Controller
+> +
+> +maintainers:
+> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Don't need oneOf.
+
+> +      - items:
+> +        - enum:
+> +          - mediatek,pericfg
+
+PERICFG is exactly the same register set and functions on all Mediatek 
+SoCs? Needs to be more specific.
+
+> +        - const: syscon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pericfg: pericfg@10003050 {
+> +        compatible = "mediatek,mt8516-pericfg", "syscon";
+> +        reg = <0 0x10003050 0 0x1000>;
+
+Default for examples is 1 cell for addr and size.
+
+> +    };
+> -- 
+> 2.25.0
+> 
