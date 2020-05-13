@@ -2,124 +2,105 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736A2CA90AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 14:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5BBC433F2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 547732065C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 14:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="ZLQrV0nn"
+	by mail.kernel.org (Postfix) with ESMTP id 8E44B207DA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 14:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589380978;
+	bh=zHZKVOQrw4iw1BYZotmmbCpHSm3rHNSI8b2j1BlvFYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KnNF1d0kgKUrB+89tRLejtcM7WulciDLiSTDuf2sE282THf/b1Ml+wHU0/0ghH45Q
+	 Jud9h8Su99hYeL1I9y2DSMsbHqvvTlr79VEgbKedwJXMUmnowid/o1VmBtSLc70P2z
+	 0SQszH23JZtUVe9d3/hFQLdSvgKq0O1mvqrCNFJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388974AbgEMOfy (ORCPT
+        id S2388800AbgEMOm5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 10:35:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388395AbgEMOfy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 10:35:54 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29EA5C061A0C
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 07:35:54 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id n17so14388052ejh.7
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 07:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AlqVC8u4P9PNkoT8l8vMpZfu06Dmj3nts225WoeRAJA=;
-        b=ZLQrV0nneosBHj+7xCc5egcsUtP65O31+mSG+ARmurEXovdMccDV3mFX15VNW2ByBl
-         QO4llNH+5o4bhlXHKGm0KbtQIJ3+Z1GRZSWSE/M5qV65RflL1tf78xgJe7A4rE8M2qJW
-         ntHk1Z/Jd+55anPZ9E0wqcCyq8rnGIdyrGqTGORajq8YkayNJ1XuO7h7NgQSoAkFP2kL
-         53h0HrwXoZrsg4DB33/bqlCSIQpB1aGOnaVpTfwGrZn5FWoDCoYsCyy0fvL07HZwXNkI
-         zWPvp6MiCgszDsuRdhpk8HEMAcRwTIKiMTPgV4iJvA0Jsw7VqEDejipUKNQjiekb3m9P
-         cGrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AlqVC8u4P9PNkoT8l8vMpZfu06Dmj3nts225WoeRAJA=;
-        b=kCN/7bp4YCL6xtGMmOMQQZLrk34YGP/ujzL7j9f/v1o6QVTdQxIMJ5YmsTR8L9JTSA
-         s4q5dMTEYPV/SI0zIFhGz4ZT87pSUFVzlVr0wt856qVk3X9fL52MmGnBQp+pEEfKehhy
-         vEn/7DTd7273+SNBJd9VU8qrG2EID4j4n0FrNWQFgYs3CfN3Kwi3MVLf1BKRwJQ8SIr8
-         2VfMn7Zjv7yPcn21u6zV6k75iefEfdE/N15nmeZBSsB6ycX05bf5Bs8diA6oQgHRuBLP
-         UEjgTmOWjTgvgeIx/dFJ1+xMjxL39JDYcGkXeTNYKluJC0OFSxswIryix7zv9lyp1IFL
-         P0zw==
-X-Gm-Message-State: AGi0PuYSS+Qkz7a6JfcGM8HO3gfRCxtxEoKOpFReNaUdettAw81T37Ab
-        d90cwW42hfpzap4epLcOeuiGT8L6deqlsYRSQMohHfxQnus=
-X-Google-Smtp-Source: APiQypKK6WVF7jNOMbzOYGstLdxFuP03Og914DSw6UgaUl3VURf6RhYpE2KLwj09JfmwrN8oLKW+BCRRSdYt8gBuuKw=
-X-Received: by 2002:a17:906:404d:: with SMTP id y13mr23435201ejj.43.1589380552850;
- Wed, 13 May 2020 07:35:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200506211523.15077-1-keescook@chromium.org> <20200512131655.GE17734@linux-b0ei>
- <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
- <20200512155207.GF17734@linux-b0ei> <202005121111.6BECC45@keescook>
- <20200513073448.GG7340@linux-b0ei> <202005130045.EF013D12E@keescook>
-In-Reply-To: <202005130045.EF013D12E@keescook>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 13 May 2020 10:35:16 -0400
-Message-ID: <CA+CK2bAPv5u1ih5y9t5FUnTyximtFCtDYXJCpuyjOyHNOkRdqw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Petr Mladek <pmladek@suse.com>, Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Wed, 13 May 2020 10:42:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388777AbgEMOm5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 10:42:57 -0400
+Received: from localhost (p5486CF35.dip0.t-ipconnect.de [84.134.207.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D094A207D5;
+        Wed, 13 May 2020 14:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589380977;
+        bh=zHZKVOQrw4iw1BYZotmmbCpHSm3rHNSI8b2j1BlvFYA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mvXJRT2oJSavng4jGGwzEFhHegydiclz8aPDt0QP1O1szj+96SM3Yk7nkkc8UZfYj
+         XXLax2E1kLirXPhiZwHSP8AQ1KkAhN0sygzJqxmioG4IGUY7q2t/sKRd37eAtrRVcW
+         HrdeG5laMpYZK9LOfM+nI0xX5K/T0d8jO+TIj6wE=
+Date:   Wed, 13 May 2020 16:42:54 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org,
         Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Vladimir Vid <vladimir.vid@sartura.hr>
+Subject: Re: [PATCH] i2c: pxa: implement generic i2c bus recovery
+Message-ID: <20200513144254.GA7446@ninjato>
+References: <E1jYnlI-0002Nw-83@rmk-PC.armlinux.org.uk>
+ <20200513131843.GB499265@lunn.ch>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Content-Disposition: inline
+In-Reply-To: <20200513131843.GB499265@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> >   + reason: panic, oops, emergency, shutdown    (ordered by severity)
-> >   + handling: restart, halt, poweroff
-> >
-> > Or we might just replace KMSG_DUMP_RESTART, KMSG_DUMP_HALT,
-> > KMSG_DUMP_POWEROFF with a single KMSG_DUMP_SHUTDOWN.
-> >
-> > Then the max reason variable would make sense.
->
-> That would work for me, yeah. Pavel, is that enough granularity for you?
->
 
-Yes, I like the second approach: where we combine all shutdown type
-events into a single type.
-max_reason will have 4 levels:
+--FCuugMFkClbJLl1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   KMSG_DUMP_PANIC,
-   KMSG_DUMP_OOPS,
-   KMSG_DUMP_EMERG,
-   KMSG_DUMP_SHUTDOWN,
+On Wed, May 13, 2020 at 03:18:43PM +0200, Andrew Lunn wrote:
+> On Wed, May 13, 2020 at 10:33:12AM +0100, Russell King wrote:
+> > Implement generic GPIO-based I2C bus recovery for the PXA I2C driver.
+>=20
+> Hi Russell
+>=20
+> I assume this is going to be merged via i2c? So Wolfram Sang?  He is
+> not on To: or Cc:
 
-If needed it is possible to determine from dmesg logs what kind of
-shutdown was taken, because there is a message logged right before
-every kmsg_dump() for these events:
+But I read the i2c list :) I know some maintainers request CC, but I am
+fine as long as it is on the list.
 
-249   if (!cmd)
-250   pr_emerg("Restarting system\n");
-251   else
-252   pr_emerg("Restarting system with command '%s'\n", cmd);
-253   kmsg_dump(KMSG_DUMP_RESTART);
 
-276   pr_emerg("System halted\n");
-277   kmsg_dump(KMSG_DUMP_HALT);
+--FCuugMFkClbJLl1L
+Content-Type: application/pgp-signature; name="signature.asc"
 
-294   pr_emerg("Power down\n");
-295   kmsg_dump(KMSG_DUMP_POWEROFF);
+-----BEGIN PGP SIGNATURE-----
 
-Kees, I will submit a new series with these changes soon.
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl68B2oACgkQFA3kzBSg
+KbYAhg/+KOJpSs2n9SV0i9OsvjhuoQNKYIuQKFbNAyoFkDrIOxv473cx4JA89DeF
+FdwdSA5p0K3hqzXyb2Mp+NFTHW6BdHrkEROUbJnR5GkAdWW/lT7qjfrfRDaMvO71
+BGMn7mRwVb1eU0bzIsxZjMEQ7rDxREMn9FLmwfvlvE9CJ3tZkp0PU5vYQ7oR6481
++Syn6EusLFjH4Jb3HJdNI+6HVSe9wPSCul8E8vWgj9n9dXr78WMtAnKzpm+x1RZy
+gfaNVDQtMtWCX3wcdQCGegBumZ9H2CUJ56CIERdn3p4BmCUJX1sm5M+ZprhfLdeI
+9JHZIYi5rxLnbe737mntlHQ/BcJgkTRQgldPre9IE91a98QV/UL5v+4YXSGTa9TK
++BDs0oQFin7ZrOkq5330SsdPzs5CVDoYsjD2VYmy8k7DTLU2ArYmkusBTiRKwBnB
+SKFas7O+LVNEQyX+qJ+rmf2nqZGDBXKui02t7BQm+UoGq59Qw2PSVh9C2jinaRh3
+1auy5B1LN2pUXpiQnliwllO63bE+yVBBey3vPx/AkXh+Fu+a25h+N7F2lItIeWMo
+94/PHne8JInu29fkK/lKYDo71T8XpDIVEEqLG9iNAbTzInbXMB3CCDvoqj3IjhFa
+Uki43KWsNZ0RkqhCWGG0XZf1r6rhtbyXJIET6VwIXDeFYE1fjJU=
+=SnWv
+-----END PGP SIGNATURE-----
 
-Thank you,
-Pasha
+--FCuugMFkClbJLl1L--
