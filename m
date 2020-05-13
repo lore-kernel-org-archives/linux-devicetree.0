@@ -2,51 +2,47 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327DEC2D0F6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 01:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0A0C2D0FB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 01:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABD6206B7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 01:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2795206CC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 01:37:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="vV0fTbCT"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="utHyRH1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732024AbgEMBhV (ORCPT
+        id S1731604AbgEMBhV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 12 May 2020 21:37:21 -0400
-Received: from onstation.org ([52.200.56.107]:35608 "EHLO onstation.org"
+Received: from onstation.org ([52.200.56.107]:35604 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728332AbgEMBhT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1728313AbgEMBhT (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Tue, 12 May 2020 21:37:19 -0400
 Received: from tp-x1.redhat.com (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 8DD123EA59;
+        by onstation.org (Postfix) with ESMTPSA id 3687B3E8F9;
         Wed, 13 May 2020 01:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
         s=default; t=1589333507;
-        bh=9vYr0veDNGoPaF0yS5MgwbJtvztKvRkU36Niw0Jf0FQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vV0fTbCTzCLFGEiGXQv9U0QuwhugL71BmjnOIengbpGcnpJTGPe7nAqq+YlPmmzdn
-         hTWjZgaLDfZokWS1ciT1lVx9N+ULN6/aBF+m7PbBYMhzCfo5ax/6OfEFNkozZ4PP9/
-         yLn76FCFnP/2emMumEBcxy+8n7TIurFWmTOf8ojE=
+        bh=B+H20NEAsBxVq9dR1S+OzvWqKqZ/flzrrfq6qjDiS7U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=utHyRH1cxlSWJ2sp4CbTavFFXvuWSDnkgqufwwmjrYg4ZegePUhoMagD3Hov2E1AY
+         WKWkezi0EaAwAAiKOpaFhAD8sTRx30tR10bmXLrmCdUAxcf6rlNvxUknE9Z8cVNVCc
+         4Mi/UzV4hjBujGc2tCrNoHjFdRzbpLGar8KUfa2A=
 From:   Brian Masney <masneyb@onstation.org>
 To:     dmitry.torokhov@gmail.com
 Cc:     robh+dt@kernel.org, linux-input@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, sboyd@kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 RESEND 1/2] dt-bindings: Input: remove msm-vibrator
-Date:   Tue, 12 May 2020 21:31:39 -0400
-Message-Id: <20200513013140.69935-2-masneyb@onstation.org>
+        linux-arm-msm@vger.kernel.org, sboyd@kernel.org
+Subject: [PATCH v2 RESEND 0/2] Input: remove msm-vibrator driver and bindings
+Date:   Tue, 12 May 2020 21:31:38 -0400
+Message-Id: <20200513013140.69935-1-masneyb@onstation.org>
 X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200513013140.69935-1-masneyb@onstation.org>
-References: <20200513013140.69935-1-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -54,60 +50,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The address referenced in this binding is within the Qualcomm Clock
-namespace so let's drop the msm-vibrator bindings so that a more
-generic solution can be used instead.  No one is currently using these
-bindings so this won't affect any users.
+Here's a small patch series that removes the msm-vibrator driver and
+bindings. These two patches are broken out from this patch series from
+December:
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../bindings/input/msm-vibrator.txt           | 36 -------------------
- 1 file changed, 36 deletions(-)
+https://lore.kernel.org/lkml/20191205002503.13088-5-masneyb@onstation.org/
+
+And a resend of what I sent out in February:
+
+https://lore.kernel.org/lkml/20200211121318.144067-1-masneyb@onstation.org/
+
+In a nutshell, the address referenced by this driver is within the
+Qualcomm Clock namespace and needs to be managed by the clk subsystem.
+This driver needs to go away to clean up the upstream kernel.
+
+I'm waiting for someone from Qualcomm to either post a patch to support
+setting the clock duty cycle or someone to post information about the
+m,n,d registers for the clocks. Once that's done, no other changes
+will be needed in the input subsystem.
+
+Brian Masney (2):
+  dt-bindings: Input: remove msm-vibrator
+  Input: remove msm-vibrator driver
+
+ .../bindings/input/msm-vibrator.txt           |  36 ---
+ drivers/input/misc/Kconfig                    |  10 -
+ drivers/input/misc/Makefile                   |   1 -
+ drivers/input/misc/msm-vibrator.c             | 281 ------------------
+ 4 files changed, 328 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/input/msm-vibrator.txt
+ delete mode 100644 drivers/input/misc/msm-vibrator.c
 
-diff --git a/Documentation/devicetree/bindings/input/msm-vibrator.txt b/Documentation/devicetree/bindings/input/msm-vibrator.txt
-deleted file mode 100644
-index 8dcf014ef2e5..000000000000
---- a/Documentation/devicetree/bindings/input/msm-vibrator.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--* Device tree bindings for the Qualcomm MSM vibrator
--
--Required properties:
--
--  - compatible: Should be one of
--		"qcom,msm8226-vibrator"
--		"qcom,msm8974-vibrator"
--  - reg: the base address and length of the IO memory for the registers.
--  - pinctrl-names: set to default.
--  - pinctrl-0: phandles pointing to pin configuration nodes. See
--               Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
--  - clock-names: set to pwm
--  - clocks: phandle of the clock. See
--            Documentation/devicetree/bindings/clock/clock-bindings.txt
--  - enable-gpios: GPIO that enables the vibrator.
--
--Optional properties:
--
--  - vcc-supply: phandle to the regulator that provides power to the sensor.
--
--Example from a LG Nexus 5 (hammerhead) phone:
--
--vibrator@fd8c3450 {
--	reg = <0xfd8c3450 0x400>;
--	compatible = "qcom,msm8974-vibrator";
--
--	vcc-supply = <&pm8941_l19>;
--
--	clocks = <&mmcc CAMSS_GP1_CLK>;
--	clock-names = "pwm";
--
--	enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
--
--	pinctrl-names = "default";
--	pinctrl-0 = <&vibrator_pin>;
--};
 -- 
 2.24.1
 
