@@ -2,167 +2,203 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB6BCA90AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 09:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A06CCA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 09:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6281D206F5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 09:29:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Os/ZcSdg"
+	by mail.kernel.org (Postfix) with ESMTP id DBB3520675
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 09:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgEMJ3U (ORCPT
+        id S1726891AbgEMJbk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 05:29:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgEMJ3T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 05:29:19 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A91C061A0C;
-        Wed, 13 May 2020 02:29:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=S1EKebOmxklJ89iEdCA6FkHkRp5HPs448bB2B6Evm0I=; b=Os/ZcSdgPw4delhE0F4Emd2x2
-        43Y/EB85BrZZZqgPzvLWWCNhSng9hu+4jFq2etztt85v+AXIYt3rJyRl+gxbD1gt8gtq8QPa5lkoH
-        xPIJdrFk8m7LziQsOkDHo2QaRJlTU9UF4VhMw9Tm7PA8UjMzqnVjj57Md4Zzy/L2xyoD6Canbai7p
-        Lg7wUefFGMNd9k1eIwjzbGAy2zp8acaP2gdqwaWYXnX+AY1Cbsl6ifKKjB6JgZ0Q/ZGykbp4BNSHI
-        BvIQ/fofTz4IngWTBFcVYFOTHhsiW7Z4ry/1a3eqFIpe+4oj3CO7nSR8xe4ntUFV4rzBbn6f1wPbp
-        E0nJ6SkGQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:39690)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jYnhQ-00041Y-Al; Wed, 13 May 2020 10:29:12 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jYnhO-0007du-CI; Wed, 13 May 2020 10:29:10 +0100
-Date:   Wed, 13 May 2020 10:29:10 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Vladimir Vid <vladimir.vid@sartura.hr>
-Subject: Re: [PATCH 1/2] i2c: pxa: implement generic i2c bus recovery
-Message-ID: <20200513092910.GF1551@shell.armlinux.org.uk>
-References: <20200506094001.GP1551@shell.armlinux.org.uk>
- <E1jWGXX-0000Yx-UL@rmk-PC.armlinux.org.uk>
- <20200506140054.GG224913@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506140054.GG224913@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 13 May 2020 05:31:40 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:57562 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726492AbgEMJbk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 05:31:40 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 13 May 2020 15:01:35 +0530
+Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 13 May 2020 15:01:07 +0530
+Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
+        id 361C021257; Wed, 13 May 2020 15:01:05 +0530 (IST)
+From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, david.brown@linaro.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
+        robh+dt@kernel.org, sricharan@codeaurora.org,
+        nprakash@codeaurora.org
+Subject: [PATCH V5 01/10] remoteproc: qcom: Add PRNG proxy clock
+Date:   Wed, 13 May 2020 15:00:56 +0530
+Message-Id: <1589362265-22702-2-git-send-email-gokulsri@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
+References: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 06, 2020 at 04:00:54PM +0200, Andrew Lunn wrote:
-> On Wed, May 06, 2020 at 10:40:31AM +0100, Russell King wrote:
-> > Implement generic GPIO-based I2C bus recovery for the PXA I2C driver.
-> > 
-> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > ---
-> >  drivers/i2c/busses/i2c-pxa.c | 176 +++++++++++++++++++++++++++++++----
-> >  1 file changed, 159 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-> > index 0e194d6cd1b5..da15ab2a519e 100644
-> > --- a/drivers/i2c/busses/i2c-pxa.c
-> > +++ b/drivers/i2c/busses/i2c-pxa.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/err.h>
-> >  #include <linux/errno.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/init.h>
-> >  #include <linux/interrupt.h>
-> > @@ -28,6 +29,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/pinctrl/consumer.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/platform_data/i2c-pxa.h>
-> >  #include <linux/slab.h>
-> > @@ -260,6 +262,11 @@ struct pxa_i2c {
-> >  	bool			highmode_enter;
-> >  	u32			fm_mask;
-> >  	u32			hs_mask;
-> > +
-> > +	struct i2c_bus_recovery_info recovery;
-> > +	struct pinctrl		*pinctrl;
-> > +	struct pinctrl_state	*pinctrl_default;
-> > +	struct pinctrl_state	*pinctrl_recovery;
-> >  };
-> >  
-> >  #define _IBMR(i2c)	((i2c)->reg_ibmr)
-> > @@ -559,13 +566,8 @@ static void i2c_pxa_set_slave(struct pxa_i2c *i2c, int errcode)
-> >  #define i2c_pxa_set_slave(i2c, err)	do { } while (0)
-> >  #endif
-> >  
-> > -static void i2c_pxa_reset(struct pxa_i2c *i2c)
-> > +static void i2c_pxa_do_reset(struct pxa_i2c *i2c)
-> >  {
-> > -	pr_debug("Resetting I2C Controller Unit\n");
-> > -
-> > -	/* abort any transfer currently under way */
-> > -	i2c_pxa_abort(i2c);
-> > -
-> >  	/* reset according to 9.8 */
-> >  	writel(ICR_UR, _ICR(i2c));
-> >  	writel(I2C_ISR_INIT, _ISR(i2c));
-> > @@ -584,12 +586,25 @@ static void i2c_pxa_reset(struct pxa_i2c *i2c)
-> >  #endif
-> >  
-> >  	i2c_pxa_set_slave(i2c, 0);
-> > +}
-> >  
-> > +static void i2c_pxa_enable(struct pxa_i2c *i2c)
-> > +{
-> >  	/* enable unit */
-> >  	writel(readl(_ICR(i2c)) | ICR_IUE, _ICR(i2c));
-> >  	udelay(100);
-> >  }
-> >  
-> > +static void i2c_pxa_reset(struct pxa_i2c *i2c)
-> > +{
-> > +	pr_debug("Resetting I2C Controller Unit\n");
-> 
-> Hi Russell
-> 
-> I know you are just moving code around, but maybe pr_debug() could be
-> cleaned up to dev_debug()? 
+PRNG clock is needed by the secure PIL, support for the same
+is added in subsequent patches.
 
-Yes, but I don't want to add irrelevant changes into this; changing
-the way the driver prints stuff wouldn't be part of adding recovery
-support, and would likely get review comments suggesting it should
-be a separate patch.
+Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
+---
+ drivers/remoteproc/qcom_q6v5_wcss.c | 65 +++++++++++++++++++++++++++----------
+ 1 file changed, 47 insertions(+), 18 deletions(-)
 
-> > +	/*
-> > +	 * Claiming GPIOs can change the pinmux state, which confuses the
-> > +	 * pinctrl since since pinctrl's idea of the current setting is
-> 
-> since since
-> 
-> I don't know too much about this hardware, but for what it is worth,
-> 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index fff681a..0700d68 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -91,19 +91,6 @@ enum {
+ 	WCSS_QCS404,
+ };
+ 
+-struct wcss_data {
+-	const char *firmware_name;
+-	int crash_reason_smem;
+-	u32 version;
+-	bool aon_reset_required;
+-	bool wcss_q6_reset_required;
+-	const char *ssr_name;
+-	const char *sysmon_name;
+-	int ssctl_id;
+-	const struct rproc_ops *ops;
+-	bool requires_force_stop;
+-};
+-
+ struct q6v5_wcss {
+ 	struct device *dev;
+ 
+@@ -128,6 +115,7 @@ struct q6v5_wcss {
+ 	struct clk *qdsp6ss_xo_cbcr;
+ 	struct clk *qdsp6ss_core_gfmux;
+ 	struct clk *lcc_bcr_sleep;
++	struct clk *prng_clk;
+ 	struct regulator *cx_supply;
+ 
+ 	struct qcom_rproc_glink glink_subdev;
+@@ -151,6 +139,21 @@ struct q6v5_wcss {
+ 	bool requires_force_stop;
+ };
+ 
++struct wcss_data {
++	int (*init_clock)(struct q6v5_wcss *wcss);
++	int (*init_regulator)(struct q6v5_wcss *wcss);
++	const char *firmware_name;
++	int crash_reason_smem;
++	u32 version;
++	bool aon_reset_required;
++	bool wcss_q6_reset_required;
++	const char *ssr_name;
++	const char *sysmon_name;
++	int ssctl_id;
++	const struct rproc_ops *ops;
++	bool requires_force_stop;
++};
++
+ static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
+ {
+ 	int ret;
+@@ -240,6 +243,12 @@ static int q6v5_wcss_start(struct rproc *rproc)
+ 	struct q6v5_wcss *wcss = rproc->priv;
+ 	int ret;
+ 
++	ret = clk_prepare_enable(wcss->prng_clk);
++	if (ret) {
++		dev_err(wcss->dev, "prng clock enable failed\n");
++		return ret;
++	}
++
+ 	qcom_q6v5_prepare(&wcss->q6v5);
+ 
+ 	/* Release Q6 and WCSS reset */
+@@ -732,6 +741,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
+ 			return ret;
+ 	}
+ 
++	clk_disable_unprepare(wcss->prng_clk);
+ 	qcom_q6v5_unprepare(&wcss->q6v5);
+ 
+ 	return 0;
+@@ -889,7 +899,21 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
+ 	return 0;
+ }
+ 
+-static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
++static int ipq8074_init_clock(struct q6v5_wcss *wcss)
++{
++	int ret;
++
++	wcss->prng_clk = devm_clk_get(wcss->dev, "prng");
++	if (IS_ERR(wcss->prng_clk)) {
++		ret = PTR_ERR(wcss->prng_clk);
++		if (ret != -EPROBE_DEFER)
++			dev_err(wcss->dev, "Failed to get prng clock\n");
++		return ret;
++	}
++	return 0;
++}
++
++static int qcs404_init_clock(struct q6v5_wcss *wcss)
+ {
+ 	int ret;
+ 
+@@ -979,7 +1003,7 @@ static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
+ 	return 0;
+ }
+ 
+-static int q6v5_wcss_init_regulator(struct q6v5_wcss *wcss)
++static int qcs404_init_regulator(struct q6v5_wcss *wcss)
+ {
+ 	wcss->cx_supply = devm_regulator_get(wcss->dev, "cx");
+ 	if (IS_ERR(wcss->cx_supply))
+@@ -1023,12 +1047,14 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
+ 
+-	if (wcss->version == WCSS_QCS404) {
+-		ret = q6v5_wcss_init_clock(wcss);
++	if (desc->init_clock) {
++		ret = desc->init_clock(wcss);
+ 		if (ret)
+ 			goto free_rproc;
++	}
+ 
+-		ret = q6v5_wcss_init_regulator(wcss);
++	if (desc->init_regulator) {
++		ret = desc->init_regulator(wcss);
+ 		if (ret)
+ 			goto free_rproc;
+ 	}
+@@ -1073,6 +1099,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct wcss_data wcss_ipq8074_res_init = {
++	.init_clock = ipq8074_init_clock,
+ 	.firmware_name = "IPQ8074/q6_fw.mdt",
+ 	.crash_reason_smem = WCSS_CRASH_REASON,
+ 	.aon_reset_required = true,
+@@ -1082,6 +1109,8 @@ static const struct wcss_data wcss_ipq8074_res_init = {
+ };
+ 
+ static const struct wcss_data wcss_qcs404_res_init = {
++	.init_clock = qcs404_init_clock,
++	.init_regulator = qcs404_init_regulator,
+ 	.crash_reason_smem = WCSS_CRASH_REASON,
+ 	.firmware_name = "wcnss.mdt",
+ 	.version = WCSS_QCS404,
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+2.7.4
+
