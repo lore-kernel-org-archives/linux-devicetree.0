@@ -2,134 +2,101 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94000C2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 07:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42A5C2D0F8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 07:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A033206F5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 07:01:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gc7Z967+"
+	by mail.kernel.org (Postfix) with ESMTP id B1458206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 07:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbgEMHBK (ORCPT
+        id S1730310AbgEMHEm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 03:01:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729367AbgEMHBH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 03:01:07 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D555C061A0E
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 00:01:07 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id l73so1391547pjb.1
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 00:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xht2lyYjw3RWBPZeMoeAYqlmyNVt9OCwJ+waHrDKeEg=;
-        b=gc7Z967+/+x+Rsbye80nih3OeRQBVS5NToLQHZqZX+ApJYFJOElSd40Ra1HZnEg0Ph
-         Rx2a25ItsdZYotcejlAzUajOLBv0Vnw5ZBenOEJq38l9jyTu8H/YRIH6kNiTvovcXWi+
-         ozcgLpWi6yUqbLk8B4b0HtezRWolYau49baOajAyrR11aE5vDgJAEV4M5R2XXlFHGrE+
-         zXaBEMliC1qhG+8pH8YW8gH4LhQW+5/gUBaFAIDJQHDyQB0YxQMBzfkSXtKHxlIR2hFU
-         L/oJ4yD0kfAZ4LdFXX7JxBEcAeCXRMAksgQ6Svtqo6gbrQF5F/89tu1uxZ7CMWW7+Hz3
-         Yh2Q==
+        Wed, 13 May 2020 03:04:42 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43953 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729642AbgEMHEm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 03:04:42 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i22so3966938oik.10;
+        Wed, 13 May 2020 00:04:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xht2lyYjw3RWBPZeMoeAYqlmyNVt9OCwJ+waHrDKeEg=;
-        b=fUht+mwbTnZYv6IHuWozGJEfTxg7mJ2kKAQrQvpUhggoiGqdiirJQ7M9T+rT0JKuyv
-         fSSvu0POKaKZxYhxKkzevelRoGf5Qasp7LaT4ux/J8SbTibOyXRt+OERPCP7aNZJKT9t
-         1Ye9y4atsZGSb6TALCn3VIudVRbd96HSbfrIFic1QvjC3t6VeK/JJHMmHllN6WBzzQ7L
-         y6hN0/8ZdVQYDmWOS7xPSM1b/4Gs6mwkf4y71R8LahN2iwt2e7+PnHSNdSyr0gAGGjeZ
-         MdbSWcYU1M3g/eF/TFWuwmTotOTXe47KrnB+5l5Oaccr9OC9Ok4jGaAx1XTZRRfUOxsU
-         /AUw==
-X-Gm-Message-State: AOAM533ZVOjVAPHXzJbEl1z1TZV6KASbcUHjXEzaNxI2fGyjb2u4bTh9
-        JyKQw70DL4M8LSC3oPwr27eWMw==
-X-Google-Smtp-Source: ABdhPJyaJmFj2yG8v3BmrLqGILiIpuTEKtwTuXWHIP84gKlaqkfpLJBdd+LiwbV9iYkBev0bjFD1og==
-X-Received: by 2002:a17:90a:bb81:: with SMTP id v1mr1808779pjr.168.1589353266968;
-        Wed, 13 May 2020 00:01:06 -0700 (PDT)
-Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id p190sm14234819pfp.207.2020.05.13.00.01.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 May 2020 00:01:06 -0700 (PDT)
-Date:   Wed, 13 May 2020 12:31:04 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
-        saravanak@google.com, sibis@codeaurora.org, mka@chromium.org,
-        robh+dt@kernel.org, rnayak@codeaurora.org,
-        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
-        jcrouse@codeaurora.org, evgreen@chromium.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 04/10] OPP: Add support for parsing interconnect
- bandwidth
-Message-ID: <20200513070104.yr4jtfu3pyib2qts@vireshk-i7>
-References: <20200512125327.1868-1-georgi.djakov@linaro.org>
- <20200512125327.1868-5-georgi.djakov@linaro.org>
- <20200513064139.5kxjjddcooqcvny3@vireshk-i7>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sMqsXTZkQsUYXsgUW5SNfqYNzeikt2R+rOYAkqTmE5k=;
+        b=Qlo78ui8y08TBdBC1f87m+1ryXxVvJIB0Om7wNF+f5clbFdgRJkuZ+KV3ytof3yMzv
+         pM02R0CKD0jZQOggg78PwzYCICqcG2pqnWlJxECulifzUnEt9l855gTMvHK8AU9y91ts
+         /uQ9XkcsXgSYXTS2E0/JG62+VXh+H3y2256SXpcam2KItKvB51Ef8zoWWhXlmsWq6bgv
+         RLKfQsNJ1wZv/aYbLb16oD9ElcNCyaUn1NW+mNoOSonhUUqa8QBQvjhGKC2E9s9WZHR2
+         63gmIBtMFhzTCBuzEMmdiQyxcXTTohcGoM/8EZXUExFNtORXZDpi9p2ZZcQNWEyOb7LV
+         pMKA==
+X-Gm-Message-State: AGi0Puack8XJaENLTjvv1ed5B7u91qa0FqxGx8C9af530hSjD2PmLX0s
+        uidHH4s9Gs0xSRIp3B+eG53NviECbNhbEtanQUiqrw==
+X-Google-Smtp-Source: APiQypI2i3OcOk0fZSl5EaM/AtAYKVxaJffZ2UtQJdWMHY7G9eIbkNlIzli6zPVMpFnI38y49fid2zK+GkOq09gyGKs=
+X-Received: by 2002:aca:cd93:: with SMTP id d141mr3674965oig.148.1589353479660;
+ Wed, 13 May 2020 00:04:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513064139.5kxjjddcooqcvny3@vireshk-i7>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200512204543.22090-1-robh@kernel.org> <20200512204543.22090-5-robh@kernel.org>
+In-Reply-To: <20200512204543.22090-5-robh@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 13 May 2020 09:04:28 +0200
+Message-ID: <CAMuHMdWoh94eFvVKHt5si3LOX4Nwx0-JssxVOy=fXPMXxgndXg@mail.gmail.com>
+Subject: Re: [PATCH 5/5] dt-bindings: Fix incorrect 'reg' property sizes
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13-05-20, 12:11, Viresh Kumar wrote:
-> On 12-05-20, 15:53, Georgi Djakov wrote:
-> > The OPP bindings now support bandwidth values, so add support to parse it
-> > from device tree and store it into the new dev_pm_opp_icc_bw struct, which
-> > is part of the dev_pm_opp.
-> > 
-> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> > ---
-> > v8:
-> > * Drop bandwidth requests and free memory in _opp_table_kref_release.
-> > * Take into account the supply_count in struct size calculations.
-> > * Free the temporary arrays for peak and average bandwidth.
-> > * Fix the check for opp-level.
-> > * Use dev_warn insted of dev_dbg.
-> > * Rename _of_find_icc_paths to _of_find_icc_paths.
-> > * Rename the variable count to supply_count.
-> 
-> Added this delta to this patch:
+Hi Rob,
 
-+this :)
+On Tue, May 12, 2020 at 10:46 PM Rob Herring <robh@kernel.org> wrote:
+> The examples template is a 'simple-bus' with a size of 1 cell for
+> #address-cells and #size-cells. The schema was only checking the entries
+> had between 2 and 4 cells which really only errors on I2C or SPI type
+> devices with a single cell.
+>
+> The easiest fix in most cases is to change the 'reg' property to for 1 cell
+> address and size. In some cases with child devices having 2 cells, that
+> doesn't make sense so a bus node is needed.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 15f30ed70bbc..06e38f95116c 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -336,7 +336,7 @@ int dev_pm_opp_of_find_icc_paths(struct device *dev,
-                                 struct opp_table *opp_table)
- {
-        struct device_node *np;
--       int ret, i, count, num_paths;
-+       int ret = 0, i, count, num_paths;
-        struct icc_path **paths;
- 
-        np = of_node_get(dev->of_node);
-@@ -375,10 +375,9 @@ int dev_pm_opp_of_find_icc_paths(struct device *dev,
-        if (opp_table) {
-                opp_table->paths = paths;
-                opp_table->path_count = num_paths;
-+               return 0;
-        }
- 
--       return 0;
--
- err:
-        while (i--)
-                icc_put(paths[i]);
+Thanks for your patch!
+
+>  .../devicetree/bindings/arm/renesas,prr.yaml  |  2 +-
+>  .../bindings/display/renesas,cmm.yaml         |  2 +-
+>  .../interrupt-controller/renesas,irqc.yaml    |  2 +-
+>  .../bindings/media/renesas,csi2.yaml          |  2 +-
+>  .../bindings/media/renesas,vin.yaml           |  6 +-
+>  .../bindings/net/renesas,ether.yaml           |  2 +-
+>  .../bindings/pwm/renesas,pwm-rcar.yaml        |  2 +-
+>  .../bindings/spi/renesas,sh-msiof.yaml        |  2 +-
+>  .../bindings/thermal/rcar-thermal.yaml        |  6 +-
+>  .../bindings/usb/renesas,usb3-peri.yaml       |  2 +-
+>  .../bindings/usb/renesas,usbhs.yaml           |  2 +-
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-viresh
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
