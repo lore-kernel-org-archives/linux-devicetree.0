@@ -2,78 +2,134 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0EFC2D0FC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 11:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA91CA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 11:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF8A6206CC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 11:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4D1206E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 11:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589371187;
+	bh=emjIeu5JHVXvz7EYNp2+SaFasQsTnpCGqjEd+kJZQDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D75JR/ALKerm887S/oX4LNddEkQ23j+76ESQFd7buJYY1DZhpiGp5w+RydJR8LVXX
+	 IuqUT/WkHiCog6sdcXeXa971FSjK5e5Xvqt73LYfvByT09KQY5rJrm8jsPDRnqPI+g
+	 zBNr62lq2bF1RzdcXOzgCVJE3rRkK5tbNi6J4ATo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbgEML5C (ORCPT
+        id S1731179AbgEML7o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 07:57:02 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57762 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgEML5C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 07:57:02 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id CCC60803087C;
-        Wed, 13 May 2020 11:56:56 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7N8KV2RDK2yq; Wed, 13 May 2020 14:56:56 +0300 (MSK)
-Date:   Wed, 13 May 2020 14:56:55 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 08/17] spi: dw: Clear DMAC register when done or stopped
-Message-ID: <20200513115655.s2i65tfy5m4skl35@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508132943.9826-9-Sergey.Semin@baikalelectronics.ru>
- <20200508173134.GP4820@sirena.org.uk>
+        Wed, 13 May 2020 07:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729271AbgEML7n (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 07:59:43 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C63B206CC;
+        Wed, 13 May 2020 11:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589371182;
+        bh=emjIeu5JHVXvz7EYNp2+SaFasQsTnpCGqjEd+kJZQDs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KGupt8pPaud4SWH2sdRuISm1I4BLcdf07N1MndA7qMR/M7PCWlChiOh/FtQohh4hg
+         PNstr1A8KkwC01KCERq+7Ju7DpB0uMpe7++J6NOtYtBWYwfGBIGCCYhSQl1mygIgOW
+         V4LQaS9tqt4fJQ5RSHaM+Hrj6e3MsCaQTOClr6fc=
+Received: by pali.im (Postfix)
+        id A80FF774; Wed, 13 May 2020 13:59:40 +0200 (CEST)
+Date:   Wed, 13 May 2020 13:59:40 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     thomas.petazzoni@bootlin.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
+ Compex wifi cards
+Message-ID: <20200513115940.fiemtnxfqcyqo6ik@pali>
+References: <20200430080625.26070-1-pali@kernel.org>
+ <20200513111651.q62dqauatryh6xd6@pali>
+ <20200513113314.GB32365@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200508173134.GP4820@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200513113314.GB32365@e121166-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 06:31:34PM +0100, Mark Brown wrote:
-> On Fri, May 08, 2020 at 04:29:33PM +0300, Serge Semin wrote:
-> > If DMAC register is left uncleared any further DMAless transfers
-> > may cause the DMAC hardware handshaking interface getting activated.
-> > So the next DMA-based Rx/Tx transaction will be started right
-> > after the dma_async_issue_pending() method is invoked even if no
-> > DMATDLR/DMARDLR conditions are met. This at the same time may cause
-> > the Tx/Rx FIFO buffers underrun/overrun. In order to fix this we
-> > must clear DMAC register after a current DMA-based transaction is
-> > finished.
+On Wednesday 13 May 2020 12:33:14 Lorenzo Pieralisi wrote:
+> On Wed, May 13, 2020 at 01:16:51PM +0200, Pali Rohár wrote:
+> > On Thursday 30 April 2020 10:06:13 Pali Rohár wrote:
+> > > Hello,
+> > > 
+> > > this is the fourth version of the patch series for Armada 3720 PCIe
+> > > controller (aardvark). It's main purpose is to fix some bugs regarding
+> > > buggy ath10k cards, but we also found out some suspicious stuff about
+> > > the driver and the SOC itself, which we try to address.
+> > > 
+> > > Patches are available also in my git branch pci-aardvark:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
+> > 
+> > Hello! Thanks everybody for review and testing of this patch series.
+> > 
+> > I would like to ask, is there something needed to fix / modify in this
+> > patch series? If everything is OK, would you Bjorn or Lorenzo take this
+> > patch series into your tree?
 > 
-> This also looks like a bugfix so should be pulled forwards to the start
-> of the series if possible.
+> We need Thomas' ACK on the series. We don't have this HW and
+> we comment on the generic code, Thomas owns it and must check that
+> what you are changing is sound.
 
-Ok.
+Ok, we will wait for Thomas ACK/review.
 
--Sergey
+> On patch 5 I share Rob's concerns - it does not make much sense
+> to have something driver specific there, need to look further.
+
+I fully understand yours concerns. I wanted to solve it. Problem is that
+I really do not know which timeout is there applicable. I read
+information about PERST# more times but I was not able to clearly deduce
+that minimal timeout/delay needed for this reset scenario.
+
+So what I was able to do are just experiments. I found out what is the
+minimal needed time to correctly initialize wifi cars which I used for
+testing.
+
+You can look into my previous email [1] where I wrote which timeouts are
+used by which drivers. Basically every driver is using its own custom
+timeout and this is something which should be fixed / improved. In my
+opinion authors tested their own (wifi) cards and measured minimal
+timeout needed for initializing them.
+
+So somebody with deeper PCI knowledge should look at this PERST# problem
+and try to address it.
+
+After it happens I see there two scenarios:
+
+1) Timeout according to specification/authority is lower than what we
+currently use. In this case it would mean that we have buggy wifi cards
+(and we already know that people reported issues with Compex cards) and
+we would have to stay with higher timeout. Probably we can define common
+macro with timeout value and use it.
+
+2) Timeout according to specification/authority is bigger then what we
+currently use. In this case there is no problem to increase it, card
+would be just longer in reset state. What could be problematic for
+somebody is that this increase boot / initialization time.
+
+[1] - https://lore.kernel.org/linux-pci/20200424092546.25p3hdtkehohe3xw@pali/
