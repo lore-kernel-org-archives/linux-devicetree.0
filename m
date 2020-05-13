@@ -2,101 +2,135 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A56C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 16:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F110DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 16:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8C02054F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 16:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA092065D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 16:56:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="Fkzu73s0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1RIAufN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389405AbgEMQpv (ORCPT
+        id S2389736AbgEMQ4e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 12:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57842 "EHLO
+        Wed, 13 May 2020 12:56:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbgEMQpv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 12:45:51 -0400
-X-Greylist: delayed 164 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 May 2020 09:45:50 PDT
-Received: from mxa1.seznam.cz (mxa1.seznam.cz [IPv6:2a02:598:a::78:90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB57C061A0C;
-        Wed, 13 May 2020 09:45:50 -0700 (PDT)
-Received: from email.seznam.cz
-        by email-smtpc25a.ko.seznam.cz (email-smtpc25a.ko.seznam.cz [10.53.18.34])
-        id 01f9a2ac5af7f6c500506ef2;
-        Wed, 13 May 2020 18:45:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
-        t=1589388343; bh=HOw/beXCV8NM3f8Zz2gwYM60zg/PgILleFcF555HlSQ=;
-        h=Received:Subject:To:Cc:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Fkzu73s01g06qdTZvb350vh0/bI6/0G0gU8ztoOxL7T14AE3ruvRU20ZaYLxs6Tm9
-         JALoIPdqd6Zh4mh+xYPHlGb3BxSnv4wXvLZv2ELiYVO+r0/Q3zG0fdIE78NxdzcYzJ
-         bSLDxFRPE42aF68Eoax34bKz2YLh1swagx5vRHa4=
-Received: from [192.168.1.167] (212.69.128.228 [212.69.128.228])
-        by email-relay2.ko.seznam.cz (Seznam SMTPD 1.3.114) with ESMTP;
-        Wed, 13 May 2020 18:42:49 +0200 (CEST)  
-Subject: Re: [PATCH] arm64: dts: qcom: disable the new cti nodes on devices
- with broken coresight
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-References: <20200513154718.17401-1-michael.srba@seznam.cz>
- <CAOCk7No3bJMpZNjXaNv-OScaLXPKbdj3d_n20ss3MyciPO=e3g@mail.gmail.com>
-From:   Michael Srba <Michael.Srba@seznam.cz>
-Message-ID: <af456130-e54c-28ff-b71e-f2da43331a8f@seznam.cz>
-Date:   Wed, 13 May 2020 18:42:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAOCk7No3bJMpZNjXaNv-OScaLXPKbdj3d_n20ss3MyciPO=e3g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        with ESMTP id S1727120AbgEMQ4e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 12:56:34 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D58A0C061A0C;
+        Wed, 13 May 2020 09:56:33 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id p12so339813qtn.13;
+        Wed, 13 May 2020 09:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qBVZWFtAh+7DORRPK/TwdIKVsq3QEyyzn54AuQWxNP0=;
+        b=L1RIAufNL98urjz7BCnrWRTjugA6uPmGbIYVboOjQ8V2QimJ0n2VXOnIUHzoJXQ+/4
+         99TyMq6RTSQQHgGIGsLEycE/uc0bfxNjQjAyR6mNiV0XsOPBxN0866iXF/qdvYHXD9lO
+         seFml3FmDCb8GYPQ6g6T02+IWklFe1aBMnmYyU05b2M/XfP7lWQKxR2qUPovUERYPE9+
+         8UkY07ADa/IBpVT6h+JK4JesJLZMLRJOtSx7DGAuT2EosWrOnvJBC98jUR5ipXo9SDem
+         cA+0tf1mxDxu3VM39aZLY39w7aQGmIJEPnpfHpibNKEcu7/rhL2PhnWVDPPZhq+A7RRg
+         7Pgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qBVZWFtAh+7DORRPK/TwdIKVsq3QEyyzn54AuQWxNP0=;
+        b=dWOdnfYuw6Nw0ktwbam8O+FWbMtur1pLF5EcFSFfCrhQ2MUwZGOLXR3fmzT3J7cCQB
+         TVwRBusYZukgUdSwXHnRbX0+QPrB2NThWj4aZjIzUPovqbjanV/C56jQ5gxlRW94ZdIX
+         b6mNTQ7Vawi/d9R1jXMRWD2HUxnWT0p8mrkHU5Bdzd01F49RBb7mbLUZyDzCbT5qizpa
+         EyFUAlZPF3u8NZr6G1nORJhvhc0y13UJMXyLsMliSAOVFvbqCHxMQvm/H8ikw94vdpuH
+         nS3cREhAO/Gl78rr8iSoZhdPaJJmksIbxwGLzFNaPIYy0OyYTKHYuFSOFPxodk+qMgNK
+         S9KA==
+X-Gm-Message-State: AOAM532I784rZaQIUNBTnZZKfz/T6ot7UYjAaCEYwggUcIlBJVYIS2Vb
+        iooBniN0oC76LMDhcgjnAjDR41cLHWP3IQ==
+X-Google-Smtp-Source: ABdhPJz4BxcVN1K+jM+GD0D/sMOhctEOtpVMtMUtfe8GhLvP3oAgnfwMAJRnU/Yz/g6xusJ+o4e8oA==
+X-Received: by 2002:ac8:4890:: with SMTP id i16mr7909qtq.299.1589388992616;
+        Wed, 13 May 2020 09:56:32 -0700 (PDT)
+Received: from sca.dev ([201.17.110.164])
+        by smtp.gmail.com with ESMTPSA id m59sm136795qtd.46.2020.05.13.09.56.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 May 2020 09:56:31 -0700 (PDT)
+From:   Rodrigo Rolim Mendes de Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>
+To:     linux-fbdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com,
+        andy.shevchenko@gmail.com, devicetree@vger.kernel.org,
+        Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>,
+        Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Subject: [PATCH v2] video: fbdev: ssd1307fb: Added support to Column offset
+Date:   Wed, 13 May 2020 13:56:15 -0300
+Message-Id: <1589388975-15499-1-git-send-email-alencar.fmce@imbel.gov.br>
+X-Mailer: git-send-email 1.9.3
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13. 05. 20 18:04, Jeffrey Hugo wrote:
-> On Wed, May 13, 2020 at 9:53 AM <michael.srba@seznam.cz> wrote:
->> From: Michael Srba <michael.srba@seznam.cz>
->>
->> Attempting to enable these devices causes a "synchronous
->> external abort". Suspected cause is that the debug power
->> domain is not enabled by default on this device.
->> Disable these devices for now to avoid the crash.
->>
->> See: https://lore.kernel.org/linux-arm-msm/20190618202623.GA53651@gerhold.net/
->>
->> Fixes: b1fcc5702a41 ("arm64: dts: qcom: msm8916: Add CTI options")
->> Signed-off-by: Michael Srba <michael.srba@seznam.cz>
->>
->> ---
->>  arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts       | 6 ++++++
->>  arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi | 6 ++++++
->>  2 files changed, 12 insertions(+)
-> Why are we disabling these in board specific files?  Seems like these
-> should be disabled in the base msm8916.dtsi.  Otherwise, the next
-> board that gets brought up is probably going to hit this same exact
-> issue.
->
-> This also follows the solution that msm8998 did for the same issue.
+This patch provides support for displays like VGM128064B0W10,
+which requires a column offset of 2, i.e., its segments starts
+in SEG2 and ends in SEG129.
 
-I would also advocate for having them disabled by default. I *think* it was
-brought up initially, but that would be before the msm8998 change.
+Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+---
+ Documentation/devicetree/bindings/display/ssd1307fb.txt | 1 +
+ drivers/video/fbdev/ssd1307fb.c                         | 8 ++++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b/Documentation/devicetree/bindings/display/ssd1307fb.txt
+index 27333b9551b3..2dcb6d12d137 100644
+--- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
++++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
+@@ -19,6 +19,7 @@ Optional properties:
+   - vbat-supply: The supply for VBAT
+   - solomon,segment-no-remap: Display needs normal (non-inverted) data column
+                               to segment mapping
++  - solomon,col-offset: Offset of columns (COL/SEG) that the screen is mapped to.
+   - solomon,com-seq: Display uses sequential COM pin configuration
+   - solomon,com-lrremap: Display uses left-right COM pin remap
+   - solomon,com-invdir: Display uses inverted COM pin scan direction
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index 8e06ba912d60..f135b2959f87 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -74,6 +74,7 @@ struct ssd1307fb_par {
+ 	struct fb_info *info;
+ 	u8 lookup_table[4];
+ 	u32 page_offset;
++	u32 col_offset;
+ 	u32 prechargep1;
+ 	u32 prechargep2;
+ 	struct pwm_device *pwm;
+@@ -458,11 +459,11 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = ssd1307fb_write_cmd(par->client, 0x0);
++	ret = ssd1307fb_write_cmd(par->client, par->col_offset);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = ssd1307fb_write_cmd(par->client, par->width - 1);
++	ret = ssd1307fb_write_cmd(par->client, par->col_offset + par->width - 1);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -626,6 +627,9 @@ static int ssd1307fb_probe(struct i2c_client *client)
+ 	if (device_property_read_u32(dev, "solomon,page-offset", &par->page_offset))
+ 		par->page_offset = 1;
+ 
++	if (device_property_read_u32(node, "solomon,col-offset", &par->col_offset))
++		par->col_offset = 0;
++
+ 	if (device_property_read_u32(dev, "solomon,com-offset", &par->com_offset))
+ 		par->com_offset = 0;
+ 
+-- 
+2.23.0.rc1
 
