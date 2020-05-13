@@ -2,124 +2,98 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADA5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB54C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D10A9207F5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9531F20809
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbgEMPYS (ORCPT
+        id S2389228AbgEMP0O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 11:24:18 -0400
-Received: from mga02.intel.com ([134.134.136.20]:63313 "EHLO mga02.intel.com"
+        Wed, 13 May 2020 11:26:14 -0400
+Received: from mga12.intel.com ([192.55.52.136]:5095 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729153AbgEMPYQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 11:24:16 -0400
-IronPort-SDR: ihX3aOfMkDRyoSI3BXeQDwlHzLsfm4qh59ktvA7M5GXsYGPFaezzB8OsiqZVJvnynpYmFxFOP5
- jqhfsr+xUh1w==
+        id S1732300AbgEMP0O (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 11:26:14 -0400
+IronPort-SDR: 10LHBv/gr9H30UxboA5GwFTYwIqF34ZvabE/C6gG9gfW9qgmxwbqU1P0l2gY63YOpHOmqpyB4/
+ dutQpTq9ip4Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 08:24:15 -0700
-IronPort-SDR: LEYmL0D8h4/MJPzQww7+nG6ZMTyIUMdrpW620uivs8d1RMOvGn0hsKExHGUYjZoUgEhe4Gmdup
- YKNkAXzriOTw==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 08:26:13 -0700
+IronPort-SDR: lpwA1behfMK+YoTYrewJdqYqqwJnbTOvkihSrV8etO4S7L7OrLHQ5L8WJd8nkhoMvqurgnnLd8
+ ugv8/0/nSPbQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
-   d="scan'208";a="251288456"
+   d="scan'208";a="253223172"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 13 May 2020 08:24:10 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 13 May 2020 08:26:11 -0700
 Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jYtEz-006Rr3-Pi; Wed, 13 May 2020 18:24:13 +0300
-Date:   Wed, 13 May 2020 18:24:13 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     ofery@google.com, Brendan Higgins <brendanhiggins@google.com>,
-        avifishman70@gmail.com, Tomer Maimon <tmaimon77@gmail.com>,
-        kfting@nuvoton.com, Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jYtGv-006Rs4-KZ; Wed, 13 May 2020 18:26:13 +0300
+Date:   Wed, 13 May 2020 18:26:13 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
- driver
-Message-ID: <20200513152413.GQ185537@smile.fi.intel.com>
-References: <20200510102330.66715-1-tali.perry1@gmail.com>
- <20200510102330.66715-3-tali.perry1@gmail.com>
- <20200511091759.GE185537@smile.fi.intel.com>
- <CAHb3i=tERsM+gwmQN1+vjnML9o5NxRK=uBokEUsd-Ljyje4s3A@mail.gmail.com>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v10 1/5] usb: xhci: Change the XHCI link order in the
+ Makefile
+Message-ID: <20200513152613.GR185537@smile.fi.intel.com>
+References: <20200512150019.25903-1-alcooperx@gmail.com>
+ <20200512150019.25903-2-alcooperx@gmail.com>
+ <20200513122613.GA1023594@kroah.com>
+ <7acc2a4c-caab-11e7-7b3f-4176f19c58cf@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHb3i=tERsM+gwmQN1+vjnML9o5NxRK=uBokEUsd-Ljyje4s3A@mail.gmail.com>
+In-Reply-To: <7acc2a4c-caab-11e7-7b3f-4176f19c58cf@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 11, 2020 at 02:28:50PM +0300, Tali Perry wrote:
-> On Mon, May 11, 2020 at 12:18 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Sun, May 10, 2020 at 01:23:29PM +0300, Tali Perry wrote:
-
-...
-
-> > > +#if IS_ENABLED(CONFIG_DEBUG_FS)
-> >
-> > Why?
+On Wed, May 13, 2020 at 08:08:07AM -0700, Florian Fainelli wrote:
+> On 5/13/2020 5:26 AM, Greg Kroah-Hartman wrote:
+> > On Tue, May 12, 2020 at 11:00:15AM -0400, Al Cooper wrote:
+> >> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
+> >> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
+> >> devices and OHCI handles <2.0 devices. Currently the Makefile
+> >> has XHCI linking at the bottom which will result in the XHIC driver
+> >> initalizing after the EHCI and OHCI drivers and any installed 3.0
+> >> device will be seen as a 2.0 device. Moving the XHCI linking
+> >> above the EHCI and OHCI linking fixes the issue.
+> > 
+> > What happens if all of these are modules and they are loaded in a
+> > different order?  This makefile change will not help with that, you need
+> > to have logic in the code in order to properly coordinate this type of
+> > mess, sorry.
 > 
-> We wanted to add an optional feature to track i2c slave status.
-> the NPCM has 16 channels handling multiple devices each. Some of the devices
-> are polled periodically, and might power down.
-> The user wanted to implement a health monitoring option
-> to occasionally check the status of the buses (how many timeouts, recovery etc.)
-> This feature is optional and depends on CONFIG_DEBUG_FS The counters are exposed
-> to user through the file system.
-
-What I meant is why do you need an #ifdef?
-
-
-...
-
-> > > +#define I2C_NUM_OF_ADDR 10
-> >
-> > Is it 10-bit address support or what?
-> >
+> I believe we should be using module soft dependencies to instruct the
+> module loaders to load the modules in the correct order, so something
+> like this would do (not tested) for xhci-plat-hcd.c:
 > 
-> No, the NPCM has an option to respond to multiple slave addresses
-> (10 own slave addresses)
-
-Perhaps more descriptive name then?
-
-...
-
-> > > +     // Repeat the following sequence until SDA is released
-> > > +     do {
-> > > +             // Issue a single SCL toggle
-> > > +             iowrite8(NPCM_I2CCST_TGSCL, bus->reg + NPCM_I2CCST);
-> > > +             udelay(20);
-> > > +             // If SDA line is inactive (high), stop
-> > > +             if (npcm_i2c_get_SDA(_adap)) {
-> > > +                     done = true;
-> > > +                     status = 0;
-> > > +             }
-> > > +     } while (!done && iter--);
-> >
-> > readx_poll_timeout() ?
+> MODULE_SOFTDEP("post: ehci-hcd ohci-hcd");
 > 
-> Not exactly, readx_poll_timeout includes only a read operation, here there is a
-> write in the middle. (iowrite8)
+> and I am not sure whether we need to add the opposite for ehci-hcd and
+> ohci-hcd:
+> 
+> MODULE_SOFTDEP("pre: xhci-plat-hcd");
 
-Ah, indeed. Perhaps time to add writex_poll_timeout() ?
+JFYI: not all user space support this (alas, but that's current state of
+affairs), OTOH I don't really care about those which do not support it
+(Busybox).
 
 -- 
 With Best Regards,
