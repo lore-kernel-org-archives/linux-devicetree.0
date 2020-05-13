@@ -2,136 +2,103 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C219C2D0FC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 14:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2938CA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 14:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20F7F2065D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 14:01:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ssTtXH4W"
+	by mail.kernel.org (Postfix) with ESMTP id 3CA3920659
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 14:03:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589378591;
+	bh=Eufhx3dlqqgouxXOOXWIHlrYL0mU5lBnSfOCmIEp3Fc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DgAdhEdFrztpecBifKZI/i1pPC1lxDbdyAiM/JYSUOBDelkMsJmd18x7zWYNrqa08
+	 2rvSvq4ZxFaLg6yTGYoN+sKtYeIILdluiuFaB897YnzwcXYdtdm2WkG/4OGh7OQxGK
+	 Kw098Zg9/FS3a6hHLk6SAR/jqINUYR+nx+dgMD1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388781AbgEMOAt (ORCPT
+        id S2388758AbgEMODL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 10:00:49 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:62324 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388776AbgEMOAr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 10:00:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589378446; x=1620914446;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=u/thRVYUM0XeOw/EsW4JAmGaBkslBy0kyoRiLscrOEs=;
-  b=ssTtXH4WHpCYDY1OZjtLyIMl+OWa7ktcyCSoFTGwNIkRl6FANV+NVnc3
-   rbWsBez/PaFRaKIMavO2Gk19a/AciCNbGIYuXrvtyIeYDZCFoVnURe5ng
-   Qe8EeSM/kHOtcjhS/urYlTPmQXnf9ORDd/FsNsoolUHiDlnopUGtEusXe
-   Ml/n+QvlHHGFS0n+dPlbYX3BrFBiykwIRcliezZzkYhfNi9/HA1tYL4bo
-   0kNt5l5renDa2/tX4wdwM5AH7LDXSHx5+ADyi4NABCAEfX6p3nu830gJ7
-   rMOBYsh404Mr+bUv3wWTlyKvCD89EbgDu2wlvD4slJUL4zkBQdAJmejZk
-   A==;
-IronPort-SDR: b4JIm4J9WSFX+Pq41qrUtq7qPwNcRI2DslfTJ6HN1XIhRrDlwjYQ6h+E0lYyGenGKe/280HFc5
- j+SD2DVQxlA7pxQFaQrgXpQCQoWC79Jh5osGxD5FTDf5V9+DZRRnwIsYqUpN9Xok3liQl4t4Ki
- Oqtp3Pxf+gbP1xfPuSkvMt3GWYoRuUlBKbBuQe75sbVn3IyGftyHam1KT83nZcPFBGx9w2p+Ee
- cpoqQs2+OiIgB+EQWj5JBRSl4sIHy7aDN7Bdb/RZzhdgo40+gArMhm+fFVdk2jtJg34EzfYhgc
- gSs=
-X-IronPort-AV: E=Sophos;i="5.73,388,1583218800"; 
-   d="scan'208";a="75774856"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 07:00:46 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 07:00:48 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 07:00:43 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-To:     Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 02/10] spi: dw: Add support for RX sample delay register
-Date:   Wed, 13 May 2020 16:00:23 +0200
-Message-ID: <20200513140031.25633-3-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513140031.25633-1-lars.povlsen@microchip.com>
-References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+        Wed, 13 May 2020 10:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387608AbgEMODL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 10:03:11 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A18692064E;
+        Wed, 13 May 2020 14:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589378590;
+        bh=Eufhx3dlqqgouxXOOXWIHlrYL0mU5lBnSfOCmIEp3Fc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0MdU5zsTd7ve9RlyN3XfHy/AJ43Nj4J4J62DwwgSTzTcA8x8VxoDauR/tEsXmcv7q
+         NJ6UyyO4gjb2WaPXu01c6Y8jNGvZwZMdKq7Xhbg3rNxR6otHnF9G5IlB1aQ+fVnwxd
+         tuOOeeuhw+QHhj+kPL4w7M336rEi/oQ8bppMd8Qw=
+Date:   Wed, 13 May 2020 15:03:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH 1/5] spi: dt-bindings: sifive: Add missing 2nd register
+ region
+Message-ID: <20200513140307.GG4803@sirena.org.uk>
+References: <20200512204543.22090-1-robh@kernel.org>
+ <158937185132.39109.17103954100758193517.b4-ty@kernel.org>
+ <CAL_Jsq+KfngSTEnP3eh6Zr9H4GUuSbyZCGXs=skbwQK0j4ZJnA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ulDeV4rPMk/y39in"
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+KfngSTEnP3eh6Zr9H4GUuSbyZCGXs=skbwQK0j4ZJnA@mail.gmail.com>
+X-Cookie: Long life is in store for you.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This add support for the RX_SAMPLE_DLY register. If enabled in the
-Designware IP, it allows tuning of the rx data signal by means of an
-internal rx sample fifo.
 
-The register is located at offset 0xf0, and if the option is not
-enabled in the IP, changing the register will have no effect.
+--ulDeV4rPMk/y39in
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- drivers/spi/spi-dw.c | 7 +++++++
- drivers/spi/spi-dw.h | 2 ++
- 2 files changed, 9 insertions(+)
+On Wed, May 13, 2020 at 08:02:14AM -0500, Rob Herring wrote:
+> On Wed, May 13, 2020 at 7:10 AM Mark Brown <broonie@kernel.org> wrote:
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index e572eb34a3c1a..32997f28fa5bb 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -81,6 +81,9 @@ static ssize_t dw_spi_show_regs(struct file *file, char __user *user_buf,
- 			"DMATDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMATDLR));
- 	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
- 			"DMARDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMARDLR));
-+	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
-+			 "RX_SAMPLE_DLY: \t0x%08x\n",
-+			 dw_readl(dws, DW_SPI_RX_SAMPLE_DLY));
- 	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
- 			"=================================\n");
+> > [1/1] spi: dt-bindings: sifive: Add missing 2nd register region
+> >       commit: b265b5a0ba15b6e00abce9bf162926e84b4323b4
 
-@@ -315,6 +318,10 @@ static int dw_spi_transfer_one(struct spi_controller *master,
- 		spi_set_clk(dws, chip->clk_div);
- 	}
+> You missed my ask for an ack. This is a dependency for patch 5.
 
-+	/* Apply RX sample delay, iff requested (nonzero) */
-+	if (dws->rx_sample_dly)
-+		dw_writel(dws, DW_SPI_RX_SAMPLE_DLY, dws->rx_sample_dly);
-+
- 	dws->n_bytes = DIV_ROUND_UP(transfer->bits_per_word, BITS_PER_BYTE);
- 	dws->dma_width = DIV_ROUND_UP(transfer->bits_per_word, BITS_PER_BYTE);
+Ah, there was no cover letter.=20
 
-diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 1bf5713e047d3..ed6e47b3f50da 100644
---- a/drivers/spi/spi-dw.h
-+++ b/drivers/spi/spi-dw.h
-@@ -31,6 +31,7 @@
- #define DW_SPI_IDR			0x58
- #define DW_SPI_VERSION			0x5c
- #define DW_SPI_DR			0x60
-+#define DW_SPI_RX_SAMPLE_DLY		0xf0
- #define DW_SPI_CS_OVERRIDE		0xf4
+Acked-by: Mark Brown <broonie@kernel.org>
 
- /* Bit fields in CTRLR0 */
-@@ -111,6 +112,7 @@ struct dw_spi {
+--ulDeV4rPMk/y39in
+Content-Type: application/pgp-signature; name="signature.asc"
 
- 	int			cs_override;
- 	u32			reg_io_width;	/* DR I/O width in bytes */
-+	u8			rx_sample_dly;	/* RX fifo tuning (option) */
- 	u16			bus_num;
- 	u16			num_cs;		/* supported slave numbers */
- 	void (*set_cs)(struct spi_device *spi, bool enable);
---
-2.26.2
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl67/hoACgkQJNaLcl1U
+h9AiNAf/VxSFKe5eGeiXNh8NQ9o1DuI+ryYYh8J5t4bHHaX/ukfZxOjzM1emHxVY
+dK91QCGiu/6HrZOrx7SNr/ZsJaSqIHg7le2mJWvu4g6uJ/SaPTKCGjUfL5gPeG28
+FHa34V2fwOUoRil6nEiHnvrbQTQQmtwMw13zeYi38ltLK6qchlfCmFT7gjiYHmtm
+netlxcnM2YKr/vblKt1hnDTffvAs2THEpNh8lJ0bA7IBEWsdRPH8PVROjIaBQpME
+JzEW1cFXZTEeuuiNkYS1GMk/ShIxSiD19aAhfOzbomVXqMjenusxBN1jAd5VfoA2
+9TnqOxwFFTKo84Gi3jhJlFaTkx5IRQ==
+=KsV3
+-----END PGP SIGNATURE-----
+
+--ulDeV4rPMk/y39in--
