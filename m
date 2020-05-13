@@ -2,161 +2,182 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68111C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449CAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D51A207EA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:28:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fluZZrz+"
+	by mail.kernel.org (Postfix) with ESMTP id 70BDF20671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388998AbgEMP2z (ORCPT
+        id S2388974AbgEMPeI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 11:28:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388493AbgEMP2z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 11:28:55 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA433C061A0F
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 08:28:54 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mq3so11265290pjb.1
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 08:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4VqrDPtNrY8lU3jv4tbGJ+nxlqODxkNJ8mQ1kIusA3s=;
-        b=fluZZrz+O2fICElXwhjMSYxAQrhkMhGKHiOoJDtdBYYrM6szMhqD4hxk+9S/ZftImQ
-         r96KGLWZN8Gh+PeHts9jOj7MRSh4dPpzON8r9dlgXeb28GLUu6EZ/u8W3+SD8tXHoML4
-         cMy4/pufmvHKH/sxSEn2bRjX5KjLt2fJTqf5w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=4VqrDPtNrY8lU3jv4tbGJ+nxlqODxkNJ8mQ1kIusA3s=;
-        b=LliZmuVZtctF1ideQWjZbxrYBsWgEE+pkTDF7t+TSXjXmFkkQtNqNzhmvDLP2DtjFv
-         UgtpOy6xmzXaqx7s3kBaqHAt45cWGjyHSynzUy7x2lNvglvyCF+R0M/akZN18B1Mhro5
-         XQdt3uPuigPKI0C4oIB3jS8qKs+zsQky2uO05iJmrEQyL8PiXjog5qGW9e1nK04Dteez
-         8rba0qb7qI7+kRzH+H3m12VVYbGwJN+fxRHKyIlbChthZ3uLTb4Lp99bQr+W1pPQDXH7
-         tMUF/HnzQKGGWbz8cHpFfpu+33wQlSl/SybNqEy13uGYyivzUzEeGBEdzegnPdpAOR9w
-         ZwLA==
-X-Gm-Message-State: AGi0Pua9dABVncPPKORdOKZvHtUNJ1BDUQ+5Yt7POlS+I4NJtkHbsKiw
-        GCpL7+uRXI63nIzivWFQtB1pEg==
-X-Google-Smtp-Source: APiQypLwE5b0n6ox/XG+aPuvmiery03Ijo0hokbmjaaas92s1E2eRupRYJZVsWYaZPW4kxRd8JXDyA==
-X-Received: by 2002:a17:90a:6782:: with SMTP id o2mr36669866pjj.122.1589383734237;
-        Wed, 13 May 2020 08:28:54 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q3sm2710500pfg.22.2020.05.13.08.28.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 08:28:53 -0700 (PDT)
-Subject: Re: [PATCH v10 1/5] usb: xhci: Change the XHCI link order in the
- Makefile
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-References: <20200512150019.25903-1-alcooperx@gmail.com>
- <20200512150019.25903-2-alcooperx@gmail.com>
- <20200513122613.GA1023594@kroah.com>
- <7acc2a4c-caab-11e7-7b3f-4176f19c58cf@gmail.com>
- <20200513152613.GR185537@smile.fi.intel.com>
-From:   Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- mQENBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAG0MEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPokB
- xAQQAQgArgUCXnQoOxcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFrZXktdXNh
- Z2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2RpbmdAcGdw
- LmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29tLmNvbQUb
- AwAAAAMWAgEFHgEAAAAEFQgJCgAKCRCBMbXEKbxmoHaNB/4p5GXw2Xlk4r2J0MsUAZE4Gnfc
- C4DtilufOGVR1K0/WhROYemyCAP+xuBj8bnQDBtZwB5ED37q4/p8DSmCnkEBjM5Cz12EZQzs
- utQgCV1UIgzryoiDZSF2XLslzF9LOSaOiNzpBvwEYNTZ+koEW+AOHEAgS6SbV2Hob8Zc32xF
- oQdKGwbSwcV8hS2YLL37VxKr2h8ZTtuTmhDNqxuKPzZuoAL61/4i8+BTyVZC4gUL/EUu7pG2
- rbwhg/s8TyQWWeBz18Xiw5K148TXT0LeErmTsJSPQFMqZ6AR/nuJDQzhIUiLeq/hvBs1BIQf
- REqNMShEnnMJfHjd8RFnGpdPk+hKuQENBFPAG8EBCACsa+9aKnvtPjGAnO1mn1hHKUBxVML2
- C3HQaDp5iT8Q8A0ab1OS4akj75P8iXYfZOMVA0Lt65taiFtiPT7pOZ/yc/5WbKhsPE9dwysr
- vHjHL2gP4q5vZV/RJduwzx8v9KrMZsVZlKbvcvUvgZmjG9gjPSLssTFhJfa7lhUtowFof0fA
- q3Zy+vsy5OtEe1xs5kiahdPb2DZSegXW7DFg15GFlj+VG9WSRjSUOKk+4PCDdKl8cy0LJs+r
- W4CzBB2ARsfNGwRfAJHU4Xeki4a3gje1ISEf+TVxqqLQGWqNsZQ6SS7jjELaB/VlTbrsUEGR
- 1XfIn/sqeskSeQwJiFLeQgj3ABEBAAGJAkEEGAECASsFAlPAG8IFGwwAAADAXSAEGQEIAAYF
- AlPAG8EACgkQk2AGqJgvD1UNFQgAlpN5/qGxQARKeUYOkL7KYvZFl3MAnH2VeNTiGFoVzKHO
- e7LIwmp3eZ6GYvGyoNG8cOKrIPvXDYGdzzfwxVnDSnAE92dv+H05yanSUv/2HBIZa/LhrPmV
- hXKgD27XhQjOHRg0a7qOvSKx38skBsderAnBZazfLw9OukSnrxXqW/5pe3mBHTeUkQC8hHUD
- Cngkn95nnLXaBAhKnRfzFqX1iGENYRH3Zgtis7ZvodzZLfWUC6nN8LDyWZmw/U9HPUaYX8qY
- MP0n039vwh6GFZCqsFCMyOfYrZeS83vkecAwcoVh8dlHdke0rnZk/VytXtMe1u2uc9dUOr68
- 7hA+Z0L5IQAKCRCBMbXEKbxmoLoHCACXeRGHuijOmOkbyOk7x6fkIG1OXcb46kokr2ptDLN0
- Ky4nQrWp7XBk9ls/9j5W2apKCcTEHONK2312uMUEryWI9BlqWnawyVL1LtyxLLpwwsXVq5m5
- sBkSqma2ldqBu2BHXZg6jntF5vzcXkqG3DCJZ2hOldFPH+czRwe2OOsiY42E/w7NUyaN6b8H
- rw1j77+q3QXldOw/bON361EusWHdbhcRwu3WWFiY2ZslH+Xr69VtYAoMC1xtDxIvZ96ps9ZX
- pUPJUqHJr8QSrTG1/zioQH7j/4iMJ07MMPeQNkmj4kGQOdTcsFfDhYLDdCE5dj5WeE6fYRxE
- Q3up0ArDSP1L
-Message-ID: <2fda61f9-388f-d62b-feaf-9782cbbe37fd@broadcom.com>
-Date:   Wed, 13 May 2020 08:28:51 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        Wed, 13 May 2020 11:34:08 -0400
+Received: from mga06.intel.com ([134.134.136.31]:38735 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728678AbgEMPeH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 11:34:07 -0400
+IronPort-SDR: qun4NCiBK7eySdGFVFU83FEH9k+uXrw8JzGCpwbKP0zQw50iqD+EPzeBNnUItaq2dcf2NH8Ibh
+ 5zCuwOSQX6KA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 08:34:07 -0700
+IronPort-SDR: vy2lgmYe9rC6VKwtymuZYskMIG1nHjtOprrt8bbbkB+37IzrVJhAjSdT4L/bg8ZbBCzNykt+4f
+ Eb3d8mkGjR7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
+   d="scan'208";a="463977187"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 13 May 2020 08:34:02 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jYtOX-006Rw5-7D; Wed, 13 May 2020 18:34:05 +0300
+Date:   Wed, 13 May 2020 18:34:05 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v6 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200513153405.GS185537@smile.fi.intel.com>
+References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200513104615.7905-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200513152613.GR185537@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513104615.7905-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 5/13/2020 8:26 AM, Andy Shevchenko wrote:
-> On Wed, May 13, 2020 at 08:08:07AM -0700, Florian Fainelli wrote:
->> On 5/13/2020 5:26 AM, Greg Kroah-Hartman wrote:
->>> On Tue, May 12, 2020 at 11:00:15AM -0400, Al Cooper wrote:
->>>> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
->>>> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
->>>> devices and OHCI handles <2.0 devices. Currently the Makefile
->>>> has XHCI linking at the bottom which will result in the XHIC driver
->>>> initalizing after the EHCI and OHCI drivers and any installed 3.0
->>>> device will be seen as a 2.0 device. Moving the XHCI linking
->>>> above the EHCI and OHCI linking fixes the issue.
->>>
->>> What happens if all of these are modules and they are loaded in a
->>> different order?  This makefile change will not help with that, you need
->>> to have logic in the code in order to properly coordinate this type of
->>> mess, sorry.
->>
->> I believe we should be using module soft dependencies to instruct the
->> module loaders to load the modules in the correct order, so something
->> like this would do (not tested) for xhci-plat-hcd.c:
->>
->> MODULE_SOFTDEP("post: ehci-hcd ohci-hcd");
->>
->> and I am not sure whether we need to add the opposite for ehci-hcd and
->> ohci-hcd:
->>
->> MODULE_SOFTDEP("pre: xhci-plat-hcd");
+On Wed, May 13, 2020 at 06:46:15PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > 
-> JFYI: not all user space support this (alas, but that's current state of
-> affairs), OTOH I don't really care about those which do not support it
-> (Busybox).
+> This patch adds the new IP of Nand Flash Controller(NFC) support
+> on Intel's Lightning Mountain(LGM) SoC.
+> 
+> DMA is used for burst data transfer operation, also DMA HW supports
+> aligned 32bit memory address and aligned data access by default.
+> DMA burst of 8 supported. Data register used to support the read/write
+> operation from/to device.
+> 
+> NAND controller driver implements ->exec_op() to replace legacy hooks,
+> these specific call-back method to execute NAND operations.
 
-I know that Gentoo's initramfs tool does not support it, however given
-there are no symbols being cross referenced, I am not sure how to best
-support this other than using these hints, and possibly making use of
-device links too?
+...
+
+> +static int ebu_nand_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct ebu_nand_controller *ebu_host;
+> +	struct nand_chip *nand;
+> +	struct mtd_info *mtd;
+> +	struct resource *res;
+> +	char *resname;
+> +	int ret, i;
+> +	u32 reg;
+> +
+> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+> +	if (!ebu_host)
+> +		return -ENOMEM;
+> +
+> +	ebu_host->dev = dev;
+> +	nand_controller_init(&ebu_host->controller);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+> +	ebu_host->ebu = devm_ioremap_resource(&pdev->dev, res);
+
+devm_platform_ioremap_resource_byname
+
+> +	if (IS_ERR(ebu_host->ebu))
+> +		return PTR_ERR(ebu_host->ebu);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+> +	ebu_host->hsnand = devm_ioremap_resource(&pdev->dev, res);
+
+devm_platform_ioremap_resource_byname
+
+> +	if (IS_ERR(ebu_host->hsnand))
+> +		return PTR_ERR(ebu_host->hsnand);
+> +
+> +	ret = device_property_read_u32(dev, "nand,cs", &reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to get chip select: %d\n", ret);
+> +		return ret;
+> +	}
+> +	ebu_host->cs_num = reg;
+> +
+> +	for (i = 0; i < MAX_CS; i++) {
+> +		resname = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", i);
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   resname);
+
+if res is NULL?
+
+> +		ebu_host->cs[i].chipaddr = devm_ioremap_resource(dev, res);
+> +		ebu_host->cs[i].nand_pa = res->start;
+> +			if (IS_ERR(ebu_host->cs[i].chipaddr))
+> +				return PTR_ERR(ebu_host->cs[i].chipaddr);
+
+Something happened with ordering / indentation along these lines...
+
+> +	}
+> +
+
+> +	for (i = 0; i < MAX_CS; i++) {
+> +		resname = devm_kasprintf(dev, GFP_KERNEL, "addr_sel%d", i);
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   resname);
+
+if res is NULL?
+
+> +		ebu_host->cs[i].addr_sel = res->start;
+> +		writel(ebu_host->cs[i].addr_sel | EBU_ADDR_MASK(5) |
+> +		       EBU_ADDR_SEL_REGEN, ebu_host->ebu + EBU_ADDR_SEL(i));
+> +	}
+
+> +	return ret;
+> +}
+
+...
+
+> +static int ebu_nand_remove(struct platform_device *pdev)
+> +{
+> +	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
+> +
+
+> +	if (ebu_host) {
+
+How it can be NULL here?
+
+> +		mtd_device_unregister(nand_to_mtd(&ebu_host->chip));
+> +		nand_cleanup(&ebu_host->chip);
+> +		ebu_nand_disable(&ebu_host->chip);
+> +
+> +		if (ebu_host->dma_rx || ebu_host->dma_tx)
+> +			ebu_dma_cleanup(ebu_host);
+> +
+> +		clk_disable_unprepare(ebu_host->clk);
+> +	}
+> +
+> +	return 0;
+> +}
+
+
 -- 
-Florian
+With Best Regards,
+Andy Shevchenko
+
+
