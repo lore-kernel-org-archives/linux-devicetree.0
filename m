@@ -2,64 +2,64 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21303C2D0FA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365D4CA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E76BD206B8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD6F205ED
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gMQBgdnI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xtVbguBh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgEMKKm (ORCPT
+        id S1732382AbgEMKTG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 06:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52514 "EHLO
+        Wed, 13 May 2020 06:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732382AbgEMKKl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 06:10:41 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95293C061A0C
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 03:10:40 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id y24so27843125wma.4
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 03:10:40 -0700 (PDT)
+        with ESMTP id S1732890AbgEMKS5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 06:18:57 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3269EC061A0F
+        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 03:18:57 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id s20so6645529plp.6
+        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 03:18:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HLNFbZ1pUXdpUu4uIHgZes4VhXZ3ubFdB8i3YmL6eQg=;
-        b=gMQBgdnIMWxdQ281X69UXFiONU35q6BA2601uQGUEHpjqLi5V8HCyK4H8zFwxayomQ
-         mJpAUrqL+E6M2zRhA3+ynOOKjOizz6VUdlyEjDsC3H1hftoopwObOU/bKxJX8xZxd6Di
-         ndY+GQzvG94Aodppqte8cBTfQdV1crDDfSZkLq2IJIs0Rq7Pp1PcFUiUSgKBcoMzbTup
-         A8J9ZJBzof9t6+H6X2OqlDZ2o/4ZL8y4/0cphFHirWpT1mmh79OxCeKN87cMHnMZ7DPP
-         9B+K2b6BX4nLVlXlCVKPPHUV70yAkyIJrkGnOhyEg5Cn8ROoSGsz/dixpXEB7FBOKTu+
-         ZU3w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lLoZsGIxtkk7j2CSSPpmeCKvNxSk8rWmhnaCpyOYcGw=;
+        b=xtVbguBh8B5FtXizn6MSIzXDhCyv7k0rk1Y4qwDQBj3IBklzOmqenVnzcXEG4ZpQ+/
+         crLdNgXyxSeMgHXb9yQfjnIwl6u0ioK0Bq/KoqUiB2bRVWPmOvm1EQd1zFVvC/s2V0Ke
+         wcF7cbyY2FZWaOy99yT8RFX1TWkMnQwTppI3OOnbuPXmnndv28GBaEY7brU+tc8BhpvJ
+         sI1g49t5aIrKexIVVJv2EapH5mfYqHGTQ1Itp0p2Vt/rKp5iLfU/N/l354T1sKh6uSbz
+         q01l3vxyANrTRwQmU3aEWIjujPr9oDvA7Hlx2hJCmXPPBno6j53xqWrJm/h7zrHY94H+
+         2V4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HLNFbZ1pUXdpUu4uIHgZes4VhXZ3ubFdB8i3YmL6eQg=;
-        b=t+NwPHS3QbAOZtCBeHI6ut22Uq/TwGcY5IkE89ONtY/6JUSchP5eCqFLvfi0xyvjDh
-         gUl/oMTLsgiyhnVWPEz0WUfYMlk5xhWfO2mL8YKytdB37nUiUoNPtVkJPNO4ZuQRbooZ
-         SujDBA8A8TlOaY0uiuVvidWVNPXXxFV0yDriGej4LZ4Orho8knYpDC/bPSf661h8+PHZ
-         lj9y2A7USBCjopIJ1JoFii++tiRAVNvgFUwTLabQNm1vH+4iXakdl2YALRPZ5q5YB0st
-         JUc1Idbd4Fj7iPuMjhxAuKX6n/F1YDxyMoVuAc45ukCXyGPIFAkJMPO3DYqXh/laqDJz
-         25jg==
-X-Gm-Message-State: AGi0PubRJLhFGduryq0bdJFa4b95kYg+nvq7o+hc+QO9OzNBg2zWs7lS
-        drzg59B9lztSwV6dM2dtbN71mg==
-X-Google-Smtp-Source: APiQypIYdTSZJe3Y4e3+lnSSbtwf1K8offweIlDZGjyZHvtGvqNlYAe+bH5LnVDK5Hv8ivjuh+nPcA==
-X-Received: by 2002:a1c:1f0d:: with SMTP id f13mr16463240wmf.184.1589364639220;
-        Wed, 13 May 2020 03:10:39 -0700 (PDT)
-Received: from [192.168.43.249] (212-39-89-233.ip.btc-net.bg. [212.39.89.233])
-        by smtp.googlemail.com with ESMTPSA id m7sm12180941wmc.40.2020.05.13.03.10.37
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lLoZsGIxtkk7j2CSSPpmeCKvNxSk8rWmhnaCpyOYcGw=;
+        b=Dl/ywgy9eCmKUgHmEf9HJUvPJXNv3jXyHpJQrUXqolCfVnWCXN5+rZ1FFKmM1adX3F
+         P2Qm9izlFxswYA/gb/CJDxJxiZ4glZ0cvd/11DM5cYHXUxrQufH3C8XW8iBnp4hqkEBZ
+         9XWrvdIGrp6Vm7yDLhVRrtSjWfnhTeF3VM6iMmRk1dFo5xk2UMO9ksr38lcUZPbfzmnP
+         PBjyD+RADwpPx/5GMtAAXLEdaUfNVQobsPnD1WOJlSUNaH/TjfI/dZmXe7WduZyExloj
+         HZ/j7+c3bIaj3c/R03OkT0TKWTdW3GAiv1N3AU0Ilx5ED1Cits2W7cTQXhbWlqa4cP3D
+         PTjg==
+X-Gm-Message-State: AGi0Pua8AToQmYzsuFOF9pfV44Jy/C+iNDUA+7Ufxg6ZOAlWAB+gq/kz
+        4gYSJyzXXocS8GyR1Sb421LleQ==
+X-Google-Smtp-Source: APiQypJcrzuruIOsKMtnNxHm9luYlHHAVgwiZFkPh0F1nM5grzxMsIRwzyzv83Hle/OfkxoBiw8oKg==
+X-Received: by 2002:a17:90b:8c4:: with SMTP id ds4mr30750303pjb.133.1589365136441;
+        Wed, 13 May 2020 03:18:56 -0700 (PDT)
+Received: from localhost ([122.167.130.103])
+        by smtp.gmail.com with ESMTPSA id 1sm14060007pff.151.2020.05.13.03.18.55
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 May 2020 03:10:38 -0700 (PDT)
-Subject: Re: [PATCH v8 00/10] Introduce OPP bandwidth bindings
-To:     Viresh Kumar <viresh.kumar@linaro.org>
+        Wed, 13 May 2020 03:18:55 -0700 (PDT)
+Date:   Wed, 13 May 2020 15:48:53 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
 Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
         saravanak@google.com, sibis@codeaurora.org, mka@chromium.org,
         robh+dt@kernel.org, rnayak@codeaurora.org,
@@ -67,104 +67,28 @@ Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
         jcrouse@codeaurora.org, evgreen@chromium.org,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 00/10] Introduce OPP bandwidth bindings
+Message-ID: <20200513101853.gedtaqxhg22jnbrp@vireshk-i7>
 References: <20200512125327.1868-1-georgi.djakov@linaro.org>
  <20200513065559.wznvqc7tzvmv3ghy@vireshk-i7>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <ea73d0e7-7428-c3cf-b44b-59427c4d6109@linaro.org>
-Date:   Wed, 13 May 2020 13:10:29 +0300
+ <ea73d0e7-7428-c3cf-b44b-59427c4d6109@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200513065559.wznvqc7tzvmv3ghy@vireshk-i7>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea73d0e7-7428-c3cf-b44b-59427c4d6109@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Viresh,
+On 13-05-20, 13:10, Georgi Djakov wrote:
+> There will be a minor conflict with my branch when this is merged upstream,
+> so maybe we will need to report it or use an immutable tag/branch.
 
-On 5/13/20 09:55, Viresh Kumar wrote:
-> On 12-05-20, 15:53, Georgi Djakov wrote:
->> Here is a proposal to extend the OPP bindings with bandwidth based on
->> a few previous discussions [1] and patchsets from me [2][3] and Saravana
->> [4][5][6][7][8][9].
->>
->> Changes in v8:
->> * Addressed review comments from Matthias, Sibi and Viresh.
->> * Picked reviewed-by tags.
->> * Picked Sibi's interconnect-tag patches into this patchset.
-> 
-> I have applied the series with the modifications I replied with
-> separately.
+Okay, give me your branch and I will rebase over it then. Or if you
+can do that over my branch, that will be better as mine is just based
+of rc2.
 
-Thanks a lot!
-
-> Please lemme know if any more tags (reviewed/acked) etc need to be
-> applied or any more changes are required before I send the pull
-> request to Rafael.
-> 
-> Please give my branch a try as soon as you can.
-
-On top of your branch i tested with scaling 3 different test paths (also
-tagged with different tags) and it looks good:
-
- node                                  tag          avg         peak
---------------------------------------------------------------------
-slv_ebi_ch0                                      458824      1525000
-  cpu0                                   3          922          911
-  cpu0                                   2          902          901
-  cpu0                                   1       457000      1525000
-
-Apart from that, i ran memory throughput tests and they also confirm
-that it's working as expected.
-
-There will be a minor conflict with my branch when this is merged upstream,
-so maybe we will need to report it or use an immutable tag/branch.
-
-Thanks,
-Georgi
+-- 
+viresh
