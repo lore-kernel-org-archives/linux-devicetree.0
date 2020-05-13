@@ -2,71 +2,72 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31086C2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 03:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEDDC2D0F8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 04:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 026A7205ED
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 03:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78F1206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 04:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9XbgXJj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCY38xRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgEMD6A (ORCPT
+        id S1726046AbgEMEOL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 23:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
+        Wed, 13 May 2020 00:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727107AbgEMD6A (ORCPT
+        by vger.kernel.org with ESMTP id S1725943AbgEMEOK (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 23:58:00 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2BEC061A0C;
-        Tue, 12 May 2020 20:57:58 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w10so5402418ljo.0;
-        Tue, 12 May 2020 20:57:58 -0700 (PDT)
+        Wed, 13 May 2020 00:14:10 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80BBBC061A0C;
+        Tue, 12 May 2020 21:14:10 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id v5so8314803lfp.13;
+        Tue, 12 May 2020 21:14:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6jF36zZV4YkOjjEEZcxlJOpsCDyfDyyD6Cte3hhe7uI=;
-        b=Y9XbgXJjX+6b/Our6/e59lW7rMJCRfJO6yDzwJR1u5a+RhYXDVOjWj/MbixpXAlrui
-         tpctqJeC0xlc287Dtv0RlCI9Uv3LvCKCDQXDdmqtodxedvelQUWwAUVoxR6kLxDRPBIw
-         nnlXH487hTvFkMAeK0XmN2uMADfBTpXbEGCqUQGJTLs+JgJVU8YQdc+gqaczKCjXk/ww
-         dLIJykfm8bjmnLHP0QANywpt1aM1jPQBkTI2QIZlSz01me1G9dgncXGPbNmvdgzbDn0n
-         //rocSpNRMykFJEJry29KXF0+QRYEnhnH9lQeHG/nK33ixD2idsoyYRUOyXRCyNyY5bP
-         eGfw==
+        bh=+ahCDXQiMHnFAjGQZFWa3EU/WYE096uPwzw+1hypJRg=;
+        b=OCY38xRSWj2F1o83KA4utovE82g3hXfBvZAV42sOUT2WA9xFgZgT+NHWcV49WqQcKH
+         aAhUgSfdSoVmS1/uje+15mzUU3blIvZbNaYXNoayRZoR03Pmv17xa3vxfcwv/O0ON+24
+         O3L9o1FSlVXf8kSxrulqgNiC657j2A9Lm3880Bap+Zofwf8xkMygJcYrZxz645uLkGEP
+         tqXoZ9EFyda421p5B/871cFHjm2HqyOEJVRO41Ibm1iOrenw6t68uAtxqilGiE2HiesN
+         9Qg4bAqV3VbqIoQyHLO1vBcE59+WLKUKX+UH/YVQVd93VCvgo9Fzq0n5b09yIXyABtfh
+         nYdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6jF36zZV4YkOjjEEZcxlJOpsCDyfDyyD6Cte3hhe7uI=;
-        b=VCNKvjEATSZPebT/uMWXPV+aiuagMob3Tt1iB7EcG7jewtj56cnFMjN5bs1b9WjOxB
-         ptl56bTA7Gvi39MNjBjV7Z0Qalv+GWqZq+mv/GHfD99gvlhG6D90Yo6akDRV4cOd95q8
-         fUDcMV2pykWwBOwc0JZcCXphLySwNYeFRaohvewJiZHZaPuxWu+IbAQwQ9BPWpstV/jC
-         +YXuHn2WnqnthCdP/hD4H3kbBNjTRR04Zt1zGxNW7WgLgrYJLW23yQ9h58I0D/uFFjUT
-         weYBy2P9C/VyO+S5U5Vmm8opsF1tP86HWehZ90NVq831ZWprbmIT3YGapmLa5VAbEg3L
-         TlEg==
-X-Gm-Message-State: AOAM533uKDX8Xhqatz8+O2rNWsb9r7+25n2poKInd8Qp4rh6UO7d8/4W
-        cKGloUYyLQldsBSmSsNEU8/4HvKkLmr4A/sFl0d8L/6m
-X-Google-Smtp-Source: ABdhPJxfEIMDcND6bucfnbiaUf/kKcp6Jv+7+dq6HYchFLm1kBE0LRNTGoe8f4XeHYTkPvaQm5pT9GMkoE/Myrf+lFY=
-X-Received: by 2002:a2e:9490:: with SMTP id c16mr15831301ljh.110.1589342276826;
- Tue, 12 May 2020 20:57:56 -0700 (PDT)
+        bh=+ahCDXQiMHnFAjGQZFWa3EU/WYE096uPwzw+1hypJRg=;
+        b=lRQ+RbzB/LW4S2X4TOqDaDbVvHzbXcz7UDmNc7Tl+5MbJTamtFg8poIjoeNd6SuHTB
+         9tsfVTMPMSBZ5EqlZnHBpAjy7HfBa75/v/zxf8NTlfT8k1uvIsHunoY3SmD0boqv/+TW
+         qKboSz5kjSCPav4TLnsxE6TJ2Xe9wnqCN8V/fpyorRhl/X/XXc+kcNWfpdXGqRtmF+D7
+         yQgNG6WEHvls9TWsuNI4L6b7VtgcO7/UpFDkQuutwiOMaBMIKEezguKX2VHC28/506aW
+         WwcYGxGaP9OhRjrcw40XLOE4pKJq6yv/SRsHBcrr5GkjMdu37Q58C/i3dE6xkS9JEJUE
+         Ss/A==
+X-Gm-Message-State: AOAM5319DxMzwdKJ4AhUUtAoMwxmxVXw0saRvitOLuOhI4SkmmN+665W
+        DsYSHZEcM0NYZNSdSvhrFoI5ZB3bs+N6vhaXSzs=
+X-Google-Smtp-Source: ABdhPJzXujhsuFrsFdx13RF+OZEnFT8Qs+NbvyPaselPPhn4Som0iftFJsRh0vz3+lb6f01KB6OMTXk1AsIs1PEYCHk=
+X-Received: by 2002:ac2:5293:: with SMTP id q19mr16863434lfm.90.1589343248887;
+ Tue, 12 May 2020 21:14:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200513005441.1102586-1-bjorn.andersson@linaro.org> <20200513005441.1102586-4-bjorn.andersson@linaro.org>
-In-Reply-To: <20200513005441.1102586-4-bjorn.andersson@linaro.org>
+References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
+ <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
+ <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
+ <CABb+yY2Pph4EeQtg9xSaCWHqcXr0mVNkrrFYm-E3x3f5xaxygg@mail.gmail.com> <CADBw62rrQ=Po76qpJoUj1za9Hg=T+=eEJf=Yv3UmLFLtRZvwsg@mail.gmail.com>
+In-Reply-To: <CADBw62rrQ=Po76qpJoUj1za9Hg=T+=eEJf=Yv3UmLFLtRZvwsg@mail.gmail.com>
 From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Wed, 13 May 2020 11:57:42 +0800
-Message-ID: <CADBw62oF=o4xxar8yO+xwhLa3h2oD_GD_tWhFo1DDTJGgFnEjg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] hwspinlock: qcom: Allow mmio usage in addition to syscon
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+Date:   Wed, 13 May 2020 12:13:54 +0800
+Message-ID: <CADBw62oFTV3MPuFQSL0MWyYQWy9MuhL70w5HGHPPV1EXBd3KEQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
         Devicetree List <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -75,130 +76,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 8:55 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> In all modern Qualcomm platforms the mutex region of the TCSR is forked
-> off into its own block, all with a offset of 0 and stride of 4096. So
-> add support for directly memory mapping this register space, to avoid
-> the need to represent this block using a syscon.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/hwspinlock/qcom_hwspinlock.c | 72 +++++++++++++++++++++-------
->  1 file changed, 56 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
-> index f0da544b14d2..d8d4d729816c 100644
-> --- a/drivers/hwspinlock/qcom_hwspinlock.c
-> +++ b/drivers/hwspinlock/qcom_hwspinlock.c
-> @@ -70,41 +70,81 @@ static const struct of_device_id qcom_hwspinlock_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
->
-> -static int qcom_hwspinlock_probe(struct platform_device *pdev)
-> +static struct regmap *qcom_hwspinlock_probe_syscon(struct platform_device *pdev,
-> +                                                  u32 *base, u32 *stride)
->  {
-> -       struct hwspinlock_device *bank;
->         struct device_node *syscon;
-> -       struct reg_field field;
->         struct regmap *regmap;
-> -       size_t array_size;
-> -       u32 stride;
-> -       u32 base;
->         int ret;
-> -       int i;
->
->         syscon = of_parse_phandle(pdev->dev.of_node, "syscon", 0);
-> -       if (!syscon) {
-> -               dev_err(&pdev->dev, "no syscon property\n");
-> -               return -ENODEV;
-> -       }
-> +       if (!syscon)
-> +               return ERR_PTR(-ENODEV);
->
->         regmap = syscon_node_to_regmap(syscon);
->         of_node_put(syscon);
->         if (IS_ERR(regmap))
-> -               return PTR_ERR(regmap);
-> +               return regmap;
->
-> -       ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, &base);
-> +       ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, base);
->         if (ret < 0) {
->                 dev_err(&pdev->dev, "no offset in syscon\n");
-> -               return -EINVAL;
-> +               return ERR_PTR(-EINVAL);
->         }
->
-> -       ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, &stride);
-> +       ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, stride);
->         if (ret < 0) {
->                 dev_err(&pdev->dev, "no stride syscon\n");
-> -               return -EINVAL;
-> +               return ERR_PTR(-EINVAL);
->         }
->
-> +       return regmap;
-> +}
-> +
-> +static const struct regmap_config tcsr_mutex_config = {
-> +       .reg_bits               = 32,
-> +       .reg_stride             = 4,
-> +       .val_bits               = 32,
-> +       .max_register           = 0x40000,
-> +       .fast_io                = true,
-> +};
-> +
-> +static struct regmap *qcom_hwspinlock_probe_mmio(struct platform_device *pdev,
-> +                                                u32 *offset, u32 *stride)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct resource *res;
-> +       void __iomem *base;
-> +
-> +       /* All modern platform has offset 0 and stride of 4k */
-> +       *offset = 0;
-> +       *stride = 0x1000;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       base = devm_ioremap_resource(&pdev->dev, res);
+Hi Jassi,
 
-I think you can use devm_platform_ioremap_resource(pdev, 0) to
-simplify your code, otherwise looks good to me.
-Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
-
-> +       if (IS_ERR(base))
-> +               return ERR_CAST(base);
-> +
-> +       return devm_regmap_init_mmio(dev, base, &tcsr_mutex_config);
-> +}
-> +
-> +static int qcom_hwspinlock_probe(struct platform_device *pdev)
-> +{
-> +       struct hwspinlock_device *bank;
-> +       struct reg_field field;
-> +       struct regmap *regmap;
-> +       size_t array_size;
-> +       u32 stride;
-> +       u32 base;
-> +       int i;
-> +
-> +       regmap = qcom_hwspinlock_probe_syscon(pdev, &base, &stride);
-> +       if (IS_ERR(regmap) && PTR_ERR(regmap) == -ENODEV)
-> +               regmap = qcom_hwspinlock_probe_mmio(pdev, &base, &stride);
-> +
-> +       if (IS_ERR(regmap))
-> +               return PTR_ERR(regmap);
-> +
->         array_size = QCOM_MUTEX_NUM_LOCKS * sizeof(struct hwspinlock);
->         bank = devm_kzalloc(&pdev->dev, sizeof(*bank) + array_size, GFP_KERNEL);
->         if (!bank)
-> --
-> 2.26.2
+On Thu, May 7, 2020 at 11:23 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
 >
+> Hi Jassi,
+>
+> On Thu, May 7, 2020 at 7:25 AM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> >
+> > On Wed, May 6, 2020 at 8:29 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > >
+> > > Hi Jassi,
+> > >
+> > > On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > >
+> > > > From: Baolin Wang <baolin.wang@unisoc.com>
+> > > >
+> > > > The Spreadtrum mailbox controller supports 8 channels to communicate
+> > > > with MCUs, and it contains 2 different parts: inbox and outbox, which
+> > > > are used to send and receive messages by IRQ mode.
+> > > >
+> > > > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > > > ---
+> > > > Changes from v3:
+> > > >  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
+> > > >
+> > > > Changes from v2:
+> > > >  - None.
+> > > >
+> > > > Changes from v1:
+> > > >  - None
+> > >
+> > > Gentle ping, do you have any other comments? Thanks.
+> > >
+> > Yea, I am still not sure about the error returned in send_data().  It
+> > will either never hit or there will be no easy recovery from it. The
+> > api expects the driver to tell it the last-tx was done only when it
+> > can send the next message. (There may be case like sending depend on
+> > remote, which can't be ensured before hand).
+>
+> Actually this is an unusual case, suppose the remote target did not
+> fetch the message as soon as possile, which will cause the FIFO
+> overflow, so in this case we  can not send messages to the remote
+> target any more, otherwise messages will be lost. Thus we can return
+> errors to users to indicate that something wrong with the remote
+> target need to be checked.
+>
+> So this validation in send_data() is mostly for debugging for this
+> abnormal case and we will not trigger this issue if the remote target
+> works well. So I think it is useful to keep this validation in
+> send_data(). Thanks.
 
+Any comments? Thanks.
 
 -- 
 Baolin Wang
