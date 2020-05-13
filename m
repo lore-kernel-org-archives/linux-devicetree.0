@@ -5,56 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384D7C2D0FA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D91C2D0FC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19690206B7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A737D206CC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nKZEzBBg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kAkiwK4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733118AbgEMNHS (ORCPT
+        id S1733216AbgEMNHX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 09:07:18 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38514 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgEMNHS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 09:07:18 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04DD7GTd114155;
-        Wed, 13 May 2020 08:07:16 -0500
+        Wed, 13 May 2020 09:07:23 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48950 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733182AbgEMNHW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 09:07:22 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04DD7Kf1043033;
+        Wed, 13 May 2020 08:07:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589375236;
-        bh=f4nG1Z0UcuxYUN06zcx+hh4NnFLdEFqFG1jkKWOQn60=;
+        s=ti-com-17Q1; t=1589375240;
+        bh=5K+SEGQeU5EpeWcccdRNrdDbsnRedKCXOuo8mbwS6a8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nKZEzBBgxwTvSaPxjwoPYlYmcvcMqTEx8zF7x/apNyhpFMbGU13FCJRfDVuaDRKRT
-         fkXpmWM0GfsST6JAT2MvPMQrtsNt2eXXhfWNZxwBNkGwiwQABEqvaCkgnVHRAgRYxQ
-         jR58l/ZHz/fxHKFP8fJKa6vRsYlJQ7GaaOG41zsE=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04DD7GDt123458
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 May 2020 08:07:16 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+        b=kAkiwK4gmsI3IObS1d0pMN20fNxEMri/JnVKQUZSxRrdRJ4Ti26pmFqU36POHxXfo
+         E8KFX8wHpOT8VkNt17Pken/mDV67dsN8bgkfsI1kux/BxfHZ7zxBqda8mrOzX+Bu4x
+         y9UHvlME7SVHJTPIKTb2Faly+ukq9GeaTUglQA+E=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DD7KLm068039;
+        Wed, 13 May 2020 08:07:20 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 13
- May 2020 08:07:16 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 08:07:20 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 13 May 2020 08:07:16 -0500
+ Frontend Transport; Wed, 13 May 2020 08:07:20 -0500
 Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DD7B2R074071;
-        Wed, 13 May 2020 08:07:14 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DD7B2T074071;
+        Wed, 13 May 2020 08:07:18 -0500
 From:   Roger Quadros <rogerq@ti.com>
 To:     <balbi@kernel.org>
 CC:     <robh+dt@kernel.org>, <vigneshr@ti.com>,
         <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 1/3] dt-bindings: usb: convert keystone-usb.txt to YAML
-Date:   Wed, 13 May 2020 16:07:07 +0300
-Message-ID: <20200513130709.10239-2-rogerq@ti.com>
+Subject: [PATCH 3/3] usb: dwc3: keystone: Turn on USB3 PHY before controller
+Date:   Wed, 13 May 2020 16:07:09 +0300
+Message-ID: <20200513130709.10239-4-rogerq@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200513130709.10239-1-rogerq@ti.com>
 References: <20200513130709.10239-1-rogerq@ti.com>
@@ -66,151 +65,104 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert keystone-usb documentation to YAML format.
+The Local Power Sleep Controller (LPSC) dependency on AM65
+requires SERDES0 to be powered on before USB.
+
+We need to power up SERDES0 power domain and hold it on
+throughout the reset, init, power on sequence.
 
 Signed-off-by: Roger Quadros <rogerq@ti.com>
 ---
- .../devicetree/bindings/usb/keystone-usb.txt  | 56 ----------------
- .../bindings/usb/ti,keystone-dwc3.yaml        | 67 +++++++++++++++++++
- 2 files changed, 67 insertions(+), 56 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/keystone-usb.txt
- create mode 100644 Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
+ drivers/usb/dwc3/dwc3-keystone.c | 47 +++++++++++++++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/keystone-usb.txt b/Documentation/devicetree/bindings/usb/keystone-usb.txt
-deleted file mode 100644
-index 77df82e36138..000000000000
---- a/Documentation/devicetree/bindings/usb/keystone-usb.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--TI Keystone Soc USB Controller
--
--DWC3 GLUE
--
--Required properties:
-- - compatible: should be
--		"ti,keystone-dwc3" for Keystone 2 SoCs
--		"ti,am654-dwc3" for AM654 SoC
-- - #address-cells, #size-cells : should be '1' if the device has sub-nodes
--   with 'reg' property.
-- - reg : Address and length of the register set for the USB subsystem on
--   the SOC.
-- - interrupts : The irq number of this device that is used to interrupt the
--   MPU.
-- - ranges: allows valid 1:1 translation between child's address space and
--   parent's address space.
--
--SoC-specific Required Properties:
--The following are mandatory properties for Keystone 2 66AK2HK, 66AK2L and 66AK2E
--SoCs only:
--
--- clocks:		Clock ID for USB functional clock.
--- clock-names:		Must be "usb".
--
--
--The following are mandatory properties for 66AK2G and AM654:
--
--- power-domains:	Should contain a phandle to a PM domain provider node
--			and an args specifier containing the USB device id
--			value. This property is as per the binding,
--			Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
--
--Sub-nodes:
--The dwc3 core should be added as subnode to Keystone DWC3 glue.
--- dwc3 :
--   The binding details of dwc3 can be found in:
--   Documentation/devicetree/bindings/usb/dwc3.txt
--
--Example:
--	usb: usb@2680000 {
--		compatible = "ti,keystone-dwc3";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		reg = <0x2680000 0x10000>;
--		clocks = <&clkusb>;
--		clock-names = "usb";
--		interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
--		ranges;
--
--		dwc3@2690000 {
--			compatible = "synopsys,dwc3";
--			reg = <0x2690000 0x70000>;
--			interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
--			usb-phy = <&usb_phy>, <&usb_phy>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-new file mode 100644
-index 000000000000..14d2fe329b93
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/ti,keystone-dwc3.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/usb/dwc3/dwc3-keystone.c b/drivers/usb/dwc3/dwc3-keystone.c
+index 1e14a6f4884b..46d46f3507fc 100644
+--- a/drivers/usb/dwc3/dwc3-keystone.c
++++ b/drivers/usb/dwc3/dwc3-keystone.c
+@@ -14,6 +14,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/io.h>
+ #include <linux/of_platform.h>
++#include <linux/phy/phy.h>
+ #include <linux/pm_runtime.h>
+ 
+ /* USBSS register offsets */
+@@ -34,6 +35,7 @@
+ struct dwc3_keystone {
+ 	struct device			*dev;
+ 	void __iomem			*usbss;
++	struct phy			*usb3_phy;
+ };
+ 
+ static inline u32 kdwc3_readl(void __iomem *base, u32 offset)
+@@ -95,8 +97,44 @@ static int kdwc3_probe(struct platform_device *pdev)
+ 	if (IS_ERR(kdwc->usbss))
+ 		return PTR_ERR(kdwc->usbss);
+ 
+-	pm_runtime_enable(kdwc->dev);
++	/* PSC dependency on AM65 needs SERDES0 to be powered before USB0 */
++	kdwc->usb3_phy = devm_phy_get(dev, "usb3-phy");
++	if (IS_ERR(kdwc->usb3_phy)) {
++		error = PTR_ERR(kdwc->usb3_phy);
++		if (error == -ENOSYS || error == -ENODEV) {
++			kdwc->usb3_phy = NULL;
++		} else {
++			if (error != -EPROBE_DEFER) {
++				dev_err(dev, "couldn't get usb3 phy: %d\n",
++					error);
++			}
 +
-+title: TI Keystone Soc USB Controller
++			return error;
++		}
++	}
 +
-+maintainers:
-+  - Roger Quadros <rogerq@ti.com>
++	phy_pm_runtime_get_sync(kdwc->usb3_phy);
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: "ti,keystone-dwc3"
-+      - const: "ti,am654-dwc3"
++	error = phy_reset(kdwc->usb3_phy);
++	if (error < 0) {
++		dev_err(dev, "usb3 phy reset failed: %d\n", error);
++		return error;
++	}
 +
-+  reg:
-+    maxItems: 1
-+    description: Address and length of the register set for the USB subsystem on
-+      the SOC.
++	error = phy_init(kdwc->usb3_phy);
++	if (error < 0) {
++		dev_err(dev, "usb3 phy init failed: %d\n", error);
++		return error;
++	}
+ 
++	error = phy_power_on(kdwc->usb3_phy);
++	if (error < 0) {
++		dev_err(dev, "usb3 phy power on failed: %d\n", error);
++		phy_exit(kdwc->usb3_phy);
++		return error;
++	}
 +
-+  interrupts:
-+    maxItems: 1
-+    description: The irq number of this device that is used to interrupt the MPU.
++	pm_runtime_enable(kdwc->dev);
+ 	error = pm_runtime_get_sync(kdwc->dev);
+ 	if (error < 0) {
+ 		dev_err(kdwc->dev, "pm_runtime_get_sync failed, error %d\n",
+@@ -138,6 +176,9 @@ static int kdwc3_probe(struct platform_device *pdev)
+ err_irq:
+ 	pm_runtime_put_sync(kdwc->dev);
+ 	pm_runtime_disable(kdwc->dev);
++	phy_power_off(kdwc->usb3_phy);
++	phy_exit(kdwc->usb3_phy);
++	phy_pm_runtime_put_sync(kdwc->usb3_phy);
+ 
+ 	return error;
+ }
+@@ -163,6 +204,10 @@ static int kdwc3_remove(struct platform_device *pdev)
+ 	pm_runtime_put_sync(kdwc->dev);
+ 	pm_runtime_disable(kdwc->dev);
+ 
++	phy_power_off(kdwc->usb3_phy);
++	phy_exit(kdwc->usb3_phy);
++	phy_pm_runtime_put_sync(kdwc->usb3_phy);
 +
-+
-+  clocks:
-+    description: Clock ID for USB functional clock.
-+
-+  power-domains:
-+    description: Should contain a phandle to a PM domain provider node
-+      and an args specifier containing the USB device id
-+      value. This property is as per the binding,
-+      Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-+
-+  dwc3:
-+    description: This is the node representing the DWC3 controller instance
-+      Documentation/devicetree/bindings/usb/dwc3.txt
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    usb: usb@2680000 {
-+      compatible = "ti,keystone-dwc3";
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      reg = <0x2680000 0x10000>;
-+      clocks = <&clkusb>;
-+      clock-names = "usb";
-+      interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
-+      ranges;
-+
-+      dwc3@2690000 {
-+        compatible = "synopsys,dwc3";
-+        reg = <0x2690000 0x70000>;
-+        interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
-+        usb-phy = <&usb_phy>, <&usb_phy>;
-+      };
-+    };
+ 	platform_set_drvdata(pdev, NULL);
+ 
+ 	return 0;
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
 Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
