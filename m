@@ -2,209 +2,153 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C9CCA90AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 08:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29C1C2D0FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 08:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A23BB20753
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 08:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8402A24927
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 08:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="HTFl3Klp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ME8JKV6m"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mf7qLmSG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbgEMIQR (ORCPT
+        id S1732161AbgEMIUY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 04:16:17 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:40193 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729106AbgEMIQQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 04:16:16 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 82B9B580259;
-        Wed, 13 May 2020 04:16:15 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 13 May 2020 04:16:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=0j46CBI/bHAD1UvanCxkve32qLl
-        V511xJqDxBIoMMfU=; b=HTFl3Klp2QfojXXgRrErUJAxxal4UKbARLXv7sdH2kW
-        5Z6TVj+TXe0Dzotb9rvCgJ7qIFqDAM50LeL9vDigMJ+/hJIqiLhpnY6TwrmdA9zn
-        wcIuONOdhRvzr0XnqxfzmU4Cgqt2obYMbFPYkA4rG7n9sY4DuGGY1QHtihcL9OUG
-        6KcpkECvWFW0vg2c3woq4k8U9vVXZBv4IpM2bMnzgAq7u0FsZOt4appHJQISonKm
-        37mJ2ws/KvvqGaaEoNlkwA9EcjNR+oSDshiAH+3NfaXS7QJxp0XvXqLOQeHyr+pK
-        BZlmKfUu9zC+arM5xFxLzw8xGpHu0xrrawRP5EDSY2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0j46CB
-        I/bHAD1UvanCxkve32qLlV511xJqDxBIoMMfU=; b=ME8JKV6mKukylAFSChUaYj
-        U2qnpZbY8VKhb96F+cdAzDVoxRc7tMYOGgh5HI3He7gV4X6NCP/4BzKyTFVeFpaX
-        b1ffAwY3vT8C3XXm7X8ukIyCPNXKKw9Wn3YuUah4EzkwpkOT+z1rdenqkGB3SIDC
-        mbk5Mib8N1EAM+EgLtO7OTDZC42IrKZveCNtpzTsojGDKx7hoZKjxbGLD12Xd/Uc
-        S3tVA+WAf8nTtQ8xxhqdiG/rufNA0lMMowDMpqobVaQnEnI+0I86mpCbDFOsnOjc
-        tyxHn0UMGfv9XWlq1qreHMWhXU4bAefkHCcxpBL+H2WPKXYGJt49Uw4fVLIz2QFQ
-        ==
-X-ME-Sender: <xms:zqy7Xoae7j8EJXZNl5ITxUEaEHN9KyUXts41mDFCudOneOnPlTZdsQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeggddtvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeffteetveeijeetuefhffegkeetgffhieelheehtdduudethffhjedtvddtudel
-    vdenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
-    mhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:zqy7Xjb_gzqfaP5apaGEkZQP7B1_BAWupvdiUOGftcDIYbxDnZ2mZQ>
-    <xmx:zqy7Xi-GppLH-jpxW4_wKRZ_cK_3RDfc29t0cqAQWlOWo8k80vdOPQ>
-    <xmx:zqy7XirIrMfP-DBf7fwSPbqIuiv3WgKZ12YTpZJzGtvgifSiYkBHBg>
-    <xmx:z6y7XndYTy7d3DOVWcCzjnYkUd2S4pRFNwlYKG6tiFFzfUZaHJ0q-w>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D76EC30662FE;
-        Wed, 13 May 2020 04:16:13 -0400 (EDT)
-Date:   Wed, 13 May 2020 10:16:12 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 90/91] dt-bindings: display: vc4: hdmi: Add BCM2711
- HDMI controllers bindings
-Message-ID: <20200513081612.qyc24hmodift4pru@gilmour.lan>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <9bdee4024b3f95bed9b55c642f0f9415c22fc506.1587742492.git-series.maxime@cerno.tech>
- <20200511215014.GA4800@bogus>
+        Wed, 13 May 2020 04:20:24 -0400
+Received: from mail-eopbgr20053.outbound.protection.outlook.com ([40.107.2.53]:10353
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732121AbgEMIUY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 04:20:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B6Bz1p41IIUUhyaPbrgqEdl7Md9bqD/rgrR1RPB09OM6oyWugvcT/wRVWJH+RJZIq3ZicyNtMalpcYQI5V/CMB0HNGt+lGokOIP1J60A7lHbTpflS90hyy9LCPj/BkgQPoj8g07l2iyZz+8ypChEupcMiMg0CEEZFjai+lUOwG2rJCReMVfZJschQQ4gBDz+lxL5mnRCJ5CTzP4rZxijPDOnsK2dF1nxOWz6srU9WJxYGIKAWJn8m8sCAspukjSzME0wCQicItudXGJ21z0e0zxRb/Ledr2NnMj2lYClBerkWYo4SLVDCVeTwoAsYvMGST9FuQmVPTgN5WPKpw9qdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XWEdXAhnXXeFk6WL4AWaBjGKdYGhKXzG8vgymH3/6l8=;
+ b=W7DMBcF/kVJA3/NiCurVXxNTODLAj75lOdSPYEZBEdADIO89/UTd8iEer9rgOq8cv533EDmmxGohzI84nrtzwAkzihMIhQsgDjJFJz+hchqCgcZlKN0KpZVVnfPINzkjeqnmM3bCJ1or312h6qsSCyRvFzo6pRACZ4tJlP3GlXvFt6KiFlqQi//vpxQtFnq+a1KB6sLTRIxk0rp8rcPi8BNbwwgRHZrH028ZImSQXC4vntIuWhwW0tY4PJM325oqUfsaAIQpNRMZuy54oFdk6fLlPA7aWBSrEdHyHFql3M6oepcdYox6g5wj+9IHMZQnzshhoQ3zrj909xhCphDrMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XWEdXAhnXXeFk6WL4AWaBjGKdYGhKXzG8vgymH3/6l8=;
+ b=mf7qLmSG0UmxNz+RHdFT37ITOKECXkXU7sDRAz6OkCLkiKigYmBc0MJklcNO75UhbblyuFE6/Yms3Npe4oyPnOoSjNerpNRLGrvSkRgxxuUhIDywCmr0F+IOiBa04RvLVYr1L9rvYfY1xXgyngrnuQu3NLacCKtgV7D6o/iVGyc=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6495.eurprd04.prod.outlook.com (2603:10a6:803:11d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Wed, 13 May
+ 2020 08:20:18 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.3000.016; Wed, 13 May 2020
+ 08:20:18 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v7 RESEND 00/13] add ecspi ERR009165 for i.mx6/7 soc
+ family
+Thread-Topic: [PATCH v7 RESEND 00/13] add ecspi ERR009165 for i.mx6/7 soc
+ family
+Thread-Index: AQHWJ3cQF4VQAfbPY0eHwEq+VJV4M6ilnvSAgAANpiA=
+Date:   Wed, 13 May 2020 08:20:18 +0000
+Message-ID: <VE1PR04MB663826721B0720C313C3E12A89BF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
+ <20200513072012.GB15934@pengutronix.de>
+In-Reply-To: <20200513072012.GB15934@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c6a6175a-c429-43d8-8970-08d7f7167905
+x-ms-traffictypediagnostic: VE1PR04MB6495:|VE1PR04MB6495:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6495028891FE13A5A93459B489BF0@VE1PR04MB6495.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2089;
+x-forefront-prvs: 0402872DA1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2Az6f7afz3WGTTd3KHlalP4pRyNiYet1VQlF7dMrMG8VOaXtup2no51OH5q7ezcE7S5H9U1+1xL96s+vS3/hSFXIZFbBLS8yU4cpTyEkTAeHiZZFNPJufFD5awLAtztVomOyTn/7I2iaeLRmeks+MHn10Zwigrh2so4H+Y9SDrVuVGOUpvBEbkirrruZ9yTtiH9j0I5hL+/vBPKi5lcNn0yqkI9J8vOVEjYM1eIWoQaE3mlCeyM5qFykcUXhUaGE2rEwtXIIWqm2b2l8RL6FUQ2IOxneB+ZvTu8EvDHJtu9Y0FmvpTP5yYZQOD1jCe0gSJvta1xIOS+FriAhz2KNzY9vRbuH4M7qnwl06EFTaChpU2rac47eImUdnTKxaV8wOp2RSGgC5Qvp5EMfQ5HnufIcmjbvEZ4d8ACJdpXY8dRxC3E6NrCnyTvsAtuh84Yj0tZdatyyGReJg6onKtc4HSFiP9WzYIhBr8V+rTzCALl4nuvoK3NLLSmT/mVjIcBDExOprIxBQIgN7ggKOHim/WL3JHyvQrrmUb+QZgqT20j0S/ezchVahLPR0EmJXajcFEoKZMvXxVYQqQ2r0QGRKZZfYc1hffI9etXv2tHHtEU=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(33430700001)(86362001)(7416002)(71200400001)(52536014)(316002)(66476007)(66946007)(478600001)(966005)(54906003)(45080400002)(76116006)(33656002)(5660300002)(66556008)(6916009)(66446008)(7696005)(4326008)(33440700001)(9686003)(8676002)(55016002)(6506007)(2906002)(186003)(83080400001)(26005)(8936002)(64756008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 8YXxr7GNc171Guheu4KtR5OT0vICQafNvA5L/0OLA9vIgFXFVGzX17kYc8Xfz2vggPVDf0Ih3M4xMgIiuF7vT/VQjIeXMp3DoIQHgB77Znm/XwHorxZuDJoMAdAnb6EL3lWAitrsceE8E9ySSAzspgr8bTgj1Z8xyh4HRAiRB8REo5bV1Wy/q/oesK3XEm0d/IEyByY/mHZV65LU6U8mkyVsFQHEUe3OQfHuZIbD2KtmWdLXdE5Um/NMsCXYYLrFKd/t+rDGHHmqLg8T/g87fvUMdi0RmLa4RxYtaV3AO9QBQ0vW7o3lKkGi1/d/ojEpvb2Rcfq34jyWdBz4jI0v4vApQ3IkKc7f5cuXgYTs8gn7p/Cb/Oakm2353Q1oENi6pkTiavaeSa9COdiMscEOFDEDcXuwKYcXztu/slYQn69oAfJRK6RkdWqpGaz+F0D92022YKz3CnraCtZLybpUuGE/+ZNw6jafxTzlK5DyzO8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="25uvvhz4ijwduufw"
-Content-Disposition: inline
-In-Reply-To: <20200511215014.GA4800@bogus>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6a6175a-c429-43d8-8970-08d7f7167905
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:20:18.6012
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M2wChgXBhAkbq7yo+BNwhok4GlUr1+Z0YXS0+dkM/o/LRsJD5JZjLoHKxy2pN5aKcbyDHAKEEz6GV/6/hChixw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6495
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---25uvvhz4ijwduufw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, May 11, 2020 at 04:50:14PM -0500, Rob Herring wrote:
-> On Fri, Apr 24, 2020 at 05:35:11PM +0200, Maxime Ripard wrote:
-> > The HDMI controllers found in the BCM2711 SoC need some adjustments to =
-the
-> > bindings, especially since the registers have been shuffled around in m=
-ore
-> > register ranges.
-> >=20
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > ---
-> >  Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml | 109=
- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 109 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2=
-711-hdmi.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2711-hdm=
-i.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-> > new file mode 100644
-> > index 000000000000..6091fe3d315b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-> > @@ -0,0 +1,109 @@
-> > +# SPDX-License-Identifier: GPL-2.0
+On 2020/05/13 Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Tue, May 12, 2020 at 01:32:23AM +0800, Robin Gong wrote:
+> > There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> > transfer to be send twice in DMA mode. Please get more information from=
+:
+> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww=
+.
+> >
+> nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01%7C
+> yibin.g
+> >
+> ong%40nxp.com%7C4276d42955334886056508d7f70e18af%7C686ea1d3bc2b4
+> c6fa92
+> >
+> cd99c5c301635%7C0%7C1%7C637249512224944620&amp;sdata=3Dvh0e3BER01
+> 02648t9HRe14h%2BaE9m%2BAlJ5Smd6v%2B9AhM%3D&amp;reserved=3D0. The
+> workaround is adding new sdma ram script which works in XCH  mode as PIO
+> inside sdma instead of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0.
+> The issue should be exist on all legacy i.mx6/7 soc family before i.mx6ul=
+.
+> > NXP fix this design issue from i.mx6ul, so newer chips including
+> > i.mx6ul/ 6ull/6sll do not need this workaroud anymore. All other
+> > i.mx6/7/8 chips still need this workaroud. This patch set add new
+> 'fsl,imx6ul-ecspi'
+> > for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need
+> > errata or not.
+> > The first two reverted patches should be the same issue, though, it
+> > seems 'fixed' by changing to other shp script. Hope Sean or Sascha
+> > could have the chance to test this patch set if could fix their issues.
+> > Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+> > on i.mx8mm because the event id is zero.
 >=20
-> Dual license
->=20
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/brcm,bcm2711-hdmi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Broadcom BCM2711 HDMI Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Eric Anholt <eric@anholt.net>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - brcm,bcm2711-hdmi0
-> > +      - brcm,bcm2711-hdmi1
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: HDMI controller register range
-> > +      - description: DVP register range
-> > +      - description: HDMI PHY register range
-> > +      - description: Rate Manager register range
-> > +      - description: Packet RAM register range
-> > +      - description: Metadata RAM register range
-> > +      - description: CSC register range
-> > +      - description: CEC register range
-> > +      - description: HD register range
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: hdmi
-> > +      - const: dvp
-> > +      - const: phy
-> > +      - const: rm
-> > +      - const: packet
-> > +      - const: metadata
-> > +      - const: csc
-> > +      - const: cec
-> > +      - const: hd
-> > +
-> > +  clocks:
-> > +    description: The HDMI state machine clock
-> > +
-> > +  clock-names:
-> > +    const: hdmi
-> > +
-> > +  ddc:
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: >
-> > +      Phandle of the I2C controller used for DDC EDID probing
->=20
-> This belongs in a connector node. (ddc-i2c-bus)
->=20
-> > +
-> > +  hpd-gpios:
-> > +    description: >
-> > +      The GPIO pin for the HDMI hotplug detect (if it doesn't appear
-> > +      as an interrupt/status bit in the HDMI controller itself)
->=20
-> This belongs in a connector node.
+> It's not nice to break SPI support when the new firmware is not present a=
+nd I
+> think we can do better. Wouldn't it be possible to fall back to PIO in th=
+is case?
+I'm afraid that's not easy since spi driver don't know which firmware used.=
+ Could I add some comments in commit log?=20
 
-If we were to create a new binding, sure, but we're merely reusing the old
-binding that is already there. The only reason it's in a separate file is
-because you said it would be clearer in a separate file.
-
-Maxime
-
---25uvvhz4ijwduufw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXruszAAKCRDj7w1vZxhR
-xZXGAPwI/P/64ae/RGoyiyvicUFL/8PZpskFHFYPNqgj1twd1QD9GJ81sy881K3d
-VLuJhfBzZzlO3Dkq6buOGLj+E1To/Qw=
-=ZkKk
------END PGP SIGNATURE-----
-
---25uvvhz4ijwduufw--
