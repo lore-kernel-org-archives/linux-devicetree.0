@@ -2,87 +2,115 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30275CA90AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C4BCA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E92DB222E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2C0223E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="DB1u96VA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yO+lKrES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387936AbgEMNhf (ORCPT
+        id S2387767AbgEMNjh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 09:37:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgEMNhf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 09:37:35 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCFE5C061A0C;
-        Wed, 13 May 2020 06:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CT8QafuNU7nLW58gRG75IH2d/SNOoLj5Pkh6RsDK2u0=; b=DB1u96VASarFExlYVvTN2K4FF
-        YcWgO4N/Pv/7rjUwfqYgwZzwFq83aUexyQlS0nCAYIIXLmIB+NxaVmv4qU+wi8Gg9CjGaX/JyUX5f
-        KfEkgGylGwbYY1gc5y+4a3myt/YWd09VH4dnEhbYWl3ZT3wAo9hJCw51Q2bm/7feFrrai2HMkHBSV
-        +rhzet+/uD9KCl+EkC/RpgUKU27k9nbKLwfvMorD16UTwETE/H3U/9TiQTJjqZsPm2BYynJ5ALsfz
-        smTKoZptXIo9MJ7w/bvIachtZYcbNozvC47ygP4FLFac2zgGFgVCjdEgoiydosTgWsg4SosQaQv7o
-        K2jOKiUZg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59948)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jYrZe-0004jS-7F; Wed, 13 May 2020 14:37:26 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jYrZb-0007oW-Ux; Wed, 13 May 2020 14:37:23 +0100
-Date:   Wed, 13 May 2020 14:37:23 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel@lists.infradead.org,
+        Wed, 13 May 2020 09:39:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57898 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728787AbgEMNjc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 09:39:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=hKK0PusahUIxbCyM9tysfdHvsir7N5IvBCEky0jEiNY=; b=yO+lKrESHBVdVl79yB038dn1C0
+        0RBiUREpZ6oVmSLcN/Y3XjsZA8aHMFK9vMWIIYZ0wxHZsjF/+b6rRcN8jPRcKIAn94UDiwQrnC/3k
+        kJoP0jS9KqXGzSml+Im1iUz7oLti+haAV8uVUuu8u9S731vOv78LsOU1fRMu4PRlWobw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jYrbZ-002AKi-MH; Wed, 13 May 2020 15:39:25 +0200
+Date:   Wed, 13 May 2020 15:39:25 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Vladimir Vid <vladimir.vid@sartura.hr>
-Subject: Re: [PATCH] i2c: pxa: implement generic i2c bus recovery
-Message-ID: <20200513133722.GJ1551@shell.armlinux.org.uk>
-References: <E1jYnlI-0002Nw-83@rmk-PC.armlinux.org.uk>
- <20200513131843.GB499265@lunn.ch>
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v1] net: phy: tja11xx: add cable-test support
+Message-ID: <20200513133925.GD499265@lunn.ch>
+References: <20200513123440.19580-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513131843.GB499265@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200513123440.19580-1-o.rempel@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 03:18:43PM +0200, Andrew Lunn wrote:
-> On Wed, May 13, 2020 at 10:33:12AM +0100, Russell King wrote:
-> > Implement generic GPIO-based I2C bus recovery for the PXA I2C driver.
+On Wed, May 13, 2020 at 02:34:40PM +0200, Oleksij Rempel wrote:
+> Add initial cable testing support.
+> This PHY needs only 100usec for this test and it is recommended to run it
+> before the link is up. For now, provide at least ethtool support, so it
+> can be tested by more developers.
 > 
-> Hi Russell
+> This patch was tested with TJA1102 PHY with following results:
+> - No cable, is detected as open
+> - 1m cable, with no connected other end and detected as open
+> - a 40m cable (out of spec, max lenght should be 15m) is detected as OK.
 > 
-> I assume this is going to be merged via i2c? So Wolfram Sang?  He is
-> not on To: or Cc:
+> Current patch do not provide polarity test support. This test would
+> indicate not proper wire connection, where "+" wire of main phy is
+> connected to the "-" wire of the link partner.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  drivers/net/phy/nxp-tja11xx.c | 106 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 105 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+> index ca5f9d4dc57ed..8b743d25002b9 100644
+> --- a/drivers/net/phy/nxp-tja11xx.c
+> +++ b/drivers/net/phy/nxp-tja11xx.c
+> @@ -5,6 +5,7 @@
+>   */
+>  #include <linux/delay.h>
+>  #include <linux/ethtool.h>
+> +#include <linux/ethtool_netlink.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mdio.h>
+>  #include <linux/mii.h>
+> @@ -26,6 +27,7 @@
+>  #define MII_ECTRL_POWER_MODE_NO_CHANGE	(0x0 << 11)
+>  #define MII_ECTRL_POWER_MODE_NORMAL	(0x3 << 11)
+>  #define MII_ECTRL_POWER_MODE_STANDBY	(0xc << 11)
+> +#define MII_ECTRL_CABLE_TEST		BIT(5)
+>  #define MII_ECTRL_CONFIG_EN		BIT(2)
+>  #define MII_ECTRL_WAKE_REQUEST		BIT(0)
+>  
+> @@ -55,6 +57,11 @@
+>  #define MII_GENSTAT			24
+>  #define MII_GENSTAT_PLL_LOCKED		BIT(14)
+>  
+> +#define MII_EXTSTAT			25
+> +#define MII_EXTSTAT_SHORT_DETECT	BIT(8)
+> +#define MII_EXTSTAT_OPEN_DETECT		BIT(7)
+> +#define MII_EXTSTAT_POLARITY_DETECT	BIT(6)
+> +
 
-Yes, just as my other patches I've posted to the linux-i2c list that
-Wolfram has picked up.  I think he works from patchwork.
+Do these registers all conform to the standard? Can we pull this code
+out into a library which all standards conformant PHY drivers can use?
 
-I assume Wolfram doesn't want to be Cc'd, as per the current setup in
-MAINTAINERS.  If that's not the case, MAINTAINERS needs to be fixed.
+The code itself looks O.K.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+    Andrew
