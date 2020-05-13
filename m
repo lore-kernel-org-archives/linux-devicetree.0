@@ -2,60 +2,61 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67D6C2D0FC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD05CA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6EFF2176D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0F820753
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:57:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="jWMv1SiE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="VwNouJhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733245AbgEMM5A (ORCPT
+        id S1728612AbgEMM5J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 08:57:00 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:29599 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733200AbgEMM45 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 08:56:57 -0400
+        Wed, 13 May 2020 08:57:09 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:7011 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728100AbgEMM5G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 08:57:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589374616; x=1620910616;
+  t=1589374626; x=1620910626;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tnLWmU9TG0hHNpiEsQJmeBvXg8PJsOm3nln/lwMbNII=;
-  b=jWMv1SiElsKoLpJiDb0vND4QaEsOf5JjkWYiqsVDmZKGLDy2JO1FK26+
-   WGvGBEjtWZFCa+xYTmaYP+VM40rFBwKqReHNIdfXVsZnxj2wHYGdajaVR
-   zw4O+KXZBEfqf56D5objzPvlg6Zk7Nqa7lnoPFTDO7movSsp9Y413eLpm
-   Aa9SHTnzzcK+u7Nbk0xM0KdqeMmvdXTEJfj0ilkkfjZAaeNDX3Ia1G+jr
-   BhoS/LZZuliSeUKsmZRaAy1kmZG4RDEHmErJd8qFzuejKWDdBP6Eruz2K
-   S87VNLQ77kPjMj1hoAY68rdS2QMo0YkF3dtY/eOFZO3plDMZGmrT/z51V
-   w==;
-IronPort-SDR: iPcmnwfvFRdYKmx9fcBuWP/43p5J+o/Hc4a9KPJnQ45OI62gYQOywxkAutC2Lxc7aN6VKmbdQL
- C2romUuZo8OLj5ePxprebSXup3EIm2IxT467FjHmpBibuXw4O5t/lLOAMF2oijchUKNYVdYxgx
- de2mmO/IDSBNmxot12YgHkFtgxLmatdkOmeSHLg6u6cP1ktNiIZ0gYtSGEur/x6MBjKuhNBNxX
- 7hbb9JM2e1M5PqbaYX2TiRVSkMANTEgGHXfmQxgxJR3QK6R+T018jvB0OUR4mJy7YnxQfJEU+B
- wgU=
+  bh=xXJynxC1V+h72C8jGLqY9iD3zxa+PCkiEZWrzWLo4sc=;
+  b=VwNouJhCByK3bn7CwPfNUVwngLRxKUEAfhbkYa84veCGBnmdEawZL3wN
+   RSXIr2A8LW4LFfoMVoKt+2D0ChcFIaCpHfAweo00qE5tQsG+SRcUBMhoK
+   e/AbmZroqAc2jooB8v2f0D/B4fqEdmtCJf38N582YpEoukBaoVef8Qzf5
+   Ovwx9KjWDgv1M33BUcu72MU2Iee+LiXgNwoylrJCJz5Ef6bVXjioqZ4no
+   vBN+h0iJ6zAuOqQDVhG0V1tRtpOCUUqvxZ2bYMrUAC8Py00Eio+wXeTb6
+   whALgA/OG3WeQx4iWlhSmmxL0317p+d0CLNQRa3/id19AQP3UGhnYuq95
+   A==;
+IronPort-SDR: NvIML1Er/K90nIzYLbI8PG5XGtzccaa59ul/HN7TPT0pSCir3gKv9DnyhjUOSU5kx8utt4y68X
+ SDygjKCvEZ2UI/fnAJnrZNIbjveyyH4J9b2akdOdsbEnf0Zh2yZ7UsLMyIEVUeOtrWZEGOMlo4
+ hkIEwcwYhN6wHrnzfJ1vdC1ezZLigalGeC1GiSthWba5ahB7qrf89nmjSM5ERpAJWruiaFmA5w
+ pUwkawnxrP6DD4mObHusuFYyISg1BhnWValJ9+XFC+8+hGvDqWdd/vSfJm8fq3VrFQAPDumNEU
+ cFw=
 X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
-   d="scan'208";a="76494636"
+   d="scan'208";a="75132848"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 05:56:55 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 05:57:05 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 05:56:58 -0700
+ 15.1.1713.5; Wed, 13 May 2020 05:57:05 -0700
 Received: from soft-dev15.microsemi.net (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 05:56:52 -0700
+ 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 05:57:02 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
 List-Id: <soc.lore.kernel.org>
 To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
 CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         Steen Hegelund <Steen.Hegelund@microchip.com>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
@@ -66,9 +67,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 08/14] arm64: dts: sparx5: Add pinctrl support
-Date:   Wed, 13 May 2020 14:55:26 +0200
-Message-ID: <20200513125532.24585-9-lars.povlsen@microchip.com>
+Subject: [PATCH 11/14] dt-bindings: clock: sparx5: Add bindings include file
+Date:   Wed, 13 May 2020 14:55:29 +0200
+Message-ID: <20200513125532.24585-12-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513125532.24585-1-lars.povlsen@microchip.com>
 References: <20200513125532.24585-1-lars.povlsen@microchip.com>
@@ -80,63 +81,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This add pinctrl support to the Microchip Sparx5 SoC.
+The Sparx5 support 9 different clock outputs. This include file has
+defines for each supported clock ordinal.
 
 Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 ---
- arch/arm64/boot/dts/microchip/sparx5.dtsi | 26 +++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ include/dt-bindings/clock/microchip,sparx5.h | 23 ++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 3136b4369f507..45a60993789c8 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -102,6 +102,8 @@ gic: interrupt-controller@600300000 {
- 		};
-
- 		uart0: serial@600100000 {
-+			pinctrl-0 = <&uart_pins>;
-+			pinctrl-names = "default";
- 			compatible = "ns16550a";
- 			reg = <0x6 0x00100000 0x20>;
- 			clocks = <&ahb_clk>;
-@@ -113,6 +115,8 @@ uart0: serial@600100000 {
- 		};
-
- 		uart1: serial@600102000 {
-+			pinctrl-0 = <&uart2_pins>;
-+			pinctrl-names = "default";
- 			compatible = "ns16550a";
- 			reg = <0x6 0x00102000 0x20>;
- 			clocks = <&ahb_clk>;
-@@ -131,5 +135,27 @@ timer1: timer@600105000 {
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-
-+		gpio: pinctrl@6110101e0 {
-+			compatible = "microchip,sparx5-pinctrl";
-+			reg = <0x6 0x110101e0 0x90>, <0x6 0x10508010 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&gpio 0 0 64>;
-+			interrupt-controller;
-+			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+			#interrupt-cells = <2>;
+diff --git a/include/dt-bindings/clock/microchip,sparx5.h b/include/dt-bindings/clock/microchip,sparx5.h
+new file mode 100644
+index 0000000000000..4b04dabacec2c
+--- /dev/null
++++ b/include/dt-bindings/clock/microchip,sparx5.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2019 Microchip Inc.
++ *
++ * Author: Lars Povlsen <lars.povlsen@microchip.com>
++ */
 +
-+			uart_pins: uart-pins {
-+				pins = "GPIO_10", "GPIO_11";
-+				function = "uart";
-+			};
++#ifndef _DT_BINDINGS_CLK_SPARX5_H
++#define _DT_BINDINGS_CLK_SPARX5_H
 +
-+			uart2_pins: uart2-pins {
-+				pins = "GPIO_26", "GPIO_27";
-+				function = "uart2";
-+			};
++#define CLK_ID_CORE	0
++#define CLK_ID_DDR	1
++#define CLK_ID_CPU2	2
++#define CLK_ID_ARM2	3
++#define CLK_ID_AUX1	4
++#define CLK_ID_AUX2	5
++#define CLK_ID_AUX3	6
++#define CLK_ID_AUX4	7
++#define CLK_ID_SYNCE	8
 +
-+		};
++#define N_CLOCKS	9
 +
- 	};
- };
++#endif
 --
 2.26.2
