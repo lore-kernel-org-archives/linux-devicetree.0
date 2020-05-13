@@ -2,64 +2,140 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14822C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE49CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B412C205ED
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B315206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589394873;
+	bh=kfOetw6RNffDyEDmJrjXfqa/wxQ2KWn/v0pTuDbJq5o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HDTcB73fWi2r3NiTuxMp9DbVFE7tSk6q8AO95CAi8bzbfoCqOTs4sj1kqHjDQ1KkK
+	 Ne39mWqb4rjysA0em2KZ6vDF0SoUT7YlJ6gWXFRRISA1hAMdxXi7aav8aOyK9UuU5/
+	 Aj7adMeZzbxs/6Tpz3rsdbXLILi+gpnVAWldu2XI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390157AbgEMS25 (ORCPT
+        id S1733166AbgEMSec (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 14:28:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:51788 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733310AbgEMS25 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 14:28:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 681AE30E;
-        Wed, 13 May 2020 11:28:56 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.13])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85EBF3F305;
-        Wed, 13 May 2020 11:28:54 -0700 (PDT)
-Date:   Wed, 13 May 2020 19:28:51 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH v3 20/20] dt-bindings: ehci/ohci: Allow iommus property
-Message-ID: <20200513182851.GF27686@bogus>
-References: <20200513103016.130417-1-andre.przywara@arm.com>
- <20200513103016.130417-21-andre.przywara@arm.com>
+        Wed, 13 May 2020 14:34:32 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:45985 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730472AbgEMSeb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 14:34:31 -0400
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 04DIYGB0031239;
+        Thu, 14 May 2020 03:34:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 04DIYGB0031239
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1589394857;
+        bh=uh/q3wIRj9D8mxhaGFf/csD4DWxBwEldh2d8P3QOpDc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fyRcbsMFf1M7mdA4tFQjP+koPuQItQ25H+cdo6ubIlK2uAt0wzDDgJa7X7K4LE0kL
+         cj+9Fge+HUxMVFrJYzU7kudHhz1FSvoib9Q2ytzxwn9cOrDfFyshFiSli34D/VuC8O
+         WI/buLPkk7f3KfMvx7h6c1MOmaEcz8XpP7x6TIpRFFrHPd7r9B0Eetare9kF84PW9t
+         5evbp4P6EW/M9PzWdzlxdNHSiifaBuhGKgUFkrnznJ1fyc4bE8NRZhE+8LoCzMQpli
+         fEt+BYHvor0gKqLpQXZQ583abc6MyDtMO0Al77YXNQypRR9rdrwEGCGG6RTLMn28/B
+         Pf+/82dd9liHw==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id g2so416265vsb.4;
+        Wed, 13 May 2020 11:34:16 -0700 (PDT)
+X-Gm-Message-State: AOAM532H1/cSgN7gIp2kb78WToxVrSOpFKAPbSmYQZjkc1vB6spwnFQB
+        QE5CKzQUDhHxHRc3jZb/Zygx5kiu27tdGnCgjFU=
+X-Google-Smtp-Source: ABdhPJx2LhA4VLe3aAig9eJCUqnx6r4fHUdJTEZD5bqYhVguYjAawiUKadpaXQb0nksqoxptptfCP5k+6e+L2J24WdA=
+X-Received: by 2002:a67:6e07:: with SMTP id j7mr374699vsc.181.1589394855436;
+ Wed, 13 May 2020 11:34:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513103016.130417-21-andre.przywara@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200422141836.1964676-1-yamada.masahiro@socionext.com> <20200511191400.GA27107@bogus>
+In-Reply-To: <20200511191400.GA27107@bogus>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 14 May 2020 03:33:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQjnvh=8A6nz3Kb3xLQ=6Gz6=oVGNfPbCmCazAwt5wTwQ@mail.gmail.com>
+Message-ID: <CAK7LNAQjnvh=8A6nz3Kb3xLQ=6Gz6=oVGNfPbCmCazAwt5wTwQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: at24: add microchip,24lc[0-9]+ to the
+ compatible pattern
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:30:16AM +0100, Andre Przywara wrote:
-> A OHCI/EHCI controller could be behind an IOMMU, in which case an iommus
-> property assigns the stream ID for this device.
->
-> Allow that property in the DT bindings to fix a complaint about the Arm Juno
-> board's DTS file.
->
+Hi Rob,
 
-I need acks for this and the first dt-binding in order to take it
-via ARM SoC. Also where ever possible split arm64 and arm DT in case
-ARM SoC wants different PR. I will ask if you have to respin.
 
---
-Regards,
-Sudeep
+On Tue, May 12, 2020 at 4:14 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, 22 Apr 2020 23:18:36 +0900, Masahiro Yamada wrote:
+> > arch/arm/boot/dts/uniphier-ref-daughter.dtsi has
+> >
+> >   compatible = "microchip,24lc128", "atmel,24c128";
+> >
+> > and 'make ARCH=arm dtbs_check' warns this:
+> >
+> >   eeprom@50: compatible: ['microchip,24lc128', 'atmel,24c128'] is not valid under any of the given schemas (Possible causes of the failure)
+> >
+> > Microchip 24LC128 is the device used on this board, and I see it in
+> > https://www.microchip.com/wwwproducts/en/24LC128
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  Documentation/devicetree/bindings/eeprom/at24.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+>
+> Applied, thanks!
+
+
+If it is not too late, can you correct the patch subject?
+
+
+
+See the applied commit in linux-next.
+
+
+
+Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed Apr 22 23:18:36 2020 +0900
+
+    dt-bindings: at24: add microchip, 24lc[0-9]+ to the compatible pattern
+
+
+
+
+Please notice a space after 'microchip,'
+
+
+
+And this is the patch I submitted:
+
+https://lore.kernel.org/patchwork/patch/1229480/
+
+
+No space after 'microchip,'
+
+
+
+
+This is a patchwork bug.
+It automatically inserts a space after a comma.
+Patchwork adds various unpleasant modification,
+and breaks the commit subject and log.
+
+I reported this bug to patchwork ML, but
+still not fixed...
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
