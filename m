@@ -2,119 +2,97 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35548CA90AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B93CA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A79620673
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 607F220673
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:08:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ThRcLeZH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="kVMNO2Ns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725925AbgEMNHU (ORCPT
+        id S1727033AbgEMNI4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 09:07:20 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54104 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725967AbgEMNHU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 09:07:20 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04DD7IPT043989;
-        Wed, 13 May 2020 08:07:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589375238;
-        bh=C9IeA+VMqNp11foyocZyx6XO16F5Fon6CjEx0Vpeqlw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ThRcLeZHPxW5EQF4qTKczrAeOQFd3XVkHRAUvYvS3F9qIx9S72bPROkFO5VwdoxZJ
-         +nwnpe6UnYif6zfdadSyRHl1R4sBZuBsCJ5ocHjmSfTj/u8M+B6rxR1HCu8V7vQ1dD
-         ho4MHM3e9+lsazOECfrON+I4DCN3WFznH2AeT5Pg=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04DD7I90010782
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 May 2020 08:07:18 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 13
- May 2020 08:07:18 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 13 May 2020 08:07:18 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DD7B2S074071;
-        Wed, 13 May 2020 08:07:16 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <balbi@kernel.org>
-CC:     <robh+dt@kernel.org>, <vigneshr@ti.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 2/3] dt-bindings: usb: ti,keystone-dwc3.yaml: Add USB3.0 PHY property
-Date:   Wed, 13 May 2020 16:07:08 +0300
-Message-ID: <20200513130709.10239-3-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200513130709.10239-1-rogerq@ti.com>
-References: <20200513130709.10239-1-rogerq@ti.com>
+        Wed, 13 May 2020 09:08:56 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:43028 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgEMNIz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 09:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589375335; x=1620911335;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wEXDFyhD27FZDpCBx83MYF8BSCc7p0QLtEEMqVkQwfk=;
+  b=kVMNO2NsH2oPLucy4doYPWJG+Ohuyj4JXRWb8d5Ib5iM5lYOQkJRGw34
+   Mz6O9PAEIDhWb3Ld3Ar09UemY3j5CIX95zuEGUQy3CIcDs3uMFucBUS7z
+   PCZviQ42mDfqJwpdGTCb4P0jf4iJiC2Kv6PfmNCMyt/r64wruH2QRLeuT
+   ph/r6dTOLePkOwd6jSGpTNeF9wQQ5bgjqj1Sr/EES7LaxVsSM4oXM/hxW
+   /x9VNAblajw1UjEph8kG3TlZE/WFPXx5ptmiw4OOsGEQ/fEDzzOvB/JMD
+   U9iW7sS7CaNkWh8GPRP5fUC4HzCCU49Q1H8D7iZTkzYoIug0AxggM86S4
+   Q==;
+IronPort-SDR: u4GtpcwpQ8MLU6OB9FkxDseViNR3YvoIb2dMRW2aHsvK94tIS3YRC/H1aZ1aJGFh447eHJ6kxm
+ q0M9h2sHr59/QU8HxihFuIrdVG6L6VY1StWHUaXYcFnJ+0gUZ1kYwzulTdKX9mKoyjDNMzGlW1
+ WRoWOxUtL7Qf/vH9i/84trcmss+PxIw8QdVVYIiN1CrScjMZzqrrZF03S7HzRVRK8cubqsbNZk
+ Up62au2XJDvEMe26Udy40kwR9xIUIxKskgvj+ggSJFtYonedtPRoxzWJsNiom5nY35mxdL2tkf
+ n18=
+X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
+   d="scan'208";a="79438661"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 06:08:54 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 May 2020 06:08:57 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 06:08:52 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     Sebastian Reichel <sre@kernel.org>, SoC Team <soc@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH 0/5] power: Adding support for Microchip Sparx5 SoC
+Date:   Wed, 13 May 2020 15:08:37 +0200
+Message-ID: <20200513130842.24847-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-AM654 SoC requires USB3.0 PHY to be turned on before the USB controller.
-For this SoC, the 'phys' property is used to provide the USB3.0
-reference.
+This is an add-on series to the main SoC Sparx5 series
+(Message-ID: <20200513125532.24585-1-lars.povlsen@microchip.com>).
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- .../bindings/usb/ti,keystone-dwc3.yaml        | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+It adds reset support for Sparx5, using the ocelot reset driver.
 
-diff --git a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-index 14d2fe329b93..51c0ab01b0bc 100644
---- a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-+++ b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-@@ -34,6 +34,16 @@ properties:
-       value. This property is as per the binding,
-       Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
- 
-+  phys:
-+    description:
-+      PHY specifier for the USB3.0 PHY. Some SoCs need the USB3.0 PHY
-+      to be turned on before the controller.
-+      Documentation/devicetree/bindings/phy/phy-bindings.txt
-+
-+  phy-names:
-+    items:
-+      - const: "usb3-phy"
-+
-   dwc3:
-     description: This is the node representing the DWC3 controller instance
-       Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -44,6 +54,17 @@ required:
-   - interrupts
-   - clocks
- 
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: "ti,am654-dwc3"
-+
-+then:
-+  required:
-+    - phys
-+    - phy-names
-+
- examples:
-   - |
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+It is expected that the DT patches are to be taken directly by the arm-soc
+maintainers.
 
+Lars Povlsen (5):
+  dt-bindings: reset: ocelot: Add Sparx5 support
+  power: reset: ocelot: Add support for Sparx5
+  dt-bindings: reset: ocelot: Add documentation for
+    'microchip,reset-switch-core' property
+  power: reset: ocelot: Add support for reset switch on load time
+  arm64: dts: sparx5: Add reset support
+
+ .../bindings/power/reset/ocelot-reset.txt     | 13 ++-
+ MAINTAINERS                                   |  1 +
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     | 11 +++
+ drivers/power/reset/Kconfig                   |  3 +-
+ drivers/power/reset/ocelot-reset.c            | 95 ++++++++++++++++---
+ 5 files changed, 105 insertions(+), 18 deletions(-)
+
+--
+2.26.2
