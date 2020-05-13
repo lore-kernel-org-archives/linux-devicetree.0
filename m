@@ -2,88 +2,88 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7293BC2D0FC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945B5CA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47F1B20740
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589374948;
-	bh=3gsu1+H8KaTAc/1/XTAg+o3iWJpqglDQYi2kGj9mDyY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ThgWMdBB1rIHhL32hbVVB8LgBOCdA9s5hsbPJx4eb8re6v9DxRxSNSrH3EgRgpEgb
-	 Zrjtsdqgi0MBFoPLPcJRxDe5tBK2TAKh6lPr8rDv1EwlptJrzmtEIQckSyNHpnzuvf
-	 6ksLImt/OJgYRBGcD/3XZpK953Ul5UoHsXtOxNjQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7196520673
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:07:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A2U7blwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732901AbgEMNC1 (ORCPT
+        id S1728456AbgEMNHP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 09:02:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgEMNC1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 09:02:27 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D85B22494F;
-        Wed, 13 May 2020 13:02:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589374947;
-        bh=3gsu1+H8KaTAc/1/XTAg+o3iWJpqglDQYi2kGj9mDyY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GHEUHp58flz5dGi5qOoN3liccsYth1fQGfMCrkeZ0Ukng6zXWrNkLhmVsWRUDfDfL
-         XjmY8es72bnP0BEoJ1esx+zSnjB8BQb7oNiKNXZm06o9In68xcVy5l0WbydN+Zx6i2
-         J+VhzAIgf9YJotVvPlAHwSw7XasOcwiGNjxF1/ts=
-Received: by mail-oi1-f171.google.com with SMTP id 19so21320661oiy.8;
-        Wed, 13 May 2020 06:02:26 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua0/EJNJRqeYmQTpKOCyUaHKHhn8qKAFboGef/r1toUSrn/smwu
-        7LAAO9UureKF2XkJZlGMO7IS0U+yWbJR+pg5wA==
-X-Google-Smtp-Source: APiQypJLdEVF0QKdCuz/qxBqkFZpgAWEBjtcdpCh6nTVaiCngqOwmIFbeeHiC/FcXGhzItL+NUf/oULbqA+pCcA59cE=
-X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr28316669oie.152.1589374946192;
- Wed, 13 May 2020 06:02:26 -0700 (PDT)
+        Wed, 13 May 2020 09:07:15 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57168 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgEMNHP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 09:07:15 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04DD7Ej9020488;
+        Wed, 13 May 2020 08:07:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589375234;
+        bh=LDyxAA4SwKan1ZwYDVOZs8hTdszW97RTY6Flp1z7EHg=;
+        h=From:To:CC:Subject:Date;
+        b=A2U7blwaBgciolqSRpNrprT0BUzdnlukr4eEvGQmjSQ5LB7JQo1DOorGOmmgOswXM
+         Rw+oBSRxZMP8VSph9bbexjmDPXghIrE+d5b8rCwFWhkqVdzTuLyq9VceCemp2xnWgP
+         idGaODa7yl1m76p3GagyZ0ib3oDXcEU6ovg/NM2I=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DD7EMF067967;
+        Wed, 13 May 2020 08:07:14 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 13
+ May 2020 08:07:14 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 13 May 2020 08:07:14 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DD7B2Q074071;
+        Wed, 13 May 2020 08:07:12 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <balbi@kernel.org>
+CC:     <robh+dt@kernel.org>, <vigneshr@ti.com>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH 0/3] usb: dwc3: keystone: Convert binding to YAML
+Date:   Wed, 13 May 2020 16:07:06 +0300
+Message-ID: <20200513130709.10239-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200512204543.22090-1-robh@kernel.org> <158937185132.39109.17103954100758193517.b4-ty@kernel.org>
-In-Reply-To: <158937185132.39109.17103954100758193517.b4-ty@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 13 May 2020 08:02:14 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+KfngSTEnP3eh6Zr9H4GUuSbyZCGXs=skbwQK0j4ZJnA@mail.gmail.com>
-Message-ID: <CAL_Jsq+KfngSTEnP3eh6Zr9H4GUuSbyZCGXs=skbwQK0j4ZJnA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] spi: dt-bindings: sifive: Add missing 2nd register region
-To:     Mark Brown <broonie@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 7:10 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, 12 May 2020 15:45:39 -0500, Rob Herring wrote:
-> > The 'reg' description and example have a 2nd register region for memory
-> > mapped flash, but the schema says there is only 1 region. Fix this.
->
-> Applied to
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.8
->
-> Thanks!
->
-> [1/1] spi: dt-bindings: sifive: Add missing 2nd register region
->       commit: b265b5a0ba15b6e00abce9bf162926e84b4323b4
+Hi Felipe,
 
-You missed my ask for an ack. This is a dependency for patch 5.
+This series converts keystone-usb.txt to YAML and prepares
+for Super-Speed support for AM654 SoC.
 
-Rob
+cheers,
+-roger
+
+Roger Quadros (3):
+  dt-bindings: usb: convert keystone-usb.txt to YAML
+  dt-bindings: usb: ti,keystone-dwc3.yaml: Add USB3.0 PHY property
+  usb: dwc3: keystone: Turn on USB3 PHY before controller
+
+ .../devicetree/bindings/usb/keystone-usb.txt  | 56 ------------
+ .../bindings/usb/ti,keystone-dwc3.yaml        | 88 +++++++++++++++++++
+ drivers/usb/dwc3/dwc3-keystone.c              | 47 +++++++++-
+ 3 files changed, 134 insertions(+), 57 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/usb/keystone-usb.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
