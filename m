@@ -2,88 +2,113 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B519C2D0F6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C572C2D0F6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A49420714
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589336561;
-	bh=MnzyUJbC1/Xp/QkUP2hjZ+cuj4GlQl6GKuTbfFwtIks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ef9ODgrFAKLRfA1oz/N/guIpZzU0nNhDeTJhr3Ir5tJ9QZ8C5e0tV6c+YhLeF9BZC
-	 qx5J33ERcNBnKIyPUq8IcbF4goUMLUxc4DPUic7NKY9s5YLVBbXuccKpKYClSc/LWd
-	 iSVnvGGlpDCtzlE9zkRV1tLhG1CbOm/d1XBAvC9g=
+	by mail.kernel.org (Postfix) with ESMTP id 5AAAB207BC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:33:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a3x2n47K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgEMCWk (ORCPT
+        id S1727805AbgEMCdQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 22:22:40 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43051 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727890AbgEMCWk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 22:22:40 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i22so3534945oik.10
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 19:22:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AaR/7VLqy6LVKQz0uPuHWvPqsrRu/xq4udfPwcoi4i4=;
-        b=ccmxhzT6iIPbvPTQOu0Dj2QOi9TXY6LHNt8EuCNTbXN16z2kxjuogTZiuTiBxTlSIN
-         uKD1p6WxoAXKxBrX1hBS37jWDLT595jF5j8u5k9kY0n98Z9u/HQZAcwEkRV7b05wknDQ
-         +S7aJEiCbHw/gnpOzIgqvcpV0UXP7YBNkPUqqF21Erinfh9DsIcCXcBneESyEgJEroXV
-         vAyBUtFtGkYgeiV+eOvFrglAGBTfU7Cz6baX7QU7zbRmWyNpCY9wnjlLtEdiB1x4/4TM
-         QSTnZ1vMzePKQw7CTaW+GeQW1YvPFmxy5aW8CIrad5bONvN7v/HY8wPbZLF/HImJlF0h
-         glVQ==
-X-Gm-Message-State: AGi0PubwcJ72qHniV/KV6NKLQskosYPSWM5yo7meqCby3ljZqEBOahN1
-        W0dNuISgk5yKfKHSNNMMOg==
-X-Google-Smtp-Source: APiQypINVeEjqdUUaUFDCRteAcuJFXQ0VcFRi9yLFbPpHTTIaQYCJC8fJUkJltCCW9Ho2P4Z1GY8Xw==
-X-Received: by 2002:aca:1818:: with SMTP id h24mr26212488oih.71.1589336559137;
-        Tue, 12 May 2020 19:22:39 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q3sm1359956oth.2.2020.05.12.19.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 19:22:38 -0700 (PDT)
-Received: (nullmailer pid 22790 invoked by uid 1000);
-        Wed, 13 May 2020 02:22:37 -0000
-Date:   Tue, 12 May 2020 21:22:37 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: display: sun8i-mixer: Allow for an
- iommu property
-Message-ID: <20200513022237.GA22733@bogus>
-References: <cover.70f96f9afd2e04161ebece593ae6cd7e17eca41b.1588673353.git-series.maxime@cerno.tech>
- <ef88e9d96eafe3f921cfbe087c5f0a25a5dd41ac.1588673353.git-series.maxime@cerno.tech>
+        Tue, 12 May 2020 22:33:16 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43488 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgEMCdQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 22:33:16 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04D2X6cD020439;
+        Tue, 12 May 2020 21:33:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589337186;
+        bh=yTteBEh6Xwn4I3BnvI6/DQ8ygYomYcOGArsSXBO0R/M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=a3x2n47K9GBaLLhitS5heuPagTcYKacY4q19cXTJ5s9Ud49C9v30kOX1chVBQwCkd
+         d35wSH+IYw4EPw4LFQM8mJNbFUYmFAFrkSSwty/t/I6IhgGWjazhGWWFWijX1EhNKp
+         SdmmHj+oyMjKs9gddleUaZW+I/JQyl24uNN1+1Es=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04D2X6pQ012778
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 21:33:06 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
+ May 2020 21:33:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 12 May 2020 21:33:05 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04D2X3tF053605;
+        Tue, 12 May 2020 21:33:04 -0500
+Subject: Re: [RESEND PATCH v2 1/3] dt-bindings: phy: Drop reset-gpios from
+ marvell,mmp3-hsic-phy
+To:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200509081754.474787-1-lkundrak@v3.sk>
+ <20200509081754.474787-2-lkundrak@v3.sk>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <3fbe923d-6b38-bec5-c623-7640c6affbae@ti.com>
+Date:   Wed, 13 May 2020 08:03:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef88e9d96eafe3f921cfbe087c5f0a25a5dd41ac.1588673353.git-series.maxime@cerno.tech>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200509081754.474787-2-lkundrak@v3.sk>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue,  5 May 2020 12:09:31 +0200, Maxime Ripard wrote:
-> The H6 mixer is attached to an IOMMU, so let's allow that property to be
-> set in the bindings.
-> 
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  Documentation/devicetree/bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
++Rob
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 5/9/2020 1:47 PM, Lubomir Rintel wrote:
+> This has been added in error -- the PHY block doesn't have a reset pin.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  .../devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml     | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+> index 00609ace677c..30e290c57930 100644
+> --- a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+> @@ -18,27 +18,20 @@ properties:
+>      maxItems: 1
+>      description: base address of the device
+>  
+> -  reset-gpios:
+> -    maxItems: 1
+> -    description: GPIO connected to reset
+> -
+>    "#phy-cells":
+>      const: 0
+>  
+>  required:
+>    - compatible
+>    - reg
+> -  - reset-gpios
+>    - "#phy-cells"
+>  
+>  additionalProperties: false
+>  
+>  examples:
+>    - |
+> -    #include <dt-bindings/gpio/gpio.h>
+>      hsic-phy@f0001800 {
+>              compatible = "marvell,mmp3-hsic-phy";
+>              reg = <0xf0001800 0x40>;
+> -            reset-gpios = <&gpio 63 GPIO_ACTIVE_HIGH>;
+>              #phy-cells = <0>;
+>      };
+> 
