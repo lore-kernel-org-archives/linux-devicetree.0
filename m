@@ -2,105 +2,249 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7A3C2D0FC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB43AC2D0FC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D704420740
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F32820659
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbgEMMaj (ORCPT
+        id S1732752AbgEMMfB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 08:30:39 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57894 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgEMMai (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 08:30:38 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 83C56803088B;
-        Wed, 13 May 2020 12:30:35 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id o_-9KXxNQ0-u; Wed, 13 May 2020 15:30:35 +0300 (MSK)
-Date:   Wed, 13 May 2020 15:30:33 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 13/17] spi: dw: Initialize paddr in DW SPI MMIO private
- data
-Message-ID: <20200513123033.in3uksakteze3y5t@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508132943.9826-14-Sergey.Semin@baikalelectronics.ru>
- <20200508192144.GT185537@smile.fi.intel.com>
+        Wed, 13 May 2020 08:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728726AbgEMMfA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 08:35:00 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984E9C061A0C
+        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 05:35:00 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jYqb2-000383-OV; Wed, 13 May 2020 14:34:48 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jYqb1-0000wt-HO; Wed, 13 May 2020 14:34:47 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: [PATCH net-next v1] net: phy: tja11xx: add cable-test support
+Date:   Wed, 13 May 2020 14:34:40 +0200
+Message-Id: <20200513123440.19580-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200508192144.GT185537@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 10:21:44PM +0300, Andy Shevchenko wrote:
-> On Fri, May 08, 2020 at 04:29:38PM +0300, Serge Semin wrote:
-> > This field is used only for the DW SPI DMA code initialization, that's
-> > why there were no problems with it being uninitialized in Dw SPI MMIO
-> > driver. Since in a further patch we are going to introduce the DW SPI DMA
-> > support in the MMIO version of the driver, lets set the field with the
-> > physical address of the DW SPI controller registers region.
-> 
-> ...
-> 
-> > -	dws->regs = devm_platform_ioremap_resource(pdev, 0);
-> > +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	dws->regs = devm_ioremap_resource(&pdev->dev, mem);
-> 
+Add initial cable testing support.
+This PHY needs only 100usec for this test and it is recommended to run it
+before the link is up. For now, provide at least ethtool support, so it
+can be tested by more developers.
 
-> There is a helper
-> 	dws->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &mem);
+This patch was tested with TJA1102 PHY with following results:
+- No cable, is detected as open
+- 1m cable, with no connected other end and detected as open
+- a 40m cable (out of spec, max lenght should be 15m) is detected as OK.
 
-Oh, good point. It has been just added, in kernel v5.7. v5.6 didn't provide such
-a convenient helper. Thanks for the suggestion.
+Current patch do not provide polarity test support. This test would
+indicate not proper wire connection, where "+" wire of main phy is
+connected to the "-" wire of the link partner.
 
--Sergey
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/nxp-tja11xx.c | 106 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 105 insertions(+), 1 deletion(-)
 
-> 
-> 
-> >  	if (IS_ERR(dws->regs)) {
-> >  		dev_err(&pdev->dev, "SPI region map failed\n");
-> >  		return PTR_ERR(dws->regs);
-> >  	}
-> > +	dws->paddr = mem->start;
-> >  
-> >  	dws->irq = platform_get_irq(pdev, 0);
-> >  	if (dws->irq < 0)
-> > -- 
-> > 2.25.1
-> > 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+index ca5f9d4dc57ed..8b743d25002b9 100644
+--- a/drivers/net/phy/nxp-tja11xx.c
++++ b/drivers/net/phy/nxp-tja11xx.c
+@@ -5,6 +5,7 @@
+  */
+ #include <linux/delay.h>
+ #include <linux/ethtool.h>
++#include <linux/ethtool_netlink.h>
+ #include <linux/kernel.h>
+ #include <linux/mdio.h>
+ #include <linux/mii.h>
+@@ -26,6 +27,7 @@
+ #define MII_ECTRL_POWER_MODE_NO_CHANGE	(0x0 << 11)
+ #define MII_ECTRL_POWER_MODE_NORMAL	(0x3 << 11)
+ #define MII_ECTRL_POWER_MODE_STANDBY	(0xc << 11)
++#define MII_ECTRL_CABLE_TEST		BIT(5)
+ #define MII_ECTRL_CONFIG_EN		BIT(2)
+ #define MII_ECTRL_WAKE_REQUEST		BIT(0)
+ 
+@@ -55,6 +57,11 @@
+ #define MII_GENSTAT			24
+ #define MII_GENSTAT_PLL_LOCKED		BIT(14)
+ 
++#define MII_EXTSTAT			25
++#define MII_EXTSTAT_SHORT_DETECT	BIT(8)
++#define MII_EXTSTAT_OPEN_DETECT		BIT(7)
++#define MII_EXTSTAT_POLARITY_DETECT	BIT(6)
++
+ #define MII_COMMCFG			27
+ #define MII_COMMCFG_AUTO_OP		BIT(15)
+ 
+@@ -111,6 +118,11 @@ static int tja11xx_enable_link_control(struct phy_device *phydev)
+ 	return phy_set_bits(phydev, MII_ECTRL, MII_ECTRL_LINK_CONTROL);
+ }
+ 
++static int tja11xx_disable_link_control(struct phy_device *phydev)
++{
++	return phy_clear_bits(phydev, MII_ECTRL, MII_ECTRL_LINK_CONTROL);
++}
++
+ static int tja11xx_wakeup(struct phy_device *phydev)
+ {
+ 	int ret;
+@@ -536,6 +548,93 @@ static int tja11xx_config_intr(struct phy_device *phydev)
+ 	return phy_write(phydev, MII_INTEN, value);
+ }
+ 
++static int tja11xx_cable_test_start(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = phy_clear_bits(phydev, MII_COMMCFG, MII_COMMCFG_AUTO_OP);
++	if (ret)
++		return ret;
++
++	ret = tja11xx_wakeup(phydev);
++	if (ret < 0)
++		return ret;
++
++	ret = tja11xx_disable_link_control(phydev);
++	if (ret < 0)
++		return ret;
++
++	return phy_set_bits(phydev, MII_ECTRL, MII_ECTRL_CABLE_TEST);
++}
++
++/*
++ * | BI_DA+           | BI_DA-                 | Result
++ * | open             | open                   | open
++ * | + short to -     | - short to +           | short
++ * | short to Vdd     | open                   | open
++ * | open             | shot to Vdd            | open
++ * | short to Vdd     | short to Vdd           | short
++ * | shot to GND      | open                   | open
++ * | open             | shot to GND            | open
++ * | short to GND     | shot to GND            | short
++ * | connected to active link partner (master) | shot and open
++ */
++static int tja11xx_cable_test_report_trans(u32 result)
++{
++	u32 mask = MII_EXTSTAT_SHORT_DETECT | MII_EXTSTAT_OPEN_DETECT;
++
++	if ((result & mask) == mask) {
++		/* connected to active link partner (master) */
++		return ETHTOOL_A_CABLE_RESULT_CODE_UNSPEC;
++	} else if ((result & mask) == 0) {
++		return ETHTOOL_A_CABLE_RESULT_CODE_OK;
++	} else if (result & MII_EXTSTAT_SHORT_DETECT) {
++		return ETHTOOL_A_CABLE_RESULT_CODE_SAME_SHORT;
++	} else if (result & MII_EXTSTAT_OPEN_DETECT) {
++		return ETHTOOL_A_CABLE_RESULT_CODE_OPEN;
++	} else {
++		return ETHTOOL_A_CABLE_RESULT_CODE_UNSPEC;
++	}
++}
++
++static int tja11xx_cable_test_report(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = phy_read(phydev, MII_EXTSTAT);
++	if (ret < 0)
++		return ret;
++
++	ethnl_cable_test_result(phydev, ETHTOOL_A_CABLE_PAIR_A,
++				tja11xx_cable_test_report_trans(ret));
++
++	return 0;
++}
++
++static int tja11xx_cable_test_get_status(struct phy_device *phydev,
++					 bool *finished)
++{
++	int ret;
++
++	*finished = false;
++
++	ret = phy_read(phydev, MII_ECTRL);
++	if (ret < 0)
++		return ret;
++
++	if (!(ret & MII_ECTRL_CABLE_TEST)) {
++		*finished = true;
++
++		ret = phy_set_bits(phydev, MII_COMMCFG, MII_COMMCFG_AUTO_OP);
++		if (ret)
++			return ret;
++
++		return tja11xx_cable_test_report(phydev);
++	}
++
++	return 0;
++}
++
+ static struct phy_driver tja11xx_driver[] = {
+ 	{
+ 		PHY_ID_MATCH_MODEL(PHY_ID_TJA1100),
+@@ -572,6 +671,7 @@ static struct phy_driver tja11xx_driver[] = {
+ 	}, {
+ 		.name		= "NXP TJA1102 Port 0",
+ 		.features       = PHY_BASIC_T1_FEATURES,
++		.flags          = PHY_POLL_CABLE_TEST,
+ 		.probe		= tja1102_p0_probe,
+ 		.soft_reset	= tja11xx_soft_reset,
+ 		.config_aneg	= tja11xx_config_aneg,
+@@ -587,10 +687,12 @@ static struct phy_driver tja11xx_driver[] = {
+ 		.get_stats	= tja11xx_get_stats,
+ 		.ack_interrupt	= tja11xx_ack_interrupt,
+ 		.config_intr	= tja11xx_config_intr,
+-
++		.cable_test_start = tja11xx_cable_test_start,
++		.cable_test_get_status = tja11xx_cable_test_get_status,
+ 	}, {
+ 		.name		= "NXP TJA1102 Port 1",
+ 		.features       = PHY_BASIC_T1_FEATURES,
++		.flags          = PHY_POLL_CABLE_TEST,
+ 		/* currently no probe for Port 1 is need */
+ 		.soft_reset	= tja11xx_soft_reset,
+ 		.config_aneg	= tja11xx_config_aneg,
+@@ -606,6 +708,8 @@ static struct phy_driver tja11xx_driver[] = {
+ 		.get_stats	= tja11xx_get_stats,
+ 		.ack_interrupt	= tja11xx_ack_interrupt,
+ 		.config_intr	= tja11xx_config_intr,
++		.cable_test_start = tja11xx_cable_test_start,
++		.cable_test_get_status = tja11xx_cable_test_get_status,
+ 	}
+ };
+ 
+-- 
+2.26.2
+
