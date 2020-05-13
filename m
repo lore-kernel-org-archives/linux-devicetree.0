@@ -2,115 +2,96 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F63C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 17:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1CFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 17:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1917205ED
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 17:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589389509;
-	bh=CjEfXpPIH7XRzomP1iu377biV+QAATQ4yh1cf6voOCo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MCRE3TXue/9msYk5fws/mls3GPVcUp2/7V6B1Aqs/RFbvLFZ3CQgjxfUU7/65W0TE
-	 iyoqTKHTtMnj4rsjzDdoAgfawIvjNDU5OfVB7zWPkVPkoWHlKpupP+Scp785xPEcq6
-	 rzR0wgyePiyFJlKJT1wYU6U8l6zhKdntZSC9deCk=
+	by mail.kernel.org (Postfix) with ESMTP id 5F53B205CB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 17:13:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHuOQ7kU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389507AbgEMRFI (ORCPT
+        id S2389831AbgEMRNX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 13:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgEMRFH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 13:05:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30843205CB;
-        Wed, 13 May 2020 17:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589389507;
-        bh=CjEfXpPIH7XRzomP1iu377biV+QAATQ4yh1cf6voOCo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nr4PpmZDc4mu0yzGbKsiz8SoJD/n2BPo2hncfqdP84nMAjaD6O427NP9viYwFL8AC
-         he8MEW3BBis8pDwqC3Ifa2pw63G2cHvak4kzKZwlW0TxjcZ1bIr13yS8nxVtp6FLs1
-         6QAzGRQkMMIaShw+z/DOUqizo/fGGg4nB9ypQCM4=
-Date:   Wed, 13 May 2020 19:05:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v10 1/5] usb: xhci: Change the XHCI link order in the
- Makefile
-Message-ID: <20200513170505.GB1369204@kroah.com>
-References: <20200512150019.25903-1-alcooperx@gmail.com>
- <20200512150019.25903-2-alcooperx@gmail.com>
- <20200513122613.GA1023594@kroah.com>
- <7acc2a4c-caab-11e7-7b3f-4176f19c58cf@gmail.com>
- <20200513162723.GF1362525@kroah.com>
- <38ff034d-a84c-2309-a8d5-f344930d9a31@gmail.com>
+        Wed, 13 May 2020 13:13:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389431AbgEMRNX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 13:13:23 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E81FC061A0C;
+        Wed, 13 May 2020 10:13:23 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k7so6394121pjs.5;
+        Wed, 13 May 2020 10:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CESDIXK5iziXykt0Y/ez2vWrIKygUcVw6M6S2Ji/JxM=;
+        b=lHuOQ7kUnqQ2J0pAG3sD5Jmpiv/ZRrptG88vVBX3a6kKvOnEj9jay5x80zP7d27cU0
+         hsnrdGm01EqSgogJIz7up6/iww5HRrxBkHIrnvZVX980yyqqQVn5hsIq3aNQdOkMkWZq
+         sshgStyWmPTxxWtzMEIG5deLjiaPpOuoZcaE6NZFHEJS9D/zEvmjLaB6z/kL6pz1AbCi
+         w7s06b1aApuoQjttFuvOQQVG6undKKO+yPHP2N8lHCAgxRX0hmmLOYSQrRCq8Zs0yu1D
+         L2O9cp3DoSh0+CO5hrgxoXAc6Y8DKaAN93O88wgIQc2QyQ7DQty+5Xd3+nxK9AoYj2YC
+         kxTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CESDIXK5iziXykt0Y/ez2vWrIKygUcVw6M6S2Ji/JxM=;
+        b=VE5kdUUFQv3Dp+a9XYbyIeSSEjdYCAvxC1ZAcTe9SAIXRcI4n5tEax7jLzuV4INc3s
+         6X877dgG/p0olmP4KU/xAVowjRybtY+vRKDHXy15EnSR3OTNFg8uRnGpGZMrQSslWkX6
+         0gQ27pbSv7TDrayGq5FhN/joLvmXUv4uqg9jZtycfPipBtjjytHAWr0EqIAF9/AHcQtb
+         C/XsGiTeqNxfoRx7K7XQgCqUCNTcyFsJvxNCQFYUzKFRrqV27INACOJvWmkfuATJL4Mi
+         GIEp7AH/90HbA7TP5KLo1drRg+TzdYFXXoqlr6F6Ix/CGmWP55PVqkSR3RbGV2KS/jgC
+         tcHw==
+X-Gm-Message-State: AGi0PuZO/pmbJ8gL3/fTlNd2IfpsCB4LqZVDltZ3cIUius0/XH069rW5
+        wQfZM5K4CEg7t/7NYoy0W1bp2SsDagDlhYtjWG00CcK9J40=
+X-Google-Smtp-Source: APiQypJb2ISh0rO+fH9GikkKZila88U9u2hScbncsFLhBKJ17A2wWU2g4j/yfe5q/bd2kIKf2YRxCXnmezeOzQ619E0=
+X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr36843294pjb.129.1589390002549;
+ Wed, 13 May 2020 10:13:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38ff034d-a84c-2309-a8d5-f344930d9a31@gmail.com>
+References: <1589388975-15499-1-git-send-email-alencar.fmce@imbel.gov.br>
+In-Reply-To: <1589388975-15499-1-git-send-email-alencar.fmce@imbel.gov.br>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 20:13:16 +0300
+Message-ID: <CAHp75VeycGutrfTCrVP-9V61ag-KbNHfykQXHWU-8hwEFOerMQ@mail.gmail.com>
+Subject: Re: [PATCH v2] video: fbdev: ssd1307fb: Added support to Column offset
+To:     Rodrigo Rolim Mendes de Alencar <455.rodrigo.alencar@gmail.com>
+Cc:     linux-fbdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 09:31:11AM -0700, Florian Fainelli wrote:
-> 
-> 
-> On 5/13/2020 9:27 AM, Greg Kroah-Hartman wrote:
-> > On Wed, May 13, 2020 at 08:08:07AM -0700, Florian Fainelli wrote:
-> >>
-> >>
-> >> On 5/13/2020 5:26 AM, Greg Kroah-Hartman wrote:
-> >>> On Tue, May 12, 2020 at 11:00:15AM -0400, Al Cooper wrote:
-> >>>> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
-> >>>> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
-> >>>> devices and OHCI handles <2.0 devices. Currently the Makefile
-> >>>> has XHCI linking at the bottom which will result in the XHIC driver
-> >>>> initalizing after the EHCI and OHCI drivers and any installed 3.0
-> >>>> device will be seen as a 2.0 device. Moving the XHCI linking
-> >>>> above the EHCI and OHCI linking fixes the issue.
-> >>>
-> >>> What happens if all of these are modules and they are loaded in a
-> >>> different order?  This makefile change will not help with that, you need
-> >>> to have logic in the code in order to properly coordinate this type of
-> >>> mess, sorry.
-> >>
-> >> I believe we should be using module soft dependencies to instruct the
-> >> module loaders to load the modules in the correct order, so something
-> >> like this would do (not tested) for xhci-plat-hcd.c:
-> >>
-> >> MODULE_SOFTDEP("post: ehci-hcd ohci-hcd");
-> >>
-> >> and I am not sure whether we need to add the opposite for ehci-hcd and
-> >> ohci-hcd:
-> >>
-> >> MODULE_SOFTDEP("pre: xhci-plat-hcd");
-> > 
-> > That's a nice start, but what happens if that isn't honored?  This
-> > really needs to work properly for any order as you never can guarantee
-> > module/driver loading order in a system of modules.
-> 
-> I also suggested that device links may help, though I am not sure. What
-> do you suggest to be done?
+On Wed, May 13, 2020 at 7:56 PM Rodrigo Rolim Mendes de Alencar
+<455.rodrigo.alencar@gmail.com> wrote:
+>
+> This patch provides support for displays like VGM128064B0W10,
+> which requires a column offset of 2, i.e., its segments starts
+> in SEG2 and ends in SEG129.
 
-No idea.  device links will help if you defer the probe properly until
-you see the proper drivers binding correctly.
+Also, include Rob as well into Cc.
 
-good luck!
+...
 
-greg k-h
+> +       if (device_property_read_u32(node, "solomon,col-offset", &par->col_offset))
+> +               par->col_offset = 0;
+> +
+>         if (device_property_read_u32(dev, "solomon,com-offset", &par->com_offset))
+>                 par->com_offset = 0;
+
+Have you ever compile it?
+
+-- 
+With Best Regards,
+Andy Shevchenko
