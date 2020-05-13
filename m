@@ -2,136 +2,156 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B44ADCA90AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB3ACA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B53204EA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494132064E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 13:57:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="jW7AnQal"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="ezglxHUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388325AbgEMNtT (ORCPT
+        id S1729345AbgEMN51 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 09:49:19 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:45375 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388095AbgEMNtS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 09:49:18 -0400
-Received: from [192.168.1.2] (212-5-158-106.ip.btc-net.bg [212.5.158.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 98D7ACFDC;
-        Wed, 13 May 2020 16:49:13 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1589377754; bh=MPuMCjwAK4ickFvEAphG1V4j7sZJqS/FOfNLWab/sXY=;
-        h=Subject:To:Cc:From:Date:From;
-        b=jW7AnQalVZhBRrCArUUEHXqkzTpbf89eh/IqpUobGlDwwvMUGRc25od3FH3/E6Wz4
-         FxWYcdIsD5Bspw+tenmZdUDFeoHMj3Gtj58jpi10n9FnTgWcwYNVt2N+r6nAPGem6e
-         4B1Lf0CO3RrR/ZzrTJ4e7q4jr9WFv27HZ3P8dDEZd6ExSMdY8kKLizwyCYTsLUBhvh
-         K8PDLra+t6pxilv/ZaiIgq797KaSt4I8i6bvK0anHcKGrsRahHjhq88Bsuh1hwaFhi
-         myYfx9JHkkAUhk85REV/NHhKpRHs6F+i3HPtuRXwwEnAQ1Op7sQVSYmaPKZkv1JGlc
-         e+It4iaLsf1iw==
-Subject: Re: R: [PATCH v3 09/11] PCI: qcom: add ipq8064 rev2 variant and set
- tx term offset
-To:     ansuelsmth@gmail.com,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>
-Cc:     'Sham Muthayyan' <smuthayy@codeaurora.org>,
-        'Andy Gross' <agross@kernel.org>,
-        'Bjorn Helgaas' <bhelgaas@google.com>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
-        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
-        'Philipp Zabel' <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-10-ansuelsmth@gmail.com>
- <3dc89ec6-d550-9402-1a4a-ca0c6f1e1fb9@mm-sol.com>
- <02df01d62925$acd160a0$067421e0$@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <37ddf6ac-43c8-f2f1-ce53-e0959084b77c@mm-sol.com>
-Date:   Wed, 13 May 2020 16:49:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 13 May 2020 09:57:27 -0400
+Received: from mail-bn8nam12on2082.outbound.protection.outlook.com ([40.107.237.82]:6221
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727792AbgEMN50 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 09:57:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VZU5kr2e4ucWfn9Gyo+9dZqyVxErtNfv/kqZVPdjeR+EcMGJvAmTMBhkDH/guvXjjaGF0JykDAXmAr1w5s99Co/JloAnoU2TO0PdrJwiblkeF8VdbZW0m2JL3bkPAuoIAwriZpQRUSRoy43QUrZ+9fscE1rIBrSTIO4/tOgGj5Checjxrrvc9uUmfqR2+wxyTq7z2UoN7ETamrvhA3EMEiHVlEjMwKj5Z0shGRCVWRSH8E+SSexX+WFPT99A9ArfKEXT8/jVGMHjfvGoqat/pEHNnZdA3v+sKtF0J8J1jM59pmg/m0/M5KfkDiAugUHgKaWqJt/YEPqGlDsnrgLigw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z/CissEnr03/jFIrciKL+3QUEybGszDHRakSyGze/Mk=;
+ b=hG/FIHfew1ZNCNF9L7l2HEWXXZtsJnCOjYYs+J0gugoqQOUrOdMJP0NLO0tvcfWciar6UqF0Dj3VW8j5p4dBUqdCrRpGrCfoTSO0HD4K038QM3GwFNmf4rtpYWEPspt95Ey9z4MKZfxQbAtwrvwIOhqFIbr4zaPlZITYxUCJ4IG8aEjdml68xE+BFnk4kFjv3w4+FDSSp1Uw29Um2+ztBxCOYfpb00UsW4WOZ8pD5uiO8XyC9tFA1UZdYi7Ep8wjdHoFHJOP1uyxfC9DrvU2Gp3Ym/H73pXc83KhYNqpcACgyJRA3K/pE5UPRYcBX7BfQTZAkWRyH2eUdX1Cy/dTIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z/CissEnr03/jFIrciKL+3QUEybGszDHRakSyGze/Mk=;
+ b=ezglxHUKNiabv5gtPqAS5GBwc0Pjm6d8tQnGwxqsYPvVZhfYUhuWwrs2GKF8KKW8Yte4aKN/dEqPjTSV1/vF5KD5La15FdxkL8TzfBZ1CFXWCSeVXG+xQOLX1phdga6ulCaq4XVXXThdAY2skgAQhoR5JlCUaGt4eb06/mEAl+Q=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
+Received: from BYAPR13MB2614.namprd13.prod.outlook.com (2603:10b6:a03:b4::12)
+ by BYAPR13MB2279.namprd13.prod.outlook.com (2603:10b6:a02:bd::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.6; Wed, 13 May
+ 2020 13:57:21 +0000
+Received: from BYAPR13MB2614.namprd13.prod.outlook.com
+ ([fe80::c0fc:30a3:5e5f:c2b6]) by BYAPR13MB2614.namprd13.prod.outlook.com
+ ([fe80::c0fc:30a3:5e5f:c2b6%7]) with mapi id 15.20.3000.013; Wed, 13 May 2020
+ 13:57:21 +0000
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc:     palmer@dabbelt.com, paul.walmsley@sifive.com, atish.patra@wdc.com,
+        Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH v1 0/3] fix macb phy probe failure if phy-reset is not handled
+Date:   Wed, 13 May 2020 06:56:58 -0700
+Message-Id: <1589378222-15238-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR16CA0005.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::18) To BYAPR13MB2614.namprd13.prod.outlook.com
+ (2603:10b6:a03:b4::12)
 MIME-Version: 1.0
-In-Reply-To: <02df01d62925$acd160a0$067421e0$@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from gamma07.internal.sifive.com (64.62.193.194) by BY5PR16CA0005.namprd16.prod.outlook.com (2603:10b6:a03:1a0::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3000.20 via Frontend Transport; Wed, 13 May 2020 13:57:21 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [64.62.193.194]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 291f2f1e-14db-4bfc-0640-08d7f7458e9b
+X-MS-TrafficTypeDiagnostic: BYAPR13MB2279:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR13MB2279CF6379D1536DBD8B5D7C99BF0@BYAPR13MB2279.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0402872DA1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR13MB2614.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(376002)(136003)(396003)(39830400003)(33430700001)(2906002)(8676002)(956004)(6486002)(316002)(7696005)(8936002)(86362001)(36756003)(26005)(107886003)(66946007)(66476007)(2616005)(6666004)(52116002)(16526019)(66556008)(33440700001)(966005)(478600001)(5660300002)(186003)(4326008);DIR:OUT;SFP:1101;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: N5mu5YLoMctltfIK2SnVkQ6ElKpqdMvD50DBH+8Kl3yphisBBL2+mrO2A1byK4P9B6v6LYl5dfAKB1Y71dc1Dg/cqb5eZFJnVZXrBMwO89Raq5/p+Ivf6CpytMOIoA9Vb/tRhKHQ3fqrrRNQUClkmfWohhmBN9iMJoiBrP277F9IiPHvhF+6Ul1dpsDhioT7Pd4x+OSSsGvNXKwtZikRGxqwubsWist4uwYu43jjS+V1z5TAMtjPP2fpOIZIKeEjJVxQ2u97IewV8VjvvVL8F/4apEUP3fU00h3YGl+gQtKEjVTrHZvLAB+u+PSQML+8uCWLbQiGYCGzbLhWjy7AQQPJXyc8R3KtF6+ZO1f+m7SafbmHoYoONT1FzDn5msvLN0u0/YQaIEvOzCWlKB4DZqneKUfD42AurwwTp2ZsMApLEasmuFHf4NWBC6giZoHZnk+zutF9bneBDcUCCfGhSUUFEBMDVFYvB4FbyF/beDpeOyssRXBPTCC0ZpMi8wyMDvtLfUKiWhhQu9/1uyGYQk/U/LYplJn8ItHh4Dao4uHyvJSnvcng5d2rDp2gWATIx7wwlAwCF/W4h69B+d4N1bwQEBGfozW2ufMww+TPpSk=
+X-MS-Exchange-AntiSpam-MessageData: NwvgaxkkE+vM1IZhTPVMFQTWFLLOfCd6hM6YsAymydyqHHn/nA9pFwQXPa4v97PB4LsMovmZrdLaIgj8Nh0XDClPgdukIrhOVN8cZf1frn+z/DVy1G3l/2NPTj2vcD+fsirjqETitOYD1BP0+WfVMYkOZgYiiRPkxl86YwAGN0L78kiRICZR5m5sxMXeesW8Ebh7X6idPggzpw6yRNyj5zxJFyZM1GlcuGGcKGWu+wfnJVxCnN/Bt14Wn19HXuP6x3gV4QfzK5IjFFtKZGnUwhujp0zrqNsGEpD2lJq1hyQV4BjGxpJGOBBWRwdYTZYVPTiVbAi1Z9x3Hhdagg+6N+ntvzi0UBqRlxgpP5Rwdv8R/QpioFbNaei4fjh1GO8krOIjwG+mjlAYiYKhzJLtEImYvjjDiO5tlslKZexemWVIL+xqobHQzjnX/ZV/IcPZx4G5AKAh7aHQXqGlhppMyiLw8xCDD/nftwxad29v+Vw=
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 291f2f1e-14db-4bfc-0640-08d7f7458e9b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2020 13:57:21.6161
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 09m65hpxR63ujFVJdMUBLQyTyLgzGi3wPUBerTn4VnrOT/Odk9k3syMV9E64dKcQbXMGSysdYlSSdDttRFtygA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR13MB2279
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+HiFive Unleashed is having VSC8541-01 ethernet phy device and requires a
+specific reset sequence of 0-1-0-1 in order to use it in unmanaged mode.
+This series addresses a corner case where phy reset is not handled by boot
+stages prior to linux.
+Somewhat similar unreliable phy probe failure was reported and discussed
+here [1].
+The macb driver fails to detect the ethernet phy device if the bootloader
+doesn't provide a proper reset sequence to the phy device or the phy itself
+is in some invalid state. Currently, the FSBL is resetting the phy device,
+and so there is no issue observed in the linux network setup.
+
+The series is based on linux-5.7-rc5.
+Patch 1: Add the OUI to the phy dt node to fix issue of missing mdio device
+Patch 2 and 3:
+	Resetting phy needs GPIO support so add to dt and defconfig.
+
+[1] https://lkml.org/lkml/2018/11/29/154
+
+To reproduce the issue: 
+1. Comment out VSC8541 reset sequence in fsbl/main.c
+   from within the freedom-u540-c000-bootloader.
+2. Build and flash fsbl.bin to micro sdcard.
+
+Boot the board and bootlog will show network setup failure messages as:
+
+[  1.069474] libphy: MACB_mii_bus: probed
+[  1.073092] mdio_bus 10090000.ethernet-ffffffff: MDIO device at address 0
+	       is missing 
+.....
+[  1.979252] macb 10090000.ethernet eth0: Could not attach PHY (-19)
+
+3. Now apply the series build, and boot kernel.
+4. MACB and VSC8541 driver get successfully probed and the network is set
+   without any failure.
 
 
-On 5/13/20 3:54 PM, ansuelsmth@gmail.com wrote:
->> Hi Ansuel,
->>
->> On 5/1/20 1:06 AM, Ansuel Smith wrote:
->>> From: Sham Muthayyan <smuthayy@codeaurora.org>
->>>
->>> Add tx term offset support to pcie qcom driver need in some revision of
->>> the ipq806x SoC.
->>> Ipq8064 have tx term offset set to 7.
->>> Ipq8064-v2 revision and ipq8065 have the tx term offset set to 0.
->>>
->>> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
->>> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
->>> ---
->>>  drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++++++++++++
->>>  1 file changed, 15 insertions(+)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
->> b/drivers/pci/controller/dwc/pcie-qcom.c
->>> index da8058fd1925..372d2c8508b5 100644
->>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->>> @@ -45,6 +45,9 @@
->>>  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
->>>
->>>  #define PCIE20_PARF_PHY_CTRL			0x40
->>> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(12,
->> 16)
->>
->> The mask definition is not correct. Should be GENMASK(20, 16)
->>
->>> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
->>> +
->>>  #define PCIE20_PARF_PHY_REFCLK			0x4C
->>>  #define PHY_REFCLK_SSP_EN			BIT(16)
->>>  #define PHY_REFCLK_USE_PAD			BIT(12)
->>> @@ -118,6 +121,7 @@ struct qcom_pcie_resources_2_1_0 {
->>>  	u32 tx_swing_full;
->>>  	u32 tx_swing_low;
->>>  	u32 rx0_eq;
->>> +	u8 phy_tx0_term_offset;
->>>  };
->>>
->>>  struct qcom_pcie_resources_1_0_0 {
->>> @@ -318,6 +322,11 @@ static int
->> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
->>>  	if (IS_ERR(res->ext_reset))
->>>  		return PTR_ERR(res->ext_reset);
->>>
->>> +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-ipq8064"))
->>> +		res->phy_tx0_term_offset = 7;
->>
->> Before your change the phy_tx0_term_offser was 0 for apq8064, but here
->> you change it to 7, why?
->>
-> 
-> apq8064 board should use qcom,pcie-apq8064 right? This should be set to 0
-> only with pcie-ipq8064 compatible. Tell me if I'm wrong.
+So irrespective of whether the prior stages handle the phy reset sequence,
+the probing is successful in both the cases of cold boot and warm boot.
 
-Sorry, my fault. I read the compatible check above as apq8064 but it is ipq.
+Change History:
+===============================
+V1:
+-Ignore 4th patch as suggested and so removed it from the series.
+-Verified this series on 5.7-rc5.
+
+V0: Base RFC patch. Verified on 5.7-rc2
+
+
+Sagar Shrikant Kadam (3):
+  dts: phy: fix missing mdio device and probe failure of vsc8541-01
+    device
+  dts: phy: add GPIO number and active state used for phy reset
+  riscv: defconfig: enable gpio support for HiFive Unleashed
+
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 2 ++
+ arch/riscv/configs/defconfig                        | 2 ++
+ 2 files changed, 4 insertions(+)
 
 -- 
-regards,
-Stan
+2.7.4
+
