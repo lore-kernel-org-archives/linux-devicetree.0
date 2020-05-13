@@ -2,113 +2,112 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155C3C43458
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DDDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A5B21919
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 14:55:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbVXtppE"
+	by mail.kernel.org (Postfix) with ESMTP id 75F7F20659
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589382322;
+	bh=fYO8JH34C0Fa8TeL6MWg6T7hkyBbRx2lT9T57V5nNEI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=knQZ1d+SH4u/51PQX1jMoDIPkeECs3AWPLPkUrklH0bXcnJD/LU0jq/1t5lCnMJP/
+	 7wTIdpOJrIj/8g8XGdCF9BTLstIE9inlAdKKxZS6xLNqxRYgGsFwYlEyA5KN1BwMpB
+	 bS/o9woQFeqR/Sp4OtKBtfMhyKBSVa/a9Gf/7ShY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388965AbgEMOz6 (ORCPT
+        id S1729400AbgEMPFV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 10:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388167AbgEMOz5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 10:55:57 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9FFCC061A0C;
-        Wed, 13 May 2020 07:55:57 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t7so6925379plr.0;
-        Wed, 13 May 2020 07:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q0we0+GBX6q0qsW/YELPh66cYe9GwOpY4tlrJBAC4pY=;
-        b=dbVXtppEdGfbCzGErxALcHVIJjRBUe5SR4gI+aW8gGwrpxSLPy95nUwKeOViTlMJJa
-         GetvmXVu6j1ZaiqMj4ZA0CI6ROcZ4mDH55B/Cfk2OA0nNVt4eZRRr7NsHAb4JkNqLgsK
-         s51l3826ndpc6C7+MmyNtQ1Wh/8J8THb3G2oKksmFcptHgxpvbGiU8IyCfxSJWnKVpCz
-         fv7pJ8FmzZMP268zQaGv/ASAnz/7NGa7D/v801KXMvnvuS+B35jW3K91J1C7mNBQpWKw
-         6ShgfD4zx07M3n4f8Vthv8RuzRgKPSlm6+HfkQ/IfNJSjLB/xMotG+w5eSX0JME536PM
-         GdZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q0we0+GBX6q0qsW/YELPh66cYe9GwOpY4tlrJBAC4pY=;
-        b=XvH4OvOcpX2NlsPRePUefcMn4jDXEpDXhXLJWKADIxgqy7Git5h6GqyoOZdkbyqxNn
-         51s5DCZFwMLoKAyrbob7r78juY7Xsr2ybhrbWWNzgwZTHDlez6HSCShaEJBn9YvMsAi5
-         drMLd3wMSuefS+LGTC4h7Fqsw/ViVjmK0El6bJVmvVtkjW9dhyoTRMi2E/+dyQ9BMiCZ
-         6nnQR9GEiqefrlCG7W740EjJonqjIaqpADKZ3zb9JrOGYFmi90fEmmwlvPbsF8aBfzlw
-         +wOCOoAAH+Lmwrf/356oNalZk/FccIWxuWCOvUtwilcNJWm/XresxNPf4PyB9HN16/nc
-         bnrQ==
-X-Gm-Message-State: AGi0PuZquY3O0/hGnXI/mDHc8xR5Efbmg4IdEpeyYlDKfoJPyAptWd+8
-        nmIM7wKaqf3HIskZDMR3lFXuxn0mKdUJkHNq8dxx0SS4QPo=
-X-Google-Smtp-Source: APiQypJStWKnwCbOzDaephSclhi7lT0hpHLD+NSnoaKCFmfLEuG9RPUzE+cPZl9AlTEKQ08Sn8uR/rwkx0DqCXY6/+w=
-X-Received: by 2002:a17:902:7003:: with SMTP id y3mr25899813plk.18.1589381757070;
- Wed, 13 May 2020 07:55:57 -0700 (PDT)
+        Wed, 13 May 2020 11:05:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729392AbgEMPFV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 11:05:21 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB5B205ED;
+        Wed, 13 May 2020 15:05:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589382321;
+        bh=fYO8JH34C0Fa8TeL6MWg6T7hkyBbRx2lT9T57V5nNEI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=0tKUfYB77rF36GhX7vkFhCKsL4lNCdQvDfludtEaZw7LsyojeBSDDENwYvHu/81/s
+         EB6koZK9gpStML0lzTQBXWljUMfwvQ4eXMASGhivk55joAMwLjTNoCK+ucFP1k3ZJq
+         bqUI7wU4B2/1GPj9/BMcti5tWT0+/tLj8eYP3WGo=
+Date:   Wed, 13 May 2020 10:05:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v9 2/5] PCI: Add Loongson PCI Controller support
+Message-ID: <20200513150518.GA321047@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-2-lars.povlsen@microchip.com>
-In-Reply-To: <20200513140031.25633-2-lars.povlsen@microchip.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 May 2020 17:55:50 +0300
-Message-ID: <CAHp75VcA-oDboufsDNx1ZR4+HBwYt7LdLOpbfs7-bM9ByucKJA@mail.gmail.com>
-Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no
- IRQ specified in DT
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <08C2301A-7349-4044-80F4-0B0520780DB9@flygoat.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 5:03 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
->
-> With this change a SPI controller can be added without having a IRQ
-> associated, and causing all transfers to be polled. For SPI controllers
-> without DMA, this can significantly improve performance by less
-> interrupt handling overhead.
+On Wed, May 13, 2020 at 09:20:08AM +0800, Jiaxun Yang wrote:
+> 于 2020年5月13日 GMT+08:00 上午2:06:02, Bjorn Helgaas <helgaas@kernel.org> 写到:
+> >On Tue, May 12, 2020 at 03:43:56PM +0800, Jiaxun Yang wrote:
+> >> This controller can be found on Loongson-2K SoC, Loongson-3
+> >> systems with RS780E/LS7A PCH.
+> >> 
+> >> The RS780E part of code was previously located at
+> >> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
+> >> driver implementation.
+> >> 
+> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >> Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> >> +static void system_bus_quirk(struct pci_dev *pdev)
+> >> +{
+> >> +	u16 tmp;
+> >> +
+> >> +	/* 
+> >> +	 * These devices are not sharing resouces with rest of devices
+> >> +	 * on host bus and firmware will ensure their BARs are placed
+> >> +	 * in safe ranges. Also there might be some config registers
+> >> +	 * in their config space so kernel shouldn't ignore them.
+> >
+> >"Firmware ensuring BARs are placed in 'safe' ranges" is not a
+> >sufficient answer.  As I said before, Linux needs to know both the
+> >ADDRESS and the SIZE of whatever non-standard BARs these are.
+> >Otherwise, we're liable to assign that space to a different device.
+> 
+> The address assigned to these devices will never be a part of resources
+> belongs to the host bridge. That's enforced by hardware and firmware,
+> so address conflict would never happen.
+> 
+> I'm doing like this to ensure kernel will discover this device but do nothing
+> about assignment of resources to it.
 
-...
+OK, that's really ugly, but I guess we can't do anything about it.  It
+would be helpful to make the comment say something like:
 
-> +#define VALID_IRQ(i) (i >= 0)
+  The address space consumed by these devices is outside the resources
+  of the host bridge.
 
-drivers/rtc/rtc-cmos.c:95:#define is_valid_irq(n)               ((n) > 0)
+Side note: in ACPI systems, the ACPI namespace is supposed to describe
+all resources consumed by all devices.  Does DT have a similar
+expectation?  Is there something in DT that tells us about the address
+space used by these devices?  Even if that space never overlaps with
+the PCI host bridge apertures, it might be useful to show the space in
+/proc/iomem and similar places.
 
-Candidate to be in include/linux/irq.h ?
-
-...
-
-> +       if (VALID_IRQ(dws->irq))
-> +               free_irq(dws->irq, master);
-
-Isn't free_irq() aware of invalid ones (not found IRQ in the tree or
-any other backend container won't do anything)?
-
-
->  err_free_master:
->         spi_controller_put(master);
->         return ret;
-> --
-> 2.26.2
-
-
-
---
-With Best Regards,
-Andy Shevchenko
+Bjorn
