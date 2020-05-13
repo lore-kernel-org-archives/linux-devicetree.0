@@ -2,65 +2,216 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFD2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 17:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF423C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 17:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 760472053B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 17:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252A42053B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 17:22:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IRtpMN6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389949AbgEMRWy (ORCPT
+        id S1732834AbgEMRWw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 13:22:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:51000 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389945AbgEMRWy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 13:22:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDBFF30E;
-        Wed, 13 May 2020 10:22:53 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.13])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E298B3F305;
-        Wed, 13 May 2020 10:22:51 -0700 (PDT)
-Date:   Wed, 13 May 2020 18:22:48 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 03/20] arm64: dts: arm: fvp: Move fixed devices out of
- bus node
-Message-ID: <20200513172248.GB27686@bogus>
-References: <20200513103016.130417-1-andre.przywara@arm.com>
- <20200513103016.130417-4-andre.przywara@arm.com>
+        Wed, 13 May 2020 13:22:52 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37896 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389804AbgEMRWw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 13:22:52 -0400
+Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 39A1C541;
+        Wed, 13 May 2020 19:22:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1589390569;
+        bh=F2MAw7DezcFBAVg5wNKkLeaMGzomQBRO3tc/5QLXSns=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IRtpMN6tC4juCiK6npezqpVlU+GSlqHZnmRPObylY8CteBN8n7qicDqiLNXwHmQyf
+         8/khWnpHtKCgPkcsrFDueFFpUQYN252Nrh8Kr6lIR4ABkUDEkJRRmcIZZPaoB3h5Q6
+         r1UIpnc1DF7iuQokwp0hW4xklK4PIWpNAfr9tkfM=
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v8 1/3] dt-bindings: phy: Add DT bindings for Xilinx ZynqMP PSGTR PHY
+Date:   Wed, 13 May 2020 20:22:37 +0300
+Message-Id: <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513103016.130417-4-andre.przywara@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:29:59AM +0100, Andre Przywara wrote:
-> The devicetree compiler complains when DT nodes without a reg property
-> live inside a (simple) bus node:
-> Warning (simple_bus_reg): Node /bus@8000000/motherboard-bus/v2m_refclk32khz
->                           missing or empty reg/ranges property
->
-> Move the fixed clocks, the fixed regulator, and the config bus subtree
-> to the root node, since they do not depend on any busses.
->
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 
-[nit] only if you respin the series, you can drop extra "arm:" in the
-subject. Also if it contains both fvp and juno change, use fvp/juno.
+Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+Processing System Gigabit Transceiver which provides PHY capabilities to
+USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
 
---
+Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+Changes since v7:
+
+- Switch to GPL-2.0-only OR BSD-2-Clause
+
+Changes since v6:
+
+- Fixed specification of compatible-dependent xlnx,tx-termination-fix
+  property
+- Dropped status property from example
+- Use 4 spaces to indent example
+
+Changes since v5:
+
+- Document clocks and clock-names properties
+- Document resets and reset-names properties
+- Replace subnodes with an additional entry in the PHY cells
+- Drop lane frequency PHY cell, replaced by reference clock phandle
+- Convert bindings to YAML
+- Reword the subject line
+- Drop Rob's R-b as the bindings have significantly changed
+- Drop resets and reset-names properties
+---
+ .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
+ include/dt-bindings/phy/phy.h                 |   1 +
+ 2 files changed, 106 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+new file mode 100644
+index 000000000000..09e3cde7ebca
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+@@ -0,0 +1,105 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++
++description: |
++  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
++  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
++  Ethernet SGMII controllers.
++
++properties:
++  "#phy-cells":
++    const: 4
++    description: |
++      The cells contain the following arguments.
++
++      - description: The GTR lane
++        minimum: 0
++        maximum: 3
++      - description: The PHY type
++        enum:
++          - PHY_TYPE_DP
++          - PHY_TYPE_PCIE
++          - PHY_TYPE_SATA
++          - PHY_TYPE_SGMII
++          - PHY_TYPE_USB
++      - description: The PHY instance
++        minimum: 0
++        maximum: 1 # for DP, SATA or USB
++        maximum: 3 # for PCIE or SGMII
++      - description: The reference clock number
++        minimum: 0
++        maximum: 3
++
++  compatible:
++    enum:
++      - xlnx,zynqmp-psgtr-v1.1
++      - xlnx,zynqmp-psgtr
++
++  clocks:
++    minItems: 1
++    maxItems: 4
++    description: |
++      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
++      inputs shall not have an entry.
++
++  clock-names:
++    minItems: 1
++    maxItems: 4
++    items:
++      pattern: "^ref[0-3]$"
++
++  reg:
++    items:
++      - description: SERDES registers block
++      - description: SIOU registers block
++
++  reg-names:
++    items:
++      - const: serdes
++      - const: siou
++
++  xlnx,tx-termination-fix:
++    description: |
++      Include this for fixing functional issue with the TX termination
++      resistance in GT, which can be out of spec for the XCZU9EG silicon
++      version.
++    type: boolean
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - reg-names
++
++if:
++  properties:
++    compatible:
++      const: xlnx,zynqmp-psgtr-v1.1
++
++then:
++  properties:
++    xlnx,tx-termination-fix: false
++
++additionalProperties: false
++
++examples:
++  - |
++    phy: phy@fd400000 {
++        compatible = "xlnx,zynqmp-psgtr-v1.1";
++        reg = <0x0 0xfd400000 0x0 0x40000>,
++              <0x0 0xfd3d0000 0x0 0x1000>;
++        reg-names = "serdes", "siou";
++        clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
++        clock-names = "ref1", "ref2", "ref3";
++        #phy-cells = <4>;
++    };
++
++...
+diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+index 1f3f866fae7b..f6bc83b66ae9 100644
+--- a/include/dt-bindings/phy/phy.h
++++ b/include/dt-bindings/phy/phy.h
+@@ -17,5 +17,6 @@
+ #define PHY_TYPE_USB3		4
+ #define PHY_TYPE_UFS		5
+ #define PHY_TYPE_DP		6
++#define PHY_TYPE_SGMII		7
+ 
+ #endif /* _DT_BINDINGS_PHY */
+-- 
 Regards,
-Sudeep
+
+Laurent Pinchart
+
