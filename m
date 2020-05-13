@@ -2,96 +2,89 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF34C2D0FA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBE4C2D0FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C069A20575
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI5NR0Fm"
+	by mail.kernel.org (Postfix) with ESMTP id 5645520575
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589364364;
+	bh=WjRy4bGb2XBE4e+1YGSH0DDmJTpK19nx1tzKdrx5qeQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XzqWspT9XuHfacyZ7qq7yxGS4EFeL0ZYQEAwVSoB+nCgG0LWcSYSR4OndqHvb3JCU
+	 lWDfXhGs0YKngB5X2E8LeYj6asV3eIH0z2nO412+NCHlpbTgCql4zhkt3T1fN6h38n
+	 5MPzYio2aAthd4BB8Ltf2OtuO1O3eL33aBcywYeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbgEMJt7 (ORCPT
+        id S1733265AbgEMKGA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 05:49:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387418AbgEMJt6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 05:49:58 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0B76C061A0C;
-        Wed, 13 May 2020 02:49:58 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u10so6618558pls.8;
-        Wed, 13 May 2020 02:49:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vI1HSpo7JSbwTRD9lhLBPGbReloovre1TONkkWI4K8s=;
-        b=cI5NR0Fmf0b3v4RmzfC93mlJjUuGrnz+wojY6kn0wMKI0CqhzbAaR68zlAPTfc8dlv
-         nEo440GlsOwFtHLvmIwgjuS3b21nqoISVskSnOTWHvxRLJrdNWFj6QMTmLmtSrHcvII1
-         f21gkgvPL17ChZSaMzaeZarWmyda5FX9Kr5ukmdzmNBgSSse2lehTc0Ks5vhNtVA0/mE
-         9rpVuAwhTwRu4icbbs7byMez/Yo1v+A11a88VyXl7uI1WJZAZarE356ybl82sEjjXRZ5
-         8G2lnX/haRNYHv8EmMYC+JvmoyXtaKWUhedE/OBMwOR4zYnDyClehHQNyZI5AqEinVaV
-         sbng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vI1HSpo7JSbwTRD9lhLBPGbReloovre1TONkkWI4K8s=;
-        b=abcJAl2ciZe1+rQEyAm0KavHP1h120wmdnahsKjDU0VQBCwljrm1YKMih15GGmO2+a
-         c7R0Kf83OWxOinsJ9d5XKvy6Lk71Q0gh/vkFn0l/AAgCoGuBBBQaYzmwEwUq35jyEkX+
-         A/K1hqw9CYUdf/qzC6qyb99FzXbUoZOcUI/S+7YDqJc9OlPO0r5VBZa5qAohxE0C/4zq
-         siNy7fNGlXCV97TBLUy8p78m7QX34FXVn1LcepyvpF2iyiONLIOJE2U8267SUxooOyQ3
-         N49vO+Cobfgxc/h+36PZ1m3IiNhsmxXtjS8A5mPmRyZNkqA6ToillKlRjzmIwLeFJSv2
-         Dicw==
-X-Gm-Message-State: AGi0PuY445Iqi3v54nG6GlPWwD83cdT77UbY982OxGpObje+WDxxM48Z
-        +rFP3uvnUOvmTtc1Kf6fZRg292nUgMyxPkTWFAo=
-X-Google-Smtp-Source: APiQypKJ0EhcKN4EMwA2AMwX12EH/qNwRgFeDBPkHlJLKVpoAB7ilzcQdSoNb7EilT7ycg/niDjp4WWhY8w/d/sAxM4=
-X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr34645016pjb.129.1589363398238;
- Wed, 13 May 2020 02:49:58 -0700 (PDT)
+        Wed, 13 May 2020 06:06:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732551AbgEMKF7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 06:05:59 -0400
+Received: from localhost.localdomain (unknown [106.200.233.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0045F20575;
+        Wed, 13 May 2020 10:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589364359;
+        bh=WjRy4bGb2XBE4e+1YGSH0DDmJTpK19nx1tzKdrx5qeQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xJ51Bv2swDWPGJNoHbrEJBLashQwC/Xq44TcCpIoBvgmvk+w/yhWKGLTIXXpWuwQW
+         m2rhP13GblVTwezQLIRo4n+13HW669cQaegtfkBSq3CX7DQP1CtM9Ug7DSqG9wA5vP
+         RLiGzalHteJJIN0xsTBcoVDLLgfRdecFoh5XDehw=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH 0/3] Add LT9611 DSI to HDMI bridge
+Date:   Wed, 13 May 2020 15:35:30 +0530
+Message-Id: <20200513100533.42996-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org> <1589361736-816-5-git-send-email-jprakash@codeaurora.org>
-In-Reply-To: <1589361736-816-5-git-send-email-jprakash@codeaurora.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 May 2020 12:49:51 +0300
-Message-ID: <CAHp75Vex+hm2pVat_VVH5gAqPDbm-VQMes56wC=RUcQeM=z7vA@mail.gmail.com>
-Subject: Re: [PATCH V4 4/5] iio: adc: Update error checks and debug prints
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        smohanad@codeaurora.org, kgunda@codeaurora.org,
-        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:23 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
->
-> Change pr_err/pr_debug statements to dev_err/dev_dbg for
-> increased clarity. Also clean up some return value checks.
+Hi,
 
-'Also' on the commit message == 'split this to two'.
-But here is a ping pong style of patches (you introduce a problem in
-one patch and fix it in the following).
+This series adds driver and bindings for Lontium LT9611 bridge chip which
+takes MIPI DSI as input and HDMI as output.
+
+This chip can be found in 96boards RB3 platform [1] commonly called DB845c.
+
+[1]: https://www.96boards.org/product/rb3-platform/
+
+Vinod Koul (3):
+  dt-bindings: vendor-prefixes: Add Lontium vendor prefix
+  dt-bindings: display: bridge: Add documentation for LT9611
+  drm/bridge: Introduce LT9611 DSI to HDMI bridge
+
+ .../display/bridge/lontium,lt9611.yaml        |  178 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ drivers/gpu/drm/bridge/Kconfig                |   13 +
+ drivers/gpu/drm/bridge/Makefile               |    1 +
+ drivers/gpu/drm/bridge/lt9611.c               | 1113 +++++++++++++++++
+ 5 files changed, 1307 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+ create mode 100644 drivers/gpu/drm/bridge/lt9611.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.4
+
