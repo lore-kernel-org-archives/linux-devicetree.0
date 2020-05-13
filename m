@@ -2,84 +2,111 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED20CA90AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 11:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA43C2D0FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 11:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 973C9206D6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 11:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92F720753
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 11:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589369820;
+	bh=esvSPlYfmiYgql73vEjD2+5RucmuA0PgDXZlvBGj+VE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=of814Sjtu0FGAceVkk7SlkIEuJW8LMaECFlb+JeAhK/iBIJabm2pJmMzYTSUe6isC
+	 Bs1953Z7WKG7HJFIoKRzOS7TPaE7mF7Utm+LxaXjbkes7z6OzmxDkn06mx1UwkX7gD
+	 qckv1wWgolSOOvoM0mseRAKjOzd7RMAs4TWLvmWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731022AbgEMLdT (ORCPT
+        id S1727918AbgEMLhA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 07:33:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:43920 "EHLO foss.arm.com"
+        Wed, 13 May 2020 07:37:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728049AbgEMLdT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 07:33:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D986630E;
-        Wed, 13 May 2020 04:33:18 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE64B3F71E;
-        Wed, 13 May 2020 04:33:16 -0700 (PDT)
-Date:   Wed, 13 May 2020 12:33:14 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        thomas.petazzoni@bootlin.com
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
- Compex wifi cards
-Message-ID: <20200513113314.GB32365@e121166-lin.cambridge.arm.com>
-References: <20200430080625.26070-1-pali@kernel.org>
- <20200513111651.q62dqauatryh6xd6@pali>
+        id S1727794AbgEMLhA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 07:37:00 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3022206D6;
+        Wed, 13 May 2020 11:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589369819;
+        bh=esvSPlYfmiYgql73vEjD2+5RucmuA0PgDXZlvBGj+VE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EXEPmp4wRscmSOpgSsbkHiRIaecmZa09WJ0Kb2AvQ9nCRPGsSR3zseVQTSCYNqsYs
+         nkOmpc+jTnaPWyQN/+5rGzQDmrfd+jpCWT/xDkp6bn1eVhnAXSoSK+2TW3/oixy8gP
+         w0ifH6+8WJHCTVMQr4Me1LppjfLlROKy01S7ymhs=
+Date:   Wed, 13 May 2020 12:36:56 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/17] spi: dw: Add Tx/Rx finish wait methods to DMA
+Message-ID: <20200513113656.GF4803@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-8-Sergey.Semin@baikalelectronics.ru>
+ <20200508173023.GO4820@sirena.org.uk>
+ <20200513113555.mjivjk374giopnea@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="O98KdSgI27dgYlM5"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200513111651.q62dqauatryh6xd6@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200513113555.mjivjk374giopnea@mobilestation>
+X-Cookie: Long life is in store for you.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 01:16:51PM +0200, Pali Rohár wrote:
-> On Thursday 30 April 2020 10:06:13 Pali Rohár wrote:
-> > Hello,
-> > 
-> > this is the fourth version of the patch series for Armada 3720 PCIe
-> > controller (aardvark). It's main purpose is to fix some bugs regarding
-> > buggy ath10k cards, but we also found out some suspicious stuff about
-> > the driver and the SOC itself, which we try to address.
-> > 
-> > Patches are available also in my git branch pci-aardvark:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
-> 
-> Hello! Thanks everybody for review and testing of this patch series.
-> 
-> I would like to ask, is there something needed to fix / modify in this
-> patch series? If everything is OK, would you Bjorn or Lorenzo take this
-> patch series into your tree?
 
-We need Thomas' ACK on the series. We don't have this HW and
-we comment on the generic code, Thomas owns it and must check that
-what you are changing is sound.
+--O98KdSgI27dgYlM5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On patch 5 I share Rob's concerns - it does not make much sense
-to have something driver specific there, need to look further.
+On Wed, May 13, 2020 at 02:35:55PM +0300, Serge Semin wrote:
+> On Fri, May 08, 2020 at 06:30:23PM +0100, Mark Brown wrote:
 
-Lorenzo
+> > > +	while (dw_spi_dma_tx_busy(dws) && retry--)
+> > > +		ndelay(ns);
+
+> > How deep can the FIFO be with this IP - could we end up ndelay()ing for
+> > non-trivial amounts of time?
+
+> According to the DW APB SSI db it can be up to 256 transfer words. So the delay
+> should be trivial.
+
+Yes, that should be fine.
+
+--O98KdSgI27dgYlM5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6729gACgkQJNaLcl1U
+h9AzxQf/bsWYDjXldUBZJ1fmI7RZ7yZW9/NawHY0tDiB5aidn0Qz1+0tYxPDmbhJ
+bUrIy7i5rEDV45LCvSLqXmOFAPs7+ic+SqlmIJFT+oHXR57351MKFSdPzc4WIbUT
+ZtCF2sUfQZXrk6O++CHGNwaiXkvkPxvdSw3R8AwsjUslTNHhqUH83efqIpCfu0mw
+Ttg/Ub0mSxEoALKiJN1T3NEH2B8qYS/J1dHGqoky8/ETQnXGR9NPTxIksgNVr42w
+HzXRM9gaXiBGtLAKfQqCwlRHUKqXckccJYfXN1edvFujhaXrfirs85hkEe+5CmMS
+OllgnBoTThVcCIvQZ+OAqp1c5UYtmw==
+=myKX
+-----END PGP SIGNATURE-----
+
+--O98KdSgI27dgYlM5--
