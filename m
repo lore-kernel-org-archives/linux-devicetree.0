@@ -2,116 +2,145 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BD9C47077
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674B2CA90AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35AB0206E5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589365408;
-	bh=SgltVphT3mpSTEBHdav7w7v68p4IcFWaePiyBQPkO8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cUI/IdEVit3Sm864vVZjLJixuWUTWxvieNo45uPwIkH6Swsu8Mv1jPoYTwgQzb+Wt
-	 si98C3f1RGXLTWQoltdQsuhiTukkE64Iv0Ks9Bhijlz51+C9rHj336l9ilA3Gjn6dD
-	 g/hDoFl43pQdItNAG4QyMBOwBk+6yDp4SJ5DajSk=
+	by mail.kernel.org (Postfix) with ESMTP id 4556B206CC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:30:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732620AbgEMKX1 (ORCPT
+        id S1732416AbgEMKaa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 06:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48590 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:30:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:42566 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732472AbgEMKX1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 06:23:27 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2ADE205ED;
-        Wed, 13 May 2020 10:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589365406;
-        bh=SgltVphT3mpSTEBHdav7w7v68p4IcFWaePiyBQPkO8w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NrsN+a3kpBa7OFvfx9JXEBF+1YkN3RgZILtNd4fzcVkmVsRyKxSyx+gt6YXsmbXrz
-         Hx1RfoOlKR1O+niAskCU80lQ2ZSQTI3Q6rmpzlyPMTGKgmrfJJinz9rZfb/cTjDtwl
-         gI0HCGuNKK1ywI5CqXsbEbg51rVPBG0qLm+l4fIg=
-Date:   Wed, 13 May 2020 11:23:24 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/17] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200513102324.GB4803@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508133336.GK4820@sirena.org.uk>
- <20200512200733.bdbbhkjkwjd5yzqq@mobilestation>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
-Content-Disposition: inline
-In-Reply-To: <20200512200733.bdbbhkjkwjd5yzqq@mobilestation>
-X-Cookie: Long life is in store for you.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1729731AbgEMKaa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 06:30:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFAF41FB;
+        Wed, 13 May 2020 03:30:29 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A5BE3F305;
+        Wed, 13 May 2020 03:30:28 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH v3 00/20] dts/dt-bindings: Fix Arm Ltd. ARMv8 "boards"
+Date:   Wed, 13 May 2020 11:29:56 +0100
+Message-Id: <20200513103016.130417-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+A few updates compared to v2. The most important is to fix the
+interrupt-maps, triggered by changing the number of address-cells in
+the GIC node. For this I split the former patch 07/17 into two (09/20
+and 10/20), one for the foundation model, the other for Juno.
+Also I fixed a dtc complaint about device nodes without reg properties
+being inside simple-bus nodes, those are the new patches 04-06/20.
+Will took patch 01/17 from v2 already, so I removed this from this
+series.
+The rest of the patches stayed the same.
+-----------------------------------
 
---E39vaYmALEf/7YXx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The .dts files in the arch/arm64/boot/dts/arm directory describe several
+boards and platforms provided by Arm Ltd. (mostly Juno and fastmodels).
+Both the .dts files and some of their associated .yaml bindings were not
+fully compliant, for some boards a simple dtc run complains already.
+And make dtbs_check would create quite a list of violations.
 
-On Tue, May 12, 2020 at 11:07:33PM +0300, Serge Semin wrote:
-> On Fri, May 08, 2020 at 02:33:36PM +0100, Mark Brown wrote:
+This series attempts to fix all of them, although some are not yet
+covered, as they require some discussion about potential binding or
+DT schema changes.
 
-> > Please don't make new feature development dependent on conversion to the
-> > new schema format, there's quite a backlog of reviews of schema
-> > conversions so it can slow things down.  It's good to do the conversions
-> > but please do them after adding any new stuff to the binding rather than
-> > before.
+The first and the last two patches fix some minor omissions in the yaml
+bindings.
+The rest of the series then address the violations that dtbs_check and
+dtc itself reported: many node name scheme mismatches, some missing
+properties or wrong child node handling. See the respective patches for
+more details.
 
-> So by saying this do you want me to revert an order of the first two patches
-> in the series, right? So the series would first add the DMA properties support
-> to the binding, then would convert the binding file to DT schema.
+After applying this series I still see the following warnings:
+- vexpress-v2f-1xv7-ca53x2: leds: linux,default-trigger names not
+  listed. The kernel provides triggers for each CPU core, which the DT
+  tries to use. However cpu<x> is not listed in the binding, and I fail
+  to add a regexp for a property *value* to express this easily.
+  Alternatively we could drop any constraint on this string at all,
+  since this might become a moving target and is not really a hardware
+  property, rather than a convenience Linux configuration option.
+- juno: scp-sram: The compatible names for the SCPI child nodes are not
+  fully converted to yaml yet, so dtbs_check fails to find a matching
+  schema. Converting the SCPI bindings over is next on my list.
+- fvp-base-revc: panel: 'power-supply' is a required property
+  Indeed the Linux driver depends on that property, not sure how this
+  ever worked. I am about to test this, the fix should a rather easy
+  addition of a fixed regulator.
 
-The conversion to YAML format should be the very last thing in the patch
-series, and as Andy says there's another patch in flight also doing this
-conversion which you should coordinate with.
+Please have a look, I am open to discussions.
 
---E39vaYmALEf/7YXx
-Content-Type: application/pgp-signature; name="signature.asc"
+Cheers,
+Andre
 
------BEGIN PGP SIGNATURE-----
+Changelog v2 ... v3:
+- drop patch v2 01/17, Will took that already
+- also move fixed devices for vexpress, foundation and Juno (04-06/20)
+- use "arm,gic-400" in addition to the "Cortex GIC" for the models
+- adjust all interrupt-map properties to reflect GIC #address-cells changes
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl67ypsACgkQJNaLcl1U
-h9AodAf/V7hLsdN16eZChRbVtE6dJ5AQUp2c5eX7YNYnMNJwp1c/rBpMUNUA8YL+
-noBZvjVO2gt+2IwQWc1EZhxbHT1r+6tX8UCrddNFQ6yJi8xsTnUZk3GV+2nd0B6w
-neS85VfshHlLkOZxoaBd7k48Z1aDmdYUkzgBZ432BHy5yzR4uE4zU8BZtcqkvBBT
-qs/Cd9VftFV3zv1HUofjURdirNqylzsQoApRaGtJT79eqZyt/0cSi2bWipJAtHTz
-lhVWfqby7g4FI+GGUYSvjY3eo4flsLhWk/hML+wQoZoSZiBvjoz0uoZnsM8FVQ3w
-4X17XlyTkbM6XVYez5I8xYh3U6TyoQ==
-=6nLk
------END PGP SIGNATURE-----
+Changelog v1 ... v2:
+- drop GIC "compatible" changes for Juno
+- add "arm,gic-400", "arm,cortex-a15-gic" as a valid combination
+- reorder more controversial binding fixes to the end
+- add Robin's Acked-by:
+- fix subject lines in first three emails
 
---E39vaYmALEf/7YXx--
+Andre Przywara (20):
+  dt-bindings: arm: gic: Allow combining arm,gic-400 compatible strings
+  arm64: dts: arm: Fix node address fields
+  arm64: dts: arm: fvp: Move fixed devices out of bus node
+  arm64: dts: arm: vexpress: Move fixed devices out of bus node
+  arm64: dts: arm: foundation: Move fixed clocks out of bus node
+  arm64: dts: arm: juno: Move fixed devices out of bus node
+  arm64: dts: juno: Fix mem-timer
+  arm64: dts: arm: model: Fix GIC compatible names
+  arm64: dts: arm: juno: Fix GIC child nodes
+  arm64: dts: arm: foundation: Fix GIC child nodes
+  arm64: dts: arm: Fix ITS node names and #msi-cells
+  arm64: dts: juno: usb: Use proper DT node name
+  arm64: dts: arm: Fix serial node names
+  arm64: dts: fvp: Fix SMMU DT node
+  arm64: dts: arm: Fix bus node names
+  arm64: dts: juno: Fix GPU interrupt order
+  arm64: dts: arm: Fix VExpress LED names
+  arm64: dts: juno: Fix SCPI shared mem node name
+  dt-bindings: mali-midgard: Allow dma-coherent
+  dt-bindings: ehci/ohci: Allow iommus property
+
+ .../bindings/gpu/arm,mali-midgard.yaml        |   2 +
+ .../interrupt-controller/arm,gic.yaml         |   6 +
+ .../devicetree/bindings/usb/generic-ehci.yaml |   3 +
+ .../devicetree/bindings/usb/generic-ohci.yaml |   3 +
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi       | 328 +++++++++---------
+ .../boot/dts/arm/foundation-v8-gicv2.dtsi     |   4 +-
+ .../boot/dts/arm/foundation-v8-gicv3.dtsi     |  11 +-
+ arch/arm64/boot/dts/arm/foundation-v8.dtsi    | 142 ++++----
+ arch/arm64/boot/dts/arm/fvp-base-revc.dts     |  10 +-
+ arch/arm64/boot/dts/arm/juno-base.dtsi        |  82 ++---
+ arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 166 ++++-----
+ arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts    |   2 +-
+ .../boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi |   4 +-
+ .../boot/dts/arm/rtsm_ve-motherboard.dtsi     | 152 ++++----
+ 14 files changed, 465 insertions(+), 450 deletions(-)
+
+-- 
+2.17.1
+
