@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC847C2D0FC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBC7C2D0FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D63BF20769
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C26AB206CC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:30:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732670AbgEMKas (ORCPT
+        id S1729731AbgEMKau (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 06:30:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:42666 "EHLO foss.arm.com"
+        Wed, 13 May 2020 06:30:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:42672 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729731AbgEMKas (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 06:30:48 -0400
+        id S1732694AbgEMKat (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 06:30:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF6C811B3;
-        Wed, 13 May 2020 03:30:47 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 082B8D6E;
+        Wed, 13 May 2020 03:30:49 -0700 (PDT)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 961103F305;
-        Wed, 13 May 2020 03:30:46 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2AB93F305;
+        Wed, 13 May 2020 03:30:47 -0700 (PDT)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
         Sudeep Holla <sudeep.holla@arm.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v3 13/20] arm64: dts: arm: Fix serial node names
-Date:   Wed, 13 May 2020 11:30:09 +0100
-Message-Id: <20200513103016.130417-14-andre.przywara@arm.com>
+Subject: [PATCH v3 14/20] arm64: dts: fvp: Fix SMMU DT node
+Date:   Wed, 13 May 2020 11:30:10 +0100
+Message-Id: <20200513103016.130417-15-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200513103016.130417-1-andre.przywara@arm.com>
 References: <20200513103016.130417-1-andre.przywara@arm.com>
@@ -42,153 +42,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The UARTs for all Arm Ltd. boards were using "uart" as their node name
-stub.
+The SMMU name in the RevC FVP DT file was not fully binding compliant.
 
-Replace that with the required "serial" string, to comply with the PL011
-DT binding.
+Adjust the node name to match the binding's list of allowed names, also
+shuffle the order of the interrupts to comply with the expected order.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- arch/arm/boot/dts/vexpress-v2m-rs1.dtsi          | 8 ++++----
- arch/arm64/boot/dts/arm/foundation-v8.dtsi       | 8 ++++----
- arch/arm64/boot/dts/arm/juno-base.dtsi           | 2 +-
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi | 8 ++++----
- 4 files changed, 13 insertions(+), 13 deletions(-)
+ arch/arm64/boot/dts/arm/fvp-base-revc.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-index d4d88ce996a5..f4a65d693f15 100644
---- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -316,7 +316,7 @@
- 					clock-names = "KMIREFCLK", "apb_pclk";
- 				};
- 
--				v2m_serial0: uart@90000 {
-+				v2m_serial0: serial@90000 {
- 					compatible = "arm,pl011", "arm,primecell";
- 					reg = <0x090000 0x1000>;
- 					interrupts = <5>;
-@@ -324,7 +324,7 @@
- 					clock-names = "uartclk", "apb_pclk";
- 				};
- 
--				v2m_serial1: uart@a0000 {
-+				v2m_serial1: serial@a0000 {
- 					compatible = "arm,pl011", "arm,primecell";
- 					reg = <0x0a0000 0x1000>;
- 					interrupts = <6>;
-@@ -332,7 +332,7 @@
- 					clock-names = "uartclk", "apb_pclk";
- 				};
- 
--				v2m_serial2: uart@b0000 {
-+				v2m_serial2: serial@b0000 {
- 					compatible = "arm,pl011", "arm,primecell";
- 					reg = <0x0b0000 0x1000>;
- 					interrupts = <7>;
-@@ -340,7 +340,7 @@
- 					clock-names = "uartclk", "apb_pclk";
- 				};
- 
--				v2m_serial3: uart@c0000 {
-+				v2m_serial3: serial@c0000 {
- 					compatible = "arm,pl011", "arm,primecell";
- 					reg = <0x0c0000 0x1000>;
- 					interrupts = <8>;
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-index 63efb88595d4..e226c5e080c2 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-+++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-@@ -189,7 +189,7 @@
- 				reg = <0x010000 0x1000>;
- 			};
- 
--			v2m_serial0: uart@90000 {
-+			v2m_serial0: serial@90000 {
- 				compatible = "arm,pl011", "arm,primecell";
- 				reg = <0x090000 0x1000>;
- 				interrupts = <5>;
-@@ -197,7 +197,7 @@
- 				clock-names = "uartclk", "apb_pclk";
- 			};
- 
--			v2m_serial1: uart@a0000 {
-+			v2m_serial1: serial@a0000 {
- 				compatible = "arm,pl011", "arm,primecell";
- 				reg = <0x0a0000 0x1000>;
- 				interrupts = <6>;
-@@ -205,7 +205,7 @@
- 				clock-names = "uartclk", "apb_pclk";
- 			};
- 
--			v2m_serial2: uart@b0000 {
-+			v2m_serial2: serial@b0000 {
- 				compatible = "arm,pl011", "arm,primecell";
- 				reg = <0x0b0000 0x1000>;
- 				interrupts = <7>;
-@@ -213,7 +213,7 @@
- 				clock-names = "uartclk", "apb_pclk";
- 			};
- 
--			v2m_serial3: uart@c0000 {
-+			v2m_serial3: serial@c0000 {
- 				compatible = "arm,pl011", "arm,primecell";
- 				reg = <0x0c0000 0x1000>;
- 				interrupts = <8>;
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index 2b34661d426c..ee860d539395 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -729,7 +729,7 @@
- 		};
+diff --git a/arch/arm64/boot/dts/arm/fvp-base-revc.dts b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
+index 0cf96ceff431..b8a21092db4d 100644
+--- a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
++++ b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
+@@ -172,14 +172,14 @@
+ 		dma-coherent;
  	};
  
--	soc_uart0: uart@7ff80000 {
-+	soc_uart0: serial@7ff80000 {
- 		compatible = "arm,pl011", "arm,primecell";
- 		reg = <0x0 0x7ff80000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-index f61e313ab1a4..b81651b1890a 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-@@ -158,7 +158,7 @@
- 					clock-names = "KMIREFCLK", "apb_pclk";
- 				};
- 
--				v2m_serial0: uart@90000 {
-+				v2m_serial0: serial@90000 {
- 					compatible = "arm,pl011", "arm,primecell";
- 					reg = <0x090000 0x1000>;
- 					interrupts = <5>;
-@@ -166,7 +166,7 @@
- 					clock-names = "uartclk", "apb_pclk";
- 				};
- 
--				v2m_serial1: uart@a0000 {
-+				v2m_serial1: serial@a0000 {
- 					compatible = "arm,pl011", "arm,primecell";
- 					reg = <0x0a0000 0x1000>;
- 					interrupts = <6>;
-@@ -174,7 +174,7 @@
- 					clock-names = "uartclk", "apb_pclk";
- 				};
- 
--				v2m_serial2: uart@b0000 {
-+				v2m_serial2: serial@b0000 {
- 					compatible = "arm,pl011", "arm,primecell";
- 					reg = <0x0b0000 0x1000>;
- 					interrupts = <7>;
-@@ -182,7 +182,7 @@
- 					clock-names = "uartclk", "apb_pclk";
- 				};
- 
--				v2m_serial3: uart@c0000 {
-+				v2m_serial3: serial@c0000 {
- 					compatible = "arm,pl011", "arm,primecell";
- 					reg = <0x0c0000 0x1000>;
- 					interrupts = <8>;
+-	smmu: smmu@2b400000 {
++	smmu: iommu@2b400000 {
+ 		compatible = "arm,smmu-v3";
+ 		reg = <0x0 0x2b400000 0x0 0x100000>;
+ 		interrupts = <GIC_SPI 74 IRQ_TYPE_EDGE_RISING>,
++			     <GIC_SPI 79 IRQ_TYPE_EDGE_RISING>,
+ 			     <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>,
+-			     <GIC_SPI 77 IRQ_TYPE_EDGE_RISING>,
+-			     <GIC_SPI 79 IRQ_TYPE_EDGE_RISING>;
+-		interrupt-names = "eventq", "priq", "cmdq-sync", "gerror";
++			     <GIC_SPI 77 IRQ_TYPE_EDGE_RISING>;
++		interrupt-names = "eventq", "gerror", "priq", "cmdq-sync";
+ 		dma-coherent;
+ 		#iommu-cells = <1>;
+ 		msi-parent = <&its 0x10000>;
 -- 
 2.17.1
 
