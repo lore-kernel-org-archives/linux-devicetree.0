@@ -7,188 +7,113 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAD8C2D0F6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14DDC2D0F6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 455F72176D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0561206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 02:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589337679;
-	bh=rDLeaH+ysOe0eibHhFmvQzwi1JTxEafT2KIaRN8YrPQ=;
+	s=default; t=1589337754;
+	bh=p9y9a3QyMJxo3k2kNaZVRf0AFIIDm4OTYEkMkDePs1w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hxgji/Ba76t0eeOvUKhqBfk4B64eMhcxIjGamEtgqjl0ujcsZjNzbZEHm6m8jOxJm
-	 DLQPsRSByHbq+PUiwdZCI4xPD8qJ1wIXCSrAMhMHMkeQveY+anJPGG5tL11gKhSrkM
-	 bHYfblexJ8LyJ5OiGWFq3eVTF6S6FjxDHB0KBhaU=
+	b=WPZaLQ7C246bLtDS/ii8ZPFDFtE/2kh//0g/rUP13GiMhwhUGR6JBBPGcLp6SCkRB
+	 D6p6doFv550YNYfyq9+292JTELhP/aEAB2rTccNMRYk3pJW1ZdnhQkd4s1fD96AbAG
+	 U9jh3NUWhSt+s6sMlCNPX6d4hY2u6hhiXEf5QE7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgEMClN (ORCPT
+        id S1725967AbgEMCme (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 22:41:13 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33972 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbgEMClM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 22:41:12 -0400
-Received: by mail-oi1-f193.google.com with SMTP id c12so19164531oic.1;
-        Tue, 12 May 2020 19:41:11 -0700 (PDT)
+        Tue, 12 May 2020 22:42:34 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35824 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgEMCme (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 22:42:34 -0400
+Received: by mail-ot1-f67.google.com with SMTP id k110so12279989otc.2;
+        Tue, 12 May 2020 19:42:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vk/gH8NIib/i4WfO/BNqo7XG45YgRMuUKBCFCVNn9K4=;
-        b=SG+0zf87qoK95kbJl8aVrnAdDs8QxEe94vNGKHZo3mbpugux4pcOoiOjF3VAKpYyAN
-         /8U7J50azqbbAkCe+tAEuC3ncELx7eM49r1PtbqWkckvF2mpxv7/Eopc50mx1lkivKTu
-         0iAG9nIwR71DZoUuEKktBKiNhExqHZyimISpMEiCdQjX/5ETii0zokVVq5a4/DTCjJop
-         HYPl8IKtmpxTw6UtwUMFCquA1SDB46mX5qTFniZPD3VCqr9XG08MeYDPDUwlMG1TVNDj
-         WDZFuJflr07IyLXg9BkX8DAiZGk6FFZByjXoDI23+CRudRBT0MLFVqMn9EvcSVPuNVfD
-         6QEQ==
-X-Gm-Message-State: AGi0PuZiaNTKNChL89FqYYR+JEaWt1gNRbAz2iSZeiDHtGsr2HkUSMEw
-        1V7xjj6F5QAmCCi7lfudcQ==
-X-Google-Smtp-Source: APiQypLSWgq5+Oay+HnD2z30chqUL/969npxbmRPrn1Thwb26z2ngIk97YEqxzAvB6hlSpP74HHRRQ==
-X-Received: by 2002:aca:2209:: with SMTP id b9mr15742070oic.117.1589337671421;
-        Tue, 12 May 2020 19:41:11 -0700 (PDT)
+        bh=2bMFR9ZrgzOQlH0FlvnvdFeLoRnipB/ORGSjRz0EVps=;
+        b=iV305tQZ6TmyhB2c9kBH2Z1qRXsD3Xuju30Kb3u5+AhvqVDjyDoup7p3iWfHcpoih4
+         QmBcXHob3WyGUl7ZpmDHUjYXWs9UbBqur5li52P+FypUcJG/Bpjx4fd9a0OxRQ2tpxsz
+         peljOWmj5D7lzy8zGM8ucwWYpvrWnILaFgbDdHOwpWoV4LjZyiuLb0IKTQG8qkxGxfzz
+         dVWRNZp5FFBb+KQx3/SbrTBH7Q802jhJ9JHrMk/jwoPji6ttoNtXumAGn5kyasqiOLwv
+         Oa1hAS2VTT3KYIWHSJLr0GRoD3FwVrEdCo6u9XI0A7KcTPMKjj3SvS/kuICkg4SdFJmp
+         SqPg==
+X-Gm-Message-State: AGi0Pubv3oshbafhRyTPiOTBq2pc+xDq62VHeaa57mbM4vfbqCM4NXmn
+        bNb8QAAGqNd6EfIN0eZDUQ==
+X-Google-Smtp-Source: APiQypLBEyIuv7R37kJCZ3zR8tQwf7xBblI1Bgjqy2437+/2qxUEX5u/run7rNEJgzhwZrmLw59oHQ==
+X-Received: by 2002:a9d:d07:: with SMTP id 7mr19762517oti.338.1589337753062;
+        Tue, 12 May 2020 19:42:33 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j23sm58681otl.64.2020.05.12.19.41.09
+        by smtp.gmail.com with ESMTPSA id f20sm3920467otp.61.2020.05.12.19.42.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 19:41:10 -0700 (PDT)
-Received: (nullmailer pid 2185 invoked by uid 1000);
-        Wed, 13 May 2020 02:41:09 -0000
-Date:   Tue, 12 May 2020 21:41:09 -0500
+        Tue, 12 May 2020 19:42:32 -0700 (PDT)
+Received: (nullmailer pid 5606 invoked by uid 1000);
+        Wed, 13 May 2020 02:42:30 -0000
+Date:   Tue, 12 May 2020 21:42:30 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 02/11] dt-bindings: new: add yaml bindings for MediaTek
- Ethernet MAC
-Message-ID: <20200513024109.GA29703@bogus>
-References: <20200505140231.16600-1-brgl@bgdev.pl>
- <20200505140231.16600-3-brgl@bgdev.pl>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
+        pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org, keescook@chromium.org, anton@enomsg.org,
+        ccross@android.com, tony.luck@intel.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] ramoops: add max_reason optional field to ramoops
+ DT node
+Message-ID: <20200513024230.GA3514@bogus>
+References: <20200505154510.93506-1-pasha.tatashin@soleen.com>
+ <20200505154510.93506-6-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505140231.16600-3-brgl@bgdev.pl>
+In-Reply-To: <20200505154510.93506-6-pasha.tatashin@soleen.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 05, 2020 at 04:02:22PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, May 05, 2020 at 11:45:10AM -0400, Pavel Tatashin wrote:
+> Currently, it is possible to dump kmsges for panic, or oops.
+> With max_reason it is possible to dump messages for other
+> kmesg_dump events, for example reboot, halt, shutdown, kexec.
 > 
-> This adds yaml DT bindings for the MediaTek Ethernet MAC present on the
-> mt8* family of SoCs.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 > ---
->  .../bindings/net/mediatek,eth-mac.yaml        | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
+>  .../devicetree/bindings/reserved-memory/ramoops.txt    | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml b/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
-> new file mode 100644
-> index 000000000000..7682fe9d8109
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/mediatek,eth-mac.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek Ethernet MAC Controller
-> +
-> +maintainers:
-> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> +
-> +description:
-> +  This Ethernet MAC is used on the MT8* family of SoCs from MediaTek.
-> +  It's compliant with 802.3 standards and supports half- and full-duplex
-> +  modes with flow-control as well as CRC offloading and VLAN tags.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt8516-eth
-> +      - mediatek,mt8518-eth
-> +      - mediatek,mt8175-eth
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 3
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    additionalItems: false
-> +    items:
-> +      - const: core
-> +      - const: reg
-> +      - const: trans
-> +
-> +  mediatek,pericfg:
-> +    $ref: /schemas/types.yaml#definitions/phandle
-> +    description:
-> +      Phandle to the device containing the PERICFG register range.
+> diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+> index 0eba562fe5c6..886cff15d822 100644
+> --- a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+> +++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+> @@ -30,7 +30,7 @@ Optional properties:
+>  - ecc-size: enables ECC support and specifies ECC buffer size in bytes
+>    (defaults to 0: no ECC)
+>  
+> -- record-size: maximum size in bytes of each dump done on oops/panic
+> +- record-size: maximum size in bytes of each kmsg dump.
+>    (defaults to 0: disabled)
+>  
+>  - console-size: size in bytes of log buffer reserved for kernel messages
+> @@ -45,7 +45,13 @@ Optional properties:
+>  - unbuffered: if present, use unbuffered mappings to map the reserved region
+>    (defaults to buffered mappings)
+>  
+> -- no-dump-oops: if present, only dump panics (defaults to panics and oops)
+> +- max_reason: maximum reason for kmsg dump. Defaults to 2 (dump oops and
 
-Perhaps say what it is used for?
+max-reason
 
+> +  panics). Can be set to INT_MAX to dump for all reasons. See
+> +  include/linux/kmsg_dump.h KMSG_DUMP_* for other kmsg dump values.
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - mediatek,pericfg
-> +  - phy-handle
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/mt8516-clk.h>
-> +
-> +    ethernet: ethernet@11180000 {
-> +        compatible = "mediatek,mt8516-eth";
-> +        reg = <0 0x11180000 0 0x1000>;
-
-Default addr and size is 1 cell.
-
-> +        mediatek,pericfg = <&pericfg>;
-> +        interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_LOW>;
-> +        clocks = <&topckgen CLK_TOP_RG_ETH>,
-> +                 <&topckgen CLK_TOP_66M_ETH>,
-> +                 <&topckgen CLK_TOP_133M_ETH>;
-> +        clock-names = "core", "reg", "trans";
-> +        phy-handle = <&eth_phy>;
-> +        phy-mode = "rmii";
-> +
-> +        mdio {
-
-Not documented.
-
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            eth_phy: ethernet-phy@0 {
-> +                reg = <0>;
-> +            };
-> +        };
-> +    };
+> +- no-dump-oops: deprecated, use max_reason instead.
+> +  if present, and max_reason is not specified is equivalent to
+> +  max_reason = 1 (KMSG_DUMP_PANIC).
+>  
+>  - flags: if present, pass ramoops behavioral flags (defaults to 0,
+>    see include/linux/pstore_ram.h RAMOOPS_FLAG_* for flag values).
 > -- 
-> 2.25.0
+> 2.25.1
 > 
