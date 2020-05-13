@@ -2,167 +2,136 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC39DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 19:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2073AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 20:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB132065C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 19:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50DF206A5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 20:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kf3uoBcY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nMo2mfTP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390443AbgEMTmi (ORCPT
+        id S2390858AbgEMUPd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 15:42:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57296 "EHLO
+        Wed, 13 May 2020 16:15:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387616AbgEMTmh (ORCPT
+        by vger.kernel.org with ESMTP id S2390352AbgEMUPc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 15:42:37 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D13DC061A0C;
-        Wed, 13 May 2020 12:42:37 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id w6so944948ilg.1;
-        Wed, 13 May 2020 12:42:37 -0700 (PDT)
+        Wed, 13 May 2020 16:15:32 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C884EC061A0E
+        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 13:15:32 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id fu13so11465593pjb.5
+        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 13:15:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uINUBH0b67t7eYaVdOESIaSo4GsnVh3MgDPLeaDlYvQ=;
-        b=kf3uoBcYAc8ZC02QIDPCZgxdfnLlHom1piA05+woOCC7646WUcvJ+cpVUT/csrQsC/
-         K/Q/ItYqAVNA+MvlSbTTSylkjRMbx5p2+XF/xfpHae7fMmWKefe6OzozeTVXKtXARI8R
-         4jHdVNe1kTp+adyHo8sPZ5i5SYQZGdfp6OlGTwxGZmHbJOCMCz+3pfsBawlydtRcD1oA
-         Jssx4Bxz9oR1XBNMmzjPvnH4ymFhXKDluPKwv9pY179jlyO0xqcRB3Uam2qOVlF90jE7
-         v7zbAt2fz9Ud/2LaJgZ3pyWdymGut2f6EK1CcME0HM539KjbhJWqgYT6bBfuRfCv2Pak
-         12vA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Gcu03BapccXbGC0ugrF7HAKsX8s/rikPdyRfZ2v+7/A=;
+        b=nMo2mfTPsCwPQuL3Wy/MlcZIMWxFkdw9LhCDLY5nhwMM21OCJKIkBr/jaFfSBwIN1Y
+         akIlzTecdhLNLgKpEWYDBQ0mN/XX7L2NRzU4azhQL5vDsth352qYFB19f+vz5xYZdL9J
+         F/FtSTYPzv3A5YmLLP2aadn9GW2+VRNqnIS0I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uINUBH0b67t7eYaVdOESIaSo4GsnVh3MgDPLeaDlYvQ=;
-        b=FPAdI3qSGkxJT8MdLWlf7JR7Y8PWtLmaCNnQEMACiT6GwyQ/alkTlle4kMBZTF5Q5T
-         /QJXSdMU9IB1/7lDhGQCLDdu+m4L/XApOJmxqjzIfAfZEOlPdtPlAWhGvaTK4KdbIT9d
-         rmamaQ66Qs5pIiVYyq+UlCCjb/Z1T9vStQqOq3RkPq5Ww4qsNqxMhgcId/7EG2mQBMnB
-         lQTZaPmCV4YClRmDrRl3BWvswpMAvO1+m6ElS3qtGFc5BssmrvvgwcVkPaSEXuOBnGtb
-         nyNn6RFr3tg5ww+qvhvSOokP+65FF4/WqcXQXS1AxD4wtc0faRc1zvZ5maswPdRuTRs/
-         Z+Dg==
-X-Gm-Message-State: AOAM530qBWYzaHJmGYm3mWgX/vrTkrSzD0hayblrXwUeuT0GZZ/1+m5o
-        qqVTvuDF/DRN/3KOq8kE6mSDWUqcGDuhDet/uW+/Jstn
-X-Google-Smtp-Source: ABdhPJxTm1xgroYc2W51c5QCs9n6y0TBHp/24L3n0o5XMr5msuOmG19W+7cwoNcXSsf3jT3rkp/YlZAYEsp+LWW0+VU=
-X-Received: by 2002:a92:6c0b:: with SMTP id h11mr1024982ilc.158.1589398956864;
- Wed, 13 May 2020 12:42:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200512150019.25903-1-alcooperx@gmail.com> <20200512150019.25903-2-alcooperx@gmail.com>
- <20200513122613.GA1023594@kroah.com> <7acc2a4c-caab-11e7-7b3f-4176f19c58cf@gmail.com>
- <20200513162723.GF1362525@kroah.com> <38ff034d-a84c-2309-a8d5-f344930d9a31@gmail.com>
- <20200513170505.GB1369204@kroah.com> <20200513173920.GA2862@rowland.harvard.edu>
- <c0642cf4-1436-aec4-96fd-355a897f6418@gmail.com>
-In-Reply-To: <c0642cf4-1436-aec4-96fd-355a897f6418@gmail.com>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Wed, 13 May 2020 15:42:25 -0400
-Message-ID: <CAOGqxeU=LjAmAYR9wGeKZo_eLj+ehkrANTM+04E7xWNAp82EJA@mail.gmail.com>
-Subject: Re: [PATCH v10 1/5] usb: xhci: Change the XHCI link order in the Makefile
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Gcu03BapccXbGC0ugrF7HAKsX8s/rikPdyRfZ2v+7/A=;
+        b=R4nQyikiwRlrEhOMT0kXmoT3AhxZklEgNJsX65Emqsc81KDVa5XsbUFvCzR1mvJ5p3
+         grQgc5kpaVsxmpCVyPmm/RV8CHMWVy6COPqH+wra9COl+1KmGRkUsRfbIAKTwhppDLSi
+         LWl13NMovngIR6XQCV1iGOu5W3KSBVniW1+P6bPSx2A8VMKnqV2OV51IPGtEbhSlqvWU
+         AEd6qoA3mbVxgKAEteYBr9BmT68JBCgukI9aWIq7YVVxlKfCqudXCL45bESV2Iqj11T4
+         dfjN+huRhsD96SyzxGqIcwFgo/lkcxBcAvumQ3HUzpWnFJwEOnf2fMVrpPgPW9WcqOp5
+         LgpQ==
+X-Gm-Message-State: AGi0PubBtChTE6pkBzEK1rL2NErmd+EF4oLSu34Vy4tza2s/rIRCkS/D
+        PLmNjs3m8Pl6csHtvOfux48Qnw==
+X-Google-Smtp-Source: APiQypLWtkrar0+R60VQFnxu1If/r6w1THO5SU46GXyv2coXCgkwRIlLIk7e/Jx6iO/X9WDaTCI0SQ==
+X-Received: by 2002:a17:90a:cb86:: with SMTP id a6mr37392232pju.127.1589400932263;
+        Wed, 13 May 2020 13:15:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y16sm355662pfp.45.2020.05.13.13.15.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 13:15:30 -0700 (PDT)
+Date:   Wed, 13 May 2020 13:15:29 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Petr Mladek <pmladek@suse.com>, Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
+Message-ID: <202005131315.5CEA90C@keescook>
+References: <20200506211523.15077-1-keescook@chromium.org>
+ <20200512131655.GE17734@linux-b0ei>
+ <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
+ <20200512155207.GF17734@linux-b0ei>
+ <202005121111.6BECC45@keescook>
+ <20200513073448.GG7340@linux-b0ei>
+ <202005130045.EF013D12E@keescook>
+ <CA+CK2bAPv5u1ih5y9t5FUnTyximtFCtDYXJCpuyjOyHNOkRdqw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+CK2bAPv5u1ih5y9t5FUnTyximtFCtDYXJCpuyjOyHNOkRdqw@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 1:46 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 5/13/2020 10:39 AM, Alan Stern wrote:
-> > On Wed, May 13, 2020 at 07:05:05PM +0200, Greg Kroah-Hartman wrote:
-> >> On Wed, May 13, 2020 at 09:31:11AM -0700, Florian Fainelli wrote:
-> >>>
-> >>>
-> >>> On 5/13/2020 9:27 AM, Greg Kroah-Hartman wrote:
-> >>>> On Wed, May 13, 2020 at 08:08:07AM -0700, Florian Fainelli wrote:
-> >>>>>
-> >>>>>
-> >>>>> On 5/13/2020 5:26 AM, Greg Kroah-Hartman wrote:
-> >>>>>> On Tue, May 12, 2020 at 11:00:15AM -0400, Al Cooper wrote:
-> >>>>>>> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
-> >>>>>>> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
-> >>>>>>> devices and OHCI handles <2.0 devices. Currently the Makefile
-> >>>>>>> has XHCI linking at the bottom which will result in the XHIC driver
-> >>>>>>> initalizing after the EHCI and OHCI drivers and any installed 3.0
-> >>>>>>> device will be seen as a 2.0 device. Moving the XHCI linking
-> >>>>>>> above the EHCI and OHCI linking fixes the issue.
-> >>>>>>
-> >>>>>> What happens if all of these are modules and they are loaded in a
-> >>>>>> different order?  This makefile change will not help with that, you need
-> >>>>>> to have logic in the code in order to properly coordinate this type of
-> >>>>>> mess, sorry.
-> >>>>>
-> >>>>> I believe we should be using module soft dependencies to instruct the
-> >>>>> module loaders to load the modules in the correct order, so something
-> >>>>> like this would do (not tested) for xhci-plat-hcd.c:
-> >>>>>
-> >>>>> MODULE_SOFTDEP("post: ehci-hcd ohci-hcd");
-> >>>>>
-> >>>>> and I am not sure whether we need to add the opposite for ehci-hcd and
-> >>>>> ohci-hcd:
-> >>>>>
-> >>>>> MODULE_SOFTDEP("pre: xhci-plat-hcd");
-> >>>>
-> >>>> That's a nice start, but what happens if that isn't honored?  This
-> >>>> really needs to work properly for any order as you never can guarantee
-> >>>> module/driver loading order in a system of modules.
-> >>>
-> >>> I also suggested that device links may help, though I am not sure. What
-> >>> do you suggest to be done?
-> >>
-> >> No idea.  device links will help if you defer the probe properly until
-> >> you see the proper drivers binding correctly.
+On Wed, May 13, 2020 at 10:35:16AM -0400, Pavel Tatashin wrote:
+> > >   + reason: panic, oops, emergency, shutdown    (ordered by severity)
+> > >   + handling: restart, halt, poweroff
+> > >
+> > > Or we might just replace KMSG_DUMP_RESTART, KMSG_DUMP_HALT,
+> > > KMSG_DUMP_POWEROFF with a single KMSG_DUMP_SHUTDOWN.
+> > >
+> > > Then the max reason variable would make sense.
 > >
-> > I suspect that in general there is no way to do this properly.
+> > That would work for me, yeah. Pavel, is that enough granularity for you?
 > >
-> > We can't modify ehci-hcd and ohci-hcd to make them wait.  In fact, for
-> > all they know, xhci-hcd will _never_ be loaded.
-> >
-> > One thing that might be possible (although not all platforms may support
-> > it) is if xhci-hcd could somehow disconnect all devices attached to a
-> > peer port when it starts up.  But that would be disruptive to any
-> > devices that aren't USB-3.
-> >
-> > We faced a very similar ordering problem between ehci-hcd and
-> > [ou]hci-hcd many years ago, and we never found a good solution.
-> > We did arrange the link order so that ehci-hcd precedes the others, and
-> > we added a warning message to ehci-hcd which gets printed if the module
-> > initialization routine runs after [ou]hci-hcd is loaded.  Also, there
-> > are MODULE_SOFTDEP lines in ohci-pci.c and uhci-pci.c.
->
-> Given that these modules are used on specific SoC platforms, where we
-> usually provide a reference implementation of user space and kernel
-> space and documentation, it seems to me that the MODULE_SOFTDEP(),
-> despite being a hint and best effort from user space module loaders is
-> probably acceptable.
-> --
-> Florian
+> 
+> Yes, I like the second approach: where we combine all shutdown type
+> events into a single type.
+> max_reason will have 4 levels:
+> 
+>    KMSG_DUMP_PANIC,
+>    KMSG_DUMP_OOPS,
+>    KMSG_DUMP_EMERG,
+>    KMSG_DUMP_SHUTDOWN,
+> 
+> If needed it is possible to determine from dmesg logs what kind of
+> shutdown was taken, because there is a message logged right before
+> every kmsg_dump() for these events:
+> 
+> 249   if (!cmd)
+> 250   pr_emerg("Restarting system\n");
+> 251   else
+> 252   pr_emerg("Restarting system with command '%s'\n", cmd);
+> 253   kmsg_dump(KMSG_DUMP_RESTART);
+> 
+> 276   pr_emerg("System halted\n");
+> 277   kmsg_dump(KMSG_DUMP_HALT);
+> 
+> 294   pr_emerg("Power down\n");
+> 295   kmsg_dump(KMSG_DUMP_POWEROFF);
+> 
+> Kees, I will submit a new series with these changes soon.
 
-What I found in the past is that things work. For example if the ehci
-driver starts first, the USB device will come up as a 2.0 device and
-when the XHCI driver comes up the device will switch to 3.0. I've see
-the same thing happen if OHCI starts before EHCI. It's just that there
-are some poorly behaved USB devices that have trouble with this.
+Great; thanks!
 
-Al
+-Kees
+
+-- 
+Kees Cook
