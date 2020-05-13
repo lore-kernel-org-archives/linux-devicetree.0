@@ -2,123 +2,129 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3656C2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 07:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FDBC2D0FD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 07:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE2AE206F5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 07:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33590206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 07:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7NxJ5me"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KvbUf9n7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgEMHpK (ORCPT
+        id S1729337AbgEMHrM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 03:45:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58036 "EHLO
+        Wed, 13 May 2020 03:47:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728905AbgEMHpJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 03:45:09 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8449CC061A0C;
-        Wed, 13 May 2020 00:45:08 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id b8so7403481pgi.11;
-        Wed, 13 May 2020 00:45:08 -0700 (PDT)
+        with ESMTP id S1729060AbgEMHrM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 03:47:12 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082DEC061A0F
+        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 00:47:11 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t11so7426701pgg.2
+        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 00:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=H65Vxu253kb3zW5OLT3gqxYyLx+OY58AmrFPbg1BtQ4=;
-        b=G7NxJ5mehnMYlEkMa3a29ghSVoJRGjhjmf8xIlvmrFbJEIKb3mRhE30cyNyB19m3cw
-         XeqIrzewNcYkLpzKPHAp2pHdPUQRm8rV3JdlbpIleIZNk7XmHgdRcq9MTkRPa5KL1Zj/
-         bqyKIpWZX+DFYSuGd3kjGWvDD4Oul3E5sLQvSMDljrHiKm7hcY3iL4csf5CpXfSNDPo8
-         5GHvjJEPdMEsiYSOmoUCwhAqSOLn8j8ssHto6wstiEf3WwWjaHT26KOqSH7m8zmbsnoq
-         82dzbBUe7hJGWPGJaQQic71EMwOk5VB04q47ho9D33b/SDMizL3cZZjVN5FgCJ5U9PHI
-         waTw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Knn0jf0/vclS0Ugurfak7uxD0jycVtPvhoKug+BNtc8=;
+        b=KvbUf9n7O1VSTSebKcFo14zCjmdMbhsq8ZWvqNyxzkE8949GHFqBUZayBMdjhqgFlB
+         xn1CV9cIdzasYxiGE0WmehiVhnd6ovEQwElhi00QZk2giKfc1FY5je+pPT4PlO8hMxqu
+         tnZjtU94cdMBgnqy4W4xP44dLPh+t7uUbutn8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=H65Vxu253kb3zW5OLT3gqxYyLx+OY58AmrFPbg1BtQ4=;
-        b=Sk2wEysGmDgnmcSkXZOO2G62GCq0MQUnBt1OPsSVu+FzZEHwOOZBfgwvmZi3/QQ8Zj
-         Ht+l1D5HJsCPpaBhhNiLrbBxVhkCiH5a4LWi10sdb+/HE+ocKBo3JyW6QgqYzNupdHVy
-         f0iBwDbh3Rc0ccL5U4pNbwIKIGl+OU+7DtbVju0dd1D386/B5NybOM/M07rFBQn26ogM
-         Un4DXg9ZawnZx8+NwyxLfYfsSultb2TwsEWFqnftyAI+aSDfRJgEmFiHqx8yQ6WK87hI
-         rLgxuYCByPf0SnBdimz3zhZcIp7kXZd5+NR8fqwxDYGg3lwgJeECvnv3lboOWJBNeW0Z
-         +/sg==
-X-Gm-Message-State: AGi0Pub2kdp0qDmhI2Yp4e3Zaslvmxb47FTFs21Zsq1E1+koPbUKDhFk
-        xKNpPlGjRwSuPgdcQsjIykM=
-X-Google-Smtp-Source: APiQypIER4ye/hOz4oLh6skERHRUkzmMFbigD5b/Te7MST5tFsN6gh4pp6TGiqHg49eP8ruTP9JQCg==
-X-Received: by 2002:a63:d64:: with SMTP id 36mr17709173pgn.143.1589355908024;
-        Wed, 13 May 2020 00:45:08 -0700 (PDT)
-Received: from localhost.localdomain ([2001:2d8:eb02:505a:d5fe:3ea6:5791:c8e8])
-        by smtp.gmail.com with ESMTPSA id v3sm2740091pfv.186.2020.05.13.00.45.03
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Knn0jf0/vclS0Ugurfak7uxD0jycVtPvhoKug+BNtc8=;
+        b=arq5ui53IPh7Tt93Aa1CVDnVapKCB0+lcF/5NmVqyJyuvQoJsDdtSFgpCOsbXlP8Xc
+         NJrIZlWv656nHEUeE8615UIN7qekt4xIRzX1XrGX9JIcFTjucgF+qGKq0dH9FdyeoviV
+         lWndkcp85y9f3H+uTQo70ySZosPC1eXg6BaKe9Akz0c4tE7MylVP/7ro3jmksQLVp12l
+         vmsjFxgUPfdbx2cMfiVo4BR7sGDH/YYX7kiQ3Q6Evd8+DWB06V4CSmZN4YUBQvoHOqMP
+         7h14Y4saEonaMMSTwvU5/m7IKXA4ZaPffLkExw3v6xxbypJZI40Q2y40qQUICXYko90w
+         bhhw==
+X-Gm-Message-State: AGi0PuZeF84LjxcBlGgFu2/gN5FYJTYx6mMVXF/XGBNmb+B7Ttk47jaM
+        UgoP1JM4cQJvRj1iUK07tx86oQ==
+X-Google-Smtp-Source: APiQypIOFJRoYFPckLNU7gCMIEAOvHkJqV8/zbo2htRrA5RmROIhxl9oM/nTS9P72UyT7EVbGgOvlg==
+X-Received: by 2002:a62:144b:: with SMTP id 72mr25566659pfu.246.1589356030444;
+        Wed, 13 May 2020 00:47:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m63sm14307808pfb.101.2020.05.13.00.47.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 00:45:07 -0700 (PDT)
-From:   Steve Lee <steves.lee.maxim@gmail.com>
-X-Google-Original-From: Steve Lee <steves.lee@maximintegrated.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
-        steves.lee@maximintegrated.com, steves.lee.maxim@gmail.com
-Subject: [V3 PATCH 1/2] dt-bindings: Added device tree binding for max98390
-Date:   Wed, 13 May 2020 16:44:23 +0900
-Message-Id: <20200513074423.21034-1-steves.lee@maximintegrated.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 13 May 2020 00:47:09 -0700 (PDT)
+Date:   Wed, 13 May 2020 00:47:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
+Message-ID: <202005130045.EF013D12E@keescook>
+References: <20200506211523.15077-1-keescook@chromium.org>
+ <20200512131655.GE17734@linux-b0ei>
+ <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
+ <20200512155207.GF17734@linux-b0ei>
+ <202005121111.6BECC45@keescook>
+ <20200513073448.GG7340@linux-b0ei>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513073448.GG7340@linux-b0ei>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for DT binding of max98390 amplifier driver.
+On Wed, May 13, 2020 at 09:34:49AM +0200, Petr Mladek wrote:
+> On Tue 2020-05-12 11:45:54, Kees Cook wrote:
+> > Here are the problems I see being solved by this:
+> > 
+> > - lifting kmsg dump reason filtering out of the individual pstore
+> >   backends and making it part of the "infrastructure", so that
+> >   there is a central place to set expectations. Right now there
+> >   is a mix of explicit and implicit kmsg dump handling:
+> > 
+> >   - arch/powerpc/kernel/nvram_64.c has a hard-coded list
+> 
+> It handles restart, halt, poweroff the same way.  I wonder if anyone
+> would want to distinguish them.
+> 
+> >   - drivers/firmware/efi/efi-pstore.c doesn't expect anything but
+> >     OOPS and PANIC.
+> >   - drivers/mtd/mtdoops.c tries to filter using its own dump_oops
+> >     and doesn't expect anything but OOPS and PANIC.
+> >   - fs/pstore/ram.c: has a hard-coded list and uses its own
+> >     dump_oops.
+> >   - drivers/mtd/mtdpstore.c (under development[3]) expected only
+> >     OOPS and PANIC and had its own dump_oops.
+> 
+> The others handle only panic or oops.
+> 
+> What about splitting the reason into two variables? One for severity
+> and other for shutdown behavior. I mean:
+> 
+>   + reason: panic, oops, emergency, shutdown    (ordered by severity)
+>   + handling: restart, halt, poweroff
+> 
+> Or we might just replace KMSG_DUMP_RESTART, KMSG_DUMP_HALT,
+> KMSG_DUMP_POWEROFF with a single KMSG_DUMP_SHUTDOWN.
+> 
+> Then the max reason variable would make sense.
 
-Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
----
+That would work for me, yeah. Pavel, is that enough granularity for you?
 
-Changed since V2:
-	* No changes.
-Changed since V1:
-	* Modified sample text in example
-
- .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
-new file mode 100644
-index 000000000000..0ddd4c6ae55e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/max98390.txt
-@@ -0,0 +1,26 @@
-+Maxim Integrated MAX98390 Speaker Amplifier
-+
-+This device supports I2C.
-+
-+Required properties:
-+
-+ - compatible : "maxim,max98390"
-+
-+ - reg : the I2C address of the device.
-+
-+Optional properties:
-+
-+- maxim,temperature_calib
-+  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
-+
-+- maxim,r0_calib
-+  u32. This is r0 calibration data which was measured in factory mode.
-+
-+Example:
-+
-+codec: max98390@38 {
-+	compatible = "maxim,max98390";
-+	reg = <0x38>;
-+	maxim,temperature_calib = <1024>;
-+	maxim,r0_calib = <100232>;
-+};
 -- 
-2.17.1
-
+Kees Cook
