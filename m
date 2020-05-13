@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC87C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1E4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8AC2065C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5048320708
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390365AbgEMS4d (ORCPT
+        id S2390401AbgEMS4g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 14:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49932 "EHLO
+        Wed, 13 May 2020 14:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390361AbgEMS4d (ORCPT
+        by vger.kernel.org with ESMTP id S2390393AbgEMS4g (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 14:56:33 -0400
+        Wed, 13 May 2020 14:56:36 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38190C061A0C;
-        Wed, 13 May 2020 11:56:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED23C061A0F;
+        Wed, 13 May 2020 11:56:35 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id D71732A251E
+        with ESMTPSA id 68B3D2A28F8
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 6A140480100; Wed, 13 May 2020 20:56:29 +0200 (CEST)
+        id 80A39480108; Wed, 13 May 2020 20:56:29 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,9 +37,9 @@ To:     Sebastian Reichel <sre@kernel.org>,
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1 02/19] power: supply: core: add capacity error margin property
-Date:   Wed, 13 May 2020 20:55:58 +0200
-Message-Id: <20200513185615.508236-3-sebastian.reichel@collabora.com>
+Subject: [PATCHv1 10/19] power: supply: sbs-battery: Improve POWER_SUPPLY_PROP_TECHNOLOGY support
+Date:   Wed, 13 May 2020 20:56:06 +0200
+Message-Id: <20200513185615.508236-11-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
 References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
@@ -50,66 +50,96 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a property for reporting the error margin expected
-by fuel gauge chips.
+This reads the battery chemistry from the battery chip instead
+of incorrectly hardcoding the type to be Li-Ion.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- Documentation/ABI/testing/sysfs-class-power | 15 +++++++++++++++
- drivers/power/supply/power_supply_sysfs.c   |  1 +
- include/linux/power_supply.h                |  1 +
- 3 files changed, 17 insertions(+)
+ drivers/power/supply/sbs-battery.c | 43 ++++++++++++++++++++++++++++--
+ 1 file changed, 41 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index bf3b48f022dc..2f896555ae23 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -74,6 +74,21 @@ Description:
- 		Access: Read, Write
- 		Valid values: 0 - 100 (percent)
+diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
+index 611a11385496..b697a42d9ccf 100644
+--- a/drivers/power/supply/sbs-battery.c
++++ b/drivers/power/supply/sbs-battery.c
+@@ -43,6 +43,7 @@ enum {
+ 	REG_DESIGN_CAPACITY_CHARGE,
+ 	REG_DESIGN_VOLTAGE_MIN,
+ 	REG_DESIGN_VOLTAGE_MAX,
++	REG_CHEMISTRY,
+ 	REG_MANUFACTURER,
+ 	REG_MODEL_NAME,
+ };
+@@ -133,7 +134,9 @@ static const struct chip_data {
+ 	[REG_MANUFACTURER] =
+ 		SBS_DATA(POWER_SUPPLY_PROP_MANUFACTURER, 0x20, 0, 65535),
+ 	[REG_MODEL_NAME] =
+-		SBS_DATA(POWER_SUPPLY_PROP_MODEL_NAME, 0x21, 0, 65535)
++		SBS_DATA(POWER_SUPPLY_PROP_MODEL_NAME, 0x21, 0, 65535),
++	[REG_CHEMISTRY] =
++		SBS_DATA(POWER_SUPPLY_PROP_TECHNOLOGY, 0x22, 0, 65535)
+ };
  
-+What:		/sys/class/power_supply/<supply_name>/capacity_error_margin
-+Date:		April 2019
-+Contact:	linux-pm@vger.kernel.org
-+Description:
-+		Battery capacity measurement becomes unreliable without
-+		recalibration. This values provides the maximum error
-+		margin expected to exist by the fuel gauge in percent.
-+		Values close to 0% will be returned after (re-)calibration
-+		has happened. Over time the error margin will increase.
-+		100% means, that the capacity related values are basically
-+		completely useless.
+ static enum power_supply_property sbs_properties[] = {
+@@ -185,6 +188,7 @@ struct sbs_info {
+ 
+ static char model_name[I2C_SMBUS_BLOCK_MAX + 1];
+ static char manufacturer[I2C_SMBUS_BLOCK_MAX + 1];
++static char chemistry[I2C_SMBUS_BLOCK_MAX + 1];
+ static bool force_load;
+ 
+ static int sbs_update_presence(struct sbs_info *chip, bool is_present)
+@@ -636,6 +640,38 @@ static int sbs_get_property_index(struct i2c_client *client,
+ 	return -EINVAL;
+ }
+ 
++static int sbs_get_chemistry(struct i2c_client *client,
++		union power_supply_propval *val)
++{
++	enum power_supply_property psp = POWER_SUPPLY_PROP_TECHNOLOGY;
++	int ret;
 +
-+		Access: Read
-+		Valid values: 0 - 100 (percent)
++	ret = sbs_get_property_index(client, psp);
++	if (ret < 0)
++		return ret;
 +
- What:		/sys/class/power_supply/<supply_name>/capacity_level
- Date:		June 2009
- Contact:	linux-pm@vger.kernel.org
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index d21b4e0edf38..e664774a2d1e 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -178,6 +178,7 @@ static struct power_supply_attr power_supply_attrs[] = {
- 	POWER_SUPPLY_ATTR(CAPACITY),
- 	POWER_SUPPLY_ATTR(CAPACITY_ALERT_MIN),
- 	POWER_SUPPLY_ATTR(CAPACITY_ALERT_MAX),
-+	POWER_SUPPLY_ATTR(CAPACITY_ERROR_MARGIN),
- 	POWER_SUPPLY_ENUM_ATTR(CAPACITY_LEVEL),
- 	POWER_SUPPLY_ATTR(TEMP),
- 	POWER_SUPPLY_ATTR(TEMP_MAX),
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 1f60731ec7fe..453a85f25635 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -139,6 +139,7 @@ enum power_supply_property {
- 	POWER_SUPPLY_PROP_CAPACITY, /* in percents! */
- 	POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN, /* in percents! */
- 	POWER_SUPPLY_PROP_CAPACITY_ALERT_MAX, /* in percents! */
-+	POWER_SUPPLY_PROP_CAPACITY_ERROR_MARGIN, /* in percents! */
- 	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
- 	POWER_SUPPLY_PROP_TEMP,
- 	POWER_SUPPLY_PROP_TEMP_MAX,
++	ret = sbs_get_battery_string_property(client, ret, psp,
++					      chemistry);
++	if (ret < 0)
++		return ret;
++
++	if (!strncasecmp(chemistry, "LION", 4))
++		val->intval = POWER_SUPPLY_TECHNOLOGY_LION;
++	else if (!strncasecmp(chemistry, "LiP", 3))
++		val->intval = POWER_SUPPLY_TECHNOLOGY_LIPO;
++	else if (!strncasecmp(chemistry, "NiCd", 4))
++		val->intval = POWER_SUPPLY_TECHNOLOGY_NiCd;
++	else if (!strncasecmp(chemistry, "NiMH", 4))
++		val->intval = POWER_SUPPLY_TECHNOLOGY_NiMH;
++	else
++		val->intval = POWER_SUPPLY_TECHNOLOGY_UNKNOWN;
++
++	if (val->intval == POWER_SUPPLY_TECHNOLOGY_UNKNOWN)
++		dev_warn(&client->dev, "Unknown chemistry: %s\n", chemistry);
++
++	return 0;
++}
++
+ static int sbs_get_property(struct power_supply *psy,
+ 	enum power_supply_property psp,
+ 	union power_supply_propval *val)
+@@ -673,7 +709,10 @@ static int sbs_get_property(struct power_supply *psy,
+ 		break;
+ 
+ 	case POWER_SUPPLY_PROP_TECHNOLOGY:
+-		val->intval = POWER_SUPPLY_TECHNOLOGY_LION;
++		ret = sbs_get_chemistry(client, val);
++		if (ret < 0)
++			break;
++
+ 		goto done; /* don't trigger power_supply_changed()! */
+ 
+ 	case POWER_SUPPLY_PROP_ENERGY_NOW:
 -- 
 2.26.2
 
