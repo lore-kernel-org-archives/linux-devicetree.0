@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C049C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 21:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BE0C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 21:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDC720675
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 21:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D19205ED
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 21:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="NRRp3FXF"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="jwel8EOt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbgEMVY6 (ORCPT
+        id S1729006AbgEMVZB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 17:24:58 -0400
-Received: from vps.xff.cz ([195.181.215.36]:33780 "EHLO vps.xff.cz"
+        Wed, 13 May 2020 17:25:01 -0400
+Received: from vps.xff.cz ([195.181.215.36]:33876 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbgEMVY5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 17:24:57 -0400
+        id S1728691AbgEMVY7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 17:24:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1589405095; bh=gvSRm0rmQ7W+MSQqWiSzV31k3+eFDx+2BX8HfaNKv+o=;
+        t=1589405097; bh=dAtOpoYajZP7C0pqSSKpj9PSQkj8wPGyufOsCnWHi+I=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=NRRp3FXFRr6+JDPCv93mEyKR4cWbL4cCSQmwvGLKLoduDFsYwh1vOTtJUq0XlbHm+
-         Zg6KGIJ9ii8UQlUxsPRjV89ludJxM3Sv3jaQNfrMN5F/XTQ7UqrAcorWf9Ptjg887M
-         QOnxFZhPb5rKTwnEdCHYBtin7lFc72rVfcSRPGu8=
+        b=jwel8EOthc8Nk5hqZACkDug6Vh+fBrG5B+CM1pAJr5awcf+Vv60s7JQN/muNtC2p5
+         m4pgb1D2FllBTyO06nOCgwzfm9odoyqlaNMVbCK9rrnKV2Of0UHjRlXasxmjdrxgMZ
+         TSW+cChDYyqg/omHwxLV0dVwvNR++GbkrxTGpu6o=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -39,14 +39,15 @@ To:     linux-sunxi@googlegroups.com,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Icenowy Zheng <icenowy@aosc.io>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>, Ondrej Jirman <megous@megous.com>
-Subject: [PATCH v3 2/5] dt-bindings: panel: Add binding for Xingbangda XBD599 panel
-Date:   Wed, 13 May 2020 23:24:48 +0200
-Message-Id: <20200513212451.1919013-3-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>
+Subject: [PATCH v3 5/5] arm64: dts: sun50i-a64-pinephone: Add touchscreen support
+Date:   Wed, 13 May 2020 23:24:51 +0200
+Message-Id: <20200513212451.1919013-6-megous@megous.com>
 In-Reply-To: <20200513212451.1919013-1-megous@megous.com>
 References: <20200513212451.1919013-1-megous@megous.com>
 MIME-Version: 1.0
@@ -56,89 +57,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+Pinephone has a Goodix GT917S capacitive touchscreen controller on
+I2C0 bus. Add support for it.
 
-Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel. It is based on
-Sitronix ST7703 LCD controller.
-
-Add its device tree binding.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../display/panel/sitronix,st7703.yaml        | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7703.yaml
+ .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sitronix,st7703.yaml b/Documentation/devicetree/bindings/display/panel/sitronix,st7703.yaml
-new file mode 100644
-index 000000000000..6e1606db4ab4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sitronix,st7703.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/sitronix,st7703.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+index e60b57f8ac14..6b2ff431cddb 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+@@ -123,6 +123,25 @@ &ehci1 {
+ 	status = "okay";
+ };
+ 
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins>;
++	status = "okay";
 +
-+title: Sitronix ST7703 MIPI DSI panel
++	touchscreen@5d {
++		compatible = "goodix,gt917s", "goodix,gt911";
++		reg = <0x5d>;
++		interrupt-parent = <&pio>;
++		interrupts = <7 4 IRQ_TYPE_LEVEL_HIGH>; /* PH4 */
++		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
++		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
++		AVDD28-supply = <&reg_ldo_io0>;
++		VDDIO-supply = <&reg_ldo_io0>;
++		touchscreen-size-x = <720>;
++		touchscreen-size-y = <1440>;
++	};
++};
 +
-+maintainers:
-+  - Icenowy Zheng <icenowy@aosc.io>
-+  - Ondrej Jirman <megous@megous.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - xingbangda,xbd599
-+      - const: sitronix,st7703
-+
-+  reg:
-+    description: DSI virtual channel used by that screen
-+    maxItems: 1
-+
-+  vcc-supply:
-+    description: regulator that supplies the VCC voltage
-+
-+  iovcc-supply:
-+    description: regulator that supplies the IOVCC voltage
-+
-+  reset-gpios: true
-+
-+  backlight: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - vcc-supply
-+  - iovcc-supply
-+  - reset-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        panel@0 {
-+            compatible = "xingbangda,xbd599", "sitronix,st7703";
-+            reg = <0>;
-+            reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
-+            iovcc-supply = <&reg_dldo2>;
-+            vcc-supply = <&reg_ldo_io0>;
-+            backlight = <&backlight>;
-+        };
-+    };
-+
+ &i2c1 {
+ 	status = "okay";
+ 
 -- 
 2.26.2
 
