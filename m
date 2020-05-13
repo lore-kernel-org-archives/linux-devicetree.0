@@ -2,155 +2,112 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B264DC2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 01:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327DEC2D0F6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 01:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94376206D3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 01:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABD6206B7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 01:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="bcpCCd4I"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="vV0fTbCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731695AbgEMBUr (ORCPT
+        id S1732024AbgEMBhV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 21:20:47 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17766 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731604AbgEMBUr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 May 2020 21:20:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1589332815; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=cjRqHgQoFQcF9dXuptd75t76dh9Ox5nQ6TBCswsAIE4vmMvZMewIFAKPRRPZe/PJS2bY6Znhx+4w0WAA5Mc10//xuHcGOXibicDt0DNxz/yqmBq9jqQYI0HOJKQZLeRu97PeXH0+eg7Wh7IEp7qIfK2cgzhh49fR11LSI9OmNkM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1589332815; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=UUH9TBEsGZClV0UvQJYkiGlyJwxsXutgInjbHM/99OA=; 
-        b=UeVNz+dMSImscqxWTjoQW6hcrDNWN8PeWNk2/x2Z7sWF8rnNDKBCow+UF1rwxfp6prWwIgTltl1mXREQhk3JzzzL9uRc8V36S/nmjqTuPp8mHYV/KUcZasCsX1zXsKb+mm4yvqUoOl5SfBFRA/dS2EfEd67YRPZXmbW7VWWx9bw=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589332815;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=UUH9TBEsGZClV0UvQJYkiGlyJwxsXutgInjbHM/99OA=;
-        b=bcpCCd4IolU5WLkjKiiyehRsPV+/qDkYcYvv6kgawo3IpvNaL0dpUfqw1G/bJJ3B
-        hTpUDBXWRJAWXQfNpXFhEmkx6v6tDlprHuJHAJtFK56CoaoP5V9/naZuiG0Yo92b7Hd
-        2ymduufrqGSTuebNjO6jnOS0hJEjt+PQJZIAEou0=
-Received: from [127.0.0.1] (223.104.5.223 [223.104.5.223]) by mx.zoho.com.cn
-        with SMTPS id 1589332811518609.5936666834109; Wed, 13 May 2020 09:20:11 +0800 (CST)
-Date:   Wed, 13 May 2020 09:20:08 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v9 2/5] PCI: Add Loongson PCI Controller support
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <20200512180602.GA273658@bjorn-Precision-5520>
-References: <20200512180602.GA273658@bjorn-Precision-5520>
-Message-ID: <08C2301A-7349-4044-80F4-0B0520780DB9@flygoat.com>
+        Tue, 12 May 2020 21:37:21 -0400
+Received: from onstation.org ([52.200.56.107]:35608 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728332AbgEMBhT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 21:37:19 -0400
+Received: from tp-x1.redhat.com (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 8DD123EA59;
+        Wed, 13 May 2020 01:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1589333507;
+        bh=9vYr0veDNGoPaF0yS5MgwbJtvztKvRkU36Niw0Jf0FQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vV0fTbCTzCLFGEiGXQv9U0QuwhugL71BmjnOIengbpGcnpJTGPe7nAqq+YlPmmzdn
+         hTWjZgaLDfZokWS1ciT1lVx9N+ULN6/aBF+m7PbBYMhzCfo5ax/6OfEFNkozZ4PP9/
+         yLn76FCFnP/2emMumEBcxy+8n7TIurFWmTOf8ojE=
+From:   Brian Masney <masneyb@onstation.org>
+To:     dmitry.torokhov@gmail.com
+Cc:     robh+dt@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, sboyd@kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 RESEND 1/2] dt-bindings: Input: remove msm-vibrator
+Date:   Tue, 12 May 2020 21:31:39 -0400
+Message-Id: <20200513013140.69935-2-masneyb@onstation.org>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200513013140.69935-1-masneyb@onstation.org>
+References: <20200513013140.69935-1-masneyb@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The address referenced in this binding is within the Qualcomm Clock
+namespace so let's drop the msm-vibrator bindings so that a more
+generic solution can be used instead.  No one is currently using these
+bindings so this won't affect any users.
 
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/input/msm-vibrator.txt           | 36 -------------------
+ 1 file changed, 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/msm-vibrator.txt
 
-=E4=BA=8E 2020=E5=B9=B45=E6=9C=8813=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882=
-:06:02, Bjorn Helgaas <helgaas@kernel=2Eorg> =E5=86=99=E5=88=B0:
->On Tue, May 12, 2020 at 03:43:56PM +0800, Jiaxun Yang wrote:
->> This controller can be found on Loongson-2K SoC, Loongson-3
->> systems with RS780E/LS7A PCH=2E
->>=20
->> The RS780E part of code was previously located at
->> arch/mips/pci/ops-loongson3=2Ec and now it can use generic PCI
->> driver implementation=2E
->>=20
->> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> Reviewed-by: Rob Herring <robh@kernel=2Eorg>
->
->> +static void system_bus_quirk(struct pci_dev *pdev)
->> +{
->> +	u16 tmp;
->> +
->> +	/*=20
->> +	 * These devices are not sharing resouces with rest of devices
->> +	 * on host bus and firmware will ensure their BARs are placed
->> +	 * in safe ranges=2E Also there might be some config registers
->> +	 * in their config space so kernel shouldn't ignore them=2E
->
->"Firmware ensuring BARs are placed in 'safe' ranges" is not a
->sufficient answer=2E  As I said before, Linux needs to know both the
->ADDRESS and the SIZE of whatever non-standard BARs these are=2E
->Otherwise, we're liable to assign that space to a different device=2E
+diff --git a/Documentation/devicetree/bindings/input/msm-vibrator.txt b/Documentation/devicetree/bindings/input/msm-vibrator.txt
+deleted file mode 100644
+index 8dcf014ef2e5..000000000000
+--- a/Documentation/devicetree/bindings/input/msm-vibrator.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-* Device tree bindings for the Qualcomm MSM vibrator
+-
+-Required properties:
+-
+-  - compatible: Should be one of
+-		"qcom,msm8226-vibrator"
+-		"qcom,msm8974-vibrator"
+-  - reg: the base address and length of the IO memory for the registers.
+-  - pinctrl-names: set to default.
+-  - pinctrl-0: phandles pointing to pin configuration nodes. See
+-               Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+-  - clock-names: set to pwm
+-  - clocks: phandle of the clock. See
+-            Documentation/devicetree/bindings/clock/clock-bindings.txt
+-  - enable-gpios: GPIO that enables the vibrator.
+-
+-Optional properties:
+-
+-  - vcc-supply: phandle to the regulator that provides power to the sensor.
+-
+-Example from a LG Nexus 5 (hammerhead) phone:
+-
+-vibrator@fd8c3450 {
+-	reg = <0xfd8c3450 0x400>;
+-	compatible = "qcom,msm8974-vibrator";
+-
+-	vcc-supply = <&pm8941_l19>;
+-
+-	clocks = <&mmcc CAMSS_GP1_CLK>;
+-	clock-names = "pwm";
+-
+-	enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
+-
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&vibrator_pin>;
+-};
+-- 
+2.24.1
 
-The address assigned to these devices will never be a part of resources
-belongs to the host bridge=2E That's enforced by hardware and firmware,
-so address conflict would never happen=2E
-
-I'm doing like this to ensure kernel will discover this device but do noth=
-ing
-about assignment of resources to it=2E
-
->
->If you have to hard-code the size, so be it=2E  That would mean the
->hardware is completely broken, but at least we could make Linux deal
->with it=2E  If the hardware consumes address space we don't know about,
->we can't deal with that=2E
->
->> +	 */
->> +	pdev->mmio_always_on =3D 1;
->> +	pdev->non_compliant_bars =3D 1;
->> +}
->
->> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int d=
-evfn,
->> +			       int where)
->> +{
->> +	unsigned char busnum =3D bus->number;
->> +	struct pci_host_bridge *bridge =3D pci_find_host_bridge(bus);
->> +	struct loongson_pci *priv =3D  pci_host_bridge_priv(bridge);
->> +
->> +	/*
->> +	 * Do not read more than one device on the bus other than
->> +	 * the host bus 0=2E
->> +	 */
->
->If the hardware is restricted such that the root bus number must be
->zero, pleae say that explicitly here=2E  Otherwise, it just looks like
->a bug=2E
->
->> +	if (priv->flags & FLAG_DEV_FIX && busnum !=3D 0 &&
->> +		PCI_SLOT(devfn) > 0)
->> +		return NULL;
->> +
->> +	/* CFG0 can only access standard space */
->> +	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
->> +		return cfg0_map(priv, busnum, devfn, where);
->> +
->> +	/* CFG1 can access extended space */
->> +	if (where < PCI_CFG_SPACE_EXP_SIZE && priv->cfg1_base)
->> +		return cfg1_map(priv, busnum, devfn, where);
->> +
->> +	return NULL;
->> +}
-
---=20
-Jiaxun Yang
