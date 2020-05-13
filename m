@@ -2,82 +2,105 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F313CA90AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7A3C2D0FC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 420982312A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:26:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589372778;
-	bh=2nPOeFMik9ZQ6xUKx8jufYdpBAmDTPfySWDo5YjI/wo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XurEEGRLhT+Zkg1WsygdZM3N40eeqa6CwZsNwPr4KA8MfOvrTmyBYuk4GlPERiHHg
-	 wV3xssUgxnwOKxQ4GUjQnVcF4+Y2SoCRAeGvsvw8M003VQ887PNqlUSI6yhaVvQ4/q
-	 T+c/O4F3ux2z/wmUipb8S5VFVgXjKuCIp+H7lnK4=
+	by mail.kernel.org (Postfix) with ESMTP id D704420740
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 12:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbgEMM0R (ORCPT
+        id S1731271AbgEMMaj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 08:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgEMM0R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 08:26:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 845F623126;
-        Wed, 13 May 2020 12:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589372776;
-        bh=2nPOeFMik9ZQ6xUKx8jufYdpBAmDTPfySWDo5YjI/wo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cjGFtJREmNTq4FgZ+a7ie6IwGzteTC/KDPnz6U8iBRnMyIZgw8KSg+tkkQY2K/XN5
-         SbFGEpjin9G6axFoke7d3ZIox+x7r8pKNnv4obxEEdO+/ok8me1Pgjq5D8AxYPwfYF
-         Mjbp5BdabWGT9x5mF/k7xzDCFd3CIHIs2V1YXgCY=
-Date:   Wed, 13 May 2020 14:26:13 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Al Cooper <alcooperx@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v10 1/5] usb: xhci: Change the XHCI link order in the
- Makefile
-Message-ID: <20200513122613.GA1023594@kroah.com>
-References: <20200512150019.25903-1-alcooperx@gmail.com>
- <20200512150019.25903-2-alcooperx@gmail.com>
+        Wed, 13 May 2020 08:30:39 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57894 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgEMMai (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 08:30:38 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 83C56803088B;
+        Wed, 13 May 2020 12:30:35 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id o_-9KXxNQ0-u; Wed, 13 May 2020 15:30:35 +0300 (MSK)
+Date:   Wed, 13 May 2020 15:30:33 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 13/17] spi: dw: Initialize paddr in DW SPI MMIO private
+ data
+Message-ID: <20200513123033.in3uksakteze3y5t@mobilestation>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-14-Sergey.Semin@baikalelectronics.ru>
+ <20200508192144.GT185537@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200512150019.25903-2-alcooperx@gmail.com>
+In-Reply-To: <20200508192144.GT185537@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 11:00:15AM -0400, Al Cooper wrote:
-> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
-> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
-> devices and OHCI handles <2.0 devices. Currently the Makefile
-> has XHCI linking at the bottom which will result in the XHIC driver
-> initalizing after the EHCI and OHCI drivers and any installed 3.0
-> device will be seen as a 2.0 device. Moving the XHCI linking
-> above the EHCI and OHCI linking fixes the issue.
+On Fri, May 08, 2020 at 10:21:44PM +0300, Andy Shevchenko wrote:
+> On Fri, May 08, 2020 at 04:29:38PM +0300, Serge Semin wrote:
+> > This field is used only for the DW SPI DMA code initialization, that's
+> > why there were no problems with it being uninitialized in Dw SPI MMIO
+> > driver. Since in a further patch we are going to introduce the DW SPI DMA
+> > support in the MMIO version of the driver, lets set the field with the
+> > physical address of the DW SPI controller registers region.
+> 
+> ...
+> 
+> > -	dws->regs = devm_platform_ioremap_resource(pdev, 0);
+> > +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	dws->regs = devm_ioremap_resource(&pdev->dev, mem);
+> 
 
-What happens if all of these are modules and they are loaded in a
-different order?  This makefile change will not help with that, you need
-to have logic in the code in order to properly coordinate this type of
-mess, sorry.
+> There is a helper
+> 	dws->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &mem);
 
-thanks,
+Oh, good point. It has been just added, in kernel v5.7. v5.6 didn't provide such
+a convenient helper. Thanks for the suggestion.
 
-greg k-h
+-Sergey
+
+> 
+> 
+> >  	if (IS_ERR(dws->regs)) {
+> >  		dev_err(&pdev->dev, "SPI region map failed\n");
+> >  		return PTR_ERR(dws->regs);
+> >  	}
+> > +	dws->paddr = mem->start;
+> >  
+> >  	dws->irq = platform_get_irq(pdev, 0);
+> >  	if (dws->irq < 0)
+> > -- 
+> > 2.25.1
+> > 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
