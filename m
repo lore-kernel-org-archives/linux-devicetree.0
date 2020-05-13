@@ -2,136 +2,167 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39782C2D0F8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 08:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D70EC2D0FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 08:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8DE20769
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 08:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E97420740
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 08:09:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XeUplpuT"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="I333cevq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgEMIGh (ORCPT
+        id S1728902AbgEMIJv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 04:06:37 -0400
-Received: from mail-vi1eur05on2073.outbound.protection.outlook.com ([40.107.21.73]:6060
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726092AbgEMIGh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 04:06:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wg7bF+gx0FCpW9wU1rX4Bb6jMS7uUu/K8h2vnzrQquFs/qtyZ0yzC8PGVckvMiLGLJK2NRu+D70N27RTRR+c4tAzgc/l9L0/KSPgJ2DtBPmz2PdqWNbxCvf8Mq/qlEnnz/82T8sLSrJW6xVS8niU1V3iAdcoDBaUqO22OmtVdTZIIWoVbhwKM35y/Y5dtyouup/5JeUXSby+/poNA6Y/IK+X5dxYCtiEvvzwjHWP6qRzVH8deO9qNFPYafaz9Fve/7iX0b/rtpYFi38qx+VH9k3eoZLHSPPF1rZIyD9A4K7ma1InWglv0qrg4yng00RQw/lnrlgiYHvhHAbo3aXvgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CG/5eRAkPL0M8IFsNRjZ70jvC1+Kn6ZtS/f8mUCOUEY=;
- b=I9pA0REMaYu8/KuNvIDIV0JdHv13bkbBNO/aKOrr700sGeH+2xb7/4d6BM5lL6jWLQKSilbVlFmQ1I+AqFF+q9X3oAu1XG1n2kiFPkISNwi+95WxWl/d69JJX2ZXZ6BSsN3jl8vopaQGZZlM9RavMkGCnSzn5LVcEettkQeRzLczdFJUW3MWNPABOr+EQZSKhSqSISORDbIVHVQN4jdiGTXqvnwo662VkUls7StpNRBWDGm4Zt8uuGAQblsQ8Y8uaqhOEehf8PcKd+TXUNuvUO6RjqjLLOJzuWs67s6uaTs0QW3w1ZDH6N7epRFKfxk8rrkenr1a97oShtsl4TSmVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CG/5eRAkPL0M8IFsNRjZ70jvC1+Kn6ZtS/f8mUCOUEY=;
- b=XeUplpuTi2REF84g8dYfzk8tQLmEu/pIeATeVeHmDyboDnDQ6kD3ANVCbOoFBly5oAmyWu3lOyDwBg87vaehkOyJiz9vndkUD/KutsvltNfwWaao2Ww8qzblY59nWsjN3ODoIG8P3B6sQzcA4oFp8eXCqPpvpn7gWNY+HcR75Cg=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6592.eurprd04.prod.outlook.com (2603:10a6:803:124::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Wed, 13 May
- 2020 08:06:31 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.3000.016; Wed, 13 May 2020
- 08:06:31 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     "Fuzzey, Martin" <martin.fuzzey@flowbird.group>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v7 RESEND 03/13] Revert "dmaengine: imx-sdma: fix context
- cache"
-Thread-Topic: [PATCH v7 RESEND 03/13] Revert "dmaengine: imx-sdma: fix context
- cache"
-Thread-Index: AQHWJ3caK60pir53Nk+ogIMcp5w3wKilig6AgAASqoCAAA6qQA==
-Date:   Wed, 13 May 2020 08:06:31 +0000
-Message-ID: <VE1PR04MB66381C7FAC6EA04658C3176389BF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
- <1589218356-17475-4-git-send-email-yibin.gong@nxp.com>
- <20200513060525.GJ5877@pengutronix.de>
- <CANh8QzxJg05nXasHfN2kC-G7TOKZ8trJkOP_v0KXvcy6S4df4Q@mail.gmail.com>
-In-Reply-To: <CANh8QzxJg05nXasHfN2kC-G7TOKZ8trJkOP_v0KXvcy6S4df4Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: flowbird.group; dkim=none (message not signed)
- header.d=none;flowbird.group; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 09161746-f2ea-48e0-b444-08d7f7148bc9
-x-ms-traffictypediagnostic: VE1PR04MB6592:|VE1PR04MB6592:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6592EA6BA1F97D96928FD1A589BF0@VE1PR04MB6592.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
-x-forefront-prvs: 0402872DA1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ApPW9OKxUwxbX9Tz5vIfQitGI7jRCQRMX9jM3OmFwOZaxH5PSdZvcGwF4I42FHGrv5svdtXiokSeGnOcTdLUPUt57wjugVd2Q/GXuqec/EaWz/Yv3i6XXd/obxGNtd5Xld9ENbCtTdIc1mwWKU9jUBVlibnHbtIPI2kd3JMYyd7L/QNPEnIsS+cHnQuAq36u81iV/lh010obXJ1AMyHzrZQzSH/lRfvfxgdkLVby3M4iwuhL8uDVaX3nOY3Fpm8U3Qz2P3Vwt2zxyquP50X14JF8nyoZqyUXtXtsIImUckjiGNbbPAZiknsNGrXWTDpi+h7OTcEaHae8CL2UJ45XCKEo5FFNtZClNcU63RHlgbqWX/M0XzFUiDJyu7SobrSZ8VJvWkVIdjAnWPl1SsRY2aQVe7o/XUbrficqSGvvf8NKL0xmlsL47OqyxGsvfMvlYod4bp1Z4ahLPnHslg+jjtwQQFzJK1MK40IF4y1So6j+HK1DT2rdLJjluxcmsV5p0KKjDMdBNRpRvdzYukFTow==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(33430700001)(64756008)(66556008)(66446008)(86362001)(54906003)(4326008)(7696005)(7416002)(5660300002)(33656002)(478600001)(8936002)(110136005)(4744005)(26005)(76116006)(71200400001)(33440700001)(8676002)(52536014)(66946007)(55016002)(66476007)(9686003)(2906002)(316002)(186003)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: rVnGgRtCpZXQwHyquhdA6CCfT40SD1YjDH/Ms+3xT43ucDkcB7UFefbxmxwE2QzIiavvKaMnUANRNB8JDGPeFwzet0QdaDgS1y/f4Fo0JNinSPWuT4XGMR6v3GBf2SnUZgWJ1f4ltChB9xWMvXjeamoIidHktoB5RZem4Es3NU7naPgMLCehchnSKYTYjrH5v0+Yf4Ax7YO9+uZFR0vPKkqpq+iCELuVChpwlw/0zYnXipWWfelVDfMYV666gmj1clpSs6NDBp5LRgu2aOnSVfHpvqx+O6vgeFx42/N6NuOFw16GhI2WpRNY2xsHVYop+hw5Bt3wa0gH+BuMT2FvIHkVDZwrKn8e6kE82Dhsz1T2fq85nmRbJomikqnFk1hA5C7XZa6N1ElXXEZ8Cl9PsLKGSFchL+DHFDEQ1WgfGIOdMr0J2Q+kDQkKAw4L/XnqMHfXT3OOyakDbpq16cq8jvSuHCceDRWurqifDhQlRy8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 13 May 2020 04:09:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729872AbgEMIJv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 04:09:51 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D8BC061A0C
+        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 01:09:49 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id d7so17108600ioq.5
+        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 01:09:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9UilNQk9S4BvXv27MvSXEo2VXDVsyD3FnEfjySXek3Q=;
+        b=I333cevq/ZiYLBB2UEqQvcKtAGvuyLJZxdyLz+dw9rtzdUG3Rn5bsG6b+cpl7WJ7be
+         gTKIH/JsA1vPwstSt1K87Da84h3nS6SdQlUWK+QTnSAYwi+CjJ/aL+J8zawKW++FhJMQ
+         aAWwxITol5cIJWKXZHPmGp5Bv26XE5m8HS8GVMXZPkz9eAufEiFF137yzG71eVK31Y0h
+         GRCKTv29IzTe96QDVL3EExYOvg7/+4BsAH4/rwxaCg0aboPZ4fdHNA+ZSezFo4H59XIF
+         6YgL3Ztsxu7NdaF62XFuH+8rQKy6pIHash3BieKanuFtjzs07HWpQii/lNhRuYgekHNs
+         jZ6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9UilNQk9S4BvXv27MvSXEo2VXDVsyD3FnEfjySXek3Q=;
+        b=UQR0AZ/P2kwkmMt2A9eMhDYUprxz5fKZvw7yyFXGGwjAwW3Iu6nXpNsZWD1tKTEJ7i
+         Gjh2da+oS2CnEN714NenNIOHvY0T+ZKig++SVRlHL8dVEa2KisFU1jDXcv9g4OK3VZTZ
+         U6Z/yYRkGN0Iu5pb0hE1dDRd9wBgWXAfayduGzT2W+daVCC0dZPl7SQEk6/44fnxAsyu
+         +HPpZj4qE2r8P31MgGxpirWEyQGChcJs9QoWZ58O8y9EG5PbfJbVSkSFUQ1Yj+PkfVxo
+         lith+I78BzO7+2qU+KDKBODxfClof6l0cpeAt2Vp17qkZKB+Zk0racM4u3wLUtB/0Cdk
+         Ma5w==
+X-Gm-Message-State: AGi0PubIeEl/2UePTtPL88JqelLhfGRFjk3QOYiTDFOMGK9l3W9VIQHj
+        jUNExPPdw27YicL3lDHPxWP7bnfpfQN0axSFIJTWEQ==
+X-Google-Smtp-Source: APiQypLSKZpPbpZGWbIa6OCLB4vXnavWGW3O9jfduY7qGPjrWI211lZ+fRr7Evkrpn1Sok32KOFfgRA0O4qxfjO7Hmw=
+X-Received: by 2002:a05:6602:2dd4:: with SMTP id l20mr1335649iow.13.1589357388989;
+ Wed, 13 May 2020 01:09:48 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09161746-f2ea-48e0-b444-08d7f7148bc9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:06:31.0954
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kMAp/rrSxe+NNwq4gPmEXt2YCS7O5cC0bMyrqCPT8zJJbXxpleIeTSESm8quSXUJwtQCfbkd4+l1eyAIFT0epQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6592
+References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-2-brgl@bgdev.pl>
+ <20200513023855.GA23714@bogus>
+In-Reply-To: <20200513023855.GA23714@bogus>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 13 May 2020 10:09:38 +0200
+Message-ID: <CAMRc=MfScMKPMNeFAMA=6ObhFkU8T=8a+dVyiUyvGOXyBG8H=g@mail.gmail.com>
+Subject: Re: [PATCH 01/11] dt-bindings: add a binding document for MediaTek
+ PERICFG controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gMjAyMC8wNS8xMyBGdXp6ZXksIE1hcnRpbiA8bWFydGluLmZ1enpleUBmbG93YmlyZC5ncm91
-cD4gd3JvdGU6DQo+IE9uIFdlZCwgMTMgTWF5IDIwMjAgYXQgMDg6MDcsIFNhc2NoYSBIYXVlciA8
-cy5oYXVlckBwZW5ndXRyb25peC5kZT4NCj4gd3JvdGU6DQo+ID4NCj4gPiBPbiBUdWUsIE1heSAx
-MiwgMjAyMCBhdCAwMTozMjoyNkFNICswODAwLCBSb2JpbiBHb25nIHdyb3RlOg0KPiA+ID4gVGhp
-cyByZXZlcnRzIGNvbW1pdCBkMjg4YmRkZDgzNzRlMGEwNDNhYzlkZGU2NGExYWU2YTA5NDExZDc0
-LCBzaW5jZQ0KPiA+ID4gJ2NvbnRleHRfbG9hZGVkJyBmaW5hbGx5IHJlbW92ZWQuDQo+ID4gPg0K
-PiA+ID4gU2lnbmVkLW9mZi1ieTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0KPiA+
-ID4gLS0tDQo+ID4NCj4gPiBJIHRoaW5rIHRoaXMgY2FuIHNhZmVseSBiZSBmb2xkZWQgaW50byB0
-aGUgbmV4dCBwYXRjaCB3aGljaCBtYWtlcyBpdA0KPiA+IG1vcmUgY2xlYXIgd2hhdCBpcyBoYXBw
-ZW5pbmcuDQo+ID4NCj4gDQo+IEFncmVlZCwNCj4gbm90IG9ubHkgdGhhdCBidXQgaGF2aW5nIDIg
-c2VwYXJhdGUgcGF0Y2hlcyBhbHNvIG1lYW5zIHRoYXQgdGhlIGJ1ZyB0aGF0IHdhcw0KPiBmaXhl
-ZCBieSB0aGUgY29tbWl0IGJlaW5nIHJldmVydGVkIGNvdWxkIHJlYXBwZWFyIGR1cmluZyBiaXNl
-Y3Rpb24uDQo+IA0KPiBNb3JlIGdlbmVyYWxseSBJIHRoaW5rIHJldmVydHMgc2hvdWxkIGJlIHJl
-c2VydmVkIGZvciBjb21taXRzIHRoYXQgbGF0ZXIgdHVybg0KPiBvdXQgdG8gYmUgd3Jvbmcgb3Ig
-dW5uZWVkZWQgKGllIHNob3VsZCBuZXZlciByZWFsbHkgaGF2ZSBiZWVuIGFwcGxpZWQpLg0KPiBJ
-ZiB0aGV5IHdlcmUgT0sgYXQgdGhlIHRpbWUgYnV0IGxhdGVyIGJlY29tZSB1bm5lY2Vzc2FyeSBk
-dWUgdG8gb3RoZXIgY29kZQ0KPiBjaGFuZ2VzIEkgdGhpbmsgYWxsIHRoZSByZWxhdGVkIG1vZGlm
-aWNhdGlvbnMgc2hvdWxkIGJlIGRvbmUgaW4gYSBzaW5nbGUgbm9ybWFsDQo+IG5vbiByZXZlcnQg
-cGF0Y2guDQpPa2F5LCB3aWxsIHJlbW92ZSBpdCBpbiB2OC4NCg==
+=C5=9Br., 13 maj 2020 o 04:38 Rob Herring <robh@kernel.org> napisa=C5=82(a)=
+:
+>
+> On Tue, May 05, 2020 at 04:02:21PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > This adds a binding document for the PERICFG controller present on
+> > MediaTek SoCs. For now the only variant supported is 'mt8516-pericfg'.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  .../arm/mediatek/mediatek,pericfg.yaml        | 34 +++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/medi=
+atek,pericfg.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pe=
+ricfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericf=
+g.yaml
+> > new file mode 100644
+> > index 000000000000..74b2a6173ffb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.y=
+aml
+> > @@ -0,0 +1,34 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/arm/mediatek/mediatek,pericfg.yaml=
+#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: MediaTek Peripheral Configuration Controller
+> > +
+> > +maintainers:
+> > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+>
+> Don't need oneOf.
+>
+> > +      - items:
+> > +        - enum:
+> > +          - mediatek,pericfg
+>
+> PERICFG is exactly the same register set and functions on all Mediatek
+> SoCs? Needs to be more specific.
+>
+> > +        - const: syscon
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    pericfg: pericfg@10003050 {
+> > +        compatible =3D "mediatek,mt8516-pericfg", "syscon";
+> > +        reg =3D <0 0x10003050 0 0x1000>;
+>
+> Default for examples is 1 cell for addr and size.
+>
+> > +    };
+> > --
+> > 2.25.0
+> >
+
+Hi Rob,
+
+I somehow missed the fact that there already is an old-style txt
+binding document for pericfg. I'll first convert it and then add the
+new compatible.
+
+Bart
