@@ -2,88 +2,93 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05A0C2D0FA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0889C2D0FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90FFA206CC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B958720673
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732788AbgEMKa6 (ORCPT
+        id S1730149AbgEMKlj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 06:30:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:42726 "EHLO foss.arm.com"
+        Wed, 13 May 2020 06:41:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59744 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732741AbgEMKa6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 06:30:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72035D6E;
-        Wed, 13 May 2020 03:30:57 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22DE23F305;
-        Wed, 13 May 2020 03:30:56 -0700 (PDT)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Subject: [PATCH v3 20/20] dt-bindings: ehci/ohci: Allow iommus property
-Date:   Wed, 13 May 2020 11:30:16 +0100
-Message-Id: <20200513103016.130417-21-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200513103016.130417-1-andre.przywara@arm.com>
-References: <20200513103016.130417-1-andre.przywara@arm.com>
+        id S1727918AbgEMKli (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 06:41:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A1977AC6D;
+        Wed, 13 May 2020 10:41:39 +0000 (UTC)
+Date:   Wed, 13 May 2020 12:41:27 +0200
+From:   Mian Yousaf Kaukab <ykaukab@suse.de>
+To:     Stephen Warren <swarren@wwwdotorg.org>
+Cc:     robh+dt@kernel.org, robin.murphy@arm.com,
+        devicetree@vger.kernel.org, talho@nvidia.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, afaerber@suse.de,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Subject: Re: [PATCH 2/4] dt-bindings: sram: add documentation for
+ reserved-only flag
+Message-ID: <20200513104127.GA2309@suse.de>
+References: <20200512144803.24344-1-ykaukab@suse.de>
+ <20200512144803.24344-2-ykaukab@suse.de>
+ <52f099e4-5c03-2141-f049-cd3adeb04c5b@wwwdotorg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <52f099e4-5c03-2141-f049-cd3adeb04c5b@wwwdotorg.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A OHCI/EHCI controller could be behind an IOMMU, in which case an iommus
-property assigns the stream ID for this device.
+On Tue, May 12, 2020 at 01:45:28PM -0600, Stephen Warren wrote:
+> On 5/12/20 8:48 AM, Mian Yousaf Kaukab wrote:
+> > Add documentation for the new optional flag added for SRAM driver.
+> 
+> > diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
+> 
+> > +  reserved-only:
+> > +    description:
+> > +      The flag indicating, that only SRAM reserved regions have to be remapped.
+> > +      remapping type is selected depending upon no-memory-wc as usual.
+> > +    type: boolean
+> 
+> This feels a bit like a SW flag rather than a HW description, so I'm not
+> sure it's appropriate to put it into DT.
 
-Allow that property in the DT bindings to fix a complaint about the Arm Juno
-board's DTS file.
+Reserved regions themselves are software descriptions, no? Then we have 'pool'
+flag which is again a software flag and so on. This flag falls into same
+category and nothing out of ordinary.
+> 
+> Are there any cases where the SW should map all of the SRAM, i.e. where
+> we wouldn't expect to set reserved-only? [...]
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- Documentation/devicetree/bindings/usb/generic-ehci.yaml | 3 +++
- Documentation/devicetree/bindings/usb/generic-ohci.yaml | 3 +++
- 2 files changed, 6 insertions(+)
+Yes, here are a few examples:
+arch/arm/boot/dts/aspeed-g*.dtsi
+arch/arm/boot/dts/at91*.dtsi
+arch/arm/boot/dts/bcm7445.dtsi
+Then arch/arm/boot/dts/dra7.dtsi is an example where we should map everything
+except the reserved region.
 
-diff --git a/Documentation/devicetree/bindings/usb/generic-ehci.yaml b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-index 10edd05872ea..20664c28bfb2 100644
---- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-+++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-@@ -74,6 +74,9 @@ properties:
-   phy-names:
-     const: usb
- 
-+  iommus:
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/usb/generic-ohci.yaml b/Documentation/devicetree/bindings/usb/generic-ohci.yaml
-index bcffec1f1341..ff6c04cde695 100644
---- a/Documentation/devicetree/bindings/usb/generic-ohci.yaml
-+++ b/Documentation/devicetree/bindings/usb/generic-ohci.yaml
-@@ -73,6 +73,9 @@ properties:
-   phy-names:
-     const: usb
- 
-+  iommus:
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
--- 
-2.17.1
+> [...] I'd expect reserved-only to be
+> the default, and perhaps only, mode of operation for the SRAM driver.
 
+It will break compatibility with existing dtbs.
+
+> If we can't do that because some SW currently expects to be able to map
+> arbitrary portions of the SRAM, shouldn't that SW be fixed to tell the
+> SRAM driver which parts it's using, hence still allowing the driver to
+> only map in-use portions?
+
+User doesn’t need sram driver in that case. It can use genalloc api directly.
+
+BR,
+Yousaf
