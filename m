@@ -2,102 +2,144 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E882C2D0FE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 06:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A3CC2D0F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 06:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B630206D3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 06:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC1720718
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 06:32:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frhhnar7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgEMGH0 (ORCPT
+        id S1732311AbgEMGcm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 02:07:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729171AbgEMGHZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 02:07:25 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83215C061A0C
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 23:07:25 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jYkWG-0000uB-3T; Wed, 13 May 2020 08:05:28 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jYkWD-0003jr-LK; Wed, 13 May 2020 08:05:25 +0200
-Date:   Wed, 13 May 2020 08:05:25 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     vkoul@kernel.org, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
-        festevam@gmail.com, dan.j.williams@intel.com, mark.rutland@arm.com,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
-        kernel@pengutronix.de, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 RESEND 03/13] Revert "dmaengine: imx-sdma: fix context
- cache"
-Message-ID: <20200513060525.GJ5877@pengutronix.de>
-References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
- <1589218356-17475-4-git-send-email-yibin.gong@nxp.com>
+        Wed, 13 May 2020 02:32:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729482AbgEMGck (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 02:32:40 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D05C061A0C;
+        Tue, 12 May 2020 23:32:40 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id r17so9579005lff.9;
+        Tue, 12 May 2020 23:32:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=krXK6kZ32e/DR3mFxC2FGM2vIFqONMy2uV/TIX0FVDM=;
+        b=frhhnar7CKQR2XF4Gs7FLnJvOeAo/JsvYEUzT8TLjEVb6kqd31MBao6wcIFeBL3qg+
+         KwkF1Amy5O8k2ZXdiMmlmf+LSJt3xL8s9ss5Az4ue5CXlNw9OcCvTSnEeI+VrUu3K1vo
+         K3Jerui34Obxv4lspAwcu5qRexjClFphoMQYY5QtDLC0E2zXn0Obo9qMJEiXcq4YRXIw
+         ThGRjP6sspwo39HZICoCCR3J7IHG7IqQeuGf+qWW20WRpkcXxsYfOJYrpCtRxLbNp3lu
+         aABlwegv63RSx26E+0g8aUtS0nx6o1Af6kWXyjnyySpLjVnlw+SNmO8W+Jc3wzYOozDl
+         g7Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=krXK6kZ32e/DR3mFxC2FGM2vIFqONMy2uV/TIX0FVDM=;
+        b=JBsEP5UNvJo3LpJnTeKjp3srq1ulcBRzmF4LM/DVVAVv0iVD9wkZrOsRka3y68fakK
+         BYpPPpqFeCMEbJ/MBIKsOwR0BKYZj0LVSW3ViTeP20d9c425i/oQWkzdroR/5CVoCEL5
+         Vx8qqKvSZRzLuTe0nrC5EAO5v/NWVm9cnVl8oNJndy3CJOkH5zdz56tkPHVP29gflQTN
+         IlY05ia4zjk8CBiWB1Y6M41dyLPoG18JT58Q1ae1PMzTPftFBbtyP0mui7PQWsCKAW3D
+         J8HvkP/d/Aq4ewaYHZklGA4Di5rHNM3g/S/RCvk4eBvJkcHSZud4HeA0/HLLA/bl7HP5
+         wfeA==
+X-Gm-Message-State: AOAM533NHvFhjKIQj4pemkArpi3GG7RTp6RNCq95kpi4fdQnqXQS67mO
+        p3f/ACsvcsxaWTC4T1KmGU6WQzOQjRAYgn2/6KnS1g==
+X-Google-Smtp-Source: ABdhPJxbvqZkkJXjowqHDv7L9rLpGIRvDYTGXyAqz9zNiTVOkPexOuZDGWJb752gZC4Hfjw1q8/fZ3ILE93Jt83mUJ8=
+X-Received: by 2002:a05:6512:10cd:: with SMTP id k13mr16946641lfg.153.1589351558460;
+ Tue, 12 May 2020 23:32:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589218356-17475-4-git-send-email-yibin.gong@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:04:32 up 83 days, 13:35, 87 users,  load average: 0.05, 0.22,
- 0.17
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
+ <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
+ <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
+ <CABb+yY2Pph4EeQtg9xSaCWHqcXr0mVNkrrFYm-E3x3f5xaxygg@mail.gmail.com>
+ <CADBw62rrQ=Po76qpJoUj1za9Hg=T+=eEJf=Yv3UmLFLtRZvwsg@mail.gmail.com>
+ <CADBw62oFTV3MPuFQSL0MWyYQWy9MuhL70w5HGHPPV1EXBd3KEQ@mail.gmail.com> <CABb+yY1gXxpU=q9xKf14uZtJz51kLJ-k2EeWsjnFRyBzR5bmgA@mail.gmail.com>
+In-Reply-To: <CABb+yY1gXxpU=q9xKf14uZtJz51kLJ-k2EeWsjnFRyBzR5bmgA@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Wed, 13 May 2020 14:32:23 +0800
+Message-ID: <CADBw62oFDrruSq+Rm=hXHZYn0qDrr47cNK4Wj0_A-jG1dOT+kw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 01:32:26AM +0800, Robin Gong wrote:
-> This reverts commit d288bddd8374e0a043ac9dde64a1ae6a09411d74, since
-> 'context_loaded' finally removed.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> ---
->  drivers/dma/imx-sdma.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 4d4477d..3d4aac9 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -1338,7 +1338,6 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
->  
->  	sdmac->event_id0 = 0;
->  	sdmac->event_id1 = 0;
-> -	sdmac->context_loaded = false;
->  
->  	sdma_set_channel_priority(sdmac, 0);
+On Wed, May 13, 2020 at 2:05 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>
+> On Tue, May 12, 2020 at 11:14 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> >
+> > Hi Jassi,
+> >
+> > On Thu, May 7, 2020 at 11:23 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > >
+> > > Hi Jassi,
+> > >
+> > > On Thu, May 7, 2020 at 7:25 AM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> > > >
+> > > > On Wed, May 6, 2020 at 8:29 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > > >
+> > > > > Hi Jassi,
+> > > > >
+> > > > > On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > > > >
+> > > > > > From: Baolin Wang <baolin.wang@unisoc.com>
+> > > > > >
+> > > > > > The Spreadtrum mailbox controller supports 8 channels to communicate
+> > > > > > with MCUs, and it contains 2 different parts: inbox and outbox, which
+> > > > > > are used to send and receive messages by IRQ mode.
+> > > > > >
+> > > > > > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> > > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > > > > > ---
+> > > > > > Changes from v3:
+> > > > > >  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
+> > > > > >
+> > > > > > Changes from v2:
+> > > > > >  - None.
+> > > > > >
+> > > > > > Changes from v1:
+> > > > > >  - None
+> > > > >
+> > > > > Gentle ping, do you have any other comments? Thanks.
+> > > > >
+> > > > Yea, I am still not sure about the error returned in send_data().  It
+> > > > will either never hit or there will be no easy recovery from it. The
+> > > > api expects the driver to tell it the last-tx was done only when it
+> > > > can send the next message. (There may be case like sending depend on
+> > > > remote, which can't be ensured before hand).
+> > >
+> > > Actually this is an unusual case, suppose the remote target did not
+> > > fetch the message as soon as possile, which will cause the FIFO
+> > > overflow, so in this case we  can not send messages to the remote
+> > > target any more, otherwise messages will be lost. Thus we can return
+> > > errors to users to indicate that something wrong with the remote
+> > > target need to be checked.
+> > >
+> > > So this validation in send_data() is mostly for debugging for this
+> > > abnormal case and we will not trigger this issue if the remote target
+> > > works well. So I think it is useful to keep this validation in
+> > > send_data(). Thanks.
+> >
+> > Any comments? Thanks.
+> >
+> Same as my last post.
 
-I think this can safely be folded into the next patch which makes it
-more clear what is happening.
-
-Sascha
+I think I've explained the reason why we need add this validation in
+my previous email, I am not sure how do you think? You still want to
+remove this validation?
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Baolin Wang
