@@ -2,33 +2,32 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAD5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD38C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B041E2054F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F98A2054F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390376AbgEMS4e (ORCPT
+        id S2390368AbgEMS4d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 14:56:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49936 "EHLO
+        Wed, 13 May 2020 14:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390370AbgEMS4d (ORCPT
+        by vger.kernel.org with ESMTP id S2390362AbgEMS4d (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
         Wed, 13 May 2020 14:56:33 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B186FC061A0C;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B77C061A0E;
         Wed, 13 May 2020 11:56:33 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id E65ED2A27A9
+        with ESMTPSA id DAE132A2521
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 6C7E8480101; Wed, 13 May 2020 20:56:29 +0200 (CEST)
+        id 63EF24800F8; Wed, 13 May 2020 20:56:29 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,12 +36,10 @@ To:     Sebastian Reichel <sre@kernel.org>,
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1 03/19] power: supply: core: add manufacture date properties
-Date:   Wed, 13 May 2020 20:55:59 +0200
-Message-Id: <20200513185615.508236-4-sebastian.reichel@collabora.com>
+Subject: [PATCHv1 00/19] Improve SBS battery support
+Date:   Wed, 13 May 2020 20:55:56 +0200
+Message-Id: <20200513185615.508236-1-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -50,81 +47,94 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some smart batteries store their manufacture date, which is
-useful to identify the battery and/or to know about the cell
-quality.
+This patchset improves support for SBS compliant batteries. Due to
+the changes, the battery now exposes 32 power supply properties and
+(un)plugging it generates a backtrace containing the following message
+without the first patch in this series:
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- Documentation/ABI/testing/sysfs-class-power | 28 +++++++++++++++++++++
- drivers/power/supply/power_supply_sysfs.c   |  3 +++
- include/linux/power_supply.h                |  3 +++
- 3 files changed, 34 insertions(+)
+---------------------------
+WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0xd4/0x104
+add_uevent_var: too many keys
+---------------------------
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index 2f896555ae23..e6d7348766b2 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -680,3 +680,31 @@ Description:
- 		Valid values:
- 		- 1: enabled
- 		- 0: disabled
-+
-+What:		/sys/class/power_supply/<supply_name>/manufacture_year
-+Date:		January 2020
-+Contact:	linux-pm@vger.kernel.org
-+Description:
-+		Reports the year (following Gregorian calendar) when the device has been
-+		manufactured.
-+
-+		Access: Read
-+		Valid values: Reported as integer
-+
-+What:		/sys/class/power_supply/<supply_name>/manufacture_month
-+Date:		January 2020
-+Contact:	linux-pm@vger.kernel.org
-+Description:
-+		Reports the month when the device has been manufactured.
-+
-+		Access: Read
-+		Valid values: 1-12
-+
-+What:		/sys/class/power_supply/<supply_name>/manufacture_day
-+Date:		January 2020
-+Contact:	linux-pm@vger.kernel.org
-+Description:
-+		Reports the day of month when the device has been manufactured.
-+
-+		Access: Read
-+		Valid values: 1-31
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index e664774a2d1e..78d5382e69f1 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -198,6 +198,9 @@ static struct power_supply_attr power_supply_attrs[] = {
- 	POWER_SUPPLY_ATTR(PRECHARGE_CURRENT),
- 	POWER_SUPPLY_ATTR(CHARGE_TERM_CURRENT),
- 	POWER_SUPPLY_ATTR(CALIBRATE),
-+	POWER_SUPPLY_ATTR(MANUFACTURE_YEAR),
-+	POWER_SUPPLY_ATTR(MANUFACTURE_MONTH),
-+	POWER_SUPPLY_ATTR(MANUFACTURE_DAY),
- 	/* Properties of type `const char *' */
- 	POWER_SUPPLY_ATTR(MODEL_NAME),
- 	POWER_SUPPLY_ATTR(MANUFACTURER),
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 453a85f25635..63ffe2a0a87b 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -159,6 +159,9 @@ enum power_supply_property {
- 	POWER_SUPPLY_PROP_PRECHARGE_CURRENT,
- 	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
- 	POWER_SUPPLY_PROP_CALIBRATE,
-+	POWER_SUPPLY_PROP_MANUFACTURE_YEAR,
-+	POWER_SUPPLY_PROP_MANUFACTURE_MONTH,
-+	POWER_SUPPLY_PROP_MANUFACTURE_DAY,
- 	/* Properties of type `const char *' */
- 	POWER_SUPPLY_PROP_MODEL_NAME,
- 	POWER_SUPPLY_PROP_MANUFACTURER,
+For references this is what an SBS battery status looks like after
+the patch series has been applied:
+
+cat /sys/class/power_supply/sbs-0-000b/uevent 
+POWER_SUPPLY_NAME=sbs-0-000b
+POWER_SUPPLY_TYPE=Battery
+POWER_SUPPLY_STATUS=Discharging
+POWER_SUPPLY_CAPACITY_LEVEL=Normal
+POWER_SUPPLY_HEALTH=Good
+POWER_SUPPLY_PRESENT=1
+POWER_SUPPLY_TECHNOLOGY=Li-ion
+POWER_SUPPLY_CYCLE_COUNT=12
+POWER_SUPPLY_VOLTAGE_NOW=11441000
+POWER_SUPPLY_CURRENT_NOW=-26000
+POWER_SUPPLY_CURRENT_AVG=-24000
+POWER_SUPPLY_CAPACITY=76
+POWER_SUPPLY_CAPACITY_ERROR_MARGIN=1
+POWER_SUPPLY_TEMP=198
+POWER_SUPPLY_TIME_TO_EMPTY_AVG=438600
+POWER_SUPPLY_TIME_TO_FULL_AVG=3932100
+POWER_SUPPLY_SERIAL_NUMBER=0000
+POWER_SUPPLY_VOLTAGE_MIN_DESIGN=10800000
+POWER_SUPPLY_VOLTAGE_MAX_DESIGN=10800000
+POWER_SUPPLY_ENERGY_NOW=31090000
+POWER_SUPPLY_ENERGY_FULL=42450000
+POWER_SUPPLY_ENERGY_FULL_DESIGN=41040000
+POWER_SUPPLY_CHARGE_NOW=2924000
+POWER_SUPPLY_CHARGE_FULL=3898000
+POWER_SUPPLY_CHARGE_FULL_DESIGN=3800000
+POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3000000
+POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=12300000
+POWER_SUPPLY_MANUFACTURE_YEAR=2017
+POWER_SUPPLY_MANUFACTURE_MONTH=7
+POWER_SUPPLY_MANUFACTURE_DAY=3
+POWER_SUPPLY_MANUFACTURER=UR18650A
+POWER_SUPPLY_MODEL_NAME=GEHC
+
+-- Sebastian
+
+Jean-Francois Dagenais (1):
+  power: supply: sbs-battery: add ability to disable charger broadcasts
+
+Sebastian Reichel (18):
+  kobject: increase allowed number of uevent variables
+  power: supply: core: add capacity error margin property
+  power: supply: core: add manufacture date properties
+  power: supply: core: add POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED
+  power: supply: sbs-battery: Add TI BQ20Z65 support
+  power: supply: sbs-battery: add
+    POWER_SUPPLY_PROP_CAPACITY_ERROR_MARGIN support
+  power: supply: sbs-battery: simplify read_read_string_data
+  power: supply: sbs-battery: add PEC support
+  power: supply: sbs-battery: add POWER_SUPPLY_PROP_CURRENT_AVG support
+  power: supply: sbs-battery: Improve POWER_SUPPLY_PROP_TECHNOLOGY
+    support
+  power: supply: sbs-battery: add
+    POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT/VOLTAGE_MAX support
+  power: supply: sbs-battery: add MANUFACTURE_DATE support
+  power: supply: sbs-battery: add
+    POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED support
+  power: supply: sbs-battery: fix idle battery status
+  power: supply: sbs-battery: switch from of_property_* to
+    device_property_*
+  power: supply: sbs-battery: switch to i2c's probe_new
+  power: supply: sbs-battery: constify power-supply property array
+  dt-bindings: power: sbs-battery: Convert to yaml
+
+ Documentation/ABI/testing/sysfs-class-power   |  45 ++-
+ .../power/supply/sbs,sbs-battery.yaml         |  83 +++++
+ .../bindings/power/supply/sbs_sbs-battery.txt |  27 --
+ drivers/power/supply/power_supply_sysfs.c     |   5 +
+ drivers/power/supply/sbs-battery.c            | 348 +++++++++++++-----
+ include/linux/kobject.h                       |   2 +-
+ include/linux/power_supply.h                  |   5 +
+ 7 files changed, 404 insertions(+), 111 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/sbs,sbs-battery.yaml
+ delete mode 100644 Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+
 -- 
 2.26.2
 
