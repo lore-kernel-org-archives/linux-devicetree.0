@@ -2,104 +2,114 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09209C43458
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E084AC433ED
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73A7B207F7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JjTS/Fg9"
+	by mail.kernel.org (Postfix) with ESMTP id B6F88207EA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 14:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389159AbgEMPAO (ORCPT
+        id S2389009AbgEMOlj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 11:00:14 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49043 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389142AbgEMPAD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:03 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwJuu008668;
-        Wed, 13 May 2020 16:59:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=JWzwrNh3nE/7ShXP/Ib08KUjuRLg+lYaWrsytOK3vj8=;
- b=JjTS/Fg9Wazr9t3Jks16qyc7mKewLkMmzffYnzpYJHXTAMweL9XSlTg7uKRmOmEC0ugk
- lgTdLp1r2m+CkRty7fkl3O6kZ+4Fecrz+Xzy4n6/Sv5rdnlKJD7UvS911BZ8jQC43kSp
- 3lO+K9ELoLsnbrgpGfHPWpv8sXeWt2YGOvXHoix/PYWKO2FgvKovLFmj9CWGTUC7T8Zg
- u6ywRmAKbhPeiFWqfJ5jeslt0Z/daYCET/lczXHk0PAl34UjiqeVfcZrXLGoppDNcaIm
- lKR9bFFSOutwnUT0PdYKgAJaQd9ogUKH96dTG8uZwzNcm6j1VZokRWrXRlaVxV1YP9MS IQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vqde9u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:49 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5DBAD100034;
-        Wed, 13 May 2020 16:59:49 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4FF572D3006;
-        Wed, 13 May 2020 16:59:49 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:48
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 07/15] ARM: dts: stm32: update led nodes names for stm32f769-disco
-Date:   Wed, 13 May 2020 16:59:27 +0200
-Message-ID: <20200513145935.22493-8-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
-References: <20200513145935.22493-1-benjamin.gaignard@st.com>
+        Wed, 13 May 2020 10:41:39 -0400
+Received: from mga05.intel.com ([192.55.52.43]:14940 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388395AbgEMOlj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 10:41:39 -0400
+IronPort-SDR: fMcQmLgdCp9QN0PT92LMvDpFxtMC1+thL3c5pb7SQx8oWTDIzh0mTiaywaa57clcE/RtjMoEyS
+ UT0H8OvFCfLA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 07:41:39 -0700
+IronPort-SDR: z/LwwDOuZhSyS3rvaD9yFkLshHEjGog5cmKgX+mVSZttANYRsDanxeHRqykqKaOzpXjY2HC7j0
+ n95DSdK68+Mw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
+   d="scan'208";a="251271896"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 13 May 2020 07:41:33 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jYsZj-006RTr-Aw; Wed, 13 May 2020 17:41:35 +0300
+Date:   Wed, 13 May 2020 17:41:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, fengsheng <fengsheng5@huawei.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Aditya Pakki <pakki001@umn.edu>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 17/17] spi: dw: Use regset32 DebugFS method to create a
+ registers file
+Message-ID: <20200513144135.GO185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-18-Sergey.Semin@baikalelectronics.ru>
+ <20200508193027.GW185537@smile.fi.intel.com>
+ <20200513124422.z6ctlmvipwer45q4@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513124422.z6ctlmvipwer45q4@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update led nodes names to be aligned with yaml description
+On Wed, May 13, 2020 at 03:44:22PM +0300, Serge Semin wrote:
+> On Fri, May 08, 2020 at 10:30:27PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 08, 2020 at 04:29:42PM +0300, Serge Semin wrote:
+> > > DebugFS kernel interface provides a dedicated method to create the
+> > > registers dump file. Use it instead of creating a generic DebugFS
+> > > file with manually written read callback function.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- arch/arm/boot/dts/stm32f769-disco.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > > +#define DW_SPI_DBGFS_REG(_name, _off)	\
+> > > +{					\
+> > > +	.name = _name,			\
+> > > +	.offset = _off			\
+> > 
+> > Leave comma here.
+> 
+> don't see a point.
 
-diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-index 1626e00bb2cb..0ce7fbc20fa4 100644
---- a/arch/arm/boot/dts/stm32f769-disco.dts
-+++ b/arch/arm/boot/dts/stm32f769-disco.dts
-@@ -66,11 +66,11 @@
- 
- 	leds {
- 		compatible = "gpio-leds";
--		green {
-+		led-green {
- 			gpios = <&gpioj 5 GPIO_ACTIVE_HIGH>;
- 			linux,default-trigger = "heartbeat";
- 		};
--		red {
-+		led-red {
- 			gpios = <&gpioj 13 GPIO_ACTIVE_HIGH>;
- 		};
- 	};
+It will help in case if this getting extended. Also slightly better to
+distinguish between terminator type of members vs. data structures.
+
+> > >  }
+
+> > > +	struct debugfs_regset32 regset;
+> > 
+> > I'm wondering why we need it here and not simple on the stack?
+> 
+> Please see the way the DebugFS regset work. A prompt: how does the DebugFS
+> core get to know what is a base address of the registers? =)
+
+If they have a member in the struct which passed thru private pointer of inode.
+But I see your point.
+
 -- 
-2.15.0
+With Best Regards,
+Andy Shevchenko
+
 
