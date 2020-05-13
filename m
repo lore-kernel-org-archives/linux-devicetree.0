@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962F2C43457
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E3DC4345A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0567207D5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CDC207D5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GLLfwc4J"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pQuA5mlI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389287AbgEMPBJ (ORCPT
+        id S2389284AbgEMPBJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 13 May 2020 11:01:09 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36892 "EHLO
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25524 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389144AbgEMPAE (ORCPT
+        by vger.kernel.org with ESMTP id S2388167AbgEMPAI (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:04 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEv03b016527;
-        Wed, 13 May 2020 16:59:53 +0200
+        Wed, 13 May 2020 11:00:08 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwIF1014070;
+        Wed, 13 May 2020 16:59:50 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=mwyeERxk2B3fi4OoJUIvRQEZ7pcDFkiAPomoxGvPt0U=;
- b=GLLfwc4J0Jvwd0moB7yT47ZWedecVE36DC1qcp8jh4WJLXfSi6l64VpaESlrq/8kwdYM
- mWY9qD5iZ2KDHcrivNxOWECZzMfFpl5IMs2SIDCumF8ZRwYalj/5dum6oQuwDBpFfg0D
- vHj1GlIzppfP/5rD568GPcxihohxPmSDKBOEL+K75LxwhirjygfgbfkW73MtgbqOaT2g
- ZOrGXlYRBV42QaE2+FVWWP3NzD8/OUNnzqskiB/yvofLHyjFehgyY7UOlE9MDuEf8ES6
- 8OKpMqZvmiQTmFfh7SqIarS7yb/xQupc34Pp1iCjrTFC5KVzmUhXrwP1kcOo7If+KjhX 9Q== 
+ bh=ND/Ui9QeJtuTQHrwcVceQrxlKJrz8tVZT9wD57SuC/4=;
+ b=pQuA5mlIwQRsbYfUpKN1I/OvvRO7nSkGazvir6QaJAa6xljFUR3NbubPn1V72WfspmnL
+ Ex2kSZxWyFe5u5hoU7IwGv+Cz5Pdq1to1oE6jWw/iJ8y9/r4XreOtGtL/OdKbksvNJUg
+ AOT+nTUhU16pcxrSnPH9TzfnT3BzESvt7JdiSCLnkG68MlLAGRdq4MCBIlOCTDEhC6v2
+ kZiBPvuoRwneNinKjbbx2pXeCKroERF9NLRUCX4doLDGAiR7TnpsBw/i285UX5b5FbDr
+ JMJXgeL2QudSyy+BMaCrJyo3pV3We6ti42tPyxpLoo/OYLiUFuQwoUJDuHQI5ywIwg9e +Q== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vydgmp-1
+        by mx07-00178001.pphosted.com with ESMTP id 3100vpdfxb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:53 +0200
+        Wed, 13 May 2020 16:59:50 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A336210002A;
-        Wed, 13 May 2020 16:59:52 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 73256100034;
+        Wed, 13 May 2020 16:59:50 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 948962D3006;
-        Wed, 13 May 2020 16:59:52 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 63B3B2D3006;
+        Wed, 13 May 2020 16:59:50 +0200 (CEST)
 Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:51
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:49
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
@@ -57,16 +57,16 @@ CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 10/15] ARM: dts: stm32: Update nodes names for stm32h743 pinctrl
-Date:   Wed, 13 May 2020 16:59:30 +0200
-Message-ID: <20200513145935.22493-11-benjamin.gaignard@st.com>
+Subject: [PATCH 08/15] ARM: dts: stm32: update led nodes names for stm32f746-eval
+Date:   Wed, 13 May 2020 16:59:28 +0200
+Message-ID: <20200513145935.22493-9-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
 References: <20200513145935.22493-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE3.st.com
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
@@ -75,62 +75,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix the nodes names to be aligned with yaml description
+Update led nodes names to be aligned with yaml description
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/stm32746g-eval.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-index e44e7baa3f17..fa5dcb6a5fdd 100644
---- a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-@@ -163,7 +163,7 @@
- 				#interrupt-cells = <2>;
- 			};
+diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
+index 4ea3f98dd275..ca8c192449ee 100644
+--- a/arch/arm/boot/dts/stm32746g-eval.dts
++++ b/arch/arm/boot/dts/stm32746g-eval.dts
+@@ -66,17 +66,17 @@
  
--			i2c1_pins_a: i2c1@0 {
-+			i2c1_pins_a: i2c1-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('B', 6, AF4)>, /* I2C1_SCL */
- 						 <STM32_PINMUX('B', 7, AF4)>; /* I2C1_SDA */
-@@ -173,7 +173,7 @@
- 				};
- 			};
- 
--			ethernet_rmii: rmii@0 {
-+			ethernet_rmii: rmii-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('G', 11, AF11)>,
- 						 <STM32_PINMUX('G', 13, AF11)>,
-@@ -256,7 +256,7 @@
- 				};
- 			};
- 
--			usart1_pins: usart1@0 {
-+			usart1_pins: usart1-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('B', 14, AF4)>; /* USART1_TX */
- 					bias-disable;
-@@ -269,7 +269,7 @@
- 				};
- 			};
- 
--			usart2_pins: usart2@0 {
-+			usart2_pins: usart2-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('D', 5, AF7)>; /* USART2_TX */
- 					bias-disable;
-@@ -282,7 +282,7 @@
- 				};
- 			};
- 
--			usbotg_hs_pins_a: usbotg-hs@0 {
-+			usbotg_hs_pins_a: usbotg-hs-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('H', 4, AF10)>,	/* ULPI_NXT */
- 							 <STM32_PINMUX('I', 11, AF10)>, /* ULPI_DIR> */
+ 	leds {
+ 		compatible = "gpio-leds";
+-		green {
++		led-green {
+ 			gpios = <&gpiof 10 1>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
+-		orange {
++		led-orange {
+ 			gpios = <&stmfx_pinctrl 17 1>;
+ 		};
+-		red {
++		led-red {
+ 			gpios = <&gpiob 7 1>;
+ 		};
+-		blue {
++		led-blue {
+ 			gpios = <&stmfx_pinctrl 19 1>;
+ 		};
+ 	};
 -- 
 2.15.0
 
