@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F9BC433FE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51398C433E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C48F5207D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40042207CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="S4Tl1/zE"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WGYdM0pC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389128AbgEMPAA (ORCPT
+        id S2389218AbgEMPAf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 11:00:00 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22916 "EHLO
+        Wed, 13 May 2020 11:00:35 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24648 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729121AbgEMO77 (ORCPT
+        by vger.kernel.org with ESMTP id S2389150AbgEMPAJ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 10:59:59 -0400
+        Wed, 13 May 2020 11:00:09 -0400
 Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwIF0014070;
-        Wed, 13 May 2020 16:59:45 +0200
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwTsU014529;
+        Wed, 13 May 2020 16:59:57 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=9MIUs7nsYP61tQJvbx3DssG7X7lbDl4qrt73yI2Mgpg=;
- b=S4Tl1/zEVTSB6f72mx3yfBm1XDCCBP507cBSHZOmFs2agrUmzS0iCaPl+ULjuleCBUt0
- NurgVnQhukF1kX0NayM8hzZ2Q/nk/O3mZe2Ro2LSxNegUmmJaUNGEYVC+s3tyfu4vp3r
- lX3oByHIOUHmtz8yCPqbvbSttbbvOlJ+Dxja1MA2VigCAbtU6He52z9nbc/wlc1P9qQ9
- bdwdhS6GAJIE+fxsDJX7r5BQUTWvw6T8SYd+CabXKuLGkRrOUzSuZa1e7bmk6zupqhks
- U5wQGFvzFRBURC2Qf/xMhJsSePewwV+UOpvGduCttk+FmHtcDlQNHP8kqqzbAY2wWNas nA== 
+ bh=ZBFbrec77VlhVdOpdB9DYkx4tcvKD68mo+Z0BcORXI8=;
+ b=WGYdM0pCE2kRVJAEZogMtm72v2ZoJbYAK6/VIz7zokZTLN2185I9cJFQkchWDdbe/vl2
+ TL0IhmiWbTNq3kO3C4epdrvHtjXmma3u/kvbz08EtcDSEl0Fe8keld+agML3OeD6rLBO
+ RckxLSxLKYOkAkG1EQEiG9vC8gOF9CM03OvIzgYeDX1TC31zPrr4LvsSyh14z88Kvf2C
+ e+GV8T4jaRSLiErAM+00Si6ykVZyNeCur1pBiQNaF69HDAxf93eUibR8oY92qQgXws28
+ KdYZWAGqBDwir5h7s9nm6VsuHmuV9gcI4apsF0OJBggHyPttZmDTUufEM+bOLDJxT8kJ Bg== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vpdfwt-1
+        by mx07-00178001.pphosted.com with ESMTP id 3100vpdfy6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:45 +0200
+        Wed, 13 May 2020 16:59:57 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DFD9010002A;
-        Wed, 13 May 2020 16:59:44 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0B4D310002A;
+        Wed, 13 May 2020 16:59:57 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D192D2D3006;
-        Wed, 13 May 2020 16:59:44 +0200 (CEST)
-Received: from localhost (10.75.127.51) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:44
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F07632D3006;
+        Wed, 13 May 2020 16:59:56 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:56
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
@@ -57,16 +57,16 @@ CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 03/15] ARM: dts: stm32: update led nodes names for stm32f249-disco
-Date:   Wed, 13 May 2020 16:59:23 +0200
-Message-ID: <20200513145935.22493-4-benjamin.gaignard@st.com>
+Subject: [PATCH 14/15] dt-bindings: pinctrl: stm32: Add missing interrupts property
+Date:   Wed, 13 May 2020 16:59:34 +0200
+Message-ID: <20200513145935.22493-15-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
 References: <20200513145935.22493-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE3.st.com
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
@@ -75,30 +75,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update led nodes names to be aligned with yaml description
+Driver use interrupt-parent field so update the bindings to allow it.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm/boot/dts/stm32f429-disco.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index 30c0f6717871..b39a2b24d7b0 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -70,10 +70,10 @@
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+index 46a0478cb924..5abdabafb8a0 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+@@ -36,6 +36,9 @@ properties:
+   pins-are-numbered: true
+   hwlocks: true
  
- 	leds {
- 		compatible = "gpio-leds";
--		red {
-+		led-red {
- 			gpios = <&gpiog 14 0>;
- 		};
--		green {
-+		led-green {
- 			gpios = <&gpiog 13 0>;
- 			linux,default-trigger = "heartbeat";
- 		};
++  interrupts:
++    maxItems: 1
++
+   st,syscfg:
+     allOf:
+       - $ref: "/schemas/types.yaml#/definitions/phandle-array"
 -- 
 2.15.0
 
