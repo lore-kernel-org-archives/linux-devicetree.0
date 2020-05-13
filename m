@@ -2,99 +2,113 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883E6C433E7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155C3C43458
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 732A5207ED
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 15:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A5B21919
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 14:55:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="oSeKdbtB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbVXtppE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389210AbgEMPAe (ORCPT
+        id S2388965AbgEMOz6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 11:00:34 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24662 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389101AbgEMPAM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:12 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwKAm014273;
-        Wed, 13 May 2020 16:59:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=ESEUfqvz9YnklAP6u66uze+yLAip+yjj8ZHTnTxLVQA=;
- b=oSeKdbtBsR3pyqIaYGozSEZLtRsNmf8qZ57L7VB533+8IqP/ioqn4hls8ky5MZm2//Pc
- sfYwXsY3ZB3/J3IWQkucHlw8ctskuYKUsg8zYY5FAbb4fIooWKeB7Fla088lCLqZYT4L
- j1zngVwn7HKMAJxGKYOj0futBuP9sn53cf6SbZPfkpu0duJRcdldRtV0HqFlOg/bqniD
- zEKXhtJ1eChMmpwHliJqz5S21JmBtD+A0Xbcm6QVwd06oFoKMzD2b15Dgb6NOjExjBti
- p2mFoONyQdweicRBhMIAL573so8aKfte5bmmmKAi/AX4YS2829R0/0tixBEtt1Au7HI2 sg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vpdfy0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:56 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E679310002A;
-        Wed, 13 May 2020 16:59:55 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D8DC52D3006;
-        Wed, 13 May 2020 16:59:55 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:55
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 13/15] ARM: dts: stm32: update led nodes names for stm32f746-eval
-Date:   Wed, 13 May 2020 16:59:33 +0200
-Message-ID: <20200513145935.22493-14-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
-References: <20200513145935.22493-1-benjamin.gaignard@st.com>
+        Wed, 13 May 2020 10:55:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388167AbgEMOz5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 10:55:57 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9FFCC061A0C;
+        Wed, 13 May 2020 07:55:57 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t7so6925379plr.0;
+        Wed, 13 May 2020 07:55:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q0we0+GBX6q0qsW/YELPh66cYe9GwOpY4tlrJBAC4pY=;
+        b=dbVXtppEdGfbCzGErxALcHVIJjRBUe5SR4gI+aW8gGwrpxSLPy95nUwKeOViTlMJJa
+         GetvmXVu6j1ZaiqMj4ZA0CI6ROcZ4mDH55B/Cfk2OA0nNVt4eZRRr7NsHAb4JkNqLgsK
+         s51l3826ndpc6C7+MmyNtQ1Wh/8J8THb3G2oKksmFcptHgxpvbGiU8IyCfxSJWnKVpCz
+         fv7pJ8FmzZMP268zQaGv/ASAnz/7NGa7D/v801KXMvnvuS+B35jW3K91J1C7mNBQpWKw
+         6ShgfD4zx07M3n4f8Vthv8RuzRgKPSlm6+HfkQ/IfNJSjLB/xMotG+w5eSX0JME536PM
+         GdZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q0we0+GBX6q0qsW/YELPh66cYe9GwOpY4tlrJBAC4pY=;
+        b=XvH4OvOcpX2NlsPRePUefcMn4jDXEpDXhXLJWKADIxgqy7Git5h6GqyoOZdkbyqxNn
+         51s5DCZFwMLoKAyrbob7r78juY7Xsr2ybhrbWWNzgwZTHDlez6HSCShaEJBn9YvMsAi5
+         drMLd3wMSuefS+LGTC4h7Fqsw/ViVjmK0El6bJVmvVtkjW9dhyoTRMi2E/+dyQ9BMiCZ
+         6nnQR9GEiqefrlCG7W740EjJonqjIaqpADKZ3zb9JrOGYFmi90fEmmwlvPbsF8aBfzlw
+         +wOCOoAAH+Lmwrf/356oNalZk/FccIWxuWCOvUtwilcNJWm/XresxNPf4PyB9HN16/nc
+         bnrQ==
+X-Gm-Message-State: AGi0PuZquY3O0/hGnXI/mDHc8xR5Efbmg4IdEpeyYlDKfoJPyAptWd+8
+        nmIM7wKaqf3HIskZDMR3lFXuxn0mKdUJkHNq8dxx0SS4QPo=
+X-Google-Smtp-Source: APiQypJStWKnwCbOzDaephSclhi7lT0hpHLD+NSnoaKCFmfLEuG9RPUzE+cPZl9AlTEKQ08Sn8uR/rwkx0DqCXY6/+w=
+X-Received: by 2002:a17:902:7003:: with SMTP id y3mr25899813plk.18.1589381757070;
+ Wed, 13 May 2020 07:55:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
+References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-2-lars.povlsen@microchip.com>
+In-Reply-To: <20200513140031.25633-2-lars.povlsen@microchip.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 17:55:50 +0300
+Message-ID: <CAHp75VcA-oDboufsDNx1ZR4+HBwYt7LdLOpbfs7-bM9ByucKJA@mail.gmail.com>
+Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no
+ IRQ specified in DT
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update led nodes names to be aligned with yaml description
+On Wed, May 13, 2020 at 5:03 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+> With this change a SPI controller can be added without having a IRQ
+> associated, and causing all transfers to be polled. For SPI controllers
+> without DMA, this can significantly improve performance by less
+> interrupt handling overhead.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+...
 
-diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-index d946e0a02f5c..aa47be06cd7a 100644
---- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-@@ -62,7 +62,7 @@
- 
- 	led {
- 		compatible = "gpio-leds";
--		blue {
-+		led-blue {
- 			label = "heartbeat";
- 			gpios = <&gpiod 11 GPIO_ACTIVE_HIGH>;
- 			linux,default-trigger = "heartbeat";
--- 
-2.15.0
+> +#define VALID_IRQ(i) (i >= 0)
 
+drivers/rtc/rtc-cmos.c:95:#define is_valid_irq(n)               ((n) > 0)
+
+Candidate to be in include/linux/irq.h ?
+
+...
+
+> +       if (VALID_IRQ(dws->irq))
+> +               free_irq(dws->irq, master);
+
+Isn't free_irq() aware of invalid ones (not found IRQ in the tree or
+any other backend container won't do anything)?
+
+
+>  err_free_master:
+>         spi_controller_put(master);
+>         return ret;
+> --
+> 2.26.2
+
+
+
+--
+With Best Regards,
+Andy Shevchenko
