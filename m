@@ -2,73 +2,115 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E9CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B563C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 19:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44752065C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 18:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288D62054F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 19:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390369AbgEMS56 (ORCPT
+        id S2390448AbgEMTJp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 14:57:58 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51866 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732218AbgEMS4d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 14:56:33 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id D22F82A0188
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 6697A4800FF; Wed, 13 May 2020 20:56:29 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1 01/19] kobject: increase allowed number of uevent variables
-Date:   Wed, 13 May 2020 20:55:57 +0200
-Message-Id: <20200513185615.508236-2-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+        Wed, 13 May 2020 15:09:45 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:35188 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732218AbgEMTJp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 15:09:45 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id B26AA1C025E; Wed, 13 May 2020 21:09:42 +0200 (CEST)
+Date:   Wed, 13 May 2020 21:09:42 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200513190942.GA2626@duo.ucw.cz>
+References: <20200512214713.40501-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
+Content-Disposition: inline
+In-Reply-To: <20200512214713.40501-1-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SBS battery driver exposes 32 power supply properties now,
-which will result in uevent failure on (un)plugging the
-battery. Other drivers (e.g. bq27xxx) are also coming close
-to this limit, so increase it.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- include/linux/kobject.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--Kj7319i9nmIyA2yE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/include/linux/kobject.h b/include/linux/kobject.h
-index e2ca0a292e21..75e822569e39 100644
---- a/include/linux/kobject.h
-+++ b/include/linux/kobject.h
-@@ -29,7 +29,7 @@
- #include <linux/uidgid.h>
- 
- #define UEVENT_HELPER_PATH_LEN		256
--#define UEVENT_NUM_ENVP			32	/* number of env pointers */
-+#define UEVENT_NUM_ENVP			64	/* number of env pointers */
- #define UEVENT_BUFFER_SIZE		2048	/* buffer for the variables */
- 
- #ifdef CONFIG_UEVENT_HELPER
--- 
-2.26.2
+Hi!
 
+> Here's the updated set of these patches fixed up for Johan's and
+> Pavel's earlier comments.
+>=20
+> This series does the following:
+>=20
+> 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
+>=20
+> 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
+>    TTY ports configured in devicetree with help of n_gsm.c
+>=20
+> 3. Allows the use of standard Linux device drivers for dedicated
+>    TS 27.010 channels for devices like GNSS and ALSA found on some
+>    modems for example
+
+> 4. Adds a gnss-motmdm consumer driver for the GNSS device found on
+>    the Motorola Mapphone MDM6600 modem on devices like droid4
+
+It does one thing ... it turns Droid 4 into useful phone!=20
+
+Thanks a lot. I believe these are same patches as in
+droid4-pending-v5.7 branch, so whole series is
+
+Tested-by: Pavel Machek <pavel@ucw.cz>
+
+Getting this into 5.8 would be nice :-).
+
+> Now without the chardev support, the /dev/gsmtty* using apps need
+> to use "U1234AT+CFUN?" format for the packets. The advantage is
+> less kernel code, and we keep the existing /dev/gsmtty* interface.
+>=20
+> If we still really need the custom chardev support, that can now
+> be added as needed with the channel specific consumer driver(s),
+> but looks like this won't be needed based on Pavel's ofono work.
+
+These work for me, and I have patched ofono with basic
+functionality. It is no longer possible to use minicom for debugging,
+but printf can be used instead, so that's not much of a problem.
+
+I have adjusted ofono code, and moved away from normal AT support
+code. More API changes would not be welcome :-).
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Kj7319i9nmIyA2yE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXrxF9gAKCRAw5/Bqldv6
+8s9sAKCe1lhrghH/ZZcPP1qyI00/pEbM/ACfeI3/EpzutMhcO7n1Hu9cHZhSmis=
+=tgVq
+-----END PGP SIGNATURE-----
+
+--Kj7319i9nmIyA2yE--
