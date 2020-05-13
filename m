@@ -2,98 +2,155 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBF9C2D0FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 00:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B264DC2D0F8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 01:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47BFD20753
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 00:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94376206D3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 01:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ITZ6s8nf"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="bcpCCd4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732083AbgEMAzy (ORCPT
+        id S1731695AbgEMBUr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 May 2020 20:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732075AbgEMAza (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 May 2020 20:55:30 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09655C061A0F
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 17:55:30 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t9so10382794pjw.0
-        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 17:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+aVsTRV0Vd7AjARuX1FSoP3j3p4vMbsUynYNIWG2zcg=;
-        b=ITZ6s8nfqeBtfn0oVoLGCgrnjOV1Xy0pZ3QdECW67KsV/hkeylPh/9bZ5pY1ytrDEv
-         MYdwBAJh+8DHuXK6VaGPgTKlQozijma7VAZhrA2jziS2Wlfl2Aj0GO+oGXYBdvOHYkNI
-         1zyQX/hfzOnC2niIDuG1u0ohwO0xg+hWVawxT9+Pn0+2OOKKwn0xZv2Qvv+BXw3KPfaT
-         Ba0QGr4CYQTEmMg3MUxArtF/PEekKi386oRGyi9pXGwCAQiIgxbtoqYViHsSJgREiy1K
-         Y7ilsmDsR0Th/RdJdnf+j5yqKLOCA3bz1sKYYSDzKdxvqgerEGPd3qk7PmVJDXYSzYoI
-         zGxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+aVsTRV0Vd7AjARuX1FSoP3j3p4vMbsUynYNIWG2zcg=;
-        b=CqdXG2c9gbwvx6rOB3iopmY/sVigDJIdpCenWHHIX73AwuCc4FFj3BpN2V6T9mT7c9
-         SAANnQum6QBly41bYsYnp0asns9CGLponHB1sR9OxcDjn1Jtw/nUUx5B4wczye4bl1vq
-         JrQ/nq+gOZNC+9JYpZxZd/OscCXMosTE8wSotek+q2TTRQ4hSudkMqx9zfiQqrul4UJS
-         /kKobLySg5PP5XJISSY88IwalUQ44OdCgATpbH+9nRi7fed+zo4DhPBZHOypdMbAEuPq
-         EXbROgjtIXMiPJR9UgEwUGAtCnyFQbr3BajpMpCe1U06u7PKeQSoFH7jMJp61WAiCPp6
-         PgCw==
-X-Gm-Message-State: AGi0PuacIo7MYn6aiyL6iLm+V1wAtNi8fKk/itifhnyP3a0gmkzt65do
-        M2vn1n6TYDOdJVennjaB2ZXp9A==
-X-Google-Smtp-Source: APiQypI3O4oBkDtpKaBNHwg5f+8AZEbJC5eKmdrym5Hi5g9Mw7N4wvHIlkhR/lrQNiEANYIJvRADLA==
-X-Received: by 2002:a17:90a:da05:: with SMTP id e5mr32780994pjv.140.1589331329287;
-        Tue, 12 May 2020 17:55:29 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p2sm11057428pgh.25.2020.05.12.17.55.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 17:55:28 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] hwspinlock: qcom: Allow dropping the intermediate TCSR mutex syscon
-Date:   Tue, 12 May 2020 17:54:37 -0700
-Message-Id: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 12 May 2020 21:20:47 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17766 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731604AbgEMBUr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 May 2020 21:20:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1589332815; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=cjRqHgQoFQcF9dXuptd75t76dh9Ox5nQ6TBCswsAIE4vmMvZMewIFAKPRRPZe/PJS2bY6Znhx+4w0WAA5Mc10//xuHcGOXibicDt0DNxz/yqmBq9jqQYI0HOJKQZLeRu97PeXH0+eg7Wh7IEp7qIfK2cgzhh49fR11LSI9OmNkM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1589332815; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=UUH9TBEsGZClV0UvQJYkiGlyJwxsXutgInjbHM/99OA=; 
+        b=UeVNz+dMSImscqxWTjoQW6hcrDNWN8PeWNk2/x2Z7sWF8rnNDKBCow+UF1rwxfp6prWwIgTltl1mXREQhk3JzzzL9uRc8V36S/nmjqTuPp8mHYV/KUcZasCsX1zXsKb+mm4yvqUoOl5SfBFRA/dS2EfEd67YRPZXmbW7VWWx9bw=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589332815;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=UUH9TBEsGZClV0UvQJYkiGlyJwxsXutgInjbHM/99OA=;
+        b=bcpCCd4IolU5WLkjKiiyehRsPV+/qDkYcYvv6kgawo3IpvNaL0dpUfqw1G/bJJ3B
+        hTpUDBXWRJAWXQfNpXFhEmkx6v6tDlprHuJHAJtFK56CoaoP5V9/naZuiG0Yo92b7Hd
+        2ymduufrqGSTuebNjO6jnOS0hJEjt+PQJZIAEou0=
+Received: from [127.0.0.1] (223.104.5.223 [223.104.5.223]) by mx.zoho.com.cn
+        with SMTPS id 1589332811518609.5936666834109; Wed, 13 May 2020 09:20:11 +0800 (CST)
+Date:   Wed, 13 May 2020 09:20:08 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v9 2/5] PCI: Add Loongson PCI Controller support
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <20200512180602.GA273658@bjorn-Precision-5520>
+References: <20200512180602.GA273658@bjorn-Precision-5520>
+Message-ID: <08C2301A-7349-4044-80F4-0B0520780DB9@flygoat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In all modern Qualcomm platforms the mutex region of the TCSR is forked
-off into its own block, all with a offset of 0 and stride of 4096.
-Update the binding to allow the hardware block to be described directly
-on the mmio bus, in addition to allowing the existing syscon based
-definition.
 
-Bjorn Andersson (4):
-  dt-bindings: hwlock: qcom: Migrate binding to YAML
-  dt-bindings: hwlock: qcom: Allow device on mmio bus
-  hwspinlock: qcom: Allow mmio usage in addition to syscon
-  arm64: dts: qcom: sm8250: Drop tcsr_mutex syscon
 
- .../bindings/hwlock/qcom-hwspinlock.yaml      | 65 +++++++++++++++++
- arch/arm64/boot/dts/qcom/sm8250.dtsi          | 11 +--
- drivers/hwspinlock/qcom_hwspinlock.c          | 72 ++++++++++++++-----
- 3 files changed, 124 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+=E4=BA=8E 2020=E5=B9=B45=E6=9C=8813=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882=
+:06:02, Bjorn Helgaas <helgaas@kernel=2Eorg> =E5=86=99=E5=88=B0:
+>On Tue, May 12, 2020 at 03:43:56PM +0800, Jiaxun Yang wrote:
+>> This controller can be found on Loongson-2K SoC, Loongson-3
+>> systems with RS780E/LS7A PCH=2E
+>>=20
+>> The RS780E part of code was previously located at
+>> arch/mips/pci/ops-loongson3=2Ec and now it can use generic PCI
+>> driver implementation=2E
+>>=20
+>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>> Reviewed-by: Rob Herring <robh@kernel=2Eorg>
+>
+>> +static void system_bus_quirk(struct pci_dev *pdev)
+>> +{
+>> +	u16 tmp;
+>> +
+>> +	/*=20
+>> +	 * These devices are not sharing resouces with rest of devices
+>> +	 * on host bus and firmware will ensure their BARs are placed
+>> +	 * in safe ranges=2E Also there might be some config registers
+>> +	 * in their config space so kernel shouldn't ignore them=2E
+>
+>"Firmware ensuring BARs are placed in 'safe' ranges" is not a
+>sufficient answer=2E  As I said before, Linux needs to know both the
+>ADDRESS and the SIZE of whatever non-standard BARs these are=2E
+>Otherwise, we're liable to assign that space to a different device=2E
 
--- 
-2.26.2
+The address assigned to these devices will never be a part of resources
+belongs to the host bridge=2E That's enforced by hardware and firmware,
+so address conflict would never happen=2E
 
+I'm doing like this to ensure kernel will discover this device but do noth=
+ing
+about assignment of resources to it=2E
+
+>
+>If you have to hard-code the size, so be it=2E  That would mean the
+>hardware is completely broken, but at least we could make Linux deal
+>with it=2E  If the hardware consumes address space we don't know about,
+>we can't deal with that=2E
+>
+>> +	 */
+>> +	pdev->mmio_always_on =3D 1;
+>> +	pdev->non_compliant_bars =3D 1;
+>> +}
+>
+>> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int d=
+evfn,
+>> +			       int where)
+>> +{
+>> +	unsigned char busnum =3D bus->number;
+>> +	struct pci_host_bridge *bridge =3D pci_find_host_bridge(bus);
+>> +	struct loongson_pci *priv =3D  pci_host_bridge_priv(bridge);
+>> +
+>> +	/*
+>> +	 * Do not read more than one device on the bus other than
+>> +	 * the host bus 0=2E
+>> +	 */
+>
+>If the hardware is restricted such that the root bus number must be
+>zero, pleae say that explicitly here=2E  Otherwise, it just looks like
+>a bug=2E
+>
+>> +	if (priv->flags & FLAG_DEV_FIX && busnum !=3D 0 &&
+>> +		PCI_SLOT(devfn) > 0)
+>> +		return NULL;
+>> +
+>> +	/* CFG0 can only access standard space */
+>> +	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
+>> +		return cfg0_map(priv, busnum, devfn, where);
+>> +
+>> +	/* CFG1 can access extended space */
+>> +	if (where < PCI_CFG_SPACE_EXP_SIZE && priv->cfg1_base)
+>> +		return cfg1_map(priv, busnum, devfn, where);
+>> +
+>> +	return NULL;
+>> +}
+
+--=20
+Jiaxun Yang
