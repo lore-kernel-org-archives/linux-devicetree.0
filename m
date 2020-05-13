@@ -2,143 +2,107 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DDEC2D0FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 05:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AE5C2D0FE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 06:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A376220659
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 05:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3071220708
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 06:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cBKs8dP3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uSuhoH0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgEMFmy (ORCPT
+        id S1728784AbgEMF53 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 01:42:54 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:9834 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728097AbgEMFmy (ORCPT
+        Wed, 13 May 2020 01:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728871AbgEMF53 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 01:42:54 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D5gKwG030195;
-        Wed, 13 May 2020 07:42:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=PA4ZXQ0yWBr3TXyuz71Z6yCek2TSTzgnyT8SThVO9WM=;
- b=cBKs8dP3gE1rIUG2bqKcIRQOanm7pzuqyCC4/EqFsjyf8Vc048pCQi0+GyDvyK6rvUaY
- sVOQvIXe/ooRW65Ym3Qk/YUeKI79nY3KGV1L1Qzfd3eKwOfqt/s5Zjyj0t8k0FuiUpzL
- rVa/eo6uT+hrtDkq2ScaPQ0d9hmCfzP8p88T8JADVbdvZF2jWw72lnsjCEwJwd5gQR1f
- ByeJ1zGbZ468urJOvdEW0p8y6VjK0M6HBYHNV2mJr1C5Al+tuAwyclQfiszWgkmIg+Mu
- YyXaGJi1nIMeXPyxdlY9UphXl2Q+TPd+oG42omIeQkyaIbHqE4bLwqGjisEr1CL+re5V 1w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vpam3m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 07:42:37 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7284310002A;
-        Wed, 13 May 2020 07:42:37 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4234721FE90;
-        Wed, 13 May 2020 07:42:37 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May
- 2020 07:42:36 +0200
-Date:   Wed, 13 May 2020 07:42:31 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "wsa@kernel.org" <wsa@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
-Message-ID: <20200513054231.GA16558@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Rob Herring <robh@kernel.org>,
-        "wsa@kernel.org" <wsa@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
- <1588657871-14747-4-git-send-email-alain.volmat@st.com>
- <20200513021932.GA9172@bogus>
+        Wed, 13 May 2020 01:57:29 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 342FBC05BD09
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 22:57:29 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z1so7532685pfn.3
+        for <devicetree@vger.kernel.org>; Tue, 12 May 2020 22:57:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kcyyNciXuByQ3loktJkU4jCSR6CJ8Ob9Xjb+xzFsaeI=;
+        b=uSuhoH0eMm36ZmB2Fj4UvKsgN/+ZX1g/k1KEpzJIpbdClvv6EyyLOo7Xhggv5m5whY
+         fumXDtsw61PgVLyJv2XjsNuuuTuZjCZvWyabAK+NvvkfNV0tCUa+gHZc9WhLMPFjreoK
+         EwT4KhQzxnMfDwSNS8mbvvmwljx32IjcWYMh8pjl7UzEBBJsTevzdSozStSlvgQrPAfe
+         nQeawgeQN9j+hQquwiMcT19uaLzEMQbVmFFzglN9Bj16ZuEP8iVNoH0pQQSyQpLuNYVg
+         EJWC67O81VXreR59gfK39BQ4XBVYSaoFfjGBH7ASGAuHeCSgqkbavrNhxciR6oNvCDl5
+         +LpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kcyyNciXuByQ3loktJkU4jCSR6CJ8Ob9Xjb+xzFsaeI=;
+        b=bfOzsdmpXfe/vNjNBLUQJ/jQXR+FYIRNv6WpERFIxBugcxIMyMlr4FnVPGpAqFxcRH
+         1Jo6K7bZgx7IdpOwEp267+PLvcF64a9gyNh3EIdoGej/4XMQ7hXnzkJgKt6idjF3jEEk
+         8MpzBv808oBZVLLzPh8S4J1kmUZxjw7JsNiN4HvQ875K8LLNYlS5jTh0b4sFgr2t51Mj
+         UMjn8WovVs4wiIpdpZhWpiKDYv1Q9n36zqQ4x3ZMghCGzmOxepcs8ZmqBqUlu9MbyjxV
+         2Dj1RmlD+s7IZEFBRU5Nan6eu4P0iuZ18ToB/ABc75/c+RZO4e6KPAK/uWu05GhaSMXx
+         1Seg==
+X-Gm-Message-State: AGi0PubY+dCT+xN7K4kMRuULTJqx2bBkUpWAVwGo2BPZz+g/XOB6E/Hf
+        vcr5Bg49aVQvZxra0sG13Pmy+g==
+X-Google-Smtp-Source: APiQypL7n3HR1/A2BsmbmDuES13Hpi9E5nO3B4RrCgr0yhFV1nEZmheX1W1DXxDuIqkSRWwoDZ7KGg==
+X-Received: by 2002:a63:f610:: with SMTP id m16mr22384313pgh.174.1589349448543;
+        Tue, 12 May 2020 22:57:28 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id w192sm14131161pff.126.2020.05.12.22.57.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 22:57:27 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/5] remoteproc: qcom: PIL info support
+Date:   Tue, 12 May 2020 22:56:36 -0700
+Message-Id: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200513021932.GA9172@bogus>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_01:2020-05-11,2020-05-13 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Rob,
+Introduce support for filling out the relocation information in IMEM, to aid
+post mortem debug tools to locate the various remoteprocs.
 
-On Wed, May 13, 2020 at 02:19:32AM +0000, Rob Herring wrote:
-> On Tue, May 05, 2020 at 07:51:10AM +0200, Alain Volmat wrote:
-> > Add a new binding of the i2c-stm32f7 driver to enable the handling
-> > of the SMBUS-Alert
-> > 
-> > Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> > ---
-> >  Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
-> > index b50a2f420b36..04c0882c3661 100644
-> > --- a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
-> > +++ b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
-> > @@ -36,6 +36,10 @@ allOf:
-> >                  minItems: 3
-> >                  maxItems: 3
-> >  
-> > +        st,smbus-alert:
-> > +          description: Enable the SMBus Alert feature
-> > +          $ref: /schemas/types.yaml#/definitions/flag
-> > +
-> 
-> We already have smbus_alert interrupt. Can't you just check for this in 
-> the slave nodes and enable if found?
+Bjorn Andersson (5):
+  dt-bindings: remoteproc: Add Qualcomm PIL info binding
+  remoteproc: qcom: Introduce helper to store pil info in IMEM
+  remoteproc: qcom: Update PIL relocation info on load
+  arm64: dts: qcom: qcs404: Add IMEM and PIL info region
+  arm64: dts: qcom: sdm845: Add IMEM and PIL info region
 
-My understanding reading the code (smbalert_probe within i2c-smbus.c, of_i2c_setup_smbus_alert called when
-registering an adapter within i2c-core-smbus.c) is that smbus_alert refers to an interrupt on the
-adapter side. That is an interrupt that would be triggered when the adapter is receiving an smbus_alert
-message.
-In our case (stm32f7), we do not have specific interrupt for that purpose. The interrupt triggered when
-an SMBUS Alert is received (by the adapter) is the same interrupt as for other reasons and we check
-within the irq handler within stm32f7 the reason before calling i2c_handle_smbus_alert if the status
-register indicated an SMBUS Alert.
-So my understanding is that we cannot rely on the mechanism of naming an interrupt smbus_alert.
-Did I misunderstood something ?
+ .../bindings/remoteproc/qcom,pil-info.yaml    |  44 +++++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  15 +++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  15 +++
+ drivers/remoteproc/Kconfig                    |   6 +
+ drivers/remoteproc/Makefile                   |   1 +
+ drivers/remoteproc/qcom_pil_info.c            | 124 ++++++++++++++++++
+ drivers/remoteproc/qcom_pil_info.h            |   7 +
+ drivers/remoteproc/qcom_q6v5_adsp.c           |  16 ++-
+ drivers/remoteproc/qcom_q6v5_mss.c            |   3 +
+ drivers/remoteproc/qcom_q6v5_pas.c            |  15 ++-
+ drivers/remoteproc/qcom_q6v5_wcss.c           |  14 +-
+ drivers/remoteproc/qcom_wcnss.c               |  14 +-
+ 12 files changed, 262 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+ create mode 100644 drivers/remoteproc/qcom_pil_info.c
+ create mode 100644 drivers/remoteproc/qcom_pil_info.h
 
-> 
-> >    - if:
-> >        properties:
-> >          compatible:
-> > -- 
-> > 2.17.1
-> > 
+-- 
+2.26.2
+
