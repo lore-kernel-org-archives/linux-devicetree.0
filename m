@@ -2,176 +2,112 @@ Return-Path: <SRS0=QJws=63=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E708CA90AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 09:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7381FC2D0FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19A47206B8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 09:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54AF220575
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 May 2020 10:00:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p7i6gqiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388025AbgEMJ7h (ORCPT
+        id S2388243AbgEMKAk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 05:59:37 -0400
-Received: from 8bytes.org ([81.169.241.247]:42342 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733308AbgEMJxH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:07 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 8FAD0379; Wed, 13 May 2020 11:53:05 +0200 (CEST)
-Date:   Wed, 13 May 2020 11:53:04 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v3 3/5] iommu: Add Allwinner H6 IOMMU driver
-Message-ID: <20200513095304.GK9820@8bytes.org>
-References: <cover.70f96f9afd2e04161ebece593ae6cd7e17eca41b.1588673353.git-series.maxime@cerno.tech>
- <dcccd40c46982b6ab2fc1c5bc199d045798fbe8e.1588673353.git-series.maxime@cerno.tech>
+        Wed, 13 May 2020 06:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387696AbgEMJvo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 05:51:44 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 833F4C061A0C;
+        Wed, 13 May 2020 02:51:44 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x2so7775815pfx.7;
+        Wed, 13 May 2020 02:51:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hjiKJ7FJyTyiMTQabLbMdyXHxAd5Y5rApctKC8YRsHE=;
+        b=p7i6gqiUSXTtK8sEqLVDaHCAQ4YPJvlMltihgkLN7PhyQ+GkAQ13GNyAEymKYACWAF
+         Z8VAhvK8B1LJYKmMS2KF1M/TV8DHztjkQco/ZFyFDXNzKiaIx4RZz7xBWFDR16ITIdCx
+         jHEg/QgmnkBftkMGLGoPfM0qxMz1CpHKozcnhaKuOi2jeiARYIRZPQByw9cY8tbS/AAk
+         hC1GDea4nZlaXy0tn6iJbsACuFTdha5CqiXFVYBskwh9+LslZOdOnNMFMqY7kJ7Opqbs
+         yTRB1F1Q/nICpbSz/IUXIDs8pDHgXq//6RETRj7c91UGb18dnxDJt9uZo1YSTMW8mSq8
+         4WWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hjiKJ7FJyTyiMTQabLbMdyXHxAd5Y5rApctKC8YRsHE=;
+        b=LYQZCWjglxnBoqWh97RtefJXqLeJE4Nx6JnWUgs/mmwkBOSRvz7QMmo5T1mkK38pVo
+         kiU0S8Pmxxi4ebGYCCUttfEhnXBKiUC3KUl6CuKCr0wB2a6lX8hbfhLnnPDSwgf6exS/
+         sm5GUe9faNTQJP8gOphIg+LqpXYewSqEZAj0T0LZ6VCA6NcBfSTOSTLu8HwO5Z5MSP6K
+         JiYFkBlEL0tJR6YIQGbX+wwhIq5YoNwBoZV0vLLiRavuwoc4iA7Itk7OHROULeCe3tZt
+         +vXmSE/QFIymMPCYit3rrU3MZj/s0ilq9RUEUl8o8jGOUdIcqRHQPf3XceeRyWtB86Ee
+         Viuw==
+X-Gm-Message-State: AGi0PubInIQmkABs6348LPCQKrUzly6g1CCNxkd9iMR0Ma3wvDSuixSm
+        Sj+rfdJq7Wo67LSDmWS749eX9AxF4OY7QsIq3O4=
+X-Google-Smtp-Source: APiQypIgIamK3+3CJqNCYmJC4K3blTlFkyzYGSrlGUS2dxYhc98NURSl+FWvlL20we5SAXLj5NrJHWb6PfApdwXRfzI=
+X-Received: by 2002:a62:7f11:: with SMTP id a17mr24262558pfd.36.1589363503255;
+ Wed, 13 May 2020 02:51:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dcccd40c46982b6ab2fc1c5bc199d045798fbe8e.1588673353.git-series.maxime@cerno.tech>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org> <1589361736-816-6-git-send-email-jprakash@codeaurora.org>
+In-Reply-To: <1589361736-816-6-git-send-email-jprakash@codeaurora.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 12:51:36 +0300
+Message-ID: <CAHp75Vf-bFfrZ7uCOnXuzT+p+itkcmkE61=ezZzN8yDFQHABdw@mail.gmail.com>
+Subject: Re: [PATCH V4 5/5] iio: adc: Clean up ADC code common to PMIC5 and PMIC7
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        smohanad@codeaurora.org, kgunda@codeaurora.org,
+        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 05, 2020 at 12:09:32PM +0200, Maxime Ripard wrote:
-> +static u32 *sun50i_dte_get_page_table(struct sun50i_iommu_domain *sun50i_domain,
-> +				      dma_addr_t iova, gfp_t gfp)
-> +{
-> +	struct sun50i_iommu *iommu = sun50i_domain->iommu;
-> +	unsigned long flags;
-> +	u32 *page_table;
-> +	u32 *dte_addr;
-> +	u32 old_dte;
-> +	u32 dte;
-> +
-> +	dte_addr = &sun50i_domain->dt[sun50i_iova_get_dte_index(iova)];
-> +	dte = *dte_addr;
-> +	if (sun50i_dte_is_pt_valid(dte)) {
-> +		phys_addr_t pt_phys = sun50i_dte_get_pt_address(dte);
-> +		return (u32 *)phys_to_virt(pt_phys);
-> +	}
-> +
-> +	page_table = sun50i_iommu_alloc_page_table(iommu, gfp);
-> +	if (IS_ERR(page_table))
-> +		return page_table;
-> +
-> +	dte = sun50i_mk_dte(virt_to_phys(page_table));
-> +	old_dte = cmpxchg(dte_addr, 0, dte);
-> +	if (old_dte) {
-> +		phys_addr_t installed_pt_phys =
-> +			sun50i_dte_get_pt_address(old_dte);
-> +		u32 *installed_pt = phys_to_virt(installed_pt_phys);
-> +		u32 *drop_pt = page_table;
-> +
-> +		page_table = installed_pt;
-> +		dte = old_dte;
-> +		sun50i_iommu_free_page_table(iommu, drop_pt);
-> +	}
-> +
-> +	sun50i_table_flush(sun50i_domain, page_table, PT_SIZE);
-> +	sun50i_table_flush(sun50i_domain, dte_addr, 1);
-> +
-> +	spin_lock_irqsave(&iommu->iommu_lock, flags);
-> +	sun50i_iommu_ptw_invalidate(iommu, iova);
-> +	spin_unlock_irqrestore(&iommu->iommu_lock, flags);
+On Wed, May 13, 2020 at 12:24 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>
+> This commit includes the following changes:
+> Add a common function used for read_raw callback for
+> both PMIC5 and PMIC7 ADCs.
+> Add exit function for ADC.
+> Add info_property under adc_data to more efficiently
+> distinguish PMIC5 and PMIC7 ADCs.
 
-Why is that needed, does the PTW also cache non-present entries?
+Something happened to the editor settings. We have lines up to 72
+(recommended) characters.
 
-> +static size_t sun50i_iommu_unmap(struct iommu_domain *domain, unsigned long iova,
-> +				 size_t size, struct iommu_iotlb_gather *gather)
-> +{
-> +	struct sun50i_iommu_domain *sun50i_domain = to_sun50i_domain(domain);
-> +	struct sun50i_iommu *iommu = sun50i_domain->iommu;
-> +	phys_addr_t pt_phys;
-> +	dma_addr_t pte_dma;
-> +	u32 *pte_addr;
-> +	u32 dte;
+...
+
+> @@ -512,6 +518,7 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
+>                         &adc5_prescale_ratios[prop->prescale],
+>                         adc->data,
+>                         adc_code_volt, val);
 > +
-> +	dte = sun50i_domain->dt[sun50i_iova_get_dte_index(iova)];
-> +	if (!sun50i_dte_is_pt_valid(dte))
-> +		return 0;
-> +
-> +	pt_phys = sun50i_dte_get_pt_address(dte);
-> +	pte_addr = (u32 *)phys_to_virt(pt_phys) + sun50i_iova_get_pte_index(iova);
-> +	pte_dma = pt_phys + sun50i_iova_get_pte_index(iova) * PT_ENTRY_SIZE;
-> +
-> +	if (!sun50i_pte_is_page_valid(*pte_addr))
-> +		return 0;
-> +
-> +	memset(pte_addr, 0, sizeof(*pte_addr));
-> +	sun50i_table_flush(sun50i_domain, pte_addr, 1);
-> +
-> +	spin_lock(&iommu->iommu_lock);
-> +	sun50i_iommu_ptw_invalidate(iommu, iova);
-> +	spin_unlock(&iommu->iommu_lock);
+>                 if (ret)
+>                         return ret;
+>
 
-And is that also needed? You clear a PTE here and not a top-level DT
-entry. All these spinlocks in the map/unmap paths will truly hurt
-performance.
+Unrelated.
 
-And if it is really needed you can defer it into the iotlb_sync()
-call-back.
-
-> +static int sun50i_iommu_add_device(struct device *dev)
-> +{
-> +	struct sun50i_iommu *iommu;
-> +	struct iommu_group *group;
-> +
-> +	iommu = sun50i_iommu_from_dev(dev);
-> +	if (!iommu)
-> +		return -ENODEV;
-> +
-> +	group = iommu_group_get_for_dev(dev);
-> +	if (IS_ERR(group))
-> +		return PTR_ERR(group);
-> +
-> +	iommu_group_put(group);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sun50i_iommu_remove_device(struct device *dev)
-> +{
-> +	iommu_group_remove_device(dev);
-> +}
-
-
-These two call-backs have been renamed in the iommu-tree to
-probe_device() and release_device() with slightly different semantics
-and function signatures. I think for this driver they should look like
-this:
-
-	static struct iommu_device *sun50i_iommu_probe_device(struct device *dev)
-	{
-		struct sun50i_iommu *iommu;
-
-		iommu = sun50i_iommu_from_dev(dev);
-		if (!iommu)
-			return ERR_PTR(-ENODEV);
-
-		return &iommu->iommu;
-	}
-
-	static void sun50i_iommu_release_device(struct device *dev)
-	{
-	}
-
-Can you pleas rebase these patches to the 'core' branch of the
-iommu-tree and use these new call-backs?
-
-The rest of your driver looks good to me. Good work!
-
-Thanks,
-
-	Joerg
+-- 
+With Best Regards,
+Andy Shevchenko
