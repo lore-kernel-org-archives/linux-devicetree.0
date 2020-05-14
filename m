@@ -2,111 +2,151 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B5AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 07:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BFCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 07:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B6B2070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 07:03:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xE6djdmW"
+	by mail.kernel.org (Postfix) with ESMTP id E1347206F1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 07:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgENHDe (ORCPT
+        id S1726005AbgENHD4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 03:03:34 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:18696 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725946AbgENHDd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 03:03:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589439813; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=mD6zwcTcSV2rURIM5M2MgMVSc+SPDGYA1hmogi2AOqw=; b=xE6djdmWSTfm74opQzo4K1xJCdqjxXcFC6TlGsFrsQzSfWfYiEXxLNHUOFWx2YtYviNeLRPp
- 7OgpbRVuXrTDLXwASidQOnlUhYWV5lfIMsG/WTGKbqWmfwov+uy7iz64ahN6fwfS0boWYcuX
- 3Pv2H6vIjVqCA61XvsGMsHGl9a8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebced3f.7fd5c3656f80-smtp-out-n03;
- Thu, 14 May 2020 07:03:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 999D5C43636; Thu, 14 May 2020 07:03:26 +0000 (UTC)
-Received: from [10.206.24.246] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7D00DC433F2;
-        Thu, 14 May 2020 07:03:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7D00DC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V5 2/7] soc: qcom-geni-se: Add interconnect support to fix
- earlycon crash
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org, georgi.djakov@linaro.org
-References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
- <1588919619-21355-3-git-send-email-akashast@codeaurora.org>
- <20200508175938.GB4525@google.com> <20200508191454.GH4525@google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <a261dfa3-2435-ab79-e7fc-29e5df107757@codeaurora.org>
-Date:   Thu, 14 May 2020 12:33:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200508191454.GH4525@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Thu, 14 May 2020 03:03:56 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:33332 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbgENHDz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 03:03:55 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E0DAA2016FC;
+        Thu, 14 May 2020 09:03:52 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A651520178E;
+        Thu, 14 May 2020 09:03:47 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E883B402BB;
+        Thu, 14 May 2020 15:03:40 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, p.zabel@pengutronix.de,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 2/2] dt-bindings: pwm: Convert imx tpm pwm to json-schema
+Date:   Thu, 14 May 2020 14:54:19 +0800
+Message-Id: <1589439259-28510-2-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589439259-28510-1-git-send-email-Anson.Huang@nxp.com>
+References: <1589439259-28510-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
+Convert the imx tpm pwm binding to DT schema format using json-schema.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/pwm/imx-tpm-pwm.txt        | 22 ---------
+ .../devicetree/bindings/pwm/imx-tpm-pwm.yaml       | 55 ++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 22 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
 
->> The loop should have curly braces ("use braces when a loop contains more than
->> a single simple statement"), even though the compiler doesn't need them in
->> this case. This is not a loop, but I was told by a maintainer that it equally
->> applies, which makes sense.
->>
->> You could avoid one level of indentation through:
->>
->> if (!console_drivers)
->> 	goto exit;
->>
->>> +		for_each_console(bcon)
-> Actually the NULL check of 'console_drivers' is not needed:
->
-> #define for_each_console(con) \
->          for (con = console_drivers; con != NULL; con = con->next)
-
-Ok, I will remove this check.
-
-
-Regards,
-
-Akash
-
->
-> see also:
->
-> commit caa72c3bc584bc28b557bcf1a47532a7a6f37e6f
-> Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Date:   Mon Feb 3 15:31:25 2020 +0200
->
->      console: Drop double check for console_drivers being non-NULL
-
+diff --git a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+deleted file mode 100644
+index 5bf2095..0000000
+--- a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-Freescale i.MX TPM PWM controller
+-
+-Required properties:
+-- compatible : Should be "fsl,imx7ulp-pwm".
+-- reg: Physical base address and length of the controller's registers.
+-- #pwm-cells: Should be 3. See pwm.yaml in this directory for a description of the cells format.
+-- clocks : The clock provided by the SoC to drive the PWM.
+-- interrupts: The interrupt for the PWM controller.
+-
+-Note: The TPM counter and period counter are shared between multiple channels, so all channels
+-should use same period setting.
+-
+-Example:
+-
+-tpm4: pwm@40250000 {
+-	compatible = "fsl,imx7ulp-pwm";
+-	reg = <0x40250000 0x1000>;
+-	assigned-clocks = <&pcc2 IMX7ULP_CLK_LPTPM4>;
+-	assigned-clock-parents = <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
+-	clocks = <&pcc2 IMX7ULP_CLK_LPTPM4>;
+-	#pwm-cells = <3>;
+-};
+diff --git a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
+new file mode 100644
+index 0000000..fe9ef42
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/imx-tpm-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX TPM PWM controller
++
++maintainers:
++  - Anson Huang <anson.huang@nxp.com>
++
++description: |
++  The TPM counter and period counter are shared between multiple
++  channels, so all channels should use same period setting.
++
++properties:
++  "#pwm-cells":
++    const: 3
++
++  compatible:
++    enum:
++      - fsl,imx7ulp-pwm
++
++  reg:
++    maxItems: 1
++
++  assigned-clocks:
++    maxItems: 1
++
++  assigned-clock-parents:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - "#pwm-cells"
++  - compatible
++  - reg
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx7ulp-clock.h>
++
++    pwm@40250000 {
++        compatible = "fsl,imx7ulp-pwm";
++        reg = <0x40250000 0x1000>;
++        assigned-clocks = <&pcc2 IMX7ULP_CLK_LPTPM4>;
++        assigned-clock-parents = <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
++        clocks = <&pcc2 IMX7ULP_CLK_LPTPM4>;
++        #pwm-cells = <3>;
++    };
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+2.7.4
+
