@@ -2,133 +2,93 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1633CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E08C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7A412070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589466943;
-	bh=48EwYvSwIgRzFWPGVtkj550AqOLgeUUnyv4LtyKi/pE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wcBM2iE3y8Sg6zHKyHhkyGee0h7s/m8CUUonqssIv8wB/cV3PWPCT8T0LMZBqORBj
-	 i2AmmHfut/wcfX4Ed+Jc6wOiRI4VCpEUf0IWg27WKBbk+MuvrhcMLIytAigZFJ9dFr
-	 KdWyTqax8olqpw+9+x+AOSmSWfxDs9y+AB5AY3MU=
+	by mail.kernel.org (Postfix) with ESMTP id 2F657205CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgENOfl (ORCPT
+        id S1726239AbgENOge (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 10:35:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726051AbgENOfk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 10:35:40 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D4F7205CB;
-        Thu, 14 May 2020 14:35:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589466940;
-        bh=48EwYvSwIgRzFWPGVtkj550AqOLgeUUnyv4LtyKi/pE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tnKmJyCk1QIFgro/vw3QB05SDh5+ogBAdK18o1spkVK4RFF+Sxgqduez8FAymwQ4u
-         lacbo6x7gFlSmljLNO1A6hq2LFOrXGrDLgKqLV0am5LdghHhP9SFmCdz/fKXbCcNM0
-         LopKZfpYuy4FpSQq/UiRFgb1c8s7RhUC3qHkq6OI=
-Date:   Thu, 14 May 2020 15:35:37 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 11/17] spi: dw: Fix native CS being unset
-Message-ID: <20200514143537.GH5127@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508132943.9826-12-Sergey.Semin@baikalelectronics.ru>
- <CACRpkdY=wkgnYPcqSzyzNpS6ckJZs-9kXfTfdwa1E+POzOBQGA@mail.gmail.com>
- <20200513001347.dyt357erev7vzy3l@mobilestation>
- <CACRpkdZTH1DNHvi4r48nLNWp4rqyYDZTzT12hw0eTNcYmgSr3Q@mail.gmail.com>
- <20200514115558.e6cqnuxqyqkysfn7@mobilestation>
+        Thu, 14 May 2020 10:36:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726051AbgENOge (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 10:36:34 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6297EC061A0C
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 07:36:34 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: rcn)
+        with ESMTPSA id 7C7962A2EDE
+From:   =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To:     Laurent.pinchart@ideasonboard.com
+Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net,
+        tomi.valkeinen@ti.com, robh+dt@kernel.org, airlied@linux.ie,
+        shawnguo@kernel.org
+Subject: [PATCH v2 0/4] dt-bindings: display: ti,tfp410.txt: convert to yaml
+Date:   Thu, 14 May 2020 16:36:08 +0200
+Message-Id: <20200514143612.2094-1-ricardo.canuelo@collabora.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KscVNZbUup0vZz0f"
-Content-Disposition: inline
-In-Reply-To: <20200514115558.e6cqnuxqyqkysfn7@mobilestation>
-X-Cookie: I think we're in trouble.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This series converts the DT binding documentation for the TI TFP410
+DPI-to-DVI encoder to json-schema.
 
---KscVNZbUup0vZz0f
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Some minor changes were made to two DTs in order to make them compliant
+with the binding. These changes shouldn't have any functional effect.
 
-On Thu, May 14, 2020 at 02:55:58PM +0300, Serge Semin wrote:
-> On Thu, May 14, 2020 at 10:31:13AM +0200, Linus Walleij wrote:
+This also fixes a minor bug in the ti-tfp410 driver that would cause a
+wrong calculation of the setup and hold times when the de-skew feature
+is enabled. The retrieval of the de-skew value from the DT has also been
+updated to reflect the binding changes.
 
-> > We had some related discussion what to do with this case
-> > when a controller can support active high CS if and only if
-> > it is using a GPIO instead of the native CS. We didn't really
-> > figure it out, I suppose ideally we should use two flags in the
-> > master but that exercise is for another day.
+Changes in v2:
 
-> Even though it might be painful, but as I see it the best way to generically fix
-> this problem would be to change the controller->set_cs() callback
-> semantics. SPI core should pass a CS activation flag to the set_cs()
-> callback instead of the CS pin logical level (just propagate the enable argument
-> passed to the spi_set_cs() SPI core method). So if an SPI controller supports
-> the Active-high native CS, during the set_cs() callback invocation it would
-> analyze the spi_device flags state to figure out whether the slave needs the
+  - ti,tfp410.yaml
+    - Set license as GPL-2.0-only (Sam Ravnborg)
+    - Complete pclk-sample and bus-width comments (Sam)
+    - Remove quotes from compatible value (Sam)
+    - Remove the allOf keyword from the ti,deskew definition (Sam)
+    - Set endpoint as optional in port definitions
+    - Set a range for ti,deskew
 
-The idea with set_cs() is to support controllers that allow the chip
-select to be directly managed.  If the controller is interpreting or
-automatically managing chip select at all then set_cs() is not likely to
-be a good fit, if the controller does support unfiltered management then
-anything else is going to result in there being a bunch of duplicate
-code between drivers.
+  DTs fixes (added):
+    - dove-sbc-a510.dts: s/powerdown-gpio/powerdown-gpios (Sam)
+    - dove-sbc-a510.dts: Add dummy ports node
+    - imx53-cx9020.dts: Group the ports in a ports node
 
---KscVNZbUup0vZz0f
-Content-Type: application/pgp-signature; name="signature.asc"
+  ti-tfp410.c (added):
+    - Fix setup time and hold time calculation based on the deskew value
+      (Laurent Pinchart)
 
------BEGIN PGP SIGNATURE-----
+Ricardo Cañuelo (4):
+  ARM: dts: dove: Make the DT compliant with the ti,tfp410 binding
+  ARM: dts: ims53: Group port definitions for the dvi-converter
+  dt-bindings: display: ti,tfp410.txt: convert to yaml
+  drm/bridge: tfp410: Fix setup and hold time calculation
 
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl69VzgACgkQJNaLcl1U
-h9CkzQf4/uHBSzXTasSY03WgD1z9u+SSfFJAZ5Boxho3Qo6dz4aKF8l8h9suzNWq
-1WfAehSkgkhS85JHeNMcuTjr5P4sAjQW/yF7q1n2edDYpj8lbK3+imNpSrnfNp0z
-0GUhUfHJLQZ05l7DWFyeQ1S88u7obs7D3/RrRfznYcCFG8CsJczlnlBG8DPFPNtB
-ZidIShahKy/TZsdMm8jx+BpdglPnArIwvxd/0wOivwI69077MrigR5cH0GpL6rA9
-Pq5EkxK5W9UereSFPv+BsaTW4ou7mHITbCzjS9DDjYo4I5OVEUqKwaFD4yp9CoBc
-MTBnB9xxDydUKqJqUNnzksYrFpBO
-=ssDU
------END PGP SIGNATURE-----
+ .../bindings/display/bridge/ti,tfp410.txt     |  66 ----------
+ .../bindings/display/bridge/ti,tfp410.yaml    | 124 ++++++++++++++++++
+ arch/arm/boot/dts/dove-sbc-a510.dts           |  13 +-
+ arch/arm/boot/dts/imx53-cx9020.dts            |  25 ++--
+ drivers/gpu/drm/bridge/ti-tfp410.c            |  10 +-
+ 5 files changed, 155 insertions(+), 83 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml
 
---KscVNZbUup0vZz0f--
+-- 
+2.18.0
+
