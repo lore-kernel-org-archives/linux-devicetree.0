@@ -2,66 +2,146 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F77C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F06C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E672065F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9940620675
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589476506;
-	bh=n5DENuly7GB3vCYWanyi3YFnqNctc7DKWNzlGDezsfA=;
+	s=default; t=1589476954;
+	bh=wIMgNNfo0EDDt8NmxxrijoMhNj8Je6+uJKEuTcKCsoQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NWM4J2Va4xb/oJD1ICQh0lDLo8+eFlZpkt8vU0s4vXuur5ANLLsr/jAH5JifYkWds
-	 yMlyj94xef6I5wD1shTI42Bd5AvvCT6ezl5EQNe8u0Ac8q41RvLXSxy87liuKEJsHg
-	 g0xMWaNUG0q2fmPYgIUbCiwm9713a2HzR3XCXLd0=
+	b=2rfUkPW9fsImmR9lsAtBb1T7mrIyKGhYZ8zl9S3eYPUh4c5VceThGxvrq7FRhVLf7
+	 JXR3h2Fki+JB9sDZMaB0l6xBX/EDh9p/DRO6bD0b3GH6XnDtEJ0hdLIwSiSWe2Xfrs
+	 dc/0KjkymyerQy5l1GJYbiOV5MQ+zemLEyVbzl+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbgENRPG (ORCPT
+        id S1726035AbgENRWe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 13:15:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39086 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 13:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgENRPG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 13:15:06 -0400
+        id S1726027AbgENRWd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 13:22:33 -0400
 Received: from localhost (unknown [122.182.193.86])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A13962065D;
-        Thu, 14 May 2020 17:15:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 284E3206D8;
+        Thu, 14 May 2020 17:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589476505;
-        bh=n5DENuly7GB3vCYWanyi3YFnqNctc7DKWNzlGDezsfA=;
+        s=default; t=1589476953;
+        bh=wIMgNNfo0EDDt8NmxxrijoMhNj8Je6+uJKEuTcKCsoQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z9iSoYsL98wpR4LL3cedmqD0OUIrRXwvlIjkjXjo+/0sXwQA/PppgcNaDn6qysWrA
-         tf3Cv8aP9RBHpq6SqXuJc/WxjwpXajYCIEhGUALMv6zsUeNMvTijyPpFHBnUHTDNAl
-         wNqDh6jX2JtNwKUWd7INQO0UZmr+0+yRvq/nYgYo=
-Date:   Thu, 14 May 2020 22:44:52 +0530
+        b=O2zdxtCScg6zANPn7hgKwfoSDOdN+BdSGrfM4Dc7c0P7Lt6SYzjA9JJaA1H1zyF37
+         JssAlZm3g2JNlmglXAcfxSlBz2sEo3wndutLsIhwwr4HxhPgp/TlWH0lm5E3+zndvO
+         K1q87xdcYjl3df/m9heCAUDSY31vKczdAalMRUyo=
+Date:   Thu, 14 May 2020 22:52:23 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: c630: Add WiFi node
-Message-ID: <20200514171452.GE14092@vkoul-mobl>
-References: <20191018055841.3729591-1-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v1] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm
+ APQ8016 SBC + D3 mezzanine
+Message-ID: <20200514172223.GF14092@vkoul-mobl>
+References: <20200422111014.616233-1-robert.foss@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191018055841.3729591-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200422111014.616233-1-robert.foss@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17-10-19, 22:58, Bjorn Andersson wrote:
-> Specify regulators and enable the &wifi node. The firmware uses the 8
-> bit version of the host capability message, so specify this quirk.
+On 22-04-20, 13:10, Robert Foss wrote:
+> Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
+> the Dragonboard 410c with the D3 mezzanine expansion board.
+> 
+> The D3 mezzanine ships in a kit with a OmniVision 5640 sensor module,
+> which is what this DT targets.
+> 
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile           |  1 +
+>  arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts | 45 +++++++++++++++++++++
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index cc103f7020fd..025362471929 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+> new file mode 100644
+> index 000000000000..1b85adeeada1
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+> @@ -0,0 +1,45 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Dual BSD + GPL please
+
+> +/*
+> + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
+
+we are in 2020 now :)
+
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "apq8016-sbc.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3 Mezzanine";
+> +	compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
+> +};
+> +
+> +&cci_i2c0 {
+> +	/delete-node/ camera_rear@3b;
+> +
+> +	camera_rear@76 {
+> +		compatible = "ovti,ov5640";
+> +		reg = <0x76>;
+> +
+> +		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
+> +		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&camera_rear_default>;
+> +
+> +		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
+> +		clock-names = "xclk";
+> +		clock-frequency = <23880000>;
+> +
+> +		vdddo-supply = <&camera_vdddo_1v8>;
+> +		vdda-supply = <&camera_vdda_2v8>;
+> +		vddd-supply = <&camera_vddd_1v5>;
+> +
+> +		status = "ok";
+> +
+> +		port {
+> +			ov5640_ep: endpoint {
+> +				clock-lanes = <1>;
+> +				data-lanes = <0 2>;
+> +				remote-endpoint = <&csiphy0_ep>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.25.1
 
 -- 
 ~Vinod
