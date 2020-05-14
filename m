@@ -2,104 +2,154 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2AAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2975AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4FF22070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:12:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XottLg9c"
+	by mail.kernel.org (Postfix) with ESMTP id F3D3220671
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589465732;
+	bh=M7KMNxwSSfTgmt0MkIbH3NUhq1iJ/RxQlCObAMOEohI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w9YdI5EVY2OK6a3zKH0PQIIyEATktX2OwsW8W1N5u2Rg0T6Jz6lV6kgquH6fgD7Xb
+	 orkKikVcMHCGIYWdNP7QEjM3R0Dj7D9zHQCa4WGfi+clLDgomkh0Gqr0yzauD/dMkF
+	 VklTq2JXnYdqo5E0q14vHaL2j/UuoFrggJya6NeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgENOMZ (ORCPT
+        id S1726304AbgENOP2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 10:12:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgENOMY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 10:12:24 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F220C061A0F
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 07:12:24 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id a9so2746533lfb.8
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 07:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DkzKtHfHzDrv9acZGYhRUV9tmRVRbn6arGIc1dXkxBI=;
-        b=XottLg9cQaTSjBHR11pedGRx+Glhzf+8Usg9K//kY6W0jNVJL1plss0LJBLgC3nXhz
-         M7/NBircuUPinVKCHjYMUacfV2lTSjNWOTELV64WKqTIb+VoAHkWrKK+LyXiKxtTc91H
-         EkpxcjLeryrGNDHr3ahfTehONNWh2vDTvJC3KrUAVwr5ekDS6uVYv5S8fYzsZqRMeDcg
-         U9QIPtq8KUiqElnQ2rNtYXfrfX1ML51sOsdTUPKMJPSEfu+9xo31LZcyI4nCectwBKUP
-         tA1N9H4f3nEE3y6yZE9MxWwkMpIknY1ov4rh2crp5UPVHztPX919W+E1wCHPIKL0EBRz
-         aJ9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DkzKtHfHzDrv9acZGYhRUV9tmRVRbn6arGIc1dXkxBI=;
-        b=U2EeKtW+bSW62ot6ZCkKS3w8FZlfaTnuaxeFDtj/JVc1nZenX+nxvsAHcZUisnEyjm
-         tVCazye5PvpBftxaRxzL5Ubeh3eUbSFEvbDw5Y+vLU3QmejN1FK8H0TXkwcKTAZ2y4gB
-         7hTNTlpSDe2UzVsjUrkixutabb28EV1pGhSLLGVuwP2N69Q/WNO5I2dg9vLjbiGx6zFQ
-         +wyQmf5StnBKf0YGYXWt9akePZ2W6XMrbFSAMruB2j4mgGlcq37tBRUAS/DV53B/WPYd
-         jolsXJangZ/ABCf+s4pfMnx6cDM95B9nG1vtnY3BP0qzbSrJhq2bAdEF3Z8CCDjcYbob
-         42Bg==
-X-Gm-Message-State: AOAM530iU8Kmuwc3YzwtbNg2DKnLLuBmhnNFnQ2zPnN2Ur1Wi3IEenkV
-        xRtQPkDDJFiExvJP3W25p5XRjL9q64mLiCG5pLXbUw==
-X-Google-Smtp-Source: ABdhPJzbFJbGyW1QIZoQeEMNyecliP3FhYfrVVsA0/vlx9bAuXukGyGD9ZMmozQ02I6kOFg4AohML8Hs61aAnqoqEGA=
-X-Received: by 2002:ac2:5e70:: with SMTP id a16mr3507458lfr.77.1589465542377;
- Thu, 14 May 2020 07:12:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200417061907.1226490-1-bjorn.andersson@linaro.org>
- <20200417061907.1226490-2-bjorn.andersson@linaro.org> <20200429213453.GA32114@bogus>
- <20200514060422.GL1302550@yoga>
-In-Reply-To: <20200514060422.GL1302550@yoga>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 14 May 2020 16:12:10 +0200
-Message-ID: <CACRpkdZpfgb0wwt2FUwqPab4XhtLXfDWOvZLdCc+NF-mVJkKYw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8250 pinctrl bindings
+        Thu, 14 May 2020 10:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgENOP2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 10:15:28 -0400
+Received: from localhost (unknown [122.182.193.86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D01120671;
+        Thu, 14 May 2020 14:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589465728;
+        bh=M7KMNxwSSfTgmt0MkIbH3NUhq1iJ/RxQlCObAMOEohI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cy47zUIYmLwIScfGmX6mF9OXTP9WaSnD6gHHFTDbe73TFgrG6NYkxi7EdlzBvLDtT
+         ksnbsUjUmVOICSr91LcFngJ1hZJ/B8wGgzjyS/PbI2659ixty6zTmFVkVPtM0iZHYc
+         9slKetQe6APMCEO5Nlt1viRNLBMGf0718rE/yoFM=
+Date:   Thu, 14 May 2020 19:45:23 +0530
+From:   Vinod Koul <vkoul@kernel.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] hwspinlock: qcom: Allow mmio usage in addition to
+ syscon
+Message-ID: <20200514141523.GW14092@vkoul-mobl>
+References: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
+ <20200513005441.1102586-4-bjorn.andersson@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513005441.1102586-4-bjorn.andersson@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 8:04 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Wed 29 Apr 14:34 PDT 2020, Rob Herring wrote:
-> > On Thu, Apr 16, 2020 at 11:19:06PM -0700, Bjorn Andersson wrote:
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
-> [..]
-> > > +#PIN CONFIGURATION NODES
-> > > +patternProperties:
-> > > +  '^.*$':
-> > > +    if:
-> > > +      type: object
-> > > +    then:
-> >
-> > Needs a $ref to the standard properties.
-> >
-> > Would be good to show a child node in the example too. (And try having
-> > an error in a standard property type to verify you get an error).
-> >
->
-> Finally looked into this.
+On 12-05-20, 17:54, Bjorn Andersson wrote:
+> In all modern Qualcomm platforms the mutex region of the TCSR is forked
+> off into its own block, all with a offset of 0 and stride of 4096. So
+> add support for directly memory mapping this register space, to avoid
+> the need to represent this block using a syscon.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/hwspinlock/qcom_hwspinlock.c | 72 +++++++++++++++++++++-------
+>  1 file changed, 56 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
+> index f0da544b14d2..d8d4d729816c 100644
+> --- a/drivers/hwspinlock/qcom_hwspinlock.c
+> +++ b/drivers/hwspinlock/qcom_hwspinlock.c
+> @@ -70,41 +70,81 @@ static const struct of_device_id qcom_hwspinlock_of_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
+>  
+> -static int qcom_hwspinlock_probe(struct platform_device *pdev)
+> +static struct regmap *qcom_hwspinlock_probe_syscon(struct platform_device *pdev,
+> +						   u32 *base, u32 *stride)
+>  {
+> -	struct hwspinlock_device *bank;
+>  	struct device_node *syscon;
+> -	struct reg_field field;
+>  	struct regmap *regmap;
+> -	size_t array_size;
+> -	u32 stride;
+> -	u32 base;
+>  	int ret;
+> -	int i;
+>  
+>  	syscon = of_parse_phandle(pdev->dev.of_node, "syscon", 0);
+> -	if (!syscon) {
+> -		dev_err(&pdev->dev, "no syscon property\n");
 
-Can you send an incremental patch because otherwise I have
-to revert the patch that I merged (maybe to trigger happy, mea culpa).
+any reason to drop the log?
 
-(If it's too hard I can just revert it.)
+> -		return -ENODEV;
+> -	}
+> +	if (!syscon)
+> +		return ERR_PTR(-ENODEV);
+>  
+>  	regmap = syscon_node_to_regmap(syscon);
+>  	of_node_put(syscon);
+>  	if (IS_ERR(regmap))
+> -		return PTR_ERR(regmap);
+> +		return regmap;
+>  
+> -	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, &base);
+> +	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, base);
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "no offset in syscon\n");
+> -		return -EINVAL;
+> +		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> -	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, &stride);
+> +	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, stride);
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "no stride syscon\n");
+> -		return -EINVAL;
+> +		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> +	return regmap;
+> +}
+> +
+> +static const struct regmap_config tcsr_mutex_config = {
+> +	.reg_bits		= 32,
+> +	.reg_stride		= 4,
+> +	.val_bits		= 32,
+> +	.max_register		= 0x40000,
+> +	.fast_io		= true,
+> +};
+> +
+> +static struct regmap *qcom_hwspinlock_probe_mmio(struct platform_device *pdev,
+> +						 u32 *offset, u32 *stride)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +
+> +	/* All modern platform has offset 0 and stride of 4k */
+> +	*offset = 0;
+> +	*stride = 0x1000;
 
-Yours,
-Linus Walleij
+Wouldn't it make sense to read this from DT rather than code in kernel?
+
+-- 
+~Vinod
