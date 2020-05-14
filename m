@@ -2,184 +2,84 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B021C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B29AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46571205CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:08:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJPRMdQo"
+	by mail.kernel.org (Postfix) with ESMTP id 394C6206A5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589468910;
+	bh=48I96bMQ1CEeb7oxxjCuOFlFMAEbO4NxGW7b5X6/HYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y/K9AGY5sB0SW5fLH1BYTvVixTuAmGQPY3tGa9V+ciwcyRPV7st55QOSAXfseTiVK
+	 PvpXKeoBDgF8zuvHXlOL9+Umms2JYqN6MzNCD0nQI0Kqmy/aVyIwXj5BNCW0h4S8pU
+	 gA0CubW9Kyktd6sr3GbyPwGZlkQK6SPmRupLMTEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgENPIK (ORCPT
+        id S1726550AbgENPI3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 11:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgENPII (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 11:08:08 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72ECDC061A0C;
-        Thu, 14 May 2020 08:08:08 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id 79so3358454iou.2;
-        Thu, 14 May 2020 08:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Gbex69XR4ZtBuJoqVeoYUx9nyFHm1kZR6S5jk554FrE=;
-        b=FJPRMdQokqht7U+y1ela4OESMPvwo+hnpZbq+e01yT4sc7YmX6KhRapTLoooJGnaer
-         no8q5/+yTTtmbVYURRxBEfQhhZ9J+LhKOFz0bqgGBx4PJ2Bw2ftahjLfUzXNEEvP8ccI
-         2pAP6Y2aYPKnolxMJQZEZL2TjJA9jwPSwcgeBX6VoDfVfbkeZdHE4f3iGkIRzsuBERI3
-         b0XGSa3ns7gvk1VcwnfVu1eKrphDamt+YQi9Z3l0nVtOAJFrtU66CW6UaoIx+NrhyDWG
-         bpqevwejD/G29RpG/FpMT46mNvKB9gZs0esEtTpKHnxOjUpQp/TrM51cnY7zblKAAa2T
-         Tr+Q==
+        Thu, 14 May 2020 11:08:29 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36743 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbgENPI3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 11:08:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id x7so23890822oic.3
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 08:08:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Gbex69XR4ZtBuJoqVeoYUx9nyFHm1kZR6S5jk554FrE=;
-        b=M3wnIGSuqEf/qElsJ2WUpn2RRaXc3cntoA1CwXzU51tnS1ApY+QV+CVJDqaY0/SbaS
-         UeEGqmvBlTpzPbXxysWj5Xo0HEw5lzkMSDI1BcrkwkWDvWNAgyPp5nAO3lEJKnPBktOz
-         X3bZMiEtf+0RX5LRWSG57/+o9lgeDy+8DT9PPCea2lwKpMZ9CYxJEWEigp5rhVo6HUIO
-         vH1Y3uB76cV/FXU4ymPHjk1VipvTtH+rImpeOOGoddhgNtIwmPOZ8bejzzt5sErQnhld
-         YsIKFi4oJx7x6uIJQ92bNry1nRHlxBoS/8KUkf4oJreeKD8R5QWdpZh9HCilYIzigmHP
-         nozQ==
-X-Gm-Message-State: AOAM5300q5phDhsOdufNkig62F0I6Oz8vysH8qLAPGztnqR8yo7D4Gwf
-        LF8YfkYG3NGflJqKS5rerIUELXd5FAZCMTFLSeo=
-X-Google-Smtp-Source: ABdhPJxG7GXTkoxbTPKumJL1X0BkUdzHfDr7LxNY1mkd2t1RPi+rTYGSq8vStSCW40203NqyVRJ+wEEs4doBgLVXPhg=
-X-Received: by 2002:a5d:8b8e:: with SMTP id p14mr4506860iol.110.1589468887821;
- Thu, 14 May 2020 08:08:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z78zI7ZbyVskAgWCc1NqF/JnuqHwotn4rURhcKPHKm8=;
+        b=im6T8Natc56LR63GRBJgNKWpKQtXYvCbLnDB2aWyBPV+luv4OMfE9nabAXAaPuqrcD
+         48iLKrxj/C2UZ981aN1YYmTbJ4a4dhsJ6pI60Q1Xd9gpZpCQE2938fsUi5BEKUHwW9q3
+         mbGGasQXbd8QuaLIwkzy5GXUxhunJLastgloT3Zz6x4k3tEL1meeueTcjYlJEVG5wotB
+         dAWZZa+2SrGzRn82KExx/H4c6HnHHHBLOMbgokWEYzpXtGV1UEqeyck9vVJh4nQMXs26
+         Ma6JG+6jOm8XWm4eiOZrVXOR8ww98JoI3OF+/b2keGUm7TV+4jSB6nUZEBzBpEipm+iS
+         j/Rw==
+X-Gm-Message-State: AOAM53284t+0ziXvC+i3KBtFMn5Q9nt9iR4dj9UoGB8g2lZCloScXjFZ
+        u9vpnKC1+KhjEz6LWeWkaw==
+X-Google-Smtp-Source: ABdhPJz7ekl6VwtUgZBoNPiDa7Tm0U7cB71ZTwaPGr/qw2e4m8JJLosEG/FZLKTP3dZtRI4GRHFX1A==
+X-Received: by 2002:aca:5243:: with SMTP id g64mr1438425oib.90.1589468908927;
+        Thu, 14 May 2020 08:08:28 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h9sm840838oor.21.2020.05.14.08.08.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 08:08:27 -0700 (PDT)
+Received: (nullmailer pid 27316 invoked by uid 1000);
+        Thu, 14 May 2020 15:08:27 -0000
+Date:   Thu, 14 May 2020 10:08:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Amit Singh Tomar <amittomer25@gmail.com>
+Cc:     manivannan.sadhasivam@linaro.org, devicetree@vger.kernel.org,
+        andre.przywara@arm.com, linux-actions@lists.infradead.org,
+        robh+dt@kernel.org, cristian.ciocaltea@gmail.com,
+        linux-arm-kernel@lists.infradead.org, afaerber@suse.de
+Subject: Re: [PATCH RFC 6/8] dt-bindings: reset: s700: Add binding constants
+ for mmc
+Message-ID: <20200514150827.GA27226@bogus>
+References: <1588761371-9078-1-git-send-email-amittomer25@gmail.com>
+ <1588761371-9078-7-git-send-email-amittomer25@gmail.com>
 MIME-Version: 1.0
-References: <1589269010-18472-1-git-send-email-dillon.minfei@gmail.com>
- <1589269010-18472-3-git-send-email-dillon.minfei@gmail.com> <da9fbb80-571d-1217-4028-e413a0c7db84@st.com>
-In-Reply-To: <da9fbb80-571d-1217-4028-e413a0c7db84@st.com>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Thu, 14 May 2020 15:07:32 +0800
-Message-ID: <CAL9mu0KJ0j6Rxf7YjKxVWKz_d+B6vrwqqxJM-fmzG=NonLeDYQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] ARM: dts: stm32: enable l3gd20 on stm32429-disco board
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Mark Brown <broonie@kernel.org>, p.zabel@pengutronix.de,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Hua Dillon <dillonhua@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588761371-9078-7-git-send-email-amittomer25@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alexandre,
+On Wed,  6 May 2020 16:06:08 +0530, Amit Singh Tomar wrote:
+> This commit adds device tree binding reset constants for mmc controller
+> present on Actions S700 Soc.
+> 
+> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+> ---
+>  include/dt-bindings/reset/actions,s700-reset.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-Alexandre Torgue <alexandre.torgue@st.com> =E4=BA=8E2020=E5=B9=B45=E6=9C=88=
-14=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:10=E5=86=99=E9=81=93=EF=
-=BC=9A
->
-> Hi Dillon
->
-> On 5/12/20 9:36 AM, dillon.minfei@gmail.com wrote:
-> > From: dillon min <dillon.minfei@gmail.com>
-> >
-> > L3gd20, st mems motion sensor, 3-axis digital output gyroscope,
-> > connect to stm32f429 via spi5
-> >
-> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> > ---
-> >
-> > Hi Alexandre,
-> >
-> > V2:
-> >      1, insert blank line at stm32f420-disco.dts line 143
-> >      2, add more description about l3gd20 in commit message
-> >
-> > V1:
-> >      enable l3gd20 dts binding on stm32f429-disco
-> >
-> > thanks.
-> >
-> > dillon,
-> >
-> >   arch/arm/boot/dts/stm32f429-disco.dts | 25 +++++++++++++++++++++++++
-> >   1 file changed, 25 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/=
-stm32f429-disco.dts
-> > index 30c0f67..1bfb903 100644
-> > --- a/arch/arm/boot/dts/stm32f429-disco.dts
-> > +++ b/arch/arm/boot/dts/stm32f429-disco.dts
-> > @@ -49,6 +49,8 @@
-> >   #include "stm32f429.dtsi"
-> >   #include "stm32f429-pinctrl.dtsi"
-> >   #include <dt-bindings/input/input.h>
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/gpio/gpio.h>
-> >
-> >   / {
-> >       model =3D "STMicroelectronics STM32F429i-DISCO board";
-> > @@ -127,3 +129,26 @@
-> >       pinctrl-names =3D "default";
-> >       status =3D "okay";
-> >   };
-> > +
-> > +&spi5 {
-> > +     status =3D "okay";
-> > +     pinctrl-0 =3D <&spi5_pins>;
-> > +     pinctrl-names =3D "default";
-> > +     #address-cells =3D <1>;
-> > +     #size-cells =3D <0>;
-> > +     cs-gpios =3D <&gpioc 1 GPIO_ACTIVE_LOW>;
-> > +     dmas =3D <&dma2 3 2 0x400 0x0>,
-> > +            <&dma2 4 2 0x400 0x0>;
-> > +     dma-names =3D "rx", "tx";
-> > +
->
-> You added this spi5 node in this patch but also in the display series. I
-> will have issue to merge. Even if I could fix it easily, as you are
-> going to resend, the good practice could be to have several patches in
-> one series: one patch for spi5 controller, another for gyro and another
-> for display.
->
-> And also same remark than Linus did in display series move DMA to soc
-> dtsi file please.
-
-Sure, how about this patch sequence:
-1 add spi5 dma to soc (stm32f429.dtsi)
-2 add pin map for spi5 (stm32f4-pinctrl.dtsi)
-3 add spi5 controller with gyro (stm32f429-disco.dts)
-4 add spi modification to support gyro (spi-stm32.c)
-
-5 add ltdc pin map for stm32f429-disco board (stm32f4-pinctrl.dtsi)
-6 add ilitek-ili9341 dts bindings for disco (stm32f429-disco.dts,
-depends on above step 3)
-7 add yaml document about ilitek-ili9341 (ilitek,ili9341.yaml)
-8 add clk changes to support ltdc driver (clk-stm32f4.c)
-
-so, i will combine gyro and display two patches to one patchset next
-time. right ?
-
-thanks.
->
->
-> > +     l3gd20: l3gd20@0 {
-> > +             compatible =3D "st,l3gd20-gyro";
-> > +             spi-max-frequency =3D <10000000>;
-> > +             st,drdy-int-pin =3D <2>;
-> > +             interrupt-parent =3D <&gpioa>;
-> > +             interrupts =3D <1 IRQ_TYPE_EDGE_RISING>,
-> > +                             <2 IRQ_TYPE_EDGE_RISING>;
-> > +             reg =3D <0>;
-> > +             status =3D "okay";
-> > +     };
-> > +};
-> >
+Acked-by: Rob Herring <robh@kernel.org>
