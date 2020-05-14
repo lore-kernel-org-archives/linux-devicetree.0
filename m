@@ -2,102 +2,103 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D189C433E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A806BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44307206A5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828A520727
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589483076;
+	bh=8+f9J7HLotnPg1ibsPMFa6TOOwtvz30IPYIYAtWGcgs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t7pnsnYWlIZCMv6rxTEJiDr6vF2elSvv9EEPf7aBGzz4Pb9lRk/ElgedHUc0AcvTf
+	 TDwn13Wbs8zPHKTSOTW7LV+B9kO2TJv5qwyi1rRUjRwzEhAySv9pKj9ICQfeysj+dV
+	 EZxtnLH3HkfOtfUrDmfvcr769fhzV2RcTcNvrFig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbgENTDI (ORCPT
+        id S1727823AbgENTEf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 15:03:08 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33864 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729645AbgENTDH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 15:03:07 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 72so3297174otu.1;
-        Thu, 14 May 2020 12:03:06 -0700 (PDT)
+        Thu, 14 May 2020 15:04:35 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34641 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728890AbgENTEe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 15:04:34 -0400
+Received: by mail-oi1-f193.google.com with SMTP id c12so16157oic.1;
+        Thu, 14 May 2020 12:04:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NuQFLQ72I0J0DKeS9L7b1iMxSobCW1C+Qb2KkEUowaM=;
-        b=R5gVpDIq0DHIv7SzGtqgqOnVWMuq8Qkxn5wChcfjAeElLColOX3RQH4auRk9DLonRv
-         +Xh6rSvi9n8corlLJcmRwiainaDuUEO8Sqtr5+2fVGS5KkMUmJr0H/thg0eIfPX0NmaP
-         vSkKwEZDRpK5CGC7hwdqpKxOiJFCUQMyV5D0KTOmHqOtstIOuKPpiSwC4IFfarwIbcTA
-         hSlfZwxppodEaP5ryl53Up96E76OZM5n0HVf7CTLMla1hIuXCAN2YOH6rx4Y0A30kKh8
-         2lPXccUVn1ZfrgrWtDc03VC4qKvli39SkNOqTTKyDM4l1i+h5kj++qPEdbED6+tCZFAt
-         3dNw==
-X-Gm-Message-State: AOAM533MmFsegbRI3F1CiYCNIWURAZihgli51T183FdGSs8YfO1ZQGnL
-        cDszFuxsiPY/aKPgTkZ9wLU3SbkFryETFc1fTH8wyHx/
-X-Google-Smtp-Source: ABdhPJxS/x6khHmLb+BuWxzhx5jsDw8uFHomhEbhTkk23nKiA6DF1SpbqxI4DkSPB4fSmxLf/QvEVGoNgyYH9rONp9Q=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr4736276otw.250.1589482986051;
- Thu, 14 May 2020 12:03:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2wP+XM3Aov1bJkyBy7HnnvUXG3tbJVLAv2ge5XF7T+c=;
+        b=faxcvlgwUQibnpoL+dKLuipk6cSDryXN6AkmbgdEmusYId3gGpEVX5Q+PaU4Ih12x0
+         Ls1k8w6t8hLH6CkiE0ZtwwFYQ0RHLK8n0bZ0DuI5zQ0La7a8udDCpGtK+EujcJci0ElL
+         5mYztB9RE5mGApFWiVl8M4PmLF9onJuaE2oKSIh/NXQdrvxq8AQx/kPgbWCRhSZv47kW
+         XLgD8hH8bJ6Be2uADBKaLL6oAhUjdV0ytM3UeBd8zGnxMk9/BzUjv2L0B8NViykP6MyI
+         G2raD1UYA/x8DFGS//OVCXKoPX92mntBfdnXmYQEcRBXVB6Ec7CJ/fHkOxlJy/Tno4do
+         ZP+g==
+X-Gm-Message-State: AOAM533yi00qD80ClJlgykchHgeyndAcSDX53Y263tQgTJf6aRGgVWNs
+        V74OJ+TDmLHrmKAUslFlZw==
+X-Google-Smtp-Source: ABdhPJzg7GDOldcvgZzJQS6ZeGgBC1ebIOzmAOdEuhqsKev8xcTta1lwZc2MiilTX0y99+1J1dhElw==
+X-Received: by 2002:aca:ebc5:: with SMTP id j188mr2653350oih.70.1589483073243;
+        Thu, 14 May 2020 12:04:33 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n2sm6881235oie.46.2020.05.14.12.04.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 12:04:32 -0700 (PDT)
+Received: (nullmailer pid 7214 invoked by uid 1000);
+        Thu, 14 May 2020 19:04:31 -0000
+Date:   Thu, 14 May 2020 14:04:31 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        linux-mips@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-rtc@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 2/7] dt-bindings: timer: Move snps,dw-apb-timer DT
+ schema from rtc
+Message-ID: <20200514190431.GA7149@bogus>
+References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-3-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200405232318.26833-5-laurent.pinchart+renesas@ideasonboard.com>
- <20200513232840.22687-1-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdXRiP3topBOeLdLhJ9wMBAMFEnLYJPPpdmmdK7TKN4X6g@mail.gmail.com> <20200514151721.GF5955@pendragon.ideasonboard.com>
-In-Reply-To: <20200514151721.GF5955@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 May 2020 21:02:54 +0200
-Message-ID: <CAMuHMdVrO8WfKVdp2wONSYg=cbK=CWyXMyC+Hqv4tkiuCm5WAQ@mail.gmail.com>
-Subject: Re: [PATCH v1.1 4/4] dt-bindings: display: bridge: renesas,lvds:
- Convert binding to YAML
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506214107.25956-3-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Thu, 7 May 2020 00:41:02 +0300, Serge Semin wrote:
+> This binding file doesn't belong to the rtc seeing it's a pure timer
+> with no rtc facilities like days/months/years counting and alarms.
+> So move the YAML-file to the Documentation/devicetree/bindings/timer/
+> directory.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-mips@vger.kernel.org
+> ---
+>  .../devicetree/bindings/{rtc => timer}/snps,dw-apb-timer.yaml   | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>  rename Documentation/devicetree/bindings/{rtc => timer}/snps,dw-apb-timer.yaml (96%)
+> 
 
-On Thu, May 14, 2020 at 5:17 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Thu, May 14, 2020 at 09:31:53AM +0200, Geert Uytterhoeven wrote:
-> > On Thu, May 14, 2020 at 1:29 AM Laurent Pinchart wrote:
-> > > Convert the Renesas R-Car LVDS encoder text binding to YAML.
-> > >
-> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > > Acked-by: Maxime Ripard <mripard@kernel.org>
-> >
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
-> >
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-> > > +    #include <dt-bindings/power/r8a7795-sysc.h>
-> > > +
-> > > +    lvds@feb90000 {
-> > > +        compatible = "renesas,r8a7795-lvds";
-> > > +        reg = <0 0xfeb90000 0 0x14>;
-> >
-> > #{address,size}-cells = <1> for examples.
-> > Applies to all nodes below, too.
->
-> Why ?
-
-See "[PATCH 5/5] dt-bindings: Fix incorrect 'reg' property sizes"
-https://lore.kernel.org/linux-devicetree/20200512204543.22090-5-robh@kernel.org/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Acked-by: Rob Herring <robh@kernel.org>
