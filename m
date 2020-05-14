@@ -2,110 +2,212 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A688C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3426EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27BED2065D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:59:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="efu3k+G2"
+	by mail.kernel.org (Postfix) with ESMTP id 1E6D52065C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:01:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgENT6z (ORCPT
+        id S1728365AbgENUBG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 15:58:55 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:47370 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729001AbgENT6z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 15:58:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589486334; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=E3JOrY4A58gZsnsClzyUNWC3fBr+ONS0bBEOUGfz3Ts=; b=efu3k+G2xJPeT2qs5QuaQ0mF1JofJmXmvk3xPUsvDK95w0i42aUxiUel7iurN04pKXoZ/Eyn
- r0+axRfmmRRRRx0JDZ/DTiKxpRYEpcOuEAfS+OtgPkM/vGBTU0rj/j4/EmDNgYbOpibpcChQ
- LGE9Qq4c9UqkdztPL2w5Q0SBFAQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ebda2ee61db07dc42de77c2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 14 May 2020 19:58:38
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0DBC8C44788; Thu, 14 May 2020 19:58:38 +0000 (UTC)
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9E486C433D2;
-        Thu, 14 May 2020 19:58:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9E486C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        coresight@lists.linaro.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv2 2/2] dt-bindings: arm: coresight: Add support to skip trace unit power up
-Date:   Fri, 15 May 2020 01:27:56 +0530
-Message-Id: <b5f1161d7b007682d2526f88e31795572f920202.1589485594.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1589485594.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1589485594.git.saiprakash.ranjan@codeaurora.org>
+        Thu, 14 May 2020 16:01:06 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44616 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728021AbgENUBG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 16:01:06 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j4so37397otr.11;
+        Thu, 14 May 2020 13:01:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PtBjkIGGxXDp1dHFJEjYfiWUY2P5QlsKo/K6/+WZmeY=;
+        b=eRLUE4rvRcOHfERfQ/lZ1rp8Kk//qNdCk4bS2xoOhfNO5mIntyKzTVA1Ew4NEPbqll
+         Z9Xp/obclZWi7Rp8ZkJWnI40MuL/JroOONIWQ3nXX17Ik0xrhHlp8+icT4xbqol+nGG2
+         wyHt6VeTrarxUE3nWZYnrDC90la4CRI3f76nNCy/F0dr7Tobz3XX4F/z44r9E8SPGR1r
+         NCBRJhVH4t/cyHUR6WVUYzlH/VJnE++5Aq9t7nfgoU+qwF2NCK0ffxo8V3TT03M2bGns
+         efQnrPDQqMiZyu1ayC39UUJAcEf4tuOgT5p26XiynCL178rf1RL27Vgd3IwFD0QuO0w5
+         vV0Q==
+X-Gm-Message-State: AOAM532+LP+Ow5o84UFzRHCjQ/WL+gkAC6gY/oXaZMrd6GDDH462NWkj
+        8+JloxnL0KveMpiodaoOpCDwSFn/rQZtNOrNdJI=
+X-Google-Smtp-Source: ABdhPJxlL7bOKztMOeZJClvcFRKGEuvOXp/eLE3eVPuXdamQTY6erD7PmPjlCxeaUKv6T7vSuweVf114QyJxq2E0ayI=
+X-Received: by 2002:a9d:564:: with SMTP id 91mr4920155otw.250.1589486465222;
+ Thu, 14 May 2020 13:01:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200417140920.22596-1-geert+renesas@glider.be> <20200430023237.GA23316@bogus>
+In-Reply-To: <20200430023237.GA23316@bogus>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 14 May 2020 22:00:53 +0200
+Message-ID: <CAMuHMdUySoqH+uCQrOVCQm9YU5h0F0JwZaPT5291Mo5bb8-Oxg@mail.gmail.com>
+Subject: Re: [PATCH RFC] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tingwei Zhang <tingwei@codeaurora.org>
+Hi Rob,
 
-Add "qcom,skip-power-up" property to identify systems which can
-skip powering up of trace unit since they share the same power
-domain as their CPU core. This is required to identify such
-systems with hardware errata which stops the CPU watchdog counter
-when the power up bit is set (TRCPDCR.PU).
+On Thu, Apr 30, 2020 at 4:32 AM Rob Herring <robh@kernel.org> wrote:
+> On Fri, Apr 17, 2020 at 04:09:20PM +0200, Geert Uytterhoeven wrote:
+> > Convert the Renesas Pin Function Controller (PFC) Device Tree binding
+> > documentation to json-schema.
+> >
+> > Document missing properties.
+> > Drop deprecated and obsolete #gpio-range-cells property.
+> > Update the example to match reality.
+> > Drop consumer examples, as they do not belong here.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > How to describe that pin configuration nodes can have subnodes?
+> > E.g.
+> >
+> >     arch/arm/boot/dts/sh73a0-kzm9g.dt.yaml: pin-controller@e6050000: mmc: Additional properties are not allowed ('cfg', 'mux' were unexpected)
+>
+> I shouldn't tell you so no one does this again...
+>
+> I think you want something like this assuming you have either
+> grandchildren or properties, but not both in the child nodes:
+>
+> patternProperties:
+>   ".*":
+>     if:
+>       type: object
+>     then:
+>       oneOf:
+>         - allOf:
+>             - $ref: pincfg-node.yaml#
+>             - $ref: pinmux-node.yaml#
+>           ...
+>         - patternProperties:
+>             ".*":
+>               type: object
+>               allOf:
+>                 - $ref: pincfg-node.yaml#
+>                 - $ref: pinmux-node.yaml#
 
-Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks, sounds sane!
+As there are phandles pointing to the child node, I do need an explicit
+phandle property in the child node...
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index 846f6daae71b..e4b2eda0b53b 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -108,6 +108,13 @@ its hardware characteristcs.
- 	* arm,cp14: must be present if the system accesses ETM/PTM management
- 	  registers via co-processor 14.
- 
-+	* qcom,skip-power-up: boolean. Indicates that an implementation can
-+	  skip powering up the trace unit. TRCPDCR.PU does not have to be set
-+	  on Qualcomm Technologies Inc. systems since ETMs are in the same power
-+	  domain as their CPU cores. This property is required to identify such
-+	  systems with hardware errata where the CPU watchdog counter is stopped
-+	  when TRCPDCR.PU is set.
-+
- * Optional property for TMC:
- 
- 	* arm,buffer-size: size of contiguous buffer space for TMC ETR
+> If you did have a mixture, then you'd need the same if/then construct.
+
+... so I have a mixture, and do need the if/then construct.
+However, that gives me "is valid under each of" errors for all  child nodes
+of sh-pfc nodes.
+
+As both child and grandchild do not have any required properties, I
+tried adding some, but that didn't help.
+
+Do you have a clue? For reference, this is what I ended up with:
+
+patternProperties:
+  "^.*$":
+    if:
+      type: object
+    then:
+      oneOf:
+        - allOf:
+            - $ref: pincfg-node.yaml#
+            - $ref: pinmux-node.yaml#
+          description:
+            Pinctrl node's client devices use subnodes for desired pin
+            configuration.
+            Client device subnodes use below standard properties.
+
+          properties:
+            phandle: true
+            pins: true
+            groups: true
+            function: true
+            bias-disable: true
+            bias-pull-down: true
+            bias-pull-up: true
+            drive-strength:
+              enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset of
+supported values
+            power-source:
+              enum: [ 1800, 3300 ]
+            gpio-hog: true
+            gpios: true
+            input: true
+            output-high: true
+            output-low: true
+
+          additionalProperties: false
+
+        - properties:
+            phandle: true
+
+          patternProperties:
+            "^.*$":
+              if:
+                type: object
+              then:
+                allOf:
+                  - $ref: pincfg-node.yaml#
+                  - $ref: pinmux-node.yaml#
+                description:
+                  Pinctrl node's client devices use subnodes for desired pin
+                  configuration.
+                  Client device subnodes use below standard properties.
+
+                properties:
+                  pins: true
+                  groups: true
+                  function: true
+                  bias-disable: true
+                  bias-pull-down: true
+                  bias-pull-up: true
+                  drive-strength:
+                    enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset
+of supported values
+                  power-source:
+                    enum: [ 1800, 3300 ]
+                  gpio-hog: true
+                  gpios: true
+                  input: true
+                  output-high: true
+                  output-low: true
+
+                additionalProperties: false
+
+          additionalProperties: false
+
+> Now it probably ends up that the 'allOf' and everything else with it are
+> duplicated. If so you can do:
+>
+> definitions:
+>   pin-nodes:
+>     allOf:
+>     ...
+>
+> And use '$ref: #/definitions/pin-nodes' where you need it.
+>
+> That probably is not going to work with the fixups the tooling does, but
+> we could fix that.
+
+Obviously I haven't tried this part yet, but I'll keep it in mind.
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
