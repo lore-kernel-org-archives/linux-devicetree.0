@@ -2,92 +2,136 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD3BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 07:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BFAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 07:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80D89206F1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 07:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD2E2073E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 07:34:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LqTpSVy4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725925AbgENHcP (ORCPT
+        id S1726097AbgENHe6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 03:32:15 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40345 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgENHcO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 03:32:14 -0400
-Received: by mail-ot1-f68.google.com with SMTP id d26so1593080otc.7;
-        Thu, 14 May 2020 00:32:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vhc1vPOe6XCEp9cAZAiq6WN1cflOAJVbZDflQFJ2vjQ=;
-        b=JDB2sMytdCit1Mhi6CTKqqWI+CXqtp77Po/uyMf5zjfU+62LjR1MVfWNflNeZE81K/
-         KcBao1vg71j8aLO4h5GaGia3wg992ZPXB32dHEHXH7nGZICZDNDalBe1u6IRNIiNhPHS
-         JYEX4Il8ISQPWA2IB6pgXTSJyfx91XCRtvEjTKNAxocgVRnb3OwWY68E3Q6bxUK1xucu
-         gu5iPbbsfkhxJ+2ul/fhRbv7IVk2+U+X75p7YFjmlORpNeHXLZXUzFtGtqzFCennzArH
-         tJmBw3DcBHhCPBh3xUBv/F4is3F1wMlHxO6sB2eTmBWYHv3Q2WgD2AcjFw0/YAK1ZO6E
-         VYvw==
-X-Gm-Message-State: AOAM531SOkvf714tbkGfhU3sGcQEyWvIQ+gV+rAhVKeIYM7kN/SxmZK7
-        Sk4FZ80h7PSfG1K1I9lDKgAJVmo+H/DUpgYI77A=
-X-Google-Smtp-Source: ABdhPJyGBQa7yUxMaeUUyVrVubTEBO6u7aeAiflupj4yZkSBefIq/PXr26WIZz78ucQ0WiPzpHtHcVIgcxumEbzSbis=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr2543922otw.250.1589441534036;
- Thu, 14 May 2020 00:32:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200405232318.26833-5-laurent.pinchart+renesas@ideasonboard.com> <20200513232840.22687-1-laurent.pinchart+renesas@ideasonboard.com>
-In-Reply-To: <20200513232840.22687-1-laurent.pinchart+renesas@ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 May 2020 09:31:53 +0200
-Message-ID: <CAMuHMdXRiP3topBOeLdLhJ9wMBAMFEnLYJPPpdmmdK7TKN4X6g@mail.gmail.com>
-Subject: Re: [PATCH v1.1 4/4] dt-bindings: display: bridge: renesas,lvds:
- Convert binding to YAML
-To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Thu, 14 May 2020 03:34:58 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:21017 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725955AbgENHe5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 03:34:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589441697; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=cTY3pvzI77KJ5Z/we/c4X1UOa6Y2/VYnrojkOWwC9X4=; b=LqTpSVy4hjT35jgDaZuWlB+XyoakWPa+/wU35UGec9XycUc3KNIyRUpotJA4/pGkwlcQYIfN
+ P677JrhSZ3j0/0QBLAYLkIgcPLWSX4ieFj2fYcS1soGdq+9tU8P3NhYnChqvGsnmdPmTMvv7
+ nKhDizNJr/ra4o6BD4ZWgLng+PM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebcf496.7f98084e52d0-smtp-out-n01;
+ Thu, 14 May 2020 07:34:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3C7C4C44788; Thu, 14 May 2020 07:34:44 +0000 (UTC)
+Received: from [10.206.24.246] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DD2E9C433D2;
+        Thu, 14 May 2020 07:34:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DD2E9C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V5 2/7] soc: qcom-geni-se: Add interconnect support to fix
+ earlycon crash
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, agross@kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, mgautam@codeaurora.org,
+        linux-arm-msm@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
+ <1588919619-21355-3-git-send-email-akashast@codeaurora.org>
+ <CAHp75Vdjz7RBbyPwZwvNq5njwb_Jc76U=3pDpswmoFCFaGtNAQ@mail.gmail.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <b4c03f46-e991-4a3a-8059-9924b8d6ace4@codeaurora.org>
+Date:   Thu, 14 May 2020 13:04:35 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75Vdjz7RBbyPwZwvNq5njwb_Jc76U=3pDpswmoFCFaGtNAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Andy,
 
-On Thu, May 14, 2020 at 1:29 AM Laurent Pinchart
-<laurent.pinchart+renesas@ideasonboard.com> wrote:
-> Convert the Renesas R-Car LVDS encoder text binding to YAML.
+On 5/9/2020 5:41 PM, Andy Shevchenko wrote:
+> On Fri, May 8, 2020 at 9:34 AM Akash Asthana <akashast@codeaurora.org> wrote:
+>> QUP core clock is shared among all the SE drivers present on particular
+>> QUP wrapper, the system will reset(unclocked access) if earlycon used after
+>> QUP core clock is put to 0 from other SE drivers before real console comes
+>> up.
+>>
+>> As earlycon can't vote for it's QUP core need, to fix this add ICC
+>> support to common/QUP wrapper driver and put vote for QUP core from
+>> probe on behalf of earlycon and remove vote during earlycon exit call.
+> ...
 >
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Acked-by: Maxime Ripard <mripard@kernel.org>
+>> +       for_each_child_of_node(parent, child) {
+>> +               if (of_device_is_compatible(child, "qcom,geni-se-qup")) {
+> if (!...)
+>   continue;
+> will save you a readability of the loop body.
+>
+> Or...
+Ok.
+>
+>> +                       wrapper = platform_get_drvdata(of_find_device_by_node(
+>> +                                       child));
+> ...leave this on one line
+ok
+>
+>> +                       icc_put(wrapper->to_core.path);
+>> +                       wrapper->to_core.path = NULL;
+>> +               }
+> And here is the question, what do you want to do if you find more
+> devices with the same compatible string?
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
+We are voting on core path (from probe *geni_se_probe*) for all the 
+devices which are compatible to string "qcom,geni-se-qup" so, here we'll 
+remove those vote and release the icc_path for all the those devices
 
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-> +    #include <dt-bindings/power/r8a7795-sysc.h>
-> +
-> +    lvds@feb90000 {
-> +        compatible = "renesas,r8a7795-lvds";
-> +        reg = <0 0xfeb90000 0 0x14>;
+We have to vote on each qup device instead ones to which console is 
+connected because all the qup shares the same core clocks. You may refer 
+previous thread@ https://www.spinics.net/lists/linux-spi/msg21000.html 
+for more info on this limitation.
 
-#{address,size}-cells = <1> for examples.
-Applies to all nodes below, too.
+Thankyou for taking time out and reviewing the patch.
 
-Gr{oetje,eeting}s,
+Regards,
 
-                        Geert
+Akash
+
+>
+>> +       }
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
