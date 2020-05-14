@@ -2,299 +2,98 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69109C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 23:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3610C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 23:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4B920734
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 23:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0FF2074A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 23:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgENXFJ (ORCPT
+        id S1728303AbgENXcc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 19:05:09 -0400
-Received: from mail-mw2nam12olkn2084.outbound.protection.outlook.com ([40.92.23.84]:28621
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728602AbgENXFJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 19:05:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DO0cFOQofIEESAc5fRVOhz9srlEMKK7fB8+sWxF9dG1U0GKfmsu7PBcQ5s5ktFZtC9dd0KxHS4W4PbpLIIUK9NB1ygTgq7LyfXf+B1calMyMpg6Lq+mCBn28qURHNpRmOlr7C/bxom4QQq9WS+SO2nycVL4vtLd97FMxr3bAtVSXCaJCELJFsPH8IYbgRn9z1YwBwf/oP6wxu9QJKRZbtvBQIUzmGtTMdcRz3JztsUBVihP9vYAb6rajxpLP6D/LQnGM3Fo7FezqWKK5amiiWtYoULSBvUk9TQY7/Shr5ECU729553FyTbEMigo67qcrncazAyYxzC+ss7aV3HTGjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gUCcqPZF46q0Hh6KXEjruQjzv4fka78JltJ4rJy8xpM=;
- b=Y1pr3MzfYnZhlNksrKmMtW7HzPr0LuHoRGww63ohv5Zab8JtLOnsuIF4Nalk+INIRYTK7A+kUlRiZTklWWK3f1sizZIgAePz4S+LEwORuq7RsJdNGUkHZnGImjQpugvxHDqQGKsfwPelOFfVeQpNGywwenKItBog24fsvU6n4oo2iJ9CZgwd/u8hxmGDcyhxbTxbeVmkkCey6+05BTmm8oo+MmZ/WCvZVH1T+A0Xgu5LOwgNRrpqduKUT+IYkzFf4RavlUD4Vn4HPp9L0PNIeo1NJFcn5rXu7BcxuFKRIvlbPIPbaG8TKAgtaxjutmC0PA4dF7alv1JvStg2+6+CVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from MW2NAM12FT003.eop-nam12.prod.protection.outlook.com
- (2a01:111:e400:fc65::42) by
- MW2NAM12HT256.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc65::347)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11; Thu, 14 May
- 2020 23:05:05 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc65::44) by MW2NAM12FT003.mail.protection.outlook.com
- (2a01:111:e400:fc65::70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11 via Frontend
- Transport; Thu, 14 May 2020 23:05:05 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:96457069B7C8ECE2B32989EFB7E1F5D4DADFFD3A441ED28AA851DA2F7CED0FB9;UpperCasedChecksum:0278B8E250466512A3B55EE2741B6A3930D3A4C203E92490CD07E1149D2789B6;SizeAsReceived:7954;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.3000.022; Thu, 14 May 2020
- 23:05:05 +0000
-From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     sre@kernel.org, krzk@kernel.org, jonghwa3.lee@samsung.com,
-        tglx@linutronix.de, kstewart@linuxfoundation.org,
-        baolin.wang7@gmail.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <k.kozlowski@samsung.com>,
-        Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH 01/10] power: supply: charger-manager: Swap private uevent for power_supply_changed
-Date:   Thu, 14 May 2020 16:04:26 -0700
-Message-ID: <BN6PR04MB0660089AC6741DF0318C2949A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514230435.11798-1-xc-racer2@live.ca>
-References: <20200514230435.11798-1-xc-racer2@live.ca>
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MWHPR22CA0040.namprd22.prod.outlook.com
- (2603:10b6:300:69::26) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200514230435.11798-2-xc-racer2@live.ca>
+        Thu, 14 May 2020 19:32:32 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15797 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728288AbgENXcc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 19:32:32 -0400
+IronPort-SDR: vsyOoDT3emlGh5iOTYA/v1OE3N6hG3JRXGdkBowU334UgS3HTvGenrWxjxedQk7ynQ4151cObB
+ TAXcszonfLcA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 16:32:31 -0700
+IronPort-SDR: AGf3EJk7tM8SlSjLEDYCzZ23Rp2H3cq6MSyBBtVyJEpl4LUf6aIl2O9wJ2mcgH6a5YyUB3Yo0S
+ wQTHkMcurE2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
+   d="scan'208";a="341784788"
+Received: from ashadrin-mobl1.ccr.corp.intel.com ([10.249.38.112])
+  by orsmga001.jf.intel.com with ESMTP; 14 May 2020 16:32:23 -0700
+Message-ID: <2a2e2c8c4a9364fa515fe772d2216d77c45ae854.camel@linux.intel.com>
+Subject: Re: [PATCH v8 1/8] tpm: tpm_tis: Make implementation of read16,
+ read32 and write32 optional
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com, Eyal.Cohen@nuvoton.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, benoit.houyere@st.com, mark.rutland@arm.com,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Date:   Fri, 15 May 2020 02:32:12 +0300
+In-Reply-To: <5e66f2d3e3f2c6af4bafd25f0d228774b8302e8d.camel@linux.intel.com>
+References: <20200512141431.83833-1-amirmizi6@gmail.com>
+         <20200512141431.83833-2-amirmizi6@gmail.com>
+         <5e66f2d3e3f2c6af4bafd25f0d228774b8302e8d.camel@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR22CA0040.namprd22.prod.outlook.com (2603:10b6:300:69::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26 via Frontend Transport; Thu, 14 May 2020 23:05:04 +0000
-X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200514230435.11798-2-xc-racer2@live.ca>
-X-TMN:  [mPWESInzjCLz92pIXHfqiXC1ByhNVvhz3CPcz0+OaSZ94j1MlwaNEzaqt3PaUjLe]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: eeb8004d-7710-4412-fe06-08d7f85b3d5d
-X-MS-TrafficTypeDiagnostic: MW2NAM12HT256:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: d3TyidNTycMoHuwCqjQxwoUlVk2ivaMpaJzGqs2P6nFiNhFuCQKYYqQ9K4Ie/z0U7IqDPaDQCVhCJMCvG52QjnN2JmsPJnJfRgfoU0SJ8YVFXULdXOK6BUvEk+4iBYExmTh518nD2XlNuQvEW9daEo2dliB0FRJPAGPa+b9Eepq6PkWmww0uoLnlAIxW2ZFGTXT8ETEwKEjxDQB6nsoUhg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: wx8almPHaP0Jq9rE26RA5ylTygMxvedEN8J0H/QT6rQSDzit4sgCmBQpP11nrP1ft9QxWtXWtZD1E0oHbJJgxrPw5gIebSDSXsfPmgupvQKHfJYUwoeVT003jGDRy1bjyDY0bti+upFkQ8lbvID57LRNJEQzTieLQMATNJJGzVOeVBWbJR5A71QScbMa7jV5tcmf270E1c224CmmYZXiSQ==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eeb8004d-7710-4412-fe06-08d7f85b3d5d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2020 23:05:05.5715
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2NAM12HT256
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jonghwa Lee <jonghwa3.lee@samsung.com>
+On Thu, 2020-05-14 at 14:26 +0300, Jarkko Sakkinen wrote:
+> On Tue, 2020-05-12 at 17:14 +0300, amirmizi6@gmail.com wrote:
+> > From: Amir Mizinski <amirmizi6@gmail.com>
+> > 
+> > Only tpm_tis can use memory-mapped I/O, which is truly mapped into
+> > the kernel's memory space. Therefore, using ioread16/ioread32/iowrite32
+> > turns into a straightforward pointer dereference.
+> > Every other driver requires more complicated operations to read more than
+> > one byte at a time and will just fall back to read_bytes/write_bytes.
+> > Therefore, move this common code out of tpm_tis_spi and into tpm_tis_core
+> > so that it is used automatically when low-level drivers do not implement
+> > the specialized methods.
+> > 
+> > Co-developed-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> > Signed-off-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> > Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 
+> OK, so I applied this one:
+> 
+> http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/fa05dc792ea02043f3c21467cb4485a38ac19bdf
+> 
+> I.e. no need to carry this one any more in the series. Sorry that
+> I haven't done this before (should have).
 
-Whenever the battery status is changed, charger manager triggers a uevent
-through a private interface. Modify it to use power_supply_changed()
-since it belongs to the power supply subsystem.
+Dropped it. Breaks the compilation:
 
-Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
----
- drivers/power/supply/charger-manager.c | 91 ++++----------------------
- 1 file changed, 11 insertions(+), 80 deletions(-)
+ld: drivers/char/tpm/tpm_tis_spi_cr50.o:(.rodata+0x10): undefined reference to `tpm_tis_spi_read16'
+ld: drivers/char/tpm/tpm_tis_spi_cr50.o:(.rodata+0x18): undefined reference to `tpm_tis_spi_read32'
+ld: drivers/char/tpm/tpm_tis_spi_cr50.o:(.rodata+0x20): undefined reference to `tpm_tis_spi_write32'
 
-diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
-index a21e1a2673f8..330185b960a5 100644
---- a/drivers/power/supply/charger-manager.c
-+++ b/drivers/power/supply/charger-manager.c
-@@ -33,18 +33,6 @@
- #define CM_DEFAULT_RECHARGE_TEMP_DIFF	50
- #define CM_DEFAULT_CHARGE_TEMP_MAX	500
- 
--static const char * const default_event_names[] = {
--	[CM_EVENT_UNKNOWN] = "Unknown",
--	[CM_EVENT_BATT_FULL] = "Battery Full",
--	[CM_EVENT_BATT_IN] = "Battery Inserted",
--	[CM_EVENT_BATT_OUT] = "Battery Pulled Out",
--	[CM_EVENT_BATT_OVERHEAT] = "Battery Overheat",
--	[CM_EVENT_BATT_COLD] = "Battery Cold",
--	[CM_EVENT_EXT_PWR_IN_OUT] = "External Power Attach/Detach",
--	[CM_EVENT_CHG_START_STOP] = "Charging Start/Stop",
--	[CM_EVENT_OTHERS] = "Other battery events"
--};
--
- /*
-  * Regard CM_JIFFIES_SMALL jiffies is small enough to ignore for
-  * delayed works so that we can run delayed works with CM_JIFFIES_SMALL
-@@ -61,8 +49,6 @@ static const char * const default_event_names[] = {
-  */
- #define CM_RTC_SMALL		(2)
- 
--#define UEVENT_BUF_SIZE		32
--
- static LIST_HEAD(cm_list);
- static DEFINE_MUTEX(cm_list_mtx);
- 
-@@ -446,61 +432,6 @@ static int try_charger_restart(struct charger_manager *cm)
- 	return try_charger_enable(cm, true);
- }
- 
--/**
-- * uevent_notify - Let users know something has changed.
-- * @cm: the Charger Manager representing the battery.
-- * @event: the event string.
-- *
-- * If @event is null, it implies that uevent_notify is called
-- * by resume function. When called in the resume function, cm_suspended
-- * should be already reset to false in order to let uevent_notify
-- * notify the recent event during the suspend to users. While
-- * suspended, uevent_notify does not notify users, but tracks
-- * events so that uevent_notify can notify users later after resumed.
-- */
--static void uevent_notify(struct charger_manager *cm, const char *event)
--{
--	static char env_str[UEVENT_BUF_SIZE + 1] = "";
--	static char env_str_save[UEVENT_BUF_SIZE + 1] = "";
--
--	if (cm_suspended) {
--		/* Nothing in suspended-event buffer */
--		if (env_str_save[0] == 0) {
--			if (!strncmp(env_str, event, UEVENT_BUF_SIZE))
--				return; /* status not changed */
--			strncpy(env_str_save, event, UEVENT_BUF_SIZE);
--			return;
--		}
--
--		if (!strncmp(env_str_save, event, UEVENT_BUF_SIZE))
--			return; /* Duplicated. */
--		strncpy(env_str_save, event, UEVENT_BUF_SIZE);
--		return;
--	}
--
--	if (event == NULL) {
--		/* No messages pending */
--		if (!env_str_save[0])
--			return;
--
--		strncpy(env_str, env_str_save, UEVENT_BUF_SIZE);
--		kobject_uevent(&cm->dev->kobj, KOBJ_CHANGE);
--		env_str_save[0] = 0;
--
--		return;
--	}
--
--	/* status not changed */
--	if (!strncmp(env_str, event, UEVENT_BUF_SIZE))
--		return;
--
--	/* save the status and notify the update */
--	strncpy(env_str, event, UEVENT_BUF_SIZE);
--	kobject_uevent(&cm->dev->kobj, KOBJ_CHANGE);
--
--	dev_info(cm->dev, "%s\n", event);
--}
--
- /**
-  * fullbatt_vchk - Check voltage drop some times after "FULL" event.
-  * @work: the work_struct appointing the function
-@@ -538,7 +469,7 @@ static void fullbatt_vchk(struct work_struct *work)
- 
- 	if (diff > desc->fullbatt_vchkdrop_uV) {
- 		try_charger_restart(cm);
--		uevent_notify(cm, "Recharging");
-+		power_supply_changed(cm->charger_psy);
- 	}
- }
- 
-@@ -569,7 +500,7 @@ static int check_charging_duration(struct charger_manager *cm)
- 		if (duration > desc->charging_max_duration_ms) {
- 			dev_info(cm->dev, "Charging duration exceed %ums\n",
- 				 desc->charging_max_duration_ms);
--			uevent_notify(cm, "Discharging");
-+			power_supply_changed(cm->charger_psy);
- 			try_charger_enable(cm, false);
- 			ret = true;
- 		}
-@@ -580,7 +511,7 @@ static int check_charging_duration(struct charger_manager *cm)
- 				is_ext_pwr_online(cm)) {
- 			dev_info(cm->dev, "Discharging duration exceed %ums\n",
- 				 desc->discharging_max_duration_ms);
--			uevent_notify(cm, "Recharging");
-+			power_supply_changed(cm->charger_psy);
- 			try_charger_enable(cm, true);
- 			ret = true;
- 		}
-@@ -688,7 +619,7 @@ static bool _cm_monitor(struct charger_manager *cm)
- 	if (temp_alrt) {
- 		cm->emergency_stop = temp_alrt;
- 		if (!try_charger_enable(cm, false))
--			uevent_notify(cm, default_event_names[temp_alrt]);
-+			power_supply_changed(cm->charger_psy);
- 
- 	/*
- 	 * Check whole charging duration and discharging duration
-@@ -713,7 +644,7 @@ static bool _cm_monitor(struct charger_manager *cm)
- 	} else if (!cm->emergency_stop && is_full_charged(cm) &&
- 			cm->charger_enabled) {
- 		dev_info(cm->dev, "EVENT_HANDLE: Battery Fully Charged\n");
--		uevent_notify(cm, default_event_names[CM_EVENT_BATT_FULL]);
-+		power_supply_changed(cm->charger_psy);
- 
- 		try_charger_enable(cm, false);
- 
-@@ -722,7 +653,7 @@ static bool _cm_monitor(struct charger_manager *cm)
- 		cm->emergency_stop = 0;
- 		if (is_ext_pwr_online(cm)) {
- 			if (!try_charger_enable(cm, true))
--				uevent_notify(cm, "CHARGING");
-+				power_supply_changed(cm->charger_psy);
- 		}
- 	}
- 
-@@ -843,7 +774,7 @@ static void fullbatt_handler(struct charger_manager *cm)
- 
- out:
- 	dev_info(cm->dev, "EVENT_HANDLE: Battery Fully Charged\n");
--	uevent_notify(cm, default_event_names[CM_EVENT_BATT_FULL]);
-+	power_supply_changed(cm->charger_psy);
- }
- 
- /**
-@@ -857,9 +788,9 @@ static void battout_handler(struct charger_manager *cm)
- 
- 	if (!is_batt_present(cm)) {
- 		dev_emerg(cm->dev, "Battery Pulled Out!\n");
--		uevent_notify(cm, default_event_names[CM_EVENT_BATT_OUT]);
-+		power_supply_changed(cm->charger_psy);
- 	} else {
--		uevent_notify(cm, "Battery Reinserted?");
-+		power_supply_changed(cm->charger_psy);
- 	}
- }
- 
-@@ -876,7 +807,7 @@ static void misc_event_handler(struct charger_manager *cm,
- 
- 	if (is_polling_required(cm) && cm->desc->polling_interval_ms)
- 		schedule_work(&setup_polling);
--	uevent_notify(cm, default_event_names[type]);
-+	power_supply_changed(cm->charger_psy);
- }
- 
- static int charger_get_property(struct power_supply *psy,
-@@ -2044,7 +1975,7 @@ void cm_notify_event(struct power_supply *psy, enum cm_event_types type,
- 		break;
- 	case CM_EVENT_UNKNOWN:
- 	case CM_EVENT_OTHERS:
--		uevent_notify(cm, msg ? msg : default_event_names[type]);
-+		power_supply_changed(cm->charger_psy);
- 		break;
- 	default:
- 		dev_err(cm->dev, "%s: type not specified\n", __func__);
--- 
-2.20.1
+Please fix this issue in the next version of the patch and remove my
+reviewed-by. I will have to re-review the patch.
+
+/Jarkko
 
