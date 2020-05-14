@@ -2,136 +2,82 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B74C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 11:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BB3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 11:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE399206A5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 11:30:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589455839;
-	bh=N0SNu+Nn/EIk64Sqc/MA48Bp1bPQoGgfY6AXnq6mazE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=lUhPk9Z6x8wAWyOQh8uKs9vVaKodIA9+dwf95D2uSbJTT2X5AVJA/bhlZoC6fXMdf
-	 LDdjyTFXPjxZ8cNQnm3HX4YaPWWCvH1tgh/Toaqf7o+UcZ53Xl3uyxTMjeWux4EUgJ
-	 1utyV7xTZXTgrxVNpMmkSpit56/Uq87aG74M2Itw=
+	by mail.kernel.org (Postfix) with ESMTP id 1480E2065F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 11:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXqfYEcG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgENLag (ORCPT
+        id S1726056AbgENLgx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 07:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35664 "EHLO
+        Thu, 14 May 2020 07:36:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgENLag (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 07:30:36 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F17C061A0C;
-        Thu, 14 May 2020 04:30:35 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id o14so3114219ljp.4;
-        Thu, 14 May 2020 04:30:35 -0700 (PDT)
+        with ESMTP id S1726011AbgENLgw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 07:36:52 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D487C061A0C;
+        Thu, 14 May 2020 04:36:52 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id a9so2319316lfb.8;
+        Thu, 14 May 2020 04:36:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ah//zqGVr2uq0yxwfS0temU7octJ3zdlPot3c86bBKg=;
-        b=ZWiahqDG1NmV5BZmHPba70NLT3jWoiGhVL8LiWzNM5EhW7iB8gMGIHJWV5rCTG8rSo
-         HQJAj/lGM8deoncy8mlMupsfxwUzmZfcH7LSJB4TBSc5VzKIqmp9ASkktLIpfvCVNc3A
-         BoMwqKygagvsl3T0XOfD4ktdNoyypTKBqlGaj+q0h9E0RS2FYPE/MZptMW8/G1zMOSQW
-         HVAoWBCuHRgv0LAKY8q86/wb7mFb7ezeOtSWtnkM57R2R6U0QTqBIQpwkwljLayq4+jk
-         pfTZPKz/kEOk9lEBP50dMvgmYYWd9kRdtTbQY2kjDY48W1NzTDBvZQGOhiLt3kCT8Jp6
-         i9Vw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zGigY40HNC0vIIg2KqrMRVX3IHwlm3zXsKb7MGlt1hE=;
+        b=eXqfYEcGXhSVo+xqDDZGlPliR281ArKBPClCeLdkTj649PZFDo0KHiPpfLyMmVbOBB
+         W2dQj8QZV3a6sYqgDyggORuRFa2RhWt1VedY9tRCcV24BFp8iju+JKwPzuGw6SgkGFC0
+         FYPhLZ6d8dJ+0ed1Vz+EjiCppgbgkPvQfwCnMiB40rE6yA+etGnSDSnR6RU+3PAGxAh5
+         MvmFq7mAeqKUD2LF/opZd7OUV514O06q53xXl0CwM4GzprAzGiDbIxZ6DqwMs413pFzx
+         MuL+s1EkiJla5d5R2yYkmTaEinqAnkxMNWo8Fuzb2uONO5X4z+d3Ctw0upZYvWtCu4pG
+         BEXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=ah//zqGVr2uq0yxwfS0temU7octJ3zdlPot3c86bBKg=;
-        b=koOyuQU/wwm2FhIT6rroXW1il2D/fegpTtMkuxpKgHU+yClv9vji5dI+CgMs/OX86d
-         Fc3y2zVxP7icLfiPAiowYKxaRQm5WXYA6Jw1tRN89WZzbj40k2UJFeCw+Qk/8XwO2MU9
-         PH+2KIQPJIUNbiOYmh3B6yHL8dqUJL1nxuU69F7J5x8U9Q4krHORUJe+nu6RCcC3jVO/
-         MZPHcqZFQr+AOuwJyHbBnjQw+5MtvrHH3L3+sSyfaqp3PVuIC3mjJ8mfPedsakuPRVIc
-         z85p1xxvZu6/LwFBouuJCjkF5/zyMS30l2if9t4YuS2gQiqbM3PkppfNEETemn3KpVmf
-         Efog==
-X-Gm-Message-State: AOAM5315o8hDrmT/oEty2sXiBLL1JpbFe5lFr8fhXUYp6YNL+rBJ7rZq
-        Y9s4lC16jd9ESp/cU8wPAK4=
-X-Google-Smtp-Source: ABdhPJzBPTrOoPSmDrxxlZaojs5Gyl65qbnn/VHe5j3S87HnxSM5SrSaFP8FYBZdlRTpPyemwx7bpg==
-X-Received: by 2002:a2e:a313:: with SMTP id l19mr2474879lje.133.1589455834002;
-        Thu, 14 May 2020 04:30:34 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id l26sm1340749ljc.49.2020.05.14.04.30.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 04:30:33 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
-In-Reply-To: <878shu4uwk.fsf@kernel.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-3-git-send-email-sanm@codeaurora.org> <878shu4uwk.fsf@kernel.org>
-Date:   Thu, 14 May 2020 14:30:28 +0300
-Message-ID: <875zcy4uuj.fsf@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zGigY40HNC0vIIg2KqrMRVX3IHwlm3zXsKb7MGlt1hE=;
+        b=aE/+sjiXbER8X7oh3vtRZ3oc+W5YM9kIoyCx5Uo3IqvgMuZ7yH1vV1edpglynp98mC
+         dPrdfBW9Gi0JVvHvegv1/f9fpyTK0/pB3r6/VZyVH3XgC0+LwuVNned+dFyfa5NTDs45
+         1uUnQ2uNmv3GokyxmDrNcYForzgghNL/p26lQZXLPc9bA0NciIp3s9B9y6bjlV3x0vq9
+         61lhLTY1ptidX+N9Ms440ohbTaSictFJchlX/fsu3TUqADBTZpUkOvLbkLunL4nWGE/d
+         UR6zLya7IDDEoCaY+1Om/JJpZPmmjK3H8NkQXZDe/L3zJiibKFb0QFWF71idU0KeteN9
+         MMPw==
+X-Gm-Message-State: AOAM533Nw8IakXS2KUQ63uPaT4VIfYRmRccRl+wwxP4A12A8X3ncOHRm
+        wXgzyvLF1Wg/gj5n4HY13Wrm+1K4nCrhiqdS8pG5Rw==
+X-Google-Smtp-Source: ABdhPJxBmTa1h8WlktzqD3pLbVyqrx3p3qFiTuM+yFXGEoO7RIjFXQifYAYsXge406O6IyIPcO5/3UB23gV5x4p5eQM=
+X-Received: by 2002:ac2:5e9c:: with SMTP id b28mr3067625lfq.50.1589456210950;
+ Thu, 14 May 2020 04:36:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <20200514113003.19067-1-geert@linux-m68k.org>
+In-Reply-To: <20200514113003.19067-1-geert@linux-m68k.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 14 May 2020 13:36:39 +0200
+Message-ID: <CANiq72=tpSaYkZHf9ip0A1Lhip+B4rWPf-fCJorq7oigaVe98Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: auxdisplay: hd44780: Convert to json-schema
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Rob,
 
-Felipe Balbi <balbi@kernel.org> writes:
-
-> Hi,
+On Thu, May 14, 2020 at 1:30 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> Sandeep Maheswaram <sanm@codeaurora.org> writes:
->> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
->> +{
->> +	struct device *dev =3D qcom->dev;
->> +	int ret;
->> +
->> +	if (!device_is_bound(&qcom->dwc3->dev))
->> +		return -EPROBE_DEFER;
->
-> this breaks allmodconfig. I'm dropping this series from my queue for
-> this merge window.
+> Convert the Hitachi HD44780 Character LCD Controller Device Tree binding
+> documentation to json-schema.
 
-Sorry, I meant this patch ;-)
+Do you usually take these ones or should I?
 
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl69K9QACgkQzL64meEa
-mQZ7vhAArWjaK6Aj1DN1EzYA0n/cMOhFyrbXdSjFMQVnz2FVLtseCEoKC6OdSMLx
-jGEzTYRjI+78Ypm8agyAVxlEvWvpG9z7NNNTA8yDIevNKQ47q5M/XWRsI2ueElV1
-LG6mt2SdK5RH1Id4BQAIZ36/IG/CIlQiml4EJYUtT0RjNhCmP7kI73bN4bp8EH3u
-8TGjNwFfguoI0RjJLXbOSIkTvYUbMFv/X3Ap5qk7sne3BBBMZkNGepGG5t8HGWHa
-uFgM1IXpgVQ3Wnua5nlSjk/PYjm+Vkm/z4Tj646+cUZHyhlZNpwSlMDtrPT9euAS
-7cWU4zVE2ve74Jpu2CJbVuHEpVmNSoh4zlnqDHpth8AEfiSndn4AlzkHd7ZLY1lA
-ZEXGRu8aylz4/fIQMlxA1J2NiV+81zi8awOD4D4/ERBJrf5Fx5s41ChUXXynbmrx
-OSube67GvjjMZdCG1gjZatIIex8pj0DMM91bDAEPvZIbr/Z1G5FwrNnoIaJpE3Xi
-DT9N6CGkz+PvOpME7y/CLpOlfqYe1Js/+RkzRJ80Qwy/G1V5n7McOKSU4o7AOmZk
-m40we7nmSzN+Q1KmAh0EzjtfLhrUWGMcuwRcI+p5jc40G/4dm6ySKVv9b5z+l+No
-1yahDWmAwNgIDBJtRvET0vbw5F7oaCqzy+p+lKq7s/8UnxLVJNQ=
-=mQ/l
------END PGP SIGNATURE-----
---=-=-=--
+Cheers,
+Miguel
