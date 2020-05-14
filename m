@@ -2,180 +2,147 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC95C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9613C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 007BA206D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:00:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XILpPMuJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9B534205CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589468434;
+	bh=XhfuoXAvGKkWFM4KU0QcEkopvO6851ddFKPESaeDxxk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YpiJgxwn33uun5SjXuXafnaqSJUfUhppI+CCkcEtj84QU0veBZRvJlmR0QTxUMFAh
+	 H53NTSC1Q3otP4+V4YwKZ3SAcfqXmorHvmmj4QLYNweJXMVgd2DajWD1XwqO3p5OLq
+	 YKccgDvmBdCIpiMXOw+MGS46hJGI32utEDl+ikPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgENPAX (ORCPT
+        id S1727991AbgENPAd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 11:00:23 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50410 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgENPAW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 11:00:22 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EF04GF032483;
-        Thu, 14 May 2020 10:00:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589468404;
-        bh=bDHfeg2mPHd8gN2CoYU7iU5rAUI8DfJtiyLth9bqm8Q=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=XILpPMuJnHCkbsdfHqkWOg9NpMw2zFY8iYdg5WcRu8E48J//kLV6GRNQCHRS2LgKw
-         5VBvswXO0u+Q66POCghVoQmZmgDky622apKVGwJzAHjiQsTB8lAvhMhevkqM9Dmybu
-         SCBw6b7HCWvshLaqcyIJGMfqwBzrdbljV5O2x7Fs=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EF03Ti127742;
-        Thu, 14 May 2020 10:00:04 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 10:00:01 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 10:00:01 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EExgAl019279;
-        Thu, 14 May 2020 09:59:57 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-pci@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 03/19] PCI: endpoint: Add API to get reference to EPC from device-tree
-Date:   Thu, 14 May 2020 20:29:11 +0530
-Message-ID: <20200514145927.17555-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200514145927.17555-1-kishon@ti.com>
-References: <20200514145927.17555-1-kishon@ti.com>
+        Thu, 14 May 2020 11:00:33 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37341 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgENPAd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 11:00:33 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z17so2577111oto.4;
+        Thu, 14 May 2020 08:00:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b4HeH81d7CC2pFdjz+KIc9E1a6jJhBx25lXQ9gtMpzM=;
+        b=LDr0V/g7lU4mfrKVFlAzBhPfFjpnLKqUWtDGOZTQRWAcVGUaTfareZm8aCHe0TnVBZ
+         KWC6IPzCkma8QwgBjPiTdVrAzP9Dox6Je/5E9sho2a/+0W9ln0I0iXKilExH9l5KlmO5
+         1nxKMt6DZiAdXmQGlguq8fwZ0faOWuLa8xd65yyGJ+nxbkNHzQFQzKKPX5qzA9r7EZ1z
+         sp77BNMjgsH50GHKvTtIUaLhUOkMjLJLR/x1ftHapFIi2L0mBPJbo3AtGmyTDSPcT8bR
+         hq5bIuXhreruOcJQuVxRbHpM012FE0h3Xi7ME+fJhtPIR7gy09G6BRGq0K91lEvw2YFt
+         4e9g==
+X-Gm-Message-State: AOAM5314U7Ti1EA00J3afmsQkn3Sjb6ew76IrG+GXyFbXWJsL2iQG8Fv
+        4diMEDSZ0+M5RwG5FCffkQ==
+X-Google-Smtp-Source: ABdhPJzW85ZeQbTbhD2yMI5gcvb3x7Kv8qJI1H0Pl22tcfxBOiO1jCVwwbhxlPlqaQj6fzuo6pKuzg==
+X-Received: by 2002:a9d:7343:: with SMTP id l3mr3559142otk.276.1589468430559;
+        Thu, 14 May 2020 08:00:30 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u45sm818344ooi.41.2020.05.14.08.00.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 08:00:29 -0700 (PDT)
+Received: (nullmailer pid 8677 invoked by uid 1000);
+        Thu, 14 May 2020 15:00:28 -0000
+Date:   Thu, 14 May 2020 10:00:28 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        mark.rutland@arm.com, gregkh@linuxfoundation.org,
+        boris.brezillon@collabora.com, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org, marex@denx.de
+Subject: Re: [PATCH v4 06/10] dt-bindings: mtd: update STM32 FMC2 NAND
+ controller documentation
+Message-ID: <20200514150028.GB28489@bogus>
+References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
+ <1588756279-17289-7-git-send-email-christophe.kerello@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588756279-17289-7-git-send-email-christophe.kerello@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add of_pci_epc_get() and of_pci_epc_get_by_name() to get reference
-to EPC from device-tree. This is added in preparation to define
-an endpoint function device in device tree.
+On Wed, May 06, 2020 at 11:11:15AM +0200, Christophe Kerello wrote:
+> These bindings can be used on SOCs where the FMC2 NAND controller is
+> in standalone. In case that the FMC2 embeds 2 controllers (an external
+> bus controller and a raw NAND controller), the register base and the
+> clock will be defined in the parent node. It is the reason why the
+> register base address and the clock are now optional.
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
+>  .../devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml   | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+> index b059267..68fac1a 100644
+> --- a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+> @@ -18,13 +18,15 @@ properties:
+>  
+>    reg:
+>      items:
+> -      - description: Registers
+> +      - description: Registers (optional)
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/endpoint/pci-epc-core.c | 61 +++++++++++++++++++++++++++++
- include/linux/pci-epc.h             |  3 ++
- 2 files changed, 64 insertions(+)
+The only thing that can be optional are the last entries. You have to do 
+a 'oneOf' with 6 entries and 7 entries.
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 82ba0dc7f2f5..177a3fc1a0dd 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -83,6 +83,66 @@ struct pci_epc *pci_epc_get(const char *epc_name)
- }
- EXPORT_SYMBOL_GPL(pci_epc_get);
- 
-+/**
-+ * of_pci_epc_get() - get PCI endpoint controller from device node and index
-+ * @node: device node which contains the phandle to endpoint controller
-+ * @index: index of the endpoint controller in "epcs" property
-+ *
-+ * Returns the EPC corresponding to the _index_ entry in "epcs" property
-+ * present in device node, after getting a refcount  to it or -ENODEV if
-+ * there is no such EPC or -EPROBE_DEFER if there is a phandle to the phy,
-+ * but the device is not yet loaded.
-+ */
-+struct pci_epc *of_pci_epc_get(struct device_node *node, int index)
-+{
-+	struct device_node *epc_node;
-+	struct class_dev_iter iter;
-+	struct pci_epc *epc;
-+	struct device *dev;
-+
-+	epc_node = of_parse_phandle(node, "epcs", index);
-+	if (!epc_node)
-+		return ERR_PTR(-ENODEV);
-+
-+	class_dev_iter_init(&iter, pci_epc_class, NULL, NULL);
-+	while ((dev = class_dev_iter_next(&iter))) {
-+		epc = to_pci_epc(dev);
-+		if (epc_node != epc->dev.of_node)
-+			continue;
-+
-+		of_node_put(epc_node);
-+		class_dev_iter_exit(&iter);
-+		get_device(&epc->dev);
-+		return epc;
-+	}
-+
-+	of_node_put(epc_node);
-+	class_dev_iter_exit(&iter);
-+	return ERR_PTR(-EPROBE_DEFER);
-+}
-+EXPORT_SYMBOL_GPL(of_pci_epc_get);
-+
-+/**
-+ * of_pci_epc_get_by_name() - get PCI endpoint controller from device node
-+ *                            and string
-+ * @node: device node which contains the phandle to endpoint controller
-+ * @epc_name: name of endpoint controller as present in "epc-names" property
-+ *
-+ * Returns the EPC corresponding to the epc_name in "epc-names" property
-+ * present in device node.
-+ */
-+struct pci_epc *of_pci_epc_get_by_name(struct device_node *node,
-+				       const char *epc_name)
-+{
-+	int index = 0;
-+
-+	if (epc_name)
-+		index = of_property_match_string(node, "epc-names", epc_name);
-+
-+	return of_pci_epc_get(node, index);
-+}
-+EXPORT_SYMBOL_GPL(of_pci_epc_get_by_name);
-+
- /**
-  * pci_epc_get_first_free_bar() - helper to get first unreserved BAR
-  * @epc_features: pci_epc_features structure that holds the reserved bar bitmap
-@@ -629,6 +689,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- 	device_initialize(&epc->dev);
- 	epc->dev.class = pci_epc_class;
- 	epc->dev.parent = dev;
-+	epc->dev.of_node = dev->of_node;
- 	epc->ops = ops;
- 
- 	ret = dev_set_name(&epc->dev, "%s", dev_name(dev));
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index cc66bec8be90..dd3c2d566c3d 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -211,6 +211,9 @@ int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
- int pci_epc_multi_mem_init(struct pci_epc *epc,
- 			   struct pci_epc_mem_window *window,
- 			   unsigned int num_windows);
-+struct pci_epc *of_pci_epc_get(struct device_node *node, int index);
-+struct pci_epc *of_pci_epc_get_by_name(struct device_node *node,
-+				       const char *epc_name);
- void pci_epc_mem_exit(struct pci_epc *epc);
- void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
- 				     phys_addr_t *phys_addr, size_t size);
--- 
-2.17.1
+And where's your new compatible string for this different h/w?
 
+>        - description: Chip select 0 data
+>        - description: Chip select 0 command
+>        - description: Chip select 0 address space
+>        - description: Chip select 1 data
+>        - description: Chip select 1 command
+>        - description: Chip select 1 address space
+> +    minItems: 6
+> +    maxItems: 7
+>  
+>    interrupts:
+>      maxItems: 1
+> @@ -61,7 +63,6 @@ required:
+>    - compatible
+>    - reg
+>    - interrupts
+> -  - clocks
+>  
+>  examples:
+>    - |
+> @@ -77,13 +78,13 @@ examples:
+>              <0x81000000 0x1000>,
+>              <0x89010000 0x1000>,
+>              <0x89020000 0x1000>;
+> -            interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> -            dmas = <&mdma1 20 0x10 0x12000a02 0x0 0x0>,
+> -                   <&mdma1 20 0x10 0x12000a08 0x0 0x0>,
+> -                   <&mdma1 21 0x10 0x12000a0a 0x0 0x0>;
+> -            dma-names = "tx", "rx", "ecc";
+> -            clocks = <&rcc FMC_K>;
+> -            resets = <&rcc FMC_R>;
+> +      interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> +      dmas = <&mdma1 20 0x2 0x12000a02 0x0 0x0>,
+> +             <&mdma1 20 0x2 0x12000a08 0x0 0x0>,
+> +             <&mdma1 21 0x2 0x12000a0a 0x0 0x0>;
+> +      dma-names = "tx", "rx", "ecc";
+> +      clocks = <&rcc FMC_K>;
+> +      resets = <&rcc FMC_R>;
+>        #address-cells = <1>;
+>        #size-cells = <0>;
+>  
+> -- 
+> 1.9.1
+> 
