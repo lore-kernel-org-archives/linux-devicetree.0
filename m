@@ -4,82 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B29AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D65C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 394C6206A5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA7020728
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589468910;
-	bh=48I96bMQ1CEeb7oxxjCuOFlFMAEbO4NxGW7b5X6/HYA=;
+	s=default; t=1589468952;
+	bh=5ZIUZLh3hl0XJeCruWdO+4sBSAhw7XXJeX3qzYngHko=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y/K9AGY5sB0SW5fLH1BYTvVixTuAmGQPY3tGa9V+ciwcyRPV7st55QOSAXfseTiVK
-	 PvpXKeoBDgF8zuvHXlOL9+Umms2JYqN6MzNCD0nQI0Kqmy/aVyIwXj5BNCW0h4S8pU
-	 gA0CubW9Kyktd6sr3GbyPwGZlkQK6SPmRupLMTEE=
+	b=a1HQryPdKX9/EujOkYiMpa3dywTqtlJef1+j/7jyzBCLGRkNG81HC7EZaJQ0dQZYE
+	 IWQefX/NfV7UJjoRGcqsVIdJCTTvkK44GnCJAWVXmz/b37q9bFFsqElW14S+XLHO4o
+	 UKLKOSTjq6jp2qyuWn0xIE2i5MdsBjVftu2TTPlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgENPI3 (ORCPT
+        id S1727896AbgENPJH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 11:08:29 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36743 "EHLO
+        Thu, 14 May 2020 11:09:07 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44337 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgENPI3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 11:08:29 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x7so23890822oic.3
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 08:08:29 -0700 (PDT)
+        with ESMTP id S1726240AbgENPJG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 11:09:06 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a2so24613398oia.11;
+        Thu, 14 May 2020 08:09:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z78zI7ZbyVskAgWCc1NqF/JnuqHwotn4rURhcKPHKm8=;
-        b=im6T8Natc56LR63GRBJgNKWpKQtXYvCbLnDB2aWyBPV+luv4OMfE9nabAXAaPuqrcD
-         48iLKrxj/C2UZ981aN1YYmTbJ4a4dhsJ6pI60Q1Xd9gpZpCQE2938fsUi5BEKUHwW9q3
-         mbGGasQXbd8QuaLIwkzy5GXUxhunJLastgloT3Zz6x4k3tEL1meeueTcjYlJEVG5wotB
-         dAWZZa+2SrGzRn82KExx/H4c6HnHHHBLOMbgokWEYzpXtGV1UEqeyck9vVJh4nQMXs26
-         Ma6JG+6jOm8XWm4eiOZrVXOR8ww98JoI3OF+/b2keGUm7TV+4jSB6nUZEBzBpEipm+iS
-         j/Rw==
-X-Gm-Message-State: AOAM53284t+0ziXvC+i3KBtFMn5Q9nt9iR4dj9UoGB8g2lZCloScXjFZ
-        u9vpnKC1+KhjEz6LWeWkaw==
-X-Google-Smtp-Source: ABdhPJz7ekl6VwtUgZBoNPiDa7Tm0U7cB71ZTwaPGr/qw2e4m8JJLosEG/FZLKTP3dZtRI4GRHFX1A==
-X-Received: by 2002:aca:5243:: with SMTP id g64mr1438425oib.90.1589468908927;
-        Thu, 14 May 2020 08:08:28 -0700 (PDT)
+        bh=pEb8Z2pMkkbfNV7pCxLtoRmGyd419uEf0xyvpMZy978=;
+        b=W7stWmPAgpc4oQ1dJvRCckEPqKVXjFF9my7CGSL+VcBRZgEQzp5nDZfI6QEamd9LKw
+         CdIHvkFcdF4NAklzfcYHGSETc3XOCiwkPMYzu5rKweM6+/L4UanPfcCsRqGMtorgEfNO
+         L6N8atZsMn7S+aG7w2PL94BmKafh1yZfrZnHpjvplCxxJOnh2Bz6gdL1jSJZkRaUAUGo
+         lwLYspP9d5VzD3ACBfJVw700x76PSU7VPo9hRRaGzCGZiLDC/Q1hdWEbX3Gfb3dTtyJ/
+         8I3ZReu7InNAgshfpbtmpa8HWOImP+/sL56PVwkpRclmKmZzDYuHpleXYAUItFealmw/
+         bLIw==
+X-Gm-Message-State: AGi0PuYp8D52C84tZuk+kwQ56tOqJCNsCVqM/GEZz+HNaVNDctswR338
+        rEqMG0DuoLj8trFzbgnj1g==
+X-Google-Smtp-Source: APiQypLVRNwGWhiz/pLryvwHAj1Sc7jqWQATwc7y3kNeYCvEkOxVAGZwsNHFpv/Mc94Bdfgu+ChEGg==
+X-Received: by 2002:a05:6808:7dc:: with SMTP id f28mr31904197oij.88.1589468945619;
+        Thu, 14 May 2020 08:09:05 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h9sm840838oor.21.2020.05.14.08.08.27
+        by smtp.gmail.com with ESMTPSA id l192sm857550ooc.3.2020.05.14.08.09.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 08:08:27 -0700 (PDT)
-Received: (nullmailer pid 27316 invoked by uid 1000);
-        Thu, 14 May 2020 15:08:27 -0000
-Date:   Thu, 14 May 2020 10:08:27 -0500
+        Thu, 14 May 2020 08:09:04 -0700 (PDT)
+Received: (nullmailer pid 28879 invoked by uid 1000);
+        Thu, 14 May 2020 15:09:03 -0000
+Date:   Thu, 14 May 2020 10:09:03 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Amit Singh Tomar <amittomer25@gmail.com>
-Cc:     manivannan.sadhasivam@linaro.org, devicetree@vger.kernel.org,
-        andre.przywara@arm.com, linux-actions@lists.infradead.org,
-        robh+dt@kernel.org, cristian.ciocaltea@gmail.com,
-        linux-arm-kernel@lists.infradead.org, afaerber@suse.de
-Subject: Re: [PATCH RFC 6/8] dt-bindings: reset: s700: Add binding constants
- for mmc
-Message-ID: <20200514150827.GA27226@bogus>
-References: <1588761371-9078-1-git-send-email-amittomer25@gmail.com>
- <1588761371-9078-7-git-send-email-amittomer25@gmail.com>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-kernel@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [PATCH v2 01/20] dt-bindings: power: Convert mti,mips-cpc to DT
+ schema
+Message-ID: <20200514150903.GA28744@bogus>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588761371-9078-7-git-send-email-amittomer25@gmail.com>
+In-Reply-To: <20200506174238.15385-2-Sergey.Semin@baikalelectronics.ru>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  6 May 2020 16:06:08 +0530, Amit Singh Tomar wrote:
-> This commit adds device tree binding reset constants for mmc controller
-> present on Actions S700 Soc.
+On Wed, 6 May 2020 20:42:19 +0300,  wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+> It's a Cluster Power Controller embedded into the MIPS IP cores.
+> Currently the corresponding dts node is supposed to have compatible
+> and reg properties.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-pm@vger.kernel.org
+> 
 > ---
->  include/dt-bindings/reset/actions,s700-reset.h | 3 +++
->  1 file changed, 3 insertions(+)
+> 
+> Changelog v2:
+> - Reword the changelog summary - use shorter version.
+> - Lowercase the example hex'es.
+> ---
+>  .../bindings/power/mti,mips-cpc.txt           |  8 -----
+>  .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
+>  2 files changed, 35 insertions(+), 8 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
