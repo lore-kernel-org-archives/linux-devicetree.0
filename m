@@ -2,114 +2,139 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575ACC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 21:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F07C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 23:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1E42065C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 21:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tVE470XW"
+	by mail.kernel.org (Postfix) with ESMTP id 5C9E320734
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 23:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbgENVxD (ORCPT
+        id S1729010AbgENXFH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 17:53:03 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59060 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgENVxD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 17:53:03 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04ELqvKs096190;
-        Thu, 14 May 2020 16:52:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589493177;
-        bh=gq1egVzpDSB9B+OD1HzxXbmyNMglkSN4GoPkuCuAoZw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tVE470XWB6YZ/q4MZMgEKQqGk8Bs3y5T7zDmGrQpAWdSperW386SBKl4uKuOtpUeU
-         CUnOziB5GRQI9kJ1ZJkB0I8bTVUhVaLr96mQnsYtVSYl3L7RdigjQFCT+6lrSxLcXG
-         5B8fhqNusISqVdLe2vlubt9M4B86QPWxCctcuBDI=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04ELqvGJ030194
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 May 2020 16:52:57 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 16:52:57 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 16:52:57 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04ELqvEs072265;
-        Thu, 14 May 2020 16:52:57 -0500
-Subject: Re: [PATCH net-next 2/2] net: phy: DP83822: Add ability to advertise
- Fiber connection
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200514173055.15013-1-dmurphy@ti.com>
- <20200514173055.15013-3-dmurphy@ti.com> <20200514185217.GX499265@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <2ccba0e1-d7f1-86ae-d67c-5e9f4a3b0c4f@ti.com>
-Date:   Thu, 14 May 2020 16:43:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 19:05:07 -0400
+Received: from mail-dm6nam12olkn2048.outbound.protection.outlook.com ([40.92.22.48]:47424
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728508AbgENXFG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 19:05:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gdYG3GM2E6DZNF3aoaeD39O3T4OfsV5XN9Zzc9TLdMfAY/BKisbC46jkvT7qgDGIPFlIA2sL7QE1FVmzhwaeV235nwpWVX3WggkX4EEm/IHceCtB5xifFos7vNwFoRtP170S+Z1pLZt1s0RO5eobHwLT4gjFTka5HzqmmreQpx6FwrlJXs1knWsScuKqQYOcJaEn6fk/1EbLfmGpxOQ54n4K6IelNXhzdGQYsYeZo7z8ffi36SIEgaAr64S6DxeqwkND/iG8+O/BgrSn5kAiI7/OvrE6da0FUV8VRI6iAKToYXOpd3rcfFrRaCLxcym4whh0/CGHgwF8B1zn+qkRsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u8Z4mUac3jNXx26SHqo2XYSo2AyvhLsfSPKAt2qH4nM=;
+ b=B9Zs7TvD+lex5/QF9NzXp51hsYled7lTeKOSGUQMNfAMw9JmcpprwyycnwKKhe7qySUNpU9I69GbJ6O+Y18ZkkAAiUbILHqga4c/Y1ToSO1UPDU944UX3/4zIgejnH8Cp6ZajRFa1Ahp3i9oyK68lJBJVuNQfWEeWTvDXjhEkhWEs4YB2uKgP7xpabnE+pJPohg13KoAz7C/G+ZSs5N4kKjhUzTZnLHz+eFti1s1Ray70RUrCEluyCQ+WgFr77L06SFM4MBTi72KIEVt0PrgJz1UhLg/hI+QJRbXh17NYTIr05+zxuTrYqBsvOGExqeRS6ZWQWPl3/DH27DteY7w0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from MW2NAM12FT003.eop-nam12.prod.protection.outlook.com
+ (2a01:111:e400:fc65::48) by
+ MW2NAM12HT221.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc65::279)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11; Thu, 14 May
+ 2020 23:05:04 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc65::44) by MW2NAM12FT003.mail.protection.outlook.com
+ (2a01:111:e400:fc65::70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11 via Frontend
+ Transport; Thu, 14 May 2020 23:05:04 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:2B908F33ADF082C81FC1E0FCB353C2A7DCA76E6AA8734CB8F5D9CE6A53963CFD;UpperCasedChecksum:74C0D38BCB1EA9186C10664C7F62431CC02EA446E510634877E7D9DA5FB97A8B;SizeAsReceived:7743;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.3000.022; Thu, 14 May 2020
+ 23:05:04 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     sre@kernel.org, krzk@kernel.org, jonghwa3.lee@samsung.com,
+        tglx@linutronix.de, kstewart@linuxfoundation.org,
+        baolin.wang7@gmail.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH 00/10] power: supply: Charger-manager improvements
+Date:   Thu, 14 May 2020 16:04:25 -0700
+Message-ID: <BN6PR04MB06603115D277DF264D9380E8A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MWHPR22CA0040.namprd22.prod.outlook.com
+ (2603:10b6:300:69::26) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <20200514230435.11798-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-In-Reply-To: <20200514185217.GX499265@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR22CA0040.namprd22.prod.outlook.com (2603:10b6:300:69::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26 via Frontend Transport; Thu, 14 May 2020 23:05:02 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200514230435.11798-1-xc-racer2@live.ca>
+X-TMN:  [LHc+2olohFnXGtQZ9kDZurzcUck2jh1xjDnxFJJ2eRRV/Kohx+25bz1VVfCpu2qV]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: f984340d-8d2c-46d8-a3fd-08d7f85b3c3e
+X-MS-TrafficTypeDiagnostic: MW2NAM12HT221:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zEK1vFgZqFPbxQudR2BGPp2pdGOL30XDE/H1APDQuD9mJ69a0uXXwI+2yAT5GB1qE4MO1SLmRoWyZUKDUyis7OLV9UTujY53etGoA3k/Cop7FZNsUhGvz799uhS1ozt9xMDAUHMBYQI0gYnNxkS2YXftPMdndAMUa5H2pRe71A8G5ULXXnCXJRhQcI+rJnavPuD7gCo7RjpqDQStVXTW192wwK/Y8QxmYfB7EX9LjfnCUMzvEAb/L2PyG2jPIC5f
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: TIXwLDbwsqF2yzraKILd15S/al3pSAZhOVLabJc8h/79+Gm4GfDdB13jP2gCM6zZOglCXdVdoMUkNsnnyI31AXbKQLlBuHGkhEZGNg2EU3ctyo2XbrZmUfdqI+abgknkLGjJqiMKU0eIHedbdXtyeh1u2L58kMPsybIVH6D4wkyYaEr22pU3dWdFb/a40SxdhpH/GI+Pogb+PZyc+nwFow==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f984340d-8d2c-46d8-a3fd-08d7f85b3c3e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2020 23:05:03.8852
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2NAM12HT221
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Andrew
+Charger-manager is a virtual driver for unifying chargers, fuel gauges,
+extcon devices, and a thermal device into a battery management system.
 
-On 5/14/20 1:52 PM, Andrew Lunn wrote:
->> +static int dp83822_config_init(struct phy_device *phydev)
->> +{
->> +	struct dp83822_private *dp83822 = phydev->priv;
->> +	int err = 0;
->> +
->> +	if (dp83822->fx_enabled) {
->> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
->> +				 phydev->supported);
->> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
->> +				 phydev->advertising);
->> +
->> +		/*  Auto negotiation is not available in fiber mode */
->> +		phydev->autoneg = AUTONEG_DISABLE;
->> +		phydev->speed = SPEED_100;
->> +		phydev->duplex = DUPLEX_FULL;
-> Hi Dan
->
-> This is normally determined by reading the ability registers,
-> genphy_read_abilities(). When strapped to fibre mode, does it still
-> indicate all the usual copper capabilities, which it can not actually
-> do?
+Unfortunately, it has been broken since commit 830ae442202e ("extcon:
+Remove the deprecated extcon functions") when the extcon internal API
+was changed but some drivers were not updated.  Additionally, it had
+some race conditions and was unnecessarily complex.
 
-Auto negotiation is not available when in Fiber mode for this PHY.  The 
-Speed is locked at 100Mbps for fiber.
+A number of these patches come from a Tizen git tree(1); they have been
+rebased and the commit messages cleaned up.
 
-Duplex can be either FULL or HALF so that should be removed.
+These changes have been tested on a couple of first-gen Galaxy S devices
+based on s5pv210 with a modified max8998 driver so that a charger
+regulator is exposed.  In addition to the max8998, this hardware has
+a max17040 fuel gauge, fsa9480 extcon, and a generic thermal resistor
+for temperature sensing.
 
-I am verifying with the PHY team on the BMSR register but I do not see 
-any bits for FX there.
+1) https://git.tizen.org/cgit/platform/kernel/linux-exynos/log/drivers/power/charger-manager.c?h=tizen_5.0
 
-If we remove these settings then I will need to read the PHY_STS 
-register to manage the speed and mode of the fiber.  This register 
-reports the PHY link status regardless of the mode.
+Jonathan Bakker (4):
+  power: supply: charger-manager: Always use POWER_SUPPLY_PROP_TEMP
+  power: supply: charger-manager: Update extcon functions
+  power: supply: charger-manager: Count cm-chargers property directly
+  dt-bindings: power: supply: Cleanup charger-manager bindings
 
-Dan
+Jonghwa Lee (6):
+  power: supply: charger-manager: Swap private uevent for
+    power_supply_changed
+  power: supply: charger-manager: Remove cm_notify_event function
+  power: supply: charger-manager: Correct usage of CHARGE_NOW/FULL
+  power: supply: charger-manager:  Collect all power_supply_changed()
+    calls
+  power: supply: charger-manager: Make decisions focussed on battery
+    status
+  power: supply: charger-manager: Don't start charging in cable
+    nofitication
 
+ .../bindings/power/supply/charger-manager.txt |  30 +-
+ drivers/power/supply/charger-manager.c        | 571 +++++-------------
+ include/linux/power/charger-manager.h         |  41 +-
+ 3 files changed, 175 insertions(+), 467 deletions(-)
 
->
-> 	Andrew
+-- 
+2.20.1
+
