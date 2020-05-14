@@ -2,293 +2,252 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37BEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A2BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA6E120675
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:13:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483608;
-	bh=t6LAsFMJGab9q7la8bLiLmD71GRJ1pRvNju7JJgwi5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JypALpuPae7lr9I0AlwL/LY/vMRTSINOB+6LJotURMBhM45jQsSNqqx6kYNe7r3cL
-	 OkkjtU++q8YbMCBU4OgXwA/gZu/kLqFRcOqfAQRB2+0NswDhKkiZ/ieKIt62thT9w4
-	 FQqKCCosz9zKNJec5gXjMp2w4QXKuJ38WDsQG4VU=
+	by mail.kernel.org (Postfix) with ESMTP id 737F120643
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:35:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZolF2Dg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgENTNX (ORCPT
+        id S1726553AbgENTe5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 15:13:23 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41490 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbgENTNW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 15:13:22 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 63so3282307oto.8;
-        Thu, 14 May 2020 12:13:21 -0700 (PDT)
+        Thu, 14 May 2020 15:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726128AbgENTe4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 15:34:56 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CCB4C061A0C;
+        Thu, 14 May 2020 12:34:56 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h4so4792828ljg.12;
+        Thu, 14 May 2020 12:34:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=og+mFqkQ1CAe/czR3+TKiYrXrYEV1ucIAEKU/RyoNDU=;
+        b=CZolF2DggsKTYh/lV2wyHaCyiHB7GdpzW6g/ZtAFXpginQWA/dcpxrrOZQN7GAq3Ue
+         8zdhEQ1f//fiAMdlhLLQ9WqGSx/FouKUOmmRxTGAat8BhikOJpfiS79qRkg8S9neyS9p
+         bKYRxmRxa0kRH7ZNCcu1yBLfMAmLjoxyNNzZwVcTDc6XcT/Wnw6z7NdKlmWP9xaxgI93
+         F9JR+DvnTzhW6HBs4pLEg4DtNlD1nEoeO5CmRc63GIwhYw4UsMuejkrXmqv08YofzFUg
+         s20cXrdibxukNV0TOQleiGRde2ZVH1xtygUSM2YCyDWwfClF7IGM9uOXOV61tuPCHY2X
+         vqrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1hsjDRxDrqUiJ2zCntl33FowRx8SVYyc1frPwk5HdUU=;
-        b=cwzNovdlpIPu1wa5aa2sP2i9ZnCqjbGhgfUhFHRy7vtS4NmFvdW1BSz4uPc2LxaVJ1
-         ORadOSM2H5Ts+HLI9wgIUpDz3D5txQWtBRx5QlMf4X/J3japAslN3PsY09IS2F2vd+UU
-         2lbCESoYLeN4wKvbMuCBRCcjXPkBbKZConF8gFAJ/3ol6bTiooCmEAd13lNT+ZolDgMk
-         3thaR2OO9xLU+u3LgJ6Wae1vOMR5z08uSXdv5HUe1jZ49a2U+Ca+Bysd1g8JzVarFidw
-         9hqaJx8tEdffeEBvrJQBGB6VpPi8LH3Tv1ZCQ15RZp52GfTG3bCIq+SW5HZnEMsIAMKA
-         oZiQ==
-X-Gm-Message-State: AOAM530HFGn2VmhS1M53zx9NMWCoPM5H9Ajyzw47lS124p+/VLbZ47F2
-        9xByX2ZngMMwzc1mRDRXS8/xF3w=
-X-Google-Smtp-Source: ABdhPJwChB1vgd/fyeUGCU9oe4078K6mWpRpBkNggNqyJzVVUwQdfjyt0tHZ3CPD6L5pc+JJINTcWQ==
-X-Received: by 2002:a9d:7cd1:: with SMTP id r17mr4811626otn.355.1589483600453;
-        Thu, 14 May 2020 12:13:20 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y17sm1008975oou.13.2020.05.14.12.13.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 12:13:19 -0700 (PDT)
-Received: (nullmailer pid 19245 invoked by uid 1000);
-        Thu, 14 May 2020 19:13:18 -0000
-Date:   Thu, 14 May 2020 14:13:18 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: clk: Add Baikal-T1 CCU PLLs binding
-Message-ID: <20200514191318.GA10192@bogus>
-References: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
- <20200506222300.30895-1-Sergey.Semin@baikalelectronics.ru>
- <20200506222300.30895-2-Sergey.Semin@baikalelectronics.ru>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=og+mFqkQ1CAe/czR3+TKiYrXrYEV1ucIAEKU/RyoNDU=;
+        b=Pdz23X5p8SznJ0UV4lEV1aQvQryKgsrLmTY5JOnQgXcEQW9iGeuAQiNsN2MxBS6cNs
+         j1AkquVLeYjCKdUm67GpRvgMGK0FKPikMbDstkhZr+BN9Bj0yiB9ci6nb6rFdUCYROBq
+         MNIik8CzvKXGsohkz3gS7ZZ+XfVxspmDLafkfbvb20Zunkh0tPpKucGwrtNYocOTpSp0
+         AZhxwL7+j4Sj9qtMojCxGzuqf9q/KXW6Wv6WL9RszWETh+FekgwfxTgVKsG8MUW5NjPo
+         6cGXEuU6ynsh44N6swSHXat9pMX9cweDZ2CxgIUeW44gdWYFigkASHCeiSYvyRqZYqvz
+         EtiQ==
+X-Gm-Message-State: AOAM5331E38FW//1wv/4pbwlz9OUUgrlC3gBcJoK6z979yP3ujA8B8ea
+        Klyc/m3iDmc96J/m4uxPIyWjqwpP
+X-Google-Smtp-Source: ABdhPJxDflsh0HvwluZVujuFduHUZilb+GFF3x0ItuiZEaHP8qSiaL9YfMiDfg6H1ZW4TlRkFv1U/w==
+X-Received: by 2002:a2e:9e97:: with SMTP id f23mr3698618ljk.228.1589484892987;
+        Thu, 14 May 2020 12:34:52 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id w12sm53343ljj.55.2020.05.14.12.34.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 12:34:51 -0700 (PDT)
+Subject: Re: [PATCH 4/9] dt-bindings: power: supply: Add device-tree binding
+ for Summit SMB3xx
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Rob Herring <robh@kernel.org>, David Heidelberg <david@ixit.cz>,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Myungjoo Ham <myungjoo.ham@samsung.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        ramakrishna.pallala@intel.com,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+References: <20200329161552.215075-1-david@ixit.cz>
+ <20200329162128.218584-5-david@ixit.cz> <20200410164905.GA719@bogus>
+ <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
+ <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
+ <687db60d-fea9-f157-d4ce-907189bb3cc7@gmail.com>
+ <20200509011406.hs7nj3g7f5pzetxp@earth.universe>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <fea13673-9500-c34b-5b50-c4f8cef9c4d8@gmail.com>
+Date:   Thu, 14 May 2020 22:34:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506222300.30895-2-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200509011406.hs7nj3g7f5pzetxp@earth.universe>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:22:57AM +0300, Serge Semin wrote:
-> Baikal-T1 Clocks Control Unit is responsible for transformation of a
-> signal coming from an external oscillator into clocks of various
-> frequencies to propagate them then to the corresponding clocks
-> consumers (either individual IP-blocks or clock domains). In order
-> to create a set of high-frequency clocks the external signal is
-> firstly handled by the embedded into CCU PLLs. So the corresponding
-> dts-node is just a normal clock-provider node with standard set of
-> properties. Note as being part of the Baikal-T1 System Controller its
-> DT node is supposed to be a child the system controller node.
+09.05.2020 04:14, Sebastian Reichel пишет:
+> Hi,
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-mips@vger.kernel.org
+> On Wed, Apr 15, 2020 at 06:30:02PM +0300, Dmitry Osipenko wrote:
+>> 15.04.2020 17:27, Rob Herring пишет:
+>>> On Fri, Apr 10, 2020 at 2:02 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>
+>>>> 10.04.2020 19:49, Rob Herring пишет:
+>>>> ...
+>>>>>> +  summit,max-chg-curr:
+>>>>>> +    description: Maximum current for charging (in uA)
+>>>>>> +    allOf:
+>>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>> +
+>>>>>> +  summit,max-chg-volt:
+>>>>>> +    description: Maximum voltage for charging (in uV)
+>>>>>> +    allOf:
+>>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>> +    minimum: 3500000
+>>>>>> +    maximum: 4500000
+>>>>>> +
+>>>>>> +  summit,pre-chg-curr:
+>>>>>> +    description: Pre-charging current for charging (in uA)
+>>>>>> +    allOf:
+>>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>> +
+>>>>>> +  summit,term-curr:
+>>>>>> +    description: Charging cycle termination current (in uA)
+>>>>>> +    allOf:
+>>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>>>> ...
+>>>>> These are all properties of the battery attached and we have standard
+>>>>> properties for some/all of these.
+>>>>
+>>>> Looks like only four properties seem to be matching the properties of
+>>>> the battery.txt binding.
+>>>>
+>>>> Are you suggesting that these matching properties should be renamed
+>>>> after the properties in battery.txt?
+>>>
+>>> Yes, and that there should be a battery node.
+>>
+>> Usually, it's a battery that has a phandle to the power-supply. Isn't it?
 > 
-> ---
+> There are two things: The infrastructure described by 
+> Documentation/devicetree/bindings/power/supply/power-supply.yaml is
+> used for telling the operating system, that a battery is charged
+> by some charger. This is done by adding a power-supplies = <&phandle>
+> in the battery fuel gauge node referencing the charger and probably
+> what you mean here.
 > 
-> Changelog v2:
-> - Rearrange the SoBs.
-> - Discard comments in the bindings file header.
-> - Add dual GPL/BSD license.
-> - Add spaces around the ASCII-graphics in the binding description.
-> - Remove reference to Documentation/devicetree/bindings/clock/clock-bindings.txt
->   file.
-> - Discard redundant object check against "/schemas/clock/clock.yaml#" schema.
-> - Discard redundant descriptions of the "#clock-cells" property.
-> - Remove "reg" property since from now the clock DT node is supposed to be
->   a child of the syscon-compatible system controller node.
-> - Remove "clock-output-names" property support.
-> - Replace "additionalProperties: false" with "unevaluatedProperties: false".
-> - Lowercase the nodes name in the examples.
-> - Use "clock-controller" node name suffix in the examples.
-> - Remove unnecessary comments in the clocks dt-bindings header file.
-> ---
->  .../bindings/clock/baikal,bt1-ccu-pll.yaml    | 127 ++++++++++++++++++
->  include/dt-bindings/clock/bt1-ccu.h           |  16 +++
->  2 files changed, 143 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
->  create mode 100644 include/dt-bindings/clock/bt1-ccu.h
+> Then we have the infrastructure described by 
+> Documentation/devicetree/bindings/power/supply/battery.txt, which
+> provides data about the battery cell. In an ideal world we would
+> have only smart batteries providing this data, but we don't live
+> in such a world. So what we currently have is a binding looking
+> like this:
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml b/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
-> new file mode 100644
-> index 000000000000..571181758ef2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
-> @@ -0,0 +1,127 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/baikal,bt1-ccu-pll.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Baikal-T1 Clock Control Unit PLL
-> +
-> +maintainers:
-> +  - Serge Semin <fancer.lancer@gmail.com>
-> +
-> +description: |
-> +  Clocks Control Unit is the core of Baikal-T1 SoC System Controller
-> +  responsible for the chip subsystems clocking and resetting. The CCU is
-> +  connected with an external fixed rate oscillator, which signal is transformed
-> +  into clocks of various frequencies and then propagated to either individual
-> +  IP-blocks or to groups of blocks (clock domains). The transformation is done
-> +  by means of PLLs and gateable/non-gateable dividers embedded into the CCU.
-> +  It's logically divided into the next components:
-> +  1) External oscillator (normally XTAL's 25 MHz crystal oscillator, but
-> +     in general can provide any frequency supported by the CCU PLLs).
-> +  2) PLLs clocks generators (PLLs) - described in this binding file.
-> +  3) AXI-bus clock dividers (AXI).
-> +  4) System devices reference clock dividers (SYS).
-> +  which are connected with each other as shown on the next figure:
-> +
-> +          +---------------+
-> +          | Baikal-T1 CCU |
-> +          |   +----+------|- MIPS P5600 cores
-> +          | +-|PLLs|------|- DDR controller
-> +          | | +----+      |
-> +  +----+  | |  |  |       |
-> +  |XTAL|--|-+  |  | +---+-|
-> +  +----+  | |  |  +-|AXI|-|- AXI-bus
-> +          | |  |    +---+-|
-> +          | |  |          |
-> +          | |  +----+---+-|- APB-bus
-> +          | +-------|SYS|-|- Low-speed Devices
-> +          |         +---+-|- High-speed Devices
-> +          +---------------+
-
-Are you going to just duplicate all this for each sub-block? 
-
-> +
-> +  Each CCU sub-block is represented as a separate dts-node and has an
-> +  individual driver to be bound with.
-> +
-> +  In order to create signals of wide range frequencies the external oscillator
-> +  output is primarily connected to a set of CCU PLLs. There are five PLLs
-> +  to create a clock for the MIPS P5600 cores, the embedded DDR controller,
-> +  SATA, Ethernet and PCIe domains. The last three domains though named by the
-> +  biggest system interfaces in fact include nearly all of the rest SoC
-> +  peripherals. Each of the PLLs is based on True Circuits TSMC CLN28HPM core
-> +  with an interface wrapper (so called safe PLL' clocks switcher) to simplify
-> +  the PLL configuration procedure. The PLLs work as depicted on the next
-> +  diagram:
-> +
-> +      +--------------------------+
-> +      |                          |
-> +      +-->+---+    +---+   +---+ |  +---+   0|\
-> +  CLKF--->|/NF|--->|PFD|...|VCO|-+->|/OD|--->| |
-> +          +---+ +->+---+   +---+ /->+---+    | |--->CLKOUT
-> +  CLKOD---------C----------------+          1| |
-> +       +--------C--------------------------->|/
-> +       |        |                             ^
-> +  Rclk-+->+---+ |                             |
-> +  CLKR--->|/NR|-+                             |
-> +          +---+                               |
-> +  BYPASS--------------------------------------+
-> +  BWADJ--->
-> +
-> +  where Rclk is the reference clock coming  from XTAL, NR - reference clock
-> +  divider, NF - PLL clock multiplier, OD - VCO output clock divider, CLKOUT -
-> +  output clock, BWADJ is the PLL bandwidth adjustment parameter. At this moment
-> +  the binding supports the PLL dividers configuration in accordance with a
-> +  requested rate, while bypassing and bandwidth adjustment settings can be
-> +  added in future if it gets to be necessary.
-> +
-> +  The PLLs CLKOUT is then either directly connected with the corresponding
-> +  clocks consumer (like P5600 cores or DDR controller) or passed over a CCU
-> +  divider to create a signal required for the clock domain.
-> +
-> +  The CCU PLL dts-node uses the common clock bindings with no custom
-> +  parameters. The list of exported clocks can be found in
-> +  'include/dt-bindings/clock/bt1-ccu.h'. Since CCU PLL is a part of the
-> +  Baikal-T1 SoC System Controller its DT node is supposed to be a child of
-> +  later one.
-
-The schema can and should express this. IOW, either move this into the 
-system controller schema or reference this ($ref) from it.
-
-> +
-> +properties:
-> +  compatible:
-> +    const: baikal,bt1-ccu-pll
-> +
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  clocks:
-> +    description: External reference clock
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: ref_clk
-> +
-> +unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - "#clock-cells"
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  # Clock Control Unit PLL node:
-> +  - |
-> +    clock-controller-pll {
-> +      compatible = "baikal,bt1-ccu-pll";
-> +      #clock-cells = <1>;
-> +
-> +      clocks = <&clk25m>;
-> +      clock-names = "ref_clk";
-
-If there's a register range within the system controller for the pll, 
-then add 'reg' even if Linux doesn't use it.
-
-> +    };
-> +  # Required external oscillator:
-> +  - |
-> +    clk25m: clock-oscillator-25m {
-> +      compatible = "fixed-clock";
-> +      #clock-cells = <0>;
-> +      clock-frequency  = <25000000>;
-> +      clock-output-names = "clk25m";
-> +    };
-> +...
-> diff --git a/include/dt-bindings/clock/bt1-ccu.h b/include/dt-bindings/clock/bt1-ccu.h
-> new file mode 100644
-> index 000000000000..931a4bea67c0
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/bt1-ccu.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-> + *
-> + * Baikal-T1 CCU clock indices
-> + */
-> +#ifndef __DT_BINDINGS_CLOCK_BT1_CCU_H
-> +#define __DT_BINDINGS_CLOCK_BT1_CCU_H
-> +
-> +#define CCU_CPU_PLL			0
-> +#define CCU_SATA_PLL			1
-> +#define CCU_DDR_PLL			2
-> +#define CCU_PCIE_PLL			3
-> +#define CCU_ETH_PLL			4
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_BT1_CCU_H */
-> -- 
-> 2.25.1
+> bat: dumb-battery {
+>     compatible = "simple-battery";
 > 
+>     // data about battery cell(s)
+> };
+> 
+> fuel-gauge {
+>     // fuel-gauge specific data
+> 
+>     supplies = <&charger>;
+>     monitored-battery = <&bat>;
+> };
+> 
+> charger: charger {
+>     // charger specific data
+> 
+>     monitored-battery = <&bat>;
+> };
+> 
+> In an ideal world, charger should possibly reference fuel-gauge
+> node, which could provide combined data. Right now we do not have
+> the infrastructure for that, so it needs to directly reference
+> the simple-battery node.
+> 
+>>> Possibly you should add
+>>> new properties battery.txt. It's curious that different properties are
+>>> needed.
+>>
+>> I guess it should be possible to make all these properties generic.
+>>
+>> Sebastian, will you be okay if we will add all the required properties
+>> to the power_supply_core?
+> 
+> Extending battery.txt is possible when something is missing. As Rob
+> mentioned quite a few are already described, though:
+> 
+> summit,max-chg-curr => constant-charge-current-max-microamp
+> summit,max-chg-volt => constant-charge-voltage-max-microvolt
+> summit,pre-chg-curr => precharge-current-microamp
+> summit,term-curr => charge-term-current-microamp
+> 
+> I think at least the battery temperature limits are something, that
+> should be added to the generic code.
+> 
+>>> Ultimately, for a given battery technology I would expect
+>>> there's a fixed set of properties needed to describe how to charge
+>>> them.
+>>
+>> Please notice that the charger doesn't "only charge" the battery,
+>> usually it also supplies power to the whole device.
+>>
+>> For example, when battery is fully-charged and charger is connected to
+>> the power source (USB or mains), then battery may not draw any current
+>> at all.
+> 
+> It is also a question of how good the charging process should be.
+> Technically I can charge a single cell Li-ion battery without
+> knowing much, but it can reduce battery life and/or be very slow.
+> It might even be dangerous, if charging is done at high
+> temperatures. Also some of the properties in the battery binding
+> are not about charging, but about gauging. Some devices basically
+> have only options to measure voltage and voltage drop over a
+> resistor and everything else must be done by the operating system.
+> 
+>>> Perhaps some of these properties can just be derived from other
+>>> properties and folks are just picking what a specific charger wants.
+>>
+>> Could be so, but I don't know for sure.
+> 
+> I don't think we have things, that can be derived with a reasonable
+> amount of effort in the existing simple-battery binding, except for
+> energy-full-design-microwatt-hours & charge-full-design-microamp-hours.
+> 
+>> Even if some properties could be derived from the others, it won't hurt
+>> if we will specify everything explicitly in the device-tree.
+>>
+>>> Unfortunately, we have just a mess of stuff made up for each charger
+>>> out there. I don't have the time nor the experience in this area to do
+>>> much more than say do better.
+>>
+>> I don't think it's a mess in the kernel. For example, it's common that
+>> embedded controllers are exposed to the system as "just a battery",
+>> while in fact it's a combined charger + battery controller and the
+>> charger parameters just couldn't be changed by SW.
+> 
+> A good EC driver exposes a charger and a battery device, so that
+> userspace can easily identify if a charger is connected.
+> 
+>> In a case of the Nexus 7 devices, the battery controller and charger
+>> controller are two separate entities in the system. The battery
+>> controller (bq27541) only monitors status of the battery (charge level,
+>> temperature and etc).
+
+Hello Sebastian,
+
+Thank you very much for the comments! We'll prepare the v2.
+
