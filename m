@@ -2,79 +2,99 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84481C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 21:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1DEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 21:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDA620709
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 21:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589491900;
-	bh=k7TtCoEeuLkGH34nBpkUYgHUJWbus9eVDn+Uybg9KPk=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=lWlv4ehmRGKnnw6A8C1FS8zQjhySkD+49ozp1Am1GHnHE3Zc+YM8TChmBhpmDmQlt
-	 Ovmrc4rPzznqFsnyLGi8HH++lWUUYnLpmXEg/h5apRunvUKq2dxnMf8AicpWtByrEV
-	 QzVxnUJCQeVrXJ7ae1EvDTeRmxooeVPBTMB7bvVE=
+	by mail.kernel.org (Postfix) with ESMTP id 0031720722
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 21:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ax8svKia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgENVbj (ORCPT
+        id S1726241AbgENVhw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 17:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgENVbj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 17:31:39 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F03DF2065D;
-        Thu, 14 May 2020 21:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589491899;
-        bh=k7TtCoEeuLkGH34nBpkUYgHUJWbus9eVDn+Uybg9KPk=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ztp8Wqkc/EHoWW4ozsx0XTdgIuDee2TcdnQeFokRPBinPcFGXUwjSAM2t8dt+R0bB
-         YMa6q4TJG9y5HytWxZ/axOhJ/kiHzjrWgjJw7Fl+SCJLlXGL/8gcgHXBVemMsOSK34
-         6Ip7tcuHTt8yPiLA4gWuAwZmmSDmolSwYRPRx5sg=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 14 May 2020 17:37:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgENVhw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 17:37:52 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29DEAC061A0C;
+        Thu, 14 May 2020 14:37:52 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E16B626A;
+        Thu, 14 May 2020 23:37:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1589492270;
+        bh=r7w1seKk94lC635xvi8ddGdPNjZzV7G8rR6A8E6Nsaw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ax8svKia4yEKShB3qJmaCJybaNITWBYQC5Ogg3Bw0vlgSXWM2ZC8KEgvzYDH7s5gr
+         yQmt/IxAmMTHQZqAjxs1IhZDGyovMWc1L+EB+oyUrgvQGKtjBqJnbrWZCbAykJT2BJ
+         Dg8HueHTzqZ4v08G9ATowJ8Bj5QlpX4wuy9w9vKg=
+Date:   Fri, 15 May 2020 00:37:42 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v1.1 4/4] dt-bindings: display: bridge: renesas,lvds:
+ Convert binding to YAML
+Message-ID: <20200514213742.GO5955@pendragon.ideasonboard.com>
+References: <20200405232318.26833-5-laurent.pinchart+renesas@ideasonboard.com>
+ <20200513232840.22687-1-laurent.pinchart+renesas@ideasonboard.com>
+ <CAMuHMdXRiP3topBOeLdLhJ9wMBAMFEnLYJPPpdmmdK7TKN4X6g@mail.gmail.com>
+ <20200514151721.GF5955@pendragon.ideasonboard.com>
+ <CAMuHMdVrO8WfKVdp2wONSYg=cbK=CWyXMyC+Hqv4tkiuCm5WAQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200512115023.2856617-2-bryan.odonoghue@linaro.org>
-References: <20200512115023.2856617-1-bryan.odonoghue@linaro.org> <20200512115023.2856617-2-bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v4 1/2] clk: qcom: Add DT bindings for MSM8939 GCC
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        shawn.guo@linaro.org, p.zabel@pengutronix.de,
-        vincent.knecht@mailoo.org, konradybcio@gmail.com,
-        bryan.odonoghue@linaro.org
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-Date:   Thu, 14 May 2020 14:31:38 -0700
-Message-ID: <158949189827.215346.16562450992275804503@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVrO8WfKVdp2wONSYg=cbK=CWyXMyC+Hqv4tkiuCm5WAQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bryan O'Donoghue (2020-05-12 04:50:22)
-> Add compatible strings and the include files for the MSM8939 GCC.
->=20
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Tested-by: Vincent Knecht <vincent.knecht@mailoo.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
+Hi Geert,
 
-Applied to clk-next
+On Thu, May 14, 2020 at 09:02:54PM +0200, Geert Uytterhoeven wrote:
+> On Thu, May 14, 2020 at 5:17 PM Laurent Pinchart wrote:
+> > On Thu, May 14, 2020 at 09:31:53AM +0200, Geert Uytterhoeven wrote:
+> > > On Thu, May 14, 2020 at 1:29 AM Laurent Pinchart wrote:
+> > > > Convert the Renesas R-Car LVDS encoder text binding to YAML.
+> > > >
+> > > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > > > Acked-by: Maxime Ripard <mripard@kernel.org>
+> > >
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
+> > >
+> > > > +examples:
+> > > > +  - |
+> > > > +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
+> > > > +    #include <dt-bindings/power/r8a7795-sysc.h>
+> > > > +
+> > > > +    lvds@feb90000 {
+> > > > +        compatible = "renesas,r8a7795-lvds";
+> > > > +        reg = <0 0xfeb90000 0 0x14>;
+> > >
+> > > #{address,size}-cells = <1> for examples.
+> > > Applies to all nodes below, too.
+> >
+> > Why ?
+> 
+> See "[PATCH 5/5] dt-bindings: Fix incorrect 'reg' property sizes"
+> https://lore.kernel.org/linux-devicetree/20200512204543.22090-5-robh@kernel.org/
+
+I don't like this much as it creates invalid examples, but until we have
+a better solution, I'll reduce the number of cells.
+
+-- 
+Regards,
+
+Laurent Pinchart
